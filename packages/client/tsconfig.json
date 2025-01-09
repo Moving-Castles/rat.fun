@@ -1,0 +1,44 @@
+{
+  "extends": "@tsconfig/svelte/tsconfig.json",
+  "compilerOptions": {
+    "types": [
+      "vite/client",
+      "svelte"
+    ],
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "lib": [
+      "ESNext",
+      "DOM"
+    ],
+    "moduleResolution": "Node",
+    "strict": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "noEmit": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "skipLibCheck": true,
+    "verbatimModuleSyntax": false,
+    "baseUrl": ".",
+    "paths": {
+      "@mud/*": [
+        "src/mud/*"
+      ],
+      "@svelte/*": [
+        "src/svelte/*"
+      ],
+      "@components/*": [
+        "src/svelte/components/*"
+      ],
+      "@modules/*": [
+        "src/svelte/modules/*"
+      ]
+    },
+  },
+  "include": [
+    "src"
+  ],
+}

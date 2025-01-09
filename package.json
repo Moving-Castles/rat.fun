@@ -1,0 +1,35 @@
+{
+  "name": "rat-room",
+  "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/moving-castles/rat-room.git"
+  },
+  "scripts": {
+    "build": "pnpm recursive run build",
+    "build:client": "pnpm --filter 'client' run build",
+    "dev": "mprocs",
+    "dev:client": "pnpm --filter 'client' run dev",
+    "dev:contracts": "pnpm --filter 'contracts' run dev",
+    "foundry:up": "curl -L https://foundry.paradigm.xyz | bash && bash $HOME/.foundry/bin/foundryup",
+    "mud:up": "pnpm mud set-version --tag main && pnpm install",
+    "prepare": "(forge --version || pnpm foundry:up)",
+    "test": "pnpm recursive run test"
+  },
+  "devDependencies": {
+    "@latticexyz/cli": "2.2.15-main-f1751e3c2a8a7128867dc4624049d088d014e66a",
+    "@latticexyz/common": "2.2.15-main-f1751e3c2a8a7128867dc4624049d088d014e66a",
+    "@latticexyz/explorer": "2.2.15-main-f1751e3c2a8a7128867dc4624049d088d014e66a",
+    "@latticexyz/store-indexer": "2.2.15-main-f1751e3c2a8a7128867dc4624049d088d014e66a",
+    "@typescript-eslint/eslint-plugin": "7.7.1",
+    "@typescript-eslint/parser": "7.7.1",
+    "eslint": "8.57.0",
+    "mprocs": "^0.7.1",
+    "shx": "^0.3.4",
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": "22.x",
+    "pnpm": "^8 || ^9"
+  }
+}

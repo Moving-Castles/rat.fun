@@ -1,0 +1,38 @@
+{
+  "name": "reality-model",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "tsc && node dist/index.js",
+    "build": "tsc",
+    "dev": "pnpm tsx src/index.ts"
+  },
+  "dependencies": {
+    "contracts": "workspace:*",
+    "@latticexyz/common": "2.2.15-main-f1751e3c2a8a7128867dc4624049d088d014e66a",
+    "@latticexyz/dev-tools": "2.2.15-main-f1751e3c2a8a7128867dc4624049d088d014e66a",
+    "@latticexyz/recs": "2.2.15-main-f1751e3c2a8a7128867dc4624049d088d014e66a",
+    "@latticexyz/schema-type": "2.2.15-main-f1751e3c2a8a7128867dc4624049d088d014e66a",
+    "@latticexyz/store-sync": "2.2.15-main-f1751e3c2a8a7128867dc4624049d088d014e66a",
+    "@latticexyz/utils": "2.2.15-main-f1751e3c2a8a7128867dc4624049d088d014e66a",
+    "@latticexyz/world": "2.2.15-main-f1751e3c2a8a7128867dc4624049d088d014e66a",
+    "rxjs": "^7.8.1",
+    "viem": "2.22.1",
+    "@anthropic-ai/sdk": "^0.33.1",
+    "body-parser": "^1.20.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "openai": "^4.77.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/body-parser": "^1.19.5",
+    "@types/express": "^5.0.0",
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "type": "module"
+}

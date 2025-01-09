@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+      "target": "es2021",
+      "module": "esnext",
+      "moduleResolution": "node",
+      "resolveJsonModule": true,
+      "declaration": true,
+      "sourceMap": false,
+      "outDir": "dist",
+      "isolatedModules": true,
+      "esModuleInterop": true,
+      "forceConsistentCasingInFileNames": true,
+      "strict": true
+    },
+    "include": ["src/**/*.ts"],
+    "exclude": ["node_modules"] 
+  }

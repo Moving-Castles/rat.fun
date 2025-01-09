@@ -1,0 +1,19 @@
+out/
+/cache/
+node_modules/
+.env
+.redstone-holesky-key
+bindings/
+artifacts/
+deployments
+abi/
+types/
+broadcast/
+.DS_Store
+script/private
+docs/
+
+# Ignore all deploy artifacts
+deploys/**/*.json
+# Except the latest ones (so we can load these into client)
+!deploys/**/latest.json

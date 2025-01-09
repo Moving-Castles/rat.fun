@@ -1,0 +1,17 @@
+node_modules
+.eslintcache
+.DS_STORE
+.DS_Store
+
+# Local Netlify folder
+.netlify
+
+# mud artifacts
+.mud
+
+# sqlite indexer data
+*.db
+*.db-journal
+
+.env
+

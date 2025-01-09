@@ -1,0 +1,82 @@
+/* @import url("./public/fonts/index.css"); */
+
+:root {
+  /* Colors */
+  --black: #000000;
+  --white: #d7d7c3;
+  /* --white: #dcdccb; */
+
+  --background: var(--black);
+  --foreground: var(--white);
+
+  --color-grey-dark: #333;
+  --color-grey-mid: #666;
+  --color-grey-light: #999;
+
+  --color-failure: #ff2600;
+  --color-alert: #00e5ff;
+  --color-info: #bb3af2;
+  --color-success: #a4fa3b;
+  --color-tutorial: #f6ff00;
+
+  /* Sizing */
+  --default-padding: 14px;
+  --top-bar-height: 40px;
+  --tab-bar-height: 90px;
+
+  /* Fonts */
+  --font-family: 'helvetica', sans-serif;
+  --font-size-label: 8px;
+  --font-size-small: 9px;
+  --font-size-normal: 18px;
+  --font-size-large: 18px;
+
+  /* Misc */
+  --default-border-style: 5px double var(--color-grey-dark);
+
+  /** Layers */
+  --z-0: 0;
+  --z-1: 1;
+  --z-2: 2;
+  --z-3: 3;
+  --z-4: 4;
+  --z-5: 5;
+  --z-6: 6;
+  --z-7: 7;
+  --z-8: 8;
+  --z-9: 9;
+  --z-10: 10;
+}
+
+* {
+  box-sizing: border-box;
+  border-color: var(--foreground);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  margin: 0;
+  padding: 0;
+  user-select: none;
+}
+
+body {
+  text-transform: uppercase;
+  letter-spacing: 0px;
+}
+
+body,
+html {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-family);
+  font-size: var(--font-size-normal);
+  margin: 0;
+  padding: 0;
+  overscroll-behavior-y: none;
+}
+
+hr {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}

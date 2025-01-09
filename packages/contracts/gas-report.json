@@ -1,0 +1,8 @@
+[
+  {
+    "file": "test/systems/SpawnSystem.t.sol:BuildSystemTest",
+    "test": "testSpawn",
+    "name": "Spawn",
+    "gasUsed": 65948
+  }
+]
