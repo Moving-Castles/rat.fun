@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import Anthropic from '@anthropic-ai/sdk';
 import { addressToId, constructMessages, recoverAddress } from './utils';
+import { MESSAGE, realityPrompt, stylePrompt, formatPrompt } from './constants';
 
 import { getComponentValueStrict } from "@latticexyz/recs";
 import { setup } from "./mud/setup";
@@ -11,11 +12,6 @@ import { setup } from "./mud/setup";
 dotenv.config();
 
 const PRIVATE_API_KEY = process.env.PRIVATE_ANTHROPIC_API_KEY as string;
-const MESSAGE = "RATROOM"
-
-const realityPrompt = "You are the manager of a fictional research facility. You will be given information about a room in the facility as well as descriptions of one or multiple rats. It is your job to determine a definite outcome (live/die) for these rats. The rats might interact with each other. Describe the events happening and conclude with the fate of each rat."
-const stylePrompt = "Be very brief and concise. Use style of research protocol. Use dry technical language. Only describe observable events and behaviours. Use present tense describing the events. Do not include any unnecessary information. Do not embellish. Do not speculate on the mental state or motives of the rat."
-const formatPrompt = "Return in json-format with the following properties. narrative: string, isAlive: boolean. Narrative text should be structured as points in the format: [MINUTES:SECONDS]: [EVENT]"
 
 const app = express();
 const port = 3131;
@@ -27,12 +23,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 const {
     components,
-    // systemCalls: { increment },
+    systemCalls: { reward, punish },
     network,
   } = await setup();
-
-// console.log('components', components);
-// console.log('network', network);
 
 // Route to handle OpenAI API requests
 app.post('/api/generate', async (req, res) => {
@@ -98,9 +91,26 @@ app.post('/api/generate', async (req, res) => {
             system: systemPrompt
         });
 
-        console.log(msg);
+        // Access the text property
+        const rawText = msg.content[0].text;
 
-        res.json({ message: msg.content[0] });
+        // Parse the text into a native object
+        let outcome;
+        try {
+            outcome = JSON.parse(rawText);
+            console.log(outcome);
+        } catch (error) {
+            console.error("Failed to parse JSON:", error);
+            return res.status(403).json({ error: 'Error: Failed to parse JSON' });
+        }
+
+        if(outcome.success) {
+            reward(ratId);
+        } else {
+            punish(ratId);
+        }
+
+        res.json(outcome);
     } catch (error) {
         console.error('Error:', error);
         res.status(500).json({ error: 'An error occurred while processing the request.' });

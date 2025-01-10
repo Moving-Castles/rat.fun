@@ -30,22 +30,32 @@ export function createSystemCalls(
    *   syncToRecs
    *   (https://github.com/latticexyz/mud/blob/main/templates/vanilla/packages/client/src/mud/setupNetwork.ts#L77-L83).
    */
-  { worldContract, waitForTransaction }: SetupNetworkResult,
-  { Counter }: ClientComponents,
+  { worldContract, waitForTransaction }: SetupNetworkResult
 ) {
-  const increment = async () => {
+  const reward = async (ratId: string) => {
     /*
      * Because IncrementSystem
      * (https://mud.dev/templates/typescript/contracts#incrementsystemsol)
      * is in the root namespace, `.increment` can be called directly
      * on the World contract.
      */
-    const tx = await worldContract.write.app__increment();
+    const tx = await worldContract.write.ratroom__reward([ratId]);
     await waitForTransaction(tx);
-    return getComponentValue(Counter, singletonEntity);
+  };
+
+  const punish = async (ratId: string) => {
+    /*
+     * Because IncrementSystem
+     * (https://mud.dev/templates/typescript/contracts#incrementsystemsol)
+     * is in the root namespace, `.increment` can be called directly
+     * on the World contract.
+     */
+    const tx = await worldContract.write.ratroom__punish([ratId]);
+    await waitForTransaction(tx);
   };
 
   return {
-    increment,
+    reward,
+    punish
   };
 }
