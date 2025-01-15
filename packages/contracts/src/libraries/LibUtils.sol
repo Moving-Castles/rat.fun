@@ -42,6 +42,22 @@ library LibUtils {
   }
 
   /**
+   * @dev Clamps return value between 0 and _upperBound
+   * @param _value Value to be clamped
+   * @param _upperBound Upper bound
+   * @return Clamped value
+   */
+  function clampToBounds(uint256 _value, uint256 _upperBound) internal pure returns (uint256) {
+      if (_value > _upperBound) {
+          return _upperBound;
+      } else if (_value < 0) {
+          return 0;
+      } else {
+          return _value;
+      }
+  }
+
+  /**
    * @dev Returns the absolute value
    */
   function abs(int32 x) internal pure returns (int32) {

@@ -15,6 +15,7 @@ declare global {
     entityType?: ENTITY_TYPE,
     name?: string,
     currency?: number,
+    dead?: boolean,
     // Stats
     health?: number,
     intelligence?: number,
@@ -40,6 +41,7 @@ declare global {
     [key: string]: any,
     entityType: ENTITY_TYPE.RAT,
     owner: Hex,
+    dead: boolean,
     health: number,
     intelligence: number,
     strength: number,

@@ -32,24 +32,18 @@ export function createSystemCalls(
    */
   { worldContract, waitForTransaction }: SetupNetworkResult
 ) {
-  const reward = async (ratId: string) => {
-    const tx = await worldContract.write.ratroom__reward([ratId]);
-    await waitForTransaction(tx);
-  };
-
-  const punish = async (ratId: string) => {
-    const tx = await worldContract.write.ratroom__punish([ratId]);
-    await waitForTransaction(tx);
-  };
-
   const addTrait = async (ratId: string, newTrait: string ) => {
     const tx = await worldContract.write.ratroom__addTrait([ratId, newTrait]);
     await waitForTransaction(tx);
   };
 
+  const changeStat = async (ratId: string, statName: string, change: number, negative: boolean ) => {
+    const tx = await worldContract.write.ratroom__changeStat([ratId, statName, change, negative]);
+    await waitForTransaction(tx);
+  };
+
   return {
-    reward,
-    punish,
-    addTrait
+    addTrait,
+    changeStat
   };
 }

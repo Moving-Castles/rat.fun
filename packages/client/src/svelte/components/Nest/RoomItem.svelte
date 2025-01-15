@@ -1,5 +1,6 @@
 <script lang="ts">
   import { player } from "@modules/state/base/stores"
+  import type { ServerReturnValue } from "./types"
   import { walletNetwork } from "@modules/network"
   import { MESSAGE } from "./constants"
   import { ENVIRONMENT } from "@mud/enums"
@@ -11,7 +12,7 @@
   export let environment: ENVIRONMENT
 
   let busy = false
-  let outcome: any
+  let outcome: ServerReturnValue
   let inRoom = false
 
   const submit = async () => {
@@ -47,7 +48,7 @@
         throw new Error("Network response was not ok")
       }
 
-      outcome = await response.json()
+      outcome = (await response.json()) as ServerReturnValue
       console.log(outcome)
 
       busy = false

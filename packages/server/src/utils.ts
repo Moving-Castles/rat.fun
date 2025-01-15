@@ -1,4 +1,4 @@
-import { Message } from './types'
+import { Message, Outcome } from './types'
 import { toBuffer, fromRpcSig, ecrecover, pubToAddress, bufferToHex } from "ethereumjs-util";
 import jsSha3 from "js-sha3";
 
@@ -32,10 +32,27 @@ export function addressToId(address: string): string {
 // Function to construct messages
 export function constructMessages(
     roomPrompt: string,
-    ratPrompt: string
+    ratPrompt: string,
+    ratStats: string
 ): Message[] {
     const messages: Message[] = [];
     messages.push({ role: "user", content: `Room: ${roomPrompt}` });
     messages.push({ role: "user", content: `Rat: ${ratPrompt}` });
+    messages.push({ role: "user", content: `RatStats: ${ratStats}` });
     return messages;
+}
+
+// Function to construct messages
+export function constructOutcomeMessages(
+    outcome: Outcome,
+    ratStats: string
+): Message[] {
+    const messages: Message[] = [];
+    messages.push({ role: "user", content: `Outcome: ${JSON.stringify(outcome.eventLog)}` });
+    messages.push({ role: "user", content: `RatStats: ${ratStats}` });
+    return messages;
+}
+
+export function isNegative(value: number): boolean {
+    return value < 0;
 }

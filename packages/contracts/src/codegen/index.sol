@@ -12,6 +12,7 @@ import { Strength } from "./tables/Strength.sol";
 import { Sanity } from "./tables/Sanity.sol";
 import { Luck } from "./tables/Luck.sol";
 import { Trait } from "./tables/Trait.sol";
+import { Dead } from "./tables/Dead.sol";
 import { Currency } from "./tables/Currency.sol";
 import { OwnedRat } from "./tables/OwnedRat.sol";
 import { Owner } from "./tables/Owner.sol";

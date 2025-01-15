@@ -1,10 +1,11 @@
 <script lang="ts">
   import { fade } from "svelte/transition"
   import { createEventDispatcher } from "svelte"
+  import type { ServerReturnValue } from "./types"
 
   import Ellipsis from "./Ellipsis.svelte"
 
-  export let outcome: { eventLog: string[]; success: boolean; change: string }
+  export let outcome: ServerReturnValue
   export let room: Room
 
   const dispatch = createEventDispatcher()
@@ -35,7 +36,14 @@
       class="outcome"
       in:fade={{ duration: 200, delay: 500 * outcome.eventLog.length + 1 }}
     >
-      <div class="trait">Trait added: {outcome.change}</div>
+      <div class="trait">Trait added: {outcome.newTrait}</div>
+      <div class="stat-changes">
+        {#each Object.entries(outcome.statChanges) as [stat, change]}
+          <div class="stat-change" class:negative={change < 0}>
+            {stat}: {change}
+          </div>
+        {/each}
+      </div>
       <div class="return">
         <button on:click={close}>Return to nest</button>
       </div>
@@ -95,6 +103,17 @@
       font-size: 32px;
       margin-top: 20px;
       cursor: pointer;
+    }
+
+    .stat-change {
+      display: inline-block;
+      padding: 10px;
+      margin: 10px;
+      background: green;
+
+      &.negative {
+        background: red;
+      }
     }
   }
 </style>

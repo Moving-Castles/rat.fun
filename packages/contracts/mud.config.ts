@@ -30,6 +30,7 @@ export default defineWorld({
     // Traits / items / afflictions
     Trait: "string",
     // ...
+    Dead: "bool",
     Currency: "uint256",
     OwnedRat: "bytes32",
     Owner: "bytes32",

@@ -23,6 +23,10 @@
           {$rats[$player.ownedRat]?.trait ?? ""}
         </div>
         <div class="stat-item">
+          <strong>Dead:</strong>
+          {$rats[$player.ownedRat]?.dead}
+        </div>
+        <div class="stat-item">
           <strong>Health:</strong>
           {$rats[$player.ownedRat]?.health ?? 0}
         </div>
@@ -58,10 +62,6 @@
 </div>
 
 <style lang="scss">
-  // strong {
-  //   font-size: 32px;
-  // }
-
   .stats {
     margin-bottom: 20px;
   }

@@ -1,5 +1,17 @@
 [
   {
+    "file": "test/systems/RatSystem.t.sol:RatSystemTest",
+    "test": "testAddTrait",
+    "name": "Add trait",
+    "gasUsed": 94171
+  },
+  {
+    "file": "test/systems/RatSystem.t.sol:RatSystemTest",
+    "test": "testChangeStat",
+    "name": "Change stat",
+    "gasUsed": 45117
+  },
+  {
     "file": "test/systems/RoomSystem.t.sol:RoomSystemTest",
     "test": "testCreateRoom",
     "name": "Create room",
