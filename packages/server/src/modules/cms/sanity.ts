@@ -1,6 +1,5 @@
 import { createClient } from "@sanity/client"
-
-const SANITY_ID = 'kupagww3'
+import { SANITY_ID } from "@config"
 
 export const client = createClient({
     projectId: SANITY_ID,

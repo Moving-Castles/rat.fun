@@ -1,6 +1,5 @@
 export type ServerReturnValue = {
-    eventLog: string[]
-    success: boolean
+    log: string[]
     newTrait: string
     statChanges: {
       [key: string]: number

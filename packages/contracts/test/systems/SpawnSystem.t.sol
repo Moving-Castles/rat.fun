@@ -31,9 +31,6 @@ contract SpawnSystemTest is BaseTest {
     
     // Rat stats
     assertEq(Health.get(ratEntity), 100);
-    assertEq(Intelligence.get(ratEntity), 100);
-    assertEq(Strength.get(ratEntity), 100);
-    assertEq(Sanity.get(ratEntity), 100);
-    assertEq(Luck.get(ratEntity), 100);
+    assertEq(Level.get(ratEntity), 1);
   }
 }

@@ -65,8 +65,6 @@ export async function setupNetwork(privateKey: string, chainId: number): Promise
 
   const publicClient = createPublicClient(clientOptions);
 
-  // console.log('publicClient:', publicClient);
-
   /*
    * Create an observable for contract writes that we can
    * pass into MUD dev tools for transaction observability.
@@ -84,12 +82,6 @@ export async function setupNetwork(privateKey: string, chainId: number): Promise
   })
     .extend(transactionQueue())
     .extend(writeObserver({ onWrite: (write) => write$.next(write) }));
-
-  // console.log('burnerAccount:', burnerAccount);
-  // console.log('burnerWalletClient:', burnerWalletClient);
-
-  // console.log('networkConfig.worldAddress:', networkConfig.worldAddress);
-  // console.log('IWorldAbi:', IWorldAbi);
 
   /*
    * Create an object for communicating with the deployed World.

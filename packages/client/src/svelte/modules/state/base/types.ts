@@ -18,10 +18,7 @@ declare global {
     dead?: boolean,
     // Stats
     health?: number,
-    intelligence?: number,
-    strength?: number,
-    sanity?: number,
-    luck?: number,
+    level?: number,
     // Traits
     trait?: string,
     ownedRat?: Hex,
@@ -43,11 +40,7 @@ declare global {
     owner: Hex,
     dead: boolean,
     health: number,
-    intelligence: number,
-    strength: number,
-    sanity: number,
-    luck: number,
-    trait: string
+    level: number
   }
 
   type Room = {

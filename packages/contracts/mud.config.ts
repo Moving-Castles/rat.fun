@@ -23,10 +23,7 @@ export default defineWorld({
     EntityType: "ENTITY_TYPE",
     // Stats
     Health: "uint256",
-    Intelligence: "uint256",
-    Strength: "uint256", 
-    Sanity: "uint256",
-    Luck: "uint256",
+    Level: "uint256",
     // Traits / items / afflictions
     Trait: "string",
     // ...

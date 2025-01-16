@@ -23,7 +23,7 @@
 
   <!-- LOG -->
   <div class="log">
-    {#each outcome.eventLog as event, i}
+    {#each outcome.log as event, i}
       <div class="event" in:fade={{ duration: 200, delay: 500 * i }}>
         {event}
       </div>
@@ -31,17 +31,21 @@
   </div>
 
   <!-- OUTCOME -->
-  {#if outcome.eventLog?.length ?? 0 > 0}
+  {#if outcome.log?.length ?? 0 > 0}
     <div
       class="outcome"
-      in:fade={{ duration: 200, delay: 500 * outcome.eventLog.length + 1 }}
+      in:fade={{ duration: 200, delay: 500 * outcome.log.length + 1 }}
     >
-      <div class="trait">Trait added: {outcome.newTrait}</div>
+      {#if outcome.newTrait}
+        <div class="trait">Trait added: {outcome.newTrait}</div>
+      {/if}
       <div class="stat-changes">
         {#each Object.entries(outcome.statChanges) as [stat, change]}
-          <div class="stat-change" class:negative={change < 0}>
-            {stat}: {change}
-          </div>
+          {#if change !== 0}
+            <div class="stat-change" class:negative={change < 0}>
+              {stat}: {change}
+            </div>
+          {/if}
         {/each}
       </div>
       <div class="return">
@@ -81,14 +85,6 @@
 
     .outcome {
       max-width: 800px;
-    }
-
-    .success {
-      background: green;
-    }
-
-    .failure {
-      color: red;
     }
 
     .trait {

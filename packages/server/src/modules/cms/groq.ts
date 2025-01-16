@@ -3,5 +3,6 @@
  *  https://www.sanity.io/docs/groq
  */
 export const queries = {
-    worldPrompts: '*[_id == "worldPrompts"][0]'
+    eventPrompts: '*[_id == "event-prompts"][0]',
+    outcomePrompts: '*[_id == "outcome-prompts"][0]'
 }

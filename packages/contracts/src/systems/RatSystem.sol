@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
-import { GameConfig, Trait, Health, Intelligence, Strength, Sanity, Luck, Dead } from "../codegen/index.sol";
+import { GameConfig, Trait, Health, Level, Dead } from "../codegen/index.sol";
 import { System } from "@latticexyz/world/src/System.sol";
 import { LibRoom, LibUtils } from "../libraries/Libraries.sol";
 
@@ -25,29 +25,11 @@ contract RatSystem is System {
       } else {
         Health.set(ratId, Health.get(ratId) + change);
       }
-    } else if(LibUtils.stringEq(statName, "intelligence")) {
+    } else if(LibUtils.stringEq(statName, "level")) {
       if(negative) {
-        Intelligence.set(ratId, LibUtils.safeSubtract(Intelligence.get(ratId), change));
+        Level.set(ratId, LibUtils.safeSubtract(Level.get(ratId), change));
       } else {
-        Intelligence.set(ratId, Intelligence.get(ratId) + change);
-      }
-    } else if(LibUtils.stringEq(statName, "strength")) {
-      if(negative) {
-        Strength.set(ratId, LibUtils.safeSubtract(Strength.get(ratId), change));
-      } else {
-        Strength.set(ratId, Strength.get(ratId) + change);
-      }
-    } else if(LibUtils.stringEq(statName, "sanity")) {
-      if(negative) {
-        Sanity.set(ratId, LibUtils.safeSubtract(Sanity.get(ratId), change));
-      } else {
-        Sanity.set(ratId, Sanity.get(ratId) + change);
-      }
-    } else if(LibUtils.stringEq(statName, "luck")) {
-      if(negative) {
-        Luck.set(ratId, LibUtils.safeSubtract(Luck.get(ratId), change));
-      } else {
-        Luck.set(ratId, Luck.get(ratId) + change);
+        Level.set(ratId, Level.get(ratId) + change);
       }
     } else {
       console.log("invalid stat name");

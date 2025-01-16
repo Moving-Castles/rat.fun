@@ -31,20 +31,8 @@
           {$rats[$player.ownedRat]?.health ?? 0}
         </div>
         <div class="stat-item">
-          <strong>Intelligence:</strong>
-          {$rats[$player.ownedRat]?.intelligence ?? 0}
-        </div>
-        <div class="stat-item">
-          <strong>Strength:</strong>
-          {$rats[$player.ownedRat]?.strength ?? 0}
-        </div>
-        <div class="stat-item">
-          <strong>Sanity:</strong>
-          {$rats[$player.ownedRat]?.sanity ?? 0}
-        </div>
-        <div class="stat-item">
-          <strong>Luck:</strong>
-          {$rats[$player.ownedRat]?.luck ?? 0}
+          <strong>Level:</strong>
+          {$rats[$player.ownedRat]?.level ?? 0}
         </div>
       </div>
     {/if}

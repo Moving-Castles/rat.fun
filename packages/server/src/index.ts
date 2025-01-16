@@ -1,12 +1,11 @@
 import Fastify from 'fastify'
 import formbody from '@fastify/formbody';
-// import compress from '@fastify/compress';
 import cors from '@fastify/cors';
 
-import test from './routes/test';
-import enterRoom from './routes/enter-room';
+import { PORT } from '@config';
 
-const PORT = 3131;
+import ping from '@routes/test/ping';
+import enter from '@routes/room/enter';
 
 const fastify = Fastify({   logger: {
     transport: {
@@ -15,25 +14,18 @@ const fastify = Fastify({   logger: {
   },
  })
 
-// Register the formbody plugin for application/x-www-form-urlencoded
+// Register plugins
 fastify.register(formbody);
-
-// Register the compress plugin for response compression
-// fastify.register(compress, {
-//   global: true, // Apply compression globally
-//   encodings: ['gzip', 'deflate'], // Supported encodings
-// });
-
-// Register the CORS plugin for Cross-Origin Resource Sharing
 fastify.register(cors, {
   origin: '*', // Allow all origins (restrict for production)
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
 });
 
 // Register routes
-fastify.register(test)
-fastify.register(enterRoom)
+fastify.register(ping)
+fastify.register(enter)
 
+// Start the server
 const start = async (port: number) => {
     try {
         await fastify.listen({ port })

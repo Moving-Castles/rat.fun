@@ -3,7 +3,7 @@ pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import { getUniqueEntity } from "@latticexyz/world-modules/src/modules/uniqueentity/getUniqueEntity.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { EntityType, Currency, Health, Intelligence, Strength, Sanity, Luck, Owner, OwnedRat, Dead } from "../codegen/index.sol";
+import { EntityType, Currency, Health, Level, Owner, OwnedRat, Dead } from "../codegen/index.sol";
 import { LibUtils, LibRandom } from "../libraries/Libraries.sol";
 import { ENTITY_TYPE } from "../codegen/common.sol";
 
@@ -24,9 +24,6 @@ contract SpawnSystem is System {
 
         // Set stats
         Health.set(ratEntity, 100);
-        Intelligence.set(ratEntity, 100);
-        Strength.set(ratEntity, 100);
-        Sanity.set(ratEntity, 100);
-        Luck.set(ratEntity, 100);
+        Level.set(ratEntity, 1);
     }
 }

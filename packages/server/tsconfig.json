@@ -10,7 +10,14 @@
       "isolatedModules": true,
       "esModuleInterop": true,
       "forceConsistentCasingInFileNames": true,
-      "strict": true
+      "strict": true,
+      "baseUrl": ".",
+        "paths": {
+          "@config": ["src/config"],
+          "@routes/*": ["src/routes/*"],
+          "@modules/*": ["src/modules/*"],
+          "@sanity-types": ["../cms/sanity.types"]
+        }
     },
     "include": ["src/**/*.ts"],
     "exclude": ["node_modules"] 

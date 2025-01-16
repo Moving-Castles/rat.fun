@@ -140,7 +140,7 @@ export type OutcomePrompts = {
   title?: string;
   mainPrompt?: string;
   stylePrompt?: string;
-  formatPrompt?: string;
+  formatPrompt?: Code;
 };
 
 export type EventPrompts = {
@@ -152,7 +152,15 @@ export type EventPrompts = {
   title?: string;
   mainPrompt?: string;
   stylePrompt?: string;
-  formatPrompt?: string;
+  formatPrompt?: Code;
+};
+
+export type Code = {
+  _type: "code";
+  language?: string;
+  filename?: string;
+  code?: string;
+  highlightedLines?: Array<number>;
 };
 export declare const internalGroqTypeReferenceTo: unique symbol;
 

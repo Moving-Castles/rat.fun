@@ -25,7 +25,7 @@ export default {
             title: 'Format prompt',
             description: "Be careful editing this as it will effect the return format.",
             name: 'formatPrompt',
-            type: 'text',
+            type: 'code'        
         }
     ],
 }
