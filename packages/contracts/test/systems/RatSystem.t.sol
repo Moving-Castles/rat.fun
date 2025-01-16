@@ -18,14 +18,45 @@ contract RatSystemTest is BaseTest {
         prankAdmin();
 
         startGasReport("Add trait");
-        world.ratroom__addTrait(ratEntity, "hungry");
+        bytes32 hungryTraitId = world.ratroom__addTrait(ratEntity, "hungry");
         endGasReport();
         
         vm.stopPrank();
 
-        console.log(Trait.get(ratEntity));
+        assertEq(uint8(EntityType.get(hungryTraitId)), uint8(ENTITY_TYPE.TRAIT));
+        assertTrue(LibUtils.stringEq(Name.get(hungryTraitId), "hungry"));
 
-        assertTrue(LibUtils.stringEq(Trait.get(ratEntity), ", hungry"));
+        bytes32[] memory traits = Traits.get(ratEntity);
+        assertEq(traits.length, 1);
+        assertEq(traits[0], hungryTraitId);
+    }
+
+    function testRemoveTrait() public {
+        setUp();
+
+        vm.startPrank(alice);
+        bytes32 playerEntity = world.ratroom__spawn();
+        bytes32 ratEntity = OwnedRat.get(playerEntity);
+        vm.stopPrank();
+
+        prankAdmin();
+
+        bytes32 hungryTraitId = world.ratroom__addTrait(ratEntity, "hungry");
+
+        assertEq(uint8(EntityType.get(hungryTraitId)), uint8(ENTITY_TYPE.TRAIT));
+        assertTrue(LibUtils.stringEq(Name.get(hungryTraitId), "hungry"));
+
+        startGasReport("Remove trait");
+        world.ratroom__removeTrait(ratEntity, hungryTraitId);
+        endGasReport();
+        
+        vm.stopPrank();
+
+        assertEq(uint8(EntityType.get(hungryTraitId)), uint8(ENTITY_TYPE.NONE));
+        assertTrue(LibUtils.stringEq(Name.get(hungryTraitId), ""));
+
+        bytes32[] memory traits = Traits.get(ratEntity);
+        assertEq(traits.length, 0);
     }
 
     function testChangeStat() public {
@@ -72,6 +103,9 @@ contract RatSystemTest is BaseTest {
 
         vm.expectRevert("not allowed");
         world.ratroom__addTrait(ratEntity, "hungry");
+
+        vm.expectRevert("not allowed");
+        world.ratroom__removeTrait(ratEntity, bytes32(0));
 
         vm.expectRevert("not allowed");
         world.ratroom__changeStat(ratEntity, "health", 10, true);

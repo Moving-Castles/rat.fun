@@ -34,6 +34,11 @@ export function createSystemCalls(
     await waitForTransaction(tx);
   };
 
+  const removeTrait = async (ratId: string, traitId: string ) => {
+    const tx = await worldContract.write.ratroom__removeTrait([ratId, traitId]);
+    await waitForTransaction(tx);
+  };
+
   const changeStat = async (ratId: string, statName: string, change: number, negative: boolean ) => {
     const tx = await worldContract.write.ratroom__changeStat([ratId, statName, change, negative]);
     await waitForTransaction(tx);
@@ -41,6 +46,7 @@ export function createSystemCalls(
 
   return {
     addTrait,
+    removeTrait,
     changeStat
   };
 }

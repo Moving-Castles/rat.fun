@@ -30,7 +30,7 @@ const CHAIN_ID = Number(process.env.CHAIN_ID) as number;
 // Initialize MUD
 const {
     components,
-    systemCalls: { addTrait, changeStat },
+    systemCalls: { addTrait, removeTrait, changeStat },
     network,
 } = await setup(PRIVATE_ETH_KEY, CHAIN_ID);
 
@@ -72,7 +72,7 @@ async function routes (fastify: FastifyInstance) {
             const eventMessages = constructEventMessages(room, rat);
             const events = await callModel(anthropic, eventMessages, eventSystemPrompt) as EventsReturnValue;
 
-            // TODO: error handling
+            // TODO: better error handling
             if(!events) {
                 return reply.status(403).send({ error: 'Error: Event model call failed' });
             }
@@ -81,10 +81,12 @@ async function routes (fastify: FastifyInstance) {
             const outcomeMessages = constructOutcomeMessages(events, rat);
             const outcome = await callModel(anthropic, outcomeMessages, outcomeSystemPrompt) as OutcomeReturnValue;
 
-            // TODO: error handling
+            // TODO: better error handling
             if(!outcome) {
                 return reply.status(403).send({ error: 'Error: Outcome model call failed' });
             }
+
+            // TODO: Determine wether to add or combine/remove traits
 
             // Add trait
             if (outcome.newTrait?.length > 0) {

@@ -75,6 +75,16 @@ export const rooms = derived(entities, $entities => {
   return rooms
 })
 
+export const traits = derived(entities, $entities => {
+  const traits = {} as Traits
+  Object.entries($entities).forEach(([key, value]) => {
+    if (value.entityType === ENTITY_TYPE.TRAIT) {
+      traits[key] = value as Trait
+    }
+  })
+  return traits
+})
+
 // export const gameConfig = derived(entities, $entities => {
 //   return ($entities[GAME_CONFIG_ID] || {}) as GameConfig
 // })

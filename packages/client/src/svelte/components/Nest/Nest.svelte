@@ -1,5 +1,10 @@
 <script lang="ts">
-  import { player, rats, rooms } from "@svelte/modules/state/base/stores"
+  import {
+    player,
+    rats,
+    rooms,
+    traits,
+  } from "@svelte/modules/state/base/stores"
   import RoomItem from "./RoomItem.svelte"
   import { ENVIRONMENT } from "@mud/enums"
 
@@ -20,7 +25,11 @@
         <!-- <br />id: {$player.ownedRat} -->
         <div class="stat-item trait">
           <strong>Traits:</strong>
-          {$rats[$player.ownedRat]?.trait ?? ""}
+          {#if $rats[$player.ownedRat]?.traits}
+            {#each $rats[$player.ownedRat]?.traits as trait}
+              <div class="trait-item">{$traits[trait]?.name}</div>
+            {/each}
+          {/if}
         </div>
         <div class="stat-item">
           <strong>Dead:</strong>
@@ -82,5 +91,16 @@
   .trait {
     background: lightcyan;
     color: black;
+    display: flex;
+    flex-wrap: wrap;
+
+    .trait-item {
+      margin-right: 5px;
+      margin-bottom: 5px;
+      padding: 4px;
+      border-radius: 5px;
+      background: orangered;
+      font-size: 14px;
+    }
   }
 </style>

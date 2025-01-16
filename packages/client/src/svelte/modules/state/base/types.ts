@@ -19,8 +19,7 @@ declare global {
     // Stats
     health?: number,
     level?: number,
-    // Traits
-    trait?: string,
+    traits?: string[],
     ownedRat?: Hex,
     owner?: Hex,
     roomPrompt?: string,
@@ -40,7 +39,8 @@ declare global {
     owner: Hex,
     dead: boolean,
     health: number,
-    level: number
+    level: number,
+    traits: string[],
   }
 
   type Room = {
@@ -48,6 +48,12 @@ declare global {
     entityType: ENTITY_TYPE.ROOM,
     roomIndex: number,
     roomPrompt: string
+  }
+
+  type Trait = {
+    [key: string]: any,
+    entityType: ENTITY_TYPE.TRAIT,
+    name: string
   }
 
   // * * * * * * * * * * * * * * * * *
@@ -68,5 +74,9 @@ declare global {
 
   type Rooms = {
     [index: string]: Room
+  }
+
+  type Traits = {
+    [index: string]: Trait
   }
 }

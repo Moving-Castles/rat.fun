@@ -6,3 +6,4 @@ import { LibRandom } from "./LibRandom.sol";
 import { LibRoom } from "./LibRoom.sol";
 import { LibRat } from "./LibRat.sol";
 import { LibInit } from "./LibInit.sol";
+import { LibTrait } from "./LibTrait.sol";

@@ -8,7 +8,7 @@ import { Name } from "./tables/Name.sol";
 import { EntityType } from "./tables/EntityType.sol";
 import { Health } from "./tables/Health.sol";
 import { Level } from "./tables/Level.sol";
-import { Trait } from "./tables/Trait.sol";
+import { Traits } from "./tables/Traits.sol";
 import { Dead } from "./tables/Dead.sol";
 import { Currency } from "./tables/Currency.sol";
 import { OwnedRat } from "./tables/OwnedRat.sol";

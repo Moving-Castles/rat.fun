@@ -8,8 +8,14 @@ export type Room = {
     prompt: string;
 }
 
+export type Trait = {
+    id: string,
+    name: string
+}
+
 export type Rat = {
     prompt: string;
+    traits: Trait[];
     dead: boolean;
     owner: string;
     stats: {
@@ -17,7 +23,6 @@ export type Rat = {
         level: number;
     }
 }
-
 export type OnchainData = {
     room: Room;
     rat: Rat;

@@ -5,8 +5,7 @@
   import { UIState } from "@svelte/modules/ui/stores"
   import { UI } from "@modules/ui/enums"
 
-  import { walletNetwork, publicNetwork } from "./modules/network"
-  import { rats, rooms } from "@modules/state/base/stores"
+  import { rats, rooms, traits, player } from "@modules/state/base/stores"
 
   import Loading from "@components/Loading/Loading.svelte"
   import Spawn from "./components/Spawn/Spawn.svelte"
@@ -14,8 +13,10 @@
 
   export let environment: ENVIRONMENT
 
-  // $: console.log("$rats", $rats)
-  // $: console.log("$rooms", $rooms)
+  $: console.log("$rats", $rats)
+  $: console.log("$rooms", $rooms)
+  $: console.log("$traits", $traits)
+  $: console.log("$player", $player)
 
   const loadedEnvironment = () => {
     UIState.set(UI.SPAWNING)

@@ -24,8 +24,8 @@ export default defineWorld({
     // Stats
     Health: "uint256",
     Level: "uint256",
-    // Traits / items / afflictions
-    Trait: "string",
+    // Inventory
+    Traits: "bytes32[]",
     // ...
     Dead: "bool",
     Currency: "uint256",
