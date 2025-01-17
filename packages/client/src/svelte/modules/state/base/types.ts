@@ -18,9 +18,8 @@ declare global {
     [key: string]: number | ENTITY_TYPE | Hex | boolean | string | string[] | undefined,
     entityType?: ENTITY_TYPE,
     name?: string,
-    currency?: number,
+    balance?: number,
     dead?: boolean,
-    // Stats
     health?: number,
     level?: number,
     traits?: string[],
@@ -33,7 +32,7 @@ declare global {
   type Player  = {
     [key: string]: number | ENTITY_TYPE | Hex,
     entityType: ENTITY_TYPE.PLAYER,
-    currency: number,
+    balance: number,
     ownedRat: Hex,
   }
 
@@ -51,7 +50,8 @@ declare global {
     [key: string]: number | ENTITY_TYPE | string,
     entityType: ENTITY_TYPE.ROOM,
     roomIndex: number,
-    roomPrompt: string
+    balance: number,
+    roomPrompt: string,
   }
 
   type Trait = {

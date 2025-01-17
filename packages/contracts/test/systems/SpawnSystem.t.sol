@@ -19,7 +19,7 @@ contract SpawnSystemTest is BaseTest {
     vm.stopPrank();
 
     // Check player
-    assertEq(Currency.get(playerEntity), 0);
+    assertEq(Balance.get(playerEntity), 1000);
     assertEq(uint8(EntityType.get(playerEntity)), uint8(ENTITY_TYPE.PLAYER));
 
     bytes32 ratEntity = OwnedRat.get(playerEntity);

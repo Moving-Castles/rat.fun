@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { player } from "@modules/state/base/stores"
+  import { player, playerRat } from "@modules/state/base/stores"
   import type { ServerReturnValue } from "./types"
   import { walletNetwork } from "@modules/network"
   import { MESSAGE } from "@components/Nest/constants"
@@ -71,10 +71,11 @@
   }
 </script>
 
-<div class="room-item">
+<div class="room-item" class:disabled={$playerRat?.dead ?? false}>
   <button on:click={submit} disabled={busy}>ROOM {room.roomIndex}</button>
   <div class="room-info">
-    {room.roomPrompt}
+    <div class="prompt">{room.roomPrompt}</div>
+    <div class="balance">Balance: {room.balance ?? 0}</div>
   </div>
 </div>
 
@@ -86,6 +87,11 @@
   .room-item {
     display: flex;
     width: 100%;
+
+    &.disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
 
     button {
       width: 200px;
@@ -102,5 +108,13 @@
     color: black;
     margin-top: 20px;
     font-size: 16px;
+  }
+
+  .balance {
+    padding: 10px;
+    background: purple;
+    display: inline-block;
+    margin-top: 10px;
+    color: white;
   }
 </style>

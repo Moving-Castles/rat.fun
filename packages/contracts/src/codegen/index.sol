@@ -10,7 +10,7 @@ import { Health } from "./tables/Health.sol";
 import { Level } from "./tables/Level.sol";
 import { Traits } from "./tables/Traits.sol";
 import { Dead } from "./tables/Dead.sol";
-import { Currency } from "./tables/Currency.sol";
+import { Balance } from "./tables/Balance.sol";
 import { OwnedRat } from "./tables/OwnedRat.sol";
 import { Owner } from "./tables/Owner.sol";
 import { RoomPrompt } from "./tables/RoomPrompt.sol";

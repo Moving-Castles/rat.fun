@@ -6,6 +6,7 @@ export type EnterRoomBody = {
 
 export type Room = {
     prompt: string;
+    balance: number;
 }
 
 export type Trait = {

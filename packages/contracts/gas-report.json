@@ -3,30 +3,48 @@
     "file": "test/systems/RatSystem.t.sol:RatSystemTest",
     "test": "testAddTrait",
     "name": "Add trait",
-    "gasUsed": 94171
+    "gasUsed": 205237
   },
   {
     "file": "test/systems/RatSystem.t.sol:RatSystemTest",
     "test": "testChangeStat",
     "name": "Change stat",
-    "gasUsed": 45117
+    "gasUsed": 45130
+  },
+  {
+    "file": "test/systems/RatSystem.t.sol:RatSystemTest",
+    "test": "testRemoveTrait",
+    "name": "Remove trait",
+    "gasUsed": 27486
   },
   {
     "file": "test/systems/RoomSystem.t.sol:RoomSystemTest",
-    "test": "testCreateRoom",
-    "name": "Create room",
-    "gasUsed": 222465
+    "test": "testCreateRoomAdmin",
+    "name": "Create room (admin)",
+    "gasUsed": 253636
   },
   {
     "file": "test/systems/RoomSystem.t.sol:RoomSystemTest",
-    "test": "testLongRoomPrompt",
+    "test": "testCreateRoomUser",
+    "name": "Create room (user)",
+    "gasUsed": 250150
+  },
+  {
+    "file": "test/systems/RoomSystem.t.sol:RoomSystemTest",
+    "test": "testLongRoomPromptAdmin",
     "name": "Create room: long prompt",
-    "gasUsed": 359031
+    "gasUsed": 390203
+  },
+  {
+    "file": "test/systems/RoomSystem.t.sol:RoomSystemTest",
+    "test": "testSetRoomBalance",
+    "name": "Set room balance",
+    "gasUsed": 31067
   },
   {
     "file": "test/systems/SpawnSystem.t.sol:SpawnSystemTest",
     "test": "testSpawn",
     "name": "Spawn",
-    "gasUsed": 399779
+    "gasUsed": 329614
   }
 ]

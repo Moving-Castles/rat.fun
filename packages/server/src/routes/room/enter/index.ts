@@ -30,7 +30,7 @@ const CHAIN_ID = Number(process.env.CHAIN_ID) as number;
 // Initialize MUD
 const {
     components,
-    systemCalls: { addTrait, removeTrait, changeStat },
+    systemCalls: { addTrait, removeTrait, changeStat, changeRoomBalance },
     network,
 } = await setup(PRIVATE_ETH_KEY, CHAIN_ID);
 
@@ -50,6 +50,7 @@ async function routes (fastify: FastifyInstance) {
                 ratId,
             } = request.body;
 
+            // Get onchain data
             const { room, rat } = getOnchainData(await network, components, roomId, ratId);
             
             // Recover sender address from signature and convert to MUD bytes32 format
@@ -63,6 +64,11 @@ async function routes (fastify: FastifyInstance) {
             // Check that the rat is alive
             if (rat.dead) {
                 return reply.status(403).send({ error: 'The rat is dead.' });
+            }
+
+            // Check that room balance is positive
+            if (room.balance <= 0) {
+                return reply.status(403).send({ error: 'The room balance is not positive.' });
             }
 
             // Get system prompts from CMS
@@ -99,6 +105,8 @@ async function routes (fastify: FastifyInstance) {
                 if(traitChange.type === "add") {
                     if(traitChange.name) {
                         addTrait(ratId, traitChange.name);
+                        // Currently all traits cost 50
+                        changeRoomBalance(roomId, 50, true);
                     }
                 } else if(traitChange.type === "remove") {
                     if(traitChange.id) {
@@ -110,7 +118,11 @@ async function routes (fastify: FastifyInstance) {
             // Change stats
             Object.entries(outcome.statChanges).forEach(async ([statName, change]) => {
                 if (change === 0) return;
-                changeStat(ratId, statName, Math.abs(change), change < 0);
+                const changeIsNegative = change < 0;
+                await changeStat(ratId, statName, Math.abs(change), changeIsNegative);
+                if(statName === "health") {
+                    changeRoomBalance(roomId, Math.abs(change), !changeIsNegative);
+                }
             });
 
             const returnObject = {

@@ -28,7 +28,7 @@ export default defineWorld({
     Traits: "bytes32[]",
     // ...
     Dead: "bool",
-    Currency: "uint256",
+    Balance: "uint256",
     OwnedRat: "bytes32",
     Owner: "bytes32",
     RoomPrompt: "string",

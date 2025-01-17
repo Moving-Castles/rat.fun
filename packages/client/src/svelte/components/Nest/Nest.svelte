@@ -17,7 +17,14 @@
 <div class="nest">
   <div class="column first">
     {#if $player}
-      <img src="/images/rat.jpg" alt="nest" />
+      <div class="balance">
+        Balance:
+        <strong>{$player?.balance ?? 0}</strong>
+      </div>
+      <div class="image-container" class:dead={$playerRat?.dead ?? false}>
+        <img class="rat" src="/images/rat.jpg" alt="nest" />
+        <img class="stamp" src="/images/dead.png" alt="dead" />
+      </div>
       <div class="stats">
         <div class="stat-item trait">
           <strong>Traits:</strong>
@@ -97,6 +104,38 @@
       border-radius: 5px;
       background: orangered;
       font-size: 14px;
+    }
+  }
+
+  .balance {
+    padding: 20px;
+    background: yellow;
+    font-size: 32px;
+    margin-bottom: 20px;
+    color: black;
+  }
+
+  .image-container {
+    display: inline-block;
+    position: relative;
+
+    .stamp {
+      width: 400px;
+      display: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    &.dead {
+      .rat {
+        filter: grayscale(100%);
+      }
+
+      .stamp {
+        display: block;
+      }
     }
   }
 </style>

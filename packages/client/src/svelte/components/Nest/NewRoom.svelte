@@ -1,6 +1,7 @@
 <script lang="ts">
   import { createRoom } from "@modules/action"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
+  import { player } from "@modules/state/base/stores"
 
   let busy = false
   let newPrompt: string
@@ -22,7 +23,9 @@
 <div class="create-room">
   <textarea rows="5" cols="50" placeholder="Room prompt" bind:value={newPrompt}
   ></textarea>
-  <button on:click={sendCreateRoom} disabled={busy}>Create room</button>
+  <button disabled={busy || $player.balance < 100} on:click={sendCreateRoom}>
+    Create room
+  </button>
 </div>
 
 <style lang="scss">

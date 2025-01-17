@@ -44,9 +44,15 @@ export function createSystemCalls(
     await waitForTransaction(tx);
   };
 
+  const changeRoomBalance = async (roomId: string, change: number, negative: boolean ) => {
+    const tx = await worldContract.write.ratroom__changeRoomBalance([roomId, change, negative]);
+    await waitForTransaction(tx);
+  };
+
   return {
     addTrait,
     removeTrait,
-    changeStat
+    changeStat,
+    changeRoomBalance
   };
 }
