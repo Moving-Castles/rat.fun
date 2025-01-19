@@ -30,7 +30,14 @@ const CHAIN_ID = Number(process.env.CHAIN_ID) as number;
 // Initialize MUD
 const {
     components,
-    systemCalls: { addTrait, removeTrait, changeStat, changeRoomBalance },
+    systemCalls: { 
+        addTrait, 
+        removeTrait, 
+        changeStat, 
+        changeRoomBalance, 
+        addItemToInventory, 
+        clearLoadOut 
+    },
     network,
 } = await setup(PRIVATE_ETH_KEY, CHAIN_ID);
 
@@ -53,11 +60,11 @@ async function routes (fastify: FastifyInstance) {
             // Get onchain data
             const { room, rat } = getOnchainData(await network, components, roomId, ratId);
             
-            // Recover sender address from signature and convert to MUD bytes32 format
-            const senderId = getSenderId(signature, MESSAGE);
+            // Recover player address from signature and convert to MUD bytes32 format
+            const playerId = getSenderId(signature, MESSAGE);
 
             // Check that sender owns the rat
-            if (rat.owner !== senderId) {
+            if (rat.owner !== playerId) {
                 return reply.status(403).send({ error: 'You are not the owner of the rat.' });
             } 
             
@@ -95,8 +102,6 @@ async function routes (fastify: FastifyInstance) {
                 return reply.status(403).send({ error: 'Error: Outcome model call failed' });
             }
 
-            // TODO: Determine wether to add or combine/remove traits
-
             console.log('Outcome:', outcome);
 
             // Change Traits
@@ -115,6 +120,17 @@ async function routes (fastify: FastifyInstance) {
                 }
             }
 
+            // Add items
+            for( let i = 0; i < outcome.newItems.length; i++) {
+                const newItem = outcome.newItems[i]; 
+                addItemToInventory(playerId, newItem);
+                // Currently all items cost 50
+                changeRoomBalance(roomId, 50, true);
+            }
+
+            // Clear rat load out, destroying all items
+            clearLoadOut(ratId);
+            
             // Change stats
             Object.entries(outcome.statChanges).forEach(async ([statName, change]) => {
                 if (change === 0) return;
@@ -127,6 +143,7 @@ async function routes (fastify: FastifyInstance) {
 
             const returnObject = {
                 log: events.log,
+                newItems: outcome.newItems,
                 traitChanges: outcome.traitChanges,
                 statChanges: outcome.statChanges
             }

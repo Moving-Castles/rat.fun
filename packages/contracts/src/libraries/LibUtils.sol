@@ -145,7 +145,7 @@ library LibUtils {
    * @param array The array to check
    * @param element The element to check for
    */
-  function arrayIncludes(bytes14[] memory array, bytes14 element) internal pure returns (bool) {
+  function arrayIncludes(bytes32[] memory array, bytes32 element) internal pure returns (bool) {
     for (uint256 i = 0; i < array.length; i++) {
       if (array[i] == element) {
         return true;

@@ -1,9 +1,9 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from "svelte"
-  import { spawn } from "@modules/action"
+  import { createRat } from "@modules/action"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
   import { playSound } from "@modules/sound"
-  import { player } from "@modules/state/base/stores"
+  import { playerRat } from "@modules/state/base/stores"
   import { ENTITY_TYPE } from "contracts/enums"
 
   import Spinner from "@components/Spinner/Spinner.svelte"
@@ -12,14 +12,12 @@
 
   const done = () => dispatch("done")
 
-  // $: console.log("$player", $player)
-
   let busy = false
 
-  async function sendSpawn() {
+  async function sendCreateRat() {
     playSound("tcm", "blink")
     busy = true
-    const action = spawn()
+    const action = createRat()
     try {
       await waitForCompletion(action)
       done()
@@ -31,7 +29,7 @@
   }
 
   onMount(() => {
-    if ($player?.entityType === ENTITY_TYPE.PLAYER) {
+    if ($playerRat && $playerRat.entityType === ENTITY_TYPE.RAT) {
       done()
     }
   })
@@ -39,7 +37,8 @@
 
 <div class="main">
   <div>
-    <button disabled={busy} on:click={sendSpawn}>Spawn</button>
+    <img src="/images/rat.jpg" alt="rat" />
+    <button disabled={busy} on:click={sendCreateRat}>Adopt a rat</button>
   </div>
   {#if busy}
     <Spinner />

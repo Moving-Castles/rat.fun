@@ -18,6 +18,11 @@ export const schema =     {
             items: { type: 'string' },
             description: 'An array of events that occurred'
           },
+          newItems: {
+            type: 'array',
+            items: { type: 'string' },
+            description: 'An array of new items added to the player inventory'
+          },
           traitChanges: {
             type: 'array',
             items: { 

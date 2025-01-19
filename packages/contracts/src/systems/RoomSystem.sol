@@ -16,12 +16,12 @@ contract RoomSystem is System {
     if(_msgSender() == GameConfig.getAdminAddress()) {
       roomId = LibRoom.createRoom(roomPrompt);
     } else {
-      bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
+      bytes32 playerId = LibUtils.addressToEntityKey(_msgSender());
 
-      require(Balance.get(playerEntity) > ROOM_CREATION_COST, "balance too low");
+      require(Balance.get(playerId) > ROOM_CREATION_COST, "balance too low");
 
       // Deduct from player's balance
-      Balance.set(playerEntity, Balance.get(playerEntity) - ROOM_CREATION_COST);
+      Balance.set(playerId, Balance.get(playerId) - ROOM_CREATION_COST);
 
       // Create room
       roomId = LibRoom.createRoom(roomPrompt);

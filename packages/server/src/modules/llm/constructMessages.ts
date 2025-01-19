@@ -22,6 +22,7 @@ export function constructOutcomeMessages(
     console.log('rat', rat)
     messages.push({ role: "user", content: `Room: ${room.prompt}` });
     messages.push({ role: "user", content: `RatTraits: ${JSON.stringify(rat.traits)}` });
+    messages.push({ role: "user", content: `RatItems: ${JSON.stringify(rat.loadOut)}` });
     messages.push({ role: "user", content: `RatStats: ${JSON.stringify(rat.stats)}` });
     messages.push({ role: "user", content: `Eventlog: ${JSON.stringify(events.log)}` });
     return messages;

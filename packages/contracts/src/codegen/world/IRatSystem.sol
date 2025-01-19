@@ -9,9 +9,17 @@ pragma solidity >=0.8.24;
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IRatSystem {
+  function ratroom__createRat() external returns (bytes32 ratId);
+
   function ratroom__addTrait(bytes32 ratId, string memory name) external returns (bytes32 traitId);
 
   function ratroom__removeTrait(bytes32 ratId, bytes32 traitId) external;
 
   function ratroom__changeStat(bytes32 ratId, string memory statName, uint256 change, bool negative) external;
+
+  function ratroom__addItemToLoadOut(bytes32 itemId) external;
+
+  function ratroom__removeItemFromLoadOut(bytes32 itemId) external;
+
+  function ratroom__clearLoadOut(bytes32 ratId) external;
 }

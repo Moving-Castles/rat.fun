@@ -10,6 +10,8 @@
 
   import RoomItem from "@components/Nest/RoomItem.svelte"
   import NewRoom from "@components/Nest/NewRoom.svelte"
+  import Inventory from "@svelte/components/Nest/Inventory/Inventory.svelte"
+  import LoadOut from "@svelte/components/Nest/LoadOut/LoadOut.svelte"
 
   export let environment: ENVIRONMENT
 </script>
@@ -21,6 +23,11 @@
         Balance:
         <strong>{$player?.balance ?? 0}</strong>
       </div>
+      <!-- INVENTORY -->
+      <div class="stat-item">
+        <Inventory />
+      </div>
+      <hr />
       <div class="image-container" class:dead={$playerRat?.dead ?? false}>
         <img class="rat" src="/images/rat.jpg" alt="nest" />
         <img class="stamp" src="/images/dead.png" alt="dead" />
@@ -42,9 +49,10 @@
           <strong>Health:</strong>
           {$playerRat?.health ?? 0}
         </div>
+        <hr />
+        <!-- LOAD OUT -->
         <div class="stat-item">
-          <strong>Level:</strong>
-          {$playerRat?.level ?? 0}
+          <LoadOut />
         </div>
       </div>
     {/if}
@@ -102,15 +110,15 @@
       margin-bottom: 5px;
       padding: 4px;
       border-radius: 5px;
-      background: orangered;
+      background: lightsalmon;
       font-size: 14px;
     }
   }
 
   .balance {
-    padding: 20px;
+    padding: 10px;
     background: yellow;
-    font-size: 32px;
+    font-size: 23px;
     margin-bottom: 20px;
     color: black;
   }

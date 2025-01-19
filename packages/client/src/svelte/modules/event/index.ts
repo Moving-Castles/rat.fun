@@ -44,7 +44,7 @@ export function initPlayerEventsListener() {
 
     // console.log("!!!!! New event received", player.event)
 
-    newEvent.set(player.event)
-    UILocation.set(LOCATION.RESULT)
+    // newEvent.set(player.event)
+    // UILocation.set(LOCATION.RESULT)
   })
 }

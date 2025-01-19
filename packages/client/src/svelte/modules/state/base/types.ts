@@ -21,8 +21,9 @@ declare global {
     balance?: number,
     dead?: boolean,
     health?: number,
-    level?: number,
     traits?: string[],
+    inventory?: string[],
+    loadOut?: string[],
     ownedRat?: Hex,
     owner?: Hex,
     roomPrompt?: string,
@@ -30,10 +31,11 @@ declare global {
   }
 
   type Player  = {
-    [key: string]: number | ENTITY_TYPE | Hex,
+    [key: string]: number | ENTITY_TYPE | Hex | string[],
     entityType: ENTITY_TYPE.PLAYER,
     balance: number,
     ownedRat: Hex,
+    inventory: string[],
   }
 
   type Rat  = {
@@ -42,8 +44,8 @@ declare global {
     owner: Hex,
     dead: boolean,
     health: number,
-    level: number,
     traits: string[],
+    loadOut: string[],
   }
 
   type Room = {
@@ -57,6 +59,12 @@ declare global {
   type Trait = {
     [key: string]: ENTITY_TYPE | string,
     entityType: ENTITY_TYPE.TRAIT,
+    name: string
+  }
+
+  type Item = {
+    [key: string]: ENTITY_TYPE | string,
+    entityType: ENTITY_TYPE.ITEM,
     name: string
   }
 
@@ -82,5 +90,9 @@ declare global {
 
   type Traits = {
     [index: string]: Trait
+  }
+
+  type Items = {
+    [index: string]: Item
   }
 }

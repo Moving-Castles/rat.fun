@@ -7,6 +7,7 @@ export type TraitChange = {
 export type ServerReturnValue = {
     log: string[]
     traitChanges: TraitChange[]
+    newItems: string[]
     statChanges: {
       [key: string]: number
     }

@@ -21,11 +21,12 @@ export default defineWorld({
     },
     Name: "string",
     EntityType: "ENTITY_TYPE",
-    // Stats
+    // ...
     Health: "uint256",
-    Level: "uint256",
-    // Inventory
+    // ...
     Traits: "bytes32[]",
+    Inventory: "bytes32[]",
+    LoadOut: "bytes32[]",
     // ...
     Dead: "bool",
     Balance: "uint256",

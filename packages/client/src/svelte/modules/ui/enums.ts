@@ -1,6 +1,7 @@
 export enum UI {
   LOADING,
   SPAWNING,
+  CREATING_RAT,
   READY,
   ERROR
 }

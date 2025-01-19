@@ -39,6 +39,16 @@ export function createSystemCalls(
     await waitForTransaction(tx);
   };
 
+  const addItemToInventory = async (playerId: string, newTrait: string ) => {
+    const tx = await worldContract.write.ratroom__addItemToInventory([playerId, newTrait]);
+    await waitForTransaction(tx);
+  };
+
+  const clearLoadOut = async (ratId: string ) => {
+    const tx = await worldContract.write.ratroom__clearLoadOut([ratId]);
+    await waitForTransaction(tx);
+  }
+
   const changeStat = async (ratId: string, statName: string, change: number, negative: boolean ) => {
     const tx = await worldContract.write.ratroom__changeStat([ratId, statName, change, negative]);
     await waitForTransaction(tx);
@@ -53,6 +63,8 @@ export function createSystemCalls(
     addTrait,
     removeTrait,
     changeStat,
-    changeRoomBalance
+    changeRoomBalance,
+    addItemToInventory,
+    clearLoadOut
   };
 }

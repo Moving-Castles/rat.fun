@@ -44,9 +44,9 @@ contract RoomSystemTest is BaseTest {
 
 
     vm.startPrank(alice);
-    bytes32 playerEntity = world.ratroom__spawn();
+    bytes32 playerId = world.ratroom__spawn();
 
-    assertEq(Balance.get(playerEntity), 1000);
+    assertEq(Balance.get(playerId), 1000);
 
     startGasReport("Create room (user)");
     bytes32 roomId = world.ratroom__createRoom("A test room");
@@ -55,7 +55,7 @@ contract RoomSystemTest is BaseTest {
     vm.stopPrank();
 
     // Check player balance
-    assertEq(Balance.get(playerEntity), 1000 - ROOM_CREATION_COST);
+    assertEq(Balance.get(playerId), 1000 - ROOM_CREATION_COST);
 
     // Check room
     assertEq(uint8(EntityType.get(roomId)), uint8(ENTITY_TYPE.ROOM));

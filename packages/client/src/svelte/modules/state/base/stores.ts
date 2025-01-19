@@ -31,6 +31,16 @@ export const gameConfig = derived(
 )
 
 // * * * * * * * * * * * * * * * * *
+// GAME ELEMENT STORES
+// * * * * * * * * * * * * * * * * *
+
+export const players = derived(entities, $entities => filterByEntitytype($entities, ENTITY_TYPE.PLAYER) as Players)
+export const rats = derived(entities, $entities => filterByEntitytype($entities, ENTITY_TYPE.RAT) as Rats)
+export const rooms = derived(entities, $entities => filterByEntitytype($entities, ENTITY_TYPE.ROOM) as Rooms)
+export const traits = derived(entities, $entities => filterByEntitytype($entities, ENTITY_TYPE.TRAIT) as Traits)
+export const items = derived(entities, $entities => filterByEntitytype($entities, ENTITY_TYPE.ITEM) as Items)
+
+// * * * * * * * * * * * * * * * * *
 // PLAYER STORES
 // * * * * * * * * * * * * * * * * *
 
@@ -46,14 +56,10 @@ export const player = derived(
   ([$entities, $playerId]) => $entities[$playerId] as Player
 )
 
-// * * * * * * * * * * * * * * * * *
-// GAME ELEMENT STORES
-// * * * * * * * * * * * * * * * * *
-
-export const players = derived(entities, $entities => filterByEntitytype($entities, ENTITY_TYPE.PLAYER) as Players)
-export const rats = derived(entities, $entities => filterByEntitytype($entities, ENTITY_TYPE.RAT) as Rats)
-export const rooms = derived(entities, $entities => filterByEntitytype($entities, ENTITY_TYPE.ROOM) as Rooms)
-export const traits = derived(entities, $entities => filterByEntitytype($entities, ENTITY_TYPE.TRAIT) as Traits)
+export const playerInventory = derived(
+  [player, items],
+  ([$player, $items]) => $player?.inventory?.map(item => $items[item]) as Item[]
+)
 
 // * * * * * * * * * * * * * * * * *
 // PLAYER RAT STORES
@@ -69,13 +75,7 @@ export const playerRatTraits = derived(
   ([$playerRat, $traits]) => $playerRat?.traits?.map(trait => $traits[trait]) as Trait[]
 )
 
-// export const playerRemainingCooldown = derived(
-//   [player, blockNumber],
-//   ([$player, $blockNumber]) => {
-//     if (!$player) return 0
-//     return Math.max(
-//       0,
-//       (Number($player.cooldown) ?? 0) + COOLDOWN_PERIOD - Number($blockNumber)
-//     )
-//   }
-// )
+export const playerRatLoadOut = derived(
+  [playerRat, items],
+  ([$playerRat, $items]) => $playerRat?.loadOut?.map(item => $items[item]) as Item[]
+)

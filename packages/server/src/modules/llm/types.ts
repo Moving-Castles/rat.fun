@@ -6,6 +6,7 @@ export type TraitChange = {
 
 export type OutcomeReturnValue = {
     traitChanges: TraitChange[],
+    newItems: string[],
     statChanges: {
         health: number,
         level: number
