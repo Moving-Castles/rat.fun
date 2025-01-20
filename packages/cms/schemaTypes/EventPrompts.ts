@@ -12,20 +12,15 @@ export default {
             validation: (Rule: any) => Rule.required()
         },
         {
-            title: 'Main prompt',
-            name: 'mainPrompt',
-            type: 'text',
+            title: 'Prompt',
+            name: 'prompt',
+            type: 'markdown',
         },
         {
-            title: 'Style prompt',
-            name: 'stylePrompt',
-            type: 'text',
-        },
-        {
-            title: 'Format prompt',
-            description: "Be careful editing this as it will effect the return format.",
-            name: 'formatPrompt',
+            title: 'Return format',
+            description: "Do not edit.",
+            name: 'returnFormat',
             type: 'code'
-        },
+        }
     ],
 }

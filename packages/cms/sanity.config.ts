@@ -1,5 +1,6 @@
 import {defineConfig} from 'sanity'
 import {structureTool} from 'sanity/structure'
+import {markdownSchema} from 'sanity-plugin-markdown'
 import {codeInput} from '@sanity/code-input'
 import {visionTool} from '@sanity/vision'
 import {schemaTypes} from './schemaTypes'
@@ -12,7 +13,7 @@ export default defineConfig({
   projectId: 'kupagww3',
   dataset: 'production',
 
-  plugins: [ structureTool({ structure: deskStructure }),  visionTool(), codeInput() ],
+  plugins: [ structureTool({ structure: deskStructure }), visionTool(), codeInput(), markdownSchema() ],
 
   document: {
     newDocumentOptions: (prev, { creationContext }) => {

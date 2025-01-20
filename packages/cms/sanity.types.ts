@@ -138,9 +138,8 @@ export type OutcomePrompts = {
   _updatedAt: string;
   _rev: string;
   title?: string;
-  mainPrompt?: string;
-  stylePrompt?: string;
-  formatPrompt?: Code;
+  prompt?: string;
+  returnFormat?: Code;
 };
 
 export type EventPrompts = {
@@ -150,10 +149,11 @@ export type EventPrompts = {
   _updatedAt: string;
   _rev: string;
   title?: string;
-  mainPrompt?: string;
-  stylePrompt?: string;
-  formatPrompt?: Code;
+  prompt?: string;
+  returnFormat?: Code;
 };
+
+export type Markdown = string;
 
 export type Code = {
   _type: "code";

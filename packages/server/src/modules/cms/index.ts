@@ -12,6 +12,6 @@ export const getSystemPrompts = async () => {
     };
 }
 
-function combineSystemPrompts(prompts: EventPrompts | OutcomePrompts) {
-    return `${prompts.mainPrompt ?? ""} ${prompts.stylePrompt ?? ""} ${prompts.formatPrompt?.code ?? ""}`; 
+function combineSystemPrompts(doc: EventPrompts | OutcomePrompts) {
+    return `Return format: ${doc.returnFormat?.code ?? ""} // ${doc.prompt ?? ""}`; 
 }

@@ -734,21 +734,14 @@
         },
         "optional": true
       },
-      "mainPrompt": {
+      "prompt": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
         },
         "optional": true
       },
-      "stylePrompt": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
-        },
-        "optional": true
-      },
-      "formatPrompt": {
+      "returnFormat": {
         "type": "objectAttribute",
         "value": {
           "type": "inline",
@@ -800,21 +793,14 @@
         },
         "optional": true
       },
-      "mainPrompt": {
+      "prompt": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
         },
         "optional": true
       },
-      "stylePrompt": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
-        },
-        "optional": true
-      },
-      "formatPrompt": {
+      "returnFormat": {
         "type": "objectAttribute",
         "value": {
           "type": "inline",
@@ -822,6 +808,13 @@
         },
         "optional": true
       }
+    }
+  },
+  {
+    "name": "markdown",
+    "type": "type",
+    "value": {
+      "type": "string"
     }
   },
   {
