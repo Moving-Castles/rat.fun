@@ -48,7 +48,7 @@
             <strong>Traits:</strong>
             {#if $playerRatTraits}
               {#each $playerRatTraits as trait}
-                <div class="trait-item">{trait.name}</div>
+                <div class="trait-item">{trait.name} ({trait.value})</div>
               {/each}
             {/if}
           </div>

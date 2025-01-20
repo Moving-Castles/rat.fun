@@ -20,8 +20,13 @@ export const schema =     {
           },
           newItems: {
             type: 'array',
-            items: { type: 'string' },
-            description: 'An array of new items added to the player inventory'
+            items: { 
+              type: 'object',
+              properties: {
+                name: { type: 'string'},
+                value: { type: 'number'}
+              },
+            },
           },
           traitChanges: {
             type: 'array',
@@ -31,6 +36,7 @@ export const schema =     {
                 type: { type: 'string' },
                 id: { type: 'string'},
                 name: { type: 'string'},
+                value: { type: 'number'}
               },
             },
           },
@@ -47,7 +53,7 @@ export const schema =     {
             },
           }
         },
-        required: ['log', 'traitChanges', 'statChanges']
+        required: ['log', 'traitChanges', 'statChanges', 'newItems', 'balanceTransfer']
       },
       403: {
         type: 'object',

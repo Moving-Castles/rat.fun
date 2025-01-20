@@ -19,6 +19,7 @@ declare global {
     entityType?: ENTITY_TYPE,
     name?: string,
     balance?: number,
+    value?: number,
     dead?: boolean,
     health?: number,
     traits?: string[],
@@ -59,13 +60,15 @@ declare global {
   type Trait = {
     [key: string]: ENTITY_TYPE | string,
     entityType: ENTITY_TYPE.TRAIT,
-    name: string
+    name: string,
+    value: number
   }
 
   type Item = {
     [key: string]: ENTITY_TYPE | string,
     entityType: ENTITY_TYPE.ITEM,
-    name: string
+    name: string,
+    value: number
   }
 
   // * * * * * * * * * * * * * * * * *

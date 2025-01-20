@@ -36,11 +36,12 @@ contract RatSystem is System {
    * @dev Only admin can call this function
    * @param _ratId The id of the rat
    * @param _name Description of the trait
+   * @param _value Value of the trait
    * @return traitId The id of the new trait
    */
-  function addTrait(bytes32 _ratId, string memory _name) public returns (bytes32 traitId) {
+  function addTrait(bytes32 _ratId, string memory _name, uint256 _value) public returns (bytes32 traitId) {
     require(_msgSender() == GameConfig.getAdminAddress(), "not allowed");
-    traitId = LibTrait.createTrait(_name);
+    traitId = LibTrait.createTrait(_name, _value);
     // Add trait to rat
     Traits.push(_ratId, traitId);
   }

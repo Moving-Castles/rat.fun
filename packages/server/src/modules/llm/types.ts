@@ -1,12 +1,18 @@
 export type TraitChange = {
     type: "add" | "remove",
-    id?: string,
-    name?: string
+    id: string,
+    name: string,
+    value: number,
+}
+
+export type Item = {
+    name: string,
+    value: number,
 }
 
 export type OutcomeReturnValue = {
     traitChanges: TraitChange[],
-    newItems: string[],
+    newItems: Item[],
     balanceTransfer: number,
     statChanges: {
         health: number,

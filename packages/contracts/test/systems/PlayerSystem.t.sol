@@ -71,7 +71,7 @@ contract PlayerSystemTest is BaseTest {
     prankAdmin();
 
     startGasReport("Add item to inventory");
-    bytes32 itemId = world.ratroom__addItemToInventory(playerId, "test item");
+    bytes32 itemId = world.ratroom__addItemToInventory(playerId, "test item", 20);
     endGasReport();
 
     vm.stopPrank();
@@ -79,6 +79,7 @@ contract PlayerSystemTest is BaseTest {
     // Check item
     assertEq(uint8(EntityType.get(itemId)), uint8(ENTITY_TYPE.ITEM));
     assertEq(Name.get(itemId), "test item");
+    assertEq(Value.get(itemId), 20);
 
     // Check inventory
     bytes32[] memory inventory = Inventory.get(playerId);
@@ -96,7 +97,7 @@ contract PlayerSystemTest is BaseTest {
 
     prankAdmin();
 
-    bytes32 itemId = world.ratroom__addItemToInventory(playerId, "test item");
+    bytes32 itemId = world.ratroom__addItemToInventory(playerId, "test item", 20);
 
     startGasReport("Remove item from inventory");
     world.ratroom__removeItemFromInventory(playerId, itemId);
@@ -107,6 +108,7 @@ contract PlayerSystemTest is BaseTest {
     // Item should be destroyed
     assertEq(uint8(EntityType.get(itemId)), uint8(ENTITY_TYPE.NONE));
     assertEq(Name.get(itemId), "");
+    assertEq(Value.get(itemId), 0);
 
     // Check inventory
     bytes32[] memory inventory = Inventory.get(playerId);

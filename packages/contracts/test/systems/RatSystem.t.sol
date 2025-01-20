@@ -18,13 +18,14 @@ contract RatSystemTest is BaseTest {
         prankAdmin();
 
         startGasReport("Add trait");
-        bytes32 hungryTraitId = world.ratroom__addTrait(ratId, "hungry");
+        bytes32 hungryTraitId = world.ratroom__addTrait(ratId, "hungry", 20);
         endGasReport();
         
         vm.stopPrank();
 
         assertEq(uint8(EntityType.get(hungryTraitId)), uint8(ENTITY_TYPE.TRAIT));
         assertTrue(LibUtils.stringEq(Name.get(hungryTraitId), "hungry"));
+        assertEq(Value.get(hungryTraitId), 20);
 
         bytes32[] memory traits = Traits.get(ratId);
         assertEq(traits.length, 1);
@@ -41,10 +42,11 @@ contract RatSystemTest is BaseTest {
 
         prankAdmin();
 
-        bytes32 hungryTraitId = world.ratroom__addTrait(ratId, "hungry");
+        bytes32 hungryTraitId = world.ratroom__addTrait(ratId, "hungry", 20);
 
         assertEq(uint8(EntityType.get(hungryTraitId)), uint8(ENTITY_TYPE.TRAIT));
         assertTrue(LibUtils.stringEq(Name.get(hungryTraitId), "hungry"));
+        assertEq(Value.get(hungryTraitId), 20);
 
         startGasReport("Remove trait");
         world.ratroom__removeTrait(ratId, hungryTraitId);
@@ -54,6 +56,7 @@ contract RatSystemTest is BaseTest {
 
         assertEq(uint8(EntityType.get(hungryTraitId)), uint8(ENTITY_TYPE.NONE));
         assertTrue(LibUtils.stringEq(Name.get(hungryTraitId), ""));
+        assertEq(Value.get(hungryTraitId), 0);
 
         bytes32[] memory traits = Traits.get(ratId);
         assertEq(traits.length, 0);
@@ -102,7 +105,7 @@ contract RatSystemTest is BaseTest {
         vm.stopPrank();
 
         vm.expectRevert("not allowed");
-        world.ratroom__addTrait(ratId, "hungry");
+        world.ratroom__addTrait(ratId, "hungry", 20);
 
         vm.expectRevert("not allowed");
         world.ratroom__removeTrait(ratId, bytes32(0));
@@ -122,7 +125,7 @@ contract RatSystemTest is BaseTest {
 
         // As admin, give player item
         prankAdmin();
-        bytes32 itemId = world.ratroom__addItemToInventory(playerId, "test item");
+        bytes32 itemId = world.ratroom__addItemToInventory(playerId, "test item", 20);
         vm.stopPrank();
 
         vm.startPrank(alice);
@@ -155,7 +158,7 @@ contract RatSystemTest is BaseTest {
 
         // As admin, give player item
         prankAdmin();
-        bytes32 itemId = world.ratroom__addItemToInventory(playerId, "test item");
+        bytes32 itemId = world.ratroom__addItemToInventory(playerId, "test item", 20);
         vm.stopPrank();
 
 
@@ -191,8 +194,8 @@ contract RatSystemTest is BaseTest {
 
         // As admin, give player two item
         prankAdmin();
-        bytes32 itemIdOne = world.ratroom__addItemToInventory(playerId, "test item");
-        bytes32 itemIdTwo = world.ratroom__addItemToInventory(playerId, "anoter test item");
+        bytes32 itemIdOne = world.ratroom__addItemToInventory(playerId, "test item", 20);
+        bytes32 itemIdTwo = world.ratroom__addItemToInventory(playerId, "anoter test item", 20);
         vm.stopPrank();
 
         // As player, add the items to load out

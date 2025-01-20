@@ -11,7 +11,7 @@ pragma solidity >=0.8.24;
 interface IRatSystem {
   function ratroom__createRat() external returns (bytes32 ratId);
 
-  function ratroom__addTrait(bytes32 _ratId, string memory _name) external returns (bytes32 traitId);
+  function ratroom__addTrait(bytes32 _ratId, string memory _name, uint256 _value) external returns (bytes32 traitId);
 
   function ratroom__removeTrait(bytes32 _ratId, bytes32 _traitId) external;
 

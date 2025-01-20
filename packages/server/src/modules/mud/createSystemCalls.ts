@@ -29,8 +29,8 @@ export function createSystemCalls(
    */
   { worldContract, waitForTransaction }: SetupNetworkResult
 ) {
-  const addTrait = async (ratId: string, newTrait: string ) => {
-    const tx = await worldContract.write.ratroom__addTrait([ratId, newTrait]);
+  const addTrait = async (ratId: string, newTrait: string, value: number ) => {
+    const tx = await worldContract.write.ratroom__addTrait([ratId, newTrait, value]);
     await waitForTransaction(tx);
   };
 
@@ -39,8 +39,8 @@ export function createSystemCalls(
     await waitForTransaction(tx);
   };
 
-  const addItemToInventory = async (playerId: string, newTrait: string ) => {
-    const tx = await worldContract.write.ratroom__addItemToInventory([playerId, newTrait]);
+  const addItemToInventory = async (playerId: string, newTrait: string, value: number ) => {
+    const tx = await worldContract.write.ratroom__addItemToInventory([playerId, newTrait, value]);
     await waitForTransaction(tx);
   };
 

@@ -3,19 +3,19 @@
     "file": "test/systems/PlayerSystem.t.sol:PlayerSystemTest",
     "test": "testAddItemToInventory",
     "name": "Add item to inventory",
-    "gasUsed": 194642
+    "gasUsed": 229960
   },
   {
     "file": "test/systems/PlayerSystem.t.sol:PlayerSystemTest",
     "test": "testCreateRat",
     "name": "Create rat",
-    "gasUsed": 220907
+    "gasUsed": 220885
   },
   {
     "file": "test/systems/PlayerSystem.t.sol:PlayerSystemTest",
     "test": "testRemoveItemFromInventory",
     "name": "Remove item from inventory",
-    "gasUsed": 27453
+    "gasUsed": 28959
   },
   {
     "file": "test/systems/PlayerSystem.t.sol:PlayerSystemTest",
@@ -27,13 +27,13 @@
     "file": "test/systems/RatSystem.t.sol:RatSystemTest",
     "test": "testAddItemToLoadOut",
     "name": "Add item to load out",
-    "gasUsed": 93010
+    "gasUsed": 93055
   },
   {
     "file": "test/systems/RatSystem.t.sol:RatSystemTest",
     "test": "testAddTrait",
     "name": "Add trait",
-    "gasUsed": 194759
+    "gasUsed": 230060
   },
   {
     "file": "test/systems/RatSystem.t.sol:RatSystemTest",
@@ -45,7 +45,7 @@
     "file": "test/systems/RatSystem.t.sol:RatSystemTest",
     "test": "testClearLoadOut",
     "name": "Clear load out",
-    "gasUsed": 30512
+    "gasUsed": 33481
   },
   {
     "file": "test/systems/RatSystem.t.sol:RatSystemTest",
@@ -57,7 +57,7 @@
     "file": "test/systems/RatSystem.t.sol:RatSystemTest",
     "test": "testRemoveTrait",
     "name": "Remove trait",
-    "gasUsed": 27502
+    "gasUsed": 28987
   },
   {
     "file": "test/systems/RoomSystem.t.sol:RoomSystemTest",

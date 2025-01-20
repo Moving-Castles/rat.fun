@@ -6,9 +6,8 @@ export async function changeTraits(systemCalls: SystemCalls, outcome: OutcomeRet
         const traitChange = outcome.traitChanges[i];
         if(traitChange.type === "add") {
             if(traitChange.name) {
-                await systemCalls.addTrait(ratId, traitChange.name);
-                // Currently all traits cost 50
-                await systemCalls.changeRoomBalance(roomId, 50, true);
+                await systemCalls.addTrait(ratId, traitChange.name, traitChange.value);
+                await systemCalls.changeRoomBalance(roomId, traitChange.value, true);
             }
         } else if(traitChange.type === "remove") {
             if(traitChange.id) {
@@ -21,9 +20,8 @@ export async function changeTraits(systemCalls: SystemCalls, outcome: OutcomeRet
 export async function addItems(systemCalls: SystemCalls, outcome: OutcomeReturnValue, playerId: string, roomId: string) {
     for( let i = 0; i < outcome.newItems.length; i++) {
         const newItem = outcome.newItems[i]; 
-        await systemCalls.addItemToInventory(playerId, newItem);
-        // Currently all items cost 50
-        await systemCalls.changeRoomBalance(roomId, 50, true);
+        await systemCalls.addItemToInventory(playerId, newItem.name, newItem.value);
+        await systemCalls.changeRoomBalance(roomId, newItem.value, true);
     }
 }
 

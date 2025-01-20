@@ -23,13 +23,14 @@ export default defineWorld({
     EntityType: "ENTITY_TYPE",
     // ...
     Health: "uint256",
+    Dead: "bool",
     // ...
     Traits: "bytes32[]",
     Inventory: "bytes32[]",
     LoadOut: "bytes32[]",
     // ...
-    Dead: "bool",
     Balance: "uint256",
+    Value: "uint256",
     OwnedRat: "bytes32",
     Owner: "bytes32",
     RoomPrompt: "string",

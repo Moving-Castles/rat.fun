@@ -22,11 +22,12 @@ contract PlayerSystem is System {
    * @dev Only admin can call this function
    * @param _playerId The id of the player
    * @param _name Descirption of the item
+   * @param _value Value of the item
    * @return itemId The id of the new item
    */
-  function addItemToInventory(bytes32 _playerId, string memory _name) public returns (bytes32 itemId) {
+  function addItemToInventory(bytes32 _playerId, string memory _name, uint256 _value) public returns (bytes32 itemId) {
     require(_msgSender() == GameConfig.getAdminAddress(), "not allowed");
-    itemId = LibItem.createItem(_name);
+    itemId = LibItem.createItem(_name, _value);
     // Add to inventory table
     Inventory.push(_playerId, itemId);
   }
