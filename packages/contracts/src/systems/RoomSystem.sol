@@ -50,4 +50,19 @@ contract RoomSystem is System {
       Balance.set(_roomId, Balance.get(_roomId) + _change);
     }
   }
+
+  /**
+   * @notice Transfer balance from room to player
+   * @dev Only admin can call this function
+   * @param _roomId The id of the room
+   * @param _playerId The id of the player
+   * @param _amount Amount to transfer
+   */
+  function transferBalanceToPlayer(bytes32 _roomId, bytes32 _playerId, uint256 _amount) public {
+    require(_msgSender() == GameConfig.getAdminAddress(), "not allowed");
+    require(EntityType.get(_roomId) == ENTITY_TYPE.ROOM, "not a room");
+
+    Balance.set(_roomId, LibUtils.safeSubtract(Balance.get(_roomId), _amount));
+    Balance.set(_playerId, Balance.get(_playerId) + _amount);
+  }
 }

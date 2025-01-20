@@ -21,6 +21,9 @@ import { getSenderId } from '@modules/signature';
 // CMS
 import { getSystemPrompts } from '@modules/cms';
 
+// Execute outcomes
+import { addItems, changeTraits, changeStats, transferBalance } from './executeOutcomes';
+
 dotenv.config();
 
 const PRIVATE_API_KEY = process.env.PRIVATE_ANTHROPIC_API_KEY as string;
@@ -30,14 +33,7 @@ const CHAIN_ID = Number(process.env.CHAIN_ID) as number;
 // Initialize MUD
 const {
     components,
-    systemCalls: { 
-        addTrait, 
-        removeTrait, 
-        changeStat, 
-        changeRoomBalance, 
-        addItemToInventory, 
-        clearLoadOut 
-    },
+    systemCalls,
     network,
 } = await setup(PRIVATE_ETH_KEY, CHAIN_ID);
 
@@ -92,9 +88,6 @@ async function routes (fastify: FastifyInstance) {
 
             // Call outcome model
             const outcomeMessages = constructOutcomeMessages(room, rat, events);
-
-            console.log('Outcome Messages:', outcomeMessages);
-
             const outcome = await callModel(anthropic, outcomeMessages, outcomeSystemPrompt) as OutcomeReturnValue;
 
             // TODO: better error handling
@@ -102,48 +95,17 @@ async function routes (fastify: FastifyInstance) {
                 return reply.status(403).send({ error: 'Error: Outcome model call failed' });
             }
 
-            console.log('Outcome:', outcome);
-
-            // Change Traits
-            for( let i = 0; i < outcome.traitChanges.length; i++) {
-                const traitChange = outcome.traitChanges[i];
-                if(traitChange.type === "add") {
-                    if(traitChange.name) {
-                        addTrait(ratId, traitChange.name);
-                        // Currently all traits cost 50
-                        changeRoomBalance(roomId, 50, true);
-                    }
-                } else if(traitChange.type === "remove") {
-                    if(traitChange.id) {
-                        removeTrait(ratId, traitChange.id);
-                    }
-                }
-            }
-
-            // Add items
-            for( let i = 0; i < outcome.newItems.length; i++) {
-                const newItem = outcome.newItems[i]; 
-                addItemToInventory(playerId, newItem);
-                // Currently all items cost 50
-                changeRoomBalance(roomId, 50, true);
-            }
-
-            // Clear rat load out, destroying all items
-            clearLoadOut(ratId);
-            
-            // Change stats
-            Object.entries(outcome.statChanges).forEach(async ([statName, change]) => {
-                if (change === 0) return;
-                const changeIsNegative = change < 0;
-                await changeStat(ratId, statName, Math.abs(change), changeIsNegative);
-                if(statName === "health") {
-                    changeRoomBalance(roomId, Math.abs(change), !changeIsNegative);
-                }
-            });
+            // Execute onchain changes based on outcome
+            await changeTraits(systemCalls, outcome, ratId, roomId);
+            await addItems(systemCalls, outcome, playerId, roomId);
+            await changeStats(systemCalls, outcome, ratId, roomId);
+            await transferBalance(systemCalls, outcome, playerId, roomId);
+            await systemCalls.clearLoadOut(ratId);
 
             const returnObject = {
                 log: events.log,
                 newItems: outcome.newItems,
+                balanceTransfer: outcome.balanceTransfer,
                 traitChanges: outcome.traitChanges,
                 statChanges: outcome.statChanges
             }

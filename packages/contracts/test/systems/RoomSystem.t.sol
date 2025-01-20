@@ -104,4 +104,25 @@ contract RoomSystemTest is BaseTest {
 
     vm.stopPrank();
   }
+
+  function testTransferBalanceToPlayer() public {
+    setUp();
+
+    vm.startPrank(alice);
+    bytes32 playerId = world.ratroom__spawn();
+    bytes32 roomId = world.ratroom__createRoom("A test room");
+    vm.stopPrank();
+
+    assertEq(Balance.get(roomId), ROOM_CREATION_COST);
+    assertEq(Balance.get(playerId), 1000 - ROOM_CREATION_COST);
+
+    prankAdmin();
+    startGasReport("Transfer balance to player");
+    world.ratroom__transferBalanceToPlayer(roomId, playerId, 50);
+    endGasReport();
+    vm.stopPrank();
+
+    assertEq(Balance.get(roomId), ROOM_CREATION_COST - 50);
+    assertEq(Balance.get(playerId), (1000 - ROOM_CREATION_COST) + 50);
+  }
 }

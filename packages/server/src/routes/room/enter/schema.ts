@@ -32,7 +32,11 @@ export const schema =     {
                 id: { type: 'string'},
                 name: { type: 'string'},
               },
-             },
+            },
+          },
+          balanceTransfer: {
+            type: 'number',
+            description: 'The amount of currency transferred to player'
           },
           statChanges: {
             type: 'object',

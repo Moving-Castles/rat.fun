@@ -19,8 +19,8 @@ export function constructOutcomeMessages(
     events: EventsReturnValue
 ): MessageParam[] {
     const messages: MessageParam[] = [];
-    console.log('rat', rat)
     messages.push({ role: "user", content: `Room: ${room.prompt}` });
+    messages.push({ role: "user", content: `RoomBalance: ${room.balance}` });
     messages.push({ role: "user", content: `RatTraits: ${JSON.stringify(rat.traits)}` });
     messages.push({ role: "user", content: `RatItems: ${JSON.stringify(rat.loadOut)}` });
     messages.push({ role: "user", content: `RatStats: ${JSON.stringify(rat.stats)}` });

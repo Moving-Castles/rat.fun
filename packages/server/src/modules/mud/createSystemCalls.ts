@@ -47,7 +47,7 @@ export function createSystemCalls(
   const clearLoadOut = async (ratId: string ) => {
     const tx = await worldContract.write.ratroom__clearLoadOut([ratId]);
     await waitForTransaction(tx);
-  }
+  };
 
   const changeStat = async (ratId: string, statName: string, change: number, negative: boolean ) => {
     const tx = await worldContract.write.ratroom__changeStat([ratId, statName, change, negative]);
@@ -59,12 +59,18 @@ export function createSystemCalls(
     await waitForTransaction(tx);
   };
 
+  const transferBalanceToPlayer = async (roomId: string, playerId: string, amount: number ) => {
+    const tx = await worldContract.write.ratroom__transferBalanceToPlayer([roomId, playerId, amount]);
+    await waitForTransaction(tx);
+  };
+
   return {
     addTrait,
     removeTrait,
     changeStat,
     changeRoomBalance,
     addItemToInventory,
-    clearLoadOut
+    clearLoadOut,
+    transferBalanceToPlayer
   };
 }
