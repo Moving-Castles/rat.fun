@@ -81,13 +81,15 @@ contract RoomSystemTest is BaseTest {
 
     bytes32 roomId = world.ratroom__createRoom("A test room");
 
-    startGasReport("Set room balance");
-    world.ratroom__changeRoomBalance(roomId, 10, false);
+    startGasReport("Increase room balance");
+    world.ratroom__increaseRoomBalance(roomId, 10);
     endGasReport();
 
     assertEq(Balance.get(roomId), 110);
 
-    world.ratroom__changeRoomBalance(roomId, 20, true);
+    startGasReport("Decrease room balance");
+    world.ratroom__decreaseRoomBalance(roomId, 20);
+    endGasReport();
 
     assertEq(Balance.get(roomId), 90);
 
@@ -100,7 +102,7 @@ contract RoomSystemTest is BaseTest {
     vm.startPrank(alice);
 
     vm.expectRevert("not allowed");
-    world.ratroom__changeRoomBalance(bytes32(0), 10, false);
+    world.ratroom__increaseRoomBalance(bytes32(0), 10);
 
     vm.stopPrank();
   }

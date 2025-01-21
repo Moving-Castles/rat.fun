@@ -62,7 +62,7 @@ contract RatSystemTest is BaseTest {
         assertEq(traits.length, 0);
     }
 
-    function testChangeStat() public {
+    function testSetHealth() public {
         setUp();
 
         vm.startPrank(alice);
@@ -73,23 +73,23 @@ contract RatSystemTest is BaseTest {
         assertEq(Health.get(ratId), 100);
 
         prankAdmin();
-
-        startGasReport("Change stat");
-        world.ratroom__changeStat(ratId, "health", 10, false);
+        startGasReport("Increase health");
+        world.ratroom__increaseHealth(ratId, 10);
         endGasReport();
-
         vm.stopPrank();
 
         assertEq(Health.get(ratId), 110);
 
         prankAdmin();
-        world.ratroom__changeStat(ratId, "health", 20, true);
+        startGasReport("Decrease health");
+        world.ratroom__decreaseHealth(ratId, 20);
+        endGasReport();
         vm.stopPrank();
 
         assertEq(Health.get(ratId), 90);
 
         prankAdmin();
-        world.ratroom__changeStat(ratId, "health", 200, true);
+        world.ratroom__decreaseHealth(ratId, 200);
         vm.stopPrank();
 
         assertEq(Health.get(ratId), 0);
@@ -111,7 +111,10 @@ contract RatSystemTest is BaseTest {
         world.ratroom__removeTrait(ratId, bytes32(0));
 
         vm.expectRevert("not allowed");
-        world.ratroom__changeStat(ratId, "health", 10, true);
+        world.ratroom__increaseHealth(ratId, 10);
+
+        vm.expectRevert("not allowed");
+        world.ratroom__decreaseHealth(ratId, 10);
     }
 
     function testAddItemToLoadOut() public {
@@ -207,12 +210,15 @@ contract RatSystemTest is BaseTest {
         // As admin, clear the load out
         prankAdmin();
         startGasReport("Clear load out");
-        world.ratroom__clearLoadOut(ratId);
+        world.ratroom__clearLoadOut(ratId, bytes32(0));
         endGasReport();
 
         // Check load out
         bytes32[] memory loadOut = LoadOut.get(ratId);
         assertEq(loadOut.length, 0);
+
+        // Check room
+        assertEq(Balance.get(bytes32(0)), 40);
     }
 
     // - - - - - - - - - -

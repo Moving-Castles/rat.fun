@@ -5,13 +5,25 @@ export async function changeTraits(systemCalls: SystemCalls, outcome: OutcomeRet
     for( let i = 0; i < outcome.traitChanges.length; i++) {
         const traitChange = outcome.traitChanges[i];
         if(traitChange.type === "add") {
-            if(traitChange.name) {
-                await systemCalls.addTrait(ratId, traitChange.name, traitChange.value);
-                await systemCalls.changeRoomBalance(roomId, traitChange.value, true);
+            // Add the trait to the rat
+            systemCalls.addTrait(ratId, traitChange.name ?? "", traitChange.value);
+            // Change room balance
+            if(traitChange.value > 0) {
+                // If the trait has a positive value, decrease the room balance
+                systemCalls.decreaseRoomBalance(roomId, Math.abs(traitChange.value));
+            } else {
+                // If the trait has a negative value, increase the room balance
+                systemCalls.increaseRoomBalance(roomId, Math.abs(traitChange.value));
             }
         } else if(traitChange.type === "remove") {
-            if(traitChange.id) {
-                await systemCalls.removeTrait(ratId, traitChange.id);
+            // TODO: deal with costs of removal / update of traits
+            systemCalls.removeTrait(ratId, traitChange.id ?? "");
+            if(traitChange.value > 0) {
+                // If the trait has a positive value, increase the room balance
+                systemCalls.increaseRoomBalance(roomId, Math.abs(traitChange.value));
+            } else {
+                // If the trait has a negative value, decrease the room balance
+                systemCalls.decreaseRoomBalance(roomId, Math.abs(traitChange.value));
             }
         }
     }
@@ -20,18 +32,26 @@ export async function changeTraits(systemCalls: SystemCalls, outcome: OutcomeRet
 export async function addItems(systemCalls: SystemCalls, outcome: OutcomeReturnValue, playerId: string, roomId: string) {
     for( let i = 0; i < outcome.newItems.length; i++) {
         const newItem = outcome.newItems[i]; 
-        await systemCalls.addItemToInventory(playerId, newItem.name, newItem.value);
-        await systemCalls.changeRoomBalance(roomId, newItem.value, true);
+        // Give item to player
+        systemCalls.addItemToInventory(playerId, newItem.name, Math.abs(newItem.value));
+        // Value of an item is always positive so we decrease room balance
+        systemCalls.decreaseRoomBalance(roomId, Math.abs(newItem.value));
     }
 }
 
 export async function changeStats(systemCalls: SystemCalls, outcome: OutcomeReturnValue, ratId: string, roomId: string) {
     Object.entries(outcome.statChanges).forEach(async ([statName, change]) => {
         if (change === 0) return;
-        const changeIsNegative = change < 0;
-        await systemCalls.changeStat(ratId, statName, Math.abs(change), changeIsNegative);
         if(statName === "health") {
-            await systemCalls.changeRoomBalance(roomId, Math.abs(change), !changeIsNegative);
+            if(change > 0) {
+                systemCalls.increaseHealth(ratId, change);
+                // For each point of health added to rat, reduce room blance by two credits
+                systemCalls.decreaseRoomBalance(roomId, change * 2);
+            } else {
+                systemCalls.decreaseHealth(ratId, Math.abs(change));
+                // For each point of health removed from rat, increase room balance by two credits
+                systemCalls.increaseRoomBalance(roomId, Math.abs(change) * 2);
+            }
         }
     });
 }
@@ -39,5 +59,5 @@ export async function changeStats(systemCalls: SystemCalls, outcome: OutcomeRetu
 export async function transferBalance(systemCalls: SystemCalls, outcome: OutcomeReturnValue, playerId: string, roomId: string) {
     console.log('outcome.balanceTransfer:', outcome.balanceTransfer)
     if(!outcome.balanceTransfer) return;
-    await systemCalls.transferBalanceToPlayer(roomId, playerId, outcome.balanceTransfer);
+    systemCalls.transferBalanceToPlayer(roomId, playerId, outcome.balanceTransfer);
 }

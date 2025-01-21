@@ -59,6 +59,15 @@ library LibUtils {
   }
 
   /**
+   * @notice Converts a signed integer to an unsigned integer.
+   * @param _value Value to convert
+   */
+  function signedToUnsigned(int256 _value) public pure returns (uint256) {
+    require(_value != type(int256).min, "Value out of range");
+    return _value < 0 ? uint256(-_value) : uint256(_value);
+  }
+
+  /**
    * @notice Returns the absolute difference.
    * @param _a First number
    * @param _b Second number

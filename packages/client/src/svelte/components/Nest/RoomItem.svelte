@@ -50,8 +50,6 @@
 
       outcome = (await response.json()) as ServerReturnValue
 
-      console.log(outcome)
-
       busy = false
       const endTime = performance.now()
       console.log(
@@ -75,7 +73,7 @@
   <button on:click={submit} disabled={busy}>ROOM {room.roomIndex}</button>
   <div class="room-info">
     <div class="prompt">{room.roomPrompt}</div>
-    <div class="balance">Balance: {room.balance ?? 0}</div>
+    <div class="balance">Balance: ${room.balance ?? 0}</div>
   </div>
 </div>
 

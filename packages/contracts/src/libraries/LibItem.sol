@@ -11,7 +11,7 @@ library LibItem {
    * @param _value Value of item
    * @return itemId The id of the new item
    */
-  function createItem(string memory _name, uint256 _value) internal returns (bytes32 itemId) {
+  function createItem(string memory _name, int256 _value) internal returns (bytes32 itemId) {
     itemId = getUniqueEntity();
     EntityType.set(itemId, ENTITY_TYPE.ITEM);
     Name.set(itemId, _name);

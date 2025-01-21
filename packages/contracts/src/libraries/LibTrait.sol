@@ -11,7 +11,7 @@ library LibTrait {
    * @param _value Value of trait
    * @return traitId The id of the new trait
    */
-  function createTrait(string memory _name, uint256 _value) internal returns (bytes32 traitId) {
+  function createTrait(string memory _name, int256 _value) internal returns (bytes32 traitId) {
     traitId = getUniqueEntity();
     EntityType.set(traitId, ENTITY_TYPE.TRAIT);
     Name.set(traitId, _name);

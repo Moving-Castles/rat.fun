@@ -25,7 +25,7 @@ contract PlayerSystem is System {
    * @param _value Value of the item
    * @return itemId The id of the new item
    */
-  function addItemToInventory(bytes32 _playerId, string memory _name, uint256 _value) public returns (bytes32 itemId) {
+  function addItemToInventory(bytes32 _playerId, string memory _name, int256 _value) public returns (bytes32 itemId) {
     require(_msgSender() == GameConfig.getAdminAddress(), "not allowed");
     itemId = LibItem.createItem(_name, _value);
     // Add to inventory table

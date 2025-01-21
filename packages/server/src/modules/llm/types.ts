@@ -1,8 +1,8 @@
 export type TraitChange = {
     type: "add" | "remove",
-    id: string,
     name: string,
     value: number,
+    id?: string // Only set if type is "remove"
 }
 
 export type Item = {

@@ -24,7 +24,7 @@
 </script>
 
 <button class="item" disabled={busy} on:click={sendRemoveItemFromLoadOut}>
-  {item.name}
+  {item.name} (${item.value})
 </button>
 
 <style lang="scss">

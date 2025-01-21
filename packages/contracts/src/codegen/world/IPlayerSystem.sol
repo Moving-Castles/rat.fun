@@ -14,7 +14,7 @@ interface IPlayerSystem {
   function ratroom__addItemToInventory(
     bytes32 _playerId,
     string memory _name,
-    uint256 _value
+    int256 _value
   ) external returns (bytes32 itemId);
 
   function ratroom__removeItemFromInventory(bytes32 _playerId, bytes32 _itemId) external;

@@ -1,13 +1,20 @@
 export type TraitChange = {
   type: "add" | "remove",
-  id?: string,
-  name?: string
+  name: string,
+  value: number,
+  id?: string // Only set if type == "remove"
+}
+
+export type NewItem = {
+  name: string,
+  value: number
 }
 
 export type ServerReturnValue = {
     log: string[]
     traitChanges: TraitChange[]
-    newItems: string[]
+    newItems: NewItem[]
+    balanceTransfer: number
     statChanges: {
       [key: string]: number
     }

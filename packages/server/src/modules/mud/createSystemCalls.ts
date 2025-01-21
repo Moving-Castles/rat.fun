@@ -29,6 +29,9 @@ export function createSystemCalls(
    */
   { worldContract, waitForTransaction }: SetupNetworkResult
 ) {
+
+  // Traits
+
   const addTrait = async (ratId: string, newTrait: string, value: number ) => {
     const tx = await worldContract.write.ratroom__addTrait([ratId, newTrait, value]);
     await waitForTransaction(tx);
@@ -39,23 +42,39 @@ export function createSystemCalls(
     await waitForTransaction(tx);
   };
 
+  // Health
+
+  const increaseHealth = async (ratId: string, change: number) => {
+    const tx = await worldContract.write.ratroom__increaseHealth([ratId, change]);
+    await waitForTransaction(tx);
+  }
+
+  const decreaseHealth = async (ratId: string, change: number) => {
+    const tx = await worldContract.write.ratroom__decreaseHealth([ratId, change]);
+    await waitForTransaction(tx);
+  }
+
+  // Room balance
+
+  const increaseRoomBalance = async (roomId: string, change: number) => {
+    const tx = await worldContract.write.ratroom__increaseRoomBalance([roomId, change]);
+    await waitForTransaction(tx);
+  };
+
+  const decreaseRoomBalance = async (roomId: string, change: number) => {
+    const tx = await worldContract.write.ratroom__decreaseRoomBalance([roomId, change]);
+    await waitForTransaction(tx);
+  };
+
+  // ...
+
   const addItemToInventory = async (playerId: string, newTrait: string, value: number ) => {
     const tx = await worldContract.write.ratroom__addItemToInventory([playerId, newTrait, value]);
     await waitForTransaction(tx);
   };
 
-  const clearLoadOut = async (ratId: string ) => {
-    const tx = await worldContract.write.ratroom__clearLoadOut([ratId]);
-    await waitForTransaction(tx);
-  };
-
-  const changeStat = async (ratId: string, statName: string, change: number, negative: boolean ) => {
-    const tx = await worldContract.write.ratroom__changeStat([ratId, statName, change, negative]);
-    await waitForTransaction(tx);
-  };
-
-  const changeRoomBalance = async (roomId: string, change: number, negative: boolean ) => {
-    const tx = await worldContract.write.ratroom__changeRoomBalance([roomId, change, negative]);
+  const clearLoadOut = async (ratId: string, roomId: string ) => {
+    const tx = await worldContract.write.ratroom__clearLoadOut([ratId, roomId]);
     await waitForTransaction(tx);
   };
 
@@ -65,10 +84,16 @@ export function createSystemCalls(
   };
 
   return {
+    // Traits
     addTrait,
     removeTrait,
-    changeStat,
-    changeRoomBalance,
+    // Health
+    increaseHealth,
+    decreaseHealth,
+    // Room balance
+    increaseRoomBalance,
+    decreaseRoomBalance,
+    // ...
     addItemToInventory,
     clearLoadOut,
     transferBalanceToPlayer

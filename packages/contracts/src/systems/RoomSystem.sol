@@ -34,21 +34,25 @@ contract RoomSystem is System {
   }
 
   /**
-   * @notice Change balance of room
+   * @notice Increase balance of room
    * @dev Only admin can call this function
    * @param _roomId The id of the room
-   * @param _change Amount to change balance by
-   * @param _negative Whether to subtract or add
+   * @param _change Amount to incr balance by
    */
-  function changeRoomBalance(bytes32 _roomId, uint256 _change, bool _negative) public {
+  function increaseRoomBalance(bytes32 _roomId, uint256 _change) public {
     require(_msgSender() == GameConfig.getAdminAddress(), "not allowed");
-    require(EntityType.get(_roomId) == ENTITY_TYPE.ROOM, "not a room");
+    Balance.set(_roomId, Balance.get(_roomId) + _change);
+  }
 
-    if (_negative) {
-      Balance.set(_roomId, LibUtils.safeSubtract(Balance.get(_roomId), _change));
-    } else {
-      Balance.set(_roomId, Balance.get(_roomId) + _change);
-    }
+  /**
+   * @notice Decrease balance of room
+   * @dev Only admin can call this function
+   * @param _roomId The id of the room
+   * @param _change Amount to decr balance by
+   */
+  function decreaseRoomBalance(bytes32 _roomId, uint256 _change) public {
+    require(_msgSender() == GameConfig.getAdminAddress(), "not allowed");
+    Balance.set(_roomId, LibUtils.safeSubtract(Balance.get(_roomId), _change));
   }
 
   /**

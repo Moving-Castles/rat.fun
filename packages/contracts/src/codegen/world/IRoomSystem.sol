@@ -11,7 +11,9 @@ pragma solidity >=0.8.24;
 interface IRoomSystem {
   function ratroom__createRoom(string memory _roomPrompt) external returns (bytes32 roomId);
 
-  function ratroom__changeRoomBalance(bytes32 _roomId, uint256 _change, bool _negative) external;
+  function ratroom__increaseRoomBalance(bytes32 _roomId, uint256 _change) external;
+
+  function ratroom__decreaseRoomBalance(bytes32 _roomId, uint256 _change) external;
 
   function ratroom__transferBalanceToPlayer(bytes32 _roomId, bytes32 _playerId, uint256 _amount) external;
 }

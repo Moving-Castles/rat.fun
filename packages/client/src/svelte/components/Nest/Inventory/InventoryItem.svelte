@@ -2,9 +2,15 @@
   import { addItemToLoadOut } from "@svelte/modules/action"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
   import { playSound } from "@modules/sound"
+  // import { NewItem } from "@components/Nest/types"
 
-  export let key: string
-  export let item: Item
+  type NewItem = {
+    name: string
+    value: number
+  }
+
+  export let key: string = ""
+  export let item: Item | NewItem
 
   let busy = false
 
@@ -24,7 +30,7 @@
 </script>
 
 <button class="item" disabled={busy} on:click={sendAddItemToLoadOut}>
-  {item.name} ({item.value})
+  {item.name} (${item.value})
 </button>
 
 <style lang="scss">

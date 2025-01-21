@@ -100,7 +100,7 @@ async function routes (fastify: FastifyInstance) {
             await addItems(systemCalls, outcome, playerId, roomId);
             await changeStats(systemCalls, outcome, ratId, roomId);
             await transferBalance(systemCalls, outcome, playerId, roomId);
-            await systemCalls.clearLoadOut(ratId);
+            await systemCalls.clearLoadOut(ratId, roomId);
 
             const returnObject = {
                 log: events.log,

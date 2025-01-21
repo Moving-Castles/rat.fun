@@ -12,8 +12,9 @@
 
   import RoomItem from "@components/Nest/RoomItem.svelte"
   import NewRoom from "@components/Nest/NewRoom.svelte"
-  import Inventory from "@svelte/components/Nest/Inventory/Inventory.svelte"
-  import LoadOut from "@svelte/components/Nest/LoadOut/LoadOut.svelte"
+  import Inventory from "@components/Nest/Inventory/Inventory.svelte"
+  import LoadOut from "@components/Nest/LoadOut/LoadOut.svelte"
+  import Traits from "@components/Nest/Traits/Traits.svelte"
 
   export let environment: ENVIRONMENT
 
@@ -27,7 +28,7 @@
     {#if $player}
       <div class="balance">
         Balance:
-        <strong>{$player?.balance ?? 0}</strong>
+        <strong>${$player?.balance ?? 0}</strong>
       </div>
       <!-- INVENTORY -->
       <div class="stat-item">
@@ -45,12 +46,7 @@
       {:else}
         <div class="stats">
           <div class="stat-item trait">
-            <strong>Traits:</strong>
-            {#if $playerRatTraits}
-              {#each $playerRatTraits as trait}
-                <div class="trait-item">{trait.name} ({trait.value})</div>
-              {/each}
-            {/if}
+            <Traits />
           </div>
           <div class="stat-item">
             <strong>Dead:</strong>
@@ -116,15 +112,6 @@
     color: black;
     display: flex;
     flex-wrap: wrap;
-
-    .trait-item {
-      margin-right: 5px;
-      margin-bottom: 5px;
-      padding: 4px;
-      border-radius: 5px;
-      background: lightsalmon;
-      font-size: 14px;
-    }
   }
 
   .balance {

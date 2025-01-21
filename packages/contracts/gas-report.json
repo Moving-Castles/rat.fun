@@ -3,7 +3,7 @@
     "file": "test/systems/PlayerSystem.t.sol:PlayerSystemTest",
     "test": "testAddItemToInventory",
     "name": "Add item to inventory",
-    "gasUsed": 229960
+    "gasUsed": 229958
   },
   {
     "file": "test/systems/PlayerSystem.t.sol:PlayerSystemTest",
@@ -15,7 +15,7 @@
     "file": "test/systems/PlayerSystem.t.sol:PlayerSystemTest",
     "test": "testRemoveItemFromInventory",
     "name": "Remove item from inventory",
-    "gasUsed": 28959
+    "gasUsed": 28937
   },
   {
     "file": "test/systems/PlayerSystem.t.sol:PlayerSystemTest",
@@ -27,25 +27,19 @@
     "file": "test/systems/RatSystem.t.sol:RatSystemTest",
     "test": "testAddItemToLoadOut",
     "name": "Add item to load out",
-    "gasUsed": 93055
+    "gasUsed": 93033
   },
   {
     "file": "test/systems/RatSystem.t.sol:RatSystemTest",
     "test": "testAddTrait",
     "name": "Add trait",
-    "gasUsed": 230060
-  },
-  {
-    "file": "test/systems/RatSystem.t.sol:RatSystemTest",
-    "test": "testChangeStat",
-    "name": "Change stat",
-    "gasUsed": 34653
+    "gasUsed": 229971
   },
   {
     "file": "test/systems/RatSystem.t.sol:RatSystemTest",
     "test": "testClearLoadOut",
     "name": "Clear load out",
-    "gasUsed": 33481
+    "gasUsed": 94807
   },
   {
     "file": "test/systems/RatSystem.t.sol:RatSystemTest",
@@ -57,36 +51,54 @@
     "file": "test/systems/RatSystem.t.sol:RatSystemTest",
     "test": "testRemoveTrait",
     "name": "Remove trait",
-    "gasUsed": 28987
+    "gasUsed": 28965
+  },
+  {
+    "file": "test/systems/RatSystem.t.sol:RatSystemTest",
+    "test": "testSetHealth",
+    "name": "Increase health",
+    "gasUsed": 33086
+  },
+  {
+    "file": "test/systems/RatSystem.t.sol:RatSystemTest",
+    "test": "testSetHealth",
+    "name": "Decrease health",
+    "gasUsed": 34404
   },
   {
     "file": "test/systems/RoomSystem.t.sol:RoomSystemTest",
     "test": "testChangeRoomBalance",
-    "name": "Set room balance",
-    "gasUsed": 34606
+    "name": "Increase room balance",
+    "gasUsed": 31059
+  },
+  {
+    "file": "test/systems/RoomSystem.t.sol:RoomSystemTest",
+    "test": "testChangeRoomBalance",
+    "name": "Decrease room balance",
+    "gasUsed": 31101
   },
   {
     "file": "test/systems/RoomSystem.t.sol:RoomSystemTest",
     "test": "testCreateRoomAdmin",
     "name": "Create room (admin)",
-    "gasUsed": 253685
+    "gasUsed": 253663
   },
   {
     "file": "test/systems/RoomSystem.t.sol:RoomSystemTest",
     "test": "testCreateRoomUser",
     "name": "Create room (user)",
-    "gasUsed": 267499
+    "gasUsed": 267477
   },
   {
     "file": "test/systems/RoomSystem.t.sol:RoomSystemTest",
     "test": "testLongRoomPromptAdmin",
     "name": "Create room: long prompt",
-    "gasUsed": 390246
+    "gasUsed": 390224
   },
   {
     "file": "test/systems/RoomSystem.t.sol:RoomSystemTest",
     "test": "testTransferBalanceToPlayer",
     "name": "Transfer balance to player",
-    "gasUsed": 49017
+    "gasUsed": 49039
   }
 ]

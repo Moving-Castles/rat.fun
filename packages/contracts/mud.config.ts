@@ -30,7 +30,7 @@ export default defineWorld({
     LoadOut: "bytes32[]",
     // ...
     Balance: "uint256",
-    Value: "uint256",
+    Value: "int256", // Value of a trait can be negative
     OwnedRat: "bytes32",
     Owner: "bytes32",
     RoomPrompt: "string",
