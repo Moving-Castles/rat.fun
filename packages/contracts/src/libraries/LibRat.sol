@@ -5,6 +5,10 @@ import { EntityType, GameConfig, Dead, Health, Index } from "../codegen/index.so
 import { ENTITY_TYPE } from "../codegen/common.sol";
 
 library LibRat {
+  /**
+   * @notice Create a new rat entity
+   * @return ratId The id of the new rat entity
+   */
   function createRat() internal returns (bytes32 ratId) {
     ratId = getUniqueEntity();
     // Create rat
