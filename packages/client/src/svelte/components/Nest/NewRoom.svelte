@@ -1,10 +1,13 @@
 <script lang="ts">
   import { createRoom } from "@modules/action"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
-  import { player } from "@modules/state/base/stores"
+  import { player, gameConfig } from "@modules/state/base/stores"
 
   let busy = false
-  let newPrompt: string
+  let newPrompt: string = ""
+
+  $: invalidPromptLength =
+    newPrompt.length < 1 || newPrompt.length > $gameConfig.maxRoomPromptLength
 
   async function sendCreateRoom() {
     busy = true
@@ -23,9 +26,19 @@
 <div class="create-room">
   <textarea rows="5" placeholder="Room prompt" bind:value={newPrompt}
   ></textarea>
-  <button disabled={busy || $player.balance < 100} on:click={sendCreateRoom}>
-    Create room (Cost: $100)
-  </button>
+  <div class="actions">
+    <!-- SUBMIT -->
+    <button
+      disabled={invalidPromptLength || busy || $player.balance < 100}
+      on:click={sendCreateRoom}
+    >
+      Create room (Cost: $100)
+    </button>
+    <!-- PROMPT LENGHT -->
+    <div class="prompt-length" class:invalid={invalidPromptLength}>
+      {newPrompt.length} / {$gameConfig.maxRoomPromptLength}
+    </div>
+  </div>
 </div>
 
 <style lang="scss">
@@ -44,16 +57,29 @@
       font-size: var(--font-size-normal);
       border: none;
     }
+    .actions {
+      display: flex;
+      justify-content: space-between;
 
-    button {
-      padding: 10px;
-      margin-top: 10px;
-      cursor: pointer;
-      font-size: var(--font-size-normal);
-      background: var(--color-secondary);
+      button {
+        padding: 10px;
+        margin-top: 10px;
+        cursor: pointer;
+        font-size: var(--font-size-normal);
+        background: var(--color-secondary);
 
-      &:active {
-        background: var(--color-alert);
+        &:active {
+          background: var(--color-alert);
+        }
+      }
+
+      .prompt-length {
+        margin-top: 10px;
+        padding: 10px;
+
+        &.invalid {
+          background: var(--color-death);
+        }
       }
     }
   }

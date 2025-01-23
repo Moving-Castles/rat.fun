@@ -5,6 +5,10 @@ declare global {
 
   type GameConfig = {
     adminAddress: string,
+    globalRoomIndex: number,
+    globalRatIndex: number,
+    roomCreationCost: number,
+    maxRoomPromptLength: number
   }
   // * * * * * * * * * * * * * * * * *
   // DEFAULT ENTITY TYPE

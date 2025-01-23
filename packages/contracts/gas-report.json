@@ -3,13 +3,13 @@
     "file": "test/systems/PlayerSystem.t.sol:PlayerSystemTest",
     "test": "testAddItemToInventory",
     "name": "Add item to inventory",
-    "gasUsed": 229958
+    "gasUsed": 227958
   },
   {
     "file": "test/systems/PlayerSystem.t.sol:PlayerSystemTest",
     "test": "testCreateRat",
     "name": "Create rat",
-    "gasUsed": 220885
+    "gasUsed": 277132
   },
   {
     "file": "test/systems/PlayerSystem.t.sol:PlayerSystemTest",
@@ -33,13 +33,13 @@
     "file": "test/systems/RatSystem.t.sol:RatSystemTest",
     "test": "testAddTrait",
     "name": "Add trait",
-    "gasUsed": 229971
+    "gasUsed": 227971
   },
   {
     "file": "test/systems/RatSystem.t.sol:RatSystemTest",
     "test": "testClearLoadOut",
     "name": "Clear load out",
-    "gasUsed": 94807
+    "gasUsed": 94827
   },
   {
     "file": "test/systems/RatSystem.t.sol:RatSystemTest",
@@ -57,7 +57,7 @@
     "file": "test/systems/RatSystem.t.sol:RatSystemTest",
     "test": "testSetHealth",
     "name": "Increase health",
-    "gasUsed": 33086
+    "gasUsed": 31086
   },
   {
     "file": "test/systems/RatSystem.t.sol:RatSystemTest",
@@ -81,19 +81,19 @@
     "file": "test/systems/RoomSystem.t.sol:RoomSystemTest",
     "test": "testCreateRoomAdmin",
     "name": "Create room (admin)",
-    "gasUsed": 253663
+    "gasUsed": 253718
   },
   {
     "file": "test/systems/RoomSystem.t.sol:RoomSystemTest",
     "test": "testCreateRoomUser",
     "name": "Create room (user)",
-    "gasUsed": 267477
+    "gasUsed": 267532
   },
   {
     "file": "test/systems/RoomSystem.t.sol:RoomSystemTest",
     "test": "testLongRoomPromptAdmin",
     "name": "Create room: long prompt",
-    "gasUsed": 390224
+    "gasUsed": 390279
   },
   {
     "file": "test/systems/RoomSystem.t.sol:RoomSystemTest",

@@ -8,4 +8,5 @@ uint32 constant ONE_MINUTE = 60;
 uint32 constant ONE_HOUR = 60 * 60;
 uint32 constant ONE_DAY = 24 * ONE_HOUR;
 
-uint256 constant ROOM_CREATION_COST = 100;
+uint32 constant ROOM_CREATION_COST = 100;
+uint32 constant MAX_ROOM_PROMPT_LENGTH = 500;

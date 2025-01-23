@@ -20,6 +20,8 @@ struct GameConfigData {
   address adminAddress;
   uint32 globalRoomIndex;
   uint32 globalRatIndex;
+  uint32 roomCreationCost;
+  uint32 maxRoomPromptLength;
 }
 
 library GameConfig {
@@ -27,12 +29,12 @@ library GameConfig {
   ResourceId constant _tableId = ResourceId.wrap(0x7462726174726f6f6d0000000000000047616d65436f6e666967000000000000);
 
   FieldLayout constant _fieldLayout =
-    FieldLayout.wrap(0x001c030014040400000000000000000000000000000000000000000000000000);
+    FieldLayout.wrap(0x0024050014040404040000000000000000000000000000000000000000000000);
 
   // Hex-encoded key schema of ()
   Schema constant _keySchema = Schema.wrap(0x0000000000000000000000000000000000000000000000000000000000000000);
-  // Hex-encoded value schema of (address, uint32, uint32)
-  Schema constant _valueSchema = Schema.wrap(0x001c030061030300000000000000000000000000000000000000000000000000);
+  // Hex-encoded value schema of (address, uint32, uint32, uint32, uint32)
+  Schema constant _valueSchema = Schema.wrap(0x0024050061030303030000000000000000000000000000000000000000000000);
 
   /**
    * @notice Get the table's key field names.
@@ -47,10 +49,12 @@ library GameConfig {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](3);
+    fieldNames = new string[](5);
     fieldNames[0] = "adminAddress";
     fieldNames[1] = "globalRoomIndex";
     fieldNames[2] = "globalRatIndex";
+    fieldNames[3] = "roomCreationCost";
+    fieldNames[4] = "maxRoomPromptLength";
   }
 
   /**
@@ -182,6 +186,82 @@ library GameConfig {
   }
 
   /**
+   * @notice Get roomCreationCost.
+   */
+  function getRoomCreationCost() internal view returns (uint32 roomCreationCost) {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 3, _fieldLayout);
+    return (uint32(bytes4(_blob)));
+  }
+
+  /**
+   * @notice Get roomCreationCost.
+   */
+  function _getRoomCreationCost() internal view returns (uint32 roomCreationCost) {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 3, _fieldLayout);
+    return (uint32(bytes4(_blob)));
+  }
+
+  /**
+   * @notice Set roomCreationCost.
+   */
+  function setRoomCreationCost(uint32 roomCreationCost) internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 3, abi.encodePacked((roomCreationCost)), _fieldLayout);
+  }
+
+  /**
+   * @notice Set roomCreationCost.
+   */
+  function _setRoomCreationCost(uint32 roomCreationCost) internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    StoreCore.setStaticField(_tableId, _keyTuple, 3, abi.encodePacked((roomCreationCost)), _fieldLayout);
+  }
+
+  /**
+   * @notice Get maxRoomPromptLength.
+   */
+  function getMaxRoomPromptLength() internal view returns (uint32 maxRoomPromptLength) {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 4, _fieldLayout);
+    return (uint32(bytes4(_blob)));
+  }
+
+  /**
+   * @notice Get maxRoomPromptLength.
+   */
+  function _getMaxRoomPromptLength() internal view returns (uint32 maxRoomPromptLength) {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 4, _fieldLayout);
+    return (uint32(bytes4(_blob)));
+  }
+
+  /**
+   * @notice Set maxRoomPromptLength.
+   */
+  function setMaxRoomPromptLength(uint32 maxRoomPromptLength) internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 4, abi.encodePacked((maxRoomPromptLength)), _fieldLayout);
+  }
+
+  /**
+   * @notice Set maxRoomPromptLength.
+   */
+  function _setMaxRoomPromptLength(uint32 maxRoomPromptLength) internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    StoreCore.setStaticField(_tableId, _keyTuple, 4, abi.encodePacked((maxRoomPromptLength)), _fieldLayout);
+  }
+
+  /**
    * @notice Get the full data.
    */
   function get() internal view returns (GameConfigData memory _table) {
@@ -212,8 +292,20 @@ library GameConfig {
   /**
    * @notice Set the full data using individual values.
    */
-  function set(address adminAddress, uint32 globalRoomIndex, uint32 globalRatIndex) internal {
-    bytes memory _staticData = encodeStatic(adminAddress, globalRoomIndex, globalRatIndex);
+  function set(
+    address adminAddress,
+    uint32 globalRoomIndex,
+    uint32 globalRatIndex,
+    uint32 roomCreationCost,
+    uint32 maxRoomPromptLength
+  ) internal {
+    bytes memory _staticData = encodeStatic(
+      adminAddress,
+      globalRoomIndex,
+      globalRatIndex,
+      roomCreationCost,
+      maxRoomPromptLength
+    );
 
     EncodedLengths _encodedLengths;
     bytes memory _dynamicData;
@@ -226,8 +318,20 @@ library GameConfig {
   /**
    * @notice Set the full data using individual values.
    */
-  function _set(address adminAddress, uint32 globalRoomIndex, uint32 globalRatIndex) internal {
-    bytes memory _staticData = encodeStatic(adminAddress, globalRoomIndex, globalRatIndex);
+  function _set(
+    address adminAddress,
+    uint32 globalRoomIndex,
+    uint32 globalRatIndex,
+    uint32 roomCreationCost,
+    uint32 maxRoomPromptLength
+  ) internal {
+    bytes memory _staticData = encodeStatic(
+      adminAddress,
+      globalRoomIndex,
+      globalRatIndex,
+      roomCreationCost,
+      maxRoomPromptLength
+    );
 
     EncodedLengths _encodedLengths;
     bytes memory _dynamicData;
@@ -241,7 +345,13 @@ library GameConfig {
    * @notice Set the full data using the data struct.
    */
   function set(GameConfigData memory _table) internal {
-    bytes memory _staticData = encodeStatic(_table.adminAddress, _table.globalRoomIndex, _table.globalRatIndex);
+    bytes memory _staticData = encodeStatic(
+      _table.adminAddress,
+      _table.globalRoomIndex,
+      _table.globalRatIndex,
+      _table.roomCreationCost,
+      _table.maxRoomPromptLength
+    );
 
     EncodedLengths _encodedLengths;
     bytes memory _dynamicData;
@@ -255,7 +365,13 @@ library GameConfig {
    * @notice Set the full data using the data struct.
    */
   function _set(GameConfigData memory _table) internal {
-    bytes memory _staticData = encodeStatic(_table.adminAddress, _table.globalRoomIndex, _table.globalRatIndex);
+    bytes memory _staticData = encodeStatic(
+      _table.adminAddress,
+      _table.globalRoomIndex,
+      _table.globalRatIndex,
+      _table.roomCreationCost,
+      _table.maxRoomPromptLength
+    );
 
     EncodedLengths _encodedLengths;
     bytes memory _dynamicData;
@@ -270,12 +386,26 @@ library GameConfig {
    */
   function decodeStatic(
     bytes memory _blob
-  ) internal pure returns (address adminAddress, uint32 globalRoomIndex, uint32 globalRatIndex) {
+  )
+    internal
+    pure
+    returns (
+      address adminAddress,
+      uint32 globalRoomIndex,
+      uint32 globalRatIndex,
+      uint32 roomCreationCost,
+      uint32 maxRoomPromptLength
+    )
+  {
     adminAddress = (address(Bytes.getBytes20(_blob, 0)));
 
     globalRoomIndex = (uint32(Bytes.getBytes4(_blob, 20)));
 
     globalRatIndex = (uint32(Bytes.getBytes4(_blob, 24)));
+
+    roomCreationCost = (uint32(Bytes.getBytes4(_blob, 28)));
+
+    maxRoomPromptLength = (uint32(Bytes.getBytes4(_blob, 32)));
   }
 
   /**
@@ -289,7 +419,13 @@ library GameConfig {
     EncodedLengths,
     bytes memory
   ) internal pure returns (GameConfigData memory _table) {
-    (_table.adminAddress, _table.globalRoomIndex, _table.globalRatIndex) = decodeStatic(_staticData);
+    (
+      _table.adminAddress,
+      _table.globalRoomIndex,
+      _table.globalRatIndex,
+      _table.roomCreationCost,
+      _table.maxRoomPromptLength
+    ) = decodeStatic(_staticData);
   }
 
   /**
@@ -317,9 +453,11 @@ library GameConfig {
   function encodeStatic(
     address adminAddress,
     uint32 globalRoomIndex,
-    uint32 globalRatIndex
+    uint32 globalRatIndex,
+    uint32 roomCreationCost,
+    uint32 maxRoomPromptLength
   ) internal pure returns (bytes memory) {
-    return abi.encodePacked(adminAddress, globalRoomIndex, globalRatIndex);
+    return abi.encodePacked(adminAddress, globalRoomIndex, globalRatIndex, roomCreationCost, maxRoomPromptLength);
   }
 
   /**
@@ -331,9 +469,17 @@ library GameConfig {
   function encode(
     address adminAddress,
     uint32 globalRoomIndex,
-    uint32 globalRatIndex
+    uint32 globalRatIndex,
+    uint32 roomCreationCost,
+    uint32 maxRoomPromptLength
   ) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
-    bytes memory _staticData = encodeStatic(adminAddress, globalRoomIndex, globalRatIndex);
+    bytes memory _staticData = encodeStatic(
+      adminAddress,
+      globalRoomIndex,
+      globalRatIndex,
+      roomCreationCost,
+      maxRoomPromptLength
+    );
 
     EncodedLengths _encodedLengths;
     bytes memory _dynamicData;

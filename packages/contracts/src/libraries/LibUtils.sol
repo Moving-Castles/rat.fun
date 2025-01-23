@@ -136,6 +136,16 @@ library LibUtils {
   }
 
   /**
+   * @notice Get length of a string
+   * @param _str The string to get the length of
+   * @return The length of the string
+   */
+  function getStringLength(string memory _str) public pure returns (uint256) {
+    bytes memory stringBytes = bytes(_str); // Convert the string to bytes
+    return stringBytes.length; // Return the length of the bytes array (number of characters)
+  }
+
+  /**
    * @notice Subtract without underflow.
    * @param _a First number
    * @param _b Second number

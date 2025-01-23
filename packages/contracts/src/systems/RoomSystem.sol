@@ -4,7 +4,7 @@ import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
 import { GameConfig, Balance, EntityType } from "../codegen/index.sol";
 import { LibRoom, LibUtils } from "../libraries/Libraries.sol";
-import { ROOM_CREATION_COST } from "../constants.sol";
+import { ROOM_CREATION_COST, MAX_ROOM_PROMPT_LENGTH } from "../constants.sol";
 import { ENTITY_TYPE } from "../codegen/common.sol";
 
 contract RoomSystem is System {
@@ -15,7 +15,9 @@ contract RoomSystem is System {
    * @return roomId The id of the new room
    */
   function createRoom(string memory _roomPrompt) public returns (bytes32 roomId) {
-    // TODO: Limit prompt length
+    // TODO: Character count is not accurate, due to UTF8 encoding
+    require(bytes(_roomPrompt).length > 0, "prompt too short");
+    require(bytes(_roomPrompt).length <= MAX_ROOM_PROMPT_LENGTH, "prompt too long");
 
     // Admin creates rooms for free
     if (_msgSender() == GameConfig.getAdminAddress()) {

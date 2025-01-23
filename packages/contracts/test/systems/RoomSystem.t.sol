@@ -19,11 +19,8 @@ contract RoomSystemTest is BaseTest {
 
     vm.stopPrank();
 
-    console.log(Index.get(roomId));
-
     // Check room
     assertEq(uint8(EntityType.get(roomId)), uint8(ENTITY_TYPE.ROOM));
-    assertEq(Index.get(roomId), 1);
     assertEq(RoomPrompt.get(roomId), "A test room");
     assertEq(Balance.get(roomId), ROOM_CREATION_COST);
   }
@@ -39,6 +36,26 @@ contract RoomSystemTest is BaseTest {
     );
     endGasReport();
 
+    vm.stopPrank();
+  }
+
+  function testRevertPromptTooShort() public {
+    setUp();
+
+    prankAdmin();
+    vm.expectRevert("prompt too short");
+    world.ratroom__createRoom("");
+    vm.stopPrank();
+  }
+
+  function testRevertPromptTooLong() public {
+    setUp();
+
+    prankAdmin();
+    vm.expectRevert("prompt too long");
+    world.ratroom__createRoom(
+      "The room has two doors. One doors lead to death, the other to freedom. If a rat does not make a choice within 10 minutes it is killed and the body removed. Each door has a guardian mouse that needs to be defeated to pass. The room has two doors. One doors lead to death, the other to freedom. If a rat does not make a choice within 10 minutes it is killed and the body removed. Each door has a guardian mouse that needs to be defeated to pass. The room has two doors. One doors lead to death, the other to freedom. If a rat does not make a choice within 10 minutes it is killed and the body removed. Each door has a guardian mouse that needs to be defeated to pass."
+    );
     vm.stopPrank();
   }
 

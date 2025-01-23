@@ -14,7 +14,9 @@ export default defineWorld({
       schema: {
         adminAddress: "address",
         globalRoomIndex: "uint32",
-        globalRatIndex: "uint32"
+        globalRatIndex: "uint32",
+        roomCreationCost: "uint32",
+        maxRoomPromptLength: "uint32"
       },
       codegen: {
         dataStruct: true
