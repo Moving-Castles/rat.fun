@@ -2,18 +2,30 @@ import { FastifyInstance, FastifyRequest } from 'fastify';
 import { schema } from '@routes/room/enter/schema';
 import dotenv from 'dotenv';
 
+dotenv.config();
+
 import { MESSAGE } from '@config';
 import { EnterRoomBody } from '@routes/room/enter/types';
 
 // LLM
-import Anthropic from '@anthropic-ai/sdk';
 import { EventsReturnValue, OutcomeReturnValue } from '@modules/llm/types'
 import { constructEventMessages, constructOutcomeMessages } from '@modules/llm/constructMessages';
-import { callModel } from '@modules/llm/callModel';
+
+// Anthropic
+import { getLLMClient } from '@modules/llm/anthropic';
+import { callModel } from '@modules/llm/anthropic/callModel';
+const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY as string;
+
+// DeepSeek
+// import { getLLMClient } from '@modules/llm/deepseek';
+// import { callModel } from '@modules/llm/deepseek/callModel';
+// const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY as string;
 
 // MUD
 import { setup } from '@modules/mud/setup';
 import { getOnchainData } from '@modules/mud/getOnchainData';
+const ETH_PRIVATE_KEY = process.env.ETH_PRIVATE_KEY as string;
+const CHAIN_ID = Number(process.env.CHAIN_ID) as number;
 
 // Signature
 import { getSenderId } from '@modules/signature';
@@ -24,23 +36,18 @@ import { getSystemPrompts } from '@modules/cms';
 // Apply changes to onchain state
 import { changeStats, changeTraits, changeItems, transferBalance } from './executeOutcomes';
 
-dotenv.config();
-
-const PRIVATE_API_KEY = process.env.PRIVATE_ANTHROPIC_API_KEY as string;
-const PRIVATE_ETH_KEY = process.env.PRIVATE_ETH_KEY as string;
-const CHAIN_ID = Number(process.env.CHAIN_ID) as number;
-
 // Initialize MUD
 const {
     components,
     systemCalls,
     network,
-} = await setup(PRIVATE_ETH_KEY, CHAIN_ID);
+} = await setup(ETH_PRIVATE_KEY, CHAIN_ID);
 
-// Initialize LLM
-const anthropic = new Anthropic({
-    apiKey: PRIVATE_API_KEY
-});
+// Initialize LLM: Anthropic
+const llmClient = getLLMClient(ANTHROPIC_API_KEY);
+
+// Initialize LLM: DeepSeek
+// const llmClient = getLLMClient(DEEPSEEK_API_KEY);
 
 const opts = { schema };  
 
@@ -79,7 +86,7 @@ async function routes (fastify: FastifyInstance) {
 
             // Call event model
             const eventMessages = constructEventMessages(room, rat);
-            const events = await callModel(anthropic, eventMessages, eventSystemPrompt) as EventsReturnValue;
+            const events = await callModel(llmClient, eventMessages, eventSystemPrompt) as EventsReturnValue;
 
             // TODO: better error handling
             if(!events) {
@@ -88,7 +95,7 @@ async function routes (fastify: FastifyInstance) {
 
             // Call outcome model
             const outcomeMessages = constructOutcomeMessages(room, rat, events);
-            const outcome = await callModel(anthropic, outcomeMessages, outcomeSystemPrompt) as OutcomeReturnValue;
+            const outcome = await callModel(llmClient, outcomeMessages, outcomeSystemPrompt) as OutcomeReturnValue;
 
             // TODO: better error handling
             if(!outcome) {
