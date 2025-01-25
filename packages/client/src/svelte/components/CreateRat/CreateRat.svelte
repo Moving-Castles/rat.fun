@@ -41,8 +41,7 @@
 </script>
 
 <div class="main">
-  <div class="title">WELCOME {$player.name ?? "anon"}</div>
-
+  <div class="title">WELCOME {$player?.name ?? ""}</div>
   <div class="image-container">
     <img src="/images/rat.jpg" alt="rat" />
   </div>
