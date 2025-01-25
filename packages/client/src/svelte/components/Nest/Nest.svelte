@@ -64,7 +64,7 @@
         <div class="stat-item">
           <div class="inner-wrapper rat-keeper">
             <div class="label">Rat keeper:</div>
-            <div class="value">{shortenAddress($playerAddress)}</div>
+            <div class="value">{$player.name}</div>
           </div>
         </div>
         <!-- RAT KEEPER BALANCE -->

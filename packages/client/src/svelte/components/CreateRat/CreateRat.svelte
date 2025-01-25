@@ -3,7 +3,7 @@
   import { createRat } from "@modules/action"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
   import { playSound } from "@modules/sound"
-  import { playerRat } from "@modules/state/base/stores"
+  import { playerRat, player } from "@modules/state/base/stores"
   import { ENTITY_TYPE } from "contracts/enums"
 
   import Spinner from "@components/Spinner/Spinner.svelte"
@@ -41,6 +41,8 @@
 </script>
 
 <div class="main">
+  <div class="title">WELCOME {$player.name ?? "anon"}</div>
+
   <div class="image-container">
     <img src="/images/rat.jpg" alt="rat" />
   </div>
@@ -59,6 +61,12 @@
     background: var(--color-grey-mid);
     color: var(--white);
     width: 50%;
+  }
+
+  .title {
+    font-size: var(--font-size-large);
+    margin-top: 20px;
+    margin-bottom: 20px;
   }
 
   .image-container {

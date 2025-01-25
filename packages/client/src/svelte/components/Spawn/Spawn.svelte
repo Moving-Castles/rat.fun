@@ -13,11 +13,14 @@
   const done = () => dispatch("done")
 
   let busy = false
+  let name: string
+  let inputEl: HTMLInputElement
 
   async function sendSpawn() {
+    if (!name) return
     playSound("tcm", "blink")
     busy = true
-    const action = spawn("alice")
+    const action = spawn(name)
     try {
       await waitForCompletion(action)
       done()
@@ -32,12 +35,23 @@
     if ($player?.entityType === ENTITY_TYPE.PLAYER) {
       done()
     }
+    inputEl.focus()
   })
 </script>
 
 <div class="main">
   <div class="title">RESEARCH FACILITY</div>
-  <button class:busy on:click={sendSpawn}>
+  <div class="form">
+    <input
+      type="text"
+      placeholder="YOUR NAME"
+      disabled={busy}
+      bind:this={inputEl}
+      bind:value={name}
+      on:keydown={e => e.key === "Enter" && sendSpawn()}
+    />
+  </div>
+  <button class:disabled={!name} class:busy on:click={sendSpawn}>
     <span class="button-text">ENTER</span>
     {#if busy}
       <div class="spinner"><Spinner /></div>
@@ -73,6 +87,12 @@
       display: none;
     }
 
+    &.disabled {
+      pointer-events: none;
+      opacity: 0.5;
+      cursor: default;
+    }
+
     &.busy {
       background: var(--color-alert);
       pointer-events: none;
@@ -87,5 +107,19 @@
         display: none;
       }
     }
+  }
+
+  input {
+    width: 100%;
+    padding: 10px;
+    font-size: var(--font-size-large);
+    background: var(--color-grey-light);
+    color: var(--black);
+    border: none;
+    margin-bottom: 20px;
+    text-align: center;
+    outline-color: var(--color-alert);
+    font-family: var(--typewriter-stack);
+    text-transform: uppercase;
   }
 </style>
