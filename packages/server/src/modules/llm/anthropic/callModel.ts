@@ -18,7 +18,6 @@ function parseReturnMessage(msg: Anthropic.Messages.Message) {
     // Parse the text into a native object
     try {
         const returnValue = JSON.parse(rawText);
-        console.log(returnValue);
         return returnValue;
     } catch (error) {
         console.error("Failed to parse JSON:", error);

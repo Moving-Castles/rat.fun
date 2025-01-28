@@ -7,11 +7,14 @@ export function constructEventMessages(
     rat: Rat
 ): MessageParam[] {
     const messages: MessageParam[] = [];
-    messages.push({ role: "user", content: `Room: ${room.prompt}` });
+    // Room
+    messages.push({ role: "user", content: `RoomDescription: ${room.prompt}` });
     messages.push({ role: "user", content: `RoomBalance: ${room.balance}` });
-    messages.push({ role: "user", content: `Rat: ${rat.prompt}` });
-    messages.push({ role: "user", content: `RatBalance: ${rat.balance}` });
+    // Rat
+    messages.push({ role: "user", content: `RatTraits: ${JSON.stringify(rat.traits)}` });
+    messages.push({ role: "user", content: `RatItems: ${JSON.stringify(rat.loadOut)}` });
     messages.push({ role: "user", content: `RatStats: ${JSON.stringify(rat.stats)}` });
+    messages.push({ role: "user", content: `RatBalance: ${rat.balance}` });
     return messages;
 }
 
@@ -21,11 +24,15 @@ export function constructOutcomeMessages(
     events: EventsReturnValue
 ): MessageParam[] {
     const messages: MessageParam[] = [];
-    messages.push({ role: "user", content: `Room: ${room.prompt}` });
+    // Room
+    messages.push({ role: "user", content: `RoomDescription: ${room.prompt}` });
     messages.push({ role: "user", content: `RoomBalance: ${room.balance}` });
+    // Rat
     messages.push({ role: "user", content: `RatTraits: ${JSON.stringify(rat.traits)}` });
     messages.push({ role: "user", content: `RatItems: ${JSON.stringify(rat.loadOut)}` });
     messages.push({ role: "user", content: `RatStats: ${JSON.stringify(rat.stats)}` });
+    messages.push({ role: "user", content: `RatBalance: ${rat.balance}` });
+    // Event log
     messages.push({ role: "user", content: `Eventlog: ${JSON.stringify(events)}` });
     return messages;
 }

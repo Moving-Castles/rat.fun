@@ -57,6 +57,8 @@ contract PostDeploy is Script {
     LibRoom.createRoom("The room gives the rat a bag of cheese.");
     LibRoom.createRoom("The rat can trade a bag of cheese for a jester hat of the same value.");
     LibRoom.createRoom("The rat is forced to bet it's whole credit balance on a double or nothing game of chance.");
+    LibRoom.createRoom("The room gives the rat a powerful lucky charm.");
+    
     vm.stopBroadcast();
   }
 }

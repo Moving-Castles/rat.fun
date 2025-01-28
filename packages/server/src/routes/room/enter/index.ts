@@ -43,6 +43,9 @@ import { getSenderId } from '@modules/signature';
 // CMS
 import { getSystemPrompts } from '@modules/cms';
 
+// Validate
+import { validateOutcome, validateOnchainData } from './validation';
+
 // Apply changes to onchain state
 import { changeStats, changeTraits, changeItems, transferBalance } from './executeOutcomes';
 
@@ -82,20 +85,7 @@ async function routes (fastify: FastifyInstance) {
             // Recover player address from signature and convert to MUD bytes32 format
             const playerId = getSenderId(signature, MESSAGE);
 
-            // Check that sender owns the rat
-            if (rat.owner !== playerId) {
-                return reply.status(403).send({ error: 'You are not the owner of the rat.' });
-            } 
-            
-            // Check that the rat is alive
-            if (rat.dead) {
-                return reply.status(403).send({ error: 'The rat is dead.' });
-            }
-
-            // Check that room balance is positive
-            if (room.balance <= 0) {
-                return reply.status(403).send({ error: 'The room balance is not positive.' });
-            }
+            validateOnchainData(playerId, rat, room);
 
             // Get system prompts from CMS
             const { eventSystemPrompt, outcomeSystemPrompt } = await getSystemPrompts();
@@ -113,29 +103,26 @@ async function routes (fastify: FastifyInstance) {
             const outcomeMessages = constructOutcomeMessages(room, rat, events);
             const outcome = await callModel(llmClient, outcomeMessages, outcomeSystemPrompt) as OutcomeReturnValue;
 
-            // TODO: better error handling
-            if(!outcome) {
-                return reply.status(403).send({ error: 'Error: Outcome model call failed' });
-            }
+            const validatedOutcome = await validateOutcome(outcome, rat, room);
 
             // Execute onchain changes based on outcome
-            await changeStats(systemCalls, outcome, ratId, roomId);
-            await changeTraits(systemCalls, outcome, ratId, roomId);
-            await changeItems(systemCalls, outcome, ratId, roomId);
-            await transferBalance(systemCalls, outcome, ratId, roomId);
+            await changeStats(systemCalls, validatedOutcome, ratId, roomId);
+            await changeTraits(systemCalls, validatedOutcome, ratId, roomId);
+            await changeItems(systemCalls, validatedOutcome, ratId, roomId);
+            await transferBalance(systemCalls, validatedOutcome, ratId, roomId);
 
             const returnObject = {
                 log: events,
-                statChanges: outcome.statChanges,
-                traitChanges: outcome.traitChanges,
-                itemChanges: outcome.itemChanges,
-                balanceTransfer: outcome.balanceTransfer,
+                statChanges: validatedOutcome.statChanges,
+                traitChanges: validatedOutcome.traitChanges,
+                itemChanges: validatedOutcome.itemChanges,
+                balanceTransfer: validatedOutcome.balanceTransfer,
             }
 
             reply.send(returnObject);
         } catch (error) {
             console.error('Error:', error);
-            reply.status(500).send({ error: 'An error occurred while processing the request.' });
+            reply.status(500).send({ error });
         }
     });
 }
