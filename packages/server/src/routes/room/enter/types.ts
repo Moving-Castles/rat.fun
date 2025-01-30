@@ -5,6 +5,7 @@ export type EnterRoomBody = {
 }
 
 export type Room = {
+    id: string,
     prompt: string;
     balance: number;
 }
@@ -22,10 +23,10 @@ export type Item = {
 }
 
 export type Rat = {
-    prompt: string;
+    id: string,
     balance: number;
     traits: Trait[];
-    loadOut: Item[];
+    inventory: Item[];
     dead: boolean;
     owner: string;
     stats: {

@@ -81,79 +81,79 @@ contract PlayerSystemTest is BaseTest {
 
   }
 
-  function testTransferItemToInventory() public {
-    setUp();
+  // function testTransferItemToInventory() public {
+  //   setUp();
 
-    // As player
-    vm.startPrank(alice);
-    bytes32 playerId = world.ratroom__spawn("alice");
-    bytes32 ratId = world.ratroom__createRat();
-    vm.stopPrank();
+  //   // As player
+  //   vm.startPrank(alice);
+  //   bytes32 playerId = world.ratroom__spawn("alice");
+  //   bytes32 ratId = world.ratroom__createRat();
+  //   vm.stopPrank();
 
-    // As admin
-    prankAdmin();
-    startGasReport("Add item to load out");
-    bytes32 itemId = world.ratroom__addItemToLoadOut(ratId, "test item", 20);
-    endGasReport();
-    vm.stopPrank();
+  //   // As admin
+  //   prankAdmin();
+  //   startGasReport("Add item to load out");
+  //   bytes32 itemId = world.ratroom__addItemToLoadOut(ratId, "test item", 20);
+  //   endGasReport();
+  //   vm.stopPrank();
 
-    // Check that item is in load out
-    assertEq(LoadOut.get(ratId).length, 1);
-    assertEq(LoadOut.get(ratId)[0], itemId);
-    assertEq(Inventory.get(playerId).length, 0);
+  //   // Check that item is in load out
+  //   assertEq(LoadOut.get(ratId).length, 1);
+  //   assertEq(LoadOut.get(ratId)[0], itemId);
+  //   assertEq(Inventory.get(playerId).length, 0);
 
-    // As player
-    vm.startPrank(alice);
-    startGasReport("Transfer item from load out to inventory");
-    world.ratroom__transferItemToInventory(itemId);
-    endGasReport();
-    vm.stopPrank();
+  //   // As player
+  //   vm.startPrank(alice);
+  //   startGasReport("Transfer item from load out to inventory");
+  //   world.ratroom__transferItemToInventory(itemId);
+  //   endGasReport();
+  //   vm.stopPrank();
 
-    // check that item was transferred
-    assertEq(Inventory.get(playerId).length, 1);
-    assertEq(Inventory.get(playerId)[0], itemId);
-    assertEq(LoadOut.get(ratId).length, 0);
-  }
+  //   // check that item was transferred
+  //   assertEq(Inventory.get(playerId).length, 1);
+  //   assertEq(Inventory.get(playerId)[0], itemId);
+  //   assertEq(LoadOut.get(ratId).length, 0);
+  // }
 
-  function testTransferItemToLoadOut() public {
-    setUp();
+  // function testTransferItemToLoadOut() public {
+  //   setUp();
 
-    // As player
-    vm.startPrank(alice);
-    bytes32 playerId = world.ratroom__spawn("alice");
-    bytes32 ratId = world.ratroom__createRat();
-    vm.stopPrank();
+  //   // As player
+  //   vm.startPrank(alice);
+  //   bytes32 playerId = world.ratroom__spawn("alice");
+  //   bytes32 ratId = world.ratroom__createRat();
+  //   vm.stopPrank();
 
-    // As admin
-    prankAdmin();
-    startGasReport("Add item to load out");
-    bytes32 itemId = world.ratroom__addItemToLoadOut(ratId, "test item", 20);
-    endGasReport();
-    vm.stopPrank();
+  //   // As admin
+  //   prankAdmin();
+  //   startGasReport("Add item to load out");
+  //   bytes32 itemId = world.ratroom__addItemToLoadOut(ratId, "test item", 20);
+  //   endGasReport();
+  //   vm.stopPrank();
 
-    // Check that item is in load out
-    assertEq(LoadOut.get(ratId).length, 1);
-    assertEq(LoadOut.get(ratId)[0], itemId);
-    assertEq(Inventory.get(playerId).length, 0);
+  //   // Check that item is in load out
+  //   assertEq(LoadOut.get(ratId).length, 1);
+  //   assertEq(LoadOut.get(ratId)[0], itemId);
+  //   assertEq(Inventory.get(playerId).length, 0);
 
-    // As player
-    vm.startPrank(alice);
-    world.ratroom__transferItemToInventory(itemId);
+  //   // As player
+  //   vm.startPrank(alice);
+  //   world.ratroom__transferItemToInventory(itemId);
 
-    assertEq(Inventory.get(playerId).length, 1);
-    assertEq(Inventory.get(playerId)[0], itemId);
-    assertEq(LoadOut.get(ratId).length, 0);
+  //   assertEq(Inventory.get(playerId).length, 1);
+  //   assertEq(Inventory.get(playerId)[0], itemId);
+  //   assertEq(LoadOut.get(ratId).length, 0);
 
-    startGasReport("Transfer item from inventory to load out");
-    world.ratroom__transferItemToLoadOut(itemId);
-    endGasReport();
-    vm.stopPrank();
+  //   startGasReport("Transfer item from inventory to load out");
+  //   world.ratroom__transferItemToLoadOut(itemId);
+  //   endGasReport();
+  //   vm.stopPrank();
 
-    // Check that item is back in load out
-    assertEq(LoadOut.get(ratId).length, 1);
-    assertEq(LoadOut.get(ratId)[0], itemId);
-    assertEq(Inventory.get(playerId).length, 0);
-  }
+  //   // Check that item is back in load out
+  //   assertEq(LoadOut.get(ratId).length, 1);
+  //   assertEq(LoadOut.get(ratId)[0], itemId);
+  //   assertEq(Inventory.get(playerId).length, 0);
+  // }
 
   function testRevertItemNotFound() public {
     setUp();

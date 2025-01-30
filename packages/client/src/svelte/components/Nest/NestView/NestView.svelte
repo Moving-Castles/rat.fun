@@ -1,13 +1,14 @@
 <script lang="ts">
-  import { playerRat } from "@modules/state/base/stores"
+  import { rat } from "@modules/state/base/stores"
 
-  $: console.log("$playerRat", $playerRat)
+  $: console.log("$rat", $rat)
 </script>
 
 <div class="nest-view">NEST VIEW</div>
 
 <style lang="scss">
   .nest-view {
+    margin-top: 20px;
     background: red;
     width: 100%;
     max-width: 600px;

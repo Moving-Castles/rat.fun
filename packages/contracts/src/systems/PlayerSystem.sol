@@ -2,7 +2,7 @@
 pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { GameConfig, EntityType, Balance, Name, OwnedRat, Inventory, Dead, LoadOut } from "../codegen/index.sol";
+import { GameConfig, EntityType, Balance, Name, OwnedRat, Inventory, Dead } from "../codegen/index.sol";
 import { LibUtils } from "../libraries/Libraries.sol";
 import { ENTITY_TYPE } from "../codegen/common.sol";
 import { MAX_INVENTORY_SIZE, MAX_LOADOUT_SIZE } from "../constants.sol";
@@ -62,13 +62,13 @@ contract PlayerSystem is System {
 
     require(ratId != bytes32(0), "no rat");
     require(!Dead.get(ratId), "rat is dead");
-    require(LibUtils.arrayIncludes(LoadOut.get(ratId), _itemId), "item not found");
+    require(LibUtils.arrayIncludes(Inventory.get(ratId), _itemId), "item not found");
     require(Inventory.get(playerId).length < MAX_INVENTORY_SIZE, "full");
 
-    // Remove from load out
-    LoadOut.set(ratId, LibUtils.removeFromArray(LoadOut.get(ratId), _itemId));
+    // Remove from rat's inventory
+    Inventory.set(ratId, LibUtils.removeFromArray(Inventory.get(ratId), _itemId));
 
-    // Add to inventory
+    // Add to player's inventory
     Inventory.push(playerId, _itemId);
   }
 
@@ -83,13 +83,13 @@ contract PlayerSystem is System {
     require(ratId != bytes32(0), "no rat");
     require(!Dead.get(ratId), "rat is dead");
     require(LibUtils.arrayIncludes(Inventory.get(playerId), _itemId), "item not found");
-    require(LoadOut.get(playerId).length < MAX_LOADOUT_SIZE, "full");
+    require(Inventory.get(ratId).length < MAX_LOADOUT_SIZE, "full");
 
-    // Remove from inventory
+    // Remove from player's inventory
     Inventory.set(playerId, LibUtils.removeFromArray(Inventory.get(playerId), _itemId));
 
-    // Add to load out
-    LoadOut.push(ratId, _itemId);
+    // Add to rat's inventory
+    Inventory.push(ratId, _itemId);
   }
 
 }

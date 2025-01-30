@@ -1,11 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
-import { console } from "forge-std/console.sol";
-import { getUniqueEntity } from "@latticexyz/world-modules/src/modules/uniqueentity/getUniqueEntity.sol";
-import { GameConfig, Health, Dead, Traits, Owner, OwnedRat, EntityType, Inventory, LoadOut, Value, Balance } from "../codegen/index.sol";
+import { Owner, OwnedRat, Dead } from "../codegen/index.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { LibRoom, LibUtils, LibTrait, LibItem, LibRat } from "../libraries/Libraries.sol";
-import { ENTITY_TYPE } from "../codegen/common.sol";
+import { LibUtils, LibRat } from "../libraries/Libraries.sol";
 
 contract RatSystem is System {
   /**

@@ -31,7 +31,6 @@ declare global {
     health?: number,
     traits?: string[],
     inventory?: string[],
-    loadOut?: string[],
     ownedRat?: Hex,
     owner?: Hex,
     roomPrompt?: string,
@@ -55,7 +54,7 @@ declare global {
     dead: boolean,
     health: number,
     traits: string[],
-    loadOut: string[],
+    inventory: string[],
   }
 
   type Room = {

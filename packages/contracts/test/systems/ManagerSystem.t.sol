@@ -7,8 +7,12 @@ import { BaseTest } from "../BaseTest.sol";
 import "../../src/codegen/index.sol";
 import "../../src/libraries/Libraries.sol";
 import { ENTITY_TYPE } from "../../src/codegen/common.sol";
+import { Item } from "../../src/Structs.sol";
 
 contract ManagerSystemTest is BaseTest {
+    // * * * *
+    // Basic
+    // * * * *
 
     function testRevertNotAllowed() public {
         setUp();
@@ -17,242 +21,591 @@ contract ManagerSystemTest is BaseTest {
         world.ratroom__spawn("alice");
 
         vm.expectRevert("not allowed");
-        world.ratroom__addItemToLoadOut(bytes32(0), "test item", 20);
-
-        vm.expectRevert("not allowed");
-        world.ratroom__removeItemFromLoadOut(bytes32(0), bytes32(0));
-
-        vm.expectRevert("not allowed");
-        world.ratroom__addTraitToRat(bytes32(0), "test trait", 20);
-
-        vm.expectRevert("not allowed");
-        world.ratroom__removeTraitFromRat(bytes32(0), bytes32(0));
-
-        vm.expectRevert("not allowed");
-        world.ratroom__increaseBalance(bytes32(0), 20);
-
-        vm.expectRevert("not allowed");
-        world.ratroom__decreaseBalance(bytes32(0), 20);
-
-        vm.expectRevert("not allowed");
-        world.ratroom__increaseHealth(bytes32(0), 20);
-
-        vm.expectRevert("not allowed");
-        world.ratroom__decreaseHealth(bytes32(0), 20);
+        world.ratroom__applyOutcome(bytes32(0), bytes32(0), 0, 0, new bytes32[](0), new Item[](0), new bytes32[](0), new Item[](0));
 
         vm.stopPrank();
     }
 
-    function testAddItemToLoadOut() public {
+    function testApplyOutcomeEmpty() public {
         setUp();
 
         // As player
         vm.startPrank(alice);
         world.ratroom__spawn("alice");
         bytes32 ratId = world.ratroom__createRat();
+        bytes32 roomId = world.ratroom__createRoom("test room");
         vm.stopPrank();
 
         // As admin
         prankAdmin();
-        startGasReport("Add item to load out");
-        bytes32 itemId = world.ratroom__addItemToLoadOut(ratId, "test item", 20);
+        startGasReport("Apply outcome (empty)");
+        world.ratroom__applyOutcome(ratId, roomId, 0, 0, new bytes32[](0), new Item[](0), new bytes32[](0), new Item[](0));
+        endGasReport();
+        vm.stopPrank();
+    }
+
+    // * * * *
+    // Health
+    // * * * *
+
+    function testApplyOutcomeIncreaseHealth() public {
+        setUp();
+
+        // As player
+        vm.startPrank(alice);
+        world.ratroom__spawn("alice");
+        bytes32 ratId = world.ratroom__createRat();
+        bytes32 roomId = world.ratroom__createRoom("test room");
+        vm.stopPrank();
+
+        // As admin
+        prankAdmin();
+        startGasReport("Apply outcome (increase health)");
+        world.ratroom__applyOutcome(ratId, roomId, 20, 0, new bytes32[](0), new Item[](0), new bytes32[](0), new Item[](0));
         endGasReport();
         vm.stopPrank();
 
-        // Check item
-        assertEq(uint8(EntityType.get(itemId)), uint8(ENTITY_TYPE.ITEM));
-        assertEq(Name.get(itemId), "test item");
-        assertEq(Value.get(itemId), 20);
-
-        // Check rat's load out
-        bytes32[] memory loadOut = LoadOut.get(ratId);
-        assertEq(loadOut.length, 1);
-        assertEq(loadOut[0], itemId);
+        // 100 + 20
+        assertEq(Health.get(ratId), 120);
+        // 100 - 20
+        assertEq(Balance.get(roomId), 80);
     }
 
-    function testRemoveItemFromLoadOut() public {
+    function testApplyOutcomeReduceHealth() public {
         setUp();
 
         // As player
         vm.startPrank(alice);
         world.ratroom__spawn("alice");
         bytes32 ratId = world.ratroom__createRat();
+        bytes32 roomId = world.ratroom__createRoom("test room");
         vm.stopPrank();
 
         // As admin
         prankAdmin();
-        bytes32 itemId = world.ratroom__addItemToLoadOut(ratId, "test item", 20);
-        startGasReport("Remove item from load out");
-        world.ratroom__removeItemFromLoadOut(ratId, itemId);
+        startGasReport("Apply outcome (reduce health)");
+        world.ratroom__applyOutcome(ratId, roomId, -20, 0, new bytes32[](0), new Item[](0), new bytes32[](0), new Item[](0));
         endGasReport();
         vm.stopPrank();
 
-        // Item should be destroyed
-        assertEq(uint8(EntityType.get(itemId)), uint8(ENTITY_TYPE.NONE));
-        assertEq(Name.get(itemId), "");
-        assertEq(Value.get(itemId), 0);
-
-        // Check rat's load out
-        bytes32[] memory loadOut = LoadOut.get(ratId);
-        assertEq(loadOut.length, 0);
+        // 100 - 20
+        assertEq(Health.get(ratId), 80);
+        // 100 + 20
+        assertEq(Balance.get(roomId), 120);
     }
 
-    function testAddTraitToRat() public {
+    function testApplyOutcomeOverReduceHealth() public {
         setUp();
 
         // As player
         vm.startPrank(alice);
         world.ratroom__spawn("alice");
         bytes32 ratId = world.ratroom__createRat();
+        bytes32 roomId = world.ratroom__createRoom("test room");
         vm.stopPrank();
 
         // As admin
         prankAdmin();
-        startGasReport("Add trait to rat");
-        bytes32 traitId = world.ratroom__addTraitToRat(ratId, "hungry", 20);
+        startGasReport("Apply outcome (over-reduce health)");
+        world.ratroom__applyOutcome(ratId, roomId, -200, 0, new bytes32[](0), new Item[](0), new bytes32[](0), new Item[](0));
         endGasReport();
         vm.stopPrank();
 
-        // Check trait
-        assertEq(uint8(EntityType.get(traitId)), uint8(ENTITY_TYPE.TRAIT));
-        assertTrue(LibUtils.stringEq(Name.get(traitId), "hungry"));
-        assertEq(Value.get(traitId), 20);
-
-        bytes32[] memory traits = Traits.get(ratId);
-        assertEq(traits.length, 1);
-        assertEq(traits[0], traitId);
+        // 100 - 100 (because rat only had 100 health to give)
+        assertEq(Health.get(ratId), 0);
+        // Rat is dead
+        assertTrue(Dead.get(ratId));
+        // 100 + 100 (because rat only had 100 health to give)
+        assertEq(Balance.get(roomId), 200);
     }
 
-    function testRemoveTraitFromRat() public {
+    function testApplyOutcomeOverIncreaseHealth() public {
         setUp();
 
         // As player
         vm.startPrank(alice);
         world.ratroom__spawn("alice");
         bytes32 ratId = world.ratroom__createRat();
+        bytes32 roomId = world.ratroom__createRoom("test room");
         vm.stopPrank();
 
         // As admin
         prankAdmin();
+        startGasReport("Apply outcome (over-increase health)");
+        world.ratroom__applyOutcome(ratId, roomId, 200, 0, new bytes32[](0), new Item[](0), new bytes32[](0), new Item[](0));
+        endGasReport();
+        vm.stopPrank();
 
-        bytes32 traitId = world.ratroom__addTraitToRat(ratId, "hungry", 20);
+        // 100 + 100 (because room only had 100 credits to give)
+        assertEq(Health.get(ratId), 200);
+        // 100 - 100 (because room only had 100 credits to give)
+        assertEq(Balance.get(roomId), 0);
+    }
 
-        // Check that trait was added
-        assertEq(uint8(EntityType.get(traitId)), uint8(ENTITY_TYPE.TRAIT));
-        assertTrue(LibUtils.stringEq(Name.get(traitId), "hungry"));
-        assertEq(Value.get(traitId), 20);
+    // * * * *
+    // Traits
+    // * * * *
+
+    function testApplyOutcomeAddPositiveTrait() public {
+        setUp();
+
+        // As player
+        vm.startPrank(alice);
+        world.ratroom__spawn("alice");
+        bytes32 ratId = world.ratroom__createRat();
+        bytes32 roomId = world.ratroom__createRoom("test room");
+        vm.stopPrank();
+
+        // Trait to add
+        Item[] memory newTraits = new Item[](1);
+        newTraits[0] = Item("happy", 40);
+
+        // As admin
+        prankAdmin();
+        startGasReport("Apply outcome (add positive trait)");
+        world.ratroom__applyOutcome(ratId, roomId, 0, 0, new bytes32[](0), newTraits, new bytes32[](0), new Item[](0));
+        endGasReport();
+        vm.stopPrank();
+
+        // Check added trait
         assertEq(Traits.get(ratId).length, 1);
+        assertEq(Value.get(Traits.get(ratId)[0]), 40);
+        assertEq(Name.get(Traits.get(ratId)[0]), "happy");
 
-        startGasReport("Remove trait from rat");
-        world.ratroom__removeTraitFromRat(ratId, traitId);
-        endGasReport();
+        // 100 - 40
+        assertEq(Balance.get(roomId), 60);
+    }
 
+    function testApplyOutcomeAddNegativeTrait() public {
+        setUp();
+
+        // As player
+        vm.startPrank(alice);
+        world.ratroom__spawn("alice");
+        bytes32 ratId = world.ratroom__createRat();
+        bytes32 roomId = world.ratroom__createRoom("test room");
         vm.stopPrank();
 
-        // Check that trait was removed
-        assertEq(uint8(EntityType.get(traitId)), uint8(ENTITY_TYPE.NONE));
-        assertTrue(LibUtils.stringEq(Name.get(traitId), ""));
-        assertEq(Value.get(traitId), 0);
+        // Trait to add
+        Item[] memory newTraits = new Item[](1);
+        newTraits[0] = Item("sad", -40);
+
+        // As admin
+        prankAdmin();
+        startGasReport("Apply outcome (add negative trait)");
+        world.ratroom__applyOutcome(ratId, roomId, 0, 0, new bytes32[](0), newTraits, new bytes32[](0), new Item[](0));
+        endGasReport();
+        vm.stopPrank();
+
+        // Check added trait
+        assertEq(Traits.get(ratId).length, 1);
+        assertEq(Value.get(Traits.get(ratId)[0]), -40);
+        assertEq(Name.get(Traits.get(ratId)[0]), "sad");
+
+        // 100 + 40
+        assertEq(Balance.get(roomId), 140);
+    }
+
+    function testApplyOutcomeAddPositiveTraitTooExpensive() public {
+        setUp();
+
+        // As player
+        vm.startPrank(alice);
+        world.ratroom__spawn("alice");
+        bytes32 ratId = world.ratroom__createRat();
+        bytes32 roomId = world.ratroom__createRoom("test room");
+        vm.stopPrank();
+
+        // Trait to add
+        Item[] memory newTraits = new Item[](1);
+        newTraits[0] = Item("happy", 400);
+
+        // As admin
+        prankAdmin();
+        startGasReport("Apply outcome (add positive trait: too expensive)");
+        world.ratroom__applyOutcome(ratId, roomId, 0, 0, new bytes32[](0), newTraits, new bytes32[](0), new Item[](0));
+        endGasReport();
+        vm.stopPrank();
+
+        // Not enough room balance, so nothing should happen
+        assertEq(Traits.get(ratId).length, 0);
+        assertEq(Balance.get(roomId), 100);
+    }
+
+    function testApplyOutcomeRemovePositiveTrait() public {
+        setUp();
+
+        // As player
+        vm.startPrank(alice);
+        world.ratroom__spawn("alice");
+        bytes32 ratId = world.ratroom__createRat();
+        bytes32 roomId = world.ratroom__createRoom("test room");
+        vm.stopPrank();
+
+        // Trait to add
+        Item[] memory newTraits= new Item[](1);
+        newTraits[0] = Item("happy", 40);
+
+        // As admin
+        prankAdmin();
+        world.ratroom__applyOutcome(ratId, roomId, 0, 0, new bytes32[](0), newTraits, new bytes32[](0), new Item[](0));
+        vm.stopPrank();
+
+        // Check added trait
+        bytes32 traitId = Traits.get(ratId)[0];
+        assertEq(Traits.get(ratId).length, 1);
+        assertEq(Value.get(traitId), 40);
+        assertEq(Name.get(traitId), "happy");
+
+        // 100 - 40
+        assertEq(Balance.get(roomId), 60);
+
+        bytes32[] memory traitsToRemove = new bytes32[](1);
+        traitsToRemove[0] = traitId;
+
+        // As admin
+        prankAdmin();
+        startGasReport("Apply outcome (remove positive trait)");
+        world.ratroom__applyOutcome(ratId, roomId, 0, 0, traitsToRemove, new Item[](0), new bytes32[](0), new Item[](0));
+        endGasReport();
+        vm.stopPrank();
+
+        // 60 + 40
+        assertEq(Balance.get(roomId), 100);
         assertEq(Traits.get(ratId).length, 0);
     }
 
-    function testIncreaseBalance() public {
+    function testApplyOutcomeRemoveNegativeTrait() public {
         setUp();
 
         // As player
         vm.startPrank(alice);
         world.ratroom__spawn("alice");
         bytes32 ratId = world.ratroom__createRat();
+        bytes32 roomId = world.ratroom__createRoom("test room");
+        vm.stopPrank();
+
+        // Trait to add
+        Item[] memory newTraits= new Item[](1);
+        newTraits[0] = Item("sad", -40);
+
+        // As admin
+        prankAdmin();
+        world.ratroom__applyOutcome(ratId, roomId, 0, 0, new bytes32[](0), newTraits, new bytes32[](0), new Item[](0));
+        vm.stopPrank();
+
+        // Check added trait
+        bytes32 traitId = Traits.get(ratId)[0];
+        assertEq(Traits.get(ratId).length, 1);
+        assertEq(Value.get(traitId), -40);
+        assertEq(Name.get(traitId), "sad");
+
+        // 100 + 40
+        assertEq(Balance.get(roomId), 140);
+
+        bytes32[] memory traitsToRemove = new bytes32[](1);
+        traitsToRemove[0] = traitId;
+
+        // As admin
+        prankAdmin();
+        startGasReport("Apply outcome (remove negative trait)");
+        world.ratroom__applyOutcome(ratId, roomId, 0, 0, traitsToRemove, new Item[](0), new bytes32[](0), new Item[](0));
+        endGasReport();
+        vm.stopPrank();
+
+        // 140 - 40
+        assertEq(Balance.get(roomId), 100);
+        assertEq(Traits.get(ratId).length, 0);
+    }
+    
+    function testApplyOutcomeRemoveNegativeTraitTooExpensive() public {
+        setUp();
+
+        // As player
+        vm.startPrank(alice);
+        world.ratroom__spawn("alice");
+        bytes32 ratId = world.ratroom__createRat();
+        bytes32 roomId = world.ratroom__createRoom("test room");
+        vm.stopPrank();
+
+        // Trait to add
+        Item[] memory newTraits= new Item[](1);
+        newTraits[0] = Item("sad", -40);
+
+        // As admin
+        prankAdmin();
+        world.ratroom__applyOutcome(ratId, roomId, 0, 0, new bytes32[](0), newTraits, new bytes32[](0), new Item[](0));
+        vm.stopPrank();
+
+        // Check added trait
+        bytes32 traitId = Traits.get(ratId)[0];
+        assertEq(Traits.get(ratId).length, 1);
+        assertEq(Value.get(traitId), -40);
+        assertEq(Name.get(traitId), "sad");
+
+        // 100 + 40
+        assertEq(Balance.get(roomId), 140);
+
+        bytes32[] memory traitsToRemove = new bytes32[](1);
+        traitsToRemove[0] = traitId;
+
+        // As admin
+        prankAdmin();
+        // Transfer 120 to rat
+        world.ratroom__applyOutcome(ratId, roomId, 0, 120, new bytes32[](0), new Item[](0), new bytes32[](0), new Item[](0));
+        assertEq(Balance.get(roomId), 20);
+
+        startGasReport("Apply outcome (remove negative trait: too expensive)");
+        world.ratroom__applyOutcome(ratId, roomId, 0, 0, traitsToRemove, new Item[](0), new bytes32[](0), new Item[](0));
+        endGasReport();
+        vm.stopPrank();
+
+        // Trait not removed because not enough room balance
+        assertEq(Traits.get(ratId).length, 1);
+        assertEq(Value.get(traitId), -40);
+        assertEq(Name.get(traitId), "sad");
+        // Balance unchanged
+        assertEq(Balance.get(roomId), 20);
+    }
+
+    // * * * *
+    // Items
+    // * * * *
+
+    function testApplyOutcomeAddPositiveItem() public {
+        setUp();
+
+        // As player
+        vm.startPrank(alice);
+        world.ratroom__spawn("alice");
+        bytes32 ratId = world.ratroom__createRat();
+        bytes32 roomId = world.ratroom__createRoom("test room");
+        vm.stopPrank();
+
+        // Trait to add
+        Item[] memory newItems = new Item[](1);
+        newItems[0] = Item("cheese", 40);
+
+        // As admin
+        prankAdmin();
+        startGasReport("Apply outcome (add positive item)");
+        world.ratroom__applyOutcome(ratId, roomId, 0, 0, new bytes32[](0), new Item[](0), new bytes32[](0), newItems);
+        endGasReport();
+        vm.stopPrank();
+
+        // Check added item
+        assertEq(Inventory.get(ratId).length, 1);
+        assertEq(Value.get(Inventory.get(ratId)[0]), 40);
+        assertEq(Name.get(Inventory.get(ratId)[0]), "cheese");
+
+        // 100 - 40
+        assertEq(Balance.get(roomId), 60);
+    }
+
+    function testApplyOutcomeAddNegativeItem() public {
+        setUp();
+
+        // As player
+        vm.startPrank(alice);
+        world.ratroom__spawn("alice");
+        bytes32 ratId = world.ratroom__createRat();
+        bytes32 roomId = world.ratroom__createRoom("test room");
+        vm.stopPrank();
+
+        // Trait to add
+        Item[] memory newItems = new Item[](1);
+        newItems[0] = Item("rotten cheese", -40);
+
+        // As admin
+        prankAdmin();
+        startGasReport("Apply outcome (add negative item)");
+        world.ratroom__applyOutcome(ratId, roomId, 0, 0, new bytes32[](0), new Item[](0), new bytes32[](0), newItems);
+        endGasReport();
+        vm.stopPrank();
+
+        // Check added item
+        assertEq(Inventory.get(ratId).length, 1);
+        // Items should always be positive
+        // Negative values will be converted to positive
+        assertEq(Value.get(Inventory.get(ratId)[0]), 40);
+        assertEq(Name.get(Inventory.get(ratId)[0]), "rotten cheese");
+
+        // 100 - 40
+        assertEq(Balance.get(roomId), 60);
+    }
+
+    function testApplyOutcomeAddPositiveItemTooExpensive() public {
+        setUp();
+
+        // As player
+        vm.startPrank(alice);
+        world.ratroom__spawn("alice");
+        bytes32 ratId = world.ratroom__createRat();
+        bytes32 roomId = world.ratroom__createRoom("test room");
+        vm.stopPrank();
+
+        // Trait to add
+        Item[] memory newItems = new Item[](1);
+        newItems[0] = Item("cheese", 200);
+
+        // As admin
+        prankAdmin();
+        startGasReport("Apply outcome (add positive item: too expensive)");
+        world.ratroom__applyOutcome(ratId, roomId, 0, 0, new bytes32[](0), new Item[](0), new bytes32[](0), newItems);
+        endGasReport();
+        vm.stopPrank();
+
+        // Not enough room balance, so nothing should happen
+        assertEq(Inventory.get(ratId).length, 0);
+        assertEq(Balance.get(roomId), 100);
+    }
+
+    function testApplyOutcomeRemovePositiveItem() public {
+        setUp();
+
+        // As player
+        vm.startPrank(alice);
+        world.ratroom__spawn("alice");
+        bytes32 ratId = world.ratroom__createRat();
+        bytes32 roomId = world.ratroom__createRoom("test room");
+        vm.stopPrank();
+
+        // Trait to add
+        Item[] memory newItems = new Item[](1);
+        newItems[0] = Item("cheese", 40);
+
+        // As admin
+        prankAdmin();
+        world.ratroom__applyOutcome(ratId, roomId, 0, 0, new bytes32[](0), new Item[](0), new bytes32[](0), newItems);
+        vm.stopPrank();
+
+        // Check added item
+        bytes32 itemId = Inventory.get(ratId)[0];
+        assertEq(Inventory.get(ratId).length, 1);
+        assertEq(Value.get(itemId), 40);
+        assertEq(Name.get(itemId), "cheese");
+
+        // 100 - 40
+        assertEq(Balance.get(roomId), 60);
+
+        bytes32[] memory itemsToRemove = new bytes32[](1);
+        itemsToRemove[0] = itemId;
+
+        // As admin
+        prankAdmin();
+        startGasReport("Apply outcome (remove positive item)");
+        world.ratroom__applyOutcome(ratId, roomId, 0, 0, new bytes32[](0), new Item[](0), itemsToRemove, new Item[](0));
+        endGasReport();
+        vm.stopPrank();
+
+        // 60 + 40
+        assertEq(Balance.get(roomId), 100);
+        assertEq(Inventory.get(ratId).length, 0);
+    }
+
+    // * * * * * * * * *
+    // Balance transfer
+    // * * * * * * * * *
+
+    function testApplyOutcomeTransferToRat() public {
+        setUp();
+
+        // As player
+        vm.startPrank(alice);
+        world.ratroom__spawn("alice");
+        bytes32 ratId = world.ratroom__createRat();
+        bytes32 roomId = world.ratroom__createRoom("test room");
         vm.stopPrank();
 
         // As admin
         prankAdmin();
-        startGasReport("Increase balance");
-        world.ratroom__increaseBalance(ratId, 20);
+        startGasReport("Apply outcome (transfer to rat)");
+        world.ratroom__applyOutcome(ratId, roomId, 0, 20, new bytes32[](0), new Item[](0), new bytes32[](0), new Item[](0));
         endGasReport();
         vm.stopPrank();
 
+        // 0 + 20
         assertEq(Balance.get(ratId), 20);
+        // 100 - 20
+        assertEq(Balance.get(roomId), 80);
     }
 
-    function testDecreaseBalance() public {
+    function testApplyOutcomeTransferToRoom() public {
         setUp();
 
         // As player
         vm.startPrank(alice);
         world.ratroom__spawn("alice");
         bytes32 ratId = world.ratroom__createRat();
+        bytes32 roomId = world.ratroom__createRoom("test room");
         vm.stopPrank();
 
         // As admin
         prankAdmin();
-        world.ratroom__increaseBalance(ratId, 20);
-
-        assertEq(Balance.get(ratId), 20);
-
-        startGasReport("Decrease balance");
-        world.ratroom__decreaseBalance(ratId, 10);
+        world.ratroom__applyOutcome(ratId, roomId, 0, 50, new bytes32[](0), new Item[](0), new bytes32[](0), new Item[](0));
+        startGasReport("Apply outcome (transfer to room)");
+        world.ratroom__applyOutcome(ratId, roomId, 0, -20, new bytes32[](0), new Item[](0), new bytes32[](0), new Item[](0));
         endGasReport();
         vm.stopPrank();
 
-        assertEq(Balance.get(ratId), 10);
+        // 0 + 50 - 20 = 30
+        assertEq(Balance.get(ratId), 30);
+        // 100 - 50 + 20 = 70
+        assertEq(Balance.get(roomId), 70);
     }
 
-    function testIncreaseHealth() public {
+    function testApplyOutcomeOverTransferToRat() public {
         setUp();
 
         // As player
         vm.startPrank(alice);
         world.ratroom__spawn("alice");
         bytes32 ratId = world.ratroom__createRat();
+        bytes32 roomId = world.ratroom__createRoom("test room");
         vm.stopPrank();
 
         // As admin
         prankAdmin();
-        startGasReport("Increase health");
-        world.ratroom__increaseHealth(ratId, 20);
+        startGasReport("Apply outcome (over transfer to rat)");
+        world.ratroom__applyOutcome(ratId, roomId, 0, 200, new bytes32[](0), new Item[](0), new bytes32[](0), new Item[](0));
         endGasReport();
         vm.stopPrank();
 
-        assertEq(Health.get(ratId), 120);
+        // 0 + 100 (because room only had 100 credits to give)
+        assertEq(Balance.get(ratId), 100);
+        // 100 - 100 (because room only had 100 credits to give)
+        assertEq(Balance.get(roomId), 0);
     }
 
-    function testDecreaseHealth() public {
+    function testApplyOutcomeOverTransferToRoom() public {
         setUp();
 
         // As player
         vm.startPrank(alice);
         world.ratroom__spawn("alice");
         bytes32 ratId = world.ratroom__createRat();
+        bytes32 roomId = world.ratroom__createRoom("test room");
         vm.stopPrank();
 
         // As admin
         prankAdmin();
-        startGasReport("Decrease health");
-        world.ratroom__decreaseHealth(ratId, 20);
+        world.ratroom__applyOutcome(ratId, roomId, 0, 50, new bytes32[](0), new Item[](0), new bytes32[](0), new Item[](0));
+        startGasReport("Apply outcome (over transfer to room)");
+        world.ratroom__applyOutcome(ratId, roomId, 0, -200, new bytes32[](0), new Item[](0), new bytes32[](0), new Item[](0));
         endGasReport();
         vm.stopPrank();
 
-        assertEq(Health.get(ratId), 80);
+        // 0 + 50 - 50 (because rat only had 50 credits to give)
+        assertEq(Balance.get(ratId), 0);
+        // 100 - 50 + 50 (because rat only had 50 credits to give)
+        assertEq(Balance.get(roomId), 100);
     }
 
-    function testKillRat() public {
-        setUp();
+    // * * * * * * * * 
+    // Complex outcomes
+    // * * * * * * * *
 
-        // As player
-        vm.startPrank(alice);
-        world.ratroom__spawn("alice");
-        bytes32 ratId = world.ratroom__createRat();
-        vm.stopPrank();
-
-        // As admin
-        prankAdmin();
-        world.ratroom__decreaseHealth(ratId, 200);
-        vm.stopPrank();
-
-        assertEq(Health.get(ratId), 0);
-        assertTrue(Dead.get(ratId));
-    }
+    // ...
 }
 
 

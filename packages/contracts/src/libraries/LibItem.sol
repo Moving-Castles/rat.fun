@@ -3,19 +3,21 @@ pragma solidity >=0.8.24;
 import { getUniqueEntity } from "@latticexyz/world-modules/src/modules/uniqueentity/getUniqueEntity.sol";
 import { EntityType, Name, Value } from "../codegen/index.sol";
 import { ENTITY_TYPE } from "../codegen/common.sol";
+import { LibUtils } from "./LibUtils.sol";
+import { Item } from "../Structs.sol";
 
 library LibItem {
   /**
    * @notice Create an item
-   * @param _name Description of item
-   * @param _value Value of item
+   * @param _item Item to create
    * @return itemId The id of the new item
    */
-  function createItem(string memory _name, int256 _value) internal returns (bytes32 itemId) {
+  function createItem(Item calldata _item) internal returns (bytes32 itemId) {
     itemId = getUniqueEntity();
     EntityType.set(itemId, ENTITY_TYPE.ITEM);
-    Name.set(itemId, _name);
-    Value.set(itemId, _value);
+    Name.set(itemId, _item.name);
+    // Value of item is always positive
+    Value.set(itemId, LibUtils.abs(_item.value));
   }
 
   /**

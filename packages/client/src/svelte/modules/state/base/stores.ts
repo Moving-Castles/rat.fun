@@ -62,17 +62,17 @@ export const playerInventory = derived(
 // PLAYER RAT STORES
 // * * * * * * * * * * * * * * * * *
 
-export const playerRat = derived(
+export const rat = derived(
   [player, rats],
   ([$player, $rats]) => $rats[$player?.ownedRat] as Rat
 )
 
-export const playerRatTraits = derived(
-  [playerRat, traits],
-  ([$playerRat, $traits]) => $playerRat?.traits?.map(trait => $traits[trait]) as Trait[]
+export const ratTraits = derived(
+  [rat, traits],
+  ([$rat, $traits]) => $rat?.traits?.map(trait => $traits[trait]) as Trait[]
 )
 
-export const playerRatLoadOut = derived(
-  [playerRat, items],
-  ([$playerRat, $items]) => $playerRat?.loadOut?.map(item => $items[item]) as Item[]
+export const ratInventory = derived(
+  [rat, items],
+  ([$rat, $items]) => $rat?.inventory?.map(item => $items[item]) as Item[]
 )

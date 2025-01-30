@@ -10,6 +10,8 @@ export async function callModel(anthropic: Anthropic, messages: MessageParam[], 
         system
     });
 
+    console.log("Message:", msg);
+
     return parseReturnMessage(msg);
 }
 

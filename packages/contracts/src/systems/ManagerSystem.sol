@@ -2,14 +2,14 @@
 pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { GameConfig, EntityType, Balance, Inventory, LoadOut, Health, Traits, Dead } from "../codegen/index.sol";
-import { LibUtils, LibItem, LibTrait } from "../libraries/Libraries.sol";
+import { GameConfig, EntityType, Balance, Dead, Health } from "../codegen/index.sol";
+import { LibManager, LibRat } from "../libraries/Libraries.sol";
 import { ENTITY_TYPE } from "../codegen/common.sol";
-import { MAX_LOADOUT_SIZE, MAX_TRAITS_SIZE } from "../constants.sol";
+import { Item } from "../Structs.sol";
 
-  /**
-   * @dev Only admin can call these function
-   */
+/**
+ * @dev Only admin can call these function
+ */
 contract ManagerSystem is System {
 
   /**
@@ -21,98 +21,60 @@ contract ManagerSystem is System {
   }
 
   /**
-   * @notice Create item and add to rat's load out
+   * @notice Apply outcome of a room interaction
    * @dev Only admin can call this function
-   * @param _ratId The id of the rat
-   * @param _name Description of the item
-   * @param _value Value of the item
-   * @return itemId The id of the new item
+   * @param _ratId Id of the rat
+   * @param _roomId Id of the room
+   * @param _healthChange Change to the rat's health
+   * @param _balanceTransferToOrFromRat Credits to transfer to or from rat
+   * @param _traitsToRemoveFromRat Traits to remove from rat
+   * @param _itemsToRemoveFromRat Items to remove from rat
    */
-  function addItemToLoadOut(bytes32 _ratId, string memory _name, int256 _value) public onlyAdmin returns (bytes32 itemId) {
-    require(LoadOut.get(_ratId).length < MAX_LOADOUT_SIZE, "full");
-    itemId = LibItem.createItem(_name, _value);
-    LoadOut.push(_ratId, itemId);
-  }
+  function applyOutcome(
+      bytes32 _ratId, 
+      bytes32 _roomId, 
+      int256 _healthChange, 
+      int256 _balanceTransferToOrFromRat, 
+      bytes32[] calldata _traitsToRemoveFromRat,
+      Item[] calldata _traitToAddToRat, 
+      bytes32[] calldata _itemsToRemoveFromRat,
+      Item[] calldata _itemsToAddToRat
+    ) onlyAdmin public {
+    require(EntityType.get(_ratId) == ENTITY_TYPE.RAT, "not rat");
+    require(Dead.get(_ratId) == false, "rat is dead");
+    require(EntityType.get(_roomId) == ENTITY_TYPE.ROOM, "not room");
+    require(Balance.get(_roomId) >= 0, "no room balance");
 
-  /**
-   * @notice Remove item from rat's load out and destroy the item
-   * @dev Only admin can call this function
-   * @param _ratId The id of the rat
-   * @param _itemId The id of the item
-   */
-  function removeItemFromLoadOut(bytes32 _ratId, bytes32 _itemId) public onlyAdmin {
-    LibItem.destroyItem(_itemId);
-    LoadOut.set(_ratId, LibUtils.removeFromArray(LoadOut.get(_ratId), _itemId));
-  }
+    // * * * * * * * * * * * * *
+    // HEALTH
+    // * * * * * * * * * * * * *
 
-  /**
-   * @notice Add a trait to rat
-   * @dev Only admin can call this function
-   * @param _ratId The id of the rat
-   * @param _name Description of the trait
-   * @param _value Value of the trait
-   * @return traitId The id of the new trait
-   */
-  function addTraitToRat(bytes32 _ratId, string memory _name, int256 _value) public onlyAdmin returns (bytes32 traitId) {
-    require(Traits.get(_ratId).length < MAX_TRAITS_SIZE, "full");
-    traitId = LibTrait.createTrait(_name, _value);
-    // Add trait to rat
-    Traits.push(_ratId, traitId);
-  }
+    LibManager.updateHealth(_ratId, _roomId, _healthChange);
 
-  /**
-   * @notice Remove trait from rat
-   * @dev Only admin can call this function
-   * @param _ratId The id of the rat
-   * @param _traitId Id of trait to remove
-   */
-  function removeTraitFromRat(bytes32 _ratId, bytes32 _traitId) onlyAdmin public {
-    LibTrait.destroyTrait(_traitId);
-    // Remove trait from rat
-    Traits.set(_ratId, LibUtils.removeFromArray(Traits.get(_ratId), _traitId));
-  }
-
-  /**
-   * @notice Increase balance
-   * @dev Only admin can call this function
-   * @param _id The id of the entity (room or rat)
-   * @param _change Amount to increase balance by
-   */
-  function increaseBalance(bytes32 _id, uint256 _change) onlyAdmin public {
-    Balance.set(_id, Balance.get(_id) + _change);
-  }
-
-  /**
-   * @notice Decrease balance
-   * @dev Only admin can call this function
-   * @param _id The id of the entity (room or rat)
-   * @param _change Amount to decrease balance by
-   */
-  function decreaseBalance(bytes32 _id, uint256 _change) onlyAdmin public {
-    Balance.set(_id, LibUtils.safeSubtract(Balance.get(_id), _change));
-  }
-
-  /**
-   * @notice Increase rat's health
-   * @dev Only admin can call this function
-   * @param _ratId The id of the rat
-   * @param _change Amount to increase health by
-   */
-  function increaseHealth(bytes32 _ratId, uint256 _change) onlyAdmin public {
-    Health.set(_ratId, Health.get(_ratId) + _change);
-  }
-
-  /**
-   * @notice Decrease rat's health
-   * @dev Only admin can call this function. Kills rat if health is 0.
-   * @param _ratId The id of the rat
-   * @param _change Amount to decrease health by
-   */
-  function decreaseHealth(bytes32 _ratId, uint256 _change) onlyAdmin public {
-    Health.set(_ratId, LibUtils.safeSubtract(Health.get(_ratId), _change));
-    // Kill rat if health is 0
-    if (Health.get(_ratId) == 0) {
-      Dead.set(_ratId, true);
+    // Exit early if dead
+    if(Health.get(_ratId) == 0) {
+      LibRat.killRat(_ratId, _roomId);
+      return;
     }
+
+    // * * * * * * * * * * * * *
+    // TRAITS
+    // * * * * * * * * * * * * *
+
+    LibManager.removeTraitsFromRat(_ratId, _roomId, _traitsToRemoveFromRat);
+    LibManager.addTraitsToRat(_ratId, _roomId, _traitToAddToRat);
+
+    // * * * * * * * * * * * * *
+    // ITEMS
+    // * * * * * * * * * * * * *
+
+    LibManager.removeItemsFromRat(_ratId, _roomId, _itemsToRemoveFromRat);
+    LibManager.addItemsToRat(_ratId, _roomId, _itemsToAddToRat);
+
+    // * * * * * * * * * * * * *
+    // BALANCE
+    // * * * * * * * * * * * * *
+
+    LibManager.updateBalance(_ratId, _roomId, _balanceTransferToOrFromRat);
   }
 }

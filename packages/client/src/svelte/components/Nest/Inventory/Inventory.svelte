@@ -1,17 +1,24 @@
 <script lang="ts">
-  import { player, playerInventory } from "@svelte/modules/state/base/stores"
   import InventoryItem from "@components/Nest/Inventory/InventoryItem.svelte"
+
+  export let isRat = false
+  export let inventory: Item[]
+  export let itemKeys: string[]
+
+  const title = isRat
+    ? "__ Load out (click item to dequip)"
+    : "__ NEST Inventory (click item to equip)"
 </script>
 
-{#if $player}
+{#if inventory}
   <div class="inventory">
-    <div class="title">__ NEST Inventory (click item to equip)</div>
+    <div class="title">{title}</div>
     <div class="content">
-      {#if !$playerInventory || $playerInventory.length === 0}
+      {#if !inventory || inventory.length === 0}
         <div>** EMPTY **</div>
       {:else}
-        {#each $playerInventory as item, i}
-          <InventoryItem {item} key={$player.inventory[i]} />
+        {#each inventory as item, i}
+          <InventoryItem {isRat} {item} key={itemKeys[i]} />
         {/each}
       {/if}
     </div>

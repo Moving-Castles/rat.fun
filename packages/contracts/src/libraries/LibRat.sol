@@ -21,4 +21,14 @@ library LibRat {
     GameConfig.setGlobalRatIndex(newRatIndex);
     Index.set(ratId, newRatIndex);
   }
+
+  /**
+   * @notice Kill a rat
+   * @param _ratId The id of the rat
+   * @param _roomId The id of the room that the rat died in
+   */
+  function killRat(bytes32 _ratId, bytes32 _roomId) internal {
+    Dead.set(_ratId, true);
+    // TODO: Transfer all value one rat (balance, traits, items) to room
+  }
 }

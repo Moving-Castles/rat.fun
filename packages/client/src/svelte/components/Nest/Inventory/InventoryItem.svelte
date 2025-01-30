@@ -1,18 +1,24 @@
 <script lang="ts">
-  import { transferItemToLoadOut } from "@svelte/modules/action"
+  import {
+    transferItemToLoadOut,
+    transferItemToInventory,
+  } from "@svelte/modules/action"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
   import { playSound } from "@modules/sound"
   import type { ItemChange } from "../types"
 
+  export let isRat = false
   export let key: string = ""
   export let item: Item | ItemChange
 
   let busy = false
 
-  async function sendTransferItemToLoadOut() {
+  async function sendTransfer() {
     playSound("tcm", "selectionEnter")
     busy = true
-    const action = transferItemToLoadOut(key)
+    const action = isRat
+      ? transferItemToInventory(key)
+      : transferItemToLoadOut(key)
     try {
       await waitForCompletion(action)
     } catch (e) {
@@ -23,7 +29,7 @@
   }
 </script>
 
-<button class="item" disabled={busy} on:click={sendTransferItemToLoadOut}>
+<button class="item" disabled={busy} on:click={sendTransfer}>
   <div class="text">{item.name} (${item.value})</div>
 </button>
 

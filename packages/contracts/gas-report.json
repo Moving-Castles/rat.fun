@@ -1,51 +1,117 @@
 [
   {
     "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
-    "test": "testAddItemToLoadOut",
-    "name": "Add item to load out",
-    "gasUsed": 241398
+    "test": "testApplyOutcomeAddNegativeItem",
+    "name": "Apply outcome (add negative item)",
+    "gasUsed": 278539
   },
   {
     "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
-    "test": "testAddTraitToRat",
-    "name": "Add trait to rat",
-    "gasUsed": 241355
+    "test": "testApplyOutcomeAddNegativeTrait",
+    "name": "Apply outcome (add negative trait)",
+    "gasUsed": 275112
   },
   {
     "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
-    "test": "testDecreaseBalance",
-    "name": "Decrease balance",
-    "gasUsed": 31140
+    "test": "testApplyOutcomeAddPositiveItem",
+    "name": "Apply outcome (add positive item)",
+    "gasUsed": 278410
   },
   {
     "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
-    "test": "testDecreaseHealth",
-    "name": "Decrease health",
-    "gasUsed": 44885
+    "test": "testApplyOutcomeAddPositiveItemTooExpensive",
+    "name": "Apply outcome (add positive item too expensive)",
+    "gasUsed": 53280
   },
   {
     "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
-    "test": "testIncreaseBalance",
-    "name": "Increase balance",
-    "gasUsed": 61482
+    "test": "testApplyOutcomeAddPositiveTrait",
+    "name": "Apply outcome (add positive trait)",
+    "gasUsed": 278370
   },
   {
     "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
-    "test": "testIncreaseHealth",
-    "name": "Increase health",
-    "gasUsed": 41585
+    "test": "testApplyOutcomeAddPositiveTraitTooExpensive",
+    "name": "Apply outcome (add positive trait: too expensive)",
+    "gasUsed": 53293
   },
   {
     "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
-    "test": "testRemoveItemFromLoadOut",
-    "name": "Remove item from load out",
-    "gasUsed": 28983
+    "test": "testApplyOutcomeEmpty",
+    "name": "Apply outcome (empty)",
+    "gasUsed": 45474
   },
   {
     "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
-    "test": "testRemoveTraitFromRat",
-    "name": "Remove trait from rat",
-    "gasUsed": 28983
+    "test": "testApplyOutcomeIncreaseHealth",
+    "name": "Apply outcome (increase health)",
+    "gasUsed": 79680
+  },
+  {
+    "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
+    "test": "testApplyOutcomeOverIncreaseHealth",
+    "name": "Apply outcome (over-increase health)",
+    "gasUsed": 70470
+  },
+  {
+    "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
+    "test": "testApplyOutcomeOverReduceHealth",
+    "name": "Apply outcome (over-reduce health)",
+    "gasUsed": 99360
+  },
+  {
+    "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
+    "test": "testApplyOutcomeOverTransferToRat",
+    "name": "Apply outcome (over transfer to rat)",
+    "gasUsed": 90391
+  },
+  {
+    "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
+    "test": "testApplyOutcomeOverTransferToRoom",
+    "name": "Apply outcome (over transfer to room)",
+    "gasUsed": 53527
+  },
+  {
+    "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
+    "test": "testApplyOutcomeReduceHealth",
+    "name": "Apply outcome (reduce health)",
+    "gasUsed": 79741
+  },
+  {
+    "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
+    "test": "testApplyOutcomeRemoveNegativeTrait",
+    "name": "Apply outcome (remove negative trait)",
+    "gasUsed": 70590
+  },
+  {
+    "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
+    "test": "testApplyOutcomeRemoveNegativeTraitTooExpensive",
+    "name": "Apply outcome (remove negative trait: too expensive)",
+    "gasUsed": 43764
+  },
+  {
+    "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
+    "test": "testApplyOutcomeRemovePositiveItem",
+    "name": "Apply outcome (remove positive item)",
+    "gasUsed": 63992
+  },
+  {
+    "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
+    "test": "testApplyOutcomeRemovePositiveTrait",
+    "name": "Apply outcome (remove positive trait)",
+    "gasUsed": 67217
+  },
+  {
+    "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
+    "test": "testApplyOutcomeTransferToRat",
+    "name": "Apply outcome (transfer to rat)",
+    "gasUsed": 99601
+  },
+  {
+    "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
+    "test": "testApplyOutcomeTransferToRoom",
+    "name": "Apply outcome (transfer to room)",
+    "gasUsed": 62735
   },
   {
     "file": "test/systems/PlayerSystem.t.sol:PlayerSystemTest",
@@ -64,30 +130,6 @@
     "test": "testTransferBalanceToRat",
     "name": "Transfer balance to rat",
     "gasUsed": 71986
-  },
-  {
-    "file": "test/systems/PlayerSystem.t.sol:PlayerSystemTest",
-    "test": "testTransferItemToInventory",
-    "name": "Add item to load out",
-    "gasUsed": 241398
-  },
-  {
-    "file": "test/systems/PlayerSystem.t.sol:PlayerSystemTest",
-    "test": "testTransferItemToInventory",
-    "name": "Transfer item from load out to inventory",
-    "gasUsed": 95930
-  },
-  {
-    "file": "test/systems/PlayerSystem.t.sol:PlayerSystemTest",
-    "test": "testTransferItemToLoadOut",
-    "name": "Add item to load out",
-    "gasUsed": 241398
-  },
-  {
-    "file": "test/systems/PlayerSystem.t.sol:PlayerSystemTest",
-    "test": "testTransferItemToLoadOut",
-    "name": "Transfer item from inventory to load out",
-    "gasUsed": 73952
   },
   {
     "file": "test/systems/RatSystem.t.sol:RatSystemTest",

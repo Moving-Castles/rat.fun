@@ -59,6 +59,14 @@ library LibUtils {
   }
 
   /**
+   * @notice Returns the absolute value.
+   * @param _x The number to take the absolute value of
+   */
+  function abs(int256 _x) internal pure returns (int256) {
+    return _x >= 0 ? _x : -_x;
+  }
+
+  /**
    * @notice Converts a signed integer to an unsigned integer.
    * @param _value Value to convert
    */
@@ -170,5 +178,28 @@ library LibUtils {
       }
     }
     return false;
+  }
+
+  /**
+   * @notice Generate a random number between 0 and _max
+   * @param  _sender The address of the sender
+   * @param  _max The maximum value to return
+   * @return r Random value
+   */
+  function random(address _sender, uint256 _max) internal view returns (uint256 r) {
+    require(_max > 0, "Max must be greater than 0");
+    r =
+      uint256(
+        keccak256(
+          abi.encodePacked(
+            _sender,
+            block.prevrandao,
+            block.timestamp,
+            block.coinbase,
+            gasleft() // Remaining gas
+          )
+        )
+      ) %
+      _max;
   }
 }

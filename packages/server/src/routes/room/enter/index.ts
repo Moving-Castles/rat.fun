@@ -44,10 +44,7 @@ import { getSenderId } from '@modules/signature';
 import { getSystemPrompts } from '@modules/cms';
 
 // Validate
-import { validateOutcome, validateOnchainData } from './validation';
-
-// Apply changes to onchain state
-import { changeStats, changeTraits, changeItems, transferBalance } from './executeOutcomes';
+import { validateInputData } from './validation';
 
 // Initialize MUD
 const {
@@ -85,49 +82,34 @@ async function routes (fastify: FastifyInstance) {
             // Recover player address from signature and convert to MUD bytes32 format
             const playerId = getSenderId(signature, MESSAGE);
 
-            validateOnchainData(playerId, rat, room);
+            validateInputData(playerId, rat, room);
 
             // Get system prompts from CMS
             const { eventSystemPrompt, outcomeSystemPrompt, correctionSystemPrompt } = await getSystemPrompts();
 
             // Call event model
-            const eventMessages = constructEventMessages(room, rat);
+            const eventMessages = constructEventMessages(rat, room);
             const events = await callModel(llmClient, eventMessages, eventSystemPrompt) as EventsReturnValue;
 
-            // TODO: better error handling
-            if(!events) {
-                return reply.status(403).send({ error: 'Error: Event model call failed' });
-            }
-
             // Call outcome model
-            const outcomeMessages = constructOutcomeMessages(room, rat, events);
+            const outcomeMessages = constructOutcomeMessages(rat, room, events);
             const outcome = await callModel(llmClient, outcomeMessages, outcomeSystemPrompt) as OutcomeReturnValue;
 
-            const validatedOutcome = await validateOutcome(outcome, rat, room);
+            // Apply the outcome suggested by the LLM to the onchain state and get back the actual outcome.
+            const actualOutcome = await systemCalls.applyOutcome(rat, room, outcome);
 
-            console.log('events', events);
-
-            // Call correction model
-            const correctionMessages = constructCorrectionMessages(validatedOutcome, events);
+            // The event log might now not reflect the actual outcome.
+            // Run it through the LLM again to get the corrected event log.
+            const correctionMessages = constructCorrectionMessages(actualOutcome, events);
             const correctedEvents = await callModel(llmClient, correctionMessages, correctionSystemPrompt) as EventsReturnValue;
 
-            console.log('correctedEvents:', correctedEvents);
-
-            // Execute onchain changes based on outcome
-            await changeStats(systemCalls, validatedOutcome, ratId, roomId);
-            await changeTraits(systemCalls, validatedOutcome, ratId, roomId);
-            await changeItems(systemCalls, validatedOutcome, ratId, roomId);
-            await transferBalance(systemCalls, validatedOutcome, ratId, roomId);
-
-            const returnObject = {
+            reply.send({
                 log: correctedEvents,
-                statChanges: validatedOutcome.statChanges,
-                traitChanges: validatedOutcome.traitChanges,
-                itemChanges: validatedOutcome.itemChanges,
-                balanceTransfer: validatedOutcome.balanceTransfer,
-            }
-
-            reply.send(returnObject);
+                statChanges: actualOutcome.statChanges,
+                traitChanges: actualOutcome.traitChanges,
+                itemChanges: actualOutcome.itemChanges,
+                balanceTransfer: actualOutcome.balanceTransfer,
+            });
         } catch (error) {
             console.error('Error:', error);
             reply.status(500).send({ error });

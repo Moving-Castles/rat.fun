@@ -1,5 +1,11 @@
 <script lang="ts">
-  import { player, playerRat, rooms } from "@modules/state/base/stores"
+  import {
+    player,
+    rat,
+    rooms,
+    ratInventory,
+    playerInventory,
+  } from "@modules/state/base/stores"
   import { UI } from "@modules/ui/enums"
   import { UIState } from "@modules/ui/stores"
   import {
@@ -13,7 +19,6 @@
   import RoomItem from "@components/Nest/RoomItem.svelte"
   import NewRoom from "@components/Nest/NewRoom.svelte"
   import Inventory from "@components/Nest/Inventory/Inventory.svelte"
-  import LoadOut from "@components/Nest/LoadOut/LoadOut.svelte"
   import Traits from "@components/Nest/Traits/Traits.svelte"
   import NestView from "@components/Nest/NestView/NestView.svelte"
 
@@ -76,36 +81,39 @@
             </div>
           {/if}
         </div>
-        <!-- INVENTORY -->
+        <!-- PLAYER INVENTORY -->
         <div class="stat-item">
-          <Inventory />
+          <Inventory
+            inventory={$playerInventory}
+            itemKeys={$player.inventory}
+          />
         </div>
       </div>
     {/if}
 
     <!-- RAT STATS -->
-    {#if $playerRat}
+    {#if $rat}
       <div class="rat-stats">
         <!-- RAT -->
         <div class="stat-item">
           <div class="inner-wrapper rat">
-            <div class="label">Rat #{$playerRat.index}</div>
+            <div class="label">Rat #{$rat.index}</div>
           </div>
         </div>
         <!-- HEALTH -->
         <div class="stat-item">
           <div class="inner-wrapper health">
             <div class="label">Health:</div>
-            <div class="value">{$playerRat?.health ?? 0}</div>
+            <div class="value">{$rat?.health ?? 0}</div>
           </div>
         </div>
         <!-- RAT BALANCE -->
         <div class="stat-item">
           <div class="inner-wrapper balance">
             <div class="label">Balance:</div>
-            <div class="value">${$playerRat?.balance ?? 0}</div>
+            <div class="value">${$rat?.balance ?? 0}</div>
           </div>
-          {#if $playerRat?.balance >= 100}
+          {#if $rat?.balance >= 100}
             <div class="action">
               <button disabled={busy} on:click={sendTransferBalanceToPlayer}>
                 Send $100 to player balance
@@ -113,11 +121,15 @@
             </div>
           {/if}
         </div>
-        {#if !$playerRat?.dead}
+        {#if !$rat?.dead}
           <!-- TRAITS -->
           <Traits />
-          <!-- LOAD OUT -->
-          <LoadOut />
+          <!-- RAT INVENTORY -->
+          <Inventory
+            isRat
+            inventory={$ratInventory}
+            itemKeys={$rat.inventory}
+          />
           <!-- NEST VIEW -->
           <NestView />
         {:else}

@@ -10,7 +10,6 @@ import { Health } from "./tables/Health.sol";
 import { Dead } from "./tables/Dead.sol";
 import { Traits } from "./tables/Traits.sol";
 import { Inventory } from "./tables/Inventory.sol";
-import { LoadOut } from "./tables/LoadOut.sol";
 import { Balance } from "./tables/Balance.sol";
 import { Value } from "./tables/Value.sol";
 import { OwnedRat } from "./tables/OwnedRat.sol";

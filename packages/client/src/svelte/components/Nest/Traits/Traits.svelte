@@ -1,15 +1,15 @@
 <script lang="ts">
-  import { playerRatTraits } from "@modules/state/base/stores"
+  import { ratTraits } from "@modules/state/base/stores"
   import TraitItem from "./TraitItem.svelte"
 </script>
 
 <div class="traits">
   <div class="title">__ Traits</div>
   <div class="content">
-    {#if !$playerRatTraits || $playerRatTraits.length === 0}
+    {#if !$ratTraits || $ratTraits.length === 0}
       <div>** BLANK **</div>
     {:else}
-      {#each $playerRatTraits as trait}
+      {#each $ratTraits as trait}
         <TraitItem {trait} />
       {/each}
     {/if}

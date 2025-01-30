@@ -7,7 +7,7 @@ export function getOnchainData(network: SetupNetworkReturnType, components: Clie
     const roomEntity = network.world.registerEntity({ id: roomId });
     const ratEntity = network.world.registerEntity({ id: ratId });
 
-    const { RoomPrompt, Dead, Traits, Owner, Health, Name, Balance, LoadOut, Value } = components;
+    const { RoomPrompt, Dead, Traits, Owner, Health, Name, Balance, Inventory, Value } = components;
 
     // Room
     const roomPrompt = (getComponentValue(RoomPrompt, roomEntity)?.value  ?? "") as string;
@@ -18,11 +18,11 @@ export function getOnchainData(network: SetupNetworkReturnType, components: Clie
     const ratDead = (getComponentValue(Dead, ratEntity)?.value) as boolean;
     const ratHealth = getComponentValue(Health, ratEntity)?.value as number;
     const ratBalance = (getComponentValue(Balance, ratEntity)?.value ?? 0) as number;
-    const ratLoadOut = (getComponentValue(LoadOut, ratEntity)?.value ?? [""]) as string[];
+    const ratInventory = (getComponentValue(Inventory, ratEntity)?.value ?? [""]) as string[];
     const ratTraits = (getComponentValue(Traits, ratEntity)?.value ?? [""]) as string[];
 
     const traitsObjects = constructTraitsObject(ratTraits, Name, Value)
-    const loadOutObjects = constructLoadOutObject(ratLoadOut, Name, Value)
+    const inventoryObjects = constructInventoryObject(ratInventory, Name, Value)
 
     const ratStats = {
         health: Number(ratHealth)
@@ -30,14 +30,15 @@ export function getOnchainData(network: SetupNetworkReturnType, components: Clie
 
     return {
         room: {
+            id: roomId,
             prompt: roomPrompt,
             balance: Number(roomBalance),
         },
         rat: {
+            id: ratId,
             traits: traitsObjects,
             balance: Number(ratBalance),
-            loadOut: loadOutObjects,
-            prompt: `Traits: ${toString(traitsObjects)}. Items: ${toString(loadOutObjects)}`,
+            inventory: inventoryObjects,
             dead: ratDead,
             owner: ratOwner,
             stats: ratStats,
@@ -48,6 +49,7 @@ export function getOnchainData(network: SetupNetworkReturnType, components: Clie
 function constructTraitsObject(ratTraits: string[], Name: ClientComponents['Name'], Value: ClientComponents['Value']) {
     const traitsObject: Trait[] = []
     for(let i = 0; i < ratTraits.length; i++) {
+        if(!ratTraits[i]) continue
         traitsObject.push(
             {
                 id: ratTraits[i],
@@ -59,20 +61,17 @@ function constructTraitsObject(ratTraits: string[], Name: ClientComponents['Name
     return traitsObject
 }
 
-function constructLoadOutObject(ratLoadOut: string[], Name: ClientComponents['Name'], Value: ClientComponents['Value']) {
-    const loadOutObject: Item[] = []
-    for(let i = 0; i < ratLoadOut.length; i++) {
-        loadOutObject.push(
+function constructInventoryObject(ratInventory: string[], Name: ClientComponents['Name'], Value: ClientComponents['Value']) {
+    const inventoryObject: Item[] = []
+    for(let i = 0; i < ratInventory.length; i++) {
+        if(!ratInventory[i]) continue
+        inventoryObject.push(
             {
-                id: ratLoadOut[i],
-                name: (getComponentValue(Name, ratLoadOut[i] as Entity)?.value ?? "") as string,
-                value: Number(getComponentValue(Value, ratLoadOut[i] as Entity)?.value ?? 0) as number
+                id: ratInventory[i],
+                name: (getComponentValue(Name, ratInventory[i] as Entity)?.value ?? "") as string,
+                value: Number(getComponentValue(Value, ratInventory[i] as Entity)?.value ?? 0) as number
             }
         )
     }
-    return loadOutObject
-}
-
-function toString(obj: Trait[]) {
-    return obj.map(o => o.name).join(', ')
+    return inventoryObject
 }

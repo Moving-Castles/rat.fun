@@ -33,7 +33,6 @@ export default defineWorld({
     // ...
     Traits: "bytes32[]",
     Inventory: "bytes32[]",
-    LoadOut: "bytes32[]",
     // ...
     Balance: "uint256",
     Value: "int256", // Value of a trait can be negative
