@@ -95,28 +95,28 @@ async function routes (fastify: FastifyInstance) {
 
             // Call outcome model
             const outcomeMessages = constructOutcomeMessages(rat, room, events);
-            const outcome = await callModel(llmClient, outcomeMessages, outcomeSystemPrompt) as OutcomeReturnValue;
+            const unvalidatedOutcome = await callModel(llmClient, outcomeMessages, outcomeSystemPrompt) as OutcomeReturnValue;
 
-            console.log('Outcome:', outcome);
+            console.log('Unvalidated outcome:', unvalidatedOutcome);
 
             // Apply the outcome suggested by the LLM to the onchain state and get back the actual outcome.
-            const actualOutcome = await systemCalls.applyOutcome(rat, room, outcome);
+            const validatedOutcome = await systemCalls.applyOutcome(rat, room, unvalidatedOutcome);
 
-            console.log('Actual Outcome:', actualOutcome);
+            console.log('Validated outcome:', validatedOutcome);
 
             // The event log might now not reflect the actual outcome.
             // Run it through the LLM again to get the corrected event log.
-            const correctionMessages = constructCorrectionMessages(actualOutcome, events);
+            const correctionMessages = constructCorrectionMessages(unvalidatedOutcome, validatedOutcome, events);
             const correctedEvents = await callModel(llmClient, correctionMessages, correctionSystemPrompt) as EventsReturnValue;
 
-            console.log('Corrected Events:', correctedEvents);
+            console.log('Corrected events:', correctedEvents);
 
             reply.send({
                 log: correctedEvents,
-                statChanges: actualOutcome.statChanges,
-                traitChanges: actualOutcome.traitChanges,
-                itemChanges: actualOutcome.itemChanges,
-                balanceTransfer: actualOutcome.balanceTransfer,
+                statChanges: validatedOutcome.statChanges,
+                traitChanges: validatedOutcome.traitChanges,
+                itemChanges: validatedOutcome.itemChanges,
+                balanceTransfer: validatedOutcome.balanceTransfer,
             });
         } catch (error) {
             console.error('Error:', error);

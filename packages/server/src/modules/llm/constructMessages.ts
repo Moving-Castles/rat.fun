@@ -38,10 +38,13 @@ export function constructOutcomeMessages(
 }
 
 export function constructCorrectionMessages(
+    unvalidatedOutcome: OutcomeReturnValue,
     validatedOutcome: OutcomeReturnValue,
     events: EventsReturnValue
 ): MessageParam[] {
     const messages: MessageParam[] = [];
+    // Unvalidated outcome
+    messages.push({ role: "user", content: `OldOutcome: ${JSON.stringify(unvalidatedOutcome)}` });
     // Validated outcome
     messages.push({ role: "user", content: `ValidatedOutcome: ${JSON.stringify(validatedOutcome)}` });
     // Event log
