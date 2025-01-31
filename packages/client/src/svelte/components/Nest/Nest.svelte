@@ -100,6 +100,13 @@
             <div class="label">Rat #{$rat.index}</div>
           </div>
         </div>
+        <!-- LEVEL-->
+        <div class="stat-item">
+          <div class="inner-wrapper">
+            <div class="label">Level:</div>
+            <div class="value">{$rat?.level ?? 0}</div>
+          </div>
+        </div>
         <!-- HEALTH -->
         <div class="stat-item">
           <div class="inner-wrapper health">

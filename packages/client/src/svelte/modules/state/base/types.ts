@@ -26,6 +26,7 @@ declare global {
     entityType?: ENTITY_TYPE,
     name?: string,
     balance?: number,
+    level?: number,
     value?: number,
     dead?: boolean,
     health?: number,
@@ -48,8 +49,9 @@ declare global {
   type Rat  = {
     [key: string]: number | ENTITY_TYPE | Hex | boolean | string[],
     entityType: ENTITY_TYPE.RAT,
-    balance: number,
     index: number,
+    balance: number,
+    level: number,
     owner: Hex,
     dead: boolean,
     health: number,
@@ -62,6 +64,7 @@ declare global {
     entityType: ENTITY_TYPE.ROOM,
     index: number,
     balance: number,
+    level: number,
     roomPrompt: string,
   }
 

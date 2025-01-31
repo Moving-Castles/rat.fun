@@ -247,7 +247,7 @@ contract ManagerSystemTest is BaseTest {
     assertEq(Traits.get(ratId).length, 0);
     assertEq(Inventory.get(ratId).length, 0);
     // Room balance:
-    // 50 (pre-change balance) + 100 (health) + 20 (balance) + 20 (positive trait) + 30 (positive item)
+    // 50 (pre-change balance) + 100 (health from rat) + 20 (balance) + 20 (positive trait) + 30 (positive item)
     assertEq(Balance.get(roomId), 220);
   }
 

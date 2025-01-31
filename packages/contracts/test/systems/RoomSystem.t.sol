@@ -23,6 +23,7 @@ contract RoomSystemTest is BaseTest {
     assertEq(uint8(EntityType.get(roomId)), uint8(ENTITY_TYPE.ROOM));
     assertEq(RoomPrompt.get(roomId), "A test room");
     assertEq(Balance.get(roomId), ROOM_CREATION_COST);
+    assertEq(Level.get(roomId), 1);
   }
 
   function testLongRoomPromptAdmin() public {
@@ -80,6 +81,7 @@ contract RoomSystemTest is BaseTest {
     assertEq(uint8(EntityType.get(roomId)), uint8(ENTITY_TYPE.ROOM));
     assertEq(RoomPrompt.get(roomId), "A test room");
     assertEq(Balance.get(roomId), ROOM_CREATION_COST);
+    assertEq(Level.get(roomId), 1);
   }
 
   function testRevertBlanceTooLow() public {

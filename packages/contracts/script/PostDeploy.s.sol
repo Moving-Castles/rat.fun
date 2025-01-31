@@ -39,25 +39,14 @@ contract PostDeploy is Script {
     LibInit.init(NamespaceOwner.get(ROOT_NAMESPACE_ID));
 
     // Create test rooms
-    LibRoom.createRoom(
-      "The room has two doors. One doors lead to victory, the other to defeat. Each door has a guardian mouse that needs to be defeated to pass."
-    );
-    LibRoom.createRoom(
-      "The room has one door. There is a puzzle on the floor. If a rat can solve the puzzle the door will open leading to victory."
-    );
-    LibRoom.createRoom("The room has no doors. The room is radioactive. There is no escape.");
-    LibRoom.createRoom("The room has no doors. There is a comfortable bed and relaxing music playing.");
-    LibRoom.createRoom(
-      "The room has a VR head set. The VR head give the experience of running on a thredmill. There is a virtual block of cheese dangling just out of reach. The experience of time is infinite."
-    );
-    LibRoom.createRoom(
-      "The room has a VR head set. The VR head gives access to all knowledge in the world. The experience of time is infinite."
-    );
+    LibRoom.createRoom("There is a second rat in the room. The rats have to fight.");
+    LibRoom.createRoom("The room has a comfortable bed and relaxing music playing.");
     LibRoom.createRoom("The room has healing energy that will restore the rat to perfect health.");
     LibRoom.createRoom("The room gives the rat a bag of cheese.");
     LibRoom.createRoom("The rat can trade a bag of cheese for a jester hat of the same value.");
     LibRoom.createRoom("The rat is forced to bet it's whole credit balance on a double or nothing game of chance.");
     LibRoom.createRoom("The room gives the rat a powerful lucky charm.");
+    LibRoom.createRoom("The room is a euthanasia chamber. There is no exit.");
     
     vm.stopBroadcast();
   }

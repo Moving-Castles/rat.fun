@@ -141,24 +141,24 @@
     "file": "test/systems/RatSystem.t.sol:RatSystemTest",
     "test": "testCreateRat",
     "name": "Create rat",
-    "gasUsed": 290294
+    "gasUsed": 325408
   },
   {
     "file": "test/systems/RoomSystem.t.sol:RoomSystemTest",
     "test": "testCreateRoomAdmin",
     "name": "Create room (admin)",
-    "gasUsed": 253713
+    "gasUsed": 288827
   },
   {
     "file": "test/systems/RoomSystem.t.sol:RoomSystemTest",
     "test": "testCreateRoomUser",
     "name": "Create room (user)",
-    "gasUsed": 267527
+    "gasUsed": 302641
   },
   {
     "file": "test/systems/RoomSystem.t.sol:RoomSystemTest",
     "test": "testLongRoomPromptAdmin",
     "name": "Create room: long prompt",
-    "gasUsed": 390280
+    "gasUsed": 425394
   }
 ]

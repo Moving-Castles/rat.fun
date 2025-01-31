@@ -102,10 +102,14 @@ async function routes (fastify: FastifyInstance) {
             // Apply the outcome suggested by the LLM to the onchain state and get back the actual outcome.
             const actualOutcome = await systemCalls.applyOutcome(rat, room, outcome);
 
+            console.log('Actual Outcome:', actualOutcome);
+
             // The event log might now not reflect the actual outcome.
             // Run it through the LLM again to get the corrected event log.
             const correctionMessages = constructCorrectionMessages(actualOutcome, events);
             const correctedEvents = await callModel(llmClient, correctionMessages, correctionSystemPrompt) as EventsReturnValue;
+
+            console.log('Corrected Events:', correctedEvents);
 
             reply.send({
                 log: correctedEvents,

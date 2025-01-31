@@ -13,10 +13,6 @@ export type SystemCalls = ReturnType<typeof createSystemCalls>;
 export function createSystemCalls(network: SetupNetworkResult) {
   const applyOutcome = async (rat: Rat, room: Room, outcome: OutcomeReturnValue) => {
 
-    // console.log('outcome:', outcome);
-    // console.log('old rat:', rat);
-    // console.log('old room:', room);
-
     const tx = await network.worldContract.write.ratroom__applyOutcome([
       rat.id, // _ratId
       room.id, // _roomId
@@ -31,8 +27,6 @@ export function createSystemCalls(network: SetupNetworkResult) {
     await network.waitForTransaction(tx);
 
     const newOnChainData = getOnchainData(network, network.components, room.id, rat.id);
-    // console.log('new rat:', newOnChainData.rat);
-    // console.log('new room:', newOnChainData.room);
 
     return updateOutcome(outcome, rat, newOnChainData.rat);
   }
@@ -45,10 +39,9 @@ export function createSystemCalls(network: SetupNetworkResult) {
 function updateOutcome(oldOutcome: OutcomeReturnValue, oldRat: Rat, newRat: Rat): OutcomeReturnValue {
   const newOutcome = oldOutcome;
 
-  console.log('old outcome:', oldOutcome);
-  console.log('old rat:', oldRat);
-  console.log('new rat:', newRat);
-
+  // console.log('old outcome:', oldOutcome);
+  // console.log('old rat:', oldRat);
+  // console.log('new rat:', newRat);
 
   // - - - - - - - - -
   // HEALTH
