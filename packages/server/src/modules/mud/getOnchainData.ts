@@ -3,20 +3,16 @@ import { getComponentValue, Entity } from "@latticexyz/recs";
 import { ClientComponents } from "./createClientComponents";
 import { SetupNetworkReturnType } from "./setupNetwork";
 
-export function getOnchainData(network: SetupNetworkReturnType, components: ClientComponents, roomId: string, ratId: string): OnchainData {
+export function getOnchainData(network: SetupNetworkReturnType, components: ClientComponents, ratId: string, roomId: string | undefined = undefined): OnchainData {
     const roomEntity = network.world.registerEntity({ id: roomId });
     const ratEntity = network.world.registerEntity({ id: ratId });
 
     const { RoomPrompt, Dead, Traits, Owner, Health, Name, Balance, Inventory, Value } = components;
 
-    // Room
-    const roomPrompt = (getComponentValue(RoomPrompt, roomEntity)?.value  ?? "") as string;
-    const roomBalance = (getComponentValue(Balance, roomEntity)?.value ?? 0) as number;
-
     // Rat
     const ratOwner = (getComponentValue(Owner, ratEntity)?.value ?? "") as string;
-    const ratDead = (getComponentValue(Dead, ratEntity)?.value) as boolean;
-    const ratHealth = getComponentValue(Health, ratEntity)?.value as number;
+    const ratDead = (getComponentValue(Dead, ratEntity)?.value ??  false) as boolean;
+    const ratHealth = (getComponentValue(Health, ratEntity)?.value ?? 0) as number;
     const ratBalance = (getComponentValue(Balance, ratEntity)?.value ?? 0) as number;
     const ratInventory = (getComponentValue(Inventory, ratEntity)?.value ?? [""]) as string[];
     const ratTraits = (getComponentValue(Traits, ratEntity)?.value ?? [""]) as string[];
@@ -28,22 +24,31 @@ export function getOnchainData(network: SetupNetworkReturnType, components: Clie
         health: Number(ratHealth)
     };
 
-    return {
-        room: {
-            id: roomId,
-            prompt: roomPrompt,
-            balance: Number(roomBalance),
-        },
-        rat: {
-            id: ratId,
-            traits: traitsObjects,
-            balance: Number(ratBalance),
-            inventory: inventoryObjects,
-            dead: ratDead,
-            owner: ratOwner,
-            stats: ratStats,
-        }
-    };
+    const rat = {
+        id: ratId,
+        traits: traitsObjects,
+        balance: Number(ratBalance),
+        inventory: inventoryObjects,
+        dead: ratDead,
+        owner: ratOwner,
+        stats: ratStats,
+    }
+
+    if(!roomId) {
+        return { rat }
+    }
+
+    // Room
+    const roomPrompt = (getComponentValue(RoomPrompt, roomEntity)?.value  ?? "") as string;
+    const roomBalance = (getComponentValue(Balance, roomEntity)?.value ?? 0) as number;
+
+    const room = {
+        id: roomId,
+        prompt: roomPrompt,
+        balance: Number(roomBalance),
+    }
+
+    return { rat, room};
 }
 
 function constructTraitsObject(ratTraits: string[], Name: ClientComponents['Name'], Value: ClientComponents['Value']) {

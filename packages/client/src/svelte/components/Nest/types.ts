@@ -1,3 +1,5 @@
+import { Hex } from "viem"
+
 export type TraitChange = {
   type: "add" | "remove",
   name: string,
@@ -18,6 +20,7 @@ export type LogEntry = {
 }
 
 export type ServerReturnValue = {
+  id: Hex,
   log: LogEntry[]
   statChanges: {
     [key: string]: number
@@ -25,4 +28,28 @@ export type ServerReturnValue = {
   traitChanges: TraitChange[]
   itemChanges: ItemChange[]
   balanceTransfer: number
+}
+
+export type ServerReturnValuePvP = {
+  log: LogEntry[]
+  ratA: { 
+    id: Hex,
+    log: LogEntry[]
+    statChanges: {
+      [key: string]: number
+    }
+    traitChanges: TraitChange[]
+    itemChanges: ItemChange[]
+    balanceTransfer: number
+  },
+  ratB: {
+    id: Hex,
+    log: LogEntry[]
+    statChanges: {
+      [key: string]: number
+    }
+    traitChanges: TraitChange[]
+    itemChanges: ItemChange[]
+    balanceTransfer: number
+  }
 }

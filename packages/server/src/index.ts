@@ -10,7 +10,10 @@ import { PORT } from '@config';
 
 import ping from '@routes/test/ping';
 import debug from '@routes/test/debug';
+import enterPvP from '@routes/room/enter-pvp';
 import enter from '@routes/room/enter';
+
+import { initDB } from '@routes/room/enter-pvp/roomStore';
 
 const fastify = Fastify({   logger: {
     transport: {
@@ -21,6 +24,9 @@ const fastify = Fastify({   logger: {
 
 // Monitoring 
 Sentry.setupFastifyErrorHandler(fastify);
+
+// Room store
+initDB();
 
 // Register plugins
 fastify.register(formbody);
@@ -33,6 +39,7 @@ fastify.register(cors, {
 fastify.register(ping)
 fastify.register(debug)
 fastify.register(enter)
+fastify.register(enterPvP)
 
 // Start the server
 const start = async (port: number) => {

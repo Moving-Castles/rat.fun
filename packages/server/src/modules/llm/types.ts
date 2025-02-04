@@ -13,12 +13,18 @@ export type ItemChange = {
 }
 
 export type OutcomeReturnValue = {
+    id?: string,
     statChanges: {
         health: number
     },
     traitChanges: TraitChange[],
     itemChanges: ItemChange[],
     balanceTransfer: number
+}
+
+export type PvPOutcomeReturnValue = {
+    ratA: OutcomeReturnValue,
+    ratB: OutcomeReturnValue
 }
 
 export type LogEntry = {

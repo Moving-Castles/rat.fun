@@ -4,6 +4,7 @@ export default defineWorld({
   namespace: "ratroom",
   enums: {
     ENTITY_TYPE: ["NONE", "PLAYER", "RAT", "ROOM", "ITEM", "TRAIT", ],
+    ROOM_TYPE: ["ONE_PLAYER", "TWO_PLAYER"]
   },
   deploy: {
     upgradeableWorldImplementation: true,
@@ -42,6 +43,7 @@ export default defineWorld({
     OwnedRat: "bytes32",
     Owner: "bytes32",
     RoomPrompt: "string",
+    RoomType: "ROOM_TYPE",
     Index: "uint256"
   },
   modules: [

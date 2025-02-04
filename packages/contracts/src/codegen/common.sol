@@ -11,3 +11,8 @@ enum ENTITY_TYPE {
   ITEM,
   TRAIT
 }
+
+enum ROOM_TYPE {
+  ONE_PLAYER,
+  TWO_PLAYER
+}

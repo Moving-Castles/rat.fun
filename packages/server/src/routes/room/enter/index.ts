@@ -33,10 +33,8 @@ const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY as string;
 // const LAMBDA_API_KEY = process.env.LAMBDA_API_KEY as string;
 
 // MUD
-import { setup } from '@modules/mud/setup';
 import { getOnchainData } from '@modules/mud/getOnchainData';
-const ETH_PRIVATE_KEY = process.env.ETH_PRIVATE_KEY as string;
-const CHAIN_ID = Number(process.env.CHAIN_ID) as number;
+import { components, systemCalls, network } from '@modules/mud/initMud';
 
 // Signature
 import { getSenderId } from '@modules/signature';
@@ -46,13 +44,6 @@ import { getSystemPrompts } from '@modules/cms';
 
 // Validate
 import { validateInputData } from './validation';
-
-// Initialize MUD
-const {
-    components,
-    systemCalls,
-    network,
-} = await setup(ETH_PRIVATE_KEY, CHAIN_ID);
 
 // Initialize LLM: Anthropic
 const llmClient = getLLMClient(ANTHROPIC_API_KEY);
@@ -78,7 +69,11 @@ async function routes (fastify: FastifyInstance) {
             } = request.body;
 
             // Get onchain data
-            const { room, rat } = getOnchainData(await network, components, roomId, ratId);
+            const { room, rat } = getOnchainData(await network, components, ratId, roomId);
+
+            if(!room) {
+                throw new Error('Room not found');
+            }
             
             // Recover player address from signature and convert to MUD bytes32 format
             const playerId = getSenderId(signature, MESSAGE);

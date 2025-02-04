@@ -26,7 +26,7 @@ export function createSystemCalls(network: SetupNetworkResult) {
     
     await network.waitForTransaction(tx);
 
-    const newOnChainData = getOnchainData(network, network.components, room.id, rat.id);
+    const newOnChainData = getOnchainData(network, network.components, rat.id, room.id);
 
     return updateOutcome(outcome, rat, newOnChainData.rat);
   }
@@ -42,6 +42,12 @@ function updateOutcome(oldOutcome: OutcomeReturnValue, oldRat: Rat, newRat: Rat)
   // console.log('old outcome:', oldOutcome);
   // console.log('old rat:', oldRat);
   // console.log('new rat:', newRat);
+
+  // - - - - - - - - -
+  // ID
+  // - - - - - - - - -
+
+  newOutcome.id = newRat.id;
 
   // - - - - - - - - -
   // HEALTH

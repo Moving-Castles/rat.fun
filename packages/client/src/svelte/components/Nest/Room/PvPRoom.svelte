@@ -1,18 +1,19 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte"
 
-  import type { ServerReturnValue } from "../types"
+  import type { ServerReturnValuePvP } from "../types"
 
   import Spinner from "@components/Spinner/Spinner.svelte"
   import Log from "@components/Nest/Log/Log.svelte"
   import Outcome from "./Outcome.svelte"
+  import { player } from "@svelte/modules/state/base/stores"
 
-  export let outcome: ServerReturnValue
+  export let outcome: ServerReturnValuePvP
   export let room: Room
 
   let oldRoomBalance = room.balance
 
-  $: console.log("outcome", outcome)
+  $: console.log("pvp outcome", outcome)
 
   const dispatch = createEventDispatcher()
 
@@ -32,7 +33,20 @@
 
   <!-- OUTCOME -->
   {#if outcome.log?.length ?? 0 > 0}
-    <Outcome {room} {outcome} {oldRoomBalance} />
+    <div class="outcome-container">
+      <div class="column">
+        <div class="alert">
+          {outcome.ratA.id === $player.ownedRat ? "YOU" : "OTHER GUY"}
+        </div>
+        <Outcome {room} outcome={outcome.ratA} {oldRoomBalance} />
+      </div>
+      <div class="column">
+        <div class="alert">
+          {outcome.ratB.id === $player.ownedRat ? "YOU" : "OTHER GUY"}
+        </div>
+        <Outcome {room} outcome={outcome.ratB} {oldRoomBalance} />
+      </div>
+    </div>
     <div class="return">
       <button on:click={close}>Return to nest</button>
     </div>
@@ -71,5 +85,22 @@
     background: var(--color-alert);
     margin-top: 20px;
     cursor: pointer;
+  }
+
+  .outcome-container {
+    display: flex;
+    justify-content: space-between;
+
+    .column {
+      width: 50%;
+    }
+  }
+
+  .alert {
+    display: inline-block;
+    background: var(--color-alert);
+    padding: 10px;
+    padding-inline: 20px;
+    color: var(--black);
   }
 </style>

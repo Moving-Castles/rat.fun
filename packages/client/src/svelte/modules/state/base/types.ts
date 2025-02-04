@@ -1,4 +1,4 @@
-import { ENTITY_TYPE } from "contracts/enums"
+import { ENTITY_TYPE, ROOM_TYPE } from "contracts/enums"
 import { Hex } from "viem"
 
 declare global {
@@ -37,6 +37,7 @@ declare global {
     ownedRat?: Hex,
     owner?: Hex,
     roomPrompt?: string,
+    roomType?: ROOM_TYPE,
     index?: number,
   }
 
@@ -69,6 +70,7 @@ declare global {
     balance: number,
     level: number,
     roomPrompt: string,
+    roomType: ROOM_TYPE
   }
 
   type Trait = {

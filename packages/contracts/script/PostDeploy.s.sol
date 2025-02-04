@@ -18,6 +18,7 @@ import { NamespaceOwner } from "@latticexyz/world/src/codegen/tables/NamespaceOw
 import { GameConfig } from "../src/codegen/index.sol";
 
 import { LibRoom, LibInit, LibUtils } from "../src/libraries/Libraries.sol";
+import { ROOM_TYPE } from "../src/codegen/common.sol";
 
 contract PostDeploy is Script {
   function run(address worldAddress) external {
@@ -43,15 +44,33 @@ contract PostDeploy is Script {
     bytes32 adminId = GameConfig.getAdminId();
 
     // Create test rooms
-    LibRoom.createRoom("There is a second rat in the room. The rats have to fight.", adminId);
-    LibRoom.createRoom("The room has a comfortable bed and relaxing music playing.", adminId);
-    LibRoom.createRoom("The room has healing energy that will restore the rat to perfect health.", adminId);
-    LibRoom.createRoom("The room gives the rat a bag of cheese.", adminId);
-    LibRoom.createRoom("The rat can trade a bag of cheese for a jester hat of the same value.", adminId);
-    LibRoom.createRoom("The rat is forced to bet it's whole credit balance on a double or nothing game of chance.", adminId);
-    LibRoom.createRoom("The room gives the rat a powerful lucky charm.", adminId);
-    LibRoom.createRoom("The room is a euthanasia chamber. There is no exit.", adminId);
-    
+    LibRoom.createRoom("There is a second rat in the room. The rats have to fight.", ROOM_TYPE.ONE_PLAYER, adminId);
+    LibRoom.createRoom("The room has a comfortable bed and relaxing music playing.", ROOM_TYPE.ONE_PLAYER, adminId);
+    LibRoom.createRoom(
+      "The room has healing energy that will restore the rat to perfect health.",
+      ROOM_TYPE.ONE_PLAYER,
+      adminId
+    );
+    LibRoom.createRoom("The room gives the rat a bag of cheese.", ROOM_TYPE.ONE_PLAYER, adminId);
+    LibRoom.createRoom(
+      "The rat can trade a bag of cheese for a jester hat of the same value.",
+      ROOM_TYPE.ONE_PLAYER,
+      adminId
+    );
+    LibRoom.createRoom(
+      "The rat is forced to bet it's whole credit balance on a double or nothing game of chance.",
+      ROOM_TYPE.ONE_PLAYER,
+      adminId
+    );
+    LibRoom.createRoom("The room gives the rat a powerful lucky charm.", ROOM_TYPE.ONE_PLAYER, adminId);
+    LibRoom.createRoom("The room is a euthanasia chamber. There is no exit.", ROOM_TYPE.ONE_PLAYER, adminId);
+    LibRoom.createRoom("The neutral room.", ROOM_TYPE.TWO_PLAYER, adminId);
+    LibRoom.createRoom(
+      "The room has is filled with a gas that radically increases rat aggression.",
+      ROOM_TYPE.TWO_PLAYER,
+      adminId
+    );
+
     vm.stopBroadcast();
   }
 }

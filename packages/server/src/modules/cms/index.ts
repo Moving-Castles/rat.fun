@@ -14,6 +14,18 @@ export const getSystemPrompts = async () => {
     };
 }
 
+export const getPvPSystemPrompts = async () => {
+    const pvpEventPrompts = await loadData(queries.pvpEventPrompts, {}) as EventPrompts;
+    const pvpOutcomePrompts = await loadData(queries.pvpOutcomePrompts, {}) as OutcomePrompts;
+    const pvpCorrectionPrompts = await loadData(queries.pvpCorrectionPrompts, {}) as CorrectionPrompts;
+
+    return {
+        eventSystemPrompt: combineSystemPrompts(pvpEventPrompts),
+        outcomeSystemPrompt: combineSystemPrompts(pvpOutcomePrompts),
+        correctionSystemPrompt: combineSystemPrompts(pvpCorrectionPrompts)
+    };
+}
+
 function combineSystemPrompts(doc: EventPrompts | OutcomePrompts | CorrectionPrompts) {
     return `Return format: ${doc.returnFormat?.code ?? ""} // ${doc.prompt ?? ""}`; 
 }
