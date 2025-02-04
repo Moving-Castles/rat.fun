@@ -15,7 +15,9 @@ import { PuppetModule } from "@latticexyz/world-modules/src/modules/puppet/Puppe
 import { ROOT_NAMESPACE_ID } from "@latticexyz/world/src/constants.sol";
 import { NamespaceOwner } from "@latticexyz/world/src/codegen/tables/NamespaceOwner.sol";
 
-import { LibRoom, LibInit } from "../src/libraries/Libraries.sol";
+import { GameConfig } from "../src/codegen/index.sol";
+
+import { LibRoom, LibInit, LibUtils } from "../src/libraries/Libraries.sol";
 
 contract PostDeploy is Script {
   function run(address worldAddress) external {
@@ -38,15 +40,17 @@ contract PostDeploy is Script {
     // Root namespace owner is admin
     LibInit.init(NamespaceOwner.get(ROOT_NAMESPACE_ID));
 
+    bytes32 adminId = GameConfig.getAdminId();
+
     // Create test rooms
-    LibRoom.createRoom("There is a second rat in the room. The rats have to fight.");
-    LibRoom.createRoom("The room has a comfortable bed and relaxing music playing.");
-    LibRoom.createRoom("The room has healing energy that will restore the rat to perfect health.");
-    LibRoom.createRoom("The room gives the rat a bag of cheese.");
-    LibRoom.createRoom("The rat can trade a bag of cheese for a jester hat of the same value.");
-    LibRoom.createRoom("The rat is forced to bet it's whole credit balance on a double or nothing game of chance.");
-    LibRoom.createRoom("The room gives the rat a powerful lucky charm.");
-    LibRoom.createRoom("The room is a euthanasia chamber. There is no exit.");
+    LibRoom.createRoom("There is a second rat in the room. The rats have to fight.", adminId);
+    LibRoom.createRoom("The room has a comfortable bed and relaxing music playing.", adminId);
+    LibRoom.createRoom("The room has healing energy that will restore the rat to perfect health.", adminId);
+    LibRoom.createRoom("The room gives the rat a bag of cheese.", adminId);
+    LibRoom.createRoom("The rat can trade a bag of cheese for a jester hat of the same value.", adminId);
+    LibRoom.createRoom("The rat is forced to bet it's whole credit balance on a double or nothing game of chance.", adminId);
+    LibRoom.createRoom("The room gives the rat a powerful lucky charm.", adminId);
+    LibRoom.createRoom("The room is a euthanasia chamber. There is no exit.", adminId);
     
     vm.stopBroadcast();
   }

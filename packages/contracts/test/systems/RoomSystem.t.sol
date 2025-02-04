@@ -23,6 +23,7 @@ contract RoomSystemTest is BaseTest {
     assertEq(uint8(EntityType.get(roomId)), uint8(ENTITY_TYPE.ROOM));
     assertEq(RoomPrompt.get(roomId), "A test room");
     assertEq(Balance.get(roomId), ROOM_CREATION_COST);
+    assertEq(Owner.get(roomId), GameConfig.getAdminId());
     assertEq(Level.get(roomId), 1);
   }
 
@@ -81,6 +82,7 @@ contract RoomSystemTest is BaseTest {
     assertEq(uint8(EntityType.get(roomId)), uint8(ENTITY_TYPE.ROOM));
     assertEq(RoomPrompt.get(roomId), "A test room");
     assertEq(Balance.get(roomId), ROOM_CREATION_COST);
+    assertEq(Owner.get(roomId), playerId);
     assertEq(Level.get(roomId), 1);
   }
 

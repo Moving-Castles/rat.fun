@@ -16,8 +16,8 @@
 
   import { ENVIRONMENT } from "@mud/enums"
 
-  import RoomItem from "@components/Nest/RoomItem.svelte"
-  import NewRoom from "@components/Nest/NewRoom.svelte"
+  import RoomItem from "@svelte/components/Nest/Room/RoomItem.svelte"
+  import NewRoom from "@components/Nest/Room/NewRoom.svelte"
   import Inventory from "@components/Nest/Inventory/Inventory.svelte"
   import Traits from "@components/Nest/Traits/Traits.svelte"
   import NestView from "@components/Nest/NestView/NestView.svelte"

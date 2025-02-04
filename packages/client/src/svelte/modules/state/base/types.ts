@@ -4,13 +4,15 @@ import { Hex } from "viem"
 declare global {
 
   type GameConfig = {
-    adminAddress: string,
+    adminAddress: Hex,
+    adminId: Hex,
     globalRoomIndex: number,
     globalRatIndex: number,
     roomCreationCost: number,
     maxRoomPromptLength: number,
     maxInventorySize: number,
     maxLoadOutSize: number
+    creatorFee: number
   }
   
   // * * * * * * * * * * * * * * * * *
@@ -62,6 +64,7 @@ declare global {
   type Room = {
     [key: string]: number | ENTITY_TYPE | string,
     entityType: ENTITY_TYPE.ROOM,
+    owner: Hex,
     index: number,
     balance: number,
     level: number,

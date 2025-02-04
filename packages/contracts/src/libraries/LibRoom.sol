@@ -9,9 +9,10 @@ library LibRoom {
   /**
    * @notice Create a room
    * @param _roomPrompt The prompt for the room
+   * @param _roomOwner Id of the owner of the room
    * @return roomId The id of the new room
    */
-  function createRoom(string memory _roomPrompt) internal returns (bytes32 roomId) {
+  function createRoom(string memory _roomPrompt, bytes32 _roomOwner) internal returns (bytes32 roomId) {
     roomId = getUniqueEntity();
     EntityType.set(roomId, ENTITY_TYPE.ROOM);
     RoomPrompt.set(roomId, _roomPrompt);
@@ -20,6 +21,7 @@ library LibRoom {
     GameConfig.setGlobalRoomIndex(newRoomIndex);
     Index.set(roomId, newRoomIndex);
     Level.set(roomId, 1);
+    Owner.set(roomId, _roomOwner);
 
     // Add to room's balance
     Balance.set(roomId, ROOM_CREATION_COST);

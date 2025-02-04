@@ -58,10 +58,16 @@ contract ManagerSystemTest is BaseTest {
   function testApplyOutcomeIncreaseHealth() public {
     setUp();
 
-    // As player
+
+    // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
     bytes32 ratId = world.ratroom__createRat();
+    vm.stopPrank();
+
+    // As bob
+    vm.startPrank(bob);
+    world.ratroom__spawn("bob");
     bytes32 roomId = world.ratroom__createRoom("test room");
     vm.stopPrank();
 
@@ -74,17 +80,22 @@ contract ManagerSystemTest is BaseTest {
 
     // 100 + 20
     assertEq(Health.get(ratId), 120);
-    // 100 - 20
-    assertEq(Balance.get(roomId), 80);
+    // 100 - 20 - 5 (CREATOR_FEE)
+    assertEq(Balance.get(roomId), 75);
   }
 
   function testApplyOutcomeReduceHealth() public {
     setUp();
 
-    // As player
+    // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
     bytes32 ratId = world.ratroom__createRat();
+    vm.stopPrank();
+
+    // As bob
+    vm.startPrank(bob);
+    world.ratroom__spawn("bob");
     bytes32 roomId = world.ratroom__createRoom("test room");
     vm.stopPrank();
 
@@ -106,17 +117,22 @@ contract ManagerSystemTest is BaseTest {
 
     // 100 - 20
     assertEq(Health.get(ratId), 80);
-    // 100 + 20
-    assertEq(Balance.get(roomId), 120);
+    // 100 + 20 - 5 (CREATOR_FEE)
+    assertEq(Balance.get(roomId), 115);
   }
 
   function testApplyOutcomeOverIncreaseHealth() public {
     setUp();
 
-    // As player
+    // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
     bytes32 ratId = world.ratroom__createRat();
+    vm.stopPrank();
+
+    // As bob
+    vm.startPrank(bob);
+    world.ratroom__spawn("bob");
     bytes32 roomId = world.ratroom__createRoom("test room");
     vm.stopPrank();
 
@@ -136,19 +152,24 @@ contract ManagerSystemTest is BaseTest {
     endGasReport();
     vm.stopPrank();
 
-    // 100 + 100 (because room only had 100 credits to give)
-    assertEq(Health.get(ratId), 200);
-    // 100 - 100 (because room only had 100 credits to give)
+    // 100 + 95 (because room only had 95 credits to give after creator fee)
+    assertEq(Health.get(ratId), 195);
+    // 100 - 100
     assertEq(Balance.get(roomId), 0);
   }
 
   function testApplyOutcomeOverReduceHealth() public {
     setUp();
 
-    // As player
+    // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
     bytes32 ratId = world.ratroom__createRat();
+    vm.stopPrank();
+
+    // As bob
+    vm.startPrank(bob);
+    world.ratroom__spawn("bob");
     bytes32 roomId = world.ratroom__createRoom("test room");
     vm.stopPrank();
 
@@ -172,17 +193,22 @@ contract ManagerSystemTest is BaseTest {
     assertEq(Health.get(ratId), 0);
     // Rat is dead
     assertTrue(Dead.get(ratId));
-    // 100 + 100 (because rat only had 100 health to give)
-    assertEq(Balance.get(roomId), 200);
+    // 100 + 100 (because rat only had 100 health to give) - 5 (CREATOR_FEE)
+    assertEq(Balance.get(roomId), 195);
   }
 
   function testApplyOutcomeValueTransferOnDeath() public {
     setUp();
 
-    // As player
+    // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
     bytes32 ratId = world.ratroom__createRat();
+    vm.stopPrank();
+
+    // As bob
+    vm.startPrank(bob);
+    bytes32 bobId = world.ratroom__spawn("bob");
     bytes32 roomId = world.ratroom__createRoom("test room");
     vm.stopPrank();
 
@@ -203,8 +229,12 @@ contract ManagerSystemTest is BaseTest {
 
     // Room balance:
     // Traits cancel out
-    // 100 - 20 (balance transfer) - 30 (item)
-    assertEq(Balance.get(roomId), 50);
+    // 100 - 20 (balance transfer) - 30 (item) - 5 (CREATOR_FEE)
+    assertEq(Balance.get(roomId), 45);
+
+    // Check balance transfer to creator
+    // 1000 (initial credits) - 100 (ROOM_CREATION_COST) + 5 (CREATOR_FEE)
+    assertEq(Balance.get(bobId), 905);
 
     // Check rat balance
     // 0 + 20 (balance transfer)
@@ -247,8 +277,8 @@ contract ManagerSystemTest is BaseTest {
     assertEq(Traits.get(ratId).length, 0);
     assertEq(Inventory.get(ratId).length, 0);
     // Room balance:
-    // 50 (pre-change balance) + 100 (health from rat) + 20 (balance) + 20 (positive trait) + 30 (positive item)
-    assertEq(Balance.get(roomId), 220);
+    // 45 (pre-change balance) + 100 (health from rat) + 20 (balance) + 20 (positive trait) + 30 (positive item) - 5 (CREATOR_FEE)
+    assertEq(Balance.get(roomId), 210);
   }
 
   // * * * *
@@ -258,10 +288,15 @@ contract ManagerSystemTest is BaseTest {
   function testApplyOutcomeAddPositiveTrait() public {
     setUp();
 
-    // As player
+    // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
     bytes32 ratId = world.ratroom__createRat();
+    vm.stopPrank();
+
+    // As bob
+    vm.startPrank(bob);
+    world.ratroom__spawn("bob");
     bytes32 roomId = world.ratroom__createRoom("test room");
     vm.stopPrank();
 
@@ -281,17 +316,22 @@ contract ManagerSystemTest is BaseTest {
     assertEq(Value.get(Traits.get(ratId)[0]), 40);
     assertEq(Name.get(Traits.get(ratId)[0]), "happy");
 
-    // 100 - 40
-    assertEq(Balance.get(roomId), 60);
+    // 100 - 40 - 5 (CREATOR_FEE)
+    assertEq(Balance.get(roomId), 55);
   }
 
   function testApplyOutcomeAddNegativeTrait() public {
     setUp();
 
-    // As player
+    // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
     bytes32 ratId = world.ratroom__createRat();
+    vm.stopPrank();
+
+    // As bob
+    vm.startPrank(bob);
+    world.ratroom__spawn("bob");
     bytes32 roomId = world.ratroom__createRoom("test room");
     vm.stopPrank();
 
@@ -311,17 +351,22 @@ contract ManagerSystemTest is BaseTest {
     assertEq(Value.get(Traits.get(ratId)[0]), -40);
     assertEq(Name.get(Traits.get(ratId)[0]), "sad");
 
-    // 100 + 40
-    assertEq(Balance.get(roomId), 140);
+    // 100 + 40 - 5 (CREATOR_FEE)
+    assertEq(Balance.get(roomId), 135);
   }
 
   function testApplyOutcomeAddPositiveTraitTooExpensive() public {
     setUp();
 
-    // As player
+    // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
     bytes32 ratId = world.ratroom__createRat();
+    vm.stopPrank();
+
+    // As bob
+    vm.startPrank(bob);
+    world.ratroom__spawn("bob");
     bytes32 roomId = world.ratroom__createRoom("test room");
     vm.stopPrank();
 
@@ -336,18 +381,24 @@ contract ManagerSystemTest is BaseTest {
     endGasReport();
     vm.stopPrank();
 
-    // Not enough room balance, so nothing should happen
+    // Not enough room balance, so only creator fee is subtracted
     assertEq(Traits.get(ratId).length, 0);
-    assertEq(Balance.get(roomId), 100);
+    // 100 - 5 (CREATOR_FEE)
+    assertEq(Balance.get(roomId), 95);
   }
 
   function testApplyOutcomeRemovePositiveTrait() public {
     setUp();
 
-    // As player
+    // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
     bytes32 ratId = world.ratroom__createRat();
+    vm.stopPrank();
+
+    // As bob
+    vm.startPrank(bob);
+    world.ratroom__spawn("bob");
     bytes32 roomId = world.ratroom__createRoom("test room");
     vm.stopPrank();
 
@@ -366,8 +417,8 @@ contract ManagerSystemTest is BaseTest {
     assertEq(Value.get(traitId), 40);
     assertEq(Name.get(traitId), "happy");
 
-    // 100 - 40
-    assertEq(Balance.get(roomId), 60);
+    // 100 - 40 - 5 (CREATOR_FEE)
+    assertEq(Balance.get(roomId), 55);
 
     bytes32[] memory traitsToRemove = new bytes32[](1);
     traitsToRemove[0] = traitId;
@@ -379,21 +430,25 @@ contract ManagerSystemTest is BaseTest {
     endGasReport();
     vm.stopPrank();
 
-    // 60 + 40
-    assertEq(Balance.get(roomId), 100);
+    // 55 + 40 - 5 (CREATOR_FEE)
+    assertEq(Balance.get(roomId), 90);
     assertEq(Traits.get(ratId).length, 0);
   }
 
   function testApplyOutcomeRemoveNegativeTrait() public {
     setUp();
 
-    // As player
+    // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
     bytes32 ratId = world.ratroom__createRat();
-    bytes32 roomId = world.ratroom__createRoom("test room");
     vm.stopPrank();
 
+    // As bob
+    vm.startPrank(bob);
+    world.ratroom__spawn("bob");
+    bytes32 roomId = world.ratroom__createRoom("test room");
+    vm.stopPrank();
     // Trait to add
     Item[] memory newTraits = new Item[](1);
     newTraits[0] = Item("sad", -40);
@@ -409,8 +464,8 @@ contract ManagerSystemTest is BaseTest {
     assertEq(Value.get(traitId), -40);
     assertEq(Name.get(traitId), "sad");
 
-    // 100 + 40
-    assertEq(Balance.get(roomId), 140);
+    // 100 + 40 - 5 (CREATOR_FEE)
+    assertEq(Balance.get(roomId), 135);
 
     bytes32[] memory traitsToRemove = new bytes32[](1);
     traitsToRemove[0] = traitId;
@@ -422,18 +477,23 @@ contract ManagerSystemTest is BaseTest {
     endGasReport();
     vm.stopPrank();
 
-    // 140 - 40
-    assertEq(Balance.get(roomId), 100);
+    // 135 - 40 - 5 (CREATOR_FEE)
+    assertEq(Balance.get(roomId), 90);
     assertEq(Traits.get(ratId).length, 0);
   }
 
   function testApplyOutcomeRemoveNegativeTraitTooExpensive() public {
     setUp();
 
-    // As player
+    // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
     bytes32 ratId = world.ratroom__createRat();
+    vm.stopPrank();
+
+    // As bob
+    vm.startPrank(bob);
+    world.ratroom__spawn("bob");
     bytes32 roomId = world.ratroom__createRoom("test room");
     vm.stopPrank();
 
@@ -452,8 +512,8 @@ contract ManagerSystemTest is BaseTest {
     assertEq(Value.get(traitId), -40);
     assertEq(Name.get(traitId), "sad");
 
-    // 100 + 40
-    assertEq(Balance.get(roomId), 140);
+    // 100 + 40 - 5 (CREATOR_FEE)
+    assertEq(Balance.get(roomId), 135);
 
     bytes32[] memory traitsToRemove = new bytes32[](1);
     traitsToRemove[0] = traitId;
@@ -471,7 +531,9 @@ contract ManagerSystemTest is BaseTest {
       new bytes32[](0),
       new Item[](0)
     );
-    assertEq(Balance.get(roomId), 20);
+
+    // 135 - 120 - 5 (CREATOR_FEE)
+    assertEq(Balance.get(roomId), 10);
 
     startGasReport("Apply outcome (remove negative trait: too expensive)");
     world.ratroom__applyOutcome(ratId, roomId, 0, 0, traitsToRemove, new Item[](0), new bytes32[](0), new Item[](0));
@@ -482,8 +544,8 @@ contract ManagerSystemTest is BaseTest {
     assertEq(Traits.get(ratId).length, 1);
     assertEq(Value.get(traitId), -40);
     assertEq(Name.get(traitId), "sad");
-    // Balance unchanged
-    assertEq(Balance.get(roomId), 20);
+    // 10 - 5 (CREATOR_FEE)
+    assertEq(Balance.get(roomId), 5);
   }
 
   // * * * *
@@ -493,10 +555,15 @@ contract ManagerSystemTest is BaseTest {
   function testApplyOutcomeAddPositiveItem() public {
     setUp();
 
-    // As player
+    // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
     bytes32 ratId = world.ratroom__createRat();
+    vm.stopPrank();
+
+    // As bob
+    vm.startPrank(bob);
+    world.ratroom__spawn("bob");
     bytes32 roomId = world.ratroom__createRoom("test room");
     vm.stopPrank();
 
@@ -516,17 +583,22 @@ contract ManagerSystemTest is BaseTest {
     assertEq(Value.get(Inventory.get(ratId)[0]), 40);
     assertEq(Name.get(Inventory.get(ratId)[0]), "cheese");
 
-    // 100 - 40
-    assertEq(Balance.get(roomId), 60);
+    // 100 - 40 - 5 (CREATOR_FEE)
+    assertEq(Balance.get(roomId), 55);
   }
 
   function testApplyOutcomeAddNegativeItem() public {
     setUp();
 
-    // As player
+    // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
     bytes32 ratId = world.ratroom__createRat();
+    vm.stopPrank();
+
+    // As bob
+    vm.startPrank(bob);
+    world.ratroom__spawn("bob");
     bytes32 roomId = world.ratroom__createRoom("test room");
     vm.stopPrank();
 
@@ -548,20 +620,24 @@ contract ManagerSystemTest is BaseTest {
     assertEq(Value.get(Inventory.get(ratId)[0]), 40);
     assertEq(Name.get(Inventory.get(ratId)[0]), "rotten cheese");
 
-    // 100 - 40
-    assertEq(Balance.get(roomId), 60);
+    // 100 - 40 - 5 (CREATOR_FEE)
+    assertEq(Balance.get(roomId), 55);
   }
 
   function testApplyOutcomeAddPositiveItemTooExpensive() public {
     setUp();
 
-    // As player
+    // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
     bytes32 ratId = world.ratroom__createRat();
-    bytes32 roomId = world.ratroom__createRoom("test room");
     vm.stopPrank();
 
+    // As bob
+    vm.startPrank(bob);
+    world.ratroom__spawn("bob");
+    bytes32 roomId = world.ratroom__createRoom("test room");
+    vm.stopPrank();
     // Item to add
     Item[] memory newItems = new Item[](1);
     newItems[0] = Item("cheese", 200);
@@ -573,18 +649,24 @@ contract ManagerSystemTest is BaseTest {
     endGasReport();
     vm.stopPrank();
 
-    // Not enough room balance, so nothing should happen
+    // Not enough room balance
     assertEq(Inventory.get(ratId).length, 0);
-    assertEq(Balance.get(roomId), 100);
+    // 100 - 5 (CREATOR_FEE)
+    assertEq(Balance.get(roomId), 95);
   }
 
   function testApplyOutcomeRemovePositiveItem() public {
     setUp();
 
-    // As player
+    // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
     bytes32 ratId = world.ratroom__createRat();
+    vm.stopPrank();
+
+    // As bob
+    vm.startPrank(bob);
+    world.ratroom__spawn("bob");
     bytes32 roomId = world.ratroom__createRoom("test room");
     vm.stopPrank();
 
@@ -603,8 +685,8 @@ contract ManagerSystemTest is BaseTest {
     assertEq(Value.get(itemId), 40);
     assertEq(Name.get(itemId), "cheese");
 
-    // 100 - 40
-    assertEq(Balance.get(roomId), 60);
+    // 100 - 40 - 5 (CREATOR_FEE)
+    assertEq(Balance.get(roomId), 55);
 
     bytes32[] memory itemsToRemove = new bytes32[](1);
     itemsToRemove[0] = itemId;
@@ -616,8 +698,8 @@ contract ManagerSystemTest is BaseTest {
     endGasReport();
     vm.stopPrank();
 
-    // 60 + 40
-    assertEq(Balance.get(roomId), 100);
+    // 55 + 40 - 5 (CREATOR_FEE)
+    assertEq(Balance.get(roomId), 90);
     assertEq(Inventory.get(ratId).length, 0);
   }
 
@@ -628,10 +710,15 @@ contract ManagerSystemTest is BaseTest {
   function testApplyOutcomeTransferToRat() public {
     setUp();
 
-    // As player
+    // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
     bytes32 ratId = world.ratroom__createRat();
+    vm.stopPrank();
+
+    // As bob
+    vm.startPrank(bob);
+    bytes32 bobId = world.ratroom__spawn("bob");
     bytes32 roomId = world.ratroom__createRoom("test room");
     vm.stopPrank();
 
@@ -644,17 +731,24 @@ contract ManagerSystemTest is BaseTest {
 
     // 0 + 20
     assertEq(Balance.get(ratId), 20);
-    // 100 - 20
-    assertEq(Balance.get(roomId), 80);
+    // 100 - 20 - 5 (CREATOR_FEE)
+    assertEq(Balance.get(roomId), 75);
+    // 1000 (initial credits) - 100 (ROOM_CREATION_COST) + 5 (CREATOR_FEE)
+    assertEq(Balance.get(bobId), 905);
   }
 
   function testApplyOutcomeTransferToRoom() public {
     setUp();
 
-    // As player
+    // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
     bytes32 ratId = world.ratroom__createRat();
+    vm.stopPrank();
+
+    // As bob
+    vm.startPrank(bob);
+    world.ratroom__spawn("bob");
     bytes32 roomId = world.ratroom__createRoom("test room");
     vm.stopPrank();
 
@@ -675,19 +769,24 @@ contract ManagerSystemTest is BaseTest {
     endGasReport();
     vm.stopPrank();
 
-    // 0 + 50 - 20 = 30
+    // 0 + 50 - 20 
     assertEq(Balance.get(ratId), 30);
-    // 100 - 50 + 20 = 70
-    assertEq(Balance.get(roomId), 70);
+    // 100 - 50 + 20 - 2 x 5 (CREATOR_FEE)
+    assertEq(Balance.get(roomId), 60);
   }
 
   function testApplyOutcomeOverTransferToRat() public {
     setUp();
 
-    // As player
+    // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
     bytes32 ratId = world.ratroom__createRat();
+    vm.stopPrank();
+
+    // As bob
+    vm.startPrank(bob);
+    world.ratroom__spawn("bob");
     bytes32 roomId = world.ratroom__createRoom("test room");
     vm.stopPrank();
 
@@ -707,19 +806,24 @@ contract ManagerSystemTest is BaseTest {
     endGasReport();
     vm.stopPrank();
 
-    // 0 + 100 (because room only had 100 credits to give)
-    assertEq(Balance.get(ratId), 100);
-    // 100 - 100 (because room only had 100 credits to give)
+    // 0 + 95 (because room only had 95 credits to give)
+    assertEq(Balance.get(ratId), 95);
+    // 100 - 95 - 5 (CREATOR_FEE)
     assertEq(Balance.get(roomId), 0);
   }
 
   function testApplyOutcomeOverTransferToRoom() public {
     setUp();
 
-    // As player
+    // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
     bytes32 ratId = world.ratroom__createRat();
+    vm.stopPrank();
+
+    // As bob
+    vm.startPrank(bob);
+    world.ratroom__spawn("bob");
     bytes32 roomId = world.ratroom__createRoom("test room");
     vm.stopPrank();
 
@@ -742,8 +846,8 @@ contract ManagerSystemTest is BaseTest {
 
     // 0 + 50 - 50 (because rat only had 50 credits to give)
     assertEq(Balance.get(ratId), 0);
-    // 100 - 50 + 50 (because rat only had 50 credits to give)
-    assertEq(Balance.get(roomId), 100);
+    // 100 - 50 + 50 - 2 x 5 (CREATOR_FEE)
+    assertEq(Balance.get(roomId), 90);
   }
 
   // * * * * * * * *

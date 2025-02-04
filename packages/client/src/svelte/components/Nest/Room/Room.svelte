@@ -2,12 +2,14 @@
   import { fade } from "svelte/transition"
   import { createEventDispatcher } from "svelte"
 
-  import type { ServerReturnValue } from "./types"
+  import type { ServerReturnValue } from "../types"
 
   import Spinner from "@components/Spinner/Spinner.svelte"
   import InventoryItem from "@components/Nest/Inventory/InventoryItem.svelte"
   import TraitItem from "@components/Nest/Traits/TraitItem.svelte"
   import Log from "@components/Nest/Log/Log.svelte"
+  import { gameConfig } from "@svelte/modules/state/base/stores"
+  import { shortenAddress } from "@svelte/modules/utils"
 
   export let outcome: ServerReturnValue
   export let room: Room
@@ -111,6 +113,16 @@
         {/if}
       </div>
 
+      <!-- Creator fee payout-->
+      {#if room.owner !== $gameConfig.adminId}
+        <div class="outcome-item">
+          <div class="title">
+            Creator fee (${$gameConfig.creatorFee}) paid to
+          </div>
+          <div class="creator">{shortenAddress(room.owner)}</div>
+        </div>
+      {/if}
+
       <!-- Old room balance -->
       <div class="outcome-item">
         <div class="title">Old room balance</div>
@@ -199,6 +211,13 @@
     display: inline-block;
     padding: 10px;
     background: var(--color-value);
+    color: var(--black);
+  }
+
+  .creator {
+    display: inline-block;
+    padding: 10px;
+    background: var(--color-secondary);
     color: var(--black);
   }
 

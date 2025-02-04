@@ -33,7 +33,7 @@
     "viem": "2.22.15"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": "^20"
   },
   "type": "module"
 }

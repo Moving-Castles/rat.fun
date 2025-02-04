@@ -1,11 +1,12 @@
 <script lang="ts">
-  import { player, rat } from "@modules/state/base/stores"
-  import type { ServerReturnValue } from "./types"
+  import { player, rat, gameConfig } from "@modules/state/base/stores"
+  import type { ServerReturnValue } from "../types"
   import { walletNetwork } from "@modules/network"
   import { MESSAGE } from "@components/Nest/constants"
   import { ENVIRONMENT } from "@mud/enums"
+  import { shortenAddress } from "@modules/utils"
 
-  import RoomComponent from "@components/Nest/Room.svelte"
+  import RoomComponent from "@components/Nest/Room/Room.svelte"
 
   export let room: Room
   export let roomId: string
@@ -74,6 +75,11 @@
   <div class="room-info">
     <div class="prompt">{room.roomPrompt}</div>
     <div class="balance">Balance: ${room.balance ?? 0}</div>
+    <div class="creator">
+      Creator: {room.owner === $gameConfig.adminId
+        ? "Jimmy9"
+        : shortenAddress(room.owner)}
+    </div>
   </div>
 </div>
 
@@ -119,6 +125,14 @@
     padding: 10px;
     background: var(--color-value);
     color: var(--black);
+    display: inline-block;
+    margin-top: 10px;
+  }
+
+  .creator {
+    padding: 10px;
+    background: var(--color-grey-mid);
+    color: var(--white);
     display: inline-block;
     margin-top: 10px;
   }

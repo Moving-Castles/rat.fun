@@ -13,6 +13,7 @@ export default defineWorld({
       key: [],
       schema: {
         adminAddress: "address",
+        adminId: "bytes32",
         globalRoomIndex: "uint32",
         globalRatIndex: "uint32",
         roomCreationCost: "uint32",
@@ -20,6 +21,7 @@ export default defineWorld({
         maxInventorySize: "uint32",
         maxLoadOutSize: "uint32",
         maxTraitsSize: "uint32",
+        creatorFee: "uint256",
       },
       codegen: {
         dataStruct: true
