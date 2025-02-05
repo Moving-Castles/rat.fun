@@ -5,6 +5,7 @@ import * as Sentry from "@sentry/node"
 import Fastify from 'fastify'
 import formbody from '@fastify/formbody';
 import cors from '@fastify/cors';
+import websocket from '@fastify/websocket'
 
 import { PORT } from '@config';
 
@@ -12,8 +13,7 @@ import ping from '@routes/test/ping';
 import debug from '@routes/test/debug';
 import enterPvP from '@routes/room/enter-pvp';
 import enter from '@routes/room/enter';
-
-import { initDB } from '@routes/room/enter-pvp/roomStore';
+import ws from '@routes/websocket';
 
 const fastify = Fastify({   logger: {
     transport: {
@@ -25,10 +25,8 @@ const fastify = Fastify({   logger: {
 // Monitoring 
 Sentry.setupFastifyErrorHandler(fastify);
 
-// Room store
-initDB();
-
 // Register plugins
+fastify.register(websocket);
 fastify.register(formbody);
 fastify.register(cors, {
   origin: '*', // Allow all origins (restrict for production)
@@ -40,6 +38,7 @@ fastify.register(ping)
 fastify.register(debug)
 fastify.register(enter)
 fastify.register(enterPvP)
+fastify.register(ws)
 
 // Start the server
 const start = async (port: number) => {

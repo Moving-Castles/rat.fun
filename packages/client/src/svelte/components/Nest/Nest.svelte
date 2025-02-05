@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from "svelte"
   import {
     player,
     rat,
@@ -13,8 +14,11 @@
     transferBalanceToRat,
   } from "@modules/action"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
+  import { shortenAddress } from "@modules/utils"
 
   import { ENVIRONMENT } from "@mud/enums"
+  import { EMPTY_CONNECTION } from "@svelte/modules/utils/constants"
+  import { initOffChainSync } from "@svelte/modules/off-chain-sync"
 
   import RoomItem from "@svelte/components/Nest/Room/RoomItem.svelte"
   import NewRoom from "@components/Nest/Room/NewRoom.svelte"
@@ -53,6 +57,10 @@
   function restart() {
     UIState.set(UI.CREATING_RAT)
   }
+
+  onMount(() => {
+    initOffChainSync(environment, $player.ownedRat)
+  })
 </script>
 
 <div class="nest">
@@ -100,6 +108,15 @@
             <div class="label">Rat #{$rat.index}</div>
           </div>
         </div>
+        <!-- Wating in room -->
+        {#if $rat.waitingInRoom && $rat.waitingInRoom !== EMPTY_CONNECTION}
+          <div class="stat-item">
+            <div class="inner-wrapper rat">
+              <div class="label">Waiting in room</div>
+              <div class="value">{shortenAddress($rat.waitingInRoom)}</div>
+            </div>
+          </div>
+        {/if}
         <!-- LEVEL-->
         <div class="stat-item">
           <div class="inner-wrapper">

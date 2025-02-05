@@ -38,13 +38,16 @@ export default defineWorld({
     Inventory: "bytes32[]",
     // ...
     Level: "uint256",
+    Index: "uint256",
     Balance: "uint256",
+    WaitingInRoom: "bytes32", // Set on rat. Id of the room that the rat is waiting in
     Value: "int256", // Value of a trait can be negative
     OwnedRat: "bytes32",
     Owner: "bytes32",
+    // ...
     RoomPrompt: "string",
     RoomType: "ROOM_TYPE",
-    Index: "uint256"
+    RatInRoom: "bytes32" // Set on room. Id of rat waiting in room
   },
   modules: [
     {

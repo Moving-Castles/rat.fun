@@ -30,8 +30,8 @@ import { getPvPSystemPrompts } from '@modules/cms';
 // Validate
 import { validateInputData } from '@routes/room/enter/validation';
 
-// Room store
-import { getRats, addRat, clearRoom } from '@routes/room/enter-pvp/roomStore';
+// Websocket
+import { wsConnections } from '@routes/websocket/store';
 
 // Initialize LLM: Anthropic
 const llmClient = getLLMClient(ANTHROPIC_API_KEY);
@@ -50,9 +50,6 @@ async function routes (fastify: FastifyInstance) {
             // Get onchain data
             const { room, rat: ratA } = getOnchainData(await network, components, ratId, roomId);
 
-            console.log('room', room)
-            console.log('ratA', ratA)
-
             if(!room) {
                 throw new Error('Room not found');
             }
@@ -61,18 +58,20 @@ async function routes (fastify: FastifyInstance) {
             const playerId = getSenderId(signature, MESSAGE);
 
             validateInputData(playerId, ratA, room);
-
+            
+            console.log('ratInRoom:', room.ratInRoom);
             // Check if room already has one player
-            const ratsInRoom = getRats(roomId);
-            console.log("rats in room", ratsInRoom, ratsInRoom.length);
-            if(ratsInRoom.length === 0) {
-                // Add rat to room
-                await addRat(roomId, ratId);
-                return;
+
+            if(!room.ratInRoom) {
+                console.log('no rat in room');
+                console.log('Placing Rat A in room...');
+                console.log('ratA', ratA);
+                await systemCalls.placeRatInRoom(ratA, room);
+                return { message: 'Rat entered room' };
             }
 
             // We have two players in room, run the simulation...
-            const { rat: ratB } = getOnchainData(await network, components, ratsInRoom[0]);
+            const { rat: ratB } = getOnchainData(await network, components, room.ratInRoom);
 
             console.log('Rat A:', ratA);
             console.log('Rat B:', ratB);
@@ -84,13 +83,13 @@ async function routes (fastify: FastifyInstance) {
             const eventMessages = constructPvPEventMessages(ratA, ratB, room);
             const events = await callModel(llmClient, eventMessages, eventSystemPrompt) as EventsReturnValue;
 
-            console.log('Events:', events);
+            // console.log('Events:', events);
 
             // Call outcome model
             const outcomeMessages = constructPvPOutcomeMessages(ratA, ratB, room, events);
             const unvalidatedOutcome = await callModel(llmClient, outcomeMessages, outcomeSystemPrompt) as PvPOutcomeReturnValue;
 
-            console.log('Unvalidated outcome:', unvalidatedOutcome);
+            // console.log('Unvalidated outcome:', unvalidatedOutcome);
 
             // Apply the outcome suggested by the LLM to the onchain state and get back the actual outcome.
             const validatedOutcome = {
@@ -98,17 +97,14 @@ async function routes (fastify: FastifyInstance) {
                 ratB: await systemCalls.applyOutcome(ratB, room, unvalidatedOutcome.ratB)
             }
 
-            console.log('Validated outcome:', validatedOutcome);
+            // console.log('Validated outcome:', validatedOutcome);
 
             // The event log might now not reflect the actual outcome.
             // Run it through the LLM again to get the corrected event log.
             const correctionMessages = constructPvPCorrectionMessages(unvalidatedOutcome, validatedOutcome, events);
             const correctedEvents = await callModel(llmClient, correctionMessages, correctionSystemPrompt) as EventsReturnValue;
 
-            console.log('Corrected events:', correctedEvents);
-
-            // Clear room
-            clearRoom(roomId);
+            // console.log('Corrected events:', correctedEvents);
 
             const returnValue = {
                 log: correctedEvents,
@@ -116,7 +112,17 @@ async function routes (fastify: FastifyInstance) {
                 ratB: validatedOutcome.ratB
             }
 
-            console.log(returnValue);
+            // console.log(returnValue);
+
+            console.log('Sending outcome to RatA via WebSocket...');
+
+            // Send the outcome to RatB through its WebSocket connection
+            const ratBWebSocket = wsConnections[ratB.id];
+            if (ratBWebSocket) {
+                ratBWebSocket.send(JSON.stringify(returnValue));
+            } else {
+                console.error('No active WebSocket connection for RatA');
+            }
 
             reply.send(returnValue);
         } catch (error) {

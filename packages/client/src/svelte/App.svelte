@@ -18,7 +18,6 @@
 
   const spawned = async () => {
     try {
-      // await initOffChainSync()
       UIState.set(UI.CREATING_RAT)
     } catch (e) {
       console.error(e)

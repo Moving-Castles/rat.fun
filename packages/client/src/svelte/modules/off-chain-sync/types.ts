@@ -1,5 +1,3 @@
-import type { Euler } from "three"
-
 export type Client = {
   id: string
   address: string
@@ -19,11 +17,3 @@ export type MessageObject = {
   data: ChatMessage
   verifiedClients: Client[]
 }
-
-export type Object3DTransform = {
-  position: [number, number, number]
-  rotation: Euler
-  scale: number | [number, number, number]
-}
-
-export type FalseOrTransform = false | Object3DTransform

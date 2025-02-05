@@ -12,8 +12,6 @@
 
   let oldRoomBalance = room.balance
 
-  $: console.log("outcome", outcome)
-
   const dispatch = createEventDispatcher()
 
   function close() {

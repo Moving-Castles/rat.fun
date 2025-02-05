@@ -1,6 +1,6 @@
 import { writable } from "svelte/store"
+import type { Writable } from "svelte/store"
+import { ServerReturnValuePvP } from "@components/Nest/types"
 
-export const playerClientId = writable("")
 export const clientList = writable([] as string[])
-export const clientTransforms = writable(new Map())
-export const clientLocations = writable(new Map())
+export const newEvent: Writable<ServerReturnValuePvP | null> = writable(null)

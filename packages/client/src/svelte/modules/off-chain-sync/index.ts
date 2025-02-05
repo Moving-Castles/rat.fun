@@ -1,130 +1,75 @@
-import type { FalseOrTransform } from "@modules/off-chain-sync/types"
-import type { ChatMessage } from "@modules/off-chain-sync/types"
-import {
-  clientList,
-  playerClientId,
-  clientTransforms,
-  clientLocations,
-} from "@modules/off-chain-sync/stores"
-import { LOCATION } from "@modules/ui/enums"
-import { OFF_CHAIN_SYNC_SERVER_URL } from "./constants"
-import { get } from "svelte/store"
-import { publicNetwork } from "@modules/network"
+import { ENVIRONMENT } from "@mud/enums"
+import { newEvent } from "@modules/off-chain-sync/stores"
 
 let socket: WebSocket
-let lastTransformUpdate = performance.now()
 
-const TRANSFORM_UPDATE_INTERVAL = 100
+export function initOffChainSync(environment: ENVIRONMENT, ratId: string) {
+  console.log("Initializing off chain sync", environment, ratId)
 
-export function initOffChainSync(): Promise<void> {
-  console.log("Initializing off chain sync")
-  return new Promise((resolve, reject) => {
-    socket = new WebSocket(OFF_CHAIN_SYNC_SERVER_URL)
+  let url = `ws://localhost:3131/ws/${ratId}`
 
-    socket.addEventListener("open", event => {
-      console.log("Connected to off chain sync", event)
-      resolve()
-    })
-
-    socket.addEventListener("error", error => {
-      console.error("WebSocket error:", error)
-      reject()
-    })
-
-    // Listen for messages
-    socket.addEventListener("message", (event: { data: string }) => {
-      const msgObj = JSON.parse(event.data)
-
-      const { topic, message } = msgObj
-
-      switch (topic) {
-        case "clientId": {
-          const { clientId } = JSON.parse(event.data)
-          playerClientId.set(clientId)
-          console.log("Player client, ", clientId)
-          break
-        }
-
-        case "clientList": {
-          clientList.set(msgObj.clients)
-          console.log("Clients, ", msgObj.clients)
-          break
-        }
-
-        case "transform": {
-          clientTransforms.update(m => {
-            m.set(msgObj.clientId, JSON.parse(message))
-
-            return m
-          })
-
-          break
-        }
-
-        case "location": {
-          clientLocations.update(m => {
-            m.set(msgObj.clientId, JSON.parse(message))
-
-            return m
-          })
-
-          break
-        }
-
-        default: {
-          console.warn("unhandled message topic: ", topic, msgObj)
-          break
-        }
-      }
-    })
-
-    socket.addEventListener("close", () => {
-      console.log("socket closed")
-    })
-  })
-}
-
-function setupMessage(address: string, topic: string, message: any) {
-  if (!socket) return
-
-  const $publicNetwork = get(publicNetwork)
-
-  if (socket.readyState === socket.OPEN) {
-    const timestamp = performance.now()
-    const msg: ChatMessage = {
-      topic,
-      address,
-      world: $publicNetwork.worldAddress,
-      timestamp,
-      id: String(timestamp),
-      message: JSON.stringify(message),
-    }
-    return JSON.stringify(msg)
+  if ([ENVIRONMENT.GARNET].includes(environment)) {
+    url = `wss://reality-model-1.mc-infra.com/ws/${ratId}`
   }
 
-  return false
-}
+  socket = new WebSocket(url)
 
-export async function sendTransform(address: string, t: FalseOrTransform) {
-  if (!socket) return
-
-  const now = performance.now()
-
-  // Throttle updates to the server
-  if (now - lastTransformUpdate < TRANSFORM_UPDATE_INTERVAL) return
-
-  const msg = setupMessage(address, "transform", t)
-
-  if (msg) {
-    socket.send(msg)
-    lastTransformUpdate = now
+  socket.onmessage = message => {
+    // TODO route messages to appropriate handlers
+    console.log("Received message:", message)
+    const outcome = JSON.parse(message.data)
+    console.log("Received outcome:", outcome)
+    newEvent.set(outcome)
   }
-}
 
-export async function sendLocation(address: string, l: LOCATION) {
-  if (!socket) return
+  // TODO: Handle socket disconnection
 
-  const msg = setupMessage(address, "location", l)
+  // TODO: Update client list when players connect/disconnect
 
-  if (msg) socket.send(msg)
+  // // Listen for messages
+  // socket.addEventListener("message", (event: { data: string }) => {
+  //   const msgObj = JSON.parse(event.data)
+
+  //   const { topic, message } = msgObj
+
+  //   switch (topic) {
+  //     case "clientId": {
+  //       const { clientId } = JSON.parse(event.data)
+  //       playerClientId.set(clientId)
+  //       console.log("Player client, ", clientId)
+  //       break
+  //     }
+
+  //     case "clientList": {
+  //       clientList.set(msgObj.clients)
+  //       console.log("Clients, ", msgObj.clients)
+  //       break
+  //     }
+
+  //     case "transform": {
+  //       clientTransforms.update(m => {
+  //         m.set(msgObj.clientId, JSON.parse(message))
+
+  //         return m
+  //       })
+
+  //       break
+  //     }
+
+  //     case "location": {
+  //       clientLocations.update(m => {
+  //         m.set(msgObj.clientId, JSON.parse(message))
+
+  //         return m
+  //       })
+
+  //       break
+  //     }
+
+  //     default: {
+  //       console.warn("unhandled message topic: ", topic, msgObj)
+  //       break
+  //     }
+  //   }
+  // })
 }

@@ -5,6 +5,7 @@
   import { MESSAGE } from "@components/Nest/constants"
   import { ENVIRONMENT } from "@mud/enums"
   import { shortenAddress } from "@modules/utils"
+  import { EMPTY_CONNECTION } from "@modules/utils/constants"
 
   import RoomComponent from "@components/Nest/Room/Room.svelte"
   import PvPRoomComponent from "@components/Nest/Room/PvPRoom.svelte"
@@ -12,8 +13,6 @@
   export let room: Room
   export let roomId: string
   export let environment: ENVIRONMENT
-
-  $: console.log("room", room)
 
   let busy = false
   let outcome: ServerReturnValue | ServerReturnValuePvP
@@ -127,13 +126,20 @@
     disabled={busy}>ROOM #{room.index}</button
   >
   <div class="room-info" class:pvp={room.roomType === 1}>
+    <!-- Prompt -->
     <div class="prompt">{room.roomPrompt}</div>
+    <!-- Balance -->
     <div class="balance">Balance: ${room.balance ?? 0}</div>
+    <!-- Creator -->
     <div class="creator">
       Creator: {room.owner === $gameConfig.adminId
         ? "Jimmy9"
         : shortenAddress(room.owner)}
     </div>
+    <!-- Rat waiting in room  -->
+    {#if room.ratInRoom && room.ratInRoom !== EMPTY_CONNECTION}
+      <div class="creator">Rat in room: {shortenAddress(room.ratInRoom)}</div>
+    {/if}
   </div>
 </div>
 

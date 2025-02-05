@@ -1,19 +1,25 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte"
+  import { player } from "@svelte/modules/state/base/stores"
+  import { newEvent } from "@svelte/modules/off-chain-sync/stores"
 
   import type { ServerReturnValuePvP } from "../types"
 
   import Spinner from "@components/Spinner/Spinner.svelte"
   import Log from "@components/Nest/Log/Log.svelte"
   import Outcome from "./Outcome.svelte"
-  import { player } from "@svelte/modules/state/base/stores"
 
   export let outcome: ServerReturnValuePvP
   export let room: Room
 
+  $: console.log("outcome", outcome)
+
   let oldRoomBalance = room.balance
 
-  $: console.log("pvp outcome", outcome)
+  $: if ($newEvent?.log) {
+    outcome = $newEvent
+    newEvent.set(null)
+  }
 
   const dispatch = createEventDispatcher()
 
@@ -50,6 +56,9 @@
     <div class="return">
       <button on:click={close}>Return to nest</button>
     </div>
+  {:else if outcome.message}
+    <p>{outcome.message}.</p>
+    <p>Waiting for second rat: <Spinner /></p>
   {:else}
     EXPERIMENT IN PROGRESS: <Spinner />
   {/if}

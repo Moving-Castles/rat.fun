@@ -38,6 +38,8 @@ declare global {
     owner?: Hex,
     roomPrompt?: string,
     roomType?: ROOM_TYPE,
+    ratInRoom?: Hex,
+    waitingInRoom?: Hex,
     index?: number,
   }
 
@@ -60,6 +62,7 @@ declare global {
     health: number,
     traits: string[],
     inventory: string[],
+    waitingInRoom: Hex
   }
 
   type Room = {
@@ -70,7 +73,8 @@ declare global {
     balance: number,
     level: number,
     roomPrompt: string,
-    roomType: ROOM_TYPE
+    roomType: ROOM_TYPE,
+    ratInRoom: Hex
   }
 
   type Trait = {

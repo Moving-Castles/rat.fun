@@ -11,6 +11,13 @@ import { getOnchainData } from "./getOnchainData";
 export type SystemCalls = ReturnType<typeof createSystemCalls>;
 
 export function createSystemCalls(network: SetupNetworkResult) {
+  const placeRatInRoom = async (rat: Rat, room: Room) => {
+    const tx = await network.worldContract.write.ratroom__placeRatInRoom([rat.id, room.id]);
+    await network.waitForTransaction(tx);
+    return;
+  }
+
+
   const applyOutcome = async (rat: Rat, room: Room, outcome: OutcomeReturnValue) => {
 
     const tx = await network.worldContract.write.ratroom__applyOutcome([
@@ -32,6 +39,7 @@ export function createSystemCalls(network: SetupNetworkResult) {
   }
 
   return {
+    placeRatInRoom,
     applyOutcome
   };
 }

@@ -1,7 +1,5 @@
 <script lang="ts">
   import { rat } from "@modules/state/base/stores"
-
-  $: console.log("$rat", $rat)
 </script>
 
 <div class="nest-view">NEST VIEW</div>

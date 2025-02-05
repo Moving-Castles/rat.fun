@@ -6,7 +6,6 @@ import { setupBurnerWalletNetwork } from "@mud/setupBurnerWalletNetwork"
 import { ENVIRONMENT } from "@mud/enums"
 import { initActionSequencer } from "@modules/action/actionSequencer"
 import { playerAddress } from "@modules/state/base/stores"
-import { initPlayerEventsListener } from "@modules/event"
 
 export async function initNetwork(environment: ENVIRONMENT) {
     // Write mud layer to svelte store
@@ -24,7 +23,4 @@ export async function initNetwork(environment: ENVIRONMENT) {
 
     // Write block numbers to svelte store and alert on lost connection
     initBlockListener()
-
-    // Handle changes to player's event state
-    initPlayerEventsListener()
 }

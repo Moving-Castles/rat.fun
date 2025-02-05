@@ -5,9 +5,6 @@ procs:
   contracts:
     cwd: packages/contracts
     shell: pnpm mud dev-contracts --rpc http://127.0.0.1:8545
-  off-chain-sync:
-    cwd: packages/off-chain-sync
-    shell: pnpm start
   cms:
     cwd: packages/cms
     shell: pnpm dev
