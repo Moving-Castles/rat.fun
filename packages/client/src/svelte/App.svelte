@@ -9,8 +9,6 @@
   import Spawn from "@components/Spawn/Spawn.svelte"
   import CreateRat from "@components/CreateRat/CreateRat.svelte"
   import Nest from "@components/Nest/Nest.svelte"
-  import Cage from "@components/Cage/Cage.svelte"
-  import Main from "@components/World/Main.svelte"
 
   export let environment: ENVIRONMENT
 
@@ -50,12 +48,6 @@
 <svelte:window />
 
 <div class="context-main">
-  <div class="warn">
-    <Main>
-      <Cage />
-    </Main>
-  </div>
-
   {#if $UIState === UI.LOADING}
     <main>
       <Loading {environment} on:done={loadedEnvironment} />
@@ -86,12 +78,5 @@
     display: flex;
     justify-content: center;
     align-items: center;
-  }
-
-  .warn {
-    position: fixed;
-    inset: 0;
-    border-top: 20px solid yellow;
-    border-bottom: 20px solid yellow;
   }
 </style>

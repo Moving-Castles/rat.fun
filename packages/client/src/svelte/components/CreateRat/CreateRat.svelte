@@ -5,6 +5,8 @@
   import { playSound } from "@modules/sound"
   import { rat, player } from "@modules/state/base/stores"
   import { ENTITY_TYPE } from "contracts/enums"
+  import Cage from "@components/Cage/Cage.svelte"
+  import Main from "@components/World/Main.svelte"
 
   import Spinner from "@components/Spinner/Spinner.svelte"
 
@@ -39,7 +41,9 @@
 <div class="main">
   <div class="title">WELCOME {$player?.name ?? ""}</div>
   <div class="image-container">
-    <img src="/images/rat.jpg" alt="rat" />
+    <Main>
+      <Cage />
+    </Main>
   </div>
   <button class:busy on:click={sendCreateRat}>
     <span class="button-text">ADOPT A RAT</span>

@@ -4,7 +4,7 @@
 
   let fogColor: number = 0x000000
   export let ambientLightColor: number = 0xd0d0d0
-  let ambientLightIntensity: number = 0
+  let ambientLightIntensity: number = 10
   export let directionalLightColor: number = 0xffffff
   let directionalLightIntensity: number = 0.2
   export let mapRadius: number = 500

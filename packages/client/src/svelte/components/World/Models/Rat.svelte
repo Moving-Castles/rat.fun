@@ -6,8 +6,15 @@ Command: npx @threlte/gltf@3.0.0 RAT_FinalModel_01.glb
 <script>
   import { T } from "@threlte/core"
   import { useGltf } from "@threlte/extras"
+  import { useTask } from "@threlte/core"
 
   let { fallback, error, children, ref = $bindable(), ...props } = $props()
+
+  let rotation = $state(0)
+
+  useTask(d => {
+    rotation += d
+  })
 
   const gltf = useGltf("/models/RAT_FinalModel_01.glb")
 </script>
@@ -16,7 +23,7 @@ Command: npx @threlte/gltf@3.0.0 RAT_FinalModel_01.glb
   {#await gltf}
     {@render fallback?.()}
   {:then gltf}
-    <T.Mesh
+    <!-- <T.Mesh
       geometry={gltf.nodes.First.geometry}
       material={gltf.materials.Wireframe}
       position={[0, 0.72, -7.58]}
@@ -69,12 +76,13 @@ Command: npx @threlte/gltf@3.0.0 RAT_FinalModel_01.glb
       material={gltf.materials.Rat}
       position={[-1.54, 0.49, 2.46]}
       scale={0.32}
-    />
+    /> -->
     <T.Mesh
+      rotation.z={rotation}
       geometry={gltf.nodes.Small_Up_NONMIRRORED.geometry}
       material={gltf.materials.Rat}
-      position={[-0.13, 0.17, 6.33]}
-      scale={0.32}
+      position={[0, -0.5, 1.91]}
+      scale={1}
     />
   {:catch err}
     {@render error?.({ error: err })}

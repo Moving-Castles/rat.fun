@@ -83,10 +83,27 @@
     }
   }
 
+  const updateEffects = e => {
+    const keys = Object.keys(e)
+    console.log(keys)
+
+    if (keys.includes("crt")) {
+      const p = composer.passes?.find(p => p?.material?.name === "CRTShader")
+      if (p) {
+        p.uniforms["scan"].value = e.crt.scan
+        p.uniforms["warp"].value = e.crt.warp
+      }
+    }
+  }
+
   // If depends on other things than camera, add extra dependencies in function
   // signature and call them here
   $: setupEffectComposer($camera)
   $: composer.setSize($size.width, $size.height)
+  $: {
+    // console.log("effects updated", effects)
+    updateEffects(effects)
+  }
 
   onMount(() => {
     let before = autoRender.current
@@ -99,8 +116,6 @@
   useTask(
     "render-pass",
     delta => {
-      console.log(composer.passes)
-
       composer.render(delta)
     },
     { stage: renderStage, autoInvalidate: false }
