@@ -8,7 +8,7 @@
   .client-stats {
     position: fixed;
     top: 0;
-    right: 0;
+    left: 0;
     background: blue;
     padding: 10px;
   }

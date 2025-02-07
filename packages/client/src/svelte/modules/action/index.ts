@@ -8,6 +8,8 @@ export enum WorldFunctions {
   LevelUp = NAMESPACE + "levelUp",
   CreateRat = NAMESPACE + "createRat",
   CreateRoom = NAMESPACE + "createRoom",
+  CreateRoomAsAdmin = NAMESPACE + "createRoomAsAdmin",
+  DestroyRoomAsAdmin = NAMESPACE + "destroyRoomAsAdmin",
   transferItemToInventory = NAMESPACE + "transferItemToInventory",
   transferItemToLoadOut = NAMESPACE + "transferItemToLoadOut",
   transferBalanceToPlayer = NAMESPACE + "transferBalanceToPlayer",
@@ -26,6 +28,14 @@ export function levelUp() {
 
 export function createRoom(prompt: string, roomType: ROOM_TYPE) {
   return addToSequencer(WorldFunctions.CreateRoom, [prompt, roomType])
+}
+
+export function createRoomAsAdmin(prompt: string, roomType: ROOM_TYPE, roomLevel: number) {
+  return addToSequencer(WorldFunctions.CreateRoomAsAdmin, [prompt, roomType, roomLevel])
+}
+
+export function destroyRoomAsAdmin(roomId: string) {
+  return addToSequencer(WorldFunctions.DestroyRoomAsAdmin, [roomId])
 }
 
 export function createRat() {

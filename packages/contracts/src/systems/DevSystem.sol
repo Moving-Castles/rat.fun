@@ -3,8 +3,8 @@ pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
 import { GameConfig, EntityType, Balance, Name, OwnedRat, Inventory, Dead, Level } from "../codegen/index.sol";
-import { LibUtils } from "../libraries/Libraries.sol";
-import { ENTITY_TYPE } from "../codegen/common.sol";
+import { LibUtils, LibRoom } from "../libraries/Libraries.sol";
+import { ENTITY_TYPE, ROOM_TYPE } from "../codegen/common.sol";
 import { MAX_INVENTORY_SIZE, MAX_LOADOUT_SIZE } from "../constants.sol";
 
 contract DevSystem is System {
@@ -17,5 +17,13 @@ contract DevSystem is System {
         bytes32 playerId = LibUtils.addressToEntityKey(_msgSender());
         bytes32 ratId = OwnedRat.get(playerId);
         Balance.set(ratId, Balance.get(ratId) + _amount);
+    }
+
+    function createRoomAsAdmin(string memory _roomPrompt, ROOM_TYPE _roomType, uint256 _roomLevel) public returns (bytes32 roomId) {
+        roomId = LibRoom.createRoom(_roomPrompt, _roomType, GameConfig.getAdminId(), _roomLevel);
+    }
+
+    function destroyRoomAsAdmin(bytes32 _roomId) public {
+        LibRoom.destroyRoom(_roomId);
     }
 }

@@ -34,4 +34,13 @@ library LibRoom {
     // Add to room's balance
     Balance.set(roomId, ROOM_CREATION_COST);
   }
+
+  function destroyRoom(bytes32 _roomId) internal {
+    EntityType.deleteRecord(_roomId);
+    RoomPrompt.deleteRecord(_roomId);
+    RoomType.deleteRecord(_roomId);
+    Index.deleteRecord(_roomId);
+    Level.deleteRecord(_roomId);
+    Owner.deleteRecord(_roomId);
+  }
 }

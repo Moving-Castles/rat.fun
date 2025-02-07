@@ -23,11 +23,12 @@
   import { initOffChainSync } from "@modules/off-chain-sync"
 
   import RoomItem from "@components/Nest/Room/RoomItem.svelte"
-  // import NewRoom from "@components/Nest/Room/NewRoom.svelte"
+  import NewRoom from "@components/Nest/Room/NewRoom.svelte"
   import Inventory from "@components/Nest/Inventory/Inventory.svelte"
   import Traits from "@components/Nest/Traits/Traits.svelte"
   import NestView from "@components/Nest/NestView/NestView.svelte"
   import ClientStats from "@components/Elements/ClientStats/ClientStats.svelte"
+  import Admin from "@components/Admin/Admin.svelte"
 
   export let environment: ENVIRONMENT
 
@@ -78,6 +79,7 @@
   })
 </script>
 
+<Admin />
 <ClientStats />
 
 <div class="nest">
@@ -197,10 +199,13 @@
   </div>
 
   <div class="column second">
-    <!-- <NewRoom /> -->
     <div class="level">
       <h2>Level: {$rat?.level ?? 0}</h2>
     </div>
+    <!-- CREATE ROOM-->
+    {#if $rat.level > 1}
+      <NewRoom />
+    {/if}
     <!-- ROOM LIST -->
     <div class="room-list">
       {#each Object.entries($roomsOnRatLevel).reverse() as [roomId, room]}
@@ -226,6 +231,7 @@
     padding: 20px;
     overflow-x: hidden;
     overflow-y: auto;
+    padding-top: 60px;
 
     &.first {
       border-right: 1px solid var(--white);
