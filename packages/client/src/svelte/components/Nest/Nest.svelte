@@ -36,9 +36,6 @@
 
   let busy = false
 
-  $: console.log("$levels", $levels)
-  $: console.log("$gameConfig.levelList", $gameConfig.levelList)
-
   async function sendTransferBalanceToPlayer() {
     busy = true
     const action = transferBalanceToPlayer(100)

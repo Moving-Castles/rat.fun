@@ -72,20 +72,20 @@
     if (effects.crt) {
       const crtPass = new ShaderPass(CRTShader)
 
-      console.log("crt", effects.crt)
+      // console.log("crt", effects.crt)
 
       crtPass.uniforms["scan"].value = effects.crt.scan
       crtPass.uniforms["warp"].value = effects.crt.warp
 
       composer.addPass(crtPass)
 
-      console.log("added crt")
+      // console.log("added crt")
     }
   }
 
   const updateEffects = e => {
     const keys = Object.keys(e)
-    console.log(keys)
+    // console.log(keys)
 
     if (keys.includes("crt")) {
       const p = composer.passes?.find(p => p?.material?.name === "CRTShader")

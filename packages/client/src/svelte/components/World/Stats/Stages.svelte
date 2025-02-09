@@ -2,7 +2,7 @@
   import { useThrelte } from "@threlte/core"
   import { Pane, Folder, Button } from "svelte-tweakpane-ui"
 
-  console.log("stages")
+  // console.log("stages")
 
   const { scheduler } = useThrelte()
   const { stages } = scheduler.getSchedule({ tasks: true })
