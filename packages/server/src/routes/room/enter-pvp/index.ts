@@ -25,7 +25,7 @@ const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY as string;
 // const GROQ_API_KEY = process.env.GROQ_API_KEY as string;
 
 // MUD
-import { getOnchainData } from '@modules/mud/getOnchainData';
+import { getOnchainData, getRatName } from '@modules/mud/getOnchainData';
 import { components, systemCalls, network } from '@modules/mud/initMud';
 
 // Signature
@@ -73,7 +73,7 @@ async function routes (fastify: FastifyInstance) {
             if(!room.ratInRoom || room.ratInRoom === EMPTY_CONNECTION) {
                 await systemCalls.placeRatInRoom(ratA, room);
                 sendToRat(ratA.id, 'pvp__update', "Waiting for second rat...");
-                return { message: 'Rat entered room' };
+                return { message: `${getRatName(ratA.id, components.Name)} entered room`};
             }
 
             // We have two players in room, run the simulation...
@@ -83,8 +83,8 @@ async function routes (fastify: FastifyInstance) {
             // - ratA is the player that just entered the room
             // - ratB is the player that was already in the room
 
-            sendToRat(ratB.id, 'pvp__update', `Another rat entered the room: ${ratA.id}`);
-            sendToRat(ratA.id, 'pvp__update', `Another rat is in the room: ${ratB.id}`);
+            sendToRat(ratB.id, 'pvp__update', `Another rat entered the room: ${getRatName(ratA.id, components.Name)}`);
+            sendToRat(ratA.id, 'pvp__update', `Another rat is in the room: ${getRatName(ratB.id, components.Name)}`);
 
             // Get system prompts from CMS
             const { eventSystemPrompt, outcomeSystemPrompt, correctionSystemPrompt } = await getPvPSystemPrompts();

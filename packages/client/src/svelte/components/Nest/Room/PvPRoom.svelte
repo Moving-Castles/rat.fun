@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte"
-  import { player } from "@modules/state/base/stores"
+  import { rat, rats } from "@modules/state/base/stores"
   import { newEvent } from "@modules/off-chain-sync/stores"
 
   import type { ServerReturnValuePvP } from "../types"
@@ -12,7 +12,7 @@
   export let outcome: ServerReturnValuePvP
   export let room: Room
 
-  let executionLog: string[] = ["Rat entered room"]
+  let executionLog: string[] = [`${$rat.name} entered room`]
   let oldRoomBalance = room.balance
 
   $: if ($newEvent?.topic === "pvp__outcome") {
@@ -46,13 +46,13 @@
     <div class="outcome-container">
       <div class="column">
         <div class="alert">
-          {outcome.ratA.id === $player.ownedRat ? "YOU" : "OTHER GUY"}
+          {$rats[outcome.ratA.id]?.name ?? "unknown"}
         </div>
         <Outcome {room} outcome={outcome.ratA} {oldRoomBalance} />
       </div>
       <div class="column">
         <div class="alert">
-          {outcome.ratB.id === $player.ownedRat ? "YOU" : "OTHER GUY"}
+          {$rats[outcome.ratB.id]?.name ?? "unknown"}
         </div>
         <Outcome {room} outcome={outcome.ratB} {oldRoomBalance} />
       </div>

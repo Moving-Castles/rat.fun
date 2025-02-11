@@ -32,7 +32,7 @@ contract PlayerSystemTest is BaseTest {
     bytes32 playerId = world.ratroom__spawn("alice");
     world.ratroom__givePlayerBalance(1000);
 
-    world.ratroom__createRat();
+    world.ratroom__createRat("roger");
 
     startGasReport("Transfer balance to rat");
     world.ratroom__transferBalanceToRat(500);
@@ -51,8 +51,8 @@ contract PlayerSystemTest is BaseTest {
 
     bytes32 playerId = world.ratroom__spawn("alice");
     world.ratroom__givePlayerBalance(1000);
-    
-    world.ratroom__createRat();
+
+    world.ratroom__createRat("roger");
 
     world.ratroom__transferBalanceToRat(500);
 
@@ -71,20 +71,19 @@ contract PlayerSystemTest is BaseTest {
 
     // As player
     vm.startPrank(alice);
-    
+
     world.ratroom__spawn("alice");
     world.ratroom__givePlayerBalance(1000);
 
-    world.ratroom__createRat();
+    world.ratroom__createRat("roger");
 
     vm.expectRevert("insufficient balance");
     world.ratroom__transferBalanceToRat(6900);
 
     vm.expectRevert("insufficient balance");
     world.ratroom__transferBalanceToPlayer(6900);
-    
-    vm.stopPrank();
 
+    vm.stopPrank();
   }
 
   // function testTransferItemToInventory() public {
@@ -93,7 +92,7 @@ contract PlayerSystemTest is BaseTest {
   //   // As player
   //   vm.startPrank(alice);
   //   bytes32 playerId = world.ratroom__spawn("alice");
-  //   bytes32 ratId = world.ratroom__createRat();
+  //   bytes32 ratId = world.ratroom__createRat("roger");
   //   vm.stopPrank();
 
   //   // As admin
@@ -127,7 +126,7 @@ contract PlayerSystemTest is BaseTest {
   //   // As player
   //   vm.startPrank(alice);
   //   bytes32 playerId = world.ratroom__spawn("alice");
-  //   bytes32 ratId = world.ratroom__createRat();
+  //   bytes32 ratId = world.ratroom__createRat("roger");
   //   vm.stopPrank();
 
   //   // As admin
@@ -170,7 +169,7 @@ contract PlayerSystemTest is BaseTest {
     world.ratroom__spawn("alice");
     world.ratroom__givePlayerBalance(1000);
 
-    world.ratroom__createRat();
+    world.ratroom__createRat("roger");
 
     vm.expectRevert("item not found");
     world.ratroom__transferItemToInventory(bytes32(0));

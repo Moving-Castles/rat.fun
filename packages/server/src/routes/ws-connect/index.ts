@@ -33,7 +33,7 @@ async function routes(fastify: FastifyInstance) {
       // Add ping-pong handler
       socket.on('message', (message: Message) => {
         const data = JSON.parse(message.toString());
-        console.log('ping from', ratId)
+        // console.log('ping from', ratId)
         if (data.topic === 'test') {
           socket.send(JSON.stringify({ topic: 'test', message: 'pong' }));
         }

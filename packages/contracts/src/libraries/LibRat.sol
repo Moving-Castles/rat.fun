@@ -2,7 +2,7 @@
 pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import { getUniqueEntity } from "@latticexyz/world-modules/src/modules/uniqueentity/getUniqueEntity.sol";
-import { EntityType, GameConfig, Dead, Health, Index, Balance, Traits, Inventory, Value, Level, LevelList } from "../codegen/index.sol";
+import { EntityType, GameConfig, Dead, Health, Index, Balance, Traits, Inventory, Value, Level, LevelList, Name } from "../codegen/index.sol";
 import { LibTrait } from "./LibTrait.sol";
 import { LibItem } from "./LibItem.sol";
 import { LibUtils } from "./LibUtils.sol";
@@ -11,12 +11,14 @@ import { ENTITY_TYPE } from "../codegen/common.sol";
 library LibRat {
   /**
    * @notice Create a new rat entity
+   * @param _name The name of the rat
    * @return ratId The id of the new rat entity
    */
-  function createRat() internal returns (bytes32 ratId) {
+  function createRat(string calldata _name) internal returns (bytes32 ratId) {
     ratId = getUniqueEntity();
     // Create rat
     EntityType.set(ratId, ENTITY_TYPE.RAT);
+    Name.set(ratId, _name);
     Dead.set(ratId, false);
     Health.set(ratId, 100);
     Balance.set(ratId, 0);
@@ -33,7 +35,6 @@ library LibRat {
    * @param _roomId The id of the room that the rat died in
    */
   function killRat(bytes32 _ratId, bytes32 _roomId) internal {
-
     Dead.set(_ratId, true);
 
     // Health value has already been transferred to room

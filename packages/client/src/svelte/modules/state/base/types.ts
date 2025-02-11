@@ -61,8 +61,9 @@ declare global {
   }
 
   type Rat  = {
-    [key: string]: number | ENTITY_TYPE | Hex | boolean | string[],
+    [key: string]: number | string | ENTITY_TYPE | Hex | boolean | string[],
     entityType: ENTITY_TYPE.RAT,
+    name: string,
     index: number,
     balance: number,
     level: Hex,

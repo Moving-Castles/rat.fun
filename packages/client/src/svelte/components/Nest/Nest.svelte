@@ -125,7 +125,13 @@
         <!-- RAT -->
         <div class="stat-item">
           <div class="inner-wrapper rat">
-            <div class="label">Rat #{$rat.index}</div>
+            <div class="label">Rat: {$rat.name}</div>
+          </div>
+        </div>
+        <!-- RAT ID-->
+        <div class="stat-item">
+          <div class="inner-wrapper">
+            <div class="label">ID: {shortenAddress($player.ownedRat)}</div>
           </div>
         </div>
         <!-- Wating in room -->

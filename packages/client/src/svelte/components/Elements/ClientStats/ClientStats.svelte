@@ -28,12 +28,6 @@
     padding: 10px;
     display: flex;
 
-    .action {
-      margin-left: 10px;
-      position: relative;
-      top: -3px;
-    }
-
     .round-trip-time {
       margin-left: 10px;
       font-size: 12px;

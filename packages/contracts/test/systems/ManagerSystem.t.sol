@@ -39,7 +39,7 @@ contract ManagerSystemTest is BaseTest {
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
-    bytes32 ratId = world.ratroom__createRat();
+    bytes32 ratId = world.ratroom__createRat("roger");
     vm.stopPrank();
 
     // As bob
@@ -64,11 +64,10 @@ contract ManagerSystemTest is BaseTest {
   function testApplyOutcomeIncreaseHealth() public {
     setUp();
 
-
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
-    bytes32 ratId = world.ratroom__createRat();
+    bytes32 ratId = world.ratroom__createRat("roger");
     vm.stopPrank();
 
     // As bob
@@ -97,7 +96,7 @@ contract ManagerSystemTest is BaseTest {
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
-    bytes32 ratId = world.ratroom__createRat();
+    bytes32 ratId = world.ratroom__createRat("roger");
     vm.stopPrank();
 
     // As bob
@@ -135,7 +134,7 @@ contract ManagerSystemTest is BaseTest {
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
-    bytes32 ratId = world.ratroom__createRat();
+    bytes32 ratId = world.ratroom__createRat("roger");
     vm.stopPrank();
 
     // As bob
@@ -173,7 +172,7 @@ contract ManagerSystemTest is BaseTest {
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
-    bytes32 ratId = world.ratroom__createRat();
+    bytes32 ratId = world.ratroom__createRat("roger");
     vm.stopPrank();
 
     // As bob
@@ -213,7 +212,7 @@ contract ManagerSystemTest is BaseTest {
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
-    bytes32 ratId = world.ratroom__createRat();
+    bytes32 ratId = world.ratroom__createRat("roger");
     vm.stopPrank();
 
     // As bob
@@ -302,7 +301,7 @@ contract ManagerSystemTest is BaseTest {
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
-    bytes32 ratId = world.ratroom__createRat();
+    bytes32 ratId = world.ratroom__createRat("roger");
     vm.stopPrank();
 
     // As bob
@@ -338,7 +337,7 @@ contract ManagerSystemTest is BaseTest {
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
-    bytes32 ratId = world.ratroom__createRat();
+    bytes32 ratId = world.ratroom__createRat("roger");
     vm.stopPrank();
 
     // As bob
@@ -374,7 +373,7 @@ contract ManagerSystemTest is BaseTest {
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
-    bytes32 ratId = world.ratroom__createRat();
+    bytes32 ratId = world.ratroom__createRat("roger");
     vm.stopPrank();
 
     // As bob
@@ -407,7 +406,7 @@ contract ManagerSystemTest is BaseTest {
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
-    bytes32 ratId = world.ratroom__createRat();
+    bytes32 ratId = world.ratroom__createRat("roger");
     vm.stopPrank();
 
     // As bob
@@ -456,7 +455,7 @@ contract ManagerSystemTest is BaseTest {
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
-    bytes32 ratId = world.ratroom__createRat();
+    bytes32 ratId = world.ratroom__createRat("roger");
     vm.stopPrank();
 
     // As bob
@@ -504,7 +503,7 @@ contract ManagerSystemTest is BaseTest {
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
-    bytes32 ratId = world.ratroom__createRat();
+    bytes32 ratId = world.ratroom__createRat("roger");
     vm.stopPrank();
 
     // As bob
@@ -575,7 +574,7 @@ contract ManagerSystemTest is BaseTest {
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
-    bytes32 ratId = world.ratroom__createRat();
+    bytes32 ratId = world.ratroom__createRat("roger");
     vm.stopPrank();
 
     // As bob
@@ -611,7 +610,7 @@ contract ManagerSystemTest is BaseTest {
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
-    bytes32 ratId = world.ratroom__createRat();
+    bytes32 ratId = world.ratroom__createRat("roger");
     vm.stopPrank();
 
     // As bob
@@ -649,7 +648,7 @@ contract ManagerSystemTest is BaseTest {
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
-    bytes32 ratId = world.ratroom__createRat();
+    bytes32 ratId = world.ratroom__createRat("roger");
     vm.stopPrank();
 
     // As bob
@@ -681,7 +680,7 @@ contract ManagerSystemTest is BaseTest {
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
-    bytes32 ratId = world.ratroom__createRat();
+    bytes32 ratId = world.ratroom__createRat("roger");
     vm.stopPrank();
 
     // As bob
@@ -734,7 +733,7 @@ contract ManagerSystemTest is BaseTest {
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
-    bytes32 ratId = world.ratroom__createRat();
+    bytes32 ratId = world.ratroom__createRat("roger");
     vm.stopPrank();
 
     // As bob
@@ -765,7 +764,7 @@ contract ManagerSystemTest is BaseTest {
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
-    bytes32 ratId = world.ratroom__createRat();
+    bytes32 ratId = world.ratroom__createRat("roger");
     vm.stopPrank();
 
     // As bob
@@ -792,7 +791,7 @@ contract ManagerSystemTest is BaseTest {
     endGasReport();
     vm.stopPrank();
 
-    // 0 + 50 - 20 
+    // 0 + 50 - 20
     assertEq(Balance.get(ratId), 30);
     // 100 - 50 + 20 - 2 x 5 (CREATOR_FEE)
     assertEq(Balance.get(roomId), 60);
@@ -804,7 +803,7 @@ contract ManagerSystemTest is BaseTest {
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
-    bytes32 ratId = world.ratroom__createRat();
+    bytes32 ratId = world.ratroom__createRat("roger");
     vm.stopPrank();
 
     // As bob
@@ -842,7 +841,7 @@ contract ManagerSystemTest is BaseTest {
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
-    bytes32 ratId = world.ratroom__createRat();
+    bytes32 ratId = world.ratroom__createRat("roger");
     vm.stopPrank();
 
     // As bob

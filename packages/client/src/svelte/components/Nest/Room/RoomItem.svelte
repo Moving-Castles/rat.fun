@@ -1,5 +1,11 @@
 <script lang="ts">
-  import { player, rat, gameConfig, levels } from "@modules/state/base/stores"
+  import {
+    player,
+    rat,
+    rats,
+    gameConfig,
+    levels,
+  } from "@modules/state/base/stores"
   import type { ServerReturnValue, ServerReturnValuePvP } from "../types"
   import { walletNetwork } from "@modules/network"
   import { MESSAGE } from "@components/Nest/constants"
@@ -128,7 +134,6 @@
   <div class="room-info" class:pvp={room.roomType === 1}>
     <!-- Prompt -->
     <div class="prompt">{room.roomPrompt}</div>
-
     <!-- Balance -->
     <div class="balance">Balance: ${room.balance ?? 0}</div>
     <!-- Creator -->
@@ -147,7 +152,9 @@
     </div>
     <!-- Rat waiting in room  -->
     {#if room.ratInRoom && room.ratInRoom !== EMPTY_CONNECTION}
-      <div class="creator">Rat in room: {shortenAddress(room.ratInRoom)}</div>
+      <div class="creator">
+        Rat in room: {$rats[room.ratInRoom]?.name ?? "unknown"}
+      </div>
     {/if}
   </div>
 </div>

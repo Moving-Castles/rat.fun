@@ -87,11 +87,11 @@ export const ratTotalValue = derived([rat, ratInventory, ratTraits], ([$rat, $ra
 
   console.log($rat, $ratInventory, $ratTraits);
 
-  const totalValue = 
+  const totalValue = !$rat ? 0 :
     Number($rat.balance ?? 0) + // Balance
     Number($rat.health ?? 0) + // Health
-    ($ratInventory?.reduce((acc, item) => acc + (Number(item.value) ?? 0), 0) ?? 0) + // Inventory
-    ($ratTraits?.reduce((acc, trait) => acc + (Number(trait.value) ?? 0), 0) ?? 0) // Traits
+    ($ratInventory ?? []).reduce((acc, item) => acc + (Number(item?.value) ?? 0), 0) + // Inventory
+    ($ratTraits ?? []).reduce((acc, trait) => acc + (Number(trait?.value) ?? 0), 0) // Traits
   return totalValue
 })
 
