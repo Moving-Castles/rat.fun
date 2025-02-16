@@ -1,5 +1,6 @@
 <script lang="ts">
   import { Canvas } from "@threlte/core"
+  import Stats from "@components/World/Stats/Stats.svelte"
   // import { Debug } from "@threlte/rapier"
   // import Loader from "@components/World/Loader/Loader.svelte"
 
@@ -11,6 +12,8 @@
 <Canvas>
   <!-- Forward the ready event -->
   <!-- <Loader on:ready /> -->
+
+  <!-- <Stats /> -->
 
   <!-- Physics wrapper -->
   <!-- <World> -->

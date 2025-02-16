@@ -5,8 +5,9 @@
   import { ShaderPass } from "three/addons/postprocessing/ShaderPass.js"
   import { RGBShiftShader } from "three/addons/shaders/RGBShiftShader.js"
   import { CRTShader } from "@components/World/CustomRenderer/shaders/CRTShader"
+  import { FishEyeShader } from "@components/World/CustomRenderer/shaders/FishEyeShader"
   import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js"
-  import { Vector2 } from "three"
+  import { Vector2, MathUtils } from "three"
   import { onMount } from "svelte"
 
   type BloomConfig = {
@@ -21,14 +22,27 @@
     scan: number
   }
 
+  type FishEyeConfig = {
+    horizontalFOV: number
+    strength: number
+    cylindricalRatio: number
+  }
+
   export let effects: {
     rgbShift?: boolean
     bloom?: BloomConfig
     crt?: CRTConfig
+    fishEye?: FishEyeConfig
   }
 
-  const { scene, renderer, camera, size, autoRender, renderStage } =
-    useThrelte()
+  const {
+    scene,
+    renderer,
+    camera: cameraStore,
+    size,
+    autoRender,
+    renderStage,
+  } = useThrelte()
 
   const composer = new EffectComposer(renderer)
 
@@ -72,14 +86,30 @@
     if (effects.crt) {
       const crtPass = new ShaderPass(CRTShader)
 
-      // console.log("crt", effects.crt)
-
       crtPass.uniforms["scan"].value = effects.crt.scan
       crtPass.uniforms["warp"].value = effects.crt.warp
 
       composer.addPass(crtPass)
+    }
 
-      // console.log("added crt")
+    if (effects.fishEye) {
+      const fishEyePass = new ShaderPass(FishEyeShader)
+
+      // Setup distortion effect
+      let height =
+        Math.tan(MathUtils.degToRad(effects.fishEye.horizontalFOV) / 2) /
+        camera.aspect // will only work for PerspectiveCamera
+
+      camera.fov = (Math.atan(height) * 2 * 180) / 3.1415926535
+      camera.updateProjectionMatrix()
+
+      fishEyePass.uniforms["strength"].value = effects.fishEye.strength
+      fishEyePass.uniforms["height"].value = effects.fishEye.height
+      fishEyePass.uniforms["aspectRatio"].value = camera.aspect
+      fishEyePass.uniforms["cylindricalRatio"].value =
+        effects.fishEye.cylindricalRatio
+
+      composer.addPass(fishEyePass)
     }
   }
 
@@ -98,7 +128,7 @@
 
   // If depends on other things than camera, add extra dependencies in function
   // signature and call them here
-  $: setupEffectComposer($camera)
+  $: setupEffectComposer($cameraStore)
   $: composer.setSize($size.width, $size.height)
   $: {
     // console.log("effects updated", effects)
@@ -108,6 +138,7 @@
   onMount(() => {
     let before = autoRender.current
     autoRender.set(false)
+
     return () => {
       autoRender.set(before)
     }
