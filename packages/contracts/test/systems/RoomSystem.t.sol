@@ -21,6 +21,8 @@ contract RoomSystemTest is BaseTest {
     bytes32 roomId = world.ratroom__createRoom("A test room", ROOM_TYPE.ONE_PLAYER);
     endGasReport();
 
+    console.logBytes32(roomId);
+
     vm.stopPrank();
 
     // Check player balance (100 = room creation cost)

@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { LogEntry } from "@components/Nest/types"
-  import LogItem from "@components/Nest/Log/LogItem.svelte"
+  import type { LogEntry } from "@components/Room/types"
+  import LogItem from "@components/Room/Log/LogItem.svelte"
   export let log: LogEntry[]
 </script>
 

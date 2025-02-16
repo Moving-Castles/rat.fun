@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { debugPhysics } from "@svelte/modules/three/stores"
+  import { debugPhysics } from "@modules/three/stores"
 </script>
 
 <div class="tweak">
-  <label>Debug Physics</label>
-  <input type="checkbox" bind:value={$debugPhysics} />
+  <label for="debug-physics">Debug Physics</label>
+  <input id="debug-physics" type="checkbox" bind:value={$debugPhysics} />
 </div>
 
 <style>

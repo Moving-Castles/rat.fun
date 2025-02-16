@@ -44,7 +44,9 @@ export const levels = derived(entities, $entities => filterByEntitytype($entitie
 
 export const playerAddress = writable("0x0" as string)
 
-// Address in padded format
+/**
+ * Address in padded format
+ */
 export const playerId = derived(playerAddress, $playerAddress =>
   addressToId($playerAddress)
 )
@@ -82,5 +84,17 @@ export const ratLevel = derived(
   [rat, levels],
   ([$rat, $levels]) => $levels[$rat?.level] as Level
 )
+
+/**
+ * Calculated by adding up the balance, health, inventory value and trait value
+ */
+export const ratTotalValue = derived([rat, ratInventory, ratTraits], ([$rat, $ratInventory, $ratTraits]) => {
+  const totalValue = !$rat ? 0 :
+    Number($rat.balance ?? 0) + // Balance
+    Number($rat.health ?? 0) + // Health
+    ($ratInventory ?? []).reduce((acc, item) => acc + (Number(item?.value) ?? 0), 0) + // Inventory
+    ($ratTraits ?? []).reduce((acc, trait) => acc + (Number(trait?.value) ?? 0), 0) // Traits
+  return totalValue
+})
 
 export const roomsOnRatLevel = derived([rat, rooms], ([$rat, $rooms]) =>  filterByLevel($rooms, $rat?.level) as Rooms)

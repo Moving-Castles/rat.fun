@@ -15,11 +15,13 @@
   const done = () => dispatch("done")
 
   let busy = false
+  let name: string
+  let inputEl: HTMLInputElement
 
   async function sendCreateRat() {
     playSound("tcm", "blink")
     busy = true
-    const action = createRat()
+    const action = createRat(name)
     try {
       await waitForCompletion(action)
       done()
@@ -45,8 +47,18 @@
       <Cage cameraPosition={[4, 0, 0]} cameraLookAt={[0, 0.4, -0.5]} />
     </Main>
   </div>
-  <button class:busy on:click={sendCreateRat}>
-    <span class="button-text">ADOPT A RAT</span>
+  <div class="form">
+    <input
+      type="text"
+      placeholder="RAT NAME"
+      disabled={busy}
+      bind:this={inputEl}
+      bind:value={name}
+      on:keydown={e => e.key === "Enter" && sendCreateRat()}
+    />
+  </div>
+  <button class:disabled={!name} class:busy on:click={sendCreateRat}>
+    <span class="button-text">CREATE A RAT</span>
     {#if busy}
       <div class="spinner"><Spinner /></div>
     {/if}
@@ -86,6 +98,12 @@
       display: none;
     }
 
+    &.disabled {
+      pointer-events: none;
+      opacity: 0.5;
+      cursor: default;
+    }
+
     &.busy {
       background: var(--color-alert);
       pointer-events: none;
@@ -100,5 +118,19 @@
         display: none;
       }
     }
+  }
+
+  input {
+    width: 100%;
+    padding: 10px;
+    font-size: var(--font-size-large);
+    background: var(--color-grey-light);
+    color: var(--black);
+    border: none;
+    margin-bottom: 20px;
+    text-align: center;
+    outline-color: var(--color-alert);
+    font-family: var(--typewriter-stack);
+    text-transform: uppercase;
   }
 </style>

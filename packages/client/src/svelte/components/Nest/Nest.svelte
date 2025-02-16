@@ -1,13 +1,11 @@
 <script lang="ts">
-  import { onMount } from "svelte"
   import {
-    gameConfig,
     player,
     rat,
     ratLevel,
-    levels,
     roomsOnRatLevel,
     ratInventory,
+    ratTotalValue,
     playerInventory,
   } from "@modules/state/base/stores"
   import { UI } from "@modules/ui/enums"
@@ -24,8 +22,8 @@
   import { EMPTY_CONNECTION } from "@modules/utils/constants"
   import { initOffChainSync } from "@modules/off-chain-sync"
 
-  import RoomItem from "@components/Nest/Room/RoomItem.svelte"
-  import NewRoom from "@components/Nest/Room/NewRoom.svelte"
+  import RoomItem from "@components/Room/RoomItem.svelte"
+  import NewRoom from "@components/Room/NewRoom.svelte"
   import Inventory from "@components/Nest/Inventory/Inventory.svelte"
   import Traits from "@components/Nest/Traits/Traits.svelte"
   import NestView from "@components/Nest/NestView/NestView.svelte"
@@ -76,9 +74,10 @@
     UIState.set(UI.CREATING_RAT)
   }
 
-  onMount(() => {
+  // Wait for the player to have a rat before initializing off-chain sync
+  $: if ($player.ownedRat) {
     initOffChainSync(environment, $player.ownedRat)
-  })
+  }
 </script>
 
 <Admin />
@@ -126,7 +125,13 @@
         <!-- RAT -->
         <div class="stat-item">
           <div class="inner-wrapper rat">
-            <div class="label">Rat #{$rat.index}</div>
+            <div class="label">Rat: {$rat.name}</div>
+          </div>
+        </div>
+        <!-- RAT ID-->
+        <div class="stat-item">
+          <div class="inner-wrapper">
+            <div class="label">ID: {shortenAddress($player.ownedRat)}</div>
           </div>
         </div>
         <!-- Wating in room -->
@@ -174,6 +179,13 @@
             </div>
           {/if}
         </div>
+        <!-- RAT TOTAL VALUE -->
+        <div class="stat-item">
+          <div class="inner-wrapper">
+            <div class="label">Total value:</div>
+            <div class="value">${$ratTotalValue ?? 0}</div>
+          </div>
+        </div>
         {#if !$rat?.dead}
           <!-- TRAITS -->
           <Traits />
@@ -204,9 +216,9 @@
       <h2>Level: {$ratLevel?.index ?? 0}</h2>
     </div>
     <!-- CREATE ROOM-->
-    {#if ($ratLevel?.index ?? 0) > 1}
-      <NewRoom />
-    {/if}
+    <!-- {#if ($ratLevel?.index ?? 0) > 1} -->
+    <NewRoom />
+    <!-- {/if} -->
     <!-- ROOM LIST -->
     <div class="room-list">
       {#each Object.entries($roomsOnRatLevel).reverse() as [roomId, room]}
@@ -217,14 +229,6 @@
 </div>
 
 <style lang="scss">
-  .stats {
-    margin-bottom: 20px;
-  }
-
-  img {
-    margin-bottom: 20px;
-  }
-
   .column {
     width: 50%;
     height: 100vh;
@@ -236,37 +240,6 @@
 
     &.first {
       border-right: 1px solid var(--white);
-    }
-  }
-
-  .trait {
-    background: lightcyan;
-    color: var(--black);
-    display: flex;
-    flex-wrap: wrap;
-  }
-
-  .image-container {
-    position: relative;
-    margin-top: 10px;
-
-    .stamp {
-      width: 400px;
-      display: none;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-
-    &.dead {
-      .rat {
-        filter: grayscale(100%);
-      }
-
-      .stamp {
-        display: block;
-      }
     }
   }
 

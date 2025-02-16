@@ -67,12 +67,6 @@
   },
   {
     "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
-    "test": "testApplyOutcomeOverTransferToRoom",
-    "name": "Apply outcome (over transfer to room)",
-    "gasUsed": 111112
-  },
-  {
-    "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
     "test": "testApplyOutcomeReduceHealth",
     "name": "Apply outcome (reduce health)",
     "gasUsed": 147536
@@ -81,43 +75,13 @@
     "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
     "test": "testApplyOutcomeRemoveNegativeTrait",
     "name": "Apply outcome (remove negative trait)",
-    "gasUsed": 128183
-  },
-  {
-    "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
-    "test": "testApplyOutcomeRemoveNegativeTraitTooExpensive",
-    "name": "Apply outcome (remove negative trait: too expensive)",
-    "gasUsed": 101363
-  },
-  {
-    "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
-    "test": "testApplyOutcomeRemovePositiveItem",
-    "name": "Apply outcome (remove positive item)",
-    "gasUsed": 121585
-  },
-  {
-    "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
-    "test": "testApplyOutcomeRemovePositiveTrait",
-    "name": "Apply outcome (remove positive trait)",
-    "gasUsed": 124810
+    "gasUsed": 119040
   },
   {
     "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
     "test": "testApplyOutcomeTransferToRat",
     "name": "Apply outcome (transfer to rat)",
     "gasUsed": 167386
-  },
-  {
-    "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
-    "test": "testApplyOutcomeTransferToRoom",
-    "name": "Apply outcome (transfer to room)",
-    "gasUsed": 120319
-  },
-  {
-    "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
-    "test": "testApplyOutcomeValueTransferOnDeath",
-    "name": "Apply outcome (value transfer on death)",
-    "gasUsed": 228162
   },
   {
     "file": "test/systems/PlayerSystem.t.sol:PlayerSystemTest",

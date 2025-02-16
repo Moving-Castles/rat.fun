@@ -1,7 +1,7 @@
 <script lang="ts">
   import { fade } from "svelte/transition"
 
-  import type { ServerReturnValue } from "../types"
+  import type { ServerReturnValue } from "@components/Room/types"
 
   export let outcome: ServerReturnValue
   export let room: Room

@@ -9,5 +9,6 @@ export enum UI {
 export enum LOCATION {
   NONE,
   NEST,
-  ROOM
+  ROOM,
+  PVP_ROOM
 }

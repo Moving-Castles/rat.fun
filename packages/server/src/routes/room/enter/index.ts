@@ -81,6 +81,8 @@ async function routes (fastify: FastifyInstance) {
             const { room, rat } = getOnchainData(await network, components, ratId, roomId);
             console.timeEnd('–– Get on chain data');
 
+            console.log('Rat:', rat);
+
             if(!room) {
                 throw new Error('Room not found');
             }
@@ -99,6 +101,7 @@ async function routes (fastify: FastifyInstance) {
             // Call event model
             console.time('–– Event LLM call');
             const eventMessages = constructEventMessages(rat, room);
+            
             const events = await callModel(llmClient, eventMessages, eventSystemPrompt) as EventsReturnValue;
             console.timeEnd('–– Event LLM call');
 

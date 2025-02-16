@@ -1,9 +1,11 @@
 <script lang="ts">
   import { fade } from "svelte/transition"
-  import type { LogEntry } from "@components/Nest/types"
+  import type { LogEntry } from "@components/Room/types"
 
   export let logEntry: LogEntry
   export let i: number
+
+  console.log("i", i)
 </script>
 
 <div class="log-entry" in:fade={{ duration: 200, delay: 500 * i }}>

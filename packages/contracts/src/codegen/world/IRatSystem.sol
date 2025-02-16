@@ -9,7 +9,7 @@ pragma solidity >=0.8.24;
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IRatSystem {
-  function ratroom__createRat() external returns (bytes32 ratId);
+  function ratroom__createRat(string calldata _name) external returns (bytes32 ratId);
 
   function ratroom__levelUp() external;
 }

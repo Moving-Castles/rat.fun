@@ -1,18 +1,27 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte"
-  import { player } from "@modules/state/base/stores"
+  import { onMount } from "svelte"
+  import type { ServerReturnValuePvP } from "@components/Room/types"
+  import { player, rooms, rat, rats } from "@modules/state/base/stores"
+  import { enterRoom } from "@components/Room"
+  import { UILocation } from "@modules/ui/stores"
+  import { LOCATION } from "@modules/ui/enums"
+  import { ENVIRONMENT } from "@mud/enums"
+  import { ROOM_TYPE } from "contracts/enums"
+  import { walletNetwork } from "@modules/network"
   import { newEvent } from "@modules/off-chain-sync/stores"
 
-  import type { ServerReturnValuePvP } from "../types"
-
   import Spinner from "@components/Elements/Spinner/Spinner.svelte"
-  import Log from "@components/Nest/Log/Log.svelte"
-  import Outcome from "./Outcome.svelte"
+  import Log from "@components/Room/Log/Log.svelte"
+  import Outcome from "@components/Room/Outcome.svelte"
 
-  export let outcome: ServerReturnValuePvP
-  export let room: Room
+  export let environment: ENVIRONMENT
+  export let roomId: string | null
 
-  let executionLog: string[] = ["Rat entered room"]
+  let room = $rooms[roomId ?? ""]
+
+  let outcome: ServerReturnValuePvP | undefined = undefined
+
+  let executionLog: string[] = [`${$rat.name} entered room`]
   let oldRoomBalance = room.balance
 
   $: if ($newEvent?.topic === "pvp__outcome") {
@@ -25,11 +34,20 @@
     newEvent.set(null)
   }
 
-  const dispatch = createEventDispatcher()
-
   function close() {
-    dispatch("close")
+    UILocation.set(LOCATION.NEST)
   }
+
+  onMount(async () => {
+    if (!roomId) return
+    enterRoom(
+      environment,
+      $walletNetwork,
+      ROOM_TYPE.TWO_PLAYER,
+      roomId,
+      $player.ownedRat
+    )
+  })
 </script>
 
 <div class="room">
@@ -38,21 +56,21 @@
     {room.roomPrompt}
   </div>
 
-  <!-- LOG -->
-  <Log log={outcome.log} />
+  {#if outcome && (outcome.log?.length ?? 0 > 0)}
+    <!-- LOG -->
+    <Log log={outcome.log} />
 
-  <!-- OUTCOME -->
-  {#if outcome.log?.length ?? 0 > 0}
+    <!-- OUTCOME -->
     <div class="outcome-container">
       <div class="column">
         <div class="alert">
-          {outcome.ratA.id === $player.ownedRat ? "YOU" : "OTHER GUY"}
+          {$rats[outcome.ratA.id]?.name ?? "unknown"}
         </div>
         <Outcome {room} outcome={outcome.ratA} {oldRoomBalance} />
       </div>
       <div class="column">
         <div class="alert">
-          {outcome.ratB.id === $player.ownedRat ? "YOU" : "OTHER GUY"}
+          {$rats[outcome.ratB.id]?.name ?? "unknown"}
         </div>
         <Outcome {room} outcome={outcome.ratB} {oldRoomBalance} />
       </div>

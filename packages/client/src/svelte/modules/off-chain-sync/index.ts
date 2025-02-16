@@ -1,10 +1,11 @@
 import { ENVIRONMENT } from "@mud/enums"
-import { clientList, newEvent } from "@modules/off-chain-sync/stores"
+import { clientList, newEvent, roundTriptime } from "@modules/off-chain-sync/stores"
 import { MessageContent } from "./types"
 
 let socket: WebSocket
 let reconnectAttempts = 0;
 const MAX_RECONNECTION_DELAY = 30000; // Maximum delay of 30 seconds
+let roundTripStart = 0
 
 export function initOffChainSync(environment: ENVIRONMENT, ratId: string) {
   console.log("Initializing off chain sync", environment, ratId)
@@ -33,6 +34,11 @@ export function initOffChainSync(environment: ENVIRONMENT, ratId: string) {
       return
     }
 
+    if (messageContent.topic === "test") {
+      roundTriptime.set(performance.now() - roundTripStart)
+      return
+    }
+
     // Pass message to store
     newEvent.set(messageContent)
   }
@@ -57,4 +63,12 @@ function attemptReconnect(environment: ENVIRONMENT, ratId: string) {
     console.log(`Reconnecting attempt ${reconnectAttempts}...`);
     initOffChainSync(environment, ratId);
   }, delay);
+}
+
+export function ping() {
+  roundTripStart = performance.now()
+  socket.send(JSON.stringify({
+    topic: "test",
+    message: "ping"
+  }))
 }

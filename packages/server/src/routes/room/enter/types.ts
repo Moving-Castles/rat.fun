@@ -25,6 +25,7 @@ export type Item = {
 
 export type Rat = {
     id: string,
+    name: string,
     balance: number;
     traits: Trait[];
     inventory: Item[];

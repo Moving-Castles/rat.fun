@@ -1,8 +1,23 @@
 <script lang="ts">
-  import { clientList } from "@modules/off-chain-sync/stores"
+  import { clientList, roundTriptime } from "@modules/off-chain-sync/stores"
+  import { ping } from "@modules/off-chain-sync"
+  import { onMount } from "svelte"
+
+  onMount(() => {
+    setInterval(() => {
+      ping()
+    }, 1000)
+  })
 </script>
 
-<span class="client-stats">Online operators: {$clientList.length}</span>
+<div class="client-stats">
+  <div>
+    Online operators: {$clientList.length}
+  </div>
+  <div class="round-trip-time">
+    Round trip: {$roundTriptime.toFixed(3)}ms
+  </div>
+</div>
 
 <style lang="scss">
   .client-stats {
@@ -11,5 +26,13 @@
     left: 0;
     background: blue;
     padding: 10px;
+    display: flex;
+
+    .round-trip-time {
+      margin-left: 10px;
+      font-size: 12px;
+      position: relative;
+      top: 3px;
+    }
   }
 </style>

@@ -48,8 +48,8 @@ export function addRoomBalance(roomId: string) {
   return addToSequencer(WorldFunctions.addRoomBalance, [roomId])
 }
 
-export function createRat() {
-  return addToSequencer(WorldFunctions.CreateRat, [])
+export function createRat(name: string) {
+  return addToSequencer(WorldFunctions.CreateRat, [name])
 }
 
 export function transferItemToInventory(itemId: string) {
