@@ -19,7 +19,6 @@ Command: npx @threlte/gltf@3.0.0 src/svelte/public/models/RatAnimated.glb
   export const { actions, mixer } = useGltfAnimations(gltf, ref)
 
   $effect(() => {
-    console.log($actions)
     $actions["Walk.Stepped"]?.play()
   })
 </script>

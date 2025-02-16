@@ -6,6 +6,7 @@
   import { RGBShiftShader } from "three/addons/shaders/RGBShiftShader.js"
   import { CRTShader } from "@components/World/CustomRenderer/shaders/CRTShader"
   import { FishEyeShader } from "@components/World/CustomRenderer/shaders/FishEyeShader"
+  import { GodotFishEyeShader } from "@components/World/CustomRenderer/shaders/GodotFishEyeShader"
   import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js"
   import { Vector2, MathUtils } from "three"
   import { onMount } from "svelte"
@@ -33,6 +34,7 @@
     bloom?: BloomConfig
     crt?: CRTConfig
     fishEye?: FishEyeConfig
+    godotFishEye?: boolean
   }
 
   const {
@@ -110,6 +112,12 @@
         effects.fishEye.cylindricalRatio
 
       composer.addPass(fishEyePass)
+    }
+
+    if (effects.godotFishEye) {
+      const godotFishEyePass = new ShaderPass(GodotFishEyeShader)
+
+      composer.addPass(godotFishEyePass)
     }
   }
 

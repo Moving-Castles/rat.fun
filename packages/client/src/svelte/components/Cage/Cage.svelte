@@ -47,11 +47,12 @@
 <CustomRenderer
   effects={{
     crt: { warp: 0.1, scan: scan.current },
-    fishEye: {
-      horizontalFOV: 50,
-      strength: 0.5,
-      cylindricalRatio: 2,
-    },
+    // fishEye: {
+    //   horizontalFOV: 50,
+    //   strength: 0.5,
+    //   cylindricalRatio: 2,
+    // },
+    godotFishEye: true,
   }}
 />
 
