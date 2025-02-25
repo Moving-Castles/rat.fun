@@ -44,7 +44,7 @@
   <div class="title">WELCOME {$player?.name ?? ""}</div>
   <div class="image-container">
     <Main>
-      <Cage />
+      <Cage cameraPosition={[4, 0, 0]} cameraLookAt={[0, 0.4, -0.5]} />
     </Main>
   </div>
   <div class="form">

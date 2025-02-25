@@ -2,13 +2,20 @@
   import { T, useTask, useThrelte } from "@threlte/core"
   import { Spring } from "svelte/motion"
   import { OrbitControls } from "@threlte/extras"
-  import Rat from "../World/Models/Rat.svelte"
+  import Rat from "../World/Models/RatAnimated.svelte"
   import Lighting from "@components/World/Lighting/Lighting.svelte"
+  import Performance from "@components/World/Stats/Performance.svelte"
   import CustomRenderer from "../World/CustomRenderer/CustomRenderer.svelte"
 
-  const { renderStage } = useThrelte()
+  export let cameraPosition: [number, number, number] = [15, 1, 0]
+  export let cameraLookAt: [number, number, number] = [0, 0, 0]
+
+  const { renderStage, renderer } = useThrelte()
 
   const scan = new Spring(2, { stiffness: 0.1, damping: 10 })
+
+  console.log("cameraLookAt", cameraLookAt)
+  console.log(cameraLookAt)
 
   useTask(
     () => {
@@ -22,19 +29,31 @@
   )
 </script>
 
+<Performance {renderer} />
+
 <T.PerspectiveCamera
-  on:create={({ ref }) => {
-    ref.lookAt(0, 0, 0)
+  oncreate={ref => {
+    ref.lookAt(...cameraLookAt)
   }}
-  fov={25}
+  fov={50}
   makeDefault
-  position={[15, 1, 0]}
+  position={cameraPosition}
 >
   <OrbitControls />
 </T.PerspectiveCamera>
 
 <Lighting />
 
-<CustomRenderer effects={{ crt: { warp: 0.1, scan: scan.current } }} />
+<CustomRenderer
+  effects={{
+    crt: { warp: 0.1, scan: scan.current },
+    // fishEye: {
+    //   horizontalFOV: 50,
+    //   strength: 0.5,
+    //   cylindricalRatio: 2,
+    // },
+    godotFishEye: true,
+  }}
+/>
 
 <Rat />

@@ -98,6 +98,9 @@ importers:
       three:
         specifier: ^0.173.0
         version: 0.173.0
+      three-perf:
+        specifier: ^1.0.10
+        version: 1.0.10(three@0.173.0)
       uuid:
         specifier: ^11.1.0
         version: 11.1.0
@@ -7792,6 +7795,7 @@ packages:
 
   lodash.isequal@4.5.0:
     resolution: {integrity: sha512-pDo3lu8Jhfjqls6GkMgpahsF9kCyayhgykjyLMNFTKWrpVdAQtYyB4muAMWozBB4ig/dtWAmsMxLEI8wuz+DYQ==}
+    deprecated: This package is deprecated. Use require('node:util').isDeepStrictEqual instead.
 
   lodash.merge@4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
@@ -10134,6 +10138,11 @@ packages:
     peerDependencies:
       three: '>= 0.151.0'
 
+  three-perf@1.0.10:
+    resolution: {integrity: sha512-lCur/i8U6m0ysWYhQ1yFGWOZB0QA2oVsDsfynYd65HhXxLxJfiAt8OsXmpv9PnTLacfaZclBcZHUOB9QKk3eaw==}
+    peerDependencies:
+      three: '>=0.151'
+
   three-perf@https://codeload.github.com/jerzakm/three-perf/tar.gz/322d7d38a17069f2b6e9734913edad0fc4a29169:
     resolution: {tarball: https://codeload.github.com/jerzakm/three-perf/tar.gz/322d7d38a17069f2b6e9734913edad0fc4a29169}
     version: 1.0.10
@@ -10250,6 +10259,11 @@ packages:
     resolution: {integrity: sha512-c1PTsA3tYrIsLGkJkzHF+w9F2EyxfXGo4UyJc4pFL++FMjnq0HJS69T3M7d//gKrFKwy429bouPescbjecU+Zw==}
     engines: {node: '>=8'}
 
+  troika-three-text@0.47.2:
+    resolution: {integrity: sha512-qylT0F+U7xGs+/PEf3ujBdJMYWbn0Qci0kLqI5BJG2kW1wdg4T1XSxneypnF05DxFqJhEzuaOR9S2SjiyknMng==}
+    peerDependencies:
+      three: '>=0.125.0'
+
   troika-three-text@0.50.3:
     resolution: {integrity: sha512-UzbIrgV3fOFmFbFfWIBcBEXEyQovs+LLu15E5xGpSQbo1oZH49A+J9bul4H8H0xLtaLkRTO+LqEsmkaeDtZQfg==}
     peerDependencies:
@@ -10257,6 +10271,11 @@ packages:
 
   troika-three-text@0.52.3:
     resolution: {integrity: sha512-jLhiwgV8kEkwWjvK12f2fHVpbOC75p7SgPQ0cgcz+IMtN5Bdyg4EuFdwuTOVu9ga8UeYdKBpzd1AxviyixtYTQ==}
+    peerDependencies:
+      three: '>=0.125.0'
+
+  troika-three-utils@0.47.2:
+    resolution: {integrity: sha512-/28plhCxfKtH7MSxEGx8e3b/OXU5A0xlwl+Sbdp0H8FXUHKZDoksduEKmjQayXYtxAyuUiCRunYIv/8Vi7aiyg==}
     peerDependencies:
       three: '>=0.125.0'
 
@@ -10269,6 +10288,9 @@ packages:
     resolution: {integrity: sha512-00oxqIIehtEKInOTQekgyknBuRUj1POfOUE2q1OmL+Xlpp4gIu+S0oA0schTyXsDS4d9DkR04iqCdD40rF5R6w==}
     peerDependencies:
       three: '>=0.125.0'
+
+  troika-worker-utils@0.47.2:
+    resolution: {integrity: sha512-mzss4MeyzUkYBppn4x5cdAqrhBHFEuVmMMgLMTyFV23x6GvQMyo+/R5E5Lsbrt7WSt5RfvewjcwD1DChRTA9lA==}
 
   troika-worker-utils@0.50.0:
     resolution: {integrity: sha512-BxNk0w6+d9NYd7El/3RzlzH/F2vovJI1FX9Zb+D7fArVM1EsUXj6+wVwJSrfucy6/HYhfbZPu/lD6Miiw9Byiw==}
@@ -24949,6 +24971,12 @@ snapshots:
     dependencies:
       three: 0.173.0
 
+  three-perf@1.0.10(three@0.173.0):
+    dependencies:
+      three: 0.173.0
+      troika-three-text: 0.47.2(three@0.173.0)
+      tweakpane: 3.1.10
+
   three-perf@https://codeload.github.com/jerzakm/three-perf/tar.gz/322d7d38a17069f2b6e9734913edad0fc4a29169(three@0.173.0):
     dependencies:
       three: 0.173.0
@@ -25041,6 +25069,14 @@ snapshots:
 
   trim-newlines@3.0.1: {}
 
+  troika-three-text@0.47.2(three@0.173.0):
+    dependencies:
+      bidi-js: 1.0.3
+      three: 0.173.0
+      troika-three-utils: 0.47.2(three@0.173.0)
+      troika-worker-utils: 0.47.2
+      webgl-sdf-generator: 1.1.1
+
   troika-three-text@0.50.3(three@0.173.0):
     dependencies:
       bidi-js: 1.0.3
@@ -25057,6 +25093,10 @@ snapshots:
       troika-worker-utils: 0.52.0
       webgl-sdf-generator: 1.1.1
 
+  troika-three-utils@0.47.2(three@0.173.0):
+    dependencies:
+      three: 0.173.0
+
   troika-three-utils@0.50.3(three@0.173.0):
     dependencies:
       three: 0.173.0
@@ -25064,6 +25104,8 @@ snapshots:
   troika-three-utils@0.52.0(three@0.173.0):
     dependencies:
       three: 0.173.0
+
+  troika-worker-utils@0.47.2: {}
 
   troika-worker-utils@0.50.0: {}
 
