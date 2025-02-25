@@ -29,7 +29,7 @@
   )
 </script>
 
-<Performance {renderer} />
+<!-- <Performance {renderer} /> -->
 
 <T.PerspectiveCamera
   oncreate={ref => {
