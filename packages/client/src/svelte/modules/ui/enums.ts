@@ -3,7 +3,7 @@ export enum UI {
   SPAWNING,
   CREATING_RAT,
   READY,
-  ERROR
+  ERROR,
 }
 
 export enum LOCATION {
@@ -11,5 +11,21 @@ export enum LOCATION {
   NEST,
   LOBBY,
   ROOM,
-  PVP_ROOM
+  PVP_ROOM,
+}
+
+export enum PANE {
+  LEFT,
+  MIDDLE,
+  RIGHT,
+}
+
+export enum LEFT_PANE {
+  YOUR_RAT,
+  YOUR_ROOMS,
+}
+
+export enum RIGHT_PANE {
+  ROOMS,
+  SINGLE_ROOM,
 }

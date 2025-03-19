@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte"
+  import { gameConfig, ratLevelIndex } from "@modules/state/base/stores"
 
   onMount(() => {
     console.log("FloorBar component mounted")
@@ -7,11 +8,14 @@
 </script>
 
 <div class="floor-bar">
-  <div class="floor-item">0</div>
-  <div class="floor-item">-1</div>
-  <div class="floor-item">-2</div>
-  <div class="floor-item">-3</div>
-  <div class="floor-item">-4</div>
+  {#each $gameConfig.levelList as _, i}
+    <div class="floor-item">
+      {i * -1}
+      {#if $ratLevelIndex === i}
+        <div class="floor-indicator" />
+      {/if}
+    </div>
+  {/each}
 </div>
 
 <style>
@@ -22,6 +26,7 @@
     flex-direction: column;
     border-right: 1px dashed white;
     border-left: 1px dashed white;
+    position: relative;
   }
 
   .floor-item {
@@ -31,9 +36,18 @@
     justify-content: center;
     align-items: center;
     border-bottom: 1px dashed white;
+    position: relative;
 
     &:last-child {
       border-bottom: none;
     }
+  }
+
+  .floor-indicator {
+    position: absolute;
+    inset: 0;
+    background: red;
+    mix-blend-mode: screen;
+    z-index: 1;
   }
 </style>

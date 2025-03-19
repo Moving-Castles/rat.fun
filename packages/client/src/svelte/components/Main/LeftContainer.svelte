@@ -2,6 +2,10 @@
   import { onMount } from "svelte"
   import RatEditor from "./RatEditor.svelte"
   import RatCam from "./RatCam.svelte"
+  import { getUIState } from "@modules/ui/state.svelte"
+
+  let { panes, enums } = getUIState()
+
   onMount(() => {
     console.log("LeftContainer component mounted")
   })
@@ -9,12 +13,33 @@
 
 <div class="left-container">
   <div class="pane-switch">
-    <div class="pane-switch-item selected">YOUR RAT</div>
-    <div class="pane-switch-item">YOUR ROOMS</div>
+    <button
+      onclick={() => panes.set(enums.PANE.LEFT, enums.LEFT_PANE.YOUR_RAT)}
+      class:selected={panes.left === enums.LEFT_PANE.YOUR_RAT}
+      class="pane-switch-item"
+    >
+      YOUR RAT
+    </button>
+    <button
+      onclick={() => panes.set(enums.PANE.LEFT, enums.LEFT_PANE.YOUR_ROOMS)}
+      class:selected={panes.left === enums.LEFT_PANE.YOUR_ROOMS}
+      class="pane-switch-item"
+    >
+      YOUR ROOMS
+    </button>
   </div>
-  <RatEditor />
-  <RatCam />
-  <div class="liquidate">LIQUIDATE RAT</div>
+
+  {#if panes.left === enums.LEFT_PANE.YOUR_RAT}
+    <div class="tab-rats">
+      <RatEditor />
+      <RatCam />
+      <div class="liquidate">LIQUIDATE RAT</div>
+    </div>
+  {/if}
+  {#if panes.left === enums.LEFT_PANE.YOUR_ROOMS}
+    <div class="create-room">Create room</div>
+    <div class="tab-rooms">Rooms</div>
+  {/if}
 </div>
 
 <style>

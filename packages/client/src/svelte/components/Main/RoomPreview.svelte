@@ -6,7 +6,8 @@
   let { rooms } = getUIState()
 </script>
 
-<div class="room-listing-item" onclick={() => rooms.preview(roomId)}>
+<button onclick={rooms.back}>🔙 {room.name}</button>
+<div class="room-preview" onclick={() => rooms.goto(roomId)}>
   <div class="room-info">
     <div class="room-name">**{room.name}**</div>
     <div class="room-visitor-count">Visitors: {room.visitorCount}</div>

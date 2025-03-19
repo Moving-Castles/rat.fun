@@ -2,8 +2,12 @@
   import { player } from "@modules/state/base/stores"
   import { transferBalanceToRat } from "@modules/action"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
+  import { getUIState } from "@modules/ui/state.svelte"
 
   let busy = false
+
+  let { rooms } = getUIState()
+  const { current } = rooms
 
   async function sendTransferBalanceToRat() {
     busy = true
@@ -35,6 +39,13 @@
         <div class="value">${$player?.balance ?? 0}</div>
       </div>
     </div>
+    <!-- ROOM -->
+    <!-- <div class="stat-item">
+      <div class="inner-wrapper balance">
+        <div class="label">Room:</div>
+        <div class="value">{$current}</div>
+      </div>
+    </div> -->
   </div>
 {/if}
 

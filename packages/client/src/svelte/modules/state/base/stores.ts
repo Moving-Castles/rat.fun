@@ -31,12 +31,30 @@ export const gameConfig = derived(
 // GAME ELEMENT STORES
 // * * * * * * * * * * * * * * * * *
 
-export const players = derived(entities, $entities => filterByEntitytype($entities, ENTITY_TYPE.PLAYER) as Players)
-export const rats = derived(entities, $entities => filterByEntitytype($entities, ENTITY_TYPE.RAT) as Rats)
-export const rooms = derived(entities, $entities => filterByEntitytype($entities, ENTITY_TYPE.ROOM) as Rooms)
-export const traits = derived(entities, $entities => filterByEntitytype($entities, ENTITY_TYPE.TRAIT) as Traits)
-export const items = derived(entities, $entities => filterByEntitytype($entities, ENTITY_TYPE.ITEM) as Items)
-export const levels = derived(entities, $entities => filterByEntitytype($entities, ENTITY_TYPE.LEVEL) as Levels)
+export const players = derived(
+  entities,
+  $entities => filterByEntitytype($entities, ENTITY_TYPE.PLAYER) as Players
+)
+export const rats = derived(
+  entities,
+  $entities => filterByEntitytype($entities, ENTITY_TYPE.RAT) as Rats
+)
+export const rooms = derived(
+  entities,
+  $entities => filterByEntitytype($entities, ENTITY_TYPE.ROOM) as Rooms
+)
+export const traits = derived(
+  entities,
+  $entities => filterByEntitytype($entities, ENTITY_TYPE.TRAIT) as Traits
+)
+export const items = derived(
+  entities,
+  $entities => filterByEntitytype($entities, ENTITY_TYPE.ITEM) as Items
+)
+export const levels = derived(
+  entities,
+  $entities => filterByEntitytype($entities, ENTITY_TYPE.LEVEL) as Levels
+)
 
 // * * * * * * * * * * * * * * * * *
 // PLAYER STORES
@@ -85,16 +103,33 @@ export const ratLevel = derived(
   ([$rat, $levels]) => $levels[$rat?.level] as Level
 )
 
+export const ratLevelIndex = derived([gameConfig, rat], ([$gameConfig, $rat]) =>
+  $gameConfig.levelList.findIndex(lvl => lvl === $rat.level)
+)
+
 /**
  * Calculated by adding up the balance, health, inventory value and trait value
  */
-export const ratTotalValue = derived([rat, ratInventory, ratTraits], ([$rat, $ratInventory, $ratTraits]) => {
-  const totalValue = !$rat ? 0 :
-    Number($rat.balance ?? 0) + // Balance
-    Number($rat.health ?? 0) + // Health
-    ($ratInventory ?? []).reduce((acc, item) => acc + (Number(item?.value) ?? 0), 0) + // Inventory
-    ($ratTraits ?? []).reduce((acc, trait) => acc + (Number(trait?.value) ?? 0), 0) // Traits
-  return totalValue
-})
+export const ratTotalValue = derived(
+  [rat, ratInventory, ratTraits],
+  ([$rat, $ratInventory, $ratTraits]) => {
+    const totalValue = !$rat
+      ? 0
+      : Number($rat.balance ?? 0) + // Balance
+        Number($rat.health ?? 0) + // Health
+        ($ratInventory ?? []).reduce(
+          (acc, item) => acc + (Number(item?.value) ?? 0),
+          0
+        ) + // Inventory
+        ($ratTraits ?? []).reduce(
+          (acc, trait) => acc + (Number(trait?.value) ?? 0),
+          0
+        ) // Traits
+    return totalValue
+  }
+)
 
-export const roomsOnRatLevel = derived([rat, rooms], ([$rat, $rooms]) =>  filterByLevel($rooms, $rat?.level) as Rooms)
+export const roomsOnRatLevel = derived(
+  [rat, rooms],
+  ([$rat, $rooms]) => filterByLevel($rooms, $rat?.level) as Rooms
+)
