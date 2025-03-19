@@ -5,11 +5,13 @@
 
   import { UILocation } from "@modules/ui/stores"
   import { LOCATION } from "@modules/ui/enums"
+  import { walletNetwork } from "@modules/network"
 
   import NestView from "@components/Nest/NestView/NestView.svelte"
   import Admin from "@components/Admin/Admin.svelte"
   import RatStats from "@components/Nest/RatStats.svelte"
   import OperatorStats from "@components/Nest/OperatorStats.svelte"
+  import Chat from "@components/Chat/Chat.svelte"
 
   export let environment: ENVIRONMENT
 
@@ -20,6 +22,7 @@
 </script>
 
 <Admin />
+<Chat {environment} walletNetwork={$walletNetwork} />
 
 <div class="nest">
   <!-- NEST VIEW -->

@@ -34,7 +34,7 @@ export default defineWorld({
       }
     },
     // ...
-    Name: "string", // Set on player
+    Name: "string", // Set on player and room
     EntityType: "ENTITY_TYPE",
     // ...
     Health: "uint256", // Set on rat
@@ -50,6 +50,7 @@ export default defineWorld({
     Value: "int256", // Value of a trait can be negative
     OwnedRat: "bytes32", // Set on player
     Owner: "bytes32", // Set on room and rat
+    VisitorCount: "uint256", // Set on room
     // ...
     RoomPrompt: "string",
     RoomType: "ROOM_TYPE",

@@ -3,7 +3,7 @@
 :root {
   /* Colors */
   --black: #000000;
-  --white: #d7d7c3;
+  --white: #ffffff;
   /* --white: #dcdccb; */
 
   --background: var(--black);
@@ -30,11 +30,11 @@
   --tab-bar-height: 90px;
 
   /* Typography */
-  --typewriter-font-stack: "Special Elite", monospace;
+  --typewriter-font-stack: "OCRA", monospace;
   --corporate-font-stack: "IBM Plex Sans", sans-serif;
   --font-size-label: 8px;
   --font-size-small: 9px;
-  --font-size-normal: 18px;
+  --font-size-normal: 14px;
   --font-size-large: 32px;
 
   /* Misc */

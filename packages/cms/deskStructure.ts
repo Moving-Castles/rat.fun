@@ -1,5 +1,5 @@
 // ICONS
-import { MdList, MdGavel, MdAccessAlarm } from "react-icons/md"
+import { MdList, MdGavel, MdAccessAlarm, MdChat } from "react-icons/md"
 
 export default (S: any) =>
     S.list()
@@ -40,6 +40,16 @@ export default (S: any) =>
                     .id('combined-prompts')
                     .schemaType("combinedPrompts")
                     .documentId("combined-prompts")
+            ),
+            S.divider(),
+            S.listItem()
+            .title("Chat prompts")
+            .icon(MdChat)
+            .child(
+                S.editor()
+                    .id('chat-prompts')
+                    .schemaType("chatPrompts")
+                    .documentId("chat-prompts")
             ),
             S.divider(),
             S.listItem()

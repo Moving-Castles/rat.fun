@@ -11,6 +11,7 @@ import { PORT } from '@config';
 
 import ping from '@routes/test/ping';
 import debug from '@routes/test/debug';
+import chat from '@routes/chat';
 import enterPvP from '@routes/room/enter-pvp';
 import enter from '@routes/room/enter';
 import wsConnect from '@routes/ws-connect';
@@ -39,6 +40,12 @@ fastify.register(debug)
 fastify.register(enter)
 fastify.register(enterPvP)
 fastify.register(wsConnect)
+fastify.register(chat)
+
+// Debug: Print registered routes
+fastify.ready(() => {
+  console.log('Registered routes:', fastify.printRoutes())
+})
 
 // Start the server
 const start = async (port: number) => {

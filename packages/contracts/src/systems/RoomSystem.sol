@@ -10,11 +10,16 @@ import { ENTITY_TYPE, ROOM_TYPE } from "../codegen/common.sol";
 contract RoomSystem is System {
   /**
    * @notice Create a room
+   * @param _roomName The name of the room
    * @param _roomPrompt The prompt for the room
    * @param _roomType The type of room (one or two player)
    * @return roomId The id of the new room
    */
-  function createRoom(string memory _roomPrompt, ROOM_TYPE _roomType) public returns (bytes32 roomId) {
+  function createRoom(
+    string memory _roomName,
+    string memory _roomPrompt,
+    ROOM_TYPE _roomType
+  ) public returns (bytes32 roomId) {
     bytes32 playerId = LibUtils.addressToEntityKey(_msgSender());
 
     // TODO: Character count is not accurate due to UTF8 encoding
@@ -33,7 +38,7 @@ contract RoomSystem is System {
     Balance.set(playerId, Balance.get(playerId) - roomCreationCost);
 
     // Create room
-    roomId = LibRoom.createRoom(_roomPrompt, _roomType, playerId, Level.get(playerId));
+    roomId = LibRoom.createRoom(_roomName, _roomPrompt, _roomType, playerId, Level.get(playerId));
 
     console.logBytes32(roomId);
   }

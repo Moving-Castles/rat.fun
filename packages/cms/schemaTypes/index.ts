@@ -5,6 +5,7 @@ import CombinedPrompts from "./CombinedPrompts"
 import PVPEventPrompts from "./PVPEventPrompts"
 import PVPOutcomePrompts from "./PVPOutcomePrompts"
 import PVPCorrectionPrompts from "./PVPCorrectionPrompts"
+import ChatPrompts from "./ChatPrompts"
 
 export const schemaTypes = [
     EventPrompts,
@@ -13,5 +14,6 @@ export const schemaTypes = [
     CombinedPrompts,
     PVPEventPrompts,
     PVPOutcomePrompts,
-    PVPCorrectionPrompts
+    PVPCorrectionPrompts,
+    ChatPrompts
 ]

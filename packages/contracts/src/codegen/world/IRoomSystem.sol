@@ -11,5 +11,9 @@ import { ROOM_TYPE } from "../common.sol";
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IRoomSystem {
-  function ratroom__createRoom(string memory _roomPrompt, ROOM_TYPE _roomType) external returns (bytes32 roomId);
+  function ratroom__createRoom(
+    string memory _roomName,
+    string memory _roomPrompt,
+    ROOM_TYPE _roomType
+  ) external returns (bytes32 roomId);
 }

@@ -123,3 +123,19 @@ export function constructPvPCorrectionMessages(
     messages.push({ role: "user", content: `Eventlog: ${JSON.stringify(events)}` });
     return messages;
 }
+
+// Chat
+
+export function constructChatMessages(
+    message: string,
+    rat: Rat,
+): MessageParam[] {
+    const messages: MessageParam[] = [];
+    messages.push({ role: "user", content: `Message: ${message}` });
+    messages.push({ role: "user", content: `RatName: ${rat.name}` });
+    messages.push({ role: "user", content: `RatTraits: ${JSON.stringify(rat.traits)}` });
+    messages.push({ role: "user", content: `RatItems: ${JSON.stringify(rat.inventory)}` });
+    messages.push({ role: "user", content: `RatStats: ${JSON.stringify(rat.stats)}` });
+    messages.push({ role: "user", content: `RatBalance: ${rat.balance}` });
+    return messages;
+}

@@ -32,12 +32,12 @@ export function updateLevel(levelId: string, levelUpCost: number, roomCreationCo
   return addToSequencer(WorldFunctions.updateLevel, [levelId, levelUpCost, roomCreationCost])
 }
 
-export function createRoom(prompt: string, roomType: ROOM_TYPE) {
-  return addToSequencer(WorldFunctions.CreateRoom, [prompt, roomType])
+export function createRoom(name: string, prompt: string, roomType: ROOM_TYPE) {
+  return addToSequencer(WorldFunctions.CreateRoom, [name,prompt, roomType])
 }
 
-export function createRoomAsAdmin(prompt: string, roomType: ROOM_TYPE, levelId: string, extraBalance: number) {
-  return addToSequencer(WorldFunctions.CreateRoomAsAdmin, [prompt, roomType, levelId, extraBalance])
+export function createRoomAsAdmin(name: string, prompt: string, roomType: ROOM_TYPE, levelId: string, extraBalance: number) {
+  return addToSequencer(WorldFunctions.CreateRoomAsAdmin, [name,prompt, roomType, levelId, extraBalance])
 }
 
 export function destroyRoomAsAdmin(roomId: string) {

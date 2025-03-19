@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { getUniqueEntity } from "@latticexyz/world-modules/src/modules/uniqueentity/getUniqueEntity.sol";
-import { EntityType, RoomPrompt, RoomType, Owner, Index, GameConfig, Balance, Level, RoomCreationCost } from "../codegen/index.sol";
+import { EntityType, RoomPrompt, RoomType, Owner, Index, GameConfig, Balance, Level, RoomCreationCost, Name, VisitorCount } from "../codegen/index.sol";
 import { ENTITY_TYPE, ROOM_TYPE } from "../codegen/common.sol";
 
 library LibRoom {
@@ -14,6 +14,7 @@ library LibRoom {
    * @return roomId The id of the new room
    */
   function createRoom(
+    string memory _roomName,
     string memory _roomPrompt,
     ROOM_TYPE _roomType,
     bytes32 _roomOwner,
@@ -23,12 +24,14 @@ library LibRoom {
     EntityType.set(roomId, ENTITY_TYPE.ROOM);
     RoomPrompt.set(roomId, _roomPrompt);
     RoomType.set(roomId, _roomType);
+    Name.set(roomId, _roomName);
 
     uint32 newRoomIndex = GameConfig.getGlobalRoomIndex() + 1;
     GameConfig.setGlobalRoomIndex(newRoomIndex);
     Index.set(roomId, newRoomIndex);
     Level.set(roomId, _roomLevel);
     Owner.set(roomId, _roomOwner);
+    VisitorCount.set(roomId, 0);
 
     // Add to room's balance
     Balance.set(roomId, RoomCreationCost.get(_roomLevel));
@@ -38,8 +41,10 @@ library LibRoom {
     EntityType.deleteRecord(_roomId);
     RoomPrompt.deleteRecord(_roomId);
     RoomType.deleteRecord(_roomId);
+    Name.deleteRecord(_roomId);
     Index.deleteRecord(_roomId);
     Level.deleteRecord(_roomId);
     Owner.deleteRecord(_roomId);
+    VisitorCount.deleteRecord(_roomId);
   }
 }

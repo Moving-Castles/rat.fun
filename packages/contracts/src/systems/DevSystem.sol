@@ -8,32 +8,38 @@ import { ENTITY_TYPE, ROOM_TYPE } from "../codegen/common.sol";
 import { MAX_INVENTORY_SIZE, MAX_LOADOUT_SIZE } from "../constants.sol";
 
 contract DevSystem is System {
-    function givePlayerBalance(uint256 _amount) public {
-        bytes32 playerId = LibUtils.addressToEntityKey(_msgSender());
-        Balance.set(playerId, Balance.get(playerId) + _amount);
-    }
+  function givePlayerBalance(uint256 _amount) public {
+    bytes32 playerId = LibUtils.addressToEntityKey(_msgSender());
+    Balance.set(playerId, Balance.get(playerId) + _amount);
+  }
 
-    function giveRatBalance(uint256 _amount) public {
-        bytes32 playerId = LibUtils.addressToEntityKey(_msgSender());
-        bytes32 ratId = OwnedRat.get(playerId);
-        Balance.set(ratId, Balance.get(ratId) + _amount);
-    }
+  function giveRatBalance(uint256 _amount) public {
+    bytes32 playerId = LibUtils.addressToEntityKey(_msgSender());
+    bytes32 ratId = OwnedRat.get(playerId);
+    Balance.set(ratId, Balance.get(ratId) + _amount);
+  }
 
-    function createRoomAsAdmin(string memory _roomPrompt, ROOM_TYPE _roomType, bytes32 _roomLevel, uint256 _extraBalance) public returns (bytes32 roomId) {
-        roomId = LibRoom.createRoom(_roomPrompt, _roomType, GameConfig.getAdminId(), _roomLevel);
-        Balance.set(roomId, Balance.get(roomId) + _extraBalance);
-    }
+  function createRoomAsAdmin(
+    string memory _roomName,
+    string memory _roomPrompt,
+    ROOM_TYPE _roomType,
+    bytes32 _roomLevel,
+    uint256 _extraBalance
+  ) public returns (bytes32 roomId) {
+    roomId = LibRoom.createRoom(_roomName, _roomPrompt, _roomType, GameConfig.getAdminId(), _roomLevel);
+    Balance.set(roomId, Balance.get(roomId) + _extraBalance);
+  }
 
-    function destroyRoomAsAdmin(bytes32 _roomId) public {
-        LibRoom.destroyRoom(_roomId);
-    }
+  function destroyRoomAsAdmin(bytes32 _roomId) public {
+    LibRoom.destroyRoom(_roomId);
+  }
 
-    function updateLevel(bytes32 _levelId, uint256 _levelUpCost, uint256 _roomCreationCost) public {
-        LevelUpCost.set(_levelId, _levelUpCost);
-        RoomCreationCost.set(_levelId, _roomCreationCost);
-    }
+  function updateLevel(bytes32 _levelId, uint256 _levelUpCost, uint256 _roomCreationCost) public {
+    LevelUpCost.set(_levelId, _levelUpCost);
+    RoomCreationCost.set(_levelId, _roomCreationCost);
+  }
 
-    function addRoomBalance(bytes32 _roomId) public {
-        Balance.set(_roomId, Balance.get(_roomId) + 100);
-    }
+  function addRoomBalance(bytes32 _roomId) public {
+    Balance.set(_roomId, Balance.get(_roomId) + 100);
+  }
 }

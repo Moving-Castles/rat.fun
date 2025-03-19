@@ -9,10 +9,11 @@
   import Loading from "@components/Loading/Loading.svelte"
   import Spawn from "@components/Spawn/Spawn.svelte"
   import CreateRat from "@components/CreateRat/CreateRat.svelte"
-  import Nest from "@components/Nest/Nest.svelte"
   import Room from "@components/Room/Room.svelte"
   import PvPRoom from "@components/Room/PvPRoom.svelte"
   import Lobby from "@components/Lobby/Lobby.svelte"
+
+  import Main from "@components/Main/Main.svelte"
 
   export let environment: ENVIRONMENT
 
@@ -68,7 +69,7 @@
 
   {#if $UIState === UI.READY}
     {#if $UILocation === LOCATION.NEST}
-      <Nest {environment} />
+      <Main {environment} />
     {/if}
     {#if $UILocation === LOCATION.LOBBY}
       <Lobby />

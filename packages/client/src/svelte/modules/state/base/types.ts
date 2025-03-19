@@ -48,7 +48,8 @@ declare global {
     levelUpCost: number,
     roomCreationCost: number,
     levelList: string[],
-    gameConfig: GameConfigObject
+    gameConfig: GameConfigObject,
+    visitorCount: number
   }
 
   type Player  = {
@@ -82,9 +83,11 @@ declare global {
     index: number,
     balance: number,
     level: Hex,
+    name: string,
     roomPrompt: string,
     roomType: ROOM_TYPE,
-    ratInRoom: Hex
+    ratInRoom: Hex,
+    visitorCount: number
   }
 
   type Trait = {

@@ -18,6 +18,7 @@ import { WaitingInRoom } from "./tables/WaitingInRoom.sol";
 import { Value } from "./tables/Value.sol";
 import { OwnedRat } from "./tables/OwnedRat.sol";
 import { Owner } from "./tables/Owner.sol";
+import { VisitorCount } from "./tables/VisitorCount.sol";
 import { RoomPrompt } from "./tables/RoomPrompt.sol";
 import { RoomType } from "./tables/RoomType.sol";
 import { RatInRoom } from "./tables/RatInRoom.sol";

@@ -16,6 +16,7 @@ interface IDevSystem {
   function ratroom__giveRatBalance(uint256 _amount) external;
 
   function ratroom__createRoomAsAdmin(
+    string memory _roomName,
     string memory _roomPrompt,
     ROOM_TYPE _roomType,
     bytes32 _roomLevel,
