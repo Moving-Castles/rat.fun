@@ -10,12 +10,4 @@ pragma solidity >=0.8.24;
  */
 interface IPlayerSystem {
   function ratroom__spawn(string memory _name) external returns (bytes32 _playerId);
-
-  function ratroom__transferBalanceToRat(uint256 _value) external;
-
-  function ratroom__transferBalanceToPlayer(uint256 _value) external;
-
-  function ratroom__transferItemToInventory(bytes32 _itemId) external;
-
-  function ratroom__transferItemToLoadOut(bytes32 _itemId) external;
 }

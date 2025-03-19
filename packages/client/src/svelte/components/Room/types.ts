@@ -29,27 +29,3 @@ export type ServerReturnValue = {
   itemChanges: ItemChange[]
   balanceTransfer: number
 }
-
-export type ServerReturnValuePvP = {
-  log: LogEntry[]
-  ratA: { 
-    id: Hex,
-    log: LogEntry[]
-    statChanges: {
-      [key: string]: number
-    }
-    traitChanges: TraitChange[]
-    itemChanges: ItemChange[]
-    balanceTransfer: number
-  },
-  ratB: {
-    id: Hex,
-    log: LogEntry[]
-    statChanges: {
-      [key: string]: number
-    }
-    traitChanges: TraitChange[]
-    itemChanges: ItemChange[]
-    balanceTransfer: number
-  }
-}

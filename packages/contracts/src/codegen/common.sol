@@ -12,8 +12,3 @@ enum ENTITY_TYPE {
   TRAIT,
   LEVEL
 }
-
-enum ROOM_TYPE {
-  ONE_PLAYER,
-  TWO_PLAYER
-}

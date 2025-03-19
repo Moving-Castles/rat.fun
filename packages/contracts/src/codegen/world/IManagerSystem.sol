@@ -11,8 +11,6 @@ import { Item } from "../../structs.sol";
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IManagerSystem {
-  function ratroom__placeRatInRoom(bytes32 _ratId, bytes32 _roomId) external;
-
   function ratroom__applyOutcome(
     bytes32 _ratId,
     bytes32 _roomId,

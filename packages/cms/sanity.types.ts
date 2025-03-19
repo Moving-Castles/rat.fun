@@ -131,51 +131,6 @@ export type SanityAssetSourceData = {
   url?: string
 }
 
-export type ChatPrompts = {
-  _id: string
-  _type: 'chatPrompts'
-  _createdAt: string
-  _updatedAt: string
-  _rev: string
-  title?: string
-  referenceMaterial?: string
-  prompt?: string
-  returnFormat?: Code
-}
-
-export type PvpCorrectionPrompts = {
-  _id: string
-  _type: 'pvpCorrectionPrompts'
-  _createdAt: string
-  _updatedAt: string
-  _rev: string
-  title?: string
-  prompt?: string
-  returnFormat?: Code
-}
-
-export type PvpOutcomePrompts = {
-  _id: string
-  _type: 'pvpOutcomePrompts'
-  _createdAt: string
-  _updatedAt: string
-  _rev: string
-  title?: string
-  prompt?: string
-  returnFormat?: Code
-}
-
-export type PvpEventPrompts = {
-  _id: string
-  _type: 'pvpEventPrompts'
-  _createdAt: string
-  _updatedAt: string
-  _rev: string
-  title?: string
-  prompt?: string
-  returnFormat?: Code
-}
-
 export type CombinedPrompts = {
   _id: string
   _type: 'combinedPrompts'
@@ -242,10 +197,6 @@ export type AllSanitySchemaTypes =
   | Geopoint
   | Slug
   | SanityAssetSourceData
-  | ChatPrompts
-  | PvpCorrectionPrompts
-  | PvpOutcomePrompts
-  | PvpEventPrompts
   | CombinedPrompts
   | CorrectionPrompts
   | OutcomePrompts

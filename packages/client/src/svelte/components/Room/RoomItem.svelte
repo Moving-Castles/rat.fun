@@ -3,7 +3,6 @@
 
   import { shortenAddress } from "@modules/utils"
   import { EMPTY_CONNECTION } from "@modules/utils/constants"
-  import { ROOM_TYPE } from "contracts/enums"
   import { CurrentRoomId, UILocation } from "@modules/ui/stores"
   import { LOCATION } from "@modules/ui/enums"
 
@@ -14,22 +13,13 @@
     CurrentRoomId.set(roomId)
     UILocation.set(LOCATION.ROOM)
   }
-
-  function submitTwoPlayer() {
-    CurrentRoomId.set(roomId)
-    UILocation.set(LOCATION.PVP_ROOM)
-  }
 </script>
 
 <div class="room-item" class:disabled={$rat?.dead || room.balance == 0}>
-  <button
-    on:click={room.roomType === ROOM_TYPE.ONE_PLAYER
-      ? submitOnePlayer
-      : submitTwoPlayer}
-  >
+  <button on:click={submitOnePlayer}>
     ROOM #{room.index}
   </button>
-  <div class="room-info" class:pvp={room.roomType === 1}>
+  <div class="room-info">
     <!-- Prompt -->
     <div class="prompt">{room.roomPrompt}</div>
     <!-- Balance -->
@@ -40,20 +30,10 @@
         ? "Jimmy9"
         : shortenAddress(room.owner)}
     </div>
-    <!-- Room type -->
-    <div class="creator">
-      Room type: {room.roomType === 0 ? "1p" : "2p"}
-    </div>
     <!-- Room level -->
     <div class="creator">
       Level: {$levels[room.level]?.index ?? 0}
     </div>
-    <!-- Rat waiting in room  -->
-    {#if room.ratInRoom && room.ratInRoom !== EMPTY_CONNECTION}
-      <div class="creator">
-        Rat in room: {$rats[room.ratInRoom]?.name ?? "unknown"}
-      </div>
-    {/if}
   </div>
 </div>
 

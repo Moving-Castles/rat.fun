@@ -40,7 +40,7 @@
     "@threlte/core": "^8.0.1",
     "@threlte/extras": "^9.1.0",
     "@types/three": "^0.174.0",
-    "@wagmi/core": "2.16.5",
+    "@wagmi/core": "2.16.7",
     "contracts": "workspace:*",
     "howler": "^2.2.4",
     "lodash": "^4.17.21",

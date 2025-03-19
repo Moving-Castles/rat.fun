@@ -1,4 +1,4 @@
-import { ENTITY_TYPE, ROOM_TYPE } from "contracts/enums"
+import { ENTITY_TYPE } from "contracts/enums"
 import { Hex } from "viem"
 
 declare global {
@@ -10,7 +10,6 @@ declare global {
     globalRatIndex: number,
     maxRoomPromptLength: number,
     maxInventorySize: number,
-    maxLoadOutSize: number,
     creatorFee: number,
   }
 
@@ -41,9 +40,6 @@ declare global {
     ownedRat?: Hex,
     owner?: Hex,
     roomPrompt?: string,
-    roomType?: ROOM_TYPE,
-    ratInRoom?: Hex,
-    waitingInRoom?: Hex,
     index?: number,
     levelUpCost: number,
     roomCreationCost: number,
@@ -57,7 +53,6 @@ declare global {
     entityType: ENTITY_TYPE.PLAYER,
     balance: number,
     ownedRat: Hex,
-    inventory: string[],
     level: Hex
   }
 
@@ -72,8 +67,7 @@ declare global {
     dead: boolean,
     health: number,
     traits: string[],
-    inventory: string[],
-    waitingInRoom: Hex
+    inventory: string[]
   }
 
   type Room = {
@@ -85,8 +79,6 @@ declare global {
     level: Hex,
     name: string,
     roomPrompt: string,
-    roomType: ROOM_TYPE,
-    ratInRoom: Hex,
     visitorCount: number
   }
 

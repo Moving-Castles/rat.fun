@@ -4,8 +4,7 @@ import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
 import { GameConfig, EntityType, Balance, Name, OwnedRat, Inventory, Dead, Level, LevelUpCost, RoomCreationCost } from "../codegen/index.sol";
 import { LibUtils, LibRoom } from "../libraries/Libraries.sol";
-import { ENTITY_TYPE, ROOM_TYPE } from "../codegen/common.sol";
-import { MAX_INVENTORY_SIZE, MAX_LOADOUT_SIZE } from "../constants.sol";
+import { ENTITY_TYPE } from "../codegen/common.sol";
 
 contract DevSystem is System {
   function givePlayerBalance(uint256 _amount) public {
@@ -22,11 +21,10 @@ contract DevSystem is System {
   function createRoomAsAdmin(
     string memory _roomName,
     string memory _roomPrompt,
-    ROOM_TYPE _roomType,
     bytes32 _roomLevel,
     uint256 _extraBalance
   ) public returns (bytes32 roomId) {
-    roomId = LibRoom.createRoom(_roomName, _roomPrompt, _roomType, GameConfig.getAdminId(), _roomLevel);
+    roomId = LibRoom.createRoom(_roomName, _roomPrompt, GameConfig.getAdminId(), _roomLevel);
     Balance.set(roomId, Balance.get(roomId) + _extraBalance);
   }
 

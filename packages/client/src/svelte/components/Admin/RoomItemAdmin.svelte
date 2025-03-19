@@ -35,7 +35,7 @@
 </script>
 
 <div class:disabled={busy} class="room-item">
-  <div class="room-info" class:pvp={room.roomType === 1}>
+  <div class="room-info">
     <div class="room-title">Room #{room.index}</div>
     <!-- Prompt -->
     <div class="prompt">{room.roomPrompt}</div>
@@ -47,10 +47,6 @@
       Creator: {room.owner === $gameConfig.gameConfig.adminId
         ? "Jimmy9"
         : shortenAddress(room.owner)}
-    </div>
-    <!-- Room type -->
-    <div class="creator">
-      Room type: {room.roomType === 0 ? "1p" : "2p"}
     </div>
     <!-- Room level -->
     <div class="creator">

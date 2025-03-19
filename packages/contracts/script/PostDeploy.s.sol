@@ -18,7 +18,6 @@ import { NamespaceOwner } from "@latticexyz/world/src/codegen/tables/NamespaceOw
 import { GameConfig } from "../src/codegen/index.sol";
 
 import { LibRoom, LibInit, LibUtils, LibLevel } from "../src/libraries/Libraries.sol";
-import { ROOM_TYPE } from "../src/codegen/common.sol";
 
 contract PostDeploy is Script {
   function run(address worldAddress) external {
@@ -52,51 +51,35 @@ contract PostDeploy is Script {
     LibLevel.createLevel(5, 500, 500); // Level 5
 
     // Level 1
-    LibRoom.createRoom(
-      "Fight",
-      "There is a second rat in the room. The rats have to fight.",
-      ROOM_TYPE.ONE_PLAYER,
-      adminId,
-      firstLevel
-    );
+    LibRoom.createRoom("Fight", "There is a second rat in the room. The rats have to fight.", adminId, firstLevel);
     LibRoom.createRoom(
       "Magic hospital",
       "The room has healing energy that will restore the rat to perfect health.",
-      ROOM_TYPE.ONE_PLAYER,
       adminId,
       firstLevel
     );
-    LibRoom.createRoom("Cheese", "The room gives the rat a bag of cheese.", ROOM_TYPE.ONE_PLAYER, adminId, firstLevel);
+    LibRoom.createRoom("Cheese", "The room gives the rat a bag of cheese.", adminId, firstLevel);
     LibRoom.createRoom(
       "Trade",
       "The rat can trade a bag of cheese for a jester hat of the same value.",
-      ROOM_TYPE.ONE_PLAYER,
       adminId,
       firstLevel
     );
-    LibRoom.createRoom("Sell", "The rat can sell a jester hat.", ROOM_TYPE.ONE_PLAYER, adminId, firstLevel);
+    LibRoom.createRoom("Sell", "The rat can sell a jester hat.", adminId, firstLevel);
     LibRoom.createRoom(
       "Bet",
       "The rat is forced to bet it's whole credit balance on a double or nothing game of chance.",
-      ROOM_TYPE.ONE_PLAYER,
       adminId,
       firstLevel
     );
-    LibRoom.createRoom("Hot dog", "Hot dog eating contest", ROOM_TYPE.TWO_PLAYER, adminId, firstLevel);
-    LibRoom.createRoom(
-      "Kill",
-      "The room is a euthanasia chamber. There is no exit.",
-      ROOM_TYPE.ONE_PLAYER,
-      adminId,
-      firstLevel
-    );
+    LibRoom.createRoom("Hot dog", "Hot dog eating contest", adminId, firstLevel);
+    LibRoom.createRoom("Kill", "The room is a euthanasia chamber. There is no exit.", adminId, firstLevel);
 
     // Level 2
-    LibRoom.createRoom("Forced Swim Test", "Forced Swim Test", ROOM_TYPE.ONE_PLAYER, adminId, secondLevel);
+    LibRoom.createRoom("Forced Swim Test", "Forced Swim Test", adminId, secondLevel);
     LibRoom.createRoom(
       "Aggression",
       "The room is filled with a gas that increases rat aggression.",
-      ROOM_TYPE.TWO_PLAYER,
       adminId,
       secondLevel
     );

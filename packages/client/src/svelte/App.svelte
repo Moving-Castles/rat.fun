@@ -2,16 +2,12 @@
   import { onMount } from "svelte"
   import { ENVIRONMENT } from "@mud/enums"
   import { initSound } from "@modules/sound"
-  import { UILocation, UIState, CurrentRoomId } from "@modules/ui/stores"
+  import { UILocation, UIState } from "@modules/ui/stores"
   import { LOCATION, UI } from "@modules/ui/enums"
-  // import { player, rat } from "@modules/state/base/stores"
 
   import Loading from "@components/Loading/Loading.svelte"
   import Spawn from "@components/Spawn/Spawn.svelte"
   import CreateRat from "@components/CreateRat/CreateRat.svelte"
-  import Room from "@components/Room/Room.svelte"
-  import PvPRoom from "@components/Room/PvPRoom.svelte"
-  import Lobby from "@components/Lobby/Lobby.svelte"
 
   import Main from "@components/Main/Main.svelte"
 
@@ -28,7 +24,7 @@
   const ratCreated = async () => {
     try {
       UIState.set(UI.READY)
-      UILocation.set(LOCATION.NEST)
+      UILocation.set(LOCATION.MAIN)
     } catch (e) {
       console.error(e)
     }
@@ -68,17 +64,8 @@
   {/if}
 
   {#if $UIState === UI.READY}
-    {#if $UILocation === LOCATION.NEST}
+    {#if $UILocation === LOCATION.MAIN}
       <Main {environment} />
-    {/if}
-    {#if $UILocation === LOCATION.LOBBY}
-      <Lobby />
-    {/if}
-    {#if $UILocation === LOCATION.ROOM}
-      <Room {environment} roomId={$CurrentRoomId} />
-    {/if}
-    {#if $UILocation === LOCATION.PVP_ROOM}
-      <PvPRoom {environment} roomId={$CurrentRoomId} />
     {/if}
   {/if}
 </div>

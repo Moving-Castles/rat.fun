@@ -7,7 +7,7 @@ export function getOnchainData(network: SetupNetworkReturnType, components: Clie
     const roomEntity = network.world.registerEntity({ id: roomId });
     const ratEntity = network.world.registerEntity({ id: ratId });
 
-    const { RoomPrompt, Dead, Traits, Owner, Health, Name, Balance, Inventory, Value, RatInRoom } = components;
+    const { RoomPrompt, Dead, Traits, Owner, Health, Name, Balance, Inventory, Value } = components;
 
     // Rat
     const ratOwner = (getComponentValue(Owner, ratEntity)?.value ?? "") as string;
@@ -43,13 +43,11 @@ export function getOnchainData(network: SetupNetworkReturnType, components: Clie
     // Room
     const roomPrompt = (getComponentValue(RoomPrompt, roomEntity)?.value  ?? "") as string;
     const roomBalance = (getComponentValue(Balance, roomEntity)?.value ?? 0) as number;
-    const roomRatInRoom = (getComponentValue(RatInRoom, roomEntity)?.value ?? "") as string;
 
     const room = {
         id: roomId,
         prompt: roomPrompt,
-        balance: Number(roomBalance),
-        ratInRoom: roomRatInRoom
+        balance: Number(roomBalance)
     }
 
     return { rat, room};

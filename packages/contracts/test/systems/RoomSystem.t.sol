@@ -4,7 +4,7 @@ import { console } from "forge-std/console.sol";
 import { BaseTest } from "../BaseTest.sol";
 import "../../src/codegen/index.sol";
 import "../../src/libraries/Libraries.sol";
-import { ENTITY_TYPE, ROOM_TYPE } from "../../src/codegen/common.sol";
+import { ENTITY_TYPE } from "../../src/codegen/common.sol";
 
 contract RoomSystemTest is BaseTest {
   function testCreateRoom() public {
@@ -17,7 +17,7 @@ contract RoomSystemTest is BaseTest {
     assertEq(Balance.get(playerId), 1000);
 
     startGasReport("Create room (user)");
-    bytes32 roomId = world.ratroom__createRoom("Test room", "A test room", ROOM_TYPE.ONE_PLAYER);
+    bytes32 roomId = world.ratroom__createRoom("Test room", "A test room");
     endGasReport();
 
     console.logBytes32(roomId);
@@ -47,8 +47,7 @@ contract RoomSystemTest is BaseTest {
     startGasReport("Create room: long prompt");
     world.ratroom__createRoom(
       "Test room",
-      "The room has two doors. One doors lead to death, the other to freedom. If a rat does not make a choice within 10 minutes it is killed and the body removed. Each door has a guardian mouse that needs to be defeated to pass.",
-      ROOM_TYPE.ONE_PLAYER
+      "The room has two doors. One doors lead to death, the other to freedom. If a rat does not make a choice within 10 minutes it is killed and the body removed. Each door has a guardian mouse that needs to be defeated to pass."
     );
     endGasReport();
 
@@ -60,7 +59,7 @@ contract RoomSystemTest is BaseTest {
 
     prankAdmin();
     vm.expectRevert("prompt too short");
-    world.ratroom__createRoom("test room", "test room", ROOM_TYPE.ONE_PLAYER);
+    world.ratroom__createRoom("test room", "test room");
     vm.stopPrank();
   }
 
@@ -71,8 +70,7 @@ contract RoomSystemTest is BaseTest {
     vm.expectRevert("prompt too long");
     world.ratroom__createRoom(
       "Test room",
-      "The room has two doors. One doors lead to death, the other to freedom. If a rat does not make a choice within 10 minutes it is killed and the body removed. Each door has a guardian mouse that needs to be defeated to pass. The room has two doors. One doors lead to death, the other to freedom. If a rat does not make a choice within 10 minutes it is killed and the body removed. Each door has a guardian mouse that needs to be defeated to pass. The room has two doors. One doors lead to death, the other to freedom. If a rat does not make a choice within 10 minutes it is killed and the body removed. Each door has a guardian mouse that needs to be defeated to pass.",
-      ROOM_TYPE.ONE_PLAYER
+      "The room has two doors. One doors lead to death, the other to freedom. If a rat does not make a choice within 10 minutes it is killed and the body removed. Each door has a guardian mouse that needs to be defeated to pass. The room has two doors. One doors lead to death, the other to freedom. If a rat does not make a choice within 10 minutes it is killed and the body removed. Each door has a guardian mouse that needs to be defeated to pass. The room has two doors. One doors lead to death, the other to freedom. If a rat does not make a choice within 10 minutes it is killed and the body removed. Each door has a guardian mouse that needs to be defeated to pass."
     );
     vm.stopPrank();
   }
@@ -83,7 +81,7 @@ contract RoomSystemTest is BaseTest {
     vm.startPrank(alice);
 
     vm.expectRevert("balance too low");
-    world.ratroom__createRoom("Test room", "A test room", ROOM_TYPE.ONE_PLAYER);
+    world.ratroom__createRoom("Test room", "A test room");
 
     vm.stopPrank();
   }

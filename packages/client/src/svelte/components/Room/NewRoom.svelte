@@ -2,7 +2,6 @@
   import { createRoom } from "@modules/action"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
   import { player, gameConfig } from "@modules/state/base/stores"
-  import { ROOM_TYPE } from "contracts/enums"
 
   let busy = false
   let newPrompt: string = ""
@@ -13,7 +12,7 @@
 
   async function sendCreateRoom() {
     busy = true
-    const action = createRoom(newPrompt, ROOM_TYPE.ONE_PLAYER)
+    const action = createRoom("test name", newPrompt)
     try {
       await waitForCompletion(action)
     } catch (e) {

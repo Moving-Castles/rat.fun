@@ -6,7 +6,6 @@
   import { UILocation } from "@modules/ui/stores"
   import { LOCATION } from "@modules/ui/enums"
   import { ENVIRONMENT } from "@mud/enums"
-  import { ROOM_TYPE } from "contracts/enums"
   import { walletNetwork } from "@modules/network"
 
   import Spinner from "@components/Elements/Spinner/Spinner.svelte"
@@ -23,7 +22,7 @@
   let oldRoomBalance = room.balance
 
   function close() {
-    UILocation.set(LOCATION.NEST)
+    UILocation.set(LOCATION.MAIN)
   }
 
   onMount(async () => {
@@ -32,7 +31,6 @@
     outcome = await enterRoom(
       environment,
       $walletNetwork,
-      ROOM_TYPE.ONE_PLAYER,
       roomId,
       $player.ownedRat
     )

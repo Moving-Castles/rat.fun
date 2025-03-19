@@ -1,6 +1,6 @@
-import { ServerReturnValuePvP } from "@components/Nest/types"
+import { ServerReturnValue } from "@components/Nest/types"
 
 export type MessageContent = {
-  topic: "test" | "clients__update" | "pvp__outcome" | "pvp__update" | "room__creatorfee"
-  message: ServerReturnValuePvP | string | string[]
+  topic: "test" | "clients__update" | "room__creatorfee"
+  message: ServerReturnValue | string | string[]
 }

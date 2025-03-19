@@ -2,19 +2,17 @@
   import { gameConfig } from "@modules/state/base/stores"
   import { createRoomAsAdmin } from "@modules/action"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
-  import { ROOM_TYPE } from "contracts/enums"
 
   let busy = false
   let newRoomPrompt: string = ""
   let newRoomLevelIndex: number = 1
-  let newRoomType: ROOM_TYPE = ROOM_TYPE.ONE_PLAYER // or ROOM_TYPE.TWO_PLAYER
   let newRoomExtraBalance: number = 0
 
   async function sendCreateRoom() {
     busy = true
     const action = createRoomAsAdmin(
+      "Test room",
       newRoomPrompt,
-      newRoomType,
       $gameConfig.levelList[newRoomLevelIndex],
       newRoomExtraBalance
     )
@@ -53,27 +51,6 @@
       min="0"
       bind:value={newRoomExtraBalance}
     />
-  </div>
-  <!-- ROOM TYPE -->
-  <div class="input-group">
-    <label>
-      <input
-        type="radio"
-        name="roomType"
-        value={ROOM_TYPE.ONE_PLAYER}
-        bind:group={newRoomType}
-      />
-      One Player
-    </label>
-    <label>
-      <input
-        type="radio"
-        name="roomType"
-        value={ROOM_TYPE.TWO_PLAYER}
-        bind:group={newRoomType}
-      />
-      Two Player
-    </label>
   </div>
   <div class="actions">
     <!-- SUBMIT -->

@@ -8,7 +8,6 @@ export type Room = {
     id: string,
     prompt: string;
     balance: number;
-    ratInRoom: string;
 }
 
 export type Trait = {

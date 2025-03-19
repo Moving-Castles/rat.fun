@@ -56,11 +56,6 @@ export const player = derived(
   ([$entities, $playerId]) => $entities[$playerId] as Player
 )
 
-export const playerInventory = derived(
-  [player, items],
-  ([$player, $items]) => $player?.inventory?.map(item => $items[item]) as Item[]
-)
-
 // * * * * * * * * * * * * * * * * *
 // PLAYER RAT STORES
 // * * * * * * * * * * * * * * * * *
