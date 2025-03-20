@@ -10,4 +10,6 @@ pragma solidity >=0.8.24;
  */
 interface IRatSystem {
   function ratroom__createRat(string calldata _name) external returns (bytes32 ratId);
+
+  function ratroom__liquidateRat(bytes32 _ratId) external;
 }

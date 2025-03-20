@@ -41,7 +41,7 @@ export default defineWorld({
     Traits: "bytes32[]", // Traits of rat
     Inventory: "bytes32[]", // Items carried by player and rat
     // ...
-    Level: "bytes32", // Id of level. Set on rat, player and room.
+    Level: "bytes32", // Id of level. Set on rat and room.
     Index: "uint256", // Set on rat and room
     Balance: "uint256", // Amount of credits. Set on room, rat and player.
     Value: "int256", // Value of a trait can be negative

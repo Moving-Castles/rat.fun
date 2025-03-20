@@ -10,8 +10,9 @@
   import CreateRat from "@components/CreateRat/CreateRat.svelte"
 
   import Main from "@components/Main/Main.svelte"
+  import { events } from "@modules/herp/index.svelte"
 
-  export let environment: ENVIRONMENT
+  let { environment }: { environment: ENVIRONMENT } = $props()
 
   const loadedEnvironment = () => {
     UIState.set(UI.SPAWNING)
@@ -29,6 +30,17 @@
       console.error(e)
     }
   }
+
+  events.forEach(e => {
+    $effect(() => {
+      console.log("Effect running for ", e.name)
+      let a = e.logic()
+      console.log(a)
+      if (a.condition) {
+        a.callback()
+      }
+    })
+  })
 
   onMount(async () => {
     // Remove preloader

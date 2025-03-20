@@ -20,8 +20,6 @@ contract RoomSystemTest is BaseTest {
     bytes32 roomId = world.ratroom__createRoom("Test room", "A test room");
     endGasReport();
 
-    console.logBytes32(roomId);
-
     vm.stopPrank();
 
     // Check player balance (100 = room creation cost)
@@ -29,6 +27,7 @@ contract RoomSystemTest is BaseTest {
 
     // Check room
     assertEq(uint8(EntityType.get(roomId)), uint8(ENTITY_TYPE.ROOM));
+    assertEq(Name.get(roomId), "Test room");
     assertEq(RoomPrompt.get(roomId), "A test room");
     assertEq(Balance.get(roomId), 100);
     assertEq(Owner.get(roomId), playerId);
@@ -57,16 +56,21 @@ contract RoomSystemTest is BaseTest {
   function testRevertPromptTooShort() public {
     setUp();
 
-    prankAdmin();
+    vm.startPrank(alice);
+    world.ratroom__spawn("alice");
+    world.ratroom__givePlayerBalance(1000);
     vm.expectRevert("prompt too short");
-    world.ratroom__createRoom("test room", "test room");
+    world.ratroom__createRoom("test room", "");
     vm.stopPrank();
   }
 
   function testRevertPromptTooLong() public {
     setUp();
 
-    prankAdmin();
+    vm.startPrank(alice);
+    world.ratroom__spawn("alice");
+    world.ratroom__givePlayerBalance(1000);
+
     vm.expectRevert("prompt too long");
     world.ratroom__createRoom(
       "Test room",

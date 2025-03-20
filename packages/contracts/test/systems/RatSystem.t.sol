@@ -20,16 +20,18 @@ contract RatSystemTest is BaseTest {
 
     vm.stopPrank();
 
+    // Check player
     assertEq(OwnedRat.get(playerId), ratId);
 
     // Check rat
     assertEq(uint8(EntityType.get(ratId)), uint8(ENTITY_TYPE.RAT));
-    assertEq(Index.get(ratId), 1);
-    assertEq(Level.get(ratId), LevelList.get()[0]);
-    assertEq(Balance.get(ratId), 0);
-    assertEq(Owner.get(ratId), playerId);
+    assertEq(Name.get(ratId), "roger");
     assertEq(Dead.get(ratId), false);
     assertEq(Health.get(ratId), 100);
+    assertEq(Balance.get(ratId), 0);
+    assertEq(Index.get(ratId), 1);
+    assertEq(Level.get(ratId), LevelList.get()[0]);
+    assertEq(Owner.get(ratId), playerId);
   }
 
   function testRevertAlreadyHasRat() public {
@@ -42,6 +44,25 @@ contract RatSystemTest is BaseTest {
 
     vm.expectRevert("already has rat");
     world.ratroom__createRat("roger");
+
+    vm.stopPrank();
+  }
+
+  function testLiquidateRat() public {
+    setUp();
+
+    vm.startPrank(alice);
+
+    bytes32 playerId = world.ratroom__spawn("alice");
+    bytes32 ratId = world.ratroom__createRat("roger");
+
+    assertEq(Balance.get(playerId), 0);
+
+    startGasReport("Liquidate rat");
+    world.ratroom__liquidateRat(ratId);
+    endGasReport();
+
+    assertEq(Balance.get(playerId), 100);
 
     vm.stopPrank();
   }

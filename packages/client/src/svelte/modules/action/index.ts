@@ -5,6 +5,7 @@ const NAMESPACE = "ratroom__"
 export enum WorldFunctions {
   Spawn = NAMESPACE + "spawn",
   CreateRat = NAMESPACE + "createRat",
+  LiquidateRat = NAMESPACE + "liquidateRat",
   CreateRoom = NAMESPACE + "createRoom",
   // Admin
   CreateRoomAsAdmin = NAMESPACE + "createRoomAsAdmin",
@@ -21,6 +22,10 @@ export function spawn(name: string) {
 
 export function createRat(name: string) {
   return addToSequencer(WorldFunctions.CreateRat, [name])
+}
+
+export function liquidateRat(ratId: string) {
+  return addToSequencer(WorldFunctions.LiquidateRat, [ratId])
 }
 
 export function createRoom(name: string, prompt: string ) {

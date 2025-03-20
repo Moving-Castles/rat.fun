@@ -1,17 +1,13 @@
 import { PANE, LEFT_PANE, RIGHT_PANE } from "./enums"
-import { rooms } from "@modules/state/base/stores"
-import { get } from "svelte/store"
 import * as uiStores from "@modules/ui/stores"
 import { LOCATION } from "@modules/ui/enums"
 
+// Internal state
 // PANES
 let leftPane = $state<LEFT_PANE>(LEFT_PANE.YOUR_RAT)
 let rightPane = $state<RIGHT_PANE>(RIGHT_PANE.ROOMS)
-// FLOORS
-let floor = $state<number>(0)
 
-// Get the updated
-
+// Exports
 export const getUIState = () => {
   const setPane = (pane: PANE, option: LEFT_PANE | RIGHT_PANE) => {
     console.log("Called setPane", pane, option)
@@ -21,10 +17,6 @@ export const getUIState = () => {
     if (pane === PANE.RIGHT) {
       rightPane = option
     }
-  }
-
-  const setFloor = (num: number) => {
-    floor = num
   }
 
   const previewRoom = (id: string) => {

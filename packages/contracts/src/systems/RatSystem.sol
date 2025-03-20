@@ -24,4 +24,12 @@ contract RatSystem is System {
     OwnedRat.set(playerId, ratId);
     Owner.set(ratId, playerId);
   }
+
+  /**
+   * @notice Liquidate a rat
+   * @param _ratId The id of the rat
+   */
+  function liquidateRat(bytes32 _ratId) public {
+    LibRat.liquidateRat(_ratId);
+  }
 }

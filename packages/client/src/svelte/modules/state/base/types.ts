@@ -52,8 +52,7 @@ declare global {
     [key: string]: number | ENTITY_TYPE | Hex | string[],
     entityType: ENTITY_TYPE.PLAYER,
     balance: number,
-    ownedRat: Hex,
-    level: Hex
+    ownedRat: Hex
   }
 
   type Rat  = {

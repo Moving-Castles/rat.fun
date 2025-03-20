@@ -16,6 +16,5 @@ contract PlayerSystem is System {
     EntityType.set(_playerId, ENTITY_TYPE.PLAYER);
     Name.set(_playerId, _name);
     Balance.set(_playerId, 0);
-    Level.set(_playerId, LevelList.get()[0]);
   }
 }
