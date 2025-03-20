@@ -15,6 +15,10 @@ const getEnvironment = () => {
     return ENVIRONMENT.RHODOLITE
   }
 
+  if (hostname.includes("pyrope") || urlParams.has("pyrope")) {
+    return ENVIRONMENT.PYROPE
+  }
+
   return ENVIRONMENT.DEVELOPMENT
 }
 

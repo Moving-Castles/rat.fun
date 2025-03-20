@@ -16,6 +16,8 @@ export function getNetworkConfig(environment: ENVIRONMENT) {
 
   if ([ENVIRONMENT.GARNET].includes(environment)) {
     chainId = 17069
+  } else if ([ENVIRONMENT.PYROPE].includes(environment)) {
+    chainId = 695569
   } else if ([ENVIRONMENT.REDSTONE].includes(environment)) {
     chainId = 690
   }

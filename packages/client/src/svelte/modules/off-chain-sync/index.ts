@@ -12,7 +12,7 @@ export function initOffChainSync(environment: ENVIRONMENT, ratId: string) {
 
   let url = `ws://localhost:3131/ws/${ratId}`
 
-  if ([ENVIRONMENT.GARNET].includes(environment)) {
+  if ([ENVIRONMENT.PYROPE, ENVIRONMENT.GARNET].includes(environment)) {
     url = `wss://reality-model-1.mc-infra.com/ws/${ratId}`
   }
 

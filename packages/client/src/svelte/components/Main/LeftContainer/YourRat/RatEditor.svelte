@@ -8,12 +8,12 @@
 
 <div class="rat-editor">
   <div class="inner">
-    {$rat.name} is ...
-    {#each $ratTraits as trait}
+    {$rat?.name ?? ""} is ...
+    {#each $ratTraits ?? [] as trait}
       {trait.name}
     {/each}
     has...
-    {#each $ratInventory as item}
+    {#each $ratInventory ?? [] as item}
       {item.name}
     {/each}
   </div>

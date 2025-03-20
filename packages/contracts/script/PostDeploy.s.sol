@@ -72,7 +72,6 @@ contract PostDeploy is Script {
       adminId,
       firstLevel
     );
-    LibRoom.createRoom("Hot dog", "Hot dog eating contest", adminId, firstLevel);
     LibRoom.createRoom("Kill", "The room is a euthanasia chamber. There is no exit.", adminId, firstLevel);
 
     // Level 2

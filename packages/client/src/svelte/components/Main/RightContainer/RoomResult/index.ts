@@ -8,7 +8,7 @@ export async function enterRoom(environment: ENVIRONMENT, walletNetwork: SetupWa
     const startTime = performance.now()
 
     const url = 
-    [ENVIRONMENT.GARNET].includes(environment) 
+    [ENVIRONMENT.PYROPE, ENVIRONMENT.GARNET].includes(environment) 
         ? "https://reality-model-1.mc-infra.com/room/enter" 
         : "http://localhost:3131/room/enter"
 

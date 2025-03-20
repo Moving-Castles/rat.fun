@@ -29,7 +29,6 @@
 
   onMount(async () => {
     if (!roomId) return
-
     outcome = await enterRoom(
       environment,
       $walletNetwork,

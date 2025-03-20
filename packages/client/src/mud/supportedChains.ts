@@ -27,6 +27,8 @@ import {
   sepolia,
 } from "viem/chains";
 
+import { pyrope } from "./pyropeChain";
+
 const extendedGarnet = {
   ...garnet,
   faucetUrl: "https://faucet.mc-infra.com/trpc/drip",
@@ -40,12 +42,18 @@ const extendedRedstone = {
   indexerUrl: "https://next-indexer.mud.redstonechain.com",
 } as const satisfies MUDChain;
 
+const extendedPyrope = {
+  ...pyrope,
+  faucetUrl: "https://pyrope-faucet.jimmy9-infra.com/trpc/drip",
+} as const satisfies MUDChain;
+
 export const supportedChains = [
   mudFoundry,
   mainnet,
   extendedRedstone,
   holesky,
   extendedGarnet,
+  extendedPyrope,
   sepolia,
   optimism,
   optimismSepolia,
