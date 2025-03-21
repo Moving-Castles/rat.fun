@@ -6,9 +6,9 @@
   let { logEntry, i }: { logEntry: LogEntry; i: number } = $props()
 
   const parseTimestamp = str => {
-    let datetime = new Date("1970-01-01T00:" + str + "Z").getSeconds()
+    let datetime = new Date("1970-01-01T00:" + str + "Z").getTime()
     console.log(datetime, "millis")
-    return datetime
+    return datetime / 1000
   }
 
   let millis = $derived(parseTimestamp(logEntry.timestamp))
