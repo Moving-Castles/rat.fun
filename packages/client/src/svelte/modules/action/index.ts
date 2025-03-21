@@ -25,8 +25,8 @@ export function createRat(name: string) {
   return addToSequencer(WorldFunctions.CreateRat, [name])
 }
 
-export function liquidateRat(ratId: string) {
-  return addToSequencer(WorldFunctions.LiquidateRat, [ratId])
+export function liquidateRat() {
+  return addToSequencer(WorldFunctions.LiquidateRat, [])
 }
 
 export function createRoom(name: string, prompt: string ) {

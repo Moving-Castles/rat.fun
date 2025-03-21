@@ -55,7 +55,7 @@
   </div>
   <div class="actions">
     <!-- SUBMIT -->
-    <button disabled={busy} on:click={sendCreateRoom}> Create room </button>
+    <button disabled={busy} onclick={sendCreateRoom}> Create room </button>
   </div>
 </div>
 

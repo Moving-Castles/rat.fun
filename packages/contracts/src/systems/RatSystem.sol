@@ -26,11 +26,19 @@ contract RatSystem is System {
   }
 
   /**
-   * @notice Liquidate a rat
-   * @param _ratId The id of the rat
+   * @notice Liquidate rat
    */
-  function liquidateRat(bytes32 _ratId) public {
-    LibRat.liquidateRat(_ratId);
+  function liquidateRat() public {
+    bytes32 playerId = LibUtils.addressToEntityKey(_msgSender());
+    bytes32 ratId = OwnedRat.get(playerId);
+
+    // Check that the rat is alive
+    require(!Dead.get(ratId), "rat is dead");
+
+    LibRat.liquidateRat(ratId);
+
+    // Unset the rat from the player
+    OwnedRat.deleteRecord(playerId);
   }
 
   /**

@@ -41,7 +41,7 @@
   </div>
   <!-- Action -->
   <div class="level-item">
-    <button on:click={sendUpdateLevel}>Update</button>
+    <button onclick={sendUpdateLevel}>Update</button>
   </div>
 </div>
 

@@ -6,7 +6,7 @@
   import { player } from "@modules/state/base/stores"
   import { ENTITY_TYPE } from "contracts/enums"
 
-  import Spinner from "@components/Elements/Spinner/Spinner.svelte"
+  import Spinner from "@components/Main/Shared/Spinner/Spinner.svelte"
 
   const dispatch = createEventDispatcher()
 
@@ -104,10 +104,10 @@
           disabled={busy}
           bind:this={inputEl}
           bind:value={name}
-          on:keydown={e => e.key === "Enter" && sendSpawn()}
+          onkeydown={e => e.key === "Enter" && sendSpawn()}
         />
       </div>
-      <button class:disabled={!name} class:busy on:click={sendSpawn}>
+      <button class:disabled={!name} class:busy onclick={sendSpawn}>
         AGREE TO EVERYTHING
         {#if busy}
           <div class="spinner"><Spinner /></div>

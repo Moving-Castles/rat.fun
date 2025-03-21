@@ -53,8 +53,8 @@
       Level: {$levels[room.level]?.index ?? 0}
     </div>
   </div>
-  <button disabled={busy} on:click={sendAddRoomBalance}>Add $100</button>
-  <button disabled={busy} on:click={sendDestroyRoom}>Destroy room</button>
+  <button disabled={busy} onclick={sendAddRoomBalance}>Add $100</button>
+  <button disabled={busy} onclick={sendDestroyRoom}>Destroy room</button>
 </div>
 
 <style lang="scss">

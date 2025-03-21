@@ -1,7 +1,7 @@
 const firstNameFragments = [
   "Lil",
   "Tommy",
-  "Squirt",
+  "Bong",
   "Bean",
   "Big",
   "Zaron",
@@ -55,7 +55,7 @@ const lastNameFragments = [
     "NeverLose",
     "Strawdog",
     "Pluto",
-    "Squirt",
+    "Bong",
     "Bean",
     "Zaron",
     "Barron",

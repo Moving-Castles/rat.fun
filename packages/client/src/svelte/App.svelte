@@ -7,7 +7,6 @@
 
   import Loading from "@components/Loading/Loading.svelte"
   import Spawn from "@components/Spawn/Spawn.svelte"
-  import CreateRat from "@components/CreateRat/CreateRat.svelte"
 
   import Main from "@components/Main/Main.svelte"
   import { events } from "@modules/herp/index.svelte"
@@ -19,10 +18,6 @@
   }
 
   const spawned = async () => {
-    UIState.set(UI.CREATING_RAT)
-  }
-
-  const ratCreated = async () => {
     UIState.set(UI.READY)
     UILocation.set(LOCATION.MAIN)
   }
@@ -62,12 +57,6 @@
   {#if $UIState === UI.SPAWNING}
     <main>
       <Spawn on:done={spawned} />
-    </main>
-  {/if}
-
-  {#if $UIState === UI.CREATING_RAT}
-    <main>
-      <CreateRat on:done={ratCreated} />
     </main>
   {/if}
 

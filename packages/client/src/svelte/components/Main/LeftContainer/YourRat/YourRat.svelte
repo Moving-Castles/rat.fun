@@ -1,18 +1,26 @@
 <script lang="ts">
-  import { ratTotalValue } from "@modules/state/base/stores"
+  import { player, rat } from "@modules/state/base/stores"
   import RatEditor from "@components/Main/LeftContainer/YourRat/RatEditor.svelte"
   import RatCam from "@components/Main/LeftContainer/YourRat/RatCam.svelte"
   import LiquidateRat from "@components/Main/LeftContainer/YourRat/LiquidateRat.svelte"
+  import DeployRat from "@components/Main/LeftContainer/DeployRat/DeployRat.svelte"
+
+  $: console.log("$rat", $rat)
+  $: console.log("$player", $player)
 </script>
 
 <div class="your-rat">
-  <RatEditor />
-  <RatCam />
-  <LiquidateRat />
-
+  {#if $player?.ownedRat}
+    <RatEditor />
+    <RatCam />
+    <LiquidateRat />
+  {:else}
+    <DeployRat />
+  {/if}
+  <!-- 
   {#if $ratTotalValue === 0}
     <div class="dead" />
-  {/if}
+  {/if} -->
 </div>
 
 <style lang="scss">

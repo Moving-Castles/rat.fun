@@ -51,7 +51,7 @@
   </div>
 
   <div class="actions">
-    <button {disabled} on:click={sendCreateRoom}>
+    <button {disabled} onclick={sendCreateRoom}>
       Create room (Cost: $100)
     </button>
   </div>

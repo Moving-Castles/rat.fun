@@ -19,7 +19,7 @@
   }
 </script>
 
-<button class="admin-button" on:click={toggleAdmin}>ADMIN</button>
+<button class="admin-button" onclick={toggleAdmin}>ADMIN</button>
 
 {#if adminActive}
   <div class="admin">

@@ -60,7 +60,7 @@ contract RatSystemTest is BaseTest {
     assertEq(Balance.get(playerId), 0);
 
     startGasReport("Liquidate rat");
-    world.ratroom__liquidateRat(ratId);
+    world.ratroom__liquidateRat();
     endGasReport();
 
     assertEq(Balance.get(playerId), 100);

@@ -6,7 +6,7 @@
   import { ENVIRONMENT } from "@mud/enums"
   import { walletNetwork } from "@modules/network"
 
-  import Spinner from "@components/Elements/Spinner/Spinner.svelte"
+  import Spinner from "@components/Main/Shared/Spinner/Spinner.svelte"
   import Log from "@components/Main/RightContainer/RoomResult/Log/Log.svelte"
   import Outcome from "@components/Main/RightContainer/RoomResult/Outcome.svelte"
 
@@ -51,7 +51,7 @@
     <!-- OUTCOME -->
     <Outcome {room} {outcome} {oldRoomBalance} />
     <div class="return">
-      <button on:click={close}>Return to nest</button>
+      <button onclick={close}>Return to nest</button>
     </div>
   {:else}
     EXPERIMENT IN PROGRESS: <Spinner />

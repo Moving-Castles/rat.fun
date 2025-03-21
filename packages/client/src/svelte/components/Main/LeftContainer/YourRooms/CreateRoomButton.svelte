@@ -9,7 +9,7 @@
 </script>
 
 <div class="create-room-button">
-  <button on:click={goCreateRoom}>Create Room</button>
+  <button onclick={goCreateRoom}>Create Room</button>
 </div>
 
 <style lang="scss">

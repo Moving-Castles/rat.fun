@@ -14,6 +14,11 @@
     await new Promise(r => setTimeout(r, 200))
     await doorProgress.set(1)
   }
+
+  $effect(() => {
+    console.log("$ratLevelIndex", $ratLevelIndex)
+  })
+
   $effect(() => {
     goToLevel($ratLevelIndex)
   })
@@ -24,7 +29,7 @@
 </script>
 
 <svelte:window
-  on:keypress={async e => {
+  onkeypress={async e => {
     switch (e.key) {
       case "0":
       case "1":
@@ -45,23 +50,25 @@
 
 <div class="floor-bar" bind:clientHeight>
   <div class="elevator">
-    <div
-      style:transform="translateY({elevatorIndex * (clientHeight / 6)}px)"
-      class="elevator-item"
-      style:background-image="url(/images/rat.jpg)"
-    >
+    {#if elevatorIndex >= 0}
       <div
-        style:transform="translateX(-{doorProgress.current * 100}%)"
-        class="elevator-door-l"
-      ></div>
-      <div
-        style:transform="translateX({doorProgress.current * 100}%)"
-        class="elevator-door-r"
-      ></div>
-      <span>
-        <!-- {elevatorIndex * -1} -->
-      </span>
-    </div>
+        style:transform="translateY({elevatorIndex * (clientHeight / 6)}px)"
+        class="elevator-item"
+        style:background-image="url(/images/rat.jpg)"
+      >
+        <div
+          style:transform="translateX(-{doorProgress.current * 100}%)"
+          class="elevator-door-l"
+        ></div>
+        <div
+          style:transform="translateX({doorProgress.current * 100}%)"
+          class="elevator-door-r"
+        ></div>
+        <span>
+          <!-- {elevatorIndex * -1} -->
+        </span>
+      </div>
+    {/if}
   </div>
   {#each $gameConfig?.levelList || [] as _, i}
     <div class="floor-item">
