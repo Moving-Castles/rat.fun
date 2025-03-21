@@ -3,19 +3,33 @@
   import { ratTotalValue } from "@modules/state/base/stores"
   import { liquidateRat } from "@svelte/modules/action"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
+  import {
+    ModalTarget,
+    getModalState,
+  } from "@components/Main/Modal/state.svelte"
+
+  let { modal } = getModalState()
 
   let busy = $state(false)
+  let confirming = $state(false)
+  let liquidationMessage = $state("CONFIRM LIQUIDATION")
 
   const sendLiquidateRat = async () => {
     if (busy) return
     busy = true
     const action = liquidateRat($player.ownedRat)
     try {
+      liquidationMessage = "Eliminating rat..."
       await waitForCompletion(action)
     } catch (e) {
+      busy = false
       console.error(e)
     } finally {
-      busy = false
+      liquidationMessage = "Elimination complete"
+
+      setTimeout(() => {
+        modal.close()
+      }, 1200)
     }
   }
 </script>
@@ -27,10 +41,38 @@
       <div class="data-cell-value">${$ratTotalValue}</div>
     </div>
   </div>
-  <button disabled={busy} onclick={sendLiquidateRat} class="action warning">
+  <button
+    disabled={busy}
+    onclick={() => (confirming = true)}
+    class="action warning-mute"
+  >
     Liquidate Rat
   </button>
 </div>
+
+{#snippet confirmLiquidation()}
+  <div class="confirmation danger">
+    <div class="content">
+      <img
+        class="liquidate-image"
+        src="/images/liquidate.svg"
+        alt="Confirm Liquidation"
+      />
+      <button disabled={busy} onclick={sendLiquidateRat} class="modal-button">
+        {liquidationMessage}
+      </button>
+    </div>
+  </div>
+{/snippet}
+
+{#if confirming}
+  <ModalTarget
+    onclose={() => {
+      confirming = false
+    }}
+    content={confirmLiquidation}
+  />
+{/if}
 
 <style lang="scss">
   .liquidate-rat {
@@ -58,6 +100,11 @@
     }
   }
 
+  .modal-button {
+    width: 100%;
+    height: 100%;
+  }
+
   .action {
     width: 50%;
     height: 100%;
@@ -65,15 +112,58 @@
     display: flex;
     justify-content: center;
     align-items: center;
+  }
 
-    &.warning {
-      background: repeating-linear-gradient(
-        45deg,
-        #f0d000,
-        #f0d000 20px,
-        #bda400 20px,
-        #bda400 40px
-      );
+  .warning {
+    border: none;
+    background: repeating-linear-gradient(
+      45deg,
+      #f0d000,
+      #f0d000 20px,
+      #bda400 20px,
+      #bda400 40px
+    );
+  }
+
+  .danger {
+    border: none;
+    background: repeating-linear-gradient(
+      45deg,
+      #cc0000,
+      #cc0000 20px,
+      #9e0000 20px,
+      #9e0000 40px
+    );
+  }
+  .warning-mute {
+    color: white;
+    border: none;
+    background: repeating-linear-gradient(
+      45deg,
+      black,
+      black 20px,
+      #222 20px,
+      #222 40px
+    );
+  }
+
+  .liquidate-image {
+    height: 300px;
+  }
+
+  .confirmation {
+    .content {
+      display: flex;
+      flex-flow: column nowrap;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    button {
+      height: 60px;
+      border: 1px solid white;
+      color: white;
+      background: black;
     }
   }
 

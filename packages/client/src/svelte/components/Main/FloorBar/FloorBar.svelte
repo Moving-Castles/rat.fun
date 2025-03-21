@@ -48,7 +48,7 @@
     <div
       style:transform="translateY({elevatorIndex * (clientHeight / 6)}px)"
       class="elevator-item"
-      style:background-image="url(/images/rat.jpg)"
+      style:background-image="url(/images/lift.svg)"
     >
       <div
         style:transform="translateX(-{doorProgress.current * 100}%)"
