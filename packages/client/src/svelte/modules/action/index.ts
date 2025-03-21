@@ -7,6 +7,7 @@ export enum WorldFunctions {
   CreateRat = NAMESPACE + "createRat",
   LiquidateRat = NAMESPACE + "liquidateRat",
   CreateRoom = NAMESPACE + "createRoom",
+  DropItem = NAMESPACE + "dropItem",
   // Admin
   CreateRoomAsAdmin = NAMESPACE + "createRoomAsAdmin",
   DestroyRoomAsAdmin = NAMESPACE + "destroyRoomAsAdmin",
@@ -30,6 +31,10 @@ export function liquidateRat(ratId: string) {
 
 export function createRoom(name: string, prompt: string ) {
   return addToSequencer(WorldFunctions.CreateRoom, [name, prompt])
+}
+
+export function dropItem(itemId: string) {
+  return addToSequencer(WorldFunctions.DropItem, [itemId])
 }
 
 // Admin

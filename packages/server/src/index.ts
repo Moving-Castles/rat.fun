@@ -38,11 +38,6 @@ fastify.register(debug)
 fastify.register(enter)
 fastify.register(wsConnect)
 
-// Debug: Print registered routes
-fastify.ready(() => {
-  console.log('Registered routes:', fastify.printRoutes())
-})
-
 // Start the server
 const start = async (port: number) => {
     try {

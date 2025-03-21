@@ -587,7 +587,7 @@ contract ManagerSystemTest is BaseTest {
     bytes32 roomId = world.ratroom__createRoom("test room", "test room");
     vm.stopPrank();
 
-    // Trait to add
+    // Item to add
     Item[] memory newItems = new Item[](1);
     newItems[0] = Item("cheese", 40);
 
@@ -623,7 +623,7 @@ contract ManagerSystemTest is BaseTest {
     bytes32 roomId = world.ratroom__createRoom("test room", "test room");
     vm.stopPrank();
 
-    // Trait to add
+    // Item to add
     Item[] memory newItems = new Item[](1);
     newItems[0] = Item("rotten cheese", -40);
 
@@ -660,6 +660,7 @@ contract ManagerSystemTest is BaseTest {
     world.ratroom__givePlayerBalance(1000);
     bytes32 roomId = world.ratroom__createRoom("test room", "test room");
     vm.stopPrank();
+
     // Item to add
     Item[] memory newItems = new Item[](1);
     newItems[0] = Item("cheese", 200);
@@ -693,7 +694,7 @@ contract ManagerSystemTest is BaseTest {
     bytes32 roomId = world.ratroom__createRoom("test room", "test room");
     vm.stopPrank();
 
-    // Trait to add
+    // Item to add
     Item[] memory newItems = new Item[](1);
     newItems[0] = Item("cheese", 40);
 

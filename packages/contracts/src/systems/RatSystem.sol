@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
-import { Owner, OwnedRat, Dead, Level, LevelUpCost, LevelList, Balance, Index } from "../codegen/index.sol";
+import { Owner, OwnedRat, Dead, Index, Inventory } from "../codegen/index.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { LibUtils, LibRat } from "../libraries/Libraries.sol";
+import { LibUtils, LibRat, LibItem } from "../libraries/Libraries.sol";
 
 contract RatSystem is System {
   /**
@@ -31,5 +31,25 @@ contract RatSystem is System {
    */
   function liquidateRat(bytes32 _ratId) public {
     LibRat.liquidateRat(_ratId);
+  }
+
+  /**
+   * @notice Drop an item
+   * @param _itemId The id of the item
+   */
+  function dropItem(bytes32 _itemId) public {
+    bytes32 playerId = LibUtils.addressToEntityKey(_msgSender());
+    bytes32 ratId = OwnedRat.get(playerId);
+
+    require(ratId != bytes32(0), "no rat");
+
+    // Check that the item is in the rat's inventory
+    require(LibUtils.arrayIncludes(Inventory.get(ratId), _itemId), "item not in inventory");
+
+    // Remove it from the inventory
+    Inventory.set(ratId, LibUtils.removeFromArray(Inventory.get(ratId), _itemId));
+
+    // Destroy the item
+    LibItem.destroyItem(_itemId);
   }
 }
