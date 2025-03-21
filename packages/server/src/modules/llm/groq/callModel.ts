@@ -1,24 +1,26 @@
 import { MessageParam } from '@anthropic-ai/sdk/resources';
-import OpenAI from 'openai';
+import Groq from 'groq-sdk';
 
-export async function callModel(openai: OpenAI, messages: MessageParam[], system: string)  {
+export async function callModel(groq: Groq, messages: MessageParam[], system: string, temperature: number = 1)  {
     const combinedMessages = [
         { role: "system", content: system },
         { role: "user", content: messages.map(m => m.content).join("\n") }
     ]
 
-    const completion = await openai.chat.completions.create({
+    const completion = await groq.chat.completions.create({
         messages: combinedMessages,
-        model: "llama-3.3-70b-versatile"
+        response_format: { type: "json_object" }, 
+        model: "llama-3.3-70b-versatile",
+        temperature: temperature
       });
 
     return parseReturnMessage(completion);
 }
 
-function parseReturnMessage(msg: OpenAI.Chat.Completions.ChatCompletion) {
+function parseReturnMessage(msg: Groq.Chat.Completions.ChatCompletion) {
     let rawText = msg.choices[0].message.content ?? "";
 
-    console.log('rawText', rawText);
+    // console.log('rawText', rawText);
 
     // Remove Markdown-style code block indicators
     rawText = rawText.replace(/^\s*```(?:json)?\s*/i, "").replace(/\s*```$/, "");

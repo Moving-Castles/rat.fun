@@ -8,39 +8,19 @@ dotenv.config();
 import { MESSAGE } from '@config';
 import { EnterRoomBody } from '@routes/room/enter/types';
 
-// LLM
-import { EventsReturnValue, CombinedReturnValue } from '@modules/llm/types'
+// LLM  
+import { CorrectedEventsReturnValue, CombinedReturnValue } from '@modules/llm/types'
 import { constructEventMessages, constructCorrectionMessages } from '@modules/llm/constructMessages';
 
 // Anthropic
-import { getLLMClient } from '@modules/llm/anthropic';
-import { callModel } from '@modules/llm/anthropic/callModel';
-const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY as string;
-
-// DeepSeek
-// import { getLLMClient } from '@modules/llm/deepseek';
-// import { callModel } from '@modules/llm/deepseek/callModel';
-// const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY as string;
-
-// Heurist
-// import { getLLMClient } from '@modules/llm/heurist';
-// import { callModel } from '@modules/llm/heurist/callModel';
-// const HEURIST_API_KEY = process.env.HEURIST_API_KEY as string;
-
-// Lambda
-// import { getLLMClient } from '@modules/llm/lambda';
-// import { callModel } from '@modules/llm/lambda/callModel';
-// const LAMBDA_API_KEY = process.env.LAMBDA_API_KEY as string;
+// import { getLLMClient } from '@modules/llm/anthropic';
+// import { callModel } from '@modules/llm/anthropic/callModel';
+// const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY as string;
 
 // Groq
-// import { getLLMClient } from '@modules/llm/groq';
-// import { callModel } from '@modules/llm/groq/callModel';
-// const GROQ_API_KEY = process.env.GROQ_API_KEY as string;
-
-// Grok
-// import { getLLMClient } from '@modules/llm/grok';
-// import { callModel } from '@modules/llm/grok/callModel';
-// const GROK_API_KEY = process.env.GROK_API_KEY as string;
+import { getLLMClient } from '@modules/llm/groq';
+import { callModel } from '@modules/llm/groq/callModel';
+const GROQ_API_KEY = process.env.GROQ_API_KEY as string;
 
 // MUD
 import { getOnchainData } from '@modules/mud/getOnchainData';
@@ -56,22 +36,10 @@ import { getSystemPrompts } from '@modules/cms';
 import { validateInputData } from './validation';
 
 // Initialize LLM: Anthropic
-const llmClient = getLLMClient(ANTHROPIC_API_KEY);
-
-// Initialize LLM: DeepSeek
-// const llmClient = getLLMClient(DEEPSEEK_API_KEY);
-
-// Initialize LLM: Heurist
-// const llmClient = getLLMClient(HEURIST_API_KEY);
-
-// Initialize LLM: Lambda
-// const llmClient = getLLMClient(LAMBDA_API_KEY);
+// const llmClient = getLLMClient(ANTHROPIC_API_KEY);
 
 // Initialize LLM: Groq
-// const llmClient = getLLMClient(GROQ_API_KEY);
-
-// Initialize LLM: Grok
-// const llmClient = getLLMClient(GROK_API_KEY);
+const llmClient = getLLMClient(GROQ_API_KEY);
 
 const opts = { schema };  
 
@@ -113,16 +81,6 @@ async function routes (fastify: FastifyInstance) {
 
             console.log('Combined outcome:', combinedOutcome);
 
-            // console.time('–– Event LLM call');
-            // const events = await callModel(llmClient, eventMessages, eventSystemPrompt) as EventsReturnValue;
-            // console.timeEnd('–– Event LLM call');
-
-            // // Call outcome model
-            // console.time('–– Outcome LLM call');
-            // const outcomeMessages = constructOutcomeMessages(rat, room, events);
-            // const unvalidatedOutcome = await callModel(llmClient, outcomeMessages, outcomeSystemPrompt) as OutcomeReturnValue;
-            // console.timeEnd('–– Outcome LLM call');
-
             // Apply the outcome suggested by the LLM to the onchain state and get back the actual outcome.
             console.time('–– Chain call');
             const validatedOutcome = await systemCalls.applyOutcome(rat, room, combinedOutcome.outcome);
@@ -136,13 +94,13 @@ async function routes (fastify: FastifyInstance) {
             // Run it through the LLM again to get the corrected event log.
             console.time('–– Correction LLM call');
             const correctionMessages = constructCorrectionMessages(combinedOutcome.outcome, validatedOutcome, combinedOutcome.log);
-            const correctedEvents = await callModel(llmClient, correctionMessages, correctionSystemPrompt) as EventsReturnValue;
+            const correctedEvents = await callModel(llmClient, correctionMessages, correctionSystemPrompt, 0) as CorrectedEventsReturnValue;
             console.timeEnd('–– Correction LLM call');
 
             console.log('Corrected events:', correctedEvents);
 
             reply.send({
-                log: correctedEvents,
+                log: correctedEvents.logEntries ?? [],
                 statChanges: validatedOutcome.statChanges,
                 traitChanges: validatedOutcome.traitChanges,
                 itemChanges: validatedOutcome.itemChanges,

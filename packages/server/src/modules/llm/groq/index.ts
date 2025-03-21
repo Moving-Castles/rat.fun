@@ -1,8 +1,5 @@
-import OpenAI from "openai";
+import Groq from 'groq-sdk';
 
-export function getLLMClient(apiKey: string): OpenAI {
-    return new OpenAI({
-        baseURL: 'https://api.groq.com/openai/v1',
-        apiKey
-    });
+export function getLLMClient(apiKey: string): Groq {
+    return new Groq({ apiKey });
 }

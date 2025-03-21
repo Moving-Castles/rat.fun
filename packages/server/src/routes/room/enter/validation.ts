@@ -13,6 +13,6 @@ export function validateInputData(playerId: string, rat: Rat, room: Room) {
 
     // Check that room balance is positive
     if (room.balance <= 0) {
-        throw new Error('The room balance is not positive.');
+        throw new Error('The room balance is negative.');
     }
 }
