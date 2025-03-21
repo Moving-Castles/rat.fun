@@ -1,6 +1,6 @@
 <script lang="ts">
   import { getUIState } from "@modules/ui/state.svelte"
-  import RoomsListing from "@components/Main/RightContainer/RoomListing/RoomsListing.svelte"
+  import RoomsListing from "@svelte/components/Main/Shared/RoomsListing/RoomsListing.svelte"
   import RoomResult from "@components/Main/RightContainer/RoomResult/RoomResult.svelte"
   import { ENVIRONMENT } from "@mud/enums"
   import { CurrentRoomId } from "@modules/ui/stores"
@@ -12,7 +12,7 @@
 
 <div class="right-container">
   {#if panes.right === enums.RIGHT_PANE.ROOMS}
-    <RoomsListing yours={false} />
+    <RoomsListing yours={false} pane={enums.PANE.RIGHT} />
   {/if}
 
   {#if panes.right === enums.RIGHT_PANE.ROOM_RESULT}

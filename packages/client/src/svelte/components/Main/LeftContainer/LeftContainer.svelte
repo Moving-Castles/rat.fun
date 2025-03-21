@@ -68,10 +68,12 @@
     border: none;
     outline: none;
     border-right: 1px solid white;
+    background: rgb(126, 126, 126);
+    color: white;
 
     &.selected {
-      background: rgb(126, 126, 126);
-      color: white;
+      background: white;
+      color: black;
     }
   }
 

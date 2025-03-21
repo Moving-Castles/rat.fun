@@ -15,6 +15,7 @@
     newPrompt.length > $gameConfig.gameConfig.maxRoomPromptLength
 
   async function sendCreateRoom() {
+    if (busy) return
     busy = true
     const action = createRoom(newName, newPrompt)
     try {

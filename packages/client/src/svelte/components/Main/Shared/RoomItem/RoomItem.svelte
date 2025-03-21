@@ -1,12 +1,16 @@
 <script lang="ts">
   import { getUIState } from "@modules/ui/state.svelte"
 
-  let { roomId, room } = $props()
+  let { roomId, room, yours } = $props()
 
-  let { rooms } = getUIState()
+  let { rooms, enums } = getUIState()
 </script>
 
-<button class="room-listing-item" onclick={() => rooms.preview(roomId)}>
+<button
+  class="room-listing-item"
+  onclick={() =>
+    rooms.preview(roomId, yours ? enums.PANE.LEFT : enums.PANE.RIGHT)}
+>
   <!-- IMAGE -->
   <div class="room-image"></div>
   <!-- INFO -->
