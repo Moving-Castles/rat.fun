@@ -14,9 +14,7 @@ export function filterByEntitytype(
 
 export function filterByLevel(rooms: Rooms, level: string): Rooms {
   return Object.fromEntries(
-    Object.entries(rooms).filter(
-      ([, room]) => room.level === level
-    )
+    Object.entries(rooms).filter(([, room]) => room.level === level)
   )
 }
 
@@ -24,4 +22,8 @@ export function filterByPlayer(rooms: Rooms, playerId: Hex): Rooms {
   return Object.fromEntries(
     Object.entries(rooms).filter(([, room]) => room.owner === playerId)
   )
+}
+
+export function isPlayerRoom(room: Room, playerId: Hex) {
+  return room.owner === playerId
 }

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { getUIState } from "@modules/ui/state.svelte"
   import { shortenAddress } from "@modules/utils"
-  let { roomId, room } = $props()
+  let { roomId, room, yours } = $props()
 
   let { rooms } = getUIState()
 </script>
@@ -27,9 +27,11 @@
 
   <div class="room-recent-events">RECENT EVENTS</div>
 
-  <div class="room-enter">
-    <button onclick={() => rooms.goto(roomId)}>ENTER</button>
-  </div>
+  {#if !yours}
+    <div class="room-enter">
+      <button onclick={() => rooms.goto(roomId)}>ENTER</button>
+    </div>
+  {/if}
 </div>
 
 <style lang="scss">

@@ -20,6 +20,7 @@
   let name: string = generateRatName()
 
   async function sendCreateRat() {
+    if (busy) return
     playSound("tcm", "blink")
     busy = true
     const action = createRat(name)
