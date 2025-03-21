@@ -2,7 +2,7 @@
 pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { GameConfig, EntityType, Balance, Dead, Health, Traits, Inventory, Owner, VisitorCount } from "../codegen/index.sol";
+import { GameConfig, EntityType, Balance, Dead, Health, Traits, Inventory, Owner, VisitCount, KillCount } from "../codegen/index.sol";
 import { LibManager, LibRat } from "../libraries/Libraries.sol";
 import { ENTITY_TYPE } from "../codegen/common.sol";
 import { CREATOR_FEE } from "../constants.sol";
@@ -46,7 +46,7 @@ contract ManagerSystem is System {
     require(Balance.get(_roomId) >= 0, "no room balance");
 
     // Increment visitor count
-    VisitorCount.set(_roomId, VisitorCount.get(_roomId) + 1);
+    VisitCount.set(_roomId, VisitCount.get(_roomId) + 1);
 
     // * * * * * * * * * * * * *
     // ROOM CREATOR PAYMENT
@@ -73,6 +73,7 @@ contract ManagerSystem is System {
     // Exit early if dead
     if (Health.get(_ratId) == 0) {
       LibRat.killRat(_ratId, _roomId);
+      KillCount.set(_roomId, KillCount.get(_roomId) + 1);
       return;
     }
 

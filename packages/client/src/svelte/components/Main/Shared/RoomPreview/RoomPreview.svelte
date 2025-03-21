@@ -16,9 +16,13 @@
   </div>
 
   <div class="room-stats">
-    <div class="room-visitor-count">Visitors: {room.visitorCount}</div>
+    <div class="room-visitor-count">Visitors: {room.visitCount}</div>
     <div class="room-player-count">Success rate: 0%</div>
-    <div class="room-player-count">Kill rate: 0%</div>
+    <div class="room-player-count">
+      Kill rate: {((Number(room.killCount) ?? 0) /
+        (Number(room.visitCount) ?? 1)) *
+        100}%
+    </div>
   </div>
 
   <div class="room-prompt">

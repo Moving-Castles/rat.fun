@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { getUniqueEntity } from "@latticexyz/world-modules/src/modules/uniqueentity/getUniqueEntity.sol";
-import { EntityType, RoomPrompt, Owner, Index, GameConfig, Balance, Level, RoomCreationCost, Name, VisitorCount } from "../codegen/index.sol";
+import { EntityType, RoomPrompt, Owner, Index, GameConfig, Balance, Level, RoomCreationCost, Name, VisitCount } from "../codegen/index.sol";
 import { ENTITY_TYPE } from "../codegen/common.sol";
 
 library LibRoom {
@@ -30,7 +30,7 @@ library LibRoom {
 
     Level.set(roomId, _roomLevel);
     Owner.set(roomId, _roomOwner);
-    VisitorCount.set(roomId, 0);
+    VisitCount.set(roomId, 0);
 
     // Add to room's balance
     Balance.set(roomId, RoomCreationCost.get(_roomLevel));
@@ -43,6 +43,6 @@ library LibRoom {
     Index.deleteRecord(_roomId);
     Level.deleteRecord(_roomId);
     Owner.deleteRecord(_roomId);
-    VisitorCount.deleteRecord(_roomId);
+    VisitCount.deleteRecord(_roomId);
   }
 }

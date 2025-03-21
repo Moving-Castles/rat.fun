@@ -34,6 +34,10 @@ export type LogEntry = {
 
 export type EventsReturnValue = LogEntry[];
 
+export type CorrectedEventsReturnValue = {
+    logEntries: LogEntry[] 
+}
+
 export type CombinedReturnValue = {
     log: LogEntry[],
     outcome: OutcomeReturnValue,

@@ -45,7 +45,8 @@ declare global {
     roomCreationCost: number,
     levelList: string[],
     gameConfig: GameConfigObject,
-    visitorCount: number
+    visitCount: number,
+    killCount: number
   }
 
   type Player  = {
@@ -78,7 +79,8 @@ declare global {
     level: Hex,
     name: string,
     roomPrompt: string,
-    visitorCount: number
+    visitCount: number,
+    killCount: number
   }
 
   type Trait = {

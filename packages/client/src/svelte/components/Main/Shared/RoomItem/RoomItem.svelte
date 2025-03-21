@@ -17,7 +17,7 @@
   <!-- INFO -->
   <div class="room-info">
     <div class="room-name">**{room.name}**</div>
-    <div class="room-visitor-count">Visitors: {room.visitorCount}</div>
+    <div class="room-visitor-count">Visitors: {room.visitCount}</div>
     <div class="room-balance">Balance: ${room.balance}</div>
   </div>
 </button>

@@ -288,6 +288,9 @@ contract ManagerSystemTest is BaseTest {
     assertEq(Balance.get(ratId), 0);
     assertEq(Traits.get(ratId).length, 0);
     assertEq(Inventory.get(ratId).length, 0);
+
+    // Room kill count incremented
+    assertEq(KillCount.get(roomId), 1);
     // Room balance:
     // 17 (pre-change balance) + 100 (health from rat) + 20 (balance) + 20 (positive trait) + 30 (positive item) - 17 (!!!!) (CREATOR_FEE)
     // TODO: Change claculation of creator fee?

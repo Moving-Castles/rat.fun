@@ -47,7 +47,8 @@ export default defineWorld({
     Value: "int256", // Value of a trait can be negative
     OwnedRat: "bytes32", // Set on player
     Owner: "bytes32", // Set on room and rat
-    VisitorCount: "uint256", // Set on room
+    VisitCount: "uint256", // Set on room
+    KillCount: "uint256", // Set on room
     // ...
     RoomPrompt: "string",
     // ...
