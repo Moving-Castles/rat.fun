@@ -5,21 +5,15 @@
 
   let { logEntry, i }: { logEntry: LogEntry; i: number } = $props()
 
-  const parseTimestamp = str => {
-    let datetime = new Date("1970-01-01T00:" + str + "Z").getTime()
-    console.log(datetime, "millis")
-    return datetime / 1000
-  }
-
-  let millis = $derived(parseTimestamp(logEntry.timestamp))
+  const DELAY = 400
 
   $effect(() => {
-    setTimeout(() => playSound("tcm", "selectionScroll"), millis * 100)
+    setTimeout(() => playSound("tcm", "selectionScroll"), i * DELAY)
   })
 </script>
 
 {#if i > -1}
-  <div in:fade|global={{ delay: millis * 100 }} class="log-entry">
+  <div in:fade|global={{ delay: i * DELAY }} class="log-entry">
     <span class="timestamp">{logEntry.timestamp}</span> –
     <span class="event">{logEntry.event}</span>
   </div>

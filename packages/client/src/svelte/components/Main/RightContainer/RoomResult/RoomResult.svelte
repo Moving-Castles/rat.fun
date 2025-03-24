@@ -51,7 +51,7 @@
     <!-- OUTCOME -->
     <Outcome {room} {outcome} {oldRoomBalance} />
     <div class="return">
-      <button onclick={close}>Return to nest</button>
+      <button onclick={close}>LEAVE ROOM</button>
     </div>
   {:else}
     EXPERIMENT IN PROGRESS: <Spinner />

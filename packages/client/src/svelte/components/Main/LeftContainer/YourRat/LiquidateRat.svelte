@@ -104,6 +104,18 @@
     height: 100%;
   }
 
+  button {
+    &:hover {
+      background: repeating-linear-gradient(
+        45deg,
+        #cc0000,
+        #cc0000 20px,
+        #9e0000 20px,
+        #9e0000 40px
+      );
+    }
+  }
+
   .action {
     width: 50%;
     height: 100%;
