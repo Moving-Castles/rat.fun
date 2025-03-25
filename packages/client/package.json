@@ -22,18 +22,18 @@
     "@vitest/coverage-v8": "^3.0.9",
     "postprocessing": "^6.37.1",
     "sass-embedded": "^1.86.0",
-    "svelte": "^5.23.2",
-    "vite": "^6.2.2",
+    "svelte": "^5.25.2",
+    "vite": "^6.2.3",
     "vitest": "^3.0.9"
   },
   "dependencies": {
-    "@latticexyz/common": "2.2.21-454387765857a956f3872887619d25f0352abf1c",
-    "@latticexyz/dev-tools": "2.2.21-454387765857a956f3872887619d25f0352abf1c",
-    "@latticexyz/recs": "2.2.21-454387765857a956f3872887619d25f0352abf1c",
-    "@latticexyz/schema-type": "2.2.21-454387765857a956f3872887619d25f0352abf1c",
-    "@latticexyz/store-sync": "2.2.21-454387765857a956f3872887619d25f0352abf1c",
-    "@latticexyz/utils": "2.2.21-454387765857a956f3872887619d25f0352abf1c",
-    "@latticexyz/world": "2.2.21-454387765857a956f3872887619d25f0352abf1c",
+    "@latticexyz/common": "2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c",
+    "@latticexyz/dev-tools": "2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c",
+    "@latticexyz/recs": "2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c",
+    "@latticexyz/schema-type": "2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c",
+    "@latticexyz/store-sync": "2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c",
+    "@latticexyz/utils": "2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c",
+    "@latticexyz/world": "2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c",
     "@sanity/block-content-to-html": "^2.0.0",
     "@sanity/client": "^6.28.3",
     "@sanity/image-url": "^1.1.0",
@@ -48,7 +48,7 @@
     "three": "^0.174.0",
     "three-perf": "^1.0.10",
     "uuid": "^11.1.0",
-    "viem": "2.23.13",
+    "viem": "2.23.15",
     "wait-port": "^1.1.0"
   }
 }
