@@ -1,7 +1,10 @@
 <script lang="ts">
+  // import RoomPreview from "@svelte/components/Main/Shared/RoomPreview/RoomPreview.svelte"
+  import RoomResult from "@components/Main/RightContainer/RoomResult/RoomResult.svelte"
   import { ENVIRONMENT } from "@mud/enums"
   import { UIState } from "@modules/ui/stores"
   import { UI } from "@modules/ui/enums"
+  import { getUIState } from "@modules/ui/state.svelte"
 
   import Spawn from "@components/Spawn/Spawn.svelte"
   import OperatorBar from "@components/Main/OperatorBar/OperatorBar.svelte"
@@ -10,24 +13,50 @@
   import RightContainer from "@components/Main/RightContainer/RightContainer.svelte"
   import ModalTarget from "@components/Main/Modal/ModalTarget.svelte"
 
-  export let environment: ENVIRONMENT
+  const { transition, route, rooms } = getUIState()
+  const { current } = rooms
+
+  let { environment }: { environment: ENVIRONMENT; main: HTMLElement } =
+    $props()
 </script>
 
-<div class="main">
-  <OperatorBar />
-  <div class="main-area">
-    <LeftContainer {environment} />
-    <FloorBar />
-    <RightContainer {environment} />
+{#snippet mainSnippet(className = "")}
+  <div class="main {className}">
+    <OperatorBar />
+    <div class="main-area">
+      <LeftContainer {environment} />
+      <FloorBar />
+      <RightContainer {environment} />
+    </div>
   </div>
-</div>
+{/snippet}
+
+{#if route.current === "main" && !transition.active}
+  {@render mainSnippet()}
+{/if}
+
+<!-- <div class="main below"> -->
+{#if $current}
+  <RoomResult
+    start={$current && route.current === "room"}
+    animationstart={transition.active}
+    roomId={$current}
+    {environment}
+  />
+{/if}
+<!-- </div> -->
+
+{#if transition.active}
+  {@render mainSnippet("clone-left")}
+  {@render mainSnippet("clone-right")}
+{/if}
 
 {#snippet spawn()}
   <Spawn />
 {/snippet}
 
 {#if $UIState === UI.SPAWNING}
-  <ModalTarget content={spawn} />
+  <ModalTarget noclose content={spawn} />
 {/if}
 
 <style lang="scss">
@@ -39,6 +68,8 @@
     width: calc(100vw - 20px);
     overflow: hidden;
     border: 1px solid white;
+    z-index: 1;
+    background: black;
   }
 
   .main-area {
@@ -46,5 +77,40 @@
     height: calc(100vh - 80px);
     display: flex;
     flex-direction: row;
+  }
+
+  .main.below {
+    z-index: 0;
+  }
+
+  .main.clone-left {
+    pointer-events: none;
+    z-index: 2;
+    clip-path: inset(0 50% 0 0);
+    animation: moveLeft 1s ease forwards;
+  }
+  .main.clone-right {
+    pointer-events: none;
+    z-index: 2;
+    clip-path: inset(0 0 0 50%);
+    animation: moveRight 1s ease forwards;
+  }
+
+  @keyframes moveLeft {
+    from {
+      transform: translateX(0%);
+    }
+    to {
+      transform: translateX(-100%);
+    }
+  }
+
+  @keyframes moveRight {
+    from {
+      transform: translateX(0%);
+    }
+    to {
+      transform: translateX(100%);
+    }
   }
 </style>

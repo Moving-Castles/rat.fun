@@ -1,4 +1,19 @@
-// import { sineInOut } from "svelte/easing"
+import { sineInOut } from "svelte/easing"
+
+export function fadeAndScale(
+  node: Element,
+  { delay = 0, duration = 1000, easing = sineInOut } = {}
+) {
+  // const originalOpacity = +getComputedStyle(node).opacity
+  return {
+    delay,
+    duration,
+    easing,
+    css: (t: number) => {
+      return `opacity: ${easing(t)}; transform: scale(${0.9 + t * 0.1})`
+    },
+  }
+}
 
 // export function flicker(
 //   node: Element,

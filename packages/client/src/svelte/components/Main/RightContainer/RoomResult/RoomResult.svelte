@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { onMount } from "svelte"
+  import { onDestroy } from "svelte"
   import type { ServerReturnValue } from "@components/Main/RightContainer/RoomResult/types"
+  import { fadeAndScale } from "@modules/ui/transitions"
   import { player, rooms as roomsState } from "@modules/state/base/stores"
   import { enterRoom } from "@svelte/components/Main/RightContainer/RoomResult"
   import { ENVIRONMENT } from "@mud/enums"
@@ -14,47 +15,86 @@
 
   const { rooms } = getUIState()
 
-  export let environment: ENVIRONMENT
-  export let roomId: string | null
-
+  let {
+    start,
+    animationstart,
+    environment,
+    roomId,
+  }: { start: boolean; environment: ENVIRONMENT; roomId: string | null } =
+    $props()
+  let timeout: ReturnType<typeof setTimeout> | null = null
+  let animationstarted = $state(false)
   let room = $roomsState[roomId ?? ""]
+  let busy = $state(false)
 
-  let outcome: ServerReturnValue | undefined = undefined
-
+  let entering = $state(true)
+  let outcome: ServerReturnValue | undefined = $state(undefined)
   let oldRoomBalance = room.balance
+
+  $effect(() => {
+    if (animationstart) animationstarted = true
+  })
 
   function close() {
     rooms.back()
   }
 
-  onMount(async () => {
+  const processRoom = async () => {
     if (!roomId) return
-    outcome = await enterRoom(
+    const result = enterRoom(
       environment,
       $walletNetwork,
       roomId,
       $player.ownedRat
     )
+
+    // Human reading speed is around 20-25 characters per second
+    const waitLength = Math.max(3000, room.roomPrompt.length * (1000 / 20))
+
+    timeout = setTimeout(async () => {
+      entering = false
+      outcome = await result // add here just in case the entering transition would be faster
+    }, waitLength)
+  }
+
+  $effect(() => {
+    if (start && !busy) {
+      busy = true
+      console.log("start")
+      processRoom()
+    }
+  })
+
+  onDestroy(() => {
+    if (timeout) clearTimeout(timeout)
   })
 </script>
 
 <div class="room-result">
-  <!-- DESCRIPTION -->
-  <div class="description">
-    {room.roomPrompt}
-  </div>
-
-  {#if outcome && (outcome.log?.length ?? 0 > 0)}
-    <!-- LOG -->
-    <Log log={outcome.log} />
-
-    <!-- OUTCOME -->
-    <Outcome {room} {outcome} {oldRoomBalance} />
-    <div class="return">
-      <button onclick={close}>LEAVE ROOM</button>
+  {#if entering && animationstarted}
+    <div in:fadeAndScale class="title">
+      <span>
+        {room.roomPrompt}
+      </span>
     </div>
   {:else}
-    EXPERIMENT IN PROGRESS: <Spinner />
+    <!-- DESCRIPTION -->
+    <div class="description">
+      {room.roomPrompt}
+    </div>
+
+    {#if outcome && (outcome.log?.length ?? 0 > 0)}
+      <!-- LOG -->
+      <Log log={outcome.log} />
+
+      <!-- OUTCOME -->
+      <Outcome {room} {outcome} {oldRoomBalance} />
+      <div class="return">
+        <button onclick={close}>LEAVE ROOM</button>
+      </div>
+    {:else}
+      EXPERIMENT IN PROGRESS: <Spinner />
+    {/if}
   {/if}
 </div>
 
@@ -74,6 +114,15 @@
       max-width: 800px;
       padding: 10px;
     }
+  }
+
+  .title {
+    font-size: 5rem;
+    text-align: center;
+    display: flex;
+    height: 100dvh;
+    justify-content: center;
+    align-items: center;
   }
 
   button {

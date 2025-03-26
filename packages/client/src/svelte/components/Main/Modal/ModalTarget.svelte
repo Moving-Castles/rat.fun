@@ -1,9 +1,18 @@
 <script lang="ts">
   import { getModalState } from "./state.svelte"
-  let { content, onclose } = $props()
+  let {
+    content,
+    noclose = false,
+    onclose,
+  }: {
+    content: ReturnType<import("svelte").Snippet>
+    noclose: boolean
+    onclose?: () => void
+  } = $props()
   let { modal } = getModalState()
 
   $effect(() => {
+    if (noclose) modal.setConfig({ noclose: true })
     modal.set(content)
   })
 

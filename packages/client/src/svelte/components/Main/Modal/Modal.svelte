@@ -4,7 +4,7 @@
   let modalBackground = $state(undefined)
 
   const onModalClick = e => {
-    if (e.target === modalBackground) {
+    if (e.target === modalBackground && !modal.config?.noclose) {
       modal.close()
     }
     console.log(e.target, modalBackground)
@@ -30,6 +30,7 @@
     justify-content: center;
     align-items: center;
     overscroll-behavior: none;
+    z-index: 10;
   }
 
   .content {
