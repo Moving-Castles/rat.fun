@@ -1,21 +1,53 @@
 import { PANE, LEFT_PANE, RIGHT_PANE } from "./enums"
-import * as uiStores from "@modules/ui/stores"
 import { Tween } from "svelte/motion"
+import * as uiStores from "@modules/ui/stores"
 
-// Internal state
-// PANES
+/**
+ * Structure of this file
+ *
+ * 1. Internal state
+ * 2. State modifications
+ * 3. Exporting state
+ *
+ */
+
+/** 1.1 Internal State
+ *
+ * Internal state is the one source of truth for your data.
+ * !! Note that, instead of exporting state directly as we would with stores
+ * we define *getters* and *setters* inside the return section of the getUIState() function
+ * Internal state is modified by functions. See section 2 comments
+ */
+// 1.2 Simple state. Strings, numbers, etc.
 let leftPane = $state<LEFT_PANE>(LEFT_PANE.YOUR_RAT)
 let rightPane = $state<RIGHT_PANE>(RIGHT_PANE.ROOMS)
 let previewingPane = $state<PANE>(PANE.NONE)
 let route = $state("main")
+// 1.3 More complex objects are also fully reactive once properly initialised
 const transition = $state({
   active: false,
   progress: new Tween(0, { duration: 1000 }),
   to: "main",
 })
 
-// Exports
+/** Note: Consuming state in your files
+ *
+ * Parts of the state can be imported in your files as follows
+ *
+ * import { getUIState } from "@modules/ui/state.svelte"
+ * let { rooms } = getUIState()
+ *
+ * Note: use `let` instead of `const` where appropriate.
+ * `const` can be used when the internal state variable is also initiated as a const, e.g. `transition` above.
+ *
+ */
 export const getUIState = () => {
+  /** 2.1 Basic state modification
+   *
+   * Basically: Modify the internal state by normal assignment, in setPane for example we just set leftPane by calling
+   *
+   * leftPane = option
+   */
   const setPane = (pane: PANE, option: LEFT_PANE | RIGHT_PANE) => {
     if (pane === PANE.LEFT) {
       leftPane = option as LEFT_PANE
@@ -25,13 +57,34 @@ export const getUIState = () => {
     }
   }
 
+  /** 2.2 Object state modification
+   *
+   * Assign to object keys as you normally would.
+   *
+   * In the function below, the `progress` key is actually an instance of `Tween`, so you can assign this by using the `Tween.set` property,
+   * but the transition's `active` property is just a boolean
+   *
+   */
   const transitionTo = async (to: string) => {
+    // Simple asssignment
     transition.active = true
+    // Modifying by using class instance methods
     await transition.progress.set(1)
     transition.active = false
     route = to
   }
+  /** ...Inside your code you would subscribe to both as
+   *
+   * transition.progress.current  (for current tween value)
+   * transition.progress.target   (for tween target value)
+   * transition.active            (for )
+   */
 
+  /** 2.3 modifying stores
+   *
+   * Here, I am modifying a store as you normally would anyways.
+   * When combining stores and $state calls, it can be weird to figure out which is which.
+   */
   const previewRoom = (id: string, pane = PANE.RIGHT) => {
     uiStores.CurrentRoomId.set(id)
     previewingPane = pane
@@ -46,10 +99,20 @@ export const getUIState = () => {
 
   const goToRoom = (id: string) => {
     uiStores.CurrentRoomId.set(id)
-    // setPane(PANE.RIGHT, RIGHT_PANE.ROOM_RESULT)
     transitionTo("room")
   }
 
+  /** 3.1 Exporting state
+   *
+   * We are returning a couple of different things from here, in a object-oriented type of structure.
+   *
+   * We have the enums,
+   * panes, rooms, route and transition
+   *
+   * There are `get`ters for the reactive properties, which always return the reactive state
+   * There are functions for modifying that state
+   * We do not modify state inside our components directly. We go through the functions we define
+   */
   return {
     enums: {
       PANE,
@@ -57,7 +120,13 @@ export const getUIState = () => {
       RIGHT_PANE,
     },
     panes: {
+      /** 3.2 Simple modifying function */
       set: setPane,
+      /** 3.3 Simple getter!
+       *
+       * const { panes } = getUIState()
+       * state.previewing <-- reactive
+       */
       get previewing() {
         return previewingPane
       },
@@ -72,6 +141,19 @@ export const getUIState = () => {
       preview: previewRoom,
       back: goBackRoom,
       goto: goToRoom,
+      /** 3.4: :danger: Here we are returning a store.
+       *
+       * !!!It is a bit of an anti-pattern!!!
+       *
+       * I can subscribe to this store by destructuring it from the function.
+       *
+       * because you might as well import it from the source directly instead of going through this function.
+       * But here is how you would do it inside your component:
+       *
+       * const { current } = getUIState()
+       *
+       * And then autosubscribe `$current`
+       */
       get current() {
         return uiStores.CurrentRoomId
       },
@@ -81,6 +163,18 @@ export const getUIState = () => {
         return route
       },
     },
+    /**
+     * 3.5 This is a simple export, but lots of things inside it.
+     *
+     * When subscribing to state, pay attention to the structure of this file.
+     *
+     * For the transition property, the `get`ter is directly on the transition $state variable
+     * This means that {transition} will be reactive.
+     *
+     * For the `route`, this is different, the `get`ter is on `current` and therefore we have to check `route.current` in our code for a reactive property.
+     *
+     * In this case, refer to transition's original definition above to see what properties it has.
+     */
     get transition() {
       return transition
     },
