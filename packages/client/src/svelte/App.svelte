@@ -19,11 +19,6 @@
     UIState.set(UI.SPAWNING)
   }
 
-  const spawned = async () => {
-    UIState.set(UI.READY)
-    UILocation.set(LOCATION.MAIN)
-  }
-
   events.forEach(e => {
     $effect(() => {
       console.log("Effect running for ", e.name)
@@ -54,18 +49,8 @@
     <main>
       <Loading {environment} on:done={loadedEnvironment} />
     </main>
-  {/if}
-
-  {#if $UIState === UI.SPAWNING}
-    <main>
-      <Spawn on:done={spawned} />
-    </main>
-  {/if}
-
-  {#if $UIState === UI.READY}
-    {#if $UILocation === LOCATION.MAIN}
-      <Main {environment} />
-    {/if}
+  {:else}
+    <Main {environment} />
   {/if}
 </div>
 

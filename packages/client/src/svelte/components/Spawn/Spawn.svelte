@@ -1,16 +1,17 @@
 <script lang="ts">
-  import { createEventDispatcher, onMount } from "svelte"
+  import { onMount } from "svelte"
   import { spawn } from "@modules/action"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
+  import { UIState, UILocation } from "@modules/ui/stores"
+  import { LOCATION, UI } from "@modules/ui/enums"
+  import { getModalState } from "@components/Main/Modal/state.svelte"
   import { playSound } from "@modules/sound"
   import { player } from "@modules/state/base/stores"
   import { ENTITY_TYPE } from "contracts/enums"
 
   import Spinner from "@components/Main/Shared/Spinner/Spinner.svelte"
 
-  const dispatch = createEventDispatcher()
-
-  const done = () => dispatch("done")
+  let { modal } = getModalState()
 
   let busy = false
   let name: string
@@ -23,7 +24,9 @@
     const action = spawn(name)
     try {
       await waitForCompletion(action)
-      done()
+      UIState.set(UI.READY)
+      UILocation.set(LOCATION.MAIN)
+      modal.close()
     } catch (e) {
       console.error(e)
     } finally {
@@ -33,7 +36,7 @@
 
   onMount(() => {
     if ($player?.entityType === ENTITY_TYPE.PLAYER) {
-      done()
+      modal.close()
     }
     inputEl.focus()
   })
@@ -125,8 +128,7 @@
 
 <style lang="scss">
   .container {
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
     background: var(--corporate-background);
     font-family: var(--corporate-font-stack);
     text-transform: none;

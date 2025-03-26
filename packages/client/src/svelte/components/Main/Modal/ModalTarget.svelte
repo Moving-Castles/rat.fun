@@ -8,6 +8,6 @@
   })
 
   $effect(() => {
-    if (!modal.show) onclose()
+    if (!modal.show) onclose?.()
   })
 </script>

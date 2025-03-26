@@ -29,10 +29,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    overscroll-behavior: none;
   }
 
   .content {
     width: 600px;
     height: 400px;
+    overflow-x: hidden;
+    overflow-y: scroll;
   }
 </style>
