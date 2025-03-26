@@ -29,11 +29,11 @@
     {room.roomPrompt}
   </div>
 
-  <div class="room-recent-events">RECENT EVENTS</div>
+  <div class="room-recent-events">TODO: RECENT EVENTS</div>
 
   {#if !yours && room.balance > 0 && $ratTotalValue > 0}
     <div class="room-enter">
-      <button onclick={() => rooms.goto(roomId)}>ENTER</button>
+      <button onclick={() => rooms.goto(roomId)}>ENTER ROOM</button>
     </div>
   {/if}
 </div>
@@ -80,5 +80,12 @@
 
   .room-enter {
     padding: var(--default-padding);
+  }
+
+  button {
+    width: 100%;
+    height: 100%;
+    background: var(--color-alert);
+    padding: 20px;
   }
 </style>

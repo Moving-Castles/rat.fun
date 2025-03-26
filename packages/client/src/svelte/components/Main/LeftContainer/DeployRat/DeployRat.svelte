@@ -27,14 +27,13 @@
 </script>
 
 <div class="main">
-  <div class="title">{name}</div>
   <div class="image-container">
     <Main>
       <Cage cameraPosition={[0, 0.2, 2]} cameraLookAt={[0, 0.3, 0]} />
     </Main>
   </div>
   <button class:disabled={!name} class:busy onclick={sendCreateRat}>
-    <span class="button-text">DEPLOY RAT</span>
+    <span class="button-text">DEPLOY NEW RAT ({name})</span>
     {#if busy}
       <div class="spinner"><Spinner /></div>
     {/if}

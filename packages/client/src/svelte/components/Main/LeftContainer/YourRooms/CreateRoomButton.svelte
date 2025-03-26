@@ -20,5 +20,11 @@
     align-items: center;
     border-bottom: 1px solid white;
     padding: var(--default-padding);
+
+    button {
+      width: 100%;
+      background: var(--color-alert);
+      padding: 20px;
+    }
   }
 </style>

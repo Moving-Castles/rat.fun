@@ -52,4 +52,10 @@
     background-color: rgb(36, 36, 36);
     margin-right: 20px;
   }
+
+  .room-balance {
+    background: var(--color-value);
+    color: black;
+    padding: 5px;
+  }
 </style>

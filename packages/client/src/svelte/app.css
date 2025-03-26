@@ -104,6 +104,7 @@ hr {
 button {
   font-family: var(--typewriter-font-stack);
   cursor: pointer;
+  user-select: none;
 }
 
 .button-text {

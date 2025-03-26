@@ -57,7 +57,7 @@
             <div class="floor-filter">TODO: filters</div>
           </div>
         {:else}
-          <div />
+          <div></div>
         {/if}
         {#each roomsList as [roomId, room]}
           <RoomItem {roomId} {room} {yours} />
