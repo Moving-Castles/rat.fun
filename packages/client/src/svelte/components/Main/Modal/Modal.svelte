@@ -4,7 +4,9 @@
   let modalBackground = $state(undefined)
 
   const onModalClick = e => {
-    if (e.target === modalBackground && !modal.config?.noclose) {
+    console.log("noclose ", modal.config?.noclose)
+    if (modal.config?.noclose === true) return
+    if (e.target === modalBackground) {
       modal.close()
     }
     console.log(e.target, modalBackground)

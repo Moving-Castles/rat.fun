@@ -7,6 +7,8 @@
   export let room: Room
   export let oldRoomBalance
 
+  import DraggableEntity from "@components/Main/Shared/Entities/DraggableEntity.svelte"
+
   import { gameConfig } from "@modules/state/base/stores"
   import { shortenAddress } from "@modules/utils"
 </script>
@@ -35,6 +37,7 @@
     {:else}
       {#each outcome.traitChanges.filter(tC => tC.type === "add") as trait}
         {trait.name}
+        {JSON.stringify(trait, null, 2)}
         <!-- <TraitItem {trait} /> -->
       {/each}
     {/if}
@@ -48,6 +51,7 @@
     {:else}
       {#each outcome.traitChanges.filter(tC => tC.type === "remove") as trait}
         {trait.name}
+        {JSON.stringify(trait, null, 2)}
         <!-- <TraitItem {trait} /> -->
       {/each}
     {/if}
@@ -61,6 +65,7 @@
     {:else}
       {#each outcome.itemChanges.filter(iC => iC.type === "add") as item}
         {item.name}
+        {JSON.stringify(item, null, 2)}
         <!-- <InventoryItem {item} /> -->
       {/each}
     {/if}
@@ -74,6 +79,7 @@
     {:else}
       {#each outcome.itemChanges.filter(iC => iC.type === "remove") as item}
         {item.name}
+        {JSON.stringify(item, null, 2)}
         <!-- <InventoryItem {item} /> -->
       {/each}
     {/if}

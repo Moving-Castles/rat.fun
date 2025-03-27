@@ -12,7 +12,11 @@
   let { modal } = getModalState()
 
   $effect(() => {
-    if (noclose) modal.setConfig({ noclose: true })
+    if (noclose) {
+      modal.setConfig({ noclose: true })
+    } else {
+      modal.setConfig({ noclose: false })
+    }
     modal.set(content)
   })
 

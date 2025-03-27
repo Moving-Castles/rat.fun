@@ -1,7 +1,8 @@
 <script lang="ts">
-  import { rat, traits, items } from "@svelte/modules/state/base/stores"
+  import { rat } from "@svelte/modules/state/base/stores"
   import { dropItem } from "@modules/action"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
+  import DraggableEntity from "@components/Main/Shared/Entities/DraggableEntity.svelte"
 
   const initialState = {
     address: "",
@@ -26,13 +27,14 @@
   const onDragEnd = () => {
     console.log("on drag end")
     dragState = { ...initialState }
-    console.log(dragState.address)
+    dragAddress = ""
   }
 
   const allowDrop = e => e.preventDefault()
 
   const onDrop = async e => {
-    console.log("on drop")
+    console.log("on drop", dragState)
+
     e.preventDefault()
     if (busy) return
     busy = true
@@ -53,27 +55,13 @@
     } catch (error) {
       console.error(error)
     } finally {
+      console.log("Finally")
       busy = false
       onDragEnd()
       dragAddress = ""
     }
   }
 </script>
-
-{#snippet draggableItemOrTrait(t, a)}
-  {@const itemOrTrait = t === "trait" ? $traits?.[a] : $items?.[a]}
-  {#if itemOrTrait}
-    <!-- svelte-ignore a11y_no_static_element_interactions -->
-    <span
-      ondragstart={() => onDragStart(a, t, itemOrTrait)}
-      ondragend={onDragEnd}
-      draggable="true"
-      class={t}
-    >
-      {itemOrTrait?.name} (${itemOrTrait?.value})
-    </span>
-  {/if}
-{/snippet}
 
 <div class="rat-editor" class:actions={dragAddress !== ""}>
   <div class="inner">
@@ -92,7 +80,12 @@
     {#if $rat?.traits && $rat?.traits?.length > 0}
       is
       {#each $rat?.traits ?? [] as trait, i}
-        {@render draggableItemOrTrait("trait", trait)}
+        <DraggableEntity
+          {onDragStart}
+          {onDragEnd}
+          type="trait"
+          address={trait}
+        />
         {#if i < ($rat?.traits?.length ?? 0) - 2},
         {/if}
         {#if i === ($rat?.traits?.length ?? 0) - 2}
@@ -104,11 +97,11 @@
     {#if $rat?.inventory && $rat?.inventory?.length > 0}
       has
       {#each $rat?.inventory ?? [] as item, i}
-        {@render draggableItemOrTrait("item", item)}
+        <DraggableEntity {onDragStart} {onDragEnd} type="item" address={item} />
         {#if i < ($rat?.inventory?.length ?? 0) - 2},
         {/if}
         {#if i === ($rat?.inventory?.length ?? 0) - 2}
-          and
+          and&nbsp;
         {/if}
       {/each}
     {/if}
@@ -127,6 +120,7 @@
     grid-template-rows: 1fr 0;
     transition: grid-template-rows 0.2s ease;
     line-height: 2em;
+    overflow: hidden;
 
     &.actions {
       grid-template-rows: 1fr 60px;
@@ -136,6 +130,19 @@
   .inner,
   .trash {
     padding: var(--default-padding);
+    color: white;
+    border: none;
+  }
+
+  .trash {
+    background: repeating-linear-gradient(
+      45deg,
+      black,
+      black 20px,
+      #222 20px,
+      #222 40px
+    );
+    overflow: hidden;
   }
 
   .trait,
@@ -143,17 +150,6 @@
   .health {
     cursor: grab;
     white-space: nowrap;
-  }
-
-  .trait {
-    background-color: #eee;
-    color: black;
-    padding: 5px;
-  }
-  .item {
-    background-color: orange;
-    color: black;
-    padding: 5px;
   }
 
   .health {

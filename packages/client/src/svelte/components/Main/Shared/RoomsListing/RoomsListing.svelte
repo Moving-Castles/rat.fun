@@ -96,7 +96,7 @@
   <div class="rooms">
     <div class="floor-content">
       <div class:previewing class="room-listing">
-        {#if !yours}
+        {#if !yours && $ratLevelIndex > -1}
           <div class="floor-header">
             <div class="floor-title">Floor {$ratLevelIndex * -1}</div>
             <div class="floor-stats">

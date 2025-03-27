@@ -3,42 +3,63 @@
  * for changes in the World state (using the System contracts).
  */
 
-import { OutcomeReturnValue } from "@modules/llm/types";
-import { SetupNetworkResult } from "./setupNetwork";
-import { Rat, Room } from "@routes/room/enter/types";
-import { getOnchainData } from "./getOnchainData";
+import { OutcomeReturnValue } from "@modules/llm/types"
+import { SetupNetworkResult } from "./setupNetwork"
+import { Rat, Room } from "@routes/room/enter/types"
+import { getOnchainData } from "./getOnchainData"
 
-export type SystemCalls = ReturnType<typeof createSystemCalls>;
+export type SystemCalls = ReturnType<typeof createSystemCalls>
 
 export function createSystemCalls(network: SetupNetworkResult) {
-
-  const applyOutcome = async (rat: Rat, room: Room, outcome: OutcomeReturnValue) => {
-
+  const applyOutcome = async (
+    rat: Rat,
+    room: Room,
+    outcome: OutcomeReturnValue
+  ) => {
     const tx = await network.worldContract.write.ratroom__applyOutcome([
       rat.id, // _ratId
       room.id, // _roomId
       outcome?.statChanges?.health ?? 0, // _healthChange
       outcome?.balanceTransfer ?? 0, // _balanceTransfer
-      outcome?.traitChanges.filter(c => c.type === "remove").map(c => c.id) ?? [], // _traitsToRemoveFromRat
-      outcome?.traitChanges.filter(c => c.type === "add").map(c => { return {name: c.name, value: c.value} }) ?? [], // _traitsToAddToRat
-      outcome?.itemChanges.filter(c => c.type === "remove").map( c => c.id) ?? [], // _itemsToRemoveFromRat
-      outcome?.itemChanges.filter(c => c.type === "add").map(c => { return {name: c.name, value: c.value} }) ?? [] // _traitsToAddToRat
-    ]);
-    
-    await network.waitForTransaction(tx);
+      outcome?.traitChanges.filter(c => c.type === "remove").map(c => c.id) ??
+        [], // _traitsToRemoveFromRat
+      outcome?.traitChanges
+        .filter(c => c.type === "add")
+        .map(c => {
+          return { name: c.name, value: c.value }
+        }) ?? [], // _traitsToAddToRat
+      outcome?.itemChanges.filter(c => c.type === "remove").map(c => c.id) ??
+        [], // _itemsToRemoveFromRat
+      outcome?.itemChanges
+        .filter(c => c.type === "add")
+        .map(c => {
+          return { name: c.name, value: c.value }
+        }) ?? [], // _traitsToAddToRat
+    ])
 
-    const newOnChainData = getOnchainData(network, network.components, rat.id, room.id);
+    await network.waitForTransaction(tx)
 
-    return updateOutcome(outcome, rat, newOnChainData.rat);
+    const newOnChainData = getOnchainData(
+      network,
+      network.components,
+      rat.id,
+      room.id
+    )
+
+    return updateOutcome(outcome, rat, newOnChainData.rat)
   }
 
   return {
-    applyOutcome
-  };
+    applyOutcome,
+  }
 }
 
-function updateOutcome(oldOutcome: OutcomeReturnValue, oldRat: Rat, newRat: Rat): OutcomeReturnValue {
-  const newOutcome = oldOutcome;
+function updateOutcome(
+  oldOutcome: OutcomeReturnValue,
+  oldRat: Rat,
+  newRat: Rat
+): OutcomeReturnValue {
+  const newOutcome = oldOutcome
 
   // console.log('old outcome:', oldOutcome);
   // console.log('old rat:', oldRat);
@@ -48,39 +69,45 @@ function updateOutcome(oldOutcome: OutcomeReturnValue, oldRat: Rat, newRat: Rat)
   // ID
   // - - - - - - - - -
 
-  newOutcome.id = newRat.id;
+  newOutcome.id = newRat.id
 
   // - - - - - - - - -
   // HEALTH
   // - - - - - - - - -
 
-  newOutcome.statChanges.health = newRat.stats.health - oldRat.stats.health;
+  newOutcome.statChanges.health = newRat.stats.health - oldRat.stats.health
 
   // - - - - - - - - -
   // TRAITS
   // - - - - - - - - -
-  
-  newOutcome.traitChanges = [];
+
+  newOutcome.traitChanges = []
+
+  console.log("NEW RAT", newRat)
 
   // Iterate over traits in new rat and compare with old rat
-  for(let i = 0; i < newRat.traits.length; i++) {
+  for (let i = 0; i < newRat.traits.length; i++) {
     // If trait is not in old rat, it was added
-    if(!oldRat.traits.find(trait => trait.id === newRat.traits[i].id)) {
-      newOutcome.traitChanges.push({ 
-        type: "add", 
+    if (!oldRat.traits.find(trait => trait.id === newRat.traits[i].id)) {
+      newOutcome.traitChanges.push({
+        type: "add",
         name: newRat.traits[i].name,
-        value: newRat.traits[i].value });
+        value: newRat.traits[i].value,
+        id: newRat.traits[i].id,
+      })
     }
   }
 
   // Iterate over traits in old rat and compare with new rat
-  for(let i = 0; i < oldRat.traits.length; i++) {
+  for (let i = 0; i < oldRat.traits.length; i++) {
     // If trait is not in new rat, it was removed
-    if(!newRat.traits.find(trait => trait.id === oldRat.traits[i].id)) {
-      newOutcome.traitChanges.push({ 
-        type: "remove", 
+    if (!newRat.traits.find(trait => trait.id === oldRat.traits[i].id)) {
+      newOutcome.traitChanges.push({
+        type: "remove",
         name: oldRat.traits[i].name,
-        value: oldRat.traits[i].value });
+        value: oldRat.traits[i].value,
+        id: oldRat.traits[i].id,
+      })
     }
   }
 
@@ -88,27 +115,31 @@ function updateOutcome(oldOutcome: OutcomeReturnValue, oldRat: Rat, newRat: Rat)
   // ITEMS
   // - - - - - - - - -
 
-  newOutcome.itemChanges = [];
+  newOutcome.itemChanges = []
 
   // Iterate over items in new rat and compare with old rat
-  for(let i = 0; i < newRat.inventory.length; i++) {
+  for (let i = 0; i < newRat.inventory.length; i++) {
     // If item is not in old rat, it was added
-    if(!oldRat.inventory.find(item => item.id === newRat.inventory[i].id)) {
-      newOutcome.itemChanges.push({ 
-        type: "add", 
+    if (!oldRat.inventory.find(item => item.id === newRat.inventory[i].id)) {
+      newOutcome.itemChanges.push({
+        type: "add",
         name: newRat.inventory[i].name,
-        value: newRat.inventory[i].value });
+        value: newRat.inventory[i].value,
+        id: newRat.inventory[i].id,
+      })
     }
   }
 
   // Iterate over items in old rat and compare with new rat
-  for(let i = 0; i < oldRat.inventory.length; i++) {
+  for (let i = 0; i < oldRat.inventory.length; i++) {
     // If item is not in new rat, it was removed
-    if(!newRat.inventory.find(item => item.id === oldRat.inventory[i].id)) {
-      newOutcome.itemChanges.push({ 
-        type: "remove", 
+    if (!newRat.inventory.find(item => item.id === oldRat.inventory[i].id)) {
+      newOutcome.itemChanges.push({
+        type: "remove",
         name: oldRat.inventory[i].name,
-        value: oldRat.inventory[i].value });
+        value: oldRat.inventory[i].value,
+        id: oldRat.inventory[i].id,
+      })
     }
   }
 
@@ -116,7 +147,7 @@ function updateOutcome(oldOutcome: OutcomeReturnValue, oldRat: Rat, newRat: Rat)
   // BALANCE
   // - - - - - - - - -
 
-  newOutcome.balanceTransfer = newRat.balance - oldRat.balance;
+  newOutcome.balanceTransfer = newRat.balance - oldRat.balance
 
-  return newOutcome;
+  return newOutcome
 }

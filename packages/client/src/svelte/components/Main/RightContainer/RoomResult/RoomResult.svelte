@@ -72,10 +72,15 @@
 
 <div class="room-result">
   {#if entering && animationstarted}
-    <div in:fadeAndScale class="title">
-      <span>
-        {room.roomPrompt}
-      </span>
+    <div in:fadeAndScale class="room-meta">
+      <div class="inner">
+        <span>
+          {room.name}
+        </span>
+        <span class="title">
+          {room.roomPrompt}
+        </span>
+      </div>
     </div>
   {:else}
     <!-- DESCRIPTION -->
@@ -116,13 +121,23 @@
     }
   }
 
-  .title {
-    font-size: 5rem;
+  .room-meta {
     text-align: center;
     display: flex;
     height: 100dvh;
     justify-content: center;
     align-items: center;
+    background: var(--color-alert);
+    color: black;
+
+    .inner {
+      display: flex;
+      flex-flow: column nowrap;
+
+      .title {
+        font-size: 5rem;
+      }
+    }
   }
 
   button {
