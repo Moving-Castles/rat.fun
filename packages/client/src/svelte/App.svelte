@@ -2,11 +2,12 @@
   import { onMount } from "svelte"
   import { ENVIRONMENT } from "@mud/enums"
   import { initSound } from "@modules/sound"
-  import { UILocation, UIState } from "@modules/ui/stores"
-  import { LOCATION, UI } from "@modules/ui/enums"
+  import { UIState } from "@modules/ui/stores"
+  import { UI } from "@modules/ui/enums"
+  // Tippy CSS
+  import "tippy.js/dist/tippy.css"
 
   import Loading from "@components/Loading/Loading.svelte"
-  import Spawn from "@components/Spawn/Spawn.svelte"
 
   import { Modal } from "@components/Main/Modal/state.svelte"
 

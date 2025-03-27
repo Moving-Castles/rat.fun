@@ -154,13 +154,15 @@
   .health {
     background-color: var(--color-health);
     color: black;
-    padding: 5px;
+    padding: 10px;
+    display: inline-block;
   }
 
   .balance {
     background-color: var(--color-value);
     color: black;
-    padding: 5px;
+    padding: 10px;
+    display: inline-block;
   }
 
   .trash {

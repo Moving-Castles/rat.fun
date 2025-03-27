@@ -20,8 +20,12 @@
     animationstart,
     environment,
     roomId,
-  }: { start: boolean; environment: ENVIRONMENT; roomId: string | null } =
-    $props()
+  }: {
+    start: boolean
+    animationstart: boolean
+    environment: ENVIRONMENT
+    roomId: string | null
+  } = $props()
 
   let timeout: ReturnType<typeof setTimeout> | null = null
   let animationstarted = $state(false)
@@ -75,9 +79,9 @@
   {#if entering && animationstarted}
     <div in:fadeAndScale class="room-meta">
       <div class="inner">
-        <span>
+        <div class="name">
           {room.name}
-        </span>
+        </div>
         <span class="title">
           {room.roomPrompt}
         </span>
@@ -123,6 +127,9 @@
   }
 
   .room-meta {
+    padding: 0;
+    position: absolute;
+    inset: 0;
     text-align: center;
     display: flex;
     height: 100dvh;
@@ -134,6 +141,15 @@
     .inner {
       display: flex;
       flex-flow: column nowrap;
+      justify-content: center;
+      gap: 1rem;
+
+      .name {
+        background: white;
+        color: black;
+        width: auto;
+        display: inline-block;
+      }
 
       .title {
         font-size: 5rem;

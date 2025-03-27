@@ -1,14 +1,12 @@
 <script lang="ts">
   import { onMount } from "svelte"
-
-  onMount(() => {
-    console.log("RatCam mounted")
-  })
+  import Main from "@components/3D/World/Main.svelte"
+  import Cage from "@components/3D/Cage/Cage.svelte"
 </script>
 
 <div class="rat-cam">
   <div class="rat-cam-header">RAT CAM</div>
-  <div class="image-container"></div>
+  <div class="image-container" />
 </div>
 
 <style lang="scss">
@@ -23,7 +21,7 @@
   }
 
   .image-container {
-    height: 70%;
+    height: 400px;
     aspect-ratio: 1/1;
     background: grey;
   }

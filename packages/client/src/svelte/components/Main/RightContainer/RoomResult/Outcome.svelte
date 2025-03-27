@@ -18,82 +18,63 @@
   in:fade={{ duration: 200, delay: 500 * outcome.log.length + 1 }}
 >
   <!-- Changes to health -->
-  <div class="outcome-item">
-    <div class="title">__Stat changes</div>
-    {#if !outcome?.statChanges.health || outcome.statChanges.health == 0}
-      <div class="empty">** NONE **</div>
-    {:else}
+  {#if outcome?.statChanges.health && outcome.statChanges.health !== 0}
+    <div class="outcome-item">
+      <div class="title">__Stat changes</div>
       <div class="stat-change" class:negative={outcome.statChanges.health < 0}>
         health: {outcome.statChanges.health}
       </div>
-    {/if}
-  </div>
+    </div>
+  {/if}
 
   <!-- Added traits-->
-  <div class="outcome-item">
-    <div class="title">__ Added traits</div>
-    {#if outcome.traitChanges.filter(tC => tC.type === "add").length === 0}
-      <div class="empty">** NONE **</div>
-    {:else}
+  {#if outcome.traitChanges.filter(tC => tC.type === "add").length !== 0}
+    <div class="outcome-item">
+      <div class="title">__ Added traits</div>
       {#each outcome.traitChanges.filter(tC => tC.type === "add") as trait}
-        {trait.name}
-        {JSON.stringify(trait, null, 2)}
+        <DraggableEntity type="trait" address={trait.id} />
         <!-- <TraitItem {trait} /> -->
       {/each}
-    {/if}
-  </div>
+    </div>
+  {/if}
 
   <!-- Removed traits -->
-  <div class="outcome-item">
-    <div class="title">__ Removed traits</div>
-    {#if outcome.traitChanges.filter(tC => tC.type === "remove").length === 0}
-      <div class="empty">** NONE **</div>
-    {:else}
+  {#if outcome.traitChanges.filter(tC => tC.type === "remove").length !== 0}
+    <div class="outcome-item">
+      <div class="title">__ Removed traits</div>
       {#each outcome.traitChanges.filter(tC => tC.type === "remove") as trait}
-        {trait.name}
-        {JSON.stringify(trait, null, 2)}
-        <!-- <TraitItem {trait} /> -->
+        <DraggableEntity type="trait" address={trait.id} fallback={trait} />
       {/each}
-    {/if}
-  </div>
+    </div>
+  {/if}
 
   <!-- Added items-->
-  <div class="outcome-item">
-    <div class="title">__ Added items</div>
-    {#if outcome.itemChanges.filter(iC => iC.type === "add").length === 0}
-      <div class="empty">** NONE **</div>
-    {:else}
+  {#if outcome.itemChanges.filter(iC => iC.type === "add").length !== 0}
+    <div class="outcome-item">
+      <div class="title">__ Added items</div>
       {#each outcome.itemChanges.filter(iC => iC.type === "add") as item}
-        {item.name}
-        {JSON.stringify(item, null, 2)}
-        <!-- <InventoryItem {item} /> -->
+        <DraggableEntity type="item" address={item.id} />
       {/each}
-    {/if}
-  </div>
+    </div>
+  {/if}
 
   <!-- Removed items -->
-  <div class="outcome-item">
-    <div class="title">__ Removed items</div>
-    {#if outcome.itemChanges.filter(iC => iC.type === "remove").length === 0}
-      <div class="empty">** NONE **</div>
-    {:else}
+  {#if outcome.itemChanges.filter(iC => iC.type === "remove").length !== 0}
+    <div class="outcome-item">
+      <div class="title">__ Removed items</div>
       {#each outcome.itemChanges.filter(iC => iC.type === "remove") as item}
-        {item.name}
-        {JSON.stringify(item, null, 2)}
-        <!-- <InventoryItem {item} /> -->
+        <DraggableEntity type="item" address={item.id} fallback={item} />
       {/each}
-    {/if}
-  </div>
+    </div>
+  {/if}
 
   <!-- Balance transferred to/from rat-->
-  <div class="outcome-item">
-    <div class="title">Balance transfer to/from rat</div>
-    {#if outcome.balanceTransfer === 0}
-      <div class="empty">** NONE **</div>
-    {:else}
+  {#if outcome.balanceTransfer !== 0}
+    <div class="outcome-item">
+      <div class="title">Balance transfer to/from rat</div>
       <div class="balance">${outcome.balanceTransfer}</div>
-    {/if}
-  </div>
+    </div>
+  {/if}
 
   <!-- Creator fee payout-->
   {#if room.owner !== $gameConfig.gameConfig.adminId}

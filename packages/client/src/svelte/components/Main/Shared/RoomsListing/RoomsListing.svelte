@@ -8,6 +8,7 @@
     playerRooms,
   } from "@modules/state/base/stores"
   import { getUIState } from "@modules/ui/state.svelte"
+  import { tippy } from "svelte-tippy"
 
   let {
     pane,
@@ -108,21 +109,37 @@
             </div>
             <div class="floor-filter">
               <button
+                use:tippy={{
+                  placement: "top",
+                  content: "sort chronologically",
+                }}
                 class:active={sortKey === "c"}
                 class="sort-button"
                 onclick={() => sortBy("c")}>C</button
               >
               <button
+                use:tippy={{
+                  placement: "top",
+                  content: "sort by visit",
+                }}
                 class:active={sortKey === "v"}
                 class="sort-button"
                 onclick={() => sortBy("v")}>V</button
               >
               <button
+                use:tippy={{
+                  placement: "top",
+                  content: "sort by balance",
+                }}
                 class:active={sortKey === "b"}
                 class="sort-button"
                 onclick={() => sortBy("b")}>B</button
               >
               <button
+                use:tippy={{
+                  placement: "top",
+                  content: "sort by killrate",
+                }}
                 class:active={sortKey === "k"}
                 class="sort-button"
                 onclick={() => sortBy("k")}>K</button
