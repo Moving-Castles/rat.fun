@@ -13,7 +13,7 @@
   <!-- Forward the ready event -->
   <!-- <Loader on:ready /> -->
 
-  <!-- <Stats /> -->
+  <Stats />
 
   <!-- Physics wrapper -->
   <!-- <World> -->

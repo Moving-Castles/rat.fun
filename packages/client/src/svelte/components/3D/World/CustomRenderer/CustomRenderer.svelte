@@ -116,8 +116,14 @@
 
     if (effects.godotFishEye) {
       const godotFishEyePass = new ShaderPass(GodotFishEyeShader)
-
+      godotFishEyePass.name = "fisheye"
+      godotFishEyePass.uniforms["aspect"].value = -1000000
       composer.addPass(godotFishEyePass)
+
+      setTimeout(() => {
+        godotFishEyePass.uniforms["aspect"].value =
+          renderer.domElement.clientWidth / renderer.domElement.clientHeight
+      }, 1000)
     }
   }
 
@@ -134,12 +140,9 @@
     }
   }
 
-  // If depends on other things than camera, add extra dependencies in function
-  // signature and call them here
   $: setupEffectComposer($cameraStore)
   $: composer.setSize($size.width, $size.height)
   $: {
-    // console.log("effects updated", effects)
     updateEffects(effects)
   }
 

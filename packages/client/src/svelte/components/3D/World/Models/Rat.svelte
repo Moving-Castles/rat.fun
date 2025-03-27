@@ -23,61 +23,8 @@ Command: npx @threlte/gltf@3.0.0 RAT_FinalModel_01.glb
   {#await gltf}
     {@render fallback?.()}
   {:then gltf}
-    <!-- <T.Mesh
-      geometry={gltf.nodes.First.geometry}
-      material={gltf.materials.Wireframe}
-      position={[0, 0.72, -7.58]}
-      scale={[0.36, 0.37, 0.37]}
-    />
     <T.Mesh
-      geometry={gltf.nodes.First_Correction1.geometry}
-      material={gltf.materials["Wireframe.001"]}
-      position={[-1.68, 0.72, -7.58]}
-      scale={[0.36, 0.37, 0.37]}
-    />
-    <T.Mesh
-      geometry={gltf.nodes.First_Correction2.geometry}
-      material={gltf.materials["Wireframe.001"]}
-      position={[-3.4, 0.72, -7.58]}
-      scale={[0.36, 0.37, 0.37]}
-    />
-    <T.Mesh
-      geometry={gltf.nodes.Second_01.geometry}
-      material={gltf.nodes.Second_01.material}
-      position={[-3.77, -0.08, -3.61]}
-      scale={[1.05, 1.05, 0.94]}
-    />
-    <T.Mesh
-      geometry={gltf.nodes.Second_02.geometry}
-      material={gltf.nodes.Second_02.material}
-      position={[-2.52, -0.08, -3.61]}
-      scale={[1.05, 1.05, 0.94]}
-    />
-    <T.Mesh
-      geometry={gltf.nodes.Second_03.geometry}
-      material={gltf.nodes.Second_03.material}
-      position={[-1.34, -0.02, -3.61]}
-      scale={[1.05, 1.05, 0.94]}
-    />
-    <T.Mesh
-      geometry={gltf.nodes.Second_04.geometry}
-      material={gltf.nodes.Second_04.material}
-      position={[-0.05, -0.02, -3.61]}
-      scale={[1.05, 1.05, 0.94]}
-    />
-    <T.Mesh
-      geometry={gltf.nodes.Small_Sat.geometry}
-      material={gltf.nodes.Small_Sat.material}
-      position={[-0.05, -0.17, 1.98]}
-      scale={[1.05, 1.05, 0.94]}
-    />
-    <T.Mesh
-      geometry={gltf.nodes.Small_Up_MIRRORED.geometry}
-      material={gltf.materials.Rat}
-      position={[-1.54, 0.49, 2.46]}
-      scale={0.32}
-    /> -->
-    <T.Mesh
+      castShadow
       rotation.z={rotation}
       geometry={gltf.nodes.Small_Up_NONMIRRORED.geometry}
       material={gltf.materials.Rat}
