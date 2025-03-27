@@ -9,6 +9,7 @@
     noclose: boolean
     onclose?: () => void
   } = $props()
+
   let { modal } = getModalState()
 
   $effect(() => {

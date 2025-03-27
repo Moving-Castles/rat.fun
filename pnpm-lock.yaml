@@ -9,17 +9,17 @@ importers:
   .:
     devDependencies:
       '@latticexyz/cli':
-        specifier: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c
-        version: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@opentelemetry/api@1.9.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/pg@8.6.1)(@types/react@19.0.12)(better-sqlite3@8.7.0)(bufferutil@4.0.9)(immer@10.1.1)(react@18.3.1)(typescript@5.8.2)(utf-8-validate@5.0.10)(wagmi@2.12.11(@tanstack/query-core@5.66.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/react@19.0.12)(bufferutil@4.0.9)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react-native@0.77.0(@babel/core@7.26.9)(@babel/preset-env@7.26.7(@babel/core@7.26.9))(@types/react@19.0.12)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)(rollup@4.34.2)(typescript@5.8.2)(utf-8-validate@5.0.10)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8))
+        specifier: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668
+        version: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@opentelemetry/api@1.9.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/pg@8.6.1)(@types/react@19.0.12)(better-sqlite3@8.7.0)(bufferutil@4.0.9)(immer@10.1.1)(react@18.3.1)(typescript@5.8.2)(utf-8-validate@5.0.10)(wagmi@2.12.11(@tanstack/query-core@5.66.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/react@19.0.12)(bufferutil@4.0.9)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react-native@0.77.0(@babel/core@7.26.9)(@babel/preset-env@7.26.7(@babel/core@7.26.9))(@types/react@19.0.12)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)(rollup@4.34.2)(typescript@5.8.2)(utf-8-validate@5.0.10)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8))
       '@latticexyz/common':
-        specifier: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c
-        version: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+        specifier: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668
+        version: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
       '@latticexyz/explorer':
-        specifier: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c
-        version: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(@babel/core@7.26.9)(@opentelemetry/api@1.9.0)(@tanstack/query-core@5.66.0)(@types/pg@8.6.1)(@types/react@19.0.12)(asn1.js@5.4.1)(bufferutil@4.0.9)(immer@10.1.1)(kysely@0.26.3)(react-native@0.77.0(@babel/core@7.26.9)(@babel/preset-env@7.26.7(@babel/core@7.26.9))(@types/react@19.0.12)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(rollup@4.34.2)(sql.js@1.12.0)(typescript@5.8.2)(utf-8-validate@5.0.10)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))
+        specifier: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668
+        version: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(@babel/core@7.26.9)(@opentelemetry/api@1.9.0)(@tanstack/query-core@5.66.0)(@types/pg@8.6.1)(@types/react@19.0.12)(asn1.js@5.4.1)(bufferutil@4.0.9)(immer@10.1.1)(kysely@0.26.3)(react-native@0.77.0(@babel/core@7.26.9)(@babel/preset-env@7.26.7(@babel/core@7.26.9))(@types/react@19.0.12)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(rollup@4.34.2)(sql.js@1.12.0)(typescript@5.8.2)(utf-8-validate@5.0.10)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))
       '@latticexyz/store-indexer':
-        specifier: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c
-        version: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(@opentelemetry/api@1.9.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/pg@8.6.1)(@types/react@19.0.12)(asn1.js@5.4.1)(immer@10.1.1)(kysely@0.26.3)(react@18.3.1)(sql.js@1.12.0)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(wagmi@2.12.11(@tanstack/query-core@5.66.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/react@19.0.12)(bufferutil@4.0.9)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react-native@0.77.0(@babel/core@7.26.9)(@babel/preset-env@7.26.7(@babel/core@7.26.9))(@types/react@19.0.12)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)(rollup@4.34.2)(typescript@5.8.2)(utf-8-validate@5.0.10)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8))
+        specifier: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668
+        version: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(@opentelemetry/api@1.9.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/pg@8.6.1)(@types/react@19.0.12)(asn1.js@5.4.1)(immer@10.1.1)(kysely@0.26.3)(react@18.3.1)(sql.js@1.12.0)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(wagmi@2.12.11(@tanstack/query-core@5.66.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/react@19.0.12)(bufferutil@4.0.9)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react-native@0.77.0(@babel/core@7.26.9)(@babel/preset-env@7.26.7(@babel/core@7.26.9))(@types/react@19.0.12)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)(rollup@4.34.2)(typescript@5.8.2)(utf-8-validate@5.0.10)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8))
       '@typescript-eslint/eslint-plugin':
         specifier: 7.7.1
         version: 7.7.1(@typescript-eslint/parser@7.7.1(eslint@8.57.0)(typescript@5.8.2))(eslint@8.57.0)(typescript@5.8.2)
@@ -42,26 +42,26 @@ importers:
   packages/client:
     dependencies:
       '@latticexyz/common':
-        specifier: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c
-        version: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+        specifier: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668
+        version: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
       '@latticexyz/dev-tools':
-        specifier: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c
-        version: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(f3202314f48c54a194051e168f423835)
+        specifier: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668
+        version: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(ffc6b815e24ae233ac774adf94be3971)
       '@latticexyz/recs':
-        specifier: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c
-        version: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+        specifier: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668
+        version: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
       '@latticexyz/schema-type':
-        specifier: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c
-        version: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+        specifier: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668
+        version: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
       '@latticexyz/store-sync':
-        specifier: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c
-        version: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(@opentelemetry/api@1.9.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/pg@8.6.1)(@types/react@19.0.12)(asn1.js@5.4.1)(better-sqlite3@8.7.0)(immer@10.1.1)(react@18.3.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(wagmi@2.12.11(@tanstack/query-core@5.66.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/react@19.0.12)(bufferutil@4.0.9)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react-native@0.77.0(@babel/core@7.26.9)(@babel/preset-env@7.26.7(@babel/core@7.26.9))(@types/react@19.0.12)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)(rollup@4.34.2)(typescript@5.8.2)(utf-8-validate@5.0.10)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8))
+        specifier: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668
+        version: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(@opentelemetry/api@1.9.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/pg@8.6.1)(@types/react@19.0.12)(asn1.js@5.4.1)(better-sqlite3@8.7.0)(immer@10.1.1)(react@18.3.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(wagmi@2.12.11(@tanstack/query-core@5.66.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/react@19.0.12)(bufferutil@4.0.9)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react-native@0.77.0(@babel/core@7.26.9)(@babel/preset-env@7.26.7(@babel/core@7.26.9))(@types/react@19.0.12)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)(rollup@4.34.2)(typescript@5.8.2)(utf-8-validate@5.0.10)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8))
       '@latticexyz/utils':
-        specifier: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c
-        version: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c
+        specifier: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668
+        version: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668
       '@latticexyz/world':
-        specifier: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c
-        version: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+        specifier: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668
+        version: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
       '@sanity/block-content-to-html':
         specifier: ^2.0.0
         version: 2.0.0
@@ -191,23 +191,23 @@ importers:
   packages/contracts:
     dependencies:
       '@latticexyz/cli':
-        specifier: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c
-        version: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@opentelemetry/api@1.9.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/pg@8.6.1)(@types/react@19.0.12)(better-sqlite3@8.7.0)(bufferutil@4.0.9)(immer@10.1.1)(react@18.3.1)(typescript@5.8.2)(utf-8-validate@5.0.10)(wagmi@2.12.11(@tanstack/query-core@5.66.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/react@19.0.12)(bufferutil@4.0.9)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react-native@0.77.0(@babel/core@7.26.9)(@babel/preset-env@7.26.7(@babel/core@7.26.9))(@types/react@19.0.12)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)(rollup@4.34.2)(typescript@5.8.2)(utf-8-validate@5.0.10)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1))
+        specifier: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668
+        version: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@opentelemetry/api@1.9.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/pg@8.6.1)(@types/react@19.0.12)(better-sqlite3@8.7.0)(bufferutil@4.0.9)(immer@10.1.1)(react@18.3.1)(typescript@5.8.2)(utf-8-validate@5.0.10)(wagmi@2.12.11(@tanstack/query-core@5.66.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/react@19.0.12)(bufferutil@4.0.9)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react-native@0.77.0(@babel/core@7.26.9)(@babel/preset-env@7.26.7(@babel/core@7.26.9))(@types/react@19.0.12)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)(rollup@4.34.2)(typescript@5.8.2)(utf-8-validate@5.0.10)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1))
       '@latticexyz/gas-report':
-        specifier: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c
-        version: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c
+        specifier: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668
+        version: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668
       '@latticexyz/schema-type':
-        specifier: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c
-        version: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
+        specifier: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668
+        version: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
       '@latticexyz/store':
-        specifier: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c
-        version: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
+        specifier: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668
+        version: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
       '@latticexyz/world':
-        specifier: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c
-        version: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
+        specifier: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668
+        version: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
       '@latticexyz/world-modules':
-        specifier: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c
-        version: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))
+        specifier: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668
+        version: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))
     devDependencies:
       '@types/node':
         specifier: ^22.13.13
@@ -228,11 +228,11 @@ importers:
         specifier: ^5.0.5
         version: 5.0.5(typescript@5.8.2)
       solhint-config-mud:
-        specifier: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c
-        version: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c
+        specifier: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668
+        version: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668
       solhint-plugin-mud:
-        specifier: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c
-        version: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c
+        specifier: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668
+        version: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668
 
   packages/server:
     dependencies:
@@ -255,23 +255,23 @@ importers:
         specifier: ^11.0.2
         version: 11.0.2(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@latticexyz/common':
-        specifier: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c
-        version: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
+        specifier: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668
+        version: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
       '@latticexyz/recs':
-        specifier: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c
-        version: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
+        specifier: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668
+        version: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
       '@latticexyz/schema-type':
-        specifier: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c
-        version: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
+        specifier: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668
+        version: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
       '@latticexyz/store-sync':
-        specifier: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c
-        version: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(@opentelemetry/api@1.9.0)(@tanstack/react-query@5.66.0(react@19.0.0))(@types/pg@8.6.1)(@types/react@19.0.12)(asn1.js@5.4.1)(better-sqlite3@8.7.0)(immer@10.1.1)(react@19.0.0)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(wagmi@2.12.11(@tanstack/query-core@5.66.0)(@tanstack/react-query@5.66.0(react@19.0.0))(@types/react@19.0.12)(bufferutil@4.0.9)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react-native@0.77.0(@babel/core@7.26.9)(@babel/preset-env@7.26.7(@babel/core@7.26.9))(@types/react@19.0.12)(bufferutil@4.0.9)(react@19.0.0)(utf-8-validate@5.0.10))(react@19.0.0)(rollup@4.34.2)(typescript@5.8.2)(utf-8-validate@5.0.10)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1))
+        specifier: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668
+        version: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(@opentelemetry/api@1.9.0)(@tanstack/react-query@5.66.0(react@19.0.0))(@types/pg@8.6.1)(@types/react@19.0.12)(asn1.js@5.4.1)(better-sqlite3@8.7.0)(immer@10.1.1)(react@19.0.0)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(wagmi@2.12.11(@tanstack/query-core@5.66.0)(@tanstack/react-query@5.66.0(react@19.0.0))(@types/react@19.0.12)(bufferutil@4.0.9)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react-native@0.77.0(@babel/core@7.26.9)(@babel/preset-env@7.26.7(@babel/core@7.26.9))(@types/react@19.0.12)(bufferutil@4.0.9)(react@19.0.0)(utf-8-validate@5.0.10))(react@19.0.0)(rollup@4.34.2)(typescript@5.8.2)(utf-8-validate@5.0.10)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1))
       '@latticexyz/utils':
-        specifier: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c
-        version: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c
+        specifier: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668
+        version: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668
       '@latticexyz/world':
-        specifier: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c
-        version: 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
+        specifier: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668
+        version: 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
       '@sanity/client':
         specifier: ^6.28.3
         version: 6.28.3(debug@4.4.0)
@@ -1895,21 +1895,21 @@ packages:
     resolution: {integrity: sha512-sYcHglGKTxGF+hQ6x67xDfkE9o+NhVlRHBqq6gLywaMc6CojK/5vFZByphdonKinYlMLkEkacm+HEse9HzwgTA==}
     engines: {node: '>= 12'}
 
-  '@latticexyz/abi-ts@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c':
-    resolution: {integrity: sha512-cG6H6RCMXJ0niM9bj8zqe4S87IsKPHnViT95X3UQRHgRlDQFoxysPNfK6/w286u3wxegsngu+2r98pAuvbpNgA==}
+  '@latticexyz/abi-ts@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668':
+    resolution: {integrity: sha512-b0E604HXPiygaMse/8fNhL4Kvmj3yxMEtZkalK2AD/3VxYrU2SEyLVYeVIZG7dsc1M8J8IX4ZPdaOyS6RtThYg==}
     hasBin: true
 
-  '@latticexyz/block-logs-stream@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c':
-    resolution: {integrity: sha512-R8lyrSaCC15/AlTx5TvLZv5aiZ85SyhnofBIlWlhx7VAnI3UNAACmQVV39cYId8IW/crEoKY6YG+d0Zwy8Jy+Q==}
+  '@latticexyz/block-logs-stream@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668':
+    resolution: {integrity: sha512-mbe2HXIU7YjCWyFJtm4nZzF1UeVZ75G4+4yB1IfyNtG195eup8eFdL4L8re9FX5YugUNNeDz0emrlXtlfLVF4A==}
     peerDependencies:
       viem: 2.x
 
-  '@latticexyz/cli@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c':
-    resolution: {integrity: sha512-9etvg+I4sH1cJxOaHmIC0B3G0yNh9IHm0E194Y1s2uZsPQvUupFbfamSr2K2VSrG2YHIi0hmTFvejvinDDD7tg==}
+  '@latticexyz/cli@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668':
+    resolution: {integrity: sha512-qD/1Zp7Ujs3O6ylK2XSeuxgB3LjOkAqp2L0Hok0I7BozoEssFGHbeE/NPxGSrI1P/4MMbxYZa8NXOr093zezNg==}
     hasBin: true
 
-  '@latticexyz/common@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c':
-    resolution: {integrity: sha512-4C+zV1hLARhk4zs/+jEqONpuj/egsjdbAkqU/G5/mq8Hc0g84dQBXPWqrbCt2JutTIM7jmGYRYcA7wFnycf3ww==}
+  '@latticexyz/common@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668':
+    resolution: {integrity: sha512-RPkTpDKGCoN4Z532cAuC6GmiCekoYuXdECxPD5e54Iq1sLgpIlbMq8VqgwqqCTacP8UNyiNDL4pC2RUkfghOeg==}
     peerDependencies:
       '@aws-sdk/client-kms': 3.x
       asn1.js: 5.x
@@ -1920,63 +1920,63 @@ packages:
       asn1.js:
         optional: true
 
-  '@latticexyz/config@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c':
-    resolution: {integrity: sha512-BSIBWdECUbBwel4N/1sNi6EmpsGOYdC5/V2nqsIDv91WUcWw/Bc57bGT4If5wjkt7SVsdS9UOdYLo5PmTn1Zig==}
+  '@latticexyz/config@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668':
+    resolution: {integrity: sha512-i0+0giS4Eu1Lgdd9fXzI0MrAO2t+Ga6JrBWAdTtXsJLflDmDKA2fQHJhgp3G5lFJAtRPRx8UBz+vU4/n7OQcyw==}
     peerDependencies:
       viem: 2.x
 
-  '@latticexyz/dev-tools@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c':
-    resolution: {integrity: sha512-qxSNzrLVX2EFm8nXulSQ6gddMmYjxlq17GJRijJhwdp9DEns6N9cMmvPOukMDWTrku6EgFopxSL7KtHI6kB4xw==}
+  '@latticexyz/dev-tools@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668':
+    resolution: {integrity: sha512-DpvcRLSnItQB5YLumZy+tsOgCNLzT200JQ1JHBdjCMnjFlzQt70fKVJFa2B4GLlobubyMFaE7O53QlLGMDVNpQ==}
     peerDependencies:
-      '@latticexyz/common': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c
-      '@latticexyz/recs': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c
-      '@latticexyz/store': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c
-      '@latticexyz/store-sync': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c
-      '@latticexyz/utils': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c
-      '@latticexyz/world': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c
+      '@latticexyz/common': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668
+      '@latticexyz/recs': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668
+      '@latticexyz/store': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668
+      '@latticexyz/store-sync': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668
+      '@latticexyz/utils': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668
+      '@latticexyz/world': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668
       viem: 2.x
 
-  '@latticexyz/explorer@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c':
-    resolution: {integrity: sha512-+Car1ez68Px5tRN/ADViZCU6PCDFAnPR625yPIQWH2G3Ta8xdKm/2T9wMw8DYuRdJ6s8au1m9BcbEPX2hTE+Og==}
+  '@latticexyz/explorer@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668':
+    resolution: {integrity: sha512-kecPI2cN05KRHCYHEN8R53clj1ejOk/CVwPtF13ZF4c00VpAHqWWReQFMvoSPYgMaMjFp6lMMiy2CcacN8IyAg==}
     engines: {node: 20.x, pnpm: ^9}
     hasBin: true
     peerDependencies:
       viem: 2.x
 
-  '@latticexyz/gas-report@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c':
-    resolution: {integrity: sha512-vi8qLM0JBxE6NlRnyYiWqSrBe15tDth1VybZmdKotBtezHhbyDK58jjGsFTf7olYc353UvkgwM8A9fixCwLSJQ==}
+  '@latticexyz/gas-report@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668':
+    resolution: {integrity: sha512-rErXzOsMa10u9KOha/TJOSe7IoRr45eq36b6aQIT45BNcGM79pS9eSiHpX41mX1ABvVQYRtstWbabhLLMtfsIA==}
     hasBin: true
 
-  '@latticexyz/protocol-parser@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c':
-    resolution: {integrity: sha512-elxTs7g1vEomNG+EFjjllJT3CqfoWOtDXDfjhJn5sVrq+chH2dLjjD7BG8erqxwOPfkp7GM50MAoSkVdINmH3A==}
+  '@latticexyz/protocol-parser@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668':
+    resolution: {integrity: sha512-BSZ2SXCjK0AofRtW5DnXDj3gzkGaPfLEfdtuFOvcpPSbqWRl7ZoFgjetaohmEF4GjREWNSkNTMnleSgxBxedLw==}
     peerDependencies:
       viem: 2.x
 
-  '@latticexyz/react@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c':
-    resolution: {integrity: sha512-HkL+rdXdN2wh/Vj4+lHOPXK8ve/SNHxgEv/nVhfUGIwDtN8dyWp+WAypVQuqnl+2bnCzdKZqPAsINvvxXfV5sg==}
+  '@latticexyz/react@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668':
+    resolution: {integrity: sha512-aKiWl0044LTkKPpxObibaNT5QDG9CgsuNj7h79VZegX6x6Bdqs3dp0FgblFVjcuTsbhcaYrGMVqcA5m/CpS5GA==}
 
-  '@latticexyz/recs@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c':
-    resolution: {integrity: sha512-NKRIsuikyM8oMohbCkyRvuQkk3jQ4BZ6sI13eJOWDTmj3Tz6H5vNmrAakz0Q2MF38SGk6+B/zNyPbXfTJDyxDA==}
+  '@latticexyz/recs@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668':
+    resolution: {integrity: sha512-dnxsmtdjONo3/B1Rf6lff+hG2SU9DqFOhj5+i6DSZzPieaWvH9IvsgYt1wrrqxxkb527WO6PArMJ+3Og7OBxIQ==}
 
-  '@latticexyz/schema-type@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c':
-    resolution: {integrity: sha512-vzoZ0eql2pzZYkmHYt7jK4D2oXgMynMkDkwIGJIWIbjg1jE6dZRTM6RpHe6B3PQg2OuVIiteY+NmHzLSWIedtg==}
+  '@latticexyz/schema-type@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668':
+    resolution: {integrity: sha512-HrwqysLHW1ffZH0xcZKvFT+l0MNnPbYE3jPDPWQ7qUhO5iuibtVr7O1o3dFs4OPyCx2omfYimPw1PwIVdSV3ZA==}
     peerDependencies:
       viem: 2.x
 
-  '@latticexyz/stash@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c':
-    resolution: {integrity: sha512-LkNMGoCdw3TdL3Gt3D2vzmZlTsfZFx6fQlhijiVLmygVPMwY0xZtwO5f9xKfNnhObJt8kRsjUtXaRofOQPj/2Q==}
+  '@latticexyz/stash@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668':
+    resolution: {integrity: sha512-mfp0uJZZxXUe3hVTWQjsn/R+REzWM1wIcfbbCeov/cK+Bfnf1U8Np3XWFRaZiRq4R0TgQb5Nbq69PMJQr88+Xg==}
     peerDependencies:
       react: 18.x
       viem: 2.x
 
-  '@latticexyz/store-indexer@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c':
-    resolution: {integrity: sha512-FBfLYCu6sObMIIKOv3op26btKz7y/fc3o+kyeqoKCFdd1AtXdIuk/ETs2oVM+5J8+0no+iluOwAUbUg1Irq/VA==}
+  '@latticexyz/store-indexer@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668':
+    resolution: {integrity: sha512-iGHcmRSizT3mSExY/3iU6BYj5Ng+sG9RkYKm+vQBmCFoA5Ong9UMuD7h923K5LAul4afHD7obXVr9NjnR8UHtA==}
     hasBin: true
     peerDependencies:
       viem: 2.x
 
-  '@latticexyz/store-sync@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c':
-    resolution: {integrity: sha512-9MEwfXLnMxrg5nXp1gA8NrZJD6wJhc6ZvoV6laZKourDPABb8dMGZJi711v7rCUVWqEpBSsimBvkgOsI6W4r/w==}
+  '@latticexyz/store-sync@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668':
+    resolution: {integrity: sha512-MaunW3VDfA+5OwLjNSIyoCn9LzmFslcnUh18sGR1SK2OwGbxHE58RAWtbf6lBpsKngOoLU5lY1PZMy4HZMUtKw==}
     peerDependencies:
       '@tanstack/react-query': 5.x
       react: 18.x
@@ -1990,28 +1990,28 @@ packages:
       wagmi:
         optional: true
 
-  '@latticexyz/store@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c':
-    resolution: {integrity: sha512-tG4olukY+f/SMuQcMO2EfSgh5ahQ9XH2B+y9FXDLeXoGIG9fcM392Zgz49gRxafbgg2O8ZDr2Ha8msHHRf3XdQ==}
+  '@latticexyz/store@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668':
+    resolution: {integrity: sha512-UbMJmRYlBpzZqJcw0tDTD89RINk3uT7k6CjBb1aAU6id0oFBJzOXloiHNe6ZMf6CjbtNOVDmXWp5obUFEQmO3Q==}
     peerDependencies:
       viem: 2.x
     peerDependenciesMeta:
       viem:
         optional: true
 
-  '@latticexyz/utils@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c':
-    resolution: {integrity: sha512-o/NLynUDbWIC6quMuOETC+j18vex6P+xqDtTXKL+jrMSe3vz7v8sdoS6pUM/EuQQTGf0CSfCa49xgPhmfWswWg==}
+  '@latticexyz/utils@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668':
+    resolution: {integrity: sha512-6s3bQ/gL3UbvaL9b9zEDOkzbnS22tJ0l+dWJoBwb0lpqlH9DJm8rj5w+v0vf1HHXf/VS/RzfVuvSrftb/rG/Ag==}
 
-  '@latticexyz/world-module-callwithsignature@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c':
-    resolution: {integrity: sha512-EUQM59HTP2NmNssFy3HU88VHaSVFr/58w4kRhA+w+xR6C+ZKrtLQblvGdRywCjV6RbahD9LX82MpqHdPsvui8Q==}
+  '@latticexyz/world-module-callwithsignature@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668':
+    resolution: {integrity: sha512-hO3BqoZuFuXAxhtTSae7ZGOeujlSF+P9gc59qgdUfW4ONa3t8b9IxdcykH7ShM6rjMNTQl/8Z7n9o0Z+sYSReA==}
 
-  '@latticexyz/world-module-metadata@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c':
-    resolution: {integrity: sha512-Pznqko7jBPhHEYKVPZ9eRO8pyLMFrMCKQHUk3/26fPBsV3KTKgdxgfRQ02mlloDHWj3i+HCu3/vBMBAm12TQ9A==}
+  '@latticexyz/world-module-metadata@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668':
+    resolution: {integrity: sha512-U6tny35tI9IvFICHEGkK4ztqQixN5V3P84OlKb9lL/RQJ2RrMX5omVcJlA7uOddkN3z9n4mdXQf2eczdo3HQZg==}
 
-  '@latticexyz/world-modules@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c':
-    resolution: {integrity: sha512-RTipRfRceTsW9QpS3oIu+4vC9Hx3KgtZ0Yco1FKYkcpYQgCpMO8BIVYYO0rLmrBCD7gEOHdBP6HdHUv+VEOpTQ==}
+  '@latticexyz/world-modules@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668':
+    resolution: {integrity: sha512-5w9rMqIJmPJIWjUocdzMNIN5//hWN/wBlE4RGVjSpexVJRHfcsyTzsgxgCRa4Jh6nVqQZCUQrOdWwCdcLAri/w==}
 
-  '@latticexyz/world@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c':
-    resolution: {integrity: sha512-8eBMvnVo+C65wus1tBBl3zTTnlKrF3MEqzmf74aQxia6XcpJmDlb5N2Uuck9QPRDC8d4uxRp2VTVWxHerZNl6A==}
+  '@latticexyz/world@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668':
+    resolution: {integrity: sha512-ezIxg+f/15tWfgIuQltVbiufGPQMGq4MHR3TXfcippvRF8Nhq1hu+EFFpMxcxbF+F9sSqu4bYdKvAw+k7RzUVw==}
     peerDependencies:
       viem: 2.x
     peerDependenciesMeta:
@@ -9540,11 +9540,11 @@ packages:
     resolution: {integrity: sha512-/GbIKmo8ioc+NIWIhwdecY0ge+qVBSMdgxGygevmdHj24bsfgtCmcUUcQ5ZzcylGFHsN3k4HB4Cgkl96KVnuew==}
     engines: {node: '>=10.0.0'}
 
-  solhint-config-mud@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c:
-    resolution: {integrity: sha512-ihl5etOx6t1s+GEz0NsJbHERlZiq/SfEtpw/slkuf3l9BuktQam0rwcSFPPUq8cdyV8L0izY3zCw8zLTo1Qx8g==}
+  solhint-config-mud@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668:
+    resolution: {integrity: sha512-oRbTiFcG+tQVK8Pl6IHeYHkBW3a8W9YTKcJlCDE3ApFAAkB77Y2mpQOTcFmhC7RvYIwDjmsOJvhgXo8McxJhrA==}
 
-  solhint-plugin-mud@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c:
-    resolution: {integrity: sha512-cWdvCamnpyJb6CDITDSORfx+7tkHqeN4ohSX4/US1a7nSAR3zGlv4RmpAQLmvc4oEXq9/rDvqhVECSZpG/Ko9g==}
+  solhint-plugin-mud@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668:
+    resolution: {integrity: sha512-3LDpGJ+9FxgeTn8hDAkTvrDxW+XOdV6SVBGlOsGq+sQY1gkSgJ5wB8h9WQTotJjaZ+25DnjH0uC99d2YsSS7TQ==}
 
   solhint@5.0.5:
     resolution: {integrity: sha512-WrnG6T+/UduuzSWsSOAbfq1ywLUDwNea3Gd5hg6PS+pLUm8lz2ECNr0beX609clBxmDeZ3676AiA9nPDljmbJQ==}
@@ -12955,7 +12955,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@latticexyz/abi-ts@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c':
+  '@latticexyz/abi-ts@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668':
     dependencies:
       chalk: 5.4.1
       debug: 4.4.0(supports-color@8.1.1)
@@ -12964,9 +12964,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@latticexyz/block-logs-stream@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)':
+  '@latticexyz/block-logs-stream@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)':
     dependencies:
-      '@latticexyz/common': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/common': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
       debug: 4.4.0(supports-color@8.1.1)
       rxjs: 7.5.5
       viem: 2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8)
@@ -12977,9 +12977,9 @@ snapshots:
       - typescript
       - zod
 
-  '@latticexyz/block-logs-stream@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)':
+  '@latticexyz/block-logs-stream@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)':
     dependencies:
-      '@latticexyz/common': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
+      '@latticexyz/common': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
       debug: 4.4.0(supports-color@8.1.1)
       rxjs: 7.5.5
       viem: 2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1)
@@ -12990,9 +12990,9 @@ snapshots:
       - typescript
       - zod
 
-  '@latticexyz/block-logs-stream@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)':
+  '@latticexyz/block-logs-stream@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)':
     dependencies:
-      '@latticexyz/common': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
+      '@latticexyz/common': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
       debug: 4.4.0(supports-color@8.1.1)
       rxjs: 7.5.5
       viem: 2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1)
@@ -13003,9 +13003,9 @@ snapshots:
       - typescript
       - zod
 
-  '@latticexyz/block-logs-stream@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)':
+  '@latticexyz/block-logs-stream@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)':
     dependencies:
-      '@latticexyz/common': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/common': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
       debug: 4.4.0(supports-color@8.1.1)
       rxjs: 7.5.5
       viem: 2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8)
@@ -13016,23 +13016,23 @@ snapshots:
       - typescript
       - zod
 
-  '@latticexyz/cli@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@opentelemetry/api@1.9.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/pg@8.6.1)(@types/react@19.0.12)(better-sqlite3@8.7.0)(bufferutil@4.0.9)(immer@10.1.1)(react@18.3.1)(typescript@5.8.2)(utf-8-validate@5.0.10)(wagmi@2.12.11(@tanstack/query-core@5.66.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/react@19.0.12)(bufferutil@4.0.9)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react-native@0.77.0(@babel/core@7.26.9)(@babel/preset-env@7.26.7(@babel/core@7.26.9))(@types/react@19.0.12)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)(rollup@4.34.2)(typescript@5.8.2)(utf-8-validate@5.0.10)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1))':
+  '@latticexyz/cli@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@opentelemetry/api@1.9.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/pg@8.6.1)(@types/react@19.0.12)(better-sqlite3@8.7.0)(bufferutil@4.0.9)(immer@10.1.1)(react@18.3.1)(typescript@5.8.2)(utf-8-validate@5.0.10)(wagmi@2.12.11(@tanstack/query-core@5.66.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/react@19.0.12)(bufferutil@4.0.9)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react-native@0.77.0(@babel/core@7.26.9)(@babel/preset-env@7.26.7(@babel/core@7.26.9))(@types/react@19.0.12)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)(rollup@4.34.2)(typescript@5.8.2)(utf-8-validate@5.0.10)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1))':
     dependencies:
       '@ark/util': 0.2.2
       '@aws-sdk/client-kms': 3.741.0
-      '@latticexyz/abi-ts': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c
-      '@latticexyz/block-logs-stream': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/common': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/config': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/gas-report': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c
-      '@latticexyz/protocol-parser': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/schema-type': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/store': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/store-sync': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(@opentelemetry/api@1.9.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/pg@8.6.1)(@types/react@19.0.12)(asn1.js@5.4.1)(better-sqlite3@8.7.0)(immer@10.1.1)(react@18.3.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(wagmi@2.12.11(@tanstack/query-core@5.66.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/react@19.0.12)(bufferutil@4.0.9)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react-native@0.77.0(@babel/core@7.26.9)(@babel/preset-env@7.26.7(@babel/core@7.26.9))(@types/react@19.0.12)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)(rollup@4.34.2)(typescript@5.8.2)(utf-8-validate@5.0.10)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1))
-      '@latticexyz/utils': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c
-      '@latticexyz/world': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/world-module-callwithsignature': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/world-module-metadata': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/abi-ts': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668
+      '@latticexyz/block-logs-stream': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/common': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/config': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/gas-report': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668
+      '@latticexyz/protocol-parser': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/schema-type': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/store': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/store-sync': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(@opentelemetry/api@1.9.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/pg@8.6.1)(@types/react@19.0.12)(asn1.js@5.4.1)(better-sqlite3@8.7.0)(immer@10.1.1)(react@18.3.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(wagmi@2.12.11(@tanstack/query-core@5.66.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/react@19.0.12)(bufferutil@4.0.9)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react-native@0.77.0(@babel/core@7.26.9)(@babel/preset-env@7.26.7(@babel/core@7.26.9))(@types/react@19.0.12)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)(rollup@4.34.2)(typescript@5.8.2)(utf-8-validate@5.0.10)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1))
+      '@latticexyz/utils': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668
+      '@latticexyz/world': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/world-module-callwithsignature': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/world-module-metadata': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
       abitype: 1.0.6(typescript@5.8.2)(zod@3.23.8)
       asn1.js: 5.4.1
       chalk: 5.4.1
@@ -13081,23 +13081,23 @@ snapshots:
       - utf-8-validate
       - wagmi
 
-  '@latticexyz/cli@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@opentelemetry/api@1.9.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/pg@8.6.1)(@types/react@19.0.12)(better-sqlite3@8.7.0)(bufferutil@4.0.9)(immer@10.1.1)(react@18.3.1)(typescript@5.8.2)(utf-8-validate@5.0.10)(wagmi@2.12.11(@tanstack/query-core@5.66.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/react@19.0.12)(bufferutil@4.0.9)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react-native@0.77.0(@babel/core@7.26.9)(@babel/preset-env@7.26.7(@babel/core@7.26.9))(@types/react@19.0.12)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)(rollup@4.34.2)(typescript@5.8.2)(utf-8-validate@5.0.10)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8))':
+  '@latticexyz/cli@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@opentelemetry/api@1.9.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/pg@8.6.1)(@types/react@19.0.12)(better-sqlite3@8.7.0)(bufferutil@4.0.9)(immer@10.1.1)(react@18.3.1)(typescript@5.8.2)(utf-8-validate@5.0.10)(wagmi@2.12.11(@tanstack/query-core@5.66.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/react@19.0.12)(bufferutil@4.0.9)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react-native@0.77.0(@babel/core@7.26.9)(@babel/preset-env@7.26.7(@babel/core@7.26.9))(@types/react@19.0.12)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)(rollup@4.34.2)(typescript@5.8.2)(utf-8-validate@5.0.10)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8))':
     dependencies:
       '@ark/util': 0.2.2
       '@aws-sdk/client-kms': 3.741.0
-      '@latticexyz/abi-ts': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c
-      '@latticexyz/block-logs-stream': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/common': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/config': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/gas-report': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c
-      '@latticexyz/protocol-parser': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/schema-type': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/store': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/store-sync': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(@opentelemetry/api@1.9.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/pg@8.6.1)(@types/react@19.0.12)(asn1.js@5.4.1)(better-sqlite3@8.7.0)(immer@10.1.1)(react@18.3.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(wagmi@2.12.11(@tanstack/query-core@5.66.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/react@19.0.12)(bufferutil@4.0.9)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react-native@0.77.0(@babel/core@7.26.9)(@babel/preset-env@7.26.7(@babel/core@7.26.9))(@types/react@19.0.12)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)(rollup@4.34.2)(typescript@5.8.2)(utf-8-validate@5.0.10)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8))
-      '@latticexyz/utils': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c
-      '@latticexyz/world': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/world-module-callwithsignature': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/world-module-metadata': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/abi-ts': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668
+      '@latticexyz/block-logs-stream': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/common': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/config': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/gas-report': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668
+      '@latticexyz/protocol-parser': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/schema-type': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/store': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/store-sync': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(@opentelemetry/api@1.9.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/pg@8.6.1)(@types/react@19.0.12)(asn1.js@5.4.1)(better-sqlite3@8.7.0)(immer@10.1.1)(react@18.3.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(wagmi@2.12.11(@tanstack/query-core@5.66.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/react@19.0.12)(bufferutil@4.0.9)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react-native@0.77.0(@babel/core@7.26.9)(@babel/preset-env@7.26.7(@babel/core@7.26.9))(@types/react@19.0.12)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)(rollup@4.34.2)(typescript@5.8.2)(utf-8-validate@5.0.10)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8))
+      '@latticexyz/utils': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668
+      '@latticexyz/world': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/world-module-callwithsignature': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/world-module-metadata': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
       abitype: 1.0.6(typescript@5.8.2)(zod@3.23.8)
       asn1.js: 5.4.1
       chalk: 5.4.1
@@ -13146,9 +13146,9 @@ snapshots:
       - utf-8-validate
       - wagmi
 
-  '@latticexyz/common@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)':
+  '@latticexyz/common@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)':
     dependencies:
-      '@latticexyz/schema-type': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/schema-type': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
       '@solidity-parser/parser': 0.16.2
       abitype: 1.0.6(typescript@5.8.2)(zod@3.23.8)
       debug: 4.4.0(supports-color@8.1.1)
@@ -13166,9 +13166,9 @@ snapshots:
       - typescript
       - zod
 
-  '@latticexyz/common@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)':
+  '@latticexyz/common@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)':
     dependencies:
-      '@latticexyz/schema-type': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
+      '@latticexyz/schema-type': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
       '@solidity-parser/parser': 0.16.2
       abitype: 1.0.6(typescript@5.8.2)(zod@3.23.8)
       debug: 4.4.0(supports-color@8.1.1)
@@ -13186,9 +13186,9 @@ snapshots:
       - typescript
       - zod
 
-  '@latticexyz/common@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)':
+  '@latticexyz/common@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)':
     dependencies:
-      '@latticexyz/schema-type': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
+      '@latticexyz/schema-type': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
       '@solidity-parser/parser': 0.16.2
       abitype: 1.0.6(typescript@5.8.2)(zod@3.24.1)
       debug: 4.4.0(supports-color@8.1.1)
@@ -13206,9 +13206,9 @@ snapshots:
       - typescript
       - zod
 
-  '@latticexyz/common@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)':
+  '@latticexyz/common@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)':
     dependencies:
-      '@latticexyz/schema-type': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/schema-type': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
       '@solidity-parser/parser': 0.16.2
       abitype: 1.0.6(typescript@5.8.2)(zod@3.23.8)
       debug: 4.4.0(supports-color@8.1.1)
@@ -13226,11 +13226,11 @@ snapshots:
       - typescript
       - zod
 
-  '@latticexyz/config@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)':
+  '@latticexyz/config@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)':
     dependencies:
       '@ark/util': 0.2.2
-      '@latticexyz/common': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/schema-type': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/common': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/schema-type': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
       find-up: 6.3.0
       tsx: 4.19.3
       viem: 2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8)
@@ -13241,11 +13241,11 @@ snapshots:
       - typescript
       - zod
 
-  '@latticexyz/config@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)':
+  '@latticexyz/config@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)':
     dependencies:
       '@ark/util': 0.2.2
-      '@latticexyz/common': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
-      '@latticexyz/schema-type': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
+      '@latticexyz/common': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
+      '@latticexyz/schema-type': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
       find-up: 6.3.0
       tsx: 4.19.3
       viem: 2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1)
@@ -13256,11 +13256,11 @@ snapshots:
       - typescript
       - zod
 
-  '@latticexyz/config@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)':
+  '@latticexyz/config@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)':
     dependencies:
       '@ark/util': 0.2.2
-      '@latticexyz/common': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
-      '@latticexyz/schema-type': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
+      '@latticexyz/common': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
+      '@latticexyz/schema-type': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
       find-up: 6.3.0
       tsx: 4.19.3
       viem: 2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1)
@@ -13271,11 +13271,11 @@ snapshots:
       - typescript
       - zod
 
-  '@latticexyz/config@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)':
+  '@latticexyz/config@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)':
     dependencies:
       '@ark/util': 0.2.2
-      '@latticexyz/common': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/schema-type': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/common': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/schema-type': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
       find-up: 6.3.0
       tsx: 4.19.3
       viem: 2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8)
@@ -13286,16 +13286,16 @@ snapshots:
       - typescript
       - zod
 
-  '@latticexyz/dev-tools@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(f3202314f48c54a194051e168f423835)':
+  '@latticexyz/dev-tools@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(ffc6b815e24ae233ac774adf94be3971)':
     dependencies:
-      '@latticexyz/common': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/react': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/recs': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/schema-type': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/store': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/store-sync': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(@opentelemetry/api@1.9.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/pg@8.6.1)(@types/react@19.0.12)(asn1.js@5.4.1)(better-sqlite3@8.7.0)(immer@10.1.1)(react@18.3.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(wagmi@2.12.11(@tanstack/query-core@5.66.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/react@19.0.12)(bufferutil@4.0.9)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react-native@0.77.0(@babel/core@7.26.9)(@babel/preset-env@7.26.7(@babel/core@7.26.9))(@types/react@19.0.12)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)(rollup@4.34.2)(typescript@5.8.2)(utf-8-validate@5.0.10)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8))
-      '@latticexyz/utils': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c
-      '@latticexyz/world': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/common': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/react': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/recs': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/schema-type': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/store': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/store-sync': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(@opentelemetry/api@1.9.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/pg@8.6.1)(@types/react@19.0.12)(asn1.js@5.4.1)(better-sqlite3@8.7.0)(immer@10.1.1)(react@18.3.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(wagmi@2.12.11(@tanstack/query-core@5.66.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/react@19.0.12)(bufferutil@4.0.9)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react-native@0.77.0(@babel/core@7.26.9)(@babel/preset-env@7.26.7(@babel/core@7.26.9))(@types/react@19.0.12)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)(rollup@4.34.2)(typescript@5.8.2)(utf-8-validate@5.0.10)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8))
+      '@latticexyz/utils': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668
+      '@latticexyz/world': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
       react-router-dom: 6.29.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -13313,18 +13313,18 @@ snapshots:
       - typescript
       - zod
 
-  '@latticexyz/explorer@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(@babel/core@7.26.9)(@opentelemetry/api@1.9.0)(@tanstack/query-core@5.66.0)(@types/pg@8.6.1)(@types/react@19.0.12)(asn1.js@5.4.1)(bufferutil@4.0.9)(immer@10.1.1)(kysely@0.26.3)(react-native@0.77.0(@babel/core@7.26.9)(@babel/preset-env@7.26.7(@babel/core@7.26.9))(@types/react@19.0.12)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(rollup@4.34.2)(sql.js@1.12.0)(typescript@5.8.2)(utf-8-validate@5.0.10)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))':
+  '@latticexyz/explorer@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(@babel/core@7.26.9)(@opentelemetry/api@1.9.0)(@tanstack/query-core@5.66.0)(@types/pg@8.6.1)(@types/react@19.0.12)(asn1.js@5.4.1)(bufferutil@4.0.9)(immer@10.1.1)(kysely@0.26.3)(react-native@0.77.0(@babel/core@7.26.9)(@babel/preset-env@7.26.7(@babel/core@7.26.9))(@types/react@19.0.12)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(rollup@4.34.2)(sql.js@1.12.0)(typescript@5.8.2)(utf-8-validate@5.0.10)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))':
     dependencies:
       '@hookform/resolvers': 3.10.0(react-hook-form@7.54.2(react@18.3.1))
-      '@latticexyz/block-logs-stream': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/common': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/config': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/protocol-parser': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/schema-type': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/store': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/store-indexer': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(@opentelemetry/api@1.9.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/pg@8.6.1)(@types/react@19.0.12)(asn1.js@5.4.1)(immer@10.1.1)(kysely@0.26.3)(react@18.3.1)(sql.js@1.12.0)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(wagmi@2.12.11(@tanstack/query-core@5.66.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/react@19.0.12)(bufferutil@4.0.9)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react-native@0.77.0(@babel/core@7.26.9)(@babel/preset-env@7.26.7(@babel/core@7.26.9))(@types/react@19.0.12)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)(rollup@4.34.2)(typescript@5.8.2)(utf-8-validate@5.0.10)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8))
-      '@latticexyz/store-sync': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(@opentelemetry/api@1.9.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/pg@8.6.1)(@types/react@19.0.12)(asn1.js@5.4.1)(better-sqlite3@8.7.0)(immer@10.1.1)(react@18.3.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(wagmi@2.12.11(@tanstack/query-core@5.66.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/react@19.0.12)(bufferutil@4.0.9)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react-native@0.77.0(@babel/core@7.26.9)(@babel/preset-env@7.26.7(@babel/core@7.26.9))(@types/react@19.0.12)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)(rollup@4.34.2)(typescript@5.8.2)(utf-8-validate@5.0.10)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8))
-      '@latticexyz/world': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/block-logs-stream': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/common': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/config': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/protocol-parser': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/schema-type': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/store': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/store-indexer': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(@opentelemetry/api@1.9.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/pg@8.6.1)(@types/react@19.0.12)(asn1.js@5.4.1)(immer@10.1.1)(kysely@0.26.3)(react@18.3.1)(sql.js@1.12.0)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(wagmi@2.12.11(@tanstack/query-core@5.66.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/react@19.0.12)(bufferutil@4.0.9)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react-native@0.77.0(@babel/core@7.26.9)(@babel/preset-env@7.26.7(@babel/core@7.26.9))(@types/react@19.0.12)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)(rollup@4.34.2)(typescript@5.8.2)(utf-8-validate@5.0.10)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8))
+      '@latticexyz/store-sync': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(@opentelemetry/api@1.9.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/pg@8.6.1)(@types/react@19.0.12)(asn1.js@5.4.1)(better-sqlite3@8.7.0)(immer@10.1.1)(react@18.3.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(wagmi@2.12.11(@tanstack/query-core@5.66.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/react@19.0.12)(bufferutil@4.0.9)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react-native@0.77.0(@babel/core@7.26.9)(@babel/preset-env@7.26.7(@babel/core@7.26.9))(@types/react@19.0.12)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)(rollup@4.34.2)(typescript@5.8.2)(utf-8-validate@5.0.10)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8))
+      '@latticexyz/world': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
       '@monaco-editor/react': 4.6.0(monaco-editor@0.52.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-checkbox': 1.1.3(@types/react@19.0.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-dialog': 1.1.5(@types/react@19.0.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -13416,7 +13416,7 @@ snapshots:
       - uploadthing
       - utf-8-validate
 
-  '@latticexyz/gas-report@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c':
+  '@latticexyz/gas-report@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668':
     dependencies:
       chalk: 5.4.1
       dotenv: 16.4.7
@@ -13426,11 +13426,11 @@ snapshots:
       table: 6.9.0
       yargs: 17.7.2
 
-  '@latticexyz/protocol-parser@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)':
+  '@latticexyz/protocol-parser@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)':
     dependencies:
-      '@latticexyz/common': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/config': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/schema-type': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/common': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/config': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/schema-type': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
       abitype: 1.0.6(typescript@5.8.2)(zod@3.23.8)
       viem: 2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8)
     transitivePeerDependencies:
@@ -13440,11 +13440,11 @@ snapshots:
       - typescript
       - zod
 
-  '@latticexyz/protocol-parser@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)':
+  '@latticexyz/protocol-parser@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)':
     dependencies:
-      '@latticexyz/common': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
-      '@latticexyz/config': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
-      '@latticexyz/schema-type': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
+      '@latticexyz/common': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
+      '@latticexyz/config': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
+      '@latticexyz/schema-type': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
       abitype: 1.0.6(typescript@5.8.2)(zod@3.23.8)
       viem: 2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1)
     transitivePeerDependencies:
@@ -13454,11 +13454,11 @@ snapshots:
       - typescript
       - zod
 
-  '@latticexyz/protocol-parser@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)':
+  '@latticexyz/protocol-parser@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)':
     dependencies:
-      '@latticexyz/common': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
-      '@latticexyz/config': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
-      '@latticexyz/schema-type': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
+      '@latticexyz/common': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
+      '@latticexyz/config': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
+      '@latticexyz/schema-type': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
       abitype: 1.0.6(typescript@5.8.2)(zod@3.24.1)
       viem: 2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1)
     transitivePeerDependencies:
@@ -13468,11 +13468,11 @@ snapshots:
       - typescript
       - zod
 
-  '@latticexyz/protocol-parser@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)':
+  '@latticexyz/protocol-parser@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)':
     dependencies:
-      '@latticexyz/common': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/config': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/schema-type': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/common': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/config': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/schema-type': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
       abitype: 1.0.6(typescript@5.8.2)(zod@3.23.8)
       viem: 2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8)
     transitivePeerDependencies:
@@ -13482,10 +13482,10 @@ snapshots:
       - typescript
       - zod
 
-  '@latticexyz/react@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)':
+  '@latticexyz/react@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)':
     dependencies:
-      '@latticexyz/recs': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/store': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/recs': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/store': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
       fast-deep-equal: 3.1.3
       mobx: 6.13.6
       react: 18.3.1
@@ -13498,10 +13498,10 @@ snapshots:
       - viem
       - zod
 
-  '@latticexyz/recs@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)':
+  '@latticexyz/recs@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)':
     dependencies:
-      '@latticexyz/schema-type': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/utils': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c
+      '@latticexyz/schema-type': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/utils': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668
       mobx: 6.13.6
       rxjs: 7.5.5
     transitivePeerDependencies:
@@ -13509,10 +13509,10 @@ snapshots:
       - viem
       - zod
 
-  '@latticexyz/recs@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)':
+  '@latticexyz/recs@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)':
     dependencies:
-      '@latticexyz/schema-type': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
-      '@latticexyz/utils': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c
+      '@latticexyz/schema-type': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
+      '@latticexyz/utils': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668
       mobx: 6.13.6
       rxjs: 7.5.5
     transitivePeerDependencies:
@@ -13520,10 +13520,10 @@ snapshots:
       - viem
       - zod
 
-  '@latticexyz/recs@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)':
+  '@latticexyz/recs@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)':
     dependencies:
-      '@latticexyz/schema-type': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
-      '@latticexyz/utils': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c
+      '@latticexyz/schema-type': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
+      '@latticexyz/utils': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668
       mobx: 6.13.6
       rxjs: 7.5.5
     transitivePeerDependencies:
@@ -13531,10 +13531,10 @@ snapshots:
       - viem
       - zod
 
-  '@latticexyz/recs@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)':
+  '@latticexyz/recs@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)':
     dependencies:
-      '@latticexyz/schema-type': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/utils': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c
+      '@latticexyz/schema-type': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/utils': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668
       mobx: 6.13.6
       rxjs: 7.5.5
     transitivePeerDependencies:
@@ -13542,7 +13542,7 @@ snapshots:
       - viem
       - zod
 
-  '@latticexyz/schema-type@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)':
+  '@latticexyz/schema-type@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)':
     dependencies:
       abitype: 1.0.6(typescript@5.8.2)(zod@3.23.8)
       viem: 2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8)
@@ -13550,7 +13550,7 @@ snapshots:
       - typescript
       - zod
 
-  '@latticexyz/schema-type@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)':
+  '@latticexyz/schema-type@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)':
     dependencies:
       abitype: 1.0.6(typescript@5.8.2)(zod@3.23.8)
       viem: 2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1)
@@ -13558,7 +13558,7 @@ snapshots:
       - typescript
       - zod
 
-  '@latticexyz/schema-type@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)':
+  '@latticexyz/schema-type@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)':
     dependencies:
       abitype: 1.0.6(typescript@5.8.2)(zod@3.24.1)
       viem: 2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1)
@@ -13566,7 +13566,7 @@ snapshots:
       - typescript
       - zod
 
-  '@latticexyz/schema-type@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)':
+  '@latticexyz/schema-type@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)':
     dependencies:
       abitype: 1.0.6(typescript@5.8.2)(zod@3.23.8)
       viem: 2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8)
@@ -13574,14 +13574,14 @@ snapshots:
       - typescript
       - zod
 
-  '@latticexyz/stash@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(react@18.3.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)':
+  '@latticexyz/stash@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(react@18.3.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)':
     dependencies:
       '@ark/util': 0.2.2
-      '@latticexyz/common': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/config': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/protocol-parser': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/schema-type': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/store': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/common': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/config': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/protocol-parser': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/schema-type': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/store': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
       react: 18.3.1
       viem: 2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8)
     transitivePeerDependencies:
@@ -13591,14 +13591,14 @@ snapshots:
       - typescript
       - zod
 
-  '@latticexyz/stash@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(react@18.3.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)':
+  '@latticexyz/stash@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(react@18.3.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)':
     dependencies:
       '@ark/util': 0.2.2
-      '@latticexyz/common': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/config': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/protocol-parser': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/schema-type': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/store': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/common': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/config': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/protocol-parser': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/schema-type': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/store': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
       react: 18.3.1
       viem: 2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8)
     transitivePeerDependencies:
@@ -13608,14 +13608,14 @@ snapshots:
       - typescript
       - zod
 
-  '@latticexyz/stash@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(react@19.0.0)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)':
+  '@latticexyz/stash@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(react@19.0.0)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)':
     dependencies:
       '@ark/util': 0.2.2
-      '@latticexyz/common': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
-      '@latticexyz/config': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
-      '@latticexyz/protocol-parser': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
-      '@latticexyz/schema-type': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
-      '@latticexyz/store': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
+      '@latticexyz/common': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
+      '@latticexyz/config': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
+      '@latticexyz/protocol-parser': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
+      '@latticexyz/schema-type': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
+      '@latticexyz/store': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
       react: 19.0.0
       viem: 2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1)
     transitivePeerDependencies:
@@ -13625,15 +13625,15 @@ snapshots:
       - typescript
       - zod
 
-  '@latticexyz/store-indexer@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(@opentelemetry/api@1.9.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/pg@8.6.1)(@types/react@19.0.12)(asn1.js@5.4.1)(immer@10.1.1)(kysely@0.26.3)(react@18.3.1)(sql.js@1.12.0)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(wagmi@2.12.11(@tanstack/query-core@5.66.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/react@19.0.12)(bufferutil@4.0.9)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react-native@0.77.0(@babel/core@7.26.9)(@babel/preset-env@7.26.7(@babel/core@7.26.9))(@types/react@19.0.12)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)(rollup@4.34.2)(typescript@5.8.2)(utf-8-validate@5.0.10)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8))':
+  '@latticexyz/store-indexer@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(@opentelemetry/api@1.9.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/pg@8.6.1)(@types/react@19.0.12)(asn1.js@5.4.1)(immer@10.1.1)(kysely@0.26.3)(react@18.3.1)(sql.js@1.12.0)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(wagmi@2.12.11(@tanstack/query-core@5.66.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/react@19.0.12)(bufferutil@4.0.9)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react-native@0.77.0(@babel/core@7.26.9)(@babel/preset-env@7.26.7(@babel/core@7.26.9))(@types/react@19.0.12)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)(rollup@4.34.2)(typescript@5.8.2)(utf-8-validate@5.0.10)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8))':
     dependencies:
       '@koa/cors': 4.0.0
       '@koa/router': 12.0.2
-      '@latticexyz/block-logs-stream': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/common': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/protocol-parser': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/store': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/store-sync': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(@opentelemetry/api@1.9.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/pg@8.6.1)(@types/react@19.0.12)(asn1.js@5.4.1)(better-sqlite3@8.7.0)(immer@10.1.1)(react@18.3.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(wagmi@2.12.11(@tanstack/query-core@5.66.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/react@19.0.12)(bufferutil@4.0.9)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react-native@0.77.0(@babel/core@7.26.9)(@babel/preset-env@7.26.7(@babel/core@7.26.9))(@types/react@19.0.12)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)(rollup@4.34.2)(typescript@5.8.2)(utf-8-validate@5.0.10)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8))
+      '@latticexyz/block-logs-stream': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/common': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/protocol-parser': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/store': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/store-sync': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(@opentelemetry/api@1.9.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/pg@8.6.1)(@types/react@19.0.12)(asn1.js@5.4.1)(better-sqlite3@8.7.0)(immer@10.1.1)(react@18.3.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(wagmi@2.12.11(@tanstack/query-core@5.66.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/react@19.0.12)(bufferutil@4.0.9)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react-native@0.77.0(@babel/core@7.26.9)(@babel/preset-env@7.26.7(@babel/core@7.26.9))(@types/react@19.0.12)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)(rollup@4.34.2)(typescript@5.8.2)(utf-8-validate@5.0.10)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8))
       '@sentry/node': 7.120.3
       '@sentry/profiling-node': 1.3.5(@sentry/node@7.120.3)
       '@sentry/utils': 7.120.3
@@ -13681,18 +13681,19 @@ snapshots:
       - typescript
       - wagmi
 
-  '@latticexyz/store-sync@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(@opentelemetry/api@1.9.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/pg@8.6.1)(@types/react@19.0.12)(asn1.js@5.4.1)(better-sqlite3@8.7.0)(immer@10.1.1)(react@18.3.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(wagmi@2.12.11(@tanstack/query-core@5.66.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/react@19.0.12)(bufferutil@4.0.9)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react-native@0.77.0(@babel/core@7.26.9)(@babel/preset-env@7.26.7(@babel/core@7.26.9))(@types/react@19.0.12)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)(rollup@4.34.2)(typescript@5.8.2)(utf-8-validate@5.0.10)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8))':
+  '@latticexyz/store-sync@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(@opentelemetry/api@1.9.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/pg@8.6.1)(@types/react@19.0.12)(asn1.js@5.4.1)(better-sqlite3@8.7.0)(immer@10.1.1)(react@18.3.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(wagmi@2.12.11(@tanstack/query-core@5.66.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/react@19.0.12)(bufferutil@4.0.9)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react-native@0.77.0(@babel/core@7.26.9)(@babel/preset-env@7.26.7(@babel/core@7.26.9))(@types/react@19.0.12)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)(rollup@4.34.2)(typescript@5.8.2)(utf-8-validate@5.0.10)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8))':
     dependencies:
       '@ark/util': 0.2.2
-      '@latticexyz/block-logs-stream': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/common': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/config': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/protocol-parser': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/recs': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/schema-type': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/stash': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(react@18.3.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/store': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/world': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/block-logs-stream': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/common': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/config': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/protocol-parser': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/recs': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/schema-type': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/stash': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(react@18.3.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/store': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/world': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/world-module-metadata': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
       '@trpc/client': 10.34.0(@trpc/server@10.34.0)
       '@trpc/server': 10.34.0
       change-case: 5.4.4
@@ -13735,18 +13736,19 @@ snapshots:
       - supports-color
       - typescript
 
-  '@latticexyz/store-sync@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(@opentelemetry/api@1.9.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/pg@8.6.1)(@types/react@19.0.12)(asn1.js@5.4.1)(better-sqlite3@8.7.0)(immer@10.1.1)(react@18.3.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(wagmi@2.12.11(@tanstack/query-core@5.66.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/react@19.0.12)(bufferutil@4.0.9)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react-native@0.77.0(@babel/core@7.26.9)(@babel/preset-env@7.26.7(@babel/core@7.26.9))(@types/react@19.0.12)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)(rollup@4.34.2)(typescript@5.8.2)(utf-8-validate@5.0.10)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1))':
+  '@latticexyz/store-sync@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(@opentelemetry/api@1.9.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/pg@8.6.1)(@types/react@19.0.12)(asn1.js@5.4.1)(better-sqlite3@8.7.0)(immer@10.1.1)(react@18.3.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(wagmi@2.12.11(@tanstack/query-core@5.66.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/react@19.0.12)(bufferutil@4.0.9)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react-native@0.77.0(@babel/core@7.26.9)(@babel/preset-env@7.26.7(@babel/core@7.26.9))(@types/react@19.0.12)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)(rollup@4.34.2)(typescript@5.8.2)(utf-8-validate@5.0.10)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1))':
     dependencies:
       '@ark/util': 0.2.2
-      '@latticexyz/block-logs-stream': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/common': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/config': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/protocol-parser': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/recs': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/schema-type': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/stash': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(react@18.3.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/store': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/world': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/block-logs-stream': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/common': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/config': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/protocol-parser': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/recs': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/schema-type': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/stash': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(react@18.3.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/store': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/world': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/world-module-metadata': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
       '@trpc/client': 10.34.0(@trpc/server@10.34.0)
       '@trpc/server': 10.34.0
       change-case: 5.4.4
@@ -13789,18 +13791,19 @@ snapshots:
       - supports-color
       - typescript
 
-  '@latticexyz/store-sync@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(@opentelemetry/api@1.9.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/pg@8.6.1)(@types/react@19.0.12)(asn1.js@5.4.1)(better-sqlite3@8.7.0)(immer@10.1.1)(react@18.3.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(wagmi@2.12.11(@tanstack/query-core@5.66.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/react@19.0.12)(bufferutil@4.0.9)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react-native@0.77.0(@babel/core@7.26.9)(@babel/preset-env@7.26.7(@babel/core@7.26.9))(@types/react@19.0.12)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)(rollup@4.34.2)(typescript@5.8.2)(utf-8-validate@5.0.10)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8))':
+  '@latticexyz/store-sync@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(@opentelemetry/api@1.9.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/pg@8.6.1)(@types/react@19.0.12)(asn1.js@5.4.1)(better-sqlite3@8.7.0)(immer@10.1.1)(react@18.3.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(wagmi@2.12.11(@tanstack/query-core@5.66.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/react@19.0.12)(bufferutil@4.0.9)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react-native@0.77.0(@babel/core@7.26.9)(@babel/preset-env@7.26.7(@babel/core@7.26.9))(@types/react@19.0.12)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)(rollup@4.34.2)(typescript@5.8.2)(utf-8-validate@5.0.10)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8))':
     dependencies:
       '@ark/util': 0.2.2
-      '@latticexyz/block-logs-stream': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/common': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/config': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/protocol-parser': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/recs': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/schema-type': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/stash': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(react@18.3.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/store': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/world': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/block-logs-stream': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/common': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/config': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/protocol-parser': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/recs': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/schema-type': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/stash': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(react@18.3.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/store': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/world': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/world-module-metadata': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
       '@trpc/client': 10.34.0(@trpc/server@10.34.0)
       '@trpc/server': 10.34.0
       change-case: 5.4.4
@@ -13843,18 +13846,19 @@ snapshots:
       - supports-color
       - typescript
 
-  '@latticexyz/store-sync@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(@opentelemetry/api@1.9.0)(@tanstack/react-query@5.66.0(react@19.0.0))(@types/pg@8.6.1)(@types/react@19.0.12)(asn1.js@5.4.1)(better-sqlite3@8.7.0)(immer@10.1.1)(react@19.0.0)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(wagmi@2.12.11(@tanstack/query-core@5.66.0)(@tanstack/react-query@5.66.0(react@19.0.0))(@types/react@19.0.12)(bufferutil@4.0.9)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react-native@0.77.0(@babel/core@7.26.9)(@babel/preset-env@7.26.7(@babel/core@7.26.9))(@types/react@19.0.12)(bufferutil@4.0.9)(react@19.0.0)(utf-8-validate@5.0.10))(react@19.0.0)(rollup@4.34.2)(typescript@5.8.2)(utf-8-validate@5.0.10)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1))':
+  '@latticexyz/store-sync@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(@opentelemetry/api@1.9.0)(@tanstack/react-query@5.66.0(react@19.0.0))(@types/pg@8.6.1)(@types/react@19.0.12)(asn1.js@5.4.1)(better-sqlite3@8.7.0)(immer@10.1.1)(react@19.0.0)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(wagmi@2.12.11(@tanstack/query-core@5.66.0)(@tanstack/react-query@5.66.0(react@19.0.0))(@types/react@19.0.12)(bufferutil@4.0.9)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react-native@0.77.0(@babel/core@7.26.9)(@babel/preset-env@7.26.7(@babel/core@7.26.9))(@types/react@19.0.12)(bufferutil@4.0.9)(react@19.0.0)(utf-8-validate@5.0.10))(react@19.0.0)(rollup@4.34.2)(typescript@5.8.2)(utf-8-validate@5.0.10)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1))':
     dependencies:
       '@ark/util': 0.2.2
-      '@latticexyz/block-logs-stream': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
-      '@latticexyz/common': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
-      '@latticexyz/config': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
-      '@latticexyz/protocol-parser': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
-      '@latticexyz/recs': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
-      '@latticexyz/schema-type': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
-      '@latticexyz/stash': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(react@19.0.0)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
-      '@latticexyz/store': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
-      '@latticexyz/world': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
+      '@latticexyz/block-logs-stream': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
+      '@latticexyz/common': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
+      '@latticexyz/config': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
+      '@latticexyz/protocol-parser': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
+      '@latticexyz/recs': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
+      '@latticexyz/schema-type': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
+      '@latticexyz/stash': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(react@19.0.0)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
+      '@latticexyz/store': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
+      '@latticexyz/world': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
+      '@latticexyz/world-module-metadata': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
       '@trpc/client': 10.34.0(@trpc/server@10.34.0)
       '@trpc/server': 10.34.0
       change-case: 5.4.4
@@ -13897,13 +13901,13 @@ snapshots:
       - supports-color
       - typescript
 
-  '@latticexyz/store@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)':
+  '@latticexyz/store@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)':
     dependencies:
       '@ark/util': 0.2.2
-      '@latticexyz/common': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/config': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/protocol-parser': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/schema-type': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/common': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/config': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/protocol-parser': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/schema-type': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
       abitype: 1.0.6(typescript@5.8.2)(zod@3.23.8)
       arktype: 2.0.0-beta.6
       debug: 4.4.0(supports-color@8.1.1)
@@ -13916,13 +13920,13 @@ snapshots:
       - typescript
       - zod
 
-  '@latticexyz/store@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)':
+  '@latticexyz/store@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)':
     dependencies:
       '@ark/util': 0.2.2
-      '@latticexyz/common': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
-      '@latticexyz/config': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
-      '@latticexyz/protocol-parser': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
-      '@latticexyz/schema-type': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
+      '@latticexyz/common': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
+      '@latticexyz/config': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
+      '@latticexyz/protocol-parser': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
+      '@latticexyz/schema-type': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
       abitype: 1.0.6(typescript@5.8.2)(zod@3.23.8)
       arktype: 2.0.0-beta.6
       debug: 4.4.0(supports-color@8.1.1)
@@ -13935,13 +13939,13 @@ snapshots:
       - typescript
       - zod
 
-  '@latticexyz/store@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)':
+  '@latticexyz/store@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)':
     dependencies:
       '@ark/util': 0.2.2
-      '@latticexyz/common': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
-      '@latticexyz/config': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
-      '@latticexyz/protocol-parser': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
-      '@latticexyz/schema-type': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
+      '@latticexyz/common': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
+      '@latticexyz/config': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
+      '@latticexyz/protocol-parser': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
+      '@latticexyz/schema-type': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
       abitype: 1.0.6(typescript@5.8.2)(zod@3.24.1)
       arktype: 2.0.0-beta.6
       debug: 4.4.0(supports-color@8.1.1)
@@ -13954,13 +13958,13 @@ snapshots:
       - typescript
       - zod
 
-  '@latticexyz/store@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)':
+  '@latticexyz/store@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)':
     dependencies:
       '@ark/util': 0.2.2
-      '@latticexyz/common': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/config': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/protocol-parser': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/schema-type': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/common': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/config': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/protocol-parser': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/schema-type': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
       abitype: 1.0.6(typescript@5.8.2)(zod@3.23.8)
       arktype: 2.0.0-beta.6
       debug: 4.4.0(supports-color@8.1.1)
@@ -13973,17 +13977,17 @@ snapshots:
       - typescript
       - zod
 
-  '@latticexyz/utils@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c':
+  '@latticexyz/utils@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668':
     dependencies:
       mobx: 6.13.6
       proxy-deep: 3.1.1
       rxjs: 7.5.5
 
-  '@latticexyz/world-module-callwithsignature@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)':
+  '@latticexyz/world-module-callwithsignature@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)':
     dependencies:
-      '@latticexyz/schema-type': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/store': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/world': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/schema-type': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/store': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/world': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
     transitivePeerDependencies:
       - '@aws-sdk/client-kms'
       - asn1.js
@@ -13992,11 +13996,11 @@ snapshots:
       - viem
       - zod
 
-  '@latticexyz/world-module-metadata@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)':
+  '@latticexyz/world-module-metadata@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)':
     dependencies:
-      '@latticexyz/schema-type': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/store': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/world': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/schema-type': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/store': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/world': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
     transitivePeerDependencies:
       - '@aws-sdk/client-kms'
       - asn1.js
@@ -14005,13 +14009,39 @@ snapshots:
       - viem
       - zod
 
-  '@latticexyz/world-modules@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))':
+  '@latticexyz/world-module-metadata@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)':
     dependencies:
-      '@latticexyz/common': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
-      '@latticexyz/config': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
-      '@latticexyz/schema-type': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
-      '@latticexyz/store': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
-      '@latticexyz/world': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
+      '@latticexyz/schema-type': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
+      '@latticexyz/store': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
+      '@latticexyz/world': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
+    transitivePeerDependencies:
+      - '@aws-sdk/client-kms'
+      - asn1.js
+      - supports-color
+      - typescript
+      - viem
+      - zod
+
+  '@latticexyz/world-module-metadata@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)':
+    dependencies:
+      '@latticexyz/schema-type': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/store': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/world': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+    transitivePeerDependencies:
+      - '@aws-sdk/client-kms'
+      - asn1.js
+      - supports-color
+      - typescript
+      - viem
+      - zod
+
+  '@latticexyz/world-modules@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))':
+    dependencies:
+      '@latticexyz/common': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
+      '@latticexyz/config': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
+      '@latticexyz/schema-type': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
+      '@latticexyz/store': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
+      '@latticexyz/world': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
       zod: 3.23.8
     transitivePeerDependencies:
       - '@aws-sdk/client-kms'
@@ -14020,15 +14050,15 @@ snapshots:
       - typescript
       - viem
 
-  '@latticexyz/world@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)':
+  '@latticexyz/world@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)':
     dependencies:
       '@ark/util': 0.2.2
-      '@latticexyz/block-logs-stream': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/common': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/config': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/protocol-parser': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/schema-type': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/store': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/block-logs-stream': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/common': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/config': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/protocol-parser': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/schema-type': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/store': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
       abitype: 1.0.6(typescript@5.8.2)(zod@3.23.8)
       arktype: 2.0.0-beta.6
       debug: 4.4.0(supports-color@8.1.1)
@@ -14041,15 +14071,15 @@ snapshots:
       - typescript
       - zod
 
-  '@latticexyz/world@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)':
+  '@latticexyz/world@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)':
     dependencies:
       '@ark/util': 0.2.2
-      '@latticexyz/block-logs-stream': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
-      '@latticexyz/common': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
-      '@latticexyz/config': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
-      '@latticexyz/protocol-parser': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
-      '@latticexyz/schema-type': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
-      '@latticexyz/store': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
+      '@latticexyz/block-logs-stream': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
+      '@latticexyz/common': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
+      '@latticexyz/config': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
+      '@latticexyz/protocol-parser': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
+      '@latticexyz/schema-type': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
+      '@latticexyz/store': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.23.8)
       abitype: 1.0.6(typescript@5.8.2)(zod@3.23.8)
       arktype: 2.0.0-beta.6
       debug: 4.4.0(supports-color@8.1.1)
@@ -14062,15 +14092,15 @@ snapshots:
       - typescript
       - zod
 
-  '@latticexyz/world@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)':
+  '@latticexyz/world@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)':
     dependencies:
       '@ark/util': 0.2.2
-      '@latticexyz/block-logs-stream': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
-      '@latticexyz/common': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
-      '@latticexyz/config': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
-      '@latticexyz/protocol-parser': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
-      '@latticexyz/schema-type': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
-      '@latticexyz/store': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
+      '@latticexyz/block-logs-stream': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
+      '@latticexyz/common': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
+      '@latticexyz/config': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
+      '@latticexyz/protocol-parser': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
+      '@latticexyz/schema-type': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
+      '@latticexyz/store': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.15(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1)
       abitype: 1.0.6(typescript@5.8.2)(zod@3.24.1)
       arktype: 2.0.0-beta.6
       debug: 4.4.0(supports-color@8.1.1)
@@ -14083,15 +14113,15 @@ snapshots:
       - typescript
       - zod
 
-  '@latticexyz/world@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)':
+  '@latticexyz/world@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)':
     dependencies:
       '@ark/util': 0.2.2
-      '@latticexyz/block-logs-stream': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/common': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/config': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/protocol-parser': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/schema-type': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
-      '@latticexyz/store': 2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/block-logs-stream': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/common': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/config': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/protocol-parser': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/schema-type': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/store': 2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668(@aws-sdk/client-kms@3.741.0)(asn1.js@5.4.1)(typescript@5.8.2)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
       abitype: 1.0.6(typescript@5.8.2)(zod@3.23.8)
       arktype: 2.0.0-beta.6
       debug: 4.4.0(supports-color@8.1.1)
@@ -23853,9 +23883,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  solhint-config-mud@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c: {}
+  solhint-config-mud@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668: {}
 
-  solhint-plugin-mud@2.2.22-050dfd5c0f540bc4145db05ca6798926fdecff4c:
+  solhint-plugin-mud@2.2.22-490159e880e2ac0e1ce8f5785873a25b99fb7668:
     dependencies:
       '@solidity-parser/parser': 0.16.2
 

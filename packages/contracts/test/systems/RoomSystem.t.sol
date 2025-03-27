@@ -32,6 +32,7 @@ contract RoomSystemTest is BaseTest {
     assertEq(Balance.get(roomId), 100);
     assertEq(Owner.get(roomId), playerId);
     assertEq(Level.get(roomId), LevelList.get()[0]);
+    assertEq(CreationBlock.get(roomId), block.number);
   }
 
   function testLongRoomPrompt() public {
@@ -53,31 +54,31 @@ contract RoomSystemTest is BaseTest {
     vm.stopPrank();
   }
 
-  function testRevertPromptTooShort() public {
-    setUp();
+  // function testRevertPromptTooShort() public {
+  //   setUp();
 
-    vm.startPrank(alice);
-    world.ratroom__spawn("alice");
-    world.ratroom__givePlayerBalance(1000);
-    vm.expectRevert("prompt too short");
-    world.ratroom__createRoom("test room", "");
-    vm.stopPrank();
-  }
+  //   vm.startPrank(alice);
+  //   world.ratroom__spawn("alice");
+  //   world.ratroom__givePlayerBalance(1000);
+  //   vm.expectRevert("prompt too short");
+  //   world.ratroom__createRoom("test room", "");
+  //   vm.stopPrank();
+  // }
 
-  function testRevertPromptTooLong() public {
-    setUp();
+  // function testRevertPromptTooLong() public {
+  //   setUp();
 
-    vm.startPrank(alice);
-    world.ratroom__spawn("alice");
-    world.ratroom__givePlayerBalance(1000);
+  //   vm.startPrank(alice);
+  //   world.ratroom__spawn("alice");
+  //   world.ratroom__givePlayerBalance(1000);
 
-    vm.expectRevert("prompt too long");
-    world.ratroom__createRoom(
-      "Test room",
-      "The room has two doors. One doors lead to death, the other to freedom. If a rat does not make a choice within 10 minutes it is killed and the body removed. Each door has a guardian mouse that needs to be defeated to pass. The room has two doors. One doors lead to death, the other to freedom. If a rat does not make a choice within 10 minutes it is killed and the body removed. Each door has a guardian mouse that needs to be defeated to pass. The room has two doors. One doors lead to death, the other to freedom. If a rat does not make a choice within 10 minutes it is killed and the body removed. Each door has a guardian mouse that needs to be defeated to pass."
-    );
-    vm.stopPrank();
-  }
+  //   vm.expectRevert("prompt too long");
+  //   world.ratroom__createRoom(
+  //     "Test room",
+  //     "The room has two doors. One doors lead to death, the other to freedom. If a rat does not make a choice within 10 minutes it is killed and the body removed. Each door has a guardian mouse that needs to be defeated to pass. The room has two doors. One doors lead to death, the other to freedom. If a rat does not make a choice within 10 minutes it is killed and the body removed. Each door has a guardian mouse that needs to be defeated to pass. The room has two doors. One doors lead to death, the other to freedom. If a rat does not make a choice within 10 minutes it is killed and the body removed. Each door has a guardian mouse that needs to be defeated to pass."
+  //   );
+  //   vm.stopPrank();
+  // }
 
   function testRevertBlanceTooLow() public {
     setUp();

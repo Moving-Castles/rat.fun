@@ -32,8 +32,9 @@ export default defineWorld({
       }
     },
     // ...
-    Name: "string", // Set on player and room
+    Name: "string", // Set on player, rat and room
     EntityType: "ENTITY_TYPE",
+    CreationBlock: "uint256", // Set on player, rat and room
     // ...
     Health: "uint256", // Set on rat
     Dead: "bool", // Set on rat
@@ -43,7 +44,7 @@ export default defineWorld({
     // ...
     Level: "bytes32", // Id of level. Set on rat and room.
     Index: "uint256", // Set on rat and room
-    Balance: "uint256", // Amount of credits. Set on room, rat and player.
+    Balance: "uint256", // Amount of credits. Set on player, rat and room.
     Value: "int256", // Value of a trait can be negative
     OwnedRat: "bytes32", // Set on player
     Owner: "bytes32", // Set on room and rat

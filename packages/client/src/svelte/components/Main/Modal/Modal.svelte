@@ -1,21 +1,21 @@
 <script lang="ts">
   import { getModalState } from "./state.svelte"
   let { modal } = getModalState()
-  let modalBackground = $state(undefined)
 
-  const onModalClick = e => {
-    console.log("noclose ", modal.config?.noclose)
-    if (modal.config?.noclose === true) return
-    if (e.target === modalBackground) {
+  let modalBackground = $state<HTMLDivElement | undefined>(undefined)
+
+  const onModalClick = (e: MouseEvent) => {
+    if (e.target === modalBackground && !modal.config?.noclose) {
       modal.close()
     }
-    console.log(e.target, modalBackground)
   }
 
   $inspect(modal.show)
 </script>
 
 {#if modal.show}
+  <!-- svelte-ignore a11y_click_events_have_key_events -->
+  <!-- svelte-ignore a11y_no_static_element_interactions -->
   <div bind:this={modalBackground} onclick={onModalClick} class="modal">
     <div class="content">
       {@render modal.current?.()}
@@ -36,8 +36,11 @@
   }
 
   .content {
-    width: 600px;
-    height: 400px;
+    width: 700px;
+    height: 500px;
+    max-width: 90vw;
+    max-height: 90vh;
+    background: red;
     overflow-x: hidden;
     overflow-y: scroll;
   }

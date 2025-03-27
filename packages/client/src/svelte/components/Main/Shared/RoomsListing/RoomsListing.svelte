@@ -16,6 +16,7 @@
     pane: PANE
     yours: boolean
   } = $props()
+
   let { rooms, panes } = getUIState()
   const { current } = rooms
 
@@ -26,14 +27,17 @@
   const entriesChronologically = (a, b) => {
     return Number(b[1]?.index || 0) - Number(a[1].index || 0)
   }
+
   const entriesByVisit = (a, b) => {
     const aVisitCount = Number(a[1]?.visitCount || 0)
     const bVisitCount = Number(b[1]?.visitCount || 0)
     return bVisitCount - aVisitCount
   }
+
   const entriesByBalance = (a, b) => {
     return Number(b[1].balance || 0) - Number(a[1].balance || 0)
   }
+
   const entriesByKillRate = (a, b) => {
     const aVisitCount = Number(a[1]?.visitCount || 0)
     const aKillCount = Number(a[1]?.killCount || 0)
@@ -140,7 +144,7 @@
             room={$roomsOnRatLevel[currentRoom]}
           />
         {:else}
-          <div>BE GONE</div>
+          <div>ERROR: NO CURRENT ROOM</div>
         {/if}
       </div>
     </div>
@@ -208,10 +212,10 @@
     background: white;
     color: black;
     border: none;
-    padding: 1ch;
+    padding: 0.5ch;
+
     &.active {
-      background: black;
-      color: white;
+      background: var(--color-alert);
     }
   }
   .previewing {

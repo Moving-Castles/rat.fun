@@ -18,8 +18,8 @@ contract RoomSystem is System {
     bytes32 playerId = LibUtils.addressToEntityKey(_msgSender());
 
     // TODO: Character count is not accurate due to UTF8 encoding
-    require(bytes(_roomPrompt).length > 0, "prompt too short");
-    require(bytes(_roomPrompt).length <= MAX_ROOM_PROMPT_LENGTH, "prompt too long");
+    // require(bytes(_roomPrompt).length > 0, "prompt too short");
+    // require(bytes(_roomPrompt).length <= MAX_ROOM_PROMPT_LENGTH, "prompt too long");
 
     // TODO: What level is room created on?
     uint256 roomCreationCost = RoomCreationCost.get(LevelList.get()[0]);

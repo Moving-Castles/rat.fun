@@ -31,6 +31,7 @@ declare global {
     entityType?: ENTITY_TYPE,
     name?: string,
     balance?: number,
+    creationBlock?: number,
     level?: Hex,
     value?: number,
     dead?: boolean,
@@ -53,7 +54,8 @@ declare global {
     [key: string]: number | ENTITY_TYPE | Hex | string[],
     entityType: ENTITY_TYPE.PLAYER,
     balance: number,
-    ownedRat: Hex
+    ownedRat: Hex,
+    creationBlock: number
   }
 
   type Rat  = {
@@ -67,7 +69,8 @@ declare global {
     dead: boolean,
     health: number,
     traits: string[],
-    inventory: string[]
+    inventory: string[],
+    creationBlock: number
   }
 
   type Room = {
@@ -80,7 +83,8 @@ declare global {
     name: string,
     roomPrompt: string,
     visitCount: number,
-    killCount: number
+    killCount: number,
+    creationBlock: number
   }
 
   type Trait = {

@@ -33,6 +33,7 @@ contract RatSystemTest is BaseTest {
     assertEq(Index.get(ratId), 1);
     assertEq(Level.get(ratId), LevelList.get()[0]);
     assertEq(Owner.get(ratId), playerId);
+    assertEq(CreationBlock.get(ratId), block.number);
   }
 
   function testRevertAlreadyHasRat() public {
