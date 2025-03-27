@@ -1,4 +1,6 @@
 <script lang="ts">
+  import Main from "@components/3D/World/Main.svelte"
+  import RatFace from "@components/3D/RatFace/RatFace.svelte"
   import { onMount } from "svelte"
   import { Spring } from "svelte/motion"
   import { gameConfig, ratLevelIndex } from "@modules/state/base/stores"
@@ -52,6 +54,9 @@
         class="elevator-item"
         style:background-image="url(/images/rat.jpg)"
       >
+        <Main>
+          <RatFace />
+        </Main>
         <div
           style:transform="translateX(-{doorProgress.current * 100}%)"
           class="elevator-door-l"

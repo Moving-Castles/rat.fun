@@ -3,8 +3,7 @@
   import { T } from "@threlte/core"
   import { OrbitControls, Edges } from "@threlte/extras"
   import Rat from "@components/3D/World/Models/RatAnimatedMoving.svelte"
-  import { getBoxState } from "./state.svelte"
-
+  import { getBoxState } from "@components/3D/Box/state.svelte"
   import { Object3D } from "three"
 
   const { box } = getBoxState()
@@ -46,30 +45,36 @@
   position.y={0.001}
   position.z={box.target.current.z}
   position.x={box.target.current.x}
-></Rat>
+>
+  <T.PerspectiveCamera
+    oncreate={r => r.lookAt(0, 0.4, 1)}
+    fov={80}
+    makeDefault
+    position={[1.6, 0.2, 0]}
+  >
+    <OrbitControls />
+    <T.SpotLight
+      target={(() => {
+        const t = new Object3D()
+        t.position.set(0, 0, -1)
+        return t
+      })()}
+      color={0xc0daa4}
+      intensity={20}
+      castShadow
+      angle={Math.PI}
+      penumbra={4}
+      decay={10}
+      distance={10}
+    /></T.PerspectiveCamera
+  >
+</Rat>
 
-<T.PerspectiveCamera
-  oncreate={r => r.lookAt(0, 0, 0)}
-  fov={80}
-  makeDefault
-  position={[6, 9, 6]}
->
-  <OrbitControls />
-  <T.SpotLight
-    target={(() => {
-      const t = new Object3D()
-      t.position.set(0, 0, -1)
-      return t
-    })()}
-    color={0xc0daa4}
-    intensity={10}
-    castShadow
-    angle={Math.PI + Math.PI / 2}
-    penumbra={4}
-    decay={0.1}
-    distance={20}
-  /></T.PerspectiveCamera
->
+<!-- <T.Mesh castShadow position.y={2}>
+  <T.BoxGeometry args={[1, 1, 1]} />
+  <T.MeshStandardMaterial />
+</T.Mesh> -->
+
 <T.Mesh rotation.x={-Math.PI / 2} receiveShadow>
   <T.PlaneGeometry args={[22, 22, 10, 10]} />
   <T.MeshStandardMaterial color={0xeeeeee} side={2} />
