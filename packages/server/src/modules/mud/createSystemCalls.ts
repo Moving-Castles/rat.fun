@@ -89,6 +89,7 @@ function updateOutcome(
   for (let i = 0; i < newRat.traits.length; i++) {
     // If trait is not in old rat, it was added
     if (!oldRat.traits.find(trait => trait.id === newRat.traits[i].id)) {
+      console.log("old", oldRat, "new", newRat)
       newOutcome.traitChanges.push({
         type: "add",
         name: newRat.traits[i].name,

@@ -98,7 +98,7 @@
       <div class="return">
         <button onclick={close}>LEAVE ROOM</button>
       </div>
-    {:else}
+    {:else if animationstarted}
       EXPERIMENT IN PROGRESS: <Spinner />
     {/if}
   {/if}

@@ -21,7 +21,6 @@
       type,
       payload,
     }
-    console.log(dragState.address)
   }
 
   const onDragEnd = () => {
