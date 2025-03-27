@@ -8,6 +8,7 @@ import { LibItem } from "./LibItem.sol";
 import { LibTrait } from "./LibTrait.sol";
 import { LibRat } from "./LibRat.sol";
 import { Item } from "../structs.sol";
+import { MAX_INVENTORY_SIZE, MAX_TRAITS_SIZE } from "../constants.sol";
 
 library LibManager {
   /**
@@ -122,10 +123,16 @@ library LibManager {
     // - If a trait with positive value is added, room balance goes down
     // Caveats:
     // - Room can not add traits with positive value if it does not have the balance to cover it
+    // - A rat can have a maximum of 5 traits
     // - - - - - - - - -
 
     // If list is empty, exit early
     if (_traitsToAddToRat.length == 0) {
+      return;
+    }
+
+    // Make sure the rat has enough trait space
+    if (Traits.length(_ratId) >= MAX_TRAITS_SIZE) {
       return;
     }
 
@@ -195,10 +202,17 @@ library LibManager {
     // - - - - - - - - -
     // Value of item is always positive.
     // Adding an item subtracts the value from the room balance
+    // Caveats:
+    // - A rat can have a maximum of 5 items in inventory
     // - - - - - - - - -
 
     // If list is empty, exit early
     if (_itemsToAddToRat.length == 0) {
+      return;
+    }
+
+    // Make sure the rat has enough inventory space
+    if (Inventory.length(_ratId) >= MAX_INVENTORY_SIZE) {
       return;
     }
 
