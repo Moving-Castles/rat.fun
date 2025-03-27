@@ -22,6 +22,7 @@
     roomId,
   }: { start: boolean; environment: ENVIRONMENT; roomId: string | null } =
     $props()
+
   let timeout: ReturnType<typeof setTimeout> | null = null
   let animationstarted = $state(false)
   let room = $roomsState[roomId ?? ""]
