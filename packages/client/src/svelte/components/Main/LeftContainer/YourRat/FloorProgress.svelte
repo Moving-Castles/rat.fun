@@ -26,7 +26,8 @@
     position: relative;
     background-image: url("/images/arrow-down.png");
     background-repeat: repeat-x;
-    background-size: 20px 100%;
+    background-size: 40px 100%;
+    opacity: 0.9;
 
     .progress {
       background: var(--color-value);
@@ -36,7 +37,7 @@
       left: 0;
       z-index: 1;
       overflow: hidden;
-      // mix-blend-mode: multiply;
+      mix-blend-mode: multiply;
     }
   }
 </style>

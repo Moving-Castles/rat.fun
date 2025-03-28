@@ -31,25 +31,44 @@
   </div>
 {/snippet}
 
+{#snippet roomSnippet()}
+  <!-- <div class="main below"> -->
+  {#if $current}
+    <RoomResult
+      start={$current && route.current === "room"}
+      animationstart={transition.active}
+      roomId={$current}
+      {environment}
+    />
+  {/if}
+{/snippet}
+
+<!-- Routes -->
 {#if route.current === "main" && !transition.active}
   {@render mainSnippet()}
 {/if}
 
-<!-- <div class="main below"> -->
-{#if $current}
-  <RoomResult
-    start={$current && route.current === "room"}
-    animationstart={transition.active}
-    roomId={$current}
-    {environment}
-  />
+{#if route.current === "room" || $current}
+  {@render roomSnippet()}
 {/if}
-<!-- </div> -->
+<!--  -->
 
-{#if transition.active}
-  {@render mainSnippet("clone-left")}
-  {@render mainSnippet("clone-right")}
-{/if}
+<pre class="routing">
+  transition active: {transition.active}{#if transition.active}
+    ---
+    transition from: {transition.from}
+    transition to: {transition.to}
+    transition type: {transition.type}
+    transition progress: {transition.progress.current.toFixed(
+      5
+    )}
+  {/if}
+  ---
+  route: {route.current}
+  route params: {JSON.stringify(route.params)}
+  ---
+
+</pre>
 
 {#snippet spawn()}
   <Spawn />
@@ -94,6 +113,17 @@
     z-index: 20;
     clip-path: inset(0 0 0 50%);
     animation: moveRight 1s ease forwards;
+  }
+
+  .routing {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 99;
+    background: #030;
+    color: grey;
+    width: 400px;
+    padding: 10px;
   }
 
   @keyframes moveLeft {

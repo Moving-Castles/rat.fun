@@ -36,7 +36,9 @@
 
     {#if room.balance > 0 && $ratTotalValue > 0}
       <div class="room-enter">
-        <button onclick={() => rooms.goto(roomId)}>ENTER ROOM</button>
+        <button onclick={() => rooms.navigate("room", { roomId })}
+          >ENTER ROOM</button
+        >
       </div>
     {/if}
   </div>

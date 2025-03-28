@@ -85,15 +85,6 @@
       composer.addPass(bloomPass)
     }
 
-    if (effects.crt) {
-      const crtPass = new ShaderPass(CRTShader)
-
-      crtPass.uniforms["scan"].value = effects.crt.scan
-      crtPass.uniforms["warp"].value = effects.crt.warp
-
-      composer.addPass(crtPass)
-    }
-
     if (effects.fishEye) {
       const fishEyePass = new ShaderPass(FishEyeShader)
 
@@ -124,6 +115,15 @@
         godotFishEyePass.uniforms["aspect"].value =
           renderer.domElement.clientWidth / renderer.domElement.clientHeight
       }, 1000)
+    }
+
+    if (effects.crt) {
+      const crtPass = new ShaderPass(CRTShader)
+
+      crtPass.uniforms["scan"].value = effects.crt.scan
+      crtPass.uniforms["warp"].value = effects.crt.warp
+
+      composer.addPass(crtPass)
     }
   }
 

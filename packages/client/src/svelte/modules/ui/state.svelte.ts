@@ -2,6 +2,17 @@ import { PANE, LEFT_PANE, RIGHT_PANE } from "./enums"
 import { Tween } from "svelte/motion"
 import * as uiStores from "@modules/ui/stores"
 
+export const ROUTES = [
+  {
+    id: "main",
+    params: [],
+  },
+  {
+    id: "room",
+    params: ["id"],
+  },
+]
+
 /**
  * Structure of this file
  *
@@ -22,13 +33,29 @@ import * as uiStores from "@modules/ui/stores"
 let leftPane = $state<LEFT_PANE>(LEFT_PANE.YOUR_RAT)
 let rightPane = $state<RIGHT_PANE>(RIGHT_PANE.ROOMS)
 let previewingPane = $state<PANE>(PANE.NONE)
+// Current route
 let route = $state("main")
+let params = $state({})
 // 1.3 More complex objects are also fully reactive once properly initialised
 const transition = $state({
   active: false,
-  progress: new Tween(0, { duration: 3000 }),
+  from: "",
   to: "main",
+  type: "none",
+  progress: new Tween(0, { duration: 3000 }),
 })
+
+const getTransitionType = (from, to) => {
+  if (from === "main" && to === "room") {
+    return "doorsOpen"
+  }
+
+  if (from === "room" && to === "main") {
+    return "doorsClose"
+  }
+
+  return "none"
+}
 
 /** Note: Consuming state in your files
  *
@@ -65,9 +92,13 @@ export const getUIState = () => {
    * but the transition's `active` property is just a boolean
    *
    */
-  const transitionTo = async (to: string) => {
+  const navigate = async (to: string, p?: Record<string, string> = {}) => {
     // Simple asssignment
+    transition.from = route
+    transition.to = to
     transition.active = true
+    transition.type = getTransitionType(transition.from, transition.to)
+    params = p
     // Modifying by using class instance methods
     await transition.progress.set(1)
     transition.active = false
@@ -100,12 +131,7 @@ export const getUIState = () => {
   const close = () => {
     uiStores.CurrentRoomId.set(null)
     previewingPane = PANE.NONE
-    transitionTo("main")
-  }
-
-  const goto = (id: string) => {
-    uiStores.CurrentRoomId.set(id)
-    transitionTo("room")
+    navigate("main")
   }
 
   /** 3.1 Exporting state
@@ -146,7 +172,7 @@ export const getUIState = () => {
     rooms: {
       preview,
       back,
-      goto,
+      navigate,
       close,
       /** 3.4: :danger: Here we are returning a store.
        *
@@ -166,6 +192,9 @@ export const getUIState = () => {
       },
     },
     route: {
+      get params() {
+        return params
+      },
       get current() {
         return route
       },

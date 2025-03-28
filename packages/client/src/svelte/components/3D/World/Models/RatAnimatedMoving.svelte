@@ -38,6 +38,10 @@ Command: npx @threlte/gltf@3.0.0 src/svelte/public/models/RatAnimated.glb
 <CustomRenderer
   effects={{
     godotFishEye: true,
+    crt: {
+      scan: 2,
+      warp: 1,
+    },
   }}
 />
 
