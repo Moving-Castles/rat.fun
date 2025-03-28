@@ -5,10 +5,8 @@ Command: npx @threlte/gltf@3.0.0 src/svelte/public/models/RatAnimated.glb
 
 <script>
   import { Group } from "three"
-
   import { T } from "@threlte/core"
   import { useGltf, useGltfAnimations, useDraco } from "@threlte/extras"
-  import CustomRenderer from "@components/3D/World/CustomRenderer/CustomRenderer.svelte"
 
   let {
     fallback,
@@ -34,16 +32,6 @@ Command: npx @threlte/gltf@3.0.0 src/svelte/public/models/RatAnimated.glb
     $actions?.["Walk.Stepped"]?.setEffectiveTimeScale(moving.current)
   })
 </script>
-
-<CustomRenderer
-  effects={{
-    godotFishEye: true,
-    crt: {
-      scan: 2,
-      warp: 1,
-    },
-  }}
-/>
 
 <T is={ref} dispose={false} {...props}>
   {#await gltf}

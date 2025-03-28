@@ -1,11 +1,11 @@
 <script lang="ts">
   import { onMount } from "svelte"
   import { T } from "@threlte/core"
-  import { OrbitControls, Edges } from "@threlte/extras"
+  import CustomRenderer from "@components/3D/World/CustomRenderer/CustomRenderer.svelte"
   import Rat from "@components/3D/World/Models/RatAnimatedMoving.svelte"
   import { getBoxState } from "./state.svelte"
 
-  import { Object3D } from "three"
+  import { BoxGeometry, MeshBasicMaterial, Object3D } from "three"
 
   const { box } = getBoxState()
 
@@ -39,6 +39,16 @@
   onMount(pickTarget)
 </script>
 
+<CustomRenderer
+  effects={{
+    godotFishEye: true,
+    crt: {
+      scan: 2,
+      warp: 1,
+    },
+  }}
+/>
+
 <Rat
   scale={2}
   moving={box.movingSpeed}
@@ -47,6 +57,11 @@
   position.z={box.target.current.z}
   position.x={box.target.current.x}
 ></Rat>
+
+<!-- <T.Mesh position={[box.target.target.x, 0, box.target.target.z]}>
+  <T.BoxGeometry args={[0.2, 0.2, 0.2]} />
+  <T.MeshBasicMaterial color={0xffff00} />
+</T.Mesh> -->
 
 <T.PerspectiveCamera
   oncreate={r => r.lookAt(0, 0, 0)}
@@ -75,10 +90,4 @@
   <T.MeshStandardMaterial color={0xeeeeee} side={2} />
 </T.Mesh>
 
-<!-- <T.DirectionalLight
-  position={[0, 11, 0]}
-  oncreate={ref => ref.lookAt(11, 0, 0)}
-  castShadow
-  intensity={10}
-/> -->
 <T.AmbientLight intensity={0.4} />

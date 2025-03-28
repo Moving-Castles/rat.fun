@@ -20,8 +20,8 @@
     $props()
 </script>
 
-{#snippet mainSnippet(className = "")}
-  <div class="main {className}">
+{#snippet mainSnippet(className = "", transitionStyle = "")}
+  <div class="main {className}" style={transitionStyle}>
     <OperatorBar />
     <div class="main-area">
       <LeftContainer {environment} />
@@ -32,26 +32,56 @@
 {/snippet}
 
 {#snippet roomSnippet()}
-  <!-- <div class="main below"> -->
   {#if $current}
-    <RoomResult
-      start={$current && route.current === "room"}
-      animationstart={transition.active}
-      roomId={$current}
-      {environment}
-    />
+    <div class="layer-below">
+      <RoomResult
+        start={$current && route.current === "room"}
+        animationstart={transition.active}
+        roomId={$current}
+        {environment}
+      />
+    </div>
   {/if}
 {/snippet}
 
 <!-- Routes -->
 {#if route.current === "main" && !transition.active}
-  {@render mainSnippet()}
+  <div class="layer-game">
+    {@render mainSnippet()}
+  </div>
 {/if}
 
 {#if route.current === "room" || $current}
   {@render roomSnippet()}
 {/if}
 <!--  -->
+
+{#if transition.active}
+  {#if transition.type === "doorsOpen"}
+    {#if transition.active}
+      {@render mainSnippet(
+        "clone-left",
+        `transform: translateX(${transition.progress.current * -50}%)`
+      )}
+      {@render mainSnippet(
+        "clone-right",
+        `transform: translateX(${transition.progress.current * 50}%)`
+      )}
+    {/if}
+  {/if}
+  {#if transition.type === "doorsClose"}
+    {#if transition.active}
+      {@render mainSnippet(
+        "clone-left",
+        `transform: translateX(${(1 - transition.progress.current) * -50}%)`
+      )}
+      {@render mainSnippet(
+        "clone-right",
+        `transform: translateX(${(1 - transition.progress.current) * 50}%)`
+      )}
+    {/if}
+  {/if}
+{/if}
 
 <pre class="routing">
   transition active: {transition.active}{#if transition.active}
@@ -87,8 +117,15 @@
     width: calc(100vw - 20px);
     overflow: hidden;
     border: 1px solid white;
-    z-index: 1;
     background: black;
+  }
+
+  .layer-below {
+    z-index: 0;
+  }
+
+  .layer-game {
+    z-index: 10;
   }
 
   .main-area {
@@ -104,20 +141,16 @@
 
   .main.clone-left {
     pointer-events: none;
-    z-index: 20;
     clip-path: inset(0 50% 0 0);
-    animation: moveLeft 1s ease forwards;
   }
   .main.clone-right {
     pointer-events: none;
-    z-index: 20;
     clip-path: inset(0 0 0 50%);
-    animation: moveRight 1s ease forwards;
   }
 
   .routing {
     position: fixed;
-    top: 0;
+    bottom: 0;
     right: 0;
     z-index: 99;
     background: #030;

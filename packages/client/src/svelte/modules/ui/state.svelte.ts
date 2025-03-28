@@ -42,7 +42,7 @@ const transition = $state({
   from: "",
   to: "main",
   type: "none",
-  progress: new Tween(0, { duration: 3000 }),
+  progress: new Tween(0, { duration: 400 }),
 })
 
 const getTransitionType = (from, to) => {
@@ -129,7 +129,7 @@ export const getUIState = () => {
   }
 
   const close = () => {
-    uiStores.CurrentRoomId.set(null)
+    // uiStores.CurrentRoomId.set(null)
     previewingPane = PANE.NONE
     navigate("main")
   }
