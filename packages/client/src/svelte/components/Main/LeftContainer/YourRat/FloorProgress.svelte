@@ -1,11 +1,5 @@
 <script lang="ts">
-  import { ratLevel, ratTotalValue, rat } from "@modules/state/base/stores"
-
-  $effect(() => {
-    console.log($rat.balance)
-    console.log($ratLevel.levelMinBalance)
-    console.log($ratLevel.levelMaxBalance)
-  })
+  import { ratLevel, ratTotalValue } from "@modules/state/base/stores"
 
   let progress = $derived(
     (Number($ratTotalValue) - Number($ratLevel.levelMinBalance)) /
@@ -15,6 +9,13 @@
 
 <div class="floor-progress">
   <div class="progress" style:width="{progress * 100}%"></div>
+  <div class="info">
+    <div>
+      Level progress: {Math.round(
+        (Number($ratTotalValue) / Number($ratLevel.levelMaxBalance)) * 100
+      )}%
+    </div>
+  </div>
 </div>
 
 <style lang="scss">
@@ -24,20 +25,31 @@
     background: #232323;
     overflow: hidden;
     position: relative;
-    background-image: url("/images/arrow-down.png");
     background-repeat: repeat-x;
     background-size: 40px 100%;
     opacity: 0.9;
 
     .progress {
-      background: var(--color-value);
+      background: var(--color-alert);
       height: 100%;
       display: block;
       position: absolute;
       left: 0;
+      top: 0;
       z-index: 1;
       overflow: hidden;
-      mix-blend-mode: multiply;
+    }
+
+    .info {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      padding-left: 10px;
+      z-index: 2;
+      display: flex;
+      align-items: center;
     }
   }
 </style>
