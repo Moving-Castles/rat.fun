@@ -2,9 +2,7 @@
   import { ratTotalValue } from "@modules/state/base/stores"
   import { getUIState } from "@modules/ui/state.svelte"
   import { shortenAddress } from "@modules/utils"
-  let { roomId, room, yours } = $props()
-
-  console.log(roomId, room, yours)
+  let { roomId, room } = $props()
 
   let { rooms } = getUIState()
 </script>

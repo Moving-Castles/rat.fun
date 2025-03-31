@@ -49,8 +49,25 @@ export function createSystemCalls(network: SetupNetworkResult) {
     return updateOutcome(outcome, rat, newOnChainData.rat)
   }
 
+  const createRoom = async (
+    playerId: string,
+    roomName: string,
+    roomPrompt: string,
+  ) => {
+    const tx = await network.worldContract.write.ratroom__createRoom([
+      playerId,
+      roomName, 
+      roomPrompt
+    ])
+
+    await network.waitForTransaction(tx)
+
+    return true
+  }
+
   return {
     applyOutcome,
+    createRoom,
   }
 }
 
@@ -83,13 +100,13 @@ function updateOutcome(
 
   newOutcome.traitChanges = []
 
-  console.log("NEW RAT", newRat)
+  // console.log("NEW RAT", newRat)
 
   // Iterate over traits in new rat and compare with old rat
   for (let i = 0; i < newRat.traits.length; i++) {
     // If trait is not in old rat, it was added
     if (!oldRat.traits.find(trait => trait.id === newRat.traits[i].id)) {
-      console.log("old", oldRat, "new", newRat)
+      // console.log("old", oldRat, "new", newRat)
       newOutcome.traitChanges.push({
         type: "add",
         name: newRat.traits[i].name,

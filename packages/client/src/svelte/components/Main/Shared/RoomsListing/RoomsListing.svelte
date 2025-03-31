@@ -59,7 +59,7 @@
   }
 
   let roomsList = $derived.by(() => {
-    console.log(sortFunction)
+    // console.log(sortFunction)
     if (!yours) {
       return Object.entries($roomsOnRatLevel).sort(sortFunction)
     } else {

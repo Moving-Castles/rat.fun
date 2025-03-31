@@ -4,6 +4,6 @@
   export let id: string
 
   const task = useTask(id, delta => {
-    console.log()
+    // console.log()
   })
 </script>

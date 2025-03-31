@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { onMount } from "svelte"
   import { Spring } from "svelte/motion"
   import { gameConfig, ratLevelIndex } from "@modules/state/base/stores"
   import { tippy } from "svelte-tippy"
@@ -18,10 +17,6 @@
 
   $effect(() => {
     goToLevel($ratLevelIndex)
-  })
-
-  onMount(() => {
-    console.log("FloorBar component mounted")
   })
 </script>
 

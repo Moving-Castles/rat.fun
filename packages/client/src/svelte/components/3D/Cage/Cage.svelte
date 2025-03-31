@@ -14,8 +14,8 @@
 
   const scan = new Spring(2, { stiffness: 0.1, damping: 10 })
 
-  console.log("cameraLookAt", cameraLookAt)
-  console.log(cameraLookAt)
+  // console.log("cameraLookAt", cameraLookAt)
+  // console.log(cameraLookAt)
 
   useTask(
     () => {

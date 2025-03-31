@@ -25,7 +25,7 @@
   }
 
   const onDragEnd = () => {
-    console.log("on drag end")
+    // console.log("on drag end")
     dragState = { ...initialState }
     dragAddress = ""
   }
@@ -44,14 +44,14 @@
         action = dropItem(dragState.address)
         // const result = await new Promise(r => setTimeout(r, 2000))
         const result = await waitForCompletion(action)
-        console.log(result)
+        // console.log(result)
       }
       busy = false
       dragState = { ...initialState }
     } catch (error) {
       console.error(error)
     } finally {
-      console.log("Finally")
+      // console.log("Finally")
       busy = false
       onDragEnd()
       dragAddress = ""

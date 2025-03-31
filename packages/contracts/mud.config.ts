@@ -16,10 +16,13 @@ export default defineWorld({
         adminId: "bytes32",
         globalRoomIndex: "uint32",
         globalRatIndex: "uint32",
-        maxRoomPromptLength: "uint32",
         maxInventorySize: "uint32",
         maxTraitsSize: "uint32",
-        creatorFee: "uint256"
+        creatorFee: "uint256",
+        minRoomPromptLength: "uint32",
+        maxRoomPromptLength: "uint32",
+        minRoomNameLength: "uint32",
+        maxRoomNameLength: "uint32",
       },
       codegen: {
         dataStruct: true
