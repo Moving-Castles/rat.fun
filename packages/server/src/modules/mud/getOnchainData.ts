@@ -41,11 +41,13 @@ export function getOnchainData(network: SetupNetworkReturnType, components: Clie
     }
 
     // Room
+    const roomName = (getComponentValue(Name, roomEntity)?.value ?? "") as string;
     const roomPrompt = (getComponentValue(RoomPrompt, roomEntity)?.value  ?? "") as string;
     const roomBalance = (getComponentValue(Balance, roomEntity)?.value ?? 0) as number;
 
     const room = {
         id: roomId,
+        name: roomName,
         prompt: roomPrompt,
         balance: Number(roomBalance)
     }
