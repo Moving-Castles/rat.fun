@@ -9,27 +9,31 @@ import { ENTITY_TYPE } from "../codegen/common.sol";
 
 contract RoomSystem is System {
   /**
+   * @dev Modifier to restrict access to admin only
+   */
+  modifier onlyAdmin() {
+    require(_msgSender() == GameConfig.getAdminAddress(), "not allowed");
+    _;
+  }
+
+  /**
    * @notice Create a room
+   * @dev Only admin can call this function
+   * @param playerId The id of the player creating the room
    * @param _roomName The name of the room
    * @param _roomPrompt The prompt for the room
    * @return roomId The id of the new room
    */
-  function createRoom(string memory _roomName, string memory _roomPrompt) public returns (bytes32 roomId) {
-    bytes32 playerId = LibUtils.addressToEntityKey(_msgSender());
-
+  function createRoom(
+    bytes32 playerId,
+    string memory _roomName,
+    string memory _roomPrompt
+  ) public onlyAdmin returns (bytes32 roomId) {
     // TODO: What level is room created on?
     // Currently hardcoded to level 0
     bytes32 levelId = LevelList.get()[0];
 
-    console.logBytes32(levelId);
-
     uint256 roomCreationCost = RoomCreationCost.get(levelId);
-
-    console.log("roomCreationCost", roomCreationCost);
-    console.logBytes32(bytes32(roomCreationCost));
-
-    console.log("Balance", Balance.get(playerId));
-    console.logBytes32(bytes32(Balance.get(playerId)));
 
     require(Balance.get(playerId) >= roomCreationCost, "balance too low");
 

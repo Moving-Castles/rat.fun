@@ -8,9 +8,13 @@ declare global {
     adminId: Hex,
     globalRoomIndex: number,
     globalRatIndex: number,
-    maxRoomPromptLength: number,
+    maxTraitsSize: number,
     maxInventorySize: number,
     creatorFee: number,
+    maxRoomPromptLength: number,
+    minRoomPromptLength: number,
+    maxRoomNameLength: number,
+    minRoomNameLength: number,
   }
 
   type GameConfig = {

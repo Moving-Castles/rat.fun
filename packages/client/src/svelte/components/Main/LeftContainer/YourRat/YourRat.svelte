@@ -1,13 +1,10 @@
 <script lang="ts">
-  import { player, rat } from "@modules/state/base/stores"
+  import { player } from "@modules/state/base/stores"
   import RatEditor from "@components/Main/LeftContainer/YourRat/RatEditor.svelte"
   import RatCam from "@components/Main/LeftContainer/YourRat/RatCam.svelte"
   import FloorProgress from "@components/Main/LeftContainer/YourRat/FloorProgress.svelte"
   import LiquidateRat from "@components/Main/LeftContainer/YourRat/LiquidateRat.svelte"
   import DeployRat from "@components/Main/LeftContainer/DeployRat/DeployRat.svelte"
-
-  $: console.log("$rat", $rat)
-  $: console.log("$player", $player)
 </script>
 
 <div class="your-rat">
@@ -19,10 +16,6 @@
   {:else}
     <DeployRat />
   {/if}
-  <!-- 
-  {#if $ratTotalValue === 0}
-    <div class="dead" />
-  {/if} -->
 </div>
 
 <style lang="scss">

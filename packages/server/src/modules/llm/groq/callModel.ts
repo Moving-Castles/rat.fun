@@ -27,7 +27,7 @@ function parseReturnMessage(msg: Groq.Chat.Completions.ChatCompletion) {
     // Remove Markdown-style code block indicators
     rawText = rawText.replace(/^\s*```(?:json)?\s*/i, "").replace(/\s*```$/, "");
 
-    console.log('rawText cleaned', rawText);
+    // console.log('rawText cleaned', rawText);
 
     try {
         const returnValue = JSON.parse(rawText);

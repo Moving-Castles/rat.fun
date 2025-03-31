@@ -12,6 +12,7 @@ import { PORT } from '@config';
 import ping from '@routes/test/ping';
 import debug from '@routes/test/debug';
 import enter from '@routes/room/enter';
+import create from '@routes/room/create';
 import wsConnect from '@routes/ws-connect';
 
 const fastify = Fastify({   logger: {
@@ -36,6 +37,7 @@ fastify.register(cors, {
 fastify.register(ping)
 fastify.register(debug)
 fastify.register(enter)
+fastify.register(create)
 fastify.register(wsConnect)
 
 // Start the server

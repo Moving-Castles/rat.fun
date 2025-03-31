@@ -14,7 +14,6 @@ export async function callModel(openai: OpenAI, messages: MessageParam[], system
 
     console.log('completion =>', completion);
 
-
     return parseReturnMessage(completion);
 }
 

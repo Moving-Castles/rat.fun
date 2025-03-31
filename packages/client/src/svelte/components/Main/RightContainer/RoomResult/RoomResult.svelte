@@ -65,7 +65,7 @@
   $effect(() => {
     if (start && !busy) {
       busy = true
-      console.log("start")
+      // console.log("start")
       processRoom()
     }
   })

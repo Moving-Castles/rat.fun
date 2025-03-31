@@ -22,11 +22,6 @@ export type OutcomeReturnValue = {
     balanceTransfer: number
 }
 
-export type PvPOutcomeReturnValue = {
-    ratA: OutcomeReturnValue,
-    ratB: OutcomeReturnValue
-}
-
 export type LogEntry = {
     timestamp: string,
     event: string

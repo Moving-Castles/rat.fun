@@ -10,7 +10,7 @@
     }
   }
 
-  $inspect(modal.show)
+  // $inspect(modal.show)
 </script>
 
 {#if modal.show}

@@ -4,10 +4,11 @@
   import YourRat from "@components/Main/LeftContainer/YourRat/YourRat.svelte"
   import YourRooms from "@components/Main/LeftContainer/YourRooms/YourRooms.svelte"
   import CreateRoom from "@components/Main/LeftContainer/CreateRoom/CreateRoom.svelte"
+  import { ENVIRONMENT } from "@mud/enums"
 
   let { panes, enums } = getUIState()
 
-  export let environment: Environment
+  export let environment: ENVIRONMENT
 </script>
 
 <div class="left-container">
@@ -44,8 +45,11 @@
     <YourRooms />
   </div>
   {#if panes.left === enums.LEFT_PANE.CREATE_ROOM}
-    <div class="tab-content">
-      <CreateRoom />
+    <div
+      class:active-tab={panes.left === enums.LEFT_PANE.CREATE_ROOM}
+      class="tab-content"
+    >
+      <CreateRoom {environment} />
     </div>
   {/if}
 </div>
