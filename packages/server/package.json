@@ -10,7 +10,7 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0",
     "@fastify/compress": "^8.0.1",
-    "@fastify/cors": "^11.0.0",
+    "@fastify/cors": "^11.0.1",
     "@fastify/formbody": "^8.0.2",
     "@fastify/one-line-logger": "^2.0.2",
     "@fastify/websocket": "^11.0.2",
@@ -20,7 +20,7 @@
     "@latticexyz/store-sync": "2.2.22-13071c45dd7d28c1860e703d12b07624c271f508",
     "@latticexyz/utils": "2.2.22-13071c45dd7d28c1860e703d12b07624c271f508",
     "@latticexyz/world": "2.2.22-13071c45dd7d28c1860e703d12b07624c271f508",
-    "@sanity/client": "^6.28.3",
+    "@sanity/client": "^6.28.4",
     "@sentry/node": "^8.54.0",
     "@sentry/profiling-node": "^8.54.0",
     "contracts": "workspace:*",
@@ -29,10 +29,10 @@
     "fastify": "^5.2.2",
     "groq-sdk": "^0.17.0",
     "js-sha3": "^0.9.3",
-    "openai": "^4.90.0",
+    "openai": "^4.91.0",
     "rxjs": "^7.8.2",
     "tsx": "^4.19.3",
-    "viem": "2.24.2"
+    "viem": "2.24.3"
   },
   "engines": {
     "node": "^20"
