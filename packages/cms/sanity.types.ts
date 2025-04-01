@@ -163,28 +163,6 @@ export type Prompt = {
   returnFormat?: Code
 }
 
-export type CorrectionPrompts = {
-  _id: string
-  _type: 'correctionPrompts'
-  _createdAt: string
-  _updatedAt: string
-  _rev: string
-  title?: string
-  prompt?: string
-  returnFormat?: Code
-}
-
-export type CombinedPrompts = {
-  _id: string
-  _type: 'combinedPrompts'
-  _createdAt: string
-  _updatedAt: string
-  _rev: string
-  title?: string
-  prompt?: string
-  returnFormat?: Code
-}
-
 export type Markdown = string
 
 export type Code = {
@@ -209,8 +187,6 @@ export type AllSanitySchemaTypes =
   | SanityAssetSourceData
   | ActivePrompts
   | Prompt
-  | CorrectionPrompts
-  | CombinedPrompts
   | Markdown
   | Code
 export declare const internalGroqTypeReferenceTo: unique symbol
