@@ -1,6 +1,6 @@
 <script lang="ts">
   import { ratTotalValue } from "@modules/state/base/stores"
-  import { liquidateRat } from "@svelte/modules/action"
+  import { liquidateRat } from "@modules/action"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
   import { tippy } from "svelte-tippy"
   import {

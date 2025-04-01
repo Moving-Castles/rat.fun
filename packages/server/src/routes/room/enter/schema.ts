@@ -23,14 +23,11 @@ export const schema =     {
               },
             },
           },
-          healthChanges: {
-            type: 'array',
-            items: { 
-              type: 'object',
-              properties: {
-                logStep: { type: 'number'},
-                amount: { type: 'number'}
-              },
+          healthChange: {
+            type: 'object',
+            properties: {
+              logStep: { type: 'number'},
+              amount: { type: 'number'}
             },
           },
           traitChanges: {
@@ -59,20 +56,17 @@ export const schema =     {
               },
             },
           },
-          balanceTransfers: {
-            type: 'array',
-            items: { 
-              type: 'object',
-              properties: {
-                logStep: { type: 'number'},
-                from: { type: 'string'},
-                to: { type: 'string'},
-                amount: { type: 'number'}
-              },
+          balanceTransfer: {
+            type: 'object',
+            properties: {
+              logStep: { type: 'number'},
+              from: { type: 'string'},
+              to: { type: 'string'},
+              amount: { type: 'number'}
             },
           }
         },
-        required: ['log', 'healthChanges', 'traitChanges', 'itemChanges', 'balanceTransfers']
+        required: ['log', 'healthChange', 'traitChanges', 'itemChanges', 'balanceTransfer']
       },
       403: {
         type: 'object',

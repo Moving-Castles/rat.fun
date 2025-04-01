@@ -1,7 +1,7 @@
 <script lang="ts">
   import { fade } from "svelte/transition"
 
-  import type { ServerReturnValue } from "@components/Main/RightContainer/RoomResult/types"
+  import type { ServerReturnValue } from "@components/Main/RoomResult/types"
 
   export let outcome: ServerReturnValue
   export let room: Room
@@ -18,11 +18,11 @@
   in:fade={{ duration: 200, delay: 500 * outcome.log.length + 1 }}
 >
   <!-- Changes to health -->
-  {#if outcome?.statChanges.health && outcome.statChanges.health !== 0}
+  {#if outcome?.healthChange && outcome.healthChange.amount !== 0}
     <div class="outcome-item">
       <div class="title">__Stat changes</div>
-      <div class="stat-change" class:negative={outcome.statChanges.health < 0}>
-        health: {outcome.statChanges.health}
+      <div class="stat-change" class:negative={outcome.healthChange.amount < 0}>
+        health: {outcome.healthChange}
       </div>
     </div>
   {/if}
@@ -32,8 +32,11 @@
     <div class="outcome-item">
       <div class="title">__ Added traits</div>
       {#each outcome.traitChanges.filter(tC => tC.type === "add") as trait}
-        <DraggableEntity type="trait" address={trait.id} />
-        <!-- <TraitItem {trait} /> -->
+        <DraggableEntity
+          type="trait"
+          address={trait.id ?? ""}
+          fallback={trait}
+        />
       {/each}
     </div>
   {/if}
@@ -43,7 +46,11 @@
     <div class="outcome-item">
       <div class="title">__ Removed traits</div>
       {#each outcome.traitChanges.filter(tC => tC.type === "remove") as trait}
-        <DraggableEntity type="trait" address={trait.id} fallback={trait} />
+        <DraggableEntity
+          type="trait"
+          address={trait.id ?? ""}
+          fallback={trait}
+        />
       {/each}
     </div>
   {/if}
@@ -53,7 +60,7 @@
     <div class="outcome-item">
       <div class="title">__ Added items</div>
       {#each outcome.itemChanges.filter(iC => iC.type === "add") as item}
-        <DraggableEntity type="item" address={item.id} />
+        <DraggableEntity type="item" address={item.id ?? ""} fallback={item} />
       {/each}
     </div>
   {/if}
@@ -63,16 +70,16 @@
     <div class="outcome-item">
       <div class="title">__ Removed items</div>
       {#each outcome.itemChanges.filter(iC => iC.type === "remove") as item}
-        <DraggableEntity type="item" address={item.id} fallback={item} />
+        <DraggableEntity type="item" address={item.id ?? ""} fallback={item} />
       {/each}
     </div>
   {/if}
 
   <!-- Balance transferred to/from rat-->
-  {#if outcome.balanceTransfer !== 0}
+  {#if (outcome?.balanceTransfer?.amount ?? 0) !== 0}
     <div class="outcome-item">
       <div class="title">Balance transfer to/from rat</div>
-      <div class="balance">${outcome.balanceTransfer}</div>
+      <div class="balance">${outcome.balanceTransfer.amount}</div>
     </div>
   {/if}
 
@@ -125,10 +132,6 @@
 
   .outcome {
     font-size: var(--font-size-normal);
-  }
-
-  .empty {
-    color: var(--color-grey-mid);
   }
 
   .balance {

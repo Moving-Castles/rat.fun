@@ -1,8 +1,8 @@
-import type { ServerReturnValue } from "@svelte/components/Main/RightContainer/RoomResult/types"
+import type { ServerReturnValue } from "@components/Main/RoomResult/types"
 import { SetupWalletNetworkResult } from "@mud/setupWalletNetwork";
 
 import { ENVIRONMENT } from "@mud/enums"
-import { MESSAGE } from "@svelte/components/Main/RightContainer/RoomResult/constants"
+import { MESSAGE } from "@components/Main/RoomResult/constants"
 
 export async function createRoom(environment: ENVIRONMENT, walletNetwork: SetupWalletNetworkResult, roomName: string, roomPrompt: string ) {
     const startTime = performance.now()

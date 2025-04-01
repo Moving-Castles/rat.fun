@@ -2,12 +2,13 @@ import { MessageParam } from '@anthropic-ai/sdk/resources';
 import { ANTHROPIC_MODEL } from '@config';
 import Anthropic from '@anthropic-ai/sdk';
 
-export async function callModel(anthropic: Anthropic, messages: MessageParam[], system: string)  {
+export async function callModel(anthropic: Anthropic, messages: MessageParam[], system: string, temperature: number = 1)  {
     const msg = await anthropic.messages.create({
         model: ANTHROPIC_MODEL,
         max_tokens: 1024,
         messages,
-        system
+        system,
+        temperature
     });
     
     return parseReturnMessage(msg);

@@ -1,6 +1,7 @@
 import { Hex } from "viem"
 
 export type TraitChange = {
+  logStep: number,
   type: "add" | "remove",
   name: string,
   value: number,
@@ -8,6 +9,7 @@ export type TraitChange = {
 }
 
 export type ItemChange = {
+  logStep: number,
   type: "add" | "remove",
   name: string,
   value: number,
@@ -22,10 +24,14 @@ export type LogEntry = {
 export type ServerReturnValue = {
   id: Hex,
   log: LogEntry[]
-  statChanges: {
-    [key: string]: number
+  healthChange: {
+    logStep: number,
+    amount: number
   }
   traitChanges: TraitChange[]
   itemChanges: ItemChange[]
-  balanceTransfer: number
+  balanceTransfer: {
+    logStep: number,
+    amount: number
+  }
 }

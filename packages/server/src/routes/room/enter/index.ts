@@ -9,7 +9,7 @@ import { MESSAGE } from '@config';
 import { EnterRoomBody } from '@routes/room/enter/types';
 
 // LLM  
-import { EventsReturnValue, OutcomeReturnValue } from '@modules/llm/types'
+import { EventsReturnValue, CorrectionReturnValue } from '@modules/llm/types'
 import { constructEventMessages, constructCorrectionMessages } from '@modules/llm/constructMessages';
 
 // Anthropic
@@ -67,51 +67,44 @@ async function routes (fastify: FastifyInstance) {
             validateInputData(playerId, rat, room);
 
             // Get system prompts from CMS
-            console.time('–– CMS call');
+            console.time('–– CMS');
             const { combinedSystemPrompt, correctionSystemPrompt } = await getSystemPrompts();
-            console.timeEnd('–– CMS call');
+            console.timeEnd('–– CMS');
 
             // Call event model
-            console.time('–– Combined LLM call');
+            console.time('–– Event LLM');
             const eventMessages = constructEventMessages(rat, room);
-            const combinedOutcome = await callModel(llmClient, eventMessages, combinedSystemPrompt) as EventsReturnValue;
-            console.timeEnd('–– Combined LLM call');
+            const eventResults = await callModel(llmClient, eventMessages, combinedSystemPrompt) as EventsReturnValue;
+            console.timeEnd('–– Event LLM');
 
-            console.log('Combined outcome:', combinedOutcome);
+            console.log('Event results:', eventResults);
 
-            // reply.send({
-            //     log: combinedOutcome.log ?? [],
-            //     healthChanges: combinedOutcome.outcome.healthChanges,
-            //     traitChanges: combinedOutcome.outcome.traitChanges,
-            //     itemChanges: combinedOutcome.outcome.itemChanges,
-            //     balanceTransfers: combinedOutcome.outcome.balanceTransfers,
-            // });
-
-            // // Apply the outcome suggested by the LLM to the onchain state and get back the actual outcome.
-            console.time('–– Chain call');
-            const validatedOutcome = await systemCalls.applyOutcome(rat, room, combinedOutcome.outcome);
-            console.timeEnd('–– Chain call');
+            // Apply the outcome suggested by the LLM to the onchain state and get back the actual outcome.
+            console.time('–– Chain');
+            const validatedOutcome = await systemCalls.applyOutcome(rat, room, eventResults.outcome);
+            console.timeEnd('–– Chain');
 
             console.log('Validated outcome:', validatedOutcome);
 
-            // // TODO: Send message to creator, if not admin
+            // TODO: Send message to creator, if not admin
 
-            // // The event log might now not reflect the actual outcome.
-            // // Run it through the LLM again to get the corrected event log.
-            // console.time('–– Correction LLM call');
-            // const correctionMessages = constructCorrectionMessages(combinedOutcome.outcome, validatedOutcome, combinedOutcome.log);
-            // const correctedEvents = await callModel(llmClient, correctionMessages, correctionSystemPrompt, 0) as EventsReturnValue;
-            // console.timeEnd('–– Correction LLM call');
+            // The event log might now not reflect the actual outcome.
+            // Run it through the LLM again to get the corrected event log.
+            console.time('–– Correction LLM');
+            const correctionMessages = constructCorrectionMessages(eventResults.outcome, validatedOutcome, eventResults.log);
+            const correctedEvents = await callModel(llmClient, correctionMessages, correctionSystemPrompt, 0) as CorrectionReturnValue;
+            console.timeEnd('–– Correction LLM');
 
-            // console.log('Corrected events:', correctedEvents);
+            console.log('Corrected events:', correctedEvents);
 
-            // reply.send({
-            //     log: correctedEvents.logEntries ?? [],
-            //     healthChanges: validatedOutcome.healthChanges,
-            //     traitChanges: validatedOutcome.traitChanges,
-            //     itemChanges: validatedOutcome.itemChanges,
-            //     balanceTransfers: validatedOutcome.balanceTransfers,
-            // });
+            reply.send({
+                log: correctedEvents.log ?? [],
+                healthChange: validatedOutcome.healthChange,
+                traitChanges: eventResults.outcome.traitChanges,
+                itemChanges: eventResults.outcome.itemChanges,
+                balanceTransfer: eventResults.outcome.balanceTransfer
+            });
+
         } catch (error) {
             console.error('Error:', error);
             // Capture the error in Sentry

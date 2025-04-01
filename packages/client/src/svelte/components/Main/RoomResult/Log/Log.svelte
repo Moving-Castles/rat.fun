@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { LogEntry } from "@components/Main/RightContainer/RoomResult/types"
-  import LogItem from "@components/Main/RightContainer/RoomResult/Log/LogItem.svelte"
+  import type { LogEntry } from "@components/Main/RoomResult/types"
+  import LogItem from "@components/Main/RoomResult/Log/LogItem.svelte"
   export let log: LogEntry[]
 </script>
 

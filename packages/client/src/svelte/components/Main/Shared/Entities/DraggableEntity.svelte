@@ -1,6 +1,10 @@
 <script lang="ts">
-  import { traits, items } from "@svelte/modules/state/base/stores"
+  import { traits, items } from "@modules/state/base/stores"
   import { tippy } from "svelte-tippy"
+  import type {
+    ItemChange,
+    TraitChange,
+  } from "@components/Main/RoomResult/types"
 
   let {
     type,
@@ -11,11 +15,13 @@
   }: {
     type: "item" | "trait"
     address: string
-    fallback: { name: string; value: string }
+    fallback: ItemChange | TraitChange
     onDragStart?: (a: string, t: string, i: any) => void
     onDragEnd?: () => void
   } = $props()
+
   let dragging = $state(false)
+
   let itemOrTrait = $derived.by(() => {
     const planA = type === "trait" ? $traits?.[address] : $items?.[address]
     if (!planA) {

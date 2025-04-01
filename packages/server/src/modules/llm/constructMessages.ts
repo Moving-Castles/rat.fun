@@ -1,8 +1,6 @@
 import { MessageParam } from '@anthropic-ai/sdk/resources';
 import { Rat, Room } from '@routes/room/enter/types'
-import { EventsReturnValue, OutcomeReturnValue } from './types';
-
-// One player
+import { LogEntry, OutcomeReturnValue } from './types';
 
 export function constructEventMessages(
     rat: Rat,
@@ -24,7 +22,7 @@ export function constructEventMessages(
 export function constructCorrectionMessages(
     unvalidatedOutcome: OutcomeReturnValue,
     validatedOutcome: OutcomeReturnValue,
-    events: EventsReturnValue
+    events: LogEntry[]
 ): MessageParam[] {
     const messages: MessageParam[] = [];
     // Unvalidated outcome

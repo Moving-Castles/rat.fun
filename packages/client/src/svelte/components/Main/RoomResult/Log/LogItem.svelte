@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { LogEntry } from "@components/Main/RightContainer/RoomResult/types"
+  import type { LogEntry } from "@components/Main/RoomResult/types"
   import { fade } from "svelte/transition"
   import { playSound } from "@modules/sound"
 

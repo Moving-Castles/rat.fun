@@ -1,6 +1,6 @@
 <script lang="ts">
-  import RoomItem from "@svelte/components/Main/Shared/RoomItem/RoomItem.svelte"
-  import RoomPreview from "@svelte/components/Main/Shared/RoomPreview/RoomPreview.svelte"
+  import RoomItem from "@components/Main/Shared/RoomItem/RoomItem.svelte"
+  import RoomPreview from "@components/Main/Shared/RoomPreview/RoomPreview.svelte"
   import { PANE } from "@modules/ui/enums"
   import {
     rooms as roomsStore,

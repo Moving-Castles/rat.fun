@@ -1,17 +1,17 @@
 <script lang="ts">
   import { onDestroy } from "svelte"
-  import type { ServerReturnValue } from "@components/Main/RightContainer/RoomResult/types"
+  import type { ServerReturnValue } from "@components/Main/RoomResult/types"
   import { fadeAndScale } from "@modules/ui/transitions"
   import { player, rooms as roomsState } from "@modules/state/base/stores"
-  import { enterRoom } from "@svelte/components/Main/RightContainer/RoomResult"
+  import { enterRoom } from "@components/Main/RoomResult"
   import { ENVIRONMENT } from "@mud/enums"
   import { walletNetwork } from "@modules/network"
 
   import Spinner from "@components/Main/Shared/Spinner/Spinner.svelte"
-  import Log from "@components/Main/RightContainer/RoomResult/Log/Log.svelte"
-  import Outcome from "@components/Main/RightContainer/RoomResult/Outcome.svelte"
+  import Log from "@components/Main/RoomResult/Log/Log.svelte"
+  import Outcome from "@components/Main/RoomResult/Outcome.svelte"
 
-  import { getUIState } from "@svelte/modules/ui/state.svelte"
+  import { getUIState } from "@modules/ui/state.svelte"
 
   const { rooms } = getUIState()
 

@@ -1,6 +1,4 @@
 <script lang="ts">
-  // import RoomPreview from "@svelte/components/Main/Shared/RoomPreview/RoomPreview.svelte"
-  import RoomResult from "@components/Main/RightContainer/RoomResult/RoomResult.svelte"
   import { ENVIRONMENT } from "@mud/enums"
   import { UIState } from "@modules/ui/stores"
   import { UI } from "@modules/ui/enums"
@@ -12,6 +10,7 @@
   import LeftContainer from "@components/Main/LeftContainer/LeftContainer.svelte"
   import RightContainer from "@components/Main/RightContainer/RightContainer.svelte"
   import ModalTarget from "@components/Main/Modal/ModalTarget.svelte"
+  import RoomResult from "@components/Main/RoomResult/RoomResult.svelte"
 
   const { transition, route, rooms } = getUIState()
   const { current } = rooms
@@ -26,7 +25,7 @@
     <div class="main-area">
       <LeftContainer {environment} />
       <FloorBar />
-      <RightContainer {environment} />
+      <RightContainer />
     </div>
   </div>
 {/snippet}
@@ -67,7 +66,6 @@
   route: {route.current}
   route params: {JSON.stringify(route.params)}
   ---
-
 </pre>
 
 {#snippet spawn()}

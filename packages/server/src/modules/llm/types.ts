@@ -32,10 +32,10 @@ export type HealthChange = {
 
 export type OutcomeReturnValue = {
     id?: string,
-    healthChanges: HealthChange[],
     traitChanges: TraitChange[],
     itemChanges: ItemChange[],
-    balanceTransfers: BalanceTransfer[]
+    healthChange: HealthChange,
+    balanceTransfer: BalanceTransfer
 }
 
 /**
@@ -54,4 +54,8 @@ export type LogEntry = {
 export type EventsReturnValue = {
     log: LogEntry[],
     outcome: OutcomeReturnValue
+}
+
+export type CorrectionReturnValue = {
+    log: LogEntry[]
 }

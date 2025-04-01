@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { rat } from "@svelte/modules/state/base/stores"
+  import { rat } from "@modules/state/base/stores"
   import { dropItem } from "@modules/action"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
   import DraggableEntity from "@components/Main/Shared/Entities/DraggableEntity.svelte"
