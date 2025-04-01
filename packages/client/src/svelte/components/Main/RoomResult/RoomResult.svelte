@@ -2,7 +2,7 @@
   import { onDestroy } from "svelte"
   import type { ServerReturnValue } from "@components/Main/RoomResult/types"
   import { fadeAndScale } from "@modules/ui/transitions"
-  import { fade } from "@modules/ui/transitions"
+  import { fade } from "svelte/transition"
   import { player, rooms as roomsState } from "@modules/state/base/stores"
   import { enterRoom } from "@components/Main/RoomResult"
   import { ENVIRONMENT } from "@mud/enums"
