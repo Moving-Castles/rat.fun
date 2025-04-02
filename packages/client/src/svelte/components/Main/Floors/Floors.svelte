@@ -49,7 +49,7 @@
       >
         <div
           class="your-floor"
-          style:background-image="url(/images/rat.jpg)"
+          style:background-image="url(/images/rat.png)"
         ></div>
         <div
           style:transform="translateX(-{doorProgress.current * 100}%)"
@@ -124,8 +124,10 @@
   .your-floor {
     position: absolute;
     inset: 0;
-    background-size: cover;
-    filter: grayscale(0.1) contrast(10) brightness(20) invert(0.8);
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: black;
   }
 
   .elevator {

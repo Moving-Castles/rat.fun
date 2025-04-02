@@ -59,6 +59,9 @@ contract PostDeploy is Script {
       firstLevel
     );
     LibRoom.createRoom("Cheese", "The room gives the rat a bag of cheese.", adminId, firstLevel);
+    LibRoom.createRoom("Cheese 2", "The room gives the rat a bag of cheese.", adminId, firstLevel);
+    LibRoom.createRoom("Cheese 3", "The room gives the rat two bags of cheese.", adminId, firstLevel);
+    LibRoom.createRoom("Cheese 4", "The room gives the rat a bag of cheese and a cheese grater.", adminId, firstLevel);
     LibRoom.createRoom(
       "Trade",
       "The rat can trade a bag of cheese for a jester hat of the same value.",

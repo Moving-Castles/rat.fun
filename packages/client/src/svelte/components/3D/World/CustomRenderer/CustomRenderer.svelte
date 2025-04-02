@@ -10,6 +10,7 @@
   import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js"
   import { Vector2, MathUtils } from "three"
   import { onMount } from "svelte"
+  import { GrayscaleShader } from "@components/3D/World/CustomRenderer/shaders/GrayscaleShader"
 
   type BloomConfig = {
     radius?: number
@@ -35,6 +36,7 @@
     crt?: CRTConfig
     fishEye?: FishEyeConfig
     godotFishEye?: boolean
+    grayscale?: boolean
   }
 
   const {
@@ -125,17 +127,31 @@
 
       composer.addPass(crtPass)
     }
+
+    if (effects.grayscale) {
+      const grayscalePass = new ShaderPass(GrayscaleShader)
+      grayscalePass.renderToScreen = true
+      composer.addPass(grayscalePass)
+    }
   }
 
   const updateEffects = e => {
     const keys = Object.keys(e)
-    // console.log(keys)
 
     if (keys.includes("crt")) {
       const p = composer.passes?.find(p => p?.material?.name === "CRTShader")
       if (p) {
         p.uniforms["scan"].value = e.crt.scan
         p.uniforms["warp"].value = e.crt.warp
+      }
+    }
+
+    if (keys.includes("grayscale")) {
+      const p = composer.passes?.find(
+        p => p?.material?.name === "GrayscaleShader"
+      )
+      if (p) {
+        p.enabled = e.grayscale
       }
     }
   }

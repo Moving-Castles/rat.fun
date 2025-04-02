@@ -31,7 +31,7 @@
         : 50 - progress * 50 // from 100% to 0%
     }
 
-    console.log(side, offset)
+    // console.log(side, offset)
 
     return `transform: translateX(${offset}%);`
   }

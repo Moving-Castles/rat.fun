@@ -42,6 +42,7 @@
     "@types/three": "^0.175.0",
     "@wagmi/core": "2.16.7",
     "contracts": "workspace:*",
+    "gsap": "^3.12.7",
     "howler": "^2.2.4",
     "lodash": "^4.17.21",
     "rxjs": "^7.8.2",

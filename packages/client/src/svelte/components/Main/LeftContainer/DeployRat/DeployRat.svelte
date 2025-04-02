@@ -4,8 +4,6 @@
   import { playSound } from "@modules/sound"
   import { generateRatName } from "./index"
 
-  import Cage from "@components/3D/Cage/Cage.svelte"
-  import Main from "@components/3D/World/Main.svelte"
   import Spinner from "@components/Main/Shared/Spinner/Spinner.svelte"
 
   let busy = false
@@ -28,9 +26,7 @@
 
 <div class="main">
   <div class="image-container">
-    <Main>
-      <Cage cameraPosition={[0, 0.2, 2]} cameraLookAt={[0, 0.3, 0]} />
-    </Main>
+    <img src="/images/rat.png" alt="Rat" />
   </div>
   <button class:disabled={!name} class:busy onclick={sendCreateRat}>
     <span class="button-text">DEPLOY NEW RAT ({name})</span>
@@ -48,15 +44,16 @@
     width: 100%;
   }
 
-  .title {
-    margin-top: 20px;
-    margin-bottom: 20px;
-  }
-
   .image-container {
     margin-top: 20px;
     margin-bottom: 20px;
     height: 400px;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
   }
 
   button {

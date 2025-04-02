@@ -46,6 +46,7 @@
       scan: 2,
       warp: 1,
     },
+    grayscale: true,
   }}
 />
 

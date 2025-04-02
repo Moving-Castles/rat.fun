@@ -2,9 +2,16 @@
   import { ratTotalValue } from "@modules/state/base/stores"
   import { getUIState } from "@modules/ui/state.svelte"
   import { shortenAddress } from "@modules/utils"
+  import { playSound } from "@svelte/modules/sound"
+
   let { roomId, room } = $props()
 
   let { rooms } = getUIState()
+
+  const sendEnterRoom = () => {
+    playSound("tcm", "enteredPod")
+    rooms.navigate("room", { roomId })
+  }
 </script>
 
 {#if room}
@@ -34,9 +41,7 @@
 
     {#if room.balance > 0 && $ratTotalValue > 0}
       <div class="room-enter">
-        <button onclick={() => rooms.navigate("room", { roomId })}
-          >ENTER ROOM</button
-        >
+        <button onclick={sendEnterRoom}>ENTER ROOM</button>
       </div>
     {/if}
   </div>

@@ -115,7 +115,7 @@ export const tcm: SoundAssets = {
   },
   enteredPod: {
     src: "./sounds/tcm/player_enterPod-sfx_01.mp3",
-    volume: 1,
+    volume: 1.5,
   },
   podBg: {
     src: "./sounds/tcm/pod_bg-loop_01noclick.mp3",
@@ -206,6 +206,10 @@ export const tcm: SoundAssets = {
     volume: 1,
   },
   acceptOrderSuccess: {
+    src: "./sounds/tcm/accept_order-hit_01.mp3",
+    volume: 1,
+  },
+  acceptOrderSuccessOld: {
     src: "./sounds/tcm/accept_order-hit_01.mp3",
     volume: 1,
   },

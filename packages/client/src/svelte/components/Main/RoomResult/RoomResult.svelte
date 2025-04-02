@@ -13,7 +13,7 @@
   import Outcome from "@components/Main/RoomResult/Outcome.svelte"
 
   import { getUIState } from "@modules/ui/state.svelte"
-
+  import { playSound } from "@svelte/modules/sound"
   const { rooms } = getUIState()
 
   let {
@@ -88,6 +88,11 @@
   onDestroy(() => {
     console.log("on destroy")
   })
+
+  const sendLeaveRoom = () => {
+    playSound("tcm", "enteredPod")
+    rooms.close()
+  }
 </script>
 
 <div class="room-result">
@@ -114,7 +119,7 @@
       <!-- LOG -->
       <Log result={outcome} />
       <!-- OUTCOME -->
-      <Outcome {room} {outcome} {oldRoomBalance} />
+      <!-- <Outcome {room} {outcome} {oldRoomBalance} /> -->
       <div class="return">
         <button onclick={rooms.close}>LEAVE ROOM</button>
       </div>
@@ -126,7 +131,7 @@
         {error}
       </div>
       <div class="return">
-        <button onclick={rooms.close}>LEAVE ROOM</button>
+        <button onclick={sendLeaveRoom}>LEAVE ROOM</button>
       </div>
     {/if}
   {/if}
