@@ -85,7 +85,7 @@
               false,
               false,
               randomPitch()
-            ) // or whatever sound ID you want
+            )
             if (sound) sound.play()
           },
           undefined,

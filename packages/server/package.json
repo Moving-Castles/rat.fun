@@ -27,12 +27,12 @@
     "dotenv": "^16.4.7",
     "ethereumjs-util": "^7.1.5",
     "fastify": "^5.2.2",
-    "groq-sdk": "^0.17.0",
+    "groq-sdk": "^0.19.0",
     "js-sha3": "^0.9.3",
-    "openai": "^4.91.0",
+    "openai": "^4.91.1",
     "rxjs": "^7.8.2",
     "tsx": "^4.19.3",
-    "viem": "2.24.3"
+    "viem": "2.25.0"
   },
   "engines": {
     "node": "^20"
