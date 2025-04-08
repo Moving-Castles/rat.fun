@@ -14,12 +14,12 @@
     "@fastify/formbody": "^8.0.2",
     "@fastify/one-line-logger": "^2.0.2",
     "@fastify/websocket": "^11.0.2",
-    "@latticexyz/common": "2.2.22-a3645c819959efe97ff2e50f6f5b88ebe77fa980",
-    "@latticexyz/recs": "2.2.22-a3645c819959efe97ff2e50f6f5b88ebe77fa980",
-    "@latticexyz/schema-type": "2.2.22-a3645c819959efe97ff2e50f6f5b88ebe77fa980",
-    "@latticexyz/store-sync": "2.2.22-a3645c819959efe97ff2e50f6f5b88ebe77fa980",
-    "@latticexyz/utils": "2.2.22-a3645c819959efe97ff2e50f6f5b88ebe77fa980",
-    "@latticexyz/world": "2.2.22-a3645c819959efe97ff2e50f6f5b88ebe77fa980",
+    "@latticexyz/common": "2.2.22-ca7a36a114ba65468662dbeef343129fa60f04eb",
+    "@latticexyz/recs": "2.2.22-ca7a36a114ba65468662dbeef343129fa60f04eb",
+    "@latticexyz/schema-type": "2.2.22-ca7a36a114ba65468662dbeef343129fa60f04eb",
+    "@latticexyz/store-sync": "2.2.22-ca7a36a114ba65468662dbeef343129fa60f04eb",
+    "@latticexyz/utils": "2.2.22-ca7a36a114ba65468662dbeef343129fa60f04eb",
+    "@latticexyz/world": "2.2.22-ca7a36a114ba65468662dbeef343129fa60f04eb",
     "@sanity/client": "^6.28.4",
     "@sentry/node": "^8.54.0",
     "@sentry/profiling-node": "^8.54.0",
@@ -32,7 +32,7 @@
     "openai": "^4.91.1",
     "rxjs": "^7.8.2",
     "tsx": "^4.19.3",
-    "viem": "2.25.0"
+    "viem": "2.26.2"
   },
   "engines": {
     "node": "^20"
