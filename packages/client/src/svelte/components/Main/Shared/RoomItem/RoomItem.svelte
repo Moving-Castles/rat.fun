@@ -1,7 +1,7 @@
 <script lang="ts">
   import { getUIState } from "@modules/ui/state.svelte"
   import type { Hex } from "viem"
-  import { getRoomeOwnerName } from "@modules/state/base/helpers"
+  import { getRoomOwnerName } from "@modules/state/base/helpers"
   import { truncateString } from "@modules/utils"
   let {
     roomId,
@@ -47,7 +47,7 @@
       <!-- BOTTOM ROW -->
       <div class="room-info-row bottom">
         <!-- OWNER -->
-        <span class="owner">{getRoomeOwnerName(room)}</span>
+        <span class="owner">{getRoomOwnerName(room)}</span>
         <!-- DIVIDER -->
         <span class="divider">•</span>
         <!-- BALANCE -->

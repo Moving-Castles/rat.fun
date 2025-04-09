@@ -25,14 +25,4 @@
     height: 100%;
     position: relative;
   }
-
-  .dead {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    background: rgba(255, 0, 0, 0.8);
-    color: white;
-    mix-blend-mode: luminosity;
-    display: block;
-  }
 </style>

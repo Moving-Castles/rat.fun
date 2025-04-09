@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type { Hex } from "viem"
   import RoomItem from "@components/Main/Shared/RoomItem/RoomItem.svelte"
   import RoomPreview from "@components/Main/Shared/RoomPreview/RoomPreview.svelte"
   import { PANE } from "@modules/ui/enums"
@@ -23,7 +24,7 @@
   const { current } = rooms
 
   // Local state
-  let currentRoom = $state<string | null>(null)
+  let currentRoom = $state<Hex | null>(null)
   let sortKey = $state("c")
 
   const entriesChronologically = (a, b) => {

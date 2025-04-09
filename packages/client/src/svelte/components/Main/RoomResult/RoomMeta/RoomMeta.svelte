@@ -85,7 +85,7 @@
       gap: 1rem;
       width: 400px;
       max-width: 90vw;
-      font-size: 1.5rem;
+      font-size: var(--font-size-large);
 
       .image-container {
         width: 100%;

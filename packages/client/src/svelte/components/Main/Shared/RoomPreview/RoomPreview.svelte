@@ -1,10 +1,15 @@
 <script lang="ts">
-  import { ratTotalValue } from "@modules/state/base/stores"
+  import type { Hex } from "viem"
+  import { ratTotalValue, ratLevelIndex } from "@modules/state/base/stores"
   import { getUIState } from "@modules/ui/state.svelte"
-  import { shortenAddress } from "@modules/utils"
   import { playSound } from "@svelte/modules/sound"
+  import { getRoomOwnerName } from "@svelte/modules/state/base/helpers"
 
-  let { roomId, room } = $props()
+  let {
+    roomId,
+    room,
+    isOwnRoomListing,
+  }: { roomId: Hex; room: Room; isOwnRoomListing: boolean } = $props()
 
   let { rooms } = getUIState()
 
@@ -16,34 +21,61 @@
 
 {#if room}
   <div class="room-preview">
-    <button class="back-button" onclick={rooms.back}> ← {room.name}</button>
+    <button class="back-button" onclick={rooms.back}>
+      {#if isOwnRoomListing}
+        ← BACK TO YOUR ROOMS
+      {:else}
+        ← BACK TO FLOOR {$ratLevelIndex * -1}
+      {/if}
+    </button>
 
-    <div class="room-info">
-      <div class="room-balance">Balance: ${room.balance}</div>
-      <div class="room-creator">Created by:{shortenAddress(room.owner)}</div>
-    </div>
-
-    <div class="room-stats">
-      <div class="room-visitor-count">Visitors: {room.visitCount}</div>
-      <div class="room-player-count">Success rate: 0%</div>
-      <div class="room-player-count">
-        Kill rate: {((Number(room.killCount) || 0) /
-          (Number(room.visitCount) || 1)) *
-          100}%
+    <div class="room-inner-container">
+      <!-- ROOM IMAGE -->
+      <div class="room-image">
+        <img src="/images/room3.jpg" alt={room.name} />
       </div>
-    </div>
 
-    <div class="room-prompt">
-      {room.roomPrompt}
-    </div>
+      <!-- ROOM INFO -->
+      <div class="room-info">
+        <div class="room-info-row">
+          <span class="index">Room #{room.index}</span>
+        </div>
 
-    <div class="room-recent-events">TODO: RECENT EVENTS</div>
+        <div class="room-info-row">
+          <!-- NAME -->
+          <span class="name">{room.name}</span>
+        </div>
 
-    {#if room.balance > 0 && $ratTotalValue > 0}
-      <div class="room-enter">
-        <button onclick={sendEnterRoom}>ENTER ROOM</button>
+        <div class="room-info-row">
+          <!-- OWNER -->
+          <span class="owner">{getRoomOwnerName(room)}</span>
+          <!-- DIVIDER -->
+          <span class="divider">•</span>
+          <!-- BALANCE -->
+          <span class="balance">${room.balance}</span>
+          <!-- DIVIDER -->
+          <span class="divider">•</span>
+          <!-- VISIT COUNT -->
+          <span class="visit-count">{room.visitCount} visits</span>
+          <!-- DIVIDER -->
+          <span class="divider">•</span>
+          <!-- KILL COUNT -->
+          <span class="kill-count">{room.killCount} kills</span>
+        </div>
       </div>
-    {/if}
+
+      <div class="room-prompt">
+        {room.roomPrompt}
+      </div>
+
+      <!-- <div class="room-recent-events">TODO: RECENT EVENTS</div> -->
+
+      {#if room.balance > 0 && $ratTotalValue > 0 && !isOwnRoomListing}
+        <div class="room-enter">
+          <button onclick={sendEnterRoom}>ENTER ROOM</button>
+        </div>
+      {/if}
+    </div>
   </div>
 {/if}
 
@@ -52,49 +84,89 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    word-break: break-all;
-  }
 
-  .back-button {
-    width: 100%;
-    height: 60px;
-    background: transparent;
-    border: none;
-    color: white;
-    text-transform: uppercase;
-    border-bottom: 1px solid white;
+    .back-button {
+      width: 100%;
+      height: 60px;
+      background: transparent;
+      border: none;
+      color: white;
+      text-transform: uppercase;
+      border-bottom: 1px solid white;
 
-    &:hover {
-      background-color: #222;
+      &:hover {
+        background-color: #222;
+      }
     }
-  }
 
-  .room-info {
-    padding: var(--default-padding);
-  }
+    .room-inner-container {
+      padding: 15px;
 
-  .room-stats {
-    padding: var(--default-padding);
-  }
+      .room-image {
+        margin-bottom: 5px;
+        img {
+          width: 300px;
+          aspect-ratio: 4/3;
+          object-fit: cover;
+          border: 1px solid var(--color-grey-mid);
+        }
+      }
 
-  .room-prompt {
-    padding: var(--default-padding);
-    background: var(--color-alert);
-    margin: var(--default-padding);
-  }
+      .room-info {
+        border-bottom: 1px solid var(--color-grey-mid);
+        padding-bottom: 5px;
+        margin-bottom: 5px;
 
-  .room-recent-events {
-    padding: var(--default-padding);
-  }
+        .room-info-row {
+          display: flex;
+          margin-bottom: 5px;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          width: 100%;
+        }
 
-  .room-enter {
-    padding: var(--default-padding);
-  }
+        .name {
+          background: var(--color-alert);
+          color: black;
+          padding: 5px;
+        }
 
-  button {
-    width: 100%;
-    height: 100%;
-    background: var(--color-alert);
-    padding: 20px;
+        .balance {
+          background: var(--color-value);
+          color: black;
+          padding: 5px;
+        }
+
+        .owner {
+          background: var(--color-grey-light);
+          color: black;
+          padding: 5px;
+        }
+
+        .index {
+          color: var(--color-grey-mid);
+        }
+      }
+    }
+
+    .room-prompt {
+      margin-top: 15px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--color-grey-mid);
+      margin-bottom: 15px;
+    }
+
+    .room-recent-events {
+      background: var(--color-grey-mid);
+      height: 200px;
+    }
+
+    button {
+      width: 100%;
+      height: 100%;
+      background: var(--color-alert);
+      padding: 20px;
+    }
   }
 </style>

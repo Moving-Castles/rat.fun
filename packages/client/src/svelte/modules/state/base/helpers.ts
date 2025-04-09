@@ -3,7 +3,7 @@
 import { players, gameConfig } from "@modules/state/base/stores"
 import { get } from "svelte/store"
 
-export function getRoomeOwnerName(room: Room) {
+export function getRoomOwnerName(room: Room) {
 
   if (room.owner === get(gameConfig)?.gameConfig?.adminId) {
     return "ratking"

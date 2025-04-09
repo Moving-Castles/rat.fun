@@ -16,9 +16,6 @@
 </script>
 
 <div class="rat-cam">
-  <!-- <div class="progress">
-    {progress.current}
-  </div> -->
   <Main>
     <Box></Box>
   </Main>
@@ -32,24 +29,5 @@
     justify-content: center;
     align-items: center;
     position: relative;
-  }
-
-  .progress {
-    position: absolute;
-    z-index: 10;
-  }
-
-  .image-container {
-    height: 400px;
-    aspect-ratio: 1/1;
-    background: grey;
-  }
-
-  .rat-cam-header {
-    position: absolute;
-    top: var(--default-padding);
-    left: var(--default-padding);
-    width: 100%;
-    height: 100%;
   }
 </style>
