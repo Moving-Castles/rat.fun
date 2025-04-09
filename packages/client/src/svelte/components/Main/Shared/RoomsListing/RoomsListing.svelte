@@ -13,10 +13,10 @@
 
   let {
     pane,
-    yours, // if we are listing your own rooms
+    isOwnRoomListing,
   }: {
     pane: PANE
-    yours: boolean
+    isOwnRoomListing: boolean
   } = $props()
 
   let { rooms, panes } = getUIState()
@@ -59,8 +59,7 @@
   }
 
   let roomsList = $derived.by(() => {
-    // console.log(sortFunction)
-    if (!yours) {
+    if (!isOwnRoomListing) {
       return Object.entries($roomsOnRatLevel).sort(sortFunction)
     } else {
       return Object.entries($playerRooms).sort(sortFunction)
@@ -102,7 +101,7 @@
   <div class="rooms">
     <div class="floor-content">
       <div class:previewing class="room-listing">
-        {#if !yours && $ratLevelIndex > -1}
+        {#if !isOwnRoomListing && $ratLevelIndex > -1}
           <div class="floor-header">
             <div class="floor-title">Floor {$ratLevelIndex * -1}</div>
             <div
@@ -139,7 +138,7 @@
                 }}
                 class:active={sortKey === "b"}
                 class="sort-button"
-                onclick={() => sortBy("b")}>B</button
+                onclick={() => sortBy("b")}>$</button
               >
               <button
                 use:tippy={{
@@ -156,13 +155,13 @@
           <div></div>
         {/if}
         {#each roomsList as [roomId, room]}
-          <RoomItem {roomId} {room} {yours} />
+          <RoomItem {roomId} {room} {isOwnRoomListing} />
         {/each}
       </div>
       <div class:previewing class="room-preview">
         {#if currentRoom}
           <RoomPreview
-            {yours}
+            {isOwnRoomListing}
             roomId={currentRoom}
             room={$roomsStore[currentRoom]}
           />
@@ -232,16 +231,23 @@
   }
 
   .sort-button {
-    background: white;
+    background: var(--color-grey-light);
     color: black;
     border: none;
-    padding: 0.5ch;
+    height: 20px;
+    line-height: 22px;
+    aspect-ratio: 1/1;
 
     &.active {
-      background: var(--color-alert);
+      background: white;
     }
   }
+
   .previewing {
     transform: translateX(-100%);
+  }
+
+  .floor-stats {
+    font-size: var(--font-size-small);
   }
 </style>

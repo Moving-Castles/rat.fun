@@ -7,7 +7,7 @@
   {#if $frozenRoom}
     <div class="column">
       <div class="image-container">
-        <img src="/images/room.jpg" alt={$frozenRoom.name} />
+        <img src="/images/room3.jpg" alt={$frozenRoom.name} />
       </div>
       <div class="room-name">**{$frozenRoom.name}**</div>
     </div>

@@ -333,3 +333,8 @@ export function parseJSONFromContent<T = Record<string, unknown>>(content: strin
     throw new Error("Failed to parse JSON: " + error.message);
   }
 }
+
+export function truncateString(str: string, maxLength: number) {
+  if (str.length <= maxLength) return str;
+  return str.slice(0, maxLength) + "...";
+}

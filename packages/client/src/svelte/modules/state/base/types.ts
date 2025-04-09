@@ -56,8 +56,9 @@ declare global {
   }
 
   type Player  = {
-    [key: string]: number | ENTITY_TYPE | Hex | string[],
+    [key: string]: number | ENTITY_TYPE | Hex | string[] | string,
     entityType: ENTITY_TYPE.PLAYER,
+    name: string,
     balance: number,
     ownedRat: Hex,
     creationBlock: number

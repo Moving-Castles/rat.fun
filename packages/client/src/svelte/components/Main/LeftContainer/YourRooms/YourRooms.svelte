@@ -7,7 +7,7 @@
 
 <div class="your-rooms">
   <CreateRoomButton />
-  <RoomsListing yours pane={enums.PANE.LEFT} />
+  <RoomsListing isOwnRoomListing={true} pane={enums.PANE.LEFT} />
 </div>
 
 <style lang="scss">

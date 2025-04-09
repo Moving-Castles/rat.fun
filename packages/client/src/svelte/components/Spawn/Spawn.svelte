@@ -82,7 +82,7 @@
   .container {
     width: 100%;
     background: var(--corporate-background);
-    font-family: var(--corporate-font-stack);
+    font-family: var(--typewriter-font-stack);
     text-transform: none;
     height: 100%;
   }
@@ -128,7 +128,7 @@
   }
 
   button {
-    font-family: var(--corporate-font-stack);
+    font-family: var(--typewriter-font-stack);
     font-size: 18px;
     width: 300px;
     height: 4em;

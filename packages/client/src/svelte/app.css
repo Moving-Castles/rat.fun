@@ -41,6 +41,11 @@
   --create-room-button-height: 100px;
   --player-room-listing-height: calc(100% - var(--create-room-button-height));
 
+  /* Layout: Room Item */
+  --room-item-height: 160px;
+  --room-item-padding: 15px;
+  --room-item-image-height: 130px;
+
   /* Sizing */
   --default-padding: 14px;
   --top-bar-height: 40px;
@@ -48,9 +53,8 @@
 
   /* Typography */
   --typewriter-font-stack: "OCRA", monospace;
-  --corporate-font-stack: "IBM Plex Sans", sans-serif;
   --font-size-label: 8px;
-  --font-size-small: 9px;
+  --font-size-small: 10px;
   --font-size-normal: 14px;
   --font-size-large: 32px;
 

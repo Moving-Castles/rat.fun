@@ -54,7 +54,7 @@
       </div>
       <!-- IMAGE -->
       <div class="image-container" bind:this={imageContainerElement}>
-        <img src="/images/room.jpg" alt={$frozenRoom.name} />
+        <img src="/images/room3.jpg" alt={$frozenRoom.name} />
       </div>
       <!-- PROMPT -->
       <div class="prompt" bind:this={promptElement}>
