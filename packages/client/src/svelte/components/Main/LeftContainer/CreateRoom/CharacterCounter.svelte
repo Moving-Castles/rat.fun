@@ -2,33 +2,26 @@
   let {
     currentLength,
     maxLength,
-    minLength,
-    label,
   }: {
     currentLength: number
     maxLength: number
-    minLength: number
-    label: string
   } = $props()
 </script>
 
-<div class="counter">
+<span
+  class="counter"
+  class:error={currentLength < 1 || currentLength > maxLength}
+>
   {currentLength}/{maxLength}
-  {#if currentLength < minLength}
-    <span class="error">{label} too short (min: {minLength})</span>
-  {:else if currentLength > maxLength}
-    <span class="error">{label} too long (max: {maxLength})</span>
-  {/if}
-</div>
+</span>
 
 <style lang="scss">
   .counter {
-    margin-top: 0.25rem;
-    font-size: 0.6rem;
-
-    .error {
-      color: red;
-      margin-left: 0.5rem;
+    font-size: var(--font-size-small);
+    padding: 2px;
+    &.error {
+      background: var(--color-death);
+      color: black;
     }
   }
 </style>

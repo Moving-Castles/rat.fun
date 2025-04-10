@@ -21,6 +21,7 @@
   })
 
   onMount(() => {
+    console.log("room meta loaded", room)
     // Snapshot room and rat
     // We want the pre-result state to gradually apply changes to
     // without reactivity from on chain changes
@@ -34,14 +35,14 @@
     }
 
     // Set initial values
-    gsap.set(nameElement, { opacity: 0 })
-    gsap.set(imageContainerElement, { opacity: 0 })
-    gsap.set(promptElement, { opacity: 0 })
+    gsap.set(nameElement, { opacity: 0, scale: 0.95 })
+    gsap.set(imageContainerElement, { opacity: 0, scale: 0.95 })
+    gsap.set(promptElement, { opacity: 0, scale: 0.95 })
 
     // Add to timeline
-    metaTimeline.to(nameElement, { opacity: 1, delay: 0.5 })
-    metaTimeline.to(imageContainerElement, { opacity: 1 })
-    metaTimeline.to(promptElement, { opacity: 1 })
+    metaTimeline.to(nameElement, { opacity: 1, scale: 1, delay: 0.5 })
+    metaTimeline.to(imageContainerElement, { opacity: 1, scale: 1 })
+    metaTimeline.to(promptElement, { opacity: 1, scale: 1 })
   })
 </script>
 

@@ -2,7 +2,9 @@
   import { getUIState } from "@modules/ui/state.svelte"
   import type { Hex } from "viem"
   import { getRoomOwnerName } from "@modules/state/base/helpers"
-  import { truncateString } from "@modules/utils"
+  import { truncateString, blocksToReadableTime } from "@modules/utils"
+  import { blockNumber } from "@modules/network"
+
   let {
     roomId,
     room,
@@ -37,6 +39,14 @@
         <span class="divider">•</span>
         <!-- INDEX -->
         <span class="index small">Room #{room.index}</span>
+        <!-- DIVIDER -->
+        <span class="divider">•</span>
+        <!-- CREATION TIME  -->
+        <span class="creation-time small">
+          {blocksToReadableTime(
+            Number($blockNumber) - Number(room.creationBlock)
+          )}
+        </span>
       </div>
       <!-- PROMPT -->
       <div class="room-prompt">{truncateString(room.roomPrompt, 100)}</div>
@@ -134,6 +144,10 @@
       }
 
       .index {
+        color: var(--color-grey-mid);
+      }
+
+      .creation-time {
         color: var(--color-grey-mid);
       }
 

@@ -90,10 +90,10 @@
   $effect(() => {
     if (!$current) {
       // Delayed
-      setTimeout(() => (currentRoom = $current), 400)
+      setTimeout(() => (currentRoom = $current as Hex), 400)
     } else {
       // Instant
-      currentRoom = $current
+      currentRoom = $current as Hex
     }
   })
 </script>

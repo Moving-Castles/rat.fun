@@ -4,6 +4,7 @@
   import { getUIState } from "@modules/ui/state.svelte"
   import { playSound } from "@svelte/modules/sound"
   import { getRoomOwnerName } from "@svelte/modules/state/base/helpers"
+  import { rat } from "@svelte/modules/state/base/stores"
 
   let {
     roomId,
@@ -72,7 +73,7 @@
 
       {#if room.balance > 0 && $ratTotalValue > 0 && !isOwnRoomListing}
         <div class="room-enter">
-          <button onclick={sendEnterRoom}>ENTER ROOM</button>
+          <button onclick={sendEnterRoom}>Send {$rat.name} to room</button>
         </div>
       {/if}
     </div>

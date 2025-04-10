@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { onMount } from "svelte"
   import { fade } from "svelte/transition"
   import { newEvent } from "@modules/off-chain-sync/stores"
   import type { MessageContent } from "@svelte/modules/off-chain-sync/types"
@@ -22,10 +21,6 @@
       localMessage = null
     }, 3000)
   }
-
-  onMount(() => {
-    console.log("Alert mounted")
-  })
 </script>
 
 {#if localMessage}
