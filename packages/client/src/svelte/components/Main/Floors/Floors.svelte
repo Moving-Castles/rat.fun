@@ -109,7 +109,7 @@
 
   .floor-item {
     width: 100%;
-    height: 20%;
+    height: calc(100% / 3);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -138,7 +138,7 @@
   }
 
   .elevator-item {
-    height: calc(100% / 6);
+    height: calc((100% / 3) - 2px);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -146,8 +146,6 @@
     overflow: hidden;
     background-size: cover;
     background-blend-mode: multiply;
-    border-top: 1px dashed white;
-    border-bottom: 1px dashed white;
   }
 
   .elevator-door-l {
