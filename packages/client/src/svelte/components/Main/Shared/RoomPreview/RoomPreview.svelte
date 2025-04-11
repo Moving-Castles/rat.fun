@@ -36,6 +36,7 @@
       console.error(e)
     } finally {
       busy = false
+      rooms.back(isOwnRoomListing)
     }
   }
 </script>

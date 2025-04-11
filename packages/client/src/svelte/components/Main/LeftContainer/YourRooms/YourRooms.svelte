@@ -2,11 +2,13 @@
   import { getUIState } from "@modules/ui/state.svelte"
   import CreateRoomButton from "@components/Main/LeftContainer/YourRooms/CreateRoomButton.svelte"
   import RoomsListing from "@components/Main/Shared/RoomsListing/RoomsListing.svelte"
+  import { playerRooms, player, rooms } from "@modules/state/base/stores"
   const { enums } = getUIState()
 </script>
 
 <div class="your-rooms">
   <CreateRoomButton />
+  {console.log($playerRooms, $player, $rooms)}
   <RoomsListing isOwnRoomListing={true} pane={enums.PANE.LEFT} />
 </div>
 
