@@ -1,21 +1,17 @@
 <script lang="ts">
   import type { MergedLogEntry } from "@components/Main/RoomResult/Log/types"
-
-  import {
-    changeHealth,
-    changeBalance,
-    addItem,
-    removeItem,
-    addTrait,
-    removeTrait,
-  } from "@svelte/components/Main/RoomResult/state.svelte"
-
+  import { updateState } from "@svelte/components/Main/RoomResult/state.svelte"
   import { gsap } from "gsap"
   import { TextPlugin } from "gsap/TextPlugin"
   import { playSound, randomPitch } from "@svelte/modules/sound"
 
-  // Register TextPlugin
   gsap.registerPlugin(TextPlugin)
+
+  // Type for registered outcome elements
+  type RegisteredOutcome = {
+    node: HTMLElement
+    data: DOMStringMap
+  }
 
   let {
     logEntry,
@@ -27,209 +23,142 @@
 
   // Elements
   let element = $state<HTMLDivElement | null>(null)
-  let timestampElement = $state<HTMLSpanElement | null>(null)
   let logTextElement = $state<HTMLSpanElement | null>(null)
+  // {#each} elements
+  let registeredOutcomes = $state<RegisteredOutcome[]>([])
 
-  // Create a timeline for this item's animations
+  // Timeline
   const timeline = gsap.timeline({
     defaults: {},
   })
 
-  // Export the timeline so parent can access it
-  $effect(() => {
-    if (element) {
-      // Set initial state
-      gsap.set(timestampElement, { opacity: 0 })
-      gsap.set(logTextElement, { opacity: 0 })
-      gsap.set(".outcome", { opacity: 0 })
+  // Type hit helper
+  const typeHit = (char: string) => {
+    // Use string type hint
+    if (logTextElement) logTextElement.textContent += char
+    const sound = playSound("tcm", "typingCant", false, false, randomPitch())
+    if (sound) sound.play()
+  }
 
-      // Timestamp with sound
-      timeline.call(() => {
-        const sound = playSound("tcm", "textLineHit")
-        if (sound) sound.play()
-      })
-      timeline.to(timestampElement, {
-        opacity: 1,
-        duration: 0.3,
-        ease: "power2.out",
-      })
+  // Outcome sound helper
+  const playOutcomeSound = (action: string) => {
+    const soundName =
+      action === "increase" || action === "add"
+        ? "acceptOrderSuccessOld"
+        : "acceptOrderFail"
+    const sound = playSound("tcm", soundName)
+    if (sound) sound.play()
+  }
 
-      // Set initial empty text and fade in
-      timeline.set(logTextElement, {
-        text: "",
-        opacity: 1,
-      })
+  // Action to register the nodes
+  const outcome = (node: HTMLElement) => {
+    const data = node.dataset
+    const registration: RegisteredOutcome = { node, data }
 
-      timeline.call(() => {
-        if (logTextElement) logTextElement.textContent = ""
-      })
+    // Add to our reactive state array
+    registeredOutcomes = [...registeredOutcomes, registration]
+    console.log("Registered outcome:", data.type) // For debugging
 
-      // Type in text
-      const chars = logEntry.event.split("")
-      for (let i = 0; i < chars.length; i++) {
-        const char = chars[i]
+    // Return destroy function for cleanup
+    return {
+      destroy: () => {
+        console.log("Destroying outcome:", data.type) // For debugging
+        registeredOutcomes = registeredOutcomes.filter(
+          item => item.node !== node
+        )
+      },
+    }
+  }
 
-        timeline.call(
-          () => {
-            if (logTextElement) logTextElement.textContent += char
-            const sound = playSound(
-              "tcm",
-              "typingCant",
-              false,
-              false,
-              randomPitch()
-            )
-            if (sound) sound.play()
-          },
-          undefined,
-          "+=0.04"
-        ) // 40ms delay per character
-      }
+  // Stage 1: Prepare the animation
+  const prepare = () => {
+    // Ensure all parts start invisible
+    gsap.set([".timestamp", logTextElement, ".outcome"], { opacity: 0 })
+    // Clear potential previous text content if element re-renders
+    if (logTextElement) logTextElement.textContent = ""
+  }
 
-      // Get outcome elements
-      const outcomeElements = element?.querySelectorAll(".outcome")
+  // Stage 2: Main animation
+  const main = () => {
+    // Timestamp Animation
+    timeline.call(() => {
+      const sound = playSound("tcm", "textLineHit")
+      if (sound) sound.play()
+    })
+    timeline.to(".timestamp", {
+      opacity: 1,
+      duration: 0.3,
+      ease: "power2.out",
+    })
 
-      // Add animation for each outcome element to timeline
-      for (let i = 0; i < outcomeElements.length; i++) {
-        const outcome = outcomeElements[i] as HTMLDivElement
-        const type = outcome.dataset.type
-        const action = outcome.dataset.action
+    // Typing Animation
+    timeline.set(logTextElement, {
+      text: "",
+      opacity: 1,
+    })
+    const chars = logEntry.event.split("")
+    for (let i = 0; i < chars.length; i++) {
+      timeline.call(typeHit, [chars[i]], "+=0.04") // 40ms delay per character
+    }
 
-        console.log(element, type, action)
+    // Add a label to mark the start of outcome animations
+    timeline.addLabel("outcomesStart", "+=0.2")
 
-        // - - - - - -
-        // Health
-        // - - - - - -
+    // Iterate through the registered outcomes and add their animations
+    registeredOutcomes.forEach(({ node, data }, index) => {
+      const outcomeStartTime = `outcomesStart+=${index * 0.4}`
 
-        if (type === "health") {
-          // Reduce health
-          if (action === "reduce") {
-            timeline.call(() => {
-              const sound = playSound("tcm", "acceptOrderFail")
-              if (sound) sound.play()
-              changeHealth(Number(outcome.dataset.value))
-            })
-          }
-
-          // Increase health
-          if (action === "increase") {
-            timeline.call(() => {
-              const sound = playSound("tcm", "acceptOrderSuccessOld")
-              if (sound) sound.play()
-              changeHealth(Number(outcome.dataset.value))
-            })
-          }
-        }
-
-        // - - - - - -
-        // Balance
-        // - - - - - -
-
-        if (type === "balance") {
-          // Reduce balance
-          if (action === "reduce") {
-            timeline.call(() => {
-              const sound = playSound("tcm", "acceptOrderFail")
-              if (sound) sound.play()
-              changeBalance(Number(outcome.dataset.value))
-            })
-          }
-
-          // Increase balance
-          if (action === "increase") {
-            timeline.call(() => {
-              const sound = playSound("tcm", "acceptOrderSuccessOld")
-              if (sound) sound.play()
-              changeBalance(Number(outcome.dataset.value))
-            })
-          }
-        }
-
-        // - - - - - -
-        // Inventory
-        // - - - - - -
-
-        if (type === "item") {
-          // Add item
-          if (action === "add") {
-            timeline.call(() => {
-              const sound = playSound("tcm", "acceptOrderSuccessOld")
-              if (sound) sound.play()
-              addItem(
-                outcome.dataset.itemId ?? "",
-                Number(outcome.dataset.value)
-              )
-            })
-          }
-
-          // Remove item
-          if (action === "remove") {
-            timeline.call(() => {
-              const sound = playSound("tcm", "acceptOrderFail")
-              if (sound) sound.play()
-              removeItem(
-                outcome.dataset.itemId ?? "",
-                Number(outcome.dataset.value)
-              )
-            })
-          }
-        }
-
-        // - - - - - -
-        // Traits
-        // - - - - - -
-
-        if (type === "trait") {
-          // Add trait
-          if (action === "add") {
-            timeline.call(() => {
-              const sound = playSound("tcm", "acceptOrderSuccessOld")
-              if (sound) sound.play()
-              addTrait(
-                outcome.dataset.traitId ?? "",
-                Number(outcome.dataset.value)
-              )
-            })
-          }
-
-          // Remove trait
-          if (action === "remove") {
-            timeline.call(() => {
-              const sound = playSound("tcm", "acceptOrderFail")
-              if (sound) sound.play()
-              removeTrait(
-                outcome.dataset.traitId ?? "",
-                Number(outcome.dataset.value)
-              )
-            })
-          }
-        }
-
-        // Fade in
-        timeline.to(outcome, {
+      // State update
+      timeline.call(updateState, [data], outcomeStartTime)
+      // Sound
+      timeline.call(playOutcomeSound, [data.action], outcomeStartTime)
+      // Visuals
+      timeline.to(
+        node,
+        {
           opacity: 1,
           duration: 0.3,
+          delay: index * 0.3,
           ease: "power2.out",
-        })
-      }
+        },
+        outcomeStartTime
+      )
+    })
+  }
 
-      // Dispatch the timeline to the parent
-      onTimeline?.(timeline)
+  // When it's all said and done
+  const done = () => {
+    if (timeline && onTimeline) {
+      onTimeline(timeline)
     }
+    console.log("Timeline built:", timeline.duration()) // For debugging
+  }
+
+  // Run once
+  const run = () => {
+    prepare()
+    main() // Build the timeline synchronously
+    done() // Call done immediately after building
+  }
+
+  // Ensure root element is mounted
+  $effect(() => {
+    if (element) run()
   })
 </script>
 
 <div class="log-entry" bind:this={element}>
   <div class="text">
-    <span class="timestamp" bind:this={timestampElement}>
+    <span class="timestamp">
       {logEntry.timestamp}
     </span>
-    <span class="log-text" bind:this={logTextElement}>{logEntry.event}</span>
+    <span class="log-text" bind:this={logTextElement}> </span>
   </div>
+
   <div class="outcome-list">
-    <!-- Health -->
     {#if logEntry.healthChange}
       <div
+        use:outcome
         class="outcome health"
         data-type="health"
         data-action={logEntry.healthChange.amount < 0 ? "reduce" : "increase"}
@@ -240,9 +169,9 @@
         <span class="value">{logEntry.healthChange.amount}</span>
       </div>
     {/if}
-    <!-- Balance -->
     {#if logEntry.balanceTransfer}
       <div
+        use:outcome
         class="outcome balance"
         data-type="balance"
         data-action={logEntry.balanceTransfer.amount < 0
@@ -254,32 +183,38 @@
         <span class="value">${logEntry.balanceTransfer.amount}</span>
       </div>
     {/if}
-    <!-- Traits -->
     {#if logEntry.traitChanges}
       {#each logEntry.traitChanges as traitChange}
         <div
+          use:outcome
           class="outcome trait"
           data-type="trait"
           data-action={traitChange.type}
           data-traitId={traitChange.id}
+          data-value={traitChange.value}
           class:negative={traitChange.value <= 0}
           class:remove={traitChange.type === "remove"}
         >
-          {traitChange.name} (${traitChange.value})
+          {traitChange.name} ({traitChange.type === "add"
+            ? "+"
+            : ""}{traitChange.value})
         </div>
       {/each}
     {/if}
-    <!-- Items -->
     {#if logEntry.itemChanges}
       {#each logEntry.itemChanges as itemChange}
         <div
+          use:outcome
           class="outcome item"
           data-type="item"
           data-action={itemChange.type}
           data-itemId={itemChange.id}
+          data-value={itemChange.value}
           class:remove={itemChange.type === "remove"}
         >
-          {itemChange.name} (${itemChange.value})
+          {itemChange.name} ({itemChange.type === "add"
+            ? "+"
+            : ""}{itemChange.value})
         </div>
       {/each}
     {/if}
