@@ -36,7 +36,7 @@
       <img src="/images/rat.png" alt="Rat" />
     </div>
     <button class:disabled={!name} class:busy onclick={sendCreateRat}>
-      <span class="button-text">DEPLOY NEW RAT ({name})</span>
+      <span class="button-text">Deploy new rat: {name} (Cost: $100)</span>
       {#if busy}
         <div class="spinner"><Spinner /></div>
       {/if}

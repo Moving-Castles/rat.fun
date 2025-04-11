@@ -6,11 +6,12 @@
 
   import Spawn from "@components/Spawn/Spawn.svelte"
   import OperatorBar from "@components/Main/OperatorBar/OperatorBar.svelte"
-  import Floors from "@components/Main/Floors/Floors.svelte"
+  // import Floors from "@components/Main/Floors/Floors.svelte"
   import LeftContainer from "@components/Main/LeftContainer/LeftContainer.svelte"
   import RightContainer from "@components/Main/RightContainer/RightContainer.svelte"
   import ModalTarget from "@components/Main/Modal/ModalTarget.svelte"
   import RoomResult from "@components/Main/RoomResult/RoomResult.svelte"
+  import FloorsPlaceholder from "@components/Main/Floors/FloorsPlaceholder.svelte"
 
   function getDoorStyle(side: "left" | "right"): string {
     const progress = transition.progress.current
@@ -46,7 +47,8 @@
     <OperatorBar />
     <div class="main-area">
       <LeftContainer {environment} />
-      <Floors />
+      <!-- <Floors /> -->
+      <FloorsPlaceholder />
       <RightContainer />
     </div>
   </div>

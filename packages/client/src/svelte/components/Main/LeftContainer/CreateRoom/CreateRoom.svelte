@@ -49,7 +49,7 @@
       invalidRoomChallengeLength ||
       invalidRoomResultLength ||
       busy ||
-      $player.balance < 100
+      $player.balance < 250
   )
 
   async function sendCreateRoom() {
@@ -157,7 +157,7 @@
     <!-- ACTIONS -->
     <div class="actions">
       <button class:disabled onclick={sendCreateRoom}>
-        Create room (Cost: $100)
+        Create room (Cost: $250)
       </button>
       <button class="secondary" onclick={goYourRooms}> Cancel </button>
     </div>

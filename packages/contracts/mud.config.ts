@@ -19,6 +19,7 @@ export default defineWorld({
         maxInventorySize: "uint32",
         maxTraitsSize: "uint32",
         creatorFee: "uint256",
+        ratCreationCost: "uint256",
         minRoomPromptLength: "uint32",
         maxRoomPromptLength: "uint32",
         minRoomNameLength: "uint32",

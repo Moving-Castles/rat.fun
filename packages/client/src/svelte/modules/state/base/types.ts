@@ -11,6 +11,7 @@ declare global {
     maxTraitsSize: number,
     maxInventorySize: number,
     creatorFee: number,
+    ratCreationCost: number,
     maxRoomPromptLength: number,
     minRoomPromptLength: number,
     maxRoomNameLength: number,

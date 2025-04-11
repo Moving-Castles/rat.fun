@@ -80,7 +80,7 @@
           onkeydown={e => e.key === "Enter" && sendSpawn()}
         />
         <button class:disabled={!name} class:busy onclick={sendSpawn}>
-          SUBMIT
+          SIGN
           {#if busy}
             <div class="spinner"><Spinner /></div>
           {/if}

@@ -29,12 +29,13 @@
   * * * * * * * * * * * * * */
 
   /* Layout: Your Rat */
-  --rat-editor-height: 180px;
+  /* --rat-editor-height: 180px; */
+  --rat-editor-height: 230px;
+
   --liquidate-rat-height: 100px;
   --floor-progress-height: 50px;
   --rat-cam-height: calc(
-    100% - var(--rat-editor-height) - var(--liquidate-rat-height) -
-      var(--floor-progress-height)
+    100% - var(--rat-editor-height) - var(--liquidate-rat-height)
   );
 
   /* Layout: Your Rooms */
