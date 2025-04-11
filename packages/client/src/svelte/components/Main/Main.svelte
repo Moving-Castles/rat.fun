@@ -35,7 +35,7 @@
   }
 
   const { transition, route, rooms } = getUIState()
-  const { current } = rooms
+  const { current, myCurrent } = rooms
   let debugTransition = $state(false)
 
   let { environment }: { environment: ENVIRONMENT } = $props()
@@ -53,9 +53,9 @@
 {/snippet}
 
 {#snippet roomSnippet()}
-  {#if $current}
+  {#if $current || $myCurrent}
     <RoomResult
-      start={$current && route.current === "room"}
+      start={($current || $myCurrent) && route.current === "room"}
       animationstart={transition.active}
       roomId={$current}
       {environment}

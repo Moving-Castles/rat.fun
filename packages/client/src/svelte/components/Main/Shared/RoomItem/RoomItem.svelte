@@ -11,17 +11,13 @@
     isOwnRoomListing,
   }: { roomId: Hex; room: Room; isOwnRoomListing: boolean } = $props()
 
-  let { rooms, enums } = getUIState()
+  let { rooms } = getUIState()
 </script>
 
 <button
   class="room-listing-item"
   class:disabled={room.balance <= 0 && !isOwnRoomListing}
-  onclick={() =>
-    rooms.preview(
-      roomId,
-      isOwnRoomListing ? enums.PANE.LEFT : enums.PANE.RIGHT
-    )}
+  onclick={() => rooms.preview(roomId, isOwnRoomListing)}
 >
   <!-- IMAGE -->
   <div class="room-image">

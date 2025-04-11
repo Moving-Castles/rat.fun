@@ -21,7 +21,7 @@
   } = $props()
 
   let { rooms, panes } = getUIState()
-  const { current } = rooms
+  const { current, myCurrent } = rooms
 
   // Local state
   let currentRoom = $state<Hex | null>(null)
@@ -67,7 +67,9 @@
     }
   })
 
-  let previewing = $derived(panes.previewing === pane)
+  let previewing = $derived(
+    (isOwnRoomListing && $myCurrent) || (!isOwnRoomListing && $current)
+  )
 
   $effect(() => {
     switch (sortKey) {
@@ -88,12 +90,21 @@
 
   // Update currentroom with a delay to allow animations to play
   $effect(() => {
-    if (!$current) {
-      // Delayed
-      setTimeout(() => (currentRoom = $current as Hex), 400)
-    } else {
-      // Instant
-      currentRoom = $current as Hex
+    if (isOwnRoomListing) {
+      if (!$myCurrent) {
+        setTimeout(() => (currentRoom = $myCurrent as Hex), 400)
+      } else {
+        currentRoom = $myCurrent as Hex
+      }
+    }
+  })
+  $effect(() => {
+    if (!isOwnRoomListing) {
+      if (!$current) {
+        setTimeout(() => (currentRoom = $current as Hex), 400)
+      } else {
+        currentRoom = $current as Hex
+      }
     }
   })
 </script>

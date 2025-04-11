@@ -1,3 +1,12 @@
+/**
+ * Structure of this file
+ *
+ * 1. Internal state
+ * 2. State modifications
+ * 3. Exporting state
+ *
+ */
+
 import { PANE, LEFT_PANE, RIGHT_PANE } from "./enums"
 import { quadInOut } from "svelte/easing"
 import { Tween } from "svelte/motion"
@@ -13,15 +22,6 @@ export const ROUTES = [
     params: ["id"],
   },
 ]
-
-/**
- * Structure of this file
- *
- * 1. Internal state
- * 2. State modifications
- * 3. Exporting state
- *
- */
 
 /** 1.1 Internal State
  *
@@ -119,15 +119,24 @@ export const getUIState = () => {
    * Here, I am modifying a store as you normally would anyways.
    * When combining stores and $state calls, it can be weird to figure out which is which.
    */
-  const preview = (id: string, pane = PANE.RIGHT) => {
-    uiStores.CurrentRoomId.set(id)
-    previewingPane = pane
+  const preview = (id: string, mine = false) => {
+    if (mine) {
+      uiStores.CurrentMyRoomId.set(id)
+      previewingPane = PANE.LEFT
+    } else {
+      uiStores.CurrentRoomId.set(id)
+      previewingPane = PANE.RIGHT
+    }
   }
 
-  const back = () => {
-    setPane(PANE.RIGHT, RIGHT_PANE.ROOMS)
-    uiStores.CurrentRoomId.set(null)
-    previewingPane = PANE.NONE
+  const back = (mine = false) => {
+    if (mine) {
+      uiStores.CurrentMyRoomId.set(null)
+      setPane(PANE.LEFT, LEFT_PANE.YOUR_ROOMS)
+    } else {
+      uiStores.CurrentRoomId.set(null)
+      setPane(PANE.RIGHT, RIGHT_PANE.ROOMS)
+    }
   }
 
   const close = async () => {
@@ -185,10 +194,13 @@ export const getUIState = () => {
        * because you might as well import it from the source directly instead of going through this function.
        * But here is how you would do it inside your component:
        *
-       * const { current } = getUIState()
+       * const { myCurrent, current } = getUIState()
        *
        * And then autosubscribe `$current`
        */
+      get myCurrent() {
+        return uiStores.CurrentMyRoomId
+      },
       get current() {
         return uiStores.CurrentRoomId
       },

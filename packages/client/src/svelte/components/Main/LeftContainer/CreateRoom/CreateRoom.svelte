@@ -8,7 +8,7 @@
   import CharacterCounter from "@components/Main/LeftContainer/CreateRoom/CharacterCounter.svelte"
   import Spinner from "@components/Main/Shared/Spinner/Spinner.svelte"
 
-  const { enums, panes } = getUIState()
+  const { rooms, enums, panes } = getUIState()
 
   let {
     environment,
@@ -69,6 +69,7 @@
   }
 
   const goYourRooms = () => {
+    rooms.back(true)
     panes.set(enums.PANE.LEFT, enums.LEFT_PANE.YOUR_ROOMS)
   }
 </script>
@@ -158,6 +159,7 @@
       <button class:disabled onclick={sendCreateRoom}>
         Create room (Cost: $100)
       </button>
+      <button class="secondary" onclick={goYourRooms}> Cancel </button>
     </div>
   {/if}
 </div>
@@ -208,6 +210,9 @@
     }
 
     .actions {
+      display: flex;
+      flex-flow: column nowrap;
+      gap: 12px;
       button {
         width: 100%;
         height: 40px;
@@ -217,6 +222,10 @@
         cursor: pointer;
         border: none;
         border-radius: 0;
+
+        &.secondary {
+          background: var(--color-grey-mid);
+        }
 
         &.disabled {
           pointer-events: none;
