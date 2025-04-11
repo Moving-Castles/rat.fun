@@ -43,16 +43,34 @@
 </script>
 
 <div class="container">
-  {#if !busy}
-    <div class="main">
+  <div class="main">
+    {#if !busy}
+      <!-- INTRO TEXT -->
       <div class="content">
-        <p>
-          <strong>Welcome to Facility45</strong>
+        <p class="header">
+          <span class="inverted">Welcome to Rat Rooms Playtest #1</span>
         </p>
-        <p>Authorized personnel only beyond this point.</p>
+        <p class="small">
+          Rat Rooms is a two sided market between rats and room creators. Each
+          room has a balance: it grows when rats lose value, and shrinks when
+          rats win.
+        </p>
+        <ol class="small">
+          <li>Study the rooms</li>
+          <li>Send in your rat</li>
+          <li>Traits, tokens, and items are useful in rooms</li>
+          <li>Liquidate to cash out</li>
+          <li>Create your own rooms</li>
+        </ol>
+        <p class="small">
+          Your goal is to have as many tokens as possible within 1 hour.
+        </p>
       </div>
 
+      <!-- FORM -->
       <div class="form">
+        <p>Sign with operator name to proceed.</p>
+        <!-- INPUT -->
         <input
           type="text"
           placeholder="YOUR NAME"
@@ -61,21 +79,21 @@
           bind:value={name}
           onkeydown={e => e.key === "Enter" && sendSpawn()}
         />
+        <button class:disabled={!name} class:busy onclick={sendSpawn}>
+          SIGN
+          {#if busy}
+            <div class="spinner"><Spinner /></div>
+          {/if}
+        </button>
       </div>
-      <button class:disabled={!name} class:busy onclick={sendSpawn}>
-        SUBMIT
-        {#if busy}
-          <div class="spinner"><Spinner /></div>
-        {/if}
-      </button>
-    </div>
-  {:else}
-    <div class="main">
-      <p>Standby <strong>{name}</strong></p>
-      <p>Connecting to <strong>Facility45</strong>....</p>
-      <Spinner />
-    </div>
-  {/if}
+    {:else}
+      <div class="main">
+        <p>Standby <strong>{name}</strong></p>
+        <p>Connecting to <strong>Rat Rooms</strong>....</p>
+        <Spinner />
+      </div>
+    {/if}
+  </div>
 </div>
 
 <style lang="scss">
@@ -84,29 +102,39 @@
     background: var(--corporate-background);
     font-family: var(--typewriter-font-stack);
     text-transform: none;
-    height: 100%;
+    height: auto;
   }
 
   .main {
-    font-size: 18px;
     color: var(--corporate-foreground);
     width: 100%;
     height: 100%;
     max-width: 90vw;
-    padding: 40px;
-  }
-
-  .marker {
-    background: var(--corporate-alert);
+    padding: 10px 30px;
+    padding-bottom: 30px;
   }
 
   p {
-    margin-bottom: 0.4em;
+    margin-bottom: 1em;
+  }
+
+  .small {
+    font-size: var(--font-size-normal);
+  }
+
+  .inverted {
+    background: black;
+    color: white;
+    padding: 5px;
+  }
+
+  .header {
+    margin-bottom: 2em;
+    display: block;
   }
 
   .content {
     padding-top: 1em;
-    border-top: 1px dashed var(--corporate-foreground);
     padding-bottom: 1em;
     border-bottom: 1px dashed var(--corporate-foreground);
     margin-bottom: 1em;
@@ -133,6 +161,7 @@
     width: 300px;
     height: 4em;
     margin-bottom: 0.5em;
+    background: var(--color-alert);
 
     .spinner {
       position: relative;
@@ -144,6 +173,7 @@
       pointer-events: none;
       opacity: 0.5;
       cursor: default;
+      background: var(--color-grey-light);
     }
 
     &.busy {

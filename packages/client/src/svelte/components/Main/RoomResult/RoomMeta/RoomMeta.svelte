@@ -98,7 +98,7 @@
       }
 
       .name {
-        background: white;
+        background: var(--color-alert);
         color: black;
         width: auto;
         display: inline-block;

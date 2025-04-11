@@ -33,15 +33,14 @@
     align-items: center;
     overscroll-behavior: none;
     z-index: 10;
-  }
 
-  .content {
-    width: 700px;
-    height: 500px;
-    max-width: 90vw;
-    max-height: 90vh;
-    background: red;
-    overflow-x: hidden;
-    overflow-y: scroll;
+    .content {
+      width: 700px;
+      min-height: 500px;
+      max-width: 60vw;
+      max-height: 90vh;
+      overflow-x: hidden;
+      overflow-y: scroll;
+    }
   }
 </style>

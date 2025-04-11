@@ -43,9 +43,7 @@ contract PostDeploy is Script {
     // prettier-ignore
 
     // Create levels
-    bytes32 firstLevel = LibLevel.createLevel(0, 0, 500, 100); // Level 0
-    bytes32 secondLevel = LibLevel.createLevel(1, 500, 2500, 100); // Level 1
-    bytes32 thirdLevel = LibLevel.createLevel(2, 2500, 100000, 100); // Level 2
+    bytes32 firstLevel = LibLevel.createLevel(0, 0, 1000000, 250); // Level 0
 
     // Level 0
     LibRoom.createRoom("Fight", "There is a second rat in the room. The rats have to fight.", adminId, firstLevel);
@@ -73,25 +71,6 @@ contract PostDeploy is Script {
       firstLevel
     );
     LibRoom.createRoom("Kill", "The room is a euthanasia chamber. There is no exit.", adminId, firstLevel);
-
-    // Level 1
-    LibRoom.createRoom("Forced Swim Test", "Forced Swim Test", adminId, secondLevel);
-    LibRoom.createRoom(
-      "Aggression",
-      "The room is filled with a gas that increases rat aggression.",
-      adminId,
-      secondLevel
-    );
-    LibRoom.createRoom("Steal", "The room takes all of the rats items.", adminId, secondLevel);
-
-    // Level 2
-    LibRoom.createRoom("Fight", "There is a second rat in the room. The rats have to fight.", adminId, thirdLevel);
-    LibRoom.createRoom(
-      "Magic hospital",
-      "The room has healing energy that will restore the rat to perfect health.",
-      adminId,
-      thirdLevel
-    );
 
     vm.stopBroadcast();
   }

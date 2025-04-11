@@ -1,17 +1,18 @@
 <script lang="ts">
   import { player } from "@modules/state/base/stores"
+
   import RatEditor from "@components/Main/LeftContainer/YourRat/RatEditor.svelte"
   import RatCam from "@components/Main/LeftContainer/YourRat/RatCam.svelte"
-  import FloorProgress from "@components/Main/LeftContainer/YourRat/FloorProgress.svelte"
   import LiquidateRat from "@components/Main/LeftContainer/YourRat/LiquidateRat.svelte"
   import DeployRat from "@components/Main/LeftContainer/DeployRat/DeployRat.svelte"
+  // import FloorProgress from "@components/Main/LeftContainer/YourRat/FloorProgress.svelte"
 </script>
 
 <div class="your-rat">
   {#if $player?.ownedRat}
     <RatEditor />
     <RatCam />
-    <FloorProgress />
+    <!-- <FloorProgress /> -->
     <LiquidateRat />
   {:else}
     <DeployRat />

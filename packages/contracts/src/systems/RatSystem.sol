@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
-import { Owner, OwnedRat, Dead, Index, Inventory } from "../codegen/index.sol";
+import { Owner, OwnedRat, Dead, Index, Inventory, GameConfig, Balance } from "../codegen/index.sol";
 import { System } from "@latticexyz/world/src/System.sol";
 import { LibUtils, LibRat, LibItem } from "../libraries/Libraries.sol";
 
@@ -17,12 +17,15 @@ contract RatSystem is System {
 
     // A player can only have one rat at a time
     require(currentRat == bytes32(0) || Dead.get(currentRat), "already has rat");
+    require(Balance.get(playerId) >= GameConfig.getRatCreationCost(), "not enough balance");
 
     ratId = LibRat.createRat(_name);
 
     // Set ownership
     OwnedRat.set(playerId, ratId);
     Owner.set(ratId, playerId);
+
+    Balance.set(playerId, Balance.get(playerId) - GameConfig.getRatCreationCost());
   }
 
   /**

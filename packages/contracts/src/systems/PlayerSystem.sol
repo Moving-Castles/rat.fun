@@ -15,7 +15,7 @@ contract PlayerSystem is System {
     _playerId = LibUtils.addressToEntityKey(_msgSender());
     EntityType.set(_playerId, ENTITY_TYPE.PLAYER);
     Name.set(_playerId, _name);
-    Balance.set(_playerId, 0);
+    Balance.set(_playerId, 2000);
     CreationBlock.set(_playerId, block.number);
   }
 }
