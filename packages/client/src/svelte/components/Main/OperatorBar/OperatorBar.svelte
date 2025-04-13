@@ -1,5 +1,6 @@
 <script lang="ts">
   import { player } from "@modules/state/base/stores"
+  import { HighScoreModalActive } from "@modules/ui/stores"
   import { tippy } from "svelte-tippy"
   import Alert from "@components/Main/OperatorBar/Alert/Alert.svelte"
 </script>
@@ -34,6 +35,15 @@
           <div class="value">${$player?.balance ?? 0}</div>
         </div>
       </div>
+      <!-- HIGHSCORE -->
+      <button
+        class="stat-item highscore"
+        onclick={() => HighScoreModalActive.set(true)}
+      >
+        <div class="inner-wrapper">
+          <div class="label">HighScore</div>
+        </div>
+      </button>
     </div>
   {/if}
   <div class="alert-container">
@@ -57,11 +67,22 @@
       .stat-item {
         display: flex;
         height: 100%;
-        border-right: 1px solid white;
         line-height: 60px;
+        border: 0;
+        background: transparent;
+        border-right: 1px solid white;
+        color: white;
 
         .label {
           margin-right: 0.5em;
+        }
+
+        &.highscore {
+          font-size: var(--font-size-small);
+
+          &:hover {
+            background: var(--color-grey-mid);
+          }
         }
 
         .inner-wrapper {

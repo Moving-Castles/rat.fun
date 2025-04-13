@@ -2,7 +2,7 @@
   import { onMount } from "svelte"
   import { ENVIRONMENT } from "@mud/enums"
   import { initSound } from "@modules/sound"
-  import { UIState } from "@modules/ui/stores"
+  import { UIState, HighScoreModalActive } from "@modules/ui/stores"
   import { UI } from "@modules/ui/enums"
   import { initOffChainSync } from "@modules/off-chain-sync"
   import { playerId } from "@modules/state/base/stores"
@@ -14,6 +14,7 @@
   import Loading from "@components/Loading/Loading.svelte"
   import Main from "@components/Main/Main.svelte"
   import { EMPTY_CONNECTION } from "./modules/utils/constants"
+  import HighScore from "@components/Main/HighScore/HighScore.svelte"
 
   let { environment }: { environment: ENVIRONMENT } = $props()
 
@@ -54,6 +55,10 @@
 </div>
 
 <Modal />
+
+{#if $HighScoreModalActive}
+  <HighScore />
+{/if}
 
 <style lang="scss">
   main {
