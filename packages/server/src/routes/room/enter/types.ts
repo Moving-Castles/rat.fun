@@ -7,7 +7,7 @@ export type EnterRoomBody = {
 export type Room = {
     id: string,
     name: string,
-    prompt: string;
+    roomPrompt: string;
     balance: number;
 }
 

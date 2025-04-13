@@ -5,15 +5,13 @@
   import {
     frozenRoom,
     frozenRat,
-    freezeObjects,
   } from "@svelte/components/Main/RoomResult/state.svelte"
-
-  const { rat, room }: { rat: Rat; room: Room } = $props()
 
   // Elements
   let nameElement = $state<HTMLDivElement>()
   let imageContainerElement = $state<HTMLDivElement>()
   let promptElement = $state<HTMLDivElement>()
+  let roomMetaElement = $state<HTMLDivElement>()
 
   // Create parent timeline
   const metaTimeline = gsap.timeline({
@@ -21,21 +19,21 @@
   })
 
   onMount(() => {
-    console.log("room meta loaded", room)
-    // Snapshot room and rat
-    // We want the pre-result state to gradually apply changes to
-    // without reactivity from on chain changes
-    // Do it here becuase RoomResult parent is loaded early
-    freezeObjects(rat, room)
     console.log("$frozenRoom", $frozenRoom)
     console.log("$frozenRat", $frozenRat)
 
-    if (!nameElement || !imageContainerElement || !promptElement) {
+    if (
+      !roomMetaElement ||
+      !nameElement ||
+      !imageContainerElement ||
+      !promptElement
+    ) {
       console.error("RoomMeta: Missing elements")
       return
     }
 
     // Set initial values
+    gsap.set(roomMetaElement, { opacity: 1 })
     gsap.set(nameElement, { opacity: 0, scale: 0.95 })
     gsap.set(imageContainerElement, { opacity: 0, scale: 0.95 })
     gsap.set(promptElement, { opacity: 0, scale: 0.95 })
@@ -44,10 +42,12 @@
     metaTimeline.to(nameElement, { opacity: 1, scale: 1, delay: 0.5 })
     metaTimeline.to(imageContainerElement, { opacity: 1, scale: 1 })
     metaTimeline.to(promptElement, { opacity: 1, scale: 1 })
+    metaTimeline.to(roomMetaElement, { opacity: 0, duration: 0.25 })
+    metaTimeline.to(roomMetaElement, { display: "none" })
   })
 </script>
 
-<div class="room-meta">
+<div class="room-meta" bind:this={roomMetaElement}>
   <div class="inner">
     <!-- NAME -->
     <div class="name" bind:this={nameElement}>
@@ -67,11 +67,12 @@
 <style lang="scss">
   .room-meta {
     padding: 0;
-    position: absolute;
+    position: fixed;
     inset: 0;
     text-align: center;
     display: flex;
     height: 100dvh;
+    z-index: 10000;
     justify-content: center;
     align-items: center;
     background: black;
@@ -100,8 +101,8 @@
       .name {
         background: var(--color-alert);
         color: black;
-        width: auto;
-        display: inline-block;
+        // width: auto;
+        display: block;
       }
     }
   }

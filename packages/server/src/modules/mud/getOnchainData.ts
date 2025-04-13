@@ -48,7 +48,7 @@ export function getOnchainData(network: SetupNetworkReturnType, components: Clie
     const room = {
         id: roomId,
         name: roomName,
-        prompt: roomPrompt,
+        roomPrompt: roomPrompt,
         balance: Number(roomBalance)
     }
 

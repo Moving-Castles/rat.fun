@@ -9,6 +9,8 @@
   import { ENVIRONMENT } from "@mud/enums"
   import { walletNetwork } from "@modules/network"
 
+  import { freezeObjects } from "@svelte/components/Main/RoomResult/state.svelte"
+
   import Log from "@components/Main/RoomResult/Log/Log.svelte"
   import RoomMeta from "@svelte/components/Main/RoomResult/RoomMeta/RoomMeta.svelte"
   import RatInfoBox from "@svelte/components/Main/RoomResult/InfoBox/Rat/RatInfoBox.svelte"
@@ -32,14 +34,28 @@
   let animationstarted = $state(false)
 
   let busy = $state(false)
+  let frozen = $state(false)
   let error = $state("")
 
-  let entering = $state(true)
   let result: ServerReturnValue | undefined = $state(undefined)
 
   $effect(() => {
     if (animationstart) animationstarted = true
   })
+
+  $effect(() => {
+    if (animationstarted && !frozen) {
+      freezeAndMetaAnimation()
+    }
+  })
+
+  function freezeAndMetaAnimation() {
+    // Snapshot room and rat
+    // We want the pre-result state to gradually apply changes to
+    // without reactivity from on chain changes
+    freezeObjects($ratState, $roomsState[roomId ?? ""])
+    frozen = true
+  }
 
   const processRoom = async () => {
     console.time("Process")
@@ -53,20 +69,15 @@
         $player.ownedRat
       )
 
-      await new Promise(resolve => setTimeout(resolve, 4500))
-
-      entering = false
-
       try {
         console.log("start outcome ")
-        result = await ret // add here just in case the entering transition would be faster
+        result = await ret
       } catch (err) {
         console.log("catch outcome error", err)
         throw err
       }
     } catch (error) {
       console.log("catch result error", error)
-      entering = false
       rooms.close()
     }
   }
@@ -81,22 +92,19 @@
 </script>
 
 <div class="room-result">
-  {#if entering && animationstarted}
-    <RoomMeta rat={$ratState} room={$roomsState[roomId ?? ""]} />
-  {:else}
-    <!-- INFO BOXES -->
-    <div class="info-boxes">
-      <RatInfoBox />
-      <RoomInfoBox />
+  <RoomMeta />
+  <!-- INFO BOXES -->
+  <div class="info-boxes">
+    <RatInfoBox />
+    <RoomInfoBox />
+  </div>
+  <!-- LOG -->
+  <Log {result} {animationstarted} />
+  <!-- ERROR -->
+  {#if error}
+    <div class="error">
+      {error}
     </div>
-    <!-- LOG -->
-    <Log {result} {animationstarted} />
-    <!-- ERROR -->
-    {#if error}
-      <div class="error">
-        {error}
-      </div>
-    {/if}
   {/if}
 </div>
 
