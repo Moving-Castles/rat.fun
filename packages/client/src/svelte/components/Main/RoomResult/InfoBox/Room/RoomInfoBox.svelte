@@ -16,7 +16,9 @@
       </div>
       <!-- BALANCE -->
       <div class="info-item">
-        <span class="balance">${$frozenRoom.balance}</span>
+        <span class="balance" class:empty={$frozenRoom.balance === 0}>
+          ${$frozenRoom.balance}
+        </span>
       </div>
     </div>
     <!-- PROMPT -->
@@ -104,6 +106,10 @@
       background: var(--color-value);
       padding: 5px;
       color: black;
+
+      &.empty {
+        background: var(--color-death);
+      }
     }
 
     .health {

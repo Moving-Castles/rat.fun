@@ -25,7 +25,9 @@
         <!-- BALANCE -->
         <span class="balance">${$frozenRat.balance}</span>
         <!-- HEALTH -->
-        <span class="health">HEALTH {$frozenRat.health}</span>
+        <span class="health" class:dead={$frozenRat.health <= 0}
+          >HEALTH {$frozenRat.health}</span
+        >
       </div>
     </div>
     <!-- TRAITS -->
@@ -115,6 +117,10 @@
       background: var(--color-health);
       padding: 5px;
       color: black;
+
+      &.dead {
+        background: var(--color-death);
+      }
     }
   }
 

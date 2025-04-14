@@ -62,6 +62,8 @@
     cursor: grab;
     white-space: nowrap;
     display: inline-block;
+    position: relative;
+    top: 5px;
   }
 
   .trait {

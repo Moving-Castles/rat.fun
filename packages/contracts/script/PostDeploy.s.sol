@@ -11,7 +11,7 @@ import { NamespaceOwner } from "@latticexyz/world/src/codegen/tables/NamespaceOw
 
 import { GameConfig } from "../src/codegen/index.sol";
 
-import { LibInit } from "../src/libraries/Libraries.sol";
+import { LibInit, LibLevel, LibRoom } from "../src/libraries/Libraries.sol";
 
 contract PostDeploy is Script {
   function run(address worldAddress) external {
@@ -25,6 +25,21 @@ contract PostDeploy is Script {
     // Initialize gameConfig and tutorial levels
     // Root namespace owner is admin
     LibInit.init(NamespaceOwner.get(ROOT_NAMESPACE_ID));
+
+    bytes32 adminId = GameConfig.getAdminId();
+
+    // prettier-ignore
+
+    // Create levels
+    bytes32 firstLevel = LibLevel.createLevel(0, 0, 1000000, 250); // Level 0
+
+    // Electrical shock therapy. Rat gets psychological disorder, or heals one (even if unlikely).
+    LibRoom.createRoom(
+      "Electrical Shock Therapy",
+      "The rat gets psychological disorder, or heals one (even if unlikely).",
+      adminId,
+      firstLevel
+    );
 
     vm.stopBroadcast();
   }

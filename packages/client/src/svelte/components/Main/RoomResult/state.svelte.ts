@@ -76,10 +76,10 @@ export function addItem(itemName: string, itemValue: number) {
   })
 }
 
-export function removeItem(itemId: string, itemValue: number) {
+export function removeItem(id: string, itemValue: number) {
   frozenRat.update(rat => {
     if (!rat) return null
-    rat.inventory = rat.inventory.filter(i => i !== itemId)
+    rat.inventory = rat.inventory.filter(i => i !== id)
     return rat
   })
 
@@ -115,10 +115,10 @@ export function addTrait(traitName: string, traitValue: number) {
   })
 }
 
-export function removeTrait(traitId: string, traitValue: number) {
+export function removeTrait(id: string, traitValue: number) {
   frozenRat.update(rat => {
     if (!rat) return null
-    rat.traits = rat.traits.filter(t => t !== traitId)
+    rat.traits = rat.traits.filter(t => t !== id)
     return rat
   })
 
@@ -144,7 +144,7 @@ export const stateUpdateFunctions = {
 // DOM Interactions
 // ------------------------------------------------------------
 export const updateState = (dataset: DOMStringMap) => {
-  const { type, action, value, name, itemId, traitId } = dataset
+  const { type, action, value, name, id } = dataset
 
   if (!type || !action || value === undefined) return
 
@@ -159,14 +159,14 @@ export const updateState = (dataset: DOMStringMap) => {
       if (action === "add") {
         stateUpdateFunctions.item["add"]?.(name ?? "", numericValue)
       } else if (action === "remove") {
-        stateUpdateFunctions.item["remove"]?.(itemId ?? "", numericValue)
+        stateUpdateFunctions.item["remove"]?.(id ?? "", numericValue)
       }
       break
     case "trait":
       if (action === "add") {
         stateUpdateFunctions.trait["add"]?.(name ?? "", numericValue)
       } else  if (action === "remove") {
-        stateUpdateFunctions.trait["remove"]?.(traitId ?? "", numericValue)
+        stateUpdateFunctions.trait["remove"]?.(id ?? "", numericValue)
       }
       break
   }

@@ -198,15 +198,13 @@
           class="outcome trait"
           data-type="trait"
           data-action={traitChange.type}
-          data-traitId={traitChange.id}
+          data-id={traitChange.id}
           data-value={traitChange.value}
           data-name={traitChange.name}
           class:negative={traitChange.value <= 0}
           class:remove={traitChange.type === "remove"}
         >
-          {traitChange.name} ({traitChange.type === "add"
-            ? "+"
-            : ""}{traitChange.value})
+          {traitChange.name} (${traitChange.value})
         </div>
       {/each}
     {/if}
@@ -217,14 +215,12 @@
           class="outcome item"
           data-type="item"
           data-action={itemChange.type}
-          data-itemId={itemChange.id}
+          data-id={itemChange.id}
           data-value={itemChange.value}
           data-name={itemChange.name}
           class:remove={itemChange.type === "remove"}
         >
-          {itemChange.name} ({itemChange.type === "add"
-            ? "+"
-            : ""}{itemChange.value})
+          {itemChange.name} (${itemChange.value})
         </div>
       {/each}
     {/if}

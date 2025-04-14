@@ -9,7 +9,7 @@ import { IWorld } from "../src/codegen/world/IWorld.sol";
 import { ROOT_NAMESPACE_ID } from "@latticexyz/world/src/constants.sol";
 import { NamespaceOwner } from "@latticexyz/world/src/codegen/tables/NamespaceOwner.sol";
 
-import { GameConfig } from "../src/codegen/index.sol";
+import { GameConfig, LevelList } from "../src/codegen/index.sol";
 
 import { LibRoom, LibInit, LibLevel } from "../src/libraries/Libraries.sol";
 
@@ -23,21 +23,9 @@ contract CreateRooms is Script {
     vm.startBroadcast(deployerPrivateKey);
 
     bytes32 adminId = GameConfig.getAdminId();
-
-    // prettier-ignore
-
-    // Create levels
-    bytes32 firstLevel = LibLevel.createLevel(0, 0, 1000000, 250); // Level 0
+    bytes32 firstLevel = LevelList.get()[0];
 
     // Create rooms: Level 0
-
-    // Electrical shock therapy. Rat gets psychological disorder, or heals one (even if unlikely).
-    LibRoom.createRoom(
-      "",
-      "The rat gets psychological disorder, or heals one (even if unlikely).",
-      adminId,
-      firstLevel
-    );
 
     // Fight another rat to the death
     LibRoom.createRoom("Rat Fight Club", "Fight another rat to the death. Winner takes all.", adminId, firstLevel);

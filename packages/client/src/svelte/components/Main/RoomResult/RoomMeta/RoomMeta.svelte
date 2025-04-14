@@ -11,6 +11,7 @@
   const { rat, room }: { rat: Rat; room: Room } = $props()
 
   // Elements
+  let roomIndexElement = $state<HTMLDivElement>()
   let imageContainerElement = $state<HTMLDivElement>()
   let promptElement = $state<HTMLDivElement>()
   let roomInnerElement = $state<HTMLDivElement>()
@@ -29,7 +30,12 @@
     console.log("$frozenRoom", $frozenRoom)
     console.log("$frozenRat", $frozenRat)
 
-    if (!roomInnerElement || !imageContainerElement || !promptElement) {
+    if (
+      !roomInnerElement ||
+      !imageContainerElement ||
+      !promptElement ||
+      !roomIndexElement
+    ) {
       console.error("RoomMeta: Missing elements")
       return
     }
@@ -37,9 +43,10 @@
     // Set initial values
     gsap.set(imageContainerElement, { opacity: 0, scale: 0.95 })
     gsap.set(promptElement, { opacity: 0, scale: 0.95 })
-
+    gsap.set(roomIndexElement, { opacity: 0, scale: 0.95 })
     // Add to timeline
-    metaTimeline.to(imageContainerElement, { opacity: 1, scale: 1, delay: 0.5 })
+    metaTimeline.to(roomIndexElement, { opacity: 1, scale: 1, delay: 0.5 })
+    metaTimeline.to(imageContainerElement, { opacity: 1, scale: 1 })
     metaTimeline.to(promptElement, { opacity: 1, scale: 1 })
     metaTimeline.to(roomInnerElement, { opacity: 0, delay: 2, duration: 0.5 })
   })
@@ -47,6 +54,9 @@
 
 <div class="room-meta">
   <div class="inner" bind:this={roomInnerElement}>
+    <div class="room-index" bind:this={roomIndexElement}>
+      ROOM #{$frozenRoom?.index ?? ""}
+    </div>
     <!-- IMAGE -->
     <div class="image-container" bind:this={imageContainerElement}>
       <img src="/images/room3.jpg" alt={$frozenRoom?.name ?? ""} />
@@ -96,6 +106,13 @@
         color: black;
         width: auto;
         display: inline-block;
+      }
+
+      .room-index {
+        background: var(--color-grey-light);
+        color: black;
+        width: auto;
+        padding: 5px;
       }
     }
   }

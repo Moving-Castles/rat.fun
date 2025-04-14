@@ -53,7 +53,7 @@
         $player.ownedRat
       )
 
-      await new Promise(resolve => setTimeout(resolve, 4500))
+      await new Promise(resolve => setTimeout(resolve, 5000))
 
       entering = false
 

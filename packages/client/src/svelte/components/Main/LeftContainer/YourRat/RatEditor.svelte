@@ -68,14 +68,6 @@
     >
       {$rat?.name ?? ""}
     </div>
-    <!-- HEALTH -->
-    <div
-      use:tippy={{ content: " Health of your rat, death at 0" }}
-      draggable="false"
-      class="health"
-    >
-      {$rat.health} health
-    </div>
     <!-- BALANCE -->
     {#if $rat?.balance}
       <div
@@ -86,6 +78,15 @@
         ${$rat.balance}
       </div>
     {/if}
+    <!-- HEALTH -->
+    <div
+      use:tippy={{ content: " Health of your rat, death at 0" }}
+      draggable="false"
+      class="health"
+    >
+      {$rat.health} health
+    </div>
+
     <!-- TRAITS -->
     {#if $rat?.traits && $rat?.traits?.length > 0}
       <div class="word">is</div>
