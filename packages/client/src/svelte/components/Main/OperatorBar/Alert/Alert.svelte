@@ -5,7 +5,6 @@
   import { playSound } from "@modules/sound"
 
   $effect(() => {
-    console.log("newEvent", $newEvent)
     if ($newEvent) {
       setLocalMessage($newEvent)
     }
@@ -15,7 +14,6 @@
 
   const setLocalMessage = (event: MessageContent) => {
     playSound("tcm", "alert")
-    console.log("setLocalMessage", event)
     localMessage = event
     setTimeout(() => {
       localMessage = null

@@ -36,7 +36,10 @@ export async function enterRoom(
     })
 
     if (!response.ok) {
-      throw new Error("Network response was not ok")
+      console.log("response", response)
+      const error = (await response.json())
+      console.log("error", error)
+      throw new Error(`${error.error}: ${error.message}`)
     }
 
     const outcome = (await response.json()) as ServerReturnValue

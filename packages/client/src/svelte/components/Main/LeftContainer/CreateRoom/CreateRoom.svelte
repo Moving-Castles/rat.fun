@@ -35,8 +35,6 @@
     busy = true
     const newPrompt = roomDescription
 
-    console.log("newPrompt", newPrompt)
-
     await createRoom(environment, $walletNetwork, newName, newPrompt)
     busy = false
     goYourRooms()

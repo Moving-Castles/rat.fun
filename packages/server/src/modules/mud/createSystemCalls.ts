@@ -9,6 +9,28 @@ import { Rat, Room } from "@routes/room/enter/types"
 import { getOnchainData } from "./getOnchainData"
 import { createOutcomeCallArgs, updateOutcome } from "./outcome"
 
+// Custom error classes for better error handling
+export class SystemCallError extends Error {
+  constructor(message: string, public code: string = 'SYSTEM_CALL_ERROR') {
+    super(message);
+    this.name = 'SystemCallError';
+  }
+}
+
+export class ContractCallError extends SystemCallError {
+  constructor(message: string, public originalError?: unknown) {
+    super(message, 'CONTRACT_CALL_ERROR');
+    this.name = 'ContractCallError';
+  }
+}
+
+export class OutcomeUpdateError extends SystemCallError {
+  constructor(message: string, public originalError?: unknown) {
+    super(message, 'OUTCOME_UPDATE_ERROR');
+    this.name = 'OutcomeUpdateError';
+  }
+}
+
 export type SystemCalls = ReturnType<typeof createSystemCalls>
 
 export function createSystemCalls(network: SetupNetworkResult) {
@@ -17,20 +39,52 @@ export function createSystemCalls(network: SetupNetworkResult) {
     room: Room,
     outcome: OutcomeReturnValue
   ) => {
-    const args = createOutcomeCallArgs(rat, room, outcome);
-    const tx = await network.worldContract.write.ratroom__applyOutcome(args)
-    await network.waitForTransaction(tx)
+    try {
+      const args = createOutcomeCallArgs(rat, room, outcome);
+      
+      // // Fix for the linter error - check if worldContract has a write property
+      // if (!network.worldContract || typeof network.worldContract.write !== 'function') {
+      //   throw new ContractCallError('World contract write method not available');
+      // }
+      
+      const tx = await network.worldContract.write.ratroom__applyOutcome(args);
+      await network.waitForTransaction(tx);
 
-    // Suggested outcomes were sent to the chain
-    // We get the new onchain state 
-    // and update the outcome with the actual changes
-    const newOnChainData = getOnchainData(
-      network,
-      network.components,
-      rat.id,
-      room.id
-    )
-    return updateOutcome(outcome, rat, newOnChainData.rat)
+      // Suggested outcomes were sent to the chain
+      // We get the new onchain state 
+      // and update the outcome with the actual changes
+      try {
+        const newOnChainData = getOnchainData(
+          network,
+          network.components,
+          rat.id,
+          room.id
+        );
+        return updateOutcome(outcome, rat, newOnChainData.rat);
+      } catch (error) {
+        // If it's already one of our custom errors, rethrow it
+        if (error instanceof SystemCallError) {
+          throw error;
+        }
+        
+        // Otherwise, wrap it in our custom error
+        throw new OutcomeUpdateError(
+          `Error updating outcome: ${error instanceof Error ? error.message : String(error)}`,
+          error
+        );
+      }
+    } catch (error) {
+      // If it's already one of our custom errors, rethrow it
+      if (error instanceof SystemCallError) {
+        throw error;
+      }
+      
+      // Otherwise, wrap it in our custom error
+      throw new ContractCallError(
+        `Error applying outcome: ${error instanceof Error ? error.message : String(error)}`,
+        error
+      );
+    }
   }
 
   const createRoom = async (
@@ -38,15 +92,33 @@ export function createSystemCalls(network: SetupNetworkResult) {
     roomName: string,
     roomPrompt: string
   ) => {
-    const tx = await network.worldContract.write.ratroom__createRoom([
-      playerId,
-      roomName,
-      roomPrompt,
-    ])
+    try {
+      // Fix for the linter error - check if worldContract has a write property
+      // if (!network.worldContract || typeof network.worldContract.write !== 'function') {
+      //   throw new ContractCallError('World contract write method not available');
+      // }
+      
+      const tx = await network.worldContract.write.ratroom__createRoom([
+        playerId,
+        roomName,
+        roomPrompt,
+      ]);
 
-    await network.waitForTransaction(tx)
+      await network.waitForTransaction(tx);
 
-    return true
+      return true;
+    } catch (error) {
+      // If it's already one of our custom errors, rethrow it
+      if (error instanceof SystemCallError) {
+        throw error;
+      }
+      
+      // Otherwise, wrap it in our custom error
+      throw new ContractCallError(
+        `Error creating room: ${error instanceof Error ? error.message : String(error)}`,
+        error
+      );
+    }
   }
 
   return {

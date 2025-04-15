@@ -27,8 +27,8 @@
     // without reactivity from on chain changes
     // Do it here becuase RoomResult parent is loaded early
     freezeObjects(rat, room)
-    console.log("$frozenRoom", $frozenRoom)
-    console.log("$frozenRat", $frozenRat)
+    // console.log("$frozenRoom", $frozenRoom)
+    // console.log("$frozenRat", $frozenRat)
 
     if (
       !roomInnerElement ||
@@ -106,6 +106,7 @@
         color: black;
         width: auto;
         display: inline-block;
+        padding: 5px;
       }
 
       .room-index {

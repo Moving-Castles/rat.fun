@@ -5,7 +5,7 @@
   import { UIState, HighScoreModalActive } from "@modules/ui/stores"
   import { UI } from "@modules/ui/enums"
   import { initOffChainSync } from "@modules/off-chain-sync"
-  import { playerId, player } from "@modules/state/base/stores"
+  import { playerId } from "@modules/state/base/stores"
   import { websocketConnected } from "@modules/off-chain-sync/stores"
   import { FullStory, init as initFullstory } from "@fullstory/browser"
 
@@ -38,7 +38,7 @@
       FullStory("setIdentity", {
         uid: $playerId,
         properties: {
-          displayName: $player.name,
+          displayName: $playerId,
         },
       })
     }

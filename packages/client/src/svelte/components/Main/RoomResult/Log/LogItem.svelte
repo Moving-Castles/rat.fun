@@ -56,12 +56,12 @@
 
     // Add to our reactive state array
     registeredOutcomes = [...registeredOutcomes, registration]
-    console.log("Registered outcome:", data.type) // For debugging
+    // console.log("Registered outcome:", data.type) // For debugging
 
     // Return destroy function for cleanup
     return {
       destroy: () => {
-        console.log("Destroying outcome:", data.type) // For debugging
+        // console.log("Destroying outcome:", data.type) // For debugging
         registeredOutcomes = registeredOutcomes.filter(
           item => item.node !== node
         )
@@ -137,7 +137,7 @@
     if (timeline && onTimeline) {
       onTimeline(timeline)
     }
-    console.log("Timeline built:", timeline.duration()) // For debugging
+    // console.log("Timeline built:", timeline.duration()) // For debugging
   }
 
   // Run once

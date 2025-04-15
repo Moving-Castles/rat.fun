@@ -1,4 +1,3 @@
-import * as Sentry from '@sentry/node';
 import { FastifyInstance, FastifyRequest } from 'fastify';
 import { schema } from '@routes/room/create/schema';
 import dotenv from 'dotenv';
@@ -21,6 +20,9 @@ import { getSenderId } from '@modules/signature';
 
 // Validate
 import { validateInputData } from './validation';
+
+// Error handling
+import { handleError } from './errorHandling';
 
 // Initialize LLM: Anthropic
 // const llmClient = getLLMClient(ANTHROPIC_API_KEY);
@@ -54,10 +56,7 @@ async function routes (fastify: FastifyInstance) {
                 success: true,
             })
         } catch (error) {
-            console.error('Error:', error);
-            // Capture the error in Sentry
-            Sentry.captureException(error);
-            reply.status(500).send({ error });
+            return handleError(error, reply);
         }
     });
 }
