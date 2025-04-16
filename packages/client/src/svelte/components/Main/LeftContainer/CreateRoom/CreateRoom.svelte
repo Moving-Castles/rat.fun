@@ -66,7 +66,7 @@
         disabled={busy}
         id="room-description"
         rows="6"
-        placeholder="You're creating a room that can modify traits, items, health, and tokens of rats that enter. Your room balance decreases whenever a rat gains something, and increases when your room takes something. After 24 hours, you can withdraw any remaining balance from your room."
+        placeholder="You're creating a room that can modify traits, items, health, and tokens of rats that enter. Your room balance decreases whenever a rat gains something, and increases when your room takes something. You can withdraw remaining balance from your room."
         bind:value={roomDescription}
       ></textarea>
     </div>

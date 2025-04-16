@@ -63,7 +63,7 @@
           <li>Create your own rooms</li>
         </ol>
         <p class="small">
-          Your goal is to have as many tokens as possible within 1 hour.
+          Your goal is to have as many tokens as possible within 30 minutes.
         </p>
       </div>
 
