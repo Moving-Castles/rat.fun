@@ -52,6 +52,11 @@ async function routes (fastify: FastifyInstance) {
             await systemCalls.createRoom(playerId, roomName, roomPrompt);
             console.timeEnd('–– Chain call');
 
+            // Generate image here
+            // Save in temp folder on server
+            // Upload to sanity
+            // Doc id is room id
+
             reply.send({
                 success: true,
             })
