@@ -3,11 +3,7 @@
   import RoomItem from "@components/Main/Shared/RoomItem/RoomItem.svelte"
   import RoomPreview from "@components/Main/Shared/RoomPreview/RoomPreview.svelte"
   import { PANE } from "@modules/ui/enums"
-  import {
-    rooms as roomsStore,
-    ratLevelIndex,
-    playerRooms,
-  } from "@modules/state/base/stores"
+  import { rooms as roomsStore, playerRooms } from "@modules/state/base/stores"
   import { getUIState } from "@modules/ui/state.svelte"
   import { tippy } from "svelte-tippy"
 
@@ -72,7 +68,8 @@
   )
 
   let filter = ([_, room]) => {
-    if (textFilter !== "") return room.roomPrompt.includes(textFilter)
+    if (textFilter !== "")
+      return room.roomPrompt.toLowerCase().includes(textFilter.toLowerCase())
     else return true
   }
 
@@ -348,6 +345,7 @@
 
   .floor-stats {
     font-size: var(--font-size-small);
+    width: 10ch;
   }
 
   .empty-listing {
