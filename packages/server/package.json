@@ -37,5 +37,9 @@
   "engines": {
     "node": "^20"
   },
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "node-fetch": "^3.3.2",
+    "replicate": "^1.0.1"
+  }
 }
