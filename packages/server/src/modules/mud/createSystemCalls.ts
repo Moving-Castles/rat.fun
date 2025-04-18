@@ -89,6 +89,7 @@ export function createSystemCalls(network: SetupNetworkResult) {
 
   const createRoom = async (
     playerId: string,
+    roomID: string,
     roomName: string,
     roomPrompt: string
   ) => {
@@ -100,6 +101,7 @@ export function createSystemCalls(network: SetupNetworkResult) {
       
       const tx = await network.worldContract.write.ratroom__createRoom([
         playerId,
+        roomID,
         roomName,
         roomPrompt,
       ]);

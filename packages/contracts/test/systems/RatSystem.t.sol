@@ -85,7 +85,7 @@ contract RatSystemTest is BaseTest {
     vm.stopPrank();
 
     prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(bobId, "test room", "test room");
+    bytes32 roomId = world.ratroom__createRoom(bobId, bytes32(0), "test room", "test room");
     vm.stopPrank();
 
     // Trait to add

@@ -8,12 +8,12 @@ import blocksToHtml from "@sanity/block-content-to-html"
 import { get, has } from "lodash"
 import imageUrlBuilder from "@sanity/image-url"
 
-const SANITY_PROJECT_ID = "70kzkeor"
+const SANITY_PROJECT_ID = "kupagww3"
 
 export const client = createClient({
   projectId: SANITY_PROJECT_ID,
   dataset: "production",
-  apiVersion: "2023-10-23", // use a UTC date string
+  apiVersion: "2025-04-18",
   useCdn: true
 })
 

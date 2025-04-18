@@ -32,7 +32,7 @@ contract DevSystem is System {
     bytes32 _roomLevel,
     uint256 _extraBalance
   ) public onlyAdmin returns (bytes32 roomId) {
-    roomId = LibRoom.createRoom(_roomName, _roomPrompt, GameConfig.getAdminId(), _roomLevel);
+    roomId = LibRoom.createRoom(_roomName, _roomPrompt, GameConfig.getAdminId(), _roomLevel, bytes32(0));
     Balance.set(roomId, Balance.get(roomId) + _extraBalance);
   }
 

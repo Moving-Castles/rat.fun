@@ -49,7 +49,7 @@ contract ManagerSystemTest is BaseTest {
     vm.stopPrank();
 
     prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(bobId, "test room", "test room");
+    bytes32 roomId = world.ratroom__createRoom(bobId, bytes32(0), "test room", "test room");
     vm.stopPrank();
 
     // As admin
@@ -80,7 +80,7 @@ contract ManagerSystemTest is BaseTest {
     vm.stopPrank();
 
     prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(bobId, "test room", "test room");
+    bytes32 roomId = world.ratroom__createRoom(bobId, bytes32(0), "test room", "test room");
     vm.stopPrank();
 
     // As admin
@@ -112,7 +112,7 @@ contract ManagerSystemTest is BaseTest {
     vm.stopPrank();
 
     prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(bobId, "test room", "test room");
+    bytes32 roomId = world.ratroom__createRoom(bobId, bytes32(0), "test room", "test room");
     vm.stopPrank();
 
     // As admin
@@ -153,7 +153,7 @@ contract ManagerSystemTest is BaseTest {
     vm.stopPrank();
 
     prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(bobId, "test room", "test room");
+    bytes32 roomId = world.ratroom__createRoom(bobId, bytes32(0), "test room", "test room");
     vm.stopPrank();
 
     // As admin
@@ -194,7 +194,7 @@ contract ManagerSystemTest is BaseTest {
     vm.stopPrank();
 
     prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(bobId, "test room", "test room");
+    bytes32 roomId = world.ratroom__createRoom(bobId, bytes32(0), "test room", "test room");
     vm.stopPrank();
 
     // As admin
@@ -237,7 +237,7 @@ contract ManagerSystemTest is BaseTest {
     vm.stopPrank();
 
     prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(bobId, "test room", "test room");
+    bytes32 roomId = world.ratroom__createRoom(bobId, bytes32(0), "test room", "test room");
     vm.stopPrank();
 
     // Traits to add
@@ -330,7 +330,7 @@ contract ManagerSystemTest is BaseTest {
     vm.stopPrank();
 
     prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(bobId, "test room", "test room");
+    bytes32 roomId = world.ratroom__createRoom(bobId, bytes32(0), "test room", "test room");
     vm.stopPrank();
 
     // Trait to add
@@ -369,7 +369,7 @@ contract ManagerSystemTest is BaseTest {
     vm.stopPrank();
 
     prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(bobId, "test room", "test room");
+    bytes32 roomId = world.ratroom__createRoom(bobId, bytes32(0), "test room", "test room");
     vm.stopPrank();
 
     // Trait to add
@@ -408,7 +408,7 @@ contract ManagerSystemTest is BaseTest {
     vm.stopPrank();
 
     prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(bobId, "test room", "test room");
+    bytes32 roomId = world.ratroom__createRoom(bobId, bytes32(0), "test room", "test room");
     vm.stopPrank();
 
     // Trait to add
@@ -444,7 +444,7 @@ contract ManagerSystemTest is BaseTest {
     vm.stopPrank();
 
     prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(bobId, "test room", "test room");
+    bytes32 roomId = world.ratroom__createRoom(bobId, bytes32(0), "test room", "test room");
     vm.stopPrank();
 
     // Trait to add
@@ -496,7 +496,7 @@ contract ManagerSystemTest is BaseTest {
     vm.stopPrank();
 
     prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(bobId, "test room", "test room");
+    bytes32 roomId = world.ratroom__createRoom(bobId, bytes32(0), "test room", "test room");
     vm.stopPrank();
 
     // Trait to add
@@ -619,7 +619,7 @@ contract ManagerSystemTest is BaseTest {
     vm.stopPrank();
 
     prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(bobId, "test room", "test room");
+    bytes32 roomId = world.ratroom__createRoom(bobId, bytes32(0), "test room", "test room");
     vm.stopPrank();
 
     // Item to add
@@ -658,7 +658,7 @@ contract ManagerSystemTest is BaseTest {
     vm.stopPrank();
 
     prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(bobId, "test room", "test room");
+    bytes32 roomId = world.ratroom__createRoom(bobId, bytes32(0), "test room", "test room");
     vm.stopPrank();
 
     // Item to add
@@ -699,7 +699,7 @@ contract ManagerSystemTest is BaseTest {
     vm.stopPrank();
 
     prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(bobId, "test room", "test room");
+    bytes32 roomId = world.ratroom__createRoom(bobId, bytes32(0), "test room", "test room");
     vm.stopPrank();
 
     // Item to add
@@ -735,7 +735,7 @@ contract ManagerSystemTest is BaseTest {
     vm.stopPrank();
 
     prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(bobId, "test room", "test room");
+    bytes32 roomId = world.ratroom__createRoom(bobId, bytes32(0), "test room", "test room");
     vm.stopPrank();
 
     // Item to add
@@ -791,7 +791,7 @@ contract ManagerSystemTest is BaseTest {
     vm.stopPrank();
 
     prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(bobId, "test room", "test room");
+    bytes32 roomId = world.ratroom__createRoom(bobId, bytes32(0), "test room", "test room");
     vm.stopPrank();
 
     // As admin
@@ -825,7 +825,7 @@ contract ManagerSystemTest is BaseTest {
     vm.stopPrank();
 
     prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(bobId, "test room", "test room");
+    bytes32 roomId = world.ratroom__createRoom(bobId, bytes32(0), "test room", "test room");
     vm.stopPrank();
 
     // As admin
@@ -867,7 +867,7 @@ contract ManagerSystemTest is BaseTest {
     vm.stopPrank();
 
     prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(bobId, "test room", "test room");
+    bytes32 roomId = world.ratroom__createRoom(bobId, bytes32(0), "test room", "test room");
     vm.stopPrank();
 
     // As admin
@@ -908,7 +908,7 @@ contract ManagerSystemTest is BaseTest {
     vm.stopPrank();
 
     prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(bobId, "test room", "test room");
+    bytes32 roomId = world.ratroom__createRoom(bobId, bytes32(0), "test room", "test room");
     vm.stopPrank();
 
     // As admin

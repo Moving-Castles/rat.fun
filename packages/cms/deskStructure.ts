@@ -1,5 +1,5 @@
 // ICONS
-import { MdList, MdChecklist } from "react-icons/md"
+import { MdList, MdRoom, MdChecklist } from "react-icons/md"
 
 export default (S: any) =>
     S.list()
@@ -22,5 +22,15 @@ export default (S: any) =>
                     .title('Prompts')
                     .filter('_type == "prompt"')
                     .schemaType("prompt")
+            ),
+            S.divider(),
+            S.listItem()
+            .title("Rooms")
+            .icon(MdRoom)
+            .child(
+                S.documentList()
+                    .title('Rooms')
+                    .filter('_type == "room"')
+                    .schemaType("room")
             )
         ]);

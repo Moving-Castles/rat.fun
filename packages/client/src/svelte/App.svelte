@@ -8,13 +8,16 @@
   import { playerId } from "@modules/state/base/stores"
   import { websocketConnected } from "@modules/off-chain-sync/stores"
   import { FullStory, init as initFullstory } from "@fullstory/browser"
+  import { rooms } from "@modules/state/base/stores"
+  import { EMPTY_CONNECTION } from "./modules/utils/constants"
+  import { initStaticContent, staticContent } from "@modules/content"
 
   // Tippy CSS
   import "tippy.js/dist/tippy.css"
+
   import { Modal } from "@components/Main/Modal/state.svelte"
   import Loading from "@components/Loading/Loading.svelte"
   import Main from "@components/Main/Main.svelte"
-  import { EMPTY_CONNECTION } from "./modules/utils/constants"
   import HighScore from "@components/Main/HighScore/HighScore.svelte"
 
   let { environment }: { environment: ENVIRONMENT } = $props()
@@ -22,6 +25,14 @@
   const loadedEnvironment = () => {
     UIState.set(UI.SPAWNING)
   }
+
+  $effect(() => {
+    console.log("$rooms", $rooms)
+  })
+
+  $effect(() => {
+    console.log("$staticContent.rooms", $staticContent.rooms)
+  })
 
   // Init of chain sync when player is ready
   $effect(() => {
@@ -48,8 +59,8 @@
     // Remove preloader
     document.querySelector(".preloader")?.remove()
 
-    // Get static content from CMS
-    // initStaticContent()
+    // Get content from CMS
+    initStaticContent()
 
     // Preload sounds
     initSound()

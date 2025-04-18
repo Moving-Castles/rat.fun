@@ -20,7 +20,7 @@ contract RoomSystemTest is BaseTest {
     // As admin
     prankAdmin();
     startGasReport("Create room (user)");
-    bytes32 roomId = world.ratroom__createRoom(playerId, "Test room", "A test room");
+    bytes32 roomId = world.ratroom__createRoom(playerId, bytes32(0), "Test room", "A test room");
     endGasReport();
     vm.stopPrank();
 
@@ -50,6 +50,7 @@ contract RoomSystemTest is BaseTest {
     startGasReport("Create room: long prompt");
     world.ratroom__createRoom(
       playerId,
+      bytes32(0),
       "Test room",
       "The room has two doors. One doors lead to death, the other to freedom. If a rat does not make a choice within 10 minutes it is killed and the body removed. Each door has a guardian mouse that needs to be defeated to pass."
     );
@@ -66,7 +67,7 @@ contract RoomSystemTest is BaseTest {
 
     prankAdmin();
     vm.expectRevert("balance too low");
-    world.ratroom__createRoom(playerId, "Test room", "A test room");
+    world.ratroom__createRoom(playerId, bytes32(0), "Test room", "A test room");
     vm.stopPrank();
   }
 
@@ -80,7 +81,7 @@ contract RoomSystemTest is BaseTest {
 
     // As admin
     prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(playerId, "Test room", "A test room");
+    bytes32 roomId = world.ratroom__createRoom(playerId, bytes32(0), "Test room", "A test room");
     vm.stopPrank();
 
     // Check player balance (100 = room creation cost)
@@ -119,7 +120,7 @@ contract RoomSystemTest is BaseTest {
 
     // As admin
     prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(aliceId, "Test room", "A test room");
+    bytes32 roomId = world.ratroom__createRoom(aliceId, bytes32(0), "Test room", "A test room");
     vm.stopPrank();
 
     // Check room balance

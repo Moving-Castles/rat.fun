@@ -11,30 +11,37 @@ library LibRoom {
    * @param _roomPrompt The prompt for the room
    * @param _roomOwner Id of the owner of the room
    * @param _roomLevel Id of the level that the room is on
-   * @return roomId The id of the new room
+   * @return newRoomId The id of the new room
    */
   function createRoom(
     string memory _roomName,
     string memory _roomPrompt,
     bytes32 _roomOwner,
-    bytes32 _roomLevel
-  ) internal returns (bytes32 roomId) {
-    roomId = getUniqueEntity();
-    EntityType.set(roomId, ENTITY_TYPE.ROOM);
-    RoomPrompt.set(roomId, _roomPrompt);
-    Name.set(roomId, _roomName);
+    bytes32 _roomLevel,
+    bytes32 _roomId
+  ) internal returns (bytes32 newRoomId) {
+    // If _roomId is not provided, generate a new unique id
+    if (_roomId == bytes32(0)) {
+      newRoomId = getUniqueEntity();
+    } else {
+      newRoomId = _roomId;
+    }
+
+    EntityType.set(newRoomId, ENTITY_TYPE.ROOM);
+    RoomPrompt.set(newRoomId, _roomPrompt);
+    Name.set(newRoomId, _roomName);
 
     uint32 newRoomIndex = GameConfig.getGlobalRoomIndex() + 1;
     GameConfig.setGlobalRoomIndex(newRoomIndex);
-    Index.set(roomId, newRoomIndex);
-    CreationBlock.set(roomId, block.number);
+    Index.set(newRoomId, newRoomIndex);
+    CreationBlock.set(newRoomId, block.number);
 
-    Level.set(roomId, _roomLevel);
-    Owner.set(roomId, _roomOwner);
-    VisitCount.set(roomId, 0);
+    Level.set(newRoomId, _roomLevel);
+    Owner.set(newRoomId, _roomOwner);
+    VisitCount.set(newRoomId, 0);
 
     // Add to room's balance
-    Balance.set(roomId, RoomCreationCost.get(_roomLevel));
+    Balance.set(newRoomId, RoomCreationCost.get(_roomLevel));
   }
 
   /**

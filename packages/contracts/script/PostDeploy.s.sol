@@ -38,7 +38,8 @@ contract PostDeploy is Script {
       "Electrical Shock Therapy",
       "The rat gets psychological disorder, or heals one (even if unlikely).",
       adminId,
-      firstLevel
+      firstLevel,
+      bytes32(0)
     );
 
     vm.stopBroadcast();

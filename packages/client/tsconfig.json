@@ -39,6 +39,12 @@
       "@server/*": [
         "../server/src/*"
       ],
+      "@cms/*": [
+        "../cms/*"
+      ],
+      "@sanity-types": [
+        "../cms/sanity.types"
+      ]
     },
   },
   "include": [
