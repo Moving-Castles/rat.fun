@@ -43,7 +43,6 @@
       <div class="room-info-row top">
         <!-- INDEX -->
         <span class="index small">Room #{room.index}</span>
-        <div class="index small">{roomId}</div>
         <!-- DIVIDER -->
         <span class="divider">•</span>
         <!-- CREATION TIME  -->

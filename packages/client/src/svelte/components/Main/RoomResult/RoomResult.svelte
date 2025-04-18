@@ -8,7 +8,7 @@
   import { enterRoom } from "@components/Main/RoomResult"
   import { ENVIRONMENT } from "@mud/enums"
   import { walletNetwork } from "@modules/network"
-
+  import type { Hex } from "viem"
   import Log from "@components/Main/RoomResult/Log/Log.svelte"
   import RoomMeta from "@components/Main/RoomResult/RoomMeta/RoomMeta.svelte"
   import RatInfoBox from "@components/Main/RoomResult/InfoBox/Rat/RatInfoBox.svelte"
@@ -82,7 +82,11 @@
 
 <div class="room-result">
   {#if entering && animationstarted}
-    <RoomMeta rat={$ratState} room={$roomsState[roomId ?? ""]} />
+    <RoomMeta
+      rat={$ratState}
+      room={$roomsState[roomId ?? ""]}
+      roomId={roomId as Hex}
+    />
   {:else}
     <!-- INFO BOXES -->
     <div class="info-boxes">

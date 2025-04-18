@@ -1,16 +1,19 @@
 import { writable } from "svelte/store"
-import type { FrozenRat } from "./types"
-
-export const frozenRoom = writable<Room | null>(null)
+import type { FrozenRat, FrozenRoom } from "./types"
+import type { Hex } from "viem"
+export const frozenRoom = writable<FrozenRoom  | null>(null)
 export const frozenRat = writable<FrozenRat | null>(null)
 
-export function freezeObjects(rat: Rat, room: Room) {
-  const preppedRat = structuredClone(rat)
+export function freezeObjects(rat: Rat, room: Room, roomId: Hex) {
+  const preppedRat = structuredClone(rat) as FrozenRat
   if (!preppedRat.inventory) preppedRat.inventory = []
   if (!preppedRat.traits) preppedRat.traits = []
 
   frozenRat.set(preppedRat)
-  frozenRoom.set(structuredClone(room))
+
+  const preppedRoom = structuredClone(room) as FrozenRoom
+  preppedRoom.id = roomId
+  frozenRoom.set(preppedRoom)
 }
 
 // ------------------------------------------------------------

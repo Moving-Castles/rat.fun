@@ -1,20 +1,24 @@
 <script lang="ts">
   import { onMount } from "svelte"
   import { gsap } from "gsap"
-
+  import { staticContent, urlFor } from "@modules/content"
+  import type { Hex } from "viem"
   import {
     frozenRoom,
     freezeObjects,
   } from "@components/Main/RoomResult/state.svelte"
-  import { staticContent, lastUpdated, urlFor } from "@modules/content"
 
-  const { rat, room }: { rat: Rat; room: Room } = $props()
+  const { rat, room, roomId }: { rat: Rat; room: Room; roomId: Hex } = $props()
 
   // Elements
   let roomIndexElement = $state<HTMLDivElement>()
   let imageContainerElement = $state<HTMLDivElement>()
   let promptElement = $state<HTMLDivElement>()
   let roomInnerElement = $state<HTMLDivElement>()
+
+  let sanityRoomContent = $derived(
+    $staticContent.rooms.find(r => r._id == ($frozenRoom?.Id ?? ""))
+  )
 
   // Create parent timeline
   const metaTimeline = gsap.timeline({
@@ -26,8 +30,8 @@
     // We want the pre-result state to gradually apply changes to
     // without reactivity from on chain changes
     // Do it here becuase RoomResult parent is loaded early
-    freezeObjects(rat, room)
-    // console.log("$frozenRoom", $frozenRoom)
+    freezeObjects(rat, room, roomId)
+    console.log("$frozenRoom", $frozenRoom)
     // console.log("$frozenRat", $frozenRat)
 
     if (
@@ -58,8 +62,15 @@
       ROOM #{$frozenRoom?.index ?? ""}
     </div>
     <!-- IMAGE -->
-    <div class="room-image">
-      <img src="/images/room3.jpg" alt={room.name} />
+    <div class="room-image" bind:this={imageContainerElement}>
+      {#if sanityRoomContent}
+        <img
+          src={urlFor(sanityRoomContent?.image).url()}
+          alt={$frozenRoom?.name ?? ""}
+        />
+      {:else}
+        <img src="/images/room3.jpg" alt={$frozenRoom?.name ?? ""} />
+      {/if}
     </div>
     <!-- PROMPT -->
     <div class="prompt" bind:this={promptElement}>

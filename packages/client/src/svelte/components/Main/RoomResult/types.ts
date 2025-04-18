@@ -45,7 +45,11 @@ export type TempItem = {
   value: number
 }  
 
-export type FrozenRat = Rat & {
-  inventory: Array<string | TempItem>
-  traits: Array<string | TempItem>
-}
+  export type FrozenRat = Rat & {
+    inventory: Array<string | TempItem>
+    traits: Array<string | TempItem>
+  }
+
+  export type FrozenRoom = Room & {
+    id: Hex
+  }
