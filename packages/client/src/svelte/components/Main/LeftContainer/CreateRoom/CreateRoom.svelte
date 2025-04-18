@@ -4,6 +4,7 @@
   import { getUIState } from "@modules/ui/state.svelte"
   import { ENVIRONMENT } from "@mud/enums"
   import { walletNetwork } from "@modules/network"
+  import { initStaticContent, staticContent } from "@modules/content"
 
   import CharacterCounter from "@components/Main/LeftContainer/CreateRoom/CharacterCounter.svelte"
   import Spinner from "@components/Main/Shared/Spinner/Spinner.svelte"
@@ -37,6 +38,8 @@
 
     await createRoom(environment, $walletNetwork, newName, newPrompt)
     busy = false
+    await initStaticContent()
+
     goYourRooms()
   }
 

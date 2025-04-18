@@ -1,5 +1,9 @@
 <script lang="ts">
   import { frozenRoom } from "@components/Main/RoomResult/state.svelte"
+  import { staticContent, lastUpdated, urlFor } from "@modules/content"
+  let sanityRoomContent = $derived(
+    $staticContent.rooms.find(r => r.title == roomId)
+  )
 </script>
 
 <div class="room-info-box">
@@ -12,7 +16,13 @@
       </div>
       <!-- IMAGE -->
       <div class="image-container">
-        <img src="/images/room3.jpg" alt={$frozenRoom.name} />
+        {#key $lastUpdated}
+          {#if sanityRoomContent}
+            <img src={urlFor(sanityRoomContent?.image).url()} alt={room.name} />
+          {:else}
+            <img src="/images/room3.jpg" alt={room.name} />
+          {/if}
+        {/key}
       </div>
       <!-- BALANCE -->
       <div class="info-item">

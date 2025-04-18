@@ -4,6 +4,7 @@
   import { getUIState } from "@modules/ui/state.svelte"
   import { playSound } from "@modules/sound"
   import { getRoomOwnerName } from "@modules/state/base/helpers"
+  import { staticContent, lastUpdated, urlFor } from "@modules/content"
   import { rat } from "@modules/state/base/stores"
 
   import LiquidateRoom from "@components/Main/LeftContainer/YourRooms/LiquidateRoom.svelte"
@@ -13,6 +14,10 @@
     room,
     isOwnRoomListing,
   }: { roomId: Hex; room: Room; isOwnRoomListing: boolean } = $props()
+
+  let sanityRoomContent = $derived(
+    $staticContent.rooms.find(r => r.title == roomId)
+  )
 
   let { rooms } = getUIState()
 
@@ -35,7 +40,13 @@
     <div class="room-inner-container">
       <!-- ROOM IMAGE -->
       <div class="room-image">
-        <img src="/images/room3.jpg" alt={room.name} />
+        {#key $lastUpdated}
+          {#if sanityRoomContent}
+            <img src={urlFor(sanityRoomContent?.image).url()} alt={room.name} />
+          {:else}
+            <img src="/images/room3.jpg" alt={room.name} />
+          {/if}
+        {/key}
       </div>
 
       <!-- ROOM INFO -->

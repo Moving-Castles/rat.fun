@@ -3,13 +3,17 @@
   import { getUIState } from "@modules/ui/state.svelte"
   import { closeRoom } from "@modules/action"
   import { playSound } from "@modules/sound"
-
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
   import { tippy } from "svelte-tippy"
   import {
     ModalTarget,
     getModalState,
   } from "@components/Main/Modal/state.svelte"
+  import { staticContent, lastUpdated, urlFor } from "@modules/content"
+
+  let sanityRoomContent = $derived(
+    $staticContent.rooms.find(r => r.title == roomId)
+  )
 
   let { room, roomId, isOwnRoomListing } = $props()
 
@@ -65,11 +69,15 @@
 {#snippet confirmLiquidation()}
   <div class="confirmation danger">
     <div class="content">
-      <img
-        class="liquidate-image"
-        src="/images/room3.jpg"
-        alt="Confirm Liquidation"
-      />
+      <div class="room-image">
+        {#key $lastUpdated}
+          {#if sanityRoomContent}
+            <img src={urlFor(sanityRoomContent?.image).url()} alt={room.name} />
+          {:else}
+            <img src="/images/room3.jpg" alt={room.name} />
+          {/if}
+        {/key}
+      </div>
       <button disabled={busy} onclick={sendLiquidateRoom} class="modal-button">
         {liquidationMessage}
       </button>

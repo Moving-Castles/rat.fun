@@ -3,7 +3,7 @@ import fetch from "node-fetch"
 
 export const generateImage = async (prompt: string = "A rat") => {
   const input = {
-    image: "https://rat-room-pyrope.netlify.app/images/room.png",
+    image: "https://rat-room-pyrope.netlify.app/images/room.png", // switch to png for 4:3 :upside_down_smiley_face:
     prompt: "security camera view of {PROMPT}. tiles",
     go_fast: true,
     guidance: 3.5,

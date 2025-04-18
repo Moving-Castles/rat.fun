@@ -3,13 +3,21 @@
   import type { Hex } from "viem"
   import { getRoomOwnerName } from "@modules/state/base/helpers"
   import { truncateString, blocksToReadableTime } from "@modules/utils"
+  import { staticContent, lastUpdated, urlFor } from "@modules/content"
   import { blockNumber } from "@modules/network"
+  import { getContentState } from "@modules/content/state.svelte"
+
+  let { rooms: roomsState } = getContentState()
 
   let {
     roomId,
     room,
     isOwnRoomListing,
   }: { roomId: Hex; room: Room; isOwnRoomListing: boolean } = $props()
+
+  let sanityRoomContent = $derived(
+    roomsState.current.find(r => r._id.trim() == roomId.trim())
+  )
 
   let { rooms } = getUIState()
 </script>
@@ -21,7 +29,11 @@
 >
   <!-- IMAGE -->
   <div class="room-image">
-    <img src="/images/room3.jpg" alt={room.name} />
+    {#if sanityRoomContent}
+      <img src={urlFor(sanityRoomContent?.image).url()} alt={room.name} />
+    {:else}
+      <img src="/images/room3.jpg" alt={room.name} />
+    {/if}
   </div>
   <!-- INFO -->
   <div class="room-info">
@@ -31,6 +43,7 @@
       <div class="room-info-row top">
         <!-- INDEX -->
         <span class="index small">Room #{room.index}</span>
+        <div class="index small">{roomId}</div>
         <!-- DIVIDER -->
         <span class="divider">•</span>
         <!-- CREATION TIME  -->

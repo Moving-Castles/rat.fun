@@ -7,6 +7,7 @@
     frozenRat,
     freezeObjects,
   } from "@components/Main/RoomResult/state.svelte"
+  import { staticContent, lastUpdated, urlFor } from "@modules/content"
 
   const { rat, room }: { rat: Rat; room: Room } = $props()
 
@@ -15,6 +16,9 @@
   let imageContainerElement = $state<HTMLDivElement>()
   let promptElement = $state<HTMLDivElement>()
   let roomInnerElement = $state<HTMLDivElement>()
+  let sanityRoomContent = $derived(
+    $staticContent.rooms.find(r => r.title == roomId)
+  )
 
   // Create parent timeline
   const metaTimeline = gsap.timeline({
@@ -58,8 +62,14 @@
       ROOM #{$frozenRoom?.index ?? ""}
     </div>
     <!-- IMAGE -->
-    <div class="image-container" bind:this={imageContainerElement}>
-      <img src="/images/room3.jpg" alt={$frozenRoom?.name ?? ""} />
+    <div class="room-image">
+      {#key $lastUpdated}
+        {#if sanityRoomContent}
+          <img src={urlFor(sanityRoomContent?.image).url()} alt={room.name} />
+        {:else}
+          <img src="/images/room3.jpg" alt={room.name} />
+        {/if}
+      {/key}
     </div>
     <!-- PROMPT -->
     <div class="prompt" bind:this={promptElement}>
