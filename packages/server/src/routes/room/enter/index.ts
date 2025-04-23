@@ -32,7 +32,7 @@ import { components, systemCalls, network } from '@modules/mud/initMud';
 import { getSenderId } from '@modules/signature';
 
 // CMS
-import { getSystemPrompts } from '@modules/cms';
+import { getSystemPrompts, writeOutcomeToCMS } from '@modules/cms';
 
 // Validate
 import { validateInputData } from './validation';
@@ -103,6 +103,20 @@ async function routes (fastify: FastifyInstance) {
             // Broadcast alert
             const {topic, message} = createMessage(rat, room);
             broadcast(topic, message);
+
+            // Write outcome to CMS
+            console.time('–– CMS write');
+            try {
+                // Get world address
+                const worldAddress = network?.worldContract?.address ?? "0x0"
+
+                // Write the document
+                await writeOutcomeToCMS(worldAddress, playerId, room, rat, correctedEvents, validatedOutcome)
+
+            } catch (error) {
+                console.error("Error", error)
+            }
+            console.timeEnd('–– CMS write');
 
             reply.send({
                 log: correctedEvents.log ?? [],

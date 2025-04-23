@@ -17,6 +17,12 @@
             validation: (Rule: any) => Rule.required()
         },
         {
+            title: 'Owner',
+            name: 'owner',
+            type: 'string',
+            // validation: (Rule: any) => Rule.required()
+        },
+        {
             title: 'Prompt',
             name: 'prompt',
             type: 'text',

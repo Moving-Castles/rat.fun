@@ -4,5 +4,7 @@
  */
 
 export const queries = {
-    rooms: '*[_type == "room"]'
+    rooms: '*[_type == "room"]',
+    outcomesForRoom: '*[_type == "outcome" && roomId == $roomId]',
+    outcomesForRat: '*[_type == "outcome" && ratId == $ratId]',
 }

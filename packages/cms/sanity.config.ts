@@ -20,8 +20,8 @@ export default defineConfig({
       const { type } = creationContext;
       const DISABLED_TYPES = [
         'activePrompts',
-        'combinedPrompts',
-        'correctionPrompts'
+        'room',
+        'outcome'
       ];
       if (type === 'global') {
         return prev.filter((template) => !DISABLED_TYPES.includes(template.templateId));

@@ -1,5 +1,5 @@
 // ICONS
-import { MdList, MdRoom, MdChecklist } from "react-icons/md"
+import { MdList, MdRoom, MdChecklist, MdStar } from "react-icons/md"
 
 export default (S: any) =>
     S.list()
@@ -32,5 +32,15 @@ export default (S: any) =>
                     .title('Rooms')
                     .filter('_type == "room"')
                     .schemaType("room")
-            )
+            ),
+            S.divider(),
+            S.listItem()
+            .title("Outcomes")
+            .icon(MdStar)
+            .child(
+                S.documentList()
+                    .title('Outcomes')
+                    .filter('_type == "outcome"')
+                    .schemaType("outcome")
+            ),
         ]);

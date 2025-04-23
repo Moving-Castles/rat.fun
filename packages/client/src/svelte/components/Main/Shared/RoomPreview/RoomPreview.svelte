@@ -1,11 +1,14 @@
 <script lang="ts">
   import type { Hex } from "viem"
+  import { onMount } from "svelte"
   import { ratLevelIndex } from "@modules/state/base/stores"
   import { getUIState } from "@modules/ui/state.svelte"
   import { playSound } from "@modules/sound"
   import { getRoomOwnerName } from "@modules/state/base/helpers"
   import { staticContent, lastUpdated, urlFor } from "@modules/content"
   import { rat } from "@modules/state/base/stores"
+  import { loadData } from "@modules/content/sanity"
+  import { queries } from "@modules/content/sanity/groq"
 
   import LiquidateRoom from "@components/Main/LeftContainer/YourRooms/LiquidateRoom.svelte"
 
@@ -25,6 +28,12 @@
     playSound("tcm", "enteredPod")
     rooms.navigate("room", { roomId })
   }
+
+  onMount(async () => {
+    // Test to get outcomes for room
+    const outcomes = await loadData(queries.outcomesForRoom, { roomId })
+    console.log("Room outcomes", outcomes)
+  })
 </script>
 
 {#if room}

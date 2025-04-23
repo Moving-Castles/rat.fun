@@ -13,13 +13,13 @@ import { writeRoomToCMS } from "@modules/cms"
 // MUD
 import { systemCalls, network } from "@modules/mud/initMud"
 
-// AI
+// Image generation
 import { generateImage } from "@modules/image/generate"
 
 // Signature
 import { getSenderId } from "@modules/signature"
 
-// Validate
+// Validation
 import { validateInputData } from "./validation"
 
 // Error handling
@@ -57,22 +57,20 @@ async function routes(fastify: FastifyInstance) {
 
         // Generate image
         console.time("–– Image generation")
-
-        // let imageAssetRef = null;
         try {
           // Get the image data
           const imageBuffer = await generateImage(roomPrompt)
-          // Get world addy
+          
+          // Get world address
           const worldAddress = network?.worldContract?.address ?? "0x0"
-          // Make the document
-          await writeRoomToCMS(worldAddress, roomID, roomPrompt, imageBuffer)
 
-          console.log("Successfully created new room document!")
-          //
-          // imageAssetRef = newRoomDoc.image.asset._ref;
+          // Write the document
+          await writeRoomToCMS(worldAddress, roomID, roomPrompt, playerId, imageBuffer)
+          
         } catch (error) {
           console.error("Error", error)
         }
+        console.timeEnd("–– Image generation")
 
         reply.send({
           success: true,

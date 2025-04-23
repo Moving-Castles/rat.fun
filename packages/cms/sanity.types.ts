@@ -68,6 +68,50 @@ export type Geopoint = {
   alt?: number
 }
 
+export type Outcome = {
+  _id: string
+  _type: 'outcome'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  worldAddress?: string
+  playerId?: string
+  roomId?: string
+  ratId?: string
+  ratName?: string
+  log?: Array<{
+    timestamp?: string
+    event?: string
+    _key: string
+  }>
+  healthChange?: {
+    logStep?: number
+    amount?: number
+  }
+  balanceTransfer?: {
+    logStep?: number
+    amount?: number
+  }
+  traitChanges?: Array<{
+    name?: string
+    logStep?: number
+    type?: string
+    value?: number
+    id?: string
+    _key: string
+  }>
+  itemChanges?: Array<{
+    name?: string
+    logStep?: number
+    type?: string
+    value?: number
+    id?: string
+    _key: string
+  }>
+  slug?: Slug
+}
+
 export type Room = {
   _id: string
   _type: 'room'
@@ -76,6 +120,7 @@ export type Room = {
   _rev: string
   title?: string
   worldAddress?: string
+  owner?: string
   prompt?: string
   image?: {
     asset?: {
@@ -203,6 +248,7 @@ export type AllSanitySchemaTypes =
   | SanityImageDimensions
   | SanityFileAsset
   | Geopoint
+  | Outcome
   | Room
   | Slug
   | SanityImageCrop

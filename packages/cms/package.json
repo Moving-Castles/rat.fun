@@ -9,14 +9,18 @@
     "start": "sanity start",
     "build": "sanity build",
     "deploy": "sanity deploy",
-    "deploy-graphql": "sanity graphql deploy"
+    "deploy-graphql": "sanity graphql deploy",
+    "purge-sanity": "ts-node scripts/purgeSanity.ts"
   },
   "keywords": [
     "sanity"
   ],
   "dependencies": {
+    "@sanity/client": "^6.12.3",
     "@sanity/code-input": "^5.1.2",
     "@sanity/vision": "^3.86.0",
+    "commander": "^11.1.0",
+    "dotenv": "^16.4.5",
     "easymde": "2.20.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
@@ -27,9 +31,12 @@
   },
   "devDependencies": {
     "@sanity/eslint-config-studio": "^5.0.2",
+    "@types/node": "^22.14.1",
     "@types/react": "^19.1.2",
     "eslint": "^9.25.1",
-    "prettier": "^3.5.3"
+    "prettier": "^3.5.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
   },
   "prettier": {
     "semi": false,
