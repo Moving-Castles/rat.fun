@@ -20,6 +20,8 @@
   )
 
   let { rooms } = getUIState()
+
+  $inspect(sanityRoomContent)
 </script>
 
 <button
@@ -60,7 +62,11 @@
         </span>
       </div>
       <!-- PROMPT -->
-      <div class="room-prompt">{room.roomPrompt}</div>
+      <div class="room-prompt">
+        <div class="content">
+          {room.roomPrompt}
+        </div>
+      </div>
     </div>
 
     <!-- SECTION 2 -->
@@ -151,14 +157,18 @@
       }
 
       .room-prompt {
+        width: 100%;
         padding-top: 5px;
         margin-top: 5px;
         margin-bottom: 5px;
         background: var(--color-alert);
         padding: 5px;
-        max-width: 55ch;
         word-break: break-word; /* Break long words if needed */
         overflow-wrap: anywhere; /* Break anywhere if necessary to prevent overflow */
+
+        .content {
+          max-width: 55ch;
+        }
       }
 
       .index {

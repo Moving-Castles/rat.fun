@@ -11,6 +11,8 @@
   import { queries } from "@modules/content/sanity/groq"
 
   import LiquidateRoom from "@components/Main/LeftContainer/YourRooms/LiquidateRoom.svelte"
+  import RoomStats from "@components/Main/Shared/RoomStats/RoomStats.svelte"
+
   import type { Outcome } from "@sanity-types"
   let {
     roomId,
@@ -92,10 +94,14 @@
       </div>
 
       <div class="room-prompt">
-        {room.roomPrompt}
+        <div class="content">
+          {room.roomPrompt}
+        </div>
       </div>
 
-      <!-- <div class="room-recent-events">TODO: RECENT EVENTS</div> -->
+      <div class="room-stats">
+        <RoomStats content={sanityRoomContent} />
+      </div>
 
       {#if room.balance > 0 && ($rat?.health ?? 0) > 0 && !isOwnRoomListing}
         <div class="room-enter">
@@ -192,7 +198,15 @@
       margin-bottom: 15px;
       word-break: break-word; /* Break long words if needed */
       overflow-wrap: anywhere; /* Break anywhere if necessary to prevent overflow */
-      max-width: 55ch;
+      width: 100%;
+      .content {
+        max-width: 55ch;
+      }
+    }
+
+    .room-stats {
+      height: 200px;
+      margin-bottom: 15px;
     }
 
     .room-recent-events {
