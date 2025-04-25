@@ -139,6 +139,7 @@ export async function writeOutcomeToCMS(
   playerId: string,
   room: Room,
   rat: Rat,
+  message: string,
   newRoomValue: number,
   roomValueChange: number,
   newRatValue: number,
@@ -163,6 +164,7 @@ export async function writeOutcomeToCMS(
       roomValueChange: roomValueChange,
       ratValue: newRatValue,
       ratValueChange: ratValueChange,
+      outcomeMessage: message,
       slug: {
         _type: "slug",
         current: outcomeID,

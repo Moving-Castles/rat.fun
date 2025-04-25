@@ -107,7 +107,7 @@ async function routes (fastify: FastifyInstance) {
             console.log('Corrected events:', correctedEvents);
 
             // Broadcast alert
-            const {topic, message} = createMessage(rat, room);
+            const {topic, message} = createMessage(rat, room, validatedOutcome);
             broadcast(topic, message);
 
             // Write outcome to CMS
@@ -120,6 +120,7 @@ async function routes (fastify: FastifyInstance) {
                     playerId, 
                     room, 
                     rat,
+                    message,
                     newRoomValue, 
                     roomValueChange, 
                     newRatValue, 
