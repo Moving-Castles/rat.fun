@@ -144,6 +144,7 @@ export async function writeOutcomeToCMS(
   roomValueChange: number,
   newRatValue: number,
   ratValueChange: number,
+  newRatHealth: number,
   events: CorrectionReturnValue,
   outcome: OutcomeReturnValue
 ): Promise<OutcomeDoc> {
@@ -160,6 +161,7 @@ export async function writeOutcomeToCMS(
       log: createOutcomeEvents(events),
       ratId: rat.id,
       ratName: rat.name,
+      ratHealth: newRatHealth,
       roomValue: newRoomValue,
       roomValueChange: roomValueChange,
       ratValue: newRatValue,

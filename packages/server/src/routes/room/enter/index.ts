@@ -91,7 +91,8 @@ async function routes (fastify: FastifyInstance) {
                 newRoomValue, 
                 roomValueChange, 
                 newRatValue, 
-                ratValueChange 
+                ratValueChange,
+                newRatHealth
             } = await systemCalls.applyOutcome(rat, room, eventResults.outcome);
             console.timeEnd('–– Chain');
 
@@ -125,6 +126,7 @@ async function routes (fastify: FastifyInstance) {
                     roomValueChange, 
                     newRatValue, 
                     ratValueChange, 
+                    newRatHealth,
                     correctedEvents, 
                     validatedOutcome
                 )

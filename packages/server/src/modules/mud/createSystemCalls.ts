@@ -68,12 +68,15 @@ export function createSystemCalls(network: SetupNetworkResult) {
 
         const { newRatValue, ratValueChange } = getRatValue(rat, newOnChainData.rat);
 
+        const newRatHealth = newOnChainData.rat?.stats?.health ?? 0;
+
         return {
           validatedOutcome,
           newRoomValue,
           roomValueChange,
           newRatValue,
-          ratValueChange
+          ratValueChange,
+          newRatHealth
         }
       } catch (error) {
         // If it's already one of our custom errors, rethrow it

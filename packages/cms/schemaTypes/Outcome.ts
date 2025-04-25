@@ -158,6 +158,13 @@ export default {
             validation: (Rule: any) => Rule.required()
         },
         {
+            title: 'Rat health',
+            name: 'ratHealth',
+            type: 'number',
+            readOnly: true,
+            validation: (Rule: any) => Rule.required()
+        },
+        {
             title: 'Slug',
             name: 'slug',
             type: 'slug',

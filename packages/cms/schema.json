@@ -636,6 +636,13 @@
         },
         "optional": true
       },
+      "ratHealth": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "number"
+        },
+        "optional": true
+      },
       "slug": {
         "type": "objectAttribute",
         "value": {

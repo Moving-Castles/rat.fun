@@ -114,6 +114,7 @@ export type Outcome = {
   roomValueChange?: number
   ratValue?: number
   ratValueChange?: number
+  ratHealth?: number
   slug?: Slug
 }
 
