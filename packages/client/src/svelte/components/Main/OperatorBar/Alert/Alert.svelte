@@ -36,7 +36,7 @@
     align-items: center;
     justify-content: center;
     border-left: 1px solid white;
-    font-size: var(--font-size-small);
+    font-size: var(--font-size-very-small);
     color: black;
   }
 </style>
