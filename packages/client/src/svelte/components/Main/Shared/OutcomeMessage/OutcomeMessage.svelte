@@ -10,7 +10,7 @@
   let elapsed = $derived.by(() => {
     if (tick) return timeSince(new Date(outcome._createdAt).getTime())
   })
-  let ago = $derived(elapsed !== "now" && "ago")
+  let ago = $derived(elapsed !== "now" ? "ago" : "")
 
   onMount(() => {
     interval = setInterval(() => tick++, 5000)

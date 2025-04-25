@@ -5,6 +5,6 @@
 
 export const queries = {
     rooms: '*[_type == "room"]',
-    outcomesForRoom: '*[_type == "outcome" && roomId == $roomId]',
-    outcomesForRat: '*[_type == "outcome" && ratId == $ratId]',
+    outcomesForRoom: '*[_type == "outcome" && roomId == $roomId && worldAddress == $worldAddress]',
+    outcomesForRat: '*[_type == "outcome" && ratId == $ratId && worldAddress == $worldAddress]',
 }

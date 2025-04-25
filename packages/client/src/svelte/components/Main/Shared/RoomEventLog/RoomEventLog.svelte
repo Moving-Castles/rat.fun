@@ -4,6 +4,7 @@
   import { client } from "@modules/content/sanity"
   import { queries } from "@modules/content/sanity/groq"
   import OutcomeMessage from "../OutcomeMessage/OutcomeMessage.svelte"
+  import { publicNetwork } from "@modules/network"
 
   let { roomId, initialOutcomes } = $props()
 
@@ -11,7 +12,7 @@
   let outcomes = $state(initialOutcomes)
 
   const query = queries.outcomesForRoom
-  const params = { roomId }
+  const params = { roomId, worldAddress: $publicNetwork.worldAddress }
 
   const callback = update => {
     if (!outcomes) {

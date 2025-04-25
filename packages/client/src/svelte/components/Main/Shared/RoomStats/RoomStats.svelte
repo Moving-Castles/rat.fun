@@ -12,7 +12,7 @@
 
   // Layout setup
   let width = $state(0) // width will be set by the clientWidth
-  const height = 170
+  const height = 300
 
   const padding = { top: 6, right: 6, bottom: 6, left: 6 }
 

@@ -10,6 +10,7 @@
   import { getRoomOwnerName } from "@modules/state/base/helpers"
   import { staticContent, lastUpdated, urlFor } from "@modules/content"
   import { rat } from "@modules/state/base/stores"
+  import { publicNetwork } from "@modules/network"
   import { loadData } from "@modules/content/sanity"
   import { queries } from "@modules/content/sanity/groq"
 
@@ -41,6 +42,7 @@
     // Test to get outcomes for room
     const outcomes = (await loadData(queries.outcomesForRoom, {
       roomId,
+      worldAddress: $publicNetwork.worldAddress,
     })) as Outcome[]
 
     // Sort the outcomes in order of creation
@@ -134,7 +136,10 @@
 
       <!-- Room stats with graph -->
       <div class="room-stats">
-        <RoomStats content={sanityRoomContent} data={plotData} />
+        <div class="header">Something</div>
+        <div class="content">
+          <RoomStats content={sanityRoomContent} data={plotData} />
+        </div>
       </div>
 
       <!-- Room event log -->
@@ -142,10 +147,6 @@
         <div class="room-event-log">
           <RoomEventLog {roomId} initialOutcomes={roomOutcomes} />
         </div>
-      {/if}
-
-      {#if ($rat?.health ?? 0) <= 0 && !isOwnRoomListing}
-        <div class="no-rat-warning">Deploy a rat to access this room</div>
       {/if}
 
       <!-- Liquidate Room -->
@@ -158,6 +159,10 @@
       <div class="room-enter">
         <button onclick={sendEnterRoom}>Send {$rat.name} to room</button>
       </div>
+    {/if}
+
+    {#if ($rat?.health ?? 0) <= 0 && !isOwnRoomListing}
+      <div class="no-rat-warning">Deploy a rat to access this room</div>
     {/if}
   </div>
 {/if}
@@ -253,8 +258,24 @@
     }
 
     .room-stats {
-      height: 200px;
       margin-bottom: 15px;
+      .header {
+        border-left: 1px solid var(--color-grey-mid);
+        border-top: 1px solid var(--color-grey-mid);
+        border-right: 1px solid var(--color-grey-mid);
+        border-bottom: 1px dashed var(--color-grey-mid);
+        padding: 12px;
+        display: flex;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        background: black;
+      }
+
+      .content {
+        height: 300px;
+        border-right: 1px solid var(--color-grey-mid);
+      }
     }
 
     .room-recent-events {
@@ -273,12 +294,13 @@
 
   .no-rat-warning {
     background: var(--color-death);
-    padding: 20px;
-    margin-top: 15px;
+    padding: 30px 20px;
+    // margin-top: 15px;
     color: white;
     text-align: center;
   }
 
+  .no-rat-warning,
   .room-enter {
     position: sticky;
     bottom: 0;
