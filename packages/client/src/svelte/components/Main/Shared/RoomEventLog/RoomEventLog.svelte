@@ -12,18 +12,25 @@
   const query = queries.outcomesForRoom
   const params = { roomId: room._id }
 
-  onMount(() => {
-    console.log("watch for changes")
+  const callback = update => {
+    if (!outcomes) {
+      console.error("Outcomes is undefined")
+      return
+    }
+    console.log(update)
+    console.log(update.result?._id)
+    console.log(outcomes.map(o => o._id))
+    if (!outcomes.map(o => o._id).includes(update?.result?._id)) {
+      // console.log("adding to outcome")
+      // outcomes.set([...outcomes, update.result])
+      outcomes.push(update.result)
+    }
+  }
 
-    subscription = client.listen(query, params).subscribe(update => {
-      console.log(update.result?._id)
-      console.log(outcomes.map(o => o._id))
-      if (!outcomes.map(o => o._id).includes(update?.result?._id)) {
-        // console.log("adding to outcome")
-        // outcomes.set([...outcomes, update.result])
-        outcomes.push(update.result)
-      }
-    })
+  onMount(() => {
+    console.log("watch for changes", outcomes)
+
+    subscription = client.listen(query, params).subscribe(callback)
   })
 
   onDestroy(() => {
@@ -35,11 +42,7 @@
 <div class="outcomes">
   {#each outcomes as outcome (outcome._id)}
     <div class="outcome">
-      {outcome._createdAt}
-      {outcome.ratName} entered.
-      {outcome.ratValue}
-      {outcome.ratValueChange}
-      {outcome.ratHealth}
+      {outcome.outcomeMessage}
     </div>
   {/each}
 </div>

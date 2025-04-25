@@ -89,7 +89,7 @@
   {#if entering && animationstarted}
     <RoomMeta
       rat={$ratState}
-      room={$roomsState[roomId ?? ""]}
+      room={$roomsState?.[roomId ?? ""]}
       roomId={roomId as Hex}
     />
   {:else}

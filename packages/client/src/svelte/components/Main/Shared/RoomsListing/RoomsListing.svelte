@@ -213,7 +213,7 @@
           <RoomPreview
             {isOwnRoomListing}
             roomId={currentRoom}
-            room={$roomsStore[currentRoom]}
+            room={$roomsStore?.[currentRoom]}
           />
         {:else}
           <div>ERROR: NO CURRENT ROOM</div>

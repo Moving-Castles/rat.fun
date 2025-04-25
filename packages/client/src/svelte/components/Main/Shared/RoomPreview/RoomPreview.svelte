@@ -132,9 +132,14 @@
         <RoomStats data={plotData} />
       </div>
 
-      <div class="room-event-log">
-        <RoomEventLog room={sanityRoomContent} initialOutcomes={roomOutcomes} />
-      </div>
+      {#if sanityRoomContent && roomOutcomes}
+        <div class="room-event-log">
+          <RoomEventLog
+            room={sanityRoomContent}
+            initialOutcomes={roomOutcomes}
+          />
+        </div>
+      {/if}
 
       {#if room.balance > 0 && ($rat?.health ?? 0) > 0 && !isOwnRoomListing}
         <div class="room-enter">
