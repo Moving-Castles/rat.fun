@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { rats } from "@modules/state/base/stores"
   import { scaleTime, scaleLinear } from "d3-scale"
   import { extent, max } from "d3-array"
   import { line } from "d3-shape"
@@ -9,8 +8,6 @@
   type DataPoint = { time: number; value: number }
 
   let { data } = $props()
-
-  $inspect(data)
 
   // Layout setup
   let width = $state(0) // width will be set by the clientWidth
@@ -68,8 +65,6 @@
       })
     }
   })
-
-  $inspect($rats)
 </script>
 
 <div class="room-stats">

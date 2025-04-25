@@ -4,8 +4,6 @@
 
   let { item }: { item: string | TempItem } = $props()
 
-  $inspect(item)
-
   // Item might be the id of an item or a TempItem object
 
   const name = $derived(

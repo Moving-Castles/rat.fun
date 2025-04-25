@@ -9,8 +9,6 @@
       modal.close()
     }
   }
-
-  // $inspect(modal.show)
 </script>
 
 {#if modal.show}

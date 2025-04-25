@@ -20,8 +20,6 @@
   )
 
   let { rooms } = getUIState()
-
-  $inspect(sanityRoomContent)
 </script>
 
 <button

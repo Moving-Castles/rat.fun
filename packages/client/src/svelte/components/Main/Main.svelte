@@ -41,8 +41,6 @@
   const { current, myCurrent } = rooms
 
   let debugTransition = $state(false)
-
-  $inspect("current", $current)
 </script>
 
 {#snippet mainSnippet(className = "", transitionStyle = "")}

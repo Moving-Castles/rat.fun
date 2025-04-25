@@ -12,6 +12,7 @@
 
   import LiquidateRoom from "@components/Main/LeftContainer/YourRooms/LiquidateRoom.svelte"
   import RoomStats from "@components/Main/Shared/RoomStats/RoomStats.svelte"
+  import RoomEventLog from "@components/Main/Shared/RoomEventLog/RoomEventLog.svelte"
 
   import type { Outcome } from "@sanity-types"
   let {
@@ -27,6 +28,7 @@
   let { rooms } = getUIState()
 
   let plotData = $state([])
+  let roomOutcomes = $state<Outcome[]>()
 
   const sendEnterRoom = () => {
     playSound("tcm", "enteredPod")
@@ -42,6 +44,7 @@
     outcomes.sort((a, b) => {
       return new Date(a._createdAt).getTime() - new Date(b._createdAt).getTime()
     })
+    roomOutcomes = outcomes
     // Map the values
     const computed = [
       {
@@ -126,7 +129,11 @@
       </div>
 
       <div class="room-stats">
-        <RoomStats content={sanityRoomContent} data={plotData} />
+        <RoomStats data={plotData} />
+      </div>
+
+      <div class="room-event-log">
+        <RoomEventLog room={sanityRoomContent} initialOutcomes={roomOutcomes} />
       </div>
 
       {#if room.balance > 0 && ($rat?.health ?? 0) > 0 && !isOwnRoomListing}
@@ -257,5 +264,11 @@
     margin-top: 15px;
     color: white;
     text-align: center;
+  }
+
+  .room-enter {
+    position: sticky;
+    bottom: 0;
+    z-index: 1;
   }
 </style>

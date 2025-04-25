@@ -4,8 +4,6 @@
 
   let { trait }: { trait: string | TempItem } = $props()
 
-  $inspect(trait)
-
   // Trait might be the id of a trait or a TempItem object
 
   const name = $derived(
