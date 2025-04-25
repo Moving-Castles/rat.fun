@@ -153,6 +153,8 @@
   })
 </script>
 
+<p>ROOM LOGS</p>
+
 <div class="log-entry" bind:this={element}>
   <div class="text" bind:this={timestampElement}>
     <span class="timestamp">

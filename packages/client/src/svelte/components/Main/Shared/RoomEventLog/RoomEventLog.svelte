@@ -3,6 +3,7 @@
   // import { rooms } from "@modules/state/base/stores"
   import { client } from "@modules/content/sanity"
   import { queries } from "@modules/content/sanity/groq"
+  import { formatDate } from "@modules/utils"
 
   let { room, initialOutcomes } = $props()
 
@@ -17,31 +18,27 @@
       console.error("Outcomes is undefined")
       return
     }
-    console.log(update)
-    console.log(update.result?._id)
-    console.log(outcomes.map(o => o._id))
+
     if (!outcomes.map(o => o._id).includes(update?.result?._id)) {
-      // console.log("adding to outcome")
-      // outcomes.set([...outcomes, update.result])
       outcomes.push(update.result)
     }
   }
 
   onMount(() => {
-    console.log("watch for changes", outcomes)
-
     subscription = client.listen(query, params).subscribe(callback)
   })
 
   onDestroy(() => {
-    console.log("unsubscribe")
     subscription?.unsubscribe()
   })
 </script>
 
 <div class="outcomes">
   {#each outcomes as outcome (outcome._id)}
-    <div class="outcome">
+    <div class="log-entry">
+      <span class="timestamp">
+        {formatDate(new Date(outcome._createdAt))}
+      </span>
       {outcome.outcomeMessage}
     </div>
   {/each}
@@ -54,5 +51,18 @@
   .outcome {
     display: block;
     margin-bottom: 12px;
+  }
+
+  .log-entry {
+    display: block;
+    margin-bottom: 0.5em;
+    line-height: 1.4em;
+
+    .timestamp {
+      background: var(--color-grey-light);
+      padding: 5px;
+      color: black;
+      display: inline-block;
+    }
   }
 </style>

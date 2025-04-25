@@ -67,14 +67,14 @@ export function removePrivateKeys(
 export function addressToId(address: string): Hex {
   if (!address) return "0x0"
   // remove '0x' prefix, pad the address with leading zeros up to 64 characters, then add '0x' prefix back
-  return "0x" + address.slice(2).padStart(64, "0").toLowerCase() as Hex
+  return ("0x" + address.slice(2).padStart(64, "0").toLowerCase()) as Hex
 }
 
 // Padded to unpadded
 export function idToAddress(paddedAddress: string): string {
   if (!paddedAddress) return "0x0"
   // remove '0x' prefix, remove leading zeros, then add '0x' prefix back
-  return "0x" + paddedAddress.slice(2).replace(/^0+/, '');
+  return "0x" + paddedAddress.slice(2).replace(/^0+/, "")
 }
 
 export function getRandomElement<T>(array: T[]): T {
@@ -289,52 +289,54 @@ export function formatDate(date) {
 
 export function padToUint256(num: number | bigint): string {
   // Convert the number to a string
-  const numString = num.toString();
+  const numString = num.toString()
   // Ensure the number string is padded to 78 characters
-  return numString.padStart(78, '0');
+  return numString.padStart(78, "0")
 }
 
 export function getRandomUint256(): bigint {
   // Initialize a BigInt for the random uint256 value
-  let randomUint256 = BigInt(0);
+  let randomUint256 = BigInt(0)
 
   // Generate 8 chunks of 32-bit random integers and combine them into a 256-bit number
   for (let i = 0; i < 8; i++) {
     // Generate a random 32-bit integer and shift it to its place in the final number
-    const random32Bits = BigInt(Math.floor(Math.random() * 0x100000000));
-    randomUint256 = (randomUint256 << BigInt(32)) | random32Bits;
+    const random32Bits = BigInt(Math.floor(Math.random() * 0x100000000))
+    randomUint256 = (randomUint256 << BigInt(32)) | random32Bits
   }
 
-  return randomUint256;
+  return randomUint256
 }
 
 export function getRandomUint32(): number {
-  return Math.floor(Math.random() * 0x100000000);
+  return Math.floor(Math.random() * 0x100000000)
 }
 
-export function parseJSONFromContent<T = Record<string, unknown>>(content: string): T {
+export function parseJSONFromContent<T = Record<string, unknown>>(
+  content: string
+): T {
   // Regex to detect a ```json code block
-  const regex = /```json([\s\S]*?)```/;
-  const match = content.match(regex);
+  const regex = /```json([\s\S]*?)```/
+  const match = content.match(regex)
 
-  let jsonString: string;
+  let jsonString: string
 
   if (match && match[1]) {
     // If a code block is found, extract its contents
-    jsonString = match[1].trim();
+    jsonString = match[1].trim()
   } else {
     // Otherwise, assume the entire content is JSON
-    jsonString = content.trim();
+    jsonString = content.trim()
   }
 
   try {
-    return JSON.parse(jsonString) as T;
+    return JSON.parse(jsonString) as T
   } catch (error: any) {
-    throw new Error("Failed to parse JSON: " + error.message);
+    throw new Error("Failed to parse JSON: " + error.message)
   }
 }
 
 export function truncateString(str: string, maxLength: number) {
-  if (str.length <= maxLength) return str;
-  return str.slice(0, maxLength) + "...";
+  if (str.length <= maxLength) return str
+  return str.slice(0, maxLength) + "..."
 }
