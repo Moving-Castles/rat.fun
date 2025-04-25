@@ -1,5 +1,8 @@
 <script lang="ts">
   import type { Hex } from "viem"
+  import type { Outcome } from "@sanity-types"
+  import type { PlotPoint } from "@components/Main/Shared/RoomStats/types"
+
   import { onMount } from "svelte"
   import { ratLevelIndex } from "@modules/state/base/stores"
   import { getUIState } from "@modules/ui/state.svelte"
@@ -13,7 +16,6 @@
   import LiquidateRoom from "@components/Main/LeftContainer/YourRooms/LiquidateRoom.svelte"
   import RoomStats from "@components/Main/Shared/RoomStats/RoomStats.svelte"
 
-  import type { Outcome } from "@sanity-types"
   let {
     roomId,
     room,
@@ -26,7 +28,7 @@
 
   let { rooms } = getUIState()
 
-  let plotData = $state([])
+  let plotData: PlotPoint[] = $state([])
 
   const sendEnterRoom = () => {
     playSound("tcm", "enteredPod")
@@ -38,10 +40,12 @@
     const outcomes = (await loadData(queries.outcomesForRoom, {
       roomId,
     })) as Outcome[]
+
     // Sort the outcomes in order of creation
     outcomes.sort((a, b) => {
       return new Date(a._createdAt).getTime() - new Date(b._createdAt).getTime()
     })
+
     // Map the values
     const computed = [
       {
@@ -119,26 +123,30 @@
         </div>
       </div>
 
+      <!-- Room prompt -->
       <div class="room-prompt">
         <div class="content">
           {room.roomPrompt}
         </div>
       </div>
 
-      <div class="room-stats">
-        <RoomStats content={sanityRoomContent} data={plotData} />
-      </div>
-
+      <!-- Enter Room -->
       {#if room.balance > 0 && ($rat?.health ?? 0) > 0 && !isOwnRoomListing}
         <div class="room-enter">
           <button onclick={sendEnterRoom}>Send {$rat.name} to room</button>
         </div>
       {/if}
 
+      <!-- Room stats with graph -->
+      <div class="room-stats">
+        <RoomStats content={sanityRoomContent} data={plotData} />
+      </div>
+
       {#if ($rat?.health ?? 0) <= 0 && !isOwnRoomListing}
         <div class="no-rat-warning">Deploy a rat to access this room</div>
       {/if}
 
+      <!-- Liquidate Room -->
       {#if isOwnRoomListing}
         <LiquidateRoom {roomId} {room} {isOwnRoomListing} />
       {/if}
@@ -228,8 +236,11 @@
       word-break: break-word; /* Break long words if needed */
       overflow-wrap: anywhere; /* Break anywhere if necessary to prevent overflow */
       width: 100%;
+
       .content {
         max-width: 55ch;
+        background: var(--color-alert);
+        padding: 5px;
       }
     }
 
@@ -248,6 +259,7 @@
       height: 100%;
       background: var(--color-alert);
       padding: 20px;
+      margin-bottom: 20px;
     }
   }
 
