@@ -61,28 +61,47 @@
 
 <svelte:window />
 
-<div class="context-main">
-  {#if $UIState === UI.LOADING}
-    <main>
-      <Loading {environment} on:done={loadedEnvironment} />
-    </main>
-  {:else}
-    <Main {environment} />
-  {/if}
+<div class="bg">
+  <div class="context-main">
+    {#if $UIState === UI.LOADING}
+      <main>
+        <Loading {environment} on:done={loadedEnvironment} />
+      </main>
+    {:else}
+      <Main {environment} />
+    {/if}
+
+    <Modal />
+
+    {#if $HighScoreModalActive}
+      <HighScore />
+    {/if}
+  </div>
 </div>
 
-<Modal />
-
-{#if $HighScoreModalActive}
-  <HighScore />
-{/if}
-
 <style lang="scss">
+  .context-main {
+    width: var(--game-window-width);
+    height: var(--game-window-height);
+    overflow: hidden;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: black;
+  }
   main {
-    width: 100vw;
-    height: 100vh;
+    width: var(--game-window-width);
+    height: var(--game-window-height);
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+
+  .bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
   }
 </style>

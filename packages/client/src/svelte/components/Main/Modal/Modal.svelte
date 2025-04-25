@@ -37,8 +37,8 @@
     .content {
       width: 700px;
       min-height: 500px;
-      max-width: 60vw;
-      max-height: 90vh;
+      max-width: calc(var(--game-window-height) * 0.6);
+      max-height: calc(var(--game-window-height) * 0.9);
       overflow-x: hidden;
       overflow-y: scroll;
     }

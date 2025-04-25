@@ -24,6 +24,9 @@
   --corporate-foreground: #000000;
   --corporate-alert: #ffff00;
 
+  --game-window-width: min(100vw, 1920px);
+  --game-window-height: 100vh;
+
   /* * * * * * * * * * * * * *
   * Layout
   * * * * * * * * * * * * * */

@@ -27,8 +27,8 @@
 
 <style>
   .highcore {
-    width: 100vw;
-    height: 100vh;
+    width: var(--game-window-width);
+    height: var(--game-window-height);
     display: flex;
     justify-content: center;
     align-items: center;

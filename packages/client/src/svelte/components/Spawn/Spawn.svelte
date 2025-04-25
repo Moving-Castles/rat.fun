@@ -109,7 +109,7 @@
     color: var(--corporate-foreground);
     width: 100%;
     height: 100%;
-    max-width: 90vw;
+    max-width: calc(var(--game-window-width) * 0.9);
     padding: 10px 30px;
     padding-bottom: 30px;
   }

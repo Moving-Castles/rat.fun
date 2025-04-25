@@ -120,8 +120,8 @@
     position: fixed;
     top: 10px;
     left: 10px;
-    height: calc(100vh - 20px);
-    width: calc(100vw - 20px);
+    height: calc(var(--game-window-height) - 20px);
+    width: calc(var(--game-window-width) - 20px);
     overflow: hidden;
     border: 1px solid white;
     background: black;
@@ -138,7 +138,7 @@
 
   .main-area {
     width: 100%;
-    height: calc(100vh - 80px);
+    height: calc(var(--game-window-height) - 80px);
     display: flex;
     flex-direction: row;
   }
@@ -165,8 +165,8 @@
 
   .door-container {
     position: relative;
-    width: 100vw;
-    height: 100vh;
+    width: var(--game-window-width);
+    height: var(--game-window-height);
 
     &.transition-active {
       // pointer-events: none;

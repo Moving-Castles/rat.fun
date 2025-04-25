@@ -90,7 +90,7 @@
     inset: 0;
     text-align: center;
     display: flex;
-    height: 100dvh;
+    height: var(--game-window-height);
     justify-content: center;
     align-items: center;
     background: black;
@@ -103,7 +103,7 @@
       align-items: center;
       gap: 1rem;
       width: 600px;
-      max-width: 90vw;
+      max-width: calc(var(--game-window-width) * 0.9);
 
       .image-container {
         width: 100%;

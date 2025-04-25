@@ -94,7 +94,7 @@
 <style lang="scss">
   .log {
     margin-bottom: 20px;
-    height: calc(100vh - 300px);
+    height: calc(var(--game-window-height) - 300px);
     padding: 10px;
     border: 1px solid white;
     border-top: none;
