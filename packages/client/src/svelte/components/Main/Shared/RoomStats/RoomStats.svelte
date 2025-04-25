@@ -1,11 +1,12 @@
 <script lang="ts">
+  import type { PlotPoint } from "./types"
+
+  import { rats } from "@modules/state/base/stores"
   import { scaleTime, scaleLinear } from "d3-scale"
-  import { extent, max } from "d3-array"
+  import { max } from "d3-array"
   import { line } from "d3-shape"
   import tippy from "tippy.js"
   import "tippy.js/dist/tippy.css" // optional for styling
-
-  type DataPoint = { time: number; value: number }
 
   let { data } = $props()
 
@@ -27,7 +28,7 @@
     // Use the first point's time as the domain start, max time as the end
     // Handle the case where there's only one data point
     const domainStart = data[0].time
-    const domainEnd = max(data, (d: DataPoint) => d.time)
+    const domainEnd = max(data, (d: PlotPoint) => d.time)
     const finalDomainEnd =
       domainEnd !== undefined && domainEnd > domainStart
         ? domainEnd
@@ -42,7 +43,7 @@
     if (!data || data.length === 0 || !innerHeight) return null // Use innerHeight here
 
     // Ensure the domain includes 0 and accommodates the highest value + buffer
-    const maxValue = max(data, (d: DataPoint) => +d.value) ?? 0
+    const maxValue = max(data, (d: PlotPoint) => +d.value) ?? 0
     return scaleLinear()
       .domain([0, maxValue + 250]) // Ensure domain starts at 0
       .range([innerHeight, 0]) // Use innerHeight
@@ -53,8 +54,8 @@
   let lineGenerator = $derived(
     xScale && yScale
       ? line()
-          .x((d: DataPoint) => xScale(d.time))
-          .y((d: DataPoint) => yScale(+d.value))
+          .x((d: PlotPoint) => xScale(d.time))
+          .y((d: PlotPoint) => yScale(+d.value))
       : // .curve(curveBasis)
         null
   )
@@ -83,6 +84,22 @@
       })
     }
   })
+
+  $inspect($rats)
+
+  const generateTooltipContent = (point: PlotPoint) => {
+    let toolTipContent = `<div>Room balance: <span class="tooltip-value">$${point?.meta?.roomValue}</span>`
+
+    if (point?.meta?.roomValueChange) {
+      const valueChangeClass =
+        point.meta.roomValueChange > 0
+          ? "tooltip-value-positive"
+          : "tooltip-value-negative"
+      toolTipContent += `<br/>Change: <span class="${valueChangeClass}">${point?.meta?.roomValueChange}</span></div>`
+    }
+
+    return toolTipContent
+  }
 </script>
 
 <div class="room-stats">
@@ -115,12 +132,7 @@
           {/if}
 
           {#each data as point (point.time)}
-            <g
-              data-tippy-content="<div class='center-tooltip'>{point?.meta
-                ?.ratName
-                ? `${point?.meta?.ratName ? point?.meta?.ratName : ''}`
-                : `$${point.value}`} <br> {point?.meta?.roomValueChange}</div>"
-            >
+            <g data-tippy-content={generateTooltipContent(point)}>
               {#if !point?.meta?.roomValueChange || point?.meta?.roomValueChange === 0}
                 <circle
                   fill="var(--color-value)"
@@ -132,7 +144,7 @@
                 <polygon
                   transform="translate({xScale(point.time)}, {yScale(
                     point.value
-                  )}) scale(1, 1.5)"
+                  )}) scale(1.5, 3)"
                   fill="var(--color-value-up)"
                   points="-5 2.5, 0 -5, 5 2.5"
                 />
@@ -140,7 +152,7 @@
                 <polygon
                   transform="translate({xScale(point.time)}, {yScale(
                     point.value
-                  )}) scale(1, 1.5)"
+                  )}) scale(1.5, 3)"
                   fill="var(--color-value-down)"
                   points="-5 -2.5, 0 5, 5 -2.5"
                 />
