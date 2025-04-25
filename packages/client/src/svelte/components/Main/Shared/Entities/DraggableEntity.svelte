@@ -39,7 +39,7 @@
     use:tippy={{
       content:
         type === "item"
-          ? "Item carried by your rat, it can be unequipped"
+          ? "Item carried by your rat, drag to unequip"
           : "Traits can not be unequipped",
     }}
     ondragstart={() => {

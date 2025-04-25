@@ -16,7 +16,9 @@
   --color-alert: rgb(255, 69, 0);
   --color-secondary: rgb(163, 66, 31);
   --color-health: rgb(95, 186, 95);
+  --color-value-up: rgba(76, 248, 37, 1);
   --color-value: rgba(243, 236, 42, 0.8);
+  --color-value-down: rgba(248, 129, 37, 1);
   --color-item: rgb(160, 98, 177);
   --color-death: rgb(186, 30, 30);
 
@@ -122,4 +124,8 @@ button {
 .button-text {
   position: relative;
   top: 3px;
+}
+
+.center-tooltip {
+  text-align: center;
 }

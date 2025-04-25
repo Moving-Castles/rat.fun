@@ -1,25 +1,26 @@
 <script lang="ts">
+  import { rats } from "@modules/state/base/stores"
   import { scaleTime, scaleLinear } from "d3-scale"
   import { extent, max } from "d3-array"
-  import { line, curveBasis } from "d3-shape"
-  import { draw } from "svelte/transition"
+  import { line } from "d3-shape"
+  import tippy from "tippy.js"
+  import "tippy.js/dist/tippy.css" // optional for styling
 
   type DataPoint = { time: number; value: number }
 
-  let { content, data } = $props()
+  let { data } = $props()
+
+  $inspect(data)
 
   // Layout setup
   let width = $state(0) // width will be set by the clientWidth
   const height = 170
 
-  const padding = { top: 3, right: 3, bottom: 3, left: 3 }
+  const padding = { top: 6, right: 6, bottom: 6, left: 6 }
 
   // Calculate inner dimensions based on padding
   let innerWidth = $derived(width - padding.left - padding.right)
   let innerHeight = $derived(height - padding.top - padding.bottom)
-
-  // State variables
-  // let data = $state(roomData)
 
   // Computed values
   let xScale = $derived(
@@ -33,7 +34,7 @@
   let yScale = $derived(
     data && width
       ? scaleLinear()
-          .domain([0, max(data, (d: DataPoint) => +d.value)])
+          .domain([0, max(data, (d: DataPoint) => +d.value + 250)])
           .range([innerHeight, 0])
       : null
   )
@@ -58,7 +59,17 @@
         null
   )
 
-  $inspect(content)
+  $effect(() => {
+    if (data && width && xScale && yScale && lineGenerator) {
+      setTimeout(() => {
+        tippy("[data-tippy-content]", {
+          allowHTML: true,
+        })
+      })
+    }
+  })
+
+  $inspect($rats)
 </script>
 
 <div class="room-stats">
@@ -73,7 +84,6 @@
     {#if data && width && xScale && yScale && lineGenerator}
       <svg {width} {height}>
         <g transform="translate({padding.left}, {padding.top})">
-          <!-- in:draw={{ duration: 2000 }} -->
           <path
             d={lineGenerator(data)}
             stroke="var(--color-value)"
@@ -89,12 +99,37 @@
           />
 
           {#each data as point (point.time)}
-            <circle
-              fill="var(--color-value)"
-              r="3"
-              cx={xScale(point.time)}
-              cy={yScale(point.value)}
-            ></circle>
+            <g
+              data-tippy-content="<div class='center-tooltip'>{point?.meta
+                ?.ratName
+                ? `${point?.meta?.ratName ? point?.meta?.ratName : ''}`
+                : `$${point.value}`} <br> {point?.meta?.roomValueChange}</div>"
+            >
+              {#if !point?.meta?.roomValueChange || point?.meta?.roomValueChange === 0}
+                <circle
+                  fill="var(--color-value)"
+                  r="6"
+                  cx={xScale(point.time)}
+                  cy={yScale(point.value)}
+                ></circle>
+              {:else if point?.meta?.roomValueChange > 0}
+                <polygon
+                  transform="translate({xScale(point.time)}, {yScale(
+                    point.value
+                  )}) scale(1, 1.5)"
+                  fill="var(--color-value-up)"
+                  points="-5 2.5, 0 -5, 5 2.5"
+                />
+              {:else}
+                <polygon
+                  transform="translate({xScale(point.time)}, {yScale(
+                    point.value
+                  )}) scale(1, 1.5)"
+                  fill="var(--color-value-down)"
+                  points="-5 -2.5, 0 5, 5 -2.5"
+                />
+              {/if}
+            </g>
           {/each}
         </g>
       </svg>

@@ -88,7 +88,9 @@
         <!-- DIVIDER -->
         <span class="divider">•</span>
         <!-- KILL RATE -->
-        <span class="kill-count small">{room.killCount ?? 0} kills</span>
+        <span class="kill-count small"
+          >{room.killCount ?? 0}{#if room?.killCount > 0}kills{/if}</span
+        >
       </div>
     </div>
   </div>

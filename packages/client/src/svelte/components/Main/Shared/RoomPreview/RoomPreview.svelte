@@ -46,15 +46,18 @@
     const computed = [
       {
         time: 0,
-        value: 250,
-        meta: null,
+        roomValue: 250,
+        meta: sanityRoomContent,
       },
       ...outcomes,
-    ].map((o, i) => ({
-      time: i,
-      value: o?.roomValue || 250,
-      meta: o,
-    }))
+    ].map((o, i) => {
+      return {
+        time: i,
+        value: o?.roomValue || 0,
+        meta: o,
+      }
+    })
+
     plotData = computed
   })
 </script>
@@ -104,11 +107,15 @@
           <!-- DIVIDER -->
           <span class="divider">•</span>
           <!-- VISIT COUNT -->
-          <span class="visit-count">{room.visitCount} visits</span>
-          <!-- DIVIDER -->
-          <span class="divider">•</span>
+          <span class="visit-count"
+            >{room.visitCount} visit{#if room.visitCount > 1}s{/if}</span
+          >
           <!-- KILL COUNT -->
-          <span class="kill-count">{room.killCount} kills</span>
+          {#if room?.killCount > 0}
+            <!-- DIVIDER -->
+            <span class="divider">•</span>
+            <span class="kill-count small">{room?.killCount}kills</span>
+          {/if}
         </div>
       </div>
 
@@ -144,6 +151,8 @@
     display: flex;
     flex-direction: column;
     width: 100%;
+    height: 100%;
+    overflow-y: hidden;
 
     .back-button {
       width: 100%;
@@ -161,6 +170,7 @@
 
     .room-inner-container {
       padding: 15px;
+      overflow-y: scroll;
 
       .room-image {
         margin-bottom: 5px;
