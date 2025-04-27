@@ -38,7 +38,7 @@
     </div>
   {/if}
   {#if panes.left === enums.LEFT_PANE.YOUR_ROOMS}
-    <div class="tab-content">
+    <div class="tab-content your-rooms-tab">
       <YourRooms />
     </div>
   {/if}

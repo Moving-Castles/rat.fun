@@ -1,28 +1,30 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte"
-  // import { rooms } from "@modules/state/base/stores"
   import { client } from "@modules/content/sanity"
   import { queries } from "@modules/content/sanity/groq"
   import OutcomeMessage from "../OutcomeMessage/OutcomeMessage.svelte"
   import { publicNetwork } from "@modules/network"
+  import type { Outcome } from "@cms/sanity.types"
 
-  let { roomId, initialOutcomes } = $props()
+  let {
+    roomId,
+    initialOutcomes,
+  }: { roomId: string; initialOutcomes: Outcome[] } = $props()
 
   let subscription = $state<any>(null)
-  let outcomes = $state(initialOutcomes)
+  let outcomes = $state(initialOutcomes.reverse())
+
+  $inspect(outcomes)
 
   const query = queries.outcomesForRoom
   const params = { roomId, worldAddress: $publicNetwork.worldAddress }
 
-  const callback = update => {
+  const callback = (update: Outcome[]) => {
     if (!outcomes) {
       console.error("Outcomes is undefined")
       return
     }
-
-    if (!outcomes.map(o => o._id).includes(update?.result?._id)) {
-      outcomes.pop(update.result)
-    }
+    outcomes = update.reverse()
   }
 
   onMount(() => {

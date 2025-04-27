@@ -8,7 +8,7 @@
     "dev": "pnpm tsx src/index.ts"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.39.0",
+    "@anthropic-ai/sdk": "^0.40.0",
     "@fastify/compress": "^8.0.1",
     "@fastify/cors": "^11.0.1",
     "@fastify/formbody": "^8.0.2",
@@ -30,7 +30,7 @@
     "groq-sdk": "^0.20.1",
     "js-sha3": "^0.9.3",
     "node-fetch": "^3.3.2",
-    "openai": "^4.95.1",
+    "openai": "^4.96.0",
     "replicate": "^1.0.1",
     "rxjs": "^7.8.2",
     "tsx": "^4.19.3",

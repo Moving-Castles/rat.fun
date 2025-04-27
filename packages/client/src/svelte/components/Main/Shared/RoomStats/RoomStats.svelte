@@ -8,7 +8,8 @@
   import tippy from "tippy.js"
   import "tippy.js/dist/tippy.css" // optional for styling
 
-  let { data } = $props()
+  let { plotData, empty = false }: { plotData: PlotPoint[]; empty: boolean } =
+    $props()
 
   // Layout setup
   let width = $state(0) // width will be set by the clientWidth
@@ -23,12 +24,12 @@
   // Computed values
   let xScale = $derived.by(() => {
     // Ensure data exists, has items, and innerWidth is calculated
-    if (!data || data.length === 0 || !innerWidth) return null
+    if (!plotData || plotData.length === 0 || !innerWidth) return null
 
     // Use the first point's time as the domain start, max time as the end
     // Handle the case where there's only one data point
-    const domainStart = data[0].time
-    const domainEnd = max(data, (d: PlotPoint) => d.time)
+    const domainStart = plotData[0].time
+    const domainEnd = max(plotData, (d: PlotPoint) => d.time)
     const finalDomainEnd =
       domainEnd !== undefined && domainEnd > domainStart
         ? domainEnd
@@ -40,10 +41,10 @@
   })
 
   let yScale = $derived.by(() => {
-    if (!data || data.length === 0 || !innerHeight) return null // Use innerHeight here
+    if (!plotData || plotData.length === 0 || !innerHeight) return null // Use innerHeight here
 
     // Ensure the domain includes 0 and accommodates the highest value + buffer
-    const maxValue = max(data, (d: PlotPoint) => +d.value) ?? 0
+    const maxValue = max(plotData, (d: PlotPoint) => +d.value) ?? 0
     return scaleLinear()
       .domain([0, maxValue + 250]) // Ensure domain starts at 0
       .range([innerHeight, 0]) // Use innerHeight
@@ -62,10 +63,10 @@
 
   // Generate points specifically for the full-width baseline
   let baselinePoints = $derived.by(() => {
-    if (!xScale || !yScale || !data || data.length === 0) return null
+    if (!xScale || !yScale || !plotData || plotData.length === 0) return null
 
     const domain = xScale.domain() // Get the full domain [start, end]
-    const firstValue = data[0].value // Value of the first data point
+    const firstValue = plotData[0].value // Value of the first data point
 
     // Create two points spanning the full domain width at the first data point's y-level
     // These points need 'time' and 'value' structure to work with lineGenerator
@@ -76,7 +77,7 @@
   })
 
   $effect(() => {
-    if (data && width && xScale && yScale && lineGenerator) {
+    if (plotData && width && xScale && yScale && lineGenerator) {
       setTimeout(() => {
         tippy("[data-tippy-content]", {
           allowHTML: true,
@@ -104,69 +105,88 @@
 
 <div class="room-stats">
   <div class="y-axis">
-    <small class="label">Value</small>
+    <!-- <small class="label">Value</small> -->
   </div>
   <div class="x-axis">
-    <small class="label">Time</small>
+    <!-- <small class="label">Time</small> -->
   </div>
 
-  <div class="graph" bind:clientWidth={width}>
-    {#if data && width && xScale && yScale && lineGenerator}
-      <svg {width} {height}>
-        <g transform="translate({padding.left}, {padding.top})">
-          <path
-            d={lineGenerator(data)}
-            stroke="var(--color-value)"
-            stroke-width={2}
-            stroke-dasharray={4}
-            fill="none"
-          />
-
-          {#if baselinePoints}
+  {#if empty}
+    <div class="no-data">
+      <span> No data </span>
+    </div>
+  {:else}
+    <div class="graph" bind:clientWidth={width}>
+      {#if plotData && width && xScale && yScale && lineGenerator}
+        <svg {width} {height}>
+          <g transform="translate({padding.left}, {padding.top})">
             <path
-              d={lineGenerator(baselinePoints)}
-              stroke="#eee"
-              stroke-width={1}
-              stroke-dasharray="4 4"
+              d={lineGenerator(plotData)}
+              stroke="var(--color-value)"
+              stroke-width={2}
+              stroke-dasharray={4}
               fill="none"
             />
-          {/if}
 
-          {#each data as point (point.time)}
-            <g data-tippy-content={generateTooltipContent(point)}>
-              {#if !point?.meta?.roomValueChange || point?.meta?.roomValueChange === 0}
-                <circle
-                  fill="var(--color-value)"
-                  r="6"
-                  cx={xScale(point.time)}
-                  cy={yScale(point.value)}
-                ></circle>
-              {:else if point?.meta?.roomValueChange > 0}
-                <polygon
-                  transform="translate({xScale(point.time)}, {yScale(
-                    point.value
-                  )}) scale(2, 3)"
-                  fill="var(--color-value-up)"
-                  points="-5 2.5, 0 -5, 5 2.5"
-                />
-              {:else}
-                <polygon
-                  transform="translate({xScale(point.time)}, {yScale(
-                    point.value
-                  )}) scale(2, 3)"
-                  fill="var(--color-value-down)"
-                  points="-5 -2.5, 0 5, 5 -2.5"
-                />
-              {/if}
-            </g>
-          {/each}
-        </g>
-      </svg>
-    {/if}
-  </div>
+            {#if baselinePoints}
+              <path
+                d={lineGenerator(baselinePoints)}
+                stroke="#eee"
+                stroke-width={1}
+                stroke-dasharray="4 4"
+                fill="none"
+              />
+            {/if}
+
+            {#each plotData as point (point.time)}
+              <g data-tippy-content={generateTooltipContent(point)}>
+                {#if !point?.meta?.roomValueChange || point?.meta?.roomValueChange === 0}
+                  <circle
+                    fill="var(--color-value)"
+                    r="6"
+                    cx={xScale(point.time)}
+                    cy={yScale(point.value)}
+                  ></circle>
+                {:else if point?.meta?.roomValueChange > 0}
+                  <polygon
+                    transform="translate({xScale(point.time)}, {yScale(
+                      point.value
+                    )}) scale(2, 3)"
+                    fill="var(--color-value-up)"
+                    points="-5 2.5, 0 -5, 5 2.5"
+                  />
+                {:else}
+                  <polygon
+                    transform="translate({xScale(point.time)}, {yScale(
+                      point.value
+                    )}) scale(2, 3)"
+                    fill="var(--color-value-down)"
+                    points="-5 -2.5, 0 5, 5 -2.5"
+                  />
+                {/if}
+              </g>
+            {/each}
+          </g>
+        </svg>
+      {/if}
+    </div>
+  {/if}
 </div>
 
 <style lang="scss">
+  .no-data {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+
+    span {
+      background: var(--color-death);
+      padding: 2px;
+      color: black;
+    }
+  }
   .room-stats {
     width: 100%;
     height: 100%;

@@ -42,7 +42,7 @@ export function getOnchainData(network: SetupNetworkReturnType, components: Clie
             throw new RatNotFoundError(ratId);
         }
 
-        const { RoomPrompt, Dead, Traits, Health, Balance, Inventory, Value } = components;
+        const { RoomPrompt, Dead, Traits, Health, Balance, Inventory, Value, Index } = components;
 
         // Rat
         const ratOwnerValue = (ratOwner ?? "") as string;
@@ -81,6 +81,7 @@ export function getOnchainData(network: SetupNetworkReturnType, components: Clie
         // Check if room exists
         const roomName = getComponentValue(Name, roomEntity)?.value;
         const roomPrompt = getComponentValue(RoomPrompt, roomEntity)?.value;
+        const roomIndex = (getComponentValue(Index, roomEntity)?.value ?? 0) as number;
         
         if (!roomName && !roomPrompt) {
             throw new RoomNotFoundError(roomId);
@@ -94,7 +95,8 @@ export function getOnchainData(network: SetupNetworkReturnType, components: Clie
             id: roomId,
             name: roomNameValue,
             prompt: roomPromptValue,
-            balance: Number(roomBalance)
+            balance: Number(roomBalance),
+            index: roomIndex
         };
 
         return { rat, room };

@@ -83,12 +83,14 @@
         <span class="divider">•</span>
         <!-- VISITOR COUNT -->
         <span class="visit-count small">{room.visitCount} visits</span>
-        <!-- DIVIDER -->
-        <span class="divider">•</span>
-        <!-- KILL RATE -->
-        <span class="kill-count small"
-          >{room.killCount ?? 0}{#if room?.killCount > 0}kills{/if}</span
-        >
+        {#if room?.killCount > 0}
+          <!-- DIVIDER -->
+          <span class="divider">•</span>
+          <!-- KILL RATE -->
+          <span class="kill-count small">
+            {room.killCount} kill{#if room.killCount > 1}s{/if}
+          </span>
+        {/if}
       </div>
     </div>
   </div>
