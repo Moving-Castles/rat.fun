@@ -113,7 +113,7 @@
 
         <div class="room-info-row">
           <!-- BALANCE -->
-          <span class="balance">${room.balance}</span>
+          <span class="balance">Balance: ${room.balance}</span>
           <!-- DIVIDER -->
           <span class="divider">•</span>
           <!-- VISIT COUNT -->
@@ -124,7 +124,7 @@
           {#if room?.killCount > 0}
             <!-- DIVIDER -->
             <span class="divider">•</span>
-            <span class="kill-count small">{room?.killCount}kills</span>
+            <span class="kill-count small">{room?.killCount} kills</span>
           {/if}
         </div>
       </div>

@@ -77,7 +77,7 @@
         <span class="divider">•</span>
         <!-- BALANCE -->
         <span class="balance" class:depleted={room.balance == 0}>
-          ${room.balance}
+          Balance: ${room.balance}
         </span>
         <!-- DIVIDER -->
         <span class="divider">•</span>

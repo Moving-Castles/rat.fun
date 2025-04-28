@@ -65,6 +65,7 @@
     display: flex;
     flex-flow: column nowrap;
     gap: 4px;
+    padding-bottom: 60px;
   }
 
   .header {
