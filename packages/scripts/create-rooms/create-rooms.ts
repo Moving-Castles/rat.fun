@@ -86,6 +86,12 @@ try {
       log(`Room missing required fields: ${JSON.stringify(room)}`, 'error');
       process.exit(1);
     }
+    
+    // Truncate roomPrompt if it's longer than 300 characters
+    if (room.roomPrompt.length > 300) {
+      log(`Room "${room.roomName}" prompt exceeds 300 characters. Truncating...`, 'info');
+      room.roomPrompt = room.roomPrompt.substring(0, 300);
+    }
   }
   
   log(`JSON file validated successfully. Found ${roomData.rooms.length} rooms.`, 'success');
