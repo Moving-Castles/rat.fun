@@ -131,12 +131,12 @@ library LibManager {
       return;
     }
 
-    // Make sure the rat has enough trait space
-    if (Traits.length(_ratId) >= MAX_TRAITS_SIZE) {
-      return;
-    }
-
     for (uint i = 0; i < _traitsToAddToRat.length; i++) {
+      // Abort if traits are full
+      if (Traits.length(_ratId) >= MAX_TRAITS_SIZE) {
+        return;
+      }
+
       Item calldata newTrait = _traitsToAddToRat[i];
       uint256 traitValueAmount = LibUtils.signedToUnsigned(newTrait.value);
 
@@ -211,12 +211,12 @@ library LibManager {
       return;
     }
 
-    // Make sure the rat has enough inventory space
-    if (Inventory.length(_ratId) >= MAX_INVENTORY_SIZE) {
-      return;
-    }
-
     for (uint i = 0; i < _itemsToAddToRat.length; i++) {
+      // Abort if inventory is full
+      if (Inventory.length(_ratId) >= MAX_INVENTORY_SIZE) {
+        return;
+      }
+
       Item calldata newItem = _itemsToAddToRat[i];
       uint256 itemValueAmount = LibUtils.signedToUnsigned(newItem.value);
 
