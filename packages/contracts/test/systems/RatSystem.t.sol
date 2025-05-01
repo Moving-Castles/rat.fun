@@ -77,6 +77,45 @@ contract RatSystemTest is BaseTest {
     vm.stopPrank();
   }
 
+  function testRevertLiquidateNoRat() public {
+    vm.startPrank(alice);
+    world.ratroom__spawn("alice");
+
+    world.ratroom__createRat("roger");
+
+    world.ratroom__liquidateRat();
+
+    vm.expectRevert("no rat");
+    world.ratroom__liquidateRat();
+
+    vm.stopPrank();
+  }
+
+  function testRevertLiquidateDeadRat() public {
+    setUp();
+
+    vm.startPrank(alice);
+    world.ratroom__spawn("alice");
+
+    bytes32 ratId = world.ratroom__createRat("roger");
+    vm.stopPrank();
+
+    prankAdmin();
+    Dead.set(ratId, true);
+    vm.stopPrank();
+
+    vm.startPrank(alice);
+    // Dead rat cannot be liquidated
+    vm.expectRevert("rat is dead");
+    world.ratroom__liquidateRat();
+
+    // But a new rat can be created
+    bytes32 newRatId = world.ratroom__createRat("roger");
+    vm.stopPrank();
+
+    assertNotEq(ratId, newRatId);
+  }
+
   function testDropItem() public {
     // As alice
     vm.startPrank(alice);

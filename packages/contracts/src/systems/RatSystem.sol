@@ -35,6 +35,8 @@ contract RatSystem is System {
     bytes32 playerId = LibUtils.addressToEntityKey(_msgSender());
     bytes32 ratId = OwnedRat.get(playerId);
 
+    require(ratId != bytes32(0), "no rat");
+
     // Check that the rat is alive
     require(!Dead.get(ratId), "rat is dead");
 
