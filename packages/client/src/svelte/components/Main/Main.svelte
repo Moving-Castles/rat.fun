@@ -88,6 +88,14 @@
   </div>
 {/if}
 
+{#snippet spawn()}
+  <Spawn />
+{/snippet}
+
+{#if $UIState === UI.SPAWNING}
+  <ModalTarget noclose content={spawn} />
+{/if}
+
 {#if debugTransition}
   <pre class="routing">
   transition active: {transition.active}{#if transition.active}
@@ -104,14 +112,6 @@
   route params: {JSON.stringify(route.params)}
   ---
 </pre>
-{/if}
-
-{#snippet spawn()}
-  <Spawn />
-{/snippet}
-
-{#if $UIState === UI.SPAWNING}
-  <ModalTarget noclose content={spawn} />
 {/if}
 
 <style lang="scss">

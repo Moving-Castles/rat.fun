@@ -1,10 +1,16 @@
 import { ENVIRONMENT } from "@mud/enums"
-import { clientList, newEvent, roundTriptime, websocketConnected } from "@modules/off-chain-sync/stores"
+import {
+  clientList,
+  newEvent,
+  latestEvents,
+  roundTriptime,
+  websocketConnected,
+} from "@modules/off-chain-sync/stores"
 import { MessageContent } from "./types"
 
 let socket: WebSocket
-let reconnectAttempts = 0;
-const MAX_RECONNECTION_DELAY = 30000; // Maximum delay of 30 seconds
+let reconnectAttempts = 0
+const MAX_RECONNECTION_DELAY = 30000 // Maximum delay of 30 seconds
 let roundTripStart = 0
 
 export function initOffChainSync(environment: ENVIRONMENT, playerId: string) {
@@ -19,12 +25,12 @@ export function initOffChainSync(environment: ENVIRONMENT, playerId: string) {
   socket = new WebSocket(url)
 
   socket.onopen = () => {
-    console.log('WebSocket connected');
+    console.log("WebSocket connected")
     websocketConnected.set(true)
-    reconnectAttempts = 0; // Reset attempts on successful connection
-  };
+    reconnectAttempts = 0 // Reset attempts on successful connection
+  }
 
-  socket.onmessage =(message: MessageEvent<string>) => {
+  socket.onmessage = (message: MessageEvent<string>) => {
     console.log("Received message:", message)
     const messageContent = JSON.parse(message.data) as MessageContent
     // console.log("Received outcome:", messageContent)
@@ -40,36 +46,44 @@ export function initOffChainSync(environment: ENVIRONMENT, playerId: string) {
       return
     }
 
-    // Pass message to store
+    // Pass message to stores
     newEvent.set(messageContent)
+    latestEvents.update(state => {
+      return [...state, messageContent]
+    })
   }
 
   socket.onclose = message => {
-    console.log('WebSocket closed:', message);
-    console.log('Reconnecting...');
-    attemptReconnect(environment, playerId);
+    console.log("WebSocket closed:", message)
+    console.log("Reconnecting...")
+    attemptReconnect(environment, playerId)
   }
 
-  socket.onerror = (error) => {
-    console.error('WebSocket error:', error);
-    socket.close(); // Ensure connection is properly closed before reconnecting
-  };
+  socket.onerror = error => {
+    console.error("WebSocket error:", error)
+    socket.close() // Ensure connection is properly closed before reconnecting
+  }
 }
 
 function attemptReconnect(environment: ENVIRONMENT, playerId: string) {
-  const delay = Math.min(1000 * Math.pow(2, reconnectAttempts), MAX_RECONNECTION_DELAY);
-  reconnectAttempts += 1;
+  const delay = Math.min(
+    1000 * Math.pow(2, reconnectAttempts),
+    MAX_RECONNECTION_DELAY
+  )
+  reconnectAttempts += 1
 
   setTimeout(() => {
-    console.log(`Reconnecting attempt ${reconnectAttempts}...`);
-    initOffChainSync(environment, playerId);
-  }, delay);
+    console.log(`Reconnecting attempt ${reconnectAttempts}...`)
+    initOffChainSync(environment, playerId)
+  }, delay)
 }
 
 export function ping() {
   roundTripStart = performance.now()
-  socket.send(JSON.stringify({
-    topic: "test",
-    message: "ping"
-  }))
+  socket.send(
+    JSON.stringify({
+      topic: "test",
+      message: "ping",
+    })
+  )
 }
