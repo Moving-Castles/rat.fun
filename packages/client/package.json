@@ -19,10 +19,10 @@
     "@types/howler": "^2.2.12",
     "@types/lodash": "^4.17.16",
     "@types/uuid": "^10.0.0",
-    "@vitest/coverage-v8": "^3.1.1",
+    "@vitest/coverage-v8": "^3.1.2",
     "sass-embedded": "^1.87.0",
     "svelte": "^5.28.2",
-    "vite": "^6.3.3",
+    "vite": "^6.3.4",
     "vitest": "^3.1.2"
   },
   "dependencies": {
@@ -35,12 +35,12 @@
     "@latticexyz/utils": "2.2.22-582f7187cf3cb1e0013aa5d192560235114d71e0",
     "@latticexyz/world": "2.2.22-582f7187cf3cb1e0013aa5d192560235114d71e0",
     "@sanity/block-content-to-html": "^2.0.0",
-    "@sanity/client": "^6.29.0",
+    "@sanity/client": "^6.29.1",
     "@sanity/image-url": "^1.1.0",
     "@threlte/core": "^8.0.2",
     "@threlte/extras": "^9.1.4",
-    "@types/three": "^0.175.0",
-    "@wagmi/core": "2.16.7",
+    "@types/three": "^0.176.0",
+    "@wagmi/core": "2.17.0",
     "contracts": "workspace:*",
     "d3-array": "^3.2.4",
     "d3-scale": "^4.0.2",
@@ -54,7 +54,7 @@
     "three-perf": "^1.0.10",
     "tippy.js": "^6.3.7",
     "uuid": "^11.1.0",
-    "viem": "2.28.0",
+    "viem": "2.28.1",
     "wait-port": "^1.1.0"
   }
 }

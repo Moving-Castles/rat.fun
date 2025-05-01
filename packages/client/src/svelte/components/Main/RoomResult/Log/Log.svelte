@@ -96,7 +96,7 @@
     margin-bottom: 20px;
     height: calc(var(--game-window-height) - 300px);
     padding: 10px;
-    border: 1px solid white;
+    border: var(--default-border-style);
     border-top: none;
     position: relative;
 

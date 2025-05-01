@@ -15,15 +15,12 @@ contract DevSystem is System {
     _;
   }
 
-  function givePlayerBalance(uint256 _amount) public onlyAdmin {
-    bytes32 playerId = LibUtils.addressToEntityKey(_msgSender());
-    Balance.set(playerId, Balance.get(playerId) + _amount);
+  function givePlayerBalance(bytes32 _playerId, uint256 _amount) public onlyAdmin {
+    Balance.set(_playerId, Balance.get(_playerId) + _amount);
   }
 
-  function giveRatBalance(uint256 _amount) public onlyAdmin {
-    bytes32 playerId = LibUtils.addressToEntityKey(_msgSender());
-    bytes32 ratId = OwnedRat.get(playerId);
-    Balance.set(ratId, Balance.get(ratId) + _amount);
+  function removePlayerBalance(bytes32 _playerId) public onlyAdmin {
+    Balance.set(_playerId, 0);
   }
 
   function createRoomAsAdmin(

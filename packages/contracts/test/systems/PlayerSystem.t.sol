@@ -21,7 +21,7 @@ contract PlayerSystemTest is BaseTest {
     // Check player
     assertEq(uint8(EntityType.get(playerId)), uint8(ENTITY_TYPE.PLAYER));
     assertEq(Name.get(playerId), "alice");
-    assertEq(Balance.get(playerId), 0);
+    assertEq(Balance.get(playerId), GameConfig.getStartingBalance());
     assertEq(CreationBlock.get(playerId), block.number);
   }
 }

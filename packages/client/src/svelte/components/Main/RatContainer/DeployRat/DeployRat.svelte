@@ -2,6 +2,7 @@
   import { createRat } from "@modules/action"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
   import { playSound } from "@modules/sound"
+  import { player } from "@modules/state/base/stores"
   import { generateRatName } from "./index"
 
   import Spinner from "@components/Main/Shared/Spinner/Spinner.svelte"
@@ -24,6 +25,8 @@
       done = true
     }
   }
+
+  let disabled = $derived(!name || ($player?.balance ?? 0) < 250)
 </script>
 
 <div class="main">
@@ -35,7 +38,7 @@
     <div class="image-container">
       <img src="/images/rat.png" alt="Rat" />
     </div>
-    <button class:disabled={!name} class:busy onclick={sendCreateRat}>
+    <button class:disabled class:busy onclick={sendCreateRat}>
       <span class="button-text">Deploy new rat: {name} (Cost: $100)</span>
       {#if busy}
         <div class="spinner"><Spinner /></div>

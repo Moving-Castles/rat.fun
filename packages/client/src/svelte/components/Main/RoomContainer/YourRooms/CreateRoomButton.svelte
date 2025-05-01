@@ -4,7 +4,7 @@
   const { enums, panes } = getUIState()
 
   const goCreateRoom = () => {
-    panes.set(enums.PANE.LEFT, enums.LEFT_PANE.CREATE_ROOM)
+    panes.set(enums.PANE.ROOM_CONTAINER, enums.ROOM_CONTAINER.CREATE_ROOM)
   }
 </script>
 
@@ -18,7 +18,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    border-bottom: 1px solid white;
+    border-bottom: var(--default-border-style);
     padding: var(--default-padding);
     position: sticky;
     top: 0;

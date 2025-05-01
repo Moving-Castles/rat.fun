@@ -23,7 +23,7 @@
 <style lang="scss">
   .floor-progress {
     height: var(--floor-progress-height);
-    border-bottom: 1px solid white;
+    border-bottom: var(--default-border-style);
     background: #232323;
     overflow: hidden;
     position: relative;

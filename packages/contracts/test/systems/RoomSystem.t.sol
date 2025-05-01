@@ -7,15 +7,25 @@ import "../../src/libraries/Libraries.sol";
 import { ENTITY_TYPE } from "../../src/codegen/common.sol";
 
 contract RoomSystemTest is BaseTest {
+  function setInitialBalance(bytes32 _playerId) internal returns (uint256 initialBalance) {
+    initialBalance = Balance.get(_playerId);
+    // Give player balance if 0
+    if (initialBalance == 0) {
+      prankAdmin();
+      initialBalance = 2000;
+      world.ratroom__givePlayerBalance(_playerId, initialBalance);
+      vm.stopPrank();
+    }
+  }
+
   function testCreateRoom() public {
     setUp();
 
     vm.startPrank(alice);
     bytes32 playerId = world.ratroom__spawn("alice");
-    world.ratroom__givePlayerBalance(1000);
     vm.stopPrank();
 
-    assertEq(Balance.get(playerId), 1000);
+    uint256 initialBalance = setInitialBalance(playerId);
 
     // As admin
     prankAdmin();
@@ -24,14 +34,14 @@ contract RoomSystemTest is BaseTest {
     endGasReport();
     vm.stopPrank();
 
-    // Check player balance (100 = room creation cost)
-    assertEq(Balance.get(playerId), 1000 - 100);
+    // Check player balance
+    assertEq(Balance.get(playerId), initialBalance - GameConfig.getRoomCreationCost());
 
     // Check room
     assertEq(uint8(EntityType.get(roomId)), uint8(ENTITY_TYPE.ROOM));
     assertEq(Name.get(roomId), "Test room");
     assertEq(RoomPrompt.get(roomId), "A test room");
-    assertEq(Balance.get(roomId), 100);
+    assertEq(Balance.get(roomId), GameConfig.getRoomCreationCost());
     assertEq(Owner.get(roomId), playerId);
     assertEq(Level.get(roomId), LevelList.get()[0]);
     assertEq(CreationBlock.get(roomId), block.number);
@@ -42,10 +52,11 @@ contract RoomSystemTest is BaseTest {
 
     vm.startPrank(alice);
     bytes32 playerId = world.ratroom__spawn("alice");
-    world.ratroom__givePlayerBalance(1000);
     vm.stopPrank();
-    assertEq(Balance.get(playerId), 1000);
 
+    setInitialBalance(playerId);
+
+    // As admin
     prankAdmin();
     startGasReport("Create room: long prompt");
     world.ratroom__createRoom(
@@ -66,6 +77,7 @@ contract RoomSystemTest is BaseTest {
     vm.stopPrank();
 
     prankAdmin();
+    world.ratroom__removePlayerBalance(playerId);
     vm.expectRevert("balance too low");
     world.ratroom__createRoom(playerId, bytes32(0), "Test room", "A test room");
     vm.stopPrank();
@@ -76,19 +88,20 @@ contract RoomSystemTest is BaseTest {
 
     vm.startPrank(alice);
     bytes32 playerId = world.ratroom__spawn("alice");
-    world.ratroom__givePlayerBalance(100);
     vm.stopPrank();
+
+    uint256 initialBalance = setInitialBalance(playerId);
 
     // As admin
     prankAdmin();
     bytes32 roomId = world.ratroom__createRoom(playerId, bytes32(0), "Test room", "A test room");
     vm.stopPrank();
 
-    // Check player balance (100 = room creation cost)
-    assertEq(Balance.get(playerId), 100 - 100);
+    // Check player balance
+    assertEq(Balance.get(playerId), initialBalance - GameConfig.getRoomCreationCost());
 
     // Check room balance
-    assertEq(Balance.get(roomId), 100);
+    assertEq(Balance.get(roomId), GameConfig.getRoomCreationCost());
 
     // Close room
     vm.startPrank(alice);
@@ -102,7 +115,7 @@ contract RoomSystemTest is BaseTest {
     assertEq(Balance.get(roomId), 0);
 
     // Check player balance
-    assertEq(Balance.get(playerId), 100);
+    assertEq(Balance.get(playerId), initialBalance);
   }
 
   function testCloseRoomRevertNotOwner() public {
@@ -110,7 +123,6 @@ contract RoomSystemTest is BaseTest {
 
     vm.startPrank(alice);
     bytes32 aliceId = world.ratroom__spawn("alice");
-    world.ratroom__givePlayerBalance(100);
     vm.stopPrank();
 
     // As bob
@@ -118,13 +130,15 @@ contract RoomSystemTest is BaseTest {
     world.ratroom__spawn("bob");
     vm.stopPrank();
 
+    setInitialBalance(aliceId);
+
     // As admin
     prankAdmin();
     bytes32 roomId = world.ratroom__createRoom(aliceId, bytes32(0), "Test room", "A test room");
     vm.stopPrank();
 
     // Check room balance
-    assertEq(Balance.get(roomId), 100);
+    assertEq(Balance.get(roomId), GameConfig.getRoomCreationCost());
 
     // Bob tries to close alice's room
     vm.startPrank(bob);

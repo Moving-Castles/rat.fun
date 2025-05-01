@@ -1,12 +1,22 @@
 <script lang="ts">
-  import { ratTotalValue } from "@modules/state/base/stores"
-  import { liquidateRat } from "@modules/action"
+  import { getUIState } from "@modules/ui/state.svelte"
+  import { closeRoom } from "@modules/action"
+  import { playSound } from "@modules/sound"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
   import { tippy } from "svelte-tippy"
   import {
     ModalTarget,
     getModalState,
   } from "@components/Main/Modal/state.svelte"
+  import { staticContent, lastUpdated, urlFor } from "@modules/content"
+
+  let sanityRoomContent = $derived(
+    $staticContent.rooms.find(r => r.title == roomId)
+  )
+
+  let { room, roomId, isOwnRoomListing } = $props()
+
+  let { rooms } = getUIState()
 
   let { modal } = getModalState()
 
@@ -14,57 +24,60 @@
   let confirming = $state(false)
   let liquidationMessage = $state("CONFIRM LIQUIDATION")
 
-  const sendLiquidateRat = async () => {
+  async function sendLiquidateRoom() {
     if (busy) return
+    playSound("tcm", "blink")
     busy = true
-    const action = liquidateRat()
+    const action = closeRoom(roomId)
     try {
-      liquidationMessage = "Eliminating rat..."
+      liquidationMessage = "Liquidating room..."
       await waitForCompletion(action)
+      liquidationMessage = "Liquidation complete"
     } catch (e) {
-      busy = false
       console.error(e)
+      liquidationMessage = "Could not liquidate room"
     } finally {
-      liquidationMessage = "Elimination complete"
-
+      busy = false
       setTimeout(() => {
         modal.close()
       }, 1200)
+      rooms.back(isOwnRoomListing)
     }
   }
 </script>
 
-<div class="liquidate-rat">
-  <div
-    use:tippy={{ content: "Total rat value based on rat inventory" }}
-    class="data-cell"
-  >
+<div class="liquidate-room">
+  <div use:tippy={{ content: "Total room value" }} class="data-cell">
     <div class="inner">
-      <div class="data-cell-label">Rat Value:</div>
-      <div class="data-cell-value">${$ratTotalValue}</div>
+      <div class="data-cell-label">Room balance:</div>
+      <div class="data-cell-value">${room.balance}</div>
     </div>
   </div>
   <button
     use:tippy={{
-      content: "Kill rat to get the value added to your operator wallet",
+      content: "Liquidate room to get the value added to your operator wallet",
     }}
     disabled={busy}
     onclick={() => (confirming = true)}
     class="action warning-mute"
   >
-    Liquidate Rat
+    Liquidate Room
   </button>
 </div>
 
 {#snippet confirmLiquidation()}
   <div class="confirmation danger">
     <div class="content">
-      <img
-        class="liquidate-image"
-        src="/images/liquidate.svg"
-        alt="Confirm Liquidation"
-      />
-      <button disabled={busy} onclick={sendLiquidateRat} class="modal-button">
+      <div class="room-image">
+        {#key $lastUpdated}
+          {#if sanityRoomContent}
+            <img src={urlFor(sanityRoomContent?.image).url()} alt={room.name} />
+          {:else}
+            <img src="/images/room3.jpg" alt={room.name} />
+          {/if}
+        {/key}
+      </div>
+      <button disabled={busy} onclick={sendLiquidateRoom} class="modal-button">
         {liquidationMessage}
       </button>
     </div>
@@ -81,14 +94,15 @@
 {/if}
 
 <style lang="scss">
-  .liquidate-rat {
+  .liquidate-room {
     height: var(--liquidate-rat-height);
     display: flex;
+    border: var(--default-border-style);
   }
 
   .data-cell {
     width: 50%;
-    border-right: 1px solid white;
+    border-right: var(--default-border-style);
     height: 100%;
     padding: var(--default-padding);
     display: flex;
@@ -153,6 +167,7 @@
       #9e0000 40px
     );
   }
+
   .warning-mute {
     color: white;
     border: none;
@@ -168,6 +183,9 @@
   .liquidate-image {
     height: 100%;
     max-height: 440px;
+    width: 100%;
+    object-fit: cover;
+    mix-blend-mode: screen;
   }
 
   .confirmation {
@@ -181,7 +199,7 @@
 
     button {
       height: 60px;
-      border: 1px solid white;
+      border: var(--default-border-style);
       color: white;
       background: black;
     }

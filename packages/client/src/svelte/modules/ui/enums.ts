@@ -12,20 +12,18 @@ export enum LOCATION {
 
 export enum PANE {
   NONE,
-  LEFT,
+  ROOM_CONTAINER,
   MIDDLE,
-  RIGHT,
+  RAT_CONTAINER
 }
 
-export enum LEFT_PANE {
-  YOUR_RAT,
+export enum RAT_CONTAINER {
+  YOUR_RAT
+}
+
+export enum ROOM_CONTAINER {
+  ALL_ROOMS,
   YOUR_ROOMS,
-  SINGLE_ROOM,
   CREATE_ROOM,
-}
-
-export enum RIGHT_PANE {
-  ROOMS,
-  SINGLE_ROOM,
-  ROOM_RESULT,
+  SINGLE_ROOM
 }

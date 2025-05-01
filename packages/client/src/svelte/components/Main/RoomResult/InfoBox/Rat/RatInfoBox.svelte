@@ -61,7 +61,7 @@
   .rat-info-box {
     width: calc(50% - 50px);
     height: 100%;
-    border: 1px solid white;
+    border: var(--default-border-style);
     border-right: none;
     overflow: hidden;
     display: flex;
@@ -70,7 +70,7 @@
   .image-container {
     width: 100px;
     height: 100px;
-    border: 1px solid white;
+    border: var(--default-border-style);
     margin: 10px;
 
     img {
@@ -82,7 +82,7 @@
 
   .column {
     width: calc(100% / 3);
-    border-right: 1px dashed white;
+    border-right: var(--dashed-border-style);
     overflow-x: hidden;
     overflow-y: scroll;
 
@@ -127,7 +127,7 @@
   }
 
   .header {
-    border-bottom: 1px dashed white;
+    border-bottom: var(--dashed-border-style);
     padding: 10px;
     display: flex;
     justify-content: space-between;

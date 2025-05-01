@@ -77,18 +77,20 @@
         <span class="divider">•</span>
         <!-- BALANCE -->
         <span class="balance" class:depleted={room.balance == 0}>
-          ${room.balance}
+          Balance: ${room.balance}
         </span>
         <!-- DIVIDER -->
         <span class="divider">•</span>
         <!-- VISITOR COUNT -->
         <span class="visit-count small">{room.visitCount} visits</span>
-        <!-- DIVIDER -->
-        <span class="divider">•</span>
-        <!-- KILL RATE -->
-        <span class="kill-count small"
-          >{room.killCount ?? 0}{#if room?.killCount > 0}kills{/if}</span
-        >
+        {#if room?.killCount > 0}
+          <!-- DIVIDER -->
+          <span class="divider">•</span>
+          <!-- KILL RATE -->
+          <span class="kill-count small">
+            {room.killCount} kill{#if room.killCount > 1}s{/if}
+          </span>
+        {/if}
       </div>
     </div>
   </div>
@@ -100,7 +102,7 @@
     background: transparent;
     outline: none;
     border: none;
-    border-bottom: 1px solid white;
+    border-bottom: var(--default-border-style);
     padding: var(--room-item-padding);
     cursor: pointer;
     height: var(--room-item-height);

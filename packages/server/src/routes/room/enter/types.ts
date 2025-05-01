@@ -9,6 +9,7 @@ export type Room = {
     name: string,
     prompt: string;
     balance: number;
+    index: number;
 }
 
 export type Trait = {

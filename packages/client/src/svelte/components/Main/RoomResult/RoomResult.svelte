@@ -138,6 +138,6 @@
       var(--color-grey-dark) 20px,
       var(--color-grey-dark) 40px
     );
-    border: 1px solid white;
+    border: var(--default-border-style);
   }
 </style>

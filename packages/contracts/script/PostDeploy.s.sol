@@ -27,10 +27,10 @@ contract PostDeploy is Script {
 
     bytes32 adminId = GameConfig.getAdminId();
 
-    // // Create levels
+    // Create levels
     bytes32 firstLevel = LibLevel.createLevel(0, 0, 1000000, 250); // Level 0
 
-    // // Electrical shock therapy. Rat gets psychological disorder, or heals one (even if unlikely).
+    // Electrical shock therapy. Rat gets psychological disorder, or heals one (even if unlikely).
     LibRoom.createRoom(
       "Electrical Shock Therapy",
       "The rat gets psychological disorder, or heals one (even if unlikely).",

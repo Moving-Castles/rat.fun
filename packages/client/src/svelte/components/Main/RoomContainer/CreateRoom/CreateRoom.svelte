@@ -4,9 +4,9 @@
   import { getUIState } from "@modules/ui/state.svelte"
   import { ENVIRONMENT } from "@mud/enums"
   import { walletNetwork } from "@modules/network"
-  import { initStaticContent, staticContent } from "@modules/content"
+  import { initStaticContent } from "@modules/content"
 
-  import CharacterCounter from "@components/Main/LeftContainer/CreateRoom/CharacterCounter.svelte"
+  import CharacterCounter from "@components/Main/RoomContainer/CreateRoom/CharacterCounter.svelte"
   import Spinner from "@components/Main/Shared/Spinner/Spinner.svelte"
 
   const { rooms, enums, panes } = getUIState()
@@ -45,7 +45,7 @@
 
   const goYourRooms = () => {
     rooms.back(true)
-    panes.set(enums.PANE.LEFT, enums.LEFT_PANE.YOUR_ROOMS)
+    panes.set(enums.PANE.ROOM_CONTAINER, enums.ROOM_CONTAINER.YOUR_ROOMS)
   }
 </script>
 

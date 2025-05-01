@@ -10,12 +10,13 @@ declare global {
     globalRatIndex: number,
     maxTraitsSize: number,
     maxInventorySize: number,
-    creatorFee: number,
     ratCreationCost: number,
+    roomCreationCost: number,
     maxRoomPromptLength: number,
     minRoomPromptLength: number,
     maxRoomNameLength: number,
     minRoomNameLength: number,
+    startingBalance: number
   }
 
   type GameConfig = {

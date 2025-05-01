@@ -16,6 +16,9 @@
 </script>
 
 <div class="rat-cam">
+  <div class="overlay">
+    <img src="/images/cutout-test-3.png" alt="cutout" />
+  </div>
   <div class="square">
     <Main>
       <Box></Box>
@@ -25,15 +28,32 @@
 
 <style lang="scss">
   .rat-cam {
-    border-bottom: 1px solid white;
-    height: var(--rat-cam-height);
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     position: relative;
+    aspect-ratio: 1 / 1;
+    padding: 5px;
   }
+
   .square {
     aspect-ratio: 1 / 1;
     height: 100%;
+  }
+
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
   }
 </style>

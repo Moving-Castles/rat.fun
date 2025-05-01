@@ -2,7 +2,7 @@
 pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { EntityType, Balance, Name, CreationBlock } from "../codegen/index.sol";
+import { EntityType, Balance, Name, CreationBlock, GameConfig } from "../codegen/index.sol";
 import { LibUtils } from "../libraries/Libraries.sol";
 import { ENTITY_TYPE } from "../codegen/common.sol";
 
@@ -15,7 +15,7 @@ contract PlayerSystem is System {
     _playerId = LibUtils.addressToEntityKey(_msgSender());
     EntityType.set(_playerId, ENTITY_TYPE.PLAYER);
     Name.set(_playerId, _name);
-    Balance.set(_playerId, 2000);
+    Balance.set(_playerId, GameConfig.getStartingBalance());
     CreationBlock.set(_playerId, block.number);
   }
 }

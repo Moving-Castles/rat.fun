@@ -6,12 +6,12 @@
 
 <style lang="scss">
   .floor-bar {
-    width: 160px;
+    width: var(--floor-bar-width);
     height: 100%;
     display: flex;
     flex-direction: column;
-    border-right: 1px dashed white;
-    border-left: 1px dashed white;
+    border-right: var(--dashed-border-style);
+    border-left: var(--dashed-border-style);
     position: relative;
     background: repeating-linear-gradient(
       45deg,

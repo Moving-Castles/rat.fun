@@ -13,7 +13,9 @@
   --color-grey-mid: #666;
   --color-grey-light: #999;
 
-  --color-alert: rgb(255, 69, 0);
+  /* --color-alert: rgb(255, 69, 0); */
+  --color-alert: rgb(240, 0, 0);
+
   --color-secondary: rgb(163, 66, 31);
   --color-health: rgb(95, 186, 95);
   --color-value: rgba(243, 236, 42, 0.8);
@@ -37,11 +39,18 @@
   /* --rat-editor-height: 180px; */
   --rat-editor-height: 230px;
 
-  --liquidate-rat-height: 100px;
+  --liquidate-rat-height: 60px;
   --floor-progress-height: 50px;
-  --rat-cam-height: calc(
+  /* --rat-cam-height: calc(
     100% - var(--rat-editor-height) - var(--liquidate-rat-height)
-  );
+  ); */
+  --rat-cam-height: 260px;
+  --rat-main-info-height: 200px;
+  --rat-inventory-height: 180px;
+  --rat-liquidate-height: 60px;
+
+  /* Layout: Floors */
+  --floor-bar-width: 100px;
 
   /* Layout: Your Rooms */
   --create-room-button-height: 100px;
@@ -60,16 +69,19 @@
   --top-bar-height: 40px;
   --tab-bar-height: 90px;
 
+  /* border */
+  --color-border: var(--color-grey-mid);
+  --default-border-style: 1px double var(--color-border);
+  --dashed-border-style: 1px dashed var(--color-border);
+
   /* Typography */
   --typewriter-font-stack: "OCRA", monospace;
+  --display-font-stack: "Rock Salt", cursive;
   --font-size-label: 8px;
   --font-size-very-small: 9px;
   --font-size-small: 11px;
   --font-size-normal: 14px;
   --font-size-large: 26px;
-
-  /* Misc */
-  --default-border-style: 5px double var(--color-grey-dark);
 
   /** Layers */
   --z-0: 0;

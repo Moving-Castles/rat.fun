@@ -7,7 +7,7 @@
  *
  */
 
-import { PANE, LEFT_PANE, RIGHT_PANE } from "./enums"
+import { PANE, RAT_CONTAINER, ROOM_CONTAINER } from "./enums"
 import { quadInOut } from "svelte/easing"
 import { Tween } from "svelte/motion"
 import * as uiStores from "@modules/ui/stores"
@@ -31,8 +31,8 @@ export const ROUTES = [
  * Internal state is modified by functions. See section 2 comments
  */
 // 1.2 Simple state. Strings, numbers, etc.
-let leftPane = $state<LEFT_PANE>(LEFT_PANE.YOUR_RAT)
-let rightPane = $state<RIGHT_PANE>(RIGHT_PANE.ROOMS)
+let ratContainer = $state<RAT_CONTAINER>(RAT_CONTAINER.YOUR_RAT)
+let roomContainer = $state<ROOM_CONTAINER>(ROOM_CONTAINER.ALL_ROOMS)
 let previewingPane = $state<PANE>(PANE.NONE)
 // Current route
 let route = $state("main")
@@ -46,7 +46,7 @@ const transition = $state({
   progress: new Tween(0, { duration: 2000, easing: quadInOut }),
 })
 
-const getTransitionType = (from, to) => {
+const getTransitionType = (from: string, to: string) => {
   if (from === "main" && to === "room") {
     return "doorsOpen"
   }
@@ -72,16 +72,16 @@ const getTransitionType = (from, to) => {
 export const getUIState = () => {
   /** 2.1 Basic state modification
    *
-   * Basically: Modify the internal state by normal assignment, in setPane for example we just set leftPane by calling
+   * Basically: Modify the internal state by normal assignment, in setPane for example we just set roomContainer by calling
    *
-   * leftPane = option
+   * roomContainer = option
    */
-  const setPane = (pane: PANE, option: LEFT_PANE | RIGHT_PANE) => {
-    if (pane === PANE.LEFT) {
-      leftPane = option as LEFT_PANE
+  const setPane = (pane: PANE, option: RAT_CONTAINER | ROOM_CONTAINER) => {
+    if (pane === PANE.RAT_CONTAINER) {
+      ratContainer = option as RAT_CONTAINER
     }
-    if (pane === PANE.RIGHT) {
-      rightPane = option as RIGHT_PANE
+    if (pane === PANE.ROOM_CONTAINER) {
+      roomContainer = option as ROOM_CONTAINER
     }
   }
 
@@ -93,7 +93,7 @@ export const getUIState = () => {
    * but the transition's `active` property is just a boolean
    *
    */
-  const navigate = async (to: string, p?: Record<string, string> = {}) => {
+  const navigate = async (to: string, p: Record<string, string> = {}) => {
     // Simple asssignment
     transition.from = route
     transition.to = to
@@ -128,20 +128,20 @@ export const getUIState = () => {
   const preview = (id: string, mine = false) => {
     if (mine) {
       uiStores.myPreviewId.set(id)
-      previewingPane = PANE.LEFT
+      previewingPane = PANE.ROOM_CONTAINER
     } else {
       uiStores.previewId.set(id)
-      previewingPane = PANE.RIGHT
+      previewingPane = PANE.ROOM_CONTAINER
     }
   }
 
   const back = (mine = false) => {
     if (mine) {
       uiStores.myPreviewId.set(null)
-      setPane(PANE.LEFT, LEFT_PANE.YOUR_ROOMS)
+      setPane(PANE.ROOM_CONTAINER, ROOM_CONTAINER.YOUR_ROOMS)
     } else {
       uiStores.previewId.set(null)
-      setPane(PANE.RIGHT, RIGHT_PANE.ROOMS)
+      setPane(PANE.ROOM_CONTAINER, ROOM_CONTAINER.ALL_ROOMS)
     }
   }
 
@@ -165,8 +165,8 @@ export const getUIState = () => {
   return {
     enums: {
       PANE,
-      LEFT_PANE,
-      RIGHT_PANE,
+      RAT_CONTAINER,
+      ROOM_CONTAINER,
     },
     panes: {
       /** 3.2 Simple modifying function */
@@ -179,11 +179,11 @@ export const getUIState = () => {
       get previewing() {
         return previewingPane
       },
-      get left() {
-        return leftPane
+      get ratContainer() {
+        return ratContainer
       },
-      get right() {
-        return rightPane
+      get roomContainer() {
+        return roomContainer
       },
     },
     rooms: {

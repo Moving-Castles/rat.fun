@@ -53,7 +53,7 @@
   .room-info-box {
     width: calc(50% - 50px);
     height: 100%;
-    border: 1px solid white;
+    border: var(--default-border-style);
     border-left: none;
     overflow: hidden;
     display: flex;
@@ -62,7 +62,7 @@
   .image-container {
     width: 100px;
     height: 100px;
-    border: 1px solid white;
+    border: var(--default-border-style);
     margin: 10px;
 
     img {
@@ -81,7 +81,7 @@
 
   .column {
     width: calc(100% / 3);
-    border-right: 1px dashed white;
+    border-right: var(--dashed-border-style);
     overflow-x: hidden;
     overflow-y: scroll;
 
@@ -93,7 +93,7 @@
       width: 100%;
       padding-bottom: 10px;
       margin-bottom: 10px;
-      border-bottom: 1px dashed white;
+      border-bottom: var(--dashed-border-style);
     }
 
     &.info {
@@ -103,7 +103,7 @@
     }
 
     &:last-child {
-      border-right: 1px solid white;
+      border-right: var(--default-border-style);
     }
   }
 
@@ -143,7 +143,7 @@
   }
 
   .header {
-    border-bottom: 1px dashed white;
+    border-bottom: var(--dashed-border-style);
     padding: 5px;
   }
 

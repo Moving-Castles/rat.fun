@@ -9,9 +9,9 @@ pragma solidity >=0.8.24;
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IDevSystem {
-  function ratroom__givePlayerBalance(uint256 _amount) external;
+  function ratroom__givePlayerBalance(bytes32 _playerId, uint256 _amount) external;
 
-  function ratroom__giveRatBalance(uint256 _amount) external;
+  function ratroom__removePlayerBalance(bytes32 _playerId) external;
 
   function ratroom__createRoomAsAdmin(
     string memory _roomName,

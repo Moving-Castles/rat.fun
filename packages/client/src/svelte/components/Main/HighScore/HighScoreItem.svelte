@@ -17,7 +17,7 @@
     align-items: center;
     padding-top: 10px;
     padding-bottom: 10px;
-    border-bottom: 1px solid white;
+    border-bottom: var(--default-border-style);
 
     .balance {
       background: var(--color-value);

@@ -135,7 +135,7 @@
 
 <style lang="scss">
   .rat-editor {
-    border-bottom: 1px solid white;
+    border-bottom: var(--default-border-style);
     height: var(--rat-editor-height);
     line-height: 2em;
     overflow-x: hidden;
@@ -167,7 +167,7 @@
 
     &.name {
       background-color: black;
-      border: 1px solid white;
+      border: var(--default-border-style);
       color: white;
     }
 
@@ -190,7 +190,7 @@
 
   .item {
     cursor: grab;
-    border: 1px solid white;
+    border: var(--default-border-style);
   }
 
   .cancel,
@@ -215,7 +215,7 @@
   .trash {
     animation: warn-lines 1s infinite linear;
     &.open {
-      border-left: 1px solid white;
+      border-left: var(--default-border-style);
     }
   }
 
@@ -224,7 +224,7 @@
     right: auto;
 
     &.open {
-      // border-right: 1px solid white;
+      // border-right: var(--default-border-style);
     }
   }
 

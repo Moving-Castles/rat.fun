@@ -7,8 +7,8 @@
   import Spawn from "@components/Spawn/Spawn.svelte"
   import OperatorBar from "@components/Main/OperatorBar/OperatorBar.svelte"
   // import Floors from "@components/Main/Floors/Floors.svelte"
-  import LeftContainer from "@components/Main/LeftContainer/LeftContainer.svelte"
-  import RightContainer from "@components/Main/RightContainer/RightContainer.svelte"
+  import RatContainer from "@components/Main/RatContainer/RatContainer.svelte"
+  import RoomContainer from "@components/Main/RoomContainer/RoomContainer.svelte"
   import ModalTarget from "@components/Main/Modal/ModalTarget.svelte"
   import RoomResult from "@components/Main/RoomResult/RoomResult.svelte"
   import FloorsPlaceholder from "@components/Main/Floors/FloorsPlaceholder.svelte"
@@ -47,10 +47,12 @@
   <div class="main {className}" style={transitionStyle}>
     <OperatorBar />
     <div class="main-area">
-      <LeftContainer {environment} />
+      <!-- Room container -->
+      <RoomContainer {environment} />
       <!-- <Floors /> -->
       <FloorsPlaceholder />
-      <RightContainer />
+      <!-- Rat container -->
+      <RatContainer />
     </div>
   </div>
 {/snippet}
@@ -85,7 +87,6 @@
     {@render roomSnippet()}
   </div>
 {/if}
-<!--  -->
 
 {#if debugTransition}
   <pre class="routing">
@@ -121,7 +122,7 @@
     height: calc(var(--game-window-height) - 20px);
     width: calc(var(--game-window-width) - 20px);
     overflow: hidden;
-    border: 1px solid white;
+    border: var(--default-border-style);
     background: black;
   }
 

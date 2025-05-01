@@ -18,12 +18,13 @@ export default defineWorld({
         globalRatIndex: "uint32",
         maxInventorySize: "uint32",
         maxTraitsSize: "uint32",
-        creatorFee: "uint256",
         ratCreationCost: "uint256",
+        roomCreationCost: "uint256",
         minRoomPromptLength: "uint32",
         maxRoomPromptLength: "uint32",
         minRoomNameLength: "uint32",
         maxRoomNameLength: "uint32",
+        startingBalance: "uint256",
       },
       codegen: {
         dataStruct: true

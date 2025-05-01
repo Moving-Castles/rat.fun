@@ -1,5 +1,5 @@
 <script lang="ts">
-  import CreateRoomButton from "@components/Main/LeftContainer/YourRooms/CreateRoomButton.svelte"
+  import CreateRoomButton from "@components/Main/RoomContainer/YourRooms/CreateRoomButton.svelte"
   import RoomsListing from "@components/Main/Shared/RoomsListing/RoomsListing.svelte"
 </script>
 

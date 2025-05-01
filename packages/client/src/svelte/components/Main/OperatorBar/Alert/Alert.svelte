@@ -22,7 +22,11 @@
 </script>
 
 {#if localMessage}
-  <div class="alert" transition:fade={{ duration: 400 }}>
+  <div
+    class="alert"
+    class:death={localMessage.topic == "rat__death"}
+    transition:fade={{ duration: 400 }}
+  >
     <div class="alert-message">{localMessage.message}</div>
   </div>
 {/if}
@@ -35,8 +39,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border-left: 1px solid white;
+    border-left: var(--default-border-style);
     font-size: var(--font-size-very-small);
     color: black;
+
+    &.death {
+      background-color: var(--color-death);
+    }
   }
 </style>

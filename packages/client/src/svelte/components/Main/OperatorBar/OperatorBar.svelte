@@ -65,7 +65,7 @@
 <style lang="scss">
   .operator-bar {
     width: 100%;
-    border-bottom: 1px solid white;
+    border-bottom: var(--default-border-style);
     display: flex;
     justify-content: space-between;
     height: 60px;
@@ -81,7 +81,7 @@
         line-height: 60px;
         border: 0;
         background: transparent;
-        border-right: 1px solid white;
+        border-right: var(--default-border-style);
         color: white;
 
         .label {

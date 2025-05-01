@@ -107,7 +107,7 @@
 
       .image-container {
         width: 100%;
-        border: 1px solid white;
+        border: var(--default-border-style);
 
         img {
           width: 100%;

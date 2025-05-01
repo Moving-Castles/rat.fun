@@ -14,7 +14,7 @@
   import { loadData } from "@modules/content/sanity"
   import { queries } from "@modules/content/sanity/groq"
 
-  import LiquidateRoom from "@components/Main/LeftContainer/YourRooms/LiquidateRoom.svelte"
+  import LiquidateRoom from "@components/Main/RoomContainer/YourRooms/LiquidateRoom.svelte"
   import RoomStats from "@components/Main/Shared/RoomStats/RoomStats.svelte"
   import RoomEventLog from "@components/Main/Shared/RoomEventLog/RoomEventLog.svelte"
 
@@ -49,7 +49,9 @@
     outcomes.sort((a, b) => {
       return new Date(b._createdAt).getTime() - new Date(a._createdAt).getTime()
     })
-    roomOutcomes = outcomes
+
+    roomOutcomes = outcomes.reverse()
+
     // Map the values
     const computed = [
       {
@@ -57,7 +59,7 @@
         roomValue: 250,
         meta: sanityRoomContent,
       },
-      ...outcomes,
+      ...roomOutcomes,
     ].map((o, i) => {
       return {
         time: i,
@@ -111,7 +113,7 @@
 
         <div class="room-info-row">
           <!-- BALANCE -->
-          <span class="balance">${room.balance}</span>
+          <span class="balance">Balance: ${room.balance}</span>
           <!-- DIVIDER -->
           <span class="divider">•</span>
           <!-- VISIT COUNT -->
@@ -122,7 +124,7 @@
           {#if room?.killCount > 0}
             <!-- DIVIDER -->
             <span class="divider">•</span>
-            <span class="kill-count small">{room?.killCount}kills</span>
+            <span class="kill-count small">{room?.killCount} kills</span>
           {/if}
         </div>
       </div>
@@ -136,9 +138,9 @@
 
       <!-- Room stats with graph -->
       <div class="room-stats">
-        <div class="header">Something</div>
-        <div class="content">
-          <RoomStats content={sanityRoomContent} data={plotData} />
+        <div class="header">Room balance over time</div>
+        <div class="content" class:empty={plotData.length == 1}>
+          <RoomStats {plotData} empty={plotData.length == 1} />
         </div>
       </div>
 
@@ -173,7 +175,6 @@
     flex-direction: column;
     width: 100%;
     height: 100%;
-    overflow-y: hidden;
 
     .back-button {
       width: 100%;
@@ -182,7 +183,7 @@
       border: none;
       color: white;
       text-transform: uppercase;
-      border-bottom: 1px solid white;
+      border-bottom: var(--default-border-style);
 
       &:hover {
         background-color: #222;
@@ -191,7 +192,11 @@
 
     .room-inner-container {
       padding: 15px;
-      overflow-y: scroll;
+      overflow-y: auto;
+      flex: 1;
+      min-height: 0;
+      height: 100%;
+      padding-bottom: 200px;
 
       .room-image {
         margin-bottom: 5px;
@@ -259,6 +264,7 @@
 
     .room-stats {
       margin-bottom: 15px;
+
       .header {
         border-left: 1px solid var(--color-grey-mid);
         border-top: 1px solid var(--color-grey-mid);
@@ -267,7 +273,6 @@
         padding: 12px;
         display: flex;
         justify-content: space-between;
-        position: sticky;
         top: 0;
         background: black;
       }
@@ -275,6 +280,10 @@
       .content {
         height: 300px;
         border-right: 1px solid var(--color-grey-mid);
+
+        &.empty {
+          height: 100px;
+        }
       }
     }
 

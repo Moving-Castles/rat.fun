@@ -102,8 +102,8 @@
     height: 100%;
     display: flex;
     flex-direction: column;
-    border-right: 1px dashed white;
-    border-left: 1px dashed white;
+    border-right: var(--dashed-border-style);
+    border-left: var(--dashed-border-style);
     position: relative;
   }
 
@@ -113,7 +113,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    border-bottom: 1px dashed white;
+    border-bottom: var(--dashed-border-style);
     position: relative;
 
     &:last-child {
@@ -150,12 +150,12 @@
 
   .elevator-door-l {
     left: 0;
-    border-right: 1px solid white;
+    border-right: var(--default-border-style);
   }
 
   .elevator-door-r {
     right: 0;
-    border-left: 1px solid white;
+    border-left: var(--default-border-style);
   }
 
   .elevator-door-l,
