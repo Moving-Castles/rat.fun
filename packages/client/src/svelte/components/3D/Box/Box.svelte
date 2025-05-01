@@ -5,7 +5,7 @@
   import Rat from "@components/3D/World/Models/RatAnimatedMoving.svelte"
   import { getBoxState } from "./state.svelte"
 
-  import { BoxGeometry, MeshBasicMaterial, Object3D } from "three"
+  import { Object3D } from "three"
 
   const { box } = getBoxState()
 

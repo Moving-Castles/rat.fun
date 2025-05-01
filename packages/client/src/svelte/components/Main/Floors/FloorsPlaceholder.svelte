@@ -6,10 +6,8 @@
 
 <style lang="scss">
   .floor-bar {
-    width: var(--floor-bar-width);
+    width: 100%;
     height: 100%;
-    display: flex;
-    flex-direction: column;
     border-right: var(--dashed-border-style);
     border-left: var(--dashed-border-style);
     position: relative;

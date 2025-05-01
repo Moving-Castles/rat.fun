@@ -1,7 +1,5 @@
 <script lang="ts">
   import type { Hex } from "viem"
-  import RoomItem from "@components/Main/Shared/RoomItem/RoomItem.svelte"
-  import RoomPreview from "@components/Main/Shared/RoomPreview/RoomPreview.svelte"
   import { rooms as roomsStore, playerRooms } from "@modules/state/base/stores"
   import { getUIState } from "@modules/ui/state.svelte"
   import { tippy } from "svelte-tippy"
@@ -11,6 +9,10 @@
     entriesByBalance,
     entriesByKillCount,
   } from "./sortFunctions"
+
+  import RoomItem from "@components/Main/Shared/RoomItem/RoomItem.svelte"
+  import RoomPreview from "@components/Main/Shared/RoomPreview/RoomPreview.svelte"
+  import OwnRoomItem from "@components/Main/Shared/OwnRoomItem/OwnRoomItem.svelte"
 
   let {
     isOwnRoomListing,
@@ -181,7 +183,6 @@
               </button>
               <span class="divider"></span>
               <!-- SHOW DEPELETED ROOMS -->
-
               <button
                 class="sort-button"
                 class:active={showDepletedRooms}
@@ -200,7 +201,11 @@
         {/if}
         {#if roomsList.length > 0}
           {#each roomsList as [roomId, room]}
-            <RoomItem {roomId} {room} {isOwnRoomListing} />
+            {#if isOwnRoomListing}
+              <OwnRoomItem roomId={roomId as Hex} {room} />
+            {:else}
+              <RoomItem roomId={roomId as Hex} {room} />
+            {/if}
           {/each}
         {:else}
           <div class="empty-listing">
@@ -245,7 +250,7 @@
 
   .wrapper {
     position: relative;
-    height: 100%;
+    height: calc(100% - 60px);
     overflow: hidden;
   }
 
@@ -274,14 +279,6 @@
     grid-template-rows: 1fr;
     grid-template-columns: 1fr;
     transition: grid-template-rows 0.1s ease;
-
-    &.collapsed {
-      grid-template-rows: 0px 1fr;
-
-      .floor-header {
-        border-bottom: 1px solid transparent;
-      }
-    }
   }
 
   .floor-content {

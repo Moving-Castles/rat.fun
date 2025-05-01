@@ -1,5 +1,7 @@
 <script lang="ts">
   import type { ServerReturnValue } from "@components/Main/RoomResult/types"
+  import type { Hex } from "viem"
+
   import {
     player,
     rooms as roomsState,
@@ -9,7 +11,7 @@
   import { ENVIRONMENT } from "@mud/enums"
   import { walletNetwork } from "@modules/network"
   import { onDestroy } from "svelte"
-  import type { Hex } from "viem"
+
   import Log from "@components/Main/RoomResult/Log/Log.svelte"
   import RoomMeta from "@components/Main/RoomResult/RoomMeta/RoomMeta.svelte"
   import RatInfoBox from "@components/Main/RoomResult/InfoBox/Rat/RatInfoBox.svelte"

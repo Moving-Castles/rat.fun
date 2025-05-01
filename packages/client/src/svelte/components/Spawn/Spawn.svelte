@@ -98,7 +98,8 @@
 
 <style lang="scss">
   .container {
-    width: 100%;
+    width: 600px;
+    max-width: 80vw;
     background: var(--corporate-background);
     font-family: var(--typewriter-font-stack);
     text-transform: none;
@@ -184,10 +185,6 @@
 
       .spinner {
         display: block;
-      }
-
-      .button-text {
-        display: none;
       }
     }
   }

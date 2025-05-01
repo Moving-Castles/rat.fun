@@ -2,7 +2,9 @@
   import { ratTotalValue } from "@modules/state/base/stores"
   import { liquidateRat } from "@modules/action"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
+  import { playSound } from "@modules/sound"
   import { tippy } from "svelte-tippy"
+  import Spinner from "@components/Main/Shared/Spinner/Spinner.svelte"
   import {
     ModalTarget,
     getModalState,
@@ -21,6 +23,7 @@
     try {
       liquidationMessage = "Eliminating rat..."
       await waitForCompletion(action)
+      playSound("tcm", "TRX_no")
     } catch (e) {
       busy = false
       console.error(e)
@@ -52,7 +55,11 @@
     onclick={() => (confirming = true)}
     class="action warning-mute"
   >
-    Liquidate Rat
+    {#if busy}
+      <Spinner />
+    {:else}
+      Liquidate Rat
+    {/if}
   </button>
 </div>
 
@@ -61,7 +68,7 @@
     <div class="content">
       <img
         class="liquidate-image"
-        src="/images/liquidate.svg"
+        src="/images/liquidate.jpg"
         alt="Confirm Liquidation"
       />
       <button disabled={busy} onclick={sendLiquidateRat} class="modal-button">
@@ -132,39 +139,6 @@
     align-items: center;
   }
 
-  .warning {
-    border: none;
-    background: repeating-linear-gradient(
-      45deg,
-      #f0d000,
-      #f0d000 20px,
-      #bda400 20px,
-      #bda400 40px
-    );
-  }
-
-  .danger {
-    border: none;
-    background: repeating-linear-gradient(
-      45deg,
-      #cc0000,
-      #cc0000 20px,
-      #9e0000 20px,
-      #9e0000 40px
-    );
-  }
-  .warning-mute {
-    color: white;
-    border: none;
-    background: repeating-linear-gradient(
-      45deg,
-      black,
-      black 20px,
-      #222 20px,
-      #222 40px
-    );
-  }
-
   .liquidate-image {
     height: 100%;
     max-height: 440px;
@@ -177,6 +151,14 @@
       flex-flow: column nowrap;
       justify-content: space-between;
       align-items: center;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        mix-blend-mode: screen;
+        filter: grayscale(100%);
+      }
     }
 
     button {

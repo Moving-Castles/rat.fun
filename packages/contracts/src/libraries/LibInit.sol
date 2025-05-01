@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
-import { GameConfig, GameConfigData, Balance } from "../codegen/index.sol";
+import { GameConfig, GameConfigData, Balance, Name } from "../codegen/index.sol";
 import { MAX_ROOM_PROMPT_LENGTH, MIN_ROOM_PROMPT_LENGTH, MAX_ROOM_NAME_LENGTH, MIN_ROOM_NAME_LENGTH, MAX_INVENTORY_SIZE, MAX_TRAITS_SIZE, CREATOR_FEE } from "../constants.sol";
 import { LibUtils } from "./LibUtils.sol";
 
@@ -33,5 +33,6 @@ library LibInit {
 
     // Give admin credits
     Balance.set(adminId, 1000000);
+    Name.set(adminId, "RATKING");
   }
 }

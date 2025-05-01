@@ -14,7 +14,7 @@
   --color-grey-light: #999;
 
   /* --color-alert: rgb(255, 69, 0); */
-  --color-alert: rgb(240, 0, 0);
+  --color-alert: rgb(180, 121, 27);
 
   --color-secondary: rgb(163, 66, 31);
   --color-health: rgb(95, 186, 95);
@@ -26,7 +26,6 @@
 
   --corporate-background: #bebebe;
   --corporate-foreground: #000000;
-  --corporate-alert: #ffff00;
 
   --game-window-width: min(100vw, 1920px);
   --game-window-height: 100vh;
@@ -51,6 +50,9 @@
 
   /* Layout: Floors */
   --floor-bar-width: 100px;
+
+  /* Layout: Operator Bar */
+  --operator-bar-height: 60px;
 
   /* Layout: Your Rooms */
   --create-room-button-height: 100px;
@@ -77,7 +79,6 @@
   /* Typography */
   --typewriter-font-stack: "OCRA", monospace;
   --display-font-stack: "Rock Salt", cursive;
-  --font-size-label: 8px;
   --font-size-very-small: 9px;
   --font-size-small: 11px;
   --font-size-normal: 14px;
@@ -105,12 +106,9 @@
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
   overscroll-behavior-y: none;
-
-  /* user-select: none; */
 }
 
 body {
-  /* text-transform: uppercase; */
   letter-spacing: 0px;
 }
 
@@ -161,4 +159,48 @@ button {
   background: var(--color-value-down);
   color: var(--black);
   padding: 2px;
+}
+
+.warning {
+  border: none;
+  background: repeating-linear-gradient(
+    45deg,
+    #f0d000,
+    #f0d000 20px,
+    #bda400 20px,
+    #bda400 40px
+  );
+}
+
+.danger {
+  border: none;
+  background: repeating-linear-gradient(
+    45deg,
+    #cc0000,
+    #cc0000 20px,
+    #9e0000 20px,
+    #9e0000 40px
+  );
+}
+.warning-mute {
+  color: white;
+  border: none;
+  background: repeating-linear-gradient(
+    45deg,
+    black,
+    black 20px,
+    #222 20px,
+    #222 40px
+  );
+}
+.warning-mute-inverse {
+  color: white;
+  border: none;
+  background: repeating-linear-gradient(
+    -45deg,
+    black,
+    black 20px,
+    #222 20px,
+    #222 40px
+  );
 }

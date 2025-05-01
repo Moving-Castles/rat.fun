@@ -44,7 +44,7 @@ const transition = $state({
   from: "",
   to: "main",
   type: "none",
-  progress: new Tween(0, { duration: 2000, easing: quadInOut }),
+  progress: new Tween(0, { duration: 600, easing: quadInOut }),
 })
 
 const getTransitionType = (from: string, to: string) => {

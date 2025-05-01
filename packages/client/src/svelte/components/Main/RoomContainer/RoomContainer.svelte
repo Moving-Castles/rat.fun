@@ -54,7 +54,7 @@
 
 <style lang="scss">
   .room-container {
-    width: calc(50% - (var(--floor-bar-width) / 2));
+    width: 100%;
     border-bottom: var(--default-border-style);
     height: 100%;
   }
@@ -77,7 +77,7 @@
     width: 50%;
 
     &.selected {
-      background: white;
+      background: var(--color-alert);
       color: black;
     }
   }

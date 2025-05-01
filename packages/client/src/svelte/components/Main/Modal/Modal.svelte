@@ -33,10 +33,10 @@
     z-index: 10;
 
     .content {
-      width: 700px;
-      min-height: 500px;
-      max-width: calc(var(--game-window-height) * 0.6);
-      max-height: calc(var(--game-window-height) * 0.9);
+      // width: 700px;
+      // min-height: 500px;
+      // max-width: calc(var(--game-window-height) * 0.6);
+      // max-height: calc(var(--game-window-height) * 0.9);
       overflow-x: hidden;
       overflow-y: scroll;
     }

@@ -1,11 +1,11 @@
 <script lang="ts">
   import type { PlotPoint } from "./types"
 
-  import { rats } from "@modules/state/base/stores"
   import { scaleTime, scaleLinear } from "d3-scale"
   import { max } from "d3-array"
   import { line } from "d3-shape"
   import tippy from "tippy.js"
+
   import "tippy.js/dist/tippy.css" // optional for styling
 
   let { plotData, empty = false }: { plotData: PlotPoint[]; empty: boolean } =

@@ -181,11 +181,10 @@
   }
 
   .liquidate-image {
-    height: 100%;
-    max-height: 440px;
     width: 100%;
+    height: 100%;
     object-fit: cover;
-    mix-blend-mode: screen;
+    mix-blend-mode: difference;
   }
 
   .confirmation {
@@ -195,6 +194,13 @@
       flex-flow: column nowrap;
       justify-content: space-between;
       align-items: center;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        mix-blend-mode: difference;
+      }
     }
 
     button {

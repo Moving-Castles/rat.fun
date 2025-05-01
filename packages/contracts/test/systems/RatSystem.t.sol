@@ -20,8 +20,6 @@ contract RatSystemTest is BaseTest {
   }
 
   function testCreateRat() public {
-    setUp();
-
     vm.startPrank(alice);
 
     bytes32 playerId = world.ratroom__spawn("alice");
@@ -48,8 +46,6 @@ contract RatSystemTest is BaseTest {
   }
 
   function testRevertAlreadyHasRat() public {
-    setUp();
-
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
 
@@ -62,8 +58,6 @@ contract RatSystemTest is BaseTest {
   }
 
   function testLiquidateRat() public {
-    setUp();
-
     vm.startPrank(alice);
 
     bytes32 playerId = world.ratroom__spawn("alice");
@@ -84,8 +78,6 @@ contract RatSystemTest is BaseTest {
   }
 
   function testDropItem() public {
-    setUp();
-
     // As alice
     vm.startPrank(alice);
     bytes32 aliceId = world.ratroom__spawn("alice");

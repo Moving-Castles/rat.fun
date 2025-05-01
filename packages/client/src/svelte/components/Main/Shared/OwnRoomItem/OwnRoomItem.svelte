@@ -1,42 +1,25 @@
 <script lang="ts">
   import type { Hex } from "viem"
   import { getUIState } from "@modules/ui/state.svelte"
-  import { getRoomOwnerName } from "@modules/state/base/utils"
   import { blocksToReadableTime } from "@modules/utils"
-  import { urlFor } from "@modules/content"
   import { blockNumber } from "@modules/network"
-  import { getContentState } from "@modules/content/state.svelte"
-
-  let { rooms: roomsState } = getContentState()
 
   let { roomId, room }: { roomId: Hex; room: Room } = $props()
 
-  let sanityRoomContent = $derived(
-    roomsState.current.find(r => r._id.trim() == roomId.trim())
-  )
-
   let { rooms } = getUIState()
+
+  let profit = $derived(Number(room.balance) - 250)
 </script>
 
-<button
-  class="room-listing-item"
-  class:disabled={room.balance <= 0}
-  onclick={() => rooms.preview(roomId, false)}
->
-  <!-- IMAGE -->
-  <div class="room-image">
-    {#if sanityRoomContent}
-      <img
-        src={urlFor(sanityRoomContent?.image)
-          .width(400)
-          .auto("format")
-          .saturation(-100)
-          .url()}
-        alt={room.name}
-      />
-    {:else}
-      <img src="/images/room3.jpg" alt={room.name} />
-    {/if}
+<button class="room-listing-item" onclick={() => rooms.preview(roomId, true)}>
+  <div class="profit">
+    <div
+      class="profit-indicator"
+      class:positive={profit > 0}
+      class:negative={profit < 0}
+    >
+      <span>Profit: ${profit}</span>
+    </div>
   </div>
   <!-- INFO -->
   <div class="room-info">
@@ -67,10 +50,6 @@
     <div class="section">
       <!-- BOTTOM ROW -->
       <div class="room-info-row bottom">
-        <!-- OWNER -->
-        <span class="owner">{getRoomOwnerName(room)}</span>
-        <!-- DIVIDER -->
-        <span class="divider">•</span>
         <!-- BALANCE -->
         <span class="balance" class:depleted={room.balance == 0}>
           Balance: ${room.balance}
@@ -107,25 +86,33 @@
     text-align: left;
     overflow: hidden;
 
-    &.disabled {
-      opacity: 0.5;
-      pointer-events: none;
-    }
-
     &:hover {
       background-color: #222;
     }
 
-    .room-image {
-      height: var(--room-item-image-height);
-      aspect-ratio: 4/3;
-      margin-right: 20px;
-      border: 1px solid var(--color-grey-mid);
+    .profit {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 50%;
+      height: 100%;
 
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
+      .profit-indicator {
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 70%;
+        aspect-ratio: 1/1;
+        border: var(--default-border-style);
+
+        &.positive {
+          background-color: var(--color-health);
+        }
+
+        &.negative {
+          background-color: var(--color-death);
+        }
       }
     }
 
@@ -204,12 +191,6 @@
 
       .divider {
         color: var(--color-grey-light);
-      }
-
-      .owner {
-        background: var(--color-grey-light);
-        color: black;
-        padding: 5px;
       }
     }
   }

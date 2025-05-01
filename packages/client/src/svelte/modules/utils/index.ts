@@ -1,4 +1,4 @@
-import { concat, Hex, keccak256 } from "viem"
+import { Hex } from "viem"
 import { BLOCKTIME } from "./constants"
 import { ONE_UNIT } from "@modules/ui/constants"
 
@@ -284,7 +284,8 @@ export function formatDate(date) {
   const minutes = String(date.getMinutes()).padStart(2, "0")
   const seconds = String(date.getSeconds()).padStart(2, "0")
 
-  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+  return `${hours}:${minutes}:${seconds}`
+  // return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
 }
 
 export function padToUint256(num: number | bigint): string {

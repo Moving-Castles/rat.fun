@@ -7,7 +7,7 @@
   import { ratLevelIndex } from "@modules/state/base/stores"
   import { getUIState } from "@modules/ui/state.svelte"
   import { playSound } from "@modules/sound"
-  import { getRoomOwnerName } from "@modules/state/base/helpers"
+  import { getRoomOwnerName } from "@modules/state/base/utils"
   import { staticContent, lastUpdated, urlFor } from "@modules/content"
   import { rat } from "@modules/state/base/stores"
   import { publicNetwork } from "@modules/network"
@@ -160,12 +160,12 @@
     {#if ($rat?.health ?? 0) <= 0 && !isOwnRoomListing}
       <div class="no-rat-warning">Deploy a rat to access this room</div>
     {/if}
-  </div>
-{/if}
 
-{#if room.balance > 0 && ($rat?.health ?? 0) > 0 && !isOwnRoomListing}
-  <div class="room-enter">
-    <button onclick={sendEnterRoom}>Send {$rat.name} to room</button>
+    {#if room.balance > 0 && ($rat?.health ?? 0) > 0 && !isOwnRoomListing}
+      <div class="room-enter">
+        <button onclick={sendEnterRoom}>Send {$rat.name} to room</button>
+      </div>
+    {/if}
   </div>
 {/if}
 
@@ -175,6 +175,7 @@
     flex-direction: column;
     width: 100%;
     height: 100%;
+    // height: 100%;
 
     .back-button {
       width: 100%;
@@ -196,7 +197,7 @@
       flex: 1;
       min-height: 0;
       height: 100%;
-      padding-bottom: 200px;
+      padding-bottom: 60px;
 
       .room-image {
         margin-bottom: 5px;
@@ -298,13 +299,19 @@
       background: var(--color-alert);
       padding: 20px;
       margin-bottom: 20px;
+      border: none;
+      border-top: var(--default-border-style);
+
+      &:hover {
+        background: var(--background);
+        color: var(--foreground);
+      }
     }
   }
 
   .no-rat-warning {
     background: var(--color-death);
     padding: 30px 20px;
-    // margin-top: 15px;
     color: white;
     text-align: center;
   }
@@ -312,7 +319,7 @@
   .no-rat-warning,
   .room-enter {
     position: sticky;
-    bottom: 120px;
+    bottom: 0;
     z-index: 100;
   }
 </style>

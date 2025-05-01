@@ -1,5 +1,7 @@
 import { Hex } from "viem"
 import { ENTITY_TYPE } from "./enums"
+import { players, gameConfig } from "@modules/state/base/stores"
+import { get } from "svelte/store"
 
 export function filterByEntitytype(
   entities: Entities,
@@ -33,3 +35,13 @@ export function filterByOthers(rooms: Rooms, playerId: Hex): Rooms {
 export function isPlayerRoom(room: Room, playerId: Hex) {
   return room.owner === playerId
 }
+
+export function getRoomOwnerName(room: Room) {
+
+  if (room.owner === get(gameConfig)?.gameConfig?.adminId) {
+    return "ratking"
+  }
+
+  return get(players)[room.owner]?.name ?? "unknown"
+}
+

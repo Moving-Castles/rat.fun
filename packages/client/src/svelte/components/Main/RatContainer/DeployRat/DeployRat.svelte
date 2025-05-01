@@ -35,13 +35,18 @@
       <span>Rat deployed. Stand by...</span>
     </div>
   {:else}
-    <div class="image-container">
+    <div class="image-container warning-mute-inverse">
       <img src="/images/rat.png" alt="Rat" />
+      <small>
+        {name}
+      </small>
     </div>
     <button class:disabled class:busy onclick={sendCreateRat}>
-      <span class="button-text">Deploy new rat: {name} (Cost: $100)</span>
       {#if busy}
         <div class="spinner"><Spinner /></div>
+      {:else}
+        <span class="button-text">Deploy new rat</span><br />
+        <span>Cost: $100</span>
       {/if}
     </button>
   {/if}
@@ -50,35 +55,44 @@
 <style lang="scss">
   .main {
     text-align: center;
-    padding-inline: 20px;
     color: var(--white);
     width: 100%;
+    height: 100%;
+    overflow: hidden;
+    display: grid;
+    grid-template-rows: 1fr 80px;
   }
 
   .done {
-    margin-top: 20px;
     text-align: left;
     padding: 20px;
-    background-color: var(--color-grey-dark);
   }
 
   .image-container {
-    margin-top: 20px;
-    margin-bottom: 20px;
-    height: 400px;
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 20px;
 
     img {
       width: 100%;
-      height: 100%;
+      height: 300px;
       object-fit: contain;
+      mix-blend-mode: screen;
     }
   }
 
   button {
     padding: 20px;
     width: 100%;
+    height: 80px;
     background: var(--color-alert);
-    margin-bottom: 20px;
+    border: none;
+    border-top: var(--default-border-style);
+
+    &:hover {
+      background: var(--background);
+      color: var(--foreground);
+    }
 
     .spinner {
       position: relative;

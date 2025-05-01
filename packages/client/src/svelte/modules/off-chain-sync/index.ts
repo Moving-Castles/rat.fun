@@ -1,6 +1,7 @@
 import type { OffChainMessage } from "@server/modules/websocket/types"
 import type { SetupWalletNetworkResult } from "@mud/setupWalletNetwork"
 import { ENVIRONMENT } from "@mud/enums"
+import { OFFCHAIN_VALIDATION_MESSAGE } from "@server/config";
 import {
   clientList,
   newEvent,
@@ -9,7 +10,6 @@ import {
   websocketConnected,
 } from "@modules/off-chain-sync/stores"
 
-const MESSAGE = "RATROOM"
 const MAX_RECONNECTION_DELAY = 30000 // Maximum delay of 30 seconds
 
 let socket: WebSocket
@@ -97,7 +97,7 @@ export async function sendChatMessage(
   message: string
 ) {
   const signature = await walletNetwork.walletClient.signMessage({
-    message: MESSAGE,
+    message: OFFCHAIN_VALIDATION_MESSAGE
   })
 
   if (socket) {

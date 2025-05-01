@@ -3,7 +3,6 @@
   import HighScore from "@components/Main/HighScore/HighScore.svelte"
   import ModalTarget from "@components/Main/Modal/ModalTarget.svelte"
   import { tippy } from "svelte-tippy"
-  import Alert from "@components/Main/OperatorBar/Alert/Alert.svelte"
 
   let showHighscore = $state(false)
 </script>
@@ -49,9 +48,6 @@
       </button>
     </div>
   {/if}
-  <div class="alert-container">
-    <Alert />
-  </div>
 </div>
 
 {#snippet content()}
@@ -68,7 +64,8 @@
     border-bottom: var(--default-border-style);
     display: flex;
     justify-content: space-between;
-    height: 60px;
+    height: var(--operator-bar-height);
+    background: var(--black);
 
     .player-stats {
       display: flex;
@@ -78,7 +75,7 @@
       .stat-item {
         display: flex;
         height: 100%;
-        line-height: 60px;
+        line-height: var(--operator-bar-height);
         border: 0;
         background: transparent;
         border-right: var(--default-border-style);
@@ -106,18 +103,10 @@
           }
 
           &.operator {
-            background: var(--color-alert);
-            color: var(--black);
+            color: var(--foreground);
           }
         }
       }
-    }
-
-    .alert-container {
-      display: flex;
-      align-items: center;
-      height: 100%;
-      width: calc(50% - 80px);
     }
   }
 </style>

@@ -8,12 +8,17 @@ enum ENTITY_TYPE {
   LEVEL
 }
 
-function getEnumNames<T extends object>(enumObj: T): string[] {
+// TODO remove placeholder workaround if you find a better solution (eg make string[] work)
+function getEnumKeys(enumObj: Record<string, number | string>): ["PH"] {
   // Filter the keys to remove the numeric ones, leaving only the string keys
-  return Object.keys(enumObj).filter((key) => isNaN(Number(key)));
+  return Object.values(enumObj).filter((key) => isNaN(Number(key))) as ["PH"];
 }
 
-const ENTITY_TYPE_ARRAY = getEnumNames(ENTITY_TYPE);
+export function getEnumValues<O extends Record<string, number | string>>(enumObj: O): O[keyof O][] {
+  return Object.values(enumObj).filter((key) => !isNaN(Number(key))) as never;
+}
+
+const ENTITY_TYPE_ARRAY = getEnumKeys(ENTITY_TYPE);
 
 export {
   ENTITY_TYPE,

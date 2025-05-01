@@ -61,6 +61,10 @@ export const tcm: SoundAssets = {
     src: "./sounds/tcm/selection_scroll-hit_02.mp3",
     volume: 1,
   },
+  selectionScroll2: {
+    src: "./sounds/tcm/selection_scroll-hit_01.mp3",
+    volume: 1,
+  },
   TRX_no: {
     src: "./sounds/tcm/TRX_no-sfx_01.mp3",
     volume: 1,

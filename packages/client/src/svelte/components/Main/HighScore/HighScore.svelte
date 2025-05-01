@@ -5,7 +5,6 @@
 
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <!-- svelte-ignore a11y_no_static_element_interactions -->
-
 <div class="highscore-list">
   {#each Object.entries($players).sort(([, a], [, b]) => {
     if (b.balance > a.balance) return 1

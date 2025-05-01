@@ -59,8 +59,6 @@
 
 <svelte:window />
 
-<div class="dust"></div>
-
 <div class="bg">
   <div class="context-main">
     {#if $UIState === UI.LOADING}
@@ -100,19 +98,5 @@
     position: fixed;
     inset: 0;
     z-index: 0;
-  }
-
-  .dust {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: var(--z-10);
-    pointer-events: none;
-    background-image: url(/images/dust.png);
-    opacity: 0.6;
-    background-size: cover;
-    // mix-blend-mode: difference;
   }
 </style>

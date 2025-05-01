@@ -8,7 +8,11 @@
 
   let tick = $state(1)
   let elapsed = $derived.by(() => {
-    if (tick) return timeSince(new Date(outcome._createdAt).getTime())
+    if (tick) {
+      return timeSince(new Date(outcome._createdAt).getTime())
+    } else {
+      return "now"
+    }
   })
   let ago = $derived(elapsed !== "now" ? "ago" : "")
 

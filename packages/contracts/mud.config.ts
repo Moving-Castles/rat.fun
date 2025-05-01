@@ -1,9 +1,10 @@
 import { defineWorld } from "@latticexyz/world";
+import { ENTITY_TYPE_ARRAY } from "./enums";
 
 export default defineWorld({
   namespace: "ratroom",
   enums: {
-    ENTITY_TYPE: ["NONE", "PLAYER", "RAT", "ROOM", "ITEM", "TRAIT", "LEVEL"]
+    ENTITY_TYPE: ENTITY_TYPE_ARRAY
   },
   deploy: {
     upgradeableWorldImplementation: true,

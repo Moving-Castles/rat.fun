@@ -29,6 +29,12 @@
       width: 100%;
       background: var(--color-alert);
       padding: 20px;
+      border: var(--default-border-style);
+
+      &:hover {
+        background: var(--background);
+        color: var(--foreground);
+      }
     }
   }
 </style>
