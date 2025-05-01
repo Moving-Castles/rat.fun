@@ -1,0 +1,13 @@
+export interface WebSocketParams {
+    Params: {
+      playerId: string;
+    };
+  }
+  
+  export type OffChainMessage = {
+    topic: "test" | "clients__update" | "room__outcome" | "rat__death" | "chat__message";
+    playerName?: string;
+    message: string | string[];
+    timestamp?: number;
+    signature?: string;
+  }

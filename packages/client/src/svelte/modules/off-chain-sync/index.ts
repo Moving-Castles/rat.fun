@@ -1,10 +1,13 @@
+import type { OffChainMessage } from "@server/modules/websocket/types"
+import type { SetupWalletNetworkResult } from "@mud/setupWalletNetwork";
 import { ENVIRONMENT } from "@mud/enums"
 import { clientList, newEvent, roundTriptime, websocketConnected } from "@modules/off-chain-sync/stores"
-import { MessageContent } from "./types"
+
+const MAX_RECONNECTION_DELAY = 30000; // Maximum delay of 30 seconds
+const MESSAGE = "RATROOM"
 
 let socket: WebSocket
 let reconnectAttempts = 0;
-const MAX_RECONNECTION_DELAY = 30000; // Maximum delay of 30 seconds
 let roundTripStart = 0
 
 export function initOffChainSync(environment: ENVIRONMENT, playerId: string) {
@@ -26,7 +29,7 @@ export function initOffChainSync(environment: ENVIRONMENT, playerId: string) {
 
   socket.onmessage =(message: MessageEvent<string>) => {
     console.log("Received message:", message)
-    const messageContent = JSON.parse(message.data) as MessageContent
+    const messageContent = JSON.parse(message.data) as OffChainMessage
     // console.log("Received outcome:", messageContent)
 
     // Update client list when players connect/disconnect
@@ -74,9 +77,15 @@ export function ping() {
   }))
 }
 
-export function sendChatMessage(message: string) {
+export async function sendChatMessage(walletNetwork: SetupWalletNetworkResult, message: string) {
+
+  const signature = await walletNetwork.walletClient.signMessage({
+    message: MESSAGE,
+  })
+
   socket.send(JSON.stringify({
     topic: "chat__message",
-    message: message
+    message: message,
+    signature: signature
   }))
 }

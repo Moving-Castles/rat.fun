@@ -56,5 +56,6 @@ export async function createRoom(
   } catch (err) {
     console.error(err)
     window.alert(`SERVER ERROR: ${err}`)
+    return null
   }
 }

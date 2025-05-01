@@ -1,7 +1,7 @@
 <script lang="ts">
   import { fade } from "svelte/transition"
   import { newEvent } from "@modules/off-chain-sync/stores"
-  import type { MessageContent } from "@modules/off-chain-sync/types"
+  import type { OffChainMessage } from "@server/modules/websocket/types"
   import { playSound } from "@modules/sound"
 
   $effect(() => {
@@ -10,9 +10,9 @@
     }
   })
 
-  let localMessage = $state<MessageContent | null>(null)
+  let localMessage = $state<OffChainMessage | null>(null)
 
-  const setLocalMessage = (event: MessageContent) => {
+  const setLocalMessage = (event: OffChainMessage) => {
     playSound("tcm", "alert")
     localMessage = event
     setTimeout(() => {

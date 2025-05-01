@@ -1,7 +1,14 @@
-import { FastifyInstance, FastifyRequest } from 'fastify';
+import type { FastifyInstance, FastifyRequest } from 'fastify';
+import type { WebSocketParams, OffChainMessage } from '@modules/websocket/types';
 import { schema } from '@routes/ws-connect/schema';
 import { broadcast, wsConnections } from '@modules/websocket';
-import { WebSocketParams, Message } from './types';
+
+// Signature
+import { getSenderId } from '@modules/signature';
+
+// MUD
+import { getPlayerName } from '@modules/mud/getOnchainData';
+import { components} from '@modules/mud/initMud';
 
 async function routes(fastify: FastifyInstance) {
   fastify.get(
@@ -13,18 +20,17 @@ async function routes(fastify: FastifyInstance) {
       // Store the WebSocket connection
       wsConnections[playerId] = socket;
       console.log(`WebSocket connected for Player ID: ${playerId}`);
-
       console.log('Object.keys(wsConnections)', Object.keys(wsConnections))
 
       // Broadcast updated client list to all connected clients
       broadcast("clients__update", Object.keys(wsConnections));
 
       // Add ping-pong handler
-      socket.on('message', (message: Message) => {
+      socket.on('message', (message: OffChainMessage) => {
         const data = JSON.parse(message.toString());
         // Test
         if (data.topic === 'test') {
-          const newMessage: Message = {
+          const newMessage: OffChainMessage = {
             topic: 'test',
             message: 'pong',
             timestamp: Date.now()
@@ -34,8 +40,13 @@ async function routes(fastify: FastifyInstance) {
         // Chat message
         if (data.topic === 'chat__message') {
           console.log('chat__message', data)
-          const newMessage: Message = {
+
+          const senderId = getSenderId(data.signature, data.message)
+          const playerName = getPlayerName(senderId, components.Name)
+
+          const newMessage: OffChainMessage = {
             topic: 'chat__message',
+            playerName: playerName,
             message: data.message,
             timestamp: Date.now()
           }

@@ -121,7 +121,7 @@ async function routes (fastify: FastifyInstance) {
                     playerId, 
                     room, 
                     rat,
-                    message,
+                    message as string,
                     newRoomValue, 
                     roomValueChange, 
                     newRatValue, 

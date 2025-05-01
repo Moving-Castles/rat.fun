@@ -1,8 +1,8 @@
 import { Rat, Room } from "@routes/room/enter/types";
-import { Message } from "@routes/ws-connect/types";
+import { OffChainMessage } from "@modules/websocket/types";
 import { OutcomeReturnValue } from "@modules/llm/types";
 
-export function createMessage(rat: Rat, newRatHealth: number, room: Room, validatedOutcome: OutcomeReturnValue): Message {
+export function createMessage(rat: Rat, newRatHealth: number, room: Room, validatedOutcome: OutcomeReturnValue): OffChainMessage {
     // Death
     if (newRatHealth == 0) {
         return {
