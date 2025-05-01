@@ -11,6 +11,7 @@ import { PANE, RAT_CONTAINER, ROOM_CONTAINER } from "./enums"
 import { quadInOut } from "svelte/easing"
 import { Tween } from "svelte/motion"
 import * as uiStores from "@modules/ui/stores"
+import { gameConfig } from "../state/base/stores"
 
 export const ROUTES = [
   {
