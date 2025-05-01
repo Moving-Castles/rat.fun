@@ -67,7 +67,7 @@ async function routes (fastify: FastifyInstance) {
             }
             
             // Recover player address from signature and convert to MUD bytes32 format
-            const playerId = getSenderId(signature, MESSAGE);
+            const playerId = getSenderId(signature);
 
             validateInputData(playerId, rat, room);
 

@@ -2,8 +2,7 @@ import type { ServerReturnValue } from "@components/Main/RoomResult/types"
 import { SetupWalletNetworkResult } from "@mud/setupWalletNetwork";
 
 import { ENVIRONMENT } from "@mud/enums"
-
-const MESSAGE = "RATROOM"
+import { OFFCHAIN_VALIDATION_MESSAGE } from "@server/config";
 
 export async function createRoom(
   environment: ENVIRONMENT,
@@ -18,7 +17,7 @@ export async function createRoom(
     : "http://localhost:3131/room/create"
 
   const signature = await walletNetwork.walletClient.signMessage({
-    message: MESSAGE,
+    message: OFFCHAIN_VALIDATION_MESSAGE,
   })
 
   const formData = new URLSearchParams()

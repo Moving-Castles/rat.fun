@@ -6,7 +6,7 @@ import dotenv from "dotenv"
 
 dotenv.config()
 
-import { MESSAGE } from "@config"
+import { OFFCHAIN_VALIDATION_MESSAGE } from "@config"
 
 // CMS
 import { writeRoomToCMS, CMSError } from "@modules/cms"
@@ -44,7 +44,7 @@ async function routes(fastify: FastifyInstance) {
         const { signature, roomName, roomPrompt } = request.body
 
         // Recover player address from signature and convert to MUD bytes32 format
-        const playerId = getSenderId(signature, MESSAGE)
+        const playerId = getSenderId(signature)
 
         // TODO: Check if player has enough balance to create a room
 
