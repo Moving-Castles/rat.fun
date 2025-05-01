@@ -21,7 +21,7 @@
 
     e.preventDefault()
 
-    if (!value) return
+    if (!value || value.length > 500) return
 
     try {
       await sendChatMessage($walletNetwork, value)
@@ -34,19 +34,19 @@
 
 <div bind:clientHeight class="chat-window">
   <div bind:this={scrollElement} class="chat-scroll">
-    {#each $latestEvents as event (event.message.timestamp)}
+    {#each $latestEvents as event (event.timestamp)}
       {#if event.topic === "chat__message"}
         <div class="event message">
           <span
             use:tippy={{
-              content: formatDate(new Date(event.message.timestamp)),
+              content: formatDate(new Date(event.timestamp)),
             }}
             class="timestamp"
           >
-            {event.message.playerName}
+            {event.playerName}
           </span>
           <span>
-            {event.message.message}
+            {event.message}
           </span>
         </div>
       {:else}
