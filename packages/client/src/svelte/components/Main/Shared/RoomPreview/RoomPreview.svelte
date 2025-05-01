@@ -157,15 +157,15 @@
       {/if}
     </div>
 
-    {#if room.balance > 0 && ($rat?.health ?? 0) > 0 && !isOwnRoomListing}
-      <div class="room-enter">
-        <button onclick={sendEnterRoom}>Send {$rat.name} to room</button>
-      </div>
-    {/if}
-
     {#if ($rat?.health ?? 0) <= 0 && !isOwnRoomListing}
       <div class="no-rat-warning">Deploy a rat to access this room</div>
     {/if}
+  </div>
+{/if}
+
+{#if room.balance > 0 && ($rat?.health ?? 0) > 0 && !isOwnRoomListing}
+  <div class="room-enter">
+    <button onclick={sendEnterRoom}>Send {$rat.name} to room</button>
   </div>
 {/if}
 
@@ -312,7 +312,7 @@
   .no-rat-warning,
   .room-enter {
     position: sticky;
-    bottom: 0;
+    bottom: 120px;
     z-index: 100;
   }
 </style>

@@ -1,22 +1,62 @@
 <script lang="ts">
   import { latestEvents } from "@modules/off-chain-sync/stores"
+  import { walletNetwork } from "@modules/network"
+  import { sendChatMessage } from "@modules/off-chain-sync"
+  import { websocketConnected } from "@modules/off-chain-sync/stores"
+  import { timeSince } from "@modules/utils"
 
-  const sendMessage = e => {
+  let clientHeight = $state(0)
+  let value = $state("")
+  let scrollElement = $state<null | HTMLElement>(null)
+
+  $effect(() => {
+    if ($latestEvents[$latestEvents.length - 1]) {
+      scrollElement.scrollTop = scrollElement.scrollHeight
+    }
+  })
+
+  const sendMessage = async e => {
+    console.log("yeah")
     e.preventDefault()
 
-    console.log()
+    try {
+      await sendChatMessage($walletNetwork, value)
+      console.log("we send")
+      value = ""
+    } catch (e) {
+      console.error(e)
+    }
   }
 </script>
 
-<div class="chat-window">
-  <div class="chat-scroll">
-    {#each $latestEvents as event}
-      {event.topic}: {event.message}
+<div bind:clientHeight class="chat-window">
+  <div bind:this={scrollElement} class="chat-scroll">
+    {#each $latestEvents as event (event.message.timestamp)}
+      {#if event.topic === "chat__message"}
+        <div class="event message">
+          <span class="timestamp">
+            {event.message.timestamp}
+          </span>{event.message.playerName}: {event.message.message}
+        </div>
+      {:else}
+        <div class="event {event.topic}">
+          {event.message.message}
+        </div>
+      {/if}
     {/each}
   </div>
   <form autocomplete="off" class="chat-input" onsubmit={sendMessage}>
-    <input class="chat-message" type="text" name="text" id="text" />
-    <input class="chat-submit" type="submit" value="Send" />
+    <input bind:value class="chat-message" type="text" name="text" id="text" />
+
+    <div class="status">
+      <div class="indicator" class:connected={$websocketConnected} />
+    </div>
+    <input
+      disabled={!$websocketConnected}
+      class="chat-submit"
+      type="submit"
+      value="Send"
+    />
   </form>
 </div>
 
@@ -27,7 +67,23 @@
     flex-flow: column nowrap;
 
     .chat-scroll {
-      height: 100%;
+      height: 300px;
+      overflow-y: scroll;
+      padding: 4px;
+
+      .event {
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        justify-content: start;
+        gap: 4px;
+
+        .timestamp {
+          background: var(--color-grey-light);
+          padding: 5px;
+          color: black;
+        }
+      }
     }
 
     .chat-input {
@@ -35,6 +91,26 @@
       display: flex;
       flex-flow: row nowrap;
       color: white;
+
+      .status {
+        height: 100%;
+        aspect-ratio: 1;
+        background: var(--black);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .indicator {
+          width: 10px;
+          height: 10px;
+          border-radius: 100%;
+          background: var(--color-death);
+
+          &.connected {
+            background: var(--color-health);
+          }
+        }
+      }
 
       .chat-message {
         height: 100%;

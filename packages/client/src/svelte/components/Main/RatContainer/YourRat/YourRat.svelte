@@ -7,7 +7,6 @@
   import LiquidateRat from "@components/Main/RatContainer/YourRat/LiquidateRat.svelte"
   import DeployRat from "@components/Main/RatContainer/DeployRat/DeployRat.svelte"
 
-  import ChatRoom from "@components/Main/RatContainer/ChatRoom/ChatRoom.svelte"
   // import FloorProgress from "@components/Main/RatContainer/YourRat/FloorProgress.svelte"
 </script>
 
@@ -35,9 +34,6 @@
       </div>
     </div>
     <!-- Bottom -->
-    <div class="your-rat-bottom">
-      <ChatRoom />
-    </div>
   {:else}
     <DeployRat />
   {/if}
@@ -47,7 +43,6 @@
   .your-rat {
     display: flex;
     flex-direction: column;
-    height: 100%;
     position: relative;
   }
 
@@ -66,6 +61,7 @@
     background-size: 200px;
     background-position: center;
     opacity: 0.5;
+    height: calc(var(--game-window-height) - 200px);
 
     img {
       width: 100%;

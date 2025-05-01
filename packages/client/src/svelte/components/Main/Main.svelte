@@ -137,7 +137,7 @@
 
   .main-area {
     width: 100%;
-    height: calc(var(--game-window-height) - 80px);
+    height: var(--game-window-height);
     display: flex;
     flex-direction: row;
   }

@@ -1,5 +1,5 @@
 import type { OffChainMessage } from "@server/modules/websocket/types"
-import type { SetupWalletNetworkResult } from "@mud/setupWalletNetwork";
+import type { SetupWalletNetworkResult } from "@mud/setupWalletNetwork"
 import { ENVIRONMENT } from "@mud/enums"
 import {
   clientList,
@@ -51,6 +51,7 @@ export function initOffChainSync(environment: ENVIRONMENT, playerId: string) {
 
     // Pass message to stores
     newEvent.set(messageContent)
+    console.log("new meesssage", messageContent)
     latestEvents.update(state => {
       return [...state, messageContent]
     })
@@ -91,15 +92,23 @@ export function ping() {
   )
 }
 
-export async function sendChatMessage(walletNetwork: SetupWalletNetworkResult, message: string) {
-
+export async function sendChatMessage(
+  walletNetwork: SetupWalletNetworkResult,
+  message: string
+) {
   const signature = await walletNetwork.walletClient.signMessage({
     message: MESSAGE,
   })
 
-  socket.send(JSON.stringify({
-    topic: "chat__message",
-    message: message,
-    signature: signature
-  }))
+  if (socket) {
+    socket.send(
+      JSON.stringify({
+        topic: "chat__message",
+        message: message,
+        signature: signature,
+      })
+    )
+  } else {
+    console.error("No socket")
+  }
 }
