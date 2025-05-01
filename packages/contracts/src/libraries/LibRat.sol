@@ -25,7 +25,7 @@ library LibRat {
     Level.set(ratId, LevelList.get()[0]);
     CreationBlock.set(ratId, block.number);
 
-    uint32 newRatIndex = GameConfig.getGlobalRatIndex() + 1;
+    uint256 newRatIndex = GameConfig.getGlobalRatIndex() + 1;
     GameConfig.setGlobalRatIndex(newRatIndex);
     Index.set(ratId, newRatIndex);
   }

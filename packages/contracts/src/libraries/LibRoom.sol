@@ -31,7 +31,7 @@ library LibRoom {
     RoomPrompt.set(newRoomId, _roomPrompt);
     Name.set(newRoomId, _roomName);
 
-    uint32 newRoomIndex = GameConfig.getGlobalRoomIndex() + 1;
+    uint256 newRoomIndex = GameConfig.getGlobalRoomIndex() + 1;
     GameConfig.setGlobalRoomIndex(newRoomIndex);
     Index.set(newRoomId, newRoomIndex);
     CreationBlock.set(newRoomId, block.number);

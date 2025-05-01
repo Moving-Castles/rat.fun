@@ -1,29 +1,17 @@
+import { TableRecord } from "@latticexyz/store-sync";
 import { ENTITY_TYPE } from "contracts/enums"
+import mudConfig from "contracts/mud.config";
 import { Hex } from "viem"
 
 declare global {
 
-  type GameConfigObject = {
-    adminAddress: Hex,
-    adminId: Hex,
-    globalRoomIndex: number,
-    globalRatIndex: number,
-    maxTraitsSize: number,
-    maxInventorySize: number,
-    ratCreationCost: number,
-    roomCreationCost: number,
-    maxRoomPromptLength: number,
-    minRoomPromptLength: number,
-    maxRoomNameLength: number,
-    minRoomNameLength: number,
-    startingBalance: number
-  }
+  type GameConfigObject = TableRecord<typeof mudConfig.tables.ratroom__GameConfig>["fields"]
 
   type GameConfig = {
     gameConfig: GameConfigObject
     levelList: string[]
   }
-  
+
   // * * * * * * * * * * * * * * * * *
   // DEFAULT ENTITY TYPE
   // * * * * * * * * * * * * * * * * *
@@ -57,7 +45,7 @@ declare global {
     killCount?: number
   }
 
-  type Player  = {
+  type Player = {
     [key: string]: number | ENTITY_TYPE | Hex | string[] | string,
     entityType: ENTITY_TYPE.PLAYER,
     name: string,
@@ -66,7 +54,7 @@ declare global {
     creationBlock: number
   }
 
-  type Rat  = {
+  type Rat = {
     [key: string]: number | string | ENTITY_TYPE | Hex | boolean | string[],
     entityType: ENTITY_TYPE.RAT,
     name: string,
