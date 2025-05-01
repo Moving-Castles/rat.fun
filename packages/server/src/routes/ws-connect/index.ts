@@ -3,6 +3,8 @@ import type { WebSocketParams, OffChainMessage } from '@modules/websocket/types'
 import { schema } from '@routes/ws-connect/schema';
 import { broadcast, wsConnections } from '@modules/websocket';
 
+const MESSAGE = "RATROOM"
+
 // Signature
 import { getSenderId } from '@modules/signature';
 
@@ -46,7 +48,8 @@ async function routes(fastify: FastifyInstance) {
             if (data.topic === 'chat__message') {
               console.log('chat__message', data)
 
-              const senderId = getSenderId(data.signature, data.message)
+              const senderId = getSenderId(data.signature, MESSAGE)
+
               const playerName = getPlayerName(senderId, components.Name)
 
               const newMessage: OffChainMessage = {
