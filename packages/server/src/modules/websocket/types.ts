@@ -11,3 +11,13 @@ export interface WebSocketParams {
     timestamp?: number;
     signature?: string;
   }
+
+export class WebSocketError extends Error {
+  constructor(
+    message: string,
+    public code: string
+  ) {
+    super(message);
+    this.name = 'WebSocketError';
+  }
+}
