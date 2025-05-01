@@ -12,7 +12,7 @@ import { MESSAGE } from "@config"
 import { writeRoomToCMS, CMSError } from "@modules/cms"
 
 // MUD
-import { systemCalls, network } from "@modules/mud/initMud"
+import { systemCalls, network, components } from "@modules/mud/initMud"
 
 // Image generation
 import { generateImage } from "@modules/image/generate"
@@ -22,6 +22,10 @@ import { getSenderId } from "@modules/signature"
 
 // Validation
 import { validateInputData } from "./validation"
+
+// WebSocket
+import { broadcast } from "@modules/websocket"
+import { createRoomCreationMessage } from '@modules/websocket/constructMessages';
 
 // Error handling
 import { handleError } from "./errorHandling"
@@ -81,6 +85,10 @@ async function routes(fastify: FastifyInstance) {
           }
         }
         console.timeEnd("–– Image generation")
+
+        // Broadcast room creation message
+        const {topic, message} = createRoomCreationMessage(playerId, components.Name);
+        broadcast(topic, message);
 
         reply.send({
           success: true,

@@ -1,7 +1,7 @@
-import { OnchainData, Trait, Item } from "@routes/room/enter/types";
+import type { OnchainData, Trait, Item } from "@routes/room/enter/types";
+import type { ClientComponents } from "./createClientComponents";
+import type { SetupNetworkReturnType } from "./setupNetwork";
 import { getComponentValue, Entity } from "@latticexyz/recs";
-import { ClientComponents } from "./createClientComponents";
-import { SetupNetworkReturnType } from "./setupNetwork";
 
 // Custom error classes for better error handling
 export class OnchainDataError extends Error {

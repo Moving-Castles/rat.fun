@@ -8,7 +8,7 @@ import { EnterRoomBody } from '@routes/room/enter/types';
 
 // WebSocket
 import { broadcast } from '@modules/websocket';
-import { createMessage } from '@modules/websocket/createMessage';
+import { createOutcomeMessage } from '@modules/websocket/constructMessages';
 
 // LLM  
 import { EventsReturnValue, CorrectionReturnValue } from '@modules/llm/types'
@@ -107,8 +107,8 @@ async function routes (fastify: FastifyInstance) {
 
             console.log('Corrected events:', correctedEvents);
 
-            // Broadcast alert
-            const {topic, message} = createMessage(rat, newRatHealth, room, validatedOutcome);
+            // Broadcast outcome message
+            const {topic, message} = createOutcomeMessage(rat, newRatHealth, room, validatedOutcome);
             broadcast(topic, message);
 
             // Write outcome to CMS

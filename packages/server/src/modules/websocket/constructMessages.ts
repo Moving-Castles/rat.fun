@@ -1,8 +1,11 @@
-import { Rat, Room } from "@routes/room/enter/types";
-import { OffChainMessage } from "@modules/websocket/types";
-import { OutcomeReturnValue } from "@modules/llm/types";
+import type { Rat, Room } from "@routes/room/enter/types";
+import type { OffChainMessage } from "@modules/websocket/types";
+import type { OutcomeReturnValue } from "@modules/llm/types";
+import type { ClientComponents } from "@modules/mud/createClientComponents";
+import { getPlayerName } from "@modules/mud/getOnchainData";
 
-export function createMessage(rat: Rat, newRatHealth: number, room: Room, validatedOutcome: OutcomeReturnValue): OffChainMessage {
+
+export function createOutcomeMessage(rat: Rat, newRatHealth: number, room: Room, validatedOutcome: OutcomeReturnValue): OffChainMessage {
     // Death
     if (newRatHealth == 0) {
         return {
@@ -50,6 +53,15 @@ export function createMessage(rat: Rat, newRatHealth: number, room: Room, valida
     return {
         topic: 'room__outcome',
         message,
+        timestamp: Date.now()
+    }
+}
+
+export function createRoomCreationMessage(playerId: string, Name: ClientComponents['Name']): OffChainMessage {
+    const playerName = getPlayerName(playerId, Name)
+    return {
+        topic: 'room__creation',
+        message: `${playerName} created a room`,
         timestamp: Date.now()
     }
 }
