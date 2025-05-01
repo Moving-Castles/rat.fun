@@ -1,8 +1,11 @@
 <script lang="ts">
   import { player } from "@modules/state/base/stores"
-  import { HighScoreModalActive } from "@modules/ui/stores"
+  import HighScore from "@components/Main/HighScore/HighScore.svelte"
+  import ModalTarget from "@components/Main/Modal/ModalTarget.svelte"
   import { tippy } from "svelte-tippy"
   import Alert from "@components/Main/OperatorBar/Alert/Alert.svelte"
+
+  let showHighscore = $state(false)
 </script>
 
 <div class="operator-bar">
@@ -38,7 +41,7 @@
       <!-- HIGHSCORE -->
       <button
         class="stat-item highscore"
-        onclick={() => HighScoreModalActive.set(true)}
+        onclick={() => (showHighscore = true)}
       >
         <div class="inner-wrapper">
           <div class="label">HighScore</div>
@@ -50,6 +53,14 @@
     <Alert />
   </div>
 </div>
+
+{#snippet content()}
+  <HighScore />
+{/snippet}
+
+{#if showHighscore}
+  <ModalTarget onclose={() => (showHighscore = false)} {content} />
+{/if}
 
 <style lang="scss">
   .operator-bar {

@@ -10,5 +10,3 @@ export const myPreviewId = writable<string | null>(null)
 // Current ID
 export const CurrentRoomId = writable<string | null>(null)
 export const CurrentMyRoomId = writable<string | null>(null)
-// Modal UI
-export const HighScoreModalActive = writable(false)

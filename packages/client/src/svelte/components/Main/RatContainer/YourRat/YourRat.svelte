@@ -6,6 +6,8 @@
   import RatCam from "@components/Main/RatContainer/YourRat/RatCam.svelte"
   import LiquidateRat from "@components/Main/RatContainer/YourRat/LiquidateRat.svelte"
   import DeployRat from "@components/Main/RatContainer/DeployRat/DeployRat.svelte"
+
+  import ChatRoom from "@components/Main/RatContainer/ChatRoom/ChatRoom.svelte"
   // import FloorProgress from "@components/Main/RatContainer/YourRat/FloorProgress.svelte"
 </script>
 
@@ -33,7 +35,9 @@
       </div>
     </div>
     <!-- Bottom -->
-    <div class="your-rat-bottom"></div>
+    <div class="your-rat-bottom">
+      <ChatRoom />
+    </div>
   {:else}
     <DeployRat />
   {/if}
@@ -51,6 +55,7 @@
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
+    height: 382px;
   }
 
   .your-rat-bottom {
