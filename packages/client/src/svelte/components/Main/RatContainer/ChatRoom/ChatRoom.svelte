@@ -16,7 +16,7 @@
     }
   })
 
-  const sendMessage = async e => {
+  const sendMessage = async (e: Event) => {
     console.log("yeah")
 
     e.preventDefault()

@@ -9,7 +9,7 @@ export interface WebSocketParams {
     topic: "test" | "clients__update" | "room__creation" | "room__outcome" | "rat__death" | "chat__message";
     playerName?: string;
     message: string | string[];
-    timestamp?: number;
+    timestamp: number;
     signature?: string;
   }
 

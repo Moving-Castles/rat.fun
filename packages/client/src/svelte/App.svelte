@@ -59,7 +59,7 @@
 
 <svelte:window />
 
-<div class="dust"></div>
+<!-- <div class="dust"></div> -->
 
 <div class="bg">
   <div class="context-main">
