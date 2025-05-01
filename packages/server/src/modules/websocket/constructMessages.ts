@@ -4,7 +4,6 @@ import type { OutcomeReturnValue } from "@modules/llm/types";
 import type { ClientComponents } from "@modules/mud/createClientComponents";
 import { getPlayerName } from "@modules/mud/getOnchainData";
 
-
 export function createOutcomeMessage(rat: Rat, newRatHealth: number, room: Room, validatedOutcome: OutcomeReturnValue): OffChainMessage {
     // Death
     if (newRatHealth == 0) {
@@ -16,15 +15,25 @@ export function createOutcomeMessage(rat: Rat, newRatHealth: number, room: Room,
     }
 
     // Outcome
-    const addedItems = validatedOutcome.itemChanges.filter(item => item.type ==  "add").map(item => { return `${item.name} ($${item.value})` }).join(', ')
-    const removedItems = validatedOutcome.itemChanges.filter(item => item.type ==  "remove").map(item => { return `${item.name} ($${item.value})` }).join(', ')
+    const addedItems = (validatedOutcome?.itemChanges ?? []).filter(item => item.type ==  "add").map(item => { return `${item.name} ($${item.value})` }).join(', ')
+    const removedItems = (validatedOutcome?.itemChanges ?? []).filter(item => item.type ==  "remove").map(item => { return `${item.name} ($${item.value})` }).join(', ')
 
-    const addedTraits = validatedOutcome.traitChanges.filter(trait => trait.type ==  "add").map(trait => { return `${trait.name} ($${trait.value})` }).join(', ')
-    const removedTraits = validatedOutcome.traitChanges.filter(trait => trait.type ==  "remove").map(trait => { return `${trait.name} ($${trait.value})` }).join(', ')
+    const addedTraits = (validatedOutcome?.traitChanges ?? []).filter(trait => trait.type ==  "add").map(trait => { return `${trait.name} ($${trait.value})` }).join(', ')
+    const removedTraits = (validatedOutcome?.traitChanges ?? []).filter(trait => trait.type ==  "remove").map(trait => { return `${trait.name} ($${trait.value})` }).join(', ')
 
     let message = `${rat.name}`
 
     let hasMessage = false
+
+    if((validatedOutcome?.healthChange?.amount ?? 0) !== 0) {
+        message += ` Health change: ${validatedOutcome?.healthChange?.amount}`
+        hasMessage = true
+    }
+
+    if((validatedOutcome?.balanceTransfer?.amount ?? 0) !== 0) {
+        message += `Balance change: ${validatedOutcome?.balanceTransfer?.amount}`
+        hasMessage = true
+    }
 
     if (addedItems.length > 0) {
         message += ` got ${addedItems}`
