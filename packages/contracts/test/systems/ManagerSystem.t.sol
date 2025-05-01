@@ -24,8 +24,6 @@ contract ManagerSystemTest is BaseTest {
   // * * * *
 
   function testRevertNotAllowed() public {
-    setUp();
-
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
 
@@ -45,8 +43,6 @@ contract ManagerSystemTest is BaseTest {
   }
 
   function testApplyOutcomeEmpty() public {
-    setUp();
-
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
@@ -77,8 +73,6 @@ contract ManagerSystemTest is BaseTest {
   // * * * *
 
   function testApplyOutcomeIncreaseHealth() public {
-    setUp();
-
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
@@ -110,8 +104,6 @@ contract ManagerSystemTest is BaseTest {
   }
 
   function testApplyOutcomeReduceHealth() public {
-    setUp();
-
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
@@ -152,8 +144,6 @@ contract ManagerSystemTest is BaseTest {
   }
 
   function testApplyOutcomeOverIncreaseHealth() public {
-    setUp();
-
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
@@ -194,8 +184,6 @@ contract ManagerSystemTest is BaseTest {
   }
 
   function testApplyOutcomeOverReduceHealth() public {
-    setUp();
-
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
@@ -238,8 +226,6 @@ contract ManagerSystemTest is BaseTest {
   }
 
   function testApplyOutcomeValueTransferOnDeath() public {
-    setUp();
-
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
@@ -334,8 +320,6 @@ contract ManagerSystemTest is BaseTest {
   // * * * *
 
   function testApplyOutcomeAddPositiveTrait() public {
-    setUp();
-
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
@@ -374,8 +358,6 @@ contract ManagerSystemTest is BaseTest {
   }
 
   function testApplyOutcomeAddNegativeTrait() public {
-    setUp();
-
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
@@ -414,8 +396,6 @@ contract ManagerSystemTest is BaseTest {
   }
 
   function testApplyOutcomeAddPositiveTraitTooExpensive() public {
-    setUp();
-
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
@@ -451,8 +431,6 @@ contract ManagerSystemTest is BaseTest {
   }
 
   function testApplyOutcomeRemovePositiveTrait() public {
-    setUp();
-
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
@@ -503,8 +481,6 @@ contract ManagerSystemTest is BaseTest {
   }
 
   function testApplyOutcomeRemoveNegativeTrait() public {
-    setUp();
-
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
@@ -555,8 +531,6 @@ contract ManagerSystemTest is BaseTest {
   }
 
   // function testApplyOutcomeRemoveNegativeTraitTooExpensive() public {
-  //   setUp();
-
   //   // As alice
   //   vm.startPrank(alice);
   //   world.ratroom__spawn("alice");
@@ -626,8 +600,6 @@ contract ManagerSystemTest is BaseTest {
   // // * * * *
 
   function testApplyOutcomeAddPositiveItem() public {
-    setUp();
-
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
@@ -666,8 +638,6 @@ contract ManagerSystemTest is BaseTest {
   }
 
   function testApplyOutcomeAddNegativeItem() public {
-    setUp();
-
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
@@ -708,8 +678,6 @@ contract ManagerSystemTest is BaseTest {
   }
 
   function testApplyOutcomeAddPositiveItemTooExpensive() public {
-    setUp();
-
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
@@ -745,8 +713,6 @@ contract ManagerSystemTest is BaseTest {
   }
 
   function testApplyOutcomeRemovePositiveItem() public {
-    setUp();
-
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
@@ -802,8 +768,6 @@ contract ManagerSystemTest is BaseTest {
   // * * * * * * * * *
 
   function testApplyOutcomeTransferToRat() public {
-    setUp();
-
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
@@ -837,8 +801,6 @@ contract ManagerSystemTest is BaseTest {
   }
 
   function testApplyOutcomeTransferToRoom() public {
-    setUp();
-
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
@@ -880,8 +842,6 @@ contract ManagerSystemTest is BaseTest {
   }
 
   function testApplyOutcomeOverTransferToRat() public {
-    setUp();
-
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
@@ -922,8 +882,6 @@ contract ManagerSystemTest is BaseTest {
   }
 
   function testApplyOutcomeOverTransferToRoom() public {
-    setUp();
-
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");

@@ -8,8 +8,6 @@ import { ENTITY_TYPE } from "../../src/codegen/common.sol";
 
 contract PlayerSystemTest is BaseTest {
   function testSpawn() public {
-    setUp();
-
     vm.startPrank(alice);
 
     startGasReport("Spawn");

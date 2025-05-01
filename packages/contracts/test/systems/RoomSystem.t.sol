@@ -19,8 +19,6 @@ contract RoomSystemTest is BaseTest {
   }
 
   function testCreateRoom() public {
-    setUp();
-
     vm.startPrank(alice);
     bytes32 playerId = world.ratroom__spawn("alice");
     vm.stopPrank();
@@ -48,8 +46,6 @@ contract RoomSystemTest is BaseTest {
   }
 
   function testLongRoomPrompt() public {
-    setUp();
-
     vm.startPrank(alice);
     bytes32 playerId = world.ratroom__spawn("alice");
     vm.stopPrank();
@@ -70,8 +66,6 @@ contract RoomSystemTest is BaseTest {
   }
 
   function testRevertBlanceTooLow() public {
-    setUp();
-
     vm.startPrank(alice);
     bytes32 playerId = world.ratroom__spawn("alice");
     vm.stopPrank();
@@ -84,8 +78,6 @@ contract RoomSystemTest is BaseTest {
   }
 
   function testCloseRoom() public {
-    setUp();
-
     vm.startPrank(alice);
     bytes32 playerId = world.ratroom__spawn("alice");
     vm.stopPrank();
@@ -119,8 +111,6 @@ contract RoomSystemTest is BaseTest {
   }
 
   function testCloseRoomRevertNotOwner() public {
-    setUp();
-
     vm.startPrank(alice);
     bytes32 aliceId = world.ratroom__spawn("alice");
     vm.stopPrank();
