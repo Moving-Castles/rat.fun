@@ -1,10 +1,9 @@
 <script lang="ts">
+  import ChatEvent from "../ChatEvent/ChatEvent.svelte"
   import { latestEvents } from "@modules/off-chain-sync/stores"
   import { walletNetwork } from "@modules/network"
   import { sendChatMessage } from "@modules/off-chain-sync"
   import { websocketConnected } from "@modules/off-chain-sync/stores"
-  import { formatDate } from "@modules/utils"
-  import { tippy } from "svelte-tippy"
 
   let clientHeight = $state(0)
   let value = $state("")
@@ -35,25 +34,7 @@
 <div bind:clientHeight class="chat-window">
   <div bind:this={scrollElement} class="chat-scroll">
     {#each $latestEvents as event (event.timestamp)}
-      {#if event.topic === "chat__message"}
-        <div class="event message">
-          <span
-            use:tippy={{
-              content: formatDate(new Date(event.timestamp)),
-            }}
-            class="timestamp"
-          >
-            {event.playerName}
-          </span>
-          <span>
-            {event.message}
-          </span>
-        </div>
-      {:else}
-        <div class="event {event.topic}">
-          {event.message}
-        </div>
-      {/if}
+      <ChatEvent {event} />
     {/each}
   </div>
   <form autocomplete="off" class="chat-input" onsubmit={sendMessage}>
@@ -85,21 +66,6 @@
       overflow-y: scroll;
       padding: 8px;
       gap: 8px;
-
-      .event {
-        display: inline-block;
-
-        &.room__creation {
-          background: var(--color-alert);
-        }
-
-        .timestamp {
-          background: var(--color-grey-light);
-          // padding: 5px;
-          color: black;
-          display: inline;
-        }
-      }
     }
 
     input[disabled] {
