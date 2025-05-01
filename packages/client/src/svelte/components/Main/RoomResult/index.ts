@@ -2,8 +2,7 @@ import type { ServerReturnValue } from "@components/Main/RoomResult/types"
 import { SetupWalletNetworkResult } from "@mud/setupWalletNetwork";
 
 import { ENVIRONMENT } from "@mud/enums"
-
-const MESSAGE = "RATROOM"
+import { OFFCHAIN_VALIDATION_MESSAGE } from "@server/config";
 
 export async function enterRoom(
   environment: ENVIRONMENT,
@@ -18,7 +17,7 @@ export async function enterRoom(
     : "http://localhost:3131/room/enter"
 
   const signature = await walletNetwork.walletClient.signMessage({
-    message: MESSAGE,
+    message: OFFCHAIN_VALIDATION_MESSAGE,
   })
 
   const formData = new URLSearchParams()
@@ -56,5 +55,6 @@ export async function enterRoom(
   } catch (err) {
     console.error(err)
     window.alert(`SERVER ERROR: ${err}`)
+    return null
   }
 }

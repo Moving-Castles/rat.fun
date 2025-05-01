@@ -11,12 +11,8 @@
   let scrollElement = $state<null | HTMLElement>(null)
 
   $effect(() => {
-    if (scrollElement) {
-      if ($latestEvents[$latestEvents.length - 1]) {
-        console.log("Chat updated")
-        console.log($latestEvents[$latestEvents.length - 1])
-        scrollElement.scrollTop = scrollElement?.scrollHeight
-      }
+    if ($latestEvents[$latestEvents.length - 1] && scrollElement) {
+      scrollElement.scrollTop = scrollElement?.scrollHeight ?? 0
     }
   })
 

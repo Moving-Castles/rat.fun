@@ -2,6 +2,7 @@ import type { FastifyInstance, FastifyRequest } from 'fastify';
 import type { WebSocketParams, OffChainMessage } from '@modules/websocket/types';
 import { schema } from '@routes/ws-connect/schema';
 import { broadcast, wsConnections } from '@modules/websocket';
+import { v4 as uuidv4 } from 'uuid';
 
 // Signature
 import { getSenderId } from '@modules/signature';
@@ -27,7 +28,12 @@ async function routes(fastify: FastifyInstance) {
         console.log('Object.keys(wsConnections)', Object.keys(wsConnections))
 
         // Broadcast updated client list to all connected clients
-        broadcast("clients__update", Object.keys(wsConnections));
+        broadcast({
+          id: uuidv4(),
+          topic: "clients__update",
+          message: Object.keys(wsConnections),
+          timestamp: Date.now()
+        });
 
         // Add ping-pong handler
         socket.on('message', (message: OffChainMessage) => {
@@ -36,6 +42,7 @@ async function routes(fastify: FastifyInstance) {
             // Test
             if (data.topic === 'test') {
               const newMessage: OffChainMessage = {
+                id: uuidv4(),
                 topic: 'test',
                 message: 'pong',
                 timestamp: Date.now()
@@ -46,16 +53,19 @@ async function routes(fastify: FastifyInstance) {
             if (data.topic === 'chat__message') {
               console.log('chat__message', data)
 
-              const senderId = getSenderId(data.signature, data.message)
+              const senderId = getSenderId(data.signature)
+
               const playerName = getPlayerName(senderId, components.Name)
 
               const newMessage: OffChainMessage = {
+                id: uuidv4(),
                 topic: 'chat__message',
                 playerName: playerName,
                 message: data.message,
                 timestamp: Date.now()
               }
-              broadcast("chat__message", newMessage);
+
+              broadcast(newMessage);
             }
           } catch (error) {
             handleError(error, socket);
@@ -66,7 +76,12 @@ async function routes(fastify: FastifyInstance) {
           console.log(`WebSocket closed for Player ID: ${playerId}`);
           delete wsConnections[playerId]; // Clean up connection
           // Broadcast updated client list to all connected clients
-          broadcast("clients__update", Object.keys(wsConnections));
+          broadcast({
+            id: uuidv4(),
+            topic: "clients__update",
+            message: Object.keys(wsConnections),
+            timestamp: Date.now()
+          });
         });
       } catch (error) {
         handleError(error, socket);
