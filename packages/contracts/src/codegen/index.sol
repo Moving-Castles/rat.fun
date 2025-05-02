@@ -5,6 +5,7 @@ pragma solidity >=0.8.24;
 
 import { GameConfig, GameConfigData } from "./tables/GameConfig.sol";
 import { LevelList } from "./tables/LevelList.sol";
+import { GenericBalance } from "./tables/GenericBalance.sol";
 import { Name } from "./tables/Name.sol";
 import { EntityType } from "./tables/EntityType.sol";
 import { CreationBlock } from "./tables/CreationBlock.sol";

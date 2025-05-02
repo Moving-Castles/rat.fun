@@ -7,6 +7,7 @@ import { LibUtils } from "./LibUtils.sol";
 import { LibItem } from "./LibItem.sol";
 import { LibTrait } from "./LibTrait.sol";
 import { LibRat } from "./LibRat.sol";
+import { LibGenericBalance } from "./LibGenericBalance.sol";
 import { Item } from "../structs.sol";
 import { MAX_INVENTORY_SIZE, MAX_TRAITS_SIZE } from "../constants.sol";
 
@@ -31,39 +32,26 @@ library LibManager {
     // If the rat's health goes to 0 it is dead
     // - - - - - - - - -
 
-    // If health change is 0, exit early
-    if (_healthChange == 0) {
-      return;
-    }
+    LibGenericBalance.updateGenericBalance(Health._tableId, Balance._tableId, _ratId, _roomId, _healthChange);
+  }
 
-    // Absolute value of health change
-    uint256 healthChangeAmount = LibUtils.signedToUnsigned(_healthChange);
-    uint256 oldRatHealth = Health.get(_ratId);
-    uint256 oldRoomBalance = Balance.get(_roomId);
+  /**
+   * @notice Update the balance of the rat
+   * @dev Used by the Manager system to apply changes to a rat after room events
+   * @param _ratId Id of the rat
+   * @param _roomId Id of the room
+   * @param _value Value to transfer to or from the rat's blance
+   */
+  function updateBalance(bytes32 _ratId, bytes32 _roomId, int256 _value) internal {
+    // - - - - - - - - -
+    // Function transfers balance between rat and room
+    // - - - - - - - - -
+    // Caveats:
+    // - Room can not give more credits than it has balance
+    // - Rat can not give more credits than it has balance
+    // - - - - - - - - -
 
-    if (_healthChange < 0) {
-      // __ From rat health to room balance
-
-      // Rat's old health limits value transfer
-      uint256 valueChangeAmount = LibUtils.min(oldRatHealth, healthChangeAmount);
-
-      // Reduce rat health
-      Health.set(_ratId, oldRatHealth - valueChangeAmount);
-
-      // Increase room balance
-      Balance.set(_roomId, oldRoomBalance + valueChangeAmount);
-    } else {
-      // __ From room balance to rat health
-
-      // Room's old balance limits value transfer
-      uint256 valueChangeAmount = LibUtils.min(oldRoomBalance, healthChangeAmount);
-
-      // Increase rat health
-      Health.set(_ratId, oldRatHealth + valueChangeAmount);
-
-      // Reduce room balance
-      Balance.set(_roomId, oldRoomBalance - valueChangeAmount);
-    }
+    LibGenericBalance.updateGenericBalance(Balance._tableId, Balance._tableId, _ratId, _roomId, _value);
   }
 
   /**
@@ -234,57 +222,6 @@ library LibManager {
         // Create item and add it to the rat
         Inventory.push(_ratId, LibItem.createItem(newItem));
       }
-    }
-  }
-
-  /**
-   * @notice Update the balance of the rat
-   * @dev Used by the Manager system to apply changes to a rat after room events
-   * @param _ratId Id of the rat
-   * @param _roomId Id of the room
-   * @param _value Value to transfer to or from the rat's blance
-   */
-  function updateBalance(bytes32 _ratId, bytes32 _roomId, int256 _value) internal {
-    // - - - - - - - - -
-    // Function transfers balance between rat and room
-    // - - - - - - - - -
-    // Caveats:
-    // - Room can not give more credits than it has balance
-    // - Rat can not give more credits than it has balance
-    // - - - - - - - - -
-
-    // If value is 0, exit early
-    if (_value == 0) {
-      return;
-    }
-
-    // Absolute value of balance transfer
-    uint256 balanceChangeAmount = LibUtils.signedToUnsigned(_value);
-    uint256 oldRoomBalance = Balance.get(_roomId);
-    uint256 oldRatBalance = Balance.get(_ratId);
-
-    if (_value < 0) {
-      // __ From rat balance to room balance
-
-      // Rat's old balance limits value transfer
-      uint256 valueChangeAmount = LibUtils.min(oldRatBalance, balanceChangeAmount);
-
-      // Reduce rat balance
-      Balance.set(_ratId, oldRatBalance - valueChangeAmount);
-
-      // Increase room balance
-      Balance.set(_roomId, oldRoomBalance + valueChangeAmount);
-    } else {
-      // __ From room balance to rat balance
-
-      // Room's old balance limits value transfer
-      uint256 valueChangeAmount = LibUtils.min(oldRoomBalance, balanceChangeAmount);
-
-      // Add balance to rat
-      Balance.set(_ratId, oldRatBalance + valueChangeAmount);
-
-      // Subtract balance from room
-      Balance.set(_roomId, oldRoomBalance - valueChangeAmount);
     }
   }
 

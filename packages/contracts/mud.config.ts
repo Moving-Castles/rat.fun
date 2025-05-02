@@ -37,6 +37,17 @@ export default defineWorld({
         value: "bytes32[]"
       }
     },
+    // Generic utility to use a Balance-like table via tableId (Health, Balance), see LibGenericBalance
+    GenericBalance: {
+      key: ["id"],
+      schema: {
+        id: "bytes32",
+        value: "uint256",
+      },
+      codegen: {
+        tableIdArgument: true,
+      },
+    },
     // ...
     Name: "string", // Set on player, rat and room
     EntityType: "ENTITY_TYPE",
