@@ -2,7 +2,7 @@
 pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { GameConfig, Balance, Level, RoomCreationCost, LevelList, Owner } from "../codegen/index.sol";
+import { GameConfig, EntityType, Balance, Level, RoomCreationCost, LevelList, Owner } from "../codegen/index.sol";
 import { LibRoom, LibUtils } from "../libraries/Libraries.sol";
 import { MAX_ROOM_PROMPT_LENGTH } from "../constants.sol";
 import { ENTITY_TYPE } from "../codegen/common.sol";
@@ -31,6 +31,9 @@ contract RoomSystem is System {
     string memory _roomName,
     string memory _roomPrompt
   ) public onlyAdmin returns (bytes32 newRoomId) {
+    // Room id can be 0 (which generates a new id) or an unused entity id
+    require(_roomId == bytes32(0) || EntityType.get(_roomId) == ENTITY_TYPE.NONE, "room id already in use");
+
     // TODO: What level is room created on?
     // Currently hardcoded to level 0
     bytes32 levelId = LevelList.get()[0];
