@@ -311,8 +311,8 @@ contract ManagerSystemTest is BaseTest {
     assertTrue(Dead.get(ratId));
     // Rat is cleared
     assertEq(Balance.get(ratId), 0);
-    assertEq(Traits.get(ratId).length, 0);
-    assertEq(Inventory.get(ratId).length, 0);
+    assertEq(Traits.length(ratId), 0);
+    assertEq(Inventory.length(ratId), 0);
   }
 
   // * * * *
@@ -349,9 +349,9 @@ contract ManagerSystemTest is BaseTest {
     vm.stopPrank();
 
     // Check added trait
-    assertEq(Traits.get(ratId).length, 1);
-    assertEq(Value.get(Traits.get(ratId)[0]), 40);
-    assertEq(Name.get(Traits.get(ratId)[0]), "happy");
+    assertEq(Traits.length(ratId), 1);
+    assertEq(Value.get(Traits.getItem(ratId, 0)), 40);
+    assertEq(Name.get(Traits.getItem(ratId, 0)), "happy");
 
     // 100 - 40
     assertEq(Balance.get(roomId), GameConfig.getRoomCreationCost() - 40);
@@ -387,9 +387,9 @@ contract ManagerSystemTest is BaseTest {
     vm.stopPrank();
 
     // Check added trait
-    assertEq(Traits.get(ratId).length, 1);
-    assertEq(Value.get(Traits.get(ratId)[0]), -40);
-    assertEq(Name.get(Traits.get(ratId)[0]), "sad");
+    assertEq(Traits.length(ratId), 1);
+    assertEq(Value.get(Traits.getItem(ratId, 0)), -40);
+    assertEq(Name.get(Traits.getItem(ratId, 0)), "sad");
 
     // 100 + 40
     assertEq(Balance.get(roomId), GameConfig.getRoomCreationCost() + 40);
@@ -425,7 +425,7 @@ contract ManagerSystemTest is BaseTest {
     vm.stopPrank();
 
     // Not enough room balance
-    assertEq(Traits.get(ratId).length, 0);
+    assertEq(Traits.length(ratId), 0);
     // Room balance unchanged
     assertEq(Balance.get(roomId), GameConfig.getRoomCreationCost());
   }
@@ -458,8 +458,8 @@ contract ManagerSystemTest is BaseTest {
     vm.stopPrank();
 
     // Check added trait
-    bytes32 traitId = Traits.get(ratId)[0];
-    assertEq(Traits.get(ratId).length, 1);
+    bytes32 traitId = Traits.getItem(ratId, 0);
+    assertEq(Traits.length(ratId), 1);
     assertEq(Value.get(traitId), 40);
     assertEq(Name.get(traitId), "happy");
 
@@ -477,7 +477,7 @@ contract ManagerSystemTest is BaseTest {
 
     // initial room balance - 40 + 40 (positive trait)
     assertEq(Balance.get(roomId), GameConfig.getRoomCreationCost());
-    assertEq(Traits.get(ratId).length, 0);
+    assertEq(Traits.length(ratId), 0);
   }
 
   function testApplyOutcomeRemoveNegativeTrait() public {
@@ -508,8 +508,8 @@ contract ManagerSystemTest is BaseTest {
     vm.stopPrank();
 
     // Check added trait
-    bytes32 traitId = Traits.get(ratId)[0];
-    assertEq(Traits.get(ratId).length, 1);
+    bytes32 traitId = Traits.getItem(ratId, 0);
+    assertEq(Traits.length(ratId), 1);
     assertEq(Value.get(traitId), -40);
     assertEq(Name.get(traitId), "sad");
 
@@ -527,7 +527,7 @@ contract ManagerSystemTest is BaseTest {
 
     // pre-change balance - 40 (negative trait)
     assertEq(Balance.get(roomId), GameConfig.getRoomCreationCost());
-    assertEq(Traits.get(ratId).length, 0);
+    assertEq(Traits.length(ratId), 0);
   }
 
   // function testApplyOutcomeRemoveNegativeTraitTooExpensive() public {
@@ -629,9 +629,9 @@ contract ManagerSystemTest is BaseTest {
     vm.stopPrank();
 
     // Check added item
-    assertEq(Inventory.get(ratId).length, 1);
-    assertEq(Value.get(Inventory.get(ratId)[0]), 40);
-    assertEq(Name.get(Inventory.get(ratId)[0]), "cheese");
+    assertEq(Inventory.length(ratId), 1);
+    assertEq(Value.get(Inventory.getItem(ratId, 0)), 40);
+    assertEq(Name.get(Inventory.getItem(ratId, 0)), "cheese");
 
     // pre-change balance - 40
     assertEq(Balance.get(roomId), GameConfig.getRoomCreationCost() - 40);
@@ -667,11 +667,11 @@ contract ManagerSystemTest is BaseTest {
     vm.stopPrank();
 
     // Check added item
-    assertEq(Inventory.get(ratId).length, 1);
+    assertEq(Inventory.length(ratId), 1);
     // Items should always be positive
     // Negative values will be converted to positive
-    assertEq(Value.get(Inventory.get(ratId)[0]), 40);
-    assertEq(Name.get(Inventory.get(ratId)[0]), "rotten cheese");
+    assertEq(Value.get(Inventory.getItem(ratId, 0)), 40);
+    assertEq(Name.get(Inventory.getItem(ratId, 0)), "rotten cheese");
 
     // pre-change balance - 40
     assertEq(Balance.get(roomId), GameConfig.getRoomCreationCost() - 40);
@@ -707,7 +707,7 @@ contract ManagerSystemTest is BaseTest {
     vm.stopPrank();
 
     // Not enough room balance
-    assertEq(Inventory.get(ratId).length, 0);
+    assertEq(Inventory.length(ratId), 0);
     // Initial room balance
     assertEq(Balance.get(roomId), GameConfig.getRoomCreationCost());
   }
@@ -740,8 +740,8 @@ contract ManagerSystemTest is BaseTest {
     vm.stopPrank();
 
     // Check added item
-    bytes32 itemId = Inventory.get(ratId)[0];
-    assertEq(Inventory.get(ratId).length, 1);
+    bytes32 itemId = Inventory.getItem(ratId, 0);
+    assertEq(Inventory.length(ratId), 1);
     assertEq(Value.get(itemId), 40);
     assertEq(Name.get(itemId), "cheese");
 
@@ -760,7 +760,7 @@ contract ManagerSystemTest is BaseTest {
 
     // Initial room balance again
     assertEq(Balance.get(roomId), GameConfig.getRoomCreationCost());
-    assertEq(Inventory.get(ratId).length, 0);
+    assertEq(Inventory.length(ratId), 0);
   }
 
   // * * * * * * * * *

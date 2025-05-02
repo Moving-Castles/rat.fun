@@ -282,18 +282,17 @@ library LibManager {
     // Get the level of the rat
     bytes32 levelId = Level.get(_ratId);
     uint256 levelIndex = Index.get(levelId);
-    bytes32[] memory levelList = LevelList.get();
 
     // Check if the rat is below the min balance
     if (totalRatValue < LevelMinBalance.get(levelId) && levelIndex > 0) {
       // Level down if we are not at the lowest level
-      Level.set(_ratId, levelList[levelIndex - 1]);
+      Level.set(_ratId, LevelList.getItem(levelIndex - 1));
     }
 
     // Check if the rat is above the max balance
-    if (totalRatValue >= LevelMaxBalance.get(levelId) && levelIndex < levelList.length - 1) {
+    if (totalRatValue >= LevelMaxBalance.get(levelId) && levelIndex < LevelList.length() - 1) {
       // Level up if we are not at the highest level
-      Level.set(_ratId, levelList[levelIndex + 1]);
+      Level.set(_ratId, LevelList.getItem(levelIndex + 1));
     }
   }
 }
