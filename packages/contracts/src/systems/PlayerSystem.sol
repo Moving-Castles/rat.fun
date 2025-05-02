@@ -13,6 +13,8 @@ contract PlayerSystem is System {
    */
   function spawn(string memory _name) public returns (bytes32 _playerId) {
     _playerId = LibUtils.addressToEntityKey(_msgSender());
+    require(EntityType.get(_playerId) == ENTITY_TYPE.NONE, "already spawned");
+
     EntityType.set(_playerId, ENTITY_TYPE.PLAYER);
     Name.set(_playerId, _name);
     Balance.set(_playerId, GameConfig.getStartingBalance());

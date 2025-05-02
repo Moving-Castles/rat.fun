@@ -22,4 +22,15 @@ contract PlayerSystemTest is BaseTest {
     assertEq(Balance.get(playerId), GameConfig.getStartingBalance());
     assertEq(CreationBlock.get(playerId), block.number);
   }
+
+  function testRevertAlreadySpawned() public {
+    vm.startPrank(alice);
+
+    world.ratroom__spawn("alice");
+
+    vm.expectRevert("already spawned");
+    world.ratroom__spawn("alice");
+
+    vm.stopPrank();
+  }
 }
