@@ -4,6 +4,8 @@
   import { playSound } from "@modules/sound"
   import { player } from "@modules/state/base/stores"
   import { generateRatName } from "./index"
+  import { sendDeployRatMessage } from "@modules/off-chain-sync"
+  import { walletNetwork } from "@modules/network"
 
   import Spinner from "@components/Main/Shared/Spinner/Spinner.svelte"
 
@@ -23,6 +25,7 @@
       console.error(e)
     } finally {
       done = true
+      sendDeployRatMessage($walletNetwork)
     }
   }
 
@@ -90,7 +93,7 @@
     border-top: var(--default-border-style);
 
     &:hover {
-      background: var(--background);
+      background: var(--color-alert);
       color: var(--foreground);
     }
 

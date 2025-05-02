@@ -10,7 +10,6 @@
   import { enterRoom } from "@components/Main/RoomResult"
   import { ENVIRONMENT } from "@mud/enums"
   import { walletNetwork } from "@modules/network"
-  import { onDestroy } from "svelte"
 
   import Log from "@components/Main/RoomResult/Log/Log.svelte"
   import RoomMeta from "@components/Main/RoomResult/RoomMeta/RoomMeta.svelte"
@@ -38,7 +37,7 @@
   let error = $state("")
 
   let entering = $state(true)
-  let result: ServerReturnValue | undefined = $state(undefined)
+  let result: ServerReturnValue | null = $state(null)
 
   $effect(() => {
     if (animationstart) animationstarted = true
@@ -48,7 +47,7 @@
     console.time("Process")
     if (!roomId) return
     try {
-      console.log("start result")
+      // console.log("start result")
       const ret = enterRoom(
         environment,
         $walletNetwork,
@@ -61,7 +60,7 @@
       entering = false
 
       try {
-        console.log("start outcome ")
+        // console.log("start outcome ")
         result = await ret // add here just in case the entering transition would be faster
       } catch (err) {
         console.log("catch outcome error", err)
@@ -77,13 +76,9 @@
   $effect(() => {
     if (start && !busy) {
       busy = true
-      console.log("start")
+      // console.log("start")
       processRoom()
     }
-  })
-
-  onDestroy(() => {
-    console.log("on destroy")
   })
 </script>
 

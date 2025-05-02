@@ -13,13 +13,13 @@
       <div class="info-item">
         <span class="id">RAT #{$frozenRat.index}</span>
       </div>
-      <!-- NAME -->
-      <div class="info-item">
-        <span class="name">{$frozenRat.name}</span>
-      </div>
       <!-- IMAGE -->
       <div class="image-container">
         <img src="/images/rat.png" alt={$frozenRat.name} />
+      </div>
+      <!-- NAME -->
+      <div class="info-item">
+        <span class="name">{$frozenRat.name}</span>
       </div>
       <div class="info-item">
         <!-- BALANCE -->

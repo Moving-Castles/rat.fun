@@ -71,11 +71,11 @@
       height: calc(var(--game-window-height) - 80px - 444px);
       overflow-y: scroll;
       padding: 8px;
-      gap: 8px;
+      gap: 4px;
     }
 
     input[disabled] {
-      background: grey;
+      background: var(--color-grey-mid);
     }
 
     .chat-input-container {

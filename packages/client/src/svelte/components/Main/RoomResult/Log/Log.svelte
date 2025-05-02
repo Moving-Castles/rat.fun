@@ -110,7 +110,7 @@
       border: var(--default-border-style);
 
       &:hover {
-        background: var(--background);
+        background: var(--color-alert);
         color: var(--foreground);
       }
     }

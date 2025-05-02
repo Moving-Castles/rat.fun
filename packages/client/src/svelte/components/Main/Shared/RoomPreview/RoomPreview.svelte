@@ -189,7 +189,7 @@
       border-bottom: var(--default-border-style);
 
       &:hover {
-        background-color: #222;
+        background-color: var(--color-grey-darker);
       }
     }
 
@@ -310,7 +310,7 @@
       border-top: var(--default-border-style);
 
       &:hover {
-        background: var(--background);
+        background: var(--color-alert);
         color: var(--foreground);
       }
     }

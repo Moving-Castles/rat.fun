@@ -107,7 +107,7 @@ async function routes (fastify: FastifyInstance) {
             console.log('Corrected events:', correctedEvents);
 
             // Broadcast outcome message
-            const newMessage= createOutcomeMessage(rat, newRatHealth, room, validatedOutcome);
+            const newMessage= createOutcomeMessage(playerId, components.Name, rat, newRatHealth, room, validatedOutcome);
             await broadcast(newMessage);
 
             // Write outcome to CMS

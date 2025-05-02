@@ -6,9 +6,18 @@ export interface WebSocketParams {
   
   export type OffChainMessage = {
     id: string;
-    topic: "test" | "clients__update" | "room__creation" | "room__outcome" | "rat__death" | "chat__message";
+    topic: "test" 
+    | "clients__update" 
+    | "chat__message"
+    | "room__creation" 
+    | "room__outcome" 
+    | "room__liquidation"
+    | "rat__deploy"
+    | "rat__death" 
+    | "rat__liquidate"
     playerName?: string;
-    message: string | string[];
+    ratName?: string;
+    message?: string | string[];
     timestamp: number;
     signature?: string;
   }

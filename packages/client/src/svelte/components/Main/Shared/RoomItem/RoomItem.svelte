@@ -112,7 +112,7 @@
     }
 
     &:hover {
-      background-color: #222;
+      background-color: var(--color-grey-darker);
     }
 
     .room-image {

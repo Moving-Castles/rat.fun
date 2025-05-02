@@ -51,7 +51,6 @@ export function initOffChainSync(environment: ENVIRONMENT, playerId: string) {
 
     // Pass message to stores
     newEvent.set(messageContent)
-    console.log("new meesssage", messageContent)
     latestEvents.update(state => {
       return [...state, messageContent]
     })
@@ -112,3 +111,54 @@ export async function sendChatMessage(
     console.error("No socket")
   }
 }
+
+export async function sendDeployRatMessage(walletNetwork: SetupWalletNetworkResult) {
+  const signature = await walletNetwork.walletClient.signMessage({
+    message: OFFCHAIN_VALIDATION_MESSAGE
+  })
+
+  if (socket) {
+    socket.send(
+      JSON.stringify({
+        topic: "rat__deploy",
+        signature: signature,
+      })
+    )
+  } else {
+    console.error("No socket")
+  }
+}
+
+export async function sendLiquidateRatMessage(walletNetwork: SetupWalletNetworkResult, ratName: string) {
+  const signature = await walletNetwork.walletClient.signMessage({
+    message: OFFCHAIN_VALIDATION_MESSAGE
+  })
+
+  if (socket) {
+    socket.send(
+      JSON.stringify({
+        topic: "rat__liquidate",
+        ratName: ratName,
+        signature: signature, 
+      })
+    )
+  } else {
+    console.error("No socket")
+  }
+}
+
+export async function sendLiquidateRoomMessage(walletNetwork: SetupWalletNetworkResult) {
+  const signature = await walletNetwork.walletClient.signMessage({
+    message: OFFCHAIN_VALIDATION_MESSAGE
+  })
+
+  if (socket) {
+    socket.send(
+      JSON.stringify({
+        topic: "room__liquidation",
+        signature: signature,
+      })
+    )
+  }
+}
+

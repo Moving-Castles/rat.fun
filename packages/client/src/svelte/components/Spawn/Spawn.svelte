@@ -162,7 +162,12 @@
     width: 300px;
     height: 4em;
     margin-bottom: 0.5em;
-    background: var(--color-alert);
+    background: var(--color-alert-priority);
+
+    &:hover {
+      background: var(--color-alert);
+      color: var(--foreground);
+    }
 
     .spinner {
       position: relative;

@@ -5,13 +5,16 @@ import type { ClientComponents } from "@modules/mud/createClientComponents";
 import { getPlayerName } from "@modules/mud/getOnchainData";
 import { v4 as uuidv4 } from 'uuid';
 
-export function createOutcomeMessage(rat: Rat, newRatHealth: number, room: Room, validatedOutcome: OutcomeReturnValue): OffChainMessage {
+export function createOutcomeMessage(playerId: string, Name: ClientComponents['Name'], rat: Rat, newRatHealth: number, room: Room, validatedOutcome: OutcomeReturnValue): OffChainMessage {
+    const playerName = getPlayerName(playerId, Name)
+
     // Death
     if (newRatHealth == 0) {
         return {
             id: uuidv4(),
             topic: 'rat__death',
-            playerName: rat.name,
+            playerName: playerName,
+            ratName: rat.name,
             message: `died in room #${room.index}`,
             timestamp: Date.now()
         }
@@ -24,17 +27,17 @@ export function createOutcomeMessage(rat: Rat, newRatHealth: number, room: Room,
     const addedTraits = (validatedOutcome?.traitChanges ?? []).filter(trait => trait.type ==  "add").map(trait => { return `${trait.name} ($${trait.value})` }).join(', ')
     const removedTraits = (validatedOutcome?.traitChanges ?? []).filter(trait => trait.type ==  "remove").map(trait => { return `${trait.name} ($${trait.value})` }).join(', ')
 
-    let message = `${rat.name}`
+    let message = "Result: "
 
     let hasMessage = false
 
     if((validatedOutcome?.healthChange?.amount ?? 0) !== 0) {
-        message += ` Health change: ${validatedOutcome?.healthChange?.amount}`
+        message += ` (Health change: ${validatedOutcome?.healthChange?.amount})`
         hasMessage = true
     }
 
     if((validatedOutcome?.balanceTransfer?.amount ?? 0) !== 0) {
-        message += `Balance change: ${validatedOutcome?.balanceTransfer?.amount}`
+        message += ` (Balance change: ${validatedOutcome?.balanceTransfer?.amount})`
         hasMessage = true
     }
 
@@ -59,14 +62,15 @@ export function createOutcomeMessage(rat: Rat, newRatHealth: number, room: Room,
     }
 
     if (!hasMessage) {
-        message += ": no change"
+        message += " no change"
     }
 
     return {
         id: uuidv4(),
         topic: 'room__outcome',
         message,
-        playerName: rat.name,
+        playerName: playerName,
+        ratName: rat.name,
         timestamp: Date.now()
     }
 }

@@ -87,7 +87,7 @@
     overflow: hidden;
 
     &:hover {
-      background-color: #222;
+      background-color: var(--color-grey-darker);
     }
 
     .profit {

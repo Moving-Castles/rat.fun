@@ -3,23 +3,29 @@
   import { liquidateRat } from "@modules/action"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
   import { playSound } from "@modules/sound"
+  import { rat } from "@modules/state/base/stores"
   import { tippy } from "svelte-tippy"
   import Spinner from "@components/Main/Shared/Spinner/Spinner.svelte"
+  import { walletNetwork } from "@modules/network"
+
   import {
     ModalTarget,
     getModalState,
   } from "@components/Main/Modal/state.svelte"
+  import { sendLiquidateRatMessage } from "@modules/off-chain-sync"
 
   let { modal } = getModalState()
 
   let busy = $state(false)
   let confirming = $state(false)
-  let liquidationMessage = $state("CONFIRM LIQUIDATION")
+  let liquidationMessage = $state("CONFIRM RAT LIQUIDATION")
 
   const sendLiquidateRat = async () => {
     if (busy) return
     busy = true
     const action = liquidateRat()
+
+    const liquidationRatName = $rat.name
     try {
       liquidationMessage = "Eliminating rat..."
       await waitForCompletion(action)
@@ -29,7 +35,7 @@
       console.error(e)
     } finally {
       liquidationMessage = "Elimination complete"
-
+      sendLiquidateRatMessage($walletNetwork, liquidationRatName)
       setTimeout(() => {
         modal.close()
       }, 1200)
@@ -164,8 +170,13 @@
     button {
       height: 60px;
       border: var(--default-border-style);
-      color: var(--foreground);
-      background: var(--background);
+      color: var(--background);
+      background: var(--color-death);
+
+      &:hover {
+        background: var(--background);
+        color: var(--foreground);
+      }
     }
   }
 

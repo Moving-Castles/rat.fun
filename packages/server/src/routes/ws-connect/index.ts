@@ -4,18 +4,12 @@ import { schema } from '@routes/ws-connect/schema';
 import { broadcast, wsConnections } from '@modules/websocket';
 import { v4 as uuidv4 } from 'uuid';
 
-// Signature
-import { getSenderId } from '@modules/signature';
-
-// MUD
-import { getPlayerName } from '@modules/mud/getOnchainData';
-import { components} from '@modules/mud/initMud';
-
 // Message store
 import { getMessages } from '@modules/message-store';
 
 // Error handling
 import { handleError } from './errorHandling';
+import { handleMessage } from './messageHandling';
 
 async function routes(fastify: FastifyInstance) {
   fastify.get(
@@ -27,8 +21,8 @@ async function routes(fastify: FastifyInstance) {
       try {
         // Store the WebSocket connection
         wsConnections[playerId] = socket;
-        console.log(`WebSocket connected for Player ID: ${playerId}`);
-        console.log('Object.keys(wsConnections)', Object.keys(wsConnections))
+        // console.log(`WebSocket connected for Player ID: ${playerId}`);
+        // console.log('Object.keys(wsConnections)', Object.keys(wsConnections))
 
         // Send last 30 messages to the newly connected user
         const lastMessages = await getMessages(30);
@@ -44,45 +38,18 @@ async function routes(fastify: FastifyInstance) {
           timestamp: Date.now()
         }).catch(console.error);
 
-        // Add ping-pong handler
+        // Add message handler
         socket.on('message', async (message: OffChainMessage) => {
           try {
             const data = JSON.parse(message.toString());
-            // Test
-            if (data.topic === 'test') {
-              const newMessage: OffChainMessage = {
-                id: uuidv4(),
-                topic: 'test',
-                message: 'pong',
-                timestamp: Date.now()
-              }
-              socket.send(JSON.stringify(newMessage));
-            }
-            // Chat message
-            if (data.topic === 'chat__message') {
-              console.log('chat__message', data)
-
-              const senderId = getSenderId(data.signature)
-
-              const playerName = getPlayerName(senderId, components.Name)
-
-              const newMessage: OffChainMessage = {
-                id: uuidv4(),
-                topic: 'chat__message',
-                playerName: playerName,
-                message: data.message,
-                timestamp: Date.now()
-              }
-
-              await broadcast(newMessage);
-            }
+            await handleMessage(data, socket);
           } catch (error) {
             handleError(error, socket);
           }
         });
 
         socket.on('close', async () => {
-          console.log(`WebSocket closed for Player ID: ${playerId}`);
+          // console.log(`WebSocket closed for Player ID: ${playerId}`);
           delete wsConnections[playerId]; // Clean up connection
           // Broadcast updated client list to all connected clients
           await broadcast({

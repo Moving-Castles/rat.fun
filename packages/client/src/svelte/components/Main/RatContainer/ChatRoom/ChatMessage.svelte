@@ -12,7 +12,7 @@
   })
 </script>
 
-<div class="chat-event {event.topic}">
+<div class="chat-message">
   <span
     use:tippy={{
       content: formatDate(new Date(event.timestamp)),
@@ -27,12 +27,15 @@
 </div>
 
 <style lang="scss">
-  .chat-event {
+  .chat-message {
     display: inline-block;
+    font-size: var(--font-size-small);
+    line-height: 1.6;
 
     .timestamp {
       background: var(--color-grey-light);
       color: var(--background);
+      padding: 2px;
     }
 
     .message-body {

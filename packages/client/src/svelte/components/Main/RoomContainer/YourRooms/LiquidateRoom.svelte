@@ -9,6 +9,8 @@
     getModalState,
   } from "@components/Main/Modal/state.svelte"
   import { staticContent, lastUpdated, urlFor } from "@modules/content"
+  import { sendLiquidateRoomMessage } from "@modules/off-chain-sync"
+  import { walletNetwork } from "@modules/network"
 
   let sanityRoomContent = $derived(
     $staticContent.rooms.find(r => r.title == roomId)
@@ -22,7 +24,7 @@
 
   let busy = $state(false)
   let confirming = $state(false)
-  let liquidationMessage = $state("CONFIRM LIQUIDATION")
+  let liquidationMessage = $state("CONFIRM ROOM LIQUIDATION")
 
   async function sendLiquidateRoom() {
     if (busy) return
@@ -38,6 +40,7 @@
       liquidationMessage = "Could not liquidate room"
     } finally {
       busy = false
+      sendLiquidateRoomMessage($walletNetwork)
       setTimeout(() => {
         modal.close()
       }, 1200)
@@ -206,8 +209,13 @@
     button {
       height: 60px;
       border: var(--default-border-style);
-      color: var(--foreground);
-      background: var(--background);
+      color: var(--background);
+      background: var(--color-death);
+
+      &:hover {
+        background: var(--background);
+        color: var(--foreground);
+      }
     }
   }
 

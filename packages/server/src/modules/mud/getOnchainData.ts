@@ -141,10 +141,14 @@ function constructInventoryObject(ratInventory: string[], Name: ClientComponents
     return inventoryObject;
 }
 
-export function getRatName(ratId: string, Name: ClientComponents['Name']) {
-    return (getComponentValue(Name, ratId as Entity)?.value ?? "unknown rat") as string;
-}
-
 export function getPlayerName(playerId: string, Name: ClientComponents['Name']) {
     return (getComponentValue(Name, playerId as Entity)?.value ?? "unknown player") as string;
+}
+
+export function getRatId(playerId: string, OwnedRat: ClientComponents['OwnedRat']) {
+    return (getComponentValue(OwnedRat, playerId as Entity)?.value ?? "unknown rat") as string;
+}
+
+export function getRatName(ratId: string, Name: ClientComponents['Name']) {
+    return (getComponentValue(Name, ratId as Entity)?.value ?? "unknown rat") as string;
 }
