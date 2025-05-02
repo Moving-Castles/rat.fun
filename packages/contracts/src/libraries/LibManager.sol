@@ -42,20 +42,27 @@ library LibManager {
     uint256 oldRoomBalance = Balance.get(_roomId);
 
     if (_healthChange < 0) {
-      // __ Negative health change
+      // __ From rat health to room balance
+
+      // Rat's old health limits value transfer
+      uint256 valueChangeAmount = LibUtils.min(oldRatHealth, healthChangeAmount);
 
       // Reduce rat health
-      Health.set(_ratId, LibUtils.safeSubtract(oldRatHealth, healthChangeAmount));
+      Health.set(_ratId, oldRatHealth - valueChangeAmount);
 
       // Increase room balance
-      Balance.set(_roomId, oldRoomBalance + LibUtils.clamp(oldRatHealth, healthChangeAmount));
+      Balance.set(_roomId, oldRoomBalance + valueChangeAmount);
     } else {
-      // __ Positive health change
+      // __ From room balance to rat health
 
-      // Dont give the rat more health than the room has balance
-      Health.set(_ratId, oldRatHealth + LibUtils.clamp(healthChangeAmount, oldRoomBalance));
+      // Room's old balance limits value transfer
+      uint256 valueChangeAmount = LibUtils.min(oldRoomBalance, healthChangeAmount);
 
-      Balance.set(_roomId, LibUtils.safeSubtract(oldRoomBalance, healthChangeAmount));
+      // Increase rat health
+      Health.set(_ratId, oldRatHealth + valueChangeAmount);
+
+      // Reduce room balance
+      Balance.set(_roomId, oldRoomBalance - valueChangeAmount);
     }
   }
 
@@ -251,27 +258,33 @@ library LibManager {
       return;
     }
 
-    // Absolute value of value transfer
-    uint256 valueAmount = LibUtils.signedToUnsigned(_value);
+    // Absolute value of balance transfer
+    uint256 balanceChangeAmount = LibUtils.signedToUnsigned(_value);
     uint256 oldRoomBalance = Balance.get(_roomId);
     uint256 oldRatBalance = Balance.get(_ratId);
 
-    if (_value > 0) {
-      // __ From room to rat
+    if (_value < 0) {
+      // __ From rat balance to room balance
+
+      // Rat's old balance limits value transfer
+      uint256 valueChangeAmount = LibUtils.min(oldRatBalance, balanceChangeAmount);
+
+      // Reduce rat balance
+      Balance.set(_ratId, oldRatBalance - valueChangeAmount);
+
+      // Increase room balance
+      Balance.set(_roomId, oldRoomBalance + valueChangeAmount);
+    } else {
+      // __ From room balance to rat balance
+
+      // Room's old balance limits value transfer
+      uint256 valueChangeAmount = LibUtils.min(oldRoomBalance, balanceChangeAmount);
 
       // Add balance to rat
-      Balance.set(_ratId, oldRatBalance + LibUtils.clamp(valueAmount, oldRoomBalance));
+      Balance.set(_ratId, oldRatBalance + valueChangeAmount);
 
       // Subtract balance from room
-      Balance.set(_roomId, LibUtils.safeSubtract(oldRoomBalance, valueAmount));
-    } else {
-      // __ From rat to room
-
-      // Subtract balance from rat
-      Balance.set(_ratId, LibUtils.safeSubtract(oldRatBalance, valueAmount));
-
-      // Add balance to room
-      Balance.set(_roomId, oldRoomBalance + LibUtils.clamp(valueAmount, oldRatBalance));
+      Balance.set(_roomId, oldRoomBalance - valueChangeAmount);
     }
   }
 

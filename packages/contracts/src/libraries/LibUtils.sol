@@ -12,6 +12,15 @@ library LibUtils {
   }
 
   /**
+   * @notice Returns the largest of two numbers.
+   * @param _a First number
+   * @param _b Second number
+   */
+  function max(uint256 _a, uint256 _b) internal pure returns (uint256) {
+    return _a > _b ? _a : _b;
+  }
+
+  /**
    * @notice Returns the smallest of two numbers.
    * @param _a First number
    * @param _b Second number
@@ -21,33 +30,12 @@ library LibUtils {
   }
 
   /**
-   * @notice Clamps a value to an upper bound.
-   * @param _value Value to be clamped
-   * @param _upperBound Upper bound
-   * @return Clamped value
+   * @notice Returns the smallest of two numbers.
+   * @param _a First number
+   * @param _b Second number
    */
-  function clamp(uint256 _value, uint256 _upperBound) internal pure returns (uint256) {
-    if (_value > _upperBound) {
-      return _upperBound;
-    } else {
-      return _value;
-    }
-  }
-
-  /**
-   * @notice Clamps a value between 0 and an upper bound.
-   * @param _value Value to be clamped
-   * @param _upperBound Upper bound
-   * @return Clamped value
-   */
-  function clampToBounds(uint256 _value, uint256 _upperBound) internal pure returns (uint256) {
-    if (_value > _upperBound) {
-      return _upperBound;
-    } else if (_value < 0) {
-      return 0;
-    } else {
-      return _value;
-    }
+  function min(uint256 _a, uint256 _b) internal pure returns (uint256) {
+    return _a < _b ? _a : _b;
   }
 
   /**
