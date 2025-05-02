@@ -1,7 +1,7 @@
 import { writable } from "svelte/store"
 import type { FrozenRat, FrozenRoom } from "./types"
 import type { Hex } from "viem"
-export const frozenRoom = writable<FrozenRoom  | null>(null)
+export const frozenRoom = writable<FrozenRoom | null>(null)
 export const frozenRat = writable<FrozenRat | null>(null)
 
 export function freezeObjects(rat: Rat, room: Room, roomId: Hex) {
@@ -23,14 +23,14 @@ export function freezeObjects(rat: Rat, room: Room, roomId: Hex) {
 export function changeHealth(healthChange: number) {
   frozenRat.update(rat => {
     if (!rat) return null
-    rat.health = Number(rat.health) + healthChange
+    rat.health = rat.health + BigInt(healthChange)
     return rat
   })
 
   // Inverse rat health change to get room balance change
   frozenRoom.update(room => {
     if (!room) return null
-    room.balance = Number(room.balance) - healthChange
+    room.balance = room.balance - BigInt(healthChange)
     return room
   })
 }
@@ -42,14 +42,14 @@ export function changeHealth(healthChange: number) {
 export function changeBalance(balanceChange: number) {
   frozenRat.update(rat => {
     if (!rat) return null
-    rat.balance = Number(rat.balance) + balanceChange
+    rat.balance = rat.balance + BigInt(balanceChange)
     return rat
   })
 
   // Inverse rat balance change to get room balance change
   frozenRoom.update(room => {
     if (!room) return null
-    room.balance = Number(room.balance) - balanceChange
+    room.balance = room.balance - BigInt(balanceChange)
     return room
   })
 }
@@ -74,7 +74,7 @@ export function addItem(itemName: string, itemValue: number) {
   // Items always have positive value
   frozenRoom.update(room => {
     if (!room) return null
-    room.balance = Number(room.balance) - itemValue
+    room.balance = room.balance - BigInt(itemValue)
     return room
   })
 }
@@ -90,7 +90,7 @@ export function removeItem(id: string, itemValue: number) {
   // Items always have positive value
   frozenRoom.update(room => {
     if (!room) return null
-    room.balance = Number(room.balance) + itemValue
+    room.balance = room.balance + BigInt(itemValue)
     return room
   })
 }
@@ -113,7 +113,7 @@ export function addTrait(traitName: string, traitValue: number) {
   // Change room balance
   frozenRoom.update(room => {
     if (!room) return null
-    room.balance = Number(room.balance) - traitValue
+    room.balance = room.balance - BigInt(traitValue)
     return room
   })
 }
@@ -128,7 +128,7 @@ export function removeTrait(id: string, traitValue: number) {
   // Change room balance
   frozenRoom.update(room => {
     if (!room) return null
-    room.balance = Number(room.balance) + traitValue
+    room.balance = room.balance + BigInt(traitValue)
     return room
   })
 }
@@ -168,7 +168,7 @@ export const updateState = (dataset: DOMStringMap) => {
     case "trait":
       if (action === "add") {
         stateUpdateFunctions.trait["add"]?.(name ?? "", numericValue)
-      } else  if (action === "remove") {
+      } else if (action === "remove") {
         stateUpdateFunctions.trait["remove"]?.(id ?? "", numericValue)
       }
       break
