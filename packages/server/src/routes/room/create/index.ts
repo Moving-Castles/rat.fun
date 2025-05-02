@@ -6,8 +6,6 @@ import dotenv from "dotenv"
 
 dotenv.config()
 
-import { OFFCHAIN_VALIDATION_MESSAGE } from "@config"
-
 // CMS
 import { writeRoomToCMS, CMSError } from "@modules/cms"
 
@@ -87,7 +85,7 @@ async function routes(fastify: FastifyInstance) {
         console.timeEnd("–– Image generation")
 
         // Broadcast room creation message
-        broadcast(createRoomCreationMessage(playerId, components.Name));
+        await broadcast(createRoomCreationMessage(playerId, components.Name));
 
         reply.send({
           success: true,

@@ -1,4 +1,5 @@
-import { OffChainMessage } from "./types";
+import { OffChainMessage } from "@modules/websocket/types";
+import { storeMessage } from "@modules/message-store";
 
 // Store active WebSocket connections
 export const wsConnections: { [ratId: string]: WebSocket } = {};
@@ -12,7 +13,13 @@ export function sendToClient(ratId: string, messageObject: OffChainMessage): voi
   }
 }
 
-export function broadcast(messageObject: OffChainMessage): void {
+export async function broadcast(messageObject: OffChainMessage): Promise<void> {
+  // Store the message in the message store
+  if(!["clients__update", "test"].includes(messageObject.topic)) {
+    await storeMessage(messageObject);
+  }
+  
+  // Broadcast to all connected clients
   Object.keys(wsConnections).forEach((ratId) => {
     sendToClient(ratId, messageObject);
   });

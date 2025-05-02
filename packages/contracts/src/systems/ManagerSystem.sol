@@ -27,8 +27,10 @@ contract ManagerSystem is System {
    * @param _roomId Id of the room
    * @param _healthChange Change to the rat's health
    * @param _balanceTransferToOrFromRat Credits to transfer to or from rat
-   * @param _traitsToRemoveFromRat Traits to remove from rat
-   * @param _itemsToRemoveFromRat Items to remove from rat
+   * @param _traitsToRemoveFromRat Traits to remove from rat (IDs)
+   * @param _traitToAddToRat Trait to add to rat
+   * @param _itemsToRemoveFromRat Items to remove from rat (IDs)
+   * @param _itemsToAddToRat Items to add to rat
    */
   function applyOutcome(
     bytes32 _ratId,
@@ -52,6 +54,7 @@ contract ManagerSystem is System {
     // HEALTH
     // * * * * * * * * * * * * *
 
+    // Health change can have positive or negative value: effect on room balance unknown
     LibManager.updateHealth(_ratId, _roomId, _healthChange);
 
     // Exit early if dead
@@ -65,6 +68,7 @@ contract ManagerSystem is System {
     // TRAITS
     // * * * * * * * * * * * * *
 
+    // Traits can have positive or negative value: effect on room balance unknown
     LibManager.removeTraitsFromRat(_ratId, _roomId, _traitsToRemoveFromRat);
     LibManager.addTraitsToRat(_ratId, _roomId, _traitToAddToRat);
 
@@ -72,13 +76,16 @@ contract ManagerSystem is System {
     // ITEMS
     // * * * * * * * * * * * * *
 
+    // As items always have positive value, this will always increase the room balance
     LibManager.removeItemsFromRat(_ratId, _roomId, _itemsToRemoveFromRat);
+    // As items always have positive value, this will always decrease the room balance
     LibManager.addItemsToRat(_ratId, _roomId, _itemsToAddToRat);
 
     // * * * * * * * * * * * * *
     // BALANCE
     // * * * * * * * * * * * * *
 
+    // Balance transfer can have positive or negative value: effect on room balance unknown
     LibManager.updateBalance(_ratId, _roomId, _balanceTransferToOrFromRat);
 
     // * * * * * * * * * * * * *

@@ -7,6 +7,8 @@ import formbody from '@fastify/formbody';
 import cors from '@fastify/cors';
 import websocket from '@fastify/websocket'
 
+import { initializeDB } from '@modules/message-store';
+
 import { PORT } from '@config';
 
 import ping from '@routes/test/ping';
@@ -15,7 +17,8 @@ import enter from '@routes/room/enter';
 import create from '@routes/room/create';
 import wsConnect from '@routes/ws-connect';
 
-const fastify = Fastify({   logger: {
+const fastify = Fastify({ 
+  logger: {
     transport: {
       target: "@fastify/one-line-logger",
     },
@@ -44,6 +47,8 @@ fastify.register(wsConnect)
 const start = async (port: number) => {
     try {
         await fastify.listen({ port })
+        // Initialize message store after server starts
+        await initializeDB();
     } catch (err) {
         fastify.log.error(err)
         process.exit(1)

@@ -11,6 +11,9 @@ import { getSenderId } from '@modules/signature';
 import { getPlayerName } from '@modules/mud/getOnchainData';
 import { components} from '@modules/mud/initMud';
 
+// Message store
+import { getMessages } from '@modules/message-store';
+
 // Error handling
 import { handleError } from './errorHandling';
 
@@ -18,7 +21,7 @@ async function routes(fastify: FastifyInstance) {
   fastify.get(
     '/ws/:playerId',
     { websocket: true, schema: schema },
-    (socket, req: FastifyRequest<WebSocketParams>) => {
+    async (socket, req: FastifyRequest<WebSocketParams>) => {
       const { playerId } = req.params;
 
       try {
@@ -27,16 +30,22 @@ async function routes(fastify: FastifyInstance) {
         console.log(`WebSocket connected for Player ID: ${playerId}`);
         console.log('Object.keys(wsConnections)', Object.keys(wsConnections))
 
+        // Send last 30 messages to the newly connected user
+        const lastMessages = await getMessages(30);
+        for (const message of lastMessages) {
+          socket.send(JSON.stringify(message));
+        }
+
         // Broadcast updated client list to all connected clients
         broadcast({
           id: uuidv4(),
           topic: "clients__update",
           message: Object.keys(wsConnections),
           timestamp: Date.now()
-        });
+        }).catch(console.error);
 
         // Add ping-pong handler
-        socket.on('message', (message: OffChainMessage) => {
+        socket.on('message', async (message: OffChainMessage) => {
           try {
             const data = JSON.parse(message.toString());
             // Test
@@ -65,18 +74,18 @@ async function routes(fastify: FastifyInstance) {
                 timestamp: Date.now()
               }
 
-              broadcast(newMessage);
+              await broadcast(newMessage);
             }
           } catch (error) {
             handleError(error, socket);
           }
         });
 
-        socket.on('close', () => {
+        socket.on('close', async () => {
           console.log(`WebSocket closed for Player ID: ${playerId}`);
           delete wsConnections[playerId]; // Clean up connection
           // Broadcast updated client list to all connected clients
-          broadcast({
+          await broadcast({
             id: uuidv4(),
             topic: "clients__update",
             message: Object.keys(wsConnections),

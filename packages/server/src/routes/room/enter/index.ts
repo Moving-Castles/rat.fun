@@ -3,7 +3,6 @@ import { schema } from '@routes/room/enter/schema';
 import dotenv from 'dotenv';
 dotenv.config();
 
-import { MESSAGE } from '@config';
 import { EnterRoomBody } from '@routes/room/enter/types';
 
 // WebSocket
@@ -109,7 +108,7 @@ async function routes (fastify: FastifyInstance) {
 
             // Broadcast outcome message
             const newMessage= createOutcomeMessage(rat, newRatHealth, room, validatedOutcome);
-            broadcast(newMessage);
+            await broadcast(newMessage);
 
             // Write outcome to CMS
             console.time('–– CMS write');
