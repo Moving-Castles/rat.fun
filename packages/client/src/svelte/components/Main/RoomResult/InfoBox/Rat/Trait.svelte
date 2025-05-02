@@ -36,7 +36,7 @@
       color: var(--color-health);
       &.negative {
         background: var(--color-death);
-        color: black;
+        color: var(--background);
       }
     }
   }

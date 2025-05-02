@@ -73,6 +73,6 @@
     justify-content: space-between;
     position: sticky;
     top: 0;
-    background: black;
+    background: var(--background);
   }
 </style>

@@ -61,10 +61,6 @@
     }
   }
 
-  // const restartAnimation = () => {
-  //   logTimeline.restart()
-  // }
-
   const sendLeaveRoom = () => {
     playSound("tcm", "enteredPod")
     rooms.close()
@@ -107,16 +103,16 @@
       left: 10px;
       margin: 0;
       width: calc(100% - 20px);
-      padding: 10px;
-      background: var(--color-alert);
+      padding: 20px;
+      background: var(--color-alert-priority);
       margin-top: 20px;
       cursor: pointer;
-    }
-  }
+      border: var(--default-border-style);
 
-  .restart-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
+      &:hover {
+        background: var(--background);
+        color: var(--foreground);
+      }
+    }
   }
 </style>

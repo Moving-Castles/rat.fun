@@ -123,7 +123,7 @@
     width: calc(var(--game-window-width) - 20px);
     overflow: hidden;
     border: var(--default-border-style);
-    background: black;
+    background: var(--background);
     display: grid;
     grid-template-rows: 60px 1fr;
   }
@@ -183,7 +183,7 @@
     width: 100%;
     height: 100%;
     overflow: hidden;
-    background: black;
+    background: var(--background);
     // pointer-events: none;
   }
 
@@ -226,6 +226,5 @@
     background-image: url(/images/dust.png);
     opacity: 0.6;
     background-size: cover;
-    // mix-blend-mode: difference;
   }
 </style>

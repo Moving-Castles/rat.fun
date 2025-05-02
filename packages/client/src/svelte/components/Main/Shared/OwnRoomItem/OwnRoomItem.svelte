@@ -82,7 +82,7 @@
     cursor: pointer;
     height: var(--room-item-height);
     width: 100%;
-    color: white;
+    color: var(--foreground);
     text-align: left;
     overflow: hidden;
 
@@ -166,7 +166,7 @@
 
       .name {
         background: var(--color-alert);
-        color: black;
+        color: var(--background);
         padding: 5px;
         white-space: nowrap;
         overflow: hidden;
@@ -176,12 +176,12 @@
 
       .balance {
         background: var(--color-value);
-        color: black;
+        color: var(--background);
         padding: 5px;
 
         &.depleted {
           background: var(--color-death);
-          color: black;
+          color: var(--background);
         }
       }
 

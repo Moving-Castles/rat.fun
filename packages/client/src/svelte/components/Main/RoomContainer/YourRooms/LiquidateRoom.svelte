@@ -109,7 +109,7 @@
     align-items: center;
     justify-content: center;
     background-color: var(--color-value);
-    color: black;
+    color: var(--background);
 
     .inner {
       display: flex;
@@ -169,7 +169,7 @@
   }
 
   .warning-mute {
-    color: white;
+    color: var(--foreground);
     border: none;
     background: repeating-linear-gradient(
       45deg,
@@ -206,8 +206,8 @@
     button {
       height: 60px;
       border: var(--default-border-style);
-      color: white;
-      background: black;
+      color: var(--foreground);
+      background: var(--background);
     }
   }
 

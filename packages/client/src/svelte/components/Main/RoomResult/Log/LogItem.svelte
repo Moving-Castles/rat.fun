@@ -237,14 +237,14 @@
     .timestamp {
       background: var(--color-grey-light);
       padding: 5px;
-      color: black;
+      color: var(--background);
     }
   }
 
   .outcome {
     opacity: 0;
     background: var(--color-health);
-    color: black;
+    color: var(--background);
     height: 30px;
     line-height: 30px;
     padding-inline: 10px;
@@ -255,12 +255,12 @@
 
   .health {
     background: var(--color-health);
-    color: black;
+    color: var(--background);
   }
 
   .balance {
     background: var(--color-value);
-    color: black;
+    color: var(--background);
   }
 
   .negative {

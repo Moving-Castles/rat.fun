@@ -14,12 +14,13 @@
   --color-grey-light: #999;
 
   /* --color-alert: rgb(255, 69, 0); */
-  --color-alert: rgb(180, 121, 27);
+  --color-alert: rgb(122, 94, 52);
+  --color-alert-priority: rgb(255, 128, 0);
 
   --color-secondary: rgb(163, 66, 31);
-  --color-health: rgb(95, 186, 95);
-  --color-value: rgba(243, 236, 42, 0.8);
-  --color-death: rgb(186, 30, 30);
+  --color-health: rgb(109, 196, 109);
+  --color-value: rgb(255, 213, 0);
+  --color-death: rgb(255, 0, 43);
   --color-item: rgb(160, 98, 177);
   --color-value-up: var(--color-health);
   --color-value-down: var(--color-death);
@@ -183,7 +184,7 @@ button {
   );
 }
 .warning-mute {
-  color: white;
+  color: var(--foreground);
   border: none;
   background: repeating-linear-gradient(
     45deg,
@@ -194,7 +195,7 @@ button {
   );
 }
 .warning-mute-inverse {
-  color: white;
+  color: var(--foreground);
   border: none;
   background: repeating-linear-gradient(
     -45deg,

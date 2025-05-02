@@ -67,7 +67,7 @@
 
         .highlight {
           background: var(--color-value);
-          color: black;
+          color: var(--background);
           padding: 5px;
 
           &.ready {

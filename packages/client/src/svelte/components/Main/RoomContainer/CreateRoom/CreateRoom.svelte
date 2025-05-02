@@ -102,7 +102,7 @@
         .highlight {
           background: var(--color-alert);
           padding: 5px;
-          color: black;
+          color: var(--background);
           font-weight: normal;
         }
       }
@@ -112,7 +112,7 @@
         width: 100%;
         padding: 5px;
         border: none;
-        background: white;
+        background: var(--foreground);
         font-family: var(--typewriter-font-stack);
         font-size: var(--font-size-normal);
         border-radius: 0;
@@ -126,25 +126,30 @@
       background: var(--color-grey-light);
       padding: 15px;
       font-size: var(--font-size-small);
-      color: black;
+      color: var(--background);
     }
 
     .actions {
       display: flex;
       flex-flow: column nowrap;
       gap: 12px;
+
       button {
         width: 100%;
         height: 40px;
-        background: var(--color-alert);
-        color: black;
-        border: none;
+        background: var(--color-alert-priority);
+        color: var(--background);
         cursor: pointer;
-        border: none;
         border-radius: 0;
+        border: var(--default-border-style);
 
         &.secondary {
           background: var(--color-grey-mid);
+        }
+
+        &:hover {
+          background: var(--background);
+          color: var(--foreground);
         }
 
         &.disabled {

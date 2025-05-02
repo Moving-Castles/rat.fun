@@ -82,7 +82,7 @@
       height: 60px;
       display: flex;
       flex-flow: row nowrap;
-      color: white;
+      color: var(--foreground);
       bottom: 0;
       z-index: 1000;
       width: 100%;
@@ -104,14 +104,14 @@
         font-family: var(--typewriter-font-stack);
         width: 100px;
         height: 100%;
-        color: white;
+        color: var(--foreground);
       }
 
       .chat-input {
         height: 100%;
         width: 100%;
         font-family: var(--typewriter-font-stack);
-        color: white;
+        color: var(--foreground);
         background-color: var(--color-grey-dark);
         border: var(--dashed-border-style);
         margin-right: 10px;

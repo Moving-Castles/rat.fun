@@ -113,7 +113,9 @@
 
         <div class="room-info-row">
           <!-- BALANCE -->
-          <span class="balance">Balance: ${room.balance}</span>
+          <span class="balance" class:depleted={room.balance == 0}>
+            Balance: ${room.balance}
+          </span>
           <!-- DIVIDER -->
           <span class="divider">•</span>
           <!-- VISIT COUNT -->
@@ -182,7 +184,7 @@
       height: 60px;
       background: transparent;
       border: none;
-      color: white;
+      color: var(--foreground);
       text-transform: uppercase;
       border-bottom: var(--default-border-style);
 
@@ -225,19 +227,24 @@
 
         .name {
           background: var(--color-alert);
-          color: black;
+          color: var(--background);
           padding: 5px;
         }
 
         .balance {
           background: var(--color-value);
-          color: black;
+          color: var(--background);
           padding: 5px;
+
+          &.depleted {
+            background: var(--color-death);
+            color: var(--background);
+          }
         }
 
         .owner {
           background: var(--color-grey-light);
-          color: black;
+          color: var(--background);
           padding: 5px;
         }
 
@@ -275,7 +282,7 @@
         display: flex;
         justify-content: space-between;
         top: 0;
-        background: black;
+        background: var(--background);
       }
 
       .content {
@@ -296,7 +303,7 @@
     button {
       width: 100%;
       height: 100%;
-      background: var(--color-alert);
+      background: var(--color-alert-priority);
       padding: 20px;
       margin-bottom: 20px;
       border: none;
@@ -311,8 +318,8 @@
 
   .no-rat-warning {
     background: var(--color-death);
-    padding: 30px 20px;
-    color: white;
+    padding: 20px 20px;
+    color: var(--foreground);
     text-align: center;
   }
 

@@ -124,8 +124,8 @@
   }
 
   .inverted {
-    background: black;
-    color: white;
+    background: var(--background);
+    color: var(--foreground);
     padding: 5px;
   }
 

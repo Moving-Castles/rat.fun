@@ -32,7 +32,7 @@
 
     .timestamp {
       background: var(--color-grey-light);
-      color: black;
+      color: var(--background);
     }
 
     .message-body {

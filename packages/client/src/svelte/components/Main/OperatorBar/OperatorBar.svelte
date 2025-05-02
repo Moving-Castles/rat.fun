@@ -79,7 +79,7 @@
         border: 0;
         background: transparent;
         border-right: var(--default-border-style);
-        color: white;
+        color: var(--foreground);
 
         .label {
           margin-right: 0.5em;

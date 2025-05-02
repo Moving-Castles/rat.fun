@@ -85,7 +85,7 @@
     padding: 20px;
     width: 100%;
     height: 80px;
-    background: var(--color-alert);
+    background: var(--color-alert-priority);
     border: none;
     border-top: var(--default-border-style);
 
@@ -107,7 +107,6 @@
     }
 
     &.busy {
-      background: var(--color-alert);
       pointer-events: none;
       cursor: default;
       background: var(--color-grey-light);

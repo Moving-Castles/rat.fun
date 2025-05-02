@@ -111,7 +111,7 @@
 
   {#if empty}
     <div class="no-data">
-      <span> No data </span>
+      <span>NO DATA</span>
     </div>
   {:else}
     <div class="graph" bind:clientWidth={width}>
@@ -182,7 +182,7 @@
     span {
       background: var(--color-death);
       padding: 2px;
-      color: black;
+      color: var(--background);
     }
   }
   .room-stats {

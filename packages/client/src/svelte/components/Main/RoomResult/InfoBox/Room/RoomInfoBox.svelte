@@ -115,20 +115,20 @@
     .id {
       background: var(--color-grey-light);
       padding: 5px;
-      color: black;
+      color: var(--background);
       font-size: var(--font-size-small);
     }
 
     .name {
       background: var(--color-alert);
       padding: 5px;
-      color: black;
+      color: var(--background);
     }
 
     .balance {
       background: var(--color-value);
       padding: 5px;
-      color: black;
+      color: var(--background);
 
       &.empty {
         background: var(--color-death);
@@ -138,7 +138,7 @@
     .health {
       background: var(--color-health);
       padding: 5px;
-      color: black;
+      color: var(--background);
     }
   }
 
@@ -151,7 +151,7 @@
     margin: 10px;
     padding: 5px;
     background: var(--color-alert);
-    color: black;
+    color: var(--background);
     max-width: 50ch;
   }
 </style>

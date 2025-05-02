@@ -48,14 +48,14 @@
     .index {
       background: var(--color-grey-light);
       padding: 5px;
-      color: black;
+      color: var(--background);
       font-size: var(--font-size-small);
     }
 
     .name {
       background: var(--color-alert);
       padding: 5px;
-      color: black;
+      color: var(--background);
       font-family: var(--display-font-stack);
       font-size: var(--font-size-large);
     }
@@ -63,13 +63,13 @@
     .balance {
       background: var(--color-value);
       padding: 5px;
-      color: black;
+      color: var(--background);
     }
 
     .health {
       background: var(--color-health);
       padding: 5px;
-      color: black;
+      color: var(--background);
 
       &.dead {
         background: var(--color-death);

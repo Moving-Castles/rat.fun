@@ -41,7 +41,7 @@
     .timestamp {
       background: var(--color-grey-dark);
       padding: 2px 5px;
-      color: white;
+      color: var(--foreground);
       display: inline-block;
     }
   }

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { getUIState } from "@modules/ui/state.svelte"
 
-  import RoomsListing from "@components/Main/Shared/RoomsListing/RoomsListing.svelte"
+  import RoomListing from "@svelte/components/Main/Shared/RoomListing/RoomListing.svelte"
   import YourRooms from "@components/Main/RoomContainer/YourRooms/YourRooms.svelte"
   import CreateRoom from "@components/Main/RoomContainer/CreateRoom/CreateRoom.svelte"
 
@@ -36,7 +36,7 @@
   </div>
 
   {#if panes.roomContainer === enums.ROOM_CONTAINER.ALL_ROOMS}
-    <RoomsListing isOwnRoomListing={false} />
+    <RoomListing isOwnRoomListing={false} />
   {/if}
 
   {#if panes.roomContainer === enums.ROOM_CONTAINER.YOUR_ROOMS}
@@ -73,12 +73,12 @@
     border: none;
     outline: none;
     background: var(--color-grey-mid);
-    color: white;
+    color: var(--background);
     width: 50%;
 
     &.selected {
       background: var(--color-alert);
-      color: black;
+      color: var(--foreground);
     }
   }
 

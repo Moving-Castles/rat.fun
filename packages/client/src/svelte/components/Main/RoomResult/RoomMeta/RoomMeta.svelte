@@ -93,8 +93,8 @@
     height: var(--game-window-height);
     justify-content: center;
     align-items: center;
-    background: black;
-    color: white;
+    background: var(--background);
+    color: var(--foreground);
 
     .inner {
       display: flex;
@@ -118,7 +118,7 @@
 
       .prompt {
         background: var(--color-alert);
-        color: black;
+        color: var(--background);
         width: auto;
         display: inline-block;
         padding: 5px;
@@ -127,7 +127,7 @@
 
       .room-index {
         background: var(--color-grey-light);
-        color: black;
+        color: var(--background);
         width: auto;
         padding: 5px;
       }

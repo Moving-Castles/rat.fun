@@ -127,7 +127,7 @@
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
-    background-color: black;
+    background-color: var(--background);
   }
 
   .elevator {
@@ -163,6 +163,6 @@
     width: 50%;
     position: absolute;
     height: 100%;
-    background: black;
+    background: var(--background);
   }
 </style>
