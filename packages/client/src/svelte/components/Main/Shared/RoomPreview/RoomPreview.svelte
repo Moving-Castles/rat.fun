@@ -154,7 +154,7 @@
       {/if}
 
       <!-- Liquidate Room -->
-      {#if isOwnRoomListing}
+      {#if isOwnRoomListing && room.balance > 0}
         <LiquidateRoom {roomId} {room} {isOwnRoomListing} />
       {/if}
     </div>

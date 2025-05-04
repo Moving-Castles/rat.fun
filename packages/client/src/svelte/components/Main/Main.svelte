@@ -76,7 +76,7 @@
         {@render mainSnippet()}
       </div>
       <div class="right-door" style={getDoorStyle("right")}>
-        <!-- {@render mainSnippet()} -->
+        {@render mainSnippet()}
       </div>
     </div>
   </div>

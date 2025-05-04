@@ -11,14 +11,24 @@
   let profit = $derived(Number(room.balance) - 250)
 </script>
 
-<button class="room-listing-item" onclick={() => rooms.preview(roomId, true)}>
+<button
+  class="room-listing-item"
+  class:depleted={room.balance == 0}
+  onclick={() => rooms.preview(roomId, true)}
+>
   <div class="profit">
     <div
       class="profit-indicator"
       class:positive={profit > 0}
       class:negative={profit < 0}
     >
-      <span>Profit: ${profit}</span>
+      <span>
+        {#if room.balance == 0}
+          Depleted
+        {:else}
+          Profit: ${profit}
+        {/if}
+      </span>
     </div>
   </div>
   <!-- INFO -->
@@ -88,6 +98,10 @@
 
     &:hover {
       background-color: var(--color-grey-darker);
+    }
+
+    &.depleted {
+      opacity: 0.5;
     }
 
     .profit {

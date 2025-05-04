@@ -20,7 +20,7 @@
 
 <button
   class="room-listing-item"
-  class:disabled={room.balance <= 0}
+  class:disabled={room.balance == 0}
   onclick={() => rooms.preview(roomId, false)}
 >
   <!-- IMAGE -->
