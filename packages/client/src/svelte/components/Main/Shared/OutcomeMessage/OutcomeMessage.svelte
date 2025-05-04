@@ -19,6 +19,7 @@
   onMount(() => {
     interval = setInterval(() => tick++, 5000)
   })
+
   onDestroy(() => {
     clearInterval(interval)
   })

@@ -116,8 +116,8 @@ body {
 
 body,
 html {
-  background: var(--background);
-  color: var(--foreground);
+  background: black;
+  color: white;
   font-family: var(--typewriter-font-stack);
   font-size: var(--font-size-normal);
   margin: 0;

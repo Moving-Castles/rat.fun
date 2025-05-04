@@ -12,7 +12,7 @@
   let scrollElement = $state<null | HTMLElement>(null)
 
   $effect(() => {
-    if ($latestEvents[$latestEvents.length - 1] && scrollElement) {
+    if ($latestEvents && scrollElement) {
       scrollElement.scrollTop = scrollElement?.scrollHeight ?? 0
     }
   })
