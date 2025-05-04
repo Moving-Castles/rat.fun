@@ -6,6 +6,7 @@
 
   import ChatEvent from "./ChatEvent.svelte"
   import ChatMessage from "./ChatMessage.svelte"
+  import ChatHeader from "./ChatHeader.svelte"
 
   let clientHeight = $state(0)
   let value = $state("")
@@ -31,6 +32,7 @@
 </script>
 
 <div bind:clientHeight class="chat-window">
+  <ChatHeader />
   <!-- Chat scroll -->
   <div bind:this={scrollElement} class="chat-scroll">
     {#each $latestEvents as event (event.id)}
@@ -68,7 +70,7 @@
     .chat-scroll {
       display: flex;
       flex-flow: column nowrap;
-      height: calc(var(--game-window-height) - 80px - 444px);
+      height: calc(var(--game-window-height) - 80px - 504px);
       overflow-y: scroll;
       padding: 8px;
       gap: 4px;
