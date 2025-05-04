@@ -4,13 +4,13 @@ import { ENVIRONMENT } from "@mud/enums"
 import { OFFCHAIN_VALIDATION_MESSAGE } from "@server/config";
 import {
   clientList,
-  newEvent,
   latestEvents,
   roundTriptime,
   websocketConnected,
 } from "@modules/off-chain-sync/stores"
 
 const MAX_RECONNECTION_DELAY = 30000 // Maximum delay of 30 seconds
+const MAX_EVENTS = 200
 
 let socket: WebSocket
 let reconnectAttempts = 0
@@ -50,9 +50,14 @@ export function initOffChainSync(environment: ENVIRONMENT, playerId: string) {
     }
 
     // Pass message to stores
-    newEvent.set(messageContent)
     latestEvents.update(state => {
-      return [...state, messageContent]
+      // Check if message with this ID already exists
+      if (state.some(event => event.id === messageContent.id)) {
+        return state
+      }
+      // Add new message and limit array to MAX_EVENTS items
+      const newState = [...state, messageContent]
+      return newState.slice(-MAX_EVENTS)
     })
   }
 

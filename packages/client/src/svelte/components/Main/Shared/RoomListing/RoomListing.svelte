@@ -22,7 +22,7 @@
   // Local state
   let currentRoom = $state<Hex | null>(null)
   let sortFunction = $state(entriesChronologically)
-  let showDepletedRooms = $state(false)
+  let showDepletedRooms = $state(isOwnRoomListing ? true : false)
   let textFilter = $state("")
 
   let roomList = $derived.by(() => {
