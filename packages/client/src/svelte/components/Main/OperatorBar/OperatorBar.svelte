@@ -66,6 +66,7 @@
     justify-content: space-between;
     height: var(--operator-bar-height);
     background: var(--black);
+    user-select: none;
 
     .player-stats {
       display: flex;

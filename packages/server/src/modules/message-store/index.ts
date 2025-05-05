@@ -40,24 +40,3 @@ export async function getMessages(limit?: number): Promise<OffChainMessage[]> {
   const messages = db.data?.messages || [];
   return limit ? messages.slice(-limit) : messages;
 }
-
-// Get messages by topic
-export async function getMessagesByTopic(topic: OffChainMessage['topic']): Promise<OffChainMessage[]> {
-  await db.read();
-  return db.data?.messages.filter(message => message.topic === topic) || [];
-}
-
-// Get messages by player name
-export async function getMessagesByPlayer(playerName: string): Promise<OffChainMessage[]> {
-  await db.read();
-  return db.data?.messages.filter(message => message.playerName === playerName) || [];
-}
-
-// Clear all messages
-export async function clearMessages(): Promise<void> {
-  await db.read();
-  if (db.data) {
-    db.data.messages = [];
-    await db.write();
-  }
-} 

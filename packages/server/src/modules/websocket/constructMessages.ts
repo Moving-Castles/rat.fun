@@ -2,7 +2,7 @@ import type { Rat, Room } from "@routes/room/enter/types";
 import type { OffChainMessage } from "@modules/websocket/types";
 import type { OutcomeReturnValue } from "@modules/llm/types";
 import type { ClientComponents } from "@modules/mud/createClientComponents";
-import { getPlayerName } from "@modules/mud/getOnchainData";
+import { getPlayerName, getRoomIndex } from "@modules/mud/getOnchainData";
 import { v4 as uuidv4 } from 'uuid';
 
 export function createOutcomeMessage(playerId: string, Name: ClientComponents['Name'], rat: Rat, newRatHealth: number, room: Room, validatedOutcome: OutcomeReturnValue): OffChainMessage {
@@ -15,10 +15,13 @@ export function createOutcomeMessage(playerId: string, Name: ClientComponents['N
             topic: 'rat__death',
             playerName: playerName,
             ratName: rat.name,
+            roomId: room.id,
+            roomIndex: Number(room.index),
             message: `died in room #${room.index}`,
             timestamp: Date.now()
         }
     }
+
 
     // Outcome
     const addedItems = (validatedOutcome?.itemChanges ?? []).filter(item => item.type ==  "add").map(item => { return `${item.name} ($${item.value})` }).join(', ')
@@ -70,18 +73,24 @@ export function createOutcomeMessage(playerId: string, Name: ClientComponents['N
         topic: 'room__outcome',
         message,
         playerName: playerName,
+        roomId: room.id,
+        roomIndex: Number(room.index),
         ratName: rat.name,
         timestamp: Date.now()
     }
 }
 
-export function createRoomCreationMessage(playerId: string, Name: ClientComponents['Name']): OffChainMessage {
+export function createRoomCreationMessage(roomId: string, playerId: string, Name: ClientComponents['Name'], Index: ClientComponents['Index']): OffChainMessage {
     const playerName = getPlayerName(playerId, Name)
+    const roomIndex = getRoomIndex(roomId, Index)
+
     return {
         id: uuidv4(),
         topic: 'room__creation',
         message: "created a room",
         playerName: playerName,
+        roomId: roomId,
+        roomIndex: Number(roomIndex),
         timestamp: Date.now()
     }
 }

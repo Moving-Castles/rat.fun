@@ -36,7 +36,6 @@ export function initOffChainSync(environment: ENVIRONMENT, playerId: string) {
   socket.onmessage = (message: MessageEvent<string>) => {
     console.log("Received message:", message)
     const messageContent = JSON.parse(message.data) as OffChainMessage
-    // console.log("Received outcome:", messageContent)
 
     // Update client list when players connect/disconnect
     if (messageContent.topic === "clients__update") {
@@ -152,7 +151,7 @@ export async function sendLiquidateRatMessage(walletNetwork: SetupWalletNetworkR
   }
 }
 
-export async function sendLiquidateRoomMessage(walletNetwork: SetupWalletNetworkResult) {
+export async function sendLiquidateRoomMessage(roomId: string, roomIndex: number, walletNetwork: SetupWalletNetworkResult) {
   const signature = await walletNetwork.walletClient.signMessage({
     message: OFFCHAIN_VALIDATION_MESSAGE
   })
@@ -161,6 +160,8 @@ export async function sendLiquidateRoomMessage(walletNetwork: SetupWalletNetwork
     socket.send(
       JSON.stringify({
         topic: "room__liquidation",
+        roomId: roomId,
+        roomIndex: Number(roomIndex),
         signature: signature,
       })
     )

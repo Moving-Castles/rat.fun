@@ -29,7 +29,7 @@
     >
       {event.playerName}
     </span>
-    created a room
+    created room #{event.roomIndex ?? "unknown"}
   {:else if event.topic == "room__liquidation"}
     <!-- ROOM LIQUIDATION -->
     <span
@@ -40,7 +40,7 @@
     >
       {event.playerName}
     </span>
-    destroyed a room
+    destroyed room #{event.roomIndex ?? "unknown"}
   {:else if event.topic == "room__outcome"}
     <!-- ROOM OUTCOME -->
     <span
@@ -51,7 +51,8 @@
     >
       {event.playerName}
     </span>
-    sent {event.ratName} to room.
+    sent <span class="rat-name">{event.ratName}</span> to room #{event.roomIndex ??
+      "unknown"}.
     {event.message}
   {:else if event.topic == "rat__death"}
     <!-- DEATH IN ROOM -->
@@ -63,7 +64,8 @@
     >
       {event.playerName}
     </span>
-    {event.ratName} died in room
+    let <span class="rat-name">{event.ratName}</span> die in room #{event.roomIndex ??
+      "unknown"}
   {:else if event.topic == "rat__deploy"}
     <!-- DEPLOY -->
     <span
@@ -74,7 +76,7 @@
     >
       {event.playerName}
     </span>
-    deployed {event.ratName}
+    deployed <span class="rat-name">{event.ratName}</span>
   {:else if event.topic == "rat__liquidate"}
     <!-- LIQUIDATE -->
     <span
@@ -85,7 +87,7 @@
     >
       {event.playerName}
     </span>
-    liquidated {event.ratName}
+    liquidated <span class="rat-name">{event.ratName}</span>
   {:else}
     <!-- FALLBACK -->
     <span class="message-body">
@@ -163,5 +165,11 @@
     .timestamp {
       display: inline;
     }
+  }
+
+  .rat-name {
+    background: var(--color-grey-light);
+    color: var(--background);
+    padding: 2px;
   }
 </style>

@@ -85,7 +85,13 @@
           {/each}
         {:else}
           <div class="empty-listing">
-            <div>NO ROOMS</div>
+            <div>
+              {#if isOwnRoomListing}
+                NO ROOMS CREATED YET
+              {:else}
+                NO ROOMS
+              {/if}
+            </div>
           </div>
         {/if}
       </div>

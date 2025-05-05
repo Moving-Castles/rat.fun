@@ -17,6 +17,8 @@ export interface WebSocketParams {
     | "rat__liquidate"
     playerName?: string;
     ratName?: string;
+    roomIndex?: number;
+    roomId?: string;
     message?: string | string[];
     timestamp: number;
     signature?: string;

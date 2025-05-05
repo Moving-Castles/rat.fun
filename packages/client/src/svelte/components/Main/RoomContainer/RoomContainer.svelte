@@ -76,6 +76,10 @@
     color: var(--background);
     width: 50%;
 
+    &:hover {
+      background: var(--color-grey-light);
+    }
+
     &.selected {
       background: var(--color-alert);
       color: var(--foreground);

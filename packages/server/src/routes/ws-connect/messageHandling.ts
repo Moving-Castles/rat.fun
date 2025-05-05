@@ -133,6 +133,8 @@ async function handleRoomLiquidation(message: OffChainMessage): Promise<void> {
   const newMessage: OffChainMessage = {
     id: uuidv4(),
     topic: 'room__liquidation',
+    roomIndex: message.roomIndex,
+    roomId: message.roomId,
     playerName: playerName,
     timestamp: Date.now()
   }

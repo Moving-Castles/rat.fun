@@ -152,3 +152,7 @@ export function getRatId(playerId: string, OwnedRat: ClientComponents['OwnedRat'
 export function getRatName(ratId: string, Name: ClientComponents['Name']) {
     return (getComponentValue(Name, ratId as Entity)?.value ?? "unknown rat") as string;
 }
+
+export function getRoomIndex(roomId: string, Index: ClientComponents['Index']) {
+    return (getComponentValue(Index, roomId as Entity)?.value ?? 0) as number;
+}

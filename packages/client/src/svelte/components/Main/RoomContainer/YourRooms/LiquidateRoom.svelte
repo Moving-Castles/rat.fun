@@ -16,7 +16,11 @@
     $staticContent.rooms.find(r => r.title == roomId)
   )
 
-  let { room, roomId, isOwnRoomListing } = $props()
+  let {
+    room,
+    roomId,
+    isOwnRoomListing,
+  }: { room: Room; roomId: string; isOwnRoomListing: boolean } = $props()
 
   let { rooms } = getUIState()
 
@@ -40,7 +44,7 @@
       liquidationMessage = "Could not liquidate room"
     } finally {
       busy = false
-      sendLiquidateRoomMessage($walletNetwork)
+      sendLiquidateRoomMessage(roomId, room.index, $walletNetwork)
       setTimeout(() => {
         modal.close()
       }, 1200)
