@@ -207,3 +207,8 @@ button {
     #222 40px
   );
 }
+
+.tippy-content {
+  font-size: var(--font-size-small);
+  border-radius: 0;
+}

@@ -185,6 +185,7 @@
       color: var(--background);
     }
   }
+
   .room-stats {
     width: 100%;
     height: 100%;
@@ -204,6 +205,7 @@
       padding: 10px 8px 0 6px;
     }
   }
+
   .x-axis {
     border-bottom: 1px solid var(--color-grey-mid);
     width: 100%;
