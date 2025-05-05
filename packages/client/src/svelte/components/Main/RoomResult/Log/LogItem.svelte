@@ -35,7 +35,7 @@
   const typeHit = (char: string) => {
     // Use string type hint
     if (logTextElement) logTextElement.textContent += char
-    const sound = playSound("tcm", "typingCant", false, false, randomPitch())
+    const sound = playSound("tcm", "type2", false, false, randomPitch())
     if (sound) sound.play()
   }
 
@@ -253,6 +253,8 @@
       padding: 5px;
       color: var(--background);
       max-width: 60%;
+      font-family: var(--special-font-stack);
+      font-size: 24px;
     }
 
     .outcome-list {

@@ -80,6 +80,7 @@
 
   /* Typography */
   --typewriter-font-stack: "OCRA", monospace;
+  --special-font-stack: "Special Elite", monospace;
   --display-font-stack: "Rock Salt", cursive;
   --font-size-very-small: 9px;
   --font-size-small: 11px;
