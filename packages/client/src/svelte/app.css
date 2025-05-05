@@ -195,6 +195,7 @@ button {
     #222 40px
   );
 }
+
 .warning-mute-inverse {
   color: var(--foreground);
   border: none;
