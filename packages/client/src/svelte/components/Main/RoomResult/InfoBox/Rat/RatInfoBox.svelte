@@ -1,8 +1,7 @@
 <script lang="ts">
   import { frozenRat } from "@components/Main/RoomResult/state.svelte"
-
-  import Trait from "@components/Main/RoomResult/InfoBox/Rat/Trait.svelte"
-  import Item from "@components/Main/RoomResult/InfoBox/Rat/Item.svelte"
+  import Trait from "@svelte/components/Main/Shared/Trait/Trait.svelte"
+  import Item from "@svelte/components/Main/Shared/Item/Item.svelte"
 </script>
 
 <div class="rat-info-box">
@@ -25,9 +24,9 @@
         <!-- BALANCE -->
         <span class="balance">${$frozenRat.balance}</span>
         <!-- HEALTH -->
-        <span class="health" class:dead={$frozenRat.health <= 0}
-          >HEALTH {$frozenRat.health}</span
-        >
+        <span class="health" class:dead={$frozenRat.health <= 0}>
+          HEALTH {$frozenRat.health}
+        </span>
       </div>
     </div>
     <!-- TRAITS -->
@@ -51,7 +50,7 @@
       </div>
       <!-- INVENTORY -->
       {#each $frozenRat.inventory as item}
-        <Item {item} />
+        <Item {item} isRoomInfoBox={true} />
       {/each}
     </div>
   {/if}
