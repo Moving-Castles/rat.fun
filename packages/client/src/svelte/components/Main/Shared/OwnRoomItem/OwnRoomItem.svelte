@@ -3,12 +3,16 @@
   import { getUIState } from "@modules/ui/state.svelte"
   import { blocksToReadableTime } from "@modules/utils"
   import { blockNumber } from "@modules/network"
+  import { gameConfig } from "@modules/state/base/stores"
 
   let { roomId, room }: { roomId: Hex; room: Room } = $props()
 
   let { rooms } = getUIState()
 
-  let profit = $derived(Number(room.balance) - 250)
+  let profit = $derived(
+    Number(room.balance) -
+      Number($gameConfig?.gameConfig?.roomCreationCost ?? 0)
+  )
 </script>
 
 <button

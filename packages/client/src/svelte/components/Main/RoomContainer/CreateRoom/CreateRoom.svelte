@@ -26,7 +26,9 @@
   )
 
   let disabled = $derived(
-    invalidRoomDescriptionLength || busy || $player.balance < 250
+    invalidRoomDescriptionLength ||
+      busy ||
+      $player.balance < Number($gameConfig?.gameConfig?.roomCreationCost ?? 0)
   )
 
   async function sendCreateRoom() {
@@ -75,7 +77,7 @@
     <!-- ACTIONS -->
     <div class="actions">
       <button class:disabled onclick={sendCreateRoom}>
-        Create room (Cost: $250)
+        Create room (Cost: ${Number($gameConfig?.gameConfig?.roomCreationCost)})
       </button>
       <button class="secondary" onclick={goYourRooms}>Cancel</button>
     </div>

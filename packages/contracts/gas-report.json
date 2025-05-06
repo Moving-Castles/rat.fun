@@ -117,13 +117,13 @@
     "file": "test/systems/PlayerSystem.t.sol:PlayerSystemTest",
     "test": "testSpawn",
     "name": "Spawn",
-    "gasUsed": 207158
+    "gasUsed": 210443
   },
   {
     "file": "test/systems/RatSystem.t.sol:RatSystemTest",
     "test": "testCreateRat",
     "name": "Create rat",
-    "gasUsed": 473044
+    "gasUsed": 472697
   },
   {
     "file": "test/systems/RatSystem.t.sol:RatSystemTest",
@@ -141,12 +141,12 @@
     "file": "test/systems/RoomSystem.t.sol:RoomSystemTest",
     "test": "testCreateRoom",
     "name": "Create room (user)",
-    "gasUsed": 408615
+    "gasUsed": 408268
   },
   {
     "file": "test/systems/RoomSystem.t.sol:RoomSystemTest",
     "test": "testLongRoomPrompt",
     "name": "Create room: long prompt",
-    "gasUsed": 545197
+    "gasUsed": 544850
   }
 ]

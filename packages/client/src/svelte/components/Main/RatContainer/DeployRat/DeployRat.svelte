@@ -2,7 +2,7 @@
   import { createRat } from "@modules/action"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
   import { playSound } from "@modules/sound"
-  import { player } from "@modules/state/base/stores"
+  import { gameConfig, player } from "@modules/state/base/stores"
   import { generateRatName } from "./index"
   import { sendDeployRatMessage } from "@modules/off-chain-sync"
   import { walletNetwork } from "@modules/network"
@@ -29,7 +29,11 @@
     }
   }
 
-  let disabled = $derived(!name || ($player?.balance ?? 0) < 250)
+  let disabled = $derived(
+    !name ||
+      ($player?.balance ?? 0) <
+        Number($gameConfig?.gameConfig?.ratCreationCost ?? 0)
+  )
 </script>
 
 <div class="main">
@@ -49,7 +53,7 @@
         <div class="spinner"><Spinner /></div>
       {:else}
         <span class="button-text">Deploy new rat</span><br />
-        <span>Cost: $100</span>
+        <span>Cost: ${Number($gameConfig?.gameConfig?.ratCreationCost)}</span>
       {/if}
     </button>
   {/if}
