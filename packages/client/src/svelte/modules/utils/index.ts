@@ -341,3 +341,13 @@ export function truncateString(str: string, maxLength: number) {
   if (str.length <= maxLength) return str
   return str.slice(0, maxLength) + "..."
 }
+
+export function containsHiddenUnicodeTags(str: string): boolean {
+  for (const char of str) {
+    const codePoint = char.codePointAt(0)
+    if (codePoint && codePoint >= 0xe0000 && codePoint <= 0xe007f) {
+      return true;
+    }
+  }
+  return false;
+}
