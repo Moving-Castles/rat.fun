@@ -22,7 +22,7 @@ library LibRat {
     Dead.set(ratId, false);
     Health.set(ratId, 100);
     Balance.set(ratId, 0);
-    Level.set(ratId, LevelList.get()[0]);
+    Level.set(ratId, LevelList.getItem(0));
     CreationBlock.set(ratId, block.number);
 
     uint256 newRatIndex = GameConfig.getGlobalRatIndex() + 1;

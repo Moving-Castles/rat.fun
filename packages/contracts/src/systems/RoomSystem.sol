@@ -31,7 +31,7 @@ contract RoomSystem is System {
   ) public onlyAdmin returns (bytes32 newRoomId) {
     // TODO: What level is room created on?
     // Currently hardcoded to level 0
-    bytes32 levelId = LevelList.get()[0];
+    bytes32 levelId = LevelList.getItem(0);
 
     uint256 roomCreationCost = RoomCreationCost.get(levelId);
 

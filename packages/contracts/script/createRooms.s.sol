@@ -23,7 +23,7 @@ contract CreateRooms is Script {
     vm.startBroadcast(deployerPrivateKey);
 
     bytes32 adminId = GameConfig.getAdminId();
-    bytes32 firstLevel = LevelList.get()[0];
+    bytes32 firstLevel = LevelList.getItem(0);
 
     // Create rooms: Level 0
 

@@ -40,7 +40,7 @@ contract RoomSystemTest is BaseTest {
     assertEq(RoomPrompt.get(roomId), "A test room");
     assertEq(Balance.get(roomId), GameConfig.getRoomCreationCost());
     assertEq(Owner.get(roomId), playerId);
-    assertEq(Level.get(roomId), LevelList.get()[0]);
+    assertEq(Level.get(roomId), LevelList.getItem(0));
     assertEq(CreationBlock.get(roomId), block.number);
   }
 
