@@ -3,7 +3,7 @@
 # Change to the parent directory to use its node_modules
 cd "$(dirname "$0")/.."
 
-JSON_FILE_PATH=create-rooms/room-definitions/playtest-2.json
+JSON_FILE_PATH=create-rooms/room-definitions/playtest-3.json
 API_URL=https://reality-model-1.mc-infra.com/room/create
 
 # Run the script with ts-node-esm and proper loader configuration
