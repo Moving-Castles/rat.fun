@@ -23,6 +23,7 @@
     display: grid;
     grid-template-rows: 60px 440px 1fr minmax(100px, 440px);
     position: relative;
+    background: black;
   }
 
   .spacer {

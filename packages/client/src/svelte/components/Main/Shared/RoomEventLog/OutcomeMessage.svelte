@@ -7,6 +7,8 @@
 
   let { outcome } = $props()
 
+  console.log(outcome)
+
   let tick = $state(1)
   let elapsed = $derived.by(() => {
     if (tick) {

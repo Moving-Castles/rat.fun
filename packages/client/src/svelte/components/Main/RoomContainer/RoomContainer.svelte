@@ -57,6 +57,7 @@
     width: 100%;
     border-bottom: var(--default-border-style);
     height: 100%;
+    background: black;
   }
 
   .pane-switch {

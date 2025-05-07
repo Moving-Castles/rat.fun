@@ -2,7 +2,7 @@
   import { onMount, onDestroy } from "svelte"
   import { client } from "@modules/content/sanity"
   import { queries } from "@modules/content/sanity/groq"
-  import OutcomeMessage from "./OutcomeMessage.svelte"
+  import OutcomeMessage from "./OutcomeMessageTemp.svelte"
   import { publicNetwork } from "@modules/network"
   import type { Outcome } from "@cms/sanity.types"
 

@@ -11,7 +11,6 @@ import { PANE, RAT_CONTAINER, ROOM_CONTAINER } from "./enums"
 import { quadInOut } from "svelte/easing"
 import { Tween } from "svelte/motion"
 import * as uiStores from "@modules/ui/stores"
-import { gameConfig } from "../state/base/stores"
 
 export const ROUTES = [
   {
@@ -35,9 +34,11 @@ export const ROUTES = [
 let ratContainer = $state<RAT_CONTAINER>(RAT_CONTAINER.YOUR_RAT)
 let roomContainer = $state<ROOM_CONTAINER>(ROOM_CONTAINER.ALL_ROOMS)
 let previewingPane = $state<PANE>(PANE.NONE)
+
 // Current route
 let route = $state("main")
 let params = $state({})
+
 // 1.3 More complex objects are also fully reactive once properly initialised
 const transition = $state({
   active: false,
@@ -106,6 +107,8 @@ export const getUIState = () => {
     // Handle parameters
     if (p.roomId) {
       uiStores.CurrentRoomId.set(p.roomId)
+    } else {
+      uiStores.CurrentRoomId.set(null)
     }
 
     // Modifying by using class instance methods
@@ -150,6 +153,7 @@ export const getUIState = () => {
     previewingPane = PANE.NONE
     await navigate("main")
     uiStores.CurrentRoomId.set(null)
+    console.log("closed")
   }
 
   /** 3.1 Exporting state

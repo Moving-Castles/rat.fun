@@ -86,7 +86,7 @@
   </div>
 {/if}
 
-{#if route.current === "room" || transition.from === "room" || $current}
+{#if route.current === "room" || (transition.from === "room" && transition.active) || $current}
   <div class="layer-below">
     <RoomResult
       start={($current || $myCurrent) && route.current === "room"}
@@ -131,7 +131,6 @@
     overflow: hidden;
     display: grid;
     grid-template-rows: var(--header-height, 60px) 1fr;
-    background: black;
   }
 
   .door-content-wrapper {
@@ -153,7 +152,6 @@
     border: var(--default-border-style); // Overall game window border
     overflow: hidden; // Clip any door overflow if they animate beyond bounds
     // Though with translateX(+-50%) they shouldn't.
-    background: black;
   }
 
   .door-container {
