@@ -15,7 +15,9 @@
   )
 </script>
 
-<button
+<!-- svelte-ignore a11y_no_static_element_interactions -->
+<!-- svelte-ignore a11y_click_events_have_key_events -->
+<div
   class="room-listing-item"
   class:depleted={room.balance == 0}
   onclick={() => rooms.preview(roomId, true)}
@@ -71,7 +73,13 @@
         <!-- DIVIDER -->
         <span class="divider">•</span>
         <!-- VISITOR COUNT -->
-        <span class="visit-count small">{room.visitCount} visits</span>
+        <span class="visit-count small">
+          {#if room.visitCount === 1}
+            {room.visitCount} visit
+          {:else}
+            {room.visitCount} visits
+          {/if}
+        </span>
         {#if room?.killCount > 0}
           <!-- DIVIDER -->
           <span class="divider">•</span>
@@ -83,7 +91,7 @@
       </div>
     </div>
   </div>
-</button>
+</div>
 
 <style lang="scss">
   .room-listing-item {

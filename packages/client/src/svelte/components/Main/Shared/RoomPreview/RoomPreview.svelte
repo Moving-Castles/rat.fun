@@ -13,7 +13,7 @@
   import { publicNetwork } from "@modules/network"
   import { loadData } from "@modules/content/sanity"
   import { queries } from "@modules/content/sanity/groq"
-  import { renderSafeString } from "@modules/utils"
+  import { clickToCopy, renderSafeString } from "@modules/utils"
 
   import LiquidateRoom from "@components/Main/RoomContainer/YourRooms/LiquidateRoom.svelte"
   import RoomStats from "@components/Main/Shared/RoomStats/RoomStats.svelte"
@@ -31,13 +31,30 @@
 
   let { rooms } = getUIState()
 
+  let shareText = $state<"Share" | "Copied" | "Failed">("Share")
   let plotData: PlotPoint[] = $state([])
   let roomOutcomes = $state<Outcome[]>()
+
+  let oncopysuccess = () => {
+    shareText = "Copied"
+    setTimeout(() => {
+      shareText = "Share"
+    }, 3000)
+  }
+  let oncopyfail = () => {
+    shareText = "Failed"
+    setTimeout(() => {
+      shareText = "Share"
+    }, 3000)
+  }
 
   const sendEnterRoom = () => {
     playSound("tcm", "enteredPod")
     rooms.navigate("room", { roomId })
   }
+  let copyShareLink = $derived(
+    `${window.location.protocol + "//" + window.location.host + window.location.pathname}#${roomId}`
+  )
 
   onMount(async () => {
     // Test to get outcomes for room
@@ -110,6 +127,16 @@
           <span class="divider">•</span>
           <!-- OWNER -->
           <span class="owner">{getRoomOwnerName(room)}</span>
+          <button
+            use:clickToCopy={copyShareLink}
+            {oncopysuccess}
+            {oncopyfail}
+            class:success={shareText === "Copied"}
+            class:failed={shareText === "Failed"}
+            class="share-button"
+          >
+            {shareText}
+          </button>
         </div>
 
         <div class="room-info-row">
@@ -249,6 +276,21 @@
           padding: 5px;
         }
 
+        .share-button {
+          background: var(--color-alert);
+          color: var(--white);
+          width: auto;
+          padding: 5px;
+          margin: 0;
+
+          &.success {
+            background: var(--color-alert-priority);
+          }
+          &.failed {
+            background: var(--color-death);
+          }
+        }
+
         .index {
           color: var(--color-grey-mid);
         }
@@ -322,6 +364,12 @@
     padding: 20px 20px;
     color: var(--foreground);
     text-align: center;
+  }
+
+  .share-button {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
   }
 
   .no-rat-warning,

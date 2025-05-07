@@ -342,49 +342,90 @@ export function truncateString(str: string, maxLength: number) {
   return str.slice(0, maxLength) + "..."
 }
 
-export function renderSafeString(input: string, placeholder = '💀', renderCodepoints = false) {
-  return [...input].map(char => {
-    const code = char.codePointAt(0);
-    if (code === undefined) return placeholder;
+export function renderSafeString(
+  input: string,
+  placeholder = "💀",
+  renderCodepoints = false
+) {
+  return [...input]
+    .map(char => {
+      const code = char.codePointAt(0)
+      if (code === undefined) return placeholder
 
-    const isPUA =
-      (code >= 0xE000 && code <= 0xF8FF) ||             // BMP PUA
-      (code >= 0xF0000 && code <= 0xFFFFD) ||           // PUA-A
-      (code >= 0x100000 && code <= 0x10FFFD);           // PUA-B
+      const isPUA =
+        (code >= 0xe000 && code <= 0xf8ff) || // BMP PUA
+        (code >= 0xf0000 && code <= 0xffffd) || // PUA-A
+        (code >= 0x100000 && code <= 0x10fffd) // PUA-B
 
-    const isTagsBlock =
-      (code >= 0xE0000 && code <= 0xE007F);             // Tags block
+      const isTagsBlock = code >= 0xe0000 && code <= 0xe007f // Tags block
 
-    const isNonCharacter = (code & 0xFFFE) === 0xFFFE;
+      const isNonCharacter = (code & 0xfffe) === 0xfffe
 
-    const isControl =
-      (code >= 0x00 && code <= 0x1F && ![0x09, 0x0A, 0x0D].includes(code)) ||
-      (code >= 0x7F && code <= 0x9F);
+      const isControl =
+        (code >= 0x00 && code <= 0x1f && ![0x09, 0x0a, 0x0d].includes(code)) ||
+        (code >= 0x7f && code <= 0x9f)
 
-    const isZeroWidth =
-      code === 0x200B || code === 0x200C || code === 0x200D ||
-      code === 0x2060 || code === 0xFEFF ||
-      (code >= 0x202A && code <= 0x202F) ||
-      (code >= 0x2066 && code <= 0x2069);
+      const isZeroWidth =
+        code === 0x200b ||
+        code === 0x200c ||
+        code === 0x200d ||
+        code === 0x2060 ||
+        code === 0xfeff ||
+        (code >= 0x202a && code <= 0x202f) ||
+        (code >= 0x2066 && code <= 0x2069)
 
-    const isObscureOrDeprecated =
-      code === 0x034F || // Combining Grapheme Joiner
-      code === 0x061C || // Arabic Letter Mark
-      code === 0x180E || // Mongolian Vowel Separator
-      (code >= 0x1D159 && code <= 0x1D165); // Combining musical notation
+      const isObscureOrDeprecated =
+        code === 0x034f || // Combining Grapheme Joiner
+        code === 0x061c || // Arabic Letter Mark
+        code === 0x180e || // Mongolian Vowel Separator
+        (code >= 0x1d159 && code <= 0x1d165) // Combining musical notation
 
-    const isSuspicious = isPUA || isTagsBlock || isNonCharacter || isControl || isZeroWidth || isObscureOrDeprecated;
+      const isSuspicious =
+        isPUA ||
+        isTagsBlock ||
+        isNonCharacter ||
+        isControl ||
+        isZeroWidth ||
+        isObscureOrDeprecated
 
-    if (isSuspicious) {
-      if (renderCodepoints) {
-        return `[U+${code.toString(16).toUpperCase().padStart(4, '0')}]`;
-      } else {
-        return placeholder;
+      if (isSuspicious) {
+        if (renderCodepoints) {
+          return `[U+${code.toString(16).toUpperCase().padStart(4, "0")}]`
+        } else {
+          return placeholder
+        }
       }
-    }
 
-    return char;
-  }).join('');
+      return char
+    })
+    .join("")
 }
 
+export function clickToCopy(node: HTMLElement, text: string) {
+  async function copyText() {
+    try {
+      await navigator.clipboard.writeText(text)
 
+      node.dispatchEvent(
+        new CustomEvent("copysuccess", {
+          bubbles: true,
+        })
+      )
+    } catch (error) {
+      node.dispatchEvent(
+        new CustomEvent("copyerror", {
+          bubbles: true,
+          detail: error,
+        })
+      )
+    }
+  }
+
+  node.addEventListener("click", copyText)
+
+  return {
+    destroy() {
+      node.removeEventListener("click", copyText)
+    },
+  }
+}
