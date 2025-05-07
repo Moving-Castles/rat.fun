@@ -17,7 +17,7 @@
   })
 </script>
 
-<div class="chat-message">
+<div id={event.id} class="chat-message">
   <span
     use:tippy={{
       content: formatDate(new Date(event.timestamp)),
