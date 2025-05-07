@@ -1,6 +1,7 @@
 <script lang="ts">
   import { timeSince } from "@modules/utils"
   import { onMount, onDestroy } from "svelte"
+  import { formatDate } from "@modules/utils"
 
   let interval: ReturnType<typeof setInterval>
 
@@ -30,6 +31,7 @@
     {elapsed}
     {ago}
   </span>
+  {outcome.ratName} entered {outcome.roomIndex}.
   {outcome.outcomeMessage}
 </div>
 
@@ -39,11 +41,11 @@
     margin-bottom: 0.5em;
     line-height: 1.4em;
 
+    color: var(--color-alert-priority);
     .timestamp {
-      background: var(--color-grey-dark);
-      padding: 2px 5px;
-      color: var(--foreground);
-      display: inline-block;
+      background: var(--color-alert-priority);
+      color: var(--background);
+      padding: 2px;
     }
   }
 </style>
