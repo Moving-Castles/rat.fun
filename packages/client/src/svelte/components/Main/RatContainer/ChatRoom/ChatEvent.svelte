@@ -29,7 +29,7 @@
     >
       {event.playerName}
     </span>
-    created room #{event.roomIndex ?? "unknown"}
+    created room <a href="#{event.roomId}">#{event.roomIndex ?? "unknown"}</a>
   {:else if event.topic == "room__liquidation"}
     <!-- ROOM LIQUIDATION -->
     <span
@@ -40,7 +40,7 @@
     >
       {event.playerName}
     </span>
-    destroyed room #{event.roomIndex ?? "unknown"}
+    destroyed room <a href="#{event.roomId}">#{event.roomIndex ?? "unknown"}</a>
   {:else if event.topic == "room__outcome"}
     <!-- ROOM OUTCOME -->
     <span
@@ -51,8 +51,8 @@
     >
       {event.playerName}
     </span>
-    sent <span class="rat-name">{event.ratName}</span> to room #{event.roomIndex ??
-      "unknown"}.
+    sent <span class="rat-name">{event.ratName}</span> to room
+    <a href="#{event.roomId}">#{event.roomIndex ?? "unknown"}.</a>
     {event.message}
   {:else if event.topic == "rat__death"}
     <!-- DEATH IN ROOM -->
@@ -64,8 +64,8 @@
     >
       {event.playerName}
     </span>
-    let <span class="rat-name">{event.ratName}</span> die in room #{event.roomIndex ??
-      "unknown"}
+    let <span class="rat-name">{event.ratName}</span> die in room
+    <a href="#{event.roomId}">#{event.roomIndex ?? "unknown"}</a>
   {:else if event.topic == "rat__deploy"}
     <!-- DEPLOY -->
     <span
@@ -165,6 +165,11 @@
     .timestamp {
       display: inline;
     }
+  }
+
+  a,
+  a:visited {
+    color: inherit;
   }
 
   .rat-name {
