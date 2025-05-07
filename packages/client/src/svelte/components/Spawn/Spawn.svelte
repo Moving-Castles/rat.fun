@@ -48,7 +48,7 @@
       <!-- INTRO TEXT -->
       <div class="content">
         <p class="header">
-          <span class="inverted">Welcome to Rat Rooms Playtest #2</span>
+          <span class="inverted">Welcome to Rat Rooms Playtest #3</span>
         </p>
         <p class="small">
           Rat Rooms is a two sided market between rats and room creators. Each

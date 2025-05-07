@@ -134,7 +134,7 @@
       <!-- Room prompt -->
       <div class="room-prompt">
         <div class="content">
-          {room.roomPrompt}
+          {renderSafeString(room.roomPrompt)}
         </div>
       </div>
 
