@@ -6,7 +6,7 @@ export const tcm: SoundAssets = {
     volume: 0.8,
   },
   alert: {
-    src: "./sounds/tcm/select_hit_01.mp3",
+    src: "./sounds/tcm/selection_hit_01.mp3",
     volume: 1,
   },
   dig: {

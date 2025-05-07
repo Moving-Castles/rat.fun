@@ -18,7 +18,7 @@
   })
 </script>
 
-<div class="chat-event {event.topic}">
+<div id={event.id} class="chat-event {event.topic}">
   {#if event.topic == "room__creation"}
     <!-- ROOM CREATION -->
     <span

@@ -51,7 +51,8 @@ export function initOffChainSync(environment: ENVIRONMENT, playerId: string) {
     // Pass message to stores
     latestEvents.update(state => {
       // Check if message with this ID already exists
-      if (state.some(event => event.id === messageContent.id)) {
+      if (state.some(event => event.id == messageContent.id)) {
+        console.log("Duplicate message id found:", messageContent.id)
         return state
       }
       // Add new message and limit array to MAX_EVENTS items
