@@ -7,6 +7,7 @@
     frozenRoom,
     freezeObjects,
   } from "@components/Main/RoomResult/state.svelte"
+  import { renderSafeString } from "@modules/utils"
 
   const { rat, room, roomId }: { rat: Rat; room: Room; roomId: Hex } = $props()
 
@@ -70,15 +71,18 @@
             .auto("format")
             .saturation(-100)
             .url()}
-          alt={$frozenRoom?.name ?? ""}
+          alt={`room #${$frozenRoom?.index ?? ""}`}
         />
       {:else}
-        <img src="/images/room3.jpg" alt={$frozenRoom?.name ?? ""} />
+        <img
+          src="/images/room3.jpg"
+          alt={`room #${$frozenRoom?.index ?? ""}`}
+        />
       {/if}
     </div>
     <!-- PROMPT -->
     <div class="prompt" bind:this={promptElement}>
-      {$frozenRoom?.roomPrompt ?? ""}
+      {renderSafeString($frozenRoom?.roomPrompt ?? "")}
     </div>
   </div>
 </div>

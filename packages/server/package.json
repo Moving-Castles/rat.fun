@@ -20,7 +20,7 @@
     "@latticexyz/store-sync": "2.2.22-f7aa4c5722bf24103f4cd4ab01b5d9c55f9b2995",
     "@latticexyz/utils": "2.2.22-f7aa4c5722bf24103f4cd4ab01b5d9c55f9b2995",
     "@latticexyz/world": "2.2.22-f7aa4c5722bf24103f4cd4ab01b5d9c55f9b2995",
-    "@sanity/client": "^7.0.0",
+    "@sanity/client": "^7.1.0",
     "@sentry/node": "^8.54.0",
     "@sentry/profiling-node": "^8.54.0",
     "contracts": "workspace:*",
@@ -31,12 +31,12 @@
     "js-sha3": "^0.9.3",
     "lowdb": "^7.0.1",
     "node-fetch": "^3.3.2",
-    "openai": "^4.96.2",
+    "openai": "^4.97.0",
     "replicate": "^1.0.1",
     "rxjs": "^7.8.2",
     "tsx": "^4.19.4",
     "uuid": "^11.1.0",
-    "viem": "2.28.4"
+    "viem": "2.29.0"
   },
   "engines": {
     "node": "^20"

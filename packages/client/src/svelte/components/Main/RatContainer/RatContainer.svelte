@@ -29,5 +29,7 @@
   .spacer {
     height: 100%;
     width: 100%;
+    background-image: url("/images/texture2.jpg");
+    background-size: 100px;
   }
 </style>
