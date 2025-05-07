@@ -10,6 +10,7 @@
 import { PANE, RAT_CONTAINER, ROOM_CONTAINER } from "./enums"
 import { quadInOut } from "svelte/easing"
 import { Tween } from "svelte/motion"
+import { get } from "svelte/store"
 import * as uiStores from "@modules/ui/stores"
 
 export const ROUTES = [
@@ -130,12 +131,21 @@ export const getUIState = () => {
    * When combining stores and $state calls, it can be weird to figure out which is which.
    */
   const preview = (id: string, mine = false) => {
-    if (mine) {
-      uiStores.myPreviewId.set(id)
-      previewingPane = PANE.ROOM_CONTAINER
+    const go = () => {
+      if (mine) {
+        uiStores.myPreviewId.set(id)
+        previewingPane = PANE.ROOM_CONTAINER
+      } else {
+        uiStores.previewId.set(id)
+        previewingPane = PANE.ROOM_CONTAINER
+      }
+    }
+
+    if (get(uiStores.myPreviewId) || get(uiStores.previewId)) {
+      back(!!get(uiStores.myPreviewId))
+      setTimeout(go, 400)
     } else {
-      uiStores.previewId.set(id)
-      previewingPane = PANE.ROOM_CONTAINER
+      go()
     }
   }
 
