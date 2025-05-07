@@ -13,6 +13,7 @@
   import { publicNetwork } from "@modules/network"
   import { loadData } from "@modules/content/sanity"
   import { queries } from "@modules/content/sanity/groq"
+  import { renderSafeString } from "@modules/utils"
 
   import LiquidateRoom from "@components/Main/RoomContainer/YourRooms/LiquidateRoom.svelte"
   import RoomStats from "@components/Main/Shared/RoomStats/RoomStats.svelte"
@@ -134,7 +135,7 @@
       <!-- Room prompt -->
       <div class="room-prompt">
         <div class="content">
-          {room.roomPrompt}
+          {renderSafeString(room.roomPrompt)}
         </div>
       </div>
 

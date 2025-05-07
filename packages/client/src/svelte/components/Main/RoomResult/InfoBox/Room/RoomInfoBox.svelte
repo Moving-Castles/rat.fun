@@ -2,6 +2,7 @@
   import { frozenRoom } from "@components/Main/RoomResult/state.svelte"
   import { staticContent, lastUpdated, urlFor } from "@modules/content"
   import type { Hex } from "viem"
+  import { renderSafeString } from "@modules/utils"
 
   let { roomId }: { roomId: Hex } = $props()
 
@@ -44,7 +45,9 @@
     </div>
     <!-- PROMPT -->
     <div class="column double">
-      <div class="room-description">{$frozenRoom.roomPrompt}</div>
+      <div class="room-description">
+        {renderSafeString($frozenRoom.roomPrompt)}
+      </div>
     </div>
   {/if}
 </div>

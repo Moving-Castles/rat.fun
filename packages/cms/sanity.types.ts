@@ -77,7 +77,9 @@ export type Outcome = {
   title?: string
   worldAddress?: string
   playerId?: string
+  playerName?: string
   roomId?: string
+  roomIndex?: number
   ratId?: string
   ratName?: string
   log?: Array<{

@@ -1,6 +1,8 @@
 import type { ActivePrompts, Outcome as OutcomeDoc, Room as RoomDoc, Prompt } from "@sanity-types"
 import type { Rat, Room } from "@routes/room/enter/types";
 import type { CorrectionReturnValue, OutcomeReturnValue } from '@modules/llm/types'
+import { getPlayerName } from "@modules/mud/getOnchainData"
+import { components } from "@modules/mud/initMud"
 
 import { loadData } from "@modules/cms/sanity"
 import { queries } from "@modules/cms/groq"
@@ -151,6 +153,8 @@ export async function writeOutcomeToCMS(
   try {
     const outcomeID = uuidv4()
 
+    const playerName = getPlayerName(playerId, components.Name)
+
     const newOutcomeDoc: NewOutcomeDoc = {
       _type: "outcome",
       title: outcomeID,
@@ -158,6 +162,7 @@ export async function writeOutcomeToCMS(
       worldAddress: worldAddress,
       playerId: playerId,
       roomId: room.id,
+      roomIndex: Number(room.index),
       log: createOutcomeEvents(events),
       ratId: rat.id,
       ratName: rat.name,
@@ -167,6 +172,7 @@ export async function writeOutcomeToCMS(
       ratValue: newRatValue,
       ratValueChange: ratValueChange,
       outcomeMessage: message,
+      playerName: playerName,
       slug: {
         _type: "slug",
         current: outcomeID,

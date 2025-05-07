@@ -26,9 +26,23 @@ export default {
             validation: (Rule: any) => Rule.required()
         },
         {
+            title: 'Player name',
+            name: 'playerName',
+            type: 'string',
+            readOnly: true,
+            validation: (Rule: any) => Rule.required()
+        },
+        {
             title: 'Room ID',
             name: 'roomId',
             type: 'string',
+            readOnly: true,
+            validation: (Rule: any) => Rule.required()
+        },
+        {
+            title: 'Room Index',
+            name: 'roomIndex',
+            type: 'number',
             readOnly: true,
             validation: (Rule: any) => Rule.required()
         },

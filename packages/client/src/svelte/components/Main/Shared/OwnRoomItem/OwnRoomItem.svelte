@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Hex } from "viem"
   import { getUIState } from "@modules/ui/state.svelte"
-  import { blocksToReadableTime } from "@modules/utils"
+  import { blocksToReadableTime, renderSafeString } from "@modules/utils"
   import { blockNumber } from "@modules/network"
   import { gameConfig } from "@modules/state/base/stores"
 
@@ -55,7 +55,7 @@
       <!-- PROMPT -->
       <div class="room-prompt">
         <div class="content">
-          {room.roomPrompt}
+          {renderSafeString(room.roomPrompt)}
         </div>
       </div>
     </div>
