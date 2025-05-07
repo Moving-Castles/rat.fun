@@ -8,46 +8,48 @@
 </script>
 
 <div class="operator-bar">
-  <!-- PLAYER STATS -->
-  {#if $player}
-    <div class="player-stats">
-      <!-- NAME -->
-      <div class="stat-item">
+  <div class="operator-track">
+    <!-- PLAYER STATS -->
+    {#if $player}
+      <div class="player-stats">
+        <!-- NAME -->
+        <div class="stat-item">
+          <div
+            use:tippy={{
+              content: `${$player.name}: This is you, an operator of the firm`,
+              placement: "bottom",
+            }}
+            class="inner-wrapper operator"
+          >
+            <div class="label">Operator:</div>
+            <div class="value">{$player.name}</div>
+          </div>
+        </div>
+        <!-- BALANCE -->
         <div
           use:tippy={{
-            content: `${$player.name}: This is you, an operator of the firm`,
+            content: `This is available funds in your operator wallet, spend wisely`,
             placement: "bottom",
           }}
-          class="inner-wrapper operator"
+          class="stat-item"
         >
-          <div class="label">Operator:</div>
-          <div class="value">{$player.name}</div>
+          <div class="inner-wrapper balance">
+            <div class="label">Balance:</div>
+            <div class="value">${$player?.balance ?? 0}</div>
+          </div>
         </div>
+        <!-- HIGHSCORE -->
+        <button
+          class="stat-item highscore"
+          onclick={() => (showHighscore = true)}
+        >
+          <div class="inner-wrapper">
+            <div class="label">HighScore</div>
+          </div>
+        </button>
       </div>
-      <!-- BALANCE -->
-      <div
-        use:tippy={{
-          content: `This is available funds in your operator wallet, spend wisely`,
-          placement: "bottom",
-        }}
-        class="stat-item"
-      >
-        <div class="inner-wrapper balance">
-          <div class="label">Balance:</div>
-          <div class="value">${$player?.balance ?? 0}</div>
-        </div>
-      </div>
-      <!-- HIGHSCORE -->
-      <button
-        class="stat-item highscore"
-        onclick={() => (showHighscore = true)}
-      >
-        <div class="inner-wrapper">
-          <div class="label">HighScore</div>
-        </div>
-      </button>
-    </div>
-  {/if}
+    {/if}
+  </div>
 </div>
 
 {#snippet content()}
@@ -61,12 +63,19 @@
 <style lang="scss">
   .operator-bar {
     width: 100%;
+    max-width: 100%;
     border-bottom: var(--default-border-style);
     display: flex;
     justify-content: space-between;
     height: var(--operator-bar-height);
     background: var(--black);
     user-select: none;
+    overflow-y: hidden;
+    overflow-x: scroll;
+
+    .operator-track {
+      width: 100%;
+    }
 
     .player-stats {
       display: flex;

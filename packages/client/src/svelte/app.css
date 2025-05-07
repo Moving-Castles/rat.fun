@@ -29,8 +29,8 @@
   --corporate-background: #bebebe;
   --corporate-foreground: #000000;
 
-  --game-window-width: min(100vw, 1920px);
-  --game-window-height: 100vh;
+  --game-window-width: calc(min(100vw, 1920px) - 20px);
+  --game-window-height: calc(100vh - 20px);
 
   /* * * * * * * * * * * * * *
   * Layout

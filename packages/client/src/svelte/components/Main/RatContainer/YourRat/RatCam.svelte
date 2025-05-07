@@ -32,8 +32,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    align-self: flex-end;
     position: relative;
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 1;
     padding: 5px;
   }
 
@@ -46,9 +47,9 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
     height: 100%;
     z-index: 1;
+    aspect-ratio: 1 / 1;
 
     img {
       width: 100%;

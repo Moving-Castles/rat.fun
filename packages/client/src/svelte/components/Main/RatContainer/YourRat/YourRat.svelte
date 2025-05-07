@@ -11,32 +11,34 @@
 </script>
 
 <div class="your-rat">
-  {#if $player?.ownedRat}
-    <div class="your-rat-top">
-      <div class="rat-main">
-        <!-- Info -->
-        <div class="rat-info">
-          <RatInfo />
+  <div class="your-rat-track">
+    {#if $player?.ownedRat}
+      <div class="your-rat-top">
+        <div class="rat-main">
+          <!-- Info -->
+          <div class="rat-info">
+            <RatInfo />
+          </div>
+          <!-- Cam -->
+          <div class="rat-cam-container">
+            <RatCam />
+          </div>
         </div>
-        <!-- Cam -->
-        <div class="rat-cam-container">
-          <RatCam />
+        <!-- Inventory -->
+        <div class="rat-inventory">
+          <RatInventory />
+        </div>
+        <!-- <FloorProgress /> -->
+        <!-- Liquidate -->
+        <div class="rat-liquidate">
+          <LiquidateRat />
         </div>
       </div>
-      <!-- Inventory -->
-      <div class="rat-inventory">
-        <RatInventory />
-      </div>
-      <!-- <FloorProgress /> -->
-      <!-- Liquidate -->
-      <div class="rat-liquidate">
-        <LiquidateRat />
-      </div>
-    </div>
-    <!-- Bottom -->
-  {:else}
-    <DeployRat />
-  {/if}
+      <!-- Bottom -->
+    {:else}
+      <DeployRat />
+    {/if}
+  </div>
 </div>
 
 <style lang="scss">
@@ -44,6 +46,12 @@
     display: flex;
     flex-flow: column nowrap;
     height: 440px;
+    width: 100%;
+    overflow: hidden;
+
+    .your-rat-track {
+      width: 100%;
+    }
   }
 
   .your-rat-top {
@@ -51,6 +59,7 @@
     flex-direction: column;
     flex-shrink: 0;
     height: 440px;
+    width: 100%;
   }
 
   .rat-main {
@@ -59,10 +68,12 @@
     height: 100%;
     height: var(--rat-main-info-height);
     border-bottom: var(--default-border-style);
+    overflow: hidden;
 
     .rat-cam-container {
       height: 100%;
       width: var(--rat-main-cam-width);
+      overflow: hidden;
     }
 
     .rat-info {

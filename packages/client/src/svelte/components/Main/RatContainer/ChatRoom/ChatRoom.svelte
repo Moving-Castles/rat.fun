@@ -9,7 +9,6 @@
   import ChatMessage from "./ChatMessage.svelte"
   import ChatHeader from "./ChatHeader.svelte"
 
-  let clientHeight = $state(0)
   let value = $state("")
   let scrollElement = $state<null | HTMLElement>(null)
   let suppressSound = $state(true)
@@ -40,7 +39,7 @@
   }
 </script>
 
-<div bind:clientHeight class="chat-window">
+<div class="chat-window">
   <ChatHeader />
   <!-- Chat scroll -->
   <div bind:this={scrollElement} class="chat-scroll">
@@ -68,7 +67,7 @@
 
 <style lang="scss">
   .chat-window {
-    height: calc(var(--game-window-height) - 80px - 440px);
+    height: 100%;
     display: flex;
     flex-flow: column nowrap;
     position: relative;
@@ -79,7 +78,7 @@
     .chat-scroll {
       display: flex;
       flex-flow: column nowrap;
-      height: calc(var(--game-window-height) - 80px - 504px);
+      height: calc(100% - 130px);
       overflow-y: scroll;
       padding: 8px;
       gap: 4px;
@@ -98,6 +97,8 @@
       z-index: 1000;
       width: 100%;
       padding: 10px;
+      position: sticky;
+      bottom: 0;
 
       .chat-submit {
         height: 100%;

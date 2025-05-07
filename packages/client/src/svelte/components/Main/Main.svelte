@@ -117,10 +117,10 @@
 <style lang="scss">
   .main {
     position: fixed;
-    top: 10px;
-    left: 10px;
-    height: calc(var(--game-window-height) - 20px);
-    width: calc(var(--game-window-width) - 20px);
+    top: 0;
+    left: 0;
+    height: var(--game-window-height);
+    width: var(--game-window-width);
     overflow: hidden;
     border: var(--default-border-style);
     background: var(--background);
@@ -139,7 +139,7 @@
 
   .main-area {
     width: 100%;
-    height: calc(var(--game-window-height) - 80px);
+    height: var(--game-window-height);
     display: grid;
     grid-template-columns: calc(var(--game-window-width) * 0.44) 1fr calc(
         var(--game-window-width) * 0.44
