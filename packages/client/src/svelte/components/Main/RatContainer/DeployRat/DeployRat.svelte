@@ -78,7 +78,8 @@
   .image-container {
     display: flex;
     flex-flow: column nowrap;
-    gap: 20px;
+    // gap: 20px;
+    padding: 20px;
 
     img {
       width: 100%;
