@@ -3,7 +3,7 @@
 # Change to the parent directory to use its node_modules
 cd "$(dirname "$0")/.."
 
-JSON_FILE_PATH=create-rooms/room-definitions/playtest-2.json
+JSON_FILE_PATH=create-rooms/room-definitions/playtest-3.json
 API_URL=http://localhost:3131/room/create
 
 # Run the script with ts-node-esm and proper loader configuration
