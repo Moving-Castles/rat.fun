@@ -29,16 +29,20 @@
 <div class="room-container">
   <div class="pane-switch">
     <button
-      onclick={() =>
-        panes.set(enums.PANE.ROOM_CONTAINER, enums.ROOM_CONTAINER.ALL_ROOMS)}
+      onclick={() => {
+        panes.set(enums.PANE.ROOM_CONTAINER, enums.ROOM_CONTAINER.ALL_ROOMS)
+        rooms.back()
+      }}
       class:selected={panes.roomContainer === enums.ROOM_CONTAINER.ALL_ROOMS}
       class="pane-switch-item"
     >
       ALL ROOMS
     </button>
     <button
-      onclick={() =>
-        panes.set(enums.PANE.ROOM_CONTAINER, enums.ROOM_CONTAINER.YOUR_ROOMS)}
+      onclick={() => {
+        panes.set(enums.PANE.ROOM_CONTAINER, enums.ROOM_CONTAINER.YOUR_ROOMS)
+        rooms.back(true)
+      }}
       class:selected={[
         enums.ROOM_CONTAINER.YOUR_ROOMS,
         enums.ROOM_CONTAINER.CREATE_ROOM,
