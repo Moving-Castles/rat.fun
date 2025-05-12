@@ -13,7 +13,8 @@ import { writeRoomToCMS, CMSError } from "@modules/cms"
 import { systemCalls, network, components } from "@modules/mud/initMud"
 
 // Image generation
-import { generateImage } from "@modules/image/generate"
+// Replicate
+import { generateImage } from "@modules/image-generation/replicate"
 
 // Signature
 import { getSenderId } from "@modules/signature"
