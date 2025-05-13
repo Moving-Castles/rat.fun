@@ -2,7 +2,6 @@ import { OffChainMessage } from '@modules/websocket/types';
 import { v4 as uuidv4 } from 'uuid';
 import { getSenderId } from '@modules/signature';
 import { getPlayerName, getRatId, getRatName  } from '@modules/mud/getOnchainData';
-import { components } from '@modules/mud/initMud';
 import { broadcast } from '@modules/websocket';
 
 interface WebSocketInterface {
@@ -48,7 +47,7 @@ async function handleChatMessage(message: OffChainMessage): Promise<void> {
   }
   
   const senderId = getSenderId(message.signature);
-  const playerName = getPlayerName(senderId, components.Name);
+  const playerName = getPlayerName(senderId);
 
   const newMessage: OffChainMessage = {
     id: uuidv4(),
@@ -74,9 +73,9 @@ async function handleRatDeploy(message: OffChainMessage): Promise<void> {
     return;
   }
 
-  const playerName = getPlayerName(senderId, components.Name);
-  const ratId = getRatId(senderId, components.OwnedRat);
-  const ratName = getRatName(ratId, components.Name);
+  const playerName = getPlayerName(senderId);
+  const ratId = getRatId(senderId);
+  const ratName = getRatName(ratId);
 
   const newMessage: OffChainMessage = {
     id: uuidv4(),
@@ -102,7 +101,7 @@ async function handleRatLiquidate(message: OffChainMessage): Promise<void> {
     return;
   }
 
-  const playerName = getPlayerName(senderId, components.Name);
+  const playerName = getPlayerName(senderId);
 
   const newMessage: OffChainMessage = {
     id: uuidv4(),
@@ -128,7 +127,7 @@ async function handleRoomLiquidation(message: OffChainMessage): Promise<void> {
     return;
   }
 
-  const playerName = getPlayerName(senderId, components.Name);
+  const playerName = getPlayerName(senderId);
 
   const newMessage: OffChainMessage = {
     id: uuidv4(),

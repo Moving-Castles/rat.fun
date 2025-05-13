@@ -3,6 +3,7 @@ import * as Sentry from '@sentry/node';
 
 // Import error classes
 import { SystemCallError, ContractCallError } from '@modules/mud/createSystemCalls';
+import { OnchainDataError } from '@modules/mud/getOnchainData/getCreateRoomData';
 
 /**
  * Handle errors in the Fastify route handler for room creation
@@ -29,7 +30,14 @@ export function handleError(error: unknown, reply: FastifyReply): FastifyReply {
       message: error.message 
     });
   }
-  
+
+  if (error instanceof OnchainDataError) {
+    return reply.status(500).send({ 
+      error: 'Onchain data error', 
+      code: error.code,
+      message: error.message 
+    });
+  }
   // Generic error handling
   return reply.status(500).send({ 
     error: 'Internal server error',

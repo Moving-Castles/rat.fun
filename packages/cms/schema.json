@@ -723,6 +723,13 @@
         },
         "optional": true
       },
+      "ownerName": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
       "prompt": {
         "type": "objectAttribute",
         "value": {

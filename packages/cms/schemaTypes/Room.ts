@@ -23,6 +23,12 @@
             // validation: (Rule: any) => Rule.required()
         },
         {
+            title: 'Owner name',
+            name: 'ownerName',
+            type: 'string',
+            // validation: (Rule: any) => Rule.required()
+        },
+        {
             title: 'Prompt',
             name: 'prompt',
             type: 'text',

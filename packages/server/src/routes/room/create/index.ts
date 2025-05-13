@@ -10,7 +10,8 @@ dotenv.config()
 import { writeRoomToCMS, CMSError } from "@modules/cms"
 
 // MUD
-import { systemCalls, network, components } from "@modules/mud/initMud"
+import { systemCalls, network } from "@modules/mud/initMud"
+import { getCreateRoomData } from "@modules/mud/getOnchainData/getCreateRoomData"
 
 // Image generation
 // Replicate
@@ -45,18 +46,19 @@ async function routes(fastify: FastifyInstance) {
         // Recover player address from signature and convert to MUD bytes32 format
         const playerId = getSenderId(signature)
 
-        // TODO: Check if player has enough balance to create a room
+        // Get onchain data
+        const { gameConfig, player } = await getCreateRoomData(playerId)
 
-        // Check name and prompt lengths
-        validateInputData(roomPrompt)
+        // Validate data
+        validateInputData(gameConfig, roomPrompt, player)
 
         // We need to generate a unique ID here
         // Doing it onchain does not allow us to use it to connect the room to the image
-        const roomID = generateRandomBytes32()
+        const roomId = generateRandomBytes32()
 
         // Create room onchain
         console.time("–– Chain call")
-        await systemCalls.createRoom(playerId, roomID, roomPrompt)
+        await systemCalls.createRoom(playerId, roomId, roomPrompt)
         console.timeEnd("–– Chain call")
 
         // Generate image
@@ -70,7 +72,7 @@ async function routes(fastify: FastifyInstance) {
           const worldAddress = resolvedNetwork.worldContract?.address ?? "0x0"
 
           // Write the document
-          await writeRoomToCMS(worldAddress, roomID, roomPrompt, playerId, imageBuffer)
+          await writeRoomToCMS(worldAddress, roomId, roomPrompt, player, imageBuffer)
           
         } catch (error) {
           // Handle CMS-specific errors
@@ -86,7 +88,7 @@ async function routes(fastify: FastifyInstance) {
         console.timeEnd("–– Image generation")
 
         // Broadcast room creation message
-        await broadcast(createRoomCreationMessage(roomID, playerId, components.Name, components.Index));
+        await broadcast(createRoomCreationMessage(roomId, player));
 
         reply.send({
           success: true,

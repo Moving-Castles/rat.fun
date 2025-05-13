@@ -4,3 +4,4 @@ export const SANITY_ID = 'kupagww3'
 export const ANTHROPIC_MODEL = "claude-3-7-sonnet-latest"
 export const DEEPSEEK_MODEL = ""
 export const PORT = 3131;
+export const GAME_CONFIG_ID = "0x"

@@ -1,19 +1,16 @@
-import type { Rat, Room } from "@routes/room/enter/types";
+import type { Rat, Room, Player } from "@modules/types";
 import type { OffChainMessage } from "@modules/websocket/types";
+import { getRoomIndex } from "@modules/mud/getOnchainData";
 import type { OutcomeReturnValue } from "@modules/llm/types";
-import type { ClientComponents } from "@modules/mud/createClientComponents";
-import { getPlayerName, getRoomIndex } from "@modules/mud/getOnchainData";
 import { v4 as uuidv4 } from 'uuid';
 
-export function createOutcomeMessage(playerId: string, Name: ClientComponents['Name'], rat: Rat, newRatHealth: number, room: Room, validatedOutcome: OutcomeReturnValue): OffChainMessage {
-    const playerName = getPlayerName(playerId, Name)
-
+export function createOutcomeMessage(player: Player, rat: Rat, newRatHealth: number, room: Room, validatedOutcome: OutcomeReturnValue): OffChainMessage {
     // Death
     if (newRatHealth == 0) {
         return {
             id: uuidv4(),
             topic: 'rat__death',
-            playerName: playerName,
+            playerName: player.name,
             ratName: rat.name,
             roomId: room.id,
             roomIndex: Number(room.index),
@@ -21,7 +18,6 @@ export function createOutcomeMessage(playerId: string, Name: ClientComponents['N
             timestamp: Date.now()
         }
     }
-
 
     // Outcome
     const addedItems = (validatedOutcome?.itemChanges ?? []).filter(item => item.type ==  "add").map(item => { return `${item.name} ($${item.value})` }).join(', ')
@@ -72,7 +68,7 @@ export function createOutcomeMessage(playerId: string, Name: ClientComponents['N
         id: uuidv4(),
         topic: 'room__outcome',
         message,
-        playerName: playerName,
+        playerName: player.name,
         roomId: room.id,
         roomIndex: Number(room.index),
         ratName: rat.name,
@@ -80,15 +76,14 @@ export function createOutcomeMessage(playerId: string, Name: ClientComponents['N
     }
 }
 
-export function createRoomCreationMessage(roomId: string, playerId: string, Name: ClientComponents['Name'], Index: ClientComponents['Index']): OffChainMessage {
-    const playerName = getPlayerName(playerId, Name)
-    const roomIndex = getRoomIndex(roomId, Index)
+export function createRoomCreationMessage(roomId: string, player: Player): OffChainMessage {
+    const roomIndex = getRoomIndex(roomId)
 
     return {
         id: uuidv4(),
         topic: 'room__creation',
         message: "created a room",
-        playerName: playerName,
+        playerName: player.name,
         roomId: roomId,
         roomIndex: Number(roomIndex),
         timestamp: Date.now()

@@ -1,9 +1,11 @@
 import { FastifyInstance, FastifyRequest } from 'fastify';
 import { schema } from '@routes/room/enter/schema';
+
 import dotenv from 'dotenv';
 dotenv.config();
 
 import { EnterRoomBody } from '@routes/room/enter/types';
+import { EnterRoomData } from '@modules/types';
 
 // WebSocket
 import { broadcast } from '@modules/websocket';
@@ -18,14 +20,9 @@ import { getLLMClient } from '@modules/llm/anthropic';
 import { callModel } from '@modules/llm/anthropic/callModel';
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY as string;
 
-// Groq
-// import { getLLMClient } from '@modules/llm/groq';
-// import { callModel } from '@modules/llm/groq/callModel';
-// const GROQ_API_KEY = process.env.GROQ_API_KEY as string;
-
 // MUD
-import { getOnchainData } from '@modules/mud/getOnchainData';
-import { components, systemCalls, network } from '@modules/mud/initMud';
+import { getEnterRoomData } from '@modules/mud/getOnchainData/getEnterRoomData';
+import { systemCalls, network } from '@modules/mud/initMud';
 
 // Signature
 import { getSenderId } from '@modules/signature';
@@ -42,9 +39,6 @@ import { handleError } from './errorHandling';
 // Initialize LLM: Anthropic
 const llmClient = getLLMClient(ANTHROPIC_API_KEY);
 
-// Initialize LLM: Groq
-// const llmClient = getLLMClient(GROQ_API_KEY);
-
 const opts = { schema };  
 
 async function routes (fastify: FastifyInstance) {
@@ -56,19 +50,16 @@ async function routes (fastify: FastifyInstance) {
                 ratId,
             } = request.body;
 
-            // Get onchain data
-            console.time('–– Get on chain data');
-            const { room, rat } = getOnchainData(await network, components, ratId, roomId);
-            console.timeEnd('–– Get on chain data');
-
-            if(!room) {
-                throw new Error('Room not found');
-            }
-            
             // Recover player address from signature and convert to MUD bytes32 format
             const playerId = getSenderId(signature);
 
-            validateInputData(playerId, rat, room);
+            // Get onchain data
+            console.time('–– Get on chain data');
+            const { room, rat, player } = await getEnterRoomData(ratId, roomId, playerId) as Required<EnterRoomData>;
+            console.timeEnd('–– Get on chain data');
+
+            // Validate input data
+            validateInputData(player, rat, room);
 
             // Get system prompts from CMS
             console.time('–– CMS');
@@ -81,7 +72,7 @@ async function routes (fastify: FastifyInstance) {
             const eventResults = await callModel(llmClient, eventMessages, combinedSystemPrompt) as EventsReturnValue;
             console.timeEnd('–– Event LLM');
 
-            console.log('Event results:', eventResults);
+            // console.log('Event results:', eventResults);
 
             // Apply the outcome suggested by the LLM to the onchain state and get back the actual outcome.
             console.time('–– Chain');
@@ -95,7 +86,7 @@ async function routes (fastify: FastifyInstance) {
             } = await systemCalls.applyOutcome(rat, room, eventResults.outcome);
             console.timeEnd('–– Chain');
 
-            console.log('Validated outcome:', validatedOutcome);
+            // console.log('Validated outcome:', validatedOutcome);
 
             // The event log might now not reflect the actual outcome.
             // Run it through the LLM again to get the corrected event log.
@@ -104,10 +95,10 @@ async function routes (fastify: FastifyInstance) {
             const correctedEvents = await callModel(llmClient, correctionMessages, correctionSystemPrompt, 0) as CorrectionReturnValue;
             console.timeEnd('–– Correction LLM');
 
-            console.log('Corrected events:', correctedEvents);
+            // console.log('Corrected events:', correctedEvents);
 
             // Broadcast outcome message
-            const newMessage= createOutcomeMessage(playerId, components.Name, rat, newRatHealth, room, validatedOutcome);
+            const newMessage= createOutcomeMessage(player, rat, newRatHealth, room, validatedOutcome);
             await broadcast(newMessage);
 
             // Write outcome to CMS
@@ -117,7 +108,7 @@ async function routes (fastify: FastifyInstance) {
                 const resolvedNetwork = await network;
                 await writeOutcomeToCMS(
                     resolvedNetwork.worldContract?.address ?? "0x0",
-                    playerId, 
+                    player, 
                     room, 
                     rat,
                     newMessage.message as string,
