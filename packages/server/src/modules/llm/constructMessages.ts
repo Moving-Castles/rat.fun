@@ -1,5 +1,5 @@
 import { MessageParam } from '@anthropic-ai/sdk/resources';
-import { Rat, Room } from '@routes/room/enter/types'
+import { Rat, Room } from '@modules/types'
 import { LogEntry, OutcomeReturnValue } from './types';
 
 export function constructEventMessages(

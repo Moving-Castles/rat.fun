@@ -1,5 +1,5 @@
 import { OutcomeReturnValue, TraitChange, ItemChange } from "@modules/llm/types"
-import { Rat, Room,} from "@routes/room/enter/types"
+import { Rat, Room,} from "@modules/types"
 
 export function createOutcomeCallArgs(rat: Rat, room: Room, outcome: OutcomeReturnValue) {
     const healthChange = outcome?.healthChange?.amount ?? 0;

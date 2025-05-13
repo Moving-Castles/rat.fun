@@ -5,8 +5,8 @@
 
 import { OutcomeReturnValue } from "@modules/llm/types"
 import { SetupNetworkResult } from "./setupNetwork"
-import { Rat, Room } from "@routes/room/enter/types"
-import { getOnchainData } from "./getOnchainData"
+import { Rat, Room } from "@modules/types"
+import { getEnterRoomData } from "@modules/mud/getOnchainData/getEnterRoomData"
 import { createOutcomeCallArgs, updateOutcome } from "./outcome"
 import { getRoomValue, getRatValue } from "./value"
 
@@ -43,7 +43,7 @@ export function createSystemCalls(network: SetupNetworkResult) {
     try {
       const args = createOutcomeCallArgs(rat, room, outcome);
       
-      // // Fix for the linter error - check if worldContract has a write property
+      // Fix for the linter error - check if worldContract has a write property
       // if (!network.worldContract || typeof network.worldContract.write !== 'function') {
       //   throw new ContractCallError('World contract write method not available');
       // }
@@ -55,9 +55,7 @@ export function createSystemCalls(network: SetupNetworkResult) {
       // We get the new onchain state 
       // and update the outcome with the actual changes
       try {
-        const newOnChainData = getOnchainData(
-          network,
-          network.components,
+        const newOnChainData = await getEnterRoomData(
           rat.id,
           room.id
         );

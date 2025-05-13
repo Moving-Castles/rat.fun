@@ -1,6 +1,14 @@
-export function validateInputData(roomPrompt: string) {
-    // Check that the prompt is less than 1000 characters
-    if (roomPrompt.length < 1 || roomPrompt.length > 280) {
-        throw new Error('Room prompt must be between 1 and 280 characters.');
+import { Player, GameConfig } from "@modules/types";
+
+export function validateInputData(gameConfig: GameConfig, roomPrompt: string, player: Player) {
+
+    // Check if player has enough balance to create a room
+    if (player.balance < Number(gameConfig.roomCreationCost)) {
+        throw new Error('Not enough balance to create room.');
+    }
+
+    // Check that the is not empty and prompt is less than limit
+    if (roomPrompt.length < 1 || roomPrompt.length > gameConfig.maxRoomPromptLength) {
+        throw new Error(`Room prompt must be between 1 and ${gameConfig.maxRoomPromptLength} characters.`);
     }
 }

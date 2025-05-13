@@ -129,6 +129,7 @@ export type Room = {
   title?: string
   worldAddress?: string
   owner?: string
+  ownerName?: string
   prompt?: string
   image?: {
     asset?: {

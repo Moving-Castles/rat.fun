@@ -1,0 +1,208 @@
+import type { EnterRoomData, Trait, Item, GameConfig } from "@modules/types";
+import { getComponentValue, Entity } from "@latticexyz/recs";
+import { components, network } from "@modules/mud/initMud";
+import { GAME_CONFIG_ID } from "@config";
+
+// Custom error classes for better error handling
+export class OnchainDataError extends Error {
+  constructor(message: string, public code: string = 'ONCHAIN_DATA_ERROR') {
+    super(message);
+    this.name = 'OnchainDataError';
+  }
+}
+
+export class RatNotFoundError extends OnchainDataError {
+  constructor(ratId: string) {
+    super(`Rat with ID ${ratId} not found`, 'RAT_NOT_FOUND');
+    this.name = 'RatNotFoundError';
+  }
+}
+
+export class RoomNotFoundError extends OnchainDataError {
+  constructor(roomId: string) {
+    super(`Room with ID ${roomId} not found`, 'ROOM_NOT_FOUND');
+    this.name = 'RoomNotFoundError';
+  }
+}
+
+export class PlayerNotFoundError extends OnchainDataError {
+  constructor(playerId: string) {
+    super(`Player with ID ${playerId} not found`, 'PLAYER_NOT_FOUND');
+    this.name = 'PlayerNotFoundError';
+  }
+}
+
+export class GameConfigNotFoundError extends OnchainDataError {
+  constructor(gameConfigEntity: Entity) {
+    super(`Game config not found for entity ${gameConfigEntity}`, 'GAME_CONFIG_NOT_FOUND');
+    this.name = 'GameConfigNotFoundError';
+  }
+}
+
+export async function getEnterRoomData(ratId: string, roomId?: string, playerId?: string): Promise<EnterRoomData> {
+    try {
+        if (!ratId) {
+            throw new OnchainDataError('Rat ID is required');
+        }
+
+        const { Owner, Name, RoomPrompt, Dead, Traits, Health, Balance, Inventory, Index, GameConfig } = components;
+
+        const result = {} as EnterRoomData;
+
+        /////////////////
+        // RAT
+        /////////////////
+
+        const ratEntity = (await network).world.registerEntity({ id: ratId });
+
+        const ratOwner = getComponentValue(Owner, ratEntity)?.value;
+        const ratName = getComponentValue(Name, ratEntity)?.value;
+        
+        // Check if rat exists
+        if (!ratOwner && !ratName) {
+            throw new RatNotFoundError(ratId);
+        }
+
+        // Get rat data
+        const ratOwnerValue = (ratOwner ?? "") as string;
+        const ratNameValue = (ratName ?? "") as string;
+        const ratDead = (getComponentValue(Dead, ratEntity)?.value ?? false) as boolean;
+        const ratHealth = (getComponentValue(Health, ratEntity)?.value ?? 0) as number;
+        const ratBalance = (getComponentValue(Balance, ratEntity)?.value ?? 0) as number;
+        const ratInventory = (getComponentValue(Inventory, ratEntity)?.value ?? [""]) as string[];
+        const ratTraits = (getComponentValue(Traits, ratEntity)?.value ?? [""]) as string[];
+
+        const traitsObjects = constructTraitsObject(ratTraits);
+        const inventoryObjects = constructInventoryObject(ratInventory);
+
+        const ratStats = {
+            health: Number(ratHealth)
+        };
+
+        const rat = {
+            id: ratId,
+            name: ratNameValue,
+            traits: traitsObjects,
+            balance: Number(ratBalance),
+            inventory: inventoryObjects,
+            dead: ratDead,
+            owner: ratOwnerValue,
+            stats: ratStats,
+        };
+
+        result.rat = rat;
+
+        //////////////////
+        // ROOM
+        //////////////////
+
+        // Only get room data if roomId is provided
+        if (roomId) {
+            // Get room data
+            const roomEntity = (await network).world.registerEntity({ id: roomId });
+            
+            const roomPrompt = getComponentValue(RoomPrompt, roomEntity)?.value;
+            const roomIndex = (getComponentValue(Index, roomEntity)?.value ?? 0) as number;
+            
+            // Check if room exists
+            if (!roomPrompt) {
+                throw new RoomNotFoundError(roomId);
+            }
+            
+            const roomPromptValue = (roomPrompt ?? "") as string;
+            const roomBalance = (getComponentValue(Balance, roomEntity)?.value ?? 0) as number;
+
+            const room = {
+                id: roomId,
+                prompt: roomPromptValue,
+                balance: Number(roomBalance),
+                index: roomIndex
+            };
+
+            result.room = room;
+        }
+
+        //////////////////
+        // PLAYER
+        //////////////////
+
+        // Only get player data if playerId is provided
+        if (playerId) {
+            const playerEntity = (await network).world.registerEntity({ id: playerId });
+            
+            const playerName = getComponentValue(Name, playerEntity)?.value;
+            const playerBalance = (getComponentValue(Balance, playerEntity)?.value ?? 0) as number;
+
+            // Check if player exists
+            if (!playerName) {
+                throw new PlayerNotFoundError(playerId);
+            }
+
+            result.player = {
+                id: playerId,
+                name: playerName,
+                balance: Number(playerBalance),
+            };
+        }
+
+        /////////////////
+        // GAME CONFIG
+        /////////////////
+
+        const gameConfigEntity = (await network).world.registerEntity({ id: GAME_CONFIG_ID });
+
+        const gameConfig = getComponentValue(GameConfig, gameConfigEntity) as GameConfig;
+
+        // Check if game config exists
+        if (!gameConfig) {
+            throw new GameConfigNotFoundError(gameConfigEntity);
+        }
+
+        result.gameConfig = gameConfig;
+
+        /////////////////
+        // RETURN RESULT
+        /////////////////
+        return result;
+    } catch (error) {
+        // If it's already one of our custom errors, rethrow it
+        if (error instanceof OnchainDataError) {
+            throw error;
+        }
+        
+        // Otherwise, wrap it in our custom error
+        throw new OnchainDataError(`Error fetching onchain data: ${error instanceof Error ? error.message : String(error)}`);
+    }
+}
+
+function constructTraitsObject(ratTraits: string[]) {
+    const { Name, Value } = components;
+    const traitsObject: Trait[] = [];
+    for (let i = 0; i < ratTraits.length; i++) {
+        if (!ratTraits[i]) continue;
+        traitsObject.push(
+            {
+                id: ratTraits[i],
+                name: (getComponentValue(Name, ratTraits[i] as Entity)?.value ?? "") as string,
+                value: Number(getComponentValue(Value, ratTraits[i] as Entity)?.value ?? 0) as number
+            }
+        );
+    }
+    return traitsObject;
+}
+
+function constructInventoryObject(ratInventory: string[]) {
+    const { Name, Value } = components;
+    const inventoryObject: Item[] = [];
+    for (let i = 0; i < ratInventory.length; i++) {
+        if (!ratInventory[i]) continue;
+        inventoryObject.push(
+            {
+                id: ratInventory[i],
+                name: (getComponentValue(Name, ratInventory[i] as Entity)?.value ?? "") as string,
+                value: Number(getComponentValue(Value, ratInventory[i] as Entity)?.value ?? 0) as number
+            }
+        );
+    }
+    return inventoryObject;
+}

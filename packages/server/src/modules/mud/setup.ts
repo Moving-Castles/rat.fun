@@ -9,7 +9,7 @@ import { setupNetwork } from "./setupNetwork";
 export type SetupResult = Awaited<ReturnType<typeof setup>>;
 
 export async function setup(privateKey: string, chainId: number): Promise<{
-  network: ReturnType<typeof setupNetwork>;
+  network: Awaited<ReturnType<typeof setupNetwork>>;
   components: ReturnType<typeof createClientComponents>;
   systemCalls: ReturnType<typeof createSystemCalls>;
 }> {

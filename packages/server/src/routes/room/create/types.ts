@@ -3,9 +3,3 @@ export type CreateRoomBody = {
     roomPrompt: string;
     roomLevel: number;
 }
-
-export type Room = {
-    id: string,
-    prompt: string;
-    balance: number;
-}
