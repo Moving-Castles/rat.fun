@@ -19,14 +19,4 @@ library LibItem {
     // Value of item is always positive
     Value.set(itemId, LibUtils.abs(_item.value));
   }
-
-  /**
-   * @notice Destroy an item
-   * @param _itemId The id of the item
-   */
-  function destroyItem(bytes32 _itemId) internal {
-    EntityType.deleteRecord(_itemId);
-    Name.deleteRecord(_itemId);
-    Value.deleteRecord(_itemId);
-  }
 }

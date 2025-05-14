@@ -57,7 +57,7 @@ contract ManagerSystemTest is BaseTest {
     setInitialBalance(bobId);
 
     prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(bobId, bytes32(0), "test room");
+    bytes32 roomId = world.ratroom__createRoom(bobId, LevelList.getItem(0), bytes32(0), "test room");
     vm.stopPrank();
 
     // As admin
@@ -87,7 +87,7 @@ contract ManagerSystemTest is BaseTest {
     setInitialBalance(bobId);
 
     prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(bobId, bytes32(0), "test room");
+    bytes32 roomId = world.ratroom__createRoom(bobId, LevelList.getItem(0), bytes32(0), "test room");
     vm.stopPrank();
 
     // As admin
@@ -118,7 +118,7 @@ contract ManagerSystemTest is BaseTest {
     setInitialBalance(bobId);
 
     prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(bobId, bytes32(0), "test room");
+    bytes32 roomId = world.ratroom__createRoom(bobId, LevelList.getItem(0), bytes32(0), "test room");
     vm.stopPrank();
 
     // As admin
@@ -158,7 +158,7 @@ contract ManagerSystemTest is BaseTest {
     setInitialBalance(bobId);
 
     prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(bobId, bytes32(0), "test room");
+    bytes32 roomId = world.ratroom__createRoom(bobId, LevelList.getItem(0), bytes32(0), "test room");
     vm.stopPrank();
 
     // As admin
@@ -198,7 +198,7 @@ contract ManagerSystemTest is BaseTest {
     setInitialBalance(bobId);
 
     prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(bobId, bytes32(0), "test room");
+    bytes32 roomId = world.ratroom__createRoom(bobId, LevelList.getItem(0), bytes32(0), "test room");
     vm.stopPrank();
 
     // As admin
@@ -240,7 +240,7 @@ contract ManagerSystemTest is BaseTest {
     setInitialBalance(bobId);
 
     prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(bobId, bytes32(0), "test room");
+    bytes32 roomId = world.ratroom__createRoom(bobId, LevelList.getItem(0), bytes32(0), "test room");
     vm.stopPrank();
 
     // Traits to add
@@ -334,7 +334,7 @@ contract ManagerSystemTest is BaseTest {
     setInitialBalance(bobId);
 
     prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(bobId, bytes32(0), "test room");
+    bytes32 roomId = world.ratroom__createRoom(bobId, LevelList.getItem(0), bytes32(0), "test room");
     vm.stopPrank();
 
     // Trait to add
@@ -372,7 +372,7 @@ contract ManagerSystemTest is BaseTest {
     setInitialBalance(bobId);
 
     prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(bobId, bytes32(0), "test room");
+    bytes32 roomId = world.ratroom__createRoom(bobId, LevelList.getItem(0), bytes32(0), "test room");
     vm.stopPrank();
 
     // Trait to add
@@ -410,7 +410,7 @@ contract ManagerSystemTest is BaseTest {
     setInitialBalance(bobId);
 
     prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(bobId, bytes32(0), "test room");
+    bytes32 roomId = world.ratroom__createRoom(bobId, LevelList.getItem(0), bytes32(0), "test room");
     vm.stopPrank();
 
     // Trait to add
@@ -445,7 +445,7 @@ contract ManagerSystemTest is BaseTest {
     setInitialBalance(bobId);
 
     prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(bobId, bytes32(0), "test room");
+    bytes32 roomId = world.ratroom__createRoom(bobId, LevelList.getItem(0), bytes32(0), "test room");
     vm.stopPrank();
 
     // Trait to add
@@ -495,7 +495,7 @@ contract ManagerSystemTest is BaseTest {
     setInitialBalance(bobId);
 
     prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(bobId, bytes32(0), "test room");
+    bytes32 roomId = world.ratroom__createRoom(bobId, LevelList.getItem(0), bytes32(0), "test room");
     vm.stopPrank();
 
     // Trait to add
@@ -614,7 +614,7 @@ contract ManagerSystemTest is BaseTest {
     setInitialBalance(bobId);
 
     prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(bobId, bytes32(0), "test room");
+    bytes32 roomId = world.ratroom__createRoom(bobId, LevelList.getItem(0), bytes32(0), "test room");
     vm.stopPrank();
 
     // Item to add
@@ -652,7 +652,7 @@ contract ManagerSystemTest is BaseTest {
     setInitialBalance(bobId);
 
     prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(bobId, bytes32(0), "test room");
+    bytes32 roomId = world.ratroom__createRoom(bobId, LevelList.getItem(0), bytes32(0), "test room");
     vm.stopPrank();
 
     // Item to add
@@ -692,7 +692,7 @@ contract ManagerSystemTest is BaseTest {
     setInitialBalance(bobId);
 
     prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(bobId, bytes32(0), "test room");
+    bytes32 roomId = world.ratroom__createRoom(bobId, LevelList.getItem(0), bytes32(0), "test room");
     vm.stopPrank();
 
     // Item to add
@@ -727,7 +727,7 @@ contract ManagerSystemTest is BaseTest {
     setInitialBalance(bobId);
 
     prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(bobId, bytes32(0), "test room");
+    bytes32 roomId = world.ratroom__createRoom(bobId, LevelList.getItem(0), bytes32(0), "test room");
     vm.stopPrank();
 
     // Item to add
@@ -782,7 +782,7 @@ contract ManagerSystemTest is BaseTest {
     uint256 initialBalance = setInitialBalance(bobId);
 
     prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(bobId, bytes32(0), "test room");
+    bytes32 roomId = world.ratroom__createRoom(bobId, LevelList.getItem(0), bytes32(0), "test room");
     vm.stopPrank();
 
     // As admin
@@ -815,7 +815,7 @@ contract ManagerSystemTest is BaseTest {
     setInitialBalance(bobId);
 
     prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(bobId, bytes32(0), "test room");
+    bytes32 roomId = world.ratroom__createRoom(bobId, LevelList.getItem(0), bytes32(0), "test room");
     vm.stopPrank();
 
     // As admin
@@ -856,7 +856,7 @@ contract ManagerSystemTest is BaseTest {
     setInitialBalance(bobId);
 
     prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(bobId, bytes32(0), "test room");
+    bytes32 roomId = world.ratroom__createRoom(bobId, LevelList.getItem(0), bytes32(0), "test room");
     vm.stopPrank();
 
     // As admin
@@ -896,7 +896,7 @@ contract ManagerSystemTest is BaseTest {
     setInitialBalance(bobId);
 
     prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(bobId, bytes32(0), "test room");
+    bytes32 roomId = world.ratroom__createRoom(bobId, LevelList.getItem(0), bytes32(0), "test room");
     vm.stopPrank();
 
     // As admin

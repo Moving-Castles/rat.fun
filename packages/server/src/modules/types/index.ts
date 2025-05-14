@@ -25,6 +25,7 @@ export type Player = {
     id: string;
     name: string;
     balance: number;
+    visitedLevels: string[];
 }
 
 export type Trait = {

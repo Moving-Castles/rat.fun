@@ -1,11 +1,12 @@
 export const schema =     {
     body: {
       type: 'object',
-      required: ['signature', 'roomPrompt'],
       properties: {
         signature: { type: 'string', description: 'The cryptographic signature for validation' },
+        levelId: { type: 'string', description: 'The id of the level to create the room on' },
         roomPrompt: { type: 'string', description: 'The prompt for the room' }
-      }
+      },
+      required: ['signature', 'roomPrompt', 'levelId']
     },
     response: {
       200: {

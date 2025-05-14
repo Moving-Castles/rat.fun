@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
-import { Owner, OwnedRat, Dead, Index, Inventory, GameConfig, Balance } from "../codegen/index.sol";
+import { Owner, OwnedRat, Dead, Index, Inventory, GameConfig, Balance, VisitedLevels, Level } from "../codegen/index.sol";
 import { System } from "@latticexyz/world/src/System.sol";
 import { LibUtils, LibRat, LibItem } from "../libraries/Libraries.sol";
 
@@ -61,8 +61,5 @@ contract RatSystem is System {
 
     // Remove it from the inventory
     Inventory.set(ratId, LibUtils.removeFromArray(Inventory.get(ratId), _itemId));
-
-    // Destroy the item
-    // LibItem.destroyItem(_itemId);
   }
 }

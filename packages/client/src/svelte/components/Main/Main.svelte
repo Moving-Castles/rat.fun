@@ -9,7 +9,7 @@
   import RoomContainer from "@components/Main/RoomContainer/RoomContainer.svelte"
   import ModalTarget from "@components/Main/Modal/ModalTarget.svelte"
   import RoomResult from "@components/Main/RoomResult/RoomResult.svelte"
-  import FloorsPlaceholder from "@components/Main/Floors/FloorsPlaceholder.svelte"
+  import Floors from "@components/Main/Floors/Floors.svelte"
 
   function getDoorStyle(side: "left" | "right"): string {
     const progress = transition.progress.current
@@ -44,7 +44,7 @@
   <RatContainer />
 {/snippet}
 {#snippet CenterColumnSlot()}
-  <FloorsPlaceholder />
+  <Floors />
 {/snippet}
 {#snippet RightColumnSlot()}
   <RoomContainer {environment} />

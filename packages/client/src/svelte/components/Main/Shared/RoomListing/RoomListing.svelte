@@ -1,6 +1,10 @@
 <script lang="ts">
   import type { Hex } from "viem"
-  import { rooms as roomStore, playerRooms } from "@modules/state/base/stores"
+  import {
+    rooms as roomStore,
+    roomsOnRatLevel,
+    playerRooms,
+  } from "@modules/state/base/stores"
   import { getUIState } from "@modules/ui/state.svelte"
   import { entriesChronologically } from "./sortFunctions"
   import { filterRooms, filterDepletedRooms } from "./filterFunctions"
@@ -28,7 +32,7 @@
   let roomList = $derived.by(() => {
     let entries = isOwnRoomListing
       ? Object.entries($playerRooms)
-      : Object.entries($roomStore)
+      : Object.entries($roomsOnRatLevel)
 
     entries = filterDepletedRooms(entries, showDepletedRooms)
     entries = filterRooms(entries, textFilter)

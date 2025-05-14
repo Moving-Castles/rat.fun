@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { getUniqueEntity } from "@latticexyz/world-modules/src/modules/uniqueentity/getUniqueEntity.sol";
-import { Dead, Health, Balance, Inventory, Traits, Value, Level, LevelMinBalance, LevelMaxBalance, LevelList, Index } from "../codegen/index.sol";
+import { Dead, Health, Balance, Inventory, Traits, Value, Level, VisitedLevels, LevelMinBalance, LevelMaxBalance, LevelList, Index, Owner } from "../codegen/index.sol";
 import { ENTITY_TYPE } from "../codegen/common.sol";
 import { LibUtils } from "./LibUtils.sol";
 import { LibItem } from "./LibItem.sol";
@@ -93,16 +93,12 @@ library LibManager {
           Balance.set(_roomId, LibUtils.safeSubtract(Balance.get(_roomId), traitValueAmount));
           // Remove trait from rat
           Traits.set(_ratId, LibUtils.removeFromArray(Traits.get(_ratId), traitId));
-          // Destroy trait
-          // LibTrait.destroyTrait(_traitsToRemoveFromRat[i]);
         }
       } else {
         // Trait value is positive, add value to room balance
         Balance.set(_roomId, Balance.get(_roomId) + traitValueAmount);
         // Remove trait from rat
         Traits.set(_ratId, LibUtils.removeFromArray(Traits.get(_ratId), traitId));
-        // Destroy trait
-        // LibTrait.destroyTrait(_traitsToRemoveFromRat[i]);
       }
     }
   }
@@ -184,8 +180,6 @@ library LibManager {
       Balance.set(_roomId, Balance.get(_roomId) + itemValueAmount);
       // Remove item from rat
       Inventory.set(_ratId, LibUtils.removeFromArray(Inventory.get(_ratId), itemId));
-      // Destroy item
-      // LibItem.destroyItem(_itemsToRemoveFromRat[i]);
     }
   }
 
@@ -275,24 +269,40 @@ library LibManager {
     }
   }
 
+  /**
+   * @notice Check if the rat should level up or down
+   * @dev Used by the Manager system to apply changes to a rat after room events
+   * @param _ratId Id of the rat
+   */
   function checkLevelChange(bytes32 _ratId) internal {
     // Get the total value of the rat
     uint256 totalRatValue = LibRat.getTotalRatValue(_ratId);
 
     // Get the level of the rat
-    bytes32 levelId = Level.get(_ratId);
-    uint256 levelIndex = Index.get(levelId);
+    bytes32 currentLevelId = Level.get(_ratId);
+    uint256 currentLevelIndex = Index.get(currentLevelId);
+    bytes32 newLevelId = currentLevelId;
 
     // Check if the rat is below the min balance
-    if (totalRatValue < LevelMinBalance.get(levelId) && levelIndex > 0) {
+    if (totalRatValue < LevelMinBalance.get(currentLevelId) && currentLevelIndex > 0) {
       // Level down if we are not at the lowest level
-      Level.set(_ratId, LevelList.getItem(levelIndex - 1));
+      newLevelId = LevelList.getItem(currentLevelIndex - 1);
+      Level.set(_ratId, newLevelId);
     }
 
     // Check if the rat is above the max balance
-    if (totalRatValue >= LevelMaxBalance.get(levelId) && levelIndex < LevelList.length() - 1) {
+    if (totalRatValue >= LevelMaxBalance.get(currentLevelId) && currentLevelIndex < LevelList.length() - 1) {
       // Level up if we are not at the highest level
-      Level.set(_ratId, LevelList.getItem(levelIndex + 1));
+      newLevelId = LevelList.getItem(currentLevelIndex + 1);
+      Level.set(_ratId, newLevelId);
+    }
+
+    // On change, add level to visited levels
+    if (newLevelId != currentLevelId) {
+      bytes32 playerId = Owner.get(_ratId);
+      if (!LibUtils.arrayIncludes(VisitedLevels.get(playerId), newLevelId)) {
+        VisitedLevels.push(playerId, newLevelId);
+      }
     }
   }
 }

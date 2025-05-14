@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { player, gameConfig } from "@modules/state/base/stores"
+  import { player, gameConfig, levels } from "@modules/state/base/stores"
   import { createRoom } from "./index"
   import { getUIState } from "@modules/ui/state.svelte"
   import { ENVIRONMENT } from "@mud/enums"
@@ -19,6 +19,13 @@
 
   let busy = $state(false)
   let roomDescription: string = $state("")
+  let levelId: string = $state(
+    $player.visitedLevels.length > 0
+      ? (Object.entries($levels).find(([key]) =>
+          $player.visitedLevels.includes(key as `0x${string}`)
+        )?.[0] ?? "")
+      : ""
+  )
 
   let invalidRoomDescriptionLength = $derived(
     roomDescription.length < 1 ||
@@ -36,7 +43,7 @@
     busy = true
     const newPrompt = roomDescription
 
-    await createRoom(environment, $walletNetwork, newPrompt)
+    await createRoom(environment, $walletNetwork, newPrompt, levelId)
     busy = false
     await initStaticContent()
 
@@ -72,6 +79,18 @@
         placeholder="You're creating a room that can modify traits, items, health, and tokens of rats that enter. Your room balance decreases whenever a rat gains something, and increases when your room takes something. You can withdraw remaining balance from your room."
         bind:value={roomDescription}
       ></textarea>
+    </div>
+
+    <!-- LEVEL SELECTION -->
+    <div class="form-group">
+      <label for="level-select">
+        <span class="highlight">Select Level</span>
+      </label>
+      <select id="level-select" bind:value={levelId} disabled={busy}>
+        {#each Object.entries($levels).filter( ([key]) => $player.visitedLevels.includes(key as `0x${string}`) ) as [key, level]}
+          <option value={key}>{level.index}</option>
+        {/each}
+      </select>
     </div>
 
     <!-- ACTIONS -->

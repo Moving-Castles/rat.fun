@@ -31,7 +31,7 @@ export async function getCreateRoomData(playerId: string): Promise<CreateRoomDat
           throw new OnchainDataError('Player ID is required');
         }
 
-        const { Name, Balance, GameConfig } = components;
+        const { Name, Balance, VisitedLevels, GameConfig } = components;
 
         const result = {} as CreateRoomData;
 
@@ -43,6 +43,7 @@ export async function getCreateRoomData(playerId: string): Promise<CreateRoomDat
 
         const playerName = getComponentValue(Name, playerEntity)?.value as string;
         const playerBalance = Number(getComponentValue(Balance, playerEntity)?.value);
+        const playerVisitedLevels = getComponentValue(VisitedLevels, playerEntity)?.value as string[];
 
         // Check if player exists
         if (!playerName) {
@@ -52,7 +53,8 @@ export async function getCreateRoomData(playerId: string): Promise<CreateRoomDat
         result.player = {
           id: playerId,
           name: playerName,
-          balance: playerBalance
+          balance: playerBalance,
+          visitedLevels: playerVisitedLevels
         }
 
         /////////////////

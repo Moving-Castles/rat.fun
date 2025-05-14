@@ -27,6 +27,7 @@ declare global {
     balance?: number,
     creationBlock?: number,
     level?: Hex,
+    visitedLevels?: Hex[],
     value?: number,
     dead?: boolean,
     health?: number,
@@ -46,9 +47,10 @@ declare global {
   }
 
   type Player = {
-    [key: string]: number | ENTITY_TYPE | Hex | string[] | string,
+    [key: string]: number | ENTITY_TYPE | Hex | string[] | string | Hex[],
     entityType: ENTITY_TYPE.PLAYER,
     name: string,
+    visitedLevels: Hex[],
     balance: number,
     ownedRat: Hex,
     creationBlock: number

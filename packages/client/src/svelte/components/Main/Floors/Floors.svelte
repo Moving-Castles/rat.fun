@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Spring } from "svelte/motion"
-  import { gameConfig, ratLevelIndex } from "@modules/state/base/stores"
+  import { gameConfig, ratLevelIndex, levels } from "@modules/state/base/stores"
   import { tippy } from "svelte-tippy"
 
   const doorProgress = new Spring(1)
@@ -44,7 +44,7 @@
   <div class="elevator">
     {#if elevatorIndex >= 0}
       <div
-        style:transform="translateY({elevatorIndex * (clientHeight / 6)}px)"
+        style:transform="translateY({elevatorIndex * (clientHeight / 5)}px)"
         class="elevator-item"
       >
         <div
@@ -65,12 +65,11 @@
       </div>
     {/if}
   </div>
-  {#each $gameConfig?.levelList || [] as _, i (i)}
+  {#each $gameConfig?.levelList || [] as levelId, i (i)}
     {#if i < elevatorIndex}
       <div
         use:tippy={{
-          content:
-            "Your rat has gone past this floor, lose rat value to access",
+          content: `Min: ${$levels[levelId].levelMinBalance} / Max: ${$levels[levelId].levelMaxBalance} / Prompt: ${$levels[levelId].prompt}`,
         }}
         class="floor-item"
       >
@@ -79,7 +78,7 @@
     {:else if i > elevatorIndex}
       <div
         use:tippy={{
-          content: "Not available yet. Gain more rat value for rat to access",
+          content: `Min: ${$levels[levelId].levelMinBalance} / Max: ${$levels[levelId].levelMaxBalance} / Prompt: ${$levels[levelId].prompt}`,
         }}
         class="floor-item"
       >
@@ -87,7 +86,9 @@
       </div>
     {:else}
       <div
-        use:tippy={{ content: "Your rat is on this floor" }}
+        use:tippy={{
+          content: `Your rat is on this floor. Min: ${$levels[levelId].levelMinBalance} / Max: ${$levels[levelId].levelMaxBalance} / Prompt: ${$levels[levelId].prompt}`,
+        }}
         class="floor-item"
       >
         {i * -1}
@@ -98,23 +99,31 @@
 
 <style lang="scss">
   .floor-bar {
-    width: 160px;
-    height: 100%;
     display: flex;
     flex-direction: column;
+    width: 100%;
+    height: 100%;
     border-right: var(--dashed-border-style);
     border-left: var(--dashed-border-style);
     position: relative;
+    background: repeating-linear-gradient(
+      45deg,
+      #000000,
+      #000000 20px,
+      var(--color-grey-dark) 20px,
+      var(--color-grey-dark) 40px
+    );
   }
 
   .floor-item {
     width: 100%;
-    height: calc(100% / 3);
+    height: calc(100% / 5);
     display: flex;
     justify-content: center;
     align-items: center;
     border-bottom: var(--dashed-border-style);
     position: relative;
+    font-size: 18px;
 
     &:last-child {
       border-bottom: none;
@@ -138,14 +147,14 @@
   }
 
   .elevator-item {
-    height: calc((100% / 3) - 2px);
+    height: calc((100% / 5) - 2px);
     display: flex;
     justify-content: center;
     align-items: center;
     transition: transform 0.2s ease;
     overflow: hidden;
     background-size: cover;
-    background-blend-mode: multiply;
+    background-blend-mode: lighten;
   }
 
   .elevator-door-l {

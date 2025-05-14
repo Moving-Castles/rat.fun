@@ -104,17 +104,14 @@ export function createSystemCalls(network: SetupNetworkResult) {
 
   const createRoom = async (
     playerId: string,
+    levelId: string,
     roomID: string,
     roomPrompt: string
   ) => {
     try {
-      // Fix for the linter error - check if worldContract has a write property
-      // if (!network.worldContract || typeof network.worldContract.write !== 'function') {
-      //   throw new ContractCallError('World contract write method not available');
-      // }
-      
       const tx = await network.worldContract.write.ratroom__createRoom([
         playerId,
+        levelId,
         roomID,
         roomPrompt,
       ]);

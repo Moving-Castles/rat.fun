@@ -7,7 +7,8 @@ import { OFFCHAIN_VALIDATION_MESSAGE } from "@server/config";
 export async function createRoom(
   environment: ENVIRONMENT,
   walletNetwork: SetupWalletNetworkResult,
-  roomPrompt: string
+  roomPrompt: string,
+  levelId: string
 ) {
   const startTime = performance.now()
 
@@ -22,7 +23,8 @@ export async function createRoom(
   const formData = new URLSearchParams()
   formData.append("signature", signature)
   formData.append("roomPrompt", roomPrompt)
-
+  formData.append("levelId", levelId)
+  
   try {
     const response = await fetch(url, {
       method: "POST",

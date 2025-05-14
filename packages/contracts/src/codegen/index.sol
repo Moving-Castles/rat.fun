@@ -13,6 +13,7 @@ import { Dead } from "./tables/Dead.sol";
 import { Traits } from "./tables/Traits.sol";
 import { Inventory } from "./tables/Inventory.sol";
 import { Level } from "./tables/Level.sol";
+import { VisitedLevels } from "./tables/VisitedLevels.sol";
 import { Index } from "./tables/Index.sol";
 import { Balance } from "./tables/Balance.sol";
 import { Value } from "./tables/Value.sol";

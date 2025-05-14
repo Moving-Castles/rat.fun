@@ -91,7 +91,6 @@ contract ManagerSystem is System {
     // LEVEL CHANGE
     // * * * * * * * * * * * * *
 
-    // Levels/floors are not used at the moment, but might be brought back...
-    // LibManager.checkLevelChange(_ratId);
+    LibManager.checkLevelChange(_ratId);
   }
 }

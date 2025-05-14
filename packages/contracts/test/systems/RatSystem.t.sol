@@ -32,6 +32,8 @@ contract RatSystemTest is BaseTest {
 
     // Check player
     assertEq(OwnedRat.get(playerId), ratId);
+    assertEq(VisitedLevels.get(playerId).length, 1);
+    assertEq(VisitedLevels.getItem(playerId, 0), LevelList.getItem(0));
 
     // Check rat
     assertEq(uint8(EntityType.get(ratId)), uint8(ENTITY_TYPE.RAT));
@@ -137,7 +139,7 @@ contract RatSystemTest is BaseTest {
     setInitialBalance(bobId);
 
     prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(bobId, bytes32(0), "test room");
+    bytes32 roomId = world.ratroom__createRoom(bobId, LevelList.getItem(0), bytes32(0), "test room");
     vm.stopPrank();
 
     // Trait to add
