@@ -41,8 +41,8 @@ export async function getCreateRoomData(playerId: string): Promise<CreateRoomDat
 
         const playerEntity = (await network).world.registerEntity({ id: playerId });
 
-        const playerName = getComponentValue(Name, playerEntity)?.value;
-        const playerBalance = getComponentValue(Balance, playerEntity)?.value;
+        const playerName = getComponentValue(Name, playerEntity)?.value as string;
+        const playerBalance = Number(getComponentValue(Balance, playerEntity)?.value);
 
         // Check if player exists
         if (!playerName) {

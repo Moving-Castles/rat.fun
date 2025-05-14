@@ -55,8 +55,8 @@ export async function getEnterRoomData(ratId: string, roomId?: string, playerId?
 
         const ratEntity = (await network).world.registerEntity({ id: ratId });
 
-        const ratOwner = getComponentValue(Owner, ratEntity)?.value;
-        const ratName = getComponentValue(Name, ratEntity)?.value;
+        const ratOwner = getComponentValue(Owner, ratEntity)?.value as string;
+        const ratName = getComponentValue(Name, ratEntity)?.value as string;
         
         // Check if rat exists
         if (!ratOwner && !ratName) {
@@ -64,8 +64,6 @@ export async function getEnterRoomData(ratId: string, roomId?: string, playerId?
         }
 
         // Get rat data
-        const ratOwnerValue = (ratOwner ?? "") as string;
-        const ratNameValue = (ratName ?? "") as string;
         const ratDead = (getComponentValue(Dead, ratEntity)?.value ?? false) as boolean;
         const ratHealth = (getComponentValue(Health, ratEntity)?.value ?? 0) as number;
         const ratBalance = (getComponentValue(Balance, ratEntity)?.value ?? 0) as number;
@@ -81,12 +79,12 @@ export async function getEnterRoomData(ratId: string, roomId?: string, playerId?
 
         const rat = {
             id: ratId,
-            name: ratNameValue,
+            name: ratName,
             traits: traitsObjects,
             balance: Number(ratBalance),
             inventory: inventoryObjects,
             dead: ratDead,
-            owner: ratOwnerValue,
+            owner: ratOwner,
             stats: ratStats,
         };
 
@@ -101,20 +99,19 @@ export async function getEnterRoomData(ratId: string, roomId?: string, playerId?
             // Get room data
             const roomEntity = (await network).world.registerEntity({ id: roomId });
             
-            const roomPrompt = getComponentValue(RoomPrompt, roomEntity)?.value;
-            const roomIndex = (getComponentValue(Index, roomEntity)?.value ?? 0) as number;
+            const roomPrompt = getComponentValue(RoomPrompt, roomEntity)?.value as string;
             
             // Check if room exists
             if (!roomPrompt) {
                 throw new RoomNotFoundError(roomId);
             }
             
-            const roomPromptValue = (roomPrompt ?? "") as string;
+            const roomIndex = (getComponentValue(Index, roomEntity)?.value ?? 0) as number;
             const roomBalance = (getComponentValue(Balance, roomEntity)?.value ?? 0) as number;
 
             const room = {
                 id: roomId,
-                prompt: roomPromptValue,
+                prompt: roomPrompt,
                 balance: Number(roomBalance),
                 index: roomIndex
             };
@@ -130,8 +127,8 @@ export async function getEnterRoomData(ratId: string, roomId?: string, playerId?
         if (playerId) {
             const playerEntity = (await network).world.registerEntity({ id: playerId });
             
-            const playerName = getComponentValue(Name, playerEntity)?.value;
-            const playerBalance = (getComponentValue(Balance, playerEntity)?.value ?? 0) as number;
+            const playerName = getComponentValue(Name, playerEntity)?.value as string;
+            const playerBalance = Number(getComponentValue(Balance, playerEntity)?.value ?? 0);
 
             // Check if player exists
             if (!playerName) {
@@ -141,7 +138,7 @@ export async function getEnterRoomData(ratId: string, roomId?: string, playerId?
             result.player = {
                 id: playerId,
                 name: playerName,
-                balance: Number(playerBalance),
+                balance: playerBalance,
             };
         }
 
