@@ -81,9 +81,9 @@ contract RoomSystemTest is BaseTest {
     vm.stopPrank();
 
     prankAdmin();
-    world.ratroom__createRoom(playerId, bytes32(hex"123456"), "Test room", "A test room");
+    world.ratroom__createRoom(playerId, bytes32(hex"123456"), "A test room");
     vm.expectRevert("room id already in use");
-    world.ratroom__createRoom(playerId, bytes32(hex"123456"), "Test room", "A test room");
+    world.ratroom__createRoom(playerId, bytes32(hex"123456"), "A test room");
     vm.stopPrank();
   }
 
