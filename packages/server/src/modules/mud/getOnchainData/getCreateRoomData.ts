@@ -85,7 +85,7 @@ export async function getCreateRoomData(playerId: string, levelId: string): Prom
 
         result.gameConfig = gameConfig;
 
-                /////////////////
+        /////////////////
         // LEVEL
         /////////////////
 
