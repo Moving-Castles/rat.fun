@@ -34,7 +34,7 @@ declare global {
     inventory?: string[],
     ownedRat?: Hex,
     owner?: Hex,
-    roomPrompt?: string,
+    prompt?: string,
     index?: number,
     roomCreationCost?: number,
     levelList?: string[],
@@ -76,7 +76,7 @@ declare global {
     index: number,
     balance: number,
     level: Hex,
-    roomPrompt: string,
+    prompt: string,
     visitCount: number,
     killCount: number,
     creationBlock: number
@@ -97,9 +97,10 @@ declare global {
   }
 
   type Level = {
-    [key: string]: ENTITY_TYPE | number,
+    [key: string]: ENTITY_TYPE | number | string,
     entityType: ENTITY_TYPE.LEVEL,
     index: number,
+    prompt: string,
     levelMinBalance: number,
     levelMaxBalance: number,
     roomCreationCost: number

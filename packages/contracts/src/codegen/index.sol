@@ -20,7 +20,7 @@ import { OwnedRat } from "./tables/OwnedRat.sol";
 import { Owner } from "./tables/Owner.sol";
 import { VisitCount } from "./tables/VisitCount.sol";
 import { KillCount } from "./tables/KillCount.sol";
-import { RoomPrompt } from "./tables/RoomPrompt.sol";
+import { Prompt } from "./tables/Prompt.sol";
 import { RoomCreationCost } from "./tables/RoomCreationCost.sol";
 import { LevelMinBalance } from "./tables/LevelMinBalance.sol";
 import { LevelMaxBalance } from "./tables/LevelMaxBalance.sol";

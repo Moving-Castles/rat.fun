@@ -1,13 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { getUniqueEntity } from "@latticexyz/world-modules/src/modules/uniqueentity/getUniqueEntity.sol";
-import { EntityType, Index, LevelMinBalance, LevelMaxBalance, RoomCreationCost, LevelList } from "../codegen/index.sol";
+import { EntityType, Index, LevelMinBalance, LevelMaxBalance, RoomCreationCost, LevelList, Prompt } from "../codegen/index.sol";
 import { ENTITY_TYPE } from "../codegen/common.sol";
 
 library LibLevel {
   /**
    * @notice Create a level
    * @param _index The index of the level
+   * @param _prompt The prompt for the level
    * @param _levelMinBalance The minimum balance for the level
    * @param _levelMaxBalance The maximum balance for the level
    * @param _roomCreationCost The cost to create a room on the level
@@ -15,6 +16,7 @@ library LibLevel {
    */
   function createLevel(
     uint256 _index,
+    string memory _prompt,
     uint256 _levelMinBalance,
     uint256 _levelMaxBalance,
     uint256 _roomCreationCost
@@ -26,6 +28,7 @@ library LibLevel {
     LevelMinBalance.set(levelId, _levelMinBalance);
     LevelMaxBalance.set(levelId, _levelMaxBalance);
     RoomCreationCost.set(levelId, _roomCreationCost);
+    Prompt.set(levelId, _prompt);
 
     // Push to the list of levels
     LevelList.push(levelId);

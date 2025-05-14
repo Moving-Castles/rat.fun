@@ -10,9 +10,5 @@ uint32 constant ONE_DAY = 24 * ONE_HOUR;
 
 uint32 constant MAX_INVENTORY_SIZE = 5;
 uint32 constant MAX_TRAITS_SIZE = 5;
-uint256 constant CREATOR_FEE = 33;
-uint256 constant LEVEL_UP_COST = 100;
 uint32 constant MAX_ROOM_PROMPT_LENGTH = 280;
 uint32 constant MIN_ROOM_PROMPT_LENGTH = 10;
-uint32 constant MAX_ROOM_NAME_LENGTH = 50;
-uint32 constant MIN_ROOM_NAME_LENGTH = 10;

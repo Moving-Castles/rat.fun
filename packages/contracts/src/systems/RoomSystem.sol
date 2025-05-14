@@ -21,13 +21,13 @@ contract RoomSystem is System {
    * @dev Only admin can call this function
    * @param playerId The id of the player creating the room
    * @param _roomId The id of the room
-   * @param _roomPrompt The prompt for the room
+   * @param _prompt The prompt for the room
    * @return newRoomId The id of the new room
    */
   function createRoom(
     bytes32 playerId,
     bytes32 _roomId,
-    string memory _roomPrompt
+    string memory _prompt
   ) public onlyAdmin returns (bytes32 newRoomId) {
     // Room id can be 0 (which generates a new id) or an unused entity id
     require(_roomId == bytes32(0) || EntityType.get(_roomId) == ENTITY_TYPE.NONE, "room id already in use");
@@ -44,7 +44,7 @@ contract RoomSystem is System {
     Balance.set(playerId, Balance.get(playerId) - roomCreationCost);
 
     // Create room
-    newRoomId = LibRoom.createRoom(_roomPrompt, playerId, levelId, _roomId);
+    newRoomId = LibRoom.createRoom(_prompt, playerId, levelId, _roomId);
   }
 
   function closeRoom(bytes32 _roomId) public {
