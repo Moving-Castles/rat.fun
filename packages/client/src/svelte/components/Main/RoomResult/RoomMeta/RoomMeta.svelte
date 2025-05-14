@@ -82,7 +82,7 @@
     </div>
     <!-- PROMPT -->
     <div class="prompt" bind:this={promptElement}>
-      {renderSafeString($frozenRoom?.roomPrompt ?? "")}
+      {renderSafeString($frozenRoom?.prompt ?? "")}
     </div>
   </div>
 </div>

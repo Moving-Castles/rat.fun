@@ -57,7 +57,7 @@
       <!-- PROMPT -->
       <div class="room-prompt">
         <div class="content">
-          {renderSafeString(room.roomPrompt)}
+          {renderSafeString(room.prompt)}
         </div>
       </div>
     </div>

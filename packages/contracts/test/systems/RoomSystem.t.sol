@@ -37,7 +37,7 @@ contract RoomSystemTest is BaseTest {
 
     // Check room
     assertEq(uint8(EntityType.get(roomId)), uint8(ENTITY_TYPE.ROOM));
-    assertEq(RoomPrompt.get(roomId), "A test room");
+    assertEq(Prompt.get(roomId), "A test room");
     assertEq(Balance.get(roomId), GameConfig.getRoomCreationCost());
     assertEq(Owner.get(roomId), playerId);
     assertEq(Level.get(roomId), LevelList.getItem(0));

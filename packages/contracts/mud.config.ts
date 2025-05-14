@@ -55,7 +55,7 @@ export default defineWorld({
     VisitCount: "uint256", // Set on room
     KillCount: "uint256", // Set on room
     // ...
-    RoomPrompt: "string",
+    Prompt: "string",
     // ...
     RoomCreationCost: "uint256", // Set on level
     LevelMinBalance: "uint256", // Set on level. If rat balance is below this, it will be leveled down.

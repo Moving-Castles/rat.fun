@@ -24,16 +24,12 @@ contract DevSystem is System {
   }
 
   function createRoomAsAdmin(
-    string memory _roomPrompt,
+    string memory _prompt,
     bytes32 _roomLevel,
     uint256 _extraBalance
   ) public onlyAdmin returns (bytes32 roomId) {
-    roomId = LibRoom.createRoom(_roomPrompt, GameConfig.getAdminId(), _roomLevel, bytes32(0));
+    roomId = LibRoom.createRoom(_prompt, GameConfig.getAdminId(), _roomLevel, bytes32(0));
     Balance.set(roomId, Balance.get(roomId) + _extraBalance);
-  }
-
-  function destroyRoomAsAdmin(bytes32 _roomId) public onlyAdmin {
-    LibRoom.destroyRoom(_roomId);
   }
 
   function updateLevel(

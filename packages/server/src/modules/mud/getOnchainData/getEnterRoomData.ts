@@ -45,7 +45,7 @@ export async function getEnterRoomData(ratId: string, roomId?: string, playerId?
             throw new OnchainDataError('Rat ID is required');
         }
 
-        const { Owner, Name, RoomPrompt, Dead, Traits, Health, Balance, Inventory, Index, GameConfig } = components;
+        const { Owner, Name, Prompt, Dead, Traits, Health, Balance, Inventory, Index, GameConfig } = components;
 
         const result = {} as EnterRoomData;
 
@@ -99,7 +99,7 @@ export async function getEnterRoomData(ratId: string, roomId?: string, playerId?
             // Get room data
             const roomEntity = (await network).world.registerEntity({ id: roomId });
             
-            const roomPrompt = getComponentValue(RoomPrompt, roomEntity)?.value as string;
+            const roomPrompt = getComponentValue(Prompt, roomEntity)?.value as string;
             
             // Check if room exists
             if (!roomPrompt) {

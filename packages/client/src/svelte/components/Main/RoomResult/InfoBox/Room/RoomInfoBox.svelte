@@ -46,7 +46,7 @@
     <!-- PROMPT -->
     <div class="column double">
       <div class="room-description">
-        {renderSafeString($frozenRoom.roomPrompt)}
+        {renderSafeString($frozenRoom.prompt)}
       </div>
     </div>
   {/if}

@@ -1,7 +1,7 @@
 export const filterRooms = (entries: [string, Room][], textFilter: string) => {
   if (textFilter.length > 0) {
     return entries.filter(([_, room]) =>
-      room.roomPrompt.toLowerCase().includes(textFilter.toLowerCase())
+      room.prompt.toLowerCase().includes(textFilter.toLowerCase())
     )
   }
   return entries
