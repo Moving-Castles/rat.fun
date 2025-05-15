@@ -145,7 +145,14 @@ export const ratTotalValue = derived(
   }
 )
 
-export const roomsOnRatLevel = derived(
-  [rat, rooms],
-  ([$rat, $rooms]) => filterByLevel($rooms, $rat?.level) as Rooms
+export const roomsOnCurrentLevel = derived(
+  [rat, rooms, gameConfig],
+  ([$rat, $rooms, $gameConfig]) => {
+    if (!$rat) {
+      // Show room on first level if no rat
+      // Assumes that the first element in the levelList is the first level...
+      return filterByLevel($rooms, $gameConfig?.levelList[0]) as Rooms
+    }
+    return filterByLevel($rooms, $rat?.level) as Rooms
+  }
 )
