@@ -41,6 +41,7 @@
       shareText = "Share"
     }, 3000)
   }
+
   let oncopyfail = () => {
     shareText = "Failed"
     setTimeout(() => {
@@ -52,6 +53,7 @@
     playSound("tcm", "enteredPod")
     rooms.navigate("room", { roomId })
   }
+
   let copyShareLink = $derived(
     `${window.location.protocol + "//" + window.location.host + window.location.pathname}#${roomId}`
   )
@@ -114,7 +116,7 @@
               alt={`room #${room.index}`}
             />
           {:else}
-            <img src="/images/room3.jpg" alt={`room #${room.index}`} />
+            <img src="/images/no-room-image.jpg" alt={`room #${room.index}`} />
           {/if}
         {/key}
       </div>

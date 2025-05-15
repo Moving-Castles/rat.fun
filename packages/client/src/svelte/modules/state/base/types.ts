@@ -102,6 +102,7 @@ declare global {
     [key: string]: ENTITY_TYPE | number | string,
     entityType: ENTITY_TYPE.LEVEL,
     index: number,
+    name: string,
     prompt: string,
     levelMinBalance: number,
     levelMaxBalance: number,

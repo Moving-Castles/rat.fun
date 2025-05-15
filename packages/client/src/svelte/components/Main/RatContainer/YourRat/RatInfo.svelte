@@ -54,10 +54,13 @@
 
     .name {
       background: var(--color-alert);
-      padding: 5px;
+      padding-right: 5px;
       color: var(--foreground);
-      font-family: var(--display-font-stack);
+      font-family: var(--label-font-stack);
+      letter-spacing: -0.2em;
       font-size: var(--font-size-large);
+      font-size: 60px;
+      color: var(--background);
     }
 
     .balance {

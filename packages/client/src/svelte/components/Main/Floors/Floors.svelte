@@ -20,26 +20,6 @@
   })
 </script>
 
-<!-- <svelte:window
-  onkeypress={async e => {
-    switch (e.key) {
-      case "0":
-      case "1":
-      case "2":
-      case "3":
-      case "4":
-      case "5":
-        // tempIndex = Number(e.key)
-        if (import.meta.env.DEV) {
-          goToLevel(Number(e.key))
-        }
-        break
-      default:
-        break
-    }
-  }}
-/> -->
-
 <div class="floor-bar" bind:clientHeight>
   <div class="elevator">
     {#if elevatorIndex >= 0}
@@ -69,7 +49,7 @@
     {#if i < elevatorIndex}
       <div
         use:tippy={{
-          content: `Min: ${$levels[levelId].levelMinBalance} / Max: ${$levels[levelId].levelMaxBalance} / Prompt: ${$levels[levelId].prompt}`,
+          content: `Name: ${$levels[levelId].name} / Prompt: ${$levels[levelId].prompt} / Min: ${$levels[levelId].levelMinBalance} / Max: ${$levels[levelId].levelMaxBalance}`,
         }}
         class="floor-item"
       >
@@ -78,7 +58,7 @@
     {:else if i > elevatorIndex}
       <div
         use:tippy={{
-          content: `Min: ${$levels[levelId].levelMinBalance} / Max: ${$levels[levelId].levelMaxBalance} / Prompt: ${$levels[levelId].prompt}`,
+          content: `Name: ${$levels[levelId].name} / Prompt: ${$levels[levelId].prompt} / Min: ${$levels[levelId].levelMinBalance} / Max: ${$levels[levelId].levelMaxBalance}`,
         }}
         class="floor-item"
       >
@@ -87,7 +67,7 @@
     {:else}
       <div
         use:tippy={{
-          content: `Your rat is on this floor. Min: ${$levels[levelId].levelMinBalance} / Max: ${$levels[levelId].levelMaxBalance} / Prompt: ${$levels[levelId].prompt}`,
+          content: `Your rat is on this floor. Name: ${$levels[levelId].name} / Prompt: ${$levels[levelId].prompt} / Min: ${$levels[levelId].levelMinBalance} / Max: ${$levels[levelId].levelMaxBalance}`,
         }}
         class="floor-item"
       >

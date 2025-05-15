@@ -234,7 +234,7 @@
   .log-entry {
     display: flex;
     margin-bottom: 0.5em;
-    line-height: 1.3em;
+    line-height: 1.4em;
 
     .timestamp-container {
       margin-right: 10px;

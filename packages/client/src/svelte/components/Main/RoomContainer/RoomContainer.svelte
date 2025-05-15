@@ -1,10 +1,12 @@
 <script lang="ts">
   import { getUIState } from "@modules/ui/state.svelte"
   import { ENVIRONMENT } from "@mud/enums"
+  import { SvelteURL } from "svelte/reactivity"
+
   import RoomListing from "@svelte/components/Main/Shared/RoomListing/RoomListing.svelte"
   import YourRooms from "@components/Main/RoomContainer/YourRooms/YourRooms.svelte"
   import CreateRoom from "@components/Main/RoomContainer/CreateRoom/CreateRoom.svelte"
-  import { SvelteURL } from "svelte/reactivity"
+  import FloorHeader from "@components/Main/Shared/RoomListing/FloorHeader.svelte"
 
   let { environment }: { environment: ENVIRONMENT } = $props()
 
@@ -65,6 +67,7 @@
 
   {#if panes.roomContainer === enums.ROOM_CONTAINER.CREATE_ROOM}
     <div class="tab-content">
+      <FloorHeader />
       <CreateRoom {environment} />
     </div>
   {/if}

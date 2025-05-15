@@ -75,7 +75,7 @@
         />
       {:else}
         <img
-          src="/images/room3.jpg"
+          src="/images/no-room-image.jpg"
           alt={`room #${$frozenRoom?.index ?? ""}`}
         />
       {/if}
@@ -112,6 +112,7 @@
       .image-container {
         width: 100%;
         border: var(--default-border-style);
+        line-height: 0;
 
         img {
           width: 100%;

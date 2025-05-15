@@ -16,6 +16,14 @@
   )
 
   let { rooms } = getUIState()
+
+  function getPromptLengthClass(prompt: string) {
+    const length = prompt.length
+    if (length > 200) return "extra-long"
+    if (length > 100) return "long"
+    if (length > 50) return "medium"
+    return "short"
+  }
 </script>
 
 <button
@@ -23,23 +31,31 @@
   class:disabled={room.balance == 0}
   onclick={() => rooms.preview(roomId, false)}
 >
-  <!-- IMAGE -->
-  <div class="room-image">
-    {#if sanityRoomContent}
-      <img
-        src={urlFor(sanityRoomContent?.image)
-          .width(400)
-          .auto("format")
-          // .saturation(-100)
-          .url()}
-        alt={`room #${room.index}`}
-      />
-    {:else}
-      <img src="/images/room3.jpg" alt={`room #${room.index}`} />
-    {/if}
+  <!-- COLUMN LEFT -->
+  <div class="column left">
+    <div class="room-image">
+      {#if sanityRoomContent}
+        <img
+          src={urlFor(sanityRoomContent?.image)
+            .width(400)
+            .auto("format")
+            .saturation(-100)
+            .url()}
+          alt={`room #${room.index}`}
+        />
+      {:else}
+        <img src="/images/no-room-image.jpg" alt={`room #${room.index}`} />
+      {/if}
+    </div>
+    <div class="room-balance">
+      <!-- BALANCE -->
+      <span class="balance" class:depleted={room.balance == 0}>
+        Balance: ${room.balance}
+      </span>
+    </div>
   </div>
-  <!-- INFO -->
-  <div class="room-info">
+  <!-- COLUMN RIGHT -->
+  <div class="column right">
     <!-- SECTION 1 -->
     <div class="section">
       <!-- TOP ROW -->
@@ -56,7 +72,7 @@
         </span>
       </div>
       <!-- PROMPT -->
-      <div class="room-prompt">
+      <div class="room-prompt {getPromptLengthClass(room.prompt)}">
         <div class="content">
           {renderSafeString(room.prompt)}
         </div>
@@ -71,10 +87,6 @@
         <span class="owner">{getRoomOwnerName(room)}</span>
         <!-- DIVIDER -->
         <span class="divider">•</span>
-        <!-- BALANCE -->
-        <span class="balance" class:depleted={room.balance == 0}>
-          Balance: ${room.balance}
-        </span>
         <!-- DIVIDER -->
         <span class="divider">•</span>
         <!-- VISITOR COUNT -->
@@ -115,109 +127,144 @@
       background-color: var(--color-grey-darker);
     }
 
-    .room-image {
-      height: var(--room-item-image-height);
-      aspect-ratio: 4/3;
-      margin-right: 20px;
-      // border: 1px solid var(--color-grey-mid);
-
-      border: 10px solid transparent;
-      border-image: url("/images/border-2.png") 20 repeat;
-
-      img {
-        width: 100%;
+    .column {
+      &.left {
         height: 100%;
-        object-fit: cover;
-      }
-    }
-
-    .room-info {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      width: 100%;
-
-      .room-info-row {
+        width: 280px;
+        margin-right: 10px;
         display: flex;
-        align-items: center;
-        gap: 10px;
-        width: 100%;
+        flex-direction: column;
+        z-index: 0;
 
-        &.top {
-          margin-bottom: 5px;
-          padding-bottom: 5px;
-          border-bottom: 1px solid var(--color-grey-mid);
+        .room-image {
+          border: 15px solid transparent;
+          border-image: url("/images/border-2.png") 20 repeat;
+          line-height: 0;
+          width: 100%;
+          aspect-ratio: 1/1;
+
+          img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
         }
 
-        &.bottom {
-          margin-top: 5px;
-          padding-top: 5px;
-          border-top: 1px solid var(--color-grey-mid);
-        }
-      }
-
-      .room-prompt {
-        width: 100%;
-        padding-top: 5px;
-        margin-top: 5px;
-        margin-bottom: 5px;
-        background: var(--color-alert);
-        padding: 5px;
-        word-break: break-word; /* Break long words if needed */
-        overflow-wrap: anywhere; /* Break anywhere if necessary to prevent overflow */
-        font-family: var(--special-font-stack);
-        font-size: 24px;
-        max-height: 6em;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: normal;
-
-        .content {
-          max-width: 55ch;
-        }
-      }
-
-      .index {
-        color: var(--color-grey-mid);
-      }
-
-      .creation-time {
-        color: var(--color-grey-mid);
-      }
-
-      .name {
-        background: var(--color-alert);
-        color: var(--background);
-        padding: 5px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 25ch;
-      }
-
-      .balance {
-        background: var(--color-value);
-        color: var(--background);
-        padding: 5px;
-
-        &.depleted {
-          background: var(--color-death);
+        .room-balance {
+          border: var(--default-border-style);
+          flex: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: var(--color-value);
           color: var(--background);
         }
       }
 
-      .small {
-        font-size: var(--font-size-small);
-      }
+      &.right {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 100%;
 
-      .divider {
-        color: var(--color-grey-light);
-      }
+        .room-info-row {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          width: 100%;
 
-      .owner {
-        background: var(--color-grey-light);
-        color: var(--background);
-        padding: 5px;
+          &.top {
+            margin-bottom: 5px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid var(--color-grey-mid);
+          }
+
+          &.bottom {
+            margin-top: 5px;
+            padding-top: 5px;
+            border-top: 1px solid var(--color-grey-mid);
+          }
+        }
+
+        .room-prompt {
+          width: 100%;
+          padding-top: 5px;
+          margin-top: 5px;
+          margin-bottom: 5px;
+          background: var(--color-alert);
+          padding: 5px;
+          word-break: break-word;
+          overflow-wrap: anywhere;
+          font-family: var(--special-font-stack);
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: normal;
+          max-height: 160px;
+
+          &.short {
+            font-size: 24px;
+          }
+
+          &.medium {
+            font-size: 24px;
+          }
+
+          &.long {
+            font-size: 16px;
+          }
+
+          &.extra-long {
+            font-size: 16px;
+          }
+
+          .content {
+            max-width: 55ch;
+          }
+        }
+
+        .index {
+          color: var(--color-grey-mid);
+        }
+
+        .creation-time {
+          color: var(--color-grey-mid);
+        }
+
+        .name {
+          background: var(--color-alert);
+          color: var(--background);
+          padding: 5px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 25ch;
+        }
+
+        .balance {
+          background: var(--color-value);
+          color: var(--background);
+          padding: 5px;
+
+          &.depleted {
+            background: var(--color-death);
+            color: var(--background);
+          }
+        }
+
+        .small {
+          font-size: var(--font-size-small);
+        }
+
+        .divider {
+          color: var(--color-grey-light);
+        }
+
+        .owner {
+          background: var(--color-grey-light);
+          color: var(--background);
+          padding: 5px;
+        }
       }
     }
   }

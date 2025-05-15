@@ -20,8 +20,8 @@
 
   --color-secondary: rgb(163, 66, 31);
   --color-health: rgb(109, 196, 109);
-  --color-value: rgb(255, 213, 0);
-  --color-death: rgb(255, 0, 43);
+  --color-value: rgb(194, 164, 12);
+  --color-death: rgb(190, 0, 32);
   --color-item: rgb(160, 98, 177);
   --color-value-up: var(--color-health);
   --color-value-down: var(--color-death);
@@ -62,8 +62,8 @@
 
   /* Layout: Room Item */
   --room-item-height: 260px;
-  --room-item-padding: 15px;
-  --room-item-image-height: 130px;
+  --room-item-padding: 10px;
+  --room-item-image-height: 240px;
 
   /* Layout: Room Result */
   --info-box-height: 260px;
@@ -82,6 +82,7 @@
   --typewriter-font-stack: "OCRA", monospace;
   --special-font-stack: "Special Elite", monospace;
   --display-font-stack: "Rock Salt", cursive;
+  --label-font-stack: "Impact Label Reversed", monospace;
   --font-size-very-small: 9px;
   --font-size-small: 11px;
   --font-size-normal: 14px;

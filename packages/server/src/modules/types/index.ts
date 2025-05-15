@@ -32,6 +32,7 @@ export type Player = {
 
 export type Level = {
     id: string,
+    name: string,
     prompt: string
     index: number,
     minBalance: number,

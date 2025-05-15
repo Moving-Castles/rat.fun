@@ -1,6 +1,7 @@
 <script lang="ts">
   import {
     player,
+    rat,
     gameConfig,
     levels,
     ratLevel,
@@ -24,13 +25,7 @@
 
   let busy = $state(false)
   let roomDescription: string = $state("")
-  let levelId: string = $state(
-    $player.visitedLevels.length > 0
-      ? (Object.entries($levels).find(([key]) =>
-          $player.visitedLevels.includes(key as `0x${string}`)
-        )?.[0] ?? "")
-      : ""
-  )
+  let levelId: string = $state($rat?.level ?? $gameConfig.levelList[0])
 
   let invalidRoomDescriptionLength = $derived(
     roomDescription.length < 1 ||
@@ -87,23 +82,40 @@
     </div>
 
     <!-- LEVEL SELECTION -->
-    <div class="form-group">
-      <label for="level-select">
-        <span class="highlight">Select Level</span>
+    <div class="form-group level-selection">
+      <label for="level-toggles">
+        <span class="highlight">Select floor</span>
       </label>
-      <select id="level-select" bind:value={levelId} disabled={busy}>
-        {#each Object.entries($levels).filter( ([key]) => $player.visitedLevels.includes(key as `0x${string}`) ) as [key, level]}
-          <option value={key}>{level.index}</option>
+      <div
+        id="level-toggles"
+        class="level-toggles"
+        role="radiogroup"
+        aria-label="Select level"
+      >
+        {#each Object.entries($levels) as [key, level]}
+          <button
+            class:active={levelId === key}
+            class:disabled={!$player.visitedLevels.includes(
+              key as `0x${string}`
+            )}
+            onclick={() => (levelId = key)}
+            disabled={!$player.visitedLevels.includes(key as `0x${string}`)}
+          >
+            {level.index}
+          </button>
         {/each}
-      </select>
+      </div>
     </div>
 
     <!-- ACTIONS -->
     <div class="actions">
       <button class:disabled onclick={sendCreateRoom}>
-        Create room (Cost: ${Number($ratLevel?.roomCreationCost ?? 666)})
+        Create room (Cost: ${Number(
+          $ratLevel?.roomCreationCost ??
+            $levels[$gameConfig.levelList[0]]?.roomCreationCost ??
+            666
+        )})
       </button>
-      <button class="secondary" onclick={goYourRooms}>Cancel</button>
     </div>
   {/if}
 </div>
@@ -113,8 +125,17 @@
     padding: 1rem;
 
     .form-group {
+      display: block;
       margin-bottom: 15px;
       width: 100%;
+
+      &.level-selection {
+        margin-top: 15px;
+        padding-top: 15px;
+        padding-bottom: 15px;
+        border-top: var(--default-border-style);
+        border-bottom: var(--default-border-style);
+      }
 
       label {
         display: block;
@@ -128,6 +149,41 @@
           padding: 5px;
           color: var(--background);
           font-weight: normal;
+        }
+      }
+
+      .level-toggles {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+
+        button {
+          width: 40px;
+          height: 40px;
+          padding: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: var(--foreground);
+          border: var(--default-border-style);
+          cursor: pointer;
+          font-family: var(--typewriter-font-stack);
+          font-size: var(--font-size-normal);
+
+          &.active {
+            background: var(--color-alert-priority);
+            color: var(--background);
+          }
+
+          &.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+          }
+
+          &:not(.disabled):hover {
+            background: var(--color-alert);
+            color: var(--background);
+          }
         }
       }
 
@@ -160,7 +216,7 @@
 
       button {
         width: 100%;
-        height: 40px;
+        height: 60px;
         background: var(--color-alert-priority);
         color: var(--background);
         cursor: pointer;

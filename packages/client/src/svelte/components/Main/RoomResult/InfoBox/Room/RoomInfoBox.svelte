@@ -32,7 +32,10 @@
               alt={`room #${$frozenRoom.index}`}
             />
           {:else}
-            <img src="/images/room3.jpg" alt={`room #${$frozenRoom.index}`} />
+            <img
+              src="/images/no-room-image.jpg"
+              alt={`room #${$frozenRoom.index}`}
+            />
           {/if}
         {/key}
       </div>

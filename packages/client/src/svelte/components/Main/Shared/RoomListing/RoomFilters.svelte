@@ -149,6 +149,7 @@
     overflow: hidden;
     position: sticky;
     top: 0;
+    z-index: 100;
     background: var(--background);
   }
 
