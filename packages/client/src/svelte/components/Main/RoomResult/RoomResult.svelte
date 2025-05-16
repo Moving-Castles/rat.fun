@@ -12,7 +12,6 @@
   import { enterRoom } from "@components/Main/RoomResult"
   import { ENVIRONMENT } from "@mud/enums"
   import { walletNetwork } from "@modules/network"
-  import { frozenRat } from "@components/Main/RoomResult/state.svelte"
 
   import Log from "@components/Main/RoomResult/Log/Log.svelte"
   import RoomMeta from "@components/Main/RoomResult/RoomMeta/RoomMeta.svelte"
@@ -20,7 +19,7 @@
   import RoomInfoBox from "@components/Main/RoomResult/InfoBox/Room/RoomInfoBox.svelte"
   import { getUIState } from "@modules/ui/state.svelte"
   import RoomEventPopup from "../Shared/RoomEventPopup/RoomEventPopup.svelte"
-  import { getContentState } from "@modules/content/state.svelte"
+  import { staticContent } from "@modules/content"
 
   const { rooms } = getUIState()
 
@@ -46,12 +45,10 @@
 
   let popupState: RESULT_POPUP_STATE = $state(RESULT_POPUP_STATE.NONE)
 
-  let { rooms: sanityRoomState } = getContentState()
-
   let room = $derived($roomsState?.[roomId ?? ""])
 
   let sanityRoomContent = $derived(
-    sanityRoomState.current.find(r => r._id.trim() == roomId.trim())
+    $staticContent.rooms.find(r => r._id == (roomId ?? ""))
   )
 
   $effect(() => {

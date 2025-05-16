@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Howl } from "howler"
   import { onMount, onDestroy } from "svelte"
-  import { urlFor } from "@modules/content"
+  import { urlFor } from "@modules/content/sanity"
   import type { ServerReturnValue } from "@components/Main/RoomResult/types"
   import { type Room } from "@modules/state/base/types"
   import { RESULT_POPUP_STATE } from "@modules/ui/enums"

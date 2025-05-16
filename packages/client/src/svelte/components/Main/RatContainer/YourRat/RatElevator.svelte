@@ -4,33 +4,32 @@
   import Main from "@components/3D/World/Main.svelte"
   import Elevator from "@components/3D/Elevator/Elevator.svelte"
 
-  let interval: ReturnType<typeof setInterval>
-  let progress = new Tween(0, { duration: 2000 })
   let { direction }: { direction: number } = $props()
 
-  const moving = new Tween(0, { duration: 50 })
+  let animations = $state({
+    moving: new Tween(1, { duration: 200 }), // to change the feet from moving to non moving
+    rotationY: new Tween(Math.PI / 2, { duration: 800 }), // for the rat to turn around to face us
+    positionX: new Tween(0, { duration: 3000 }), // for the rat to walk away
+    positionY: new Tween(0, { duration: 10000 }), // for the elevator to move up or down
+    doorProgress: new Tween(0, { duration: 2000 }), // for the elevator to move up or down
+  })
 
-  const twitch = async () => {
-    await new Promise(r => setTimeout(r, Math.random() * 200))
-    await moving.set(4)
-    moving.set(0)
+  const walk = async () => {
+    await animations.positionX.set(3)
+    await animations.rotationY.set(-Math.PI / 2)
+    await animations.moving.set(0)
+    await new Promise(r => setTimeout(r, 1000)) // wait 1s
+    await animations.doorProgress.set(1)
+    await animations.positionY.set(direction * 10)
   }
 
-  onMount(() => {
-    progress.set(1)
-    interval = setInterval(twitch, 2000 + Math.random() * 4000)
-  })
-
-  onDestroy(() => {
-    clearInterval(interval)
-    progress.set(0)
-  })
+  onMount(walk)
 </script>
 
 <div class="rat-cam">
   <div class="square">
     <Main>
-      <Elevator {direction} {moving} />
+      <Elevator {animations} />
     </Main>
   </div>
 </div>
