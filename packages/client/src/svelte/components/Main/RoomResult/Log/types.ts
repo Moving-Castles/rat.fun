@@ -1,4 +1,4 @@
-import { LogEntry, HealthChange,  BalanceTransfer, TraitChange, ItemChange } from "@components/Main/RoomResult/types"
+import { LogEntry, HealthChange,  BalanceTransfer, TraitChange, ItemChange } from "@server/modules/types"
 
 export type MergedLogEntry = LogEntry & {
   healthChange?: HealthChange

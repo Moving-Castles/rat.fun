@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { ServerReturnValue } from "@components/Main/RoomResult/types"
+  import type { EnterRoomReturnValue } from "@server/modules/types"
   import type { Hex } from "viem"
 
   import {
@@ -37,7 +37,7 @@
   let error = $state("")
 
   let entering = $state(true)
-  let result: ServerReturnValue | null = $state(null)
+  let result: EnterRoomReturnValue | null = $state(null)
 
   $effect(() => {
     if (animationstart) animationstarted = true

@@ -1,5 +1,6 @@
 import { TableRecord } from "@latticexyz/store-sync";
 import mudConfig from "contracts/mud.config";
+import { Hex } from "viem";
 
 export type Room = {
     id: string,
@@ -69,3 +70,48 @@ export type CreateRoomData = {
     level: MinimalLevel,
     player: Player;
 }
+
+
+export type TraitChange = {
+    logStep: number,
+    type: "add" | "remove",
+    name: string,
+    value: number,
+    id?: string // Is only set if type == "remove"
+  }
+  
+  export type ItemChange = {
+    logStep: number,
+    type: "add" | "remove",
+    name: string,
+    value: number,
+    id?: string // Is only set if type == "remove"
+  }
+  
+  export type HealthChange = {
+    logStep: number,
+    amount: number
+  }
+  
+  export type BalanceTransfer = {
+    logStep: number,
+    amount: number
+  }
+  
+  export type LogEntry = {
+    timestamp: string,
+    event: string
+  }
+
+export type EnterRoomReturnValue = {
+    id: Hex,
+    log: LogEntry[]
+    healthChange: HealthChange
+    traitChanges: TraitChange[]
+    itemChanges: ItemChange[]
+    balanceTransfer: BalanceTransfer
+    ratDead: boolean
+    roomDepleted: boolean
+    levelUp: boolean
+    levelDown: boolean
+  }

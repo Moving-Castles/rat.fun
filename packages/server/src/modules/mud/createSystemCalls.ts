@@ -60,6 +60,7 @@ export function createSystemCalls(network: SetupNetworkResult) {
           room.id
         );
 
+
         const validatedOutcome = updateOutcome(outcome, rat, newOnChainData.rat);
         
         const { newRoomValue, roomValueChange } = getRoomValue(room, newOnChainData.room);
@@ -68,13 +69,16 @@ export function createSystemCalls(network: SetupNetworkResult) {
 
         const newRatHealth = newOnChainData.rat?.stats?.health ?? 0;
 
+        const newRatLevelIndex = newOnChainData.level?.index ?? 0;
+
         return {
           validatedOutcome,
           newRoomValue,
           roomValueChange,
           newRatValue,
           ratValueChange,
-          newRatHealth
+          newRatHealth,
+          newRatLevelIndex
         }
       } catch (error) {
         // If it's already one of our custom errors, rethrow it

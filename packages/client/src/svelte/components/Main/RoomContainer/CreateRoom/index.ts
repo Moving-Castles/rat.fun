@@ -1,4 +1,4 @@
-import type { ServerReturnValue } from "@components/Main/RoomResult/types"
+import type { EnterRoomReturnValue } from "@server/modules/types"
 import { SetupWalletNetworkResult } from "@mud/setupWalletNetwork";
 
 import { ENVIRONMENT } from "@mud/enums"
@@ -41,7 +41,7 @@ export async function createRoom(
       throw new Error(`${error.error}: ${error.message}`)
     }
 
-    const result = (await response.json()) as ServerReturnValue
+    const result = (await response.json()) as EnterRoomReturnValue
 
     console.log("result", result)
 
