@@ -2,7 +2,9 @@
   import { ratLevel, levels, gameConfig } from "@modules/state/base/stores"
 
   let currentFloor = $derived(
-    $ratLevel ? $ratLevel : $levels[$gameConfig.levelList[0]]
+    $ratLevel
+      ? $ratLevel
+      : $levels[$gameConfig?.levelList[0] ?? "unknown level"]
   )
 </script>
 

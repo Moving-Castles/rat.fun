@@ -1,7 +1,7 @@
 import { OffChainMessage, WebSocketInterface } from '@modules/types';
 import { v4 as uuidv4 } from 'uuid';
 import { getSenderId } from '@modules/signature';
-import { getPlayerName, getRatId, getRatName  } from '@modules/mud/getOnchainData';
+import { getEntityName, getEntityLevel, getRatId } from '@modules/mud/getOnchainData';
 import { broadcast } from '@modules/websocket';
 
 export async function handleMessage(message: OffChainMessage, socket: WebSocketInterface): Promise<void> {
@@ -26,15 +26,24 @@ export async function handleMessage(message: OffChainMessage, socket: WebSocketI
   }
 }
 
+/****************
+ * TEST MESSAGE
+ *****************/
+
 async function handleTestMessage(socket: WebSocketInterface): Promise<void> {
   const newMessage: OffChainMessage = {
     id: uuidv4(),
     topic: 'test',
+    level: "0",
     message: 'pong',
     timestamp: Date.now()
   };
   socket.send(JSON.stringify(newMessage));
 }
+
+/****************
+ * CHAT MESSAGE
+ *****************/
 
 async function handleChatMessage(message: OffChainMessage): Promise<void> {
   if (!message.signature) {
@@ -43,18 +52,27 @@ async function handleChatMessage(message: OffChainMessage): Promise<void> {
   }
   
   const senderId = getSenderId(message.signature);
-  const playerName = getPlayerName(senderId);
+
+  if (!senderId) {
+    console.error('Missing senderId in chat message');
+    return;
+  }
 
   const newMessage: OffChainMessage = {
     id: uuidv4(),
     topic: 'chat__message',
-    playerName: playerName,
+    level: message?.level ?? "unknown level",
+    playerName: getEntityName(senderId),
     message: message.message,
     timestamp: Date.now()
   };
 
   await broadcast(newMessage);
 }
+
+/****************
+ * RAT DEPLOYMENT
+ *****************/
 
 async function handleRatDeploy(message: OffChainMessage): Promise<void> {
   if (!message.signature) {
@@ -69,20 +87,24 @@ async function handleRatDeploy(message: OffChainMessage): Promise<void> {
     return;
   }
 
-  const playerName = getPlayerName(senderId);
   const ratId = getRatId(senderId);
-  const ratName = getRatName(ratId);
+  const ratLevel = getEntityLevel(ratId);
 
   const newMessage: OffChainMessage = {
     id: uuidv4(),
     topic: 'rat__deploy',
-    playerName: playerName,
-    ratName: ratName,
+    level: ratLevel,
+    playerName: getEntityName(senderId),
+    ratName: getEntityName(ratId),
     timestamp: Date.now()
   };
 
   await broadcast(newMessage);
 }
+
+/****************
+ * RAT LIQUIDATION
+ *****************/
 
 async function handleRatLiquidate(message: OffChainMessage): Promise<void> {
   if (!message.signature) {
@@ -97,18 +119,24 @@ async function handleRatLiquidate(message: OffChainMessage): Promise<void> {
     return;
   }
 
-  const playerName = getPlayerName(senderId);
+  const ratName = getEntityName(message.ratId ?? "unknown rat");
+  const level = getEntityLevel(message.ratId ?? "unknown rat");
 
   const newMessage: OffChainMessage = {
     id: uuidv4(),
     topic: 'rat__liquidate',
-    playerName: playerName,
-    ratName: message?.ratName ?? "unknown rat",
+    level,
+    playerName: getEntityName(senderId),
+    ratName,
     timestamp: Date.now()
   }
 
   await broadcast(newMessage);
 }
+
+/****************
+ * ROOM LIQUIDATION
+ *****************/
 
 async function handleRoomLiquidation(message: OffChainMessage): Promise<void> {
   if (!message.signature) {
@@ -123,14 +151,15 @@ async function handleRoomLiquidation(message: OffChainMessage): Promise<void> {
     return;
   }
 
-  const playerName = getPlayerName(senderId);
+  const level = getEntityLevel(message.roomId ?? "unknown room");
 
   const newMessage: OffChainMessage = {
     id: uuidv4(),
     topic: 'room__liquidation',
+    level,
     roomIndex: message.roomIndex,
     roomId: message.roomId,
-    playerName: playerName,
+    playerName: getEntityName(senderId),
     timestamp: Date.now()
   }
 

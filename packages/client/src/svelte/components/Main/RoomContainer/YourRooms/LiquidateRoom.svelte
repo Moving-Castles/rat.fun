@@ -44,7 +44,7 @@
       liquidationMessage = "Could not liquidate room"
     } finally {
       busy = false
-      sendLiquidateRoomMessage(roomId, room.index, $walletNetwork)
+      sendLiquidateRoomMessage($walletNetwork, roomId)
       setTimeout(() => {
         modal.close()
       }, 1200)

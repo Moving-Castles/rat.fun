@@ -3,11 +3,14 @@
     websocketConnected,
     clientList,
   } from "@modules/off-chain-sync/stores"
+  import { ratLevel } from "@modules/state/base/stores"
 </script>
 
 <div class="chat-header">
   <div class="header-content">
-    <span class="title"></span>
+    <span class="title">
+      Floor #{$ratLevel?.index ?? 0}: {$ratLevel?.name ?? ""}
+    </span>
     <span class="status" class:connected={$websocketConnected}>
       {$clientList.length ?? 0} operator{Object.keys($clientList).length > 1
         ? "s"

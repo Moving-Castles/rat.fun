@@ -35,7 +35,7 @@ import { getSenderId } from '@modules/signature';
 // CMS
 import { getSystemPrompts, writeOutcomeToCMS, CMSError } from '@modules/cms';
 
-// Validate
+// Validation
 import { validateInputData } from './validation';
 
 // Error handling
