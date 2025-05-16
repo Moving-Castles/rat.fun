@@ -50,7 +50,7 @@ export default defineWorld({
     VisitedLevels: "bytes32[]", // Set on player. List of levels any of the player's rats have visited.
     Index: "uint256", // Set on rat and room
     Balance: "uint256", // Amount of credits. Set on player, rat and room.
-    Value: "int256", // Value of a trait can be negative
+    Value: "uint256", // Value of a trait can be negative
     OwnedRat: "bytes32", // Set on player
     Owner: "bytes32", // Set on room and rat
     VisitCount: "uint256", // Set on room

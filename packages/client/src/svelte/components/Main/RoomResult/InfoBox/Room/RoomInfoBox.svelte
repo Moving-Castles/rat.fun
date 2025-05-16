@@ -1,8 +1,11 @@
 <script lang="ts">
   import { frozenRoom } from "@components/Main/RoomResult/state.svelte"
-  import { staticContent, lastUpdated, urlFor } from "@modules/content"
+  import { staticContent, lastUpdated } from "@modules/content"
+  import { urlFor } from "@modules/content/sanity"
   import type { Hex } from "viem"
   import { renderSafeString } from "@modules/utils"
+
+  import NoImage from "@components/Main/Shared/NoImage/NoImage.svelte"
 
   let { roomId }: { roomId: Hex } = $props()
 
@@ -32,10 +35,7 @@
               alt={`room #${$frozenRoom.index}`}
             />
           {:else}
-            <img
-              src="/images/no-room-image.jpg"
-              alt={`room #${$frozenRoom.index}`}
-            />
+            <NoImage />
           {/if}
         {/key}
       </div>

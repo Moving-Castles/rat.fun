@@ -31,7 +31,7 @@ export const generateImage = async (prompt: string = "A rat") => {
   const INPUT = {
     FLUX: {
       image: pickRandom(IMAGE_TEMPLATES),
-      prompt: `${prompt}.`,
+      prompt: `${PREPROMPT} ${prompt}.`,
       go_fast: true,
       guidance: 3.5,
       megapixels: "1",
