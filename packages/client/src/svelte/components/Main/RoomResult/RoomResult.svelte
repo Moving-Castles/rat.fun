@@ -73,7 +73,7 @@
     }
 
     // Testing. Remove this
-    // popupState = RESULT_POPUP_STATE.LEVEL_UP
+    popupState = RESULT_POPUP_STATE.LEVEL_UP
   }
 
   const processRoom = async () => {

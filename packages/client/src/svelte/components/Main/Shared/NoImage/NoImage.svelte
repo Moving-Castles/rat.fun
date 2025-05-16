@@ -4,7 +4,7 @@
 
 <div class="no-image">
   <div class="no-image-text">
-    <div>IMAGE LOADING</div>
+    <!-- <div>IMAGE LOADING</div> -->
     <div>
       <SmallSpinner />
     </div>

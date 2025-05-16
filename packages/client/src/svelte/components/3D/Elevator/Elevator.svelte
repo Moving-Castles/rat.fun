@@ -3,11 +3,13 @@
   import { T } from "@threlte/core"
   import { Tween } from "svelte/motion"
   import CustomRenderer from "@components/3D/World/CustomRenderer/CustomRenderer.svelte"
+  import { interactivity } from "@threlte/extras"
+
   import Rat from "@components/3D/World/Models/RatAnimatedMoving.svelte"
 
   let { animations } = $props()
 
-  let cameraZ = new Tween(10, { duration: 60000, easing: cubicIn })
+  let cameraZ = new Tween(10, { duration: 20000, easing: cubicIn })
 
   cameraZ.set(100)
 
@@ -29,16 +31,78 @@
   moving={animations.moving}
   scale={2}
   rotation.y={animations.rotationY.current}
-  position.y={-0.5 - animations.positionY.current}
-  position.z={0}
+  position.y={-1 + animations.positionY.current}
+  position.z={animations.positionZ.current}
   position.x={0}
   rotation.z={0}
   rotation.x={animations.moving.current / 10}
 ></Rat>
 
 <!-- DOOR L -->
-<T.Mesh>
-  <T.BoxGeometry />
+<T.Mesh
+  receiveShadow
+  position.y={animations.positionY.current}
+  position.x={-2 + animations.doorProgress.current}
+>
+  <T.BoxGeometry args={[2, 4, 0.2]} />
+  <T.MeshBasicMaterial />
+</T.Mesh>
+<T.Mesh
+  receiveShadow
+  position.y={animations.positionY.current}
+  position.x={2 - animations.doorProgress.current}
+>
+  <T.BoxGeometry args={[2, 4, 0.2]} />
+  <T.MeshBasicMaterial />
+</T.Mesh>
+<!-- LEFT AND RIGHT WALLS -->
+<T.Mesh
+  receiveShadow
+  position.y={animations.positionY.current}
+  position.x={2}
+  position.z={-2}
+>
+  <T.BoxGeometry args={[0.2, 4, 4]} />
+  <T.MeshBasicMaterial color={0xdddddd} />
+</T.Mesh>
+<T.Mesh
+  receiveShadow
+  position.y={animations.positionY.current}
+  position.x={-2}
+  position.z={-2}
+>
+  <T.BoxGeometry args={[0.2, 4, 4]} />
+  <T.MeshBasicMaterial color={0xdddddd} />
+</T.Mesh>
+<!-- TOP AND BOTTOM -->
+<T.Mesh
+  receiveShadow
+  position.y={2 + animations.positionY.current}
+  position.x={2}
+  position.z={-2}
+>
+  <T.BoxGeometry args={[4, 0.2, 4]} />
+  <T.MeshBasicMaterial color={0xdddddd} />
+</T.Mesh>
+<T.Mesh
+  receiveShadow
+  position.y={-2 + animations.positionY.current}
+  position.x={2}
+  position.z={-2}
+>
+  <T.BoxGeometry args={[4, 0.2, 4]} />
+  <T.MeshBasicMaterial color={0xdddddd} />
+</T.Mesh>
+
+<!-- BACK WALL -->
+<T.Mesh
+  receiveShadow
+  position.y={animations.positionY.current}
+  position.x={0}
+  position.z={-4}
+>
+  <T.BoxGeometry args={[4, 4, 0.2]} />
+  <T.MeshBasicMaterial color={0xaaaaaa} />
 </T.Mesh>
 
 <T.PerspectiveCamera
@@ -60,7 +124,7 @@
     angle={Math.PI + Math.PI / 2}
     penumbra={20}
     decay={0.1}
-    distance={50}
+    distance={15}
   /></T.PerspectiveCamera
 >
 <T.Mesh rotation.x={-Math.PI / 2} receiveShadow>

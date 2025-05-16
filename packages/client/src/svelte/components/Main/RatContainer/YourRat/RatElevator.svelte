@@ -5,34 +5,37 @@
   import Elevator from "@components/3D/Elevator/Elevator.svelte"
 
   let { direction }: { direction: number } = $props()
+  let key = $state(0)
 
   let animations = $state({
     moving: new Tween(1, { duration: 200 }), // to change the feet from moving to non moving
     rotationY: new Tween(Math.PI / 2, { duration: 800 }), // for the rat to turn around to face us
-    positionX: new Tween(0, { duration: 3000 }), // for the rat to walk away
+    positionZ: new Tween(3, { duration: 3000 }), // for the rat to walk away
     positionY: new Tween(0, { duration: 10000 }), // for the elevator to move up or down
-    doorProgress: new Tween(0, { duration: 2000 }), // for the elevator to move up or down
+    doorProgress: new Tween(0, { duration: 1500 }), // for the elevator to move up or down
   })
 
   const walk = async () => {
-    await animations.positionX.set(3)
+    await animations.positionZ.set(-3)
     await animations.rotationY.set(-Math.PI / 2)
-    await animations.moving.set(0)
+    await animations.moving.set(0.2)
     await new Promise(r => setTimeout(r, 1000)) // wait 1s
     await animations.doorProgress.set(1)
-    await animations.positionY.set(direction * 10)
+    await animations.positionY.set(direction * 19)
   }
 
   onMount(walk)
 </script>
 
-<div class="rat-cam">
-  <div class="square">
-    <Main>
-      <Elevator {animations} />
-    </Main>
+{#key key}
+  <div onclick={() => key++} class="rat-cam">
+    <div class="square">
+      <Main>
+        <Elevator {animations} />
+      </Main>
+    </div>
   </div>
-</div>
+{/key}
 
 <style lang="scss">
   .rat-cam {
