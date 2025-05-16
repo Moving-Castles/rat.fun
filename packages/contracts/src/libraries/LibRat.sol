@@ -3,9 +3,6 @@ pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import { getUniqueEntity } from "@latticexyz/world-modules/src/modules/uniqueentity/getUniqueEntity.sol";
 import { EntityType, GameConfig, Dead, Health, Index, Balance, Traits, Inventory, Value, Level, LevelList, Name, Owner, OwnedRat, CreationBlock } from "../codegen/index.sol";
-import { LibTrait } from "./LibTrait.sol";
-import { LibItem } from "./LibItem.sol";
-import { LibUtils } from "./LibUtils.sol";
 import { ENTITY_TYPE } from "../codegen/common.sol";
 
 library LibRat {
@@ -49,16 +46,8 @@ library LibRat {
     bytes32[] memory traits = Traits.get(_ratId);
 
     for (uint i = 0; i < traits.length; i++) {
-      int256 traitValue = Value.get(traits[i]);
-      // If value of trait is positive, add value to room balance
-      if (traitValue > 0) {
-        balanceToTransfer += LibUtils.absToUint256(traitValue);
-      }
-      // LibTrait.destroyTrait(traits[i]);
+      balanceToTransfer += Value.get(traits[i]);
     }
-
-    // Remove all traits from rat
-    Traits.deleteRecord(_ratId);
 
     // * * * *
     // Items
@@ -67,12 +56,8 @@ library LibRat {
     bytes32[] memory items = Inventory.get(_ratId);
 
     for (uint i = 0; i < items.length; i++) {
-      // Value of item is always positive
-      balanceToTransfer += LibUtils.absToUint256(Value.get(items[i]));
-      // LibItem.destroyItem(items[i]);
+      balanceToTransfer += Value.get(items[i]);
     }
-    // Remove all items from rat
-    Inventory.deleteRecord(_ratId);
 
     // * * * *
     // Balance
@@ -114,15 +99,8 @@ library LibRat {
     bytes32[] memory traits = Traits.get(_ratId);
 
     for (uint i = 0; i < traits.length; i++) {
-      int256 traitValue = Value.get(traits[i]);
-      // TODO: handle negative traits
-      if (traitValue > 0) {
-        balanceToTransfer += LibUtils.absToUint256(traitValue);
-      }
-      // LibTrait.destroyTrait(traits[i]);
+      balanceToTransfer += Value.get(traits[i]);
     }
-    // Remove all traits from rat
-    Traits.deleteRecord(_ratId);
 
     // * * * *
     // Items
@@ -131,12 +109,8 @@ library LibRat {
     bytes32[] memory items = Inventory.get(_ratId);
 
     for (uint i = 0; i < items.length; i++) {
-      // Value of item is always positive
-      balanceToTransfer += LibUtils.absToUint256(Value.get(items[i]));
-      // LibItem.destroyItem(items[i]);
+      balanceToTransfer += Value.get(items[i]);
     }
-    // Remove all items from rat
-    Inventory.deleteRecord(_ratId);
 
     // * * * *
     // Balance
@@ -167,19 +141,13 @@ library LibRat {
     // Traits
     bytes32[] memory traits = Traits.get(_ratId);
     for (uint i = 0; i < traits.length; i++) {
-      int256 traitValue = Value.get(traits[i]);
-      if (traitValue > 0) {
-        totalValue += LibUtils.absToUint256(traitValue);
-      } else {
-        totalValue -= LibUtils.absToUint256(traitValue);
-      }
+      totalValue += Value.get(traits[i]);
     }
 
     // Items
     bytes32[] memory items = Inventory.get(_ratId);
     for (uint i = 0; i < items.length; i++) {
-      // Items are always positive
-      totalValue += LibUtils.absToUint256(Value.get(items[i]));
+      totalValue += Value.get(items[i]);
     }
 
     // Balance

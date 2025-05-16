@@ -1,6 +1,6 @@
 import type { ActivePrompts, Outcome as OutcomeDoc, Room as RoomDoc, Prompt } from "@sanity-types"
 import type { Rat, Room, Player } from "@modules/types";
-import type { CorrectionReturnValue, OutcomeReturnValue } from '@modules/llm/types'
+import type { CorrectionReturnValue, OutcomeReturnValue } from '@modules/types'
 
 import { loadData } from "@modules/cms/sanity"
 import { queries } from "@modules/cms/groq"

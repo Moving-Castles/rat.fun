@@ -246,7 +246,7 @@ contract ManagerSystemTest is BaseTest {
     // Traits to add
     Item[] memory newTraits = new Item[](2);
     newTraits[0] = Item("happy", 20);
-    newTraits[1] = Item("sad", -20);
+    newTraits[1] = Item("sad", 0);
 
     // Item to add
     Item[] memory newItems = new Item[](1);
@@ -259,9 +259,8 @@ contract ManagerSystemTest is BaseTest {
     world.ratroom__applyOutcome(ratId, roomId, 0, 20, new bytes32[](0), newTraits, new bytes32[](0), newItems);
 
     // Room balance:
-    // Traits cancel out
-    // initial room balance - 20 (balance transfer) - 30 (item)
-    uint256 intermediateBalance = GameConfig.getRoomCreationCost() - 20 - 30;
+    // initial room balance - 20 (balance transfer) - 30 (item) - 20 (trait)
+    uint256 intermediateBalance = GameConfig.getRoomCreationCost() - 20 - 30 - 20;
     assertEq(Balance.get(roomId), intermediateBalance);
 
     // Check rat balance
@@ -276,7 +275,7 @@ contract ManagerSystemTest is BaseTest {
     assertEq(Name.get(traits[0]), "happy");
     assertEq(Value.get(traits[0]), 20);
     assertEq(Name.get(traits[1]), "sad");
-    assertEq(Value.get(traits[1]), -20);
+    assertEq(Value.get(traits[1]), 0);
 
     // Check that items are added
     bytes32[] memory items = Inventory.get(ratId);
@@ -302,17 +301,14 @@ contract ManagerSystemTest is BaseTest {
     // Room kill count incremented
     assertEq(KillCount.get(roomId), 1);
     // Room balance:
-    // intermediate room balance + 20 (balance transfer) + 30 (item) + 100 (health)
-    // !!! This currently fails. Possibly because of how we handle negative traits...
-    // assertEq(Balance.get(roomId), intermediateBalance + 20 + 30 + 100);
+    // intermediate room balance + 20 (balance transfer) + 30 (item) + 20 (trait) + 100 (health)
+    assertEq(Balance.get(roomId), intermediateBalance + 20 + 30 + 20 + 100);
 
     // Rat is dead
     assertEq(Health.get(ratId), 0);
     assertTrue(Dead.get(ratId));
     // Rat is cleared
     assertEq(Balance.get(ratId), 0);
-    assertEq(Traits.length(ratId), 0);
-    assertEq(Inventory.length(ratId), 0);
   }
 
   // * * * *
@@ -357,44 +353,6 @@ contract ManagerSystemTest is BaseTest {
     assertEq(Balance.get(roomId), GameConfig.getRoomCreationCost() - 40);
   }
 
-  function testApplyOutcomeAddNegativeTrait() public {
-    // As alice
-    vm.startPrank(alice);
-    world.ratroom__spawn("alice");
-    bytes32 ratId = world.ratroom__createRat("roger");
-    vm.stopPrank();
-
-    // As bob
-    vm.startPrank(bob);
-    bytes32 bobId = world.ratroom__spawn("bob");
-    vm.stopPrank();
-
-    setInitialBalance(bobId);
-
-    prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(bobId, LevelList.getItem(0), bytes32(0), "test room");
-    vm.stopPrank();
-
-    // Trait to add
-    Item[] memory newTraits = new Item[](1);
-    newTraits[0] = Item("sad", -40);
-
-    // As admin
-    prankAdmin();
-    startGasReport("Apply outcome (add negative trait)");
-    world.ratroom__applyOutcome(ratId, roomId, 0, 0, new bytes32[](0), newTraits, new bytes32[](0), new Item[](0));
-    endGasReport();
-    vm.stopPrank();
-
-    // Check added trait
-    assertEq(Traits.length(ratId), 1);
-    assertEq(Value.get(Traits.getItem(ratId, 0)), -40);
-    assertEq(Name.get(Traits.getItem(ratId, 0)), "sad");
-
-    // 100 + 40
-    assertEq(Balance.get(roomId), GameConfig.getRoomCreationCost() + 40);
-  }
-
   function testApplyOutcomeAddPositiveTraitTooExpensive() public {
     // As alice
     vm.startPrank(alice);
@@ -415,7 +373,7 @@ contract ManagerSystemTest is BaseTest {
 
     // Trait to add
     Item[] memory newTraits = new Item[](1);
-    newTraits[0] = Item("happy", int256(GameConfig.getRoomCreationCost() + 1));
+    newTraits[0] = Item("happy", GameConfig.getRoomCreationCost() + 1);
 
     // As admin
     prankAdmin();
@@ -480,124 +438,9 @@ contract ManagerSystemTest is BaseTest {
     assertEq(Traits.length(ratId), 0);
   }
 
-  function testApplyOutcomeRemoveNegativeTrait() public {
-    // As alice
-    vm.startPrank(alice);
-    world.ratroom__spawn("alice");
-    bytes32 ratId = world.ratroom__createRat("roger");
-    vm.stopPrank();
-
-    // As bob
-    vm.startPrank(bob);
-    bytes32 bobId = world.ratroom__spawn("bob");
-    vm.stopPrank();
-
-    setInitialBalance(bobId);
-
-    prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(bobId, LevelList.getItem(0), bytes32(0), "test room");
-    vm.stopPrank();
-
-    // Trait to add
-    Item[] memory newTraits = new Item[](1);
-    newTraits[0] = Item("sad", -40);
-
-    // As admin
-    prankAdmin();
-    world.ratroom__applyOutcome(ratId, roomId, 0, 0, new bytes32[](0), newTraits, new bytes32[](0), new Item[](0));
-    vm.stopPrank();
-
-    // Check added trait
-    bytes32 traitId = Traits.getItem(ratId, 0);
-    assertEq(Traits.length(ratId), 1);
-    assertEq(Value.get(traitId), -40);
-    assertEq(Name.get(traitId), "sad");
-
-    assertEq(Balance.get(roomId), GameConfig.getRoomCreationCost() + 40);
-
-    bytes32[] memory traitsToRemove = new bytes32[](1);
-    traitsToRemove[0] = traitId;
-
-    // As admin
-    prankAdmin();
-    startGasReport("Apply outcome (remove negative trait)");
-    world.ratroom__applyOutcome(ratId, roomId, 0, 0, traitsToRemove, new Item[](0), new bytes32[](0), new Item[](0));
-    endGasReport();
-    vm.stopPrank();
-
-    // pre-change balance - 40 (negative trait)
-    assertEq(Balance.get(roomId), GameConfig.getRoomCreationCost());
-    assertEq(Traits.length(ratId), 0);
-  }
-
-  // function testApplyOutcomeRemoveNegativeTraitTooExpensive() public {
-  //   // As alice
-  //   vm.startPrank(alice);
-  //   world.ratroom__spawn("alice");
-  //   bytes32 ratId = world.ratroom__createRat("roger");
-  //   vm.stopPrank();
-
-  //   // As bob
-  //   vm.startPrank(bob);
-  //   world.ratroom__spawn("bob");
-  //   world.ratroom__givePlayerBalance(1000);
-  //   bytes32 roomId = world.ratroom__createRoom("test room", "test room");
-  //   vm.stopPrank();
-
-  //   // Trait to add
-  //   Item[] memory newTraits = new Item[](1);
-  //   newTraits[0] = Item("sad", -40);
-
-  //   // As admin
-  //   prankAdmin();
-  //   world.ratroom__applyOutcome(ratId, roomId, 0, 0, new bytes32[](0), newTraits, new bytes32[](0), new Item[](0));
-  //   vm.stopPrank();
-
-  //   // Check added trait
-  //   bytes32 traitId = Traits.get(ratId)[0];
-  //   assertEq(Traits.get(ratId).length, 1);
-  //   assertEq(Value.get(traitId), -40);
-  //   assertEq(Name.get(traitId), "sad");
-
-  //   // 100 + 40 - 33 (CREATOR_FEE)
-  //   assertEq(Balance.get(roomId), 107);
-
-  //   bytes32[] memory traitsToRemove = new bytes32[](1);
-  //   traitsToRemove[0] = traitId;
-
-  //   // As admin
-  //   prankAdmin();
-  //   // Transfer 120 to rat
-  //   world.ratroom__applyOutcome(
-  //     ratId,
-  //     roomId,
-  //     0,
-  //     120,
-  //     new bytes32[](0),
-  //     new Item[](0),
-  //     new bytes32[](0),
-  //     new Item[](0)
-  //   );
-
-  //   // 135 - 120 - 33 (CREATOR_FEE)
-  //   assertEq(Balance.get(roomId), 10);
-
-  //   startGasReport("Apply outcome (remove negative trait: too expensive)");
-  //   world.ratroom__applyOutcome(ratId, roomId, 0, 0, traitsToRemove, new Item[](0), new bytes32[](0), new Item[](0));
-  //   endGasReport();
-  //   vm.stopPrank();
-
-  //   // Trait not removed because not enough room balance
-  //   assertEq(Traits.get(ratId).length, 1);
-  //   assertEq(Value.get(traitId), -40);
-  //   assertEq(Name.get(traitId), "sad");
-  //   // 10 - 5 (CREATOR_FEE)
-  //   assertEq(Balance.get(roomId), 5);
-  // }
-
-  // // * * * *
-  // // Items
-  // // * * * *
+  // * * * *
+  // Items
+  // * * * *
 
   function testApplyOutcomeAddPositiveItem() public {
     // As alice
@@ -637,46 +480,6 @@ contract ManagerSystemTest is BaseTest {
     assertEq(Balance.get(roomId), GameConfig.getRoomCreationCost() - 40);
   }
 
-  function testApplyOutcomeAddNegativeItem() public {
-    // As alice
-    vm.startPrank(alice);
-    world.ratroom__spawn("alice");
-    bytes32 ratId = world.ratroom__createRat("roger");
-    vm.stopPrank();
-
-    // As bob
-    vm.startPrank(bob);
-    bytes32 bobId = world.ratroom__spawn("bob");
-    vm.stopPrank();
-
-    setInitialBalance(bobId);
-
-    prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(bobId, LevelList.getItem(0), bytes32(0), "test room");
-    vm.stopPrank();
-
-    // Item to add
-    Item[] memory newItems = new Item[](1);
-    newItems[0] = Item("rotten cheese", -40);
-
-    // As admin
-    prankAdmin();
-    startGasReport("Apply outcome (add negative item)");
-    world.ratroom__applyOutcome(ratId, roomId, 0, 0, new bytes32[](0), new Item[](0), new bytes32[](0), newItems);
-    endGasReport();
-    vm.stopPrank();
-
-    // Check added item
-    assertEq(Inventory.length(ratId), 1);
-    // Items should always be positive
-    // Negative values will be converted to positive
-    assertEq(Value.get(Inventory.getItem(ratId, 0)), 40);
-    assertEq(Name.get(Inventory.getItem(ratId, 0)), "rotten cheese");
-
-    // pre-change balance - 40
-    assertEq(Balance.get(roomId), GameConfig.getRoomCreationCost() - 40);
-  }
-
   function testApplyOutcomeAddPositiveItemTooExpensive() public {
     // As alice
     vm.startPrank(alice);
@@ -697,7 +500,7 @@ contract ManagerSystemTest is BaseTest {
 
     // Item to add
     Item[] memory newItems = new Item[](1);
-    newItems[0] = Item("cheese", int256(GameConfig.getRoomCreationCost() + 1));
+    newItems[0] = Item("cheese", GameConfig.getRoomCreationCost() + 1);
 
     // As admin
     prankAdmin();
