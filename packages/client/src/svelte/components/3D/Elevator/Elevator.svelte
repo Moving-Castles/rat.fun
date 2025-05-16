@@ -5,7 +5,7 @@
   import CustomRenderer from "@components/3D/World/CustomRenderer/CustomRenderer.svelte"
   import Rat from "@components/3D/World/Models/RatAnimatedMoving.svelte"
 
-  let { moving } = $props()
+  let { moving, direction } = $props()
 
   let cameraY = new Tween(2, { duration: 60000, easing: cubicIn })
 

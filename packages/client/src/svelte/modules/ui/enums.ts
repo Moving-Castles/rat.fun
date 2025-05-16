@@ -30,7 +30,7 @@ export enum ROOM_CONTAINER {
 
 export enum RESULT_POPUP_STATE {
   NONE,
-  RAT_DEATH,
+  RAT_DEAD,
   ROOM_DEPLETED,
   LEVEL_UP,
   LEVEL_DOWN,
