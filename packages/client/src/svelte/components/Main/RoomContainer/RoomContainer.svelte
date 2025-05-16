@@ -67,7 +67,6 @@
 
   {#if panes.roomContainer === enums.ROOM_CONTAINER.CREATE_ROOM}
     <div class="tab-content">
-      <FloorHeader />
       <CreateRoom {environment} />
     </div>
   {/if}
