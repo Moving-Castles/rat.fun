@@ -1,4 +1,4 @@
-import type { OffChainMessage } from "@server/modules/websocket/types"
+import type { OffChainMessage } from "@server/modules/types"
 import type { SetupWalletNetworkResult } from "@mud/setupWalletNetwork"
 import { ENVIRONMENT } from "@mud/enums"
 import { OFFCHAIN_VALIDATION_MESSAGE } from "@server/config";

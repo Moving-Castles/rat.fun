@@ -71,7 +71,6 @@ export type CreateRoomData = {
     player: Player;
 }
 
-
 export type TraitChange = {
     logStep: number,
     type: "add" | "remove",
@@ -103,15 +102,90 @@ export type TraitChange = {
     event: string
   }
 
-export type EnterRoomReturnValue = {
-    id: Hex,
-    log: LogEntry[]
-    healthChange: HealthChange
-    traitChanges: TraitChange[]
-    itemChanges: ItemChange[]
+  export type OutcomeReturnValue = {
+    id?: string,
+    traitChanges: TraitChange[],
+    itemChanges: ItemChange[],
+    healthChange: HealthChange,
     balanceTransfer: BalanceTransfer
+  }
+
+/**
+* LLM Return values
+*/
+
+export type EventsReturnValue = {
+  log: LogEntry[],
+  outcome: OutcomeReturnValue
+}
+
+export type CorrectionReturnValue = {
+  log: LogEntry[]
+}
+
+/**
+* Return value for the EnterRoom function
+*/
+
+export type EnterRoomReturnValue = OutcomeReturnValue & {
     ratDead: boolean
     roomDepleted: boolean
     levelUp: boolean
     levelDown: boolean
   }
+
+
+/**
+* API Types
+*/
+
+export type EnterRoomBody = {
+  signature: string;
+  roomId: string;
+  ratId: string;
+}
+
+export type CreateRoomBody = {
+  signature: string;
+  roomPrompt: string;
+  levelId: string;
+}
+
+/**
+* WebSocket Types
+*/
+
+export interface WebSocketParams {
+  Params: {
+    playerId: string;
+  };
+}
+
+export type OffChainMessage = {
+  id: string;
+  topic: "test" 
+  | "clients__update" 
+  | "chat__message"
+  | "room__creation" 
+  | "room__outcome" 
+  | "room__liquidation"
+  | "rat__deploy"
+  | "rat__death" 
+  | "rat__liquidate"
+  playerName?: string;
+  ratName?: string;
+  roomIndex?: number;
+  roomId?: string;
+  message?: string | string[];
+  timestamp: number;
+  signature?: string;
+}
+
+// For the message store
+export type DatabaseSchema = {
+  messages: OffChainMessage[];
+};
+
+export interface WebSocketInterface {
+  send: (data: string) => void;
+}

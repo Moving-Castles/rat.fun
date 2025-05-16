@@ -1,12 +1,8 @@
-import { OffChainMessage } from '@modules/websocket/types';
+import { OffChainMessage, WebSocketInterface } from '@modules/types';
 import { v4 as uuidv4 } from 'uuid';
 import { getSenderId } from '@modules/signature';
 import { getPlayerName, getRatId, getRatName  } from '@modules/mud/getOnchainData';
 import { broadcast } from '@modules/websocket';
-
-interface WebSocketInterface {
-  send: (data: string) => void;
-}
 
 export async function handleMessage(message: OffChainMessage, socket: WebSocketInterface): Promise<void> {
   switch (message.topic) {

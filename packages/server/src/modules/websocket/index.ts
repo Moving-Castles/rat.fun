@@ -1,4 +1,4 @@
-import { OffChainMessage } from "@modules/websocket/types";
+import { OffChainMessage } from "@modules/types";
 import { storeMessage } from "@modules/message-store";
 
 // Store active WebSocket connections

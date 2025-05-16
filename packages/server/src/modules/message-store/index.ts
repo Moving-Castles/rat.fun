@@ -1,15 +1,10 @@
 import { Low, Memory } from 'lowdb';
-import { OffChainMessage } from '../websocket/types';
+import { OffChainMessage, DatabaseSchema } from '@modules/types';
 import { v4 as uuidv4 } from 'uuid';
 
-// Define the database schema
-type Schema = {
-  messages: OffChainMessage[];
-};
-
 // Initialize the database with in-memory adapter
-const adapter = new Memory<Schema>();
-const db = new Low<Schema>(adapter, { messages: [] });
+const adapter = new Memory<DatabaseSchema>();
+const db = new Low<DatabaseSchema>(adapter, { messages: [] });
 
 // Initialize the database
 export async function initializeDB() {

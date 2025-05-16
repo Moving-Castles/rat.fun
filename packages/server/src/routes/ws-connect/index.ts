@@ -1,8 +1,10 @@
 import type { FastifyInstance, FastifyRequest } from 'fastify';
-import type { WebSocketParams, OffChainMessage } from '@modules/websocket/types';
 import { schema } from '@routes/ws-connect/schema';
 import { broadcast, wsConnections } from '@modules/websocket';
 import { v4 as uuidv4 } from 'uuid';
+
+// Types
+import type { WebSocketParams, OffChainMessage } from '@modules/types';
 
 // Message store
 import { getMessages } from '@modules/message-store';

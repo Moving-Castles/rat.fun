@@ -4,15 +4,20 @@ import { schema } from '@routes/room/enter/schema';
 import dotenv from 'dotenv';
 dotenv.config();
 
-import { EnterRoomBody } from '@routes/room/enter/types';
-import { EnterRoomData, EnterRoomReturnValue } from '@modules/types';
+// Types
+import { 
+    EnterRoomBody,
+    EnterRoomData, 
+    EnterRoomReturnValue, 
+    EventsReturnValue, 
+    CorrectionReturnValue 
+} from '@modules/types';
 
 // WebSocket
 import { broadcast } from '@modules/websocket';
 import { createOutcomeMessage } from '@modules/websocket/constructMessages';
 
 // LLM  
-import { EventsReturnValue, CorrectionReturnValue } from '@modules/llm/types'
 import { constructEventMessages, constructCorrectionMessages } from '@modules/llm/constructMessages';
 
 // Anthropic

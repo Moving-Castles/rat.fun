@@ -1,10 +1,11 @@
 import type { FastifyInstance, FastifyRequest } from "fastify"
-import type { CreateRoomBody } from "@routes/room/create/types"
-
 import { schema } from "@routes/room/create/schema"
 import dotenv from "dotenv"
 
 dotenv.config()
+
+// Types
+import { CreateRoomBody } from "@modules/types"
 
 // CMS
 import { writeRoomToCMS, CMSError } from "@modules/cms"

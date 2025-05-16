@@ -1,7 +1,6 @@
 import type { Rat, Room, Player } from "@modules/types";
-import type { OffChainMessage } from "@modules/websocket/types";
 import { getRoomIndex } from "@modules/mud/getOnchainData";
-import type { OutcomeReturnValue } from "@modules/llm/types";
+import type { OffChainMessage, OutcomeReturnValue } from "@modules/types";
 import { v4 as uuidv4 } from 'uuid';
 
 export function createOutcomeMessage(player: Player, rat: Rat, newRatHealth: number, room: Room, validatedOutcome: OutcomeReturnValue): OffChainMessage {

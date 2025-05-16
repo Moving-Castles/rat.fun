@@ -1,7 +1,14 @@
 import * as Sentry from '@sentry/node';
 
-// Import error classes
-import { WebSocketError } from '@modules/websocket/types';
+export class WebSocketError extends Error {
+  constructor(
+    message: string,
+    public code: string
+  ) {
+    super(message);
+    this.name = 'WebSocketError';
+  }
+}
 
 /**
  * Handle errors in the WebSocket connection handler

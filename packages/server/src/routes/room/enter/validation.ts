@@ -1,4 +1,4 @@
-import { Rat, Room, Player, Level } from "@modules/types";
+import { Rat, Room, Player } from "@modules/types";
 
 export function validateInputData(player: Player, rat: Rat, room: Room) {
     // Check that sender owns the rat
