@@ -1,8 +1,11 @@
 <script lang="ts">
+  import { onMount } from "svelte"
   import { ENVIRONMENT } from "@mud/enums"
   import { UIState } from "@modules/ui/stores"
   import { UI } from "@modules/ui/enums"
   import { getUIState } from "@modules/ui/state.svelte"
+  import { initStaticContent } from "@modules/content"
+  import { publicNetwork } from "@modules/network"
 
   import Spawn from "@components/Spawn/Spawn.svelte"
   import RatContainer from "@components/Main/RatContainer/RatContainer.svelte"
@@ -36,6 +39,12 @@
   let shouldRenderMainGameLayer = $derived(
     route.current === "main" || transition.to === "main"
   )
+
+  onMount(async () => {
+    // Get content from CMS
+    await initStaticContent($publicNetwork.worldAddress)
+    console.log("Initializing static content...")
+  })
 </script>
 
 <div class="dust"></div>

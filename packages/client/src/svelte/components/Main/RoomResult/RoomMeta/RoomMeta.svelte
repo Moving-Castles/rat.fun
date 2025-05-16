@@ -1,13 +1,16 @@
 <script lang="ts">
   import { onMount } from "svelte"
   import { gsap } from "gsap"
-  import { staticContent, urlFor } from "@modules/content"
+  import { staticContent } from "@modules/content"
+  import { urlFor } from "@modules/content/sanity"
   import type { Hex } from "viem"
   import {
     frozenRoom,
     freezeObjects,
   } from "@components/Main/RoomResult/state.svelte"
   import { renderSafeString } from "@modules/utils"
+
+  import NoImage from "@components/Main/Shared/NoImage/NoImage.svelte"
 
   const { rat, room, roomId }: { rat: Rat; room: Room; roomId: Hex } = $props()
 
@@ -74,10 +77,9 @@
           alt={`room #${$frozenRoom?.index ?? ""}`}
         />
       {:else}
-        <img
-          src="/images/no-room-image.jpg"
-          alt={`room #${$frozenRoom?.index ?? ""}`}
-        />
+        <div class="image-placeholder">
+          <NoImage />
+        </div>
       {/if}
     </div>
     <!-- PROMPT -->
@@ -119,6 +121,11 @@
           height: 100%;
           object-fit: cover;
           aspect-ratio: 4 / 3;
+        }
+
+        .image-placeholder {
+          width: 100%;
+          aspect-ratio: 4/3;
         }
       }
 

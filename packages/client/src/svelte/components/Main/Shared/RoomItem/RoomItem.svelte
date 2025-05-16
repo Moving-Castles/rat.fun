@@ -1,18 +1,19 @@
 <script lang="ts">
   import type { Hex } from "viem"
   import { getUIState } from "@modules/ui/state.svelte"
+  import { urlFor } from "@modules/content/sanity"
   import { getRoomOwnerName } from "@modules/state/base/utils"
   import { blocksToReadableTime, renderSafeString } from "@modules/utils"
-  import { urlFor } from "@modules/content"
   import { blockNumber } from "@modules/network"
-  import { getContentState } from "@modules/content/state.svelte"
+  import { staticContent } from "@modules/content"
+  import type { Room as SanityRoom } from "@cms/sanity.types"
 
-  let { rooms: roomsState } = getContentState()
+  import NoImage from "@components/Main/Shared/NoImage/NoImage.svelte"
 
   let { roomId, room }: { roomId: Hex; room: Room } = $props()
 
-  let sanityRoomContent = $derived(
-    roomsState.current.find(r => r._id.trim() == roomId.trim())
+  let sanityRoomContent: SanityRoom | undefined = $derived(
+    $staticContent?.rooms?.find(r => r._id.trim() == roomId.trim()) ?? undefined
   )
 
   let { rooms } = getUIState()
@@ -34,7 +35,7 @@
   <!-- COLUMN LEFT -->
   <div class="column left">
     <div class="room-image">
-      {#if sanityRoomContent}
+      {#if sanityRoomContent?.image}
         <img
           src={urlFor(sanityRoomContent?.image)
             .width(400)
@@ -44,7 +45,7 @@
           alt={`room #${room.index}`}
         />
       {:else}
-        <img src="/images/no-room-image.jpg" alt={`room #${room.index}`} />
+        <NoImage />
       {/if}
     </div>
     <div class="room-balance">

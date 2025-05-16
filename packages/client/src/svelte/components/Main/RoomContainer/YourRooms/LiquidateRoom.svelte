@@ -8,9 +8,12 @@
     ModalTarget,
     getModalState,
   } from "@components/Main/Modal/state.svelte"
-  import { staticContent, lastUpdated, urlFor } from "@modules/content"
+  import { staticContent, lastUpdated } from "@modules/content"
+  import { urlFor } from "@modules/content/sanity"
   import { sendLiquidateRoomMessage } from "@modules/off-chain-sync"
   import { walletNetwork } from "@modules/network"
+
+  import NoImage from "@components/Main/Shared/NoImage/NoImage.svelte"
 
   let sanityRoomContent = $derived(
     $staticContent.rooms.find(r => r.title == roomId)
@@ -83,7 +86,7 @@
               alt={`room #${room.index}`}
             />
           {:else}
-            <img src="/images/no-room-image.jpg" alt={`room #${room.index}`} />
+            <NoImage />
           {/if}
         {/key}
       </div>

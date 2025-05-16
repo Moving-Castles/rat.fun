@@ -1,7 +1,6 @@
 <script lang="ts">
   import { timeSince } from "@modules/utils"
   import { onMount, onDestroy } from "svelte"
-  import { formatDate } from "@modules/utils"
 
   let interval: ReturnType<typeof setInterval>
 

@@ -1,10 +1,7 @@
 import { writable } from "svelte/store"
-import { loadData } from "./sanity"
+import { client, loadData } from "./sanity"
 import type { Room as SanityRoom } from "@sanity-types"
 import { queries } from "./sanity/groq"
-import { getContentState } from "./state.svelte"
-
-const { rooms: roomsState } = getContentState()
 
 // --- TYPES ------------------------------------------------------------
 
@@ -19,14 +16,21 @@ export const lastUpdated = writable(performance.now())
 
 // --- API --------------------------------------------------------------
 
-export async function initStaticContent() {
-  const rooms = await loadData(queries.rooms, {})
-  // State way
-  roomsState.set(rooms)
-  // Store way
+export async function initStaticContent(worldAddress: string) {
+  const rooms = await loadData(queries.rooms, { worldAddress })
   staticContent.set({
     rooms,
   })
-}
 
-export { urlFor } from "@modules/content/sanity"
+  // Subscribe to changes to rooms in sanity DB
+  client.listen(queries.rooms, { worldAddress }).subscribe(update => {
+    if (update.transition == "appear" && update.result) {
+      const room = update.result as SanityRoom
+      console.log("new room", room)
+      staticContent.update(content => {
+        content.rooms.push(room)
+        return content
+      })
+    }
+  })
+}

@@ -8,7 +8,8 @@
   import { getUIState } from "@modules/ui/state.svelte"
   import { playSound } from "@modules/sound"
   import { getRoomOwnerName } from "@modules/state/base/utils"
-  import { staticContent, lastUpdated, urlFor } from "@modules/content"
+  import { staticContent, lastUpdated } from "@modules/content"
+  import { urlFor } from "@modules/content/sanity"
   import { rat } from "@modules/state/base/stores"
   import { publicNetwork } from "@modules/network"
   import { loadData } from "@modules/content/sanity"
@@ -18,6 +19,7 @@
   import LiquidateRoom from "@components/Main/RoomContainer/YourRooms/LiquidateRoom.svelte"
   import RoomStats from "@components/Main/Shared/RoomStats/RoomStats.svelte"
   import RoomEventLog from "@components/Main/Shared/RoomEventLog/RoomEventLog.svelte"
+  import NoImage from "@components/Main/Shared/NoImage/NoImage.svelte"
 
   let {
     roomId,
@@ -116,7 +118,9 @@
               alt={`room #${room.index}`}
             />
           {:else}
-            <img src="/images/no-room-image.jpg" alt={`room #${room.index}`} />
+            <div class="image-placeholder">
+              <NoImage />
+            </div>
           {/if}
         {/key}
       </div>
@@ -244,12 +248,22 @@
           width: 400px;
           aspect-ratio: 4/3;
           object-fit: cover;
-          border: 1px solid var(--color-grey-mid);
+          border: var(--default-border-style);
         }
       }
 
+      .image-placeholder {
+        width: 400px;
+        aspect-ratio: 4/3;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: var(--default-border-style);
+        margin-bottom: 15px;
+      }
+
       .room-info {
-        border-bottom: 1px solid var(--color-grey-mid);
+        border-bottom: var(--default-border-style);
         padding-bottom: 5px;
         margin-bottom: 5px;
 

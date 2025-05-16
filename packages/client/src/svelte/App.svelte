@@ -9,7 +9,6 @@
   import { websocketConnected } from "@modules/off-chain-sync/stores"
   import { FullStory, init as initFullstory } from "@fullstory/browser"
   import { EMPTY_CONNECTION } from "./modules/utils/constants"
-  import { initStaticContent } from "@modules/content"
 
   // Tippy CSS
   import "tippy.js/dist/tippy.css"
@@ -48,9 +47,6 @@
   onMount(async () => {
     // Remove preloader
     document.querySelector(".preloader")?.remove()
-
-    // Get content from CMS
-    initStaticContent()
 
     // Preload sounds
     initSound()
