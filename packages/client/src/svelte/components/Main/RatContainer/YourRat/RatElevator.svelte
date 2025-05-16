@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte"
   import { Tween } from "svelte/motion"
+  import { bounceIn } from "svelte/easing"
   import Main from "@components/3D/World/Main.svelte"
   import Elevator from "@components/3D/Elevator/Elevator.svelte"
 
@@ -11,7 +12,8 @@
     moving: new Tween(1, { duration: 200 }), // to change the feet from moving to non moving
     rotationY: new Tween(Math.PI / 2, { duration: 800 }), // for the rat to turn around to face us
     positionZ: new Tween(3, { duration: 3000 }), // for the rat to walk away
-    positionY: new Tween(0, { duration: 10000 }), // for the elevator to move up or down
+    positionY: new Tween(0, { duration: 10001 }), // for the elevator to move up or down
+    positionYOffset: new Tween(0, { duration: 1000, easing: bounceIn }),
     doorProgress: new Tween(0, { duration: 1500 }), // for the elevator to move up or down
   })
 
@@ -20,6 +22,7 @@
     await animations.rotationY.set(-Math.PI / 2)
     await animations.moving.set(0.2)
     await new Promise(r => setTimeout(r, 1000)) // wait 1s
+    animations.positionYOffset.set(-direction * 0.1) // offset for bouncy effect
     await animations.doorProgress.set(1)
     await animations.positionY.set(direction * 19)
   }

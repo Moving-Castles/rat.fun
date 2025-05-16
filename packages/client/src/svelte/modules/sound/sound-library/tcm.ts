@@ -81,6 +81,10 @@ export const tcm: SoundAssets = {
     src: "./sounds/tcm/TRX_wait-sfx_b_01.mp3",
     volume: 1,
   },
+  TRX_yes_c: {
+    src: "./sounds/tcm/TRX_yes-sfx_02.mp3",
+    volume: 1,
+  },
   TRX_wait_b_07: {
     src: "./sounds/tcm/TRX_wait-sfx_b_07.mp3",
     volume: 1,

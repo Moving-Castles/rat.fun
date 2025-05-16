@@ -31,6 +31,12 @@
     if (popupState === RESULT_POPUP_STATE.RAT_DEAD) {
       snd = playSound("tcm", "machineFlowing", true)
     }
+    if (popupState === RESULT_POPUP_STATE.LEVEL_UP) {
+      snd = playSound("tcm", "win", true)
+    }
+    if (popupState === RESULT_POPUP_STATE.LEVEL_DOWN) {
+      snd = playSound("tcm", "TRX_yes_c", true)
+    }
     if (popupState === RESULT_POPUP_STATE.ROOM_DEPLETED) {
       snd = playSound("tcm", "loadingVariation", true)
     }
@@ -63,14 +69,18 @@
           {$frozenRat?.name} DIED
         {/if}
         {#if popupState === RESULT_POPUP_STATE.LEVEL_UP}
+          GOING DOWN<br />
           <span class="rotate-down digit">&#x203a;</span><span class=""
-            >{$ratLevel.index}</span
+            >{$ratLevel.index === 0 ? "" : "-"}{$ratLevel.index}</span
           >
         {/if}
         {#if popupState === RESULT_POPUP_STATE.LEVEL_DOWN}
-          <span class="rotate-up digit">&#x203a;</span><span class=""
-            >{$ratLevel.index}</span
-          >
+          <span>GOING UP</span><br />
+          <span>
+            <span class="rotate-up digit">&#x203a;</span><span class=""
+              >{$ratLevel.index === 0 ? "" : "-"}{$ratLevel.index}</span
+            >
+          </span>
         {/if}
         {#if popupState === RESULT_POPUP_STATE.ROOM_DEPLETED}
           ROOM #{room?.index} DEPLETED
@@ -132,9 +142,8 @@
         text-align: center;
 
         .digit {
-          display: block;
+          display: inline-block;
           width: 50%;
-          height: 100%;
           float: left;
           text-align: center;
         }
@@ -170,6 +179,8 @@
         z-index: 0;
         overflow: hidden;
 
+        &.levelup,
+        &.leveldown,
         &.death {
           mix-blend-mode: screen;
         }
@@ -205,7 +216,7 @@
   }
   .rotate-up {
     display: inline-block;
-    transform: rotate(-90deg);
+    transform: rotate(-90deg) translate(-4px, 0);
   }
 
   @keyframes fade-out {

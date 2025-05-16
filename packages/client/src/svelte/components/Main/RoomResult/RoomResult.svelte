@@ -56,9 +56,6 @@
   })
 
   const checkEvents = async () => {
-    // console.log("CHecking result")
-    // console.log($state.snapshot(result))
-    // console.log($state.snapshot($frozenRat))
     // Rat death 1st priority
     // Room depleted 2nd
     // Level up / Level Down 3rd
@@ -72,8 +69,8 @@
       popupState = RESULT_POPUP_STATE.LEVEL_DOWN
     }
 
-    // Testing. Remove this
-    popupState = RESULT_POPUP_STATE.LEVEL_UP
+    // Uncomment to test one of the states
+    // popupState = RESULT_POPUP_STATE.LEVEL_DOWN
   }
 
   const processRoom = async () => {
