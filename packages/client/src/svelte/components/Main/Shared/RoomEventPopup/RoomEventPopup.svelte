@@ -6,6 +6,7 @@
   import { type Room } from "@modules/state/base/types"
   import { RESULT_POPUP_STATE } from "@modules/ui/enums"
   import RatDeath from "@components/Main/RatContainer/YourRat/RatDeath.svelte" // move to more appropriate place
+  import RatElevator from "@components/Main/RatContainer/YourRat/RatElevator.svelte" // move to more appropriate place
   import { frozenRat } from "@components/Main/RoomResult/state.svelte"
   import { ratLevel } from "@modules/state/base/stores"
   import { playSound } from "@modules/sound"
@@ -86,6 +87,11 @@
     >
       {#if popupState === RESULT_POPUP_STATE.RAT_DEAD}
         <RatDeath />
+      {/if}
+      {#if popupState === RESULT_POPUP_STATE.LEVEL_DOWN || popupState === RESULT_POPUP_STATE.LEVEL_UP}
+        <RatElevator
+          direction={popupState === RESULT_POPUP_STATE.LEVEL_UP ? -1 : 1}
+        />
       {/if}
       {#if popupState === RESULT_POPUP_STATE.ROOM_DEPLETED}
         <img
