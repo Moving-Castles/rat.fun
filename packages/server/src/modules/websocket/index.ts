@@ -23,4 +23,4 @@ export async function broadcast(messageObject: OffChainMessage): Promise<void> {
   Object.keys(wsConnections).forEach((ratId) => {
     sendToClient(ratId, messageObject);
   });
-} 
+}

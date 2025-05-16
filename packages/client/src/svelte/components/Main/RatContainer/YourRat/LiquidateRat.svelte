@@ -3,7 +3,7 @@
   import { liquidateRat } from "@modules/action"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
   import { playSound } from "@modules/sound"
-  import { rat } from "@modules/state/base/stores"
+  import { player } from "@modules/state/base/stores"
   import { tippy } from "svelte-tippy"
   import Spinner from "@components/Main/Shared/Spinner/Spinner.svelte"
   import { walletNetwork } from "@modules/network"
@@ -25,7 +25,6 @@
     busy = true
     const action = liquidateRat()
 
-    const liquidationRatName = $rat.name
     try {
       liquidationMessage = "Eliminating rat..."
       await waitForCompletion(action)
@@ -35,7 +34,7 @@
       console.error(e)
     } finally {
       liquidationMessage = "Elimination complete"
-      sendLiquidateRatMessage($walletNetwork, liquidationRatName)
+      sendLiquidateRatMessage($walletNetwork, $player.ownedRat)
       setTimeout(() => {
         modal.close()
       }, 1200)

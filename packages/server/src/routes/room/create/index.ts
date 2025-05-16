@@ -62,31 +62,36 @@ async function routes(fastify: FastifyInstance) {
         await systemCalls.createRoom(playerId, levelId, roomId, roomPrompt)
         console.timeEnd("–– Chain call")
 
-        // Generate image
-        console.time("–– Image generation")
-        try {
-          // Get the image data
-          const imageBuffer = await generateImage(roomPrompt)
-          
-          // Get world address - await the network promise first
-          const resolvedNetwork = await network
-          const worldAddress = resolvedNetwork.worldContract?.address ?? "0x0"
+        // Start image generation and CMS write in the background
+        const handleImageAndCMS = async () => {
+          console.time("–– Image generation")
+          try {
+            // Get the image data
+            const imageBuffer = await generateImage(roomPrompt)
+            
+            // Get world address - await the network promise first
+            const resolvedNetwork = await network
+            const worldAddress = resolvedNetwork.worldContract?.address ?? "0x0"
 
-          // Write the document
-          await writeRoomToCMS(worldAddress, roomId, roomPrompt, player, imageBuffer)
-          
-        } catch (error) {
-          // Handle CMS-specific errors
-          if (error instanceof CMSError) {
-            console.error(`CMS Error: ${error.message}`, error);
-            // We don't want to fail the entire request if CMS write fails
-            // But we do want to log it properly
-          } else {
-            // For unexpected errors, log them but don't fail the request
-            console.error("Unexpected error in image generation or CMS write:", error);
+            // Write the document
+            await writeRoomToCMS(worldAddress, roomId, roomPrompt, player, imageBuffer)
+            
+          } catch (error) {
+            // Handle CMS-specific errors
+            if (error instanceof CMSError) {
+              console.error(`CMS Error: ${error.message}`, error);
+              // We don't want to fail the entire request if CMS write fails
+              // But we do want to log it properly
+            } else {
+              // For unexpected errors, log them but don't fail the request
+              console.error("Unexpected error in image generation or CMS write:", error);
+            }
           }
+          console.timeEnd("–– Image generation")
         }
-        console.timeEnd("–– Image generation")
+
+        // Start the background process without awaiting
+        handleImageAndCMS()
 
         // Broadcast room creation message
         await broadcast(createRoomCreationMessage(roomId, player));

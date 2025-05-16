@@ -15,9 +15,25 @@ const MAX_EVENTS = 200
 let socket: WebSocket
 let reconnectAttempts = 0
 let roundTripStart = 0
+let reconnectTimeout: NodeJS.Timeout | null = null
 
 export function initOffChainSync(environment: ENVIRONMENT, playerId: string) {
   console.log("Initializing off chain sync", environment, playerId)
+
+  // Clean up any existing connection
+  if (socket) {
+    try {
+      socket.close();
+    } catch (e) {
+      console.error('Error closing existing socket:', e);
+    }
+  }
+
+  // Clear any pending reconnection
+  if (reconnectTimeout) {
+    clearTimeout(reconnectTimeout);
+    reconnectTimeout = null;
+  }
 
   let url = `ws://localhost:3131/ws/${playerId}`
 
@@ -74,16 +90,17 @@ export function initOffChainSync(environment: ENVIRONMENT, playerId: string) {
 }
 
 function attemptReconnect(environment: ENVIRONMENT, playerId: string) {
-  const delay = Math.min(
-    1000 * Math.pow(2, reconnectAttempts),
-    MAX_RECONNECTION_DELAY
-  )
-  reconnectAttempts += 1
+  if (reconnectTimeout) {
+    clearTimeout(reconnectTimeout);
+  }
 
-  setTimeout(() => {
-    console.log(`Reconnecting attempt ${reconnectAttempts}...`)
-    initOffChainSync(environment, playerId)
-  }, delay)
+  const delay = Math.min(1000 * Math.pow(2, reconnectAttempts), MAX_RECONNECTION_DELAY);
+  reconnectAttempts++;
+
+  reconnectTimeout = setTimeout(() => {
+    console.log(`Attempting to reconnect (attempt ${reconnectAttempts})...`);
+    initOffChainSync(environment, playerId);
+  }, delay);
 }
 
 export function ping() {
@@ -96,8 +113,13 @@ export function ping() {
   )
 }
 
+/****************
+ * CHAT MESSAGE
+ *****************/
+
 export async function sendChatMessage(
   walletNetwork: SetupWalletNetworkResult,
+  level: string,
   message: string
 ) {
   const signature = await walletNetwork.walletClient.signMessage({
@@ -108,6 +130,7 @@ export async function sendChatMessage(
     socket.send(
       JSON.stringify({
         topic: "chat__message",
+        level: level,
         message: message,
         signature: signature,
       })
@@ -116,6 +139,10 @@ export async function sendChatMessage(
     console.error("No socket")
   }
 }
+
+/****************
+ * RAT DEPLOYMENT
+ *****************/
 
 export async function sendDeployRatMessage(walletNetwork: SetupWalletNetworkResult) {
   const signature = await walletNetwork.walletClient.signMessage({
@@ -134,7 +161,11 @@ export async function sendDeployRatMessage(walletNetwork: SetupWalletNetworkResu
   }
 }
 
-export async function sendLiquidateRatMessage(walletNetwork: SetupWalletNetworkResult, ratName: string) {
+/****************
+ * RAT LIQUIDATION
+ *****************/
+
+export async function sendLiquidateRatMessage(walletNetwork: SetupWalletNetworkResult, ratId: string) {
   const signature = await walletNetwork.walletClient.signMessage({
     message: OFFCHAIN_VALIDATION_MESSAGE
   })
@@ -143,7 +174,7 @@ export async function sendLiquidateRatMessage(walletNetwork: SetupWalletNetworkR
     socket.send(
       JSON.stringify({
         topic: "rat__liquidate",
-        ratName: ratName,
+        ratId: ratId,
         signature: signature, 
       })
     )
@@ -152,7 +183,11 @@ export async function sendLiquidateRatMessage(walletNetwork: SetupWalletNetworkR
   }
 }
 
-export async function sendLiquidateRoomMessage(roomId: string, roomIndex: number, walletNetwork: SetupWalletNetworkResult) {
+/****************
+ * ROOM LIQUIDATION
+ *****************/
+
+export async function sendLiquidateRoomMessage(walletNetwork: SetupWalletNetworkResult, roomId: string) {
   const signature = await walletNetwork.walletClient.signMessage({
     message: OFFCHAIN_VALIDATION_MESSAGE
   })
@@ -161,8 +196,7 @@ export async function sendLiquidateRoomMessage(roomId: string, roomIndex: number
     socket.send(
       JSON.stringify({
         topic: "room__liquidation",
-        roomId: roomId,
-        roomIndex: Number(roomIndex),
+        roomId: roomId,        
         signature: signature,
       })
     )

@@ -172,8 +172,10 @@ export type OffChainMessage = {
   | "rat__deploy"
   | "rat__death" 
   | "rat__liquidate"
+  level: string;
   playerName?: string;
   ratName?: string;
+  ratId?: string;
   roomIndex?: number;
   roomId?: string;
   message?: string | string[];

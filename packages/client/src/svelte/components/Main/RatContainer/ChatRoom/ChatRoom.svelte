@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { latestEvents } from "@modules/off-chain-sync/stores"
+  import { gameConfig, rat } from "@modules/state/base/stores"
+  import { latestEventsOnRatLevel } from "@modules/off-chain-sync/stores"
   import { walletNetwork } from "@modules/network"
   import { sendChatMessage } from "@modules/off-chain-sync"
   import { websocketConnected } from "@modules/off-chain-sync/stores"
@@ -21,7 +22,7 @@
   })
 
   $effect(() => {
-    if ($latestEvents && scrollElement) {
+    if ($latestEventsOnRatLevel && scrollElement) {
       scrollElement.scrollTop = scrollElement?.scrollHeight ?? 0
     }
   })
@@ -31,7 +32,9 @@
     // Limit message length to 500 characters
     if (!value || value.length > 500) return
     try {
-      await sendChatMessage($walletNetwork, value)
+      // Level of the player's rat, or the first level if the rat is not deployed
+      const level = $rat?.level ?? $gameConfig?.levelList[0] ?? "unknown level"
+      await sendChatMessage($walletNetwork, level, value)
       value = ""
     } catch (e) {
       console.error(e)
@@ -43,7 +46,7 @@
   <ChatHeader />
   <!-- Chat scroll -->
   <div bind:this={scrollElement} class="chat-scroll">
-    {#each $latestEvents as event (event.id)}
+    {#each $latestEventsOnRatLevel as event (event.id)}
       {#if event.topic == "chat__message"}
         <ChatMessage {event} {suppressSound} />
       {:else}
