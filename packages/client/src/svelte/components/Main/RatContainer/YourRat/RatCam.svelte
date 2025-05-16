@@ -39,8 +39,10 @@
   }
 
   .square {
-    aspect-ratio: 1 / 1;
-    height: 100%;
+    width: 200px;
+    height: 200px;
+    // aspect-ratio: 1 / 1;
+    // height: 100%;
   }
 
   .overlay {
