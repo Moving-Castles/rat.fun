@@ -7,7 +7,7 @@
 
   let { moving } = $props()
 
-  let cameraY = new Tween(1, { duration: 60000, easing: cubicIn })
+  let cameraY = new Tween(2, { duration: 60000, easing: cubicIn })
 
   cameraY.set(100)
 

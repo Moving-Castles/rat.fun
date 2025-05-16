@@ -12,6 +12,7 @@
   import { enterRoom } from "@components/Main/RoomResult"
   import { ENVIRONMENT } from "@mud/enums"
   import { walletNetwork } from "@modules/network"
+  import { frozenRat } from "@components/Main/RoomResult/state.svelte"
 
   import Log from "@components/Main/RoomResult/Log/Log.svelte"
   import RoomMeta from "@components/Main/RoomResult/RoomMeta/RoomMeta.svelte"
@@ -19,6 +20,7 @@
   import RoomInfoBox from "@components/Main/RoomResult/InfoBox/Room/RoomInfoBox.svelte"
   import { getUIState } from "@modules/ui/state.svelte"
   import RoomEventPopup from "../Shared/RoomEventPopup/RoomEventPopup.svelte"
+  import { getContentState } from "@modules/content/state.svelte"
 
   const { rooms } = getUIState()
 
@@ -42,25 +44,39 @@
   let entering = $state(true)
   let result: EnterRoomReturnValue | null = $state(null)
 
-  let popup: RESULT_POPUP_STATE = $state(RESULT_POPUP_STATE.NONE)
+  let popupState: RESULT_POPUP_STATE = $state(RESULT_POPUP_STATE.NONE)
+
+  let { rooms: sanityRoomState } = getContentState()
+
+  let room = $derived($roomsState?.[roomId ?? ""])
+
+  let sanityRoomContent = $derived(
+    sanityRoomState.current.find(r => r._id.trim() == roomId.trim())
+  )
 
   $effect(() => {
     if (animationstart) animationstarted = true
   })
 
   const checkEvents = async () => {
+    // console.log("CHecking result")
+    // console.log($state.snapshot(result))
+    // console.log($state.snapshot($frozenRat))
     // Rat death 1st priority
     // Room depleted 2nd
     // Level up / Level Down 3rd
-    // if (result.ratDeath) {
-    // popup = RESULT_POPUP_STATE.RAT_DEATH
-    // } else if (result.roomDepleted) {
-    // popup = RESULT_POPUP_STATE.ROOM_DEPLETED
-    // } else if (result.levelUp) {
-    // popup = RESULT_POPUP_STATE.LEVEL_UP
-    // } else if (result.levelDown) {
-    // popup = RESULT_POPUP_STATE.LEVEL_DOWN
-    // }
+    if (result.ratDead) {
+      popupState = RESULT_POPUP_STATE.RAT_DEAD
+    } else if (result.roomDepleted) {
+      popupState = RESULT_POPUP_STATE.ROOM_DEPLETED
+    } else if (result.levelUp) {
+      popupState = RESULT_POPUP_STATE.LEVEL_UP
+    } else if (result.levelDown) {
+      popupState = RESULT_POPUP_STATE.LEVEL_DOWN
+    }
+
+    // Testing. Remove this
+    // popupState = RESULT_POPUP_STATE.LEVEL_UP
   }
 
   const processRoom = async () => {
@@ -104,11 +120,7 @@
 
 <div class="room-result">
   {#if entering && animationstarted}
-    <RoomMeta
-      rat={$ratState}
-      room={$roomsState?.[roomId ?? ""]}
-      roomId={roomId as Hex}
-    />
+    <RoomMeta rat={$ratState} {room} roomId={roomId as Hex} />
   {:else}
     <!-- INFO BOXES -->
     <div class="info-boxes">
@@ -128,10 +140,10 @@
 </div>
 
 {#snippet event()}
-  <RoomEventPopup {result} state={popup} />
+  <RoomEventPopup {result} {popupState} {room} {sanityRoomContent} />
 {/snippet}
 
-{#if popup !== RESULT_POPUP_STATE.NONE && result !== null}
+{#if popupState !== RESULT_POPUP_STATE.NONE && result !== null}
   <ModalTarget content={event} />
 {/if}
 
