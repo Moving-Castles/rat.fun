@@ -153,6 +153,7 @@
         align-items: center;
         gap: 10px;
         width: 100%;
+        flex-flow: row nowrap;
 
         &.top {
           margin-bottom: 5px;
@@ -204,6 +205,7 @@
         background: var(--color-value);
         color: var(--background);
         padding: 5px;
+        white-space: nowrap;
 
         &.depleted {
           background: var(--color-death);

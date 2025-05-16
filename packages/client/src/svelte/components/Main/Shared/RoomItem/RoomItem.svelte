@@ -6,6 +6,7 @@
   import { urlFor } from "@modules/content"
   import { blockNumber } from "@modules/network"
   import { getContentState } from "@modules/content/state.svelte"
+  import NumberGoing from "@components/Main/Shared/NumberGoing/NumberGoing.svelte"
 
   let { rooms: roomsState } = getContentState()
 
@@ -73,7 +74,7 @@
         <span class="divider">•</span>
         <!-- BALANCE -->
         <span class="balance" class:depleted={room.balance == 0}>
-          Balance: ${room.balance}
+          Balance: <NumberGoing prepend="$" value={room.balance} />
         </span>
         <!-- DIVIDER -->
         <span class="divider">•</span>
@@ -139,6 +140,7 @@
         align-items: center;
         gap: 10px;
         width: 100%;
+        flex-flow: row nowrap;
 
         &.top {
           margin-bottom: 5px;

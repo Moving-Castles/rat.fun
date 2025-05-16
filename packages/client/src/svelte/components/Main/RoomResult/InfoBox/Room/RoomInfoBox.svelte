@@ -126,12 +126,14 @@
       background: var(--color-alert);
       padding: 5px;
       color: var(--background);
+      white-space: nowrap;
     }
 
     .balance {
       background: var(--color-value);
       padding: 5px;
       color: var(--background);
+      white-space: nowrap;
 
       &.empty {
         background: var(--color-death);

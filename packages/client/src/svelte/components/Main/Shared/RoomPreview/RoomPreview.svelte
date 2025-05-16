@@ -249,6 +249,7 @@
           margin-bottom: 5px;
           display: flex;
           align-items: center;
+          flex-flow: row nowrap;
           gap: 10px;
           width: 100%;
         }
@@ -263,6 +264,7 @@
           background: var(--color-value);
           color: var(--background);
           padding: 5px;
+          white-space: nowrap;
 
           &.depleted {
             background: var(--color-death);
