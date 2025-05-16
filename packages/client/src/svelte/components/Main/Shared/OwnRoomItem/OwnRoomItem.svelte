@@ -122,6 +122,7 @@
       justify-content: center;
       width: 50%;
       height: 100%;
+      font-size: var(--font-size-small);
 
       .profit-indicator {
         text-align: center;

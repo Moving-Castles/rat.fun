@@ -240,7 +240,7 @@
       flex: 1;
       min-height: 0;
       height: 100%;
-      padding-bottom: 20px;
+      padding-bottom: 60px;
 
       .room-image {
         margin-bottom: 5px;
