@@ -70,11 +70,8 @@ library LibManager {
     // - - - - - - - - -
     // Function removes traits from rat
     // - - - - - - - - -
-    // Value of traits is connected to room blance:
-    // - If a trait with negative value is removed, room balance goes down
-    // - If a trait with positive value is removed, room balance goes up
-    // Caveats:
-    // - Room can not remove traits with negative value if it does not have the balance to cover it
+    // Value of trait is always positive.
+    // Removing a trait adds the value to the room balance
     // - - - - - - - - -
 
     // If list is empty, exit early
@@ -84,22 +81,10 @@ library LibManager {
 
     for (uint i = 0; i < _traitsToRemoveFromRat.length; i++) {
       bytes32 traitId = _traitsToRemoveFromRat[i];
-      uint256 traitValueAmount = LibUtils.signedToUnsigned(Value.get(traitId));
-
-      if (Value.get(traitId) <= 0) {
-        // Trait value is negative (or 0), make sure room has enough balance to cover it
-        if (Balance.get(_roomId) >= traitValueAmount) {
-          // If so, remove value from room balance
-          Balance.set(_roomId, LibUtils.safeSubtract(Balance.get(_roomId), traitValueAmount));
-          // Remove trait from rat
-          Traits.set(_ratId, LibUtils.removeFromArray(Traits.get(_ratId), traitId));
-        }
-      } else {
-        // Trait value is positive, add value to room balance
-        Balance.set(_roomId, Balance.get(_roomId) + traitValueAmount);
-        // Remove trait from rat
-        Traits.set(_ratId, LibUtils.removeFromArray(Traits.get(_ratId), traitId));
-      }
+      // Trait value is positive, add value to room balance
+      Balance.set(_roomId, Balance.get(_roomId) + Value.get(traitId));
+      // Remove trait from rat
+      Traits.set(_ratId, LibUtils.removeFromArray(Traits.get(_ratId), traitId));
     }
   }
 
@@ -114,9 +99,8 @@ library LibManager {
     // - - - - - - - - -
     // Function adds traits to rat
     // - - - - - - - - -
-    // Value of traits is connected to room blance:
-    // - If a trait with negative value is added, room balance goes up
-    // - If a trait with positive value is added, room balance goes down
+    // Value of item is always positive.
+    // Adding an item subtracts the value from the room balance
     // Caveats:
     // - Room can not add traits with positive value if it does not have the balance to cover it
     // - A rat can have a maximum of 5 traits
@@ -134,21 +118,54 @@ library LibManager {
       }
 
       Item calldata newTrait = _traitsToAddToRat[i];
-      uint256 traitValueAmount = LibUtils.signedToUnsigned(newTrait.value);
 
-      if (newTrait.value <= 0) {
-        // Trait value is negative (or 0), add value to room balance
-        Balance.set(_roomId, Balance.get(_roomId) + traitValueAmount);
+      // Trait value is positive, make sure room has enough balance to cover it
+      if (Balance.get(_roomId) >= newTrait.value) {
+        // If so, remove value from room balance
+        Balance.set(_roomId, LibUtils.safeSubtract(Balance.get(_roomId), newTrait.value));
         // Create trait and add it to the rat
         Traits.push(_ratId, LibTrait.createTrait(newTrait));
-      } else {
-        // Trait value is positive, make sure room has enough balance to cover it
-        if (Balance.get(_roomId) >= traitValueAmount) {
-          // If so, remove value from room balance
-          Balance.set(_roomId, LibUtils.safeSubtract(Balance.get(_roomId), traitValueAmount));
-          // Create trait and add it to the rat
-          Traits.push(_ratId, LibTrait.createTrait(newTrait));
-        }
+      }
+    }
+  }
+
+  /**
+   * @notice Add items to rat inventory
+   * @dev Used by the Manager system to apply changes to a rat after room events
+   * @param _ratId Id of the rat
+   * @param _roomId Id of the room
+   * @param _itemsToAddToRat Information of items to add to rat
+   */
+  function addItemsToRat(bytes32 _ratId, bytes32 _roomId, Item[] calldata _itemsToAddToRat) internal {
+    // - - - - - - - - -
+    // Function adds items to rat
+    // - - - - - - - - -
+    // Value of item is always positive.
+    // Adding an item subtracts the value from the room balance
+    // Caveats:
+    // - Room can not add an item if it does not have the balance to cover it
+    // - A rat can have a maximum of 5 items in inventory
+    // - - - - - - - - -
+
+    // If list is empty, exit early
+    if (_itemsToAddToRat.length == 0) {
+      return;
+    }
+
+    for (uint i = 0; i < _itemsToAddToRat.length; i++) {
+      // Abort if inventory is full
+      if (Inventory.length(_ratId) >= MAX_INVENTORY_SIZE) {
+        return;
+      }
+
+      Item calldata newItem = _itemsToAddToRat[i];
+
+      // Make sure room has enough balance to cover it
+      if (Balance.get(_roomId) >= newItem.value) {
+        // If so, remove value from room balance
+        Balance.set(_roomId, LibUtils.safeSubtract(Balance.get(_roomId), newItem.value));
+        // Create item and add it to the rat
+        Inventory.push(_ratId, LibItem.createItem(newItem));
       }
     }
   }
@@ -175,52 +192,11 @@ library LibManager {
 
     for (uint i = 0; i < _itemsToRemoveFromRat.length; i++) {
       bytes32 itemId = _itemsToRemoveFromRat[i];
-      uint256 itemValueAmount = LibUtils.signedToUnsigned(Value.get(itemId));
+      uint256 itemValueAmount = Value.get(itemId);
       // Add value to room balance
       Balance.set(_roomId, Balance.get(_roomId) + itemValueAmount);
       // Remove item from rat
       Inventory.set(_ratId, LibUtils.removeFromArray(Inventory.get(_ratId), itemId));
-    }
-  }
-
-  /**
-   * @notice Add items to rat inventory
-   * @dev Used by the Manager system to apply changes to a rat after room events
-   * @param _ratId Id of the rat
-   * @param _roomId Id of the room
-   * @param _itemsToAddToRat Information of items to add to rat
-   */
-  function addItemsToRat(bytes32 _ratId, bytes32 _roomId, Item[] calldata _itemsToAddToRat) internal {
-    // - - - - - - - - -
-    // Function adds items to rat
-    // - - - - - - - - -
-    // Value of item is always positive.
-    // Adding an item subtracts the value from the room balance
-    // Caveats:
-    // - A rat can have a maximum of 5 items in inventory
-    // - - - - - - - - -
-
-    // If list is empty, exit early
-    if (_itemsToAddToRat.length == 0) {
-      return;
-    }
-
-    for (uint i = 0; i < _itemsToAddToRat.length; i++) {
-      // Abort if inventory is full
-      if (Inventory.length(_ratId) >= MAX_INVENTORY_SIZE) {
-        return;
-      }
-
-      Item calldata newItem = _itemsToAddToRat[i];
-      uint256 itemValueAmount = LibUtils.signedToUnsigned(newItem.value);
-
-      // Make sure room has enough balance to cover it
-      if (Balance.get(_roomId) >= itemValueAmount) {
-        // If so, remove value from room balance
-        Balance.set(_roomId, LibUtils.safeSubtract(Balance.get(_roomId), itemValueAmount));
-        // Create item and add it to the rat
-        Inventory.push(_ratId, LibItem.createItem(newItem));
-      }
     }
   }
 

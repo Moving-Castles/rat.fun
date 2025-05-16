@@ -1,4 +1,4 @@
-import { OutcomeReturnValue, TraitChange, ItemChange } from "@modules/llm/types"
+import { OutcomeReturnValue, TraitChange, ItemChange } from "@modules/types"
 import { Rat, Room,} from "@modules/types"
 
 export function createOutcomeCallArgs(rat: Rat, room: Room, outcome: OutcomeReturnValue) {
@@ -11,7 +11,8 @@ export function createOutcomeCallArgs(rat: Rat, room: Room, outcome: OutcomeRetu
     // TRAIT struct
     const traitsToAddToRat = outcome?.traitChanges.filter(c => c.type === "add").map(c => {
       // Limit name length
-      return { name: c.name.slice(0, 48), value: c.value }
+      // Value is always positive
+      return { name: c.name.slice(0, 48), value: Math.abs(c.value) }
     }) ?? [];
 
     // Only ID
@@ -20,7 +21,8 @@ export function createOutcomeCallArgs(rat: Rat, room: Room, outcome: OutcomeRetu
     // ITEM struct
     const itemsToAddToRat = outcome?.itemChanges.filter(c => c.type === "add").map(c => {
       // Limit name length
-      return { name: c.name.slice(0, 48), value: c.value }
+      // Value is always positive
+      return { name: c.name.slice(0, 48), value: Math.abs(c.value)}
     }) ?? [];
   
     return [

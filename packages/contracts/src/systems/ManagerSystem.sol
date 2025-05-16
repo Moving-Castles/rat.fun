@@ -68,8 +68,9 @@ contract ManagerSystem is System {
     // TRAITS
     // * * * * * * * * * * * * *
 
-    // Traits can have positive or negative value: effect on room balance unknown
+    // As traits always have positive value, this will always increase the room balance
     LibManager.removeTraitsFromRat(_ratId, _roomId, _traitsToRemoveFromRat);
+    // As traits always have positive value, this will always decrease the room balance
     LibManager.addTraitsToRat(_ratId, _roomId, _traitToAddToRat);
 
     // * * * * * * * * * * * * *

@@ -204,7 +204,6 @@
           data-id={traitChange.id}
           data-value={traitChange.value}
           data-name={traitChange.name}
-          class:negative={traitChange.value <= 0}
           class:remove={traitChange.type === "remove"}
         >
           {traitChange.name} (${traitChange.value})

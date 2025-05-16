@@ -3,7 +3,7 @@
  * for changes in the World state (using the System contracts).
  */
 
-import { OutcomeReturnValue } from "@modules/llm/types"
+import { OutcomeReturnValue } from "@modules/types"
 import { SetupNetworkResult } from "./setupNetwork"
 import { Rat, Room } from "@modules/types"
 import { getEnterRoomData } from "@modules/mud/getOnchainData/getEnterRoomData"
