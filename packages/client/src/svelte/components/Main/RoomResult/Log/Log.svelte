@@ -11,12 +11,17 @@
   let {
     result,
     animationstarted,
-  }: { result: EnterRoomReturnValue | undefined; animationstarted: boolean } =
-    $props()
+    onComplete,
+  }: {
+    result: EnterRoomReturnValue | undefined
+    animationstarted: boolean
+    onComplete: () => void
+  } = $props()
 
   // Elements
   let logElement: HTMLDivElement
   let returnButtonElement: HTMLButtonElement
+  let done = $state(false)
 
   import { getUIState } from "@modules/ui/state.svelte"
   const { rooms } = getUIState()
@@ -56,6 +61,12 @@
         duration: 0.5,
         ease: "power2.out",
       })
+      // Add a callback to the parent timeline to check for events
+      // The call is added to the end of the timeline by default
+      logTimeline.call(() => {
+        done = true
+        onComplete()
+      })
       // All timelines added, play the parent timeline
       logTimeline.play()
     }
@@ -77,6 +88,7 @@
   {/if}
 
   <button
+    disabled={!done}
     class="return"
     bind:this={returnButtonElement}
     onclick={sendLeaveRoom}
@@ -84,8 +96,6 @@
     LEAVE ROOM
   </button>
 </div>
-
-<!-- <button class="restart-button" onclick={restartAnimation}>Restart</button> -->
 
 <style lang="scss">
   .log {
@@ -109,6 +119,10 @@
       cursor: pointer;
       border: var(--default-border-style);
 
+      &[disabled] {
+        background: var(--color-grey-dark);
+        color: var(--black);
+      }
       &:hover {
         background: var(--color-alert);
         color: var(--foreground);

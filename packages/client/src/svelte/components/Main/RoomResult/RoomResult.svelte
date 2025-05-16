@@ -1,6 +1,8 @@
 <script lang="ts">
   import type { EnterRoomReturnValue } from "@server/modules/types"
   import type { Hex } from "viem"
+  import { RESULT_POPUP_STATE } from "@modules/ui/enums"
+  import ModalTarget from "@components/Main/Modal/ModalTarget.svelte"
 
   import {
     player,
@@ -15,8 +17,9 @@
   import RoomMeta from "@components/Main/RoomResult/RoomMeta/RoomMeta.svelte"
   import RatInfoBox from "@components/Main/RoomResult/InfoBox/Rat/RatInfoBox.svelte"
   import RoomInfoBox from "@components/Main/RoomResult/InfoBox/Room/RoomInfoBox.svelte"
-
   import { getUIState } from "@modules/ui/state.svelte"
+  import RoomEventPopup from "../Shared/RoomEventPopup/RoomEventPopup.svelte"
+
   const { rooms } = getUIState()
 
   let {
@@ -39,9 +42,26 @@
   let entering = $state(true)
   let result: EnterRoomReturnValue | null = $state(null)
 
+  let popup: RESULT_POPUP_STATE = $state(RESULT_POPUP_STATE.NONE)
+
   $effect(() => {
     if (animationstart) animationstarted = true
   })
+
+  const checkEvents = async () => {
+    // Rat death 1st priority
+    // Room depleted 2nd
+    // Level up / Level Down 3rd
+    // if (result.ratDeath) {
+    // popup = RESULT_POPUP_STATE.RAT_DEATH
+    // } else if (result.roomDepleted) {
+    // popup = RESULT_POPUP_STATE.ROOM_DEPLETED
+    // } else if (result.levelUp) {
+    // popup = RESULT_POPUP_STATE.LEVEL_UP
+    // } else if (result.levelDown) {
+    // popup = RESULT_POPUP_STATE.LEVEL_DOWN
+    // }
+  }
 
   const processRoom = async () => {
     console.time("Process")
@@ -97,7 +117,7 @@
       <RoomInfoBox roomId={roomId as Hex} />
     </div>
     <!-- LOG -->
-    <Log {result} {animationstarted} />
+    <Log {result} {animationstarted} onComplete={checkEvents} />
     <!-- ERROR -->
     {#if error}
       <div class="error">
@@ -106,6 +126,14 @@
     {/if}
   {/if}
 </div>
+
+{#snippet event()}
+  <RoomEventPopup {result} state={popup} />
+{/snippet}
+
+{#if popup !== RESULT_POPUP_STATE.NONE && result !== null}
+  <ModalTarget content={event} />
+{/if}
 
 <style lang="scss">
   .room-result {
