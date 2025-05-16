@@ -193,7 +193,14 @@
       <div class="no-rat-warning">Deploy a rat to access this room</div>
     {/if}
 
-    {#if room.balance > 0 && ($rat?.health ?? 0) > 0 && !isOwnRoomListing}
+    <!--
+     Show enter button if:
+     * - Not in own room listing
+     * - Room is not depleted
+     * - Rat exists and is alive
+     * - Room is at the same level as the rat
+     -->
+    {#if !isOwnRoomListing && room.balance > 0 && ($rat?.health ?? 0) > 0 && room.level == $rat.level}
       <div class="room-enter">
         <button onclick={sendEnterRoom}>Send {$rat.name} to room</button>
       </div>
