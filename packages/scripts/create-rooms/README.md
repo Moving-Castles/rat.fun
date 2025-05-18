@@ -33,7 +33,8 @@ PRIVATE_KEY=your_private_key_here
 
 ```json
 {
-  "roomPrompt": "Your Room Prompt"
+  "roomPrompt": "Your Room Prompt",
+  "levelId": "Level ID"
 }
 ```
 
