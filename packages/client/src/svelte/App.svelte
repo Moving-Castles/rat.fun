@@ -2,8 +2,8 @@
   import { onMount } from "svelte"
   import { ENVIRONMENT } from "@mud/enums"
   import { initSound } from "@modules/sound"
-  import { UIState } from "@modules/ui/stores"
-  import { UI } from "@modules/ui/enums"
+  import { UIState, UILocation } from "@modules/ui/stores"
+  import { UI, LOCATION } from "@modules/ui/enums"
   import { initOffChainSync } from "@modules/off-chain-sync"
   import { playerId } from "@modules/state/base/stores"
   import { websocketConnected } from "@modules/off-chain-sync/stores"
@@ -16,11 +16,17 @@
   import { Modal } from "@components/Main/Modal/state.svelte"
   import Loading from "@components/Loading/Loading.svelte"
   import Main from "@components/Main/Main.svelte"
+  import Spawn from "@components/Spawn/Spawn.svelte"
 
   let { environment }: { environment: ENVIRONMENT } = $props()
 
-  const loadedEnvironment = () => {
+  const environmentLoaded = () => {
     UIState.set(UI.SPAWNING)
+  }
+
+  const playerSpawned = () => {
+    UIState.set(UI.READY)
+    UILocation.set(LOCATION.MAIN)
   }
 
   // Init of chain sync when player is ready
@@ -59,10 +65,16 @@
   <div class="context-main">
     {#if $UIState === UI.LOADING}
       <main>
-        <Loading {environment} on:done={loadedEnvironment} />
+        <Loading {environment} loaded={environmentLoaded} />
       </main>
-    {:else}
+    {:else if $UIState === UI.SPAWNING}
+      <main>
+        <Spawn spawned={playerSpawned} />
+      </main>
+    {:else if $UIState === UI.READY}
       <Main {environment} />
+    {:else}
+      <main>ERROR</main>
     {/if}
 
     <Modal />
