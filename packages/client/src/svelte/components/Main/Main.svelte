@@ -1,16 +1,12 @@
 <script lang="ts">
   import { onMount } from "svelte"
   import { ENVIRONMENT } from "@mud/enums"
-  import { UIState } from "@modules/ui/stores"
-  import { UI } from "@modules/ui/enums"
   import { getUIState } from "@modules/ui/state.svelte"
   import { initStaticContent } from "@modules/content"
   import { publicNetwork } from "@modules/network"
 
-  import Spawn from "@components/Spawn/Spawn.svelte"
   import RatContainer from "@components/Main/RatContainer/RatContainer.svelte"
   import RoomContainer from "@components/Main/RoomContainer/RoomContainer.svelte"
-  import ModalTarget from "@components/Main/Modal/ModalTarget.svelte"
   import RoomResult from "@components/Main/RoomResult/RoomResult.svelte"
   import Floors from "@components/Main/Floors/Floors.svelte"
 
@@ -104,13 +100,6 @@
       {environment}
     />
   </div>
-{/if}
-
-{#snippet spawn()}
-  <Spawn />
-{/snippet}
-{#if $UIState === UI.SPAWNING}
-  <ModalTarget noclose content={spawn} />
 {/if}
 
 {#if debugTransition}
