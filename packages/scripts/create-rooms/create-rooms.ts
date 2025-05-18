@@ -44,6 +44,7 @@ const MESSAGE = "RATROOM";
 
 // Define types
 interface RoomDetails {
+  levelId: string;
   roomPrompt: string;
 }
 
@@ -85,11 +86,16 @@ try {
       log(`Room missing required fields: ${JSON.stringify(room)}`, 'error');
       process.exit(1);
     }
+
+    if (!room.levelId) {
+      log(`Room missing required fields: ${JSON.stringify(room)}`, 'error');
+      process.exit(1);
+    }
     
-    // Truncate roomPrompt if it's longer than 300 characters
-    if (room.roomPrompt.length > 300) {
-      log(`Prompt exceeds 300 characters. Truncating...`, 'info');
-      room.roomPrompt = room.roomPrompt.substring(0, 300);
+    // Truncate roomPrompt if it's longer than 280 characters
+    if (room.roomPrompt.length > 280) {
+      log(`Prompt exceeds 280 characters. Truncating...`, 'info');
+      room.roomPrompt = room.roomPrompt.substring(0, 280);
     }
   }
   
@@ -136,7 +142,8 @@ async function sendRequest(signature: string, room: RoomDetails): Promise<void> 
   const formData = new URLSearchParams();
   formData.append('signature', signature);
   formData.append('roomPrompt', room.roomPrompt);
-
+  formData.append('levelId', room.levelId);
+  
   try {
     log(`Sending request for room: ${room.roomPrompt}...`);
     const response = await fetch(apiUrl, {
