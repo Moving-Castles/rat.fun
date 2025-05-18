@@ -88,8 +88,6 @@
         <span class="owner">{getRoomOwnerName(room)}</span>
         <!-- DIVIDER -->
         <span class="divider">•</span>
-        <!-- DIVIDER -->
-        <span class="divider">•</span>
         <!-- VISITOR COUNT -->
         <span class="visit-count small">{room.visitCount} visits</span>
         {#if room?.killCount > 0}
@@ -204,7 +202,7 @@
           max-height: 160px;
 
           &.short {
-            font-size: 24px;
+            font-size: 26px;
           }
 
           &.medium {
@@ -212,7 +210,7 @@
           }
 
           &.long {
-            font-size: 16px;
+            font-size: 20px;
           }
 
           &.extra-long {

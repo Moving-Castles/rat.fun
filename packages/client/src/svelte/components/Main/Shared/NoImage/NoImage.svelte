@@ -4,7 +4,7 @@
 
 <div class="no-image">
   <div class="no-image-text">
-    <!-- <div>IMAGE LOADING</div> -->
+    <div>IMAGE LOADING</div>
     <div>
       <SmallSpinner />
     </div>
@@ -24,7 +24,6 @@
 
     .no-image-text {
       display: flex;
-      // flex-direction: column;
       align-items: center;
       gap: 1ch;
     }

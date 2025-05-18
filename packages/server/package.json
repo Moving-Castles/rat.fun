@@ -8,26 +8,26 @@
     "dev": "pnpm tsx src/index.ts"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.50.4",
+    "@anthropic-ai/sdk": "^0.51.0",
     "fastify": "^5.3.3",
     "@fastify/compress": "^8.0.1",
     "@fastify/cors": "^11.0.1",
     "@fastify/formbody": "^8.0.2",
     "@fastify/one-line-logger": "^2.0.2",
     "@fastify/websocket": "^11.0.2",
-    "@latticexyz/common": "2.2.22-7c2fe37ce180c3d55160202867bd3835683f532b",
-    "@latticexyz/recs": "2.2.22-7c2fe37ce180c3d55160202867bd3835683f532b",
-    "@latticexyz/schema-type": "2.2.22-7c2fe37ce180c3d55160202867bd3835683f532b",
-    "@latticexyz/store-sync": "2.2.22-7c2fe37ce180c3d55160202867bd3835683f532b",
-    "@latticexyz/utils": "2.2.22-7c2fe37ce180c3d55160202867bd3835683f532b",
-    "@latticexyz/world": "2.2.22-7c2fe37ce180c3d55160202867bd3835683f532b",
+    "@latticexyz/common": "2.2.22-34ec2ec478d6e3d46d82c74a6e09387d83b7776d",
+    "@latticexyz/recs": "2.2.22-34ec2ec478d6e3d46d82c74a6e09387d83b7776d",
+    "@latticexyz/schema-type": "2.2.22-34ec2ec478d6e3d46d82c74a6e09387d83b7776d",
+    "@latticexyz/store-sync": "2.2.22-34ec2ec478d6e3d46d82c74a6e09387d83b7776d",
+    "@latticexyz/utils": "2.2.22-34ec2ec478d6e3d46d82c74a6e09387d83b7776d",
+    "@latticexyz/world": "2.2.22-34ec2ec478d6e3d46d82c74a6e09387d83b7776d",
     "@sanity/client": "^7.2.1",
     "@sentry/node": "^8.54.0",
     "@sentry/profiling-node": "^8.54.0",
     "contracts": "workspace:*",
     "dotenv": "^16.5.0",
     "ethereumjs-util": "^7.1.5",
-    "groq-sdk": "^0.21.0",
+    "groq-sdk": "^0.22.0",
     "js-sha3": "^0.9.3",
     "lowdb": "^7.0.1",
     "openai": "^4.98.0",
@@ -35,7 +35,7 @@
     "rxjs": "^7.8.2",
     "tsx": "^4.19.4",
     "uuid": "^11.1.0",
-    "viem": "2.29.3"
+    "viem": "2.29.4"
   },
   "engines": {
     "node": "^20"
