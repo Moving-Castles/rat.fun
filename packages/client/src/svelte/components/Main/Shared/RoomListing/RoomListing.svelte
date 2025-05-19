@@ -43,12 +43,6 @@
   })
   let activeList = $state<[string, Room][]>([])
 
-  $effect(() => {
-    if (!lastChecked) {
-      updateRooms()
-    }
-  })
-
   const updateRooms = () => {
     activeList = roomList
     lastChecked = Date.now()
@@ -58,24 +52,32 @@
     (isOwnRoomListing && $myPreviewId) || (!isOwnRoomListing && $previewId)
   )
 
-  // Update currentroom with a delay to allow animations to play
   $effect(() => {
-    if (isOwnRoomListing) {
-      if (!$myPreviewId) {
-        setTimeout(() => (currentRoom = $myPreviewId as Hex), 400)
-      } else {
-        currentRoom = $myPreviewId as Hex
-      }
+    if (!lastChecked) {
+      updateRooms()
     }
   })
+
+  // Update currentroom with a delay to allow animations to play
   $effect(() => {
-    if (!isOwnRoomListing) {
-      if (!$previewId) {
-        setTimeout(() => (currentRoom = $previewId as Hex), 400)
-      } else {
-        currentRoom = $previewId as Hex
-      }
-    }
+    currentRoom = $myPreviewId as Hex
+    // if (isOwnRoomListing) {
+    //   if (!$myPreviewId) {
+    //     setTimeout(() => (currentRoom = $myPreviewId as Hex), 400)
+    //   } else {
+    //     currentRoom = $myPreviewId as Hex
+    //   }
+    // }
+  })
+  $effect(() => {
+    currentRoom = $previewId as Hex
+    // if (!isOwnRoomListing) {
+    //   if (!$previewId) {
+    //     setTimeout(() => (currentRoom = $previewId as Hex), 400)
+    //   } else {
+    //     currentRoom = $previewId as Hex
+    //   }
+    // }
   })
 </script>
 

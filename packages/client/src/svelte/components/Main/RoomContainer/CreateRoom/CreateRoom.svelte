@@ -66,15 +66,15 @@
     await initStaticContent($publicNetwork.worldAddress)
 
     if (result.roomId) {
+      rooms.preview(result?.roomId)
+      busy = false
       // We can only show the room preview if the static content has caught up
       // Wait for the static content to catch up
 
-      const roomExists = await poll(result?.roomId)
+      // const roomExists = await poll(result?.roomId)
 
-      if (roomExists) {
-        rooms.preview(result?.roomId)
-        busy = false
-      }
+      // if (roomExists) {
+      // }
     }
   }
 </script>

@@ -1,32 +1,15 @@
 <script lang="ts">
   import { getUIState } from "@modules/ui/state.svelte"
   import { ENVIRONMENT } from "@mud/enums"
-  import { SvelteURL } from "svelte/reactivity"
 
   import RoomListing from "@svelte/components/Main/Shared/RoomListing/RoomListing.svelte"
   import YourRooms from "@components/Main/RoomContainer/YourRooms/YourRooms.svelte"
   import CreateRoom from "@components/Main/RoomContainer/CreateRoom/CreateRoom.svelte"
-  import FloorHeader from "@components/Main/Shared/RoomListing/FloorHeader.svelte"
 
   let { environment }: { environment: ENVIRONMENT } = $props()
 
-  const url = new SvelteURL(window.location.href)
-  let hash = $derived(url.hash.replace("#", ""))
-
   const { enums, panes, rooms } = getUIState()
-
-  $effect(() => {
-    if (hash !== "") {
-      rooms.preview(hash)
-    }
-  })
 </script>
-
-<svelte:window
-  onhashchange={e => {
-    url.href = e.newURL
-  }}
-/>
 
 <div class="room-container">
   <div class="pane-switch">

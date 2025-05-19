@@ -132,6 +132,7 @@ export const getUIState = () => {
    */
   const preview = (id: string, mine = false) => {
     const go = () => {
+      history.replaceState({}, document.title, `/#${id}`)
       if (mine) {
         uiStores.myPreviewId.set(id)
         previewingPane = PANE.ROOM_CONTAINER
@@ -147,9 +148,16 @@ export const getUIState = () => {
     } else {
       go()
     }
+
+    console.log("preview was called")
   }
 
   const back = (mine = false) => {
+    // Strip the hash
+    let uri = window.location.toString()
+    const cleanUri = uri.substring(0, uri.indexOf("#"))
+    history.replaceState({}, document.title, cleanUri)
+
     if (mine) {
       uiStores.myPreviewId.set(null)
       setPane(PANE.ROOM_CONTAINER, ROOM_CONTAINER.YOUR_ROOMS)

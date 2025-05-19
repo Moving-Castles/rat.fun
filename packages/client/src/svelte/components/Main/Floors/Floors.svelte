@@ -43,6 +43,9 @@
         class="elevator-item"
       >
         <div class="your-floor" style:background-image="url(/images/rat.png)">
+          <div class="floor-item">
+            {i * -1}
+          </div>
           <div class="progress warning-mute">
             <div class="label-min">
               ${$ratLevel.levelMinBalance}
