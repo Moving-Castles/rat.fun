@@ -43,7 +43,8 @@ export async function getCreateRoomData(playerId: string, levelId: string): Prom
           Balance, 
           VisitedLevels, 
           RoomCreationCost,
-          GameConfig 
+          GameConfig,
+          Prompt
         } = components;
 
         const result = {} as CreateRoomData;
@@ -92,6 +93,7 @@ export async function getCreateRoomData(playerId: string, levelId: string): Prom
         const levelEntity = (await network).world.registerEntity({ id: levelId });
 
         const levelRoomCreationCost = getComponentValue(RoomCreationCost, levelEntity)?.value as number;
+        const levelPrompt = getComponentValue(Prompt, levelEntity)?.value as string;
 
         if(!levelRoomCreationCost) {
           throw new LevelNotFoundError(levelId);
@@ -100,6 +102,7 @@ export async function getCreateRoomData(playerId: string, levelId: string): Prom
         const level = {
             id: levelId,
             roomCreationCost: levelRoomCreationCost,
+            prompt: levelPrompt
         };
 
         result.level = level;

@@ -30,7 +30,7 @@ contract PostDeploy is Script {
     levels[1] = LibLevel.createLevel(
       1,
       "Dark ages",
-      "Floor is capped at medieval times, only items and rooms that could have existed in the medieval period are functional / exist on this floor.",
+      "Floor is stuck in the dark ages, only items and rooms that could have existed in the medieval period are functional / exist on this floor.",
       250,
       500,
       500

@@ -41,7 +41,7 @@ export type Level = {
   roomCreationCost: number
 }
 
-export type MinimalLevel = Pick<Level, "id" | "roomCreationCost">
+export type MinimalLevel = Pick<Level, "id" | "roomCreationCost" | "prompt">
 
 export type Trait = {
   id: string

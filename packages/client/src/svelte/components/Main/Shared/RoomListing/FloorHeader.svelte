@@ -23,7 +23,6 @@
 
 <style lang="scss">
   .floor-header {
-    line-height: 60px;
     // border-bottom: 1px solid red;
     overflow: hidden;
     position: sticky;
@@ -34,8 +33,9 @@
     .inner {
       width: 100%;
       border-bottom: var(--default-border-style);
-      padding-inline: 10px;
+      padding: 10px;
       display: flex;
+      min-height: 61px;
 
       .title {
         font-size: var(--font-size-small);
