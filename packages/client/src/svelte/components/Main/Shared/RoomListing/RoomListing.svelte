@@ -29,7 +29,9 @@
   let sortFunction = $state(entriesChronologically)
   let showDepletedRooms = $state(isOwnRoomListing ? true : false)
   let textFilter = $state("")
+  let lastChecked = $state<number | null>(null)
 
+  // Here we add once there are a couple of updates
   let roomList = $derived.by(() => {
     let entries = isOwnRoomListing
       ? Object.entries($playerRooms)
@@ -39,6 +41,18 @@
     entries = filterRooms(entries, textFilter)
     return entries.sort(sortFunction)
   })
+  let activeList = $state<[string, Room][]>([])
+
+  $effect(() => {
+    if (!lastChecked) {
+      updateRooms()
+    }
+  })
+
+  const updateRooms = () => {
+    activeList = roomList
+    lastChecked = Date.now()
+  }
 
   let previewing = $derived(
     (isOwnRoomListing && $myPreviewId) || (!isOwnRoomListing && $previewId)
@@ -81,8 +95,13 @@
             onToggleDepleted={() => (showDepletedRooms = !showDepletedRooms)}
           />
         {/if}
-        {#if roomList.length > 0}
-          {#each roomList as [roomId, room]}
+        {#if activeList.length > 0}
+          {#if activeList.length < roomList.length}
+            <button onclick={updateRooms} class="new-rooms-button">
+              {roomList.length - activeList.length} new rooms added
+            </button>
+          {/if}
+          {#each activeList as [roomId, room]}
             {#if isOwnRoomListing}
               <OwnRoomItem roomId={roomId as Hex} {room} />
             {:else}
@@ -140,6 +159,15 @@
   .room-listing {
     overflow-y: scroll;
     padding-bottom: 200px;
+  }
+
+  .new-rooms-button {
+    width: 100%;
+    background-color: var(--color-alert-priority);
+    color: var(--black);
+    height: 3rem;
+    border: none;
+    outline: none;
   }
 
   .room-preview,

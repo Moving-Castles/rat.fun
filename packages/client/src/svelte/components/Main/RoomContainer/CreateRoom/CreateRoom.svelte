@@ -9,13 +9,13 @@
   import { createRoom } from "./index"
   import { getUIState } from "@modules/ui/state.svelte"
   import { ENVIRONMENT } from "@mud/enums"
-  import { walletNetwork } from "@modules/network"
-  import { initStaticContent } from "@modules/content"
+  import { walletNetwork, publicNetwork } from "@modules/network"
+  import { staticContent, initStaticContent } from "@modules/content"
 
   import CharacterCounter from "@components/Main/RoomContainer/CreateRoom/CharacterCounter.svelte"
   import Spinner from "@components/Main/Shared/Spinner/Spinner.svelte"
 
-  const { rooms, enums, panes } = getUIState()
+  const { rooms } = getUIState()
 
   let {
     environment,
@@ -38,21 +38,44 @@
       $player.balance < Number($gameConfig?.gameConfig?.roomCreationCost ?? 0)
   )
 
+  // @rasmus this simply checks the static content store until it's populated
+  const poll = async (id: string) => {
+    let attempt = 0
+
+    while (attempt < 50) {
+      const room = $staticContent.rooms.find(r => {
+        return r._id == id
+      })
+      if (room) return true
+      await new Promise(r => setTimeout(r, 500))
+      attempt++
+    }
+  }
+
   async function sendCreateRoom() {
     if (busy) return
     busy = true
     const newPrompt = roomDescription
 
-    await createRoom(environment, $walletNetwork, newPrompt, levelId)
-    busy = false
-    await initStaticContent()
+    const result = await createRoom(
+      environment,
+      $walletNetwork,
+      newPrompt,
+      levelId
+    )
+    await initStaticContent($publicNetwork.worldAddress)
 
-    goYourRooms()
-  }
+    if (result.roomId) {
+      // We can only show the room preview if the static content has caught up
+      // Wait for the static content to catch up
 
-  const goYourRooms = () => {
-    rooms.back(true)
-    panes.set(enums.PANE.ROOM_CONTAINER, enums.ROOM_CONTAINER.YOUR_ROOMS)
+      const roomExists = await poll(result?.roomId)
+
+      if (roomExists) {
+        rooms.preview(result?.roomId)
+        busy = false
+      }
+    }
   }
 </script>
 
