@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { EnterRoomReturnValue } from "@server/modules/types"
   import type { Hex } from "viem"
-  import { RESULT_POPUP_STATE } from "@modules/ui/enums"
+  import { RESULT_EVENT } from "@modules/ui/enums"
   import ModalTarget from "@components/Main/Modal/ModalTarget.svelte"
 
   import {
@@ -43,7 +43,7 @@
   let entering = $state(true)
   let result: EnterRoomReturnValue | null = $state(null)
 
-  let popupState: RESULT_POPUP_STATE = $state(RESULT_POPUP_STATE.NONE)
+  let resultEvent: RESULT_EVENT = $state(RESULT_EVENT.NONE)
 
   let room = $derived($roomsState?.[roomId ?? ""])
 
@@ -60,17 +60,17 @@
     // Room depleted 2nd
     // Level up / Level Down 3rd
     if (result.ratDead) {
-      popupState = RESULT_POPUP_STATE.RAT_DEAD
+      resultEvent = RESULT_EVENT.RAT_DEAD
     } else if (result.roomDepleted) {
-      popupState = RESULT_POPUP_STATE.ROOM_DEPLETED
+      resultEvent = RESULT_EVENT.ROOM_DEPLETED
     } else if (result.levelUp) {
-      popupState = RESULT_POPUP_STATE.LEVEL_UP
+      resultEvent = RESULT_EVENT.LEVEL_UP
     } else if (result.levelDown) {
-      popupState = RESULT_POPUP_STATE.LEVEL_DOWN
+      resultEvent = RESULT_EVENT.LEVEL_DOWN
     }
 
     // Uncomment to test one of the states
-    // popupState = RESULT_POPUP_STATE.LEVEL_DOWN
+    // resultEvent = RESULT_EVENT.LEVEL_DOWN
   }
 
   const processRoom = async () => {
@@ -99,7 +99,11 @@
     } catch (error) {
       console.log("catch result error", error)
       entering = false
-      rooms.close()
+      rooms.close(
+        resultEvent !== RESULT_EVENT.LEVEL_UP &&
+          resultEvent !== RESULT_EVENT.LEVEL_DOWN
+      )
+      return
     }
   }
 
@@ -123,7 +127,7 @@
       <RoomInfoBox roomId={roomId as Hex} />
     </div>
     <!-- LOG -->
-    <Log {result} {animationstarted} onComplete={checkEvents} />
+    <Log {result} {resultEvent} {animationstarted} onComplete={checkEvents} />
     <!-- ERROR -->
     {#if error}
       <div class="error">
@@ -134,10 +138,10 @@
 </div>
 
 {#snippet event()}
-  <RoomEventPopup {result} {popupState} {room} {sanityRoomContent} />
+  <RoomEventPopup {result} {resultEvent} {room} {sanityRoomContent} />
 {/snippet}
 
-{#if popupState !== RESULT_POPUP_STATE.NONE && result !== null}
+{#if resultEvent !== RESULT_EVENT.NONE && result !== null}
   <ModalTarget content={event} />
 {/if}
 

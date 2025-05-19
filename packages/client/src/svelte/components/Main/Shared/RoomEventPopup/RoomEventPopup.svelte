@@ -4,7 +4,7 @@
   import { urlFor } from "@modules/content/sanity"
   import type { ServerReturnValue } from "@components/Main/RoomResult/types"
   import { type Room } from "@modules/state/base/types"
-  import { RESULT_POPUP_STATE } from "@modules/ui/enums"
+  import { RESULT_EVENT } from "@modules/ui/enums"
   import RatDeath from "@components/Main/RatContainer/YourRat/RatDeath.svelte" // move to more appropriate place
   import RatElevator from "@components/Main/RatContainer/YourRat/RatElevator.svelte" // move to more appropriate place
   import { frozenRat } from "@components/Main/RoomResult/state.svelte"
@@ -12,12 +12,12 @@
   import { playSound } from "@modules/sound"
 
   let {
-    popupState,
+    resultEvent,
     result,
     room,
     sanityRoomContent,
   }: {
-    popupState: RESULT_POPUP_STATE
+    resultEvent: RESULT_EVENT
     result?: ServerReturnValue
     room: Room
     sanityRoomContent: any
@@ -28,16 +28,16 @@
   $inspect(sanityRoomContent)
 
   onMount(() => {
-    if (popupState === RESULT_POPUP_STATE.RAT_DEAD) {
+    if (resultEvent === RESULT_EVENT.RAT_DEAD) {
       snd = playSound("tcm", "machineFlowing", true)
     }
-    if (popupState === RESULT_POPUP_STATE.LEVEL_UP) {
+    if (resultEvent === RESULT_EVENT.LEVEL_UP) {
       snd = playSound("tcm", "win", true)
     }
-    if (popupState === RESULT_POPUP_STATE.LEVEL_DOWN) {
+    if (resultEvent === RESULT_EVENT.LEVEL_DOWN) {
       snd = playSound("tcm", "TRX_yes_c", true)
     }
-    if (popupState === RESULT_POPUP_STATE.ROOM_DEPLETED) {
+    if (resultEvent === RESULT_EVENT.ROOM_DEPLETED) {
       snd = playSound("tcm", "loadingVariation", true)
     }
   })
@@ -47,34 +47,34 @@
   })
 </script>
 
-<!-- {#if state === RESULT_POPUP_STATE.RAT_DEAD}
+<!-- {#if state === RESULT_EVENT.RAT_DEAD}
 {/if} -->
 
 <div class="room-event-popup">
   <div
     class="inner"
-    class:warning-mute={popupState !== RESULT_POPUP_STATE.ROOM_DEPLETED}
-    class:warning={popupState === RESULT_POPUP_STATE.ROOM_DEPLETED}
+    class:warning-mute={resultEvent !== RESULT_EVENT.ROOM_DEPLETED}
+    class:warning={resultEvent === RESULT_EVENT.ROOM_DEPLETED}
   >
     <div class="content">
       <!-- Big colored text to explain the situation -->
       <h1
         class="message"
-        class:death={popupState === RESULT_POPUP_STATE.RAT_DEAD}
-        class:levelup={popupState === RESULT_POPUP_STATE.LEVEL_UP}
-        class:leveldown={popupState === RESULT_POPUP_STATE.LEVEL_DOWN}
-        class:depleted={popupState === RESULT_POPUP_STATE.ROOM_DEPLETED}
+        class:death={resultEvent === RESULT_EVENT.RAT_DEAD}
+        class:levelup={resultEvent === RESULT_EVENT.LEVEL_UP}
+        class:leveldown={resultEvent === RESULT_EVENT.LEVEL_DOWN}
+        class:depleted={resultEvent === RESULT_EVENT.ROOM_DEPLETED}
       >
-        {#if popupState === RESULT_POPUP_STATE.RAT_DEAD}
+        {#if resultEvent === RESULT_EVENT.RAT_DEAD}
           {$frozenRat?.name} DIED
         {/if}
-        {#if popupState === RESULT_POPUP_STATE.LEVEL_UP}
+        {#if resultEvent === RESULT_EVENT.LEVEL_UP}
           GOING DOWN<br />
           <span class="rotate-down digit">&#x203a;</span><span class=""
             >{$ratLevel.index === 0 ? "" : "-"}{$ratLevel.index}</span
           >
         {/if}
-        {#if popupState === RESULT_POPUP_STATE.LEVEL_DOWN}
+        {#if resultEvent === RESULT_EVENT.LEVEL_DOWN}
           <span>GOING UP</span><br />
           <span>
             <span class="rotate-up digit">&#x203a;</span><span class=""
@@ -82,7 +82,7 @@
             >
           </span>
         {/if}
-        {#if popupState === RESULT_POPUP_STATE.ROOM_DEPLETED}
+        {#if resultEvent === RESULT_EVENT.ROOM_DEPLETED}
           ROOM #{room?.index} DEPLETED
         {/if}
       </h1>
@@ -90,20 +90,20 @@
 
     <div
       class="background"
-      class:death={popupState === RESULT_POPUP_STATE.RAT_DEAD}
-      class:levelup={popupState === RESULT_POPUP_STATE.LEVEL_UP}
-      class:leveldown={popupState === RESULT_POPUP_STATE.LEVEL_DOWN}
-      class:depleted={popupState === RESULT_POPUP_STATE.ROOM_DEPLETED}
+      class:death={resultEvent === RESULT_EVENT.RAT_DEAD}
+      class:levelup={resultEvent === RESULT_EVENT.LEVEL_UP}
+      class:leveldown={resultEvent === RESULT_EVENT.LEVEL_DOWN}
+      class:depleted={resultEvent === RESULT_EVENT.ROOM_DEPLETED}
     >
-      {#if popupState === RESULT_POPUP_STATE.RAT_DEAD}
+      {#if resultEvent === RESULT_EVENT.RAT_DEAD}
         <RatDeath />
       {/if}
-      {#if popupState === RESULT_POPUP_STATE.LEVEL_DOWN || popupState === RESULT_POPUP_STATE.LEVEL_UP}
+      {#if resultEvent === RESULT_EVENT.LEVEL_DOWN || resultEvent === RESULT_EVENT.LEVEL_UP}
         <RatElevator
-          direction={popupState === RESULT_POPUP_STATE.LEVEL_UP ? -1 : 1}
+          direction={resultEvent === RESULT_EVENT.LEVEL_UP ? -1 : 1}
         />
       {/if}
-      {#if popupState === RESULT_POPUP_STATE.ROOM_DEPLETED}
+      {#if resultEvent === RESULT_EVENT.ROOM_DEPLETED}
         <img
           class="background-image"
           src={urlFor(sanityRoomContent?.image)
