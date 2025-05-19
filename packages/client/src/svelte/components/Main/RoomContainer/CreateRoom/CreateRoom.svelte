@@ -35,7 +35,7 @@
   let disabled = $derived(
     invalidRoomDescriptionLength ||
       busy ||
-      $player.balance < Number($gameConfig?.gameConfig?.roomCreationCost ?? 0)
+      $player.balance < Number($levels[levelId].roomCreationCost ?? 0)
   )
 
   // @rasmus this simply checks the static content store until it's populated
