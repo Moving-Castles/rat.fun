@@ -132,7 +132,7 @@ export const getUIState = () => {
    * When combining stores and $state calls, it can be weird to figure out which is which.
    */
   const preview = (id: string, mine = false, animated = true) => {
-    console.log(id)
+    console.log("preview", id)
     if (id === "") return
     previewAnimated = animated
     const go = () => {

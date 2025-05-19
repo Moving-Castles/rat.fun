@@ -76,6 +76,7 @@
     // If the hash is different and not a string
     const newHash = new URL(e.newURL).hash.replaceAll("#", "")
     const oldHash = new URL(e.oldURL).hash.replaceAll("#", "")
+    console.log(newHash, oldHash)
 
     if (newHash !== "" && oldHash !== "") {
       console.log(newHash)
