@@ -67,7 +67,7 @@
     busy = false
 
     if (result.roomId) {
-      rooms.preview(result?.roomId, true)
+      rooms.preview(result?.roomId, false)
       busy = false
       // We can only show the room preview if the static content has caught up
       // Wait for the static content to catch up

@@ -82,7 +82,11 @@
 <div class="wrapper">
   <div class="rooms">
     <div class="floor-content">
-      <div class:previewing class="room-listing">
+      <div
+        class:previewing
+        class:animated={rooms.previewAnimated}
+        class="room-listing"
+      >
         {#if !isOwnRoomListing}
           <FloorHeader />
           <RoomFilters
@@ -120,7 +124,11 @@
           </div>
         {/if}
       </div>
-      <div class:previewing class="room-preview">
+      <div
+        class:previewing
+        class:animated={rooms.previewAnimated}
+        class="room-preview"
+      >
         {#if currentRoom}
           <RoomPreview
             {isOwnRoomListing}
@@ -178,7 +186,10 @@
     flex-shrink: 0;
     height: 100%;
     inset: 0;
-    transition: transform 0.2s ease 0.1s;
+
+    &.animated {
+      transition: transform 0.2s ease 0.1s;
+    }
   }
 
   .room-preview {

@@ -35,6 +35,7 @@ export const ROUTES = [
 let ratContainer = $state<RAT_CONTAINER>(RAT_CONTAINER.YOUR_RAT)
 let roomContainer = $state<ROOM_CONTAINER>(ROOM_CONTAINER.ALL_ROOMS)
 let previewingPane = $state<PANE>(PANE.NONE)
+let previewAnimated = $state(true)
 
 // Current route
 let route = $state("main")
@@ -130,7 +131,8 @@ export const getUIState = () => {
    * Here, I am modifying a store as you normally would anyways.
    * When combining stores and $state calls, it can be weird to figure out which is which.
    */
-  const preview = (id: string, mine = false) => {
+  const preview = (id: string, mine = false, animated = true) => {
+    previewAnimated = animated
     const go = () => {
       if (mine) {
         uiStores.myPreviewId.set(id)
@@ -147,12 +149,12 @@ export const getUIState = () => {
       back(mine)
       setTimeout(go, 400)
     } else {
-      console.log("we just go")
       go()
     }
   }
 
-  const back = (mine = false) => {
+  const back = (mine = false, animated = true) => {
+    previewAnimated = animated
     uiStores.myPreviewId.set(null)
     uiStores.previewId.set(null)
 
@@ -163,9 +165,11 @@ export const getUIState = () => {
     }
   }
 
-  const close = async () => {
+  const close = async (toPreview = true) => {
     previewingPane = PANE.NONE
+    if (!toPreview) back(false, false) // takes us to the list section
     await navigate("main")
+    setPane(PANE.ROOM_CONTAINER, ROOM_CONTAINER.ALL_ROOMS)
     uiStores.CurrentRoomId.set(null)
     console.log("closed")
   }
@@ -228,6 +232,9 @@ export const getUIState = () => {
       },
       get previewId() {
         return uiStores.previewId
+      },
+      get previewAnimated() {
+        return previewAnimated
       },
       get myCurrent() {
         return uiStores.CurrentMyRoomId
