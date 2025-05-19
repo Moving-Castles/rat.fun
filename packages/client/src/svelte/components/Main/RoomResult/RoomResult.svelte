@@ -70,7 +70,7 @@
     }
 
     // Uncomment to test one of the states
-    // resultEvent = RESULT_EVENT.LEVEL_DOWN
+    resultEvent = RESULT_EVENT.RAT_DEAD
   }
 
   const processRoom = async () => {

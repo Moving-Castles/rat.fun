@@ -7,9 +7,12 @@
   import { RESULT_EVENT } from "@modules/ui/enums"
   import RatDeath from "@components/Main/RatContainer/YourRat/RatDeath.svelte" // move to more appropriate place
   import RatElevator from "@components/Main/RatContainer/YourRat/RatElevator.svelte" // move to more appropriate place
+  import { getUIState } from "@modules/ui/state.svelte"
   import { frozenRat } from "@components/Main/RoomResult/state.svelte"
   import { ratLevel } from "@modules/state/base/stores"
   import { playSound } from "@modules/sound"
+
+  let { rooms } = getUIState()
 
   let {
     resultEvent,
@@ -86,6 +89,10 @@
           ROOM #{room?.index} DEPLETED
         {/if}
       </h1>
+
+      {#if resultEvent === RESULT_EVENT.RAT_DEAD || resultEvent === RESULT_EVENT.LEVEL_UP || resultEvent === RESULT_EVENT.LEVEL_DOWN}
+        <button onclick={() => rooms.close()}> LEAVE ROOM </button>
+      {/if}
     </div>
 
     <div

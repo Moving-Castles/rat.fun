@@ -67,18 +67,36 @@
 
 <svelte:window
   onhashchange={async e => {
-    const newHash = new URL(e.newURL).hash.replaceAll("#", "")
+    console.log("hash changes")
+    const url = new URL(e.newURL)
+    const newHash = url.hash.replaceAll("#", "")
     const currentHash = new URL(e.oldURL).hash.replaceAll("#", "")
 
-    // Only call preview if the hash is not empty AND it's actually different
-    // from the hash we are currently at.
+    const queryParams = new URLSearchParams(document.location.search)
+
+    console.log(queryParams)
+
     if (newHash !== "" && newHash !== currentHash) {
       if (currentHash !== "") {
         rooms.back()
         await new Promise(r => setTimeout(r, 500))
-        rooms.preview(newHash)
+        rooms.preview(
+          newHash,
+          !!queryParams.get("mine") || false,
+          !!queryParams.get("animated") || true
+        )
       } else {
-        rooms.preview(newHash)
+        console.log(
+          "mine",
+          !queryParams.get("mine") || false,
+          !!queryParams.get("animated") || true
+        )
+        rooms.preview(
+          newHash,
+          !!queryParams.get("mine") || false,
+          !!queryParams.get("animated") || true
+        )
+        // rooms.preview(newHash)
       }
     }
   }}
