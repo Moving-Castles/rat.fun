@@ -7,14 +7,14 @@
 
   import NoImage from "@components/Main/Shared/NoImage/NoImage.svelte"
 
-  let { roomId }: { roomId: Hex } = $props()
+  let { roomId, depleted }: { roomId: Hex } = $props()
 
   let sanityRoomContent = $derived(
     $staticContent.rooms.find(r => r._id == roomId)
   )
 </script>
 
-<div class="room-info-box">
+<div class="room-info-box" class:depleted>
   {#if $frozenRoom}
     <!-- INFO -->
     <div class="column">
@@ -63,6 +63,23 @@
     border-left: none;
     overflow: hidden;
     display: flex;
+    position: relative;
+
+    &.depleted {
+      // opacity: 0.5;
+
+      &::after {
+        content: "DEPLETED";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 100px;
+        background: var(--color-value);
+        color: var(--black);
+        font-family: var(--label-font-stack);
+      }
+    }
   }
 
   .image-container {

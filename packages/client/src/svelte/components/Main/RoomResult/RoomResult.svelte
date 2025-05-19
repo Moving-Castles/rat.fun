@@ -70,7 +70,7 @@
     }
 
     // Uncomment to test one of the states
-    resultEvent = RESULT_EVENT.RAT_DEAD
+    // resultEvent = RESULT_EVENT.ROOM_DEPLETED
   }
 
   const processRoom = async () => {
@@ -124,7 +124,10 @@
     <div class="info-boxes">
       <RatInfoBox />
       <div class="divider"></div>
-      <RoomInfoBox roomId={roomId as Hex} />
+      <RoomInfoBox
+        depleted={resultEvent === RESULT_EVENT.ROOM_DEPLETED}
+        roomId={roomId as Hex}
+      />
     </div>
     <!-- LOG -->
     <Log {result} {resultEvent} {animationstarted} onComplete={checkEvents} />
@@ -141,7 +144,7 @@
   <RoomEventPopup {result} {resultEvent} {room} {sanityRoomContent} />
 {/snippet}
 
-{#if resultEvent !== RESULT_EVENT.NONE && result !== null}
+{#if resultEvent !== RESULT_EVENT.NONE && resultEvent !== RESULT_EVENT.ROOM_DEPLETED && result !== null}
   <ModalTarget content={event} />
 {/if}
 

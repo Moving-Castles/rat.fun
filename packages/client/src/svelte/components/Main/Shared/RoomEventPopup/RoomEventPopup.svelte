@@ -11,8 +11,10 @@
   import { frozenRat } from "@components/Main/RoomResult/state.svelte"
   import { ratLevel } from "@modules/state/base/stores"
   import { playSound } from "@modules/sound"
+  import { getModalState } from "@components/Main/Modal/state.svelte"
 
   let { rooms } = getUIState()
+  let { modal } = getModalState()
 
   let {
     resultEvent,
@@ -72,18 +74,14 @@
           {$frozenRat?.name} DIED
         {/if}
         {#if resultEvent === RESULT_EVENT.LEVEL_UP}
-          GOING DOWN<br />
-          <span class="rotate-down digit">&#x203a;</span><span class=""
-            >{$ratLevel.index === 0 ? "" : "-"}{$ratLevel.index}</span
-          >
+          {$frozenRat?.name} TRANSFERRED DOWN TO {$ratLevel.index === 0
+            ? ""
+            : "-"}{$ratLevel.index}
         {/if}
         {#if resultEvent === RESULT_EVENT.LEVEL_DOWN}
-          <span>GOING UP</span><br />
-          <span>
-            <span class="rotate-up digit">&#x203a;</span><span class=""
-              >{$ratLevel.index === 0 ? "" : "-"}{$ratLevel.index}</span
-            >
-          </span>
+          {$frozenRat?.name} TRANSFERRED UP TO {$ratLevel.index === 0
+            ? ""
+            : "-"}{$ratLevel.index}
         {/if}
         {#if resultEvent === RESULT_EVENT.ROOM_DEPLETED}
           ROOM #{room?.index} DEPLETED
@@ -91,7 +89,19 @@
       </h1>
 
       {#if resultEvent === RESULT_EVENT.RAT_DEAD || resultEvent === RESULT_EVENT.LEVEL_UP || resultEvent === RESULT_EVENT.LEVEL_DOWN}
-        <button onclick={() => rooms.close()}> LEAVE ROOM </button>
+        <button
+          class="close-button"
+          class:death={resultEvent === RESULT_EVENT.RAT_DEAD}
+          class:levelup={resultEvent === RESULT_EVENT.LEVEL_UP}
+          class:leveldown={resultEvent === RESULT_EVENT.LEVEL_DOWN}
+          class:depleted={resultEvent === RESULT_EVENT.ROOM_DEPLETED}
+          onclick={() => {
+            modal.close()
+            rooms.close()
+          }}
+        >
+          LEAVE ROOM
+        </button>
       {/if}
     </div>
 
@@ -147,17 +157,9 @@
         font-weight: normal;
         width: 100%;
         text-align: center;
-
-        .digit {
-          display: inline-block;
-          width: 50%;
-          float: left;
-          text-align: center;
-        }
-
         &.death {
           background: var(--color-alert-priority);
-          color: var(--background);
+          color: var(--background) !important;
         }
 
         &.depleted {
@@ -173,6 +175,13 @@
         &.leveldown {
           background: var(--color-value-down);
           color: var(--background);
+        }
+
+        .digit {
+          display: inline-block;
+          width: 50%;
+          float: left;
+          text-align: center;
         }
       }
 
@@ -224,6 +233,23 @@
   .rotate-up {
     display: inline-block;
     transform: rotate(-90deg) translate(-4px, 0);
+  }
+
+  .close-button {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3rem;
+    border: none;
+
+    background: var(--black);
+    background: var(--color-alert-priority);
+
+    &:hover {
+      background: var(--color-alert);
+      color: var(--black);
+    }
   }
 
   @keyframes fade-out {
