@@ -135,26 +135,30 @@ export const getUIState = () => {
       if (mine) {
         uiStores.myPreviewId.set(id)
         previewingPane = PANE.ROOM_CONTAINER
+        setPane(PANE.ROOM_CONTAINER, ROOM_CONTAINER.YOUR_ROOMS)
       } else {
         uiStores.previewId.set(id)
         previewingPane = PANE.ROOM_CONTAINER
+        setPane(PANE.ROOM_CONTAINER, ROOM_CONTAINER.ALL_ROOMS)
       }
     }
 
     if (get(uiStores.myPreviewId) || get(uiStores.previewId)) {
-      back(!!get(uiStores.myPreviewId))
+      back(mine)
       setTimeout(go, 400)
     } else {
+      console.log("we just go")
       go()
     }
   }
 
   const back = (mine = false) => {
+    uiStores.myPreviewId.set(null)
+    uiStores.previewId.set(null)
+
     if (mine) {
-      uiStores.myPreviewId.set(null)
       setPane(PANE.ROOM_CONTAINER, ROOM_CONTAINER.YOUR_ROOMS)
     } else {
-      uiStores.previewId.set(null)
       setPane(PANE.ROOM_CONTAINER, ROOM_CONTAINER.ALL_ROOMS)
     }
   }
