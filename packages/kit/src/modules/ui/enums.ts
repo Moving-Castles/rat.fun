@@ -1,0 +1,37 @@
+export enum UI {
+  LOADING,
+  SPAWNING,
+  READY,
+  ERROR,
+}
+
+export enum LOCATION {
+  NONE,
+  MAIN,
+}
+
+export enum PANE {
+  NONE,
+  ROOM_CONTAINER,
+  MIDDLE,
+  RAT_CONTAINER,
+}
+
+export enum RAT_CONTAINER {
+  YOUR_RAT,
+}
+
+export enum ROOM_CONTAINER {
+  ALL_ROOMS,
+  YOUR_ROOMS,
+  CREATE_ROOM,
+  SINGLE_ROOM,
+}
+
+export enum RESULT_POPUP_STATE {
+  NONE,
+  RAT_DEAD,
+  ROOM_DEPLETED,
+  LEVEL_UP,
+  LEVEL_DOWN,
+}

@@ -1,0 +1,16 @@
+<script lang="ts">
+  import CreateRoomButton from "@components/Main/RoomContainer/YourRooms/CreateRoomButton.svelte"
+  import RoomListing from "@svelte/components/Main/Shared/RoomListing/RoomListing.svelte"
+</script>
+
+<div class="your-rooms">
+  <CreateRoomButton />
+  <RoomListing isOwnRoomListing={true} />
+</div>
+
+<style lang="scss">
+  .your-rooms {
+    height: 100%;
+    flex-direction: column;
+  }
+</style>

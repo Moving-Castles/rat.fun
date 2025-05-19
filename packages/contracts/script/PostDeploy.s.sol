@@ -25,13 +25,12 @@ contract PostDeploy is Script {
     bytes32 adminId = GameConfig.getAdminId();
 
     // Create levels
-
     bytes32[] memory levels = new bytes32[](5);
-    levels[0] = LibLevel.createLevel(0, "Ground floor", "", 0, 200, 250); // Level 0
-    levels[1] = LibLevel.createLevel(1, "Underwater", "Floor is underwater", 200, 500, 250); // Level 1
-    levels[2] = LibLevel.createLevel(2, "Freezer", "Floor is cold", 500, 1000, 250); // Level 2
-    levels[3] = LibLevel.createLevel(3, "Fire", "Floor is hot", 1000, 2000, 250); // Level 3
-    levels[4] = LibLevel.createLevel(4, "Lava", "Floor is lava", 2000, 300000, 250); // Level 4
+    levels[0] = LibLevel.createLevel(0, "Ground floor", "", 0, 200, 250);
+    levels[1] = LibLevel.createLevel(1, "Underwater", "Floor is underwater", 200, 500, 250);
+    levels[2] = LibLevel.createLevel(2, "Freezer", "Floor is cold", 500, 1000, 250);
+    levels[3] = LibLevel.createLevel(3, "Fire", "Floor is hot", 1000, 2000, 250);
+    levels[4] = LibLevel.createLevel(4, "Lava", "Floor is lava", 2000, 300000, 250);
 
     // Root namespace owner is admin
     LibInit.init(NamespaceOwner.get(ROOT_NAMESPACE_ID), levels);

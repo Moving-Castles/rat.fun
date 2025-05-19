@@ -1,6 +1,5 @@
 import { TableRecord } from "@latticexyz/store-sync"
 import mudConfig from "contracts/mud.config"
-import { Hex } from "viem"
 
 export type Room = {
   id: string

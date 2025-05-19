@@ -1,0 +1,217 @@
+/* @import url("./public/fonts/index.css"); */
+
+:root {
+  /* Colors */
+  --black: #000000;
+  --white: #ffffff;
+  /* --white: #dcdccb; */
+
+  --background: var(--black);
+  --foreground: var(--white);
+
+  --color-grey-light: #999;
+  --color-grey-mid: #666;
+  --color-grey-dark: #333;
+  --color-grey-darker: #222;
+
+  /* --color-alert: rgb(255, 69, 0); */
+  --color-alert: rgb(122, 94, 52);
+  --color-alert-priority: rgb(255, 128, 0);
+
+  --color-secondary: rgb(163, 66, 31);
+  --color-health: rgb(109, 196, 109);
+  --color-value: rgb(194, 164, 12);
+  --color-death: rgb(190, 0, 32);
+  --color-item: rgb(160, 98, 177);
+  --color-value-up: var(--color-health);
+  --color-value-down: var(--color-death);
+
+  --corporate-background: #bebebe;
+  --corporate-foreground: #000000;
+
+  --game-window-width: calc(min(100vw, 1920px) - 20px);
+  --game-window-height: calc(100vh - 20px);
+
+  /* * * * * * * * * * * * * *
+  * Layout
+  * * * * * * * * * * * * * */
+
+  /* Layout: Your Rat */
+  /* --rat-editor-height: 180px; */
+  --rat-editor-height: 230px;
+
+  --liquidate-rat-height: 60px;
+  --floor-progress-height: 50px;
+  /* --rat-cam-height: calc(
+    100% - var(--rat-editor-height) - var(--liquidate-rat-height)
+  ); */
+  --rat-cam-height: 260px;
+  --rat-main-info-height: 200px;
+  --rat-inventory-height: 180px;
+  --rat-liquidate-height: 60px;
+
+  /* Layout: Floors */
+  --floor-bar-width: 100px;
+
+  /* Layout: Operator Bar */
+  --operator-bar-height: 60px;
+
+  /* Layout: Your Rooms */
+  --create-room-button-height: 100px;
+  --player-room-listing-height: calc(100% - var(--create-room-button-height));
+
+  /* Layout: Room Item */
+  --room-item-height: 260px;
+  --room-item-padding: 10px;
+  --room-item-image-height: 240px;
+
+  /* Layout: Room Result */
+  --info-box-height: 260px;
+
+  /* Sizing */
+  --default-padding: 14px;
+  --top-bar-height: 40px;
+  --tab-bar-height: 90px;
+
+  /* border */
+  --color-border: var(--color-grey-mid);
+  --default-border-style: 1px double var(--color-border);
+  --dashed-border-style: 1px dashed var(--color-border);
+
+  /* Typography */
+  --typewriter-font-stack: "OCRA", monospace;
+  --special-font-stack: "Special Elite", monospace;
+  --display-font-stack: "Rock Salt", cursive;
+  --label-font-stack: "Impact Label Reversed", monospace;
+  --font-size-very-small: 9px;
+  --font-size-small: 11px;
+  --font-size-normal: 14px;
+  --font-size-large: 26px;
+  --font-size-extra-large: 60px;
+
+  /** Layers */
+  --z-0: 0;
+  --z-1: 1;
+  --z-2: 2;
+  --z-3: 3;
+  --z-4: 4;
+  --z-5: 5;
+  --z-6: 6;
+  --z-7: 7;
+  --z-8: 8;
+  --z-9: 9;
+  --z-10: 10;
+}
+
+* {
+  box-sizing: border-box;
+  border-color: var(--foreground);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  overscroll-behavior-y: none;
+}
+
+body {
+  letter-spacing: 0px;
+}
+
+body,
+html {
+  background: black;
+  color: white;
+  font-family: var(--typewriter-font-stack);
+  font-size: var(--font-size-normal);
+  margin: 0;
+  padding: 0;
+  overscroll-behavior-y: none;
+}
+
+hr {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+button {
+  font-family: var(--typewriter-font-stack);
+  cursor: pointer;
+  user-select: none;
+}
+
+.button-text {
+  position: relative;
+  top: 3px;
+}
+
+.center-tooltip {
+  text-align: center;
+}
+
+.tooltip-value {
+  background: var(--color-value);
+  color: var(--black);
+  padding: 2px;
+}
+
+.tooltip-value-positive {
+  background: var(--color-value-up);
+  color: var(--black);
+  padding: 2px;
+}
+
+.tooltip-value-negative {
+  background: var(--color-value-down);
+  color: var(--black);
+  padding: 2px;
+}
+
+.warning {
+  border: none;
+  background: repeating-linear-gradient(
+    45deg,
+    #f0d000,
+    #f0d000 20px,
+    #bda400 20px,
+    #bda400 40px
+  );
+}
+
+.danger {
+  border: none;
+  background: repeating-linear-gradient(
+    45deg,
+    #cc0000,
+    #cc0000 20px,
+    #9e0000 20px,
+    #9e0000 40px
+  );
+}
+.warning-mute {
+  color: var(--foreground);
+  border: none;
+  background: repeating-linear-gradient(
+    45deg,
+    black,
+    black 20px,
+    #222 20px,
+    #222 40px
+  );
+}
+
+.warning-mute-inverse {
+  color: var(--foreground);
+  border: none;
+  background: repeating-linear-gradient(
+    -45deg,
+    black,
+    black 20px,
+    #222 20px,
+    #222 40px
+  );
+}
+
+.tippy-content {
+  font-size: var(--font-size-small);
+  border-radius: 0;
+}
