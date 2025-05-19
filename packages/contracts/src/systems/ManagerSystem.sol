@@ -59,7 +59,7 @@ contract ManagerSystem is System {
 
     // Exit early if dead
     if (Health.get(_ratId) == 0) {
-      LibRat.killRat(_ratId, _roomId);
+      LibRat.killRat(_ratId, _roomId, false);
       KillCount.set(_roomId, KillCount.get(_roomId) + 1);
       return;
     }
