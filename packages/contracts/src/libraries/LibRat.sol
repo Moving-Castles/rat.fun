@@ -28,59 +28,12 @@ library LibRat {
   }
 
   /**
-   * @notice Kill a rat
+   * @notice Process a rat's death, transferring its value to either a room or its owner
    * @param _ratId The id of the rat
-   * @param _roomId The id of the room that the rat died in
+   * @param _destinationId The id of the destination (room or player) to receive the value
+   * @param _isLiquidation Whether this is a liquidation (true) or death (false)
    */
-  function killRat(bytes32 _ratId, bytes32 _roomId) internal {
-    Dead.set(_ratId, true);
-
-    uint256 balanceToTransfer;
-
-    // Health value has already been transferred to room
-
-    // * * * *
-    // Traits
-    // * * * *
-
-    bytes32[] memory traits = Traits.get(_ratId);
-
-    for (uint i = 0; i < traits.length; i++) {
-      balanceToTransfer += Value.get(traits[i]);
-    }
-
-    // * * * *
-    // Items
-    // * * * *
-
-    bytes32[] memory items = Inventory.get(_ratId);
-
-    for (uint i = 0; i < items.length; i++) {
-      balanceToTransfer += Value.get(items[i]);
-    }
-
-    // * * * *
-    // Balance
-    // * * * *
-
-    balanceToTransfer += Balance.get(_ratId);
-    Balance.set(_ratId, 0);
-
-    // * * * *
-    // Transfer
-    // * * * *
-
-    Balance.set(_roomId, Balance.get(_roomId) + balanceToTransfer);
-
-    bytes32 playerId = Owner.get(_ratId);
-    OwnedRat.deleteRecord(playerId);
-  }
-
-  /**
-   * @notice Liquidate a rat
-   * @param _ratId The id of the rat
-   */
-  function liquidateRat(bytes32 _ratId) internal {
+  function killRat(bytes32 _ratId, bytes32 _destinationId, bool _isLiquidation) internal {
     Dead.set(_ratId, true);
 
     uint256 balanceToTransfer;
@@ -88,16 +41,15 @@ library LibRat {
     // * * * *
     // Health
     // * * * *
-
-    balanceToTransfer += Health.get(_ratId);
-    Health.set(_ratId, 0);
+    if (_isLiquidation) {
+      balanceToTransfer += Health.get(_ratId);
+      Health.set(_ratId, 0);
+    }
 
     // * * * *
     // Traits
     // * * * *
-
     bytes32[] memory traits = Traits.get(_ratId);
-
     for (uint i = 0; i < traits.length; i++) {
       balanceToTransfer += Value.get(traits[i]);
     }
@@ -105,9 +57,7 @@ library LibRat {
     // * * * *
     // Items
     // * * * *
-
     bytes32[] memory items = Inventory.get(_ratId);
-
     for (uint i = 0; i < items.length; i++) {
       balanceToTransfer += Value.get(items[i]);
     }
@@ -115,16 +65,16 @@ library LibRat {
     // * * * *
     // Balance
     // * * * *
-
     balanceToTransfer += Balance.get(_ratId);
     Balance.set(_ratId, 0);
 
     // * * * *
     // Transfer
     // * * * *
+    Balance.set(_destinationId, Balance.get(_destinationId) + balanceToTransfer);
 
     bytes32 playerId = Owner.get(_ratId);
-    Balance.set(playerId, Balance.get(playerId) + balanceToTransfer);
+    OwnedRat.deleteRecord(playerId);
   }
 
   /**

@@ -40,7 +40,7 @@ contract RatSystem is System {
     // Check that the rat is alive
     require(!Dead.get(ratId), "rat is dead");
 
-    LibRat.liquidateRat(ratId);
+    LibRat.killRat(ratId, playerId, true);
 
     // Unset the rat from the player
     OwnedRat.deleteRecord(playerId);
