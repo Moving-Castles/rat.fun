@@ -22,7 +22,7 @@
   } = $props()
 
   let { rooms } = getUIState()
-  const { myPreviewId, previewId } = rooms
+  const { preview } = getUIState()
 
   // Local state
   let currentRoom = $state<Hex | null>(null)
@@ -49,7 +49,7 @@
   }
 
   let previewing = $derived(
-    (isOwnRoomListing && $myPreviewId) || (!isOwnRoomListing && $previewId)
+    preview.isActive && preview.isOwnRoom === isOwnRoomListing
   )
 
   $effect(() => {
@@ -60,24 +60,11 @@
 
   // Update currentroom with a delay to allow animations to play
   $effect(() => {
-    currentRoom = $myPreviewId as Hex
-    // if (isOwnRoomListing) {
-    //   if (!$myPreviewId) {
-    //     setTimeout(() => (currentRoom = $myPreviewId as Hex), 400)
-    //   } else {
-    //     currentRoom = $myPreviewId as Hex
-    //   }
-    // }
-  })
-  $effect(() => {
-    currentRoom = $previewId as Hex
-    // if (!isOwnRoomListing) {
-    //   if (!$previewId) {
-    //     setTimeout(() => (currentRoom = $previewId as Hex), 400)
-    //   } else {
-    //     currentRoom = $previewId as Hex
-    //   }
-    // }
+    if (preview.isActive && preview.isOwnRoom === isOwnRoomListing) {
+      currentRoom = preview.id as Hex
+    } else {
+      currentRoom = null
+    }
   })
 </script>
 
@@ -105,9 +92,17 @@
           {/if}
           {#each activeList as [roomId, room]}
             {#if isOwnRoomListing}
-              <OwnRoomItem roomId={roomId as Hex} {room} />
+              <OwnRoomItem
+                roomId={roomId as Hex}
+                {room}
+                onPreview={() => preview.preview(roomId, true)}
+              />
             {:else}
-              <RoomItem roomId={roomId as Hex} {room} />
+              <RoomItem
+                roomId={roomId as Hex}
+                {room}
+                onPreview={() => preview.preview(roomId, false)}
+              />
             {/if}
           {/each}
         {:else}
@@ -128,6 +123,7 @@
             {isOwnRoomListing}
             roomId={currentRoom}
             room={$roomStore?.[currentRoom]}
+            onBack={() => preview.back()}
           />
         {:else}
           <div>ERROR: NO CURRENT ROOM</div>

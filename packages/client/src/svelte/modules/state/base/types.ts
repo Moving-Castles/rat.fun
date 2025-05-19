@@ -34,6 +34,7 @@ declare global {
     traits?: string[],
     inventory?: string[],
     ownedRat?: Hex,
+    pastRats?: Hex[],
     owner?: Hex,
     prompt?: string,
     index?: number,
@@ -53,6 +54,7 @@ declare global {
     visitedLevels: Hex[],
     balance: number,
     ownedRat: Hex,
+    pastRats: Hex[],
     creationBlock: number
   }
 

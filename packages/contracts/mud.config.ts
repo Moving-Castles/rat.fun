@@ -52,6 +52,7 @@ export default defineWorld({
     Balance: "uint256", // Amount of credits. Set on player, rat and room.
     Value: "uint256", // Value of a trait can be negative
     OwnedRat: "bytes32", // Set on player
+    PastRats: "bytes32[]", // Set on player. List of rats the player has owned.
     Owner: "bytes32", // Set on room and rat
     VisitCount: "uint256", // Set on room
     KillCount: "uint256", // Set on room
