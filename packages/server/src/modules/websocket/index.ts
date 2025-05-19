@@ -2,14 +2,14 @@ import { OffChainMessage } from "@modules/types";
 import { storeMessage } from "@modules/message-store";
 
 // Store active WebSocket connections
-export const wsConnections: { [ratId: string]: WebSocket } = {};
+export const wsConnections: { [playerId: string]: WebSocket } = {};
 
-export function sendToClient(ratId: string, messageObject: OffChainMessage): void {
-  const ratWebSocket = wsConnections[ratId];
-  if (ratWebSocket) {
-    ratWebSocket.send(JSON.stringify(messageObject));
+export function sendToClient(playerId: string, messageObject: OffChainMessage): void {
+  const playerWebSocket = wsConnections[playerId];
+  if (playerWebSocket) {
+    playerWebSocket.send(JSON.stringify(messageObject));
   } else {
-    console.error(`No active WebSocket connection for Rat ID: ${ratId}`);
+    console.error(`No active WebSocket connection for Player ID: ${playerId}`);
   }
 }
 
@@ -20,7 +20,7 @@ export async function broadcast(messageObject: OffChainMessage): Promise<void> {
   }
   
   // Broadcast to all connected clients
-  Object.keys(wsConnections).forEach((ratId) => {
-    sendToClient(ratId, messageObject);
+  Object.keys(wsConnections).forEach((playerId) => {
+    sendToClient(playerId, messageObject);
   });
 }

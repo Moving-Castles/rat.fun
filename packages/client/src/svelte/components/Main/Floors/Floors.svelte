@@ -29,7 +29,6 @@
       Number($ratTotalValue) - Number($ratLevel?.levelMinBalance ?? 0)
 
     return value / range
-    // $levels[levelId].levelMinBalance} / Max: ${$levels[levelId].levelMaxBalance}
   })
 
   $effect(() => {
