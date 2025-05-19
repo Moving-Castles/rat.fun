@@ -11,7 +11,7 @@
 
   const doorProgress = new Spring(1)
 
-  let elevatorIndex = $state(0)
+  let elevatorIndex = $state(-1)
   let clientHeight = $state(0)
 
   export const goToLevel = async (num: number) => {
