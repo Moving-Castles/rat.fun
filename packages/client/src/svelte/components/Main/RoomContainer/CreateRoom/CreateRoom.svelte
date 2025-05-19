@@ -10,7 +10,6 @@
   import { getUIState } from "@modules/ui/state.svelte"
   import { ENVIRONMENT } from "@mud/enums"
   import { walletNetwork } from "@modules/network"
-  import { initStaticContent } from "@modules/content"
 
   import CharacterCounter from "@components/Main/RoomContainer/CreateRoom/CharacterCounter.svelte"
   import Spinner from "@components/Main/Shared/Spinner/Spinner.svelte"
@@ -45,7 +44,6 @@
 
     await createRoom(environment, $walletNetwork, newPrompt, levelId)
     busy = false
-    await initStaticContent()
 
     goYourRooms()
   }
@@ -63,24 +61,6 @@
       <Spinner />
     </div>
   {:else}
-    <!-- ROOM DESCRIPTION -->
-    <div class="form-group">
-      <label for="room-description">
-        <span class="highlight">Room Description</span>
-        <CharacterCounter
-          currentLength={roomDescription.length}
-          maxLength={$gameConfig.gameConfig.maxRoomPromptLength}
-        />
-      </label>
-      <textarea
-        disabled={busy}
-        id="room-description"
-        rows="6"
-        placeholder="You're creating a room that can modify traits, items, health, and tokens of rats that enter. Your room balance decreases whenever a rat gains something, and increases when your room takes something. You can withdraw remaining balance from your room."
-        bind:value={roomDescription}
-      ></textarea>
-    </div>
-
     <!-- LEVEL SELECTION -->
     <div class="form-group level-selection">
       <label for="level-toggles">
@@ -105,6 +85,34 @@
           </button>
         {/each}
       </div>
+      <div class="level-description">
+        <div class="level-name">
+          Floor {Number($levels[levelId].index) * -1}: {$levels[levelId].name}
+        </div>
+        {#if $levels[levelId].prompt}
+          <div class="level-prompt">
+            {$levels[levelId].prompt}
+          </div>
+        {/if}
+      </div>
+    </div>
+
+    <!-- ROOM DESCRIPTION -->
+    <div class="form-group">
+      <label for="room-description">
+        <span class="highlight">Room Description</span>
+        <CharacterCounter
+          currentLength={roomDescription.length}
+          maxLength={$gameConfig.gameConfig.maxRoomPromptLength}
+        />
+      </label>
+      <textarea
+        disabled={busy}
+        id="room-description"
+        rows="6"
+        placeholder="You're creating a room that can modify traits, items, health, and tokens of rats that enter. Your room balance decreases whenever a rat gains something, and increases when your room takes something. You can withdraw remaining balance from your room."
+        bind:value={roomDescription}
+      ></textarea>
     </div>
 
     <!-- ACTIONS -->
@@ -237,6 +245,26 @@
           background: var(--color-grey-mid);
         }
       }
+    }
+  }
+
+  .level-description {
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 12px;
+    background: var(--color-grey-dark);
+    padding: 10px;
+    margin-top: 10px;
+    max-width: 50ch;
+
+    .level-name {
+      border-bottom: var(--default-border-style);
+      color: var(--color-grey-light);
+    }
+
+    .level-prompt {
+      font-family: var(--special-font-stack);
+      font-size: 20px;
     }
   }
 </style>
