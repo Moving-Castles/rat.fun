@@ -1,6 +1,12 @@
 <script lang="ts">
   import { Spring } from "svelte/motion"
-  import { gameConfig, ratLevelIndex, levels } from "@modules/state/base/stores"
+  import {
+    gameConfig,
+    ratLevelIndex,
+    ratLevel,
+    levels,
+    ratTotalValue,
+  } from "@modules/state/base/stores"
   import { tippy } from "svelte-tippy"
 
   const doorProgress = new Spring(1)
@@ -15,6 +21,15 @@
     await doorProgress.set(1)
   }
 
+  let floorProgress = $derived.by(() => {
+    const range =
+      Number($ratLevel.levelMaxBalance) - Number($ratLevel.levelMinBalance)
+    const value = Number($ratTotalValue) - Number($ratLevel.levelMinBalance)
+
+    return value / range
+    // $levels[levelId].levelMinBalance} / Max: ${$levels[levelId].levelMaxBalance}
+  })
+
   $effect(() => {
     goToLevel($ratLevelIndex)
   })
@@ -27,10 +42,17 @@
         style:transform="translateY({elevatorIndex * (clientHeight / 5)}px)"
         class="elevator-item"
       >
-        <div
-          class="your-floor"
-          style:background-image="url(/images/rat.png)"
-        ></div>
+        <div class="your-floor" style:background-image="url(/images/rat.png)">
+          <div class="progress warning-mute">
+            <div class="label-min">
+              ${$ratLevel.levelMinBalance}
+            </div>
+            <div class="label-max">
+              ${$ratLevel.levelMaxBalance}
+            </div>
+            <div class="bar-current" style:width="{floorProgress * 100}%" />
+          </div>
+        </div>
         <div
           style:transform="translateX(-{doorProgress.current * 100}%)"
           class="elevator-door-l"
@@ -117,6 +139,31 @@
     background-position: center;
     background-repeat: no-repeat;
     background-color: var(--background);
+
+    .progress {
+      width: 100%;
+      position: absolute;
+      bottom: 0;
+      display: flex;
+      justify-content: space-between;
+      background-color: var(--background);
+
+      .bar-current {
+        height: 100%;
+        position: absolute;
+        left: 0;
+        background-color: var(--color-value);
+        z-index: 0;
+      }
+      .label-min,
+      .label-max {
+        z-index: 1;
+        padding-top: 4px;
+        padding-bottom: 2px;
+        padding-left: 4px;
+        padding-right: 4px;
+      }
+    }
   }
 
   .elevator {

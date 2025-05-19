@@ -26,7 +26,7 @@ import { validateInputData } from "./validation"
 
 // WebSocket
 import { broadcast } from "@modules/websocket"
-import { createRoomCreationMessage } from '@modules/websocket/constructMessages';
+import { createRoomCreationMessage } from "@modules/websocket/constructMessages"
 
 // Error handling
 import { handleError } from "./errorHandling"
@@ -36,26 +36,26 @@ import { generateRandomBytes32 } from "@modules/utils"
 
 // Spinner utility
 const spinner = {
-  chars: ['/', '-', '\\', '|'],
+  chars: ["/", "-", "\\", "|"],
   currentIndex: 0,
   interval: null as NodeJS.Timeout | null,
-  
+
   start(message: string) {
-    process.stdout.write('\x1B[?25l') // Hide cursor
+    process.stdout.write("\x1B[?25l") // Hide cursor
     this.interval = setInterval(() => {
       process.stdout.write(`\r${this.chars[this.currentIndex]} ${message}`)
       this.currentIndex = (this.currentIndex + 1) % this.chars.length
     }, 100)
   },
-  
+
   stop() {
     if (this.interval) {
       clearInterval(this.interval)
       this.interval = null
-      process.stdout.write('\r\x1B[K') // Clear line
-      process.stdout.write('\x1B[?25h') // Show cursor
+      process.stdout.write("\r\x1B[K") // Clear line
+      process.stdout.write("\x1B[?25h") // Show cursor
     }
-  }
+  },
 }
 
 const opts = { schema }
@@ -72,7 +72,10 @@ async function routes(fastify: FastifyInstance) {
         const playerId = getSenderId(signature)
 
         // Get onchain data
-        const { gameConfig, player, level } = await getCreateRoomData(playerId, levelId)
+        const { gameConfig, player, level } = await getCreateRoomData(
+          playerId,
+          levelId
+        )
 
         // Validate data
         validateInputData(gameConfig, roomPrompt, player, level)
@@ -88,28 +91,36 @@ async function routes(fastify: FastifyInstance) {
 
         // Start image generation and CMS write in the background
         const handleImageAndCMS = async () => {
-          spinner.start('Generating image and writing to CMS...')
+          spinner.start("Generating image and writing to CMS...")
           console.time("–– Image generation")
           try {
             // Get the image data
             const imageBuffer = await generateImage(roomPrompt)
-            
+
             // Get world address - await the network promise first
             const resolvedNetwork = await network
             const worldAddress = resolvedNetwork.worldContract?.address ?? "0x0"
 
             // Write the document
-            await writeRoomToCMS(worldAddress, roomId, roomPrompt, player, imageBuffer)
-            
+            await writeRoomToCMS(
+              worldAddress,
+              roomId,
+              roomPrompt,
+              player,
+              imageBuffer
+            )
           } catch (error) {
             // Handle CMS-specific errors
             if (error instanceof CMSError) {
-              console.error(`CMS Error: ${error.message}`, error);
+              console.error(`CMS Error: ${error.message}`, error)
               // We don't want to fail the entire request if CMS write fails
               // But we do want to log it properly
             } else {
               // For unexpected errors, log them but don't fail the request
-              console.error("Unexpected error in image generation or CMS write:", error);
+              console.error(
+                "Unexpected error in image generation or CMS write:",
+                error
+              )
             }
           } finally {
             spinner.stop()
@@ -121,10 +132,13 @@ async function routes(fastify: FastifyInstance) {
         handleImageAndCMS()
 
         // Broadcast room creation message
-        await broadcast(createRoomCreationMessage(roomId, player));
+        await broadcast(createRoomCreationMessage(roomId, player))
+
+        console.log("Returning Room ID", roomId)
 
         reply.send({
           success: true,
+          roomId,
         })
       } catch (error) {
         return handleError(error, reply)
