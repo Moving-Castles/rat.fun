@@ -17,14 +17,10 @@ export const ROUTES = [
   {
     id: "main",
     params: [],
-    animation: "doorsClose",
-    url: () => "/",
   },
   {
     id: "room",
     params: ["id"],
-    animation: "doorsOpen",
-    url: (p: Record<string, string>) => `/#${p.id}`,
   },
 ]
 
@@ -39,17 +35,6 @@ export const ROUTES = [
 let ratContainer = $state<RAT_CONTAINER>(RAT_CONTAINER.YOUR_RAT)
 let roomContainer = $state<ROOM_CONTAINER>(ROOM_CONTAINER.ALL_ROOMS)
 let previewingPane = $state<PANE>(PANE.NONE)
-
-// Preview state
-let previewState = $state<{
-  id: string | null
-  isOwnRoom: boolean
-  isActive: boolean
-}>({
-  id: null,
-  isOwnRoom: false,
-  isActive: false,
-})
 
 // Current route
 let route = $state("main")
@@ -112,33 +97,22 @@ export const getUIState = () => {
    *
    */
   const navigate = async (to: string, p: Record<string, string> = {}) => {
-    const routeDef = ROUTES.find(r => r.id === to)
-    if (!routeDef) throw new Error(`Unknown route: ${to}`)
-
-    // Validate params
-    for (const param of routeDef.params) {
-      if (!(param in p)) throw new Error(`Missing param: ${param}`)
-    }
-
-    // Set transition
+    // Simple asssignment
     transition.from = route
     transition.to = to
     transition.active = true
-    transition.type = routeDef.animation
+    transition.type = getTransitionType(transition.from, transition.to)
     params = p
+    history.pushState({ to, p }, "")
 
-    // Update URL
-    const url = routeDef.url(p)
-    // history.pushState({ to, p }, "", url)
-
-    // Set any relevant stores (example for roomId)
-    if (p.id) {
-      uiStores.CurrentRoomId.set(p.id)
+    // Handle parameters
+    if (p.roomId) {
+      uiStores.CurrentRoomId.set(p.roomId)
     } else {
       uiStores.CurrentRoomId.set(null)
     }
 
-    // Animate
+    // Modifying by using class instance methods
     await transition.progress.set(1)
     transition.active = false
     transition.progress.set(0)
@@ -156,53 +130,40 @@ export const getUIState = () => {
    * Here, I am modifying a store as you normally would anyways.
    * When combining stores and $state calls, it can be weird to figure out which is which.
    */
-  const preview = (id: string, isOwnRoom = false) => {
+  const preview = (id: string, mine = false) => {
     const go = () => {
-      // history.replaceState({}, document.title, `/#${id}`)
-      previewState = {
-        id,
-        isOwnRoom,
-        isActive: true,
+      if (mine) {
+        uiStores.myPreviewId.set(id)
+        previewingPane = PANE.ROOM_CONTAINER
+      } else {
+        uiStores.previewId.set(id)
+        previewingPane = PANE.ROOM_CONTAINER
       }
-      previewingPane = PANE.ROOM_CONTAINER
     }
 
-    if (previewState.isActive) {
-      back()
+    if (get(uiStores.myPreviewId) || get(uiStores.previewId)) {
+      back(!!get(uiStores.myPreviewId))
       setTimeout(go, 400)
     } else {
       go()
     }
   }
 
-  const back = () => {
-    // Strip the hash
-    let uri = window.location.toString()
-    const cleanUri = uri.substring(0, uri.indexOf("#"))
-    // history.replaceState({}, document.title, cleanUri)
-
-    previewState = {
-      id: null,
-      isOwnRoom: false,
-      isActive: false,
+  const back = (mine = false) => {
+    if (mine) {
+      uiStores.myPreviewId.set(null)
+      setPane(PANE.ROOM_CONTAINER, ROOM_CONTAINER.YOUR_ROOMS)
+    } else {
+      uiStores.previewId.set(null)
+      setPane(PANE.ROOM_CONTAINER, ROOM_CONTAINER.ALL_ROOMS)
     }
-    setPane(
-      PANE.ROOM_CONTAINER,
-      previewState.isOwnRoom
-        ? ROOM_CONTAINER.YOUR_ROOMS
-        : ROOM_CONTAINER.ALL_ROOMS
-    )
   }
 
   const close = async () => {
     previewingPane = PANE.NONE
     await navigate("main")
-    previewState = {
-      id: null,
-      isOwnRoom: false,
-      isActive: false,
-    }
     uiStores.CurrentRoomId.set(null)
+    console.log("closed")
   }
 
   /** 3.1 Exporting state
@@ -293,23 +254,6 @@ export const getUIState = () => {
      */
     get transition() {
       return transition
-    },
-    preview: {
-      get state() {
-        return previewState
-      },
-      get isActive() {
-        return previewState.isActive
-      },
-      get id() {
-        return previewState.id
-      },
-      get isOwnRoom() {
-        return previewState.isOwnRoom
-      },
-      preview,
-      back,
-      close,
     },
   }
 }

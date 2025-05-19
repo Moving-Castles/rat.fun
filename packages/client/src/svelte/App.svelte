@@ -2,7 +2,6 @@
   import { onMount } from "svelte"
   import { ENVIRONMENT } from "@mud/enums"
   import { initSound } from "@modules/sound"
-  import { getUIState } from "@modules/ui/state.svelte"
   import { UIState, UILocation } from "@modules/ui/stores"
   import { UI, LOCATION } from "@modules/ui/enums"
   import { initOffChainSync } from "@modules/off-chain-sync"
@@ -10,7 +9,6 @@
   import { websocketConnected } from "@modules/off-chain-sync/stores"
   import { FullStory, init as initFullstory } from "@fullstory/browser"
   import { EMPTY_CONNECTION } from "./modules/utils/constants"
-  import { SvelteURL } from "svelte/reactivity"
 
   // Tippy CSS
   import "tippy.js/dist/tippy.css"
@@ -22,14 +20,9 @@
 
   let { environment }: { environment: ENVIRONMENT } = $props()
 
-  const url = new SvelteURL(window.location.href)
-  let hash = $derived(url.hash.replace("#", ""))
-
   const environmentLoaded = () => {
     UIState.set(UI.SPAWNING)
   }
-
-  const { preview } = getUIState()
 
   const playerSpawned = () => {
     UIState.set(UI.READY)
@@ -57,15 +50,6 @@
     }
   })
 
-  // Router
-  $effect(() => {
-    if (hash !== "") {
-      preview.preview(hash, false) // Default to non-own room preview
-    } else {
-      preview.back()
-    }
-  })
-
   onMount(async () => {
     // Remove preloader
     document.querySelector(".preloader")?.remove()
@@ -75,11 +59,7 @@
   })
 </script>
 
-<svelte:window
-  onhashchange={e => {
-    url.href = e.newURL
-  }}
-/>
+<svelte:window />
 
 <div class="bg">
   <div class="context-main">
