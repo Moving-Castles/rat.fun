@@ -38,21 +38,6 @@
       $player.balance < Number($levels[levelId].roomCreationCost ?? 0)
   )
 
-  // @rasmus this simply checks the static content store until it's populated
-  const poll = async (id: string) => {
-    let attempt = 0
-
-    while (attempt < 50) {
-      const room = $staticContent.rooms.find(r => {
-        return r._id == id
-      })
-      if (room) return true
-      await new Promise(r => setTimeout(r, 500))
-      attempt++
-    }
-    return "Room not found"
-  }
-
   async function sendCreateRoom() {
     if (busy) return
     busy = true
@@ -67,14 +52,8 @@
     busy = false
 
     if (result.roomId) {
-      rooms.preview(result?.roomId, false)
       busy = false
-      // We can only show the room preview if the static content has caught up
-      // Wait for the static content to catch up
-      const roomExists = await poll(result?.roomId)
-
-      // if (roomExists) {
-      // }
+      // Go to the preview
     }
   }
 </script>

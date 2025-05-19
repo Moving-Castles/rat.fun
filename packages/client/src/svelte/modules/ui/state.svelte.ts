@@ -149,7 +149,7 @@ export const getUIState = () => {
     }
 
     if (get(uiStores.myPreviewId) || get(uiStores.previewId)) {
-      back(mine)
+      // back(mine)
       setTimeout(go, 400)
     } else {
       go()

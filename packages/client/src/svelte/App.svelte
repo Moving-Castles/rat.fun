@@ -60,26 +60,23 @@
     // Preload sounds
     initSound()
 
-    console.log(
-      window.location.href.includes("share"),
-      window.location.hash !== ""
-    )
-
-    if (window.location.hash !== "") {
-      rooms.preview(window.location.hash.replaceAll("#", ""))
-    }
+    const currentHash = window.location.hash.replace("#", "")
+    if (currentHash !== "") rooms.preview(currentHash)
   })
 </script>
 
 <svelte:window
-  onhashchange={e => {
-    // If the hash is different and not a string
+  onhashchange={async e => {
     const newHash = new URL(e.newURL).hash.replaceAll("#", "")
-    const oldHash = new URL(e.oldURL).hash.replaceAll("#", "")
+    const currentHash = new URL(e.oldURL).hash.replaceAll("#", "")
 
-    if (newHash !== "") {
-      if (import.meta.env.DEV) {
-        if (oldHash !== "") rooms.preview(newHash)
+    // Only call preview if the hash is not empty AND it's actually different
+    // from the hash we are currently at.
+    if (newHash !== "" && newHash !== currentHash) {
+      if (currentHash !== "") {
+        rooms.back()
+        await new Promise(r => setTimeout(r, 500))
+        rooms.preview(newHash)
       } else {
         rooms.preview(newHash)
       }

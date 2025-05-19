@@ -27,11 +27,7 @@
   }
 </script>
 
-<button
-  class="room-listing-item"
-  class:disabled={room.balance == 0}
-  onclick={() => rooms.preview(roomId, false)}
->
+<button class="room-listing-item" class:disabled={room.balance == 0}>
   <!-- COLUMN LEFT -->
   <div class="column left">
     <div class="room-image">

@@ -16,11 +16,7 @@
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <!-- svelte-ignore a11y_click_events_have_key_events -->
-<div
-  class="room-listing-item"
-  class:depleted={room.balance == 0}
-  onclick={() => rooms.preview(roomId, true)}
->
+<div class="room-listing-item" class:depleted={room.balance == 0}>
   <div class="profit">
     <div
       class="profit-indicator"
