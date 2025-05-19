@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { MergedLogEntry } from "./types"
   import type { EnterRoomReturnValue } from "@server/modules/types"
+  import { RESULT_EVENT } from "@modules/ui/enums"
   import { mergeLog } from "./index"
   import { gsap } from "gsap"
   import { playSound } from "@modules/sound"
@@ -11,10 +12,12 @@
   let {
     result,
     animationstarted,
+    resultEvent,
     onComplete,
   }: {
     result: EnterRoomReturnValue | undefined
     animationstarted: boolean
+    resultEvent: RESULT_EVENT
     onComplete: () => void
   } = $props()
 
@@ -74,7 +77,10 @@
 
   const sendLeaveRoom = () => {
     playSound("tcm", "enteredPod")
-    rooms.close()
+    rooms.close(
+      resultEvent !== RESULT_EVENT.LEVEL_UP &&
+        resultEvent !== RESULT_EVENT.LEVEL_DOWN
+    )
   }
 </script>
 

@@ -28,7 +28,7 @@ export enum ROOM_CONTAINER {
   SINGLE_ROOM,
 }
 
-export enum RESULT_POPUP_STATE {
+export enum RESULT_EVENT {
   NONE,
   RAT_DEAD,
   ROOM_DEPLETED,
