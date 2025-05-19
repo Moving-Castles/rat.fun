@@ -66,7 +66,7 @@ contract RatSystemTest is BaseTest {
 
     uint256 initialBalance = setInitialBalance(playerId);
 
-    world.ratroom__createRat("roger");
+    bytes32 ratId = world.ratroom__createRat("roger");
 
     assertEq(Balance.get(playerId), initialBalance - GameConfig.getRatCreationCost());
 
@@ -75,6 +75,8 @@ contract RatSystemTest is BaseTest {
     endGasReport();
 
     assertEq(Balance.get(playerId), initialBalance);
+    assertEq(PastRats.length(playerId), 1);
+    assertEq(PastRats.getItem(playerId, 0), ratId);
 
     vm.stopPrank();
   }

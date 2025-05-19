@@ -29,7 +29,7 @@
     UIState.set(UI.SPAWNING)
   }
 
-  const { rooms } = getUIState()
+  const { preview } = getUIState()
 
   const playerSpawned = () => {
     UIState.set(UI.READY)
@@ -60,9 +60,9 @@
   // Router
   $effect(() => {
     if (hash !== "") {
-      rooms.preview(hash)
+      preview.preview(hash, false) // Default to non-own room preview
     } else {
-      rooms.back()
+      preview.back()
     }
   })
 

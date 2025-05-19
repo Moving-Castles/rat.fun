@@ -27,13 +27,19 @@
   }
 
   let { environment }: { environment: ENVIRONMENT } = $props()
-  const { transition, route, rooms } = getUIState()
-  const { current, myCurrent } = rooms
+  const { transition, route, preview, rooms } = getUIState()
   let debugTransition = $state(false)
 
   // Determine if the main game layer (with doors) should be rendered
   let shouldRenderMainGameLayer = $derived(
     route.current === "main" || transition.to === "main"
+  )
+
+  // Determine if we should show the room result
+  let shouldShowRoomResult = $derived(
+    route.current === "room" ||
+      (transition.from === "room" && transition.active) ||
+      preview.isActive
   )
 
   onMount(async () => {
@@ -91,12 +97,12 @@
   </div>
 {/if}
 
-{#if route.current === "room" || (transition.from === "room" && transition.active) || $current}
+{#if shouldShowRoomResult}
   <div class="layer-below">
     <RoomResult
-      start={($current || $myCurrent) && route.current === "room"}
+      start={preview.isActive && route.current === "room"}
       animationstart={transition.active}
-      roomId={$current}
+      roomId={preview.id}
       {environment}
     />
   </div>
