@@ -4,10 +4,10 @@
     gameConfig,
     ratLevelIndex,
     ratLevel,
-    levels,
     ratTotalValue,
   } from "@modules/state/base/stores"
-  import { tippy } from "svelte-tippy"
+
+  import FloorItem from "./FloorItem.svelte"
 
   const doorProgress = new Spring(1)
 
@@ -50,52 +50,32 @@
             <div class="label-max">
               ${$ratLevel.levelMaxBalance}
             </div>
-            <div class="bar-current" style:width="{floorProgress * 100}%" />
+            <div class="bar-current" style:width="{floorProgress * 100}%"></div>
           </div>
         </div>
+        <!-- Elevator door: left -->
         <div
           style:transform="translateX(-{doorProgress.current * 100}%)"
           class="elevator-door-l"
         ></div>
+        <!-- Elevator door: right -->
         <div
           style:transform="translateX({doorProgress.current * 100}%)"
           class="elevator-door-r"
         ></div>
-        <span>
-          <!-- {elevatorIndex * -1} -->
-        </span>
+        <!-- Elevator floor number -->
+        <div class="elevator-floor-number">
+          {elevatorIndex * -1}
+        </div>
+        <!-- Elevator floor name -->
+        <div class="elevator-floor-name">
+          {$ratLevel?.name ?? ""}
+        </div>
       </div>
     {/if}
   </div>
   {#each $gameConfig?.levelList || [] as levelId, i (i)}
-    {#if i < elevatorIndex}
-      <div
-        use:tippy={{
-          content: `Name: ${$levels[levelId].name} / Prompt: ${$levels[levelId].prompt} / Min: ${$levels[levelId].levelMinBalance} / Max: ${$levels[levelId].levelMaxBalance}`,
-        }}
-        class="floor-item"
-      >
-        {i * -1}
-      </div>
-    {:else if i > elevatorIndex}
-      <div
-        use:tippy={{
-          content: `Name: ${$levels[levelId].name} / Prompt: ${$levels[levelId].prompt} / Min: ${$levels[levelId].levelMinBalance} / Max: ${$levels[levelId].levelMaxBalance}`,
-        }}
-        class="floor-item"
-      >
-        {i * -1}
-      </div>
-    {:else}
-      <div
-        use:tippy={{
-          content: `Your rat is on this floor. Name: ${$levels[levelId].name} / Prompt: ${$levels[levelId].prompt} / Min: ${$levels[levelId].levelMinBalance} / Max: ${$levels[levelId].levelMaxBalance}`,
-        }}
-        class="floor-item"
-      >
-        {i * -1}
-      </div>
-    {/if}
+    <FloorItem {levelId} {i} />
   {/each}
 </div>
 
@@ -115,21 +95,6 @@
       var(--color-grey-dark) 20px,
       var(--color-grey-dark) 40px
     );
-  }
-
-  .floor-item {
-    width: 100%;
-    height: calc(100% / 5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-bottom: var(--dashed-border-style);
-    position: relative;
-    font-size: 18px;
-
-    &:last-child {
-      border-bottom: none;
-    }
   }
 
   .your-floor {
@@ -155,6 +120,7 @@
         background-color: var(--color-value);
         z-index: 0;
       }
+
       .label-min,
       .label-max {
         z-index: 1;
@@ -162,6 +128,7 @@
         padding-bottom: 2px;
         padding-left: 4px;
         padding-right: 4px;
+        font-size: var(--font-size-small);
       }
     }
   }
@@ -184,6 +151,14 @@
     background-blend-mode: lighten;
   }
 
+  .elevator-door-l,
+  .elevator-door-r {
+    width: 50%;
+    position: absolute;
+    height: 100%;
+    background: var(--background);
+  }
+
   .elevator-door-l {
     left: 0;
     border-right: var(--default-border-style);
@@ -194,11 +169,23 @@
     border-left: var(--default-border-style);
   }
 
-  .elevator-door-l,
-  .elevator-door-r {
-    width: 50%;
+  .elevator-floor-number {
     position: absolute;
-    height: 100%;
-    background: var(--background);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: var(--font-size-normal);
+    background: var(--color-alert-priority);
+    color: var(--background);
+    padding: 5px;
+  }
+
+  .elevator-floor-name {
+    position: absolute;
+    top: 5px;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    font-size: var(--font-size-small);
+    white-space: nowrap;
   }
 </style>

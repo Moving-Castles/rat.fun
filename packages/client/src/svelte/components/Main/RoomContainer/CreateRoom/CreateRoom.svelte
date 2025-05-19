@@ -106,7 +106,7 @@
             onclick={() => (levelId = key)}
             disabled={!$player.visitedLevels.includes(key as `0x${string}`)}
           >
-            {level.index}
+            {Number(level.index) * -1}
           </button>
         {/each}
       </div>
