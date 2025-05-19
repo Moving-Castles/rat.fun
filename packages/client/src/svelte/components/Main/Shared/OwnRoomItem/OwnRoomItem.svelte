@@ -16,8 +16,8 @@
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <!-- svelte-ignore a11y_click_events_have_key_events -->
-<div
-  onclick={() => rooms.preview(roomId, true, true)}
+<button
+  onclick={() => rooms.preview(roomId, true, true, false)}
   class="room-listing-item"
   class:depleted={room.balance == 0}
 >
@@ -90,10 +90,12 @@
       </div>
     </div>
   </div>
-</div>
+</button>
 
 <style lang="scss">
   .room-listing-item {
+    color: white;
+    text-decoration: none;
     display: flex;
     background: transparent;
     outline: none;

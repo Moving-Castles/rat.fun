@@ -131,12 +131,16 @@ export const getUIState = () => {
    * Here, I am modifying a store as you normally would anyways.
    * When combining stores and $state calls, it can be weird to figure out which is which.
    */
-  const preview = (id: string, mine = false, animated = true) => {
-    console.log("preview", id)
+  const preview = (
+    id: string,
+    mine = false,
+    animated = true,
+    changeHash = true
+  ) => {
     if (id === "") return
     previewAnimated = animated
     const go = () => {
-      window.location.hash = id
+      if (changeHash) window.location.hash = id
       if (mine) {
         uiStores.myPreviewId.set(id)
         previewingPane = PANE.ROOM_CONTAINER
