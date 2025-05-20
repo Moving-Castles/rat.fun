@@ -3,7 +3,7 @@ export { default as Modal } from "./Modal.svelte"
 
 let modalState = $state(null)
 let showModal = $state(false)
-let modalConfig = $state({})
+let modalConfig = $state<{ target?: string; noclose?: boolean }>({})
 
 export const getModalState = () => {
   const setState = children => {

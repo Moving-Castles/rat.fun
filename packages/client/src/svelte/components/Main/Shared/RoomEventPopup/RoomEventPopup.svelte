@@ -1,12 +1,10 @@
 <script lang="ts">
   import { Howl } from "howler"
   import { onMount, onDestroy } from "svelte"
-  import { urlFor } from "@modules/content/sanity"
   import type { ServerReturnValue } from "@components/Main/RoomResult/types"
   import { type Room } from "@modules/state/base/types"
+  import FloorDescription from "@components/Main/Floors/FloorDescription.svelte"
   import { RESULT_EVENT } from "@modules/ui/enums"
-  import RatDeath from "@components/Main/RatContainer/YourRat/RatDeath.svelte" // move to more appropriate place
-  import RatElevator from "@components/Main/RatContainer/YourRat/RatElevator.svelte" // move to more appropriate place
   import { getUIState } from "@modules/ui/state.svelte"
   import { frozenRat } from "@components/Main/RoomResult/state.svelte"
   import { ratLevel } from "@modules/state/base/stores"
@@ -33,6 +31,7 @@
   $inspect(sanityRoomContent)
 
   onMount(() => {
+    console.log("on mount")
     if (resultEvent === RESULT_EVENT.RAT_DEAD) {
       snd = playSound("tcm", "machineFlowing", true)
     }
@@ -52,130 +51,131 @@
   })
 </script>
 
-<!-- {#if state === RESULT_EVENT.RAT_DEAD}
-{/if} -->
-
-<div class="room-event-popup">
-  <div
-    class="inner"
-    class:warning-mute={resultEvent !== RESULT_EVENT.ROOM_DEPLETED}
-    class:warning={resultEvent === RESULT_EVENT.ROOM_DEPLETED}
-  >
-    <div class="content">
-      <!-- Big colored text to explain the situation -->
-      <h1
-        class="message"
-        class:death={resultEvent === RESULT_EVENT.RAT_DEAD}
-        class:levelup={resultEvent === RESULT_EVENT.LEVEL_UP}
-        class:leveldown={resultEvent === RESULT_EVENT.LEVEL_DOWN}
-        class:depleted={resultEvent === RESULT_EVENT.ROOM_DEPLETED}
-      >
-        {#if resultEvent === RESULT_EVENT.RAT_DEAD}
-          {$frozenRat?.name} DIED
-        {/if}
-        {#if resultEvent === RESULT_EVENT.LEVEL_UP}
-          {$frozenRat?.name} TRANSFERRED DOWN TO {$ratLevel.index === 0
-            ? ""
-            : "-"}{$ratLevel.index}
-        {/if}
-        {#if resultEvent === RESULT_EVENT.LEVEL_DOWN}
-          {$frozenRat?.name} TRANSFERRED UP TO {$ratLevel.index === 0
-            ? ""
-            : "-"}{$ratLevel.index}
-        {/if}
-        {#if resultEvent === RESULT_EVENT.ROOM_DEPLETED}
-          ROOM #{room?.index} DEPLETED
-        {/if}
-      </h1>
-
-      {#if resultEvent === RESULT_EVENT.RAT_DEAD || resultEvent === RESULT_EVENT.LEVEL_UP || resultEvent === RESULT_EVENT.LEVEL_DOWN}
-        <button
-          class="close-button"
-          class:death={resultEvent === RESULT_EVENT.RAT_DEAD}
-          class:levelup={resultEvent === RESULT_EVENT.LEVEL_UP}
-          class:leveldown={resultEvent === RESULT_EVENT.LEVEL_DOWN}
-          class:depleted={resultEvent === RESULT_EVENT.ROOM_DEPLETED}
-          onclick={() => {
-            modal.close()
-            rooms.close()
-          }}
-        >
-          LEAVE ROOM
-        </button>
-      {/if}
-    </div>
-
+<div class="popup-container">
+  <div class="room-event-popup">
     <div
-      class="background"
+      class="inner"
       class:death={resultEvent === RESULT_EVENT.RAT_DEAD}
       class:levelup={resultEvent === RESULT_EVENT.LEVEL_UP}
       class:leveldown={resultEvent === RESULT_EVENT.LEVEL_DOWN}
       class:depleted={resultEvent === RESULT_EVENT.ROOM_DEPLETED}
     >
-      {#if resultEvent === RESULT_EVENT.RAT_DEAD}
-        <RatDeath />
-      {/if}
-      {#if resultEvent === RESULT_EVENT.LEVEL_DOWN || resultEvent === RESULT_EVENT.LEVEL_UP}
-        <RatElevator
-          direction={resultEvent === RESULT_EVENT.LEVEL_UP ? -1 : 1}
-        />
-      {/if}
-      {#if resultEvent === RESULT_EVENT.ROOM_DEPLETED}
-        <img
-          class="background-image"
-          src={urlFor(sanityRoomContent?.image)
-            .width(400)
-            .auto("format")
-            // .saturation(-100)
-            .url()}
-          alt={room.roomPrompt}
-        />
-      {/if}
+      <div class="content">
+        <!-- Big colored text to explain the situation -->
+        <h1 class="message">
+          {#if resultEvent === RESULT_EVENT.RAT_DEAD}
+            {$frozenRat?.name} DIED
+          {/if}
+          {#if resultEvent === RESULT_EVENT.LEVEL_UP}
+            {$frozenRat?.name} TRANSFERRED DOWN TO {$ratLevel.index === 0
+              ? ""
+              : "-"}{$ratLevel.index}
+            <FloorDescription />
+          {/if}
+          {#if resultEvent === RESULT_EVENT.LEVEL_DOWN}
+            {$frozenRat?.name} TRANSFERRED UP TO {$ratLevel.index === 0
+              ? ""
+              : "-"}{$ratLevel.index}
+            <FloorDescription />
+          {/if}
+          {#if resultEvent === RESULT_EVENT.ROOM_DEPLETED}
+            ROOM #{room?.index} DEPLETED
+          {/if}
+        </h1>
+
+        {#if resultEvent === RESULT_EVENT.RAT_DEAD || resultEvent === RESULT_EVENT.LEVEL_UP || resultEvent === RESULT_EVENT.LEVEL_DOWN}
+          <button
+            class="close-button"
+            class:death={resultEvent === RESULT_EVENT.RAT_DEAD}
+            class:levelup={resultEvent === RESULT_EVENT.LEVEL_UP}
+            class:leveldown={resultEvent === RESULT_EVENT.LEVEL_DOWN}
+            onclick={async () => {
+              await rooms.close()
+              setTimeout(modal.close, 3000)
+              // modal.close()
+            }}
+          >
+            LEAVE ROOM
+          </button>
+        {/if}
+      </div>
+
+      <div
+        class="background"
+        class:death={resultEvent === RESULT_EVENT.RAT_DEAD}
+        class:levelup={resultEvent === RESULT_EVENT.LEVEL_UP}
+        class:leveldown={resultEvent === RESULT_EVENT.LEVEL_DOWN}
+        class:depleted={resultEvent === RESULT_EVENT.ROOM_DEPLETED}
+      />
+      <!-- Rat visualisation dying -->
     </div>
-    <!-- Rat visualisation dying -->
   </div>
 </div>
 
 <style lang="scss">
+  .popup-container {
+    background: rgba(0, 0, 0, 0.8);
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overscroll-behavior: none;
+    z-index: 1;
+  }
   .room-event-popup {
     position: relative;
     height: 400px;
-    width: 400px;
+    width: 100%;
+    max-width: calc(var(--game-window-height) * 0.6);
+    max-height: calc(var(--game-window-height) * 0.9);
+    overflow-x: hidden;
+    overflow-y: scroll;
 
     .inner {
       position: relative;
       width: 100%;
       height: 100%;
 
+      &.death {
+        background: var(--color-alert-priority);
+        .message {
+          color: var(--background);
+        }
+      }
+
+      &.depleted {
+        background: var(--black);
+        .message {
+          color: var(--color-value);
+        }
+      }
+
+      &.levelup {
+        background: var(--color-value-up);
+
+        .message {
+          color: var(--background);
+        }
+      }
+
+      &.leveldown {
+        background: var(--color-value-down);
+
+        .message {
+          color: var(--background);
+        }
+      }
+
       .message {
-        padding: 0;
+        padding: 1rem;
         color: var(--foreground);
         font-family: var(--label-font-stack);
         letter-spacing: -0.2em;
         font-size: var(--font-size-extra-large);
         line-height: calc(var(--font-size-extra-large) * 0.7);
         font-weight: normal;
-        width: 100%;
         text-align: center;
-        &.death {
-          background: var(--color-alert-priority);
-          color: var(--background) !important;
-        }
-
-        &.depleted {
-          background: var(--black);
-          color: var(--color-value);
-        }
-
-        &.levelup {
-          background: var(--color-value-up);
-          color: var(--background);
-        }
-
-        &.leveldown {
-          background: var(--color-value-down);
-          color: var(--background);
-        }
 
         .digit {
           display: inline-block;
@@ -248,7 +248,7 @@
 
     &:hover {
       background: var(--color-alert);
-      color: var(--black);
+      color: var(--white);
     }
   }
 

@@ -2,7 +2,6 @@
   import type { EnterRoomReturnValue } from "@server/modules/types"
   import type { Hex } from "viem"
   import { RESULT_EVENT } from "@modules/ui/enums"
-  import ModalTarget from "@components/Main/Modal/ModalTarget.svelte"
 
   import {
     player,
@@ -56,9 +55,6 @@
   })
 
   const checkEvents = async () => {
-    // Rat death 1st priority
-    // Room depleted 2nd
-    // Level up / Level Down 3rd
     if (result.ratDead) {
       resultEvent = RESULT_EVENT.RAT_DEAD
     } else if (result.roomDepleted) {
@@ -68,9 +64,7 @@
     } else if (result.levelDown) {
       resultEvent = RESULT_EVENT.LEVEL_DOWN
     }
-
-    // Uncomment to test one of the states
-    // resultEvent = RESULT_EVENT.ROOM_DEPLETED
+    // resultEvent = RESULT_EVENT.LEVEL_DOWN
   }
 
   const processRoom = async () => {
@@ -138,15 +132,11 @@
       </div>
     {/if}
   {/if}
+
+  {#if resultEvent !== RESULT_EVENT.NONE && resultEvent !== RESULT_EVENT.ROOM_DEPLETED && result !== null}
+    <RoomEventPopup {result} {resultEvent} {room} {sanityRoomContent} />
+  {/if}
 </div>
-
-{#snippet event()}
-  <RoomEventPopup {result} {resultEvent} {room} {sanityRoomContent} />
-{/snippet}
-
-{#if resultEvent !== RESULT_EVENT.NONE && resultEvent !== RESULT_EVENT.ROOM_DEPLETED && result !== null}
-  <ModalTarget content={event} />
-{/if}
 
 <style lang="scss">
   .room-result {

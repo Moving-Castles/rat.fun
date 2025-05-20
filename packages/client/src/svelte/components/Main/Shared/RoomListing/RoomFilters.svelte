@@ -16,6 +16,7 @@
     onTextFilterChange,
     onTextFilterClear,
     onToggleDepleted,
+    roomsAmount,
   } = $props<{
     textFilter: string
     sortFunction: (a: [string, any], b: [string, any]) => number
@@ -24,6 +25,7 @@
     onTextFilterChange: (value: string) => void
     onTextFilterClear: () => void
     onToggleDepleted: () => void
+    roomsAmount: number
   }>()
 </script>
 
@@ -35,9 +37,7 @@
     }}
     class="floor-stats"
   >
-    {Object.keys($roomStore).length} room{Object.keys($roomStore).length > 1
-      ? "s"
-      : ""}
+    {roomsAmount} room{roomsAmount === 0 || roomsAmount > 1 ? "s" : ""}
   </div>
   <!-- TEXT FILTER -->
   <div class="text-filter">

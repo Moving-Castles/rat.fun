@@ -90,13 +90,26 @@
         {#if !isOwnRoomListing}
           <FloorHeader />
           <RoomFilters
+            roomsAmount={activeList.length}
             {textFilter}
             {sortFunction}
             {showDepletedRooms}
-            onSort={fn => (sortFunction = fn)}
-            onTextFilterChange={value => (textFilter = value)}
-            onTextFilterClear={() => (textFilter = "")}
-            onToggleDepleted={() => (showDepletedRooms = !showDepletedRooms)}
+            onSort={fn => {
+              sortFunction = fn
+              updateRooms()
+            }}
+            onTextFilterChange={value => {
+              textFilter = value
+              updateRooms()
+            }}
+            onTextFilterClear={() => {
+              textFilter = ""
+              updateRooms()
+            }}
+            onToggleDepleted={() => {
+              showDepletedRooms = !showDepletedRooms
+              updateRooms()
+            }}
           />
         {/if}
         {#if activeList.length > 0}
