@@ -134,7 +134,7 @@
       height: 100%;
 
       &.death {
-        background: var(--color-alert-priority);
+        background: var(--color-death);
         .message {
           color: var(--background);
         }

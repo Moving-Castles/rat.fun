@@ -26,7 +26,7 @@ contract PostDeploy is Script {
 
     // Create levels
     bytes32[] memory levels = new bytes32[](5);
-    levels[0] = LibLevel.createLevel(0, "Freezer", "Floor temperature is -10 degrees celsius.", 0, 250, 250);
+    levels[0] = LibLevel.createLevel(0, "Freezer", "Floor temperature is -5 degrees celsius.", 0, 250, 250);
     levels[1] = LibLevel.createLevel(
       1,
       "Dark ages",

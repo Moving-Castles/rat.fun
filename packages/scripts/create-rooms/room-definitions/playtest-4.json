@@ -2,27 +2,35 @@
     "rooms": [
       {
         "levelId": "0x0000000000000000000000000000000000000000000000000000000000000001",
-        "roomPrompt": "Weird kid - will swap any item you give her for somewhat less valuable (-5) item. Likes to give opposite item. Likes fortnite memes."
+        "roomPrompt": "Vending machine gives one random clothing item worth between 30-60 tokens. Cost is 50 tokens. If the rat does not have 50 tokens, the machine will take the debt by draining blood equivalent of 50 health."
       },
       {
         "levelId": "0x0000000000000000000000000000000000000000000000000000000000000001",
-        "roomPrompt": "Vending machine gives one random item worth between 30-60 tokens. Cost is 50 tokens. If the rat does not have 50 tokens, the machine will take the debt by draining blood equivalent of 50 health."
+        "roomPrompt": "Rat volunteers as host for experimental parasite."
       },
       {
         "levelId": "0x0000000000000000000000000000000000000000000000000000000000000001",
-        "roomPrompt": "Famished cat hybrid with titanium fangs. Only way out is by killing it."
+        "roomPrompt": "Room contains nothing except the bitter cold. If rat survives it gets 100 tokens."
       },
       {
         "levelId": "0x0000000000000000000000000000000000000000000000000000000000000001",
-        "roomPrompt": "Rat controls a human ratatouille style. Human needs to defeat 7 other humans in hand to hand combat or rat is killed."
+        "roomPrompt": "Glue trap with 25 food as bait."
       },
       {
-        "levelId": "0x0000000000000000000000000000000000000000000000000000000000000001",
-        "roomPrompt": "Room is very hot. 96°C. After two minutes, high voltage current activates in floor. If rat survives, gets full room balance in tokens."
+        "levelId": "0x0000000000000000000000000000000000000000000000000000000000000002",
+        "roomPrompt": "Rat controls a random human, ratatouille style. Give the human a name and some traits. This human needs to defeat 7 other humans in hand to hand combat or rat is killed. If rat wins, gets item worth 100-250 tokens."
       },
       {
-        "levelId": "0x0000000000000000000000000000000000000000000000000000000000000001",
-        "roomPrompt": "Room contains very strong electromagnetic radiation with wavelength ranges from about one meter to one millimeter, corresponding to frequencies between 300 MHz and 300 GHz."
+        "levelId": "0x0000000000000000000000000000000000000000000000000000000000000002",
+        "roomPrompt": "Trap room. First a trapdoor with spikes at bottom, and then a rolling ball. Ends with poison shower. If rat survives gets all balance in room."
+      },
+      {
+        "levelId": "0x0000000000000000000000000000000000000000000000000000000000000002",
+        "roomPrompt": "Local healer. Heals rat for equivalent token payment, + 5% markup."
+      },
+      {
+        "levelId": "0x0000000000000000000000000000000000000000000000000000000000000002",
+        "roomPrompt": "Merchant, buys defunct items for their novelty. Pays 50% of value for items if not functional on this floor, 95% if functional."
       }
     ]
 }

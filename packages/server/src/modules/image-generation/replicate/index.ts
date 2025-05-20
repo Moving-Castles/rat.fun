@@ -18,6 +18,7 @@ const MODEL = {
 }
 
 const PROMPT_1 = [
+  "trypophobia",
   "staring",
   "laughing",
   "sad",
@@ -91,11 +92,10 @@ const PROMPT_1 = [
   "lookmaxed",
   "merrymaxed",
   "life-maxed",
-  "white-pilled",
-  "clown-pilled",
   "sublime",
   "sneering",
   "sparkling",
+  "sickly sweet",
   "alien",
   "vivisection",
   "messy",
@@ -197,7 +197,9 @@ const PROMPT_2 = [
   "black and white",
   "monochrome",
   "go pro",
-  "gorechunk"
+  "gorechunk",
+  "VHS",
+  "trypophobia"
 ]
 
 const IMAGE_TEMPLATES = [
@@ -215,7 +217,7 @@ const makePrompt = (prompt: string) => {
   const randomPrompt2 = pickRandom(PROMPT_1)
   const randomPrompt3 = pickRandom(PROMPT_2)
   const randomPrompt4 = pickRandom(PROMPT_2)
-  return `${PREPROMPT} ${randomPrompt1} ${randomPrompt2} ${randomPrompt3} ${randomPrompt4} . Content:${prompt}`
+  return `${PREPROMPT} ${randomPrompt1} ${randomPrompt2} ${randomPrompt3} ${randomPrompt4} . !! Important !! A scene of: ${prompt}`
 }
 
 export const generateImage = async (prompt: string, levelPrompt: string) => {
