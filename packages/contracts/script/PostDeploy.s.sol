@@ -50,12 +50,12 @@ contract PostDeploy is Script {
     LibInit.init(NamespaceOwner.get(ROOT_NAMESPACE_ID), levels);
 
     // Electrical shock therapy. Rat gets psychological disorder, or heals one (even if unlikely).
-    LibRoom.createRoom(
-      "The rat gets psychological disorder, or heals one (even if unlikely).",
-      adminId,
-      levels[0],
-      bytes32(0)
-    );
+    // LibRoom.createRoom(
+    //   "The rat gets psychological disorder, or heals one (even if unlikely).",
+    //   adminId,
+    //   levels[0],
+    //   bytes32(0)
+    // );
 
     vm.stopBroadcast();
   }

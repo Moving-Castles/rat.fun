@@ -140,13 +140,12 @@ const PROMPT_2 = [
   "mutant",
   "freak",
   "gimp suit",
+  "Giovanni Battista Piranesi",
   "scarred",
   "collage",
   "otto dix",
   "francis bacon",
   "george grosz",
-  "kids drawing",
-  "naive drawing",
   "drawing",
   "plotter",
   "trash",
@@ -242,7 +241,7 @@ export const generateImage = async (prompt: string, levelPrompt: string) => {
       aspect_ratio: "1:1",
       output_format: "webp",
       output_quality: 80,
-      prompt_strength: 0.68, // 0.73
+      prompt_strength: 0.78, // 0.73
       steps: 28, // 28
     }
   }
