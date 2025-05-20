@@ -32,8 +32,8 @@
       <!-- HEALTH -->
       <div class="info-item">
         <span
-          class:priority={healthGoing}
           class="health"
+          class:priority={healthGoing}
           class:dead={$rat.health <= 0}
         >
           HEALTH <NumberGoing bind:going={healthGoing} value={$rat.health} />

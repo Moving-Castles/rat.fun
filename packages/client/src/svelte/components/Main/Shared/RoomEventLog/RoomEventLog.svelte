@@ -22,7 +22,9 @@
       console.error("Outcomes is undefined")
       return
     }
-    outcomes = update.reverse()
+    if (update.length > 0) {
+      outcomes = update.reverse()
+    }
   }
 
   onMount(() => {

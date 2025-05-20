@@ -42,6 +42,9 @@
       }, 1200)
     }
   }
+
+  // Withhold changes to this value until the
+  // ratTotalValue
 </script>
 
 <div class="liquidate-rat">
