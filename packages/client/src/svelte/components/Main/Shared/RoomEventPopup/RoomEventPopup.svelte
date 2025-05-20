@@ -1,12 +1,10 @@
 <script lang="ts">
   import { Howl } from "howler"
   import { onMount, onDestroy } from "svelte"
-  import { urlFor } from "@modules/content/sanity"
   import type { ServerReturnValue } from "@components/Main/RoomResult/types"
   import { type Room } from "@modules/state/base/types"
+  import FloorDescription from "@components/Main/Floors/FloorDescription.svelte"
   import { RESULT_EVENT } from "@modules/ui/enums"
-  import RatDeath from "@components/Main/RatContainer/YourRat/RatDeath.svelte" // move to more appropriate place
-  import RatElevator from "@components/Main/RatContainer/YourRat/RatElevator.svelte" // move to more appropriate place
   import { getUIState } from "@modules/ui/state.svelte"
   import { frozenRat } from "@components/Main/RoomResult/state.svelte"
   import { ratLevel } from "@modules/state/base/stores"
@@ -72,11 +70,13 @@
             {$frozenRat?.name} TRANSFERRED DOWN TO {$ratLevel.index === 0
               ? ""
               : "-"}{$ratLevel.index}
+            <FloorDescription />
           {/if}
           {#if resultEvent === RESULT_EVENT.LEVEL_DOWN}
             {$frozenRat?.name} TRANSFERRED UP TO {$ratLevel.index === 0
               ? ""
               : "-"}{$ratLevel.index}
+            <FloorDescription />
           {/if}
           {#if resultEvent === RESULT_EVENT.ROOM_DEPLETED}
             ROOM #{room?.index} DEPLETED

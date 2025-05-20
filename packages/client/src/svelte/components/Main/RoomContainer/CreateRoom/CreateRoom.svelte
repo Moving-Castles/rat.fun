@@ -90,6 +90,7 @@
           </button>
         {/each}
       </div>
+
       <div class="level-description">
         <div class="level-name">
           Floor {Number($levels[levelId].index) * -1}: {$levels[levelId].name}

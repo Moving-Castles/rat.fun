@@ -64,6 +64,7 @@
     } else if (result.levelDown) {
       resultEvent = RESULT_EVENT.LEVEL_DOWN
     }
+    // resultEvent = RESULT_EVENT.LEVEL_DOWN
   }
 
   const processRoom = async () => {

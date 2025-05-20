@@ -3,8 +3,6 @@
   let { id = "main" } = $props()
   let { modal } = getModalState()
 
-  console.log("mdoal id", id)
-
   let modalBackground = $state<HTMLDivElement | undefined>(undefined)
 
   const onModalClick = (e: MouseEvent) => {
@@ -14,7 +12,7 @@
   }
 </script>
 
-{#if modal.show && modal.config.target === id}
+{#if modal.show}
   <!-- svelte-ignore a11y_click_events_have_key_events -->
   <!-- svelte-ignore a11y_no_static_element_interactions -->
   <div
@@ -24,7 +22,7 @@
     class="modal"
   >
     <div class="content">
-      {@render modal.current?.()} a§
+      {@render modal.current?.()}
     </div>
   </div>
 {/if}
