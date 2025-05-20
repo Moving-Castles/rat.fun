@@ -50,20 +50,19 @@
           <span class="inverted">Welcome to Rat Rooms Playtest #4</span>
         </p>
         <p class="small">
-          Rat Rooms is a two sided market between rats and room creators. Each
-          room has a balance: it grows when rats lose value, and shrinks when
-          rats win.
+          You are an Operator working for the Firm. Your objective is to regain
+          access to the underground floors of Facility F which has gone rogue.
+          Use a remote controlled Rat to enter the facility by sending it down
+          the (rat-sized) elevator to explore its many rooms, collecting items,
+          traits and currency on your rat.
         </p>
         <ol class="small">
           <li>Study the rooms</li>
           <li>Send in your rat</li>
           <li>Traits, tokens, and items are useful in rooms</li>
-          <li>Liquidate to cash out</li>
+          <li>Liquidate your rat to cash out</li>
           <li>Create your own rooms</li>
         </ol>
-        <p class="small">
-          Your goal is to have as many tokens as possible within 30 minutes.
-        </p>
       </div>
 
       <!-- FORM -->
