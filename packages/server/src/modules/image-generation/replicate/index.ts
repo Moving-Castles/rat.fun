@@ -1,6 +1,7 @@
 import { pickRandom } from "@modules/utils"
 import Replicate from "replicate"
 import type { FileOutput } from "replicate"
+import sharp from "sharp"
 
 import dotenv from "dotenv"
 dotenv.config()
@@ -41,6 +42,9 @@ const PROMPT_1 = [
   "wide-eyed",
   "redacted",
   "censored",
+  "soiled",
+  "perverted",
+  "pervy",
   "blazing",
   "blazing fast",
   "corrupted",
@@ -108,6 +112,8 @@ const PROMPT_1 = [
 ]
 
 const PROMPT_2 = [
+  "smeared",
+  "fecal stained",
   "film grain",
   "trashed",
   "aged",
@@ -250,8 +256,15 @@ export const generateImage = async (prompt: string, levelPrompt: string) => {
     // Convert blob to buffer
     const arrayBuffer = await blob.arrayBuffer()
     const buffer = Buffer.from(arrayBuffer)
+    
+    // Process image with sharp
+    const processedBuffer = await sharp(buffer)
+      .modulate({
+        saturation: 3, // Increase saturation by 20%
+      })
+      .toBuffer()
 
-    return buffer
+    return processedBuffer
   } catch (error) {
     throw new Error(error as string)
   }
