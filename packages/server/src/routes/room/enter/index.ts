@@ -75,7 +75,7 @@ async function routes (fastify: FastifyInstance) {
             // Call event model
             console.time('–– Event LLM');
             const eventMessages = constructEventMessages(rat, room, level);
-            const eventResults = await callModel(llmClient, eventMessages, combinedSystemPrompt) as EventsReturnValue;
+            const eventResults = await callModel(llmClient, eventMessages, combinedSystemPrompt, 0) as EventsReturnValue;
             console.timeEnd('–– Event LLM');
 
             // console.log('Event results:', eventResults);

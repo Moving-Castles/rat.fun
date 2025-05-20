@@ -5,6 +5,7 @@
   import { playSound } from "@modules/sound"
   import { player } from "@modules/state/base/stores"
   import { tippy } from "svelte-tippy"
+  import NumberGoing from "@components/Main/Shared/NumberGoing/NumberGoing.svelte"
   import Spinner from "@components/Main/Shared/Spinner/Spinner.svelte"
   import { walletNetwork } from "@modules/network"
 
@@ -49,7 +50,10 @@
   >
     <div class="inner">
       <div class="data-cell-label">Rat Value:</div>
-      <div class="data-cell-value">${$ratTotalValue}</div>
+      <div class="data-cell-value">
+        $<NumberGoing value={$ratTotalValue} />
+      </div>
+      <!-- <div class="data-cell-value">${$ratTotalValue}</div> -->
     </div>
   </div>
   <button
