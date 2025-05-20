@@ -1,8 +1,6 @@
 <script lang="ts">
   import { Howl } from "howler"
   import { onMount, onDestroy } from "svelte"
-  import type { ServerReturnValue } from "@components/Main/RoomResult/types"
-  import { type Room } from "@modules/state/base/types"
   import FloorDescription from "@components/Main/Floors/FloorDescription.svelte"
   import { RESULT_EVENT } from "@modules/ui/enums"
   import { getUIState } from "@modules/ui/state.svelte"
@@ -16,12 +14,10 @@
 
   let {
     resultEvent,
-    result,
     room,
     sanityRoomContent,
   }: {
     resultEvent: RESULT_EVENT
-    result?: ServerReturnValue
     room: Room
     sanityRoomContent: any
   } = $props()

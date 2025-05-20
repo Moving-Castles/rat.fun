@@ -264,7 +264,6 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        border: var(--default-border-style);
         margin-bottom: 15px;
       }
 
