@@ -47,7 +47,12 @@
   })
 </script>
 
-<div class="popup-container">
+<div
+  onclick={async () => {
+    await rooms.close()
+  }}
+  class="popup-container"
+>
   <div class="room-event-popup">
     <div
       class="inner"
@@ -87,8 +92,6 @@
             class:leveldown={resultEvent === RESULT_EVENT.LEVEL_DOWN}
             onclick={async () => {
               await rooms.close()
-              setTimeout(modal.close, 3000)
-              // modal.close()
             }}
           >
             LEAVE ROOM

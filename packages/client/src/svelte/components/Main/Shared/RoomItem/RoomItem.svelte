@@ -53,7 +53,7 @@
     <div class="room-balance">
       <!-- BALANCE -->
       <span class="balance" class:depleted={room.balance == 0}>
-        Balance: $<NumberGoing value={room.balance} />
+        Balance: $<NumberGoing muted={true} value={room.balance} />
         <!-- Balance: ${room.balance} -->
       </span>
     </div>

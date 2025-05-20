@@ -1,6 +1,8 @@
 <script lang="ts">
   import { rat } from "@modules/state/base/stores"
   import NumberGoing from "@components/Main/Shared/NumberGoing/NumberGoing.svelte"
+  let balanceGoing = $state(false)
+  let healthGoing = $state(false)
 </script>
 
 <div class="rat-info-box">
@@ -18,14 +20,23 @@
       </div>
 
       <!-- BALANCE -->
-      <div class="info-item">
-        <span class="balance">$ <NumberGoing value={$rat.balance} /></span>
+      <div class="info-item" class:priority={balanceGoing}>
+        <span class="balance"
+          >$ <NumberGoing
+            bind:going={balanceGoing}
+            value={$rat.balance}
+          /></span
+        >
       </div>
 
       <!-- HEALTH -->
       <div class="info-item">
-        <span class="health" class:dead={$rat.health <= 0}>
-          HEALTH <NumberGoing value={$rat.health} />
+        <span
+          class:priority={healthGoing}
+          class="health"
+          class:dead={$rat.health <= 0}
+        >
+          HEALTH <NumberGoing bind:going={healthGoing} value={$rat.health} />
         </span>
       </div>
     </div>

@@ -3,6 +3,9 @@
   import Trait from "@svelte/components/Main/Shared/Trait/Trait.svelte"
   import Item from "@svelte/components/Main/Shared/Item/Item.svelte"
   import NumberGoing from "@components/Main/Shared/NumberGoing/NumberGoing.svelte"
+
+  let healthGoing = $state(false)
+  let balanceGoing = $state(false)
 </script>
 
 <div class="rat-info-box">
@@ -23,10 +26,22 @@
       </div>
       <div class="info-item">
         <!-- BALANCE -->
-        <span class="balance">$<NumberGoing value={$frozenRat.balance} /></span>
+        <span class:priority={balanceGoing} class="balance"
+          >$<NumberGoing
+            bind:going={balanceGoing}
+            value={$frozenRat.balance}
+          /></span
+        >
         <!-- HEALTH -->
-        <span class="health" class:dead={$frozenRat.health <= 0}>
-          HEALTH <NumberGoing value={$frozenRat.health} />
+        <span
+          class:priority={healthGoing}
+          class="health"
+          class:dead={$frozenRat.health <= 0}
+        >
+          HEALTH <NumberGoing
+            bind:going={healthGoing}
+            value={$frozenRat.health}
+          />
         </span>
       </div>
     </div>

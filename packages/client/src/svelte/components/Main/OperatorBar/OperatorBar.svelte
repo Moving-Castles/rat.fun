@@ -2,6 +2,7 @@
   import { player } from "@modules/state/base/stores"
   import NumberGoing from "@components/Main/Shared/NumberGoing/NumberGoing.svelte"
   import { tippy } from "svelte-tippy"
+  let balanceGoing = $state(false)
 
   // let showHighscore = $state(false)
 </script>
@@ -32,10 +33,14 @@
           }}
           class="stat-item"
         >
-          <div class="inner-wrapper balance">
+          <div class:priority={balanceGoing} class="inner-wrapper balance">
             <div class="label">Balance:</div>
             <div class="value">
-              $<NumberGoing value={$player?.balance ?? 0} />
+              $<NumberGoing
+                bind:going={balanceGoing}
+                muted={true}
+                value={$player?.balance ?? 0}
+              />
             </div>
           </div>
         </div>

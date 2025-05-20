@@ -18,6 +18,7 @@
   let { modal } = getModalState()
 
   let busy = $state(false)
+  let going = $state(false)
   let confirming = $state(false)
   let liquidationMessage = $state("CONFIRM RAT LIQUIDATION")
 
@@ -48,10 +49,10 @@
     use:tippy={{ content: "Total rat value based on rat inventory" }}
     class="data-cell"
   >
-    <div class="inner">
+    <div class="inner" class:priority={going}>
       <div class="data-cell-label">Rat Value:</div>
       <div class="data-cell-value">
-        $<NumberGoing value={$ratTotalValue} />
+        $<NumberGoing bind:going muted={true} value={$ratTotalValue} />
       </div>
       <!-- <div class="data-cell-value">${$ratTotalValue}</div> -->
     </div>

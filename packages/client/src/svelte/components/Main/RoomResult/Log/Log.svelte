@@ -93,14 +93,16 @@
     EXPERIMENT IN PROGRESS: <Spinner />
   {/if}
 
-  <button
-    disabled={!done}
-    class="return"
-    bind:this={returnButtonElement}
-    onclick={sendLeaveRoom}
-  >
-    LEAVE ROOM
-  </button>
+  {#if resultEvent === RESULT_EVENT.NONE || resultEvent === RESULT_EVENT.ROOM_DEPLETED}
+    <button
+      disabled={!done}
+      class="return"
+      bind:this={returnButtonElement}
+      onclick={sendLeaveRoom}
+    >
+      LEAVE ROOM
+    </button>
+  {/if}
 </div>
 
 <style lang="scss">

@@ -139,6 +139,12 @@ button {
   user-select: none;
 }
 
+.priority {
+  background: var(--color-alert-priority) !important;
+  color: var(--white) !important;
+  transition: all 0.2s ease;
+}
+
 .button-text {
   position: relative;
   top: 3px;
