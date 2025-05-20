@@ -17,8 +17,12 @@
         "roomPrompt": "Glue trap with 25 food as bait."
       },
       {
+        "levelId": "0x0000000000000000000000000000000000000000000000000000000000000001",
+        "roomPrompt": "Unfriendly rat will tell you something about the facility. Will try to steal items if you have any."
+      },
+      {
         "levelId": "0x0000000000000000000000000000000000000000000000000000000000000002",
-        "roomPrompt": "Rat controls a random human, ratatouille style. Give the human a name and some traits. This human needs to defeat 7 other humans in hand to hand combat or rat is killed. If rat wins, gets item worth 100-250 tokens."
+        "roomPrompt": "Rat controls a random peasant, ratatouille style. Give the peasant a name and some traits. This human needs to defeat 7 knights (7x coinflip) in cagefight to death or rat and peasant are killed. If rat wins, gets item worth 100-250 tokens."
       },
       {
         "levelId": "0x0000000000000000000000000000000000000000000000000000000000000002",
@@ -31,6 +35,26 @@
       {
         "levelId": "0x0000000000000000000000000000000000000000000000000000000000000002",
         "roomPrompt": "Merchant, buys defunct items for their novelty. Pays 50% of value for items if not functional on this floor, 95% if functional."
+      },
+      {
+        "levelId": "0x0000000000000000000000000000000000000000000000000000000000000003",
+        "roomPrompt": "Big hungry piranha. Will eat rat if it comes near. 250 tokens in watertight container floating in middle of room."
+      },
+      {
+        "levelId": "0x0000000000000000000000000000000000000000000000000000000000000003",
+        "roomPrompt": "Advanced item merchant sitting in bubble of air in room. Gives rat 500+ token value item (with 5% markup cost) for equivalent token cost if rat is liquid. Will deal 25 damage to rat if deal doesn't go through."
+      },
+      {
+        "levelId": "0x0000000000000000000000000000000000000000000000000000000000000003",
+        "roomPrompt": "Fish that will tell you a story about the history of this world for 5 tokens."
+      },
+      {
+        "levelId": "0x0000000000000000000000000000000000000000000000000000000000000003",
+        "roomPrompt": "Water in this room is boiling. After two minutes, very high voltage current activates in rod in water. If rat survives, gets full room balance in tokens."
+      },
+      {
+        "levelId": "0x0000000000000000000000000000000000000000000000000000000000000004",
+        "roomPrompt": "Room is empty. Rat is alone with inner voices. Full room balance to rat if out of room completely unscathed. "
       }
     ]
 }
