@@ -1,7 +1,6 @@
 <script lang="ts">
   import { player } from "@modules/state/base/stores"
-  // import HighScore from "@components/Main/HighScore/HighScore.svelte"
-  // import ModalTarget from "@components/Main/Modal/ModalTarget.svelte"
+  import NumberGoing from "@components/Main/Shared/NumberGoing/NumberGoing.svelte"
   import { tippy } from "svelte-tippy"
 
   // let showHighscore = $state(false)
@@ -35,7 +34,9 @@
         >
           <div class="inner-wrapper balance">
             <div class="label">Balance:</div>
-            <div class="value">${$player?.balance ?? 0}</div>
+            <div class="value">
+              $<NumberGoing value={$player?.balance ?? 0} />
+            </div>
           </div>
         </div>
         <!-- HIGHSCORE -->

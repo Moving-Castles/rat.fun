@@ -1,49 +1,86 @@
 <script lang="ts">
-  import { fly } from "svelte/transition"
-  let { value = $bindable(), prepend = "" } = $props()
+  import { Tween } from "svelte/motion"
+  import { linear as easing } from "svelte/easing"
+  import { playSound } from "@svelte/modules/sound"
 
-  // Get the new value
-  const SIZE = 8
+  let { value, goal = Infinity, warn = -1, step = 10 } = $props()
+  // export let value: number
+  // export let goal = Infinity // optional
+  // export let warn = -1 // If the value falls below this number, give ominous warning
+  // export let step = 10
 
-  let animValue = $state(Number(value))
+  const DURATION = 1000
+
+  let emphasis = $state("")
+  let tweening = false
   let direction = $state(0)
 
-  const set = (newValue: number) => {
-    direction = Math.sign(newValue - animValue)
-    console.log("direction")
-    console.log(direction)
-    console.log(newValue - animValue)
-    animValue = newValue
-    console.log("setting")
-  }
+  const goingUp = new Tween(Number(value), { duration: DURATION, easing })
+
+  let previousValue = goingUp.current
 
   $effect(() => {
-    set(Number(value))
-  })
+    if (goingUp.current !== Number(value) && !tweening) {
+      direction = previousValue - goingUp.current
+      previousValue = goingUp.current
+      goingUp.set(Number(value))
+      tweening = true
 
-  // const addOne = () => set(animValue + 10)
-  // const subtractOne = () => set(animValue - 10)
+      console.log(direction)
+
+      let interval = setInterval(() => {
+        if (direction < 0) {
+          playSound("tcm", "bugsUp", false, false, 0.5)
+        } else {
+          playSound("tcm", "bugsUp")
+        }
+      }, 70)
+
+      setTimeout(() => {
+        if (direction <= 0) {
+          emphasis = "emphasis-failure"
+        } else {
+          emphasis = "emphasis-success"
+        }
+
+        if (direction < 0) {
+          console.log(direction)
+          playSound("tcm", "ratsDown")
+        } else {
+          console.log(direction)
+          playSound("tcm", "ratsUp")
+        }
+
+        clearInterval(interval)
+
+        setTimeout(() => {
+          emphasis = ""
+          // console.log(emphasis)
+          tweening = false
+          direction = 0
+        }, 3000)
+      }, DURATION)
+    }
+  })
 </script>
 
-{#key animValue}
-  <div class="value">
-    {prepend}
-    <div
-      in:fly={{ delay: 150, duration: 150, y: direction * SIZE }}
-      out:fly={{ duration: 150, y: direction * SIZE }}
-      class="value"
-    >
-      {animValue}
-    </div>
+<span
+  class={emphasis}
+  class:flash-slow-thrice={goingUp.current === warn ||
+    (goingUp.current % step === 0 && goingUp.current < warn)}
+  class:flash-fast-thrice={goingUp.current >= goal}
+>
+  <span class="arrow">
+    {#if direction < 0}↓{:else if direction > 0}↑{/if}
+  </span>
+  {Math.round(goingUp.current)}
+</span>
 
-    <!-- <button onclick={addOne}>+1</button>
-    <button onclick={subtractOne}>-1</button> -->
-  </div>
-{/key}
-
-<style>
-  .value {
-    display: inline-flex;
-    overflow: hidden;
+<style lang="scss">
+  .arrow {
+    position: relative;
+    top: -2px;
+    left: 8px;
+    width: 0.5ch;
   }
 </style>
