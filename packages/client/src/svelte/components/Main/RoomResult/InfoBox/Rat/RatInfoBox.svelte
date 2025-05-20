@@ -2,6 +2,7 @@
   import { frozenRat } from "@components/Main/RoomResult/state.svelte"
   import Trait from "@svelte/components/Main/Shared/Trait/Trait.svelte"
   import Item from "@svelte/components/Main/Shared/Item/Item.svelte"
+  import NumberGoing from "@components/Main/Shared/NumberGoing/NumberGoing.svelte"
 </script>
 
 <div class="rat-info-box">
@@ -22,10 +23,10 @@
       </div>
       <div class="info-item">
         <!-- BALANCE -->
-        <span class="balance">${$frozenRat.balance}</span>
+        <span class="balance">$<NumberGoing value={$frozenRat.balance} /></span>
         <!-- HEALTH -->
         <span class="health" class:dead={$frozenRat.health <= 0}>
-          HEALTH {$frozenRat.health}
+          HEALTH <NumberGoing value={$frozenRat.health} />
         </span>
       </div>
     </div>

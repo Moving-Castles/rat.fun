@@ -6,6 +6,8 @@
   import { blocksToReadableTime, renderSafeString } from "@modules/utils"
   import { blockNumber } from "@modules/network"
   import { staticContent } from "@modules/content"
+  import NumberGoing from "@components/Main/Shared/NumberGoing/NumberGoing.svelte"
+
   import type { Room as SanityRoom } from "@cms/sanity.types"
 
   import NoImage from "@components/Main/Shared/NoImage/NoImage.svelte"
@@ -40,7 +42,7 @@
           src={urlFor(sanityRoomContent?.image)
             .width(400)
             .auto("format")
-            .saturation(-100)
+            // .saturation(-100)
             .url()}
           alt={`room #${room.index}`}
         />
@@ -51,7 +53,8 @@
     <div class="room-balance">
       <!-- BALANCE -->
       <span class="balance" class:depleted={room.balance == 0}>
-        Balance: ${room.balance}
+        Balance: $<NumberGoing value={room.balance} />
+        <!-- Balance: ${room.balance} -->
       </span>
     </div>
   </div>

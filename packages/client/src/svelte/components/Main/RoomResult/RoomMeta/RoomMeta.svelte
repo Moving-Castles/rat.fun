@@ -70,9 +70,9 @@
       {#if sanityRoomContent}
         <img
           src={urlFor(sanityRoomContent?.image)
-            .width(700)
+            .width(500)
             .auto("format")
-            .saturation(-100)
+            // .saturation(-100)
             .url()}
           alt={`room #${$frozenRoom?.index ?? ""}`}
         />
@@ -108,7 +108,7 @@
       justify-content: center;
       align-items: center;
       gap: 1rem;
-      width: 600px;
+      width: 500px;
       max-width: calc(var(--game-window-width) * 0.9);
 
       .image-container {
@@ -120,12 +120,12 @@
           width: 100%;
           height: 100%;
           object-fit: cover;
-          aspect-ratio: 4 / 3;
+          aspect-ratio: 1/1;
         }
 
         .image-placeholder {
           width: 100%;
-          aspect-ratio: 4/3;
+          aspect-ratio: 1/1;
         }
       }
 

@@ -113,7 +113,7 @@
               src={urlFor(sanityRoomContent?.image)
                 .width(600)
                 .auto("format")
-                .saturation(-100)
+                // .saturation(-100)
                 .url()}
               alt={`room #${room.index}`}
             />
@@ -243,10 +243,16 @@
       padding-bottom: 60px;
 
       .room-image {
-        margin-bottom: 5px;
+        margin-bottom: 10px;
+        border: 15px solid transparent;
+        border-image: url("/images/border-2.png") 20 repeat;
+        aspect-ratio: 1/1;
+        width: 430px;
+        line-height: 0;
+
         img {
           width: 400px;
-          aspect-ratio: 4/3;
+          aspect-ratio: 1/1;
           object-fit: cover;
           border: var(--default-border-style);
         }
@@ -254,7 +260,7 @@
 
       .image-placeholder {
         width: 400px;
-        aspect-ratio: 4/3;
+        aspect-ratio: 1/1;
         display: flex;
         align-items: center;
         justify-content: center;

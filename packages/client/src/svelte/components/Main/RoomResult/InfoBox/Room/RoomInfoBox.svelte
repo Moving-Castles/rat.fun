@@ -4,6 +4,7 @@
   import { urlFor } from "@modules/content/sanity"
   import type { Hex } from "viem"
   import { renderSafeString } from "@modules/utils"
+  import NumberGoing from "@components/Main/Shared/NumberGoing/NumberGoing.svelte"
 
   import NoImage from "@components/Main/Shared/NoImage/NoImage.svelte"
 
@@ -30,7 +31,7 @@
               src={urlFor(sanityRoomContent?.image)
                 .width(300)
                 .auto("format")
-                .saturation(-100)
+                // .saturation(-100)
                 .url()}
               alt={`room #${$frozenRoom.index}`}
             />
@@ -42,7 +43,7 @@
       <!-- BALANCE -->
       <div class="info-item">
         <span class="balance" class:empty={$frozenRoom.balance === 0}>
-          ${$frozenRoom.balance}
+          $ <NumberGoing value={$frozenRoom.balance} />
         </span>
       </div>
     </div>
