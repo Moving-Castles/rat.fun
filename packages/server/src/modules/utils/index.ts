@@ -8,3 +8,7 @@ export function generateRandomBytes32(): string {
 export function pickRandom<T>(array: T[]): T {
   return array[Math.floor(Math.random() * array.length)]
 }
+
+export function pickRandomMultiple<T>(array: T[], count: number): T[] {
+  return array.sort(() => Math.random() - 0.5).slice(0, count)
+}
