@@ -4,7 +4,7 @@
   import { queries } from "@modules/content/sanity/groq"
   import OutcomeMessage from "./OutcomeMessageTemp.svelte"
   import { publicNetwork } from "@modules/network"
-  import type { Outcome } from "@cms/sanity.types"
+  import type { Outcome } from "@sanity-types"
 
   let {
     roomId,

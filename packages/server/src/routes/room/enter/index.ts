@@ -33,7 +33,9 @@ import { systemCalls, network } from '@modules/mud/initMud';
 import { getSenderId } from '@modules/signature';
 
 // CMS
-import { getSystemPrompts, writeOutcomeToCMS, CMSError } from '@modules/cms';
+import { getSystemPrompts } from '@modules/cms/private';
+import { writeOutcomeToCMS } from '@modules/cms/public';
+import { CMSError } from '@modules/cms';
 
 // Validation
 import { validateInputData } from './validation';

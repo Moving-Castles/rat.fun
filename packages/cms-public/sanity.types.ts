@@ -209,48 +209,6 @@ export type SanityImageMetadata = {
   isOpaque?: boolean
 }
 
-export type ActivePrompts = {
-  _id: string
-  _type: 'activePrompts'
-  _createdAt: string
-  _updatedAt: string
-  _rev: string
-  title?: string
-  activeEventPrompt?: {
-    _ref: string
-    _type: 'reference'
-    _weak?: boolean
-    [internalGroqTypeReferenceTo]?: 'prompt'
-  }
-  activeCorrectionPrompt?: {
-    _ref: string
-    _type: 'reference'
-    _weak?: boolean
-    [internalGroqTypeReferenceTo]?: 'prompt'
-  }
-}
-
-export type Prompt = {
-  _id: string
-  _type: 'prompt'
-  _createdAt: string
-  _updatedAt: string
-  _rev: string
-  title?: string
-  prompt?: string
-  returnFormat?: Code
-}
-
-export type Markdown = string
-
-export type Code = {
-  _type: 'code'
-  language?: string
-  filename?: string
-  code?: string
-  highlightedLines?: Array<number>
-}
-
 export type AllSanitySchemaTypes =
   | SanityImagePaletteSwatch
   | SanityImagePalette
@@ -265,8 +223,4 @@ export type AllSanitySchemaTypes =
   | SanityImageAsset
   | SanityAssetSourceData
   | SanityImageMetadata
-  | ActivePrompts
-  | Prompt
-  | Markdown
-  | Code
 export declare const internalGroqTypeReferenceTo: unique symbol

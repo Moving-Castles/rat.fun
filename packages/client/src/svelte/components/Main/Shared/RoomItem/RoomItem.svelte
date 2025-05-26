@@ -8,7 +8,7 @@
   import { staticContent } from "@modules/content"
   import NumberGoing from "@components/Main/Shared/NumberGoing/NumberGoing.svelte"
 
-  import type { Room as SanityRoom } from "@cms/sanity.types"
+  import type { Room as SanityRoom } from "@sanity-types"
 
   import NoImage from "@components/Main/Shared/NoImage/NoImage.svelte"
 

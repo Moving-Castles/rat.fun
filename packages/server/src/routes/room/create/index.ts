@@ -8,7 +8,8 @@ dotenv.config()
 import { CreateRoomBody } from "@modules/types"
 
 // CMS
-import { writeRoomToCMS, CMSError } from "@modules/cms"
+import { CMSError } from "@modules/cms"
+import { writeRoomToCMS } from "@modules/cms/public"
 
 // MUD
 import { systemCalls, network } from "@modules/mud/initMud"

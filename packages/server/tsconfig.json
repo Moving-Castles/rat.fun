@@ -16,7 +16,8 @@
           "@config": ["src/config"],
           "@routes/*": ["src/routes/*"],
           "@modules/*": ["src/modules/*"],
-          "@sanity-types": ["../cms/sanity.types"]
+          "@sanity-private-cms-types": ["../cms-private/sanity.types"],
+          "@sanity-public-cms-types": ["../cms-public/sanity.types"]
         }
     },
     "include": ["src/**/*.ts"],

@@ -19,21 +19,21 @@
     "test-single": "forge clean && tsc --noEmit && mud test --forgeOptions='--match-test testCreateRoom'"
   },
   "dependencies": {
-    "@latticexyz/cli": "2.2.22-34ec2ec478d6e3d46d82c74a6e09387d83b7776d",
-    "@latticexyz/schema-type": "2.2.22-34ec2ec478d6e3d46d82c74a6e09387d83b7776d",
-    "@latticexyz/store": "2.2.22-34ec2ec478d6e3d46d82c74a6e09387d83b7776d",
-    "@latticexyz/world": "2.2.22-34ec2ec478d6e3d46d82c74a6e09387d83b7776d",
-    "@latticexyz/world-modules": "2.2.22-34ec2ec478d6e3d46d82c74a6e09387d83b7776d",
-    "@latticexyz/gas-report": "2.2.22-34ec2ec478d6e3d46d82c74a6e09387d83b7776d"
+    "@latticexyz/cli": "2.2.22-5f0b4d10731aa3b4c1f5bb872d4571e4dd3b4aa3",
+    "@latticexyz/schema-type": "2.2.22-5f0b4d10731aa3b4c1f5bb872d4571e4dd3b4aa3",
+    "@latticexyz/store": "2.2.22-5f0b4d10731aa3b4c1f5bb872d4571e4dd3b4aa3",
+    "@latticexyz/world": "2.2.22-5f0b4d10731aa3b4c1f5bb872d4571e4dd3b4aa3",
+    "@latticexyz/world-modules": "2.2.22-5f0b4d10731aa3b4c1f5bb872d4571e4dd3b4aa3",
+    "@latticexyz/gas-report": "2.2.22-5f0b4d10731aa3b4c1f5bb872d4571e4dd3b4aa3"
   },
   "devDependencies": {
-    "@types/node": "^22.15.17",
+    "@types/node": "^22.15.21",
     "ds-test": "https://github.com/dapphub/ds-test.git#e282159d5170298eb2455a6c05280ab5a73a4ef0",
     "forge-std": "https://github.com/foundry-rs/forge-std.git#74cfb77e308dd188d2f58864aaf44963ae6b88b1",
     "prettier": "^3.5.3",
     "prettier-plugin-solidity": "^2.0.0",
     "solhint": "^5.1.0",
-    "solhint-config-mud": "2.2.22-34ec2ec478d6e3d46d82c74a6e09387d83b7776d",
-    "solhint-plugin-mud": "2.2.22-34ec2ec478d6e3d46d82c74a6e09387d83b7776d"
+    "solhint-config-mud": "2.2.22-5f0b4d10731aa3b4c1f5bb872d4571e4dd3b4aa3",
+    "solhint-plugin-mud": "2.2.22-5f0b4d10731aa3b4c1f5bb872d4571e4dd3b4aa3"
   }
 }

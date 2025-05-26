@@ -5,8 +5,11 @@ procs:
   contracts:
     cwd: packages/contracts
     shell: pnpm mud dev-contracts --rpc http://127.0.0.1:8545
-  cms:
-    cwd: packages/cms
+  cms-public:
+    cwd: packages/cms-public
+    shell: pnpm dev
+  cms-private:
+    cwd: packages/cms-private
     shell: pnpm dev
   server:
     cwd: packages/server

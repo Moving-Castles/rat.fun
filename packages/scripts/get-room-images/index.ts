@@ -3,12 +3,12 @@ import * as fs from 'fs'
 import * as path from 'path'
 import * as https from 'https'
 
-const SANITY_PROJECT_ID = "kupagww3"
+const SANITY_PUBLIC_CMS_ID = "saljmqwt"
 const TARGET_WORLD_ADDRESS = "0x06522e692F64655123512FbdA87a9452cf287602"
 
 // Initialize Sanity client
 const client = createClient({
-  projectId: SANITY_PROJECT_ID,
+  projectId: SANITY_PUBLIC_CMS_ID,
   dataset: "production",
   apiVersion: "2025-04-18",
   useCdn: false,

@@ -8,9 +8,9 @@ import deskStructure from './deskStructure'
 
 export default defineConfig({
   name: 'default',
-  title: 'rat-room',
+  title: 'rat-room-prompts',
 
-  projectId: 'kupagww3',
+  projectId: 'lviejo4k',
   dataset: 'production',
 
   plugins: [ structureTool({ structure: deskStructure }), visionTool(), codeInput(), markdownSchema() ],
@@ -19,9 +19,7 @@ export default defineConfig({
     newDocumentOptions: (prev, { creationContext }) => {
       const { type } = creationContext;
       const DISABLED_TYPES = [
-        'activePrompts',
-        'room',
-        'outcome'
+        'activePrompts'
       ];
       if (type === 'global') {
         return prev.filter((template) => !DISABLED_TYPES.includes(template.templateId));

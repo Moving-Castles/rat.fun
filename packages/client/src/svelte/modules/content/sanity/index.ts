@@ -8,10 +8,10 @@ import blocksToHtml from "@sanity/block-content-to-html"
 import { get, has } from "lodash"
 import imageUrlBuilder from "@sanity/image-url"
 
-const SANITY_PROJECT_ID = "kupagww3"
+const SANITY_PUBLIC_CMS_ID = "saljmqwt"
 
 export const client = createClient({
-  projectId: SANITY_PROJECT_ID,
+  projectId: SANITY_PUBLIC_CMS_ID,
   dataset: "production",
   apiVersion: "2025-04-18",
   useCdn: false
@@ -40,7 +40,7 @@ export const renderBlockText = text =>
   blocksToHtml({
     blocks: text,
     serializers: serializers,
-    projectId: SANITY_PROJECT_ID,
+    projectId: SANITY_PUBLIC_CMS_ID,
     dataset: "production",
   })
 

@@ -27,7 +27,7 @@ const client = createClient({
   projectId: 'kupagww3',
   dataset: 'production',
   apiVersion: '2025-04-01',
-  token: process.env.SANITY_TOKEN, // Make sure to set this environment variable
+  token: process.env.SANITY_PUBLIC_CMS_TOKEN, // Make sure to set this environment variable
   useCdn: false,
 });
 
@@ -39,6 +39,7 @@ program
   .option('-r, --rooms-only', 'Only delete room documents')
   .option('-o, --outcomes-only', 'Only delete outcome documents')
   .option('-l, --localhost', 'Use localhost world address')
+  .option('-a, --all', 'Delete all documents regardless of world address')
   .parse(process.argv);
 
 const options = program.opts();
@@ -46,16 +47,31 @@ const worldAddress = options.localhost ? LOCALHOST_WORLD_ADDRESS : options.world
 const isDryRun = options.dryRun || false;
 const roomsOnly = options.roomsOnly || false;
 const outcomesOnly = options.outcomesOnly || false;
+const deleteAll = options.all || false;
 
 // Validate input
-if (!worldAddress && !options.localhost) {
-  console.error('Error: World address is required unless --localhost flag is used');
+if (!worldAddress && !options.localhost && !deleteAll) {
+  console.error('Error: World address is required unless --localhost or --all flag is used');
   process.exit(1);
+}
+
+async function confirmDeletion(): Promise<boolean> {
+  const readline = require('readline').createInterface({
+    input: process.stdin,
+    output: process.stdout
+  });
+
+  return new Promise((resolve) => {
+    readline.question('\nWARNING: This will delete A LOT of documents from Sanity. Type "I have become death" to confirm: ', (answer: string) => {
+      readline.close();
+      resolve(answer === 'I have become death');
+    });
+  });
 }
 
 async function purgeWorld() {
   try {
-    console.log(`Starting purge for world address: ${worldAddress}`);
+    console.log(`Starting purge${deleteAll ? ' for ALL documents' : ` for world address: ${worldAddress}`}`);
     console.log(`Mode: ${isDryRun ? 'DRY RUN' : 'LIVE'}`);
     console.log(`Document types: ${roomsOnly ? 'rooms only' : outcomesOnly ? 'outcomes only' : 'both rooms and outcomes'}`);
     
@@ -64,15 +80,15 @@ async function purgeWorld() {
     
     // Find room documents if needed
     if (!outcomesOnly) {
-      const roomQuery = `*[_type == "room" && worldAddress == $worldAddress]`;
-      rooms = await client.fetch(roomQuery, { worldAddress });
+      const roomQuery = deleteAll ? `*[_type == "room"]` : `*[_type == "room" && worldAddress == $worldAddress]`;
+      rooms = await client.fetch(roomQuery, deleteAll ? {} : { worldAddress });
       console.log(`Found ${rooms.length} room documents`);
     }
     
     // Find outcome documents if needed
     if (!roomsOnly) {
-      const outcomeQuery = `*[_type == "outcome" && worldAddress == $worldAddress]`;
-      outcomes = await client.fetch(outcomeQuery, { worldAddress });
+      const outcomeQuery = deleteAll ? `*[_type == "outcome"]` : `*[_type == "outcome" && worldAddress == $worldAddress]`;
+      outcomes = await client.fetch(outcomeQuery, deleteAll ? {} : { worldAddress });
       console.log(`Found ${outcomes.length} outcome documents`);
     }
     
@@ -102,6 +118,13 @@ async function purgeWorld() {
       console.log('\nDry run completed. No documents were deleted.');
       return;
     }
+
+    // Ask for confirmation before proceeding with deletion
+    const confirmed = await confirmDeletion();
+    if (!confirmed) {
+      console.log('Deletion cancelled. No documents were deleted.');
+      return;
+    }
     
     // Delete room documents
     if (rooms.length > 0) {
@@ -129,10 +152,10 @@ async function purgeWorld() {
   }
 }
 
-// Check if SANITY_TOKEN is set
-if (!process.env.SANITY_TOKEN) {
-  console.error('Error: SANITY_TOKEN environment variable is not set.');
-  console.error('Please add it to your .env file or set it with: export SANITY_TOKEN=your_token');
+// Check if SANITY_PUBLIC_CMS_TOKEN is set
+if (!process.env.SANITY_PUBLIC_CMS_TOKEN) {
+  console.error('Error: SANITY_PUBLIC_CMS_TOKEN environment variable is not set.');
+  console.error('Please add it to your .env file or set it with: export SANITY_PUBLIC_CMS_TOKEN=your_token');
   process.exit(1);
 }
 
