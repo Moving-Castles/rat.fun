@@ -11,10 +11,6 @@
     muted = false,
     going = $bindable(false),
   } = $props()
-  // export let value: number
-  // export let goal = Infinity // optional
-  // export let warn = -1 // If the value falls below this number, give ominous warning
-  // export let step = 10
 
   const DURATION = 1000
 
@@ -23,11 +19,14 @@
 
   const goingUp = new Tween(Number(value), { duration: DURATION, easing })
 
-  let previousValue = goingUp.current
+  let previousValue = $state(goingUp.current)
 
   $effect(() => {
-    if (goingUp.current !== Number(value) && !going) {
-      direction = previousValue - goingUp.current
+    direction = Math.sign(goingUp.target - goingUp.current)
+  })
+
+  $effect(() => {
+    if (!going) {
       previousValue = goingUp.current
       goingUp.set(Number(value))
       going = true
