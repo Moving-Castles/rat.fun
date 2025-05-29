@@ -57,7 +57,7 @@ export const getBoxState = () => {
         targetBeforePause = target.current
         moving.set(0)
         target.set(target.current)
-        movingSpeed.set(0.2)
+        movingSpeed.set(0.03)
         console.log(target.current.x, target.current.z)
       },
       resume: () => {
