@@ -1,13 +1,15 @@
 <script lang="ts">
   import type { Hex } from "viem"
+  import { get } from "svelte/store"
   import {
     rooms as roomStore,
     roomsOnCurrentLevel,
     playerRooms,
   } from "@modules/state/base/stores"
   import { getUIState } from "@modules/ui/state.svelte"
-  import { entriesByPopularity } from "./sortFunctions"
+  import { entriesByPopularity, entriesChronologically } from "./sortFunctions"
   import { filterRooms, filterDepletedRooms } from "./filterFunctions"
+  import { blockNumber } from "@modules/network"
 
   import RoomItem from "@components/Main/Shared/RoomItem/RoomItem.svelte"
   import RoomPreview from "@components/Main/Shared/RoomPreview/RoomPreview.svelte"
@@ -29,7 +31,7 @@
   let sortFunction = $state(entriesByPopularity)
   let showDepletedRooms = $state(isOwnRoomListing ? true : false)
   let textFilter = $state("")
-  let lastChecked = $state<number | null>(null)
+  let lastChecked = $state<number>(Number(get(blockNumber)))
 
   // Here we add once there are a couple of updates
   let roomList = $derived.by(() => {
@@ -41,7 +43,11 @@
     entries = filterRooms(entries, textFilter)
     return entries.sort(sortFunction)
   })
-  let activeList = $state<[string, Room][]>([])
+  let activeList = $derived.by(() => {
+    console.log("active list filtering")
+
+    return roomList.filter(r => r[1].creationBlock <= lastChecked)
+  })
 
   $effect(() => {
     if (!lastChecked) {
@@ -50,8 +56,7 @@
   })
 
   const updateRooms = () => {
-    activeList = roomList
-    lastChecked = Date.now()
+    lastChecked = Number(get(blockNumber))
   }
 
   let previewing = $derived(
@@ -116,18 +121,21 @@
           {#if activeList.length < roomList.length}
             {#key roomList.length}
               <button
-                onclick={updateRooms}
+                onclick={() => {
+                  sortFunction = entriesChronologically
+                  updateRooms()
+                }}
                 class="new-rooms-button flash-fast-thrice"
               >
                 {roomList.length - activeList.length} new rooms added
               </button>
             {/key}
           {/if}
-          {#each activeList as [roomId, room]}
+          {#each activeList as roomEntry}
             {#if isOwnRoomListing}
-              <OwnRoomItem roomId={roomId as Hex} {room} />
+              <OwnRoomItem roomId={roomEntry[0] as Hex} room={roomEntry[1]} />
             {:else}
-              <RoomItem roomId={roomId as Hex} {room} />
+              <RoomItem roomId={roomEntry[0] as Hex} room={roomEntry[1]} />
             {/if}
           {/each}
         {:else}

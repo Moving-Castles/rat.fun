@@ -26,10 +26,13 @@
   })
 
   $effect(() => {
+    going = direction !== 0
+  })
+
+  $effect(() => {
     if (!going) {
       previousValue = goingUp.current
       goingUp.set(Number(value))
-      going = true
 
       let interval = setInterval(() => {
         if (direction < 0) {
@@ -66,7 +69,6 @@
 
         setTimeout(() => {
           emphasis = ""
-          going = false
           direction = 0
         }, 3000)
       }, DURATION)
