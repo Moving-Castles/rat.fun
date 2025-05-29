@@ -20,6 +20,11 @@
 
   let { rooms } = getUIState()
 
+  $effect(() => {
+    console.log("room.balance")
+    console.log(room.balance)
+  })
+
   function getPromptLengthClass(prompt: string) {
     const length = prompt.length
     if (length > 200) return "extra-long"
