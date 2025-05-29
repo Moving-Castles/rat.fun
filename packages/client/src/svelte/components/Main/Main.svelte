@@ -143,7 +143,7 @@
 
   .layer-game {
     position: fixed;
-    top: 0;
+    // top: 30px;
     left: 0;
     height: var(--game-window-height);
     width: var(--game-window-width);
@@ -218,6 +218,7 @@
 
   .layer-below {
     z-index: 0;
+    // margin-top: 30px;
   }
 
   .routing {

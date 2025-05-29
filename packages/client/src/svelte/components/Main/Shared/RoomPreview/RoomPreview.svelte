@@ -60,12 +60,8 @@
     `${window.location.protocol + "//" + window.location.host + window.location.pathname}#${roomId}`
   )
 
-  onMount(async () => {
-    // Test to get outcomes for room
-    const outcomes = (await loadData(queries.outcomesForRoom, {
-      roomId,
-      worldAddress: $publicNetwork.worldAddress,
-    })) as Outcome[]
+  onMount(() => {
+    const outcomes = $staticContent.outcomes.filter(o => o.roomId == roomId)
 
     // Sort the outcomes in order of creation
     outcomes.sort((a, b) => {

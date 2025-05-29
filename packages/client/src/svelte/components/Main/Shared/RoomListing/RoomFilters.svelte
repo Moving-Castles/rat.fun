@@ -198,6 +198,12 @@
     width: 10ch;
   }
 
+  .floor-filter {
+    width: 28ch;
+    text-align: right;
+    white-space: nowrap;
+  }
+
   .divider {
     background: var(--color-grey-light);
     width: 1px;

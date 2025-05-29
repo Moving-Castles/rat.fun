@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { Hex } from "viem"
+  import { onMount } from "svelte"
   import { get } from "svelte/store"
   import {
     rooms as roomStore,
@@ -49,16 +50,6 @@
     return roomList.filter(r => r[1].creationBlock <= lastChecked)
   })
 
-  $effect(() => {
-    if (!lastChecked) {
-      updateRooms()
-    }
-  })
-
-  const updateRooms = () => {
-    lastChecked = Number(get(blockNumber))
-  }
-
   let previewing = $derived(
     (isOwnRoomListing && $myPreviewId) || (!isOwnRoomListing && $previewId)
   )
@@ -101,19 +92,15 @@
             {showDepletedRooms}
             onSort={fn => {
               sortFunction = fn
-              updateRooms()
             }}
             onTextFilterChange={value => {
               textFilter = value
-              updateRooms()
             }}
             onTextFilterClear={() => {
               textFilter = ""
-              updateRooms()
             }}
             onToggleDepleted={() => {
               showDepletedRooms = !showDepletedRooms
-              updateRooms()
             }}
           />
         {/if}
@@ -123,7 +110,6 @@
               <button
                 onclick={() => {
                   sortFunction = entriesChronologically
-                  updateRooms()
                 }}
                 class="new-rooms-button flash-fast-thrice"
               >
@@ -131,7 +117,7 @@
               </button>
             {/key}
           {/if}
-          {#each activeList as roomEntry}
+          {#each activeList as roomEntry (roomEntry[0])}
             {#if isOwnRoomListing}
               <OwnRoomItem roomId={roomEntry[0] as Hex} room={roomEntry[1]} />
             {:else}

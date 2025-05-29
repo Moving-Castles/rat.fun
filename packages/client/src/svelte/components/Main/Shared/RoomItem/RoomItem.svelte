@@ -20,9 +20,12 @@
 
   let { rooms } = getUIState()
 
+  let roomOutcomes = $derived(
+    $staticContent.outcomes.filter(o => o.roomId == roomId)
+  )
+
   $effect(() => {
-    console.log("room.balance")
-    console.log(room.balance)
+    $inspect(roomOutcomes)
   })
 
   function getPromptLengthClass(prompt: string) {
