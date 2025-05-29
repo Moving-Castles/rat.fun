@@ -21,7 +21,7 @@
   let { rooms } = getUIState()
 
   let roomOutcomes = $derived(
-    $staticContent.outcomes.filter(o => o.roomId == roomId)
+    $staticContent?.outcomes?.filter(o => o.roomId == roomId) || []
   )
 
   $effect(() => {

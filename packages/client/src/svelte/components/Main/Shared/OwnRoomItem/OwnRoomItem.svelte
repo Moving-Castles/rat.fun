@@ -4,6 +4,9 @@
   import { blocksToReadableTime, renderSafeString } from "@modules/utils"
   import { blockNumber } from "@modules/network"
   import { levels } from "@modules/state/base/stores"
+  import type { PlotPoint } from "@components/Main/Shared/RoomStats/types"
+  import { staticContent } from "@modules/content"
+  import RoomStats from "@components/Main/Shared/RoomStats/RoomStats.svelte"
 
   let { roomId, room }: { roomId: Hex; room: Room } = $props()
 
@@ -12,6 +15,34 @@
   let profit = $derived(
     Number(room.balance) - Number($levels[room.level]?.roomCreationCost ?? 0)
   )
+
+  let plotData: PlotPoint[] = $derived.by(() => {
+    let sanityRoomContent = $staticContent?.rooms?.find(r => r.title == roomId)
+
+    const outcomes =
+      $staticContent?.outcomes?.filter(o => o.roomId == roomId) || []
+    // Sort the outcomes in order of creation
+    outcomes.sort((a, b) => {
+      return new Date(b._createdAt).getTime() - new Date(a._createdAt).getTime()
+    })
+    const roomOutcomes = outcomes.reverse()
+
+    // Map the values
+    return [
+      {
+        time: 0,
+        roomValue: 250,
+        meta: sanityRoomContent,
+      },
+      ...roomOutcomes,
+    ].map((o, i) => {
+      return {
+        time: i,
+        value: o?.roomValue || 0,
+        meta: o,
+      }
+    })
+  })
 </script>
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
@@ -21,22 +52,50 @@
   class="room-listing-item"
   class:depleted={room.balance == 0}
 >
-  <div class="profit">
-    <div
-      class="profit-indicator"
-      class:positive={profit > 0}
-      class:negative={profit < 0}
-    >
-      <span>
-        {#if room.balance == 0}
-          Depleted
+  <div class="room-listing-left">
+    <div class="room-stats">
+      <RoomStats height={200} {plotData} empty={plotData.length == 1} />
+    </div>
+    <div class="room-info-row bottom">
+      <!-- PROFIT -->
+      <div
+        class="profit-indicator"
+        class:positive={profit > 0}
+        class:negative={profit < 0}
+      >
+        <span>
+          {#if room.balance == 0}
+            Depleted
+          {:else}
+            ${profit}
+          {/if}
+        </span>
+      </div>
+      <!-- BALANCE -->
+      <span class="balance" class:depleted={room.balance == 0}>
+        Balance: ${room.balance}
+      </span>
+      <!-- DIVIDER -->
+      <span class="divider">•</span>
+      <!-- VISITOR COUNT -->
+      <span class="visit-count small">
+        {#if room.visitCount === 1}
+          {room.visitCount} visit
         {:else}
-          Profit: ${profit}
+          {room.visitCount} visits
         {/if}
       </span>
+      {#if room?.killCount > 0}
+        <!-- DIVIDER -->
+        <span class="divider">•</span>
+        <!-- KILL RATE -->
+        <span class="kill-count small">
+          {room.killCount} kill{#if room.killCount > 1}s{/if}
+        </span>
+      {/if}
     </div>
   </div>
-  <!-- INFO -->
+
   <div class="room-info">
     <!-- SECTION 1 -->
     <div class="section">
@@ -64,30 +123,6 @@
     <!-- SECTION 2 -->
     <div class="section">
       <!-- BOTTOM ROW -->
-      <div class="room-info-row bottom">
-        <!-- BALANCE -->
-        <span class="balance" class:depleted={room.balance == 0}>
-          Balance: ${room.balance}
-        </span>
-        <!-- DIVIDER -->
-        <span class="divider">•</span>
-        <!-- VISITOR COUNT -->
-        <span class="visit-count small">
-          {#if room.visitCount === 1}
-            {room.visitCount} visit
-          {:else}
-            {room.visitCount} visits
-          {/if}
-        </span>
-        {#if room?.killCount > 0}
-          <!-- DIVIDER -->
-          <span class="divider">•</span>
-          <!-- KILL RATE -->
-          <span class="kill-count small">
-            {room.killCount} kill{#if room.killCount > 1}s{/if}
-          </span>
-        {/if}
-      </div>
     </div>
   </div>
 </button>
@@ -96,7 +131,9 @@
   .room-listing-item {
     color: white;
     text-decoration: none;
-    display: flex;
+    display: grid;
+    grid-template-columns: 390px 1fr;
+    gap: 12px;
     background: transparent;
     outline: none;
     border: none;
@@ -117,22 +154,24 @@
       opacity: 0.5;
     }
 
-    .profit {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 50%;
-      height: 100%;
-      font-size: var(--font-size-small);
+    .room-listing-left {
+      height: 200px;
+
+      .room-stats {
+        height: 100%;
+        margin-bottom: 10px;
+      }
+
+      .stats {
+      }
 
       .profit-indicator {
         text-align: center;
-        display: flex;
+        display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 70%;
-        aspect-ratio: 1/1;
         border: var(--default-border-style);
+        padding: 5px;
 
         &.positive {
           background-color: var(--color-health);
@@ -141,6 +180,25 @@
         &.negative {
           background-color: var(--color-death);
         }
+      }
+
+      .balance {
+        background: var(--color-value);
+        color: var(--background);
+        padding: 5px;
+
+        &.depleted {
+          background: var(--color-death);
+          color: var(--background);
+        }
+      }
+
+      .small {
+        font-size: var(--font-size-small);
+      }
+
+      .divider {
+        color: var(--color-grey-light);
       }
     }
 
@@ -200,25 +258,6 @@
         overflow: hidden;
         text-overflow: ellipsis;
         max-width: 25ch;
-      }
-
-      .balance {
-        background: var(--color-value);
-        color: var(--background);
-        padding: 5px;
-
-        &.depleted {
-          background: var(--color-death);
-          color: var(--background);
-        }
-      }
-
-      .small {
-        font-size: var(--font-size-small);
-      }
-
-      .divider {
-        color: var(--color-grey-light);
       }
     }
   }

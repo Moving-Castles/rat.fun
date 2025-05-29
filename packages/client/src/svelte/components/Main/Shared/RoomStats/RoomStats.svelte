@@ -8,14 +8,18 @@
 
   import "tippy.js/dist/tippy.css" // optional for styling
 
-  let { plotData, empty = false }: { plotData: PlotPoint[]; empty: boolean } =
-    $props()
+  let {
+    plotData,
+    empty = false,
+    height = 300,
+  }: { plotData: PlotPoint[]; empty: boolean; height: number } = $props()
+
+  console.log(height)
 
   // Layout setup
   let width = $state(0) // width will be set by the clientWidth
-  const height = 300
 
-  const padding = { top: 6, right: 6, bottom: 6, left: 6 }
+  const padding = { top: 6, right: 12, bottom: 6, left: 6 }
 
   // Calculate inner dimensions based on padding
   let innerWidth = $derived(width - padding.left - padding.right)

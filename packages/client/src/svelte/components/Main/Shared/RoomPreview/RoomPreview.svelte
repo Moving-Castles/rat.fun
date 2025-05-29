@@ -11,9 +11,7 @@
   import { staticContent, lastUpdated } from "@modules/content"
   import { urlFor } from "@modules/content/sanity"
   import { rat } from "@modules/state/base/stores"
-  import { publicNetwork } from "@modules/network"
-  import { loadData } from "@modules/content/sanity"
-  import { queries } from "@modules/content/sanity/groq"
+
   import { clickToCopy, renderSafeString } from "@modules/utils"
 
   import LiquidateRoom from "@components/Main/RoomContainer/YourRooms/LiquidateRoom.svelte"
@@ -61,7 +59,8 @@
   )
 
   onMount(() => {
-    const outcomes = $staticContent.outcomes.filter(o => o.roomId == roomId)
+    const outcomes =
+      $staticContent?.outcomes?.filter(o => o.roomId == roomId) || []
 
     // Sort the outcomes in order of creation
     outcomes.sort((a, b) => {
