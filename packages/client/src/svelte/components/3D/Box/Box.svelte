@@ -7,6 +7,8 @@
 
   import { Object3D } from "three"
 
+  let { canPet = false }: { canPet?: boolean } = $props()
+
   const { box } = getBoxState()
 
   const pickTarget = async () => {
@@ -59,11 +61,6 @@
   position.x={box.target.current.x}
 ></Rat>
 
-<!-- <T.Mesh position={[box.target.target.x, 0, box.target.target.z]}>
-  <T.BoxGeometry args={[0.2, 0.2, 0.2]} />
-  <T.MeshBasicMaterial color={0xffff00} />
-</T.Mesh> -->
-
 <T.PerspectiveCamera
   oncreate={r => r.lookAt(0, 0, 0)}
   fov={50}
@@ -92,3 +89,7 @@
 </T.Mesh>
 
 <T.AmbientLight intensity={0.4} />
+
+{#if canPet}
+  <!-- Add a hand model -->
+{/if}
