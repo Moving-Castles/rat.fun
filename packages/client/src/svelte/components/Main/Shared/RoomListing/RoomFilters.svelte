@@ -6,6 +6,7 @@
     entriesByVisit,
     entriesByBalance,
     entriesByKillCount,
+    entriesByPopularity,
   } from "./sortFunctions"
 
   let {
@@ -55,6 +56,18 @@
   </div>
   <!-- SORT BUTTONS -->
   <div class="floor-filter">
+    <!-- SORT BY HOT -->
+    <button
+      use:tippy={{
+        placement: "top",
+        content: "sort by popularity",
+      }}
+      class:active={sortFunction === entriesByPopularity}
+      class="sort-button"
+      onclick={() => onSort(entriesByPopularity)}
+    >
+      🔥
+    </button>
     <!-- SORT BY CHRONOLOGICAL -->
     <button
       use:tippy={{

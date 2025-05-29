@@ -221,3 +221,23 @@ button {
   font-size: var(--font-size-small);
   border-radius: 0;
 }
+
+.flash-fast-thrice {
+  animation: strobe 120ms steps(1, end) 3;
+}
+
+.flash-slow-thrice {
+  animation: strobe 240ms steps(1, end) 3;
+}
+
+@keyframes strobe {
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes strobe-slow {
+  20% {
+    opacity: 0;
+  }
+}

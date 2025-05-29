@@ -1,7 +1,10 @@
 import { get } from "svelte/store"
 import { blockNumber } from "@modules/network"
 
-export const entriesChronologically = (a: [string, Room], b: [string, Room]) => {
+export const entriesChronologically = (
+  a: [string, Room],
+  b: [string, Room]
+) => {
   return Number(b[1]?.index || 0) - Number(a[1].index || 0)
 }
 
@@ -26,15 +29,17 @@ export const entriesByPopularity = (a: [string, Room], b: [string, Room]) => {
 
   const aScore = computePopularity(
     Number(a[1]?.visitCount || 0),
-    Number(currentBlock - (a[1]?.creationBlock || 0)),
-    Number(currentBlock - (a[1]?.lastVisitBlock || 0))
-  );
+    Number(currentBlock - (Number(a[1]?.creationBlock) || 0)),
+    Number(currentBlock - (Number(a[1]?.lastVisitBlock) || 0))
+  )
   const bScore = computePopularity(
     Number(b[1]?.visitCount || 0),
-    Number(currentBlock - (b[1]?.creationBlock || 0)),
-    Number(currentBlock - (b[1]?.lastVisitBlock || 0))
-  );
-  return bScore - aScore;
+    Number(currentBlock - (Number(b[1]?.creationBlock) || 0)),
+    Number(currentBlock - (Number(b[1]?.lastVisitBlock) || 0))
+  )
+
+  console.log(a, b, aScore, bScore)
+  return bScore - aScore
 }
 
 /**
@@ -54,17 +59,17 @@ function computePopularity(
   blocksSinceLastVisit: number
 ): number {
   // Decay constants (tunable)
-  const alpha = 1.0;  // Controls decay based on post age
-  const beta = 1.5;   // Controls decay based on last visit
+  const alpha = 1.0 // Controls decay based on post age
+  const beta = 1.5 // Controls decay based on last visit
 
   // Freshness decay: favors newer posts
-  const freshnessDecay = 1 / Math.pow(blocksSinceCreation + 2, alpha);
+  const freshnessDecay = 1 / Math.pow(blocksSinceCreation + 2, alpha)
 
   // Visit recency decay: favors recently visited posts
-  const visitDecay = 1 / Math.pow(blocksSinceLastVisit + 2, beta);
+  const visitDecay = 1 / Math.pow(blocksSinceLastVisit + 2, beta)
 
   // Logarithmic scaling to dampen very high visit counts
-  const popularityScore = Math.log(visits + 1) * freshnessDecay * visitDecay;
+  const popularityScore = Math.log(visits + 1) * freshnessDecay * visitDecay
 
-  return popularityScore;
+  return popularityScore
 }

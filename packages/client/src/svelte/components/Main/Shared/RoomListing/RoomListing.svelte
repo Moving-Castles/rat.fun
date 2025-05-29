@@ -6,7 +6,7 @@
     playerRooms,
   } from "@modules/state/base/stores"
   import { getUIState } from "@modules/ui/state.svelte"
-  import { entriesChronologically } from "./sortFunctions"
+  import { entriesByPopularity } from "./sortFunctions"
   import { filterRooms, filterDepletedRooms } from "./filterFunctions"
 
   import RoomItem from "@components/Main/Shared/RoomItem/RoomItem.svelte"
@@ -26,7 +26,7 @@
 
   // Local state
   let currentRoom = $state<Hex | null>(null)
-  let sortFunction = $state(entriesChronologically)
+  let sortFunction = $state(entriesByPopularity)
   let showDepletedRooms = $state(isOwnRoomListing ? true : false)
   let textFilter = $state("")
   let lastChecked = $state<number | null>(null)
@@ -114,9 +114,14 @@
         {/if}
         {#if activeList.length > 0}
           {#if activeList.length < roomList.length}
-            <button onclick={updateRooms} class="new-rooms-button">
-              {roomList.length - activeList.length} new rooms added
-            </button>
+            {#key roomList.length}
+              <button
+                onclick={updateRooms}
+                class="new-rooms-button flash-fast-thrice"
+              >
+                {roomList.length - activeList.length} new rooms added
+              </button>
+            {/key}
           {/if}
           {#each activeList as [roomId, room]}
             {#if isOwnRoomListing}
