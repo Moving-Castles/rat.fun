@@ -34,6 +34,10 @@
   let textFilter = $state("")
   let lastChecked = $state<number>(Number(get(blockNumber)))
 
+  const updateRooms = () => {
+    lastChecked = Number(get(blockNumber))
+  }
+
   // Here we add once there are a couple of updates
   let roomList = $derived.by(() => {
     let entries = isOwnRoomListing
@@ -92,6 +96,7 @@
             {showDepletedRooms}
             onSort={fn => {
               sortFunction = fn
+              updateRooms()
             }}
             onTextFilterChange={value => {
               textFilter = value
@@ -110,6 +115,7 @@
               <button
                 onclick={() => {
                   sortFunction = entriesChronologically
+                  updateRooms()
                 }}
                 class="new-rooms-button flash-fast-thrice"
               >

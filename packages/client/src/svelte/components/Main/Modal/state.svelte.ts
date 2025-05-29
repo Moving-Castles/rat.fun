@@ -1,7 +1,8 @@
 export { default as ModalTarget } from "./ModalTarget.svelte"
 export { default as Modal } from "./Modal.svelte"
+import type { Snippet } from "svelte"
 
-let modalState = $state(null)
+let modalState = $state<null | Snippet>(null)
 let showModal = $state(false)
 let modalConfig = $state<{ target?: string; noclose?: boolean }>({})
 

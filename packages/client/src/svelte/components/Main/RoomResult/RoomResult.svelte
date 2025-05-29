@@ -68,7 +68,6 @@
   }
 
   const processRoom = async () => {
-    console.time("Process")
     if (!roomId) return
     try {
       // console.log("start result")

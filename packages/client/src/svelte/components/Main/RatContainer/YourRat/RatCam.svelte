@@ -3,8 +3,10 @@
   import { Tween } from "svelte/motion"
   import Main from "@components/3D/World/Main.svelte"
   import Box from "@components/3D/Box/Box.svelte"
+  import ModalTarget from "../../Modal/ModalTarget.svelte"
 
   let progress = new Tween(0, { duration: 2000 })
+  let showPettable = $state(false)
 
   onMount(() => {
     progress.set(1)
@@ -15,7 +17,12 @@
   })
 </script>
 
-<div class="rat-cam">
+<div
+  class="rat-cam"
+  onclick={() => {
+    showPettable = !showPettable
+  }}
+>
   <div class="overlay">
     <img src="/images/cutout-test-3.png" alt="cutout" />
   </div>
@@ -25,6 +32,19 @@
     </Main>
   </div>
 </div>
+
+{#snippet bigCam()}
+  <div class="big-rat-cam">
+    <Main>
+      <Box canPet></Box>
+    </Main>
+  </div>
+{/snippet}
+
+{#if showPettable}
+  <ModalTarget onclose={() => (showPettable = false)} content={bigCam}
+  ></ModalTarget>
+{/if}
 
 <style lang="scss">
   .rat-cam {
@@ -43,6 +63,11 @@
     height: 200px;
     // aspect-ratio: 1 / 1;
     // height: 100%;
+  }
+
+  .big-rat-cam {
+    width: calc(var(--game-window-height) * 0.6);
+    height: calc(var(--game-window-height) * 0.6);
   }
 
   .overlay {
