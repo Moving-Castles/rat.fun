@@ -2,6 +2,7 @@
   import { onMount, onDestroy } from "svelte"
   import { Tween } from "svelte/motion"
   import { getModalState } from "@components/Main/Modal/state.svelte"
+  import { rat } from "@modules/state/base/stores"
   import Main from "@components/3D/World/Main.svelte"
   import Box from "@components/3D/Box/Box.svelte"
   import PetRat from "@components/3D/PetRat/PetRat.svelte"
@@ -38,11 +39,15 @@
 
 {#snippet bigCam()}
   <div class="big-rat-cam">
+    <div class="info-item">
+      <span class="name">{$rat.name}</span>
+    </div>
+
     <Main>
       <PetRat></PetRat>
     </Main>
     <button
-      class="close"
+      class="close priority"
       onclick={() => {
         console.log("showPettable", showPettable)
         modal.close()
@@ -82,6 +87,25 @@
     width: calc(var(--game-window-width) - 20px);
     height: var(--game-window-height);
     position: relative;
+
+    .info-item {
+      left: 50%;
+      bottom: 20px;
+      position: absolute;
+      transform: translateX(-50%);
+      z-index: 99;
+
+      .name {
+        background: var(--color-alert);
+        padding-right: 5px;
+        color: var(--foreground);
+        font-family: var(--label-font-stack);
+        letter-spacing: -0.2em;
+        font-size: var(--font-size-large);
+        font-size: 50px;
+        color: var(--background);
+      }
+    }
 
     .close {
       position: absolute;

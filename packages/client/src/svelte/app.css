@@ -142,6 +142,7 @@ button {
 .priority {
   background: var(--color-alert-priority) !important;
   color: var(--white) !important;
+  border: none;
   transition: all 0.2s ease;
 }
 

@@ -66,7 +66,7 @@
       class="sort-button"
       onclick={() => onSort(entriesByPopularity)}
     >
-      🔥
+      P
     </button>
     <!-- SORT BY CHRONOLOGICAL -->
     <button
