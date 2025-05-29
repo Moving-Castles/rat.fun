@@ -1,6 +1,5 @@
 import { Low, Memory } from 'lowdb';
 import { OffChainMessage, DatabaseSchema } from '@modules/types';
-import { v4 as uuidv4 } from 'uuid';
 
 // Initialize the database with in-memory adapter
 const adapter = new Memory<DatabaseSchema>();
@@ -16,17 +15,11 @@ export async function initializeDB() {
 }
 
 // Store a new message
-export async function storeMessage(message: Omit<OffChainMessage, 'id'>): Promise<OffChainMessage> {
-  const messageWithId: OffChainMessage = {
-    ...message,
-    id: uuidv4(),
-  };
-
+export async function storeMessage(message: OffChainMessage): Promise<OffChainMessage> {
   await db.read();
-  db.data?.messages.push(messageWithId);
+  db.data?.messages.push(message);
   await db.write();
-
-  return messageWithId;
+  return message;
 }
 
 // Get messages
