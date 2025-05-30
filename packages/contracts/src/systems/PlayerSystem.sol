@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
-import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
 import { EntityType, Balance, Name, CreationBlock, GameConfig, VisitedLevels, LevelList } from "../codegen/index.sol";
 import { LibUtils } from "../libraries/Libraries.sol";
