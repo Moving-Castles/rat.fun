@@ -13,18 +13,10 @@ interface IDevSystem {
 
   function ratroom__removePlayerBalance(bytes32 _playerId) external;
 
-  function ratroom__createRoomAsAdmin(
-    string memory _prompt,
-    bytes32 _roomLevel,
-    uint256 _extraBalance
-  ) external returns (bytes32 roomId);
-
   function ratroom__updateLevel(
     bytes32 _levelId,
     uint256 _levelMinBalance,
     uint256 _levelMaxBalance,
     uint256 _roomCreationCost
   ) external;
-
-  function ratroom__addRoomBalance(bytes32 _roomId) external;
 }

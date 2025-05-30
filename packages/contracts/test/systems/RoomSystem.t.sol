@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: Unlicense
 pragma solidity >=0.8.24;
-import { console } from "forge-std/console.sol";
 import { BaseTest } from "../BaseTest.sol";
 import "../../src/codegen/index.sol";
 import "../../src/libraries/Libraries.sol";
@@ -71,8 +70,9 @@ contract RoomSystemTest is BaseTest {
 
     prankAdmin();
     world.ratroom__removePlayerBalance(playerId);
+    bytes32 firstLevelId = LevelList.getItem(0);
     vm.expectRevert("balance too low");
-    world.ratroom__createRoom(playerId, LevelList.getItem(0), bytes32(0), "A test room");
+    world.ratroom__createRoom(playerId, firstLevelId, bytes32(0), "A test room");
     vm.stopPrank();
   }
 
@@ -82,9 +82,10 @@ contract RoomSystemTest is BaseTest {
     vm.stopPrank();
 
     prankAdmin();
-    world.ratroom__createRoom(playerId, LevelList.getItem(0), bytes32(hex"123456"), "A test room");
+    bytes32 firstLevelId = LevelList.getItem(0);
+    world.ratroom__createRoom(playerId, firstLevelId, bytes32("666"), "A test room");
     vm.expectRevert("room id already in use");
-    world.ratroom__createRoom(playerId, LevelList.getItem(0), bytes32(hex"123456"), "A test room");
+    world.ratroom__createRoom(playerId, firstLevelId, bytes32("666"), "A test room");
     vm.stopPrank();
   }
 
