@@ -1,220 +1,208 @@
 <script lang="ts">
+  import { onMount } from "svelte"
   import { ENVIRONMENT } from "@mud/enums"
-  import { UIState } from "@modules/ui/stores"
-  import { UI } from "@modules/ui/enums"
   import { getUIState } from "@modules/ui/state.svelte"
+  import { initStaticContent } from "@modules/content"
+  import { publicNetwork } from "@modules/network"
 
-  import Spawn from "@components/Spawn/Spawn.svelte"
-  // import Floors from "@components/Main/Floors/Floors.svelte"
   import RatContainer from "@components/Main/RatContainer/RatContainer.svelte"
   import RoomContainer from "@components/Main/RoomContainer/RoomContainer.svelte"
-  import ModalTarget from "@components/Main/Modal/ModalTarget.svelte"
   import RoomResult from "@components/Main/RoomResult/RoomResult.svelte"
-  import FloorsPlaceholder from "@components/Main/Floors/FloorsPlaceholder.svelte"
+  import Floors from "@components/Main/Floors/Floors.svelte"
 
   function getDoorStyle(side: "left" | "right"): string {
     const progress = transition.progress.current
-
+    // Return empty style if transition is not active, doors will be in their "natural" state (translateX(0%))
+    // This means when not transitioning, they are "closed".
+    // The visibility of the layer-game wrapper handles whether these closed doors are seen.
     if (!transition.active) return ""
-
     const isOpening = transition.type === "doorsOpen"
-
     let offset = 0
-
     if (side === "left") {
-      offset = isOpening
-        ? -(progress * 50) // from 0% to -50%
-        : -50 + progress * 50 // from -50% to 0%
+      offset = isOpening ? -(progress * 50) : -50 + progress * 50 // Moves from 0% to -50%
     } else {
-      offset = isOpening
-        ? progress * 50 // from 0% to 50%
-        : 50 - progress * 50 // from 100% to 0%
+      offset = isOpening ? progress * 50 : 50 - progress * 50 // Moves from 0% to 50%
     }
-
     return `transform: translateX(${offset}%);`
   }
 
   let { environment }: { environment: ENVIRONMENT } = $props()
-
   const { transition, route, rooms } = getUIState()
   const { current, myCurrent } = rooms
-
   let debugTransition = $state(false)
+
+  // Determine if the main game layer (with doors) should be rendered
+  let shouldRenderMainGameLayer = $derived(
+    route.current === "main" || transition.to === "main"
+  )
+
+  onMount(async () => {
+    // Get content from CMS
+    console.log("Initializing static content...")
+    await initStaticContent($publicNetwork.worldAddress)
+    console.log("done")
+  })
 </script>
 
 <div class="dust"></div>
 
-{#snippet mainSnippet(className = "", transitionStyle = "")}
-  <div class="main {className}" style={transitionStyle}>
-    <div class="main-area">
-      <!-- Rat container -->
-      <RatContainer />
-      <!-- <Floors /> -->
-      <FloorsPlaceholder />
-      <!-- Room container -->
-      <RoomContainer {environment} />
+{#snippet LeftColumnSlot()}
+  <RatContainer />
+{/snippet}
+{#snippet CenterColumnSlot()}
+  <Floors />
+{/snippet}
+{#snippet RightColumnSlot()}
+  <RoomContainer {environment} />
+{/snippet}
+
+{#snippet MainAreaLayout(doorType: "left" | "right")}
+  <div class="main-area">
+    <div class="main-area-left-column">
+      {#if doorType === "left"}
+        {@render LeftColumnSlot()}
+      {/if}
+    </div>
+    <div class="main-area-center-column">
+      {@render CenterColumnSlot()}
+    </div>
+    <div class="main-area-right-column">
+      {#if doorType === "right"}
+        {@render RightColumnSlot()}
+      {/if}
     </div>
   </div>
 {/snippet}
 
-{#snippet roomSnippet()}
-  {#if $current || $myCurrent}
+{#if shouldRenderMainGameLayer}
+  <div class="layer-game" class:transition-active={transition.active}>
+    <div class="door-container">
+      <div class="left-door" style={getDoorStyle("left")}>
+        <div class="door-content-wrapper">
+          {@render MainAreaLayout("left")}
+        </div>
+      </div>
+
+      <div class="right-door" style={getDoorStyle("right")}>
+        <div class="door-content-wrapper">
+          {@render MainAreaLayout("right")}
+        </div>
+      </div>
+    </div>
+  </div>
+{/if}
+
+{#if route.current === "room" || (transition.from === "room" && transition.active) || $current}
+  <div class="layer-below">
     <RoomResult
       start={($current || $myCurrent) && route.current === "room"}
       animationstart={transition.active}
       roomId={$current}
       {environment}
     />
-  {/if}
-{/snippet}
-
-<!-- Routes -->
-{#if transition.to === "main" || route.current === "main"}
-  <div class="layer-game" class:transition-active={transition.active}>
-    <div class="door-container">
-      <div class="left-door" style={getDoorStyle("left")}>
-        {@render mainSnippet()}
-      </div>
-      <div class="right-door" style={getDoorStyle("right")}>
-        {@render mainSnippet()}
-      </div>
-    </div>
   </div>
-{/if}
-
-{#if route.current === "room" || transition.from === "room" || $current}
-  <div class="layer-below">
-    {@render roomSnippet()}
-  </div>
-{/if}
-
-{#snippet spawn()}
-  <Spawn />
-{/snippet}
-
-{#if $UIState === UI.SPAWNING}
-  <ModalTarget noclose content={spawn} />
 {/if}
 
 {#if debugTransition}
   <pre class="routing">
-  transition active: {transition.active}{#if transition.active}
+    transition active: {transition.active}{#if transition.active}
       ---
-    transition from: {transition.from}
-    transition to: {transition.to}
-    transition type: {transition.type}
-    transition progress: {transition.progress.current.toFixed(
+      transition from: {transition.from}
+      transition to: {transition.to}
+      transition type: {transition.type}
+      transition progress: {transition.progress.current.toFixed(
         5
       )}
     {/if}
-  ---
-  route: {route.current}
-  route params: {JSON.stringify(route.params)}
-  ---
-</pre>
+    ---
+    route: {route.current}
+    route params: {JSON.stringify(route.params)}
+    ---
+  </pre>
 {/if}
 
 <style lang="scss">
-  .main {
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    height: calc(var(--game-window-height) - 20px);
-    width: calc(var(--game-window-width) - 20px);
+  // Base layout structure (from original .main class)
+  // This is used by .door-content-wrapper
+  %main-layout-structure {
+    height: 100%;
+    width: 100%;
     overflow: hidden;
-    border: var(--default-border-style);
-    background: black;
     display: grid;
-    grid-template-rows: 60px 1fr;
+    grid-template-rows: var(--header-height, 60px) 1fr;
   }
 
-  .layer-below {
-    z-index: 0;
+  .door-content-wrapper {
+    @extend %main-layout-structure;
+    position: absolute; // Fill the .left-door or .right-door parent
+    top: 0;
+    left: 0;
+    background: transparent; // The content *inside* provides the visuals
+    border: none; // Assuming border is on .layer-game or not part of split content
   }
 
   .layer-game {
     position: fixed;
+    // top: 30px;
+    left: 0;
+    height: var(--game-window-height);
+    width: var(--game-window-width);
     z-index: 10;
-  }
-
-  .main-area {
-    width: 100%;
-    height: calc(var(--game-window-height) - 80px);
-    display: grid;
-    grid-template-columns: calc(var(--game-window-width) * 0.44) 1fr calc(
-        var(--game-window-width) * 0.44
-      );
-  }
-
-  .main.clone-left {
-    // pointer-events: none;
-    clip-path: inset(0 50% 0 0);
-  }
-  .main.clone-right {
-    // pointer-events: none;
-    clip-path: inset(0 0 0 50%);
-  }
-
-  .routing {
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    z-index: 99;
-    background: #030;
-    color: grey;
-    width: 400px;
-    padding: 10px;
+    border: var(--default-border-style); // Overall game window border
+    overflow: hidden; // Clip any door overflow if they animate beyond bounds
+    // Though with translateX(+-50%) they shouldn't.
   }
 
   .door-container {
     position: relative;
-    width: var(--game-window-width);
-    height: var(--game-window-height);
-
-    &.transition-active {
-      // pointer-events: none;
-    }
+    width: 100%;
+    height: 100%;
   }
 
   .left-door,
   .right-door {
     position: absolute;
     top: 0;
-    width: 100%;
+    width: 100%; // Each "door" is full width, containing a full-width layout
     height: 100%;
-    overflow: hidden;
-    background: black;
-    // pointer-events: none;
+    overflow: hidden; // Essential for clip-path to work on content
+    background: transparent; // Door surface is clear; its content is what's seen & clipped
   }
 
   .left-door {
     left: 0;
-    clip-path: inset(0 50% 0 0);
+    clip-path: inset(0 50% 0 0); // Shows the left 50% of its content
   }
 
   .right-door {
-    right: 0;
-    clip-path: inset(0 0 0 50%);
+    // Symmetrical positioning for its clip-path.
+    // If using `right:0;` ensure transforms are intuitive. `left:0;` might be simpler.
+    left: 0;
+    clip-path: inset(0 0 0 50%); // Shows the right 50% of its content
   }
 
-  @keyframes moveLeft {
-    from {
-      transform: translateX(0%);
-    }
-    to {
-      transform: translateX(-100%);
-    }
+  // .main-area and its columns define the layout within the 1fr part of .door-content-wrapper
+  .main-area {
+    // This is the second row of the .door-content-wrapper grid
+    // No explicit grid-row needed if it's the only 1fr consumer after header
+    width: 100%;
+    height: var(
+      --game-window-height
+    ); // Fill its allocated space in the parent grid
+    display: grid;
+    grid-template-columns: calc(var(--game-window-width) * 0.44) 1fr calc(
+        var(--game-window-width) * 0.44
+      );
   }
 
-  @keyframes moveRight {
-    from {
-      transform: translateX(0%);
-    }
-    to {
-      transform: translateX(100%);
-    }
+  .main-area-left-column,
+  .main-area-center-column,
+  .main-area-right-column {
+    overflow: hidden; // Prevent content spill from columns
+    // Add any other necessary styling for these columns
   }
 
+  // Other styles like .dust, .layer-below, .routing remain as you had them.
   .dust {
     position: fixed;
     top: 0;
@@ -226,6 +214,21 @@
     background-image: url(/images/dust.png);
     opacity: 0.6;
     background-size: cover;
-    // mix-blend-mode: difference;
+  }
+
+  .layer-below {
+    z-index: 0;
+    // margin-top: 30px;
+  }
+
+  .routing {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    z-index: 9999; // Highest for debug
+    background: #030;
+    color: grey;
+    width: 400px;
+    padding: 10px;
   }
 </style>

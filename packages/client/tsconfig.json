@@ -39,11 +39,8 @@
       "@server/*": [
         "../server/src/*"
       ],
-      "@cms/*": [
-        "../cms/*"
-      ],
       "@sanity-types": [
-        "../cms/sanity.types"
+        "../cms-public/sanity.types"
       ]
     },
   },

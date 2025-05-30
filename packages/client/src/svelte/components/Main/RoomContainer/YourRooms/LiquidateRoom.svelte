@@ -8,13 +8,22 @@
     ModalTarget,
     getModalState,
   } from "@components/Main/Modal/state.svelte"
-  import { staticContent, lastUpdated, urlFor } from "@modules/content"
+  import { staticContent, lastUpdated } from "@modules/content"
+  import { urlFor } from "@modules/content/sanity"
+  import { sendLiquidateRoomMessage } from "@modules/off-chain-sync"
+  import { walletNetwork } from "@modules/network"
+
+  import NoImage from "@components/Main/Shared/NoImage/NoImage.svelte"
 
   let sanityRoomContent = $derived(
     $staticContent.rooms.find(r => r.title == roomId)
   )
 
-  let { room, roomId, isOwnRoomListing } = $props()
+  let {
+    room,
+    roomId,
+    isOwnRoomListing,
+  }: { room: Room; roomId: string; isOwnRoomListing: boolean } = $props()
 
   let { rooms } = getUIState()
 
@@ -22,7 +31,7 @@
 
   let busy = $state(false)
   let confirming = $state(false)
-  let liquidationMessage = $state("CONFIRM LIQUIDATION")
+  let liquidationMessage = $state("CONFIRM ROOM LIQUIDATION")
 
   async function sendLiquidateRoom() {
     if (busy) return
@@ -38,6 +47,7 @@
       liquidationMessage = "Could not liquidate room"
     } finally {
       busy = false
+      sendLiquidateRoomMessage($walletNetwork, roomId)
       setTimeout(() => {
         modal.close()
       }, 1200)
@@ -71,9 +81,12 @@
       <div class="room-image">
         {#key $lastUpdated}
           {#if sanityRoomContent}
-            <img src={urlFor(sanityRoomContent?.image).url()} alt={room.name} />
+            <img
+              src={urlFor(sanityRoomContent?.image).url()}
+              alt={`room #${room.index}`}
+            />
           {:else}
-            <img src="/images/room3.jpg" alt={room.name} />
+            <NoImage />
           {/if}
         {/key}
       </div>
@@ -109,7 +122,7 @@
     align-items: center;
     justify-content: center;
     background-color: var(--color-value);
-    color: black;
+    color: var(--background);
 
     .inner {
       display: flex;
@@ -169,7 +182,7 @@
   }
 
   .warning-mute {
-    color: white;
+    color: var(--foreground);
     border: none;
     background: repeating-linear-gradient(
       45deg,
@@ -206,8 +219,13 @@
     button {
       height: 60px;
       border: var(--default-border-style);
-      color: white;
-      background: black;
+      color: var(--background);
+      background: var(--color-death);
+
+      &:hover {
+        background: var(--background);
+        color: var(--foreground);
+      }
     }
   }
 

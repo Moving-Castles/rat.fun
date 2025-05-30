@@ -1,6 +1,7 @@
 <script lang="ts">
-  import type { ServerReturnValue } from "@components/Main/RoomResult/types"
+  import type { EnterRoomReturnValue } from "@server/modules/types"
   import type { Hex } from "viem"
+  import { RESULT_EVENT } from "@modules/ui/enums"
 
   import {
     player,
@@ -10,14 +11,15 @@
   import { enterRoom } from "@components/Main/RoomResult"
   import { ENVIRONMENT } from "@mud/enums"
   import { walletNetwork } from "@modules/network"
-  import { onDestroy } from "svelte"
 
   import Log from "@components/Main/RoomResult/Log/Log.svelte"
   import RoomMeta from "@components/Main/RoomResult/RoomMeta/RoomMeta.svelte"
   import RatInfoBox from "@components/Main/RoomResult/InfoBox/Rat/RatInfoBox.svelte"
   import RoomInfoBox from "@components/Main/RoomResult/InfoBox/Room/RoomInfoBox.svelte"
-
   import { getUIState } from "@modules/ui/state.svelte"
+  import RoomEventPopup from "../Shared/RoomEventPopup/RoomEventPopup.svelte"
+  import { staticContent } from "@modules/content"
+
   const { rooms } = getUIState()
 
   let {
@@ -38,17 +40,37 @@
   let error = $state("")
 
   let entering = $state(true)
-  let result: ServerReturnValue | undefined = $state(undefined)
+  let result: EnterRoomReturnValue | null = $state(null)
+
+  let resultEvent: RESULT_EVENT = $state(RESULT_EVENT.NONE)
+
+  let room = $derived($roomsState?.[roomId ?? ""])
+
+  let sanityRoomContent = $derived(
+    $staticContent.rooms.find(r => r._id == (roomId ?? ""))
+  )
 
   $effect(() => {
     if (animationstart) animationstarted = true
   })
 
+  const checkEvents = async () => {
+    if (result.ratDead) {
+      resultEvent = RESULT_EVENT.RAT_DEAD
+    } else if (result.roomDepleted) {
+      resultEvent = RESULT_EVENT.ROOM_DEPLETED
+    } else if (result.levelUp) {
+      resultEvent = RESULT_EVENT.LEVEL_UP
+    } else if (result.levelDown) {
+      resultEvent = RESULT_EVENT.LEVEL_DOWN
+    }
+    // resultEvent = RESULT_EVENT.RAT_DEAD
+  }
+
   const processRoom = async () => {
-    console.time("Process")
     if (!roomId) return
     try {
-      console.log("start result")
+      // console.log("start result")
       const ret = enterRoom(
         environment,
         $walletNetwork,
@@ -61,7 +83,7 @@
       entering = false
 
       try {
-        console.log("start outcome ")
+        // console.log("start outcome ")
         result = await ret // add here just in case the entering transition would be faster
       } catch (err) {
         console.log("catch outcome error", err)
@@ -70,45 +92,48 @@
     } catch (error) {
       console.log("catch result error", error)
       entering = false
-      rooms.close()
+      rooms.close(
+        resultEvent !== RESULT_EVENT.LEVEL_UP &&
+          resultEvent !== RESULT_EVENT.LEVEL_DOWN
+      )
+      return
     }
   }
 
   $effect(() => {
     if (start && !busy) {
       busy = true
-      console.log("start")
+      // console.log("start")
       processRoom()
     }
-  })
-
-  onDestroy(() => {
-    console.log("on destroy")
   })
 </script>
 
 <div class="room-result">
   {#if entering && animationstarted}
-    <RoomMeta
-      rat={$ratState}
-      room={$roomsState?.[roomId ?? ""]}
-      roomId={roomId as Hex}
-    />
+    <RoomMeta rat={$ratState} {room} roomId={roomId as Hex} />
   {:else}
     <!-- INFO BOXES -->
     <div class="info-boxes">
       <RatInfoBox />
       <div class="divider"></div>
-      <RoomInfoBox roomId={roomId as Hex} />
+      <RoomInfoBox
+        depleted={resultEvent === RESULT_EVENT.ROOM_DEPLETED}
+        roomId={roomId as Hex}
+      />
     </div>
     <!-- LOG -->
-    <Log {result} {animationstarted} />
+    <Log {result} {resultEvent} {animationstarted} onComplete={checkEvents} />
     <!-- ERROR -->
     {#if error}
       <div class="error">
         {error}
       </div>
     {/if}
+  {/if}
+
+  {#if resultEvent !== RESULT_EVENT.NONE && resultEvent !== RESULT_EVENT.ROOM_DEPLETED && result !== null}
+    <RoomEventPopup {result} {resultEvent} {room} {sanityRoomContent} />
   {/if}
 </div>
 
@@ -121,6 +146,8 @@
     padding-bottom: 0;
     font-size: var(--font-size-normal);
     overflow-y: auto;
+    border: var(--default-border-style);
+    top: 32px;
   }
 
   .info-boxes {

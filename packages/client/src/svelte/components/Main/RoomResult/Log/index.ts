@@ -1,7 +1,7 @@
-import type { ServerReturnValue } from "@components/Main/RoomResult/types"
+import type { EnterRoomReturnValue } from "@server/modules/types"
 import { MergedLogEntry } from "./types"
 
-export function mergeLog(result: ServerReturnValue): MergedLogEntry[] {
+export function mergeLog(result: EnterRoomReturnValue): MergedLogEntry[] {
 
     // Deep clone the log
     const mergedLog: MergedLogEntry[] = JSON.parse(JSON.stringify(result.log))

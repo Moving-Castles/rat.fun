@@ -6,3 +6,22 @@
   font-style: normal;
   font-display: swap;
 }
+
+@font-face {
+  font-family: 'Impact Label Reversed';
+  src: url('ImpactLabel/ImpactLabelReversed.woff2') format('woff2'),
+      url('ImpactLabel/ImpactLabelReversed.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Impact Label';
+  src: url('ImpactLabel/ImpactLabel.woff2') format('woff2'),
+      url('ImpactLabel/ImpactLabel.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+

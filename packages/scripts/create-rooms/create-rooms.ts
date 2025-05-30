@@ -44,7 +44,7 @@ const MESSAGE = "RATROOM";
 
 // Define types
 interface RoomDetails {
-  roomName: string;
+  levelId: string;
   roomPrompt: string;
 }
 
@@ -82,15 +82,20 @@ try {
   
   // Validate each room has required fields
   for (const room of roomData.rooms) {
-    if (!room.roomName || !room.roomPrompt) {
+    if (!room.roomPrompt) {
+      log(`Room missing required fields: ${JSON.stringify(room)}`, 'error');
+      process.exit(1);
+    }
+
+    if (!room.levelId) {
       log(`Room missing required fields: ${JSON.stringify(room)}`, 'error');
       process.exit(1);
     }
     
-    // Truncate roomPrompt if it's longer than 300 characters
-    if (room.roomPrompt.length > 300) {
-      log(`Room "${room.roomName}" prompt exceeds 300 characters. Truncating...`, 'info');
-      room.roomPrompt = room.roomPrompt.substring(0, 300);
+    // Truncate roomPrompt if it's longer than 280 characters
+    if (room.roomPrompt.length > 280) {
+      log(`Prompt exceeds 280 characters. Truncating...`, 'info');
+      room.roomPrompt = room.roomPrompt.substring(0, 280);
     }
   }
   
@@ -136,11 +141,11 @@ async function signMessage(): Promise<string> {
 async function sendRequest(signature: string, room: RoomDetails): Promise<void> {
   const formData = new URLSearchParams();
   formData.append('signature', signature);
-  formData.append('roomName', room.roomName);
   formData.append('roomPrompt', room.roomPrompt);
-
+  formData.append('levelId', room.levelId);
+  
   try {
-    log(`Sending request for room: ${room.roomName}...`);
+    log(`Sending request for room: ${room.roomPrompt}...`);
     const response = await fetch(apiUrl, {
       method: 'POST',
       headers: {
@@ -151,19 +156,19 @@ async function sendRequest(signature: string, room: RoomDetails): Promise<void> 
 
     if (!response.ok) {
       const errorData = await response.json() as { error: string; message: string };
-      log(`API Error for room ${room.roomName}: ${errorData.error}: ${errorData.message}`, 'error');
+      log(`API Error for room ${room.roomPrompt}: ${errorData.error}: ${errorData.message}`, 'error');
       return; // Continue with other rooms even if one fails
     }
 
     const result = await response.json();
-    log(`Room "${room.roomName}" created successfully!`, 'success');
+    log(`Room "${room.roomPrompt}" created successfully!`, 'success');
     log('Response:', 'info');
     console.log(JSON.stringify(result, null, 2));
   } catch (error) {
     if (error instanceof Error) {
-      log(`Error sending request for room ${room.roomName}: ${error.message}`, 'error');
+      log(`Error sending request for room ${room.roomPrompt}: ${error.message}`, 'error');
     } else {
-      log(`An unknown error occurred while sending the request for room ${room.roomName}`, 'error');
+      log(`An unknown error occurred while sending the request for room ${room.roomPrompt}`, 'error');
     }
     // Continue with other rooms even if one fails
   }

@@ -2,10 +2,9 @@
 pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { GameConfig, EntityType, Balance, Dead, Health, Traits, Inventory, Owner, VisitCount, KillCount } from "../codegen/index.sol";
+import { GameConfig, EntityType, Balance, Dead, Health, Traits, Inventory, Owner, VisitCount, KillCount, Level, LastVisitBlock } from "../codegen/index.sol";
 import { LibManager, LibRat } from "../libraries/Libraries.sol";
 import { ENTITY_TYPE } from "../codegen/common.sol";
-import { CREATOR_FEE } from "../constants.sol";
 import { Item } from "../structs.sol";
 
 /**
@@ -46,6 +45,7 @@ contract ManagerSystem is System {
     require(Dead.get(_ratId) == false, "rat is dead");
     require(EntityType.get(_roomId) == ENTITY_TYPE.ROOM, "not room");
     require(Balance.get(_roomId) >= 0, "no room balance");
+    require(Level.get(_roomId) == Level.get(_ratId), "rat and room level mismatch");
 
     // Increment visitor count
     VisitCount.set(_roomId, VisitCount.get(_roomId) + 1);
@@ -59,7 +59,7 @@ contract ManagerSystem is System {
 
     // Exit early if dead
     if (Health.get(_ratId) == 0) {
-      LibRat.killRat(_ratId, _roomId);
+      LibRat.killRat(_ratId, _roomId, false);
       KillCount.set(_roomId, KillCount.get(_roomId) + 1);
       return;
     }
@@ -68,8 +68,9 @@ contract ManagerSystem is System {
     // TRAITS
     // * * * * * * * * * * * * *
 
-    // Traits can have positive or negative value: effect on room balance unknown
+    // As traits always have positive value, this will always increase the room balance
     LibManager.removeTraitsFromRat(_ratId, _roomId, _traitsToRemoveFromRat);
+    // As traits always have positive value, this will always decrease the room balance
     LibManager.addTraitsToRat(_ratId, _roomId, _traitToAddToRat);
 
     // * * * * * * * * * * * * *
@@ -92,7 +93,9 @@ contract ManagerSystem is System {
     // LEVEL CHANGE
     // * * * * * * * * * * * * *
 
-    // Levels/floors are not used at the moment, but might be brought back...
-    // LibManager.checkLevelChange(_ratId);
+    LibManager.checkLevelChange(_ratId);
+
+    // Update last visit block
+    LastVisitBlock.set(_roomId, block.number);
   }
 }

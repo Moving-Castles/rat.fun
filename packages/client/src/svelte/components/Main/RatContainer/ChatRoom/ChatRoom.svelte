@@ -1,18 +1,28 @@
 <script lang="ts">
-  import { latestEvents } from "@modules/off-chain-sync/stores"
+  import { gameConfig, rat } from "@modules/state/base/stores"
+  import { latestEventsOnRatLevel } from "@modules/off-chain-sync/stores"
   import { walletNetwork } from "@modules/network"
   import { sendChatMessage } from "@modules/off-chain-sync"
   import { websocketConnected } from "@modules/off-chain-sync/stores"
+  import { onMount } from "svelte"
 
   import ChatEvent from "./ChatEvent.svelte"
   import ChatMessage from "./ChatMessage.svelte"
+  import ChatHeader from "./ChatHeader.svelte"
 
-  let clientHeight = $state(0)
   let value = $state("")
   let scrollElement = $state<null | HTMLElement>(null)
+  let suppressSound = $state(true)
+
+  onMount(() => {
+    // Suppress sounds for the first 2 seconds
+    setTimeout(() => {
+      suppressSound = false
+    }, 2000)
+  })
 
   $effect(() => {
-    if ($latestEvents[$latestEvents.length - 1] && scrollElement) {
+    if ($latestEventsOnRatLevel && scrollElement) {
       scrollElement.scrollTop = scrollElement?.scrollHeight ?? 0
     }
   })
@@ -22,7 +32,9 @@
     // Limit message length to 500 characters
     if (!value || value.length > 500) return
     try {
-      await sendChatMessage($walletNetwork, value)
+      // Level of the player's rat, or the first level if the rat is not deployed
+      const level = $rat?.level ?? $gameConfig?.levelList[0] ?? "unknown level"
+      await sendChatMessage($walletNetwork, level, value)
       value = ""
     } catch (e) {
       console.error(e)
@@ -30,14 +42,15 @@
   }
 </script>
 
-<div bind:clientHeight class="chat-window">
+<div class="chat-window">
+  <ChatHeader />
   <!-- Chat scroll -->
   <div bind:this={scrollElement} class="chat-scroll">
-    {#each $latestEvents as event (event.id)}
+    {#each $latestEventsOnRatLevel as event (event.id)}
       {#if event.topic == "chat__message"}
-        <ChatMessage {event} />
+        <ChatMessage {event} {suppressSound} />
       {:else}
-        <ChatEvent {event} />
+        <ChatEvent {event} {suppressSound} />
       {/if}
     {/each}
   </div>
@@ -57,8 +70,9 @@
 
 <style lang="scss">
   .chat-window {
-    height: calc(var(--game-window-height) - 80px - 440px);
+    height: 100%;
     display: flex;
+    overflow: hidden;
     flex-flow: column nowrap;
     position: relative;
     background: url("/images/bg-test.jpg");
@@ -66,27 +80,30 @@
     border-top: double 2px var(--foreground);
 
     .chat-scroll {
-      display: flex;
+      // display: flex;
       flex-flow: column nowrap;
-      height: calc(var(--game-window-height) - 80px - 444px);
+      height: 100%;
+      // background: red;
       overflow-y: scroll;
       padding: 8px;
-      gap: 8px;
+      gap: 4px;
     }
 
     input[disabled] {
-      background: grey;
+      background: var(--color-grey-mid);
     }
 
     .chat-input-container {
       height: 60px;
       display: flex;
       flex-flow: row nowrap;
-      color: white;
+      color: var(--foreground);
       bottom: 0;
       z-index: 1000;
       width: 100%;
       padding: 10px;
+      position: sticky;
+      bottom: 0;
 
       .chat-submit {
         height: 100%;
@@ -104,14 +121,14 @@
         font-family: var(--typewriter-font-stack);
         width: 100px;
         height: 100%;
-        color: white;
+        color: var(--foreground);
       }
 
       .chat-input {
         height: 100%;
         width: 100%;
         font-family: var(--typewriter-font-stack);
-        color: white;
+        color: var(--foreground);
         background-color: var(--color-grey-dark);
         border: var(--dashed-border-style);
         margin-right: 10px;

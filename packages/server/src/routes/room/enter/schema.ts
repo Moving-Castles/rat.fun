@@ -64,9 +64,13 @@ export const schema =     {
               to: { type: 'string'},
               amount: { type: 'number'}
             },
-          }
+          },
+          ratDead: { type: 'boolean'},
+          roomDepleted: { type: 'boolean'},
+          levelUp: { type: 'boolean'},
+          levelDown: { type: 'boolean'}
         },
-        required: ['log', 'healthChange', 'traitChanges', 'itemChanges', 'balanceTransfer']
+        required: ['log', 'healthChange', 'traitChanges', 'itemChanges', 'balanceTransfer', 'ratDead', 'roomDepleted', 'levelUp', 'levelDown']
       },
       403: {
         type: 'object',

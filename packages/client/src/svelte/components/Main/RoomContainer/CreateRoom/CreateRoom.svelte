@@ -1,15 +1,14 @@
 <script lang="ts">
-  import { player, gameConfig } from "@modules/state/base/stores"
+  import { player, rat, gameConfig, levels } from "@modules/state/base/stores"
   import { createRoom } from "./index"
   import { getUIState } from "@modules/ui/state.svelte"
   import { ENVIRONMENT } from "@mud/enums"
   import { walletNetwork } from "@modules/network"
-  import { initStaticContent } from "@modules/content"
 
   import CharacterCounter from "@components/Main/RoomContainer/CreateRoom/CharacterCounter.svelte"
-  import Spinner from "@components/Main/Shared/Spinner/Spinner.svelte"
+  import VideoLoader from "@components/Main/Shared/VideoLoader/VideoLoader.svelte"
 
-  const { rooms, enums, panes } = getUIState()
+  const { rooms } = getUIState()
 
   let {
     environment,
@@ -19,8 +18,7 @@
 
   let busy = $state(false)
   let roomDescription: string = $state("")
-
-  let newName: string = $state("room name")
+  let levelId: string = $state($rat?.level ?? $gameConfig.levelList[0])
 
   let invalidRoomDescriptionLength = $derived(
     roomDescription.length < 1 ||
@@ -28,7 +26,9 @@
   )
 
   let disabled = $derived(
-    invalidRoomDescriptionLength || busy || $player.balance < 250
+    invalidRoomDescriptionLength ||
+      busy ||
+      $player.balance < Number($levels[levelId].roomCreationCost ?? 0)
   )
 
   async function sendCreateRoom() {
@@ -36,26 +36,63 @@
     busy = true
     const newPrompt = roomDescription
 
-    await createRoom(environment, $walletNetwork, newName, newPrompt)
+    const result = await createRoom(
+      environment,
+      $walletNetwork,
+      newPrompt,
+      levelId
+    )
     busy = false
-    await initStaticContent()
 
-    goYourRooms()
-  }
-
-  const goYourRooms = () => {
-    rooms.back(true)
-    panes.set(enums.PANE.ROOM_CONTAINER, enums.ROOM_CONTAINER.YOUR_ROOMS)
+    if (result.roomId) {
+      busy = false
+      // Go to the preview
+      rooms.preview(result.roomId, false, false)
+    }
   }
 </script>
 
 <div class="create-room">
   {#if busy}
-    <div class="loading-container">
-      Room creation in progress...
-      <Spinner />
-    </div>
+    <VideoLoader />
   {:else}
+    <!-- LEVEL SELECTION -->
+    <div class="form-group level-selection">
+      <label for="level-toggles">
+        <span class="highlight">Select floor</span>
+      </label>
+      <div
+        id="level-toggles"
+        class="level-toggles"
+        role="radiogroup"
+        aria-label="Select level"
+      >
+        {#each Object.entries($levels) as [key, level]}
+          <button
+            class:active={levelId === key}
+            class:disabled={!$player.visitedLevels.includes(
+              key as `0x${string}`
+            )}
+            onclick={() => (levelId = key)}
+            disabled={!$player.visitedLevels.includes(key as `0x${string}`)}
+          >
+            {Number(level.index) * -1}
+          </button>
+        {/each}
+      </div>
+
+      <div class="level-description">
+        <div class="level-name">
+          Floor {Number($levels[levelId].index) * -1}: {$levels[levelId].name}
+        </div>
+        {#if $levels[levelId].prompt}
+          <div class="level-prompt">
+            {$levels[levelId].prompt}
+          </div>
+        {/if}
+      </div>
+    </div>
+
     <!-- ROOM DESCRIPTION -->
     <div class="form-group">
       <label for="room-description">
@@ -77,20 +114,33 @@
     <!-- ACTIONS -->
     <div class="actions">
       <button class:disabled onclick={sendCreateRoom}>
-        Create room (Cost: $250)
+        Create room (Cost: ${Number(
+          $levels[levelId]?.roomCreationCost ??
+            $levels[$gameConfig.levelList[0]]?.roomCreationCost ??
+            666
+        )})
       </button>
-      <button class="secondary" onclick={goYourRooms}>Cancel</button>
     </div>
   {/if}
 </div>
 
 <style lang="scss">
   .create-room {
-    padding: 1rem;
+    height: 100%;
 
     .form-group {
+      padding: 1rem;
+      display: block;
       margin-bottom: 15px;
       width: 100%;
+
+      &.level-selection {
+        margin-top: 15px;
+        padding-top: 15px;
+        padding-bottom: 15px;
+        border-top: var(--default-border-style);
+        border-bottom: var(--default-border-style);
+      }
 
       label {
         display: block;
@@ -102,8 +152,43 @@
         .highlight {
           background: var(--color-alert);
           padding: 5px;
-          color: black;
+          color: var(--background);
           font-weight: normal;
+        }
+      }
+
+      .level-toggles {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+
+        button {
+          width: 40px;
+          height: 40px;
+          padding: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: var(--foreground);
+          border: var(--default-border-style);
+          cursor: pointer;
+          font-family: var(--typewriter-font-stack);
+          font-size: var(--font-size-normal);
+
+          &.active {
+            background: var(--color-alert-priority);
+            color: var(--background);
+          }
+
+          &.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+          }
+
+          &:not(.disabled):hover {
+            background: var(--color-alert);
+            color: var(--background);
+          }
         }
       }
 
@@ -112,7 +197,7 @@
         width: 100%;
         padding: 5px;
         border: none;
-        background: white;
+        background: var(--foreground);
         font-family: var(--typewriter-font-stack);
         font-size: var(--font-size-normal);
         border-radius: 0;
@@ -126,25 +211,31 @@
       background: var(--color-grey-light);
       padding: 15px;
       font-size: var(--font-size-small);
-      color: black;
+      color: var(--background);
     }
 
     .actions {
       display: flex;
       flex-flow: column nowrap;
       gap: 12px;
+      margin-inline: 1rem;
+
       button {
         width: 100%;
-        height: 40px;
-        background: var(--color-alert);
-        color: black;
-        border: none;
+        height: 60px;
+        background: var(--color-alert-priority);
+        color: var(--background);
         cursor: pointer;
-        border: none;
         border-radius: 0;
+        border: var(--default-border-style);
 
         &.secondary {
           background: var(--color-grey-mid);
+        }
+
+        &:hover {
+          background: var(--color-alert);
+          color: var(--foreground);
         }
 
         &.disabled {
@@ -152,6 +243,26 @@
           background: var(--color-grey-mid);
         }
       }
+    }
+  }
+
+  .level-description {
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 12px;
+    background: var(--color-grey-dark);
+    padding: 10px;
+    margin-top: 10px;
+    max-width: 50ch;
+
+    .level-name {
+      border-bottom: var(--default-border-style);
+      color: var(--color-grey-light);
+    }
+
+    .level-prompt {
+      font-family: var(--special-font-stack);
+      font-size: 20px;
     }
   }
 </style>

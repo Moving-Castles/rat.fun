@@ -1,5 +1,5 @@
-import { OutcomeReturnValue, TraitChange, ItemChange } from "@modules/llm/types"
-import { Rat, Room,} from "@routes/room/enter/types"
+import { OutcomeReturnValue, TraitChange, ItemChange } from "@modules/types"
+import { Rat, Room,} from "@modules/types"
 
 export function createOutcomeCallArgs(rat: Rat, room: Room, outcome: OutcomeReturnValue) {
     const healthChange = outcome?.healthChange?.amount ?? 0;
@@ -10,7 +10,9 @@ export function createOutcomeCallArgs(rat: Rat, room: Room, outcome: OutcomeRetu
     
     // TRAIT struct
     const traitsToAddToRat = outcome?.traitChanges.filter(c => c.type === "add").map(c => {
-      return { name: c.name, value: c.value }
+      // Limit name length
+      // Value is always positive
+      return { name: c.name.slice(0, 48), value: Math.abs(c.value) }
     }) ?? [];
 
     // Only ID
@@ -18,7 +20,9 @@ export function createOutcomeCallArgs(rat: Rat, room: Room, outcome: OutcomeRetu
     
     // ITEM struct
     const itemsToAddToRat = outcome?.itemChanges.filter(c => c.type === "add").map(c => {
-      return { name: c.name, value: c.value }
+      // Limit name length
+      // Value is always positive
+      return { name: c.name.slice(0, 48), value: Math.abs(c.value)}
     }) ?? [];
   
     return [
@@ -54,12 +58,21 @@ export function updateOutcome(
     // - - - - - - - - -
     // HEALTH
     // - - - - - - - - -
+    
+    // Guard against undefined healthChange
+    if (!newOutcome.healthChange) {
+      newOutcome.healthChange = {
+        amount: 0,
+        logStep: 0
+      }
+    }
 
     newOutcome.healthChange.amount = newRat.stats.health - oldRat.stats.health
 
     // - - - - - - - - -
     // TRAITS
     // - - - - - - - - -
+
 
     newOutcome.traitChanges = []
 
@@ -137,6 +150,14 @@ export function updateOutcome(
     // BALANCE
     // - - - - - - - - -
 
+    // Guard against undefined balanceTransfer
+    if (!newOutcome.balanceTransfer) {
+      newOutcome.balanceTransfer = {
+        amount: 0,
+        logStep: 0
+      }
+    }
+    
     newOutcome.balanceTransfer.amount = newRat.balance - oldRat.balance
 
     return newOutcome

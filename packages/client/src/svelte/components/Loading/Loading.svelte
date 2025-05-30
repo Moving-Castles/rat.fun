@@ -1,23 +1,23 @@
 <script lang="ts">
-  import { createEventDispatcher, onMount } from "svelte"
+  import { onMount } from "svelte"
   import { ready, loadingMessage } from "@modules/network"
   import { initNetwork } from "@svelte/initNetwork"
   import { initEntities } from "@modules/systems/initEntities"
   import { ENVIRONMENT } from "@mud/enums"
   import { gsap } from "gsap"
 
-  export let environment: ENVIRONMENT
-
-  const dispatch = createEventDispatcher()
+  const { environment, loaded = () => {} } = $props<{
+    environment: ENVIRONMENT
+    loaded?: () => void
+  }>()
 
   let innerElement: HTMLDivElement
 
-  const done = () => dispatch("done")
-
-  // Finished when chain is ready
-  $: if ($ready) {
-    initSequence()
-  }
+  $effect(() => {
+    if ($ready) {
+      initSequence()
+    }
+  })
 
   const initSequence = async () => {
     const tl = gsap.timeline()
@@ -30,7 +30,7 @@
       delay: 1,
     })
     tl.call(() => {
-      done()
+      loaded()
     })
   }
 
@@ -67,7 +67,7 @@
 
         .highlight {
           background: var(--color-value);
-          color: black;
+          color: var(--background);
           padding: 5px;
 
           &.ready {

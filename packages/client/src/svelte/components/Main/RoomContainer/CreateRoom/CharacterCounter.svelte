@@ -21,7 +21,7 @@
     padding: 2px;
     &.error {
       background: var(--color-death);
-      color: black;
+      color: var(--background);
     }
   }
 </style>

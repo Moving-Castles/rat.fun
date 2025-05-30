@@ -2,7 +2,7 @@ import { FastifyReply } from 'fastify';
 import * as Sentry from '@sentry/node';
 
 // Import error classes
-import { OnchainDataError, RatNotFoundError, RoomNotFoundError } from '@modules/mud/getOnchainData';
+import { OnchainDataError, RatNotFoundError, RoomNotFoundError, PlayerNotFoundError } from '@modules/mud/getOnchainData/getEnterRoomData';
 import { LLMError, LLMAPIError, LLMParseError } from '@modules/llm/anthropic/callModel';
 import { SystemCallError, ContractCallError, OutcomeUpdateError } from '@modules/mud/createSystemCalls';
 
@@ -27,6 +27,14 @@ export function handleError(error: unknown, reply: FastifyReply): FastifyReply {
   if (error instanceof RoomNotFoundError) {
     return reply.status(404).send({ 
       error: 'Room not found', 
+      code: error.code,
+      message: error.message 
+    });
+  }
+
+  if (error instanceof PlayerNotFoundError) {
+    return reply.status(404).send({ 
+      error: 'Player not found', 
       code: error.code,
       message: error.message 
     });

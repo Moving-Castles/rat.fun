@@ -23,16 +23,16 @@
     position: sticky;
     top: 0;
     z-index: 1;
-    background: black;
+    background: var(--background);
 
     button {
       width: 100%;
-      background: var(--color-alert);
+      background: var(--color-alert-priority);
       padding: 20px;
       border: var(--default-border-style);
 
       &:hover {
-        background: var(--background);
+        background: var(--color-alert);
         color: var(--foreground);
       }
     }

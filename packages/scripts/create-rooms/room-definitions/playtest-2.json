@@ -1,31 +1,24 @@
 {
     "rooms": [
       {
-        "roomName": "Hungry angry cat",
         "roomPrompt": "Hungry angry cat. Only way out is by killing cat."
       },
       {
-        "roomName": "Cold Room",
         "roomPrompt": "Room is very cold. -89.2°C. After two minutes, high voltage current activates in floor. If rat survives, gets full room balance."
       },
       {
-        "roomName": "Pitch",
         "roomPrompt": "Marc Andreesen and the a16z crypto team will listen to a startup pitch by your rat. If the pitch does not strongly fit ALL investment criteria, Marc Andreessen will physically torment the rat to death while talking about techno-optimism. If success, {random:100-250} tokens pre-seed investment."
       },
       {
-        "roomName": "Evil Vending Machine",
         "roomPrompt": "Evil Vending Machine gives one random item worth between 30-60 tokens. Cost is 50 tokens. If the rat does not have 50 tokens, the machine will take the debt by draining 50 health."
       },
       {
-        "roomName": "Rat merchant",
         "roomPrompt": "Rat merchant. Rat swaps one item for another item worth 5 tokens less. Likes to give opposite items."
       },
       {
-        "roomName": "Microwave",
         "roomPrompt": "Room is microwave."
       },
       {
-        "roomName": "Euthanasia chamber",
         "roomPrompt": "Euthanasia chamber through gas. Balance is on secure hard-wallet within safe in room."
       }
     ]

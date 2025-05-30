@@ -1,16 +1,23 @@
 import { FastifyInstance, FastifyRequest } from 'fastify';
 import { schema } from '@routes/room/enter/schema';
+
 import dotenv from 'dotenv';
 dotenv.config();
 
-import { EnterRoomBody } from '@routes/room/enter/types';
+// Types
+import { 
+    EnterRoomBody,
+    EnterRoomData, 
+    EnterRoomReturnValue, 
+    EventsReturnValue, 
+    CorrectionReturnValue 
+} from '@modules/types';
 
 // WebSocket
 import { broadcast } from '@modules/websocket';
 import { createOutcomeMessage } from '@modules/websocket/constructMessages';
 
 // LLM  
-import { EventsReturnValue, CorrectionReturnValue } from '@modules/llm/types'
 import { constructEventMessages, constructCorrectionMessages } from '@modules/llm/constructMessages';
 
 // Anthropic
@@ -18,32 +25,27 @@ import { getLLMClient } from '@modules/llm/anthropic';
 import { callModel } from '@modules/llm/anthropic/callModel';
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY as string;
 
-// Groq
-// import { getLLMClient } from '@modules/llm/groq';
-// import { callModel } from '@modules/llm/groq/callModel';
-// const GROQ_API_KEY = process.env.GROQ_API_KEY as string;
-
 // MUD
-import { getOnchainData } from '@modules/mud/getOnchainData';
-import { components, systemCalls, network } from '@modules/mud/initMud';
+import { getEnterRoomData } from '@modules/mud/getOnchainData/getEnterRoomData';
+import { systemCalls, network } from '@modules/mud/initMud';
 
 // Signature
 import { getSenderId } from '@modules/signature';
 
 // CMS
-import { getSystemPrompts, writeOutcomeToCMS, CMSError } from '@modules/cms';
+import { getSystemPrompts } from '@modules/cms/private';
+import { writeOutcomeToCMS } from '@modules/cms/public';
+import { CMSError } from '@modules/cms';
 
-// Validate
+// Validation
 import { validateInputData } from './validation';
 
 // Error handling
 import { handleError } from './errorHandling';
+import { Hex } from 'viem';
 
 // Initialize LLM: Anthropic
 const llmClient = getLLMClient(ANTHROPIC_API_KEY);
-
-// Initialize LLM: Groq
-// const llmClient = getLLMClient(GROQ_API_KEY);
 
 const opts = { schema };  
 
@@ -56,19 +58,16 @@ async function routes (fastify: FastifyInstance) {
                 ratId,
             } = request.body;
 
-            // Get onchain data
-            console.time('–– Get on chain data');
-            const { room, rat } = getOnchainData(await network, components, ratId, roomId);
-            console.timeEnd('–– Get on chain data');
-
-            if(!room) {
-                throw new Error('Room not found');
-            }
-            
             // Recover player address from signature and convert to MUD bytes32 format
             const playerId = getSenderId(signature);
 
-            validateInputData(playerId, rat, room);
+            // Get onchain data
+            console.time('–– Get on chain data');
+            const { room, rat, player, level } = await getEnterRoomData(ratId, roomId, playerId) as Required<EnterRoomData>;
+            console.timeEnd('–– Get on chain data');
+
+            // Validate input data
+            validateInputData(player, rat, room);
 
             // Get system prompts from CMS
             console.time('–– CMS');
@@ -77,11 +76,11 @@ async function routes (fastify: FastifyInstance) {
 
             // Call event model
             console.time('–– Event LLM');
-            const eventMessages = constructEventMessages(rat, room);
-            const eventResults = await callModel(llmClient, eventMessages, combinedSystemPrompt) as EventsReturnValue;
+            const eventMessages = constructEventMessages(rat, room, level);
+            const eventResults = await callModel(llmClient, eventMessages, combinedSystemPrompt, 0.5) as EventsReturnValue;
             console.timeEnd('–– Event LLM');
 
-            console.log('Event results:', eventResults);
+            // console.log('Event results:', eventResults);
 
             // Apply the outcome suggested by the LLM to the onchain state and get back the actual outcome.
             console.time('–– Chain');
@@ -91,11 +90,12 @@ async function routes (fastify: FastifyInstance) {
                 roomValueChange, 
                 newRatValue, 
                 ratValueChange,
-                newRatHealth
+                newRatHealth,
+                newRatLevelIndex
             } = await systemCalls.applyOutcome(rat, room, eventResults.outcome);
             console.timeEnd('–– Chain');
 
-            console.log('Validated outcome:', validatedOutcome);
+            // console.log('Validated outcome:', validatedOutcome);
 
             // The event log might now not reflect the actual outcome.
             // Run it through the LLM again to get the corrected event log.
@@ -104,10 +104,10 @@ async function routes (fastify: FastifyInstance) {
             const correctedEvents = await callModel(llmClient, correctionMessages, correctionSystemPrompt, 0) as CorrectionReturnValue;
             console.timeEnd('–– Correction LLM');
 
-            console.log('Corrected events:', correctedEvents);
+            // console.log('Corrected events:', correctedEvents);
 
             // Broadcast outcome message
-            const newMessage= createOutcomeMessage(rat, newRatHealth, room, validatedOutcome);
+            const newMessage= createOutcomeMessage(player, rat, newRatHealth, room, validatedOutcome);
             await broadcast(newMessage);
 
             // Write outcome to CMS
@@ -117,7 +117,7 @@ async function routes (fastify: FastifyInstance) {
                 const resolvedNetwork = await network;
                 await writeOutcomeToCMS(
                     resolvedNetwork.worldContract?.address ?? "0x0",
-                    playerId, 
+                    player, 
                     room, 
                     rat,
                     newMessage.message as string,
@@ -142,13 +142,20 @@ async function routes (fastify: FastifyInstance) {
             }
             console.timeEnd('–– CMS write');
 
-            reply.send({
+            const response: EnterRoomReturnValue = {
+                id: ratId as Hex,
                 log: correctedEvents.log ?? [],
                 healthChange: validatedOutcome.healthChange,
                 traitChanges: validatedOutcome.traitChanges,
                 itemChanges: validatedOutcome.itemChanges,
-                balanceTransfer: validatedOutcome.balanceTransfer
-            });
+                balanceTransfer: validatedOutcome.balanceTransfer,
+                ratDead: newRatHealth == 0,
+                roomDepleted: newRoomValue == 0,
+                levelUp: newRatLevelIndex > level.index,
+                levelDown: newRatLevelIndex < level.index
+            }
+
+            reply.send(response);
 
         } catch (error) {
             return handleError(error, reply);

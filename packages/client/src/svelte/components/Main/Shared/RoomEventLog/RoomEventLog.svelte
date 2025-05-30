@@ -2,9 +2,9 @@
   import { onMount, onDestroy } from "svelte"
   import { client } from "@modules/content/sanity"
   import { queries } from "@modules/content/sanity/groq"
-  import OutcomeMessage from "../OutcomeMessage/OutcomeMessage.svelte"
+  import OutcomeMessage from "./OutcomeMessageTemp.svelte"
   import { publicNetwork } from "@modules/network"
-  import type { Outcome } from "@cms/sanity.types"
+  import type { Outcome } from "@sanity-types"
 
   let {
     roomId,
@@ -22,7 +22,9 @@
       console.error("Outcomes is undefined")
       return
     }
-    outcomes = update.reverse()
+    if (update.length > 0) {
+      outcomes = update.reverse()
+    }
   }
 
   onMount(() => {
@@ -53,11 +55,6 @@
     font-size: 10px;
   }
 
-  .outcome {
-    display: block;
-    margin-bottom: 12px;
-  }
-
   .logs {
     padding: 12px;
     display: flex;
@@ -73,6 +70,6 @@
     justify-content: space-between;
     position: sticky;
     top: 0;
-    background: black;
+    background: var(--background);
   }
 </style>

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { getUniqueEntity } from "@latticexyz/world-modules/src/modules/uniqueentity/getUniqueEntity.sol";
-import { Dead, Health, Balance, Inventory, Traits, Value, Level, LevelMinBalance, LevelMaxBalance, LevelList, Index } from "../codegen/index.sol";
+import { Dead, Health, Balance, Inventory, Traits, Value, Level, VisitedLevels, LevelMinBalance, LevelMaxBalance, LevelList, Index, Owner } from "../codegen/index.sol";
 import { ENTITY_TYPE } from "../codegen/common.sol";
 import { LibUtils } from "./LibUtils.sol";
 import { LibItem } from "./LibItem.sol";
@@ -42,20 +42,27 @@ library LibManager {
     uint256 oldRoomBalance = Balance.get(_roomId);
 
     if (_healthChange < 0) {
-      // __ Negative health change
+      // __ From rat health to room balance
+
+      // Rat's old health limits value transfer
+      uint256 valueChangeAmount = LibUtils.min(oldRatHealth, healthChangeAmount);
 
       // Reduce rat health
-      Health.set(_ratId, LibUtils.safeSubtract(oldRatHealth, healthChangeAmount));
+      Health.set(_ratId, oldRatHealth - valueChangeAmount);
 
       // Increase room balance
-      Balance.set(_roomId, oldRoomBalance + LibUtils.clamp(oldRatHealth, healthChangeAmount));
+      Balance.set(_roomId, oldRoomBalance + valueChangeAmount);
     } else {
-      // __ Positive health change
+      // __ From room balance to rat health
 
-      // Dont give the rat more health than the room has balance
-      Health.set(_ratId, oldRatHealth + LibUtils.clamp(healthChangeAmount, oldRoomBalance));
+      // Room's old balance limits value transfer
+      uint256 valueChangeAmount = LibUtils.min(oldRoomBalance, healthChangeAmount);
 
-      Balance.set(_roomId, LibUtils.safeSubtract(oldRoomBalance, healthChangeAmount));
+      // Increase rat health
+      Health.set(_ratId, oldRatHealth + valueChangeAmount);
+
+      // Reduce room balance
+      Balance.set(_roomId, oldRoomBalance - valueChangeAmount);
     }
   }
 
@@ -70,11 +77,8 @@ library LibManager {
     // - - - - - - - - -
     // Function removes traits from rat
     // - - - - - - - - -
-    // Value of traits is connected to room blance:
-    // - If a trait with negative value is removed, room balance goes down
-    // - If a trait with positive value is removed, room balance goes up
-    // Caveats:
-    // - Room can not remove traits with negative value if it does not have the balance to cover it
+    // Value of trait is always positive.
+    // Removing a trait adds the value to the room balance
     // - - - - - - - - -
 
     // If list is empty, exit early
@@ -84,26 +88,10 @@ library LibManager {
 
     for (uint i = 0; i < _traitsToRemoveFromRat.length; i++) {
       bytes32 traitId = _traitsToRemoveFromRat[i];
-      uint256 traitValueAmount = LibUtils.signedToUnsigned(Value.get(traitId));
-
-      if (Value.get(traitId) <= 0) {
-        // Trait value is negative (or 0), make sure room has enough balance to cover it
-        if (Balance.get(_roomId) >= traitValueAmount) {
-          // If so, remove value from room balance
-          Balance.set(_roomId, LibUtils.safeSubtract(Balance.get(_roomId), traitValueAmount));
-          // Remove trait from rat
-          Traits.set(_ratId, LibUtils.removeFromArray(Traits.get(_ratId), traitId));
-          // Destroy trait
-          // LibTrait.destroyTrait(_traitsToRemoveFromRat[i]);
-        }
-      } else {
-        // Trait value is positive, add value to room balance
-        Balance.set(_roomId, Balance.get(_roomId) + traitValueAmount);
-        // Remove trait from rat
-        Traits.set(_ratId, LibUtils.removeFromArray(Traits.get(_ratId), traitId));
-        // Destroy trait
-        // LibTrait.destroyTrait(_traitsToRemoveFromRat[i]);
-      }
+      // Trait value is positive, add value to room balance
+      Balance.set(_roomId, Balance.get(_roomId) + Value.get(traitId));
+      // Remove trait from rat
+      Traits.set(_ratId, LibUtils.removeFromArray(Traits.get(_ratId), traitId));
     }
   }
 
@@ -118,9 +106,8 @@ library LibManager {
     // - - - - - - - - -
     // Function adds traits to rat
     // - - - - - - - - -
-    // Value of traits is connected to room blance:
-    // - If a trait with negative value is added, room balance goes up
-    // - If a trait with positive value is added, room balance goes down
+    // Value of item is always positive.
+    // Adding an item subtracts the value from the room balance
     // Caveats:
     // - Room can not add traits with positive value if it does not have the balance to cover it
     // - A rat can have a maximum of 5 traits
@@ -138,21 +125,54 @@ library LibManager {
       }
 
       Item calldata newTrait = _traitsToAddToRat[i];
-      uint256 traitValueAmount = LibUtils.signedToUnsigned(newTrait.value);
 
-      if (newTrait.value <= 0) {
-        // Trait value is negative (or 0), add value to room balance
-        Balance.set(_roomId, Balance.get(_roomId) + traitValueAmount);
+      // Trait value is positive, make sure room has enough balance to cover it
+      if (Balance.get(_roomId) >= newTrait.value) {
+        // If so, remove value from room balance
+        Balance.set(_roomId, LibUtils.safeSubtract(Balance.get(_roomId), newTrait.value));
         // Create trait and add it to the rat
         Traits.push(_ratId, LibTrait.createTrait(newTrait));
-      } else {
-        // Trait value is positive, make sure room has enough balance to cover it
-        if (Balance.get(_roomId) >= traitValueAmount) {
-          // If so, remove value from room balance
-          Balance.set(_roomId, LibUtils.safeSubtract(Balance.get(_roomId), traitValueAmount));
-          // Create trait and add it to the rat
-          Traits.push(_ratId, LibTrait.createTrait(newTrait));
-        }
+      }
+    }
+  }
+
+  /**
+   * @notice Add items to rat inventory
+   * @dev Used by the Manager system to apply changes to a rat after room events
+   * @param _ratId Id of the rat
+   * @param _roomId Id of the room
+   * @param _itemsToAddToRat Information of items to add to rat
+   */
+  function addItemsToRat(bytes32 _ratId, bytes32 _roomId, Item[] calldata _itemsToAddToRat) internal {
+    // - - - - - - - - -
+    // Function adds items to rat
+    // - - - - - - - - -
+    // Value of item is always positive.
+    // Adding an item subtracts the value from the room balance
+    // Caveats:
+    // - Room can not add an item if it does not have the balance to cover it
+    // - A rat can have a maximum of 5 items in inventory
+    // - - - - - - - - -
+
+    // If list is empty, exit early
+    if (_itemsToAddToRat.length == 0) {
+      return;
+    }
+
+    for (uint i = 0; i < _itemsToAddToRat.length; i++) {
+      // Abort if inventory is full
+      if (Inventory.length(_ratId) >= MAX_INVENTORY_SIZE) {
+        return;
+      }
+
+      Item calldata newItem = _itemsToAddToRat[i];
+
+      // Make sure room has enough balance to cover it
+      if (Balance.get(_roomId) >= newItem.value) {
+        // If so, remove value from room balance
+        Balance.set(_roomId, LibUtils.safeSubtract(Balance.get(_roomId), newItem.value));
+        // Create item and add it to the rat
+        Inventory.push(_ratId, LibItem.createItem(newItem));
       }
     }
   }
@@ -179,54 +199,11 @@ library LibManager {
 
     for (uint i = 0; i < _itemsToRemoveFromRat.length; i++) {
       bytes32 itemId = _itemsToRemoveFromRat[i];
-      uint256 itemValueAmount = LibUtils.signedToUnsigned(Value.get(itemId));
+      uint256 itemValueAmount = Value.get(itemId);
       // Add value to room balance
       Balance.set(_roomId, Balance.get(_roomId) + itemValueAmount);
       // Remove item from rat
       Inventory.set(_ratId, LibUtils.removeFromArray(Inventory.get(_ratId), itemId));
-      // Destroy item
-      // LibItem.destroyItem(_itemsToRemoveFromRat[i]);
-    }
-  }
-
-  /**
-   * @notice Add items to rat inventory
-   * @dev Used by the Manager system to apply changes to a rat after room events
-   * @param _ratId Id of the rat
-   * @param _roomId Id of the room
-   * @param _itemsToAddToRat Information of items to add to rat
-   */
-  function addItemsToRat(bytes32 _ratId, bytes32 _roomId, Item[] calldata _itemsToAddToRat) internal {
-    // - - - - - - - - -
-    // Function adds items to rat
-    // - - - - - - - - -
-    // Value of item is always positive.
-    // Adding an item subtracts the value from the room balance
-    // Caveats:
-    // - A rat can have a maximum of 5 items in inventory
-    // - - - - - - - - -
-
-    // If list is empty, exit early
-    if (_itemsToAddToRat.length == 0) {
-      return;
-    }
-
-    for (uint i = 0; i < _itemsToAddToRat.length; i++) {
-      // Abort if inventory is full
-      if (Inventory.length(_ratId) >= MAX_INVENTORY_SIZE) {
-        return;
-      }
-
-      Item calldata newItem = _itemsToAddToRat[i];
-      uint256 itemValueAmount = LibUtils.signedToUnsigned(newItem.value);
-
-      // Make sure room has enough balance to cover it
-      if (Balance.get(_roomId) >= itemValueAmount) {
-        // If so, remove value from room balance
-        Balance.set(_roomId, LibUtils.safeSubtract(Balance.get(_roomId), itemValueAmount));
-        // Create item and add it to the rat
-        Inventory.push(_ratId, LibItem.createItem(newItem));
-      }
     }
   }
 
@@ -251,49 +228,70 @@ library LibManager {
       return;
     }
 
-    // Absolute value of value transfer
-    uint256 valueAmount = LibUtils.signedToUnsigned(_value);
+    // Absolute value of balance transfer
+    uint256 balanceChangeAmount = LibUtils.signedToUnsigned(_value);
     uint256 oldRoomBalance = Balance.get(_roomId);
     uint256 oldRatBalance = Balance.get(_ratId);
 
-    if (_value > 0) {
-      // __ From room to rat
+    if (_value < 0) {
+      // __ From rat balance to room balance
+
+      // Rat's old balance limits value transfer
+      uint256 valueChangeAmount = LibUtils.min(oldRatBalance, balanceChangeAmount);
+
+      // Reduce rat balance
+      Balance.set(_ratId, oldRatBalance - valueChangeAmount);
+
+      // Increase room balance
+      Balance.set(_roomId, oldRoomBalance + valueChangeAmount);
+    } else {
+      // __ From room balance to rat balance
+
+      // Room's old balance limits value transfer
+      uint256 valueChangeAmount = LibUtils.min(oldRoomBalance, balanceChangeAmount);
 
       // Add balance to rat
-      Balance.set(_ratId, oldRatBalance + LibUtils.clamp(valueAmount, oldRoomBalance));
+      Balance.set(_ratId, oldRatBalance + valueChangeAmount);
 
       // Subtract balance from room
-      Balance.set(_roomId, LibUtils.safeSubtract(oldRoomBalance, valueAmount));
-    } else {
-      // __ From rat to room
-
-      // Subtract balance from rat
-      Balance.set(_ratId, LibUtils.safeSubtract(oldRatBalance, valueAmount));
-
-      // Add balance to room
-      Balance.set(_roomId, oldRoomBalance + LibUtils.clamp(valueAmount, oldRatBalance));
+      Balance.set(_roomId, oldRoomBalance - valueChangeAmount);
     }
   }
 
+  /**
+   * @notice Check if the rat should level up or down
+   * @dev Used by the Manager system to apply changes to a rat after room events
+   * @param _ratId Id of the rat
+   */
   function checkLevelChange(bytes32 _ratId) internal {
     // Get the total value of the rat
     uint256 totalRatValue = LibRat.getTotalRatValue(_ratId);
 
     // Get the level of the rat
-    bytes32 levelId = Level.get(_ratId);
-    uint256 levelIndex = Index.get(levelId);
-    bytes32[] memory levelList = LevelList.get();
+    bytes32 currentLevelId = Level.get(_ratId);
+    uint256 currentLevelIndex = Index.get(currentLevelId);
+    bytes32 newLevelId = currentLevelId;
 
     // Check if the rat is below the min balance
-    if (totalRatValue < LevelMinBalance.get(levelId) && levelIndex > 0) {
+    if (totalRatValue < LevelMinBalance.get(currentLevelId) && currentLevelIndex > 0) {
       // Level down if we are not at the lowest level
-      Level.set(_ratId, levelList[levelIndex - 1]);
+      newLevelId = LevelList.getItem(currentLevelIndex - 1);
+      Level.set(_ratId, newLevelId);
     }
 
     // Check if the rat is above the max balance
-    if (totalRatValue >= LevelMaxBalance.get(levelId) && levelIndex < levelList.length - 1) {
+    if (totalRatValue >= LevelMaxBalance.get(currentLevelId) && currentLevelIndex < LevelList.length() - 1) {
       // Level up if we are not at the highest level
-      Level.set(_ratId, levelList[levelIndex + 1]);
+      newLevelId = LevelList.getItem(currentLevelIndex + 1);
+      Level.set(_ratId, newLevelId);
+    }
+
+    // On change, add level to visited levels
+    if (newLevelId != currentLevelId) {
+      bytes32 playerId = Owner.get(_ratId);
+      if (!LibUtils.arrayIncludes(VisitedLevels.get(playerId), newLevelId)) {
+        VisitedLevels.push(playerId, newLevelId);
+      }
     }
   }
 }

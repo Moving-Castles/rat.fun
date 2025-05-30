@@ -1,8 +1,9 @@
 <script lang="ts">
+  import { tippy } from "svelte-tippy"
   import { rat } from "@modules/state/base/stores"
 
-  import Trait from "@components/Main/RoomResult/InfoBox/Rat/Trait.svelte"
-  import Item from "@components/Main/RoomResult/InfoBox/Rat/Item.svelte"
+  import Trait from "@svelte/components/Main/Shared/Trait/Trait.svelte"
+  import Item from "@svelte/components/Main/Shared/Item/Item.svelte"
 </script>
 
 <div class="rat-info-box">
@@ -10,7 +11,12 @@
     <!-- TRAITS -->
     <div class="column traits">
       <!-- HEADER -->
-      <div class="header">
+      <div
+        class="header"
+        use:tippy={{
+          content: "Permanent personality traits of your rat.",
+        }}
+      >
         <div class="label">Traits</div>
         <div class="counter">{$rat?.traits?.length ?? 0}/5</div>
       </div>
@@ -23,7 +29,15 @@
     <div class="column inventory">
       <!-- HEADER -->
       <div class="header">
-        <div class="label">Inventory</div>
+        <div
+          class="label"
+          use:tippy={{
+            content:
+              "Items carried by your rat. You can drop them by clicking on them.",
+          }}
+        >
+          Inventory
+        </div>
         <div class="counter">{$rat?.inventory?.length ?? 0}/5</div>
       </div>
       <!-- INVENTORY -->

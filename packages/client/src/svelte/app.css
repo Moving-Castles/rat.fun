@@ -9,17 +9,19 @@
   --background: var(--black);
   --foreground: var(--white);
 
-  --color-grey-dark: #333;
-  --color-grey-mid: #666;
   --color-grey-light: #999;
+  --color-grey-mid: #666;
+  --color-grey-dark: #333;
+  --color-grey-darker: #222;
 
   /* --color-alert: rgb(255, 69, 0); */
-  --color-alert: rgb(180, 121, 27);
+  --color-alert: rgb(122, 94, 52);
+  --color-alert-priority: rgb(255, 128, 0);
 
   --color-secondary: rgb(163, 66, 31);
-  --color-health: rgb(95, 186, 95);
-  --color-value: rgba(243, 236, 42, 0.8);
-  --color-death: rgb(186, 30, 30);
+  --color-health: rgb(109, 196, 109);
+  --color-value: rgb(194, 164, 12);
+  --color-death: rgb(190, 0, 32);
   --color-item: rgb(160, 98, 177);
   --color-value-up: var(--color-health);
   --color-value-down: var(--color-death);
@@ -27,8 +29,8 @@
   --corporate-background: #bebebe;
   --corporate-foreground: #000000;
 
-  --game-window-width: min(100vw, 1920px);
-  --game-window-height: 100vh;
+  --game-window-width: calc(min(100vw, 1920px) - 30px);
+  --game-window-height: calc(100vh - 30px);
 
   /* * * * * * * * * * * * * *
   * Layout
@@ -60,8 +62,8 @@
 
   /* Layout: Room Item */
   --room-item-height: 260px;
-  --room-item-padding: 15px;
-  --room-item-image-height: 130px;
+  --room-item-padding: 10px;
+  --room-item-image-height: 240px;
 
   /* Layout: Room Result */
   --info-box-height: 260px;
@@ -78,11 +80,14 @@
 
   /* Typography */
   --typewriter-font-stack: "OCRA", monospace;
+  --special-font-stack: "Special Elite", monospace;
   --display-font-stack: "Rock Salt", cursive;
+  --label-font-stack: "Impact Label Reversed", monospace;
   --font-size-very-small: 9px;
   --font-size-small: 11px;
   --font-size-normal: 14px;
   --font-size-large: 26px;
+  --font-size-extra-large: 60px;
 
   /** Layers */
   --z-0: 0;
@@ -114,8 +119,8 @@ body {
 
 body,
 html {
-  background: var(--background);
-  color: var(--foreground);
+  background: black;
+  color: white;
   font-family: var(--typewriter-font-stack);
   font-size: var(--font-size-normal);
   margin: 0;
@@ -132,6 +137,13 @@ button {
   font-family: var(--typewriter-font-stack);
   cursor: pointer;
   user-select: none;
+}
+
+.priority {
+  background: var(--color-alert-priority) !important;
+  color: var(--white) !important;
+  border: none;
+  transition: all 0.2s ease;
 }
 
 .button-text {
@@ -183,7 +195,7 @@ button {
   );
 }
 .warning-mute {
-  color: white;
+  color: var(--foreground);
   border: none;
   background: repeating-linear-gradient(
     45deg,
@@ -193,8 +205,9 @@ button {
     #222 40px
   );
 }
+
 .warning-mute-inverse {
-  color: white;
+  color: var(--foreground);
   border: none;
   background: repeating-linear-gradient(
     -45deg,
@@ -203,4 +216,29 @@ button {
     #222 20px,
     #222 40px
   );
+}
+
+.tippy-content {
+  font-size: var(--font-size-small);
+  border-radius: 0;
+}
+
+.flash-fast-thrice {
+  animation: strobe 120ms steps(1, end) 3;
+}
+
+.flash-slow-thrice {
+  animation: strobe 240ms steps(1, end) 3;
+}
+
+@keyframes strobe {
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes strobe-slow {
+  20% {
+    opacity: 0;
+  }
 }

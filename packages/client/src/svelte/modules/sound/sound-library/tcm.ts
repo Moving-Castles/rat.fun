@@ -1,8 +1,24 @@
 import type { SoundAssets } from "../types.js"
 
 export const tcm: SoundAssets = {
+  ratDeath: {
+    src: "./sounds/tcm/death.mp3",
+    volume: 1,
+  },
+  ratsUp: {
+    src: "./sounds/tcm/up.mp3",
+    volume: 0.8,
+  },
+  ratsDown: {
+    src: "./sounds/tcm/down.mp3",
+    volume: 0.8,
+  },
+  type2: {
+    src: "./sounds/tcm/type2.wav",
+    volume: 0.8,
+  },
   alert: {
-    src: "./sounds/tcm/select_hit_01.mp3",
+    src: "./sounds/tcm/selection_hit_01.mp3",
     volume: 1,
   },
   dig: {
@@ -75,6 +91,10 @@ export const tcm: SoundAssets = {
   },
   TRX_wait_b: {
     src: "./sounds/tcm/TRX_wait-sfx_b_01.mp3",
+    volume: 1,
+  },
+  TRX_yes_c: {
+    src: "./sounds/tcm/TRX_yes-sfx_02.mp3",
     volume: 1,
   },
   TRX_wait_b_07: {

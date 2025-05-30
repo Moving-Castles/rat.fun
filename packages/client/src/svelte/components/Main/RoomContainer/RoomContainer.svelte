@@ -1,30 +1,33 @@
 <script lang="ts">
   import { getUIState } from "@modules/ui/state.svelte"
+  import { ENVIRONMENT } from "@mud/enums"
 
-  import RoomsListing from "@components/Main/Shared/RoomsListing/RoomsListing.svelte"
+  import RoomListing from "@svelte/components/Main/Shared/RoomListing/RoomListing.svelte"
   import YourRooms from "@components/Main/RoomContainer/YourRooms/YourRooms.svelte"
   import CreateRoom from "@components/Main/RoomContainer/CreateRoom/CreateRoom.svelte"
 
-  import { ENVIRONMENT } from "@mud/enums"
+  let { environment }: { environment: ENVIRONMENT } = $props()
 
-  const { enums, panes } = getUIState()
-
-  export let environment: ENVIRONMENT
+  const { enums, panes, rooms } = getUIState()
 </script>
 
 <div class="room-container">
   <div class="pane-switch">
     <button
-      onclick={() =>
-        panes.set(enums.PANE.ROOM_CONTAINER, enums.ROOM_CONTAINER.ALL_ROOMS)}
+      onclick={() => {
+        panes.set(enums.PANE.ROOM_CONTAINER, enums.ROOM_CONTAINER.ALL_ROOMS)
+        rooms.back()
+      }}
       class:selected={panes.roomContainer === enums.ROOM_CONTAINER.ALL_ROOMS}
       class="pane-switch-item"
     >
       ALL ROOMS
     </button>
     <button
-      onclick={() =>
-        panes.set(enums.PANE.ROOM_CONTAINER, enums.ROOM_CONTAINER.YOUR_ROOMS)}
+      onclick={() => {
+        panes.set(enums.PANE.ROOM_CONTAINER, enums.ROOM_CONTAINER.YOUR_ROOMS)
+        rooms.back(true)
+      }}
       class:selected={[
         enums.ROOM_CONTAINER.YOUR_ROOMS,
         enums.ROOM_CONTAINER.CREATE_ROOM,
@@ -36,7 +39,7 @@
   </div>
 
   {#if panes.roomContainer === enums.ROOM_CONTAINER.ALL_ROOMS}
-    <RoomsListing isOwnRoomListing={false} />
+    <RoomListing isOwnRoomListing={false} />
   {/if}
 
   {#if panes.roomContainer === enums.ROOM_CONTAINER.YOUR_ROOMS}
@@ -57,6 +60,7 @@
     width: 100%;
     border-bottom: var(--default-border-style);
     height: 100%;
+    background: black;
   }
 
   .pane-switch {
@@ -72,13 +76,19 @@
     padding-inline: 20px;
     border: none;
     outline: none;
+    font-family: var(--label-font-stack);
+    font-size: var(--font-size-large);
     background: var(--color-grey-mid);
-    color: white;
+    color: var(--background);
     width: 50%;
+
+    &:hover {
+      background: var(--color-grey-light);
+    }
 
     &.selected {
       background: var(--color-alert);
-      color: black;
+      color: var(--foreground);
     }
   }
 

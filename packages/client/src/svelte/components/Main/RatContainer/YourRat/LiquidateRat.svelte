@@ -3,23 +3,30 @@
   import { liquidateRat } from "@modules/action"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
   import { playSound } from "@modules/sound"
+  import { player } from "@modules/state/base/stores"
   import { tippy } from "svelte-tippy"
+  import NumberGoing from "@components/Main/Shared/NumberGoing/NumberGoing.svelte"
   import Spinner from "@components/Main/Shared/Spinner/Spinner.svelte"
+  import { walletNetwork } from "@modules/network"
+
   import {
     ModalTarget,
     getModalState,
   } from "@components/Main/Modal/state.svelte"
+  import { sendLiquidateRatMessage } from "@modules/off-chain-sync"
 
   let { modal } = getModalState()
 
   let busy = $state(false)
+  let going = $state(false)
   let confirming = $state(false)
-  let liquidationMessage = $state("CONFIRM LIQUIDATION")
+  let liquidationMessage = $state("CONFIRM RAT LIQUIDATION")
 
   const sendLiquidateRat = async () => {
     if (busy) return
     busy = true
     const action = liquidateRat()
+
     try {
       liquidationMessage = "Eliminating rat..."
       await waitForCompletion(action)
@@ -29,12 +36,15 @@
       console.error(e)
     } finally {
       liquidationMessage = "Elimination complete"
-
+      sendLiquidateRatMessage($walletNetwork, $player.ownedRat)
       setTimeout(() => {
         modal.close()
       }, 1200)
     }
   }
+
+  // Withhold changes to this value until the
+  // ratTotalValue
 </script>
 
 <div class="liquidate-rat">
@@ -42,9 +52,12 @@
     use:tippy={{ content: "Total rat value based on rat inventory" }}
     class="data-cell"
   >
-    <div class="inner">
+    <div class="inner" class:priority={going}>
       <div class="data-cell-label">Rat Value:</div>
-      <div class="data-cell-value">${$ratTotalValue}</div>
+      <div class="data-cell-value">
+        $<NumberGoing bind:going muted={true} value={$ratTotalValue} />
+      </div>
+      <!-- <div class="data-cell-value">${$ratTotalValue}</div> -->
     </div>
   </div>
   <button
@@ -102,7 +115,7 @@
     align-items: center;
     justify-content: center;
     background-color: var(--color-value);
-    color: black;
+    color: var(--background);
 
     .inner {
       display: flex;
@@ -164,8 +177,13 @@
     button {
       height: 60px;
       border: var(--default-border-style);
-      color: white;
-      background: black;
+      color: var(--background);
+      background: var(--color-death);
+
+      &:hover {
+        background: var(--background);
+        color: var(--foreground);
+      }
     }
   }
 

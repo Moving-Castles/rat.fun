@@ -34,7 +34,9 @@ declare global {
     name?: mudComponents["Name"],
     balance?: mudComponents["Balance"],
     creationBlock?: mudComponents["CreationBlock"],
+    lastVisitBlock?: mudComponents["LastVisitBlock"],
     level?: mudComponents["Level"],
+    visitedLevels?: mudComponents["VisitedLevels"],
     value?: mudComponents["Value"],
     dead?: mudComponents["Dead"],
     health?: mudComponents["Health"],
@@ -42,13 +44,12 @@ declare global {
     inventory?: mudComponents["Inventory"],
     ownedRat?: mudComponents["OwnedRat"],
     owner?: mudComponents["Owner"],
-    roomPrompt?: mudComponents["RoomPrompt"],
+    prompt?: mudComponents["Prompt"],
     index?: mudComponents["Index"],
     roomCreationCost?: mudComponents["RoomCreationCost"],
     levelList?: mudComponents["LevelList"],
     levelMinBalance?: mudComponents["LevelMinBalance"],
     levelMaxBalance?: mudComponents["LevelMaxBalance"],
-    gameConfig?: GameConfigObject,
     visitCount?: mudComponents["VisitCount"],
     killCount?: mudComponents["KillCount"]
   }
@@ -57,8 +58,10 @@ declare global {
     [key: string]: number | bigint | ENTITY_TYPE | Hex | readonly Hex[] | string,
     entityType: ENTITY_TYPE.PLAYER,
     name: mudComponents["Name"],
+    visitedLevels: mudComponents["VisitedLevels"],
     balance: mudComponents["Balance"],
     ownedRat: mudComponents["OwnedRat"],
+    pastRats: mudComponents["PastRats"],
     creationBlock: mudComponents["CreationBlock"]
   }
 
@@ -85,10 +88,11 @@ declare global {
     balance: mudComponents["Balance"],
     level: mudComponents["Level"],
     name: mudComponents["Name"],
-    roomPrompt: mudComponents["RoomPrompt"],
+    prompt: mudComponents["Prompt"],
     visitCount: mudComponents["VisitCount"],
     killCount: mudComponents["KillCount"],
-    creationBlock: mudComponents["CreationBlock"]
+    creationBlock: mudComponents["CreationBlock"],
+    lastVisitBlock: mudComponents["LastVisitBlock"]
   }
 
   type Trait = {
@@ -106,9 +110,11 @@ declare global {
   }
 
   type Level = {
-    [key: string]: ENTITY_TYPE | number | bigint,
+    [key: string]: ENTITY_TYPE | number | bigint | string,
     entityType: ENTITY_TYPE.LEVEL,
     index: mudComponents["Index"],
+    name: mudComponents["Name"],
+    prompt: mudComponents["Prompt"],
     levelMinBalance: mudComponents["LevelMinBalance"],
     levelMaxBalance: mudComponents["LevelMaxBalance"],
     roomCreationCost: mudComponents["RoomCreationCost"]

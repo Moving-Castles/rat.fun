@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
-import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { GameConfig, Balance, Level, RoomCreationCost, LevelList, Owner } from "../codegen/index.sol";
+import { GameConfig, EntityType, Balance, Level, VisitedLevels, RoomCreationCost, LevelList, Owner, OwnedRat } from "../codegen/index.sol";
 import { LibRoom, LibUtils } from "../libraries/Libraries.sol";
 import { MAX_ROOM_PROMPT_LENGTH } from "../constants.sol";
 import { ENTITY_TYPE } from "../codegen/common.sol";
@@ -19,31 +18,33 @@ contract RoomSystem is System {
   /**
    * @notice Create a room
    * @dev Only admin can call this function
-   * @param playerId The id of the player creating the room
+   * @param _playerId The id of the player creating the room
+   * @param _levelId The id of the level the room should be created on
    * @param _roomId The id of the room
-   * @param _roomName The name of the room
-   * @param _roomPrompt The prompt for the room
+   * @param _prompt The prompt for the room
    * @return newRoomId The id of the new room
    */
   function createRoom(
-    bytes32 playerId,
+    bytes32 _playerId,
+    bytes32 _levelId,
     bytes32 _roomId,
-    string memory _roomName,
-    string memory _roomPrompt
+    string memory _prompt
   ) public onlyAdmin returns (bytes32 newRoomId) {
-    // TODO: What level is room created on?
-    // Currently hardcoded to level 0
-    bytes32 levelId = LevelList.get()[0];
+    // Player can only create rooms on levels that their rats have visited
+    require(LibUtils.arrayIncludes(VisitedLevels.get(_playerId), _levelId), "invalid level");
 
-    uint256 roomCreationCost = RoomCreationCost.get(levelId);
+    // Room id can be 0 (which generates a new id) or an unused entity id
+    require(_roomId == bytes32(0) || EntityType.get(_roomId) == ENTITY_TYPE.NONE, "room id already in use");
 
-    require(Balance.get(playerId) >= roomCreationCost, "balance too low");
+    uint256 roomCreationCost = RoomCreationCost.get(_levelId);
+
+    require(Balance.get(_playerId) >= roomCreationCost, "balance too low");
 
     // Deduct from player's balance
-    Balance.set(playerId, Balance.get(playerId) - roomCreationCost);
+    Balance.set(_playerId, Balance.get(_playerId) - roomCreationCost);
 
     // Create room
-    newRoomId = LibRoom.createRoom(_roomName, _roomPrompt, playerId, levelId, _roomId);
+    newRoomId = LibRoom.createRoom(_prompt, _playerId, _levelId, _roomId);
   }
 
   function closeRoom(bytes32 _roomId) public {
@@ -53,7 +54,5 @@ contract RoomSystem is System {
     // Transfer balance to player
     Balance.set(playerId, Balance.get(playerId) + Balance.get(_roomId));
     Balance.set(_roomId, 0);
-
-    // TODO: Possibly destroy room
   }
 }
