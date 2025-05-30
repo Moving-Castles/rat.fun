@@ -1,22 +1,30 @@
 <script lang="ts">
   import type { MergedLogEntry } from "./types"
-  import type { ServerReturnValue } from "@components/Main/RoomResult/types"
+  import type { EnterRoomReturnValue } from "@server/modules/types"
+  import { RESULT_EVENT } from "@modules/ui/enums"
   import { mergeLog } from "./index"
   import { gsap } from "gsap"
   import { playSound } from "@modules/sound"
 
   import LogItem from "@components/Main/RoomResult/Log/LogItem.svelte"
-  import Spinner from "@components/Main/Shared/Spinner/Spinner.svelte"
+  import VideoLoader from "@components/Main/Shared/VideoLoader/VideoLoader.svelte"
 
   let {
     result,
     animationstarted,
-  }: { result: ServerReturnValue | undefined; animationstarted: boolean } =
-    $props()
+    resultEvent,
+    onComplete,
+  }: {
+    result: EnterRoomReturnValue | undefined
+    animationstarted: boolean
+    resultEvent: RESULT_EVENT
+    onComplete: () => void
+  } = $props()
 
   // Elements
   let logElement: HTMLDivElement
   let returnButtonElement: HTMLButtonElement
+  let done = $state(false)
 
   import { getUIState } from "@modules/ui/state.svelte"
   const { rooms } = getUIState()
@@ -56,18 +64,23 @@
         duration: 0.5,
         ease: "power2.out",
       })
+      // Add a callback to the parent timeline to check for events
+      // The call is added to the end of the timeline by default
+      logTimeline.call(() => {
+        done = true
+        onComplete()
+      })
       // All timelines added, play the parent timeline
       logTimeline.play()
     }
   }
 
-  // const restartAnimation = () => {
-  //   logTimeline.restart()
-  // }
-
   const sendLeaveRoom = () => {
     playSound("tcm", "enteredPod")
-    rooms.close()
+    rooms.close(
+      resultEvent !== RESULT_EVENT.LEVEL_UP &&
+        resultEvent !== RESULT_EVENT.LEVEL_DOWN
+    )
   }
 </script>
 
@@ -77,19 +90,20 @@
       <LogItem {logEntry} onTimeline={addToTimeline} />
     {/each}
   {:else if animationstarted}
-    EXPERIMENT IN PROGRESS: <Spinner />
+    <VideoLoader />
   {/if}
 
-  <button
-    class="return"
-    bind:this={returnButtonElement}
-    onclick={sendLeaveRoom}
-  >
-    LEAVE ROOM
-  </button>
+  {#if resultEvent === RESULT_EVENT.NONE || resultEvent === RESULT_EVENT.ROOM_DEPLETED}
+    <button
+      disabled={!done}
+      class="return"
+      bind:this={returnButtonElement}
+      onclick={sendLeaveRoom}
+    >
+      LEAVE ROOM
+    </button>
+  {/if}
 </div>
-
-<!-- <button class="restart-button" onclick={restartAnimation}>Restart</button> -->
 
 <style lang="scss">
   .log {
@@ -107,16 +121,20 @@
       left: 10px;
       margin: 0;
       width: calc(100% - 20px);
-      padding: 10px;
-      background: var(--color-alert);
+      padding: 20px;
+      background: var(--color-alert-priority);
       margin-top: 20px;
       cursor: pointer;
-    }
-  }
+      border: var(--default-border-style);
 
-  .restart-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
+      &[disabled] {
+        background: var(--color-grey-dark);
+        color: var(--black);
+      }
+      &:hover {
+        background: var(--color-alert);
+        color: var(--foreground);
+      }
+    }
   }
 </style>

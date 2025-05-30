@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: Unlicense
 pragma solidity >=0.8.24;
-import { console } from "forge-std/console.sol";
 import { BaseTest } from "../BaseTest.sol";
 import "../../src/codegen/index.sol";
 import "../../src/libraries/Libraries.sol";
@@ -21,5 +20,16 @@ contract PlayerSystemTest is BaseTest {
     assertEq(Name.get(playerId), "alice");
     assertEq(Balance.get(playerId), GameConfig.getStartingBalance());
     assertEq(CreationBlock.get(playerId), block.number);
+  }
+
+  function testRevertAlreadySpawned() public {
+    vm.startPrank(alice);
+
+    world.ratroom__spawn("alice");
+
+    vm.expectRevert("already spawned");
+    world.ratroom__spawn("alice");
+
+    vm.stopPrank();
   }
 }

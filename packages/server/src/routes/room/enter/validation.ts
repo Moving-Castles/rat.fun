@@ -1,8 +1,8 @@
-import { Rat, Room } from "./types";
+import { Rat, Room, Player } from "@modules/types";
 
-export function validateInputData(playerId: string, rat: Rat, room: Room) {
+export function validateInputData(player: Player, rat: Rat, room: Room) {
     // Check that sender owns the rat
-    if (rat.owner !== playerId) {
+    if (rat.owner !== player.id) {
         throw new Error('You are not the owner of the rat.');
     } 
     
@@ -11,8 +11,13 @@ export function validateInputData(playerId: string, rat: Rat, room: Room) {
         throw new Error('The rat is dead.');
     }
 
+    // Check that rat and room level are the same
+    if (rat.level !== room.level) {
+        throw new Error('The rat and room level are different.');
+    }
+
     // Check that room balance is positive
-    if (room.balance <= 0) {
+    if (room.balance == 0) {
         throw new Error('The room balance is negative.');
     }
 }

@@ -2,10 +2,12 @@
   import { createRat } from "@modules/action"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
   import { playSound } from "@modules/sound"
-  import { player } from "@modules/state/base/stores"
+  import { gameConfig, player } from "@modules/state/base/stores"
   import { generateRatName } from "./index"
+  import { sendDeployRatMessage } from "@modules/off-chain-sync"
+  import { walletNetwork } from "@modules/network"
 
-  import Spinner from "@components/Main/Shared/Spinner/Spinner.svelte"
+  import VideoLoader from "@components/Main/Shared/VideoLoader/VideoLoader.svelte"
 
   let busy = $state(false)
   let done = $state(false)
@@ -23,37 +25,42 @@
       console.error(e)
     } finally {
       done = true
+      sendDeployRatMessage($walletNetwork)
     }
   }
 
-  let disabled = $derived(!name || ($player?.balance ?? 0) < 250)
+  let disabled = $derived(
+    !name ||
+      ($player?.balance ?? 0) <
+        Number($gameConfig?.gameConfig?.ratCreationCost ?? 0)
+  )
 </script>
 
-<div class="main">
-  {#if done}
+{#if busy}
+  <VideoLoader text="RAT" />
+{:else if done}
+  <div class="deploy-rat">
     <div class="done">
       <span>Rat deployed. Stand by...</span>
     </div>
-  {:else}
+  </div>
+{:else}
+  <div class="deploy-rat">
     <div class="image-container warning-mute-inverse">
       <img src="/images/rat.png" alt="Rat" />
       <small>
         {name}
       </small>
     </div>
-    <button class:disabled class:busy onclick={sendCreateRat}>
-      {#if busy}
-        <div class="spinner"><Spinner /></div>
-      {:else}
-        <span class="button-text">Deploy new rat</span><br />
-        <span>Cost: $100</span>
-      {/if}
+    <button class:disabled onclick={sendCreateRat}>
+      <span class="button-text">Deploy new rat</span><br />
+      <span>Cost: ${Number($gameConfig?.gameConfig?.ratCreationCost)}</span>
     </button>
-  {/if}
-</div>
+  </div>
+{/if}
 
 <style lang="scss">
-  .main {
+  .deploy-rat {
     text-align: center;
     color: var(--white);
     width: 100%;
@@ -71,7 +78,8 @@
   .image-container {
     display: flex;
     flex-flow: column nowrap;
-    gap: 20px;
+    // gap: 20px;
+    padding: 20px;
 
     img {
       width: 100%;
@@ -85,12 +93,12 @@
     padding: 20px;
     width: 100%;
     height: 80px;
-    background: var(--color-alert);
+    background: var(--color-alert-priority);
     border: none;
     border-top: var(--default-border-style);
 
     &:hover {
-      background: var(--background);
+      background: var(--color-alert);
       color: var(--foreground);
     }
 
@@ -107,7 +115,6 @@
     }
 
     &.busy {
-      background: var(--color-alert);
       pointer-events: none;
       cursor: default;
       background: var(--color-grey-light);

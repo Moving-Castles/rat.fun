@@ -1,11 +1,11 @@
 <script lang="ts">
   import CreateRoomButton from "@components/Main/RoomContainer/YourRooms/CreateRoomButton.svelte"
-  import RoomsListing from "@components/Main/Shared/RoomsListing/RoomsListing.svelte"
+  import RoomListing from "@svelte/components/Main/Shared/RoomListing/RoomListing.svelte"
 </script>
 
 <div class="your-rooms">
   <CreateRoomButton />
-  <RoomsListing isOwnRoomListing={true} />
+  <RoomListing isOwnRoomListing={true} />
 </div>
 
 <style lang="scss">

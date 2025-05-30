@@ -1,27 +1,101 @@
 <script lang="ts">
   import type { Hex } from "viem"
   import { getUIState } from "@modules/ui/state.svelte"
-  import { blocksToReadableTime } from "@modules/utils"
+  import { blocksToReadableTime, renderSafeString } from "@modules/utils"
   import { blockNumber } from "@modules/network"
+  import { levels } from "@modules/state/base/stores"
+  import type { PlotPoint } from "@components/Main/Shared/RoomStats/types"
+  import { staticContent } from "@modules/content"
+  import RoomStats from "@components/Main/Shared/RoomStats/RoomStats.svelte"
 
   let { roomId, room }: { roomId: Hex; room: Room } = $props()
 
   let { rooms } = getUIState()
 
-  let profit = $derived(Number(room.balance) - 250)
+  let profit = $derived(
+    Number(room.balance) - Number($levels[room.level]?.roomCreationCost ?? 0)
+  )
+
+  let plotData: PlotPoint[] = $derived.by(() => {
+    let sanityRoomContent = $staticContent?.rooms?.find(r => r.title == roomId)
+
+    const outcomes =
+      $staticContent?.outcomes?.filter(o => o.roomId == roomId) || []
+    // Sort the outcomes in order of creation
+    outcomes.sort((a, b) => {
+      return new Date(b._createdAt).getTime() - new Date(a._createdAt).getTime()
+    })
+    const roomOutcomes = outcomes.reverse()
+
+    // Map the values
+    return [
+      {
+        time: 0,
+        roomValue: 250,
+        meta: sanityRoomContent,
+      },
+      ...roomOutcomes,
+    ].map((o, i) => {
+      return {
+        time: i,
+        value: o?.roomValue || 0,
+        meta: o,
+      }
+    })
+  })
 </script>
 
-<button class="room-listing-item" onclick={() => rooms.preview(roomId, true)}>
-  <div class="profit">
-    <div
-      class="profit-indicator"
-      class:positive={profit > 0}
-      class:negative={profit < 0}
-    >
-      <span>Profit: ${profit}</span>
+<!-- svelte-ignore a11y_no_static_element_interactions -->
+<!-- svelte-ignore a11y_click_events_have_key_events -->
+<button
+  onclick={() => rooms.preview(roomId, true, true, false)}
+  class="room-listing-item"
+  class:depleted={room.balance == 0}
+>
+  <div class="room-listing-left">
+    <div class="room-stats">
+      <RoomStats height={200} {plotData} empty={plotData.length == 1} />
+    </div>
+    <div class="room-info-row bottom">
+      <!-- PROFIT -->
+      <div
+        class="profit-indicator"
+        class:positive={profit > 0}
+        class:negative={profit < 0}
+      >
+        <span>
+          {#if room.balance == 0}
+            Depleted
+          {:else}
+            ${profit}
+          {/if}
+        </span>
+      </div>
+      <!-- BALANCE -->
+      <span class="balance" class:depleted={room.balance == 0}>
+        Balance: ${room.balance}
+      </span>
+      <!-- DIVIDER -->
+      <span class="divider">•</span>
+      <!-- VISITOR COUNT -->
+      <span class="visit-count small">
+        {#if room.visitCount === 1}
+          {room.visitCount} visit
+        {:else}
+          {room.visitCount} visits
+        {/if}
+      </span>
+      {#if room?.killCount > 0}
+        <!-- DIVIDER -->
+        <span class="divider">•</span>
+        <!-- KILL RATE -->
+        <span class="kill-count small">
+          {room.killCount} kill{#if room.killCount > 1}s{/if}
+        </span>
+      {/if}
     </div>
   </div>
-  <!-- INFO -->
+
   <div class="room-info">
     <!-- SECTION 1 -->
     <div class="section">
@@ -41,7 +115,7 @@
       <!-- PROMPT -->
       <div class="room-prompt">
         <div class="content">
-          {room.roomPrompt}
+          {renderSafeString(room.prompt)}
         </div>
       </div>
     </div>
@@ -49,31 +123,17 @@
     <!-- SECTION 2 -->
     <div class="section">
       <!-- BOTTOM ROW -->
-      <div class="room-info-row bottom">
-        <!-- BALANCE -->
-        <span class="balance" class:depleted={room.balance == 0}>
-          Balance: ${room.balance}
-        </span>
-        <!-- DIVIDER -->
-        <span class="divider">•</span>
-        <!-- VISITOR COUNT -->
-        <span class="visit-count small">{room.visitCount} visits</span>
-        {#if room?.killCount > 0}
-          <!-- DIVIDER -->
-          <span class="divider">•</span>
-          <!-- KILL RATE -->
-          <span class="kill-count small">
-            {room.killCount} kill{#if room.killCount > 1}s{/if}
-          </span>
-        {/if}
-      </div>
     </div>
   </div>
 </button>
 
 <style lang="scss">
   .room-listing-item {
-    display: flex;
+    color: white;
+    text-decoration: none;
+    display: grid;
+    grid-template-columns: 390px 1fr;
+    gap: 12px;
     background: transparent;
     outline: none;
     border: none;
@@ -82,29 +142,36 @@
     cursor: pointer;
     height: var(--room-item-height);
     width: 100%;
-    color: white;
+    color: var(--foreground);
     text-align: left;
     overflow: hidden;
 
     &:hover {
-      background-color: #222;
+      background-color: var(--color-grey-darker);
     }
 
-    .profit {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 50%;
-      height: 100%;
+    &.depleted {
+      opacity: 0.5;
+    }
+
+    .room-listing-left {
+      height: 200px;
+
+      .room-stats {
+        height: 100%;
+        margin-bottom: 10px;
+      }
+
+      .stats {
+      }
 
       .profit-indicator {
         text-align: center;
-        display: flex;
+        display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 70%;
-        aspect-ratio: 1/1;
         border: var(--default-border-style);
+        padding: 5px;
 
         &.positive {
           background-color: var(--color-health);
@@ -113,6 +180,25 @@
         &.negative {
           background-color: var(--color-death);
         }
+      }
+
+      .balance {
+        background: var(--color-value);
+        color: var(--background);
+        padding: 5px;
+
+        &.depleted {
+          background: var(--color-death);
+          color: var(--background);
+        }
+      }
+
+      .small {
+        font-size: var(--font-size-small);
+      }
+
+      .divider {
+        color: var(--color-grey-light);
       }
     }
 
@@ -166,31 +252,12 @@
 
       .name {
         background: var(--color-alert);
-        color: black;
+        color: var(--background);
         padding: 5px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
         max-width: 25ch;
-      }
-
-      .balance {
-        background: var(--color-value);
-        color: black;
-        padding: 5px;
-
-        &.depleted {
-          background: var(--color-death);
-          color: black;
-        }
-      }
-
-      .small {
-        font-size: var(--font-size-small);
-      }
-
-      .divider {
-        color: var(--color-grey-light);
       }
     }
   }

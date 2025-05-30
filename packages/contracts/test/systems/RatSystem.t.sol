@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: Unlicense
 pragma solidity >=0.8.24;
-import { console } from "forge-std/console.sol";
 import { BaseTest } from "../BaseTest.sol";
 import "../../src/codegen/index.sol";
 import "../../src/libraries/Libraries.sol";
@@ -32,6 +31,8 @@ contract RatSystemTest is BaseTest {
 
     // Check player
     assertEq(OwnedRat.get(playerId), ratId);
+    assertEq(VisitedLevels.get(playerId).length, 1);
+    assertEq(VisitedLevels.getItem(playerId, 0), LevelList.getItem(0));
 
     // Check rat
     assertEq(uint8(EntityType.get(ratId)), uint8(ENTITY_TYPE.RAT));
@@ -40,7 +41,7 @@ contract RatSystemTest is BaseTest {
     assertEq(Health.get(ratId), 100);
     assertEq(Balance.get(ratId), 0);
     assertEq(Index.get(ratId), 1);
-    assertEq(Level.get(ratId), LevelList.get()[0]);
+    assertEq(Level.get(ratId), LevelList.getItem(0));
     assertEq(Owner.get(ratId), playerId);
     assertEq(CreationBlock.get(ratId), block.number);
   }
@@ -64,7 +65,7 @@ contract RatSystemTest is BaseTest {
 
     uint256 initialBalance = setInitialBalance(playerId);
 
-    world.ratroom__createRat("roger");
+    bytes32 ratId = world.ratroom__createRat("roger");
 
     assertEq(Balance.get(playerId), initialBalance - GameConfig.getRatCreationCost());
 
@@ -73,6 +74,8 @@ contract RatSystemTest is BaseTest {
     endGasReport();
 
     assertEq(Balance.get(playerId), initialBalance);
+    assertEq(PastRats.length(playerId), 1);
+    assertEq(PastRats.getItem(playerId, 0), ratId);
 
     vm.stopPrank();
   }
@@ -137,7 +140,7 @@ contract RatSystemTest is BaseTest {
     setInitialBalance(bobId);
 
     prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(bobId, bytes32(0), "test room", "test room");
+    bytes32 roomId = world.ratroom__createRoom(bobId, LevelList.getItem(0), bytes32(0), "test room");
     vm.stopPrank();
 
     // Trait to add
@@ -149,10 +152,10 @@ contract RatSystemTest is BaseTest {
     world.ratroom__applyOutcome(ratId, roomId, 0, 0, new bytes32[](0), new Item[](0), new bytes32[](0), newItems);
     vm.stopPrank();
 
-    bytes32 newItemId = Inventory.get(ratId)[0];
+    bytes32 newItemId = Inventory.getItem(ratId, 0);
 
     // Check added item
-    assertEq(Inventory.get(ratId).length, 1);
+    assertEq(Inventory.length(ratId), 1);
     assertEq(Value.get(newItemId), 40);
     assertEq(Name.get(newItemId), "cheese");
 

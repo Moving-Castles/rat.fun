@@ -9,5 +9,5 @@ pragma solidity >=0.8.24;
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IPlayerSystem {
-  function ratroom__spawn(string memory _name) external returns (bytes32 _playerId);
+  function ratroom__spawn(string memory _name) external returns (bytes32 playerId);
 }

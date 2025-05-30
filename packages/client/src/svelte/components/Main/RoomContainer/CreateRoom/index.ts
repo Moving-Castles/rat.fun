@@ -1,15 +1,18 @@
-import type { ServerReturnValue } from "@components/Main/RoomResult/types"
-import { SetupWalletNetworkResult } from "@mud/setupWalletNetwork";
+import type {
+  EnterRoomReturnValue,
+  CreateRoomReturnValue,
+} from "@server/modules/types"
+import { SetupWalletNetworkResult } from "@mud/setupWalletNetwork"
 
 import { ENVIRONMENT } from "@mud/enums"
-import { OFFCHAIN_VALIDATION_MESSAGE } from "@server/config";
+import { OFFCHAIN_VALIDATION_MESSAGE } from "@server/config"
 
 export async function createRoom(
   environment: ENVIRONMENT,
   walletNetwork: SetupWalletNetworkResult,
-  roomName: string,
-  roomPrompt: string
-) {
+  roomPrompt: string,
+  levelId: string
+): CreateRoomReturnValue {
   const startTime = performance.now()
 
   const url = [ENVIRONMENT.PYROPE, ENVIRONMENT.GARNET].includes(environment)
@@ -22,8 +25,8 @@ export async function createRoom(
 
   const formData = new URLSearchParams()
   formData.append("signature", signature)
-  formData.append("roomName", roomName)
   formData.append("roomPrompt", roomPrompt)
+  formData.append("levelId", levelId)
 
   try {
     const response = await fetch(url, {
@@ -36,12 +39,12 @@ export async function createRoom(
 
     if (!response.ok) {
       console.log("response", response)
-      const error = (await response.json())
+      const error = await response.json()
       console.log("error", error)
       throw new Error(`${error.error}: ${error.message}`)
     }
 
-    const result = (await response.json()) as ServerReturnValue
+    const result = (await response.json()) as EnterRoomReturnValue
 
     console.log("result", result)
 

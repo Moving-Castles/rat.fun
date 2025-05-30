@@ -18,14 +18,4 @@ library LibTrait {
     Name.set(traitId, _trait.name);
     Value.set(traitId, _trait.value);
   }
-
-  /**
-   * @notice Destroy a trait
-   * @param _traitId The id of the trait
-   */
-  function destroyTrait(bytes32 _traitId) internal {
-    EntityType.deleteRecord(_traitId);
-    Name.deleteRecord(_traitId);
-    Value.deleteRecord(_traitId);
-  }
 }

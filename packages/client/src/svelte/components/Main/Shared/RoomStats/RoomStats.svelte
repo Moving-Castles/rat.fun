@@ -8,14 +8,18 @@
 
   import "tippy.js/dist/tippy.css" // optional for styling
 
-  let { plotData, empty = false }: { plotData: PlotPoint[]; empty: boolean } =
-    $props()
+  let {
+    plotData,
+    empty = false,
+    height = 300,
+  }: { plotData: PlotPoint[]; empty: boolean; height: number } = $props()
+
+  console.log(height)
 
   // Layout setup
   let width = $state(0) // width will be set by the clientWidth
-  const height = 300
 
-  const padding = { top: 6, right: 6, bottom: 6, left: 6 }
+  const padding = { top: 6, right: 12, bottom: 6, left: 6 }
 
   // Calculate inner dimensions based on padding
   let innerWidth = $derived(width - padding.left - padding.right)
@@ -111,7 +115,7 @@
 
   {#if empty}
     <div class="no-data">
-      <span> No data </span>
+      <span>NO DATA</span>
     </div>
   {:else}
     <div class="graph" bind:clientWidth={width}>
@@ -182,9 +186,10 @@
     span {
       background: var(--color-death);
       padding: 2px;
-      color: black;
+      color: var(--background);
     }
   }
+
   .room-stats {
     width: 100%;
     height: 100%;
@@ -204,6 +209,7 @@
       padding: 10px 8px 0 6px;
     }
   }
+
   .x-axis {
     border-bottom: 1px solid var(--color-grey-mid);
     width: 100%;

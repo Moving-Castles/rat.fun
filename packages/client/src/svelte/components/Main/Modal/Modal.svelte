@@ -14,8 +14,13 @@
 {#if modal.show}
   <!-- svelte-ignore a11y_click_events_have_key_events -->
   <!-- svelte-ignore a11y_no_static_element_interactions -->
-  <div bind:this={modalBackground} onclick={onModalClick} class="modal">
-    <div class="content">
+  <div
+    id={modal.config.target}
+    bind:this={modalBackground}
+    onclick={onModalClick}
+    class="modal"
+  >
+    <div class="content" class:fullscreen={modal.config.fullscreen}>
       {@render modal.current?.()}
     </div>
   </div>
@@ -32,13 +37,22 @@
     overscroll-behavior: none;
     z-index: 10;
 
+    &#roomresult {
+      position: absolute;
+    }
+
     .content {
-      // width: 700px;
-      // min-height: 500px;
-      // max-width: calc(var(--game-window-height) * 0.6);
-      // max-height: calc(var(--game-window-height) * 0.9);
       overflow-x: hidden;
       overflow-y: scroll;
+
+      &.fullscreen {
+        width: 100%;
+        height: 100%;
+      }
+      &:not(.fullscreen) {
+        max-width: calc(var(--game-window-height) * 0.6);
+        max-height: calc(var(--game-window-height) * 0.9);
+      }
     }
   }
 </style>

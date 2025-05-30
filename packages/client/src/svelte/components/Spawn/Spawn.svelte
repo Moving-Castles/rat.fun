@@ -2,20 +2,19 @@
   import { onMount } from "svelte"
   import { spawn } from "@modules/action"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
-  import { UIState, UILocation } from "@modules/ui/stores"
-  import { LOCATION, UI } from "@modules/ui/enums"
-  import { getModalState } from "@components/Main/Modal/state.svelte"
   import { playSound } from "@modules/sound"
   import { player } from "@modules/state/base/stores"
   import { ENTITY_TYPE } from "contracts/enums"
 
-  import Spinner from "@components/Main/Shared/Spinner/Spinner.svelte"
+  import VideoLoader from "@components/Main/Shared/VideoLoader/VideoLoader.svelte"
 
-  let { modal } = getModalState()
+  const { spawned = () => {} } = $props<{
+    spawned?: () => void
+  }>()
 
-  let busy = false
-  let name: string
-  let inputEl: HTMLInputElement
+  let busy = $state(false)
+  let name = $state("")
+  let inputEl = $state<HTMLInputElement | null>(null)
 
   async function sendSpawn() {
     if (!name) return
@@ -24,9 +23,7 @@
     const action = spawn(name)
     try {
       await waitForCompletion(action)
-      UIState.set(UI.READY)
-      UILocation.set(LOCATION.MAIN)
-      modal.close()
+      spawned()
     } catch (e) {
       console.error(e)
     } finally {
@@ -36,35 +33,38 @@
 
   onMount(() => {
     if ($player?.entityType === ENTITY_TYPE.PLAYER) {
-      modal.close()
+      spawned()
     }
-    inputEl.focus()
+    if (inputEl) {
+      inputEl.focus()
+    }
   })
 </script>
 
 <div class="container">
-  <div class="main">
-    {#if !busy}
+  {#if busy}
+    <VideoLoader />
+  {:else}
+    <div class="main">
       <!-- INTRO TEXT -->
       <div class="content">
         <p class="header">
-          <span class="inverted">Welcome to Rat Rooms Playtest #2</span>
+          <span class="inverted">Welcome to Rat Rooms Playtest #4</span>
         </p>
         <p class="small">
-          Rat Rooms is a two sided market between rats and room creators. Each
-          room has a balance: it grows when rats lose value, and shrinks when
-          rats win.
+          You are an Operator working for the Firm. Your objective is to regain
+          access to the underground floors of Facility F which has gone rogue.
+          Use a remote controlled Rat to enter the facility by sending it down
+          the (rat-sized) elevator to explore its many rooms, collecting items,
+          traits and currency on your rat.
         </p>
         <ol class="small">
           <li>Study the rooms</li>
           <li>Send in your rat</li>
           <li>Traits, tokens, and items are useful in rooms</li>
-          <li>Liquidate to cash out</li>
+          <li>Liquidate your rat to cash out</li>
           <li>Create your own rooms</li>
         </ol>
-        <p class="small">
-          Your goal is to have as many tokens as possible within 30 minutes.
-        </p>
       </div>
 
       <!-- FORM -->
@@ -79,53 +79,39 @@
           bind:value={name}
           onkeydown={e => e.key === "Enter" && sendSpawn()}
         />
-        <button class:disabled={!name} class:busy onclick={sendSpawn}>
-          SIGN
-          {#if busy}
-            <div class="spinner"><Spinner /></div>
-          {/if}
-        </button>
+        <button class:disabled={!name} onclick={sendSpawn}>SIGN</button>
       </div>
-    {:else}
-      <div class="main">
-        <p>Standby <strong>{name}</strong></p>
-        <p>Connecting to <strong>Rat Rooms</strong>....</p>
-        <Spinner />
-      </div>
-    {/if}
-  </div>
+    </div>
+  {/if}
 </div>
 
 <style lang="scss">
   .container {
-    width: 600px;
-    max-width: 80vw;
-    background: var(--corporate-background);
-    font-family: var(--typewriter-font-stack);
+    width: 100vw;
+    height: 100vh;
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--special-font-stack);
     text-transform: none;
-    height: auto;
+    font-size: var(--font-size-large);
   }
 
   .main {
-    color: var(--corporate-foreground);
     width: 100%;
     height: 100%;
     max-width: calc(var(--game-window-width) * 0.9);
     padding: 10px 30px;
     padding-bottom: 30px;
+    max-width: 60ch;
   }
 
   p {
     margin-bottom: 1em;
   }
 
-  .small {
-    font-size: var(--font-size-normal);
-  }
-
   .inverted {
-    background: black;
-    color: white;
+    background: var(--color-alert-priority);
+    color: var(--background);
     padding: 5px;
   }
 
@@ -137,7 +123,7 @@
   .content {
     padding-top: 1em;
     padding-bottom: 1em;
-    border-bottom: 1px dashed var(--corporate-foreground);
+    border-bottom: 1px dashed var(--foreground);
     margin-bottom: 1em;
   }
 
@@ -146,14 +132,18 @@
     width: 300px;
     font-size: 18px;
     padding: 10px;
-    background: var(--color-grey-light);
-    color: var(--black);
+    background: var(--color-alert);
+    color: var(--background);
     border: none;
     margin-bottom: 0.5em;
     font-family: "Rock Salt", cursive;
     text-transform: uppercase;
-    border-bottom: 1px dashed var(--corporate-foreground);
+    border-bottom: var(--default-border-style);
     outline: none;
+
+    &::placeholder {
+      color: var(--color-grey-dark);
+    }
   }
 
   button {
@@ -161,8 +151,14 @@
     font-size: 18px;
     width: 300px;
     height: 4em;
-    margin-bottom: 0.5em;
-    background: var(--color-alert);
+    background: var(--color-alert-priority);
+    outline: none;
+    border: var(--default-border-style);
+
+    &:hover {
+      background: var(--color-alert);
+      color: var(--foreground);
+    }
 
     .spinner {
       position: relative;

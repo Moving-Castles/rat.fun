@@ -1,23 +1,39 @@
-import type { OffChainMessage } from "@server/modules/websocket/types"
+import type { OffChainMessage } from "@server/modules/types"
 import type { SetupWalletNetworkResult } from "@mud/setupWalletNetwork"
 import { ENVIRONMENT } from "@mud/enums"
 import { OFFCHAIN_VALIDATION_MESSAGE } from "@server/config";
 import {
   clientList,
-  newEvent,
   latestEvents,
   roundTriptime,
   websocketConnected,
 } from "@modules/off-chain-sync/stores"
 
 const MAX_RECONNECTION_DELAY = 30000 // Maximum delay of 30 seconds
+const MAX_EVENTS = 200
 
 let socket: WebSocket
 let reconnectAttempts = 0
 let roundTripStart = 0
+let reconnectTimeout: NodeJS.Timeout | null = null
 
 export function initOffChainSync(environment: ENVIRONMENT, playerId: string) {
   console.log("Initializing off chain sync", environment, playerId)
+
+  // Clean up any existing connection
+  if (socket) {
+    try {
+      socket.close();
+    } catch (e) {
+      console.error('Error closing existing socket:', e);
+    }
+  }
+
+  // Clear any pending reconnection
+  if (reconnectTimeout) {
+    clearTimeout(reconnectTimeout);
+    reconnectTimeout = null;
+  }
 
   let url = `ws://localhost:3131/ws/${playerId}`
 
@@ -36,7 +52,6 @@ export function initOffChainSync(environment: ENVIRONMENT, playerId: string) {
   socket.onmessage = (message: MessageEvent<string>) => {
     console.log("Received message:", message)
     const messageContent = JSON.parse(message.data) as OffChainMessage
-    // console.log("Received outcome:", messageContent)
 
     // Update client list when players connect/disconnect
     if (messageContent.topic === "clients__update") {
@@ -50,10 +65,15 @@ export function initOffChainSync(environment: ENVIRONMENT, playerId: string) {
     }
 
     // Pass message to stores
-    newEvent.set(messageContent)
-    console.log("new meesssage", messageContent)
     latestEvents.update(state => {
-      return [...state, messageContent]
+      // Check if message with this ID already exists
+      if (state.some(event => event.id == messageContent.id)) {
+        console.log("Duplicate message id found:", messageContent.id)
+        return state
+      }
+      // Add new message and limit array to MAX_EVENTS items
+      const newState = [...state, messageContent]
+      return newState.slice(-MAX_EVENTS)
     })
   }
 
@@ -70,16 +90,17 @@ export function initOffChainSync(environment: ENVIRONMENT, playerId: string) {
 }
 
 function attemptReconnect(environment: ENVIRONMENT, playerId: string) {
-  const delay = Math.min(
-    1000 * Math.pow(2, reconnectAttempts),
-    MAX_RECONNECTION_DELAY
-  )
-  reconnectAttempts += 1
+  if (reconnectTimeout) {
+    clearTimeout(reconnectTimeout);
+  }
 
-  setTimeout(() => {
-    console.log(`Reconnecting attempt ${reconnectAttempts}...`)
-    initOffChainSync(environment, playerId)
-  }, delay)
+  const delay = Math.min(1000 * Math.pow(2, reconnectAttempts), MAX_RECONNECTION_DELAY);
+  reconnectAttempts++;
+
+  reconnectTimeout = setTimeout(() => {
+    console.log(`Attempting to reconnect (attempt ${reconnectAttempts})...`);
+    initOffChainSync(environment, playerId);
+  }, delay);
 }
 
 export function ping() {
@@ -92,8 +113,13 @@ export function ping() {
   )
 }
 
+/****************
+ * CHAT MESSAGE
+ *****************/
+
 export async function sendChatMessage(
   walletNetwork: SetupWalletNetworkResult,
+  level: string,
   message: string
 ) {
   const signature = await walletNetwork.walletClient.signMessage({
@@ -104,6 +130,7 @@ export async function sendChatMessage(
     socket.send(
       JSON.stringify({
         topic: "chat__message",
+        level: level,
         message: message,
         signature: signature,
       })
@@ -112,3 +139,67 @@ export async function sendChatMessage(
     console.error("No socket")
   }
 }
+
+/****************
+ * RAT DEPLOYMENT
+ *****************/
+
+export async function sendDeployRatMessage(walletNetwork: SetupWalletNetworkResult) {
+  const signature = await walletNetwork.walletClient.signMessage({
+    message: OFFCHAIN_VALIDATION_MESSAGE
+  })
+
+  if (socket) {
+    socket.send(
+      JSON.stringify({
+        topic: "rat__deploy",
+        signature: signature,
+      })
+    )
+  } else {
+    console.error("No socket")
+  }
+}
+
+/****************
+ * RAT LIQUIDATION
+ *****************/
+
+export async function sendLiquidateRatMessage(walletNetwork: SetupWalletNetworkResult, ratId: string) {
+  const signature = await walletNetwork.walletClient.signMessage({
+    message: OFFCHAIN_VALIDATION_MESSAGE
+  })
+
+  if (socket) {
+    socket.send(
+      JSON.stringify({
+        topic: "rat__liquidate",
+        ratId: ratId,
+        signature: signature, 
+      })
+    )
+  } else {
+    console.error("No socket")
+  }
+}
+
+/****************
+ * ROOM LIQUIDATION
+ *****************/
+
+export async function sendLiquidateRoomMessage(walletNetwork: SetupWalletNetworkResult, roomId: string) {
+  const signature = await walletNetwork.walletClient.signMessage({
+    message: OFFCHAIN_VALIDATION_MESSAGE
+  })
+
+  if (socket) {
+    socket.send(
+      JSON.stringify({
+        topic: "room__liquidation",
+        roomId: roomId,        
+        signature: signature,
+      })
+    )
+  }
+}
+

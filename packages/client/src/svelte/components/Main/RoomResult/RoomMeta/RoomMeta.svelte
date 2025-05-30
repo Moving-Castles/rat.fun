@@ -1,12 +1,16 @@
 <script lang="ts">
   import { onMount } from "svelte"
   import { gsap } from "gsap"
-  import { staticContent, urlFor } from "@modules/content"
+  import { staticContent } from "@modules/content"
+  import { urlFor } from "@modules/content/sanity"
   import type { Hex } from "viem"
   import {
     frozenRoom,
     freezeObjects,
   } from "@components/Main/RoomResult/state.svelte"
+  import { renderSafeString } from "@modules/utils"
+
+  import NoImage from "@components/Main/Shared/NoImage/NoImage.svelte"
 
   const { rat, room, roomId }: { rat: Rat; room: Room; roomId: Hex } = $props()
 
@@ -66,19 +70,21 @@
       {#if sanityRoomContent}
         <img
           src={urlFor(sanityRoomContent?.image)
-            .width(700)
+            .width(500)
             .auto("format")
-            .saturation(-100)
+            // .saturation(-100)
             .url()}
-          alt={$frozenRoom?.name ?? ""}
+          alt={`room #${$frozenRoom?.index ?? ""}`}
         />
       {:else}
-        <img src="/images/room3.jpg" alt={$frozenRoom?.name ?? ""} />
+        <div class="image-placeholder">
+          <NoImage />
+        </div>
       {/if}
     </div>
     <!-- PROMPT -->
     <div class="prompt" bind:this={promptElement}>
-      {$frozenRoom?.roomPrompt ?? ""}
+      {renderSafeString($frozenRoom?.prompt ?? "")}
     </div>
   </div>
 </div>
@@ -93,8 +99,8 @@
     height: var(--game-window-height);
     justify-content: center;
     align-items: center;
-    background: black;
-    color: white;
+    background: var(--background);
+    color: var(--foreground);
 
     .inner {
       display: flex;
@@ -102,23 +108,30 @@
       justify-content: center;
       align-items: center;
       gap: 1rem;
-      width: 600px;
+      width: 500px;
       max-width: calc(var(--game-window-width) * 0.9);
 
       .image-container {
         width: 100%;
         border: var(--default-border-style);
+        line-height: 0;
 
         img {
           width: 100%;
           height: 100%;
           object-fit: cover;
+          aspect-ratio: 1/1;
+        }
+
+        .image-placeholder {
+          width: 100%;
+          aspect-ratio: 1/1;
         }
       }
 
       .prompt {
         background: var(--color-alert);
-        color: black;
+        color: var(--background);
         width: auto;
         display: inline-block;
         padding: 5px;
@@ -127,7 +140,7 @@
 
       .room-index {
         background: var(--color-grey-light);
-        color: black;
+        color: var(--background);
         width: auto;
         padding: 5px;
       }

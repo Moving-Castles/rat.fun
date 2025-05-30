@@ -14,8 +14,7 @@ export default defineConfig({
       '@components': path.resolve(__dirname, './src/svelte/components'),
       '@modules': path.resolve(__dirname, './src/svelte/modules/'),
       '@server': path.resolve(__dirname, '../server/src/'),
-      '@cms': path.resolve(__dirname, '../cms/'),
-      '@sanity-types': path.resolve(__dirname, '../cms/sanity.types')
+      '@sanity-types': path.resolve(__dirname, '../cms-public/sanity.types')
     }
   },
   publicDir: "./src/svelte/public",

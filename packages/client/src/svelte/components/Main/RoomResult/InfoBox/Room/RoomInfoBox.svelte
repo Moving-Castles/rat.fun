@@ -1,16 +1,21 @@
 <script lang="ts">
   import { frozenRoom } from "@components/Main/RoomResult/state.svelte"
-  import { staticContent, lastUpdated, urlFor } from "@modules/content"
+  import { staticContent, lastUpdated } from "@modules/content"
+  import { urlFor } from "@modules/content/sanity"
   import type { Hex } from "viem"
+  import { renderSafeString } from "@modules/utils"
+  import NumberGoing from "@components/Main/Shared/NumberGoing/NumberGoing.svelte"
 
-  let { roomId }: { roomId: Hex } = $props()
+  import NoImage from "@components/Main/Shared/NoImage/NoImage.svelte"
+
+  let { roomId, depleted }: { roomId: Hex; depleted: boolean } = $props()
 
   let sanityRoomContent = $derived(
     $staticContent.rooms.find(r => r._id == roomId)
   )
 </script>
 
-<div class="room-info-box">
+<div class="room-info-box" class:depleted>
   {#if $frozenRoom}
     <!-- INFO -->
     <div class="column">
@@ -26,25 +31,27 @@
               src={urlFor(sanityRoomContent?.image)
                 .width(300)
                 .auto("format")
-                .saturation(-100)
+                // .saturation(-100)
                 .url()}
-              alt={$frozenRoom.name}
+              alt={`room #${$frozenRoom.index}`}
             />
           {:else}
-            <img src="/images/room3.jpg" alt={$frozenRoom.name} />
+            <NoImage />
           {/if}
         {/key}
       </div>
       <!-- BALANCE -->
       <div class="info-item">
         <span class="balance" class:empty={$frozenRoom.balance === 0}>
-          ${$frozenRoom.balance}
+          $ <NumberGoing value={$frozenRoom.balance} />
         </span>
       </div>
     </div>
     <!-- PROMPT -->
     <div class="column double">
-      <div class="room-description">{$frozenRoom.roomPrompt}</div>
+      <div class="room-description">
+        {renderSafeString($frozenRoom.prompt)}
+      </div>
     </div>
   {/if}
 </div>
@@ -57,6 +64,23 @@
     border-left: none;
     overflow: hidden;
     display: flex;
+    position: relative;
+
+    &.depleted {
+      // opacity: 0.5;
+
+      &::after {
+        content: "DEPLETED";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 100px;
+        background: var(--color-value);
+        color: var(--black);
+        font-family: var(--label-font-stack);
+      }
+    }
   }
 
   .image-container {
@@ -115,20 +139,20 @@
     .id {
       background: var(--color-grey-light);
       padding: 5px;
-      color: black;
+      color: var(--background);
       font-size: var(--font-size-small);
     }
 
     .name {
       background: var(--color-alert);
       padding: 5px;
-      color: black;
+      color: var(--background);
     }
 
     .balance {
       background: var(--color-value);
       padding: 5px;
-      color: black;
+      color: var(--background);
 
       &.empty {
         background: var(--color-death);
@@ -138,7 +162,7 @@
     .health {
       background: var(--color-health);
       padding: 5px;
-      color: black;
+      color: var(--background);
     }
   }
 
@@ -151,7 +175,7 @@
     margin: 10px;
     padding: 5px;
     background: var(--color-alert);
-    color: black;
+    color: var(--background);
     max-width: 50ch;
   }
 </style>

@@ -154,14 +154,12 @@ async function execute() {
         // Clear action timeout
         clearActionTimer()
       } else {
-        console.log('receipt', receipt)
         handleError(receipt, action)
       }
     } else {
       clearActionTimer()
     }
   } catch (e) {
-    console.log('catch')
     handleError(e, action)
   }
 }

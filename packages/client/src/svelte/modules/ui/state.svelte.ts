@@ -10,8 +10,8 @@
 import { PANE, RAT_CONTAINER, ROOM_CONTAINER } from "./enums"
 import { quadInOut } from "svelte/easing"
 import { Tween } from "svelte/motion"
+import { get } from "svelte/store"
 import * as uiStores from "@modules/ui/stores"
-import { gameConfig } from "../state/base/stores"
 
 export const ROUTES = [
   {
@@ -35,9 +35,12 @@ export const ROUTES = [
 let ratContainer = $state<RAT_CONTAINER>(RAT_CONTAINER.YOUR_RAT)
 let roomContainer = $state<ROOM_CONTAINER>(ROOM_CONTAINER.ALL_ROOMS)
 let previewingPane = $state<PANE>(PANE.NONE)
+let previewAnimated = $state(true)
+
 // Current route
 let route = $state("main")
 let params = $state({})
+
 // 1.3 More complex objects are also fully reactive once properly initialised
 const transition = $state({
   active: false,
@@ -106,6 +109,8 @@ export const getUIState = () => {
     // Handle parameters
     if (p.roomId) {
       uiStores.CurrentRoomId.set(p.roomId)
+    } else {
+      uiStores.CurrentRoomId.set(null)
     }
 
     // Modifying by using class instance methods
@@ -126,30 +131,55 @@ export const getUIState = () => {
    * Here, I am modifying a store as you normally would anyways.
    * When combining stores and $state calls, it can be weird to figure out which is which.
    */
-  const preview = (id: string, mine = false) => {
-    if (mine) {
-      uiStores.myPreviewId.set(id)
-      previewingPane = PANE.ROOM_CONTAINER
+  const preview = (
+    id: string,
+    mine = false,
+    animated = true,
+    changeHash = true
+  ) => {
+    if (id === "") return
+    previewAnimated = animated
+    const go = () => {
+      if (changeHash) window.location.hash = id
+      if (mine) {
+        uiStores.myPreviewId.set(id)
+        previewingPane = PANE.ROOM_CONTAINER
+        setPane(PANE.ROOM_CONTAINER, ROOM_CONTAINER.YOUR_ROOMS)
+      } else {
+        uiStores.previewId.set(id)
+        previewingPane = PANE.ROOM_CONTAINER
+        setPane(PANE.ROOM_CONTAINER, ROOM_CONTAINER.ALL_ROOMS)
+      }
+    }
+
+    if (get(uiStores.myPreviewId) || get(uiStores.previewId)) {
+      // back(mine)
+      setTimeout(go, 400)
     } else {
-      uiStores.previewId.set(id)
-      previewingPane = PANE.ROOM_CONTAINER
+      go()
     }
   }
 
-  const back = (mine = false) => {
+  const back = (mine = false, animated = true) => {
+    window.location.hash = ""
+    previewAnimated = animated
+    uiStores.myPreviewId.set(null)
+    uiStores.previewId.set(null)
+
     if (mine) {
-      uiStores.myPreviewId.set(null)
       setPane(PANE.ROOM_CONTAINER, ROOM_CONTAINER.YOUR_ROOMS)
     } else {
-      uiStores.previewId.set(null)
       setPane(PANE.ROOM_CONTAINER, ROOM_CONTAINER.ALL_ROOMS)
     }
   }
 
-  const close = async () => {
+  const close = async (toPreview = true) => {
     previewingPane = PANE.NONE
+    if (!toPreview) back(false, false) // takes us to the list section
     await navigate("main")
+    setPane(PANE.ROOM_CONTAINER, ROOM_CONTAINER.ALL_ROOMS)
     uiStores.CurrentRoomId.set(null)
+    console.log("closed")
   }
 
   /** 3.1 Exporting state
@@ -210,6 +240,9 @@ export const getUIState = () => {
       },
       get previewId() {
         return uiStores.previewId
+      },
+      get previewAnimated() {
+        return previewAnimated
       },
       get myCurrent() {
         return uiStores.CurrentMyRoomId

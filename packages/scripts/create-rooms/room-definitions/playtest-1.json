@@ -1,127 +1,96 @@
 {
   "rooms": [
     {
-      "roomName": "Rat Fight Club",
       "roomPrompt": "Fight another rat to the death. Winner takes all."
     },
     {
-      "roomName": "Vaultex MX Safe Room",
       "roomPrompt": "100 tokens are hidden inside a Vaultex MX safe located on a shelf within the room. If Rat is unable to retrieve the tokens, or is discovered by the two security cameras, the room will take all items and tokens from the rat."
     },
     {
-      "roomName": "a16z Pitch Room",
       "roomPrompt": "Marc Andreesen and the a16z crypto team will listen to a startup pitch by your rat. If the pitch does not strongly fit ALL investment criteria, Marc Andreessen will physically torment the rat to death while talking about techno-optimism. If the rat succeeds it gets {random:100-250} tokens pre-seed investment."
     },
     {
-      "roomName": "Rat Fashion Boutique",
       "roomPrompt": "Rat clothing store. Gives rat random piece of rat-sized clothing in exchange for token value +10%."
     },
     {
-      "roomName": "Evil Vending Machine",
       "roomPrompt": "Evil Vending Machine gives one random item worth {random:30-60} tokens. Cost is 50 tokens. If the rat does not have 60 tokens, the machine will take the debt by draining 50 health."
     },
     {
-      "roomName": "Black Market",
       "roomPrompt": "Rat purchases random item at market value + 10% fee."
     },
     {
-      "roomName": "Rat Fight Club",
       "roomPrompt": "Fight a stronger than average rat to the death. Winner takes all."
     },
     {
-      "roomName": "Bayer AG RCT Drug Experiment",
       "roomPrompt": "Bayer AG randomised controlled trial (RCT) drug experiment on rat. Produces one {choose:positive,negative,ambigious} trait outcome. Risks {random:0-50} rat health."
     },
     {
-      "roomName": "IGT Ghostbusters 4D Video Slot Machine",
       "roomPrompt": "Rat puts in 10 tokens in IGT's Ghostbusters 4D Video Slot Machine, {chance:10%:success|failure} to win {random:50-150} tokens."
     },
     {
-      "roomName": "Black Market Vendor",
       "roomPrompt": "Black market vendor buys items from rats. Pays 10 less than token value for any object."
     },
     {
-      "roomName": "Ted Kaszynisky Training Camp",
       "roomPrompt": "Ted Kaszynisky training camp. Rat radicalises in anarcho-primitivism and changes name of rat to a concept from his writings. If rat does not have an object for ted as payment for his training, he will maim the rat."
     },
     {
-      "roomName": "Game Room",
       "roomPrompt": "Game room. Room gives full balance to rat, but only if there are over 500 token balance in room."
     },
     {
-      "roomName": "Rat meets God",
       "roomPrompt": "Rat meets God. God kills the rat."
     },
     {
-      "roomName": "Prison Cell",
       "roomPrompt": "Room is a prison cell for human that escaped from sector 29b. The human will eat the rat."
     },
     {
-      "roomName": "Euthanasia through injection",
       "roomPrompt": "Euthanasia through injection. Balance is on secure hardwallet within safe in room."
     },
     {
-      "roomName": "Disney Content Room",
       "roomPrompt": "Rat must watch 12 hours of unreleased Disney content while sensors monitor its emotional responses. Genuine emotional reactions reward {random:5-10} tokens per significant response. Negative emotional reactions trigger electric shocks draining {random:5-10} health."
     },
     {
-      "roomName": "Miniature War Room",
       "roomPrompt": "Rat is placed in a miniature war room as the military leader of a major power during global conflict. Each strategic decision impacts token gain/loss. Achieving peace awards {random:10-50} tokens and 'Diplomatic' trait. Causing global destruction costs {random:50-100} health and gives 'Warmonger' trait."
     },
     {
-      "roomName": "Parasite Host Room",
       "roomPrompt": "Rat must volunteer as host for experimental parasite."
     },
     {
-      "roomName": "MLM Scheme",
       "roomPrompt": "MLM Scheme. Costs 50 tokens to buy starter kit. Rat gets between 0-200 tokens based on how early they are on MLM scheme."
     },
     {
-      "roomName": "European Bureaucrat Training",
       "roomPrompt": "European bureaucrat training. No cost, subsidised by European Government. Gets negative trait of due to bureacratic inefficiency equivalent to any positive trait value."
     },
     {
-      "roomName": "Very Small Table for Eating",
       "roomPrompt": "Very small table for eating. Rat consumes any item that is food available to heal equivalent health."
     },
     {
-      "roomName": "Game Room",
       "roomPrompt": "Game room. Gives any balance over 250 in room to rat."
     },
     {
-      "roomName": "Pizza Store",
       "roomPrompt": "Pizza store. Buy a pizza, for token price of normal pizza profit margin on top of object value. Pizza salesman has baseball bat under counter to protect against robberies and doesnt deliver."
     },
     {
-      "roomName": "LAMBDA Test",
       "roomPrompt": "LAMBDA test, if rat fails then killed and replaced with smarter rat."
     },
     {
-      "roomName": "Sewing Machine Room",
       "roomPrompt": "Rat must operate a miniature sewing machine for 18 hours straight producing tiny clothes. Each successful hour yields {random:5-10} tokens but costs {random:3-8} health."
     },
     {
-      "roomName": "Centrifuge Test",
       "roomPrompt": "Rat is spun at **15,000 RPM.**"
     },
     {
-      "roomName": "Poisoned Cheese Room",
       "roomPrompt": "Room has cheese but its poisoned."
     },
     {
-      "roomName": "Very Cold Room",
       "roomPrompt": "Room is very cold. -89.2C."
     },
     {
-      "roomName": "Helium Room",
       "roomPrompt": "Rat inflates after helium is inserted into anus. Rat floats around room bumping into things before hitting sharp object."
     },
     {
-      "roomName": "Gasoline Fire Room",
       "roomPrompt": "The rat is drenched in gasoline and put on fire. If it survives it gets random item."
     },
     {
-      "roomName": "Healing Room",
       "roomPrompt": "Healing. Costs tokens equivalent to amount healed +5."
     }
   ]

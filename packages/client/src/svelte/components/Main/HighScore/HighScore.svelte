@@ -22,7 +22,7 @@
     max-height: 90vh;
     overflow-y: auto;
     padding: 20px;
-    background: black;
+    background: var(--background);
     border: 1px solid white;
   }
 </style>

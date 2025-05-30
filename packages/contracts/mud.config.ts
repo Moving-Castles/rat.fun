@@ -23,8 +23,6 @@ export default defineWorld({
         maxTraitsSize: "uint32",
         minRoomPromptLength: "uint32",
         maxRoomPromptLength: "uint32",
-        minRoomNameLength: "uint32",
-        maxRoomNameLength: "uint32",
         startingBalance: "uint256",
       },
       codegen: {
@@ -41,6 +39,7 @@ export default defineWorld({
     Name: "string", // Set on player, rat and room
     EntityType: "ENTITY_TYPE",
     CreationBlock: "uint256", // Set on player, rat and room
+    LastVisitBlock: "uint256", // Set on room
     // ...
     Health: "uint256", // Set on rat
     Dead: "bool", // Set on rat
@@ -49,15 +48,17 @@ export default defineWorld({
     Inventory: "bytes32[]", // Items carried by player and rat
     // ...
     Level: "bytes32", // Id of level. Set on rat and room.
+    VisitedLevels: "bytes32[]", // Set on player. List of levels any of the player's rats have visited.
     Index: "uint256", // Set on rat and room
     Balance: "uint256", // Amount of credits. Set on player, rat and room.
-    Value: "int256", // Value of a trait can be negative
+    Value: "uint256", // Value of a trait can be negative
     OwnedRat: "bytes32", // Set on player
+    PastRats: "bytes32[]", // Set on player. List of rats the player has owned.
     Owner: "bytes32", // Set on room and rat
     VisitCount: "uint256", // Set on room
     KillCount: "uint256", // Set on room
     // ...
-    RoomPrompt: "string",
+    Prompt: "string",
     // ...
     RoomCreationCost: "uint256", // Set on level
     LevelMinBalance: "uint256", // Set on level. If rat balance is below this, it will be leveled down.

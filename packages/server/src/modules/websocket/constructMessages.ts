@@ -1,17 +1,19 @@
-import type { Rat, Room } from "@routes/room/enter/types";
-import type { OffChainMessage } from "@modules/websocket/types";
-import type { OutcomeReturnValue } from "@modules/llm/types";
-import type { ClientComponents } from "@modules/mud/createClientComponents";
-import { getPlayerName } from "@modules/mud/getOnchainData";
+import type { Rat, Room, Player } from "@modules/types";
+import { getEntityIndex, getEntityLevel } from "@modules/mud/getOnchainData";
+import type { OffChainMessage, OutcomeReturnValue } from "@modules/types";
 import { v4 as uuidv4 } from 'uuid';
 
-export function createOutcomeMessage(rat: Rat, newRatHealth: number, room: Room, validatedOutcome: OutcomeReturnValue): OffChainMessage {
+export function createOutcomeMessage(player: Player, rat: Rat, newRatHealth: number, room: Room, validatedOutcome: OutcomeReturnValue): OffChainMessage {
     // Death
     if (newRatHealth == 0) {
         return {
             id: uuidv4(),
             topic: 'rat__death',
-            playerName: rat.name,
+            level: room.level,
+            playerName: player.name,
+            ratName: rat.name,
+            roomId: room.id,
+            roomIndex: Number(room.index),
             message: `died in room #${room.index}`,
             timestamp: Date.now()
         }
@@ -24,17 +26,17 @@ export function createOutcomeMessage(rat: Rat, newRatHealth: number, room: Room,
     const addedTraits = (validatedOutcome?.traitChanges ?? []).filter(trait => trait.type ==  "add").map(trait => { return `${trait.name} ($${trait.value})` }).join(', ')
     const removedTraits = (validatedOutcome?.traitChanges ?? []).filter(trait => trait.type ==  "remove").map(trait => { return `${trait.name} ($${trait.value})` }).join(', ')
 
-    let message = `${rat.name}`
+    let message = "Result: "
 
     let hasMessage = false
 
     if((validatedOutcome?.healthChange?.amount ?? 0) !== 0) {
-        message += ` Health change: ${validatedOutcome?.healthChange?.amount}`
+        message += ` (Health change: ${validatedOutcome?.healthChange?.amount})`
         hasMessage = true
     }
 
     if((validatedOutcome?.balanceTransfer?.amount ?? 0) !== 0) {
-        message += `Balance change: ${validatedOutcome?.balanceTransfer?.amount}`
+        message += ` (Balance change: ${validatedOutcome?.balanceTransfer?.amount})`
         hasMessage = true
     }
 
@@ -59,25 +61,31 @@ export function createOutcomeMessage(rat: Rat, newRatHealth: number, room: Room,
     }
 
     if (!hasMessage) {
-        message += ": no change"
+        message += " no change"
     }
 
     return {
         id: uuidv4(),
         topic: 'room__outcome',
+        level: room.level,
         message,
-        playerName: rat.name,
+        playerName: player.name,
+        roomId: room.id,
+        roomIndex: Number(room.index),
+        ratName: rat.name,
         timestamp: Date.now()
     }
 }
 
-export function createRoomCreationMessage(playerId: string, Name: ClientComponents['Name']): OffChainMessage {
-    const playerName = getPlayerName(playerId, Name)
+export function createRoomCreationMessage(roomId: string, player: Player): OffChainMessage {
     return {
         id: uuidv4(),
         topic: 'room__creation',
+        level: getEntityLevel(roomId),
         message: "created a room",
-        playerName: playerName,
+        playerName: player.name,
+        roomId: roomId,
+        roomIndex: Number(getEntityIndex(roomId)),
         timestamp: Date.now()
     }
 }

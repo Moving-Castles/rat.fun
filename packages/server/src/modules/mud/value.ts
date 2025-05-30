@@ -1,4 +1,4 @@
-import { Rat, Room,} from "@routes/room/enter/types"
+import { Rat, Room,} from "@modules/types"
 
 export function getRoomValue(room: Room, newRoom: Room | undefined) {
     return {
