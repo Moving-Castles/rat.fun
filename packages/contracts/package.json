@@ -19,12 +19,12 @@
     "test-single": "forge clean && tsc --noEmit && mud test --forgeOptions='--match-test testCreateRoom'"
   },
   "dependencies": {
-    "@latticexyz/cli": "2.2.22-bc95ea094386f235971f1c5b98a34f41c161999d",
-    "@latticexyz/schema-type": "2.2.22-bc95ea094386f235971f1c5b98a34f41c161999d",
-    "@latticexyz/store": "2.2.22-bc95ea094386f235971f1c5b98a34f41c161999d",
-    "@latticexyz/world": "2.2.22-bc95ea094386f235971f1c5b98a34f41c161999d",
-    "@latticexyz/world-modules": "2.2.22-bc95ea094386f235971f1c5b98a34f41c161999d",
-    "@latticexyz/gas-report": "2.2.22-bc95ea094386f235971f1c5b98a34f41c161999d"
+    "@latticexyz/cli": "2.2.22-405a600d8d3aaf06cd06b64287a8acff9e2e0e35",
+    "@latticexyz/schema-type": "2.2.22-405a600d8d3aaf06cd06b64287a8acff9e2e0e35",
+    "@latticexyz/store": "2.2.22-405a600d8d3aaf06cd06b64287a8acff9e2e0e35",
+    "@latticexyz/world": "2.2.22-405a600d8d3aaf06cd06b64287a8acff9e2e0e35",
+    "@latticexyz/world-modules": "2.2.22-405a600d8d3aaf06cd06b64287a8acff9e2e0e35",
+    "@latticexyz/gas-report": "2.2.22-405a600d8d3aaf06cd06b64287a8acff9e2e0e35"
   },
   "devDependencies": {
     "@types/node": "^22.15.27",
@@ -33,7 +33,7 @@
     "prettier": "^3.5.3",
     "prettier-plugin-solidity": "^2.0.0",
     "solhint": "^5.1.0",
-    "solhint-config-mud": "2.2.22-bc95ea094386f235971f1c5b98a34f41c161999d",
-    "solhint-plugin-mud": "2.2.22-bc95ea094386f235971f1c5b98a34f41c161999d"
+    "solhint-config-mud": "2.2.22-405a600d8d3aaf06cd06b64287a8acff9e2e0e35",
+    "solhint-plugin-mud": "2.2.22-405a600d8d3aaf06cd06b64287a8acff9e2e0e35"
   }
 }
