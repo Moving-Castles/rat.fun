@@ -28,7 +28,7 @@
 
   let { environment }: { environment: ENVIRONMENT } = $props()
   const { transition, route, rooms } = getUIState()
-  const { current, myCurrent } = rooms
+  const { current } = rooms
   let debugTransition = $state(false)
 
   // Determine if the main game layer (with doors) should be rendered
@@ -92,14 +92,10 @@
   </div>
 {/if}
 
+<!-- What does this mean? -->
 {#if route.current === "room" || (transition.from === "room" && transition.active) || $current}
   <div class="layer-below">
-    <RoomResult
-      start={($current || $myCurrent) && route.current === "room"}
-      animationstart={transition.active}
-      roomId={$current}
-      {environment}
-    />
+    <RoomResult roomId={$current} {environment} />
   </div>
 {/if}
 

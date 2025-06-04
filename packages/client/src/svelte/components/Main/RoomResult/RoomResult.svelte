@@ -1,76 +1,62 @@
 <script lang="ts">
   import type { EnterRoomReturnValue } from "@server/modules/types"
   import type { Hex } from "viem"
-  import { RESULT_EVENT } from "@modules/ui/enums"
+  import {
+    ROOM_RESULT_STATE,
+    SHOW_INFO_BOXES,
+    SHOW_LOG,
+    roomResultState,
+    transitionTo,
+    transitionToResultSummary,
+    resetRoomResultState,
+  } from "@svelte/components/Main/RoomResult/roomResultState.svelte"
 
   import {
     player,
     rooms as roomsState,
     rat as ratState,
   } from "@modules/state/base/stores"
+  import { onMount, onDestroy } from "svelte"
   import { enterRoom } from "@components/Main/RoomResult"
   import { ENVIRONMENT } from "@mud/enums"
   import { walletNetwork } from "@modules/network"
+  import { getUIState } from "@modules/ui/state.svelte"
+  import { staticContent } from "@modules/content"
 
+  import SplashScreen from "@svelte/components/Main/RoomResult/SplashScreen/SplashScreen.svelte"
+  import WaitingForResult from "@svelte/components/Main/RoomResult/WaitingForResult/WaitingForResult.svelte"
   import Log from "@components/Main/RoomResult/Log/Log.svelte"
-  import RoomMeta from "@components/Main/RoomResult/RoomMeta/RoomMeta.svelte"
   import RatInfoBox from "@components/Main/RoomResult/InfoBox/Rat/RatInfoBox.svelte"
   import RoomInfoBox from "@components/Main/RoomResult/InfoBox/Room/RoomInfoBox.svelte"
-  import { getUIState } from "@modules/ui/state.svelte"
-  import RoomEventPopup from "../Shared/RoomEventPopup/RoomEventPopup.svelte"
-  import { staticContent } from "@modules/content"
+  import NormalResultSummary from "@components/Main/RoomResult/ResultSummary/NormalResultSummary.svelte"
+  import RatDeadResultSummary from "@components/Main/RoomResult/ResultSummary/RatDeadResultSummary.svelte"
+  import LevelUpResultSummary from "@components/Main/RoomResult/ResultSummary/LevelUpResultSummary.svelte"
+  import LevelDownResultSummary from "@components/Main/RoomResult/ResultSummary/LevelDownResultSummary.svelte"
 
   const { rooms } = getUIState()
 
   let {
-    start,
-    animationstart,
     environment,
     roomId,
   }: {
-    start: boolean
-    animationstart: boolean
     environment: ENVIRONMENT
     roomId: string | null
   } = $props()
 
-  let animationstarted = $state(false)
-
-  let busy = $state(false)
-  let error = $state("")
-
-  let entering = $state(true)
+  // Result of the room entry, returned by the server
   let result: EnterRoomReturnValue | null = $state(null)
 
-  let resultEvent: RESULT_EVENT = $state(RESULT_EVENT.NONE)
-
+  // Get room info from global store based on id
   let room = $derived($roomsState?.[roomId ?? ""])
 
-  let sanityRoomContent = $derived(
+  // Get static room content from cms
+  let staticRoomContent = $derived(
     $staticContent.rooms.find(r => r._id == (roomId ?? ""))
   )
-
-  $effect(() => {
-    if (animationstart) animationstarted = true
-  })
-
-  const checkEvents = async () => {
-    if (result.ratDead) {
-      resultEvent = RESULT_EVENT.RAT_DEAD
-    } else if (result.roomDepleted) {
-      resultEvent = RESULT_EVENT.ROOM_DEPLETED
-    } else if (result.levelUp) {
-      resultEvent = RESULT_EVENT.LEVEL_UP
-    } else if (result.levelDown) {
-      resultEvent = RESULT_EVENT.LEVEL_DOWN
-    }
-    // resultEvent = RESULT_EVENT.RAT_DEAD
-  }
 
   const processRoom = async () => {
     if (!roomId) return
     try {
-      // console.log("start result")
       const ret = enterRoom(
         environment,
         $walletNetwork,
@@ -80,60 +66,98 @@
 
       await new Promise(resolve => setTimeout(resolve, 5000))
 
-      entering = false
-
       try {
-        // console.log("start outcome ")
-        result = await ret // add here just in case the entering transition would be faster
+        result = await ret
+        transitionTo(ROOM_RESULT_STATE.SHOWING_RESULTS)
       } catch (err) {
         console.log("catch outcome error", err)
         throw err
       }
     } catch (error) {
       console.log("catch result error", error)
-      entering = false
-      rooms.close(
-        resultEvent !== RESULT_EVENT.LEVEL_UP &&
-          resultEvent !== RESULT_EVENT.LEVEL_DOWN
-      )
+      transitionTo(ROOM_RESULT_STATE.ERROR)
+      rooms.close()
+      // rooms.close(
+      //   resultEvent !== RESUEVEL_UP &&
+      //     resultEvent !== RESULT_EVENT.LEVEL_DOWN
+      // )
       return
     }
   }
 
-  $effect(() => {
-    if (start && !busy) {
-      busy = true
-      // console.log("start")
-      processRoom()
-    }
+  onMount(() => {
+    resetRoomResultState()
+    processRoom()
+  })
+
+  onDestroy(() => {
+    resetRoomResultState()
   })
 </script>
 
 <div class="room-result">
-  {#if entering && animationstarted}
-    <RoomMeta rat={$ratState} {room} roomId={roomId as Hex} />
-  {:else}
-    <!-- INFO BOXES -->
+  <!-- SPLASH SCREEN -->
+  {#if roomResultState.state === ROOM_RESULT_STATE.SPLASH_SCREEN}
+    <SplashScreen
+      rat={$ratState}
+      {room}
+      roomId={roomId as Hex}
+      {staticRoomContent}
+      onComplete={() => {
+        transitionTo(ROOM_RESULT_STATE.WAITING_FOR_RESULT)
+      }}
+    />
+  {/if}
+
+  <!-- INFO BOXES -->
+  {#if SHOW_INFO_BOXES.includes(roomResultState.state)}
     <div class="info-boxes">
       <RatInfoBox />
       <div class="divider"></div>
-      <RoomInfoBox
-        depleted={resultEvent === RESULT_EVENT.ROOM_DEPLETED}
-        roomId={roomId as Hex}
-      />
+      <RoomInfoBox {staticRoomContent} />
     </div>
-    <!-- LOG -->
-    <Log {result} {resultEvent} {animationstarted} onComplete={checkEvents} />
-    <!-- ERROR -->
-    {#if error}
-      <div class="error">
-        {error}
-      </div>
-    {/if}
   {/if}
 
-  {#if resultEvent !== RESULT_EVENT.NONE && resultEvent !== RESULT_EVENT.ROOM_DEPLETED && result !== null}
-    <RoomEventPopup {result} {resultEvent} {room} {sanityRoomContent} />
+  <!-- WAITING FOR RESULT -->
+  {#if roomResultState.state === ROOM_RESULT_STATE.WAITING_FOR_RESULT}
+    <WaitingForResult />
+  {/if}
+
+  <!-- LOG -->
+  {#if SHOW_LOG.includes(roomResultState.state)}
+    <Log
+      {result}
+      onComplete={() => {
+        transitionToResultSummary(result)
+      }}
+    />
+  {/if}
+
+  <!-- Result Summary: Normal -->
+  {#if roomResultState.state === ROOM_RESULT_STATE.RESULT_SUMMARY_NORMAL}
+    <NormalResultSummary {result} {room} {staticRoomContent} />
+  {/if}
+
+  <!-- Result Summary: Rat Dead -->
+  {#if roomResultState.state === ROOM_RESULT_STATE.RESULT_SUMMARY_RAT_DEAD}
+    <RatDeadResultSummary {result} {room} {staticRoomContent} />
+  {/if}
+
+  <!-- Result Summary: Level Up -->
+  {#if roomResultState.state === ROOM_RESULT_STATE.RESULT_SUMMARY_LEVEL_UP}
+    <LevelUpResultSummary {result} {room} {staticRoomContent} />
+  {/if}
+
+  <!-- Result Summary: Level Down -->
+  {#if roomResultState.state === ROOM_RESULT_STATE.RESULT_SUMMARY_LEVEL_DOWN}
+    <LevelDownResultSummary {result} {room} {staticRoomContent} />
+  {/if}
+
+  <!-- Error -->
+  {#if roomResultState.state === ROOM_RESULT_STATE.ERROR}
+    <div class="error">
+      {roomResultState.errorMessage}
+    </div>
   {/if}
 </div>
 

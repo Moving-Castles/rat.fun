@@ -1,33 +1,21 @@
 <script lang="ts">
   import type { MergedLogEntry } from "./types"
   import type { EnterRoomReturnValue } from "@server/modules/types"
-  import { RESULT_EVENT } from "@modules/ui/enums"
   import { mergeLog } from "./index"
   import { gsap } from "gsap"
-  import { playSound } from "@modules/sound"
 
   import LogItem from "@components/Main/RoomResult/Log/LogItem.svelte"
-  import VideoLoader from "@components/Main/Shared/VideoLoader/VideoLoader.svelte"
 
   let {
     result,
-    animationstarted,
-    resultEvent,
     onComplete,
   }: {
-    result: EnterRoomReturnValue | undefined
-    animationstarted: boolean
-    resultEvent: RESULT_EVENT
+    result: EnterRoomReturnValue | null
     onComplete: () => void
   } = $props()
 
-  // Elements
+  // Element
   let logElement: HTMLDivElement
-  let returnButtonElement: HTMLButtonElement
-  let done = $state(false)
-
-  import { getUIState } from "@modules/ui/state.svelte"
-  const { rooms } = getUIState()
 
   // Merge log events with corresponding outcomes
   let mergedLog: MergedLogEntry[] | undefined = $state(undefined)
@@ -58,29 +46,20 @@
 
     if (receivedTimelines === totalItems) {
       // Add animation for return button
-      gsap.set(returnButtonElement, { opacity: 0 })
-      logTimeline.to(returnButtonElement, {
-        opacity: 1,
-        duration: 0.5,
-        ease: "power2.out",
-      })
+      // gsap.set(returnButtonElement, { opacity: 0 })
+      // logTimeline.to(returnButtonElement, {
+      //   opacity: 1,
+      //   duration: 0.5,
+      //   ease: "power2.out",
+      // })
       // Add a callback to the parent timeline to check for events
       // The call is added to the end of the timeline by default
       logTimeline.call(() => {
-        done = true
         onComplete()
       })
       // All timelines added, play the parent timeline
       logTimeline.play()
     }
-  }
-
-  const sendLeaveRoom = () => {
-    playSound("tcm", "enteredPod")
-    rooms.close(
-      resultEvent !== RESULT_EVENT.LEVEL_UP &&
-        resultEvent !== RESULT_EVENT.LEVEL_DOWN
-    )
   }
 </script>
 
@@ -89,19 +68,6 @@
     {#each mergedLog as logEntry, i (i)}
       <LogItem {logEntry} onTimeline={addToTimeline} />
     {/each}
-  {:else if animationstarted}
-    <VideoLoader />
-  {/if}
-
-  {#if resultEvent === RESULT_EVENT.NONE || resultEvent === RESULT_EVENT.ROOM_DEPLETED}
-    <button
-      disabled={!done}
-      class="return"
-      bind:this={returnButtonElement}
-      onclick={sendLeaveRoom}
-    >
-      LEAVE ROOM
-    </button>
   {/if}
 </div>
 
@@ -113,28 +79,5 @@
     border: var(--default-border-style);
     border-top: none;
     position: relative;
-
-    .return {
-      opacity: 0;
-      position: absolute;
-      bottom: 10px;
-      left: 10px;
-      margin: 0;
-      width: calc(100% - 20px);
-      padding: 20px;
-      background: var(--color-alert-priority);
-      margin-top: 20px;
-      cursor: pointer;
-      border: var(--default-border-style);
-
-      &[disabled] {
-        background: var(--color-grey-dark);
-        color: var(--black);
-      }
-      &:hover {
-        background: var(--color-alert);
-        color: var(--foreground);
-      }
-    }
   }
 </style>
