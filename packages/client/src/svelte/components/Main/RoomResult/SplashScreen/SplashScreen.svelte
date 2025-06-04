@@ -1,7 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte"
   import { gsap } from "gsap"
-  import { staticContent } from "@modules/content"
   import { urlFor } from "@modules/content/sanity"
   import type { Hex } from "viem"
   import {
@@ -12,7 +11,19 @@
 
   import NoImage from "@components/Main/Shared/NoImage/NoImage.svelte"
 
-  const { rat, room, roomId }: { rat: Rat; room: Room; roomId: Hex } = $props()
+  const {
+    rat,
+    room,
+    roomId,
+    staticRoomContent,
+    onComplete,
+  }: {
+    rat: Rat
+    room: Room
+    roomId: Hex
+    staticRoomContent: any
+    onComplete: () => void
+  } = $props()
 
   // Elements
   let roomIndexElement = $state<HTMLDivElement>()
@@ -20,12 +31,8 @@
   let promptElement = $state<HTMLDivElement>()
   let roomInnerElement = $state<HTMLDivElement>()
 
-  let sanityRoomContent = $derived(
-    $staticContent.rooms.find(r => r._id == (roomId ?? ""))
-  )
-
   // Create parent timeline
-  const metaTimeline = gsap.timeline({
+  const splashScreenTimeline = gsap.timeline({
     defaults: { duration: 0.75, ease: "power2.out" },
   })
 
@@ -53,23 +60,33 @@
     gsap.set(promptElement, { opacity: 0, scale: 0.95 })
     gsap.set(roomIndexElement, { opacity: 0, scale: 0.95 })
     // Add to timeline
-    metaTimeline.to(roomIndexElement, { opacity: 1, scale: 1, delay: 0.5 })
-    metaTimeline.to(imageContainerElement, { opacity: 1, scale: 1 })
-    metaTimeline.to(promptElement, { opacity: 1, scale: 1 })
-    metaTimeline.to(roomInnerElement, { opacity: 0, delay: 2, duration: 0.5 })
+    splashScreenTimeline.to(roomIndexElement, {
+      opacity: 1,
+      scale: 1,
+      delay: 0.5,
+    })
+    splashScreenTimeline.to(imageContainerElement, { opacity: 1, scale: 1 })
+    splashScreenTimeline.to(promptElement, { opacity: 1, scale: 1 })
+    splashScreenTimeline.to(roomInnerElement, {
+      opacity: 0,
+      delay: 2,
+      duration: 0.5,
+    })
+    // Return to parent
+    splashScreenTimeline.call(onComplete)
   })
 </script>
 
-<div class="room-meta">
+<div class="splash-screen">
   <div class="inner" bind:this={roomInnerElement}>
     <div class="room-index" bind:this={roomIndexElement}>
       ROOM #{$frozenRoom?.index ?? ""}
     </div>
     <!-- IMAGE -->
     <div class="image-container" bind:this={imageContainerElement}>
-      {#if sanityRoomContent}
+      {#if staticRoomContent}
         <img
-          src={urlFor(sanityRoomContent?.image)
+          src={urlFor(staticRoomContent?.image)
             .width(500)
             .auto("format")
             // .saturation(-100)
@@ -90,11 +107,12 @@
 </div>
 
 <style lang="scss">
-  .room-meta {
+  .splash-screen {
     padding: 0;
     position: absolute;
     inset: 0;
     text-align: center;
+    z-index: 1000;
     display: flex;
     height: var(--game-window-height);
     justify-content: center;

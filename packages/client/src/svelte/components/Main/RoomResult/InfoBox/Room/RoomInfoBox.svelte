@@ -1,18 +1,15 @@
 <script lang="ts">
   import { frozenRoom } from "@components/Main/RoomResult/state.svelte"
-  import { staticContent, lastUpdated } from "@modules/content"
+  import { lastUpdated } from "@modules/content"
   import { urlFor } from "@modules/content/sanity"
-  import type { Hex } from "viem"
   import { renderSafeString } from "@modules/utils"
   import NumberGoing from "@components/Main/Shared/NumberGoing/NumberGoing.svelte"
 
   import NoImage from "@components/Main/Shared/NoImage/NoImage.svelte"
 
-  let { roomId, depleted }: { roomId: Hex; depleted: boolean } = $props()
+  let { staticRoomContent }: { staticRoomContent: any } = $props()
 
-  let sanityRoomContent = $derived(
-    $staticContent.rooms.find(r => r._id == roomId)
-  )
+  let depleted = false
 </script>
 
 <div class="room-info-box" class:depleted>
@@ -26,9 +23,9 @@
       <!-- IMAGE -->
       <div class="image-container">
         {#key $lastUpdated}
-          {#if sanityRoomContent}
+          {#if staticRoomContent}
             <img
-              src={urlFor(sanityRoomContent?.image)
+              src={urlFor(staticRoomContent?.image)
                 .width(300)
                 .auto("format")
                 // .saturation(-100)
@@ -67,8 +64,6 @@
     position: relative;
 
     &.depleted {
-      // opacity: 0.5;
-
       &::after {
         content: "DEPLETED";
         position: absolute;

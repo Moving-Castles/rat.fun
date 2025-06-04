@@ -27,11 +27,3 @@ export enum ROOM_CONTAINER {
   CREATE_ROOM,
   SINGLE_ROOM,
 }
-
-export enum RESULT_EVENT {
-  NONE,
-  RAT_DEAD,
-  ROOM_DEPLETED,
-  LEVEL_UP,
-  LEVEL_DOWN,
-}

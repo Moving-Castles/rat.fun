@@ -1,6 +1,9 @@
 import type { EnterRoomReturnValue } from "@server/modules/types"
 import { MergedLogEntry } from "./types"
 
+/***
+ * Merges log text and outcomes into a single array
+ */
 export function mergeLog(result: EnterRoomReturnValue): MergedLogEntry[] {
 
     // Deep clone the log

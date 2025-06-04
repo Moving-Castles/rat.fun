@@ -1,45 +1,34 @@
 <script lang="ts">
-  import { Howl } from "howler"
+  import type { EnterRoomReturnValue } from "@server/modules/types"
   import { onMount, onDestroy } from "svelte"
+  import { Howl } from "howler"
   import FloorDescription from "@components/Main/Floors/FloorDescription.svelte"
-  import { RESULT_EVENT } from "@modules/ui/enums"
   import { getUIState } from "@modules/ui/state.svelte"
   import { frozenRat } from "@components/Main/RoomResult/state.svelte"
   import { ratLevel } from "@modules/state/base/stores"
   import { playSound } from "@modules/sound"
-  import { getModalState } from "@components/Main/Modal/state.svelte"
 
   let { rooms } = getUIState()
-  let { modal } = getModalState()
 
   let {
-    resultEvent,
     room,
-    sanityRoomContent,
+    staticRoomContent,
+    result,
   }: {
-    resultEvent: RESULT_EVENT
     room: Room
-    sanityRoomContent: any
+    staticRoomContent: any
+    result: EnterRoomReturnValue | null
   } = $props()
 
   let snd = $state<Howl | undefined>(undefined)
 
-  $inspect(sanityRoomContent)
+  $inspect(staticRoomContent)
+  $inspect(result)
+  $inspect(room)
 
   onMount(() => {
     console.log("on mount")
-    if (resultEvent === RESULT_EVENT.RAT_DEAD) {
-      snd = playSound("tcm", "ratDeath", false)
-    }
-    if (resultEvent === RESULT_EVENT.LEVEL_UP) {
-      snd = playSound("tcm", "win", true)
-    }
-    if (resultEvent === RESULT_EVENT.LEVEL_DOWN) {
-      snd = playSound("tcm", "TRX_yes_c", true)
-    }
-    if (resultEvent === RESULT_EVENT.ROOM_DEPLETED) {
-      snd = playSound("tcm", "loadingVariation", true)
-    }
+    snd = playSound("tcm", "TRX_yes_c", true)
   })
 
   onDestroy(() => {
@@ -51,62 +40,31 @@
   onclick={async () => {
     await rooms.close(false)
   }}
+  role="presentation"
   class="popup-container"
 >
   <div class="room-event-popup">
-    <div
-      class="inner"
-      class:death={resultEvent === RESULT_EVENT.RAT_DEAD}
-      class:levelup={resultEvent === RESULT_EVENT.LEVEL_UP}
-      class:leveldown={resultEvent === RESULT_EVENT.LEVEL_DOWN}
-      class:depleted={resultEvent === RESULT_EVENT.ROOM_DEPLETED}
-    >
+    <div class="inner">
       <div class="content">
         <!-- Big colored text to explain the situation -->
         <h1 class="message">
-          {#if resultEvent === RESULT_EVENT.RAT_DEAD}
-            {$frozenRat?.name} DIED
-          {/if}
-          {#if resultEvent === RESULT_EVENT.LEVEL_UP}
-            {$frozenRat?.name} TRANSFERRED DOWN TO {$ratLevel.index === 0
-              ? ""
-              : "-"}{$ratLevel.index}
-            <FloorDescription />
-          {/if}
-          {#if resultEvent === RESULT_EVENT.LEVEL_DOWN}
-            {$frozenRat?.name} TRANSFERRED UP TO {$ratLevel.index === 0
-              ? ""
-              : "-"}{$ratLevel.index}
-            <FloorDescription />
-          {/if}
-          {#if resultEvent === RESULT_EVENT.ROOM_DEPLETED}
-            ROOM #{room?.index} DEPLETED
-          {/if}
+          {$frozenRat?.name} TRANSFERRED UP TO {Number($ratLevel.index) === 0
+            ? ""
+            : "-"}{Number($ratLevel.index)}
+          <FloorDescription />
         </h1>
 
-        {#if resultEvent === RESULT_EVENT.RAT_DEAD || resultEvent === RESULT_EVENT.LEVEL_UP || resultEvent === RESULT_EVENT.LEVEL_DOWN}
-          <button
-            class="close-button"
-            class:death={resultEvent === RESULT_EVENT.RAT_DEAD}
-            class:levelup={resultEvent === RESULT_EVENT.LEVEL_UP}
-            class:leveldown={resultEvent === RESULT_EVENT.LEVEL_DOWN}
-            onclick={() => {
-              rooms.close(false)
-            }}
-          >
-            LEAVE ROOM
-          </button>
-        {/if}
+        <button
+          class="close-button"
+          onclick={() => {
+            rooms.close(false)
+          }}
+        >
+          LEAVE ROOM
+        </button>
       </div>
 
-      <div
-        class="background"
-        class:death={resultEvent === RESULT_EVENT.RAT_DEAD}
-        class:levelup={resultEvent === RESULT_EVENT.LEVEL_UP}
-        class:leveldown={resultEvent === RESULT_EVENT.LEVEL_DOWN}
-        class:depleted={resultEvent === RESULT_EVENT.ROOM_DEPLETED}
-      />
-      <!-- Rat visualisation dying -->
+      <div class="background"></div>
     </div>
   </div>
 </div>
@@ -136,34 +94,10 @@
       width: 100%;
       height: 100%;
 
-      &.death {
-        background: var(--color-death);
-        .message {
-          color: var(--background);
-        }
-      }
+      background: var(--color-value-down);
 
-      &.depleted {
-        background: var(--black);
-        .message {
-          color: var(--color-value);
-        }
-      }
-
-      &.levelup {
-        background: var(--color-value-up);
-
-        .message {
-          color: var(--background);
-        }
-      }
-
-      &.leveldown {
-        background: var(--color-value-down);
-
-        .message {
-          color: var(--background);
-        }
+      .message {
+        color: var(--background);
       }
 
       .message {
@@ -179,7 +113,6 @@
         .digit {
           display: inline-block;
           width: 50%;
-          float: left;
           text-align: center;
         }
       }
@@ -193,12 +126,7 @@
         transform: translate(-50%, -50%);
         z-index: 0;
         overflow: hidden;
-
-        &.levelup,
-        &.leveldown,
-        &.death {
-          mix-blend-mode: screen;
-        }
+        mix-blend-mode: screen;
 
         .background-image {
           width: 100%;
@@ -206,7 +134,7 @@
           object-fit: contain;
         }
 
-        &.depleted {
+        &.room-depleted {
           .background-image {
             animation: fade-out 60s ease;
           }
@@ -229,6 +157,7 @@
     display: inline-block;
     transform: rotate(90deg) translate(-8px, 0);
   }
+
   .rotate-up {
     display: inline-block;
     transform: rotate(-90deg) translate(-4px, 0);
