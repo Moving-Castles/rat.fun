@@ -179,10 +179,10 @@ contract ManagerSystemTest is BaseTest {
     endGasReport();
     vm.stopPrank();
 
-    // Initial health (100) + Max room balance
-    assertEq(Health.get(ratId), 100 + GameConfig.getRoomCreationCost());
-    // Initial room balance - 100
-    assertEq(Balance.get(roomId), GameConfig.getRoomCreationCost() - GameConfig.getRoomCreationCost());
+    // Initial health (100) + Half of room creation cost
+    assertEq(Health.get(ratId), 100 + (GameConfig.getRoomCreationCost() / 2));
+    // Initial room balance - Half of room creation cost
+    assertEq(Balance.get(roomId), GameConfig.getRoomCreationCost() - (GameConfig.getRoomCreationCost() / 2));
   }
 
   function testApplyOutcomeOverReduceHealth() public {
@@ -680,10 +680,10 @@ contract ManagerSystemTest is BaseTest {
     endGasReport();
     vm.stopPrank();
 
-    // 0 + 100
-    assertEq(Balance.get(ratId), GameConfig.getRoomCreationCost());
-    // All balance transferred to rat
-    assertEq(Balance.get(roomId), GameConfig.getRoomCreationCost() - GameConfig.getRoomCreationCost());
+    // 0 + half of room creation cost (because room can only give half of its creation cost)
+    assertEq(Balance.get(ratId), GameConfig.getRoomCreationCost() / 2);
+    // Half of room creation cost was given to rat
+    assertEq(Balance.get(roomId), GameConfig.getRoomCreationCost() / 2);
   }
 
   function testApplyOutcomeOverTransferToRoom() public {

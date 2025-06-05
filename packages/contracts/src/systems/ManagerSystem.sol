@@ -2,10 +2,11 @@
 pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { GameConfig, EntityType, Balance, Dead, Health, Traits, Inventory, Owner, VisitCount, KillCount, Level, LastVisitBlock } from "../codegen/index.sol";
+import { GameConfig, EntityType, Balance, Dead, Health, Traits, Inventory, Owner, VisitCount, KillCount, Level, LastVisitBlock, RoomCreationCost } from "../codegen/index.sol";
 import { LibManager, LibRat } from "../libraries/Libraries.sol";
 import { ENTITY_TYPE } from "../codegen/common.sol";
 import { Item } from "../structs.sol";
+import { LibUtils } from "../libraries/LibUtils.sol";
 
 /**
  * @dev Only admin can call these function
@@ -51,11 +52,22 @@ contract ManagerSystem is System {
     VisitCount.set(_roomId, VisitCount.get(_roomId) + 1);
 
     // * * * * * * * * * * * * *
+    // BUDGETING
+    // * * * * * * * * * * * * *
+
+    // A room can give a maximum of half of its creation cost
+    uint256 roomBudget = LibUtils.min(RoomCreationCost.get(_roomId) / 2, Balance.get(_roomId));
+
+    // console.log("1: roomBudget", roomBudget);
+
+    // * * * * * * * * * * * * *
     // HEALTH
     // * * * * * * * * * * * * *
 
     // Health change can have positive or negative value: effect on room balance unknown
-    LibManager.updateHealth(_ratId, _roomId, _healthChange);
+    roomBudget = LibManager.updateHealth(roomBudget, _ratId, _roomId, _healthChange);
+
+    // console.log("2: roomBudget", roomBudget);
 
     // Exit early if dead
     if (Health.get(_ratId) == 0) {
@@ -71,7 +83,9 @@ contract ManagerSystem is System {
     // As traits always have positive value, this will always increase the room balance
     LibManager.removeTraitsFromRat(_ratId, _roomId, _traitsToRemoveFromRat);
     // As traits always have positive value, this will always decrease the room balance
-    LibManager.addTraitsToRat(_ratId, _roomId, _traitToAddToRat);
+    roomBudget = LibManager.addTraitsToRat(roomBudget, _ratId, _roomId, _traitToAddToRat);
+
+    // console.log("3: roomBudget", roomBudget);
 
     // * * * * * * * * * * * * *
     // ITEMS
@@ -80,14 +94,16 @@ contract ManagerSystem is System {
     // As items always have positive value, this will always increase the room balance
     LibManager.removeItemsFromRat(_ratId, _roomId, _itemsToRemoveFromRat);
     // As items always have positive value, this will always decrease the room balance
-    LibManager.addItemsToRat(_ratId, _roomId, _itemsToAddToRat);
+    roomBudget = LibManager.addItemsToRat(roomBudget, _ratId, _roomId, _itemsToAddToRat);
+
+    // console.log("4: roomBudget", roomBudget);
 
     // * * * * * * * * * * * * *
     // BALANCE
     // * * * * * * * * * * * * *
 
     // Balance transfer can have positive or negative value: effect on room balance unknown
-    LibManager.updateBalance(_ratId, _roomId, _balanceTransferToOrFromRat);
+    LibManager.updateBalance(roomBudget, _ratId, _roomId, _balanceTransferToOrFromRat);
 
     // * * * * * * * * * * * * *
     // LEVEL CHANGE

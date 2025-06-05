@@ -44,7 +44,7 @@ contract RoomSystem is System {
     Balance.set(_playerId, Balance.get(_playerId) - roomCreationCost);
 
     // Create room
-    newRoomId = LibRoom.createRoom(_prompt, _playerId, _levelId, _roomId);
+    newRoomId = LibRoom.createRoom(_prompt, _playerId, _levelId, _roomId, roomCreationCost);
   }
 
   function closeRoom(bytes32 _roomId) public {

@@ -92,7 +92,8 @@ declare global {
     visitCount: mudComponents["VisitCount"],
     killCount: mudComponents["KillCount"],
     creationBlock: mudComponents["CreationBlock"],
-    lastVisitBlock: mudComponents["LastVisitBlock"]
+    lastVisitBlock: mudComponents["LastVisitBlock"],
+    roomCreationCost: mudComponents["RoomCreationCost"]
   }
 
   type Trait = {

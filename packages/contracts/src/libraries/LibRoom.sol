@@ -10,13 +10,15 @@ library LibRoom {
    * @param _prompt The prompt for the room
    * @param _roomOwner Id of the owner of the room
    * @param _roomLevel Id of the level that the room is on
+   * @param _roomCreationCost The creation cost of the room
    * @return newRoomId The id of the new room
    */
   function createRoom(
     string memory _prompt,
     bytes32 _roomOwner,
     bytes32 _roomLevel,
-    bytes32 _roomId
+    bytes32 _roomId,
+    uint256 _roomCreationCost
   ) internal returns (bytes32 newRoomId) {
     // If _roomId is not provided, generate a new unique id
     if (_roomId == bytes32(0)) {
@@ -38,6 +40,7 @@ library LibRoom {
     VisitCount.set(newRoomId, 0);
 
     // Add to room's balance
-    Balance.set(newRoomId, RoomCreationCost.get(_roomLevel));
+    Balance.set(newRoomId, _roomCreationCost);
+    RoomCreationCost.set(newRoomId, _roomCreationCost);
   }
 }
