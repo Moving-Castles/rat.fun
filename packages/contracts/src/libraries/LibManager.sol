@@ -14,18 +14,24 @@ library LibManager {
   /**
    * @notice Increase or decrease the health of a rat
    * @dev Used by the Manager system to apply changes to a rat after room events
+   * @param _roomBudget The budget of the room
    * @param _ratId Id of the rat
    * @param _roomId Id of the room
    * @param _healthChange Health change to apply to the rat
    */
-  function updateHealth(bytes32 _ratId, bytes32 _roomId, int256 _healthChange) internal {
+  function updateHealth(
+    uint256 _roomBudget,
+    bytes32 _ratId,
+    bytes32 _roomId,
+    int256 _healthChange
+  ) internal returns (uint256) {
     // - - - - - - - - -
     // Changes to rat health is connected to room blance:
     // - If rat health goes up, room balance goes down
     // - If rat health goes down, room balance goes up
     // - - - - - - - - -
     // Caveats:
-    // - Room can not give more health than it has balance
+    // - Room can not give more health than it has available budget
     // - Rat can not give more balance than it has health
     // - - - - - - - - -
     // If the rat's health goes to 0 it is dead
@@ -33,7 +39,7 @@ library LibManager {
 
     // If health change is 0, exit early
     if (_healthChange == 0) {
-      return;
+      return _roomBudget;
     }
 
     // Absolute value of health change
@@ -55,15 +61,20 @@ library LibManager {
     } else {
       // __ From room balance to rat health
 
-      // Room's old balance limits value transfer
-      uint256 valueChangeAmount = LibUtils.min(oldRoomBalance, healthChangeAmount);
+      // Available budget limits value transfer
+      uint256 valueChangeAmount = LibUtils.min(_roomBudget, healthChangeAmount);
 
       // Increase rat health
       Health.set(_ratId, oldRatHealth + valueChangeAmount);
 
       // Reduce room balance
       Balance.set(_roomId, oldRoomBalance - valueChangeAmount);
+
+      // Reduce the available budget
+      _roomBudget = _roomBudget - valueChangeAmount;
     }
+
+    return _roomBudget;
   }
 
   /**
@@ -100,40 +111,50 @@ library LibManager {
    * @dev Used by the Manager system to apply changes to a rat after room events
    * @param _ratId Id of the rat
    * @param _roomId Id of the room
+   * @param _roomBudget The budget of the room
    * @param _traitsToAddToRat Information about traits to add to rat
    */
-  function addTraitsToRat(bytes32 _ratId, bytes32 _roomId, Item[] calldata _traitsToAddToRat) internal {
+  function addTraitsToRat(
+    uint256 _roomBudget,
+    bytes32 _ratId,
+    bytes32 _roomId,
+    Item[] calldata _traitsToAddToRat
+  ) internal returns (uint256) {
     // - - - - - - - - -
     // Function adds traits to rat
     // - - - - - - - - -
     // Value of item is always positive.
     // Adding an item subtracts the value from the room balance
     // Caveats:
-    // - Room can not add traits with positive value if it does not have the balance to cover it
+    // - Room can not add traits with positive value if it does not have the available budget to cover it
     // - A rat can have a maximum of 5 traits
     // - - - - - - - - -
 
     // If list is empty, exit early
     if (_traitsToAddToRat.length == 0) {
-      return;
+      return _roomBudget;
     }
 
     for (uint i = 0; i < _traitsToAddToRat.length; i++) {
       // Abort if traits are full
       if (Traits.length(_ratId) >= MAX_TRAITS_SIZE) {
-        return;
+        return _roomBudget;
       }
 
       Item calldata newTrait = _traitsToAddToRat[i];
 
-      // Trait value is positive, make sure room has enough balance to cover it
-      if (Balance.get(_roomId) >= newTrait.value) {
+      // Trait value is positive, make sure room has enough available budget to cover it
+      if (_roomBudget >= newTrait.value) {
         // If so, remove value from room balance
         Balance.set(_roomId, LibUtils.safeSubtract(Balance.get(_roomId), newTrait.value));
+        // Reduce the available budget
+        _roomBudget = _roomBudget - newTrait.value;
         // Create trait and add it to the rat
         Traits.push(_ratId, LibTrait.createTrait(newTrait));
       }
     }
+
+    return _roomBudget;
   }
 
   /**
@@ -141,40 +162,50 @@ library LibManager {
    * @dev Used by the Manager system to apply changes to a rat after room events
    * @param _ratId Id of the rat
    * @param _roomId Id of the room
+   * @param _roomBudget The budget of the room
    * @param _itemsToAddToRat Information of items to add to rat
    */
-  function addItemsToRat(bytes32 _ratId, bytes32 _roomId, Item[] calldata _itemsToAddToRat) internal {
+  function addItemsToRat(
+    uint256 _roomBudget,
+    bytes32 _ratId,
+    bytes32 _roomId,
+    Item[] calldata _itemsToAddToRat
+  ) internal returns (uint256) {
     // - - - - - - - - -
     // Function adds items to rat
     // - - - - - - - - -
     // Value of item is always positive.
     // Adding an item subtracts the value from the room balance
     // Caveats:
-    // - Room can not add an item if it does not have the balance to cover it
+    // - Room can not add an item if it does not have the available budget to cover it
     // - A rat can have a maximum of 5 items in inventory
     // - - - - - - - - -
 
     // If list is empty, exit early
     if (_itemsToAddToRat.length == 0) {
-      return;
+      return _roomBudget;
     }
 
     for (uint i = 0; i < _itemsToAddToRat.length; i++) {
       // Abort if inventory is full
       if (Inventory.length(_ratId) >= MAX_INVENTORY_SIZE) {
-        return;
+        return _roomBudget;
       }
 
       Item calldata newItem = _itemsToAddToRat[i];
 
-      // Make sure room has enough balance to cover it
-      if (Balance.get(_roomId) >= newItem.value) {
+      // Make sure room has enough available budget to cover it
+      if (_roomBudget >= newItem.value) {
         // If so, remove value from room balance
         Balance.set(_roomId, LibUtils.safeSubtract(Balance.get(_roomId), newItem.value));
+        // Reduce the available budget
+        _roomBudget = _roomBudget - newItem.value;
         // Create item and add it to the rat
         Inventory.push(_ratId, LibItem.createItem(newItem));
       }
     }
+
+    return _roomBudget;
   }
 
   /**
@@ -212,14 +243,15 @@ library LibManager {
    * @dev Used by the Manager system to apply changes to a rat after room events
    * @param _ratId Id of the rat
    * @param _roomId Id of the room
+   * @param _roomBudget The budget of the room
    * @param _value Value to transfer to or from the rat's blance
    */
-  function updateBalance(bytes32 _ratId, bytes32 _roomId, int256 _value) internal {
+  function updateBalance(uint256 _roomBudget, bytes32 _ratId, bytes32 _roomId, int256 _value) internal {
     // - - - - - - - - -
     // Function transfers balance between rat and room
     // - - - - - - - - -
     // Caveats:
-    // - Room can not give more credits than it has balance
+    // - Room can not give more credits than it has available budget
     // - Rat can not give more credits than it has balance
     // - - - - - - - - -
 
@@ -247,8 +279,8 @@ library LibManager {
     } else {
       // __ From room balance to rat balance
 
-      // Room's old balance limits value transfer
-      uint256 valueChangeAmount = LibUtils.min(oldRoomBalance, balanceChangeAmount);
+      // Room's available budget limits value transfer
+      uint256 valueChangeAmount = LibUtils.min(_roomBudget, balanceChangeAmount);
 
       // Add balance to rat
       Balance.set(_ratId, oldRatBalance + valueChangeAmount);
