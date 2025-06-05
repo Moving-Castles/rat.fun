@@ -17,7 +17,8 @@ declare global {
 
   type GameConfig = {
     gameConfig: GameConfigObject
-    levelList: string[]
+    levelList: Hex[]
+    worldPrompt: string
   }
 
   // * * * * * * * * * * * * * * * * *

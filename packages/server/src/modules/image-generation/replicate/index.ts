@@ -21,7 +21,7 @@ const makePrompt = (prompt: string) => {
   return `STYLE: ${randomPrompts}. !! Important !! A scene of: ${prompt}`
 }
 
-export const generateImage = async (prompt: string, levelPrompt: string) => {
+export const generateImage = async (prompt: string) => {
   const INPUT = {
     FLUX: {
       image: "https://rat-room-pyrope.netlify.app/images/room-templates/room-8.jpg",

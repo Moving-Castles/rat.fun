@@ -35,6 +35,12 @@ export default defineWorld({
         value: "bytes32[]"
       }
     },
+    WorldPrompt: {
+      key: [],
+      schema: {
+        value: "string"
+      }
+    },
     // ...
     Name: "string", // Set on player, rat and room
     EntityType: "ENTITY_TYPE",

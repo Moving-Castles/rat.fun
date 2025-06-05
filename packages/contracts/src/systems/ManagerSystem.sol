@@ -2,7 +2,7 @@
 pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { GameConfig, EntityType, Balance, Dead, Health, Traits, Inventory, Owner, VisitCount, KillCount, Level, LastVisitBlock, RoomCreationCost } from "../codegen/index.sol";
+import { GameConfig, EntityType, Balance, Dead, Health, Traits, Inventory, Owner, VisitCount, KillCount, Level, LastVisitBlock, RoomCreationCost, WorldPrompt } from "../codegen/index.sol";
 import { LibManager, LibRat } from "../libraries/Libraries.sol";
 import { ENTITY_TYPE } from "../codegen/common.sol";
 import { Item } from "../structs.sol";
@@ -113,5 +113,14 @@ contract ManagerSystem is System {
 
     // Update last visit block
     LastVisitBlock.set(_roomId, block.number);
+  }
+
+  /**
+   * @notice Set the world prompt
+   * @dev Only admin can call this function
+   * @param _worldPrompt The new world prompt
+   */
+  function setWorldPrompt(string memory _worldPrompt) public onlyAdmin {
+    WorldPrompt.set(_worldPrompt);
   }
 }

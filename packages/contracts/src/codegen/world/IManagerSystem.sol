@@ -21,4 +21,6 @@ interface IManagerSystem {
     bytes32[] calldata _itemsToRemoveFromRat,
     Item[] calldata _itemsToAddToRat
   ) external;
+
+  function ratroom__setWorldPrompt(string memory _worldPrompt) external;
 }

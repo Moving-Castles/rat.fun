@@ -81,7 +81,7 @@
         {/each}
       </div>
 
-      <div class="level-description">
+      <!-- <div class="level-description">
         <div class="level-name">
           Floor {Number($levels[levelId].index) * -1}: {$levels[levelId].name}
         </div>
@@ -90,7 +90,7 @@
             {$levels[levelId].prompt}
           </div>
         {/if}
-      </div>
+      </div> -->
     </div>
 
     <!-- ROOM DESCRIPTION -->

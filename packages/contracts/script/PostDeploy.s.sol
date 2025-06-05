@@ -11,7 +11,7 @@ import { NamespaceOwner } from "@latticexyz/world/src/codegen/tables/NamespaceOw
 
 import { GameConfig } from "../src/codegen/index.sol";
 
-import { LibInit, LibLevel, LibRoom } from "../src/libraries/Libraries.sol";
+import { LibWorld, LibLevel, LibRoom } from "../src/libraries/Libraries.sol";
 
 contract PostDeploy is Script {
   function run(address worldAddress) external {
@@ -47,7 +47,10 @@ contract PostDeploy is Script {
     levels[4] = LibLevel.createLevel(4, "Fire", "Floor is on literal fire.", 2500, 10000, 10000);
 
     // Root namespace owner is admin
-    LibInit.init(NamespaceOwner.get(ROOT_NAMESPACE_ID), levels);
+    LibWorld.init(NamespaceOwner.get(ROOT_NAMESPACE_ID), levels);
+
+    // Set world prompt
+    LibWorld.setWorldPrompt("Everything is made out of cake.");
 
     // Electrical shock therapy. Rat gets psychological disorder, or heals one (even if unlikely).
     // LibRoom.createRoom(

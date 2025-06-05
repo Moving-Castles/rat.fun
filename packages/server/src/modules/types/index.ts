@@ -61,6 +61,7 @@ export type GameConfig = TableRecord<
 
 export type EnterRoomData = {
   gameConfig: GameConfig
+  worldPrompt: string
   rat: Rat
   level: Level
   player?: Player
@@ -69,6 +70,7 @@ export type EnterRoomData = {
 
 export type CreateRoomData = {
   gameConfig: GameConfig
+  worldPrompt: string
   level: MinimalLevel
   player: Player
 }

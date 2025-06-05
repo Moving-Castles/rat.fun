@@ -6,11 +6,11 @@
   <div class="level-name">
     Floor {Number($ratLevel.index) * -1}: {$ratLevel.name}
   </div>
-  {#if $ratLevel.prompt}
+  <!-- {#if $ratLevel.prompt}
     <div class="level-prompt">
       {$ratLevel.prompt}
     </div>
-  {/if}
+  {/if} -->
 </div>
 
 <style lang="scss">

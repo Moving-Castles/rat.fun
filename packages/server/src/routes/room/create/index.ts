@@ -96,7 +96,7 @@ async function routes(fastify: FastifyInstance) {
           console.time("–– Image generation")
           try {
             // Get the image data
-            const imageBuffer = await generateImage(roomPrompt, level.prompt)
+            const imageBuffer = await generateImage(roomPrompt)
 
             // Get world address - await the network promise first
             const resolvedNetwork = await network

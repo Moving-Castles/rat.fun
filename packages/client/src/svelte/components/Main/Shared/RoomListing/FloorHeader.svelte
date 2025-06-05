@@ -11,13 +11,14 @@
 <div class="floor-header">
   <div class="inner">
     <div class="title">
-      <span>Floor #{Number(currentFloor.index) * -1}: {currentFloor.name}</span>
+      <span>World prompt: {$gameConfig?.worldPrompt}</span>
+      <!-- <span>Floor #{Number(currentFloor.index) * -1}: {currentFloor.name}</span> -->
     </div>
-    {#if currentFloor.prompt}
+    <!-- {#if currentFloor.prompt}
       <div class="prompt">
         <span>{currentFloor.prompt}</span>
       </div>
-    {/if}
+    {/if} -->
   </div>
 </div>
 

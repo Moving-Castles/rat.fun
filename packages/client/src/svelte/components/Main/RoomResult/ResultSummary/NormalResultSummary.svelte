@@ -71,6 +71,7 @@
     overscroll-behavior: none;
     z-index: 1;
   }
+
   .room-event-popup {
     position: relative;
     height: 400px;
@@ -79,6 +80,7 @@
     max-height: calc(var(--game-window-height) * 0.9);
     overflow-x: hidden;
     overflow-y: scroll;
+    background: var(--color-alert);
 
     .inner {
       position: relative;

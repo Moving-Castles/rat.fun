@@ -48,7 +48,8 @@ export async function getEnterRoomData(ratId: string, roomId?: string, playerId?
         const { 
             Owner, 
             Name, 
-            Prompt, 
+            Prompt,
+            WorldPrompt,
             Dead, 
             Traits, 
             Health, 
@@ -194,6 +195,7 @@ export async function getEnterRoomData(ratId: string, roomId?: string, playerId?
         const gameConfigEntity = (await network).world.registerEntity({ id: GAME_CONFIG_ID });
 
         const gameConfig = getComponentValue(GameConfig, gameConfigEntity) as GameConfig;
+        const worldPrompt = getComponentValue(WorldPrompt, gameConfigEntity)?.value as string;
 
         // Check if game config exists
         if (!gameConfig) {
@@ -201,6 +203,7 @@ export async function getEnterRoomData(ratId: string, roomId?: string, playerId?
         }
 
         result.gameConfig = gameConfig;
+        result.worldPrompt = worldPrompt;
 
         /////////////////
         // RETURN RESULT
