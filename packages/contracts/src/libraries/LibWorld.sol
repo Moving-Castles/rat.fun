@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { GameConfig, GameConfigData, Balance, Name, VisitedLevels, WorldPrompt } from "../codegen/index.sol";
-import { MAX_ROOM_PROMPT_LENGTH, MIN_ROOM_PROMPT_LENGTH, MAX_INVENTORY_SIZE, MAX_TRAITS_SIZE } from "../constants.sol";
+import { MAX_ROOM_PROMPT_LENGTH, MIN_ROOM_PROMPT_LENGTH, MAX_INVENTORY_SIZE, MAX_TRAITS_SIZE, COOLDOWN_CLOSE_ROOM, COOLDOWN_REENTER_ROOM } from "../constants.sol";
 import { LibUtils } from "./LibUtils.sol";
 
 library LibWorld {
@@ -26,7 +26,9 @@ library LibWorld {
         maxTraitsSize: MAX_TRAITS_SIZE,
         minRoomPromptLength: MIN_ROOM_PROMPT_LENGTH,
         maxRoomPromptLength: MAX_ROOM_PROMPT_LENGTH,
-        startingBalance: 2000
+        startingBalance: 2000,
+        cooldownCloseRoom: COOLDOWN_CLOSE_ROOM,
+        cooldownReenterRoom: COOLDOWN_REENTER_ROOM
       })
     );
 

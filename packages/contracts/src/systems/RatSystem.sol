@@ -29,7 +29,7 @@ contract RatSystem is System {
   }
 
   /**
-   * @notice Liquidate rat
+   * @notice Liquidate the player's rat
    */
   function liquidateRat() public {
     bytes32 playerId = LibUtils.addressToEntityKey(_msgSender());

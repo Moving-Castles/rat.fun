@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
+import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { GameConfig, EntityType, Balance, Level, VisitedLevels, RoomCreationCost, LevelList, Owner, OwnedRat } from "../codegen/index.sol";
+import { GameConfig, EntityType, Balance, Level, VisitedLevels, RoomCreationCost, LevelList, Owner, OwnedRat, CreationBlock } from "../codegen/index.sol";
 import { LibRoom, LibUtils } from "../libraries/Libraries.sol";
 import { MAX_ROOM_PROMPT_LENGTH } from "../constants.sol";
 import { ENTITY_TYPE } from "../codegen/common.sol";
@@ -47,9 +48,14 @@ contract RoomSystem is System {
     newRoomId = LibRoom.createRoom(_prompt, _playerId, _levelId, _roomId, roomCreationCost);
   }
 
+  /**
+   * @notice Close a room
+   * @param _roomId The id of the room to close
+   */
   function closeRoom(bytes32 _roomId) public {
     bytes32 playerId = LibUtils.addressToEntityKey(_msgSender());
     require(Owner.get(_roomId) == playerId, "not owner");
+    require(block.number > (CreationBlock.get(_roomId) + GameConfig.getCooldownCloseRoom()), "in cooldown");
 
     // Transfer balance to player
     Balance.set(playerId, Balance.get(playerId) + Balance.get(_roomId));

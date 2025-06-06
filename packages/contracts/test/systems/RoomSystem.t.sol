@@ -107,6 +107,9 @@ contract RoomSystemTest is BaseTest {
     // Check room balance
     assertEq(Balance.get(roomId), GameConfig.getRoomCreationCost());
 
+    // Wait for cooldown
+    vm.roll(block.number + GameConfig.getCooldownCloseRoom() + 1);
+
     // Close room
     vm.startPrank(alice);
     startGasReport("Close room");
@@ -120,6 +123,25 @@ contract RoomSystemTest is BaseTest {
 
     // Check player balance
     assertEq(Balance.get(playerId), initialBalance);
+  }
+
+  function testCloseRoomRevertInCooldown() public {
+    vm.startPrank(alice);
+    bytes32 playerId = world.ratroom__spawn("alice");
+    vm.stopPrank();
+
+    // As admin
+    prankAdmin();
+    bytes32 roomId = world.ratroom__createRoom(playerId, LevelList.getItem(0), bytes32(0), "A test room");
+    vm.stopPrank();
+
+    // Advance blocks but not enough to pass cooldown
+    vm.roll(block.number + GameConfig.getCooldownCloseRoom() - 1);
+
+    vm.startPrank(alice);
+    vm.expectRevert("in cooldown");
+    world.ratroom__closeRoom(roomId);
+    vm.stopPrank();
   }
 
   function testCloseRoomRevertNotOwner() public {

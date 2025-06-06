@@ -8,6 +8,8 @@
     ModalTarget,
     getModalState,
   } from "@components/Main/Modal/state.svelte"
+  import { gameConfig } from "@modules/state/base/stores"
+  import { blockNumber } from "@modules/network"
   import { staticContent, lastUpdated } from "@modules/content"
   import { urlFor } from "@modules/content/sanity"
   import { sendLiquidateRoomMessage } from "@modules/off-chain-sync"
@@ -32,6 +34,13 @@
   let busy = $state(false)
   let confirming = $state(false)
   let liquidationMessage = $state("CONFIRM ROOM LIQUIDATION")
+
+  // Cooldown until room can be liquidated
+  let blockUntilUnlock = $derived(
+    Number(room.creationBlock) +
+      $gameConfig.gameConfig.cooldownCloseRoom -
+      Number($blockNumber)
+  )
 
   async function sendLiquidateRoom() {
     if (busy) return
@@ -67,11 +76,15 @@
     use:tippy={{
       content: "Liquidate room to get the value added to your operator wallet",
     }}
-    disabled={busy}
+    class:disabled={busy || blockUntilUnlock > 0}
     onclick={() => (confirming = true)}
     class="action warning-mute"
   >
-    Liquidate Room
+    {#if blockUntilUnlock <= 0}
+      Liquidate Room
+    {:else}
+      Unlocked in {blockUntilUnlock} blocks
+    {/if}
   </button>
 </div>
 
@@ -229,7 +242,8 @@
     }
   }
 
-  button[disabled] {
+  .disabled {
     background: var(--color-grey-mid);
+    pointer-events: none;
   }
 </style>

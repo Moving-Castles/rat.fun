@@ -24,6 +24,8 @@ export default defineWorld({
         minRoomPromptLength: "uint32",
         maxRoomPromptLength: "uint32",
         startingBalance: "uint256",
+        cooldownCloseRoom: "uint32",
+        cooldownReenterRoom: "uint32"
       },
       codegen: {
         dataStruct: true
