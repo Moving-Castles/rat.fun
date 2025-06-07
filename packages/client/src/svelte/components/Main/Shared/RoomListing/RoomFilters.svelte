@@ -161,7 +161,8 @@
     justify-content: space-between;
     overflow: hidden;
     position: sticky;
-    top: 61px; // respecting the floor header component above it
+    top: 0;
+    // top: 61px; // respecting the floor header component above it
     z-index: 100;
     background: var(--background);
   }

@@ -54,7 +54,8 @@
 
   .info-item {
     display: flex;
-    margin: 10px;
+    margin: 5px;
+    margin-inline: 10px;
     gap: 5px;
 
     .index {

@@ -93,7 +93,7 @@
   }
 
   .rat-liquidate {
-    height: var(--rat-liquidate-height);
+    height: var(--liquidate-rat-height);
     width: 100%;
     border-bottom: var(--default-border-style);
   }

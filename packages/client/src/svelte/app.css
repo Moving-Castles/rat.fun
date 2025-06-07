@@ -37,18 +37,9 @@
   * * * * * * * * * * * * * */
 
   /* Layout: Your Rat */
-  /* --rat-editor-height: 180px; */
-  --rat-editor-height: 230px;
-
   --liquidate-rat-height: 60px;
-  --floor-progress-height: 50px;
-  /* --rat-cam-height: calc(
-    100% - var(--rat-editor-height) - var(--liquidate-rat-height)
-  ); */
-  --rat-cam-height: 260px;
-  --rat-main-info-height: 200px;
-  --rat-inventory-height: 180px;
-  --rat-liquidate-height: 60px;
+  --rat-main-info-height: 160px;
+  --rat-inventory-height: 220px;
 
   /* Layout: Floors */
   --floor-bar-width: 100px;
@@ -57,8 +48,9 @@
   --operator-bar-height: 60px;
 
   /* Layout: Your Rooms */
+  --world-prompt-box-height: 80px;
+  --pane-switch-height: 60px;
   --create-room-button-height: 100px;
-  --player-room-listing-height: calc(100% - var(--create-room-button-height));
 
   /* Layout: Room Item */
   --room-item-height: 260px;
@@ -73,9 +65,9 @@
   --top-bar-height: 40px;
   --tab-bar-height: 90px;
 
-  /* border */
+  /* Border */
   --color-border: var(--color-grey-mid);
-  --default-border-style: 1px double var(--color-border);
+  --default-border-style: 1px solid var(--color-border);
   --dashed-border-style: 1px dashed var(--color-border);
 
   /* Typography */

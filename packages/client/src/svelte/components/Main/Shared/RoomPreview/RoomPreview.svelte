@@ -92,35 +92,59 @@
 {#if room}
   <div class="room-preview">
     <div class="room-inner-container">
-      <!-- ROOM IMAGE -->
-      <div class="room-image">
-        {#key $lastUpdated}
-          {#if sanityRoomContent}
-            <img
-              src={urlFor(sanityRoomContent?.image)
-                .width(600)
-                .auto("format")
-                // .saturation(-100)
-                .url()}
-              alt={`room #${room.index}`}
-            />
-          {:else}
-            <div class="image-placeholder">
-              <NoImage />
+      <!-- HEADER -->
+      <div class="room-header">
+        <!-- IMAGE -->
+        <div class="room-image">
+          {#key $lastUpdated}
+            {#if sanityRoomContent}
+              <img
+                src={urlFor(sanityRoomContent?.image)
+                  .width(600)
+                  .auto("format")
+                  // .saturation(-100)
+                  .url()}
+                alt={`room #${room.index}`}
+              />
+            {:else}
+              <div class="image-placeholder">
+                <NoImage />
+              </div>
+            {/if}
+          {/key}
+        </div>
+        <!-- INFO -->
+        <div class="room-info">
+          <!-- INDEX -->
+          <div class="row index">
+            <div class="label">Room</div>
+            <div class="value">#{room.index}</div>
+          </div>
+          <!-- OWNER -->
+          <div class="row">
+            <div class="label">Owner</div>
+            <div class="value">{getRoomOwnerName(room)}</div>
+          </div>
+          <!-- BALANCE -->
+          <div class="row balance" class:depleted={Number(room.balance) == 0}>
+            <div class="label">Balance</div>
+            <div class="value">${room.balance}</div>
+          </div>
+          <!-- VISIT COUNT -->
+          <div class="row visit-count">
+            <div class="label">Visits</div>
+            <div class="value">
+              {room.visitCount} visit{#if room.visitCount > 1}s{/if}
+            </div>
+          </div>
+          <!-- KILL COUNT -->
+          {#if room?.killCount > 0}
+            <div class="row kill-count">
+              <div class="label">Kills</div>
+              <div class="value">{room?.killCount} kills</div>
             </div>
           {/if}
-        {/key}
-      </div>
-
-      <!-- ROOM INFO -->
-      <div class="room-info">
-        <div class="room-info-row">
-          <span class="index">Room #{room.index}</span>
-          <!-- DIVIDER -->
-          <span class="divider">•</span>
-          <!-- OWNER -->
-          <span class="owner">{getRoomOwnerName(room)}</span>
-          <button
+          <!-- <button
             use:clickToCopy={copyShareLink}
             {oncopysuccess}
             {oncopyfail}
@@ -129,26 +153,7 @@
             class="share-button"
           >
             {shareText}
-          </button>
-        </div>
-
-        <div class="room-info-row">
-          <!-- BALANCE -->
-          <span class="balance" class:depleted={Number(room.balance) == 0}>
-            Balance: ${room.balance}
-          </span>
-          <!-- DIVIDER -->
-          <span class="divider">•</span>
-          <!-- VISIT COUNT -->
-          <span class="visit-count"
-            >{room.visitCount} visit{#if room.visitCount > 1}s{/if}</span
-          >
-          <!-- KILL COUNT -->
-          {#if room?.killCount > 0}
-            <!-- DIVIDER -->
-            <span class="divider">•</span>
-            <span class="kill-count small">{room?.killCount} kills</span>
-          {/if}
+          </button> -->
         </div>
       </div>
 
@@ -205,67 +210,64 @@
     flex-direction: column;
     width: 100%;
     height: 100%;
-    // height: 100%;
-
-    .back-button {
-      width: 100%;
-      height: 60px;
-      background: transparent;
-      border: none;
-      color: var(--foreground);
-      text-transform: uppercase;
-      border-bottom: var(--default-border-style);
-
-      &:hover {
-        background-color: var(--color-grey-darker);
-      }
-    }
 
     .room-inner-container {
-      padding: 15px;
       overflow-y: auto;
       flex: 1;
       min-height: 0;
       height: 100%;
-      padding-bottom: 60px;
+      padding-bottom: calc(
+        var(--pane-switch-height) + var(--world-prompt-box-height) + 20px
+      );
 
-      .room-image {
-        margin-bottom: 10px;
-        border: 15px solid transparent;
-        border-image: url("/images/border-2.png") 20 repeat;
-        aspect-ratio: 1/1;
-        width: 430px;
-        line-height: 0;
-
-        img {
-          width: 400px;
-          aspect-ratio: 1/1;
-          object-fit: cover;
-          border: var(--default-border-style);
-        }
-      }
-
-      .image-placeholder {
-        width: 400px;
-        aspect-ratio: 1/1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 15px;
-      }
-
-      .room-info {
+      .room-header {
         border-bottom: var(--default-border-style);
-        padding-bottom: 5px;
-        margin-bottom: 5px;
+        display: flex;
+        flex-direction: row;
 
-        .room-info-row {
+        .room-image {
+          border: 15px solid transparent;
+          border-image: url("/images/border-2.png") 20 repeat;
+          aspect-ratio: 1/1;
+          width: 330px;
+          line-height: 0;
+
+          img {
+            height: 300px;
+            aspect-ratio: 1/1;
+            object-fit: cover;
+            border: var(--default-border-style);
+          }
+
+          .image-placeholder {
+            height: 300px;
+            aspect-ratio: 1/1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+          }
+        }
+
+        .room-info {
           display: flex;
-          margin-bottom: 5px;
-          display: flex;
-          align-items: center;
-          gap: 10px;
+          flex-direction: column;
           width: 100%;
+
+          .row {
+            width: 100%;
+            border-bottom: var(--default-border-style);
+            height: 40px;
+            padding-inline: 5px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+
+            .label {
+              font-size: var(--font-size-small);
+            }
+          }
         }
 
         .name {
@@ -310,54 +312,54 @@
           color: var(--color-grey-mid);
         }
       }
-    }
 
-    .room-prompt {
-      margin-top: 15px;
-      padding-bottom: 15px;
-      border-bottom: 1px solid var(--color-grey-mid);
-      margin-bottom: 15px;
-      word-break: break-word; /* Break long words if needed */
-      overflow-wrap: anywhere; /* Break anywhere if necessary to prevent overflow */
-      width: 100%;
-      font-family: var(--special-font-stack);
-      font-size: 24px;
-
-      .content {
-        max-width: 55ch;
+      .room-prompt {
+        padding-bottom: 15px;
+        border-bottom: 1px solid var(--color-grey-mid);
+        word-break: break-word; /* Break long words if needed */
+        overflow-wrap: anywhere; /* Break anywhere if necessary to prevent overflow */
+        width: 100%;
+        font-family: var(--special-font-stack);
+        font-size: 24px;
         background: var(--color-alert);
-        padding: 5px;
-      }
-    }
+        min-height: 100px;
+        background: url("/images/bg-test.jpg");
 
-    .room-stats {
-      margin-bottom: 15px;
-
-      .header {
-        border-left: 1px solid var(--color-grey-mid);
-        border-top: 1px solid var(--color-grey-mid);
-        border-right: 1px solid var(--color-grey-mid);
-        border-bottom: 1px dashed var(--color-grey-mid);
-        padding: 12px;
-        display: flex;
-        justify-content: space-between;
-        top: 0;
-        background: var(--background);
-      }
-
-      .content {
-        height: 300px;
-        border-right: 1px solid var(--color-grey-mid);
-
-        &.empty {
-          height: 100px;
+        .content {
+          max-width: 55ch;
+          padding: 5px;
         }
       }
-    }
 
-    .room-recent-events {
-      background: var(--color-grey-mid);
-      height: 200px;
+      .room-stats {
+        margin-bottom: 15px;
+
+        .header {
+          border-left: 1px solid var(--color-grey-mid);
+          border-top: 1px solid var(--color-grey-mid);
+          border-right: 1px solid var(--color-grey-mid);
+          border-bottom: 1px dashed var(--color-grey-mid);
+          padding: 12px;
+          display: flex;
+          justify-content: space-between;
+          top: 0;
+          background: var(--background);
+        }
+
+        .content {
+          height: 300px;
+          border-right: 1px solid var(--color-grey-mid);
+
+          &.empty {
+            height: 100px;
+          }
+        }
+      }
+
+      .room-recent-events {
+        background: var(--color-grey-mid);
+        height: 200px;
+      }
     }
 
     button {
@@ -392,7 +394,7 @@
   .no-rat-warning,
   .room-enter {
     position: sticky;
-    bottom: 0;
+    bottom: 80px;
     z-index: 100;
   }
 </style>

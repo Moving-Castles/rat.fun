@@ -88,7 +88,7 @@
         class="room-listing"
       >
         {#if !isOwnRoomListing}
-          <FloorHeader />
+          <!-- <FloorHeader /> -->
           <RoomFilters
             roomsAmount={activeList.length}
             {textFilter}
