@@ -38,12 +38,6 @@
 
 {#if busy}
   <VideoLoader />
-{:else if done}
-  <div class="deploy-rat">
-    <div class="done">
-      <span>Rat deployed. Stand by...</span>
-    </div>
-  </div>
 {:else}
   <div class="deploy-rat">
     <div class="image-container warning-mute-inverse">

@@ -3,7 +3,7 @@
 
   import RatInfo from "@components/Main/RatContainer/YourRat/RatInfo.svelte"
   import RatInventory from "@components/Main/RatContainer/YourRat/RatInventory.svelte"
-  import RatCam from "@components/Main/RatContainer/YourRat/RatCam.svelte"
+  // import RatCam from "@components/Main/RatContainer/YourRat/RatCam.svelte"
   import LiquidateRat from "@components/Main/RatContainer/YourRat/LiquidateRat.svelte"
   import DeployRat from "@components/Main/RatContainer/DeployRat/DeployRat.svelte"
 </script>
@@ -19,7 +19,8 @@
           </div>
           <!-- Cam -->
           <div class="rat-cam-container">
-            <RatCam />
+            <img src="/images/rat.png" alt="Rat Cam" />
+            <!-- <RatCam /> -->
           </div>
         </div>
         <!-- Inventory -->
@@ -71,6 +72,13 @@
       height: 100%;
       width: var(--rat-main-cam-width);
       overflow: hidden;
+      border-left: var(--default-border-style);
+
+      img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+      }
     }
 
     .rat-info {

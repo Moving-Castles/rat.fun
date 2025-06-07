@@ -8,6 +8,8 @@
   } from "@modules/state/base/stores"
 
   import FloorItem from "./FloorItem.svelte"
+  import Cross from "@components/Main/Shared/Graphics/Cross.svelte"
+  import Circle from "@components/Main/Shared/Graphics/Circle.svelte"
 
   const doorProgress = new Spring(1)
 
@@ -43,10 +45,12 @@
         style:transform="translateY({elevatorIndex * (clientHeight / 5)}px)"
         class="elevator-item"
       >
-        <div class="your-floor" style:background-image="url(/images/rat.png)">
+        <div class="your-floor">
           <div class="floor-item">
             <!-- {elevatorIndex * -1} -->
           </div>
+          <!-- <Circle /> -->
+          <Cross />
           <div class="progress warning-mute">
             <div class="label-min">
               ${$ratLevel?.levelMinBalance ?? 0}
@@ -107,7 +111,7 @@
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
-    background-color: var(--background);
+    // background-color: var(--background);
 
     .progress {
       width: 100%;
