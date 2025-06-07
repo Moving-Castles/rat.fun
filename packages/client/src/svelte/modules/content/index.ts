@@ -33,7 +33,7 @@ export async function initStaticContent(worldAddress: string) {
   client.listen(queries.rooms, { worldAddress }).subscribe(update => {
     if (update.transition == "appear" && update.result) {
       const room = update.result as SanityRoom
-      console.log("new room", room)
+      // console.log("new room", room)
       staticContent.update(content => {
         content.rooms.push(room)
         return content
@@ -45,7 +45,7 @@ export async function initStaticContent(worldAddress: string) {
   client.listen(queries.outcomes, { worldAddress }).subscribe(update => {
     if (update.transition == "appear" && update.result) {
       const outcome = update.result as SanityOutcome
-      console.log("new outcome", outcome)
+      // console.log("new outcome", outcome)
       staticContent.update(content => {
         content.outcomes.push(outcome)
         return content

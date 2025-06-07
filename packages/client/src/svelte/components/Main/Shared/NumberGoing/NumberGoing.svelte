@@ -54,12 +54,12 @@
         }
 
         if (direction < 0) {
-          console.log(direction)
+          // console.log(direction)
           if (!muted) {
             playSound("tcm", "ratsDown")
           }
         } else {
-          console.log(direction)
+          // console.log(direction)
           if (!muted) {
             playSound("tcm", "ratsUp")
           }

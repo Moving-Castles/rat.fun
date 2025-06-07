@@ -15,11 +15,9 @@ const MAX_EVENTS = 200
 let socket: WebSocket
 let reconnectAttempts = 0
 let roundTripStart = 0
-let reconnectTimeout: NodeJS.Timeout | null = null
+let reconnectTimeout: number | null = null
 
 export function initOffChainSync(environment: ENVIRONMENT, playerId: string) {
-  console.log("Initializing off chain sync", environment, playerId)
-
   // Clean up any existing connection
   if (socket) {
     try {
@@ -37,7 +35,7 @@ export function initOffChainSync(environment: ENVIRONMENT, playerId: string) {
 
   let url = `ws://localhost:3131/ws/${playerId}`
 
-  if ([ENVIRONMENT.PYROPE, ENVIRONMENT.GARNET].includes(environment)) {
+  if ([ENVIRONMENT.PYROPE].includes(environment)) {
     url = `wss://reality-model-1.mc-infra.com/ws/${playerId}`
   }
 
@@ -50,7 +48,7 @@ export function initOffChainSync(environment: ENVIRONMENT, playerId: string) {
   }
 
   socket.onmessage = (message: MessageEvent<string>) => {
-    console.log("Received message:", message)
+    // console.log("Received message:", message)
     const messageContent = JSON.parse(message.data) as OffChainMessage
 
     // Update client list when players connect/disconnect
@@ -77,13 +75,13 @@ export function initOffChainSync(environment: ENVIRONMENT, playerId: string) {
     })
   }
 
-  socket.onclose = message => {
+  socket.onclose = (message: CloseEvent) => {
     console.log("WebSocket closed:", message)
     console.log("Reconnecting...")
     attemptReconnect(environment, playerId)
   }
 
-  socket.onerror = error => {
+  socket.onerror = (error: Event) => {
     console.error("WebSocket error:", error)
     socket.close() // Ensure connection is properly closed before reconnecting
   }

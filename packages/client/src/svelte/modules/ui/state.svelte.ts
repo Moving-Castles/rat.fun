@@ -179,7 +179,7 @@ export const getUIState = () => {
     await navigate("main")
     setPane(PANE.ROOM_CONTAINER, ROOM_CONTAINER.ALL_ROOMS)
     uiStores.CurrentRoomId.set(null)
-    console.log("closed")
+    // console.log("closed")
   }
 
   /** 3.1 Exporting state

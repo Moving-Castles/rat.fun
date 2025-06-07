@@ -1,7 +1,10 @@
 /*
- *  Central store for all entities in the game.
- *
+ * ========================================
+ * state/base/stores.ts
+ * ========================================
+ * Central store for all entities in the game.
  */
+
 import { writable, derived } from "svelte/store"
 import { addressToId } from "@modules/utils"
 import { ENTITY_TYPE } from "contracts/enums"

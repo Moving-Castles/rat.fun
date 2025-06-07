@@ -131,7 +131,7 @@ Command: npx @threlte/gltf@3.0.0 src/svelte/public/models/RatAnimated.glb
         visible={false}
         onpointerdown={() => {
           box?.pause()
-          console.log(box.target.current)
+          // console.log(box.target.current)
           playSound("tcm", Math.random < 0.2 ? "ratsUp" : "ratsDown")
           setTimeout(box.resume, 200 + Math.random() * 3000)
         }}

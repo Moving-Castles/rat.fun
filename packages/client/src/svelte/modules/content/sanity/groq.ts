@@ -1,4 +1,7 @@
 /** 
+ * ========================================
+ *  content/sanity/groq.ts
+ * ========================================
  *  GROQ queries for Sanity CMS
  *  https://www.sanity.io/docs/groq
  */

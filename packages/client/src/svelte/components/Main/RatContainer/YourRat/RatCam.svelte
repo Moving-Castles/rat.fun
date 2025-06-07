@@ -49,7 +49,7 @@
     <button
       class="close priority"
       onclick={() => {
-        console.log("showPettable", showPettable)
+        // console.log("showPettable", showPettable)
         modal.close()
       }}>X</button
     >

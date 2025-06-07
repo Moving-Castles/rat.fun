@@ -24,7 +24,6 @@
   $inspect(room)
 
   onMount(() => {
-    console.log("on mount")
     snd = playSound("tcm", "win", true)
   })
 

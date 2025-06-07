@@ -38,9 +38,7 @@
 
   onMount(async () => {
     // Get content from CMS
-    console.log("Initializing static content...")
     await initStaticContent($publicNetwork.worldAddress)
-    console.log("done")
   })
 </script>
 

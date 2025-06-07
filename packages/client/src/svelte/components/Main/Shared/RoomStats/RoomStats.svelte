@@ -14,7 +14,7 @@
     height = 300,
   }: { plotData: PlotPoint[]; empty: boolean; height: number } = $props()
 
-  console.log(height)
+  // console.log(height)
 
   // Layout setup
   let width = $state(0) // width will be set by the clientWidth

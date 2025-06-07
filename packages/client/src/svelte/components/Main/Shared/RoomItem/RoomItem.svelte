@@ -20,14 +20,6 @@
 
   let { rooms } = getUIState()
 
-  let roomOutcomes = $derived(
-    $staticContent?.outcomes?.filter(o => o.roomId == roomId) || []
-  )
-
-  $effect(() => {
-    $inspect(roomOutcomes)
-  })
-
   function getPromptLengthClass(prompt: string) {
     const length = prompt.length
     if (length > 200) return "extra-long"
@@ -39,7 +31,7 @@
 
 <button
   class="room-listing-item"
-  class:disabled={room.balance == 0}
+  class:disabled={Number(room.balance) == 0}
   onclick={() => rooms.preview(roomId, false)}
 >
   <!-- COLUMN LEFT -->
@@ -60,7 +52,7 @@
     </div>
     <div class="room-balance">
       <!-- BALANCE -->
-      <span class="balance" class:depleted={room.balance == 0}>
+      <span class="balance" class:depleted={Number(room.balance) == 0}>
         Balance: $<NumberGoing muted={true} value={room.balance} />
         <!-- Balance: ${room.balance} -->
       </span>

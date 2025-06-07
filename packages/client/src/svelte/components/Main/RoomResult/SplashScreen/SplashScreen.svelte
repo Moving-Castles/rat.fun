@@ -2,25 +2,15 @@
   import { onMount } from "svelte"
   import { gsap } from "gsap"
   import { urlFor } from "@modules/content/sanity"
-  import type { Hex } from "viem"
-  import {
-    frozenRoom,
-    freezeObjects,
-  } from "@components/Main/RoomResult/state.svelte"
+  import { frozenRoom } from "@components/Main/RoomResult/state.svelte"
   import { renderSafeString } from "@modules/utils"
 
   import NoImage from "@components/Main/Shared/NoImage/NoImage.svelte"
 
   const {
-    rat,
-    room,
-    roomId,
     staticRoomContent,
     onComplete,
   }: {
-    rat: Rat
-    room: Room
-    roomId: Hex
     staticRoomContent: any
     onComplete: () => void
   } = $props()
@@ -37,14 +27,6 @@
   })
 
   onMount(() => {
-    // Snapshot room and rat
-    // We want the pre-result state to gradually apply changes to
-    // without reactivity from on chain changes
-    // Do it here becuase RoomResult parent is loaded early
-    freezeObjects(rat, room, roomId)
-    // console.log("$frozenRoom", $frozenRoom)
-    // console.log("$frozenRat", $frozenRat)
-
     if (
       !roomInnerElement ||
       !imageContainerElement ||

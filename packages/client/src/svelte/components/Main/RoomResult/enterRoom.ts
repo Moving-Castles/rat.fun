@@ -1,18 +1,31 @@
+/**
+ * ========================================
+ *  RoomResult/enterRoom.ts
+ * ========================================
+ * This module is responsible for makeing the API call to send a rat to a room.
+ */
+
 import type { EnterRoomReturnValue } from "@server/modules/types"
 import { SetupWalletNetworkResult } from "@mud/setupWalletNetwork";
-
 import { ENVIRONMENT } from "@mud/enums"
 import { OFFCHAIN_VALIDATION_MESSAGE } from "@server/config";
 
+/**
+ * Makes the API call to send a rat to a room
+ * @param environment The environment to enter the room in
+ * @param walletNetwork The wallet network to use
+ * @param roomId The ID of the room to enter
+ * @param ratId The ID of the rat to enter the room with
+ */
 export async function enterRoom(
   environment: ENVIRONMENT,
   walletNetwork: SetupWalletNetworkResult,
   roomId: string,
   ratId: string
-) {
+): Promise<EnterRoomReturnValue | null> {
   const startTime = performance.now()
 
-  const url = [ENVIRONMENT.PYROPE, ENVIRONMENT.GARNET].includes(environment)
+  const url = [ENVIRONMENT.PYROPE].includes(environment)
     ? "https://reality-model-1.mc-infra.com/room/enter"
     : "http://localhost:3131/room/enter"
 
@@ -35,18 +48,13 @@ export async function enterRoom(
     })
 
     if (!response.ok) {
-      console.log("response", response)
       const error = (await response.json())
-      console.log("error", error)
       throw new Error(`${error.error}: ${error.message}`)
     }
 
     const outcome = (await response.json()) as EnterRoomReturnValue
 
-    console.log("outcome", outcome)
-
     const endTime = performance.now()
-
     console.log(
       `Operation took ${(endTime - startTime).toFixed(3)} milliseconds`
     )

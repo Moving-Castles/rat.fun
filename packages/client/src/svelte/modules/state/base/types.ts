@@ -1,3 +1,10 @@
+/**
+ * ========================================
+ * state/base/types.ts
+ * ========================================
+ * Types for the on-chain entities of the game.
+ */
+
 import { TableRecord } from "@latticexyz/store-sync";
 import { ENTITY_TYPE } from "contracts/enums"
 import mudConfig from "contracts/mud.config";

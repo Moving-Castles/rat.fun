@@ -1,7 +1,19 @@
+/**
+ * ========================================
+ *  utils/index.ts
+ * ========================================
+ * Misc. utility functions.
+ */
+
 import { Hex } from "viem"
 import { BLOCKTIME } from "./constants"
 import { ONE_UNIT } from "@modules/ui/constants"
 
+/**
+ * Converts a string to camel case
+ * @param s The string to convert
+ * @returns The camel case string
+ */
 export function toCamelCase(s: string): string {
   return (
     s
@@ -14,10 +26,20 @@ export function toCamelCase(s: string): string {
   )
 }
 
+/**
+ * Shortens an address
+ * @param s The address to shorten
+ * @returns The shortened address
+ */
 export function shortenAddress(s: string) {
   return s ? s.slice(0, 4) + "..." + s.slice(-4) : ""
 }
 
+/**
+ * Converts an address to a color
+ * @param address The address to convert
+ * @returns The color
+ */
 export function addressToColor(address: string): string {
   if (!address || address.length < 6) return "#FF0000"
   // Take the last 6 characters of the hash
@@ -26,16 +48,33 @@ export function addressToColor(address: string): string {
   return "#" + address
 }
 
+/**
+ * Gets a random integer between two numbers
+ * @param min The minimum number
+ * @param max The maximum number
+ * @returns The random integer
+ */
 export function getRandomInt(min: number, max: number) {
   min = Math.ceil(min)
   max = Math.floor(max)
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
+/**
+ * Gets unique values from an array
+ * @param arr The array to get unique values from
+ * @returns The unique values
+ */
 export function getUniqueValues<T>(arr: T[]): T[] {
   return [...new Set(arr)]
 }
 
+/**
+ * Filters an object by key
+ * @param obj The object to filter
+ * @param keysToKeep The keys to keep
+ * @returns The filtered object
+ */
 export function filterObjectByKey(
   obj: { [key: string]: any },
   keysToKeep: string[]
@@ -51,6 +90,11 @@ export function filterObjectByKey(
   return filteredObj
 }
 
+/**
+ * Removes private keys from an object
+ * @param obj The object to remove private keys from
+ * @returns The object with private keys removed
+ */
 export function removePrivateKeys(
   obj: Record<string, any>
 ): Record<string, any> {
@@ -63,29 +107,53 @@ export function removePrivateKeys(
   return newObj
 }
 
-// Unpadded to padded
+/**
+ * Converts an address to an id
+ * @param address The address to convert
+ * @returns The id
+ */
 export function addressToId(address: string): Hex {
   if (!address) return "0x0"
   // remove '0x' prefix, pad the address with leading zeros up to 64 characters, then add '0x' prefix back
   return ("0x" + address.slice(2).padStart(64, "0").toLowerCase()) as Hex
 }
 
-// Padded to unpadded
+/**
+ * Converts a padded address to an unpadded address
+ * @param paddedAddress The padded address to convert
+ * @returns The unpadded address
+ */
 export function idToAddress(paddedAddress: string): string {
   if (!paddedAddress) return "0x0"
   // remove '0x' prefix, remove leading zeros, then add '0x' prefix back
   return "0x" + paddedAddress.slice(2).replace(/^0+/, "")
 }
 
+/**
+ * Picks a random element from an array
+ * @param array The array to pick from
+ * @returns The random element
+ */
 export function getRandomElement<T>(array: T[]): T {
   const randomIndex = Math.floor(Math.random() * array.length)
   return array[randomIndex]
 }
 
+/**
+ * Picks an element from an array by index
+ * @param array The array to pick from
+ * @param index The index to pick
+ * @returns The element at the index
+ */
 export function pickByIndex<T>(array: T[], index: number): T {
   return array[array.length % (index + 1)]
 }
 
+/**
+ * Converts a hex string to a string
+ * @param hex The hex string to convert
+ * @returns The string
+ */
 export function hexToString(hex: string) {
   hex = hex.substring(2) // remove the '0x' part
   let string = ""
@@ -102,82 +170,18 @@ export function hexToString(hex: string) {
   return string
 }
 
+/**
+ * Converts a string to a hex string
+ * @param string The string to convert
+ * @returns The hex string
+ */
 export function stringToHex(string: string) {
   let hex = ""
   for (let i = 0; i < string.length; i++) {
     hex += ((i == 0 ? "" : "000") + string.charCodeAt(i).toString(16)).slice(-4) // get character ascii code and convert to hexa string, adding necessary 0s
   }
-
   return "0x" + hex.toUpperCase()
 }
-
-/**
- * Deeply clones a given object or array, creating a new instance without shared references.
- *
- * @param {T} obj - The object or array to be cloned.
- * @returns {T} A deeply cloned copy of the input.
- * @template T
- */
-export function deepClone2<T>(obj: T): T {
-  // Handle primitives and null values directly.
-  if (obj === null) return obj as any
-  if (typeof obj !== "object") return obj
-
-  // If the object is an array, create a new array and recursively clone each element.
-  if (Array.isArray(obj)) {
-    const copy: any[] = []
-    for (let i = 0; i < (obj as any[]).length; i++) {
-      copy[i] = deepClone((obj as any[])[i])
-    }
-    return copy as any
-  }
-
-  // If the object is a plain object, create a new object and recursively clone each property.
-  const copy: { [key: string]: any } = {}
-  for (let key in obj) {
-    if (obj.hasOwnProperty(key)) {
-      copy[key] = deepClone((obj as { [key: string]: any })[key])
-    }
-  }
-  return copy as T
-}
-
-/**
- * Deeply clones a given object or array, creating a new instance without shared references.
- *
- * @param {T} obj - The object or array to be cloned.
- * @returns {T} A deeply cloned copy of the input.
- * @template T
- */
-export function deepClone<T>(obj: T): T {
-  return structuredClone(obj) as T
-}
-
-/**
- * Ensure that a number is not negative.
- * If the input number is negative, the function returns 0; otherwise, it returns the input number.
- *
- * @param num - The number to cap at 0. If it is negative, the function returns 0.
- *
- * @returns A number which is either the input number (if it is non-negative) or 0 (if the input number is negative).
- */
-export function capAtZero(num: number): number {
-  // Ensure that the input is not negative
-  return Math.max(0, num)
-}
-
-export const lerp = (x: number, y: number, a: number) => x * (1 - a) + y * a
-export const clamp = (a: number, min = 0, max = 1) =>
-  Math.min(max, Math.max(min, a))
-export const invlerp = (x: number, y: number, a: number) =>
-  clamp((a - x) / (y - x))
-export const range = (
-  x1: number,
-  y1: number,
-  x2: number,
-  y2: number,
-  a: number
-) => lerp(x2, y2, invlerp(x1, y1, a))
 
 export function stepsEasing(t: number, steps: number = 4, direction = "start") {
   // Normalize the input time.
@@ -199,10 +203,20 @@ export function stepsEasing(t: number, steps: number = 4, direction = "start") {
   return progress
 }
 
+/**
+ * Converts blocks to seconds
+ * @param blocks The number of blocks to convert to seconds
+ * @returns The number of seconds
+ */
 function blocksToSeconds(blocks: number) {
   return blocks * BLOCKTIME
 }
 
+/**
+ * Converts blocks to a readable time string
+ * @param blocks The number of blocks to convert to a readable time string
+ * @returns A string in the format of "HH:MM:SS"
+ */
 export function blocksToReadableTime(blocks: number): string {
   const seconds = blocksToSeconds(blocks)
 
@@ -221,10 +235,20 @@ export function blocksToReadableTime(blocks: number): string {
   return result
 }
 
+/**
+ * Sleeps for a given number of milliseconds
+ * @param ms The number of milliseconds to sleep
+ * @returns A promise that resolves after the given number of milliseconds
+ */
 export function sleep(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
 
+/**
+ * Calculates the time since a given timestamp
+ * @param timestamp The timestamp to calculate the time since
+ * @returns A string in the format of "HH:MM:SS"
+ */
 export function timeSince(timestamp: number): string {
   const now = Date.now() // Current time in milliseconds
   const elapsed = now - timestamp // Elapsed time in milliseconds
@@ -246,48 +270,53 @@ export function timeSince(timestamp: number): string {
   }
 }
 
+/**
+ * Calculates the modulus of two numbers
+ * @param n The number to calculate the modulus of
+ * @param m The modulus
+ * @returns The modulus of the two numbers
+ */
 export function mod(n: number, m: number) {
   return ((n % m) + m) % m
 }
 
-// Scale down big ints to displayable numbers
+/**
+ * Scales down big ints to displayable numbers
+ * @param amount The amount to scale down
+ * @returns The scaled down amount
+ */
 export function displayAmount(amount: bigint | undefined) {
   if (amount === undefined) return 0
   if (amount === BigInt(0)) return 0
   return Number(amount / ONE_UNIT)
 }
-// Limitation: not usable with timezones
-export const parseISODateTime = (datestring: string) => {
-  const dt = datestring.split(/[: T-]/).map(parseFloat)
-  const localDate = new Date(
-    dt[0],
-    dt[1] - 1,
-    dt[2],
-    dt[3] || 0,
-    dt[4] || 0,
-    dt[5] || 0,
-    0
-  )
 
-  return localDate
-}
-
+/**
+ * Pads a number with zeros
+ * @param value The number to pad
+ * @returns The padded number
+ */
 export const padWithZero = (value: number) => {
   return value.toString().padStart(2, "0")
 }
 
-export function formatDate(date) {
-  const year = date.getFullYear()
-  const month = String(date.getMonth() + 1).padStart(2, "0") // Months are 0-based in JavaScript
-  const day = String(date.getDate()).padStart(2, "0")
+/**
+ * Formats a date to a readable time string
+ * @param date The date to format
+ * @returns A string in the format of "HH:MM:SS"
+ */
+export function formatDate(date: Date) {
   const hours = String(date.getHours()).padStart(2, "0")
   const minutes = String(date.getMinutes()).padStart(2, "0")
   const seconds = String(date.getSeconds()).padStart(2, "0")
-
   return `${hours}:${minutes}:${seconds}`
-  // return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
 }
 
+/**
+ * Pads a number to 78 characters
+ * @param num The number to pad
+ * @returns The padded number
+ */
 export function padToUint256(num: number | bigint): string {
   // Convert the number to a string
   const numString = num.toString()
@@ -295,6 +324,10 @@ export function padToUint256(num: number | bigint): string {
   return numString.padStart(78, "0")
 }
 
+/**
+ * Generates a random uint256 number
+ * @returns A random uint256 number
+ */
 export function getRandomUint256(): bigint {
   // Initialize a BigInt for the random uint256 value
   let randomUint256 = BigInt(0)
@@ -309,10 +342,19 @@ export function getRandomUint256(): bigint {
   return randomUint256
 }
 
+/**
+ * Generates a random uint32 number
+ * @returns A random uint32 number
+ */
 export function getRandomUint32(): number {
   return Math.floor(Math.random() * 0x100000000)
 }
 
+/**
+ * Parses JSON from a string
+ * @param content The string to parse
+ * @returns The parsed JSON
+ */
 export function parseJSONFromContent<T = Record<string, unknown>>(
   content: string
 ): T {
@@ -337,11 +379,24 @@ export function parseJSONFromContent<T = Record<string, unknown>>(
   }
 }
 
+/**
+ * Truncates a string to a given length
+ * @param str The string to truncate
+ * @param maxLength The maximum length of the string
+ * @returns The truncated string
+ */
 export function truncateString(str: string, maxLength: number) {
   if (str.length <= maxLength) return str
   return str.slice(0, maxLength) + "..."
 }
 
+/**
+ * Replace unsafe characters with a placeholder
+ * @param input The string to render
+ * @param placeholder The placeholder to use if the string is unsafe
+ * @param renderCodepoints Whether to render codepoints
+ * @returns The rendered string
+ */
 export function renderSafeString(
   input: string,
   placeholder = "💀",
@@ -401,6 +456,12 @@ export function renderSafeString(
     .join("")
 }
 
+/**
+ * Copies text to the clipboard
+ * @param node The node to attach the event listener to
+ * @param text The text to copy
+ * @returns An object with a destroy method to remove the event listener
+ */
 export function clickToCopy(node: HTMLElement, text: string) {
   async function copyText() {
     try {

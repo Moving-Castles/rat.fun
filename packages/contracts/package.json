@@ -5,7 +5,6 @@
   "scripts": {
     "build": "mud build",
     "clean": "forge clean && shx rm -rf src/**/codegen",
-    "deploy:garnet": "mud deploy --profile=garnet --forgeScriptOptions='--slow'",
     "deploy:pyrope": "mud deploy --profile=pyrope --forgeScriptOptions='--slow'",
     "deploy:local": "mud deploy",
     "deploy:redstone": "mud deploy --profile=redstone --forgeScriptOptions='--slow'",

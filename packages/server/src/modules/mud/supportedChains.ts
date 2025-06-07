@@ -7,15 +7,14 @@
  *   (see https://viem.sh/docs/clients/test.html), but with the
  *   basefee set to zero to avoid transaction fees.
  * - Redstone, our production blockchain (https://redstone.xyz/)
- * - Garnet, our test blockchain (https://garnetchain.com/))
  *
  */
 
-import { MUDChain, mudFoundry, redstone, garnet } from "@latticexyz/common/chains";
+import { MUDChain, mudFoundry, redstone } from "@latticexyz/common/chains";
 import { pyrope } from "./pyropeChain";
 
 /*
  * See https://mud.dev/guides/hello-world/add-chain-client
  * for instructions on how to add networks.
  */
-export const supportedChains: MUDChain[] = [mudFoundry, redstone, garnet, pyrope];
+export const supportedChains: MUDChain[] = [mudFoundry, redstone, pyrope];

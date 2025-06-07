@@ -10,7 +10,6 @@
 import {
   MUDChain,
   mudFoundry,
-  garnet,
   redstone,
 } from "@latticexyz/common/chains";
 
@@ -29,13 +28,6 @@ import {
 
 import { pyrope } from "./pyropeChain";
 
-const extendedGarnet = {
-  ...garnet,
-  faucetUrl: "https://faucet.mc-infra.com/trpc/drip",
-} as const satisfies MUDChain;
-
-// extendedGarnet.indexerUrl = undefined;
-
 const extendedRedstone = {
   ...redstone,
   faucetUrl: "https://redstone-faucet.onrender.com/trpc/drip",
@@ -52,7 +44,6 @@ export const supportedChains = [
   mainnet,
   extendedRedstone,
   holesky,
-  extendedGarnet,
   extendedPyrope,
   sepolia,
   optimism,

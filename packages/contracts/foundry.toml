@@ -25,9 +25,6 @@ fs_permissions = [{ access = "read", path = "./"}]
 [doc]
 ignore=["codegen"]
 
-[profile.garnet]
-eth_rpc_url = "https://rpc.garnetchain.com"
-
 [profile.redstone]
 eth_rpc_url = "https://rpc.redstonechain.com"
 

@@ -12,10 +12,10 @@ export async function createRoom(
   walletNetwork: SetupWalletNetworkResult,
   roomPrompt: string,
   levelId: string
-): CreateRoomReturnValue {
+): Promise<CreateRoomReturnValue> {
   const startTime = performance.now()
 
-  const url = [ENVIRONMENT.PYROPE, ENVIRONMENT.GARNET].includes(environment)
+  const url = [ENVIRONMENT.PYROPE ].includes(environment)
     ? "https://reality-model-1.mc-infra.com/room/create"
     : "http://localhost:3131/room/create"
 

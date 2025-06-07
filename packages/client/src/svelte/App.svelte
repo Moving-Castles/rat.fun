@@ -35,7 +35,7 @@
   // Init of chain sync when player is ready
   $effect(() => {
     if ($playerId && $playerId !== EMPTY_CONNECTION && !$websocketConnected) {
-      console.log("Initializing off-chain sync")
+      // console.log("Initializing off-chain sync")
       initOffChainSync(environment, $playerId)
 
       // Fullstory analytics
@@ -67,14 +67,14 @@
 
 <svelte:window
   onhashchange={async e => {
-    console.log("hash changes")
+    // console.log("hash changes")
     const url = new URL(e.newURL)
     const newHash = url.hash.replaceAll("#", "")
     const currentHash = new URL(e.oldURL).hash.replaceAll("#", "")
 
     const queryParams = new URLSearchParams(document.location.search)
 
-    console.log(queryParams)
+    // console.log(queryParams)
 
     if (newHash !== "" && newHash !== currentHash) {
       if (currentHash !== "") {
@@ -86,11 +86,11 @@
           !!queryParams.get("animated") || true
         )
       } else {
-        console.log(
-          "mine",
-          !queryParams.get("mine") || false,
-          !!queryParams.get("animated") || true
-        )
+        // console.log(
+        //   "mine",
+        //   !queryParams.get("mine") || false,
+        //   !!queryParams.get("animated") || true
+        // )
         rooms.preview(
           newHash,
           !!queryParams.get("mine") || false,

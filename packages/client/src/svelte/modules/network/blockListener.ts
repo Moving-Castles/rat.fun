@@ -1,6 +1,5 @@
 import { get } from "svelte/store"
 import { publicNetwork, blockNumber } from "./index"
-// import { toastMessage } from "../ui/toast"
 
 let blockTimeout: number
 const TIMEOUT = 60000
@@ -17,8 +16,5 @@ export function initBlockListener() {
 }
 
 function handleBlockTimeout() {
-  // toastMessage("Connection to chain lost. Try reloading.", {
-  //   type: "error",
-  //   disappear: true,
-  // })
+  console.error("Block timeout")
 }

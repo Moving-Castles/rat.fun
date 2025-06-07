@@ -1,6 +1,13 @@
 <script lang="ts">
   import type { EnterRoomReturnValue } from "@server/modules/types"
   import type { Hex } from "viem"
+  import { ENVIRONMENT } from "@mud/enums"
+  import { onMount } from "svelte"
+  import {
+    player,
+    rooms as roomsState,
+    rat as ratState,
+  } from "@modules/state/base/stores"
   import {
     ROOM_RESULT_STATE,
     SHOW_INFO_BOXES,
@@ -9,19 +16,12 @@
     transitionTo,
     transitionToResultSummary,
     resetRoomResultState,
-  } from "@svelte/components/Main/RoomResult/roomResultState.svelte"
-
-  import {
-    player,
-    rooms as roomsState,
-    rat as ratState,
-  } from "@modules/state/base/stores"
-  import { onMount, onDestroy } from "svelte"
-  import { enterRoom } from "@components/Main/RoomResult"
-  import { ENVIRONMENT } from "@mud/enums"
+    freezeObjects,
+  } from "@svelte/components/Main/RoomResult/state.svelte"
   import { walletNetwork } from "@modules/network"
-  import { getUIState } from "@modules/ui/state.svelte"
   import { staticContent } from "@modules/content"
+  import { enterRoom } from "@svelte/components/Main/RoomResult/enterRoom"
+  import { getUIState } from "@modules/ui/state.svelte"
 
   import SplashScreen from "@svelte/components/Main/RoomResult/SplashScreen/SplashScreen.svelte"
   import WaitingForResult from "@svelte/components/Main/RoomResult/WaitingForResult/WaitingForResult.svelte"
@@ -64,10 +64,12 @@
         $player.ownedRat
       )
 
-      await new Promise(resolve => setTimeout(resolve, 5000))
-
       try {
         result = await ret
+        if (!result) {
+          throw new Error("No result returned")
+        }
+        // Result returned, transition to showing results
         transitionTo(ROOM_RESULT_STATE.SHOWING_RESULTS)
       } catch (err) {
         console.log("catch outcome error", err)
@@ -77,21 +79,14 @@
       console.log("catch result error", error)
       transitionTo(ROOM_RESULT_STATE.ERROR)
       rooms.close()
-      // rooms.close(
-      //   resultEvent !== RESUEVEL_UP &&
-      //     resultEvent !== RESULT_EVENT.LEVEL_DOWN
-      // )
       return
     }
   }
 
   onMount(() => {
+    freezeObjects($ratState, room, roomId as Hex)
     resetRoomResultState()
     processRoom()
-  })
-
-  onDestroy(() => {
-    resetRoomResultState()
   })
 </script>
 
@@ -99,9 +94,6 @@
   <!-- SPLASH SCREEN -->
   {#if roomResultState.state === ROOM_RESULT_STATE.SPLASH_SCREEN}
     <SplashScreen
-      rat={$ratState}
-      {room}
-      roomId={roomId as Hex}
       {staticRoomContent}
       onComplete={() => {
         transitionTo(ROOM_RESULT_STATE.WAITING_FOR_RESULT)
@@ -128,7 +120,7 @@
     <Log
       {result}
       onComplete={() => {
-        transitionToResultSummary(result)
+        // transitionToResultSummary(result as EnterRoomReturnValue)
       }}
     />
   {/if}

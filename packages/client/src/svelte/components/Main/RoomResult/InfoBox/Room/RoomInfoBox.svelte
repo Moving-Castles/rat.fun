@@ -28,7 +28,6 @@
               src={urlFor(staticRoomContent?.image)
                 .width(300)
                 .auto("format")
-                // .saturation(-100)
                 .url()}
               alt={`room #${$frozenRoom.index}`}
             />
@@ -39,8 +38,8 @@
       </div>
       <!-- BALANCE -->
       <div class="info-item">
-        <span class="balance" class:empty={$frozenRoom.balance === 0}>
-          $ <NumberGoing value={$frozenRoom.balance} />
+        <span class="balance" class:empty={Number($frozenRoom.balance) === 0}>
+          $<NumberGoing value={$frozenRoom.balance} />
         </span>
       </div>
     </div>

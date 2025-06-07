@@ -52,16 +52,16 @@ export const getBoxState = () => {
       },
       pause: () => {
         if (target.current === target.target) return
-        console.log("pause")
+        // console.log("pause")
         speedBeforePause = movingSpeed.current
         targetBeforePause = target.current
         moving.set(0)
         target.set(target.current)
         movingSpeed.set(0.03)
-        console.log(target.current.x, target.current.z)
+        // console.log(target.current.x, target.current.z)
       },
       resume: () => {
-        console.log("resume")
+        // console.log("resume")
         moving.set(1)
         movingSpeed.set(1)
         pickTarget()

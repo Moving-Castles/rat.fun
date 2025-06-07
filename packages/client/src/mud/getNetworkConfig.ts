@@ -14,9 +14,7 @@ export function getNetworkConfig(environment: ENVIRONMENT) {
   // Default to local development chain
   let chainId = 31337;
 
-  if ([ENVIRONMENT.GARNET].includes(environment)) {
-    chainId = 17069
-  } else if ([ENVIRONMENT.PYROPE].includes(environment)) {
+  if ([ENVIRONMENT.PYROPE].includes(environment)) {
     chainId = 695569
   } else if ([ENVIRONMENT.REDSTONE].includes(environment)) {
     chainId = 690
