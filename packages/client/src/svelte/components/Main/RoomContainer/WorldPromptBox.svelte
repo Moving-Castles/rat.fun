@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { gameConfig } from "@modules/state/base/stores"
   import { onMount } from "svelte"
+  import { gameConfig } from "@modules/state/base/stores"
+  import { tippy } from "svelte-tippy"
 
   let timeLeft = $state("")
   let interval: number
@@ -36,11 +37,23 @@
 </script>
 
 <div class="world-prompt-box">
-  <div class="header">
+  <div
+    class="header"
+    use:tippy={{
+      content: "Situation will change when timer reaches 0.",
+    }}
+  >
     <div class="countdown">{timeLeft}</div>
   </div>
-  <div class="prompt">
+  <div
+    class="prompt"
+    use:tippy={{
+      content: "Current situation in the facility. Affects all rooms.",
+    }}
+  >
+    <div class="alert">!!!</div>
     <div class="prompt-text">{$gameConfig?.worldPrompt}</div>
+    <div class="alert">!!!</div>
   </div>
 </div>
 
@@ -74,16 +87,25 @@
     }
 
     .prompt {
-      padding-inline: 5px;
-      padding-top: 5px;
-      padding-bottom: 5px;
       height: 100%;
       font-family: var(--special-font-stack);
       font-size: var(--font-size-large);
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
       align-items: center;
-      justify-content: center;
+      justify-content: space-between;
+
+      .alert {
+        font-size: var(--font-size-large);
+        font-weight: bold;
+        background: var(--color-death);
+        height: 100%;
+        width: 2ch;
+        color: var(--background);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
     }
   }
 </style>

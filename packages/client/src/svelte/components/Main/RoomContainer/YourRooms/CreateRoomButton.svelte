@@ -19,7 +19,6 @@
     justify-content: center;
     align-items: center;
     border-bottom: var(--default-border-style);
-    padding: var(--default-padding);
     position: sticky;
     top: 0;
     z-index: var(--z-high);
@@ -27,12 +26,13 @@
 
     button {
       width: 100%;
+      height: 100%;
       background: var(--color-alert-priority);
       padding: 20px;
-      border: var(--default-border-style);
+      border: none;
 
       &:hover {
-        background: var(--color-alert);
+        background: var(--color-grey-dark);
         color: var(--foreground);
       }
     }

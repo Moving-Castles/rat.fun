@@ -42,9 +42,6 @@
   <div class="deploy-rat">
     <div class="image-container warning-mute-inverse">
       <img src="/images/rat.png" alt="Rat" />
-      <small>
-        {name}
-      </small>
     </div>
     <button class:disabled onclick={sendCreateRat}>
       <span class="button-text">Deploy new rat</span><br />

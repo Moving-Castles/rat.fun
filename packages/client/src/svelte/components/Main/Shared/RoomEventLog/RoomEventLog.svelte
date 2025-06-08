@@ -55,6 +55,8 @@
     border-right: 1px solid var(--color-grey-mid);
     border-bottom: 1px solid var(--color-grey-mid);
     font-size: 10px;
+    background-image: url("/images/texture-5.png");
+    background-size: 100px;
   }
 
   .logs {

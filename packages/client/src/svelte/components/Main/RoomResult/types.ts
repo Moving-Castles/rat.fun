@@ -8,6 +8,7 @@ export type TempItem = {
 export type FrozenRat = Rat & {
   inventory: Array<string | TempItem>
   traits: Array<string | TempItem>
+  image: string
 }
 
 export type FrozenRoom = Room & {

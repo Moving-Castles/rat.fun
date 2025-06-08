@@ -13,3 +13,9 @@
     <RoomEventLog {roomId} initialOutcomes={roomOutcomes} />
   </div>
 {/if}
+
+<style lang="scss">
+  .room-preview-event-log {
+    background: var(--background);
+  }
+</style>

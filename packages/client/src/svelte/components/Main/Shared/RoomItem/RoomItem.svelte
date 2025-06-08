@@ -120,6 +120,9 @@
     color: var(--foreground);
     text-align: left;
     overflow: hidden;
+    background-color: var(--background);
+    background-image: url("/images/texture-6.png");
+    background-size: 100px;
 
     &.disabled {
       opacity: 0.5;

@@ -1,11 +1,16 @@
 <script lang="ts">
-  import { player } from "@modules/state/base/stores"
+  import { player, ratImageUrl } from "@modules/state/base/stores"
+  import { getModalState } from "@components/Main/Modal/state.svelte"
+  import ModalTarget from "@components/Main/Modal/ModalTarget.svelte"
 
   import RatInfo from "@components/Main/RatContainer/YourRat/RatInfo.svelte"
   import RatInventory from "@components/Main/RatContainer/YourRat/RatInventory.svelte"
   import LiquidateRat from "@components/Main/RatContainer/YourRat/LiquidateRat.svelte"
   import DeployRat from "@components/Main/RatContainer/DeployRat/DeployRat.svelte"
   // import RatCam from "@components/Main/RatContainer/YourRat/RatCam.svelte"
+
+  let { modal } = getModalState()
+  let showRatModal = $state(false)
 </script>
 
 <div class="your-rat">
@@ -18,8 +23,10 @@
             <RatInfo />
           </div>
           <!-- Cam -->
-          <div class="rat-cam-container">
-            <img src="/images/rat.png" alt="Rat Cam" />
+          <!-- svelte-ignore a11y_click_events_have_key_events -->
+          <!-- svelte-ignore a11y_no_static_element_interactions -->
+          <div class="rat-cam-container" onclick={() => (showRatModal = true)}>
+            <img src={$ratImageUrl} alt="Rat Cam" />
             <!-- <RatCam /> -->
           </div>
         </div>
@@ -39,10 +46,25 @@
   </div>
 </div>
 
+{#snippet ratModal()}
+  <!-- svelte-ignore a11y_click_events_have_key_events -->
+  <!-- svelte-ignore a11y_no_static_element_interactions -->
+  <div class="rat-modal" onclick={() => modal.close()}>
+    <img src={$ratImageUrl} alt="Rat" />
+  </div>
+{/snippet}
+
+{#if showRatModal}
+  <ModalTarget
+    fullscreen={true}
+    onclose={() => (showRatModal = false)}
+    content={ratModal}
+  />
+{/if}
+
 <style lang="scss">
   .your-rat {
     display: flex;
-    // flex-flow: column nowrap;
     height: 440px;
     width: 100%;
     overflow: hidden;
@@ -73,6 +95,7 @@
       width: var(--rat-main-cam-width);
       overflow: hidden;
       border-left: var(--default-border-style);
+      cursor: pointer;
 
       img {
         height: 100%;
@@ -96,5 +119,21 @@
     height: var(--liquidate-rat-height);
     width: 100%;
     border-bottom: var(--default-border-style);
+  }
+
+  .rat-modal {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+
+    img {
+      max-width: 90%;
+      max-height: 90%;
+      object-fit: contain;
+      border: var(--default-border-style);
+    }
   }
 </style>

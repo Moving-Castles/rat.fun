@@ -18,7 +18,7 @@
       </div>
       <!-- IMAGE -->
       <div class="image-container">
-        <img src="/images/rat.png" alt={$frozenRat.name} />
+        <img src={$frozenRat.image} alt={$frozenRat.name} />
       </div>
       <!-- NAME -->
       <div class="info-item">

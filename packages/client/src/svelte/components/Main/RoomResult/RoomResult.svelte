@@ -84,7 +84,7 @@
   }
 
   onMount(() => {
-    freezeObjects($ratState, room, roomId as Hex)
+    freezeObjects($ratState, room, roomId as Hex, $player.ownedRat as Hex)
     resetRoomResultState()
     processRoom()
   })

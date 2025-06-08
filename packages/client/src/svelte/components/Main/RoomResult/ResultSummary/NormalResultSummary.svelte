@@ -94,7 +94,13 @@
         </button>
       </div>
 
-      <div class="background"></div>
+      <div class="background">
+        <img
+          class="background-image"
+          src={$frozenRat?.image}
+          alt={$frozenRat?.name}
+        />
+      </div>
     </div>
   </div>
 </div>
@@ -108,7 +114,7 @@
     justify-content: center;
     align-items: center;
     overscroll-behavior: none;
-    z-index: var(--z-base);
+    z-index: var(--z-sub);
   }
 
   .room-event-popup {
@@ -131,16 +137,10 @@
         color: var(--foreground);
         font-family: var(--label-font-stack);
         letter-spacing: -0.2em;
-        font-size: var(--font-size-extra-large);
+        font-size: var(--font-size-large);
         line-height: calc(var(--font-size-extra-large) * 0.7);
         font-weight: normal;
         text-align: center;
-
-        .digit {
-          display: inline-block;
-          width: 50%;
-          text-align: center;
-        }
       }
 
       .background {
@@ -152,11 +152,14 @@
         transform: translate(-50%, -50%);
         z-index: var(--z-sub);
         overflow: hidden;
+        mix-blend-mode: screen;
 
         .background-image {
           width: 100%;
           height: 100%;
           object-fit: contain;
+          object-position: center;
+          opacity: 0.5;
         }
 
         &.room-depleted {
@@ -169,7 +172,7 @@
       .content {
         position: relative;
         height: 100%;
-        z-index: var(--z-high);
+        z-index: var(--z-base);
         display: flex;
         flex-flow: column nowrap;
         justify-content: center;

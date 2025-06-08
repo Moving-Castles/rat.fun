@@ -100,6 +100,7 @@
     align-items: center;
     background: var(--background);
     color: var(--foreground);
+    background-image: url("/images/texture-2.png");
 
     .inner {
       display: flex;
@@ -138,7 +139,7 @@
       }
 
       .room-index {
-        background: var(--color-grey-light);
+        background: var(--color-alert-priority);
         color: var(--background);
         width: auto;
         padding: 5px;

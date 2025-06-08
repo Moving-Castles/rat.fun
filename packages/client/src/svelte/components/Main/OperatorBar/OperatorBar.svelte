@@ -42,6 +42,15 @@
             </div>
           </div>
         </div>
+        <!-- RATS KILLED -->
+        {#if $player?.pastRats?.length > 0}
+          <div class="stat-item rats-killed">
+            <div class="inner-wrapper">
+              <div class="label">Rats killed:</div>
+              <div class="value">{$player.pastRats.length}</div>
+            </div>
+          </div>
+        {/if}
       </div>
     {/if}
   </div>
@@ -77,6 +86,11 @@
         background: transparent;
         border-right: var(--default-border-style);
         color: var(--foreground);
+
+        &.rats-killed {
+          font-size: var(--font-size-small);
+          color: var(--color-death);
+        }
 
         .label {
           margin-right: 0.5em;

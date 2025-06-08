@@ -1,6 +1,10 @@
 import type { SoundAssets } from "../types.js"
 
 export const tcm: SoundAssets = {
+  ratScream: {
+    src: "./sounds/tcm/ratScream.mp3",
+    volume: 1,
+  },
   ratDeath: {
     src: "./sounds/tcm/death.mp3",
     volume: 1,

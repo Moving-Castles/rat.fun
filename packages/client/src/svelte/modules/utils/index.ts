@@ -490,3 +490,42 @@ export function clickToCopy(node: HTMLElement, text: string) {
     },
   }
 }
+
+/**
+ * Deterministically maps an Ethereum address to a number within a specified range
+ * @param address The Ethereum address to map
+ * @param max The maximum number in the range (inclusive)
+ * @returns A number between 0 and max
+ */
+export function addressToNumber(address: string, max: number): number {
+  if (!address) return 0
+  
+  // Remove '0x' prefix if present
+  const cleanAddress = address.startsWith('0x') ? address.slice(2) : address
+  
+  // Use the entire address to create a hash-like number
+  // This ensures sequential addresses map to different numbers
+  let hash = 0
+  for (let i = 0; i < cleanAddress.length; i++) {
+    const char = cleanAddress.charCodeAt(i)
+    hash = ((hash << 5) - hash) + char
+    hash = hash & hash // Convert to 32-bit integer
+  }
+  
+  // Make sure the number is positive and within range
+  return Math.abs(hash) % (max + 1)
+}
+
+/**
+ * Generates a deterministic rat image path for an Ethereum address
+ * @param address The Ethereum address to map to a rat image
+ * @param maxRats The maximum number of rat images available (default: 50)
+ * @returns A path string in the format "/images/rats/[number].png"
+ */
+export function addressToRatImage(address: string, maxRats: number = 50): string {
+  const ratNumber = addressToNumber(address, maxRats - 1) // -1 because we want 0-based indexing
+  return `/images/rats/rat_${ratNumber}.png`
+}
+
+
+

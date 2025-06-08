@@ -3,7 +3,7 @@
   import { liquidateRat } from "@modules/action"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
   import { playSound } from "@modules/sound"
-  import { player } from "@modules/state/base/stores"
+  import { player, ratImageUrl } from "@modules/state/base/stores"
   import { tippy } from "svelte-tippy"
   import { walletNetwork } from "@modules/network"
 
@@ -26,12 +26,12 @@
   const sendLiquidateRat = async () => {
     if (busy) return
     busy = true
+    playSound("tcm", "ratScream")
     const action = liquidateRat()
 
     try {
       liquidationMessage = "Eliminating rat..."
       await waitForCompletion(action)
-      playSound("tcm", "TRX_no")
     } catch (e) {
       busy = false
       console.error(e)
@@ -78,7 +78,7 @@
       {:else}
         <img
           class="liquidate-image"
-          src="/images/rat.png"
+          src={$ratImageUrl}
           alt="Confirm Liquidation"
         />
         <button disabled={busy} onclick={sendLiquidateRat} class="modal-button">
@@ -163,6 +163,7 @@
       justify-content: space-between;
       align-items: center;
       line-height: 0;
+      height: 540px;
 
       img,
       video {

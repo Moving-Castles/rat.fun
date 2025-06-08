@@ -185,6 +185,8 @@
   .room-listing {
     overflow-y: scroll;
     padding-bottom: 200px;
+    background-image: url("/images/texture-5.png");
+    background-size: 200px;
   }
 
   .new-rooms-button {

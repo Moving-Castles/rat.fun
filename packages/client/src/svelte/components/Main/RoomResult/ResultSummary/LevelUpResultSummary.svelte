@@ -97,7 +97,13 @@
         </button>
       </div>
 
-      <div class="background"></div>
+      <div class="background">
+        <img
+          class="background-image"
+          src={$frozenRat?.image}
+          alt={$frozenRat?.name}
+        />
+      </div>
     </div>
   </div>
 </div>

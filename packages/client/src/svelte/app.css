@@ -50,7 +50,7 @@
   /* Layout: Your Rooms */
   --world-prompt-box-height: 80px;
   --pane-switch-height: 60px;
-  --create-room-button-height: 100px;
+  --create-room-button-height: 80px;
 
   /* Layout: Room Item */
   --room-item-height: 260px;

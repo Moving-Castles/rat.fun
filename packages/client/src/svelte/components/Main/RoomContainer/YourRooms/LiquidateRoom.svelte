@@ -178,17 +178,6 @@
     align-items: center;
   }
 
-  .warning {
-    border: none;
-    background: repeating-linear-gradient(
-      45deg,
-      #f0d000,
-      #f0d000 20px,
-      #bda400 20px,
-      #bda400 40px
-    );
-  }
-
   .danger {
     border: none;
     background: repeating-linear-gradient(
@@ -212,24 +201,24 @@
     );
   }
 
-  .liquidate-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
   .confirmation {
     .content {
-      height: 100%;
       display: flex;
       flex-flow: column nowrap;
       justify-content: space-between;
       align-items: center;
+      height: 540px;
 
+      video,
       img {
         width: 100%;
         height: 100%;
         object-fit: cover;
+      }
+
+      img {
+        mix-blend-mode: multiply;
+        filter: grayscale(100%);
       }
     }
 

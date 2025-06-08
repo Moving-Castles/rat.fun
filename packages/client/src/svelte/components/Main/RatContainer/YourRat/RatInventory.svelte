@@ -62,6 +62,8 @@
     border-right: var(--dashed-border-style);
     overflow-x: hidden;
     overflow-y: scroll;
+    background-image: url("/images/texture-3.png");
+    background-size: 200px;
 
     &:last-child {
       border-right: none;

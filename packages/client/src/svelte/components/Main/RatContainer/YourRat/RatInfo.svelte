@@ -50,6 +50,8 @@
     border-right: none;
     overflow: hidden;
     display: flex;
+    background-image: url("/images/texture-5.png");
+    background-size: 100px;
   }
 
   .info-item {

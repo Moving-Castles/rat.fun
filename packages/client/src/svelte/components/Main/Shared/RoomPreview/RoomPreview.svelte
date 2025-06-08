@@ -82,6 +82,8 @@
     flex-direction: column;
     width: 100%;
     height: 100%;
+    background-image: url("/images/texture2.jpg");
+    background-size: 100px;
 
     .room-inner-container {
       overflow-y: auto;
@@ -139,5 +141,7 @@
     position: sticky;
     bottom: 80px;
     z-index: var(--z-high);
+    height: 60px;
+    user-select: none;
   }
 </style>

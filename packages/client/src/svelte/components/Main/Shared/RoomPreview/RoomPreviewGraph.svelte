@@ -33,12 +33,14 @@
 <div class="room-preview-stats">
   <div class="header">ROOM BALANCE OVER TIME</div>
   <div class="content" class:empty={plotData.length == 1}>
-    <RoomGraph {plotData} empty={plotData.length == 1} />
+    <RoomGraph {plotData} isEmpty={plotData.length == 1} />
   </div>
 </div>
 
 <style lang="scss">
   .room-preview-stats {
+    background: var(--background);
+
     .header {
       border-left: 1px solid var(--color-grey-mid);
       border-right: 1px solid var(--color-grey-mid);
@@ -49,6 +51,7 @@
       top: 0;
       background: var(--background);
       font-size: var(--font-size-small);
+      overflow: hidden;
     }
 
     .content {

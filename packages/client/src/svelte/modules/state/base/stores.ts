@@ -6,7 +6,7 @@
  */
 
 import { writable, derived } from "svelte/store"
-import { addressToId } from "@modules/utils"
+import { addressToId, addressToRatImage } from "@modules/utils"
 import { ENTITY_TYPE } from "contracts/enums"
 import {
   filterByEntitytype,
@@ -123,6 +123,14 @@ export const ratLevelIndex = derived(
       return $gameConfig.levelList.findIndex(lvl => lvl === ($rat?.level ?? 0))
     }
     return 0
+  }
+)
+
+export const ratImageUrl = derived(
+  [player],
+  ([$player]) => {
+    if (!$player?.ownedRat) return "/images/rat.png"
+    return addressToRatImage($player.ownedRat)
   }
 )
 

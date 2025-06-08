@@ -10,7 +10,6 @@
   .waiting-for-result {
     margin-bottom: 20px;
     height: calc(var(--game-window-height) - 300px);
-    padding: 10px;
     border: var(--default-border-style);
     border-top: none;
     position: relative;

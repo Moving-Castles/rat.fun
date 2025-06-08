@@ -4,29 +4,37 @@
 </script>
 
 <div class="pane-switch">
-  <button
-    onclick={() => {
-      panes.set(enums.PANE.ROOM_CONTAINER, enums.ROOM_CONTAINER.ALL_ROOMS)
-      rooms.back()
-    }}
-    class:selected={panes.roomContainer === enums.ROOM_CONTAINER.ALL_ROOMS}
+  <!-- ALL ROOMS -->
+  <div
     class="pane-switch-item"
+    class:selected={panes.roomContainer === enums.ROOM_CONTAINER.ALL_ROOMS}
   >
-    ALL ROOMS
-  </button>
-  <button
-    onclick={() => {
-      panes.set(enums.PANE.ROOM_CONTAINER, enums.ROOM_CONTAINER.YOUR_ROOMS)
-      rooms.back(true)
-    }}
+    <button
+      onclick={() => {
+        panes.set(enums.PANE.ROOM_CONTAINER, enums.ROOM_CONTAINER.ALL_ROOMS)
+        rooms.back()
+      }}
+    >
+      ALL ROOMS
+    </button>
+  </div>
+  <!-- YOUR ROOMS -->
+  <div
+    class="pane-switch-item"
     class:selected={[
       enums.ROOM_CONTAINER.YOUR_ROOMS,
       enums.ROOM_CONTAINER.CREATE_ROOM,
     ].includes(panes.roomContainer)}
-    class="pane-switch-item"
   >
-    YOUR ROOMS
-  </button>
+    <button
+      onclick={() => {
+        panes.set(enums.PANE.ROOM_CONTAINER, enums.ROOM_CONTAINER.YOUR_ROOMS)
+        rooms.back(true)
+      }}
+    >
+      YOUR ROOMS
+    </button>
+  </div>
 </div>
 
 <style lang="scss">
@@ -43,18 +51,33 @@
       border: none;
       outline: none;
       font-family: var(--label-font-stack);
-      font-size: var(--font-size-large);
       background: var(--color-grey-mid);
       color: var(--background);
       width: 50%;
 
-      &:hover {
-        background: var(--color-grey-light);
-      }
-
       &.selected {
         background: var(--color-alert);
         color: var(--foreground);
+      }
+
+      button {
+        width: 100%;
+        height: 100%;
+        border: none;
+        outline: none;
+        background: transparent;
+        color: var(--background);
+        font-family: var(--label-font-stack);
+        font-size: var(--font-size-large);
+      }
+
+      &:hover {
+        background: var(--color-grey-light);
+
+        button {
+          transform: scale(1.4);
+          transition: transform 0.2s ease-in-out;
+        }
       }
     }
   }

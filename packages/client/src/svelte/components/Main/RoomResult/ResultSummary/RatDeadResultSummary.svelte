@@ -90,8 +90,13 @@
           LEAVE ROOM
         </button>
       </div>
-
-      <div class="background"></div>
+      <div class="background">
+        <img
+          class="background-image"
+          src={$frozenRat?.image}
+          alt={$frozenRat?.name}
+        />
+      </div>
     </div>
   </div>
 </div>
@@ -125,12 +130,9 @@
       background: var(--color-death);
 
       .message {
-        color: var(--background);
-      }
-
-      .message {
         padding: 1rem;
         color: var(--foreground);
+        color: var(--background);
         font-family: var(--label-font-stack);
         letter-spacing: -0.2em;
         font-size: var(--font-size-extra-large);
@@ -160,6 +162,8 @@
           width: 100%;
           height: 100%;
           object-fit: contain;
+          object-position: center;
+          opacity: 0.5;
         }
       }
 

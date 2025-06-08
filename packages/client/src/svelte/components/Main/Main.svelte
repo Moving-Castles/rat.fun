@@ -4,6 +4,7 @@
   import { getUIState } from "@modules/ui/state.svelte"
   import { initStaticContent } from "@modules/content"
   import { publicNetwork } from "@modules/network"
+  import { playSound } from "@modules/sound"
 
   import RatContainer from "@components/Main/RatContainer/RatContainer.svelte"
   import RoomContainer from "@components/Main/RoomContainer/RoomContainer.svelte"
@@ -40,6 +41,8 @@
   onMount(async () => {
     // Get content from CMS
     await initStaticContent($publicNetwork.worldAddress)
+    // Play background sound
+    playSound("tcm", "podBg", true, true)
   })
 </script>
 

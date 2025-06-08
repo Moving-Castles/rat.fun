@@ -2,17 +2,24 @@
   import { getRoomOwnerName } from "@modules/state/base/utils"
   import { lastUpdated } from "@modules/content"
   import { urlFor } from "@modules/content/sanity"
+  import { getModalState } from "@components/Main/Modal/state.svelte"
+  import ModalTarget from "@components/Main/Modal/ModalTarget.svelte"
 
   import NoImage from "@components/Main/Shared/NoImage/NoImage.svelte"
   // import ShareButton from "@components/Main/Shared/RoomPreview/ShareButton.svelte"
 
   let { room, sanityRoomContent }: { room: Room; sanityRoomContent: any } =
     $props()
+
+  let { modal } = getModalState()
+  let showImageModal = $state(false)
 </script>
 
 <div class="room-preview-header">
   <!-- IMAGE -->
-  <div class="image">
+  <!-- svelte-ignore a11y_click_events_have_key_events -->
+  <!-- svelte-ignore a11y_no_static_element_interactions -->
+  <div class="image" onclick={() => (showImageModal = true)}>
     {#key $lastUpdated}
       {#if sanityRoomContent}
         <img
@@ -58,11 +65,31 @@
   </div>
 </div>
 
+{#snippet roomImageModal()}
+  <!-- svelte-ignore a11y_click_events_have_key_events -->
+  <!-- svelte-ignore a11y_no_static_element_interactions -->
+  <div class="image-modal" onclick={() => modal.close()}>
+    <img
+      src={urlFor(sanityRoomContent?.image).width(1200).auto("format").url()}
+      alt={`room #${room.index}`}
+    />
+  </div>
+{/snippet}
+
+{#if showImageModal && sanityRoomContent}
+  <ModalTarget
+    fullscreen={true}
+    onclose={() => (showImageModal = false)}
+    content={roomImageModal}
+  />
+{/if}
+
 <style lang="scss">
   .room-preview-header {
     border-bottom: var(--default-border-style);
     display: flex;
     flex-direction: row;
+    background: var(--background);
 
     .image {
       border: 15px solid transparent;
@@ -70,6 +97,7 @@
       aspect-ratio: 1/1;
       width: 50%;
       line-height: 0;
+      cursor: pointer;
 
       img {
         width: 100%;
@@ -109,24 +137,48 @@
           font-family: var(--special-font-stack);
           font-size: var(--font-size-large);
         }
+
+        &.balance {
+          background: var(--color-value);
+          color: var(--background);
+          padding: 5px;
+          height: auto;
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+
+          &.depleted {
+            background: var(--color-death);
+            color: var(--background);
+          }
+
+          .value {
+            font-size: var(--font-size-extra-large);
+          }
+        }
+
+        &.index {
+          color: var(--color-grey-mid);
+        }
       }
     }
+  }
 
-    .balance {
-      background: var(--color-value);
-      color: var(--background);
-      padding: 5px;
-      height: auto;
-      flex: 1;
+  .image-modal {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
 
-      &.depleted {
-        background: var(--color-death);
-        color: var(--background);
-      }
-    }
-
-    .index {
-      color: var(--color-grey-mid);
+    img {
+      max-width: 90%;
+      max-height: 90%;
+      object-fit: contain;
+      border: var(--default-border-style);
     }
   }
 </style>

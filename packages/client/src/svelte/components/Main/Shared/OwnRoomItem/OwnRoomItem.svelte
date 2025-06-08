@@ -141,13 +141,14 @@
     color: var(--foreground);
     text-align: left;
     overflow: hidden;
+    background-color: var(--background);
 
     &:hover {
       background-color: var(--color-grey-darker);
     }
 
     &.depleted {
-      opacity: 0.5;
+      background-color: var(--color-death);
     }
 
     .room-listing-left {

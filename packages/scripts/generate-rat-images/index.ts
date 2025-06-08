@@ -29,7 +29,7 @@ const sanitizePrompt = (prompt: string): string => {
     .toLowerCase()
     .replace(/[^a-z0-9]/g, '_')
     .replace(/_+/g, '_')
-    .substring(0, 50)
+    .substring(0, 100)
 }
 
 const createOutputDirectory = (prompt: string): string => {
@@ -45,20 +45,20 @@ const createOutputDirectory = (prompt: string): string => {
 
 const makePrompt = (prompt: string) => {
   const randomPrompts = pickRandomMultiple(PROMPTS, 4).join(" ")
-  return `STYLE: ${randomPrompts}. !! Important !! A scene of: ${prompt}`
+  return `STYLE: ${randomPrompts}. !! Important !! ${prompt}`
 }
 
 export const generateImage = async (prompt: string) => {
-  const FULL_PROMPT = prompt + FIXED_PROMPT
+  const fullPrompt = makePrompt(prompt)
   const INPUT = {
     SD: {
-      image: "https://rat-room-pyrope.netlify.app/images/rat-templates/rat-template.png",
-      prompt: makePrompt(prompt),
+      image: "https://rat-room-pyrope.netlify.app/images/rat-template/rat-template.png",
+      prompt: fullPrompt,
       cfg: 2,
       aspect_ratio: "1:1",
       output_format: "webp",
       output_quality: 80,
-      prompt_strength: 0.72,
+      prompt_strength: 0.75,
       steps: 28,
     }
   }
@@ -67,7 +67,7 @@ export const generateImage = async (prompt: string) => {
   const timecode = new Date().toISOString()
   fs.appendFileSync(
     path.join(process.cwd(), 'prompts.txt'),
-    `${timecode}: ${FULL_PROMPT}\n`
+    `${timecode}: ${fullPrompt}\n`
   )
 
   try {
@@ -89,7 +89,7 @@ export const generateImage = async (prompt: string) => {
       })
       .toBuffer()
 
-    return processedBuffer
+    return { buffer: processedBuffer, prompt: fullPrompt }
   } catch (error) {
     throw new Error(error as string)
   }
@@ -104,12 +104,12 @@ const processRun = async (variations: number) => {
   console.log(`Saving images to: ${outputDir}`)
 
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
-  const sanitizedPrompt = sanitizePrompt(prompt)
 
   for (let i = 0; i < variations; i++) {
     console.log(`Generating image ${i + 1}/${variations}...`)
     try {
-      const imageBuffer = await generateImage(prompt)
+      const { buffer: imageBuffer, prompt: fullPrompt } = await generateImage(prompt)
+      const sanitizedPrompt = sanitizePrompt(fullPrompt)
       const outputPath = path.join(outputDir, `${timestamp}__${i + 1}__${sanitizedPrompt}.png`)
       fs.writeFileSync(outputPath, imageBuffer)
       console.log(`Saved image to: ${outputPath}`)

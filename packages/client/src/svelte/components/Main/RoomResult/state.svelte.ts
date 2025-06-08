@@ -19,6 +19,7 @@ import { writable } from "svelte/store"
 import type { FrozenRat, FrozenRoom } from "./types"
 import type { EnterRoomReturnValue } from "@server/modules/types"
 import type { Hex } from "viem"
+import { addressToRatImage } from "@svelte/modules/utils"
 
 
 /*
@@ -156,10 +157,11 @@ export const frozenRat = writable<FrozenRat | null>(null)
  * @param room The room object
  * @param roomId The room ID
  */
-export function freezeObjects(rat: Rat, room: Room, roomId: Hex) {
+export function freezeObjects(rat: Rat, room: Room, roomId: Hex, ratId: Hex) {
   const preppedRat = structuredClone(rat) as FrozenRat
   if (!preppedRat.inventory) preppedRat.inventory = []
   if (!preppedRat.traits) preppedRat.traits = []
+  preppedRat.image = addressToRatImage(ratId)
   frozenRat.set(preppedRat)
 
   const preppedRoom = structuredClone(room) as FrozenRoom
