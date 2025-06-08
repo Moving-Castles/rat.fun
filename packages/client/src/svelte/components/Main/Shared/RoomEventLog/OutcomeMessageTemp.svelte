@@ -1,6 +1,6 @@
 <script lang="ts">
   import { tippy } from "svelte-tippy"
-  import { timeSince, formatDate } from "@modules/utils"
+  import { timeSince } from "@modules/utils"
   import { onMount, onDestroy } from "svelte"
 
   let interval: ReturnType<typeof setInterval>

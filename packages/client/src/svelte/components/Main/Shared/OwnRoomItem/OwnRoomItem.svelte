@@ -4,9 +4,10 @@
   import { blocksToReadableTime, renderSafeString } from "@modules/utils"
   import { blockNumber } from "@modules/network"
   import { levels } from "@modules/state/base/stores"
-  import type { PlotPoint } from "@components/Main/Shared/RoomStats/types"
+  import type { PlotPoint } from "@components/Main/Shared/RoomGraph/types"
   import { staticContent } from "@modules/content"
-  import RoomStats from "@components/Main/Shared/RoomStats/RoomStats.svelte"
+
+  import RoomGraph from "@components/Main/Shared/RoomGraph/RoomGraph.svelte"
 
   let { roomId, room }: { roomId: Hex; room: Room } = $props()
 
@@ -50,11 +51,11 @@
 <button
   onclick={() => rooms.preview(roomId, true, true, false)}
   class="room-listing-item"
-  class:depleted={room.balance == 0}
+  class:depleted={Number(room.balance) == 0}
 >
   <div class="room-listing-left">
     <div class="room-stats">
-      <RoomStats height={200} {plotData} empty={plotData.length == 1} />
+      <RoomGraph height={200} {plotData} empty={plotData.length == 1} />
     </div>
     <div class="room-info-row bottom">
       <!-- PROFIT -->
@@ -64,7 +65,7 @@
         class:negative={profit < 0}
       >
         <span>
-          {#if room.balance == 0}
+          {#if Number(room.balance) == 0}
             Depleted
           {:else}
             ${profit}
@@ -72,14 +73,14 @@
         </span>
       </div>
       <!-- BALANCE -->
-      <span class="balance" class:depleted={room.balance == 0}>
+      <span class="balance" class:depleted={Number(room.balance) == 0}>
         Balance: ${room.balance}
       </span>
       <!-- DIVIDER -->
       <span class="divider">•</span>
       <!-- VISITOR COUNT -->
       <span class="visit-count small">
-        {#if room.visitCount === 1}
+        {#if Number(room.visitCount) === 1}
           {room.visitCount} visit
         {:else}
           {room.visitCount} visits
@@ -119,11 +120,6 @@
         </div>
       </div>
     </div>
-
-    <!-- SECTION 2 -->
-    <div class="section">
-      <!-- BOTTOM ROW -->
-    </div>
   </div>
 </button>
 
@@ -160,9 +156,6 @@
       .room-stats {
         height: 100%;
         margin-bottom: 10px;
-      }
-
-      .stats {
       }
 
       .profit-indicator {
@@ -218,12 +211,6 @@
           margin-bottom: 5px;
           padding-bottom: 5px;
           border-bottom: 1px solid var(--color-grey-mid);
-        }
-
-        &.bottom {
-          margin-top: 5px;
-          padding-top: 5px;
-          border-top: 1px solid var(--color-grey-mid);
         }
       }
 

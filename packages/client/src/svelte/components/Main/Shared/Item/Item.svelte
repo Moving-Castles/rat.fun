@@ -1,6 +1,6 @@
 <script lang="ts">
   import { items } from "@modules/state/base/stores"
-  import { dropItem } from "@svelte/modules/action"
+  import { dropItem } from "@modules/action"
   import { playSound } from "@modules/sound"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
   import { ModalTarget } from "@components/Main/Modal/state.svelte"
@@ -14,7 +14,7 @@
     isRoomInfoBox = false,
   }: {
     item: string | TempItem
-    isRoomInfoBox: boolean
+    isRoomInfoBox?: boolean
   } = $props()
 
   let busy = $state(false)

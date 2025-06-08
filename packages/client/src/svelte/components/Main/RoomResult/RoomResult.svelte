@@ -17,14 +17,14 @@
     transitionToResultSummary,
     resetRoomResultState,
     freezeObjects,
-  } from "@svelte/components/Main/RoomResult/state.svelte"
+  } from "@components/Main/RoomResult/state.svelte"
   import { walletNetwork } from "@modules/network"
   import { staticContent } from "@modules/content"
-  import { enterRoom } from "@svelte/components/Main/RoomResult/enterRoom"
+  import { enterRoom } from "@components/Main/RoomResult/enterRoom"
   import { getUIState } from "@modules/ui/state.svelte"
 
-  import SplashScreen from "@svelte/components/Main/RoomResult/SplashScreen/SplashScreen.svelte"
-  import WaitingForResult from "@svelte/components/Main/RoomResult/WaitingForResult/WaitingForResult.svelte"
+  import SplashScreen from "@components/Main/RoomResult/SplashScreen/SplashScreen.svelte"
+  import WaitingForResult from "@components/Main/RoomResult/WaitingForResult/WaitingForResult.svelte"
   import Log from "@components/Main/RoomResult/Log/Log.svelte"
   import RatInfoBox from "@components/Main/RoomResult/InfoBox/Rat/RatInfoBox.svelte"
   import RoomInfoBox from "@components/Main/RoomResult/InfoBox/Room/RoomInfoBox.svelte"

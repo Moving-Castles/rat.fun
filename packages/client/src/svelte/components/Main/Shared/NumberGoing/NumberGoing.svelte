@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Tween } from "svelte/motion"
   import { linear as easing } from "svelte/easing"
-  import { playSound } from "@svelte/modules/sound"
+  import { playSound } from "@modules/sound"
 
   let {
     value,

@@ -78,8 +78,9 @@
   --font-size-very-small: 9px;
   --font-size-small: 11px;
   --font-size-normal: 14px;
+  --font-size-medium: 20px;
   --font-size-large: 26px;
-  --font-size-extra-large: 60px;
+  --font-size-extra-large: 48px;
 
   /** Layers */
   --z-background: 0;

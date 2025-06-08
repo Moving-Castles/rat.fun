@@ -178,16 +178,6 @@
     }
   }
 
-  .rotate-down {
-    display: inline-block;
-    transform: rotate(90deg) translate(-8px, 0);
-  }
-
-  .rotate-up {
-    display: inline-block;
-    transform: rotate(-90deg) translate(-4px, 0);
-  }
-
   .close-button {
     position: absolute;
     bottom: 0;

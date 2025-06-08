@@ -1,7 +1,7 @@
 <script lang="ts">
   import { frozenRat } from "@components/Main/RoomResult/state.svelte"
-  import Trait from "@svelte/components/Main/Shared/Trait/Trait.svelte"
-  import Item from "@svelte/components/Main/Shared/Item/Item.svelte"
+  import Trait from "@components/Main/Shared/Trait/Trait.svelte"
+  import Item from "@components/Main/Shared/Item/Item.svelte"
   import NumberGoing from "@components/Main/Shared/NumberGoing/NumberGoing.svelte"
 
   let healthGoing = $state(false)

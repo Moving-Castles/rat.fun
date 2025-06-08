@@ -12,7 +12,7 @@
     plotData,
     empty = false,
     height = 300,
-  }: { plotData: PlotPoint[]; empty: boolean; height: number } = $props()
+  }: { plotData: PlotPoint[]; empty: boolean; height?: number } = $props()
 
   // console.log(height)
 

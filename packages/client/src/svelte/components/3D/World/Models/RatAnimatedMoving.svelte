@@ -8,7 +8,7 @@ Command: npx @threlte/gltf@3.0.0 src/svelte/public/models/RatAnimated.glb
   import { Tween } from "svelte/motion"
   import { T, useTask } from "@threlte/core"
   import { useGltf, useGltfAnimations, useDraco } from "@threlte/extras"
-  import { playSound } from "@svelte/modules/sound"
+  import { playSound } from "@modules/sound"
   import _ from "lodash"
 
   let handMesh = $state(null)

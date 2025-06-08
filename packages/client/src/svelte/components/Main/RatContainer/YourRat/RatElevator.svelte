@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, onDestroy } from "svelte"
+  import { onMount } from "svelte"
   import { Tween } from "svelte/motion"
   import { bounceIn } from "svelte/easing"
   import Main from "@components/3D/World/Main.svelte"
@@ -31,6 +31,8 @@
 </script>
 
 {#key key}
+  <!-- svelte-ignore a11y_click_events_have_key_events -->
+  <!-- svelte-ignore a11y_no_static_element_interactions -->
   <div onclick={() => key++} class="rat-cam">
     <div class="square">
       <Main>
@@ -41,17 +43,6 @@
 {/key}
 
 <style lang="scss">
-  .rat-cam {
-    // height: 100%;
-    // display: flex;
-    // justify-content: center;
-    // align-items: center;
-    // align-self: flex-end;
-    // position: relative;
-    // aspect-ratio: 1;
-    // padding: 5px;
-  }
-
   .square {
     aspect-ratio: 1 / 1;
     // height: 100%;

@@ -16,6 +16,7 @@
   import { walletNetwork } from "@modules/network"
 
   import NoImage from "@components/Main/Shared/NoImage/NoImage.svelte"
+  import VideoLoader from "@components/Main/Shared/VideoLoader/VideoLoader.svelte"
 
   let sanityRoomContent = $derived(
     $staticContent.rooms.find(r => r.title == roomId)
@@ -55,12 +56,9 @@
       console.error(e)
       liquidationMessage = "Could not liquidate room"
     } finally {
-      busy = false
       sendLiquidateRoomMessage($walletNetwork, roomId)
-      setTimeout(() => {
-        modal.close()
-      }, 1200)
       rooms.back(isOwnRoomListing)
+      modal.close()
     }
   }
 </script>
@@ -91,21 +89,29 @@
 {#snippet confirmLiquidation()}
   <div class="confirmation danger">
     <div class="content">
-      <div class="room-image">
-        {#key $lastUpdated}
-          {#if sanityRoomContent}
-            <img
-              src={urlFor(sanityRoomContent?.image).url()}
-              alt={`room #${room.index}`}
-            />
-          {:else}
-            <NoImage />
-          {/if}
-        {/key}
-      </div>
-      <button disabled={busy} onclick={sendLiquidateRoom} class="modal-button">
-        {liquidationMessage}
-      </button>
+      {#if busy}
+        <VideoLoader duration={6000} />
+      {:else}
+        <div class="room-image">
+          {#key $lastUpdated}
+            {#if sanityRoomContent}
+              <img
+                src={urlFor(sanityRoomContent?.image).url()}
+                alt={`room #${room.index}`}
+              />
+            {:else}
+              <NoImage />
+            {/if}
+          {/key}
+        </div>
+        <button
+          disabled={busy}
+          onclick={sendLiquidateRoom}
+          class="modal-button"
+        >
+          {liquidationMessage}
+        </button>
+      {/if}
     </div>
   </div>
 {/snippet}
@@ -210,7 +216,6 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    mix-blend-mode: difference;
   }
 
   .confirmation {
@@ -225,7 +230,6 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
-        mix-blend-mode: difference;
       }
     }
 
@@ -245,5 +249,9 @@
   .disabled {
     background: var(--color-grey-mid);
     pointer-events: none;
+  }
+
+  .room-image {
+    line-height: 0;
   }
 </style>

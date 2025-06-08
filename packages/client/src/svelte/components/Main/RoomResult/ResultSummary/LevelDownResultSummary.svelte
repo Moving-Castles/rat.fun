@@ -158,7 +158,7 @@
         left: 50%;
         top: 50%;
         transform: translate(-50%, -50%);
-        z-index: var(--z-sub-top);
+        z-index: var(--z-sub);
         overflow: hidden;
         mix-blend-mode: screen;
 
@@ -185,16 +185,6 @@
         align-items: center;
       }
     }
-  }
-
-  .rotate-down {
-    display: inline-block;
-    transform: rotate(90deg) translate(-8px, 0);
-  }
-
-  .rotate-up {
-    display: inline-block;
-    transform: rotate(-90deg) translate(-4px, 0);
   }
 
   .close-button {

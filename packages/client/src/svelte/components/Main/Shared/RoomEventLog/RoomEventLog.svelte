@@ -51,7 +51,9 @@
     max-height: 200px;
     overflow-y: scroll;
     overscroll-behavior-y: none;
-    border: 1px solid var(--color-grey-mid);
+    border-left: 1px solid var(--color-grey-mid);
+    border-right: 1px solid var(--color-grey-mid);
+    border-bottom: 1px solid var(--color-grey-mid);
     font-size: 10px;
   }
 

@@ -5,9 +5,10 @@
   import { playSound } from "@modules/sound"
   import { player } from "@modules/state/base/stores"
   import { tippy } from "svelte-tippy"
-  import NumberGoing from "@components/Main/Shared/NumberGoing/NumberGoing.svelte"
-  import Spinner from "@components/Main/Shared/Spinner/Spinner.svelte"
   import { walletNetwork } from "@modules/network"
+
+  import NumberGoing from "@components/Main/Shared/NumberGoing/NumberGoing.svelte"
+  import VideoLoader from "@components/Main/Shared/VideoLoader/VideoLoader.svelte"
 
   import {
     ModalTarget,
@@ -35,11 +36,8 @@
       busy = false
       console.error(e)
     } finally {
-      liquidationMessage = "Elimination complete"
       sendLiquidateRatMessage($walletNetwork, $player.ownedRat)
-      setTimeout(() => {
-        modal.close()
-      }, 1200)
+      modal.close()
     }
   }
 
@@ -68,25 +66,25 @@
     onclick={() => (confirming = true)}
     class="action warning-mute"
   >
-    {#if busy}
-      <Spinner />
-    {:else}
-      Liquidate Rat
-    {/if}
+    Liquidate Rat
   </button>
 </div>
 
 {#snippet confirmLiquidation()}
   <div class="confirmation danger">
     <div class="content">
-      <img
-        class="liquidate-image"
-        src="/images/liquidate.jpg"
-        alt="Confirm Liquidation"
-      />
-      <button disabled={busy} onclick={sendLiquidateRat} class="modal-button">
-        {liquidationMessage}
-      </button>
+      {#if busy}
+        <VideoLoader duration={6000} />
+      {:else}
+        <img
+          class="liquidate-image"
+          src="/images/rat.png"
+          alt="Confirm Liquidation"
+        />
+        <button disabled={busy} onclick={sendLiquidateRat} class="modal-button">
+          {liquidationMessage}
+        </button>
+      {/if}
     </div>
   </div>
 {/snippet}
@@ -164,8 +162,10 @@
       flex-flow: column nowrap;
       justify-content: space-between;
       align-items: center;
+      line-height: 0;
 
-      img {
+      img,
+      video {
         width: 100%;
         height: 100%;
         object-fit: cover;

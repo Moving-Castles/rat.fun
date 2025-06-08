@@ -15,7 +15,7 @@
   import RoomPreview from "@components/Main/Shared/RoomPreview/RoomPreview.svelte"
   import OwnRoomItem from "@components/Main/Shared/OwnRoomItem/OwnRoomItem.svelte"
   import RoomFilters from "./RoomFilters.svelte"
-  import FloorHeader from "./FloorHeader.svelte"
+  // import FloorHeader from "./FloorHeader.svelte"
 
   let {
     isOwnRoomListing,

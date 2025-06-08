@@ -3,8 +3,6 @@
   import NumberGoing from "@components/Main/Shared/NumberGoing/NumberGoing.svelte"
   import { tippy } from "svelte-tippy"
   let balanceGoing = $state(false)
-
-  // let showHighscore = $state(false)
 </script>
 
 <div class="operator-bar">
@@ -44,27 +42,10 @@
             </div>
           </div>
         </div>
-        <!-- HIGHSCORE -->
-        <!-- <button
-          class="stat-item highscore"
-          onclick={() => (showHighscore = true)}
-        >
-          <div class="inner-wrapper">
-            <div class="label">HighScore</div>
-          </div>
-        </button> -->
       </div>
     {/if}
   </div>
 </div>
-
-<!-- {#snippet content()}
-  <HighScore />
-{/snippet} -->
-
-<!-- {#if showHighscore}
-  <ModalTarget onclose={() => (showHighscore = false)} {content} />
-{/if} -->
 
 <style lang="scss">
   .operator-bar {
@@ -99,14 +80,6 @@
 
         .label {
           margin-right: 0.5em;
-        }
-
-        &.highscore {
-          font-size: var(--font-size-small);
-
-          &:hover {
-            background: var(--color-grey-mid);
-          }
         }
 
         .inner-wrapper {

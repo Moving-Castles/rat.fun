@@ -2,8 +2,8 @@
   import { tippy } from "svelte-tippy"
   import { rat } from "@modules/state/base/stores"
 
-  import Trait from "@svelte/components/Main/Shared/Trait/Trait.svelte"
-  import Item from "@svelte/components/Main/Shared/Item/Item.svelte"
+  import Trait from "@components/Main/Shared/Trait/Trait.svelte"
+  import Item from "@components/Main/Shared/Item/Item.svelte"
 </script>
 
 <div class="rat-info-box">

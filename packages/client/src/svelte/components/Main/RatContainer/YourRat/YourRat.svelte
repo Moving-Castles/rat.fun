@@ -3,9 +3,9 @@
 
   import RatInfo from "@components/Main/RatContainer/YourRat/RatInfo.svelte"
   import RatInventory from "@components/Main/RatContainer/YourRat/RatInventory.svelte"
-  // import RatCam from "@components/Main/RatContainer/YourRat/RatCam.svelte"
   import LiquidateRat from "@components/Main/RatContainer/YourRat/LiquidateRat.svelte"
   import DeployRat from "@components/Main/RatContainer/DeployRat/DeployRat.svelte"
+  // import RatCam from "@components/Main/RatContainer/YourRat/RatCam.svelte"
 </script>
 
 <div class="your-rat">

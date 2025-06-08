@@ -3,7 +3,7 @@
 
   let spinnerChars = ["/", "-", "\\", "|"]
   let currentIndex = 0
-  let interval: NodeJS.Timeout
+  let interval: ReturnType<typeof setInterval>
 
   onMount(() => {
     interval = setInterval(() => {
