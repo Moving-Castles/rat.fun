@@ -5,8 +5,9 @@
   const { levelId, i }: { levelId: string; i: number } = $props()
 
   // Prompt: ${$levels[levelId].prompt}
+  // Name: ${$levels[levelId].name} /
   let toolTipText = $derived(
-    `Name: ${$levels[levelId].name} / Min: ${$levels[levelId].levelMinBalance} / Max: ${$levels[levelId].levelMaxBalance}`
+    `Min: ${$levels[levelId].levelMinBalance} / Max: ${$levels[levelId].levelMaxBalance}`
   )
 </script>
 

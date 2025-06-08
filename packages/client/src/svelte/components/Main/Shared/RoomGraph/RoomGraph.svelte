@@ -10,11 +10,9 @@
 
   let {
     plotData,
-    empty = false,
+    isEmpty = false,
     height = 300,
-  }: { plotData: PlotPoint[]; empty: boolean; height?: number } = $props()
-
-  // console.log(height)
+  }: { plotData: PlotPoint[]; isEmpty: boolean; height?: number } = $props()
 
   // Layout setup
   let width = $state(0) // width will be set by the clientWidth
@@ -58,7 +56,7 @@
   // which will be our line.
   let lineGenerator = $derived(
     xScale && yScale
-      ? line()
+      ? line<PlotPoint>()
           .x((d: PlotPoint) => xScale(d.time))
           .y((d: PlotPoint) => yScale(+d.value))
       : // .curve(curveBasis)
@@ -75,8 +73,16 @@
     // Create two points spanning the full domain width at the first data point's y-level
     // These points need 'time' and 'value' structure to work with lineGenerator
     return [
-      { time: domain[0], value: firstValue }, // Point at the start of the domain
-      { time: domain[1], value: firstValue }, // Point at the end of the domain
+      {
+        time: domain[0].getTime(),
+        value: firstValue,
+        meta: { time: domain[0].getTime(), roomValue: firstValue, meta: {} },
+      }, // Point at the start of the domain
+      {
+        time: domain[1].getTime(),
+        value: firstValue,
+        meta: { time: domain[1].getTime(), roomValue: firstValue, meta: {} },
+      }, // Point at the end of the domain
     ]
   })
 
@@ -105,7 +111,7 @@
   }
 </script>
 
-<div class="room-stats">
+<div class="room-graph">
   <div class="y-axis">
     <!-- <small class="label">Value</small> -->
   </div>
@@ -113,7 +119,7 @@
     <!-- <small class="label">Time</small> -->
   </div>
 
-  {#if empty}
+  {#if isEmpty}
     <div class="no-data">
       <span>NO DATA</span>
     </div>
@@ -190,10 +196,11 @@
     }
   }
 
-  .room-stats {
+  .room-graph {
     width: 100%;
     height: 100%;
     position: relative;
+    background: url("/images/graph-bg.png");
   }
 
   .y-axis {

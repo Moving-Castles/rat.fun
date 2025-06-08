@@ -9,7 +9,6 @@
 
   import FloorItem from "./FloorItem.svelte"
   import Cross from "@components/Main/Shared/Graphics/Cross.svelte"
-  import Circle from "@components/Main/Shared/Graphics/Circle.svelte"
 
   const doorProgress = new Spring(1)
 
@@ -77,7 +76,7 @@
         </div>
         <!-- Elevator floor name -->
         <div class="elevator-floor-name">
-          {$ratLevel?.name ?? ""}
+          <!-- {$ratLevel?.name ?? ""} -->
         </div>
       </div>
     {/if}
