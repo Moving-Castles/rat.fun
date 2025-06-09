@@ -38,11 +38,17 @@
 
 <div class="outcomes">
   <div class="header">ROOM LOGS</div>
-  <div class="logs">
-    {#each outcomes as outcome (outcome._id)}
-      <OutcomeMessage {outcome} />
-    {/each}
-  </div>
+  {#if outcomes.length > 0}
+    <div class="logs">
+      {#each outcomes as outcome (outcome._id)}
+        <OutcomeMessage {outcome} />
+      {/each}
+    </div>
+  {:else}
+    <div class="logs-empty">
+      <span> NO LOGS </span>
+    </div>
+  {/if}
 </div>
 
 <style lang="scss">
@@ -67,9 +73,25 @@
     padding-bottom: 60px;
   }
 
+  .logs-empty {
+    height: 100px;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+
+    span {
+      font-size: 14px;
+      background: var(--color-death);
+      padding: 2px;
+      color: var(--background);
+    }
+  }
+
   .header {
     border-bottom: 1px dashed var(--color-grey-mid);
     padding: 12px;
+    font-size: 11px;
     display: flex;
     justify-content: space-between;
     position: sticky;
