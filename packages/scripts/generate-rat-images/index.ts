@@ -54,9 +54,9 @@ export const generateImage = async (prompt: string) => {
     SD: {
       image: "https://rat-room-pyrope.netlify.app/images/rat-template/rat-template.png",
       prompt: fullPrompt,
-      cfg: 10,
+      cfg: 3,
       aspect_ratio: "1:1",
-      output_format: "webp",
+      output_format: "png",
       output_quality: 80,
       prompt_strength: 0.79,
       steps: 28,

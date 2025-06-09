@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # Directory containing images
-IMG_DIR="downloaded-images"
+IMG_DIR="/Users/rasmus/Desktop/SELECTED/all-rats"
 # Output video file
 OUT_VIDEO="slideshow.mp4"
 # Frame rate (1 frame per 0.1s = 10 fps)
-FPS=10
+FPS=20
 
 # Ensure ffmpeg is installed
 if ! command -v ffmpeg &> /dev/null; then
@@ -14,7 +14,7 @@ if ! command -v ffmpeg &> /dev/null; then
 fi
 
 # Create a sorted list of images (modify the pattern if your images have a different extension)
-IMG_PATTERN="$IMG_DIR/*.jpg"
+IMG_PATTERN="$IMG_DIR/*.png"
 
 # Generate the video
 ffmpeg -y -framerate $FPS -pattern_type glob -i "$IMG_PATTERN" \
