@@ -167,8 +167,8 @@
   }
 
   .image-modal {
-    width: 100%;
-    height: 100%;
+    width: var(--game-window-width);
+    height: var(--game-window-height);
     display: flex;
     justify-content: center;
     align-items: center;

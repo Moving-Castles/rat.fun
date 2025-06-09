@@ -91,7 +91,6 @@
 
 {#if confirming}
   <ModalTarget
-    fullscreen
     onclose={() => {
       confirming = false
     }}
@@ -156,10 +155,9 @@
   }
 
   .confirmation {
-    height: 100%;
+    width: 400px;
+    height: 460px;
     .content {
-      height: 100%;
-      display: flex;
       flex-flow: column nowrap;
       justify-content: space-between;
       align-items: center;
