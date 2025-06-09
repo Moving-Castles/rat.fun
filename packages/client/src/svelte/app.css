@@ -16,7 +16,11 @@
 
   /* --color-alert: rgb(255, 69, 0); */
   --color-alert: rgb(122, 94, 52);
-  --color-alert-priority: rgb(255, 128, 0);
+  /* --color-alert-priority: rgb(255, 128, 0); */
+
+  --color-alert-priority: rgb(236, 77, 3);
+
+  --color-button: rgb(86, 138, 51);
 
   --color-secondary: rgb(163, 66, 31);
   --color-health: rgb(109, 196, 109);

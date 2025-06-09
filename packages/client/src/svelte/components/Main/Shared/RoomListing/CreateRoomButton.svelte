@@ -23,17 +23,22 @@
     top: 0;
     z-index: var(--z-high);
     background: var(--background);
+    overflow: hidden;
 
     button {
       width: 100%;
       height: 100%;
       background: var(--color-alert-priority);
-      padding: 20px;
       border: none;
+      letter-spacing: -0.2em;
+      font-size: var(--font-size-extra-large);
+      font-family: var(--label-font-stack);
+      transition: transform 0.2s ease-in-out;
 
       &:hover {
-        background: var(--color-grey-dark);
-        color: var(--foreground);
+        background: var(--color-alert-priority);
+        color: var(--background);
+        transform: scale(1.3);
       }
     }
   }

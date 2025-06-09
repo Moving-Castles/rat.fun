@@ -43,10 +43,14 @@
     <div class="image-container warning-mute-inverse">
       <img src="/images/rat.png" alt="Rat" />
     </div>
-    <button class:disabled onclick={sendCreateRat}>
-      <span class="button-text">Deploy new rat</span><br />
-      <span>Cost: ${Number($gameConfig?.gameConfig?.ratCreationCost)}</span>
-    </button>
+    <div class="button-container">
+      <button class:disabled onclick={sendCreateRat}>
+        <span class="button-text">Deploy new rat</span>
+        <span class="button-cost">
+          (Cost: ${Number($gameConfig?.gameConfig?.ratCreationCost)})
+        </span>
+      </button>
+    </div>
   </div>
 {/if}
 
@@ -79,42 +83,55 @@
     }
   }
 
-  button {
-    padding: 20px;
+  .button-container {
+    overflow: hidden;
     width: 100%;
     height: 80px;
-    background: var(--color-alert-priority);
-    border: none;
-    border-top: var(--default-border-style);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-    &:hover {
-      background: var(--color-alert);
-      color: var(--foreground);
-    }
+    button {
+      width: 100%;
+      height: 100%;
 
-    .spinner {
-      position: relative;
-      top: 2px;
-      display: none;
-    }
-
-    &.disabled {
-      pointer-events: none;
-      opacity: 0.5;
-      cursor: default;
-    }
-
-    &.busy {
-      pointer-events: none;
-      cursor: default;
-      background: var(--color-grey-light);
-
-      .spinner {
-        display: block;
-      }
+      background: var(--color-alert-priority);
+      border: none;
+      border-top: var(--default-border-style);
+      transition: transform 0.2s ease-in-out;
 
       .button-text {
-        display: none;
+        letter-spacing: -0.2em;
+        font-size: var(--font-size-extra-large);
+        font-family: var(--label-font-stack);
+      }
+
+      .button-cost {
+        font-size: var(--font-size-normal);
+      }
+
+      &:hover {
+        transform: scale(1.3);
+      }
+
+      &.disabled {
+        pointer-events: none;
+        opacity: 0.5;
+        cursor: default;
+      }
+
+      &.busy {
+        pointer-events: none;
+        cursor: default;
+        background: var(--color-grey-light);
+
+        .spinner {
+          display: block;
+        }
+
+        .button-text {
+          display: none;
+        }
       }
     }
   }

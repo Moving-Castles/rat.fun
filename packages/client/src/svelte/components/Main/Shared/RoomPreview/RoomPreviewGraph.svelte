@@ -33,7 +33,7 @@
 <div class="room-preview-stats">
   <div class="header">ROOM BALANCE OVER TIME</div>
   <div class="content" class:empty={plotData.length == 1}>
-    <RoomGraph {plotData} isEmpty={plotData.length == 1} />
+    <RoomGraph height={300} {plotData} isEmpty={plotData.length == 1} />
   </div>
 </div>
 
@@ -42,6 +42,7 @@
     background: var(--background);
 
     .header {
+      border-top: 1px solid var(--color-grey-mid);
       border-left: 1px solid var(--color-grey-mid);
       border-right: 1px solid var(--color-grey-mid);
       border-bottom: 1px dashed var(--color-grey-mid);

@@ -15,6 +15,8 @@
   import RoomPreview from "@components/Main/Shared/RoomPreview/RoomPreview.svelte"
   import OwnRoomItem from "@components/Main/Shared/OwnRoomItem/OwnRoomItem.svelte"
   import RoomFilters from "./RoomFilters.svelte"
+  import CreateRoomButton from "@svelte/components/Main/Shared/RoomListing/CreateRoomButton.svelte"
+
   // import FloorHeader from "./FloorHeader.svelte"
 
   let {
@@ -108,7 +110,10 @@
               showDepletedRooms = !showDepletedRooms
             }}
           />
+        {:else}
+          <CreateRoomButton />
         {/if}
+
         {#if activeList.length > 0}
           {#if activeList.length < roomList.length}
             {#key roomList.length}
@@ -221,11 +226,15 @@
   }
 
   .empty-listing {
-    height: calc(100% - 100px);
-    background: var(--background);
-    color: var(--foreground);
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+
+    div {
+      background-color: var(--color-death);
+      padding: 10px;
+      color: var(--background);
+    }
   }
 </style>
