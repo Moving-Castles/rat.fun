@@ -114,11 +114,14 @@
     <!-- ACTIONS -->
     <div class="actions">
       <button class:disabled onclick={sendCreateRoom}>
-        Create room (Cost: ${Number(
-          $levels[levelId]?.roomCreationCost ??
-            $levels[$gameConfig.levelList[0]]?.roomCreationCost ??
-            666
-        )})
+        <span class="button-text">Create room</span>
+        <span class="button-cost">
+          (Cost: ${Number(
+            $levels[levelId]?.roomCreationCost ??
+              $levels[$gameConfig.levelList[0]]?.roomCreationCost ??
+              666
+          )})
+        </span>
       </button>
     </div>
   {/if}
@@ -219,23 +222,30 @@
       flex-flow: column nowrap;
       gap: 12px;
       margin-inline: 1rem;
+      overflow: hidden;
 
       button {
         width: 100%;
-        height: 60px;
+        height: 80px;
         background: var(--color-alert-priority);
         color: var(--background);
         cursor: pointer;
         border-radius: 0;
         border: var(--default-border-style);
+        transition: transform 0.2s ease-in-out;
+
+        .button-text {
+          letter-spacing: -0.2em;
+          font-size: var(--font-size-extra-large);
+          font-family: var(--label-font-stack);
+        }
 
         &.secondary {
           background: var(--color-grey-mid);
         }
 
         &:hover {
-          background: var(--color-alert);
-          color: var(--foreground);
+          transform: scale(1.3);
         }
 
         &.disabled {

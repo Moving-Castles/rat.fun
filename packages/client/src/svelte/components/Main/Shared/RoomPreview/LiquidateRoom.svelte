@@ -64,30 +64,24 @@
 </script>
 
 <div class="liquidate-room">
-  <div use:tippy={{ content: "Total room value" }} class="data-cell">
-    <div class="inner">
-      <div class="data-cell-label">Room balance:</div>
-      <div class="data-cell-value">${room.balance}</div>
-    </div>
-  </div>
   <button
     use:tippy={{
       content: "Liquidate room to get the value added to your operator wallet",
     }}
     class:disabled={busy || blockUntilUnlock > 0}
     onclick={() => (confirming = true)}
-    class="action warning-mute"
+    class="action"
   >
     {#if blockUntilUnlock <= 0}
-      Liquidate Room
+      Liquidate Room (Get ${room.balance})
     {:else}
-      Unlocked in {blockUntilUnlock} blocks
+      Liquidation unlocked in {blockUntilUnlock} blocks
     {/if}
   </button>
 </div>
 
 {#snippet confirmLiquidation()}
-  <div class="confirmation danger">
+  <div class="confirmation-modal">
     <div class="content">
       {#if busy}
         <VideoLoader duration={6000} />
@@ -127,38 +121,12 @@
 
 <style lang="scss">
   .liquidate-room {
-    height: var(--liquidate-rat-height);
+    height: 80px;
     display: flex;
-    border: var(--default-border-style);
-  }
 
-  .data-cell {
-    width: 50%;
-    border-right: var(--default-border-style);
-    height: 100%;
-    padding: var(--default-padding);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--color-value);
-    color: var(--background);
-
-    .inner {
-      display: flex;
-
-      .data-cell-label {
-        margin-right: 1ch;
-      }
-    }
-  }
-
-  .modal-button {
-    width: 100%;
-    height: 100%;
-  }
-
-  button {
-    &:hover {
+    button {
+      color: var(--foreground);
+      border: none;
       background: repeating-linear-gradient(
         45deg,
         #cc0000,
@@ -166,48 +134,39 @@
         #9e0000 20px,
         #9e0000 40px
       );
+
+      &:hover {
+        background: repeating-linear-gradient(
+          45deg,
+          black,
+          black 20px,
+          #222 20px,
+          #222 40px
+        );
+      }
+    }
+
+    .action {
+      width: 100%;
+      height: 100%;
+      padding: var(--default-padding);
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
   }
 
-  .action {
-    width: 50%;
-    height: 100%;
-    padding: var(--default-padding);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .danger {
-    border: none;
-    background: repeating-linear-gradient(
-      45deg,
-      #cc0000,
-      #cc0000 20px,
-      #9e0000 20px,
-      #9e0000 40px
-    );
-  }
-
-  .warning-mute {
-    color: var(--foreground);
-    border: none;
-    background: repeating-linear-gradient(
-      45deg,
-      black,
-      black 20px,
-      #222 20px,
-      #222 40px
-    );
-  }
-
-  .confirmation {
+  .confirmation-modal {
     .content {
       display: flex;
       flex-flow: column nowrap;
       justify-content: space-between;
       align-items: center;
       height: 540px;
+
+      .room-image {
+        line-height: 0;
+      }
 
       video,
       img {
@@ -240,7 +199,14 @@
     pointer-events: none;
   }
 
-  .room-image {
-    line-height: 0;
+  .danger {
+    border: none;
+    background: repeating-linear-gradient(
+      45deg,
+      #cc0000,
+      #cc0000 20px,
+      #9e0000 20px,
+      #9e0000 40px
+    );
   }
 </style>

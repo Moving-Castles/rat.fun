@@ -55,11 +55,6 @@
       color: var(--background);
       width: 50%;
 
-      &.selected {
-        background: var(--color-alert);
-        color: var(--foreground);
-      }
-
       button {
         width: 100%;
         height: 100%;
@@ -69,6 +64,7 @@
         color: var(--background);
         font-family: var(--label-font-stack);
         font-size: var(--font-size-large);
+        letter-spacing: -0.2em;
       }
 
       &:hover {
@@ -77,6 +73,15 @@
         button {
           transform: scale(1.4);
           transition: transform 0.2s ease-in-out;
+        }
+      }
+
+      &.selected {
+        background: var(--color-alert);
+        color: var(--foreground);
+
+        &:hover {
+          // background: var(--color-alert-priority);
         }
       }
     }

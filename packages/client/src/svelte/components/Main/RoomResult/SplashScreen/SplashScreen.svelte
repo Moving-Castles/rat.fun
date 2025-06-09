@@ -41,6 +41,7 @@
     gsap.set(imageContainerElement, { opacity: 0, scale: 0.95 })
     gsap.set(promptElement, { opacity: 0, scale: 0.95 })
     gsap.set(roomIndexElement, { opacity: 0, scale: 0.95 })
+
     // Add to timeline
     splashScreenTimeline.to(roomIndexElement, {
       opacity: 1,
@@ -54,6 +55,7 @@
       delay: 2,
       duration: 0.5,
     })
+
     // Return to parent
     splashScreenTimeline.call(onComplete)
   })

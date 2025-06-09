@@ -42,6 +42,7 @@
     background: var(--background);
 
     .header {
+      border-top: 1px solid var(--color-grey-mid);
       border-left: 1px solid var(--color-grey-mid);
       border-right: 1px solid var(--color-grey-mid);
       border-bottom: 1px dashed var(--color-grey-mid);

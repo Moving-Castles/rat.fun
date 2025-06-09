@@ -55,7 +55,10 @@
   )
 
   const processRoom = async () => {
-    if (!roomId) return
+    if (!roomId) {
+      return
+    }
+
     try {
       const ret = enterRoom(
         environment,
