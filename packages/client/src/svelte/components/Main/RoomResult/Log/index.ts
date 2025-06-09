@@ -1,5 +1,5 @@
 import type { EnterRoomReturnValue } from "@server/modules/types"
-import { MergedLogEntry } from "./types"
+import type { MergedLogEntry } from "@components/Main/RoomResult/types"
 
 /***
  * Merges log text and outcomes into a single array
