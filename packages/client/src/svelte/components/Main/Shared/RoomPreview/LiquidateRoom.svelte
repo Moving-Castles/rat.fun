@@ -157,14 +157,20 @@
   }
 
   .confirmation-modal {
+    width: 400px;
     .content {
       display: flex;
       flex-flow: column nowrap;
       justify-content: space-between;
       align-items: center;
-      height: 540px;
+      height: 100%;
+
+      .modal-button {
+        width: 100%;
+      }
 
       .room-image {
+        height: 100%;
         line-height: 0;
       }
 

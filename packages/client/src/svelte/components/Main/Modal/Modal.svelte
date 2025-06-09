@@ -44,14 +44,11 @@
     .content {
       overflow-x: hidden;
       overflow-y: scroll;
+      z-index: 1;
 
       &.fullscreen {
         width: 100%;
         height: 100%;
-      }
-      &:not(.fullscreen) {
-        max-width: calc(var(--game-window-height) * 0.6);
-        max-height: calc(var(--game-window-height) * 0.9);
       }
     }
   }

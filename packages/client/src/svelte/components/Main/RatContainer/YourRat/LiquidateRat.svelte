@@ -156,6 +156,7 @@
   }
 
   .confirmation {
+    height: 100%;
     .content {
       height: 100%;
       display: flex;
