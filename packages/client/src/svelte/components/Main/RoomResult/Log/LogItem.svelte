@@ -5,6 +5,7 @@
   import { gsap } from "gsap"
   import { TextPlugin } from "gsap/TextPlugin"
   import { playSound, randomPitch } from "@modules/sound"
+  import OutcomeItem from "@components/Main/Shared/OutcomeItem/OutcomeItem.svelte"
   import {
     TIMESTAMP_DURATION,
     CHARACTER_DELAY,
@@ -18,7 +19,15 @@
   // Type for registered outcome elements
   type RegisteredOutcome = {
     node: HTMLElement
-    data: DOMStringMap
+    data: DOMStringMap | LogEntryFields
+  }
+
+  type LogEntryFields = {
+    id?: string
+    name: string
+    value: number
+    action: string
+    type: string
   }
 
   let {
@@ -58,13 +67,11 @@
   }
 
   // Action to register the nodes
-  const register = (node: HTMLElement) => {
-    const data = node.dataset
+  const register = (node: HTMLElement, data: LogEntryFields) => {
     const registration: RegisteredOutcome = { node, data }
+    console.log(node)
 
-    // Add to our reactive state array
     registeredOutcomes = [...registeredOutcomes, registration]
-    // console.log("Registered outcome:", data.type) // For debugging
 
     // Return destroy function for cleanup
     return {
@@ -80,7 +87,9 @@
   // Stage 1: Prepare the animation
   const prepare = () => {
     // Ensure all parts start invisible
-    gsap.set([timestampElement, logTextElement, ".outcome"], { opacity: 0 })
+    gsap.set([timestampElement, logTextElement, ".outcome-wrapper"], {
+      opacity: 0,
+    })
     // Clear potential previous text content if element re-renders
     if (logTextElement) logTextElement.textContent = ""
   }
@@ -135,7 +144,7 @@
       )
     })
 
-    timeline.addLabel("outcomesFinish", "+=0.2")
+    timeline.addLabel("outcomesFinish", "+=2")
   }
 
   // When it's all said and done
@@ -175,62 +184,75 @@
   <div class="outcome-list">
     {#if logEntry.healthChange}
       <div
-        use:register
-        class="outcome health"
-        data-type="health"
-        data-action={logEntry.healthChange.amount < 0 ? "reduce" : "increase"}
-        data-value={logEntry.healthChange.amount}
-        data-name="Health"
-        class:negative={logEntry.healthChange.amount < 0}
+        class="outcome-wrapper"
+        use:register={{
+          type: "health",
+          action: logEntry.healthChange.amount < 0 ? "reduce" : "increase",
+          value: logEntry.healthChange.amount,
+          name: "Health",
+        }}
       >
-        <span class="title">Health</span>
-        <span class="value">{logEntry.healthChange.amount}</span>
+        <OutcomeItem
+          type="health"
+          negative={logEntry.healthChange.amount < 0}
+          value={logEntry.healthChange.amount}
+        />
       </div>
     {/if}
     {#if logEntry.balanceTransfer}
       <div
-        use:register
-        class="outcome balance"
-        data-type="balance"
-        data-action={logEntry.balanceTransfer.amount < 0
-          ? "reduce"
-          : "increase"}
-        data-value={logEntry.balanceTransfer.amount}
-        data-name="Balance"
-        class:negative={logEntry.balanceTransfer.amount < 0}
+        class="outcome-wrapper"
+        use:register={{
+          type: "balance",
+          action: logEntry.balanceTransfer.amount < 0 ? "reduce" : "increase",
+          value: logEntry.balanceTransfer.amount,
+          name: "Balance",
+        }}
       >
-        <span class="value">${logEntry.balanceTransfer.amount}</span>
+        <OutcomeItem
+          type="balance"
+          negative={logEntry.balanceTransfer.amount < 0}
+          value={`$${logEntry.balanceTransfer.amount}`}
+        />
       </div>
     {/if}
     {#if logEntry.traitChanges}
       {#each logEntry.traitChanges as traitChange}
         <div
-          use:register
-          class="outcome trait"
-          data-type="trait"
-          data-action={traitChange.type}
-          data-id={traitChange.id}
-          data-value={traitChange.value}
-          data-name={traitChange.name}
-          class:remove={traitChange.type === "remove"}
+          class="outcome-wrapper"
+          use:register={{
+            type: "trait",
+            action: traitChange.type,
+            id: traitChange.id,
+            value: traitChange.value,
+            name: traitChange.name,
+          }}
         >
-          {traitChange.name} (${traitChange.value})
+          <OutcomeItem
+            type="trait"
+            negative={traitChange.type === "remove"}
+            value={`${traitChange.name} ($${traitChange.value})`}
+          />
         </div>
       {/each}
     {/if}
     {#if logEntry.itemChanges}
       {#each logEntry.itemChanges as itemChange}
         <div
-          use:register
-          class="outcome item"
-          data-type="item"
-          data-action={itemChange.type}
-          data-id={itemChange.id}
-          data-value={itemChange.value}
-          data-name={itemChange.name}
-          class:remove={itemChange.type === "remove"}
+          class="outcome-wrapper"
+          use:register={{
+            type: "item",
+            action: itemChange.type,
+            id: itemChange.id,
+            value: itemChange.value,
+            name: itemChange.name,
+          }}
         >
-          {itemChange.name} (${itemChange.value})
+          <OutcomeItem
+            type="item"
+            negative={itemChange.type === "remove"}
+            value={`${itemChange.name} ($${itemChange.value})`}
+          />
         </div>
       {/each}
     {/if}
@@ -270,36 +292,6 @@
       flex-direction: row;
       gap: 5px;
       flex-wrap: wrap;
-
-      .outcome {
-        opacity: 0;
-        background: var(--color-health);
-        color: var(--background);
-        font-size: var(--font-size-small);
-        height: 30px;
-        line-height: 30px;
-        padding-inline: 10px;
-        font-size: 12px;
-        position: relative;
-
-        &.health {
-          background: var(--color-health);
-          color: var(--background);
-        }
-
-        &.balance {
-          background: var(--color-value);
-          color: var(--background);
-        }
-
-        &.negative {
-          background: var(--color-death);
-        }
-
-        &.remove {
-          background: var(--color-death);
-        }
-      }
     }
   }
 </style>

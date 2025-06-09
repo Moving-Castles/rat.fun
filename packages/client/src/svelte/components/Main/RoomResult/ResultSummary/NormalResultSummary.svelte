@@ -68,6 +68,8 @@
       ease: "power2.out",
     })
   })
+
+  $inspect(changes)
 </script>
 
 <div

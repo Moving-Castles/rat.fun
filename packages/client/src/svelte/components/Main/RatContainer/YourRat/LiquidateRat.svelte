@@ -91,6 +91,7 @@
 
 {#if confirming}
   <ModalTarget
+    fullscreen
     onclose={() => {
       confirming = false
     }}
@@ -151,8 +152,7 @@
   }
 
   .liquidate-image {
-    height: 100%;
-    max-height: 440px;
+    flex-basis: calc(var(--game-window-height) - 60px);
   }
 
   .confirmation {
@@ -163,7 +163,6 @@
       justify-content: space-between;
       align-items: center;
       line-height: 0;
-      height: 540px;
 
       img,
       video {
