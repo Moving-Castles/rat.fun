@@ -69,12 +69,11 @@
   .image-container {
     display: flex;
     flex-flow: column nowrap;
-    // gap: 20px;
-    padding: 20px;
+    height: 360px;
 
     img {
       width: 100%;
-      height: 300px;
+      height: 100%;
       object-fit: contain;
       mix-blend-mode: screen;
     }
