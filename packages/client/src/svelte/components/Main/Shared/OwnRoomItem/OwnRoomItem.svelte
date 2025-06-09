@@ -8,6 +8,7 @@
   import { staticContent } from "@modules/content"
 
   import RoomGraph from "@components/Main/Shared/RoomGraph/RoomGraph.svelte"
+  import Xed from "@components/Main/Shared/Graphics/Xed.svelte"
 
   let { roomId, room }: { roomId: Hex; room: Room } = $props()
 
@@ -53,9 +54,14 @@
   class="room-listing-item"
   class:depleted={Number(room.balance) == 0}
 >
+  {#if Number(room.balance) == 0}
+    <div class="depleted-indicator">
+      <Xed />
+    </div>
+  {/if}
   <div class="room-listing-left">
     <div class="room-stats">
-      <RoomGraph height={200} {plotData} empty={plotData.length == 1} />
+      <RoomGraph height={200} {plotData} isEmpty={plotData.length == 1} />
     </div>
     <div class="room-info-row bottom">
       <!-- PROFIT -->
@@ -142,6 +148,16 @@
     text-align: left;
     overflow: hidden;
     background-color: var(--background);
+    position: relative;
+
+    .depleted-indicator {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: var(--z-mid);
+    }
 
     &:hover {
       background-color: var(--color-grey-darker);
@@ -149,10 +165,6 @@
       :global(.fake-background) {
         fill: var(--color-grey-darker);
       }
-    }
-
-    &.depleted {
-      background-color: var(--color-death);
     }
 
     .room-listing-left {
@@ -170,6 +182,7 @@
         justify-content: center;
         border: var(--default-border-style);
         padding: 5px;
+        color: var(--background);
 
         &.positive {
           background-color: var(--color-health);
@@ -250,6 +263,13 @@
         overflow: hidden;
         text-overflow: ellipsis;
         max-width: 25ch;
+      }
+    }
+
+    &.depleted {
+      .room-listing-left,
+      .room-info {
+        opacity: 0.4;
       }
     }
   }
