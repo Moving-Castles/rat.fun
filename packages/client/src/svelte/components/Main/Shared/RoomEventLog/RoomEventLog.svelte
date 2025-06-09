@@ -18,7 +18,7 @@
   const params = { roomId, worldAddress: $publicNetwork.worldAddress }
 
   let roomOutcomes = $derived(
-    $staticContent.outcomes.filter(o => o.roomId == roomId) || []
+    $staticContent?.outcomes?.filter(o => o.roomId == roomId) || []
   )
 
   const callback = (update: Outcome[]) => {

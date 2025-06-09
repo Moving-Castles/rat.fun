@@ -5,6 +5,7 @@
   let modalBackground = $state<HTMLDivElement | undefined>(undefined)
 
   const onModalClick = (e: MouseEvent) => {
+    console.log("click", e)
     if (e.target === modalBackground && !modal.config?.noclose) {
       modal.close()
     }
@@ -36,15 +37,18 @@
     align-items: center;
     overscroll-behavior: none;
     z-index: var(--z-high);
+    width: 100dvw;
+    height: 100dvh;
 
     &#roomresult {
       position: absolute;
     }
 
     .content {
+      position: relative;
+      z-index: 1;
       overflow-x: hidden;
       overflow-y: scroll;
-      z-index: 1;
 
       &.fullscreen {
         width: 100%;
