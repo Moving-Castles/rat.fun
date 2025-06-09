@@ -145,6 +145,10 @@
 
     &:hover {
       background-color: var(--color-grey-darker);
+
+      :global(.fake-background) {
+        fill: var(--color-grey-darker);
+      }
     }
 
     &.depleted {

@@ -48,7 +48,7 @@
     // Ensure the domain includes 0 and accommodates the highest value + buffer
     const maxValue = max(plotData, (d: PlotPoint) => +d.value) ?? 0
     return scaleLinear()
-      .domain([0, maxValue + 250]) // Ensure domain starts at 0
+      .domain([0, Math.max(plotData[0].value * 2, maxValue)])
       .range([innerHeight, 0]) // Use innerHeight
   })
 
@@ -127,6 +127,13 @@
     <div class="graph" bind:clientWidth={width}>
       {#if plotData && width && xScale && yScale && lineGenerator}
         <svg {width} {height}>
+          <rect
+            class="fake-background"
+            width={padding.right}
+            {height}
+            x={width - padding.right}
+          ></rect>
+
           <g transform="translate({padding.left}, {padding.top})">
             <path
               d={lineGenerator(plotData)}
@@ -200,7 +207,10 @@
     width: 100%;
     height: 100%;
     position: relative;
-    background: url("/images/graph-bg.png");
+    background-size: 20px 20px;
+    background-image:
+      linear-gradient(to right, var(--color-grey-dark) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--color-grey-dark) 1px, transparent 1px);
   }
 
   .y-axis {

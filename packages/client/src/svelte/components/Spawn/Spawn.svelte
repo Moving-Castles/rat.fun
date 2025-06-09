@@ -7,6 +7,7 @@
   import { ENTITY_TYPE } from "contracts/enums"
 
   import VideoLoader from "@components/Main/Shared/VideoLoader/VideoLoader.svelte"
+  import Slides from "@components/Main/Shared/Slides/Slides.svelte"
 
   const { spawned = () => {} } = $props<{
     spawned?: () => void
@@ -15,6 +16,7 @@
   let busy = $state(false)
   let name = $state("")
   let inputEl = $state<HTMLInputElement | null>(null)
+  let showForm = $state(false)
 
   async function sendSpawn() {
     if (!name) return
@@ -44,6 +46,8 @@
 <div class="container">
   {#if busy}
     <VideoLoader duration={6000} />
+  {:else if !showForm}
+    <Slides onComplete={() => (showForm = true)} />
   {:else}
     <div class="main">
       <!-- INTRO TEXT -->
