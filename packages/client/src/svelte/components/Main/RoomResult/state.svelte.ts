@@ -16,7 +16,7 @@
  */
 
 import { writable } from "svelte/store"
-import type { FrozenRat, FrozenRoom } from "./types"
+import type { FrozenRat, FrozenRoom, OutcomeDataStringMap } from "./types"
 import type { EnterRoomReturnValue } from "@server/modules/types"
 import type { Hex } from "viem"
 import { addressToRatImage } from "@svelte/modules/utils"
@@ -169,13 +169,52 @@ export function freezeObjects(rat: Rat, room: Room, roomId: Hex, ratId: Hex) {
   frozenRoom.set(preppedRoom)
 }
 
+// ======= Route updates to frozen state =======
+
+/**
+ * Updates the frozen state of the rat and room based on the outcome
+ * @param dataset The dataset of the outcome
+ */
+export const updateFrozenState = (dataset: OutcomeDataStringMap) => {
+  const { type, action, value, name, id } = dataset
+
+  if (!type || !action || value === undefined) {
+    return
+  }
+
+  const numericValue = Number(value)
+
+  switch (type) {
+    case "health":
+      changeHealth(numericValue)
+      break
+    case "balance":
+      changeBalance(numericValue)
+      break
+    case "item":
+      if (action === "add") {
+        addItem(name ?? "", numericValue)
+      } else if (action === "remove") {
+        removeItem(id ?? "", numericValue)
+      }
+      break
+    case "trait":
+      if (action === "add") {
+        addTrait(name ?? "", numericValue)
+      } else if (action === "remove") {
+        removeTrait(id ?? "", numericValue)
+      }
+      break
+  }
+}
+
 // ======= Health =======
 
 /**
  * Changes the health of the rat and change the room balance by the inverse amount
  * @param healthChange The amount to change the health by
  */
-export function changeHealth(healthChange: number) {
+function changeHealth(healthChange: number) {
   frozenRat.update(rat => {
     if (!rat) return null
     rat.health = rat.health + BigInt(healthChange)
@@ -196,7 +235,7 @@ export function changeHealth(healthChange: number) {
  * Changes the balance of the rat and change the room balance by the inverse amount
  * @param balanceChange The amount to change the balance by
  */
-export function changeBalance(balanceChange: number) {
+function changeBalance(balanceChange: number) {
   frozenRat.update(rat => {
     if (!rat) return null
     rat.balance = rat.balance + BigInt(balanceChange)
@@ -218,7 +257,7 @@ export function changeBalance(balanceChange: number) {
  * @param itemName The name of the item
  * @param itemValue The value of the item
  */
-export function addItem(itemName: string, itemValue: number) {
+function addItem(itemName: string, itemValue: number) {
   frozenRat.update(rat => {
     if (!rat) return null
     if (!rat.inventory) rat.inventory = []
@@ -244,7 +283,7 @@ export function addItem(itemName: string, itemValue: number) {
  * @param id The ID of the item
  * @param itemValue The value of the item
  */
-export function removeItem(id: string, itemValue: number) {
+function removeItem(id: string, itemValue: number) {
   frozenRat.update(rat => {
     if (!rat) return null
     rat.inventory = rat.inventory.filter(i => i !== id)
@@ -267,7 +306,7 @@ export function removeItem(id: string, itemValue: number) {
  * @param traitName The name of the trait
  * @param traitValue The value of the trait
  */
-export function addTrait(traitName: string, traitValue: number) {
+function addTrait(traitName: string, traitValue: number) {
   frozenRat.update(rat => {
     if (!rat) return null
     const newTempItem = {
@@ -291,7 +330,7 @@ export function addTrait(traitName: string, traitValue: number) {
  * @param id The ID of the trait
  * @param traitValue The value of the trait
  */
-export function removeTrait(id: string, traitValue: number) {
+function removeTrait(id: string, traitValue: number) {
   frozenRat.update(rat => {
     if (!rat) return null
     rat.traits = rat.traits.filter(t => t !== id)
@@ -304,48 +343,4 @@ export function removeTrait(id: string, traitValue: number) {
     room.balance = room.balance + BigInt(traitValue)
     return room
   })
-}
-
-// ======= Summary =======
-
-const frozenStateUpdateFunctions = {
-  health: changeHealth,
-  balance: changeBalance,
-  item: { add: addItem, remove: removeItem },
-  trait: { add: addTrait, remove: removeTrait },
-}
-
-// ======= DOM Interactions =======
-
-/**
- * Updates the frozen state of the rat and room based on the outcome
- * @param dataset The dataset of the outcome
- */
-export const updateFrozenState = (dataset: DOMStringMap) => {
-  const { type, action, value, name, id } = dataset
-
-  if (!type || !action || value === undefined) return
-
-  const numericValue = Number(value)
-
-  switch (type) {
-    case "health":
-    case "balance":
-      frozenStateUpdateFunctions[type]?.(numericValue)
-      break
-    case "item":
-      if (action === "add") {
-        frozenStateUpdateFunctions.item["add"]?.(name ?? "", numericValue)
-      } else if (action === "remove") {
-        frozenStateUpdateFunctions.item["remove"]?.(id ?? "", numericValue)
-      }
-      break
-    case "trait":
-      if (action === "add") {
-        frozenStateUpdateFunctions.trait["add"]?.(name ?? "", numericValue)
-      } else if (action === "remove") {
-        frozenStateUpdateFunctions.trait["remove"]?.(id ?? "", numericValue)
-      }
-      break
-  }
 }

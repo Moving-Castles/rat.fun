@@ -1,5 +1,6 @@
 <script lang="ts">
-  import type { MergedLogEntry } from "@components/Main/RoomResult/Log/types"
+  import type { MergedLogEntry } from "@components/Main/RoomResult/types"
+  import type { OutcomeDataStringMap } from "@components/Main/RoomResult/types"
   import { updateFrozenState } from "@components/Main/RoomResult/state.svelte"
   import { gsap } from "gsap"
   import { TextPlugin } from "gsap/TextPlugin"
@@ -115,7 +116,11 @@
       const outcomeStartTime = `outcomesStart+=${index * OUTCOME_DELAY}`
 
       // State update
-      timeline.call(updateFrozenState, [data], outcomeStartTime)
+      timeline.call(
+        updateFrozenState,
+        [data as OutcomeDataStringMap],
+        outcomeStartTime
+      )
       // Sound
       timeline.call(playOutcomeSound, [data.action], outcomeStartTime)
       // Visuals
