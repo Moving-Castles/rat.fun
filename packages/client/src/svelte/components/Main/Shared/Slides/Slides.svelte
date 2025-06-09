@@ -53,7 +53,7 @@
       {/if}
     {/snippet}
 
-    <Slide onclick={next} {buttons} slide={slides[index]} />
+    <Slide {buttons} slide={slides[index]} />
   {/key}
 </div>
 
