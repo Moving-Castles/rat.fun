@@ -4,6 +4,7 @@
   import { tippy } from "svelte-tippy"
 
   let timeLeft = $state("")
+  let isFlashing = $state(false)
   let interval: number
 
   function updateCountdown() {
@@ -18,9 +19,21 @@
     // Calculate total seconds left
     const totalSecondsLeft = minutesUntilNext * 60 - seconds
 
-    // If we're at exactly the half hour, target the next one
+    // If we're at exactly the half hour, start flashing
     if (totalSecondsLeft === 0) {
-      minutesUntilNext = 30
+      isFlashing = true
+      timeLeft = "00:00"
+
+      // After one minute, stop flashing and target next half hour
+      setTimeout(() => {
+        isFlashing = false
+        minutesUntilNext = 30
+        const newTotalSecondsLeft = minutesUntilNext * 60
+        const mins = Math.floor(newTotalSecondsLeft / 60)
+        const secs = newTotalSecondsLeft % 60
+        timeLeft = `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`
+      }, 60000)
+      return
     }
 
     // Format as MM:SS
@@ -43,7 +56,7 @@
       content: "Situation will change when timer reaches 0.",
     }}
   >
-    <div class="countdown">{timeLeft}</div>
+    <div class="countdown" class:flashing={isFlashing}>{timeLeft}</div>
   </div>
   <div
     class="prompt"
@@ -83,6 +96,11 @@
       .countdown {
         position: relative;
         top: 1px;
+
+        &.flashing {
+          color: var(--color-death);
+          animation: flash 1s infinite;
+        }
       }
     }
 
@@ -107,6 +125,18 @@
         align-items: center;
         justify-content: center;
       }
+    }
+  }
+
+  @keyframes flash {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+    100% {
+      opacity: 1;
     }
   }
 </style>
