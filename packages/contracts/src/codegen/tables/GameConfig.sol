@@ -30,6 +30,7 @@ struct GameConfigData {
   uint256 startingBalance;
   uint32 cooldownCloseRoom;
   uint32 cooldownReenterRoom;
+  address erc20Address;
 }
 
 library GameConfig {
@@ -37,12 +38,12 @@ library GameConfig {
   ResourceId constant _tableId = ResourceId.wrap(0x7462726174726f6f6d0000000000000047616d65436f6e666967000000000000);
 
   FieldLayout constant _fieldLayout =
-    FieldLayout.wrap(0x00ec0d0014202020202004040404200404000000000000000000000000000000);
+    FieldLayout.wrap(0x01000e0014202020202004040404200404140000000000000000000000000000);
 
   // Hex-encoded key schema of ()
   Schema constant _keySchema = Schema.wrap(0x0000000000000000000000000000000000000000000000000000000000000000);
-  // Hex-encoded value schema of (address, bytes32, uint256, uint256, uint256, uint256, uint32, uint32, uint32, uint32, uint256, uint32, uint32)
-  Schema constant _valueSchema = Schema.wrap(0x00ec0d00615f1f1f1f1f030303031f0303000000000000000000000000000000);
+  // Hex-encoded value schema of (address, bytes32, uint256, uint256, uint256, uint256, uint32, uint32, uint32, uint32, uint256, uint32, uint32, address)
+  Schema constant _valueSchema = Schema.wrap(0x01000e00615f1f1f1f1f030303031f0303610000000000000000000000000000);
 
   /**
    * @notice Get the table's key field names.
@@ -57,7 +58,7 @@ library GameConfig {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](13);
+    fieldNames = new string[](14);
     fieldNames[0] = "adminAddress";
     fieldNames[1] = "adminId";
     fieldNames[2] = "globalRoomIndex";
@@ -71,6 +72,7 @@ library GameConfig {
     fieldNames[10] = "startingBalance";
     fieldNames[11] = "cooldownCloseRoom";
     fieldNames[12] = "cooldownReenterRoom";
+    fieldNames[13] = "erc20Address";
   }
 
   /**
@@ -582,6 +584,44 @@ library GameConfig {
   }
 
   /**
+   * @notice Get erc20Address.
+   */
+  function getErc20Address() internal view returns (address erc20Address) {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 13, _fieldLayout);
+    return (address(bytes20(_blob)));
+  }
+
+  /**
+   * @notice Get erc20Address.
+   */
+  function _getErc20Address() internal view returns (address erc20Address) {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 13, _fieldLayout);
+    return (address(bytes20(_blob)));
+  }
+
+  /**
+   * @notice Set erc20Address.
+   */
+  function setErc20Address(address erc20Address) internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 13, abi.encodePacked((erc20Address)), _fieldLayout);
+  }
+
+  /**
+   * @notice Set erc20Address.
+   */
+  function _setErc20Address(address erc20Address) internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    StoreCore.setStaticField(_tableId, _keyTuple, 13, abi.encodePacked((erc20Address)), _fieldLayout);
+  }
+
+  /**
    * @notice Get the full data.
    */
   function get() internal view returns (GameConfigData memory _table) {
@@ -625,7 +665,8 @@ library GameConfig {
     uint32 maxRoomPromptLength,
     uint256 startingBalance,
     uint32 cooldownCloseRoom,
-    uint32 cooldownReenterRoom
+    uint32 cooldownReenterRoom,
+    address erc20Address
   ) internal {
     bytes memory _staticData = encodeStatic(
       adminAddress,
@@ -640,7 +681,8 @@ library GameConfig {
       maxRoomPromptLength,
       startingBalance,
       cooldownCloseRoom,
-      cooldownReenterRoom
+      cooldownReenterRoom,
+      erc20Address
     );
 
     EncodedLengths _encodedLengths;
@@ -667,7 +709,8 @@ library GameConfig {
     uint32 maxRoomPromptLength,
     uint256 startingBalance,
     uint32 cooldownCloseRoom,
-    uint32 cooldownReenterRoom
+    uint32 cooldownReenterRoom,
+    address erc20Address
   ) internal {
     bytes memory _staticData = encodeStatic(
       adminAddress,
@@ -682,7 +725,8 @@ library GameConfig {
       maxRoomPromptLength,
       startingBalance,
       cooldownCloseRoom,
-      cooldownReenterRoom
+      cooldownReenterRoom,
+      erc20Address
     );
 
     EncodedLengths _encodedLengths;
@@ -710,7 +754,8 @@ library GameConfig {
       _table.maxRoomPromptLength,
       _table.startingBalance,
       _table.cooldownCloseRoom,
-      _table.cooldownReenterRoom
+      _table.cooldownReenterRoom,
+      _table.erc20Address
     );
 
     EncodedLengths _encodedLengths;
@@ -738,7 +783,8 @@ library GameConfig {
       _table.maxRoomPromptLength,
       _table.startingBalance,
       _table.cooldownCloseRoom,
-      _table.cooldownReenterRoom
+      _table.cooldownReenterRoom,
+      _table.erc20Address
     );
 
     EncodedLengths _encodedLengths;
@@ -770,7 +816,8 @@ library GameConfig {
       uint32 maxRoomPromptLength,
       uint256 startingBalance,
       uint32 cooldownCloseRoom,
-      uint32 cooldownReenterRoom
+      uint32 cooldownReenterRoom,
+      address erc20Address
     )
   {
     adminAddress = (address(Bytes.getBytes20(_blob, 0)));
@@ -798,6 +845,8 @@ library GameConfig {
     cooldownCloseRoom = (uint32(Bytes.getBytes4(_blob, 228)));
 
     cooldownReenterRoom = (uint32(Bytes.getBytes4(_blob, 232)));
+
+    erc20Address = (address(Bytes.getBytes20(_blob, 236)));
   }
 
   /**
@@ -824,7 +873,8 @@ library GameConfig {
       _table.maxRoomPromptLength,
       _table.startingBalance,
       _table.cooldownCloseRoom,
-      _table.cooldownReenterRoom
+      _table.cooldownReenterRoom,
+      _table.erc20Address
     ) = decodeStatic(_staticData);
   }
 
@@ -863,7 +913,8 @@ library GameConfig {
     uint32 maxRoomPromptLength,
     uint256 startingBalance,
     uint32 cooldownCloseRoom,
-    uint32 cooldownReenterRoom
+    uint32 cooldownReenterRoom,
+    address erc20Address
   ) internal pure returns (bytes memory) {
     return
       abi.encodePacked(
@@ -879,7 +930,8 @@ library GameConfig {
         maxRoomPromptLength,
         startingBalance,
         cooldownCloseRoom,
-        cooldownReenterRoom
+        cooldownReenterRoom,
+        erc20Address
       );
   }
 
@@ -902,7 +954,8 @@ library GameConfig {
     uint32 maxRoomPromptLength,
     uint256 startingBalance,
     uint32 cooldownCloseRoom,
-    uint32 cooldownReenterRoom
+    uint32 cooldownReenterRoom,
+    address erc20Address
   ) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
     bytes memory _staticData = encodeStatic(
       adminAddress,
@@ -917,7 +970,8 @@ library GameConfig {
       maxRoomPromptLength,
       startingBalance,
       cooldownCloseRoom,
-      cooldownReenterRoom
+      cooldownReenterRoom,
+      erc20Address
     );
 
     EncodedLengths _encodedLengths;
