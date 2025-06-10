@@ -13,6 +13,8 @@ import { GameConfig } from "../src/codegen/index.sol";
 
 import { LibWorld, LibLevel, LibRoom } from "../src/libraries/Libraries.sol";
 
+import { SlopERC20 } from "../src/external/SlopERC20.sol";
+
 contract PostDeploy is Script {
   function run(address worldAddress) external {
     // Specify a store so that you can use tables directly in PostDeploy
@@ -22,7 +24,14 @@ contract PostDeploy is Script {
     uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
     vm.startBroadcast(deployerPrivateKey);
 
-    bytes32 adminId = GameConfig.getAdminId();
+    // TODO replace placeholders with actual contract/wallet addresses
+    address initialSaleAddress = vm.addr(deployerPrivateKey);
+    address mainSaleAddress = vm.addr(deployerPrivateKey);
+    address serviceAddress = vm.addr(deployerPrivateKey);
+    address treasuryAddress = vm.addr(deployerPrivateKey);
+
+    // Deploy ERC-20
+    SlopERC20 erc20 = new SlopERC20(initialSaleAddress, mainSaleAddress, serviceAddress, treasuryAddress);
 
     // Create levels
     bytes32[] memory levels = new bytes32[](5);
@@ -47,7 +56,8 @@ contract PostDeploy is Script {
     levels[4] = LibLevel.createLevel(4, "Fire", "Floor is on literal fire.", 2500, 10000, 10000);
 
     // Root namespace owner is admin
-    LibWorld.init(NamespaceOwner.get(ROOT_NAMESPACE_ID), levels);
+    LibWorld.init(NamespaceOwner.get(ROOT_NAMESPACE_ID), address(erc20), levels);
+    // bytes32 adminId = GameConfig.getAdminId();
 
     // Set world prompt
     LibWorld.setWorldPrompt("Everything is made out of cake.");
