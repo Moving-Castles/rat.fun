@@ -1,6 +1,7 @@
 import { MessageParam } from '@anthropic-ai/sdk/resources';
 import { ANTHROPIC_MODEL } from '@config';
 import Anthropic from '@anthropic-ai/sdk';
+// import { JAILBREAK_PROMPT } from './jailbreak';
 
 // Custom error classes for better error handling
 export class LLMError extends Error {

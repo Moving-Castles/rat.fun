@@ -94,6 +94,7 @@
       flex-direction: row;
       align-items: center;
       justify-content: space-between;
+      line-height: 0.8em;
 
       .alert {
         font-size: var(--font-size-large);
