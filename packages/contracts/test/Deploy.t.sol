@@ -21,7 +21,7 @@ contract DeployTest is BaseTest {
   }
 
   function testERC20Supply() public {
-    IERC20 erc20 = IERC20(GameConfig.getErc20Address());
+    IERC20 erc20 = IERC20(ExternalAddressesConfig.getErc20Address());
     assertEq(erc20.totalSupply(), 53_450_000 * 1e18);
   }
 }

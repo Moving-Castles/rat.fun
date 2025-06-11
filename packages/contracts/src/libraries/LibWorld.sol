@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
-import { GameConfig, GameConfigData, Balance, Name, VisitedLevels, WorldPrompt } from "../codegen/index.sol";
+import { GameConfig, GameConfigData, ExternalAddressesConfig, ExternalAddressesConfigData, Balance, Name, VisitedLevels, WorldPrompt } from "../codegen/index.sol";
 import { MAX_ROOM_PROMPT_LENGTH, MIN_ROOM_PROMPT_LENGTH, MAX_INVENTORY_SIZE, MAX_TRAITS_SIZE, COOLDOWN_CLOSE_ROOM, COOLDOWN_REENTER_ROOM } from "../constants.sol";
 import { LibUtils } from "./LibUtils.sol";
 
@@ -28,10 +28,10 @@ library LibWorld {
         maxRoomPromptLength: MAX_ROOM_PROMPT_LENGTH,
         startingBalance: 2000,
         cooldownCloseRoom: COOLDOWN_CLOSE_ROOM,
-        cooldownReenterRoom: COOLDOWN_REENTER_ROOM,
-        erc20Address: erc20Address
+        cooldownReenterRoom: COOLDOWN_REENTER_ROOM
       })
     );
+    ExternalAddressesConfig.set(ExternalAddressesConfigData({ erc20Address: erc20Address }));
 
     // Give admin credits
     Balance.set(adminId, 1000000);

@@ -26,11 +26,19 @@ export default defineWorld({
         startingBalance: "uint256",
         cooldownCloseRoom: "uint32",
         cooldownReenterRoom: "uint32",
-        erc20Address: "address",
       },
       codegen: {
         dataStruct: true
       }
+    },
+    ExternalAddressesConfig: {
+      key: [],
+      schema: {
+        erc20Address: "address",
+      },
+      codegen: {
+        dataStruct: true
+      },
     },
     LevelList: {
       key: [],
