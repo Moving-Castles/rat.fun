@@ -24,6 +24,7 @@ declare global {
 
   type GameConfig = {
     gameConfig: GameConfigObject
+    externalAddressesConfig: mudSchemas["ExternalAddressesConfig"]
     levelList: Hex[]
     worldPrompt: string
   }
@@ -37,7 +38,7 @@ declare global {
   }
 
   type Entity = {
-    [key: string]: number | bigint | ENTITY_TYPE | Hex | readonly Hex[] | boolean | string | GameConfigObject | undefined,
+    [key: string]: number | bigint | ENTITY_TYPE | Hex | readonly Hex[] | boolean | string | GameConfigObject | mudSchemas["ExternalAddressesConfig"] | undefined,
     entityType?: ENTITY_TYPE,
     name?: mudComponents["Name"],
     balance?: mudComponents["Balance"],
