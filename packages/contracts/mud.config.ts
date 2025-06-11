@@ -35,6 +35,7 @@ export default defineWorld({
       key: [],
       schema: {
         erc20Address: "address",
+        gamePoolAddress: "address",
       },
       codegen: {
         dataStruct: true

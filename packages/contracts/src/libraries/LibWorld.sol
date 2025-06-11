@@ -10,7 +10,12 @@ library LibWorld {
    * @param _adminAddress The address of the admin
    * @param _levels The levels to add to the admin's VisitedLevels
    */
-  function init(address _adminAddress, address erc20Address, bytes32[] memory _levels) internal {
+  function init(
+    address _adminAddress,
+    address erc20Address,
+    address gamePoolAddress,
+    bytes32[] memory _levels
+  ) internal {
     bytes32 adminId = LibUtils.addressToEntityKey(_adminAddress);
 
     // Set game config
@@ -31,7 +36,9 @@ library LibWorld {
         cooldownReenterRoom: COOLDOWN_REENTER_ROOM
       })
     );
-    ExternalAddressesConfig.set(ExternalAddressesConfigData({ erc20Address: erc20Address }));
+    ExternalAddressesConfig.set(
+      ExternalAddressesConfigData({ erc20Address: erc20Address, gamePoolAddress: gamePoolAddress })
+    );
 
     // Give admin credits
     Balance.set(adminId, 1000000);

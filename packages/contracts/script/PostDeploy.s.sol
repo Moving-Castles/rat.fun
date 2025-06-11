@@ -14,9 +14,11 @@ import { GameConfig } from "../src/codegen/index.sol";
 import { LibWorld, LibLevel, LibRoom } from "../src/libraries/Libraries.sol";
 
 import { SlopERC20 } from "../src/external/SlopERC20.sol";
+import { GamePool } from "../src/external/GamePool.sol";
 
 contract PostDeploy is Script {
   function run(address worldAddress) external {
+    IWorld world = IWorld(worldAddress);
     // Specify a store so that you can use tables directly in PostDeploy
     StoreSwitch.setStoreAddress(worldAddress);
 
@@ -32,6 +34,8 @@ contract PostDeploy is Script {
 
     // Deploy ERC-20
     SlopERC20 erc20 = new SlopERC20(initialSaleAddress, mainSaleAddress, serviceAddress, treasuryAddress);
+    // Deploy GamePool
+    GamePool gamePool = new GamePool(world, erc20);
 
     // Create levels
     bytes32[] memory levels = new bytes32[](5);
@@ -56,7 +60,7 @@ contract PostDeploy is Script {
     levels[4] = LibLevel.createLevel(4, "Fire", "Floor is on literal fire.", 2500, 10000, 10000);
 
     // Root namespace owner is admin
-    LibWorld.init(NamespaceOwner.get(ROOT_NAMESPACE_ID), address(erc20), levels);
+    LibWorld.init(NamespaceOwner.get(ROOT_NAMESPACE_ID), address(erc20), address(gamePool), levels);
     // bytes32 adminId = GameConfig.getAdminId();
 
     // Set world prompt

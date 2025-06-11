@@ -18,6 +18,7 @@ import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 
 struct ExternalAddressesConfigData {
   address erc20Address;
+  address gamePoolAddress;
 }
 
 library ExternalAddressesConfig {
@@ -25,12 +26,12 @@ library ExternalAddressesConfig {
   ResourceId constant _tableId = ResourceId.wrap(0x7462726174726f6f6d0000000000000045787465726e616c4164647265737365);
 
   FieldLayout constant _fieldLayout =
-    FieldLayout.wrap(0x0014010014000000000000000000000000000000000000000000000000000000);
+    FieldLayout.wrap(0x0028020014140000000000000000000000000000000000000000000000000000);
 
   // Hex-encoded key schema of ()
   Schema constant _keySchema = Schema.wrap(0x0000000000000000000000000000000000000000000000000000000000000000);
-  // Hex-encoded value schema of (address)
-  Schema constant _valueSchema = Schema.wrap(0x0014010061000000000000000000000000000000000000000000000000000000);
+  // Hex-encoded value schema of (address, address)
+  Schema constant _valueSchema = Schema.wrap(0x0028020061610000000000000000000000000000000000000000000000000000);
 
   /**
    * @notice Get the table's key field names.
@@ -45,8 +46,9 @@ library ExternalAddressesConfig {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](1);
+    fieldNames = new string[](2);
     fieldNames[0] = "erc20Address";
+    fieldNames[1] = "gamePoolAddress";
   }
 
   /**
@@ -102,6 +104,44 @@ library ExternalAddressesConfig {
   }
 
   /**
+   * @notice Get gamePoolAddress.
+   */
+  function getGamePoolAddress() internal view returns (address gamePoolAddress) {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
+    return (address(bytes20(_blob)));
+  }
+
+  /**
+   * @notice Get gamePoolAddress.
+   */
+  function _getGamePoolAddress() internal view returns (address gamePoolAddress) {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
+    return (address(bytes20(_blob)));
+  }
+
+  /**
+   * @notice Set gamePoolAddress.
+   */
+  function setGamePoolAddress(address gamePoolAddress) internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((gamePoolAddress)), _fieldLayout);
+  }
+
+  /**
+   * @notice Set gamePoolAddress.
+   */
+  function _setGamePoolAddress(address gamePoolAddress) internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    StoreCore.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((gamePoolAddress)), _fieldLayout);
+  }
+
+  /**
    * @notice Get the full data.
    */
   function get() internal view returns (ExternalAddressesConfigData memory _table) {
@@ -132,8 +172,8 @@ library ExternalAddressesConfig {
   /**
    * @notice Set the full data using individual values.
    */
-  function set(address erc20Address) internal {
-    bytes memory _staticData = encodeStatic(erc20Address);
+  function set(address erc20Address, address gamePoolAddress) internal {
+    bytes memory _staticData = encodeStatic(erc20Address, gamePoolAddress);
 
     EncodedLengths _encodedLengths;
     bytes memory _dynamicData;
@@ -146,8 +186,8 @@ library ExternalAddressesConfig {
   /**
    * @notice Set the full data using individual values.
    */
-  function _set(address erc20Address) internal {
-    bytes memory _staticData = encodeStatic(erc20Address);
+  function _set(address erc20Address, address gamePoolAddress) internal {
+    bytes memory _staticData = encodeStatic(erc20Address, gamePoolAddress);
 
     EncodedLengths _encodedLengths;
     bytes memory _dynamicData;
@@ -161,7 +201,7 @@ library ExternalAddressesConfig {
    * @notice Set the full data using the data struct.
    */
   function set(ExternalAddressesConfigData memory _table) internal {
-    bytes memory _staticData = encodeStatic(_table.erc20Address);
+    bytes memory _staticData = encodeStatic(_table.erc20Address, _table.gamePoolAddress);
 
     EncodedLengths _encodedLengths;
     bytes memory _dynamicData;
@@ -175,7 +215,7 @@ library ExternalAddressesConfig {
    * @notice Set the full data using the data struct.
    */
   function _set(ExternalAddressesConfigData memory _table) internal {
-    bytes memory _staticData = encodeStatic(_table.erc20Address);
+    bytes memory _staticData = encodeStatic(_table.erc20Address, _table.gamePoolAddress);
 
     EncodedLengths _encodedLengths;
     bytes memory _dynamicData;
@@ -188,8 +228,10 @@ library ExternalAddressesConfig {
   /**
    * @notice Decode the tightly packed blob of static data using this table's field layout.
    */
-  function decodeStatic(bytes memory _blob) internal pure returns (address erc20Address) {
+  function decodeStatic(bytes memory _blob) internal pure returns (address erc20Address, address gamePoolAddress) {
     erc20Address = (address(Bytes.getBytes20(_blob, 0)));
+
+    gamePoolAddress = (address(Bytes.getBytes20(_blob, 20)));
   }
 
   /**
@@ -203,7 +245,7 @@ library ExternalAddressesConfig {
     EncodedLengths,
     bytes memory
   ) internal pure returns (ExternalAddressesConfigData memory _table) {
-    (_table.erc20Address) = decodeStatic(_staticData);
+    (_table.erc20Address, _table.gamePoolAddress) = decodeStatic(_staticData);
   }
 
   /**
@@ -228,8 +270,8 @@ library ExternalAddressesConfig {
    * @notice Tightly pack static (fixed length) data using this table's schema.
    * @return The static data, encoded into a sequence of bytes.
    */
-  function encodeStatic(address erc20Address) internal pure returns (bytes memory) {
-    return abi.encodePacked(erc20Address);
+  function encodeStatic(address erc20Address, address gamePoolAddress) internal pure returns (bytes memory) {
+    return abi.encodePacked(erc20Address, gamePoolAddress);
   }
 
   /**
@@ -238,8 +280,11 @@ library ExternalAddressesConfig {
    * @return The lengths of the dynamic fields (packed into a single bytes32 value).
    * @return The dynamic (variable length) data, encoded into a sequence of bytes.
    */
-  function encode(address erc20Address) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
-    bytes memory _staticData = encodeStatic(erc20Address);
+  function encode(
+    address erc20Address,
+    address gamePoolAddress
+  ) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
+    bytes memory _staticData = encodeStatic(erc20Address, gamePoolAddress);
 
     EncodedLengths _encodedLengths;
     bytes memory _dynamicData;
