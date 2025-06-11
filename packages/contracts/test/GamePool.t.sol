@@ -60,6 +60,7 @@ contract GamePoolTest is BaseTest {
   }
 
   function testGamePoolAccess() public {
+    // addresses without namespaces access can't call pool functions
     vm.prank(alice);
     vm.expectRevert("no namespace access");
     gamePool.withdrawTokens(alice, 100 * 1e18);
@@ -68,12 +69,14 @@ contract GamePoolTest is BaseTest {
     vm.expectRevert("no namespace access");
     gamePool.depositTokens(alice, 100 * 1e18);
 
+    // systems without namespaces access can't call pool functions
     vm.expectRevert("no namespace access");
     _callWithdrawTokens(systemIdBad, alice, 100 * 1e18);
 
     vm.expectRevert("no namespace access");
     _callDepositTokens(systemIdBad, alice, 100 * 1e18);
 
+    // world itself doesn't have all namespace access by default and can't call pool functions
     vm.prank(address(world));
     vm.expectRevert("no namespace access");
     gamePool.withdrawTokens(alice, 100 * 1e18);
@@ -82,21 +85,25 @@ contract GamePoolTest is BaseTest {
     vm.expectRevert("no namespace access");
     gamePool.depositTokens(alice, 100 * 1e18);
 
+    // address with namespace access can withdraw 100 tokens from pool to user
     prankAdmin();
     gamePool.withdrawTokens(alice, 100 * 1e18);
     assertEq(erc20.balanceOf(alice), 100 * 1e18);
     assertEq(erc20.balanceOf(address(gamePool)), 900 * 1e18);
     vm.stopPrank();
 
+    // system with namespace access can withdraw 100 tokens from pool to user
     _callWithdrawTokens(systemIdGood, alice, 100 * 1e18);
     assertEq(erc20.balanceOf(alice), 200 * 1e18);
     assertEq(erc20.balanceOf(address(gamePool)), 800 * 1e18);
 
+    // depositing tokens requires approval from user
     vm.expectRevert(abi.encodeWithSelector(IERC20Errors.ERC20InsufficientAllowance.selector, gamePool, 0, 100 * 1e18));
     _callDepositTokens(systemIdGood, alice, 100 * 1e18);
 
     vm.prank(alice);
     erc20.approve(address(gamePool), 100 * 1e18);
+    // system with namespace access can deposit 100 tokens from user to pool
     _callDepositTokens(systemIdGood, alice, 100 * 1e18);
     assertEq(erc20.balanceOf(alice), 100 * 1e18);
     assertEq(erc20.balanceOf(address(gamePool)), 900 * 1e18);
