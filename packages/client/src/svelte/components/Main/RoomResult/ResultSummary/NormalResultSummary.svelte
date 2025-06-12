@@ -29,8 +29,6 @@
     ...(result?.traitChanges || []).map(trt => ({ ...trt, type: "trait" })),
   ])
 
-  $inspect($rat)
-
   // Timeline
   const timeline = gsap.timeline()
 
@@ -70,8 +68,6 @@
       ease: "power2.out",
     })
   })
-
-  $inspect(changes)
 </script>
 
 <div

@@ -3,7 +3,7 @@
 # Change to the parent directory to use its node_modules
 cd "$(dirname "$0")/.."
 
-JSON_FILE_PATH=room-definitions/playtest-4.json
+JSON_FILE_PATH=room-definitions/playtest-5.json
 API_URL=https://reality-model-1.mc-infra.com/room/create
 
 # Run the script with ts-node and proper ESM configuration

@@ -64,7 +64,7 @@ contract PostDeploy is Script {
     // bytes32 adminId = GameConfig.getAdminId();
 
     // Set world prompt
-    LibWorld.setWorldPrompt("Everything is made out of cake.");
+    LibWorld.setWorldPrompt("Heating systems are broken: -5C/23F in all rooms.");
 
     // Electrical shock therapy. Rat gets psychological disorder, or heals one (even if unlikely).
     // LibRoom.createRoom(

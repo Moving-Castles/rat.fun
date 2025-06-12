@@ -23,7 +23,9 @@ contract ChangeWorldPrompt is Script {
     vm.startBroadcast(deployerPrivateKey);
 
     // Set world prompt
-    LibWorld.setWorldPrompt("Gas that makes all rats insane.");
+    // Heating systems are broken: -5C/23F in all rooms.
+    // Heating system is working in overdrive: +25C/77F in all rooms.
+    LibWorld.setWorldPrompt("Heating system is working in overdrive: +25C/77F in all rooms.");
 
     vm.stopBroadcast();
   }

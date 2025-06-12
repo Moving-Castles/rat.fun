@@ -27,10 +27,6 @@
   // Timeline
   const timeline = gsap.timeline()
 
-  $inspect(staticRoomContent)
-  $inspect(result)
-  $inspect(room)
-
   onMount(() => {
     if (!innerContainerElement || !messageElement || !closeButtonElement) {
       console.error("Missing elements")
