@@ -15,6 +15,7 @@ import { LibWorld, LibLevel, LibRoom } from "../src/libraries/Libraries.sol";
 
 import { SlopERC20 } from "../src/external/SlopERC20.sol";
 import { GamePool } from "../src/external/GamePool.sol";
+import { SalePlaceholder } from "../src/external/SalePlaceholder.sol";
 
 contract PostDeploy is Script {
   function run(address worldAddress) external {
@@ -28,7 +29,7 @@ contract PostDeploy is Script {
 
     // TODO replace placeholders with actual contract/wallet addresses
     address initialSaleAddress = vm.addr(deployerPrivateKey);
-    address mainSaleAddress = vm.addr(deployerPrivateKey);
+    address mainSaleAddress = address(new SalePlaceholder(world));
     address serviceAddress = vm.addr(deployerPrivateKey);
     address treasuryAddress = vm.addr(deployerPrivateKey);
 
@@ -60,7 +61,7 @@ contract PostDeploy is Script {
     levels[4] = LibLevel.createLevel(4, "Fire", "Floor is on literal fire.", 2500, 10000, 10000);
 
     // Root namespace owner is admin
-    LibWorld.init(NamespaceOwner.get(ROOT_NAMESPACE_ID), address(erc20), address(gamePool), levels);
+    LibWorld.init(NamespaceOwner.get(ROOT_NAMESPACE_ID), address(erc20), address(gamePool), mainSaleAddress, levels);
     // bytes32 adminId = GameConfig.getAdminId();
 
     // Set world prompt

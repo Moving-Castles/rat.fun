@@ -23,7 +23,6 @@ export default defineWorld({
         maxTraitsSize: "uint32",
         minRoomPromptLength: "uint32",
         maxRoomPromptLength: "uint32",
-        startingBalance: "uint256",
         cooldownCloseRoom: "uint32",
         cooldownReenterRoom: "uint32",
       },
@@ -36,6 +35,7 @@ export default defineWorld({
       schema: {
         erc20Address: "address",
         gamePoolAddress: "address",
+        mainSaleAddress: "address",
       },
       codegen: {
         dataStruct: true

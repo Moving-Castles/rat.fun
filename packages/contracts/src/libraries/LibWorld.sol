@@ -16,6 +16,7 @@ library LibWorld {
     address _adminAddress,
     address erc20Address,
     address gamePoolAddress,
+    address mainSaleAddress,
     bytes32[] memory _levels
   ) internal {
     bytes32 adminId = LibUtils.addressToEntityKey(_adminAddress);
@@ -33,13 +34,16 @@ library LibWorld {
         maxTraitsSize: MAX_TRAITS_SIZE,
         minRoomPromptLength: MIN_ROOM_PROMPT_LENGTH,
         maxRoomPromptLength: MAX_ROOM_PROMPT_LENGTH,
-        startingBalance: 2000,
         cooldownCloseRoom: COOLDOWN_CLOSE_ROOM,
         cooldownReenterRoom: COOLDOWN_REENTER_ROOM
       })
     );
     ExternalAddressesConfig.set(
-      ExternalAddressesConfigData({ erc20Address: erc20Address, gamePoolAddress: gamePoolAddress })
+      ExternalAddressesConfigData({
+        erc20Address: erc20Address,
+        gamePoolAddress: gamePoolAddress,
+        mainSaleAddress: mainSaleAddress
+      })
     );
 
     // Set admin name

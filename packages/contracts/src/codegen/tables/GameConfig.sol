@@ -27,7 +27,6 @@ struct GameConfigData {
   uint32 maxTraitsSize;
   uint32 minRoomPromptLength;
   uint32 maxRoomPromptLength;
-  uint256 startingBalance;
   uint32 cooldownCloseRoom;
   uint32 cooldownReenterRoom;
 }
@@ -37,12 +36,12 @@ library GameConfig {
   ResourceId constant _tableId = ResourceId.wrap(0x7462726174726f6f6d0000000000000047616d65436f6e666967000000000000);
 
   FieldLayout constant _fieldLayout =
-    FieldLayout.wrap(0x00ec0d0014202020202004040404200404000000000000000000000000000000);
+    FieldLayout.wrap(0x00cc0c0014202020202004040404040400000000000000000000000000000000);
 
   // Hex-encoded key schema of ()
   Schema constant _keySchema = Schema.wrap(0x0000000000000000000000000000000000000000000000000000000000000000);
-  // Hex-encoded value schema of (address, bytes32, uint256, uint256, uint256, uint256, uint32, uint32, uint32, uint32, uint256, uint32, uint32)
-  Schema constant _valueSchema = Schema.wrap(0x00ec0d00615f1f1f1f1f030303031f0303000000000000000000000000000000);
+  // Hex-encoded value schema of (address, bytes32, uint256, uint256, uint256, uint256, uint32, uint32, uint32, uint32, uint32, uint32)
+  Schema constant _valueSchema = Schema.wrap(0x00cc0c00615f1f1f1f1f03030303030300000000000000000000000000000000);
 
   /**
    * @notice Get the table's key field names.
@@ -57,7 +56,7 @@ library GameConfig {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](13);
+    fieldNames = new string[](12);
     fieldNames[0] = "adminAddress";
     fieldNames[1] = "adminId";
     fieldNames[2] = "globalRoomIndex";
@@ -68,9 +67,8 @@ library GameConfig {
     fieldNames[7] = "maxTraitsSize";
     fieldNames[8] = "minRoomPromptLength";
     fieldNames[9] = "maxRoomPromptLength";
-    fieldNames[10] = "startingBalance";
-    fieldNames[11] = "cooldownCloseRoom";
-    fieldNames[12] = "cooldownReenterRoom";
+    fieldNames[10] = "cooldownCloseRoom";
+    fieldNames[11] = "cooldownReenterRoom";
   }
 
   /**
@@ -468,50 +466,12 @@ library GameConfig {
   }
 
   /**
-   * @notice Get startingBalance.
-   */
-  function getStartingBalance() internal view returns (uint256 startingBalance) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 10, _fieldLayout);
-    return (uint256(bytes32(_blob)));
-  }
-
-  /**
-   * @notice Get startingBalance.
-   */
-  function _getStartingBalance() internal view returns (uint256 startingBalance) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 10, _fieldLayout);
-    return (uint256(bytes32(_blob)));
-  }
-
-  /**
-   * @notice Set startingBalance.
-   */
-  function setStartingBalance(uint256 startingBalance) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 10, abi.encodePacked((startingBalance)), _fieldLayout);
-  }
-
-  /**
-   * @notice Set startingBalance.
-   */
-  function _setStartingBalance(uint256 startingBalance) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    StoreCore.setStaticField(_tableId, _keyTuple, 10, abi.encodePacked((startingBalance)), _fieldLayout);
-  }
-
-  /**
    * @notice Get cooldownCloseRoom.
    */
   function getCooldownCloseRoom() internal view returns (uint32 cooldownCloseRoom) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 11, _fieldLayout);
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 10, _fieldLayout);
     return (uint32(bytes4(_blob)));
   }
 
@@ -521,7 +481,7 @@ library GameConfig {
   function _getCooldownCloseRoom() internal view returns (uint32 cooldownCloseRoom) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 11, _fieldLayout);
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 10, _fieldLayout);
     return (uint32(bytes4(_blob)));
   }
 
@@ -531,7 +491,7 @@ library GameConfig {
   function setCooldownCloseRoom(uint32 cooldownCloseRoom) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 11, abi.encodePacked((cooldownCloseRoom)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 10, abi.encodePacked((cooldownCloseRoom)), _fieldLayout);
   }
 
   /**
@@ -540,7 +500,7 @@ library GameConfig {
   function _setCooldownCloseRoom(uint32 cooldownCloseRoom) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 11, abi.encodePacked((cooldownCloseRoom)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 10, abi.encodePacked((cooldownCloseRoom)), _fieldLayout);
   }
 
   /**
@@ -549,7 +509,7 @@ library GameConfig {
   function getCooldownReenterRoom() internal view returns (uint32 cooldownReenterRoom) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 12, _fieldLayout);
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 11, _fieldLayout);
     return (uint32(bytes4(_blob)));
   }
 
@@ -559,7 +519,7 @@ library GameConfig {
   function _getCooldownReenterRoom() internal view returns (uint32 cooldownReenterRoom) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 12, _fieldLayout);
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 11, _fieldLayout);
     return (uint32(bytes4(_blob)));
   }
 
@@ -569,7 +529,7 @@ library GameConfig {
   function setCooldownReenterRoom(uint32 cooldownReenterRoom) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 12, abi.encodePacked((cooldownReenterRoom)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 11, abi.encodePacked((cooldownReenterRoom)), _fieldLayout);
   }
 
   /**
@@ -578,7 +538,7 @@ library GameConfig {
   function _setCooldownReenterRoom(uint32 cooldownReenterRoom) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 12, abi.encodePacked((cooldownReenterRoom)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 11, abi.encodePacked((cooldownReenterRoom)), _fieldLayout);
   }
 
   /**
@@ -623,7 +583,6 @@ library GameConfig {
     uint32 maxTraitsSize,
     uint32 minRoomPromptLength,
     uint32 maxRoomPromptLength,
-    uint256 startingBalance,
     uint32 cooldownCloseRoom,
     uint32 cooldownReenterRoom
   ) internal {
@@ -638,7 +597,6 @@ library GameConfig {
       maxTraitsSize,
       minRoomPromptLength,
       maxRoomPromptLength,
-      startingBalance,
       cooldownCloseRoom,
       cooldownReenterRoom
     );
@@ -665,7 +623,6 @@ library GameConfig {
     uint32 maxTraitsSize,
     uint32 minRoomPromptLength,
     uint32 maxRoomPromptLength,
-    uint256 startingBalance,
     uint32 cooldownCloseRoom,
     uint32 cooldownReenterRoom
   ) internal {
@@ -680,7 +637,6 @@ library GameConfig {
       maxTraitsSize,
       minRoomPromptLength,
       maxRoomPromptLength,
-      startingBalance,
       cooldownCloseRoom,
       cooldownReenterRoom
     );
@@ -708,7 +664,6 @@ library GameConfig {
       _table.maxTraitsSize,
       _table.minRoomPromptLength,
       _table.maxRoomPromptLength,
-      _table.startingBalance,
       _table.cooldownCloseRoom,
       _table.cooldownReenterRoom
     );
@@ -736,7 +691,6 @@ library GameConfig {
       _table.maxTraitsSize,
       _table.minRoomPromptLength,
       _table.maxRoomPromptLength,
-      _table.startingBalance,
       _table.cooldownCloseRoom,
       _table.cooldownReenterRoom
     );
@@ -768,7 +722,6 @@ library GameConfig {
       uint32 maxTraitsSize,
       uint32 minRoomPromptLength,
       uint32 maxRoomPromptLength,
-      uint256 startingBalance,
       uint32 cooldownCloseRoom,
       uint32 cooldownReenterRoom
     )
@@ -793,11 +746,9 @@ library GameConfig {
 
     maxRoomPromptLength = (uint32(Bytes.getBytes4(_blob, 192)));
 
-    startingBalance = (uint256(Bytes.getBytes32(_blob, 196)));
+    cooldownCloseRoom = (uint32(Bytes.getBytes4(_blob, 196)));
 
-    cooldownCloseRoom = (uint32(Bytes.getBytes4(_blob, 228)));
-
-    cooldownReenterRoom = (uint32(Bytes.getBytes4(_blob, 232)));
+    cooldownReenterRoom = (uint32(Bytes.getBytes4(_blob, 200)));
   }
 
   /**
@@ -822,7 +773,6 @@ library GameConfig {
       _table.maxTraitsSize,
       _table.minRoomPromptLength,
       _table.maxRoomPromptLength,
-      _table.startingBalance,
       _table.cooldownCloseRoom,
       _table.cooldownReenterRoom
     ) = decodeStatic(_staticData);
@@ -861,7 +811,6 @@ library GameConfig {
     uint32 maxTraitsSize,
     uint32 minRoomPromptLength,
     uint32 maxRoomPromptLength,
-    uint256 startingBalance,
     uint32 cooldownCloseRoom,
     uint32 cooldownReenterRoom
   ) internal pure returns (bytes memory) {
@@ -877,7 +826,6 @@ library GameConfig {
         maxTraitsSize,
         minRoomPromptLength,
         maxRoomPromptLength,
-        startingBalance,
         cooldownCloseRoom,
         cooldownReenterRoom
       );
@@ -900,7 +848,6 @@ library GameConfig {
     uint32 maxTraitsSize,
     uint32 minRoomPromptLength,
     uint32 maxRoomPromptLength,
-    uint256 startingBalance,
     uint32 cooldownCloseRoom,
     uint32 cooldownReenterRoom
   ) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
@@ -915,7 +862,6 @@ library GameConfig {
       maxTraitsSize,
       minRoomPromptLength,
       maxRoomPromptLength,
-      startingBalance,
       cooldownCloseRoom,
       cooldownReenterRoom
     );

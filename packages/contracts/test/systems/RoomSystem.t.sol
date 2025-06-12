@@ -65,7 +65,7 @@ contract RoomSystemTest is BaseTest {
     vm.stopPrank();
 
     prankAdmin();
-    world.ratroom__removePlayerBalance(playerId);
+    LibWorld.gamePool().depositTokens(alice, LibWorld.erc20().balanceOf(alice));
     bytes32 firstLevelId = LevelList.getItem(0);
     vm.expectRevert(
       abi.encodeWithSelector(
