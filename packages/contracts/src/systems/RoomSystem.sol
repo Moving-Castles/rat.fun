@@ -3,7 +3,7 @@ pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
 import { GameConfig, EntityType, Balance, Level, VisitedLevels, RoomCreationCost, LevelList, Owner, OwnedRat, CreationBlock } from "../codegen/index.sol";
-import { LibRoom, LibUtils } from "../libraries/Libraries.sol";
+import { LibRoom, LibUtils, LibWorld } from "../libraries/Libraries.sol";
 import { MAX_ROOM_PROMPT_LENGTH } from "../constants.sol";
 import { ENTITY_TYPE } from "../codegen/common.sol";
 
@@ -39,13 +39,15 @@ contract RoomSystem is System {
 
     uint256 roomCreationCost = RoomCreationCost.get(_levelId);
 
-    require(Balance.get(_playerId) >= roomCreationCost, "balance too low");
-
-    // Deduct from player's balance
-    Balance.set(_playerId, Balance.get(_playerId) - roomCreationCost);
-
     // Create room
     newRoomId = LibRoom.createRoom(_prompt, _playerId, _levelId, _roomId, roomCreationCost);
+
+    // Deposit player tokens in pool
+    // ERC-20 will check that player has sufficient balance, and approval for pool to transfer it
+    LibWorld.gamePool().depositTokens(
+      LibUtils.addressToEntityKey(_playerId),
+      roomCreationCost * 10 ** LibWorld.erc20().decimals()
+    );
   }
 
   /**
@@ -57,8 +59,11 @@ contract RoomSystem is System {
     require(Owner.get(_roomId) == playerId, "not owner");
     require(block.number > (CreationBlock.get(_roomId) + GameConfig.getCooldownCloseRoom()), "in cooldown");
 
-    // Transfer balance to player
-    Balance.set(playerId, Balance.get(playerId) + Balance.get(_roomId));
+    uint256 balanceToTransfer = Balance.get(_roomId);
     Balance.set(_roomId, 0);
+
+    // Withdraw tokens equal to room value from pool to player
+    // ERC-20 will check that pool has sufficient balance
+    LibWorld.gamePool().withdrawTokens(_msgSender(), balanceToTransfer * 10 ** LibWorld.erc20().decimals());
   }
 }

@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { System } from "@latticexyz/world/src/System.sol";
-import { EntityType, Balance, Name, CreationBlock, GameConfig, VisitedLevels, LevelList } from "../codegen/index.sol";
-import { LibUtils } from "../libraries/Libraries.sol";
+import { EntityType, Name, CreationBlock, GameConfig, VisitedLevels, LevelList } from "../codegen/index.sol";
+import { LibUtils, LibWorld } from "../libraries/Libraries.sol";
 import { ENTITY_TYPE } from "../codegen/common.sol";
 
 contract PlayerSystem is System {
@@ -17,7 +17,6 @@ contract PlayerSystem is System {
 
     EntityType.set(playerId, ENTITY_TYPE.PLAYER);
     Name.set(playerId, _name);
-    Balance.set(playerId, GameConfig.getStartingBalance());
     CreationBlock.set(playerId, block.number);
     // Set first level as visited
     VisitedLevels.push(playerId, LevelList.getItem(0));

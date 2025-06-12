@@ -7,17 +7,6 @@ import { ENTITY_TYPE } from "../../src/codegen/common.sol";
 import { Item } from "../../src/structs.sol";
 
 contract ManagerSystemTest is BaseTest {
-  function setInitialBalance(bytes32 _playerId) internal returns (uint256 initialBalance) {
-    initialBalance = Balance.get(_playerId);
-    // Give player balance if 0
-    if (initialBalance == 0) {
-      prankAdmin();
-      initialBalance = 2000;
-      world.ratroom__givePlayerBalance(_playerId, initialBalance);
-      vm.stopPrank();
-    }
-  }
-
   // * * * *
   // Basic
   // * * * *
@@ -42,18 +31,20 @@ contract ManagerSystemTest is BaseTest {
   }
 
   function testApplyOutcomeEmpty() public {
+    setInitialBalance(alice);
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
+    approveGamePool(type(uint256).max);
     bytes32 ratId = world.ratroom__createRat("roger");
     vm.stopPrank();
 
+    setInitialBalance(bob);
     // As bob
     vm.startPrank(bob);
     bytes32 bobId = world.ratroom__spawn("bob");
+    approveGamePool(type(uint256).max);
     vm.stopPrank();
-
-    setInitialBalance(bobId);
 
     prankAdmin();
     bytes32 roomId = world.ratroom__createRoom(bobId, LevelList.getItem(0), bytes32(0), "test room");
@@ -75,18 +66,20 @@ contract ManagerSystemTest is BaseTest {
   // * * * *
 
   function testApplyOutcomeIncreaseHealth() public {
+    setInitialBalance(alice);
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
+    approveGamePool(type(uint256).max);
     bytes32 ratId = world.ratroom__createRat("roger");
     vm.stopPrank();
 
+    setInitialBalance(bob);
     // As bob
     vm.startPrank(bob);
     bytes32 bobId = world.ratroom__spawn("bob");
+    approveGamePool(type(uint256).max);
     vm.stopPrank();
-
-    setInitialBalance(bobId);
 
     prankAdmin();
     bytes32 roomId = world.ratroom__createRoom(bobId, LevelList.getItem(0), bytes32(0), "test room");
@@ -106,18 +99,20 @@ contract ManagerSystemTest is BaseTest {
   }
 
   function testApplyOutcomeReduceHealth() public {
+    setInitialBalance(alice);
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
+    approveGamePool(type(uint256).max);
     bytes32 ratId = world.ratroom__createRat("roger");
     vm.stopPrank();
 
+    setInitialBalance(bob);
     // As bob
     vm.startPrank(bob);
     bytes32 bobId = world.ratroom__spawn("bob");
+    approveGamePool(type(uint256).max);
     vm.stopPrank();
-
-    setInitialBalance(bobId);
 
     prankAdmin();
     bytes32 roomId = world.ratroom__createRoom(bobId, LevelList.getItem(0), bytes32(0), "test room");
@@ -146,18 +141,20 @@ contract ManagerSystemTest is BaseTest {
   }
 
   function testApplyOutcomeOverIncreaseHealth() public {
+    setInitialBalance(alice);
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
+    approveGamePool(type(uint256).max);
     bytes32 ratId = world.ratroom__createRat("roger");
     vm.stopPrank();
 
+    setInitialBalance(bob);
     // As bob
     vm.startPrank(bob);
     bytes32 bobId = world.ratroom__spawn("bob");
+    approveGamePool(type(uint256).max);
     vm.stopPrank();
-
-    setInitialBalance(bobId);
 
     prankAdmin();
     bytes32 roomId = world.ratroom__createRoom(bobId, LevelList.getItem(0), bytes32(0), "test room");
@@ -186,18 +183,20 @@ contract ManagerSystemTest is BaseTest {
   }
 
   function testApplyOutcomeOverReduceHealth() public {
+    setInitialBalance(alice);
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
+    approveGamePool(type(uint256).max);
     bytes32 ratId = world.ratroom__createRat("roger");
     vm.stopPrank();
 
+    setInitialBalance(bob);
     // As bob
     vm.startPrank(bob);
     bytes32 bobId = world.ratroom__spawn("bob");
+    approveGamePool(type(uint256).max);
     vm.stopPrank();
-
-    setInitialBalance(bobId);
 
     prankAdmin();
     bytes32 roomId = world.ratroom__createRoom(bobId, LevelList.getItem(0), bytes32(0), "test room");
@@ -228,18 +227,20 @@ contract ManagerSystemTest is BaseTest {
   }
 
   function testApplyOutcomeValueTransferOnDeath() public {
+    setInitialBalance(alice);
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
+    approveGamePool(type(uint256).max);
     bytes32 ratId = world.ratroom__createRat("roger");
     vm.stopPrank();
 
+    setInitialBalance(bob);
     // As bob
     vm.startPrank(bob);
     bytes32 bobId = world.ratroom__spawn("bob");
+    approveGamePool(type(uint256).max);
     vm.stopPrank();
-
-    setInitialBalance(bobId);
 
     prankAdmin();
     bytes32 roomId = world.ratroom__createRoom(bobId, LevelList.getItem(0), bytes32(0), "test room");
@@ -318,18 +319,20 @@ contract ManagerSystemTest is BaseTest {
   // * * * *
 
   function testApplyOutcomeAddPositiveTrait() public {
+    setInitialBalance(alice);
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
+    approveGamePool(type(uint256).max);
     bytes32 ratId = world.ratroom__createRat("roger");
     vm.stopPrank();
 
+    setInitialBalance(bob);
     // As bob
     vm.startPrank(bob);
     bytes32 bobId = world.ratroom__spawn("bob");
+    approveGamePool(type(uint256).max);
     vm.stopPrank();
-
-    setInitialBalance(bobId);
 
     prankAdmin();
     bytes32 roomId = world.ratroom__createRoom(bobId, LevelList.getItem(0), bytes32(0), "test room");
@@ -356,18 +359,20 @@ contract ManagerSystemTest is BaseTest {
   }
 
   function testApplyOutcomeAddPositiveTraitTooExpensive() public {
+    setInitialBalance(alice);
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
+    approveGamePool(type(uint256).max);
     bytes32 ratId = world.ratroom__createRat("roger");
     vm.stopPrank();
 
+    setInitialBalance(bob);
     // As bob
     vm.startPrank(bob);
     bytes32 bobId = world.ratroom__spawn("bob");
+    approveGamePool(type(uint256).max);
     vm.stopPrank();
-
-    setInitialBalance(bobId);
 
     prankAdmin();
     bytes32 roomId = world.ratroom__createRoom(bobId, LevelList.getItem(0), bytes32(0), "test room");
@@ -391,18 +396,20 @@ contract ManagerSystemTest is BaseTest {
   }
 
   function testApplyOutcomeRemovePositiveTrait() public {
+    setInitialBalance(alice);
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
+    approveGamePool(type(uint256).max);
     bytes32 ratId = world.ratroom__createRat("roger");
     vm.stopPrank();
 
+    setInitialBalance(bob);
     // As bob
     vm.startPrank(bob);
     bytes32 bobId = world.ratroom__spawn("bob");
+    approveGamePool(type(uint256).max);
     vm.stopPrank();
-
-    setInitialBalance(bobId);
 
     prankAdmin();
     bytes32 roomId = world.ratroom__createRoom(bobId, LevelList.getItem(0), bytes32(0), "test room");
@@ -445,18 +452,20 @@ contract ManagerSystemTest is BaseTest {
   // * * * *
 
   function testApplyOutcomeAddPositiveItem() public {
+    setInitialBalance(alice);
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
+    approveGamePool(type(uint256).max);
     bytes32 ratId = world.ratroom__createRat("roger");
     vm.stopPrank();
 
+    setInitialBalance(bob);
     // As bob
     vm.startPrank(bob);
     bytes32 bobId = world.ratroom__spawn("bob");
+    approveGamePool(type(uint256).max);
     vm.stopPrank();
-
-    setInitialBalance(bobId);
 
     prankAdmin();
     bytes32 roomId = world.ratroom__createRoom(bobId, LevelList.getItem(0), bytes32(0), "test room");
@@ -483,18 +492,20 @@ contract ManagerSystemTest is BaseTest {
   }
 
   function testApplyOutcomeAddPositiveItemTooExpensive() public {
+    setInitialBalance(alice);
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
+    approveGamePool(type(uint256).max);
     bytes32 ratId = world.ratroom__createRat("roger");
     vm.stopPrank();
 
+    setInitialBalance(bob);
     // As bob
     vm.startPrank(bob);
     bytes32 bobId = world.ratroom__spawn("bob");
+    approveGamePool(type(uint256).max);
     vm.stopPrank();
-
-    setInitialBalance(bobId);
 
     prankAdmin();
     bytes32 roomId = world.ratroom__createRoom(bobId, LevelList.getItem(0), bytes32(0), "test room");
@@ -518,18 +529,20 @@ contract ManagerSystemTest is BaseTest {
   }
 
   function testApplyOutcomeRemovePositiveItem() public {
+    setInitialBalance(alice);
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
+    approveGamePool(type(uint256).max);
     bytes32 ratId = world.ratroom__createRat("roger");
     vm.stopPrank();
 
+    setInitialBalance(bob);
     // As bob
     vm.startPrank(bob);
     bytes32 bobId = world.ratroom__spawn("bob");
+    approveGamePool(type(uint256).max);
     vm.stopPrank();
-
-    setInitialBalance(bobId);
 
     prankAdmin();
     bytes32 roomId = world.ratroom__createRoom(bobId, LevelList.getItem(0), bytes32(0), "test room");
@@ -573,18 +586,20 @@ contract ManagerSystemTest is BaseTest {
   // * * * * * * * * *
 
   function testApplyOutcomeTransferToRat() public {
+    setInitialBalance(alice);
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
+    approveGamePool(type(uint256).max);
     bytes32 ratId = world.ratroom__createRat("roger");
     vm.stopPrank();
 
+    uint256 initialBalance = setInitialBalance(bob);
     // As bob
     vm.startPrank(bob);
     bytes32 bobId = world.ratroom__spawn("bob");
+    approveGamePool(type(uint256).max);
     vm.stopPrank();
-
-    uint256 initialBalance = setInitialBalance(bobId);
 
     prankAdmin();
     bytes32 roomId = world.ratroom__createRoom(bobId, LevelList.getItem(0), bytes32(0), "test room");
@@ -602,22 +617,27 @@ contract ManagerSystemTest is BaseTest {
     // Initial room balance - 20
     assertEq(Balance.get(roomId), GameConfig.getRoomCreationCost() - 20);
     // Initial bob balance - ROOM_CREATION_COST
-    assertEq(Balance.get(bobId), initialBalance - GameConfig.getRoomCreationCost());
+    assertEq(
+      LibWorld.erc20().balanceOf(bob),
+      initialBalance - GameConfig.getRoomCreationCost() * 10 ** LibWorld.erc20().decimals()
+    );
   }
 
   function testApplyOutcomeTransferToRoom() public {
+    setInitialBalance(alice);
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
+    approveGamePool(type(uint256).max);
     bytes32 ratId = world.ratroom__createRat("roger");
     vm.stopPrank();
 
+    setInitialBalance(bob);
     // As bob
     vm.startPrank(bob);
     bytes32 bobId = world.ratroom__spawn("bob");
+    approveGamePool(type(uint256).max);
     vm.stopPrank();
-
-    setInitialBalance(bobId);
 
     prankAdmin();
     bytes32 roomId = world.ratroom__createRoom(bobId, LevelList.getItem(0), bytes32(0), "test room");
@@ -647,18 +667,20 @@ contract ManagerSystemTest is BaseTest {
   }
 
   function testApplyOutcomeOverTransferToRat() public {
+    setInitialBalance(alice);
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
+    approveGamePool(type(uint256).max);
     bytes32 ratId = world.ratroom__createRat("roger");
     vm.stopPrank();
 
+    setInitialBalance(bob);
     // As bob
     vm.startPrank(bob);
     bytes32 bobId = world.ratroom__spawn("bob");
+    approveGamePool(type(uint256).max);
     vm.stopPrank();
-
-    setInitialBalance(bobId);
 
     prankAdmin();
     bytes32 roomId = world.ratroom__createRoom(bobId, LevelList.getItem(0), bytes32(0), "test room");
@@ -687,18 +709,20 @@ contract ManagerSystemTest is BaseTest {
   }
 
   function testApplyOutcomeOverTransferToRoom() public {
+    setInitialBalance(alice);
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
+    approveGamePool(type(uint256).max);
     bytes32 ratId = world.ratroom__createRat("roger");
     vm.stopPrank();
 
+    setInitialBalance(bob);
     // As bob
     vm.startPrank(bob);
     bytes32 bobId = world.ratroom__spawn("bob");
+    approveGamePool(type(uint256).max);
     vm.stopPrank();
-
-    setInitialBalance(bobId);
 
     prankAdmin();
     bytes32 roomId = world.ratroom__createRoom(bobId, LevelList.getItem(0), bytes32(0), "test room");

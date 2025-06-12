@@ -7,21 +7,12 @@ import { ENTITY_TYPE } from "../../src/codegen/common.sol";
 import { Item } from "../../src/structs.sol";
 
 contract RatSystemTest is BaseTest {
-  function setInitialBalance(bytes32 _playerId) internal returns (uint256 initialBalance) {
-    initialBalance = Balance.get(_playerId);
-    // Give player balance if 0
-    if (initialBalance == 0) {
-      prankAdmin();
-      initialBalance = 2000;
-      world.ratroom__givePlayerBalance(_playerId, initialBalance);
-      vm.stopPrank();
-    }
-  }
-
   function testCreateRat() public {
+    setInitialBalance(alice);
     vm.startPrank(alice);
 
     bytes32 playerId = world.ratroom__spawn("alice");
+    approveGamePool(type(uint256).max);
 
     startGasReport("Create rat");
     bytes32 ratId = world.ratroom__createRat("roger");
@@ -47,8 +38,10 @@ contract RatSystemTest is BaseTest {
   }
 
   function testRevertAlreadyHasRat() public {
+    setInitialBalance(alice);
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
+    approveGamePool(type(uint256).max);
 
     world.ratroom__createRat("roger");
 
@@ -59,21 +52,26 @@ contract RatSystemTest is BaseTest {
   }
 
   function testLiquidateRat() public {
+    setInitialBalance(alice);
     vm.startPrank(alice);
 
     bytes32 playerId = world.ratroom__spawn("alice");
+    approveGamePool(type(uint256).max);
 
-    uint256 initialBalance = setInitialBalance(playerId);
+    uint256 initialBalance = setInitialBalance(alice);
 
     bytes32 ratId = world.ratroom__createRat("roger");
 
-    assertEq(Balance.get(playerId), initialBalance - GameConfig.getRatCreationCost());
+    assertEq(
+      LibWorld.erc20().balanceOf(alice),
+      initialBalance - GameConfig.getRatCreationCost() * 10 ** LibWorld.erc20().decimals()
+    );
 
     startGasReport("Liquidate rat");
     world.ratroom__liquidateRat();
     endGasReport();
 
-    assertEq(Balance.get(playerId), initialBalance);
+    assertEq(LibWorld.erc20().balanceOf(alice), initialBalance);
     assertEq(PastRats.length(playerId), 1);
     assertEq(PastRats.getItem(playerId, 0), ratId);
 
@@ -81,8 +79,10 @@ contract RatSystemTest is BaseTest {
   }
 
   function testRevertLiquidateNoRat() public {
+    setInitialBalance(alice);
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
+    approveGamePool(type(uint256).max);
 
     world.ratroom__createRat("roger");
 
@@ -95,10 +95,10 @@ contract RatSystemTest is BaseTest {
   }
 
   function testRevertLiquidateDeadRat() public {
-    setUp();
-
+    setInitialBalance(alice);
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
+    approveGamePool(type(uint256).max);
 
     bytes32 ratId = world.ratroom__createRat("roger");
     vm.stopPrank();
@@ -120,24 +120,21 @@ contract RatSystemTest is BaseTest {
   }
 
   function testDropItem() public {
+    setInitialBalance(alice);
     // As alice
     vm.startPrank(alice);
-    bytes32 aliceId = world.ratroom__spawn("alice");
-    vm.stopPrank();
+    world.ratroom__spawn("alice");
+    approveGamePool(type(uint256).max);
 
-    setInitialBalance(aliceId);
-
-    // As alice
-    vm.startPrank(alice);
     bytes32 ratId = world.ratroom__createRat("roger");
     vm.stopPrank();
 
+    setInitialBalance(bob);
     // As bob
     vm.startPrank(bob);
     bytes32 bobId = world.ratroom__spawn("bob");
+    approveGamePool(type(uint256).max);
     vm.stopPrank();
-
-    setInitialBalance(bobId);
 
     prankAdmin();
     bytes32 roomId = world.ratroom__createRoom(bobId, LevelList.getItem(0), bytes32(0), "test room");

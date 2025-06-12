@@ -81,6 +81,14 @@ library LibUtils {
   }
 
   /**
+   * @notice Conversion from bytes32 to address.
+   * @param _key The entity to convert
+   */
+  function addressToEntityKey(bytes32 _key) internal pure returns (address) {
+    return address(uint160(uint256(_key)));
+  }
+
+  /**
    * @notice Removes an element from an array of `bytes32` if it exists and returns the new array.
    * @param _array The original array of `bytes32` elements.
    * @param _element The `bytes32` element to be removed from the array.

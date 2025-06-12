@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
-import { GameConfig, GameConfigData, ExternalAddressesConfig, ExternalAddressesConfigData, Balance, Name, VisitedLevels, WorldPrompt } from "../codegen/index.sol";
+import { GameConfig, GameConfigData, ExternalAddressesConfig, ExternalAddressesConfigData, Name, VisitedLevels, WorldPrompt } from "../codegen/index.sol";
 import { MAX_ROOM_PROMPT_LENGTH, MIN_ROOM_PROMPT_LENGTH, MAX_INVENTORY_SIZE, MAX_TRAITS_SIZE, COOLDOWN_CLOSE_ROOM, COOLDOWN_REENTER_ROOM } from "../constants.sol";
 import { LibUtils } from "./LibUtils.sol";
+import { SlopERC20 } from "../external/SlopERC20.sol";
+import { GamePool } from "../external/GamePool.sol";
 
 library LibWorld {
   /**
@@ -40,8 +42,7 @@ library LibWorld {
       ExternalAddressesConfigData({ erc20Address: erc20Address, gamePoolAddress: gamePoolAddress })
     );
 
-    // Give admin credits
-    Balance.set(adminId, 1000000);
+    // Set admin name
     Name.set(adminId, "RATKING");
 
     // Add all levels to admins VisitedLevels
@@ -56,5 +57,19 @@ library LibWorld {
    */
   function setWorldPrompt(string memory _worldPrompt) internal {
     WorldPrompt.set(_worldPrompt);
+  }
+
+  /**
+   * @notice Get the erc20 token contract used by the world
+   */
+  function erc20() internal view returns (SlopERC20) {
+    return SlopERC20(ExternalAddressesConfig.getErc20Address());
+  }
+
+  /**
+   * @notice Get the game pool contract used by the world
+   */
+  function gamePool() internal view returns (GamePool) {
+    return GamePool(ExternalAddressesConfig.getGamePoolAddress());
   }
 }

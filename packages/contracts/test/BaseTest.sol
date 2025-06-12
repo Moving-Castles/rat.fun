@@ -11,6 +11,7 @@ import { NamespaceOwner } from "@latticexyz/world/src/codegen/tables/NamespaceOw
 import { IWorld } from "../src/codegen/world/IWorld.sol";
 
 import "../src/codegen/index.sol";
+import "../src/libraries/Libraries.sol";
 
 contract BaseTest is MudTest, GasReporter {
   IWorld world;
@@ -51,5 +52,20 @@ contract BaseTest is MudTest, GasReporter {
 
   function prankAdmin() internal {
     vm.startPrank(NamespaceOwner.get(ROOT_NAMESPACE_ID));
+  }
+
+  function setInitialBalance(address _player) internal returns (uint256 initialBalance) {
+    initialBalance = LibWorld.erc20().balanceOf(_player);
+    // Give player balance if 0
+    if (initialBalance == 0) {
+      prankAdmin();
+      initialBalance = 2000 * 10 ** LibWorld.erc20().decimals();
+      LibWorld.erc20().transfer(_player, initialBalance);
+      vm.stopPrank();
+    }
+  }
+
+  function approveGamePool(uint256 _amount) internal {
+    LibWorld.erc20().approve(address(LibWorld.gamePool()), _amount);
   }
 }

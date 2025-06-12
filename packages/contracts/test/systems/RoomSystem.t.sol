@@ -4,25 +4,16 @@ import { BaseTest } from "../BaseTest.sol";
 import "../../src/codegen/index.sol";
 import "../../src/libraries/Libraries.sol";
 import { ENTITY_TYPE } from "../../src/codegen/common.sol";
+import { IERC20Errors } from "@openzeppelin/contracts/interfaces/draft-IERC6093.sol";
 
 contract RoomSystemTest is BaseTest {
-  function setInitialBalance(bytes32 _playerId) internal returns (uint256 initialBalance) {
-    initialBalance = Balance.get(_playerId);
-    // Give player balance if 0
-    if (initialBalance == 0) {
-      prankAdmin();
-      initialBalance = 2000;
-      world.ratroom__givePlayerBalance(_playerId, initialBalance);
-      vm.stopPrank();
-    }
-  }
-
   function testCreateRoom() public {
+    uint256 initialBalance = setInitialBalance(alice);
+    // As alice
     vm.startPrank(alice);
     bytes32 playerId = world.ratroom__spawn("alice");
+    approveGamePool(type(uint256).max);
     vm.stopPrank();
-
-    uint256 initialBalance = setInitialBalance(playerId);
 
     // As admin
     prankAdmin();
@@ -32,7 +23,10 @@ contract RoomSystemTest is BaseTest {
     vm.stopPrank();
 
     // Check player balance
-    assertEq(Balance.get(playerId), initialBalance - GameConfig.getRoomCreationCost());
+    assertEq(
+      LibWorld.erc20().balanceOf(alice),
+      initialBalance - GameConfig.getRoomCreationCost() * 10 ** LibWorld.erc20().decimals()
+    );
 
     // Check room
     assertEq(uint8(EntityType.get(roomId)), uint8(ENTITY_TYPE.ROOM));
@@ -44,11 +38,12 @@ contract RoomSystemTest is BaseTest {
   }
 
   function testLongRoomPrompt() public {
+    setInitialBalance(alice);
+    // As alice
     vm.startPrank(alice);
     bytes32 playerId = world.ratroom__spawn("alice");
+    approveGamePool(type(uint256).max);
     vm.stopPrank();
-
-    setInitialBalance(playerId);
 
     // As admin
     prankAdmin();
@@ -63,22 +58,32 @@ contract RoomSystemTest is BaseTest {
     vm.stopPrank();
   }
 
-  function testRevertBlanceTooLow() public {
+  function testRevertBalanceTooLow() public {
     vm.startPrank(alice);
     bytes32 playerId = world.ratroom__spawn("alice");
+    approveGamePool(type(uint256).max);
     vm.stopPrank();
 
     prankAdmin();
     world.ratroom__removePlayerBalance(playerId);
     bytes32 firstLevelId = LevelList.getItem(0);
-    vm.expectRevert("balance too low");
+    vm.expectRevert(
+      abi.encodeWithSelector(
+        IERC20Errors.ERC20InsufficientBalance.selector,
+        alice,
+        0,
+        GameConfig.getRoomCreationCost() * 10 ** LibWorld.erc20().decimals()
+      )
+    );
     world.ratroom__createRoom(playerId, firstLevelId, bytes32(0), "A test room");
     vm.stopPrank();
   }
 
   function testRevertIdAlreadyInUse() public {
+    setInitialBalance(alice);
     vm.startPrank(alice);
     bytes32 playerId = world.ratroom__spawn("alice");
+    approveGamePool(type(uint256).max);
     vm.stopPrank();
 
     prankAdmin();
@@ -90,11 +95,12 @@ contract RoomSystemTest is BaseTest {
   }
 
   function testCloseRoom() public {
+    uint256 initialBalance = setInitialBalance(alice);
+    // As alice
     vm.startPrank(alice);
     bytes32 playerId = world.ratroom__spawn("alice");
+    approveGamePool(type(uint256).max);
     vm.stopPrank();
-
-    uint256 initialBalance = setInitialBalance(playerId);
 
     // As admin
     prankAdmin();
@@ -102,7 +108,10 @@ contract RoomSystemTest is BaseTest {
     vm.stopPrank();
 
     // Check player balance
-    assertEq(Balance.get(playerId), initialBalance - GameConfig.getRoomCreationCost());
+    assertEq(
+      LibWorld.erc20().balanceOf(alice),
+      initialBalance - GameConfig.getRoomCreationCost() * 10 ** LibWorld.erc20().decimals()
+    );
 
     // Check room balance
     assertEq(Balance.get(roomId), GameConfig.getRoomCreationCost());
@@ -122,12 +131,15 @@ contract RoomSystemTest is BaseTest {
     assertEq(Balance.get(roomId), 0);
 
     // Check player balance
-    assertEq(Balance.get(playerId), initialBalance);
+    assertEq(LibWorld.erc20().balanceOf(alice), initialBalance);
   }
 
   function testCloseRoomRevertInCooldown() public {
+    setInitialBalance(alice);
+    // As alice
     vm.startPrank(alice);
     bytes32 playerId = world.ratroom__spawn("alice");
+    approveGamePool(type(uint256).max);
     vm.stopPrank();
 
     // As admin
@@ -145,16 +157,18 @@ contract RoomSystemTest is BaseTest {
   }
 
   function testCloseRoomRevertNotOwner() public {
+    setInitialBalance(alice);
+    // As alice
     vm.startPrank(alice);
     bytes32 aliceId = world.ratroom__spawn("alice");
+    approveGamePool(type(uint256).max);
     vm.stopPrank();
 
+    setInitialBalance(bob);
     // As bob
     vm.startPrank(bob);
     world.ratroom__spawn("bob");
     vm.stopPrank();
-
-    setInitialBalance(aliceId);
 
     // As admin
     prankAdmin();

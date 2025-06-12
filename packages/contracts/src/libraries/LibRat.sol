@@ -27,15 +27,13 @@ library LibRat {
   }
 
   /**
-   * @notice Process a rat's death, transferring its value to either a room or its owner
+   * @notice Process a rat's death, getting the total value left behind
    * @param _ratId The id of the rat
-   * @param _destinationId The id of the destination (room or player) to receive the value
    * @param _isLiquidation Whether this is a liquidation (true) or death (false)
+   * @return balanceToTransfer The total value of the rat to be transferred to room or player
    */
-  function killRat(bytes32 _ratId, bytes32 _destinationId, bool _isLiquidation) internal {
+  function killRat(bytes32 _ratId, bool _isLiquidation) internal returns (uint256 balanceToTransfer) {
     Dead.set(_ratId, true);
-
-    uint256 balanceToTransfer;
 
     // * * * *
     // Health
@@ -66,11 +64,6 @@ library LibRat {
     // * * * *
     balanceToTransfer += Balance.get(_ratId);
     Balance.set(_ratId, 0);
-
-    // * * * *
-    // Transfer
-    // * * * *
-    Balance.set(_destinationId, Balance.get(_destinationId) + balanceToTransfer);
 
     bytes32 playerId = Owner.get(_ratId);
     // Add to history of rats

@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
-import { Owner, OwnedRat, Dead, Index, Inventory, GameConfig, Balance, VisitedLevels, Level } from "../codegen/index.sol";
+import { Owner, OwnedRat, Dead, Index, Inventory, GameConfig, VisitedLevels, Level } from "../codegen/index.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { LibUtils, LibRat, LibItem } from "../libraries/Libraries.sol";
+import { LibUtils, LibRat, LibItem, LibWorld } from "../libraries/Libraries.sol";
 
 contract RatSystem is System {
   /**
@@ -17,7 +17,6 @@ contract RatSystem is System {
 
     // A player can only have one rat at a time
     require(currentRat == bytes32(0) || Dead.get(currentRat), "already has rat");
-    require(Balance.get(playerId) >= GameConfig.getRatCreationCost(), "not enough balance");
 
     ratId = LibRat.createRat(_name);
 
@@ -25,7 +24,12 @@ contract RatSystem is System {
     OwnedRat.set(playerId, ratId);
     Owner.set(ratId, playerId);
 
-    Balance.set(playerId, Balance.get(playerId) - GameConfig.getRatCreationCost());
+    // Deposit player tokens in pool
+    // ERC-20 will check that player has sufficient balance, and approval for pool to transfer it
+    LibWorld.gamePool().depositTokens(
+      _msgSender(),
+      GameConfig.getRatCreationCost() * 10 ** LibWorld.erc20().decimals()
+    );
   }
 
   /**
@@ -40,7 +44,10 @@ contract RatSystem is System {
     // Check that the rat is alive
     require(!Dead.get(ratId), "rat is dead");
 
-    LibRat.killRat(ratId, playerId, true);
+    uint256 balanceToTransfer = LibRat.killRat(ratId, true);
+    // Withdraw tokens equal to rat value from pool to player
+    // ERC-20 will check that pool has sufficient balance
+    LibWorld.gamePool().withdrawTokens(_msgSender(), balanceToTransfer * 10 ** LibWorld.erc20().decimals());
   }
 
   /**

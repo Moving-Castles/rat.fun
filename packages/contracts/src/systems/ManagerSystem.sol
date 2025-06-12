@@ -71,8 +71,7 @@ contract ManagerSystem is System {
 
     // Exit early if dead
     if (Health.get(_ratId) == 0) {
-      LibRat.killRat(_ratId, _roomId, false);
-      KillCount.set(_roomId, KillCount.get(_roomId) + 1);
+      _killRat(_ratId, _roomId);
       return;
     }
 
@@ -113,6 +112,12 @@ contract ManagerSystem is System {
 
     // Update last visit block
     LastVisitBlock.set(_roomId, block.number);
+  }
+
+  function _killRat(bytes32 _ratId, bytes32 _roomId) internal {
+    uint256 balanceToTransfer = LibRat.killRat(_ratId, false);
+    Balance.set(_roomId, Balance.get(_roomId) + balanceToTransfer);
+    KillCount.set(_roomId, KillCount.get(_roomId) + 1);
   }
 
   /**
