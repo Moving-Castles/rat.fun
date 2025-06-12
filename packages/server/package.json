@@ -5,7 +5,7 @@
   "scripts": {
     "start": "tsc && tsx src/index.ts",
     "build": "tsc",
-    "dev": "pnpm tsx src/index.ts"
+    "dev": "tsx src/index.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.54.0",
@@ -34,7 +34,7 @@
     "sharp": "^0.34.2",
     "tsx": "^4.20.2",
     "uuid": "^11.1.0",
-    "viem": "2.31.0"
+    "viem": "2.30.6"
   },
   "engines": {
     "node": "^20"
