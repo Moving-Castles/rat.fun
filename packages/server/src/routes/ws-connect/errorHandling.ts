@@ -1,5 +1,3 @@
-import * as Sentry from '@sentry/node';
-
 export class WebSocketError extends Error {
   constructor(
     message: string,
@@ -17,7 +15,6 @@ export class WebSocketError extends Error {
  */
 export function handleError(error: unknown, socket: WebSocket): void {
   console.error('WebSocket Error:', error);
-  Sentry.captureException(error);
   
   // Handle specific error types
   if (error instanceof WebSocketError) {

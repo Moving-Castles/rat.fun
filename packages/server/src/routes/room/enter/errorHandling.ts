@@ -1,5 +1,4 @@
 import { FastifyReply } from 'fastify';
-import * as Sentry from '@sentry/node';
 
 // Import error classes
 import { OnchainDataError, RatNotFoundError, RoomNotFoundError, PlayerNotFoundError } from '@modules/mud/getOnchainData/getEnterRoomData';
@@ -13,7 +12,6 @@ import { SystemCallError, ContractCallError, OutcomeUpdateError } from '@modules
  */
 export function handleError(error: unknown, reply: FastifyReply): FastifyReply {
   console.error('Error:', error);
-  Sentry.captureException(error);
   
   // Handle specific error types
   if (error instanceof RatNotFoundError) {

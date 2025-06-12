@@ -1,5 +1,4 @@
 import { FastifyReply } from 'fastify';
-import * as Sentry from '@sentry/node';
 
 // Import error classes
 import { SystemCallError, ContractCallError } from '@modules/mud/createSystemCalls';
@@ -12,7 +11,6 @@ import { OnchainDataError } from '@modules/mud/getOnchainData/getCreateRoomData'
  */
 export function handleError(error: unknown, reply: FastifyReply): FastifyReply {
   console.error('Error:', error);
-  Sentry.captureException(error);
   
   // Handle system call errors
   if (error instanceof ContractCallError) {

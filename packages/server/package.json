@@ -21,8 +21,6 @@
     "@latticexyz/utils": "2.2.22-9620c3a0ffda83a61b0ec9deb65f91cc70b2d664",
     "@latticexyz/world": "2.2.22-9620c3a0ffda83a61b0ec9deb65f91cc70b2d664",
     "@sanity/client": "^7.3.0",
-    "@sentry/node": "^8.54.0",
-    "@sentry/profiling-node": "^8.54.0",
     "contracts": "workspace:*",
     "dotenv": "^16.5.0",
     "ethereumjs-util": "^7.1.5",
