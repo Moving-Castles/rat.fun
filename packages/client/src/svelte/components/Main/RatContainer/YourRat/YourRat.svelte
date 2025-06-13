@@ -7,7 +7,6 @@
   import RatInventory from "@components/Main/RatContainer/YourRat/RatInventory.svelte"
   import LiquidateRat from "@components/Main/RatContainer/YourRat/LiquidateRat.svelte"
   import DeployRat from "@components/Main/RatContainer/DeployRat/DeployRat.svelte"
-  // import RatCam from "@components/Main/RatContainer/YourRat/RatCam.svelte"
 
   let { modal } = getModalState()
   let showRatModal = $state(false)
@@ -27,7 +26,6 @@
           <!-- svelte-ignore a11y_no_static_element_interactions -->
           <div class="rat-cam-container" onclick={() => (showRatModal = true)}>
             <img src={$ratImageUrl} alt="Rat Cam" />
-            <!-- <RatCam /> -->
           </div>
         </div>
         <!-- Inventory -->

@@ -4,7 +4,6 @@
   import { getUIState } from "@modules/ui/state.svelte"
   import { playSound } from "@modules/sound"
   import { gsap } from "gsap"
-  import { rat } from "@modules/state/base/stores"
   import { frozenRat } from "@components/Main/RoomResult/state.svelte"
   import { fade } from "svelte/transition"
   import OutcomeItem from "@components/Main/Shared/OutcomeItem/OutcomeItem.svelte"
