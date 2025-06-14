@@ -6,6 +6,3 @@ dist
 coverage
 .env2
 .env
-
-# Sentry Config File
-.env.sentry-build-plugin
