@@ -40,7 +40,6 @@ export async function getCreateRoomData(playerId: string, levelId: string): Prom
 
         const { 
           Name, 
-          Balance, 
           VisitedLevels, 
           RoomCreationCost,
           GameConfig,
@@ -57,10 +56,11 @@ export async function getCreateRoomData(playerId: string, levelId: string): Prom
         const playerEntity = (await network).world.registerEntity({ id: playerId });
 
         const playerName = getComponentValue(Name, playerEntity)?.value as string;
+
         const playerBalance = await network.publicClient.readContract({
           address: network.worldContract.address,
           abi: network.worldContract.abi,
-          functionName: 'balanceOf',
+          functionName: 'ratroom__balanceOf',
           args: [playerId],
         }) as bigint;
         const playerVisitedLevels = getComponentValue(VisitedLevels, playerEntity)?.value as string[];
