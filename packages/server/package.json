@@ -5,7 +5,7 @@
   "scripts": {
     "start": "tsc && tsx src/index.ts",
     "build": "tsc",
-    "dev": "pnpm tsx src/index.ts"
+    "dev": "tsx src/index.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.54.0",
@@ -21,8 +21,6 @@
     "@latticexyz/utils": "2.2.22-9620c3a0ffda83a61b0ec9deb65f91cc70b2d664",
     "@latticexyz/world": "2.2.22-9620c3a0ffda83a61b0ec9deb65f91cc70b2d664",
     "@sanity/client": "^7.3.0",
-    "@sentry/node": "^8.54.0",
-    "@sentry/profiling-node": "^8.54.0",
     "contracts": "workspace:*",
     "dotenv": "^16.5.0",
     "ethereumjs-util": "^7.1.5",
@@ -34,9 +32,9 @@
     "replicate": "^1.0.1",
     "rxjs": "^7.8.2",
     "sharp": "^0.34.2",
-    "tsx": "^4.20.2",
+    "tsx": "4.19.4",
     "uuid": "^11.1.0",
-    "viem": "2.31.0"
+    "viem": "2.30.6"
   },
   "engines": {
     "node": "^20"

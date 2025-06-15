@@ -1,7 +1,3 @@
-// IMPORTANT: Make sure to import `instrument.js` at the top of your file.
-import "./modules/sentry/instrument.js"
-import * as Sentry from "@sentry/node"
-
 import Fastify from 'fastify'
 import formbody from '@fastify/formbody';
 import cors from '@fastify/cors';
@@ -24,9 +20,6 @@ const fastify = Fastify({
     },
   },
  })
-
-// Monitoring 
-Sentry.setupFastifyErrorHandler(fastify);
 
 // Register plugins
 fastify.register(websocket);
