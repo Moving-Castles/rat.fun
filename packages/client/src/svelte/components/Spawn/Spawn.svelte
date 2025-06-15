@@ -1,17 +1,18 @@
 <script lang="ts">
   import { onMount } from "svelte"
+  import { maxUint256 } from "viem"
+  import { ENTITY_TYPE } from "contracts/enums"
   import { approve, spawn } from "@modules/action"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
   import { playSound } from "@modules/sound"
-  import { player, playerAddress } from "@modules/state/base/stores"
-  import { ENTITY_TYPE } from "contracts/enums"
-
+  import { player } from "@modules/state/base/stores"
   import VideoLoader from "@components/Main/Shared/VideoLoader/VideoLoader.svelte"
   import Slides from "@components/Main/Shared/Slides/Slides.svelte"
-    import { maxUint256 } from "viem";
+  import { get } from "svelte/store"
+  import { gameConfig } from "@modules/state/base/stores"
 
   const { spawned = () => {} } = $props<{
-    spawned?: () => void
+    spawned: () => void
   }>()
 
   let busy = $state(false)
@@ -23,11 +24,14 @@
     if (!name) return
     playSound("tcm", "blink")
     busy = true
-    const action = spawn(name)
-    const action2 = approve($playerAddress, maxUint256)
+    const spawnAction = spawn(name)
+    const approveAction = approve(
+      get(gameConfig).externalAddressesConfig.gamePoolAddress,
+      maxUint256
+    )
     try {
-      await waitForCompletion(action)
-      await waitForCompletion(action2)
+      await waitForCompletion(spawnAction)
+      await waitForCompletion(approveAction)
       spawned()
     } catch (e) {
       console.error(e)

@@ -8,7 +8,7 @@
 
   const { environment, loaded = () => {} } = $props<{
     environment: ENVIRONMENT
-    loaded?: () => void
+    loaded: () => void
   }>()
 
   let innerElement: HTMLDivElement
