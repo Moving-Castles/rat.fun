@@ -62,9 +62,11 @@
     {/if}
   </div>
   <div bind:this={text} class="slide-text">
-    <div class="text">
-      {@html slide.text}
-    </div>
+    {#if slide.text}
+      <div class="text">
+        {@html slide.text}
+      </div>
+    {/if}
     {#if buttons}
       <div bind:this={buttonsContainer} class="buttons">
         {@render buttons?.()}
@@ -95,7 +97,7 @@
       img,
       video {
         object-fit: contain;
-        max-height: 450px;
+        max-height: 70dvh;
         border: var(--default-border-style);
         margin-bottom: 20px;
       }

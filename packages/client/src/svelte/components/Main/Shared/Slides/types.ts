@@ -2,7 +2,7 @@ export type SlideType = "text" | "image" | "video"
 
 export type Slide = {
   type: SlideType
-  text: string
+  text?: string
   content?: {
     source: string
   }

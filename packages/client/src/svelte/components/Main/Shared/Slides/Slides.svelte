@@ -20,7 +20,7 @@
       {#if index < slides.length - 1}
         <button onclick={next}>Next</button>
       {:else}
-        <button onclick={onComplete}>Finish</button>
+        <button onclick={onComplete}>Enter</button>
       {/if}
     {/snippet}
 
