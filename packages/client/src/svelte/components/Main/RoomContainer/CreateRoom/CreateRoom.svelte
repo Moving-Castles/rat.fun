@@ -1,5 +1,13 @@
 <script lang="ts">
-  import { player, rat, gameConfig, levels, playerERC20Balance } from "@modules/state/base/stores"
+  import { approve } from "@modules/action"
+  import {
+    player,
+    rat,
+    gameConfig,
+    levels,
+    playerERC20Balance,
+  } from "@modules/state/base/stores"
+  import { waitForCompletion } from "@modules/action/actionSequencer/utils"
   import { createRoom } from "./index"
   import { getUIState } from "@modules/ui/state.svelte"
   import { ENVIRONMENT } from "@mud/enums"
@@ -31,10 +39,22 @@
       $playerERC20Balance < Number($levels[levelId].roomCreationCost ?? 0)
   )
 
+  let roomCreationCost = $derived(
+    $levels[levelId]?.roomCreationCost ??
+      $levels[$gameConfig.levelList[0]]?.roomCreationCost ??
+      0
+  )
+
   async function sendCreateRoom() {
     if (busy) return
     busy = true
     const newPrompt = roomDescription
+
+    const approveAction = approve(
+      $gameConfig.externalAddressesConfig.gamePoolAddress,
+      roomCreationCost
+    )
+    await waitForCompletion(approveAction)
 
     const result = await createRoom(
       environment,
@@ -54,7 +74,7 @@
 
 <div class="create-room">
   {#if busy}
-    <VideoLoader duration={2000} />
+    <VideoLoader duration={6000} />
   {:else}
     <!-- LEVEL SELECTION -->
     <div class="form-group level-selection">
@@ -116,11 +136,7 @@
       <button class:disabled onclick={sendCreateRoom}>
         <span class="button-text">Create room</span>
         <span class="button-cost">
-          (Cost: ${Number(
-            $levels[levelId]?.roomCreationCost ??
-              $levels[$gameConfig.levelList[0]]?.roomCreationCost ??
-              666
-          )})
+          (Cost: ${Number(roomCreationCost)})
         </span>
       </button>
     </div>

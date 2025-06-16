@@ -1,8 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte"
-  import { maxUint256 } from "viem"
   import { ENTITY_TYPE } from "contracts/enums"
-  import { approve, spawn } from "@modules/action"
+  import { spawn } from "@modules/action"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
   import { playSound } from "@modules/sound"
   import { player } from "@modules/state/base/stores"
@@ -27,15 +26,9 @@
     playSound("tcm", "blink")
     busy = true
 
-    const spawnAction = spawn(name)
-    const approveAction = approve(
-      $gameConfig.externalAddressesConfig.gamePoolAddress,
-      maxUint256
-    )
-
     try {
+      const spawnAction = spawn(name)
       await waitForCompletion(spawnAction)
-      await waitForCompletion(approveAction)
       spawned()
     } catch (e) {
       console.error(e)
