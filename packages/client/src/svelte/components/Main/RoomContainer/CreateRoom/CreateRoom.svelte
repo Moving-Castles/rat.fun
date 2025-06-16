@@ -15,6 +15,7 @@
 
   import CharacterCounter from "@components/Main/RoomContainer/CreateRoom/CharacterCounter.svelte"
   import VideoLoader from "@components/Main/Shared/VideoLoader/VideoLoader.svelte"
+  import BigButton from "@components/Main/Shared/Buttons/BigButton.svelte"
 
   const { rooms } = getUIState()
 
@@ -133,12 +134,12 @@
 
     <!-- ACTIONS -->
     <div class="actions">
-      <button class:disabled onclick={sendCreateRoom}>
-        <span class="button-text">Create room</span>
-        <span class="button-cost">
-          (Cost: ${Number(roomCreationCost)})
-        </span>
-      </button>
+      <BigButton
+        text="Create room"
+        cost={Number(roomCreationCost)}
+        {disabled}
+        onclick={sendCreateRoom}
+      />
     </div>
   {/if}
 </div>
@@ -239,36 +240,6 @@
       gap: 12px;
       margin-inline: 1rem;
       overflow: hidden;
-
-      button {
-        width: 100%;
-        height: 80px;
-        background: var(--color-alert-priority);
-        color: var(--background);
-        cursor: pointer;
-        border-radius: 0;
-        border: var(--default-border-style);
-        transition: transform 0.2s ease-in-out;
-
-        .button-text {
-          letter-spacing: -0.2em;
-          font-size: var(--font-size-extra-large);
-          font-family: var(--label-font-stack);
-        }
-
-        &.secondary {
-          background: var(--color-grey-mid);
-        }
-
-        &:hover {
-          transform: scale(1.3);
-        }
-
-        &.disabled {
-          pointer-events: none;
-          background: var(--color-grey-mid);
-        }
-      }
     }
   }
 

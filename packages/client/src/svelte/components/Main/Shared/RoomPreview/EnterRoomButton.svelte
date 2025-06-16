@@ -1,9 +1,9 @@
 <script lang="ts">
   import type { Hex } from "viem"
-
-  import { rat } from "@modules/state/base/stores"
   import { playSound } from "@modules/sound"
   import { getUIState } from "@modules/ui/state.svelte"
+
+  import BigButton from "@components/Main/Shared/Buttons/BigButton.svelte"
 
   let { roomId }: { roomId: Hex } = $props()
 
@@ -16,7 +16,7 @@
 </script>
 
 <div class="room-enter">
-  <button onclick={sendEnterRoom}>Send rat to room</button>
+  <BigButton text="Send rat to room" onclick={sendEnterRoom} />
 </div>
 
 <style lang="scss">

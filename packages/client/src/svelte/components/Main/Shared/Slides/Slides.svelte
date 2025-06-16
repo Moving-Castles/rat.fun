@@ -3,6 +3,8 @@
   let { onComplete } = $props()
   import { slides } from "./slideDefinitions"
 
+  import BigButton from "@components/Main/Shared/Buttons/BigButton.svelte"
+
   let index = $state(0)
 
   const next = () => {
@@ -20,7 +22,9 @@
       {#if index < slides.length - 1}
         <button onclick={next}>Next</button>
       {:else}
-        <button onclick={onComplete}>Enter</button>
+        <div class="enter-button">
+          <BigButton text="Enter" onclick={onComplete} />
+        </div>
       {/if}
     {/snippet}
 
@@ -39,5 +43,10 @@
 
   button {
     padding: 20px;
+  }
+
+  .enter-button {
+    width: 400px;
+    height: 80px;
   }
 </style>

@@ -9,6 +9,7 @@
 
   import NumberGoing from "@components/Main/Shared/NumberGoing/NumberGoing.svelte"
   import VideoLoader from "@components/Main/Shared/VideoLoader/VideoLoader.svelte"
+  import DangerButton from "@components/Main/Shared/Buttons/DangerButton.svelte"
 
   import {
     ModalTarget,
@@ -58,16 +59,14 @@
       <!-- <div class="data-cell-value">${$ratTotalValue}</div> -->
     </div>
   </div>
-  <button
-    use:tippy={{
-      content: "Kill rat to get the value added to your operator wallet",
-    }}
-    disabled={busy}
-    onclick={() => (confirming = true)}
-    class="action warning-mute"
-  >
-    Liquidate Rat
-  </button>
+  <div class="action">
+    <DangerButton
+      text="Liquidate Rat"
+      tippyText="Kill rat to get the value added to your operator wallet"
+      onclick={() => (confirming = true)}
+      disabled={busy}
+    />
+  </div>
 </div>
 
 {#snippet confirmLiquidation()}
@@ -81,9 +80,11 @@
           src={$ratImageUrl}
           alt="Confirm Liquidation"
         />
-        <button onclick={sendLiquidateRat} class="modal-button">
-          {liquidationMessage}
-        </button>
+        <DangerButton
+          text={liquidationMessage}
+          onclick={sendLiquidateRat}
+          disabled={busy}
+        />
       </div>
     {/if}
   </div>
@@ -124,30 +125,9 @@
     }
   }
 
-  .modal-button {
-    width: 100%;
-    height: 100%;
-  }
-
-  button {
-    &:hover {
-      background: repeating-linear-gradient(
-        45deg,
-        #cc0000,
-        #cc0000 20px,
-        #9e0000 20px,
-        #9e0000 40px
-      );
-    }
-  }
-
   .action {
     width: 50%;
     height: 100%;
-    padding: var(--default-padding);
-    display: flex;
-    justify-content: center;
-    align-items: center;
   }
 
   .liquidate-image {
@@ -172,21 +152,5 @@
         filter: grayscale(100%);
       }
     }
-
-    button {
-      height: 60px;
-      border: var(--default-border-style);
-      color: var(--background);
-      background: var(--color-death);
-
-      &:hover {
-        background: var(--background);
-        color: var(--foreground);
-      }
-    }
-  }
-
-  button[disabled] {
-    background: var(--color-grey-mid);
   }
 </style>

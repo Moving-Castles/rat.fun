@@ -19,6 +19,8 @@
   /* --color-alert-priority: rgb(255, 128, 0); */
 
   --color-alert-priority: rgb(236, 77, 3);
+  --color-alert-priority-muted: rgb(178, 57, 1);
+  --color-alert-priority-light: rgb(247, 81, 3);
 
   --color-button: rgb(86, 138, 51);
 

@@ -3,7 +3,6 @@
   import { closeRoom } from "@modules/action"
   import { playSound } from "@modules/sound"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
-  import { tippy } from "svelte-tippy"
   import {
     ModalTarget,
     getModalState,
@@ -17,6 +16,7 @@
 
   import NoImage from "@components/Main/Shared/NoImage/NoImage.svelte"
   import VideoLoader from "@components/Main/Shared/VideoLoader/VideoLoader.svelte"
+  import DangerButton from "@components/Main/Shared/Buttons/DangerButton.svelte"
 
   let sanityRoomContent = $derived(
     $staticContent.rooms.find(r => r.title == roomId)
@@ -64,20 +64,16 @@
 </script>
 
 <div class="liquidate-room">
-  <button
-    use:tippy={{
-      content: "Liquidate room to get the value added to your operator wallet",
-    }}
-    class:disabled={busy || blockUntilUnlock > 0}
-    onclick={() => (confirming = true)}
-    class="action"
-  >
-    {#if blockUntilUnlock <= 0}
-      Liquidate Room (Get ${room.balance})
-    {:else}
-      Liquidation unlocked in {blockUntilUnlock} blocks
-    {/if}
-  </button>
+  <div class="action">
+    <DangerButton
+      text={blockUntilUnlock <= 0
+        ? `Liquidate Room (Get ${room.balance})`
+        : `Liquidation unlocked in ${blockUntilUnlock} blocks`}
+      tippyText="Liquidate room to get the value added to your operator wallet"
+      onclick={() => (confirming = true)}
+      disabled={busy || blockUntilUnlock > 0}
+    />
+  </div>
 </div>
 
 {#snippet confirmLiquidation()}
@@ -98,9 +94,11 @@
             {/if}
           {/key}
         </div>
-        <button onclick={sendLiquidateRoom} class="modal-button">
-          {liquidationMessage}
-        </button>
+        <DangerButton
+          text={liquidationMessage}
+          onclick={sendLiquidateRoom}
+          disabled={busy}
+        />
       </div>
     {/if}
   </div>
@@ -120,35 +118,9 @@
     height: 80px;
     display: flex;
 
-    button {
-      color: var(--foreground);
-      border: none;
-      background: repeating-linear-gradient(
-        45deg,
-        #cc0000,
-        #cc0000 20px,
-        #9e0000 20px,
-        #9e0000 40px
-      );
-
-      &:hover {
-        background: repeating-linear-gradient(
-          45deg,
-          black,
-          black 20px,
-          #222 20px,
-          #222 40px
-        );
-      }
-    }
-
     .action {
       width: 100%;
       height: 100%;
-      padding: var(--default-padding);
-      display: flex;
-      justify-content: center;
-      align-items: center;
     }
   }
 
@@ -162,11 +134,6 @@
       justify-content: space-between;
       align-items: center;
       height: 100%;
-
-      .modal-button {
-        width: 100%;
-      }
-
       .room-image {
         height: 400px;
         line-height: 0;
@@ -176,30 +143,10 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
-      }
-
-      img {
         mix-blend-mode: multiply;
         filter: grayscale(100%);
       }
     }
-
-    button {
-      height: 60px;
-      border: var(--default-border-style);
-      color: var(--background);
-      background: var(--color-death);
-
-      &:hover {
-        background: var(--background);
-        color: var(--foreground);
-      }
-    }
-  }
-
-  .disabled {
-    background: var(--color-grey-mid);
-    pointer-events: none;
   }
 
   .danger {

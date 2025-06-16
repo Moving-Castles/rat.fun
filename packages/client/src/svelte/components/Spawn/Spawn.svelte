@@ -5,9 +5,10 @@
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
   import { playSound } from "@modules/sound"
   import { player } from "@modules/state/base/stores"
-  import VideoLoader from "@components/Main/Shared/VideoLoader/VideoLoader.svelte"
+
   import Slides from "@components/Main/Shared/Slides/Slides.svelte"
-  import { gameConfig } from "@modules/state/base/stores"
+  import VideoLoader from "@components/Main/Shared/VideoLoader/VideoLoader.svelte"
+  import BigButton from "@components/Main/Shared/Buttons/BigButton.svelte"
 
   const { spawned = () => {} } = $props<{
     spawned: () => void
@@ -19,7 +20,7 @@
   let showForm = $state(false)
 
   async function sendSpawn() {
-    if (!name || !$gameConfig?.externalAddressesConfig?.gamePoolAddress) {
+    if (!name) {
       return
     }
 
@@ -87,7 +88,7 @@
           bind:value={name}
           onkeydown={e => e.key === "Enter" && sendSpawn()}
         />
-        <button class:disabled={!name} onclick={sendSpawn}>SIGN</button>
+        <BigButton text="SIGN" onclick={sendSpawn} disabled={!name} />
       </div>
     </div>
   {/if}
@@ -151,45 +152,6 @@
 
     &::placeholder {
       color: var(--color-grey-dark);
-    }
-  }
-
-  button {
-    font-family: var(--typewriter-font-stack);
-    font-size: 18px;
-    width: 300px;
-    height: 4em;
-    background: var(--color-alert-priority);
-    outline: none;
-    border: var(--default-border-style);
-
-    &:hover {
-      background: var(--color-alert);
-      color: var(--foreground);
-    }
-
-    .spinner {
-      position: relative;
-      top: 2px;
-      display: none;
-    }
-
-    &.disabled {
-      pointer-events: none;
-      opacity: 0.5;
-      cursor: default;
-      background: var(--color-grey-light);
-    }
-
-    &.busy {
-      background: var(--color-alert);
-      pointer-events: none;
-      cursor: default;
-      background: var(--color-grey-light);
-
-      .spinner {
-        display: block;
-      }
     }
   }
 </style>

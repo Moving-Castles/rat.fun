@@ -56,10 +56,6 @@
       logTimeline.play()
     }
   }
-
-  const replayOutcome = () => {
-    logTimeline.restart()
-  }
 </script>
 
 <div class="log" bind:this={logElement}>
@@ -68,8 +64,6 @@
       <LogItem {logEntry} onTimeline={addToTimeline} />
     {/each}
   {/if}
-
-  <!-- <button class="replay-button" onclick={replayOutcome}>Replay</button> -->
 </div>
 
 <style lang="scss">
@@ -81,13 +75,5 @@
     border-top: none;
     position: relative;
     background-image: url("/images/bg-test.jpg");
-
-    // .replay-button {
-    //   position: absolute;
-    //   bottom: 20px;
-    //   right: 20px;
-    //   padding: 10px 20px;
-    //   background: var(--color-grey-dark);
-    // }
   }
 </style>
