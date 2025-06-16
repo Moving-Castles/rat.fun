@@ -34,5 +34,6 @@ export function closeRoom(roomId: string) {
 }
 
 export function approve(address: string, value: bigint) {
-  return addToSequencer(WorldFunctions.Approve, [address, value])
+  const scaledValue = value * 10n ** 18n
+  return addToSequencer(WorldFunctions.Approve, [address, scaledValue])
 }

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { createRat } from "@modules/action"
+  import { createRat, approve } from "@modules/action"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
   import { playSound } from "@modules/sound"
   import { gameConfig, playerERC20Balance } from "@modules/state/base/stores"
@@ -18,9 +18,14 @@
     if (busy) return
     playSound("tcm", "blink")
     busy = true
-    const action = createRat(name)
     try {
-      await waitForCompletion(action)
+      const approveAction = approve(
+        $gameConfig.externalAddressesConfig.gamePoolAddress,
+        $gameConfig.gameConfig.ratCreationCost
+      )
+      await waitForCompletion(approveAction)
+      const createRatAction = createRat(name)
+      await waitForCompletion(createRatAction)
     } catch (e) {
       console.error(e)
     } finally {
@@ -37,7 +42,7 @@
 </script>
 
 {#if busy}
-  <VideoLoader duration={5000} />
+  <VideoLoader duration={10000} />
 {:else}
   <div class="deploy-rat">
     <div class="image-container warning-mute-inverse">
