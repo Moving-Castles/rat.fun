@@ -17,6 +17,8 @@ library LibWorld {
     address erc20Address,
     address gamePoolAddress,
     address mainSaleAddress,
+    address serviceAddress,
+    address usdcAddress,
     bytes32[] memory _levels
   ) internal {
     bytes32 adminId = LibUtils.addressToEntityKey(_adminAddress);
@@ -42,7 +44,9 @@ library LibWorld {
       ExternalAddressesConfigData({
         erc20Address: erc20Address,
         gamePoolAddress: gamePoolAddress,
-        mainSaleAddress: mainSaleAddress
+        mainSaleAddress: mainSaleAddress,
+        serviceAddress: serviceAddress,
+        usdcAddress: usdcAddress
       })
     );
 

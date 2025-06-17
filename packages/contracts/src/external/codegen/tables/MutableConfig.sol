@@ -16,25 +16,24 @@ import { Schema } from "@latticexyz/store/src/Schema.sol";
 import { EncodedLengths, EncodedLengthsLib } from "@latticexyz/store/src/EncodedLengths.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 
-struct ExternalAddressesConfigData {
-  address erc20Address;
-  address gamePoolAddress;
-  address mainSaleAddress;
-  address serviceAddress;
-  address usdcAddress;
+struct MutableConfigData {
+  bool paused;
+  address usdEthPriceAggregator;
+  address usdEurPriceAggregator;
+  uint256 eurTokenPrice;
 }
 
-library ExternalAddressesConfig {
-  // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "ratroom", name: "ExternalAddresse", typeId: RESOURCE_TABLE });`
-  ResourceId constant _tableId = ResourceId.wrap(0x7462726174726f6f6d0000000000000045787465726e616c4164647265737365);
+library MutableConfig {
+  // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "", name: "MutableConfig", typeId: RESOURCE_TABLE });`
+  ResourceId constant _tableId = ResourceId.wrap(0x746200000000000000000000000000004d757461626c65436f6e666967000000);
 
   FieldLayout constant _fieldLayout =
-    FieldLayout.wrap(0x0064050014141414140000000000000000000000000000000000000000000000);
+    FieldLayout.wrap(0x0049040001141420000000000000000000000000000000000000000000000000);
 
   // Hex-encoded key schema of ()
   Schema constant _keySchema = Schema.wrap(0x0000000000000000000000000000000000000000000000000000000000000000);
-  // Hex-encoded value schema of (address, address, address, address, address)
-  Schema constant _valueSchema = Schema.wrap(0x0064050061616161610000000000000000000000000000000000000000000000);
+  // Hex-encoded value schema of (bool, address, address, uint256)
+  Schema constant _valueSchema = Schema.wrap(0x004904006061611f000000000000000000000000000000000000000000000000);
 
   /**
    * @notice Get the table's key field names.
@@ -49,12 +48,11 @@ library ExternalAddressesConfig {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](5);
-    fieldNames[0] = "erc20Address";
-    fieldNames[1] = "gamePoolAddress";
-    fieldNames[2] = "mainSaleAddress";
-    fieldNames[3] = "serviceAddress";
-    fieldNames[4] = "usdcAddress";
+    fieldNames = new string[](4);
+    fieldNames[0] = "paused";
+    fieldNames[1] = "usdEthPriceAggregator";
+    fieldNames[2] = "usdEurPriceAggregator";
+    fieldNames[3] = "eurTokenPrice";
   }
 
   /**
@@ -72,47 +70,47 @@ library ExternalAddressesConfig {
   }
 
   /**
-   * @notice Get erc20Address.
+   * @notice Get paused.
    */
-  function getErc20Address() internal view returns (address erc20Address) {
+  function getPaused() internal view returns (bool paused) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return (address(bytes20(_blob)));
+    return (_toBool(uint8(bytes1(_blob))));
   }
 
   /**
-   * @notice Get erc20Address.
+   * @notice Get paused.
    */
-  function _getErc20Address() internal view returns (address erc20Address) {
+  function _getPaused() internal view returns (bool paused) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return (address(bytes20(_blob)));
+    return (_toBool(uint8(bytes1(_blob))));
   }
 
   /**
-   * @notice Set erc20Address.
+   * @notice Set paused.
    */
-  function setErc20Address(address erc20Address) internal {
+  function setPaused(bool paused) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((erc20Address)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((paused)), _fieldLayout);
   }
 
   /**
-   * @notice Set erc20Address.
+   * @notice Set paused.
    */
-  function _setErc20Address(address erc20Address) internal {
+  function _setPaused(bool paused) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((erc20Address)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((paused)), _fieldLayout);
   }
 
   /**
-   * @notice Get gamePoolAddress.
+   * @notice Get usdEthPriceAggregator.
    */
-  function getGamePoolAddress() internal view returns (address gamePoolAddress) {
+  function getUsdEthPriceAggregator() internal view returns (address usdEthPriceAggregator) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
@@ -120,9 +118,9 @@ library ExternalAddressesConfig {
   }
 
   /**
-   * @notice Get gamePoolAddress.
+   * @notice Get usdEthPriceAggregator.
    */
-  function _getGamePoolAddress() internal view returns (address gamePoolAddress) {
+  function _getUsdEthPriceAggregator() internal view returns (address usdEthPriceAggregator) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
@@ -130,27 +128,27 @@ library ExternalAddressesConfig {
   }
 
   /**
-   * @notice Set gamePoolAddress.
+   * @notice Set usdEthPriceAggregator.
    */
-  function setGamePoolAddress(address gamePoolAddress) internal {
+  function setUsdEthPriceAggregator(address usdEthPriceAggregator) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((gamePoolAddress)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((usdEthPriceAggregator)), _fieldLayout);
   }
 
   /**
-   * @notice Set gamePoolAddress.
+   * @notice Set usdEthPriceAggregator.
    */
-  function _setGamePoolAddress(address gamePoolAddress) internal {
+  function _setUsdEthPriceAggregator(address usdEthPriceAggregator) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((gamePoolAddress)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((usdEthPriceAggregator)), _fieldLayout);
   }
 
   /**
-   * @notice Get mainSaleAddress.
+   * @notice Get usdEurPriceAggregator.
    */
-  function getMainSaleAddress() internal view returns (address mainSaleAddress) {
+  function getUsdEurPriceAggregator() internal view returns (address usdEurPriceAggregator) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
@@ -158,9 +156,9 @@ library ExternalAddressesConfig {
   }
 
   /**
-   * @notice Get mainSaleAddress.
+   * @notice Get usdEurPriceAggregator.
    */
-  function _getMainSaleAddress() internal view returns (address mainSaleAddress) {
+  function _getUsdEurPriceAggregator() internal view returns (address usdEurPriceAggregator) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
@@ -168,103 +166,65 @@ library ExternalAddressesConfig {
   }
 
   /**
-   * @notice Set mainSaleAddress.
+   * @notice Set usdEurPriceAggregator.
    */
-  function setMainSaleAddress(address mainSaleAddress) internal {
+  function setUsdEurPriceAggregator(address usdEurPriceAggregator) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked((mainSaleAddress)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked((usdEurPriceAggregator)), _fieldLayout);
   }
 
   /**
-   * @notice Set mainSaleAddress.
+   * @notice Set usdEurPriceAggregator.
    */
-  function _setMainSaleAddress(address mainSaleAddress) internal {
+  function _setUsdEurPriceAggregator(address usdEurPriceAggregator) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked((mainSaleAddress)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked((usdEurPriceAggregator)), _fieldLayout);
   }
 
   /**
-   * @notice Get serviceAddress.
+   * @notice Get eurTokenPrice.
    */
-  function getServiceAddress() internal view returns (address serviceAddress) {
+  function getEurTokenPrice() internal view returns (uint256 eurTokenPrice) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 3, _fieldLayout);
-    return (address(bytes20(_blob)));
+    return (uint256(bytes32(_blob)));
   }
 
   /**
-   * @notice Get serviceAddress.
+   * @notice Get eurTokenPrice.
    */
-  function _getServiceAddress() internal view returns (address serviceAddress) {
+  function _getEurTokenPrice() internal view returns (uint256 eurTokenPrice) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 3, _fieldLayout);
-    return (address(bytes20(_blob)));
+    return (uint256(bytes32(_blob)));
   }
 
   /**
-   * @notice Set serviceAddress.
+   * @notice Set eurTokenPrice.
    */
-  function setServiceAddress(address serviceAddress) internal {
+  function setEurTokenPrice(uint256 eurTokenPrice) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 3, abi.encodePacked((serviceAddress)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 3, abi.encodePacked((eurTokenPrice)), _fieldLayout);
   }
 
   /**
-   * @notice Set serviceAddress.
+   * @notice Set eurTokenPrice.
    */
-  function _setServiceAddress(address serviceAddress) internal {
+  function _setEurTokenPrice(uint256 eurTokenPrice) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 3, abi.encodePacked((serviceAddress)), _fieldLayout);
-  }
-
-  /**
-   * @notice Get usdcAddress.
-   */
-  function getUsdcAddress() internal view returns (address usdcAddress) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 4, _fieldLayout);
-    return (address(bytes20(_blob)));
-  }
-
-  /**
-   * @notice Get usdcAddress.
-   */
-  function _getUsdcAddress() internal view returns (address usdcAddress) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 4, _fieldLayout);
-    return (address(bytes20(_blob)));
-  }
-
-  /**
-   * @notice Set usdcAddress.
-   */
-  function setUsdcAddress(address usdcAddress) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 4, abi.encodePacked((usdcAddress)), _fieldLayout);
-  }
-
-  /**
-   * @notice Set usdcAddress.
-   */
-  function _setUsdcAddress(address usdcAddress) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    StoreCore.setStaticField(_tableId, _keyTuple, 4, abi.encodePacked((usdcAddress)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 3, abi.encodePacked((eurTokenPrice)), _fieldLayout);
   }
 
   /**
    * @notice Get the full data.
    */
-  function get() internal view returns (ExternalAddressesConfigData memory _table) {
+  function get() internal view returns (MutableConfigData memory _table) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
     (bytes memory _staticData, EncodedLengths _encodedLengths, bytes memory _dynamicData) = StoreSwitch.getRecord(
@@ -278,7 +238,7 @@ library ExternalAddressesConfig {
   /**
    * @notice Get the full data.
    */
-  function _get() internal view returns (ExternalAddressesConfigData memory _table) {
+  function _get() internal view returns (MutableConfigData memory _table) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
     (bytes memory _staticData, EncodedLengths _encodedLengths, bytes memory _dynamicData) = StoreCore.getRecord(
@@ -293,19 +253,12 @@ library ExternalAddressesConfig {
    * @notice Set the full data using individual values.
    */
   function set(
-    address erc20Address,
-    address gamePoolAddress,
-    address mainSaleAddress,
-    address serviceAddress,
-    address usdcAddress
+    bool paused,
+    address usdEthPriceAggregator,
+    address usdEurPriceAggregator,
+    uint256 eurTokenPrice
   ) internal {
-    bytes memory _staticData = encodeStatic(
-      erc20Address,
-      gamePoolAddress,
-      mainSaleAddress,
-      serviceAddress,
-      usdcAddress
-    );
+    bytes memory _staticData = encodeStatic(paused, usdEthPriceAggregator, usdEurPriceAggregator, eurTokenPrice);
 
     EncodedLengths _encodedLengths;
     bytes memory _dynamicData;
@@ -319,19 +272,12 @@ library ExternalAddressesConfig {
    * @notice Set the full data using individual values.
    */
   function _set(
-    address erc20Address,
-    address gamePoolAddress,
-    address mainSaleAddress,
-    address serviceAddress,
-    address usdcAddress
+    bool paused,
+    address usdEthPriceAggregator,
+    address usdEurPriceAggregator,
+    uint256 eurTokenPrice
   ) internal {
-    bytes memory _staticData = encodeStatic(
-      erc20Address,
-      gamePoolAddress,
-      mainSaleAddress,
-      serviceAddress,
-      usdcAddress
-    );
+    bytes memory _staticData = encodeStatic(paused, usdEthPriceAggregator, usdEurPriceAggregator, eurTokenPrice);
 
     EncodedLengths _encodedLengths;
     bytes memory _dynamicData;
@@ -344,13 +290,12 @@ library ExternalAddressesConfig {
   /**
    * @notice Set the full data using the data struct.
    */
-  function set(ExternalAddressesConfigData memory _table) internal {
+  function set(MutableConfigData memory _table) internal {
     bytes memory _staticData = encodeStatic(
-      _table.erc20Address,
-      _table.gamePoolAddress,
-      _table.mainSaleAddress,
-      _table.serviceAddress,
-      _table.usdcAddress
+      _table.paused,
+      _table.usdEthPriceAggregator,
+      _table.usdEurPriceAggregator,
+      _table.eurTokenPrice
     );
 
     EncodedLengths _encodedLengths;
@@ -364,13 +309,12 @@ library ExternalAddressesConfig {
   /**
    * @notice Set the full data using the data struct.
    */
-  function _set(ExternalAddressesConfigData memory _table) internal {
+  function _set(MutableConfigData memory _table) internal {
     bytes memory _staticData = encodeStatic(
-      _table.erc20Address,
-      _table.gamePoolAddress,
-      _table.mainSaleAddress,
-      _table.serviceAddress,
-      _table.usdcAddress
+      _table.paused,
+      _table.usdEthPriceAggregator,
+      _table.usdEurPriceAggregator,
+      _table.eurTokenPrice
     );
 
     EncodedLengths _encodedLengths;
@@ -389,23 +333,15 @@ library ExternalAddressesConfig {
   )
     internal
     pure
-    returns (
-      address erc20Address,
-      address gamePoolAddress,
-      address mainSaleAddress,
-      address serviceAddress,
-      address usdcAddress
-    )
+    returns (bool paused, address usdEthPriceAggregator, address usdEurPriceAggregator, uint256 eurTokenPrice)
   {
-    erc20Address = (address(Bytes.getBytes20(_blob, 0)));
+    paused = (_toBool(uint8(Bytes.getBytes1(_blob, 0))));
 
-    gamePoolAddress = (address(Bytes.getBytes20(_blob, 20)));
+    usdEthPriceAggregator = (address(Bytes.getBytes20(_blob, 1)));
 
-    mainSaleAddress = (address(Bytes.getBytes20(_blob, 40)));
+    usdEurPriceAggregator = (address(Bytes.getBytes20(_blob, 21)));
 
-    serviceAddress = (address(Bytes.getBytes20(_blob, 60)));
-
-    usdcAddress = (address(Bytes.getBytes20(_blob, 80)));
+    eurTokenPrice = (uint256(Bytes.getBytes32(_blob, 41)));
   }
 
   /**
@@ -418,14 +354,10 @@ library ExternalAddressesConfig {
     bytes memory _staticData,
     EncodedLengths,
     bytes memory
-  ) internal pure returns (ExternalAddressesConfigData memory _table) {
-    (
-      _table.erc20Address,
-      _table.gamePoolAddress,
-      _table.mainSaleAddress,
-      _table.serviceAddress,
-      _table.usdcAddress
-    ) = decodeStatic(_staticData);
+  ) internal pure returns (MutableConfigData memory _table) {
+    (_table.paused, _table.usdEthPriceAggregator, _table.usdEurPriceAggregator, _table.eurTokenPrice) = decodeStatic(
+      _staticData
+    );
   }
 
   /**
@@ -451,13 +383,12 @@ library ExternalAddressesConfig {
    * @return The static data, encoded into a sequence of bytes.
    */
   function encodeStatic(
-    address erc20Address,
-    address gamePoolAddress,
-    address mainSaleAddress,
-    address serviceAddress,
-    address usdcAddress
+    bool paused,
+    address usdEthPriceAggregator,
+    address usdEurPriceAggregator,
+    uint256 eurTokenPrice
   ) internal pure returns (bytes memory) {
-    return abi.encodePacked(erc20Address, gamePoolAddress, mainSaleAddress, serviceAddress, usdcAddress);
+    return abi.encodePacked(paused, usdEthPriceAggregator, usdEurPriceAggregator, eurTokenPrice);
   }
 
   /**
@@ -467,19 +398,12 @@ library ExternalAddressesConfig {
    * @return The dynamic (variable length) data, encoded into a sequence of bytes.
    */
   function encode(
-    address erc20Address,
-    address gamePoolAddress,
-    address mainSaleAddress,
-    address serviceAddress,
-    address usdcAddress
+    bool paused,
+    address usdEthPriceAggregator,
+    address usdEurPriceAggregator,
+    uint256 eurTokenPrice
   ) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
-    bytes memory _staticData = encodeStatic(
-      erc20Address,
-      gamePoolAddress,
-      mainSaleAddress,
-      serviceAddress,
-      usdcAddress
-    );
+    bytes memory _staticData = encodeStatic(paused, usdEthPriceAggregator, usdEurPriceAggregator, eurTokenPrice);
 
     EncodedLengths _encodedLengths;
     bytes memory _dynamicData;
@@ -494,5 +418,17 @@ library ExternalAddressesConfig {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
     return _keyTuple;
+  }
+}
+
+/**
+ * @notice Cast a value to a bool.
+ * @dev Boolean values are encoded as uint8 (1 = true, 0 = false), but Solidity doesn't allow casting between uint8 and bool.
+ * @param value The uint8 value to convert.
+ * @return result The boolean value.
+ */
+function _toBool(uint8 value) pure returns (bool result) {
+  assembly {
+    result := value
   }
 }

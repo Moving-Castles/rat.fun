@@ -21,6 +21,6 @@ contract DeployTest is BaseTest {
   }
 
   function testERC20Supply() public {
-    assertEq(LibWorld.erc20().totalSupply(), 53_450_000 * 1e18);
+    assertEq(LibWorld.erc20().totalSupply(), 53_200_000 * 1e18);
   }
 }

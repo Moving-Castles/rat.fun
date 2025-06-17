@@ -3,7 +3,7 @@
   "version": "0.2.0",
   "license": "MIT",
   "scripts": {
-    "build": "mud build",
+    "build": "tsx ./script/generate-external-tables.ts && mud build",
     "clean": "forge clean && shx rm -rf src/**/codegen",
     "deploy:pyrope": "mud deploy --profile=pyrope --forgeScriptOptions='--slow'",
     "deploy:local": "mud deploy",
@@ -18,6 +18,7 @@
     "test-single": "forge clean && tsc --noEmit && mud test --forgeOptions='--match-test testCreateRoom'"
   },
   "dependencies": {
+    "@chainlink/contracts": "^1.4.0",
     "@latticexyz/cli": "2.2.22-fc522a899c932f53675e624805e97a4eeefca9e8",
     "@latticexyz/gas-report": "2.2.22-fc522a899c932f53675e624805e97a4eeefca9e8",
     "@latticexyz/schema-type": "2.2.22-fc522a899c932f53675e624805e97a4eeefca9e8",
@@ -34,6 +35,7 @@
     "prettier-plugin-solidity": "^2.0.0",
     "solhint": "^5.1.0",
     "solhint-config-mud": "2.2.22-fc522a899c932f53675e624805e97a4eeefca9e8",
-    "solhint-plugin-mud": "2.2.22-fc522a899c932f53675e624805e97a4eeefca9e8"
+    "solhint-plugin-mud": "2.2.22-fc522a899c932f53675e624805e97a4eeefca9e8",
+    "tsx": "4.19.4"
   }
 }

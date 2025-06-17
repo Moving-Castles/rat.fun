@@ -24,7 +24,7 @@ contract PlayerSystem is System {
 
     // TODO useful for distributing tokens for playtests, remove in production
     if (LibWorld.erc20().balanceOf(_msgSender()) == 0) {
-      SalePlaceholder(ExternalAddressesConfig.getMainSaleAddress()).transferStartingTokens(
+      SalePlaceholder(ExternalAddressesConfig.getServiceAddress()).transferStartingTokens(
         LibWorld.erc20(),
         _msgSender()
       );
