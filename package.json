@@ -17,12 +17,12 @@
     "test": "pnpm recursive run test"
   },
   "devDependencies": {
-    "@latticexyz/cli": "2.2.22-9620c3a0ffda83a61b0ec9deb65f91cc70b2d664",
-    "@latticexyz/common": "2.2.22-9620c3a0ffda83a61b0ec9deb65f91cc70b2d664",
-    "@latticexyz/store-indexer": "2.2.22-9620c3a0ffda83a61b0ec9deb65f91cc70b2d664",
+    "@latticexyz/cli": "2.2.22-fc522a899c932f53675e624805e97a4eeefca9e8",
+    "@latticexyz/common": "2.2.22-fc522a899c932f53675e624805e97a4eeefca9e8",
+    "@latticexyz/store-indexer": "2.2.22-fc522a899c932f53675e624805e97a4eeefca9e8",
     "@typescript-eslint/eslint-plugin": "8.34.0",
     "@typescript-eslint/parser": "8.34.0",
-    "@latticexyz/explorer": "2.2.22-9620c3a0ffda83a61b0ec9deb65f91cc70b2d664",
+    "@latticexyz/explorer": "2.2.22-fc522a899c932f53675e624805e97a4eeefca9e8",
     "eslint": "9.28.0",
     "mprocs": "^0.7.3",
     "shx": "^0.4.0",
