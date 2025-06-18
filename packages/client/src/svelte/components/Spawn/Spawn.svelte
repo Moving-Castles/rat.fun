@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte"
   import { ENTITY_TYPE } from "contracts/enums"
+  import { AccountButton } from "@latticexyz/entrykit/internal"
   import { spawn } from "@modules/action"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
   import { playSound } from "@modules/sound"

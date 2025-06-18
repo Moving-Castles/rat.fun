@@ -37,6 +37,7 @@
     "@latticexyz/store-sync": "2.2.22-fc522a899c932f53675e624805e97a4eeefca9e8",
     "@latticexyz/utils": "2.2.22-fc522a899c932f53675e624805e97a4eeefca9e8",
     "@latticexyz/world": "2.2.22-fc522a899c932f53675e624805e97a4eeefca9e8",
+    "@latticexyz/entrykit": "2.2.22-fc522a899c932f53675e624805e97a4eeefca9e8",
     "@sanity/block-content-to-html": "^2.0.0",
     "@sanity/client": "^7.5.0",
     "@sanity/image-url": "^1.1.0",
