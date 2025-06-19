@@ -1,7 +1,7 @@
 import type { LayoutLoad } from './$types';
 import { ENVIRONMENT } from "$lib/mud/enums"
 
-export const prerender = false
+export const prerender = true
 export const ssr = false
 
 const getEnvironment = (url: URL) => {
