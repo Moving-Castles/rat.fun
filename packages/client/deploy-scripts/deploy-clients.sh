@@ -9,8 +9,10 @@ cd ..
 # build the frontend
 pnpm build
 
+ls
+
 # Change directory to the location of the built frontend
-cd ./dist
+cd ./build
 
 # Deploy for Pyrope
 # NETLIFY_SITE_ID=$PYROPE_CLIENT_ID netlify deploy --dir=. --prod --auth=$NETLIFY_AUTH_TOKEN
