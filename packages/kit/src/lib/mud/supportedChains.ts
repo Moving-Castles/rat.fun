@@ -8,7 +8,7 @@
  *
  */
 import {
-  MUDChain,
+  type MUDChain,
   mudFoundry,
   redstone,
 } from "@latticexyz/common/chains";

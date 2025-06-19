@@ -1,5 +1,5 @@
 import { chainConfig } from "viem/op-stack";
-import { MUDChain } from "@latticexyz/common/chains";
+import { type MUDChain } from "@latticexyz/common/chains";
 
 const sourceId = 11155111; // Sepolia
 
