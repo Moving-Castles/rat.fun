@@ -1,6 +1,0 @@
-export enum ENVIRONMENT {
-    DEVELOPMENT,
-    PYROPE,
-    RHODOLITE,
-    REDSTONE
-}
