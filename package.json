@@ -19,10 +19,10 @@
   "devDependencies": {
     "@latticexyz/cli": "2.2.22-fc522a899c932f53675e624805e97a4eeefca9e8",
     "@latticexyz/common": "2.2.22-fc522a899c932f53675e624805e97a4eeefca9e8",
+    "@latticexyz/explorer": "2.2.22-fc522a899c932f53675e624805e97a4eeefca9e8",
     "@latticexyz/store-indexer": "2.2.22-fc522a899c932f53675e624805e97a4eeefca9e8",
     "@typescript-eslint/eslint-plugin": "8.34.0",
     "@typescript-eslint/parser": "8.34.0",
-    "@latticexyz/explorer": "2.2.22-fc522a899c932f53675e624805e97a4eeefca9e8",
     "eslint": "9.28.0",
     "mprocs": "^0.7.3",
     "shx": "^0.4.0",
@@ -35,5 +35,8 @@
   "resolutions": {
     "brace-expansion": "2.0.1"
   },
-  "packageManager": "pnpm@10.8.0+sha512.0e82714d1b5b43c74610193cb20734897c1d00de89d0e18420aebc5977fa13d780a9cb05734624e81ebd81cc876cd464794850641c48b9544326b5622ca29971"
+  "packageManager": "pnpm@10.8.0+sha512.0e82714d1b5b43c74610193cb20734897c1d00de89d0e18420aebc5977fa13d780a9cb05734624e81ebd81cc876cd464794850641c48b9544326b5622ca29971",
+  "dependencies": {
+    "@sveltejs/adapter-auto": "^6.0.1"
+  }
 }
