@@ -38,6 +38,7 @@
 </script>
 
 <div class="floor-bar" bind:clientHeight>
+  <div class="pseudo-shadow" />
   <div class="elevator">
     {#if elevatorIndex >= 0}
       <div
@@ -90,11 +91,13 @@
   .floor-bar {
     display: flex;
     flex-direction: column;
+    position: relative;
     width: 100%;
     height: 100%;
     border-right: var(--dashed-border-style);
     border-left: var(--dashed-border-style);
     position: relative;
+    overflow: hidden;
     background: repeating-linear-gradient(
       45deg,
       #000000,
@@ -102,6 +105,23 @@
       var(--color-grey-dark) 20px,
       var(--color-grey-dark) 40px
     );
+
+    .pseudo-shadow {
+      z-index: 99;
+      position: absolute;
+      display: block;
+      width: 100%;
+      height: 100%;
+      inset: 0;
+      transform: scale(1.2);
+      background: linear-gradient(
+        90deg,
+        rgba(0,0,0,.4),
+        rgba(0,0,0,0) 20%,
+        rgba(0,0,0,0) 80%,
+        rgba(0,0,0,.4) 100%
+      );
+    }
   }
 
   .your-floor {

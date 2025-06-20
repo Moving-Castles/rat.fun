@@ -15,8 +15,6 @@ ls
 cd ./build
 
 # Deploy for Pyrope
-# NETLIFY_SITE_ID=$PYROPE_CLIENT_ID netlify deploy --dir=. --prod --auth=$NETLIFY_AUTH_TOKEN
+NETLIFY_SITE_ID=$PYROPE_CLIENT_ID netlify deploy --dir=. --prod --auth=$NETLIFY_AUTH_TOKEN
 
-echo "This is a dry-run. inspect script to enable deployment"
-
-pnpm preview
+# pnpm preview

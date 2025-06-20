@@ -85,7 +85,7 @@
             <CreateRoomButton onclick={() => showCreateRoom = true} />
           {/if}
         {/if}
-
+  
         {#if showCreateRoom}
           <CreateRoom />
         {:else}
@@ -122,14 +122,14 @@
             </div>
           {/if}
         {/if}
-
+  
       </div>
     </div>
   </div>
 </div>
 
 <style lang="scss">
-  .wrapper {
+.wrapper {
     position: relative;
     height: calc(100% - 60px);
     overflow: hidden;

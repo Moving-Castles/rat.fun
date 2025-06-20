@@ -35,6 +35,45 @@
 
 	const { environment, walletType } = data;
 
+	const transitionsConfig = [
+		{
+			from: '/(rooms)/[roomId]',
+			to: '/(rooms)/[roomId]/enter',
+			out: {
+				transition: 'wipe',
+				params: {
+					duration: 2000,
+					direction: 'in'
+				}
+			},
+			in: {
+				transition: 'fade',
+				params: {
+					duration: 1000,
+					delay: 200
+				}
+			}
+		},
+		{
+			from: '/(rooms)/[roomId]/enter',
+			to: '*',
+			out: {
+				transition: 'wipe',
+				params: {
+					duration: 2000,
+					direction: 'in'
+				}
+			},
+			in: {
+				transition: 'fade',
+				params: {
+					duration: 1000,
+					delay: 200
+				}
+			}
+		}
+	];
+
 	const environmentLoaded = async () => {
 		console.log($publicNetwork.worldAddress);
 		// Get content from CMS
@@ -47,10 +86,13 @@
 		UILocation.set(LOCATION.MAIN);
 	};
 
-	const transitionsConfig = [
-		{ from: '/(rooms)/[roomId]', to: '/(rooms)/[roomId]/enter', transition: 'doorsOpen' },
-		{ from: '/(rooms)/[roomId]/enter', to: '*', transition: 'leftToRight' }
-	];
+	// Init of chain sync when player is ready
+	$effect(() => {
+		if ($playerId && $playerId !== EMPTY_CONNECTION && !$websocketConnected) {
+			console.log('Initializing off-chain sync', environment);
+			initOffChainSync(environment, $playerId);
+		}
+	});
 
 	// Init of chain sync when player is ready
 	$effect(() => {
