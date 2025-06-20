@@ -7,6 +7,7 @@
   import Main from "$lib/components/Main/Main.svelte"
   import { onMount } from "svelte"
   import { initSound } from "$lib/modules/sound"
+	import PageTransitions from "$lib/components/Main/Shared/PageTransitions/PageTransitions.svelte";
 
   let { children, data }: LayoutProps = $props()
 
@@ -18,8 +19,6 @@
     // Preload sounds
     initSound()
   })
-
-  $inspect(data.environment)
 </script>
 
 

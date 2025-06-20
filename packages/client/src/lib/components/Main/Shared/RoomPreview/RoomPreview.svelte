@@ -61,26 +61,24 @@
 
 {#key roomId}
   {#if room}
-    <div class="room-preview">
-      <div class="room-inner-container">
-        <RoomPreviewHeader {room} {sanityRoomContent} />
-        <RoomPreviewPrompt {room} />
+    <div class="room-inner-container">
+      <RoomPreviewHeader {room} {sanityRoomContent} />
+      <RoomPreviewPrompt {room} />
 
-        {#if showLiquidateButton}
-          <LiquidateRoom {roomId} {room} {isOwnRoomListing} />
-        {/if}
+      {#if showLiquidateButton}
+        <LiquidateRoom {roomId} {room} {isOwnRoomListing} />
+      {/if}
 
-        {#if showNoRatWarning}
-          <NoRatWarning />
-        {/if}
+      {#if showNoRatWarning}
+        <NoRatWarning />
+      {/if}
 
-        {#if showEnterButton}
-          <EnterRoomButton {roomId} />
-        {/if}
+      {#if showEnterButton}
+        <EnterRoomButton {roomId} />
+      {/if}
 
-        <RoomPreviewGraph {roomOutcomes} {sanityRoomContent} />
-        <RoomPreviewEventLog {roomId} {roomOutcomes} />
-      </div>
+      <RoomPreviewGraph {roomOutcomes} {sanityRoomContent} />
+      <RoomPreviewEventLog {roomId} {roomOutcomes} />
     </div>
   {/if}
 {/key}

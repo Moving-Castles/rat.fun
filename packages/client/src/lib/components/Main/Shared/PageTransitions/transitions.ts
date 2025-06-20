@@ -1,4 +1,4 @@
-import { fade } from 'svelte/transition';
+import { fade, fly } from 'svelte/transition';
 // import { lerp } from '$lib/modules/utils/maths';
 import { elasticOut, linear } from 'svelte/easing';
 
@@ -14,11 +14,11 @@ type LayoutRouteId =
 export type TransitionConfig = {
 	from: LayoutRouteId | '*';
 	to: LayoutRouteId | '*';
-	in: {
+	in?: {
     transition: TransitionFunction,
     params: Record<string, string | number>
   }
-  out: {
+  out?: {
     transition: TransitionFunction,
     params: Record<string, string | number>
   }
@@ -107,7 +107,9 @@ export function whoosh(
 }
 
 export const transitionFunctions = {
+  none: (_: HTMLElement, __: object) => {},
 	fade,
+  fly,
 	wipe: wipe,
 	leftToRight
 };

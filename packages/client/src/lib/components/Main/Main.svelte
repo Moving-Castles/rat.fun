@@ -1,6 +1,7 @@
 <script lang="ts">
   import { ENVIRONMENT } from "$lib/mud/enums"
 
+  import PageTransitions from "$lib/components/Main/Shared/PageTransitions/PageTransitions.svelte"
   import WorldPromptBox from "$lib/components/Main/RoomContainer/WorldPromptBox.svelte"
   import PaneSwitch from "$lib/components/Main/RoomContainer/PaneSwitch.svelte"
   import RatContainer from "$lib/components/Main/RatContainer/RatContainer.svelte"
@@ -17,9 +18,7 @@
 <div class="scroll-container">
   <WorldPromptBox />
   <PaneSwitch />
-
   {@render children?.()}
-
 </div>
 
 <style lang="scss">
@@ -44,6 +43,11 @@
 
   .black {
     width: 100%;
+  }
+
+  .wrapper {
+    width: 100%;
+    background: red;
   }
 
   .layer-game {

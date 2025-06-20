@@ -7,6 +7,7 @@
   import Loading from "$lib/components/Loading/Loading.svelte"
   import Spawn from "$lib/components/Spawn/Spawn.svelte"
   import PageTransitions from "$lib/components/Main/Shared/PageTransitions/PageTransitions.svelte"
+  
   import { page } from "$app/state"
   import { Modal } from "$lib/components/Main/Modal/state.svelte"
   import { onMount } from "svelte"
@@ -89,7 +90,7 @@
           delay: 200
         }
       },
-    },
+    }
   ]
 
   // Init of chain sync when player is ready
