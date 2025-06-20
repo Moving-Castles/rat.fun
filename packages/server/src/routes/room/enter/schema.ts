@@ -30,6 +30,9 @@ export const schema =     {
               amount: { type: 'number'}
             },
           },
+          outcomeId: {
+            type: 'string'
+          },
           traitChanges: {
             type: 'array',
             items: { 
@@ -70,7 +73,7 @@ export const schema =     {
           levelUp: { type: 'boolean'},
           levelDown: { type: 'boolean'}
         },
-        required: ['log', 'healthChange', 'traitChanges', 'itemChanges', 'balanceTransfer', 'ratDead', 'roomDepleted', 'levelUp', 'levelDown']
+        required: ['log', 'healthChange', 'outcomeId', 'traitChanges', 'itemChanges', 'balanceTransfer', 'ratDead', 'roomDepleted', 'levelUp', 'levelDown']
       },
       403: {
         type: 'object',

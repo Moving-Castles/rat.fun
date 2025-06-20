@@ -1,0 +1,20 @@
+import { get } from "svelte/store"
+import { publicNetwork, ready, loadingMessage } from "$lib/modules/network"
+import { SyncStep } from "@latticexyz/store-sync"
+
+export function createSyncProgressSystem() {
+  const subscription = get(publicNetwork).components.SyncProgress.update$.subscribe(
+    update => {
+      // console.log('* * * * sync update', update)
+      loadingMessage.set(`${update.value[0]?.message} ${String(update.value[0]?.percentage.toFixed(0))}`)
+      // console.log(update.value[0]?.step)
+      if (update.value[0]?.step === SyncStep.LIVE) {
+
+        // Data loaded from indexer
+        ready.set(true)
+
+        subscription.unsubscribe()
+      }
+    }
+  )
+}

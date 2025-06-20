@@ -108,6 +108,7 @@ export type LogEntry = {
 
 export type OutcomeReturnValue = {
   id?: string
+  outcomeId: string
   traitChanges: TraitChange[]
   itemChanges: ItemChange[]
   healthChange: HealthChange

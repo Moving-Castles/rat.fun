@@ -3,6 +3,7 @@ import { FastifyReply } from 'fastify';
 // Import error classes
 import { OnchainDataError, RatNotFoundError, RoomNotFoundError, PlayerNotFoundError } from '@modules/mud/getOnchainData/getEnterRoomData';
 import { LLMError, LLMAPIError, LLMParseError } from '@modules/llm/anthropic/callModel';
+import { CMSError } from '@modules/cms';
 import { SystemCallError, ContractCallError, OutcomeUpdateError } from '@modules/mud/createSystemCalls';
 
 /**

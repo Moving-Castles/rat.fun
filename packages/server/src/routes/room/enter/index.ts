@@ -33,9 +33,9 @@ import { systemCalls, network } from '@modules/mud/initMud';
 import { getSenderId } from '@modules/signature';
 
 // CMS
+// import { CMSError } from '@modules/cms';
 import { getSystemPrompts } from '@modules/cms/private';
 import { writeOutcomeToCMS } from '@modules/cms/public';
-import { CMSError } from '@modules/cms';
 
 // Validation
 import { validateInputData } from './validation';
@@ -110,41 +110,39 @@ async function routes (fastify: FastifyInstance) {
             const newMessage= createOutcomeMessage(player, rat, newRatHealth, room, validatedOutcome);
             await broadcast(newMessage);
 
-            // Write outcome to CMS
-            console.time('–– CMS write');
-            try {
-                // Await the network promise before accessing its properties
-                const resolvedNetwork = await network;
-                await writeOutcomeToCMS(
-                    resolvedNetwork.worldContract?.address ?? "0x0",
-                    player, 
-                    room, 
-                    rat,
-                    newMessage.message as string,
-                    newRoomValue, 
-                    roomValueChange, 
-                    newRatValue, 
-                    ratValueChange, 
-                    newRatHealth,
-                    correctedEvents, 
-                    validatedOutcome
-                )
-            } catch (error) {
-                // Handle CMS-specific errors
-                if (error instanceof CMSError) {
-                    console.error(`CMS Error: ${error.message}`, error);
-                    // We don't want to fail the entire request if CMS write fails
-                    // But we do want to log it properly
-                } else {
-                    // For unexpected errors, log them but don't fail the request
-                    console.error("Unexpected error writing to CMS:", error);
-                }
-            }
+            // Await the network promise before accessing its properties
+            const resolvedNetwork = await network;
+            const outcomeDocument = await writeOutcomeToCMS(
+                resolvedNetwork.worldContract?.address ?? "0x0",
+                player, 
+                room, 
+                rat,
+                newMessage.message as string,
+                newRoomValue, 
+                roomValueChange, 
+                newRatValue, 
+                ratValueChange, 
+                newRatHealth,
+                correctedEvents, 
+                validatedOutcome
+            )
+            // } catch (error) {
+            //     // Handle CMS-specific errors
+            //     if (error instanceof CMSError) {
+            //         console.error(`CMS Error: ${error.message}`, error);
+            //         // We don't want to fail the entire request if CMS write fails
+            //         // But we do want to log it properly
+            //     } else {
+            //         // For unexpected errors, log them but don't fail the request
+            //         console.error("Unexpected error writing to CMS:", error);
+            //     }
+            // }
             console.timeEnd('–– CMS write');
 
             const response: EnterRoomReturnValue = {
                 id: ratId as Hex,
                 log: correctedEvents.log ?? [],
+                outcomeId: outcomeDocument._id,
                 healthChange: validatedOutcome.healthChange,
                 traitChanges: validatedOutcome.traitChanges,
                 itemChanges: validatedOutcome.itemChanges,
