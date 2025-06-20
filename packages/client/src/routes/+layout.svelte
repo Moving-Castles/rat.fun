@@ -7,6 +7,7 @@
   import Loading from "$lib/components/Loading/Loading.svelte"
   import Spawn from "$lib/components/Spawn/Spawn.svelte"
   import PageTransitions from "$lib/components/Main/Shared/PageTransitions/PageTransitions.svelte"
+  import { page } from "$app/state"
   import { Modal } from "$lib/components/Main/Modal/state.svelte"
   import { onMount } from "svelte"
   import { initStaticContent } from "$lib/modules/content"
@@ -19,8 +20,26 @@
   import { websocketConnected } from "$lib/modules/off-chain-sync/stores"
   import { FullStory, init as initFullstory } from "@fullstory/browser"
   import { EMPTY_CONNECTION } from "$lib/modules/utils/constants"
+  import { ENVIRONMENT } from "$lib/mud/enums"
 
   let { children, data }: LayoutProps = $props()
+
+  const getEnvironment = () => {
+    const hostname = page.url.hostname
+
+    if (hostname.includes("rhodolite") || page.url.searchParams.has("rhodolite")) {
+      return ENVIRONMENT.RHODOLITE
+    }
+
+    if (hostname.includes("pyrope") || page.url.searchParams.has("pyrope")) {
+      return ENVIRONMENT.PYROPE
+    }
+
+    return ENVIRONMENT.DEVELOPMENT
+  }
+  const environment = getEnvironment()
+
+  console.log("THE ENVIRONMENT IS ", environment)
 
   const environmentLoaded = async () => {
     console.log($publicNetwork.worldAddress)
@@ -42,8 +61,8 @@
   // Init of chain sync when player is ready
   $effect(() => {
     if ($playerId && $playerId !== EMPTY_CONNECTION && !$websocketConnected) {
-      // console.log("Initializing off-chain sync")
-      initOffChainSync(data.environment, $playerId)
+      console.log("Initializing off-chain sync", environment)
+      initOffChainSync(environment, $playerId)
 
       // Fullstory analytics
       initFullstory({
@@ -71,15 +90,13 @@
     // Play background sound
     playSound("tcm", "podBg", true, true)
   })
-
-  $inspect(data.environment)
 </script>
 
 <div class="bg">
   <div class="context-main">
     {#if $UIState === UI.LOADING}
       <main>
-        <Loading environment={data.environment} loaded={environmentLoaded} />
+        <Loading environment={environment} loaded={environmentLoaded} />
       </main>
     {:else if $UIState === UI.SPAWNING}
       <main>
