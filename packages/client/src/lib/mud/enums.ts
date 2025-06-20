@@ -1,6 +1,9 @@
 export enum ENVIRONMENT {
-    DEVELOPMENT,
-    PYROPE,
-    RHODOLITE,
-    REDSTONE
+    DEVELOPMENT = "development",
+    PYROPE = "pyrope"
+}
+
+export enum WALLET_TYPE {
+    BURNER = "burner",
+    ACCOUNTKIT = "accountkit"
 }
