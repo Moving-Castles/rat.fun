@@ -1,58 +1,58 @@
 <script lang="ts">
-  import { fade } from "svelte/transition"
   import { page } from "$app/state"
   import {
     transitionFunctions,
     type TransitionConfig,
     type TransitionFunction
   } from "./transitions"
-  import { beforeNavigate, afterNavigate } from "$app/navigation"
-  // Page transitions are complex, and they can need multiple tricks to work.
-  // This component tries to simplify that
+  import { beforeNavigate } from "$app/navigation"
 
   let {
     children,
     config,
-    defaultTransition = "fade"
+    defaultIn = "fade",
+    defaultOut = "fade"
   }: {
     children: import("svelte").Snippet,
     config: TransitionConfig[],
-    defaultTransition: TransitionFunction
+    defaultIn?: TransitionFunction,
+    defaultOut?: TransitionFunction
   } = $props()
 
-  let navigating = false
+  let transitionFunctionIn = $state(transitionFunctions[defaultIn])
+  let transitionFunctionOut = $state(transitionFunctions[defaultOut])
 
-  let transitionFunctionIn = $state(transitionFunctions[defaultTransition])
-  let transitionFunctionOut = $state(transitionFunctions[defaultTransition])
+  let inParams = $state<Record<string, string | number>>({ duration: 0 })
+  let outParams = $state<Record<string, string | number>>({ duration: 0 })
 
-  let inConfig = $state({ duration: 2000, delay: 1000 })
-  let outConfig = $state({ duration: 1000 })
+  let wanted = $state<TransitionConfig>()
+  let display = $state("contents")
 
   beforeNavigate((e) => {
     // Determine if and which one we want to use
-    const wanted = config.find(entry => (entry.from === "*" || entry.from === e.from?.route.id) && entry.to === "*" || entry.to === e.to?.route.id)
+    wanted = config.find(entry => (entry.from === "*" || entry.from === e.from?.route.id) && entry.to === "*" || entry.to === e.to?.route.id)
     if (wanted) {
-      // transitionFunctionIn = transitionFunctions?.[wanted.transition]
-      transitionFunctionOut = transitionFunctions?.[wanted.transition]
+      display = "block"
+      transitionFunctionIn = transitionFunctions?.[wanted?.in?.transition || "none"]
+      transitionFunctionOut = transitionFunctions?.[wanted?.out?.transition || "none"]
+      inParams = wanted?.in?.params || {}
+      outParams = wanted?.out?.params || {}
     }
-  })
-
-  afterNavigate((e) => {
-    console.log("AFTER")
-    console.log(e)
   })
  </script>
 
-{#key page.route.id}
+{#key `${wanted?.from}-${wanted?.to}`}
   <div
-    in:transitionFunctionIn={inConfig}
-    out:transitionFunctionOut={outConfig}
-    onintrostart={() => navigating = true}
-    onintroend={() => navigating = false}
-    onoutrostart={() => navigating = true}
-    onoutroend={() => navigating = false}
+    in:transitionFunctionIn={inParams}
+    out:transitionFunctionOut={outParams}
     >
     
     {@render children?.()}
   </div>
 {/key}
+
+<style>
+  .transition-wrapper {
+    position: relative;
+  }
+</style>

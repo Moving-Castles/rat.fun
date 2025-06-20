@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { ENVIRONMENT } from '$lib/mud/enums';
-
 	import WorldPromptBox from '$lib/components/Main/RoomContainer/WorldPromptBox.svelte';
 	import PaneSwitch from '$lib/components/Main/RoomContainer/PaneSwitch.svelte';
 	import RatContainer from '$lib/components/Main/RatContainer/RatContainer.svelte';
@@ -56,10 +55,26 @@
 		// Though with translateX(+-50%) they shouldn't.
 	}
 
+	.wrapper {
+		width: 100%;
+		background: red;
+	}
+
+	.layer-game {
+		position: fixed;
+		// top: 30px;
+		// left: 20px;
+		height: var(--game-window-height);
+		width: var(--game-window-width);
+		z-index: var(--z-base);
+		border: var(--default-border-style); // Overall game window border
+		overflow: hidden; // Clip any door overflow if they animate beyond bounds
+		// Though with translateX(+-50%) they shouldn't.
+	}
+
 	.scroll-container {
 		height: var(--game-window-height);
 		background: var(--background);
-
 		overflow-y: scroll;
 	}
 

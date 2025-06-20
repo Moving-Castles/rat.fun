@@ -4,11 +4,14 @@
 
 	import type { LayoutProps } from './$types';
 
-	import Main from '$lib/components/Main/Main.svelte';
 	import { onMount } from 'svelte';
 	import { initSound } from '$lib/modules/sound';
 
+	import Main from '$lib/components/Main/Main.svelte';
+
 	let { children, data }: LayoutProps = $props();
+
+	const { environment } = data;
 
 	onMount(async () => {
 		// Remove preloader
@@ -17,12 +20,10 @@
 		// Preload sounds
 		initSound();
 	});
-
-	$inspect(data.environment);
 </script>
 
 <div class="main-area">
-	<Main environment={data.environment}>
+	<Main {environment}>
 		{@render children?.()}
 	</Main>
 </div>
