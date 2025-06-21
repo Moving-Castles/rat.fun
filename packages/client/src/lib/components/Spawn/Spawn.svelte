@@ -1,24 +1,24 @@
 <script lang="ts">
 	import type { AccountKitConnectReturn } from './account-kit-connect/types';
+	import type { Hex } from 'viem';
+	import type { SetupWalletNetworkResult } from '$lib/mud/setupWalletNetwork';
+
 	import { WALLET_TYPE } from '$lib/mud/enums';
+	import { SPAWN_STATE } from '$lib/modules/ui/enums';
+
 	import { onMount } from 'svelte';
-	import { ENTITY_TYPE } from 'contracts/enums';
 	import { spawn } from '$lib/modules/action';
 	import { waitForCompletion } from '$lib/modules/action/actionSequencer/utils';
 	import { playSound } from '$lib/modules/sound';
-	import { player, playerAddress } from '$lib/modules/state/base/stores';
 	import { connect } from './account-kit-connect';
-	import { walletNetwork } from '$lib/modules/network';
 	import { publicNetwork } from '$lib/modules/network';
 	import { setupWalletNetwork } from '$lib/mud/setupWalletNetwork';
 	import { setupBurnerWalletNetwork } from '$lib/mud/setupBurnerWalletNetwork';
-	import { initActionSequencer } from '$lib/modules/action/actionSequencer';
-	import { initErc20Listener } from '$lib/modules/state/base/erc20Listener';
 	import { store as accountKitStore } from '@latticexyz/account-kit/bundle';
-	import { SPAWN_STATE } from '$lib/modules/ui/enums';
+	import { initWalletNetwork } from '$lib/initWalletNetwork';
 
 	import Slides from '$lib/components/Main/Shared/Slides/Slides.svelte';
-	import VideoLoader from '$lib/components/Main/Shared/VideoLoader/VideoLoader.svelte';
+	import VideoLoader from '$lib/components/Main/Shared/Loaders/VideoLoader.svelte';
 	import BigButton from '$lib/components/Main/Shared/Buttons/BigButton.svelte';
 
 	const { walletType, spawned = () => {} } = $props<{
@@ -60,35 +60,35 @@
 			}
 		}
 
-		console.log('accountKitConnectReturn', accountKitConnectReturn);
+		const wallet = setupWalletNetwork(
+			$publicNetwork,
+			accountKitConnectReturn.appAccountClient
+		) as SetupWalletNetworkResult;
 
-		// walletNetwork.set(setupBurnerWalletNetwork(get(publicNetwork)))
-		walletNetwork.set(setupWalletNetwork($publicNetwork, accountKitConnectReturn.appAccountClient));
+		const isSpawned = initWalletNetwork(wallet, accountKitConnectReturn.userAddress as Hex);
 
-		// Set player address to main wallet address
-		playerAddress.set(accountKitConnectReturn.userAddress);
-
-		// console.log('walletNetwork', $walletNetwork);
-		// console.log('publicNetwork', $publicNetwork);
-		console.log('playerAddress', $playerAddress);
-
-		// Modules responsible for sending transactions
-		initActionSequencer();
-		initErc20Listener();
-
-		// Transition to show form
-		currentState = SPAWN_STATE.SHOW_FORM;
+		if (isSpawned) {
+			// Connected and spawned - go to next step
+			spawned();
+		} else {
+			// Connected but not spawned - show form
+			currentState = SPAWN_STATE.SHOW_FORM;
+		}
 	}
 
 	async function connectBurner() {
-		console.log('connectBurner');
-		walletNetwork.set(setupBurnerWalletNetwork($publicNetwork));
-		playerAddress.set($walletNetwork.walletClient?.account.address);
-		initActionSequencer();
-		initErc20Listener();
+		console.log('connect burnder');
+		const wallet = setupBurnerWalletNetwork($publicNetwork);
+		const isSpawned = initWalletNetwork(wallet, wallet.walletClient?.account.address);
 
-		// Transition to show form
-		currentState = SPAWN_STATE.SHOW_FORM;
+		// Check if player is already spawned
+		if (isSpawned) {
+			// Connected and spawned - go to next step
+			spawned();
+		} else {
+			// Connected but not spawned - show form
+			currentState = SPAWN_STATE.SHOW_FORM;
+		}
 	}
 
 	onMount(() => {
@@ -103,16 +103,9 @@
 
 			if (accountKitStoreState.appAccountClient && accountKitStoreState.userAddress) {
 				// Wallet is connected
-				walletNetwork.set(
-					setupWalletNetwork($publicNetwork, accountKitStoreState.appAccountClient)
-				);
-				// Set player address to main wallet address
-				playerAddress.set(accountKitStoreState.userAddress);
-
-				// Check if player is already spawned
-				if ($player?.entityType === ENTITY_TYPE.PLAYER) {
+				const isSpawned = initWalletNetwork(accountKitStoreState, accountKitStoreState.userAddress);
+				if (isSpawned) {
 					// Connected and spawned - go to next step
-					initErc20Listener();
 					spawned();
 				} else {
 					// Connected but not spawned - show form
@@ -126,16 +119,6 @@
 			console.log('is burner');
 			// For burner wallet, connect immediately
 			connectBurner();
-
-			// Check if player is already spawned
-			if ($player?.entityType === ENTITY_TYPE.PLAYER) {
-				// Connected and spawned - go to next step
-				initErc20Listener();
-				spawned();
-			} else {
-				// Connected but not spawned - show form
-				currentState = SPAWN_STATE.SHOW_FORM;
-			}
 		}
 	});
 </script>
