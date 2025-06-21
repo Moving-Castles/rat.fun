@@ -10,7 +10,7 @@
 	import { Modal } from '$lib/components/Main/Modal/state.svelte';
 	import { onMount } from 'svelte';
 	import { initStaticContent } from '$lib/modules/content';
-	import { publicNetwork } from '$lib/modules/network';
+	import { publicNetwork, walletNetwork } from '$lib/modules/network';
 	import { initSound, playSound } from '$lib/modules/sound';
 	import { UIState, UILocation } from '$lib/modules/ui/stores';
 	import { UI, LOCATION } from '$lib/modules/ui/enums';
@@ -74,6 +74,10 @@
 		}
 	];
 
+	$effect(() => {
+		console.log('$walletNetwork', $walletNetwork);
+	});
+
 	const environmentLoaded = async () => {
 		console.log($publicNetwork.worldAddress);
 		// Get content from CMS
@@ -85,14 +89,6 @@
 		UIState.set(UI.READY);
 		UILocation.set(LOCATION.MAIN);
 	};
-
-	// Init of chain sync when player is ready
-	$effect(() => {
-		if ($playerId && $playerId !== EMPTY_CONNECTION && !$websocketConnected) {
-			console.log('Initializing off-chain sync', environment);
-			initOffChainSync(environment, $playerId);
-		}
-	});
 
 	// Init of chain sync when player is ready
 	$effect(() => {
