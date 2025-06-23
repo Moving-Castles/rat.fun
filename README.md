@@ -19,13 +19,13 @@ Mud based.
 
 ### cms-private
 
-- using (sanity.io)[https://www.sanity.io/]
+- using [sanity.io](https://www.sanity.io/)
 - stores the system prompts for the LLM calls
 - requires authentication to read
 
 ### cms-public
 
-- using (sanity.io)[https://www.sanity.io/]
+- using [sanity.io](https://www.sanity.io/)
 - stores room images
 - stores room and outcome statistics
 - publicly accessible
