@@ -8,7 +8,7 @@ export async function initPublicNetwork(environment: ENVIRONMENT) {
     const mudLayer = await setupPublicNetwork(environment)
     publicNetwork.set(mudLayer)
 
-    // Listen to changes to the SyncProgresscomponent
+    // Listen to changes to the SyncProgress component
     createSyncProgressSystem()
 
     // Write block numbers to svelte store and alert on lost connection

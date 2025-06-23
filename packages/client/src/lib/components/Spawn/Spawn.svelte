@@ -1,20 +1,21 @@
 <script lang="ts">
-	import type { AccountKitConnectReturn } from './account-kit-connect/types';
 	import type { Hex } from 'viem';
 	import type { SetupWalletNetworkResult } from '$lib/mud/setupWalletNetwork';
 
 	import { WALLET_TYPE } from '$lib/mud/enums';
 	import { SPAWN_STATE } from '$lib/modules/ui/enums';
 
+	import type { AccountKitConnectReturn } from '$lib/modules/account-kit/types';
+	import { connect } from '$lib/modules/account-kit/connect';
+	import { store as accountKitStore } from '@latticexyz/account-kit/bundle';
+
 	import { onMount } from 'svelte';
 	import { spawn } from '$lib/modules/action';
 	import { waitForCompletion } from '$lib/modules/action/actionSequencer/utils';
 	import { playSound } from '$lib/modules/sound';
-	import { connect } from './account-kit-connect';
 	import { publicNetwork } from '$lib/modules/network';
 	import { setupWalletNetwork } from '$lib/mud/setupWalletNetwork';
 	import { setupBurnerWalletNetwork } from '$lib/mud/setupBurnerWalletNetwork';
-	import { store as accountKitStore } from '@latticexyz/account-kit/bundle';
 	import { initWalletNetwork } from '$lib/initWalletNetwork';
 
 	import Slides from '$lib/components/Main/Shared/Slides/Slides.svelte';
@@ -49,8 +50,6 @@
 
 	async function connectAccountKit() {
 		let accountKitConnectReturn: AccountKitConnectReturn | null = null;
-		console.log('connectWallet');
-		console.log('accountKitConnectReturn', accountKitConnectReturn);
 
 		while (!accountKitConnectReturn) {
 			try {
@@ -82,7 +81,6 @@
 	}
 
 	async function connectBurner() {
-		console.log('connect burnder');
 		const wallet = setupBurnerWalletNetwork($publicNetwork);
 		const isSpawned = initWalletNetwork(wallet, wallet.walletClient?.account.address);
 
@@ -105,8 +103,6 @@
 			 */
 			const accountKitStoreState = accountKitStore.getState();
 			if (accountKitStoreState.appAccountClient && accountKitStoreState.userAddress) {
-				console.log('accountKitStoreState', accountKitStoreState);
-
 				const wallet = setupWalletNetwork(
 					$publicNetwork,
 					accountKitStoreState.appAccountClient
@@ -119,7 +115,6 @@
 
 				const isSpawned = initWalletNetwork(wallet, accountKitStoreState.userAddress);
 
-				// Wallet is connected
 				if (isSpawned) {
 					// Connected and spawned - go to next step
 					spawned();
@@ -132,7 +127,6 @@
 				currentState = SPAWN_STATE.CONNECT_WALLET;
 			}
 		} else {
-			console.log('is burner');
 			// For burner wallet, connect immediately
 			connectBurner();
 		}

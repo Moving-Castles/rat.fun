@@ -4,9 +4,6 @@
 
 	import type { LayoutProps } from './$types';
 
-	import Loading from '$lib/components/Loading/Loading.svelte';
-	import Spawn from '$lib/components/Spawn/Spawn.svelte';
-	import PageTransitions from '$lib/components/Main/Shared/PageTransitions/PageTransitions.svelte';
 	import { Modal } from '$lib/components/Main/Modal/state.svelte';
 	import { onMount } from 'svelte';
 	import { initStaticContent } from '$lib/modules/content';
@@ -19,18 +16,14 @@
 	import { websocketConnected } from '$lib/modules/off-chain-sync/stores';
 	import { FullStory, init as initFullstory } from '@fullstory/browser';
 	import { EMPTY_CONNECTION } from '$lib/modules/utils/constants';
-	import WalletInfo from '$lib/components/Debug/WalletInfo.svelte';
-
-	// Account-kit related imports
-	import { mount as mountAccountKit } from '@latticexyz/account-kit/bundle';
-	import { createConfig, http } from '@wagmi/core';
-	import { getNetworkConfig } from '$lib/mud/getNetworkConfig';
-	import { supportedChains } from '$lib/mud/supportedChains';
-	import { transportObserver } from '@latticexyz/common';
-	import { fallback, webSocket } from 'viem';
-	import type { Chain } from 'viem';
-	import { ENVIRONMENT, WALLET_TYPE } from '$lib/mud/enums';
+	import { WALLET_TYPE } from '$lib/mud/enums';
 	import { gameConfig } from '$lib/modules/state/base/stores';
+	import { mountAccountKit } from '$lib/modules/account-kit/mount';
+
+	import WalletInfo from '$lib/components/Debug/WalletInfo.svelte';
+	import Loading from '$lib/components/Loading/Loading.svelte';
+	import Spawn from '$lib/components/Spawn/Spawn.svelte';
+	import PageTransitions from '$lib/components/Main/Shared/PageTransitions/PageTransitions.svelte';
 
 	let { children, data }: LayoutProps = $props();
 
@@ -114,55 +107,11 @@
 	});
 
 	onMount(async () => {
-		// = = = = = = = = = = = =
-		// Mount account kit
-		// = = = = = = = = = = = =
-
 		if (data.walletType === WALLET_TYPE.ACCOUNTKIT) {
-			// Hack to fix:  "Failed to mount MUD Account Kit. ReferenceError: process is not defined"
-			window.process = {
-				...window.process
-			};
-
-			const networkConfig = getNetworkConfig(data.environment);
-
-			// Only include foundry chain in development
-			const chains =
-				data.environment === ENVIRONMENT.DEVELOPMENT
-					? supportedChains
-					: supportedChains.filter((c) => c.id !== 31337);
-
-			console.log('chains', chains);
-			console.log('networkConfig', networkConfig);
-
-			const wagmiConfig = createConfig({
-				chains: chains as readonly [Chain, ...Chain[]],
-				pollingInterval: 1_000,
-				// TODO: how to properly set up a transport config for all chains supported as bridge sources?
-				transports: Object.fromEntries(
-					chains.map((chain) => {
-						if (chain.rpcUrls.default.webSocket)
-							return [chain.id, transportObserver(fallback([webSocket(), http()]))];
-						return [chain.id, transportObserver(http())];
-					})
-				)
-			});
-
-			console.log('wagmiConfig', wagmiConfig);
-			console.log('mountAccountKit', mountAccountKit);
-
-			mountAccountKit({
-				wagmiConfig,
-				accountKitConfig: {
-					theme: 'dark',
-					worldAddress: networkConfig.worldAddress,
-					erc4337: false,
-					chainId: networkConfig.chainId,
-					appInfo: {
-						name: 'RAT.FUN'
-					}
-				}
-			});
+			// = = = = = = = = = = = =
+			// Mount account kit
+			// = = = = = = = = = = = =
+			mountAccountKit(data.environment);
 		}
 
 		// Remove preloader
