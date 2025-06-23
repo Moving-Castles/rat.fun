@@ -2,7 +2,9 @@
 pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { GameConfig, Balance, Name, OwnedRat, Level, LevelMinBalance, LevelMaxBalance, RoomCreationCost } from "../codegen/index.sol";
+import { GameConfig, ExternalAddressesConfig, LevelMinBalance, LevelMaxBalance, RoomCreationCost } from "../codegen/index.sol";
+import { SalePlaceholder } from "../external/SalePlaceholder.sol";
+import { LibWorld } from "../libraries/Libraries.sol";
 
 contract DevSystem is System {
   /**
@@ -13,12 +15,8 @@ contract DevSystem is System {
     _;
   }
 
-  function givePlayerBalance(bytes32 _playerId, uint256 _amount) public onlyAdmin {
-    Balance.set(_playerId, Balance.get(_playerId) + _amount);
-  }
-
-  function removePlayerBalance(bytes32 _playerId) public onlyAdmin {
-    Balance.set(_playerId, 0);
+  function giveCallerTokens() public {
+    SalePlaceholder(ExternalAddressesConfig.getServiceAddress()).transferStartingTokens(LibWorld.erc20(), _msgSender());
   }
 
   function updateLevel(

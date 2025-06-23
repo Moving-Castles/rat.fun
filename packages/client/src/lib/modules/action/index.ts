@@ -8,7 +8,8 @@ export enum WorldFunctions {
   LiquidateRat = NAMESPACE + "liquidateRat",
   DropItem = NAMESPACE + "dropItem",
   CloseRoom = NAMESPACE + "closeRoom",
-  Approve = "ERC20-approve"
+  Approve = "ERC20-approve",
+  GiveCallerTokens =  NAMESPACE + "giveCallerTokens"
 }
 
 // --- API --------------------------------------------------------------
@@ -36,4 +37,8 @@ export function closeRoom(roomId: string) {
 export function approve(address: string, value: bigint) {
   const scaledValue = value * 10n ** 18n
   return addToSequencer(WorldFunctions.Approve, [address, scaledValue])
+}
+
+export function giveCallerTokens() {
+  return addToSequencer(WorldFunctions.GiveCallerTokens, [])
 }
