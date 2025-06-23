@@ -1,10 +1,4 @@
 export const OFFCHAIN_VALIDATION_MESSAGE = "RATROOM"
-export const SANITY_PUBLIC_CMS_ID = 'saljmqwt'
-export const SANITY_PRIVATE_CMS_ID = 'lviejo4k'
-// export const ANTHROPIC_MODEL = "claude-3-5-haiku-latest"
-// export const ANTHROPIC_MODEL = "claude-3-7-sonnet-latest"
-// export const ANTHROPIC_MODEL = "claude-opus-4-20250514"
 export const ANTHROPIC_MODEL = "claude-sonnet-4-20250514"
-export const DEEPSEEK_MODEL = ""
 export const PORT = 3131;
 export const GAME_CONFIG_ID = "0x"

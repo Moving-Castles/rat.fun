@@ -1,15 +1,15 @@
 import { createClient } from "@sanity/client"
-import { SANITY_PRIVATE_CMS_ID } from "@config"
 
 import dotenv from "dotenv"
 dotenv.config()
 
-const SANITY_PRIVATE_CMS_TOKEN = process.env.SANITY_PRIVATE_CMS_TOKEN
+const PRIVATE_SANITY_CMS_ID = process.env.PRIVATE_SANITY_CMS_ID
+const PRIVATE_SANITY_CMS_TOKEN = process.env.PRIVATE_SANITY_CMS_TOKEN
 
 export const privateSanityClient = createClient({
-  projectId: SANITY_PRIVATE_CMS_ID,
+  projectId: PRIVATE_SANITY_CMS_ID,
   dataset: "production",
-  token: SANITY_PRIVATE_CMS_TOKEN,
+  token: PRIVATE_SANITY_CMS_TOKEN,
   apiVersion: "2025-04-18",
   useCdn: false, // `false` if you want to ensure fresh data
 })
