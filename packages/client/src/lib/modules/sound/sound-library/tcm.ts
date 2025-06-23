@@ -21,10 +21,6 @@ export const tcm: SoundAssets = {
     src: "/sounds/tcm/type2.wav",
     volume: 0.8,
   },
-  alert: {
-    src: "/sounds/tcm/selection_hit_01.mp3",
-    volume: 1,
-  },
   dig: {
     src: "/sounds/tcm/dig.wav",
     volume: 0.7,
