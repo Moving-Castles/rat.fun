@@ -41,6 +41,7 @@ Misc. utility scripts.
 Install [foundry](https://getfoundry.sh/)
 
 Package manager: `pnpm`
+
 Node version: `20`
 
 ### Environment variables
@@ -76,7 +77,7 @@ Copy `.env.example` to `.env` and fill in the values.
 Not crucial for local development.
 If needed, same values as for server.
 
-### Installation
+## Install, build and run
 
 1. Install dependencies: `pnpm i`
 2. Build contracts: `cd packages/contracts && pnpm build` (to not have dev script fail on first run)
