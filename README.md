@@ -1,38 +1,42 @@
-# RAT ROOM
+# RAT.FUN
 
 ## Packages
 
-### Client
+### client
 
-Svelte frontend.
+SvelteKit frontend.
 
-### CMS
+### cms-private
+
+- Stores the system prompts for the LLM calls
+- Requires authentication to read
+
+### cms-public
 
 - Stores room images
 - Stores room and outcome statistics
-- Stores the system prompts for the LLM calls
+- Publicly accessible
 
-### Contracts
+### contracts
 
 Mud based.
 
-### Scripts
-
-Misc. scripts.
-
-### Server
+### server
 
 - Creating and entering rooms is done through the server
 - The server executes the LLM calls
 - Chain calls are done from admin account on behalf of the player
 - Server maintains websocket connections to the players for alerts
 
+### scripts
+
+Misc. utility scripts.
+
 ## Setup
 
 ### Prerequisites
 
-Install [forge](https://book.getfoundry.sh/forge/)
-Install [mprocs](https://github.com/pvolok/mprocs)
+Install [foundry](https://getfoundry.sh/)
 
 Package manager: `pnpm`
 Node version: `20`
@@ -43,5 +47,3 @@ Node version: `20`
 2. Run install script and dev script from the root directory
    a. `pnpm i`
    b. `pnpm dev`
-
-Actually pretty simple
