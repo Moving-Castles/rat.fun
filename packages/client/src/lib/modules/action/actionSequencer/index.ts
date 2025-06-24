@@ -6,6 +6,7 @@
 
 import type { Writable } from "svelte/store"
 import { writable, get } from "svelte/store"
+import { store as accountKitStore } from '@latticexyz/account-kit/bundle';
 import { publicNetwork, walletNetwork, blockNumber } from "$lib/modules/network"
 // import { toastMessage } from "../../ui/toast"
 // import { parseError } from "$lib/components/Main/Terminal/functions/errors"
@@ -117,7 +118,12 @@ async function execute() {
     // Make the call
     let tx
     if (action.systemId === WorldFunctions.Approve) {
-      tx = await get(walletNetwork).walletClient.writeContract({
+      const userAccountClient = accountKitStore.getState().userAccountClient;
+      // TODO use switchChain in case chainId does not match
+      // and handle undefined client?
+      console.log(userAccountClient)
+
+      tx = await userAccountClient.writeContract({
         address: get(gameConfig).externalAddressesConfig.erc20Address,
         abi: erc20Abi,
         functionName: "approve",
