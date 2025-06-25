@@ -30,7 +30,7 @@
 			console.error(e);
 			busy = false;
 		} finally {
-			sendDeployRatMessage($walletNetwork);
+			sendDeployRatMessage();
 		}
 	}
 

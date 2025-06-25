@@ -6,9 +6,8 @@
  */
 
 import type { EnterRoomReturnValue } from "@server/modules/types"
-import { SetupWalletNetworkResult } from "$lib/mud/setupWalletNetwork";
 import { ENVIRONMENT } from "$lib/mud/enums"
-import { OFFCHAIN_VALIDATION_MESSAGE } from "@server/config";
+import { getSignature } from "$lib/modules/signature"
 
 /**
  * Makes the API call to send a rat to a room
@@ -19,7 +18,6 @@ import { OFFCHAIN_VALIDATION_MESSAGE } from "@server/config";
  */
 export async function enterRoom(
   environment: ENVIRONMENT,
-  walletNetwork: SetupWalletNetworkResult,
   roomId: string,
   ratId: string
 ): Promise<EnterRoomReturnValue | null> {
@@ -29,9 +27,7 @@ export async function enterRoom(
     ? "https://reality-model-1.mc-infra.com/room/enter"
     : "http://localhost:3131/room/enter"
 
-  const signature = await walletNetwork.walletClient.signMessage({
-    message: OFFCHAIN_VALIDATION_MESSAGE,
-  })
+  const signature = await getSignature()
 
   const formData = new URLSearchParams()
   formData.append("signature", signature)

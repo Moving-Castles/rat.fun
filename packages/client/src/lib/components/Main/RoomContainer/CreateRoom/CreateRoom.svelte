@@ -54,7 +54,7 @@
 			return;
 		}
 
-		const result = await createRoom(page.data.environment, $walletNetwork, newPrompt, levelId);
+		const result = await createRoom(page.data.environment, newPrompt, levelId);
 		busy = false;
 
 		if (result.roomId) {

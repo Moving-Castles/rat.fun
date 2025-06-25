@@ -34,7 +34,7 @@
 			busy = false;
 			console.error(e);
 		} finally {
-			sendLiquidateRatMessage($walletNetwork, $player.ownedRat);
+			sendLiquidateRatMessage($player.ownedRat);
 			modal.close();
 		}
 	};

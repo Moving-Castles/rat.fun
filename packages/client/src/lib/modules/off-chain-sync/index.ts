@@ -1,13 +1,12 @@
 import type { OffChainMessage } from "@server/modules/types"
-import type { SetupWalletNetworkResult } from "$lib/mud/setupWalletNetwork"
 import { ENVIRONMENT } from "$lib/mud/enums"
-import { OFFCHAIN_VALIDATION_MESSAGE } from "@server/config";
 import {
   clientList,
   latestEvents,
   roundTriptime,
   websocketConnected,
 } from "$lib/modules/off-chain-sync/stores"
+import { getSignature } from "$lib/modules/signature"
 
 const MAX_RECONNECTION_DELAY = 30000 // Maximum delay of 30 seconds
 const MAX_EVENTS = 200
@@ -15,7 +14,7 @@ const MAX_EVENTS = 200
 let socket: WebSocket
 let reconnectAttempts = 0
 let roundTripStart = 0
-let reconnectTimeout: number | null = null
+let reconnectTimeout: ReturnType<typeof setTimeout> | null = null
 
 export function initOffChainSync(environment: ENVIRONMENT, playerId: string) {
   // Clean up any existing connection
@@ -116,13 +115,10 @@ export function ping() {
  *****************/
 
 export async function sendChatMessage(
-  walletNetwork: SetupWalletNetworkResult,
   level: string,
   message: string
 ) {
-  const signature = await walletNetwork.walletClient.signMessage({
-    message: OFFCHAIN_VALIDATION_MESSAGE
-  })
+  const signature = await getSignature()
 
   if (socket) {
     socket.send(
@@ -142,10 +138,8 @@ export async function sendChatMessage(
  * RAT DEPLOYMENT
  *****************/
 
-export async function sendDeployRatMessage(walletNetwork: SetupWalletNetworkResult) {
-  const signature = await walletNetwork.walletClient.signMessage({
-    message: OFFCHAIN_VALIDATION_MESSAGE
-  })
+export async function sendDeployRatMessage() {
+  const signature = await getSignature()
 
   if (socket) {
     socket.send(
@@ -163,10 +157,8 @@ export async function sendDeployRatMessage(walletNetwork: SetupWalletNetworkResu
  * RAT LIQUIDATION
  *****************/
 
-export async function sendLiquidateRatMessage(walletNetwork: SetupWalletNetworkResult, ratId: string) {
-  const signature = await walletNetwork.walletClient.signMessage({
-    message: OFFCHAIN_VALIDATION_MESSAGE
-  })
+export async function sendLiquidateRatMessage(ratId: string) {
+  const signature = await getSignature()
 
   if (socket) {
     socket.send(
@@ -185,10 +177,8 @@ export async function sendLiquidateRatMessage(walletNetwork: SetupWalletNetworkR
  * ROOM LIQUIDATION
  *****************/
 
-export async function sendLiquidateRoomMessage(walletNetwork: SetupWalletNetworkResult, roomId: string) {
-  const signature = await walletNetwork.walletClient.signMessage({
-    message: OFFCHAIN_VALIDATION_MESSAGE
-  })
+export async function sendLiquidateRoomMessage(roomId: string) {
+  const signature = await getSignature()
 
   if (socket) {
     socket.send(

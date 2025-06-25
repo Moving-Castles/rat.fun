@@ -19,7 +19,6 @@
     resetRoomResultState,
     freezeObjects,
   } from "$lib/components/Main/RoomResult/state.svelte"
-  import { walletNetwork } from "$lib/modules/network"
   import { staticContent } from "$lib/modules/content"
   import { enterRoom } from "$lib/components/Main/RoomResult/enterRoom"
 
@@ -60,7 +59,6 @@
     try {
       const ret = enterRoom(
         environment,
-        $walletNetwork,
         roomId,
         $player.ownedRat
       )

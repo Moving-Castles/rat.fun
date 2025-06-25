@@ -2,14 +2,12 @@ import type {
   EnterRoomReturnValue,
   CreateRoomReturnValue,
 } from "@server/modules/types"
-import { SetupWalletNetworkResult } from "$lib/mud/setupWalletNetwork"
+import { getSignature } from "$lib/modules/signature"
 
 import { ENVIRONMENT } from "$lib/mud/enums"
-import { OFFCHAIN_VALIDATION_MESSAGE } from "@server/config"
 
 export async function createRoom(
   environment: ENVIRONMENT,
-  walletNetwork: SetupWalletNetworkResult,
   roomPrompt: string,
   levelId: string
 ): Promise<CreateRoomReturnValue> {
@@ -19,9 +17,7 @@ export async function createRoom(
     ? "https://reality-model-1.mc-infra.com/room/create"
     : "http://localhost:3131/room/create"
 
-  const signature = await walletNetwork.walletClient.signMessage({
-    message: OFFCHAIN_VALIDATION_MESSAGE,
-  })
+  const signature = await getSignature()
 
   const formData = new URLSearchParams()
   formData.append("signature", signature)

@@ -9,7 +9,6 @@
 	import { staticContent, lastUpdated } from '$lib/modules/content';
 	import { urlFor } from '$lib/modules/content/sanity';
 	import { sendLiquidateRoomMessage } from '$lib/modules/off-chain-sync';
-	import { walletNetwork } from '$lib/modules/network';
 
 	import NoImage from '$lib/components/Main/Shared/NoImage/NoImage.svelte';
 	import VideoLoader from '$lib/components/Main/Shared/Loaders/VideoLoader.svelte';
@@ -43,7 +42,7 @@
 			console.error(e);
 			liquidationMessage = 'Could not liquidate room';
 		} finally {
-			sendLiquidateRoomMessage($walletNetwork, roomId);
+			sendLiquidateRoomMessage(roomId);
 			goto('/landlord');
 			modal.close();
 		}
