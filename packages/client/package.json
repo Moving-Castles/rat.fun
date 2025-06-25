@@ -40,7 +40,6 @@
   },
   "dependencies": {
     "@latticexyz/account-kit": "2.0.12-account-kit-5eff5e311",
-    "@fullstory/browser": "^2.0.6",
     "@latticexyz/common": "2.2.22-fc522a899c932f53675e624805e97a4eeefca9e8",
     "@latticexyz/dev-tools": "2.2.22-fc522a899c932f53675e624805e97a4eeefca9e8",
     "@latticexyz/recs": "2.2.22-fc522a899c932f53675e624805e97a4eeefca9e8",

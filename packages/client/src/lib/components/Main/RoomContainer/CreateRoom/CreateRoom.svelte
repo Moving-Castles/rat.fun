@@ -11,9 +11,6 @@
   import { createRoom } from "./index"
   import { goto } from "$app/navigation"
   import { page } from "$app/state"
-  import { ENVIRONMENT } from "$lib/mud/enums"
-  import { walletNetwork } from "$lib/modules/network"
-
   import CharacterCounter from "$lib/components/Main/RoomContainer/CreateRoom/CharacterCounter.svelte"
   import VideoLoader from "$lib/components/Main/Shared/Loaders/VideoLoader.svelte"
   import BigButton from "$lib/components/Main/Shared/Buttons/BigButton.svelte"
@@ -58,7 +55,6 @@
     busy = false
 
     if (result.roomId) {
-      // console.log(result)
       // Go to the preview
       goto(`/${result.roomId}`)
     }

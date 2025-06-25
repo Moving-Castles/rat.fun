@@ -53,9 +53,6 @@ importers:
 
   packages/client:
     dependencies:
-      '@fullstory/browser':
-        specifier: ^2.0.6
-        version: 2.0.6
       '@latticexyz/account-kit':
         specifier: 2.0.12-account-kit-5eff5e311
         version: 2.0.12-account-kit-5eff5e311(@aws-sdk/client-kms@3.828.0)(@tanstack/query-core@5.80.7)(@types/react@19.1.8)(asn1.js@5.4.1)(bufferutil@4.0.9)(immer@10.1.1)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.63)
@@ -1809,12 +1806,6 @@ packages:
 
   '@floating-ui/utils@0.2.9':
     resolution: {integrity: sha512-MDWhGtE+eHw5JW7lq4qhc5yRLS11ERl1c7Z6Xd0a58DozHES6EnNNwUWbMiG4J9Cgj053Bhk8zvlhFYKVhULwg==}
-
-  '@fullstory/browser@2.0.6':
-    resolution: {integrity: sha512-5cbZldOkb+KhgAFRQ5iMEoJR+TgKhCBRFiZN3PMHr+++EmHqprtNMyEAGppe02GUkASV4+7s4txghq6nkrRj8Q==}
-
-  '@fullstory/snippet@2.0.5':
-    resolution: {integrity: sha512-33GJ/QhzZNk4q2B6LhU6Siha68NalrkPxdOaqrVZbUp0UyNYf3qHmU3ATTe51Vk/aM2J34ylrItJ7u94PQ16sA==}
 
   '@hapi/bourne@3.0.0':
     resolution: {integrity: sha512-Waj1cwPXJDucOib4a3bAISsKJVb15MKi9IvmTI/7ssVEm6sywXGjVJDhl6/umt1pK1ZS7PacXU3A1PmFKHEZ2w==}
@@ -12674,12 +12665,6 @@ snapshots:
       react-dom: 19.1.0(react@19.1.0)
 
   '@floating-ui/utils@0.2.9': {}
-
-  '@fullstory/browser@2.0.6':
-    dependencies:
-      '@fullstory/snippet': 2.0.5
-
-  '@fullstory/snippet@2.0.5': {}
 
   '@hapi/bourne@3.0.0': {}
 

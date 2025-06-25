@@ -14,7 +14,6 @@
   import { initOffChainSync } from "$lib/modules/off-chain-sync"
   import { playerId } from "$lib/modules/state/base/stores"
   import { websocketConnected } from "$lib/modules/off-chain-sync/stores"
-  import { FullStory, init as initFullstory } from "@fullstory/browser"
   import { EMPTY_CONNECTION } from "$lib/modules/utils/constants"
   import { WALLET_TYPE } from "$lib/mud/enums"
   import { gameConfig } from "$lib/modules/state/base/stores"
@@ -88,21 +87,7 @@
   // Init of chain sync when player is ready
   $effect(() => {
     if ($playerId && $playerId !== EMPTY_CONNECTION && !$websocketConnected) {
-      // console.log("Initializing off-chain sync")
       initOffChainSync(data.environment, $playerId)
-
-      // Fullstory analytics
-      initFullstory({
-        orgId: "o-1RP0ZA-na1",
-        debug: true
-      })
-
-      FullStory("setIdentity", {
-        uid: $playerId,
-        properties: {
-          displayName: $playerId
-        }
-      })
     }
   })
 
