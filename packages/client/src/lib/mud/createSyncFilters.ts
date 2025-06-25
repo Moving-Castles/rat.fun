@@ -1,7 +1,7 @@
-import { resourceToHex } from "@latticexyz/common";
-import { Entity } from "@latticexyz/recs";
-import { SyncFilter } from "@latticexyz/store-sync";
-import mudConfig from "contracts/mud.config";
+import { resourceToHex } from "@latticexyz/common"
+import { Entity } from "@latticexyz/recs"
+import { SyncFilter } from "@latticexyz/store-sync"
+import mudConfig from "contracts/mud.config"
 // import { Hex } from "viem";
 
 // const GLOBAL_TABLES = ["Order", "Offer", "Recipe", "GameConfig", "MaterialMetadata", "EntityType"]
@@ -25,16 +25,15 @@ import mudConfig from "contracts/mud.config";
 
 // console.log("syncTables", syncTables)
 
-const allTables = Object.values(mudConfig.tables).map((table) => {
-    const tableId = resourceToHex({
-        type: "table",
-        namespace: mudConfig.namespace,
-        name: table.name,
-    });
-    return { tableId: tableId };
-});
-
+const allTables = Object.values(mudConfig.tables).map(table => {
+  const tableId = resourceToHex({
+    type: "table",
+    namespace: mudConfig.namespace,
+    name: table.name
+  })
+  return { tableId: tableId }
+})
 
 export function createSyncFilters(podEntity: Entity | null): SyncFilter[] {
-    return allTables;
+  return allTables
 }

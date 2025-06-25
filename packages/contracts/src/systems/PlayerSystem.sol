@@ -1,7 +1,15 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { System } from "@latticexyz/world/src/System.sol";
-import { EntityType, Name, CreationBlock, GameConfig, ExternalAddressesConfig, VisitedLevels, LevelList } from "../codegen/index.sol";
+import {
+  EntityType,
+  Name,
+  CreationBlock,
+  GameConfig,
+  ExternalAddressesConfig,
+  VisitedLevels,
+  LevelList
+} from "../codegen/index.sol";
 import { LibUtils, LibWorld } from "../libraries/Libraries.sol";
 import { SalePlaceholder } from "../external/SalePlaceholder.sol";
 import { ENTITY_TYPE } from "../codegen/common.sol";

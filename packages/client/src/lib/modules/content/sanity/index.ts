@@ -5,7 +5,7 @@
 
 import { createClient } from "@sanity/client"
 import imageUrlBuilder from "@sanity/image-url"
-import { PUBLIC_SANITY_CMS_ID } from '$env/static/public';
+import { PUBLIC_SANITY_CMS_ID } from "$env/static/public"
 
 export const client = createClient({
   projectId: PUBLIC_SANITY_CMS_ID,

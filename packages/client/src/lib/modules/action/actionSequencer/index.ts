@@ -6,24 +6,27 @@
 
 import type { Writable } from "svelte/store"
 import { writable, get } from "svelte/store"
-import { transactionQueue } from "@latticexyz/common/actions";
-import { store as accountKitStore } from '@latticexyz/account-kit/bundle';
+import { transactionQueue } from "@latticexyz/common/actions"
+import { store as accountKitStore } from "@latticexyz/account-kit/bundle"
 import { publicNetwork, walletNetwork, blockNumber } from "$lib/modules/network"
 // import { toastMessage } from "../../ui/toast"
 // import { parseError } from "$lib/components/Main/Terminal/functions/errors"
 import { v4 as uuid } from "uuid"
 import { erc20Abi } from "viem"
-import { addChain, switchChain } from "viem/actions";
-import { clearActionTimer, startActionTimer } from "$lib/modules/action/actionSequencer/timeoutHandler"
+import { addChain, switchChain } from "viem/actions"
+import {
+  clearActionTimer,
+  startActionTimer
+} from "$lib/modules/action/actionSequencer/timeoutHandler"
 import { gameConfig } from "$lib/modules/state/base/stores"
 import { WorldFunctions } from ".."
-import { getChain } from "$lib/mud/utils";
+import { getChain } from "$lib/mud/utils"
 
 // --- TYPES -----------------------------------------------------------------
 
 export enum SequencerState {
   Running,
-  Paused,
+  Paused
 }
 
 export type Action = {
@@ -53,14 +56,18 @@ export const failedActions = writable([] as Action[])
  * @param params
  * @returns action
  */
-export function addToSequencer(systemId: string, params: any[] = [], useUserAccount: boolean = false) {
+export function addToSequencer(
+  systemId: string,
+  params: any[] = [],
+  useUserAccount: boolean = false
+) {
   const newAction: Action = {
     actionId: uuid(),
     systemId: systemId,
     params: params || [],
     useUserAccount,
     completed: false,
-    error: undefined,
+    error: undefined
   }
 
   queuedActions.update(queuedActions => {
@@ -77,9 +84,7 @@ export function addToSequencer(systemId: string, params: any[] = [], useUserAcco
 }
 
 export function removeFromSequencer(id: string) {
-  queuedActions.update(queuedActions =>
-    queuedActions.filter(a => a.actionId !== id)
-  )
+  queuedActions.update(queuedActions => queuedActions.filter(a => a.actionId !== id))
 }
 
 export function clearSequencer() {
@@ -129,7 +134,7 @@ async function prepareUserAccountClient() {
     }
   }
   // MUD's `transactionQueue` extends the client with `writeContract` method
-  return userAccountClient.extend(transactionQueue({}));
+  return userAccountClient.extend(transactionQueue({}))
 }
 
 async function execute() {
@@ -143,7 +148,9 @@ async function execute() {
     // Add action to active list
     activeActions.update(activeActions => [action, ...activeActions])
     // Prepare the action's client
-    const client = action.useUserAccount ? await prepareUserAccountClient() : get(walletNetwork).walletClient
+    const client = action.useUserAccount
+      ? await prepareUserAccountClient()
+      : get(walletNetwork).walletClient
     // Make the call
     let tx
     if (action.systemId === WorldFunctions.Approve) {
@@ -152,7 +159,7 @@ async function execute() {
         abi: erc20Abi,
         functionName: "approve",
         args: action.params,
-        gas: 5000000n, // TODO: Added to fix gas estimation. Change this.
+        gas: 5000000n // TODO: Added to fix gas estimation. Change this.
       })
     } else {
       tx = await client.writeContract({
@@ -160,11 +167,11 @@ async function execute() {
         abi: get(walletNetwork).worldContract.abi,
         functionName: action.systemId,
         args: action.params,
-        gas: 5000000n, // TODO: Added to fix gas estimation. Change this.
+        gas: 5000000n // TODO: Added to fix gas estimation. Change this.
       })
     }
 
-    console.log('tx', tx)
+    console.log("tx", tx)
 
     // const tx = await get(walletNetwork).worldContract.write[action.systemId]([
     //   ...action.params
@@ -178,10 +185,10 @@ async function execute() {
 
     // Wait for transaction to be executed
     const receipt = await get(publicNetwork).publicClient.waitForTransactionReceipt({
-      hash: tx,
+      hash: tx
     })
 
-    console.log('receipt', receipt)
+    console.log("receipt", receipt)
 
     if (receipt) {
       if (receipt.status == "success") {
@@ -189,10 +196,7 @@ async function execute() {
         action.completed = true
 
         // Add action to completed list
-        completedActions.update(completedActions => [
-          action,
-          ...completedActions,
-        ])
+        completedActions.update(completedActions => [action, ...completedActions])
         // Clear active list
         activeActions.update(() => [])
         // Clear action timeout
@@ -209,8 +213,7 @@ async function execute() {
 }
 
 function handleError(error: any, action: Action) {
-
-  console.log('error', error, action)
+  console.log("error", error, action)
 
   // Update action status
   action.error = error

@@ -7,7 +7,19 @@ import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { ERC20 } from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import { AggregatorV3Interface } from "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
 
-import { AcceptedERC20, AcceptedERC20Data, Config, ConfigData, MutableConfig, MutableConfigData, TransactionLimits, TransactionLimitsData, TransactionTotals, TransactionTotalsData, WalletEurSpent } from "./codegen/index.sol";
+import {
+  AcceptedERC20,
+  AcceptedERC20Data,
+  Config,
+  ConfigData,
+  MutableConfig,
+  MutableConfigData,
+  TransactionLimits,
+  TransactionLimitsData,
+  TransactionTotals,
+  TransactionTotalsData,
+  WalletEurSpent
+} from "./codegen/index.sol";
 
 contract MainSale {
   /**

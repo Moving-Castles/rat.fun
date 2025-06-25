@@ -36,20 +36,19 @@
     <!-- ROOM OUTCOME -->
     <span
       use:tippy={{
-        content: `${elapsed} ${ago}`,
+        content: `${elapsed} ${ago}`
       }}
       class="timestamp"
     >
       {outcome.playerName}
     </span>
-    sent <span class="rat-name">{outcome.ratName}</span> to room #{outcome.roomIndex ??
-      "unknown"}.
+    sent <span class="rat-name">{outcome.ratName}</span> to room #{outcome.roomIndex ?? "unknown"}.
     {outcome.outcomeMessage}
   {:else if topic == "rat__death"}
     <!-- DEATH IN ROOM -->
     <span
       use:tippy={{
-        content: `${elapsed} ${ago}`,
+        content: `${elapsed} ${ago}`
       }}
       class="timestamp"
     >

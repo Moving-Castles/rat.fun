@@ -11,7 +11,6 @@
   room={$rooms?.[page.params.roomId]}
 />
 
-
 <style>
   .slide-container {
     overflow: hidden;

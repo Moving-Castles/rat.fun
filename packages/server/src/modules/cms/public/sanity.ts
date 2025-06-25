@@ -11,7 +11,7 @@ export const publicSanityClient = createClient({
   dataset: "production",
   token: PUBLIC_SANITY_CMS_TOKEN,
   useCdn: false, // `false` if you want to ensure fresh data
-  apiVersion: "2025-04-18",
+  apiVersion: "2025-04-18"
 })
 
 export const loadDataPublicSanity = async (query: string, params: any) => {

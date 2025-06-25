@@ -4,15 +4,15 @@
  *
  */
 
-import { getBurnerPrivateKey } from "@latticexyz/common";
-import { getChain, getWorldFromChainId } from "./utils";
-import { ENVIRONMENT } from "./enums";
+import { getBurnerPrivateKey } from "@latticexyz/common"
+import { getChain, getWorldFromChainId } from "./utils"
+import { ENVIRONMENT } from "./enums"
 
 export function getNetworkConfig(environment: ENVIRONMENT) {
-  const params = new URLSearchParams(window.location.search);
+  const params = new URLSearchParams(window.location.search)
 
   // Default to local development chain
-  let chainId = 31337;
+  let chainId = 31337
 
   if ([ENVIRONMENT.PYROPE].includes(environment)) {
     chainId = 695569
@@ -20,20 +20,18 @@ export function getNetworkConfig(environment: ENVIRONMENT) {
     chainId = 690
   }
 
-  const chain = getChain(chainId);
+  const chain = getChain(chainId)
 
   /*
    * Get the address of the World. If you want to use a
    * different address than the one in worlds.json,
    * provide it as worldAddress in the query string.
    */
-  const world = getWorldFromChainId(chain.id);
+  const world = getWorldFromChainId(chain.id)
 
-  const worldAddress = params.get("worldAddress") || world?.address;
+  const worldAddress = params.get("worldAddress") || world?.address
   if (!worldAddress) {
-    throw new Error(
-      `No world address found for chain ${chainId}. Did you run \`mud deploy\`?`
-    );
+    throw new Error(`No world address found for chain ${chainId}. Did you run \`mud deploy\`?`)
   }
 
   /*
@@ -45,17 +43,17 @@ export function getNetworkConfig(environment: ENVIRONMENT) {
    */
   const initialBlockNumber = params.has("initialBlockNumber")
     ? Number(params.get("initialBlockNumber"))
-    : world?.blockNumber ?? -1; // -1 will attempt to find the block number from RPC
+    : (world?.blockNumber ?? -1) // -1 will attempt to find the block number from RPC
 
-  let indexerUrl = chain.indexerUrl;
-  if (params.has("indexer")) indexerUrl = params.get("indexer");
-  if (params.has("disableIndexer")) indexerUrl = undefined;
+  let indexerUrl = chain.indexerUrl
+  if (params.has("indexer")) indexerUrl = params.get("indexer")
+  if (params.has("disableIndexer")) indexerUrl = undefined
 
   return {
     provider: {
       chainId,
       jsonRpcUrl: params.get("rpc") ?? chain.rpcUrls.default.http[0],
-      wsRpcUrl: params.get("wsRpc") ?? chain.rpcUrls.default.webSocket?.[0],
+      wsRpcUrl: params.get("wsRpc") ?? chain.rpcUrls.default.webSocket?.[0]
     },
     privateKey: params.get("privateKey") ?? getBurnerPrivateKey(),
     useBurner: params.has("useBurner"),
@@ -65,6 +63,6 @@ export function getNetworkConfig(environment: ENVIRONMENT) {
     initialBlockNumber,
     disableCache: import.meta.env.PROD,
     chain,
-    indexerUrl,
-  };
+    indexerUrl
+  }
 }

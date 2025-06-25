@@ -1,4 +1,4 @@
-/** 
+/**
  * ========================================
  *  content/sanity/groq.ts
  * ========================================
@@ -7,8 +7,8 @@
  */
 
 export const queries = {
-    rooms: '*[_type == "room" && worldAddress == $worldAddress]',
-    outcomes: '*[_type == "outcome" && worldAddress == $worldAddress]',
-    outcomesForRoom: '*[_type == "outcome" && roomId == $roomId && worldAddress == $worldAddress]',
-    outcomesForRat: '*[_type == "outcome" && ratId == $ratId && worldAddress == $worldAddress]',
+  rooms: '*[_type == "room" && worldAddress == $worldAddress]',
+  outcomes: '*[_type == "outcome" && worldAddress == $worldAddress]',
+  outcomesForRoom: '*[_type == "outcome" && roomId == $roomId && worldAddress == $worldAddress]',
+  outcomesForRat: '*[_type == "outcome" && ratId == $ratId && worldAddress == $worldAddress]'
 }

@@ -7,11 +7,7 @@
  *   basefee set to zero to avoid transaction fees.
  *
  */
-import {
-  type MUDChain,
-  mudFoundry,
-  redstone,
-} from "@latticexyz/common/chains";
+import { type MUDChain, mudFoundry, redstone } from "@latticexyz/common/chains"
 
 import {
   arbitrum,
@@ -23,21 +19,21 @@ import {
   mainnet,
   optimism,
   optimismSepolia,
-  sepolia,
-} from "viem/chains";
+  sepolia
+} from "viem/chains"
 
-import { pyrope } from "./pyropeChain";
+import { pyrope } from "./pyropeChain"
 
 const extendedRedstone = {
   ...redstone,
   faucetUrl: "https://redstone-faucet.onrender.com/trpc/drip",
-  indexerUrl: "https://next-indexer.mud.redstonechain.com",
-} as const satisfies MUDChain;
+  indexerUrl: "https://next-indexer.mud.redstonechain.com"
+} as const satisfies MUDChain
 
 const extendedPyrope = {
   ...pyrope,
-  faucetUrl: "https://pyrope-faucet.jimmy9-infra.com/trpc/drip",
-} as const satisfies MUDChain;
+  faucetUrl: "https://pyrope-faucet.jimmy9-infra.com/trpc/drip"
+} as const satisfies MUDChain
 
 export const supportedChains = [
   mudFoundry,
@@ -52,5 +48,5 @@ export const supportedChains = [
   baseSepolia,
   arbitrum,
   arbitrumNova,
-  arbitrumSepolia,
-] as const;
+  arbitrumSepolia
+] as const

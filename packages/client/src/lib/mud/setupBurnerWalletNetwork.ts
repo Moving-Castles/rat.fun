@@ -11,7 +11,7 @@ import {
   Hex,
   ClientConfig,
   PublicClient,
-  parseEther,
+  parseEther
 } from "viem"
 
 import { createBurnerAccount, transportObserver } from "@latticexyz/common"
@@ -19,9 +19,7 @@ import { createBurnerAccount, transportObserver } from "@latticexyz/common"
 import { setupWalletNetwork } from "./setupWalletNetwork"
 import { SetupPublicNetworkResult } from "./setupPublicNetwork"
 
-export function setupBurnerWalletNetwork(
-  publicNetwork: SetupPublicNetworkResult
-) {
+export function setupBurnerWalletNetwork(publicNetwork: SetupPublicNetworkResult) {
   const networkConfig = publicNetwork.config
 
   /*
@@ -40,12 +38,12 @@ export function setupBurnerWalletNetwork(
   const clientOptions = {
     chain: networkConfig.chain,
     transport: transportObserver(fallback([webSocket(), http()])),
-    pollingInterval: 1000,
+    pollingInterval: 1000
   } as const satisfies ClientConfig
 
   const burnerWalletClient = createWalletClient({
     ...clientOptions,
-    account: burnerAccount,
+    account: burnerAccount
   })
 
   // console.log(networkConfig)
@@ -61,11 +59,7 @@ export function setupBurnerWalletNetwork(
   return setupWalletNetwork(publicNetwork, burnerWalletClient)
 }
 
-async function setupDrip(
-  publicClient: PublicClient,
-  faucetServiceUrl: string,
-  address: Hex
-) {
+async function setupDrip(publicClient: PublicClient, faucetServiceUrl: string, address: Hex) {
   // console.log("Setup drip")
   /*
    * If there is a faucet, request (test) ETH if you have
@@ -93,9 +87,9 @@ async function setupDrip(
       const response = await fetch(url, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json"
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(data)
       })
 
       if (!response.ok) {

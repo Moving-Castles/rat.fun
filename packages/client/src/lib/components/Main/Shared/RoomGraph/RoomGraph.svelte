@@ -11,7 +11,7 @@
   let {
     plotData,
     isEmpty = false,
-    height = 300,
+    height = 300
   }: { plotData: PlotPoint[]; isEmpty: boolean; height?: number } = $props()
 
   // Layout setup
@@ -33,13 +33,9 @@
     const domainStart = plotData[0].time
     const domainEnd = max(plotData, (d: PlotPoint) => d.time)
     const finalDomainEnd =
-      domainEnd !== undefined && domainEnd > domainStart
-        ? domainEnd
-        : domainStart + 1 // Add a minimal duration if only one point or max isn't greater
+      domainEnd !== undefined && domainEnd > domainStart ? domainEnd : domainStart + 1 // Add a minimal duration if only one point or max isn't greater
 
-    return scaleTime()
-      .domain([domainStart, finalDomainEnd])
-      .range([0, innerWidth])
+    return scaleTime().domain([domainStart, finalDomainEnd]).range([0, innerWidth])
   })
 
   let yScale = $derived.by(() => {
@@ -76,13 +72,13 @@
       {
         time: domain[0].getTime(),
         value: firstValue,
-        meta: { time: domain[0].getTime(), roomValue: firstValue, meta: {} },
+        meta: { time: domain[0].getTime(), roomValue: firstValue, meta: {} }
       }, // Point at the start of the domain
       {
         time: domain[1].getTime(),
         value: firstValue,
-        meta: { time: domain[1].getTime(), roomValue: firstValue, meta: {} },
-      }, // Point at the end of the domain
+        meta: { time: domain[1].getTime(), roomValue: firstValue, meta: {} }
+      } // Point at the end of the domain
     ]
   })
 
@@ -90,7 +86,7 @@
     if (plotData && width && xScale && yScale && lineGenerator) {
       setTimeout(() => {
         tippy("[data-tippy-content]", {
-          allowHTML: true,
+          allowHTML: true
         })
       })
     }
@@ -101,9 +97,7 @@
 
     if (point?.meta?.roomValueChange) {
       const valueChangeClass =
-        point.meta.roomValueChange > 0
-          ? "tooltip-value-positive"
-          : "tooltip-value-negative"
+        point.meta.roomValueChange > 0 ? "tooltip-value-positive" : "tooltip-value-negative"
       toolTipContent += `<br/>Change: <span class="${valueChangeClass}">${point?.meta?.roomValueChange}</span></div>`
     }
 
@@ -127,11 +121,7 @@
     <div class="graph" bind:clientWidth={width}>
       {#if plotData && width && xScale && yScale && lineGenerator}
         <svg {width} {height}>
-          <rect
-            class="fake-background"
-            width={padding.right}
-            {height}
-            x={width - padding.right}
+          <rect class="fake-background" width={padding.right} {height} x={width - padding.right}
           ></rect>
 
           <g transform="translate({padding.left}, {padding.top})">
@@ -164,17 +154,13 @@
                   ></circle>
                 {:else if point?.meta?.roomValueChange > 0}
                   <polygon
-                    transform="translate({xScale(point.time)}, {yScale(
-                      point.value
-                    )}) scale(2, 3)"
+                    transform="translate({xScale(point.time)}, {yScale(point.value)}) scale(2, 3)"
                     fill="var(--color-value-up)"
                     points="-5 2.5, 0 -5, 5 2.5"
                   />
                 {:else}
                   <polygon
-                    transform="translate({xScale(point.time)}, {yScale(
-                      point.value
-                    )}) scale(2, 3)"
+                    transform="translate({xScale(point.time)}, {yScale(point.value)}) scale(2, 3)"
                     fill="var(--color-value-down)"
                     points="-5 -2.5, 0 5, 5 -2.5"
                   />

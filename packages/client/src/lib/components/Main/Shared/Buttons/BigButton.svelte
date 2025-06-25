@@ -7,7 +7,7 @@
     cost,
     tippyText,
     disabled = false,
-    onclick,
+    onclick
   }: {
     text: string
     cost?: number
@@ -26,12 +26,7 @@
   }
 </script>
 
-<button
-  class:disabled
-  {onmouseup}
-  {onmousedown}
-  use:tippy={{ content: tippyText }}
->
+<button class:disabled {onmouseup} {onmousedown} use:tippy={{ content: tippyText }}>
   <span class="button-text">{text}</span>
   {#if cost}
     <span class="button-cost">({cost})</span>

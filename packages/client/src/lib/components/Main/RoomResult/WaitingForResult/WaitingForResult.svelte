@@ -1,17 +1,17 @@
 <script lang="ts">
-	import VideoLoader from '$lib/components/Main/Shared/Loaders/VideoLoader.svelte';
+  import VideoLoader from "$lib/components/Main/Shared/Loaders/VideoLoader.svelte"
 </script>
 
 <div class="waiting-for-result">
-	<VideoLoader duration={11000} />
+  <VideoLoader duration={11000} />
 </div>
 
 <style lang="scss">
-	.waiting-for-result {
-		margin-bottom: 20px;
-		height: calc(var(--game-window-height) - 300px);
-		border: var(--default-border-style);
-		border-top: none;
-		position: relative;
-	}
+  .waiting-for-result {
+    margin-bottom: 20px;
+    height: calc(var(--game-window-height) - 300px);
+    border: var(--default-border-style);
+    border-top: none;
+    position: relative;
+  }
 </style>

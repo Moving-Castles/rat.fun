@@ -1,17 +1,14 @@
 <script lang="ts">
   let {
     currentLength,
-    maxLength,
+    maxLength
   }: {
     currentLength: number
     maxLength: number
   } = $props()
 </script>
 
-<span
-  class="counter"
-  class:error={currentLength < 1 || currentLength > maxLength}
->
+<span class="counter" class:error={currentLength < 1 || currentLength > maxLength}>
   {currentLength}/{maxLength}
 </span>
 

@@ -1,5 +1,5 @@
-import { defineWorld } from "@latticexyz/world";
-import { ENTITY_TYPE_ARRAY } from "./enums";
+import { defineWorld } from "@latticexyz/world"
+import { ENTITY_TYPE_ARRAY } from "./enums"
 
 export default defineWorld({
   namespace: "ratroom",
@@ -7,7 +7,7 @@ export default defineWorld({
     ENTITY_TYPE: ENTITY_TYPE_ARRAY
   },
   deploy: {
-    upgradeableWorldImplementation: true,
+    upgradeableWorldImplementation: true
   },
   tables: {
     GameConfig: {
@@ -24,7 +24,7 @@ export default defineWorld({
         minRoomPromptLength: "uint32",
         maxRoomPromptLength: "uint32",
         cooldownCloseRoom: "uint32",
-        cooldownReenterRoom: "uint32",
+        cooldownReenterRoom: "uint32"
       },
       codegen: {
         dataStruct: true
@@ -37,11 +37,11 @@ export default defineWorld({
         gamePoolAddress: "address",
         mainSaleAddress: "address",
         serviceAddress: "address",
-        usdcAddress: "address",
+        usdcAddress: "address"
       },
       codegen: {
         dataStruct: true
-      },
+      }
     },
     LevelList: {
       key: [],
@@ -88,7 +88,7 @@ export default defineWorld({
     {
       artifactPath: "@latticexyz/world-modules/out/UniqueEntityModule.sol/UniqueEntityModule.json",
       root: true,
-      args: [],
+      args: []
     }
-  ],
-});
+  ]
+})

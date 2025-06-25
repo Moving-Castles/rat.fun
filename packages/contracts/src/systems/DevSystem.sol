@@ -2,7 +2,13 @@
 pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { GameConfig, ExternalAddressesConfig, LevelMinBalance, LevelMaxBalance, RoomCreationCost } from "../codegen/index.sol";
+import {
+  GameConfig,
+  ExternalAddressesConfig,
+  LevelMinBalance,
+  LevelMaxBalance,
+  RoomCreationCost
+} from "../codegen/index.sol";
 import { SalePlaceholder } from "../external/SalePlaceholder.sol";
 import { LibWorld } from "../libraries/Libraries.sol";
 

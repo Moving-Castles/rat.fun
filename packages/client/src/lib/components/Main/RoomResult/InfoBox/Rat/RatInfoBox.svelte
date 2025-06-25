@@ -27,21 +27,11 @@
       <div class="info-item">
         <!-- BALANCE -->
         <span class:priority={balanceGoing} class="balance"
-          >$<NumberGoing
-            bind:going={balanceGoing}
-            value={$frozenRat.balance}
-          /></span
+          >$<NumberGoing bind:going={balanceGoing} value={$frozenRat.balance} /></span
         >
         <!-- HEALTH -->
-        <span
-          class:priority={healthGoing}
-          class="health"
-          class:dead={$frozenRat.health <= 0}
-        >
-          HEALTH <NumberGoing
-            bind:going={healthGoing}
-            value={$frozenRat.health}
-          />
+        <span class:priority={healthGoing} class="health" class:dead={$frozenRat.health <= 0}>
+          HEALTH <NumberGoing bind:going={healthGoing} value={$frozenRat.health} />
         </span>
       </div>
     </div>

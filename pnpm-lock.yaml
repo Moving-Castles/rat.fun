@@ -35,6 +35,15 @@ importers:
       mprocs:
         specifier: ^0.7.3
         version: 0.7.3
+      prettier:
+        specifier: ^3.6.1
+        version: 3.6.1
+      prettier-plugin-solidity:
+        specifier: ^2.0.0
+        version: 2.0.0(prettier@3.6.1)
+      prettier-plugin-svelte:
+        specifier: ^3.4.0
+        version: 3.4.0(prettier@3.6.1)(svelte@5.34.1)
       shx:
         specifier: ^0.4.0
         version: 0.4.0
@@ -153,12 +162,6 @@ importers:
       globals:
         specifier: ^16.0.0
         version: 16.2.0
-      prettier:
-        specifier: ^3.4.2
-        version: 3.5.3
-      prettier-plugin-svelte:
-        specifier: ^3.3.3
-        version: 3.4.0(prettier@3.5.3)(svelte@5.34.1)
       sass-embedded:
         specifier: ^1.89.0
         version: 1.89.2
@@ -223,9 +226,6 @@ importers:
       eslint:
         specifier: ^9.28.0
         version: 9.28.0(jiti@2.4.2)
-      prettier:
-        specifier: ^3.5.3
-        version: 3.5.3
 
   packages/cms-public:
     dependencies:
@@ -257,9 +257,6 @@ importers:
       eslint:
         specifier: ^9.28.0
         version: 9.28.0(jiti@2.4.2)
-      prettier:
-        specifier: ^3.5.3
-        version: 3.5.3
 
   packages/contracts:
     dependencies:
@@ -297,12 +294,6 @@ importers:
       forge-std:
         specifier: https://github.com/foundry-rs/forge-std.git#74cfb77e308dd188d2f58864aaf44963ae6b88b1
         version: https://codeload.github.com/foundry-rs/forge-std/tar.gz/74cfb77e308dd188d2f58864aaf44963ae6b88b1
-      prettier:
-        specifier: ^3.5.3
-        version: 3.5.3
-      prettier-plugin-solidity:
-        specifier: ^2.0.0
-        version: 2.0.0(prettier@3.5.3)
       solhint:
         specifier: ^5.1.0
         version: 5.1.0(typescript@5.8.3)
@@ -8402,8 +8393,8 @@ packages:
     engines: {node: '>=14'}
     hasBin: true
 
-  prettier@3.5.3:
-    resolution: {integrity: sha512-QQtaxnoDJeAkDvDKWCLiwIXkTgRhwYDEQCghU9Z6q03iyek/rxRh/2lC3HB7P8sWT2xC/y5JDctPLBIGzHKbhw==}
+  prettier@3.6.1:
+    resolution: {integrity: sha512-5xGWRa90Sp2+x1dQtNpIpeOQpTDBs9cZDmA/qs2vDNN2i18PdapqY7CmBeyLlMuGqXJRIOPaCaVZTLNQRWUH/A==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -16979,7 +16970,7 @@ snapshots:
       get-it: 8.6.9(debug@4.4.1)
       groq-js: 1.17.0
       pkg-dir: 5.0.0
-      prettier: 3.5.3
+      prettier: 3.6.1
       semver: 7.7.2
       validate-npm-package-name: 3.0.0
     transitivePeerDependencies:
@@ -23909,23 +23900,23 @@ snapshots:
       semver: 7.7.2
       solidity-comments-extractor: 0.0.8
 
-  prettier-plugin-solidity@2.0.0(prettier@3.5.3):
+  prettier-plugin-solidity@2.0.0(prettier@3.6.1):
     dependencies:
       '@nomicfoundation/slang': 1.1.0
       '@solidity-parser/parser': 0.20.1
-      prettier: 3.5.3
+      prettier: 3.6.1
       semver: 7.7.2
 
-  prettier-plugin-svelte@3.4.0(prettier@3.5.3)(svelte@5.34.1):
+  prettier-plugin-svelte@3.4.0(prettier@3.6.1)(svelte@5.34.1):
     dependencies:
-      prettier: 3.5.3
+      prettier: 3.6.1
       svelte: 5.34.1
 
   prettier@2.8.8: {}
 
   prettier@3.2.5: {}
 
-  prettier@3.5.3: {}
+  prettier@3.6.1: {}
 
   pretty-ms@7.0.1:
     dependencies:

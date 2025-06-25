@@ -6,7 +6,7 @@
     text,
     tippyText,
     disabled = false,
-    onclick,
+    onclick
   }: {
     text: string
     tippyText?: string
@@ -24,12 +24,7 @@
   }
 </script>
 
-<button
-  class:disabled
-  {onmouseup}
-  {onmousedown}
-  use:tippy={{ content: tippyText }}
->
+<button class:disabled {onmouseup} {onmousedown} use:tippy={{ content: tippyText }}>
   <span class="button-text">{text}</span>
 </button>
 
@@ -42,13 +37,7 @@
     border-width: 7px;
     border-color: rgba(0, 0, 0, 0.5);
 
-    background: repeating-linear-gradient(
-      45deg,
-      #cc0000,
-      #cc0000 20px,
-      #9e0000 20px,
-      #9e0000 40px
-    );
+    background: repeating-linear-gradient(45deg, #cc0000, #cc0000 20px, #9e0000 20px, #9e0000 40px);
 
     .button-text {
       letter-spacing: -0.2em;

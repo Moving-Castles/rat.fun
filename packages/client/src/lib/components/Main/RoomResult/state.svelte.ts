@@ -4,11 +4,11 @@
  * ========================================
  * This module keeps track of the state of the room result flow.
  * There are two main parts:
- * 
+ *
  * 1. Room result flow state
  * - Stores current state
  * - Handles state transitions
- * 
+ *
  * 2. The frozen rat and room
  * - Freeze the state of the rat and room
  * - Updates frozen state based on outcome
@@ -20,7 +20,6 @@ import type { FrozenRat, FrozenRoom, OutcomeDataStringMap } from "./types"
 import type { EnterRoomReturnValue } from "@server/modules/types"
 import type { Hex } from "viem"
 import { addressToRatImage } from "$lib/modules/utils"
-
 
 /*
  * ─────────────────────────────────────────────
@@ -48,18 +47,24 @@ export enum ROOM_RESULT_STATE {
 }
 
 /** Current state of the room result flow */
-export let roomResultState: {state: ROOM_RESULT_STATE, errorMessage: string | null} = $state({
+export let roomResultState: { state: ROOM_RESULT_STATE; errorMessage: string | null } = $state({
   state: ROOM_RESULT_STATE.SPLASH_SCREEN,
   errorMessage: null
 })
 
-/** 
+/**
  * Defines valid state transitions between room result states
  * Maps each state to an array of valid states it can transition to
  */
 const VALID_TRANSITIONS: Record<ROOM_RESULT_STATE, ROOM_RESULT_STATE[]> = {
-  [ROOM_RESULT_STATE.SPLASH_SCREEN]: [ROOM_RESULT_STATE.WAITING_FOR_RESULT, ROOM_RESULT_STATE.ERROR],
-  [ROOM_RESULT_STATE.WAITING_FOR_RESULT]: [ROOM_RESULT_STATE.SHOWING_RESULTS, ROOM_RESULT_STATE.ERROR],
+  [ROOM_RESULT_STATE.SPLASH_SCREEN]: [
+    ROOM_RESULT_STATE.WAITING_FOR_RESULT,
+    ROOM_RESULT_STATE.ERROR
+  ],
+  [ROOM_RESULT_STATE.WAITING_FOR_RESULT]: [
+    ROOM_RESULT_STATE.SHOWING_RESULTS,
+    ROOM_RESULT_STATE.ERROR
+  ],
   [ROOM_RESULT_STATE.SHOWING_RESULTS]: [
     ROOM_RESULT_STATE.RESULT_SUMMARY_NORMAL,
     ROOM_RESULT_STATE.RESULT_SUMMARY_RAT_DEAD,
@@ -81,7 +86,7 @@ export const SHOW_INFO_BOXES = [
   ROOM_RESULT_STATE.RESULT_SUMMARY_NORMAL,
   ROOM_RESULT_STATE.RESULT_SUMMARY_RAT_DEAD,
   ROOM_RESULT_STATE.RESULT_SUMMARY_LEVEL_UP,
-  ROOM_RESULT_STATE.RESULT_SUMMARY_LEVEL_DOWN,
+  ROOM_RESULT_STATE.RESULT_SUMMARY_LEVEL_DOWN
 ]
 
 /** States where the log should be shown */
@@ -93,7 +98,7 @@ export const SHOW_LOG = [
   ROOM_RESULT_STATE.RESULT_SUMMARY_LEVEL_DOWN
 ]
 
-/** 
+/**
  * Transitions to the appropriate result summary state based on the room result
  * @param result The result returned from entering a room
  */
@@ -262,7 +267,7 @@ function addItem(itemName: string, itemValue: number) {
     if (!rat.inventory) rat.inventory = []
     const newTempItem = {
       name: itemName,
-      value: itemValue,
+      value: itemValue
     }
     rat.inventory.push(newTempItem)
     return rat
@@ -310,7 +315,7 @@ function addTrait(traitName: string, traitValue: number) {
     if (!rat) return null
     const newTempItem = {
       name: traitName,
-      value: traitValue,
+      value: traitValue
     }
     rat.traits.push(newTempItem)
     return rat

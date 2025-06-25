@@ -4,10 +4,8 @@
 
   import RoomGraph from "$lib/components/Main/Shared/RoomGraph/RoomGraph.svelte"
 
-  let {
-    roomOutcomes,
-    sanityRoomContent,
-  }: { roomOutcomes?: Outcome[]; sanityRoomContent: any } = $props()
+  let { roomOutcomes, sanityRoomContent }: { roomOutcomes?: Outcome[]; sanityRoomContent: any } =
+    $props()
 
   let plotData: PlotPoint[] = $derived.by(() => {
     if (!roomOutcomes) {
@@ -17,14 +15,14 @@
       {
         time: 0,
         roomValue: 250,
-        meta: sanityRoomContent,
+        meta: sanityRoomContent
       },
-      ...roomOutcomes,
+      ...roomOutcomes
     ].map((o, i) => {
       return {
         time: i,
         value: o?.roomValue || 0,
-        meta: o,
+        meta: o
       }
     })
   })

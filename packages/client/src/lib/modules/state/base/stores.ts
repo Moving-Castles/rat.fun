@@ -8,12 +8,7 @@
 import { writable, derived } from "svelte/store"
 import { addressToId, addressToRatImage } from "$lib/modules/utils"
 import { ENTITY_TYPE } from "contracts/enums"
-import {
-  filterByEntitytype,
-  filterByLevel,
-  filterByPlayer,
-  filterByOthers,
-} from "./utils"
+import { filterByEntitytype, filterByLevel, filterByPlayer, filterByOthers } from "./utils"
 import { GAME_CONFIG_ID } from "./constants"
 
 // * * * * * * * * * * * * * * * * *
@@ -73,9 +68,7 @@ export const playerAddress = writable("0x0" as string)
 /**
  * Address in padded format
  */
-export const playerId = derived(playerAddress, $playerAddress =>
-  addressToId($playerAddress)
-)
+export const playerId = derived(playerAddress, $playerAddress => addressToId($playerAddress))
 
 export const player = derived(
   [entities, playerId],
@@ -98,10 +91,7 @@ export const playerERC20Balance = writable(0 as number)
 // PLAYER RAT STORES
 // * * * * * * * * * * * * * * * * *
 
-export const rat = derived(
-  [player, rats],
-  ([$player, $rats]) => $rats[$player?.ownedRat] as Rat
-)
+export const rat = derived([player, rats], ([$player, $rats]) => $rats[$player?.ownedRat] as Rat)
 
 export const ratTraits = derived(
   [rat, traits],
@@ -113,28 +103,19 @@ export const ratInventory = derived(
   ([$rat, $items]) => $rat?.inventory?.map(item => $items[item]) as Item[]
 )
 
-export const ratLevel = derived(
-  [rat, levels],
-  ([$rat, $levels]) => $levels[$rat?.level] as Level
-)
+export const ratLevel = derived([rat, levels], ([$rat, $levels]) => $levels[$rat?.level] as Level)
 
-export const ratLevelIndex = derived(
-  [gameConfig, rat],
-  ([$gameConfig, $rat]) => {
-    if ($gameConfig?.levelList) {
-      return $gameConfig?.levelList?.findIndex(lvl => lvl === ($rat?.level ?? 0))
-    }
-    return 0
+export const ratLevelIndex = derived([gameConfig, rat], ([$gameConfig, $rat]) => {
+  if ($gameConfig?.levelList) {
+    return $gameConfig?.levelList?.findIndex(lvl => lvl === ($rat?.level ?? 0))
   }
-)
+  return 0
+})
 
-export const ratImageUrl = derived(
-  [player],
-  ([$player]) => {
-    if (!$player?.ownedRat) return "/images/rat.png"
-    return addressToRatImage($player.ownedRat)
-  }
-)
+export const ratImageUrl = derived([player], ([$player]) => {
+  if (!$player?.ownedRat) return "/images/rat.png"
+  return addressToRatImage($player.ownedRat)
+})
 
 /**
  * Calculated by adding up the balance, health, inventory value and trait value
@@ -145,15 +126,9 @@ export const ratTotalValue = derived(
     const totalValue = !$rat
       ? 0
       : Number($rat.balance ?? 0) + // Balance
-      Number($rat.health ?? 0) + // Health
-      ($ratInventory ?? []).reduce(
-        (acc, item) => acc + (Number(item?.value) ?? 0),
-        0
-      ) + // Inventory
-      ($ratTraits ?? []).reduce(
-        (acc, trait) => acc + (Number(trait?.value) ?? 0),
-        0
-      ) // Traits
+        Number($rat.health ?? 0) + // Health
+        ($ratInventory ?? []).reduce((acc, item) => acc + (Number(item?.value) ?? 0), 0) + // Inventory
+        ($ratTraits ?? []).reduce((acc, trait) => acc + (Number(trait?.value) ?? 0), 0) // Traits
     return totalValue
   }
 )

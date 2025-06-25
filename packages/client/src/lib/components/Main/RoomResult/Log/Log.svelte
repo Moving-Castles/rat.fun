@@ -8,7 +8,7 @@
 
   let {
     result,
-    onComplete,
+    onComplete
   }: {
     result: EnterRoomReturnValue | null
     onComplete: () => void
@@ -37,7 +37,7 @@
 
   // Create parent timeline
   const logTimeline = gsap.timeline({
-    defaults: { duration: 0.5, ease: "power2.out" },
+    defaults: { duration: 0.5, ease: "power2.out" }
   })
 
   function addToTimeline(timeline: ReturnType<typeof gsap.timeline>) {

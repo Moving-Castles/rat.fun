@@ -11,15 +11,12 @@
 
   let { roomId, room }: { roomId: Hex; room: Room } = $props()
 
-  let profit = $derived(
-    Number(room.balance) - Number($levels[room.level]?.roomCreationCost ?? 0)
-  )
+  let profit = $derived(Number(room.balance) - Number($levels[room.level]?.roomCreationCost ?? 0))
 
   let plotData: PlotPoint[] = $derived.by(() => {
     let sanityRoomContent = $staticContent?.rooms?.find(r => r.title == roomId)
 
-    const outcomes =
-      $staticContent?.outcomes?.filter(o => o.roomId == roomId) || []
+    const outcomes = $staticContent?.outcomes?.filter(o => o.roomId == roomId) || []
     // Sort the outcomes in order of creation
     outcomes.sort((a, b) => {
       return new Date(b._createdAt).getTime() - new Date(a._createdAt).getTime()
@@ -31,14 +28,14 @@
       {
         time: 0,
         roomValue: 250,
-        meta: sanityRoomContent,
+        meta: sanityRoomContent
       },
-      ...roomOutcomes,
+      ...roomOutcomes
     ].map((o, i) => {
       return {
         time: i,
         value: o?.roomValue || 0,
-        meta: o,
+        meta: o
       }
     })
   })
@@ -46,11 +43,7 @@
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <!-- svelte-ignore a11y_click_events_have_key_events -->
-<a
-  href="/{roomId}?landlord"
-  class="room-listing-item"
-  class:depleted={Number(room.balance) == 0}
->
+<a href="/{roomId}?landlord" class="room-listing-item" class:depleted={Number(room.balance) == 0}>
   {#if Number(room.balance) == 0}
     <div class="depleted-indicator">
       <Xed />
@@ -62,11 +55,7 @@
     </div>
     <div class="room-info-row bottom">
       <!-- PROFIT -->
-      <div
-        class="profit-indicator"
-        class:positive={profit > 0}
-        class:negative={profit < 0}
-      >
+      <div class="profit-indicator" class:positive={profit > 0} class:negative={profit < 0}>
         <span>
           {#if Number(room.balance) == 0}
             Depleted
@@ -111,9 +100,7 @@
         <span class="divider">•</span>
         <!-- CREATION TIME  -->
         <span class="creation-time small">
-          {blocksToReadableTime(
-            Number($blockNumber) - Number(room.creationBlock)
-          )}
+          {blocksToReadableTime(Number($blockNumber) - Number(room.creationBlock))}
         </span>
       </div>
       <!-- PROMPT -->
@@ -185,7 +172,7 @@
           color: var(--background);
           background-color: var(--color-health);
         }
-        
+
         &.negative {
           color: var(--background);
           background-color: var(--color-death);

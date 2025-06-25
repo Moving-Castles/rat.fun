@@ -1,10 +1,7 @@
 <script lang="ts">
   import type { Hex } from "viem"
   import { get } from "svelte/store"
-  import {
-    roomsOnCurrentLevel,
-    playerRooms,
-  } from "$lib/modules/state/base/stores"
+  import { roomsOnCurrentLevel, playerRooms } from "$lib/modules/state/base/stores"
   import { entriesByPopularity, entriesChronologically } from "./sortFunctions"
   import { filterRooms, filterDepletedRooms } from "./filterFunctions"
   import { blockNumber } from "$lib/modules/network"
@@ -16,7 +13,7 @@
   import CreateRoom from "$lib/components/Main/RoomContainer/CreateRoom/CreateRoom.svelte"
 
   let {
-    isOwnRoomListing,
+    isOwnRoomListing
   }: {
     isOwnRoomListing: boolean
   } = $props()
@@ -48,17 +45,12 @@
   })
 
   let previewing = $state(false)
-
 </script>
 
 <div class="wrapper">
   <div class="rooms">
     <div class="floor-content">
-      <div
-        class:previewing
-        class:animated={false}
-        class="room-listing"
-      >
+      <div class:previewing class:animated={false} class="room-listing">
         {#if !isOwnRoomListing}
           <!-- <FloorHeader /> -->
           <RoomFilters
@@ -80,56 +72,51 @@
               showDepletedRooms = !showDepletedRooms
             }}
           />
-        {:else}
-          {#if !showCreateRoom}
-            <CreateRoomButton onclick={() => showCreateRoom = true} />
-          {/if}
+        {:else if !showCreateRoom}
+          <CreateRoomButton onclick={() => (showCreateRoom = true)} />
         {/if}
-  
+
         {#if showCreateRoom}
           <CreateRoom />
-        {:else}
-          {#if activeList.length > 0}
-            {#if activeList.length < roomList.length}
-              {#key roomList.length}
-                <button
-                  onclick={() => {
-                    sortFunction = entriesChronologically
-                    updateRooms()
-                  }}
-                  class="new-rooms-button flash-fast-thrice"
-                >
-                  {roomList.length - activeList.length} new rooms added
-                </button>
-              {/key}
-            {/if}
-            {#each activeList as roomEntry (roomEntry[0])}
-              {#if isOwnRoomListing}
-                <OwnRoomItem roomId={roomEntry[0] as Hex} room={roomEntry[1]} />
-              {:else}
-                <RoomItem roomId={roomEntry[0] as Hex} room={roomEntry[1]} />
-              {/if}
-            {/each}
-          {:else}
-            <div class="empty-listing">
-              <div>
-                {#if isOwnRoomListing}
-                  NO ROOMS CREATED YET
-                {:else}
-                  NO ROOMS
-                {/if}
-              </div>
-            </div>
+        {:else if activeList.length > 0}
+          {#if activeList.length < roomList.length}
+            {#key roomList.length}
+              <button
+                onclick={() => {
+                  sortFunction = entriesChronologically
+                  updateRooms()
+                }}
+                class="new-rooms-button flash-fast-thrice"
+              >
+                {roomList.length - activeList.length} new rooms added
+              </button>
+            {/key}
           {/if}
+          {#each activeList as roomEntry (roomEntry[0])}
+            {#if isOwnRoomListing}
+              <OwnRoomItem roomId={roomEntry[0] as Hex} room={roomEntry[1]} />
+            {:else}
+              <RoomItem roomId={roomEntry[0] as Hex} room={roomEntry[1]} />
+            {/if}
+          {/each}
+        {:else}
+          <div class="empty-listing">
+            <div>
+              {#if isOwnRoomListing}
+                NO ROOMS CREATED YET
+              {:else}
+                NO ROOMS
+              {/if}
+            </div>
+          </div>
         {/if}
-  
       </div>
     </div>
   </div>
 </div>
 
 <style lang="scss">
-.wrapper {
+  .wrapper {
     position: relative;
     height: calc(100% - 60px);
     overflow: hidden;

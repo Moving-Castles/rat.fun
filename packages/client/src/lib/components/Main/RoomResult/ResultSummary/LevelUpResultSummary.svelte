@@ -24,11 +24,11 @@
     }
 
     gsap.set([messageElement, closeButtonElement], {
-      opacity: 0,
+      opacity: 0
     })
 
     gsap.set(innerContainerElement, {
-      scale: 0,
+      scale: 0
     })
 
     timeline.call(() => {
@@ -38,19 +38,19 @@
     timeline.to(innerContainerElement, {
       scale: 1,
       duration: 0.4,
-      ease: "power2.out",
+      ease: "power2.out"
     })
 
     timeline.to(messageElement, {
       opacity: 1,
       duration: 0.3,
-      ease: "power2.out",
+      ease: "power2.out"
     })
 
     timeline.to(closeButtonElement, {
       opacity: 1,
       duration: 0.3,
-      ease: "power2.out",
+      ease: "power2.out"
     })
   })
 </script>
@@ -66,27 +66,17 @@
     <div class="inner" bind:this={innerContainerElement}>
       <div class="content">
         <h1 class="message" bind:this={messageElement}>
-          {$frozenRat?.name} TRANSFERRED DOWN TO {Number($ratLevel.index) === 0
-            ? ""
-            : "-"}{Number($ratLevel.index)}
+          {$frozenRat?.name} TRANSFERRED DOWN TO {Number($ratLevel.index) === 0 ? "" : "-"}{Number(
+            $ratLevel.index
+          )}
           <FloorDescription />
         </h1>
 
-        <a
-          bind:this={closeButtonElement}
-          class="close-button"
-          href="/"
-        >
-          LEAVE ROOM
-        </a>
+        <a bind:this={closeButtonElement} class="close-button" href="/"> LEAVE ROOM </a>
       </div>
 
       <div class="background">
-        <img
-          class="background-image"
-          src={$frozenRat?.image}
-          alt={$frozenRat?.name}
-        />
+        <img class="background-image" src={$frozenRat?.image} alt={$frozenRat?.name} />
       </div>
     </div>
   </div>

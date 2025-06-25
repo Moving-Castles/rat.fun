@@ -8,7 +8,7 @@ import dotenv from "dotenv"
 dotenv.config()
 
 const client = new Replicate({
-  auth: process.env.REPLICATE_API_TOKEN,
+  auth: process.env.REPLICATE_API_TOKEN
 })
 
 const MODEL = {
@@ -33,8 +33,8 @@ export const generateImage = async (prompt: string) => {
       aspect_ratio: "1:1",
       output_format: "webp",
       output_quality: 80,
-      prompt_strength: 0.70, // 0.73
-      num_inference_steps: 30, // 28
+      prompt_strength: 0.7, // 0.73
+      num_inference_steps: 30 // 28
     },
     SD: {
       image: "https://rat-room-pyrope.netlify.app/images/room-templates/room-8.jpg",
@@ -44,26 +44,26 @@ export const generateImage = async (prompt: string) => {
       output_format: "webp",
       output_quality: 80,
       prompt_strength: 0.72, // 0.73
-      steps: 28, // 28
+      steps: 28 // 28
     }
   }
 
   try {
-    const output = await client.run(MODEL.SD, { input: INPUT.SD }) as FileOutput[]
+    const output = (await client.run(MODEL.SD, { input: INPUT.SD })) as FileOutput[]
 
     if (!output[0]) throw new Error("No output received from Replicate")
 
     // Get the image data directly as a blob
     const blob = await output[0].blob()
-    
+
     // Convert blob to buffer
     const arrayBuffer = await blob.arrayBuffer()
     const buffer = Buffer.from(arrayBuffer)
-    
+
     // Process image with sharp
     const processedBuffer = await sharp(buffer)
       .modulate({
-        saturation: 3, // Increase saturation by 20%
+        saturation: 3 // Increase saturation by 20%
       })
       .toBuffer()
 

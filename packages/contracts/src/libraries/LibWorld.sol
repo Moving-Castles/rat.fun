@@ -1,7 +1,22 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
-import { GameConfig, GameConfigData, ExternalAddressesConfig, ExternalAddressesConfigData, Name, VisitedLevels, WorldPrompt } from "../codegen/index.sol";
-import { MAX_ROOM_PROMPT_LENGTH, MIN_ROOM_PROMPT_LENGTH, MAX_INVENTORY_SIZE, MAX_TRAITS_SIZE, COOLDOWN_CLOSE_ROOM, COOLDOWN_REENTER_ROOM } from "../constants.sol";
+import {
+  GameConfig,
+  GameConfigData,
+  ExternalAddressesConfig,
+  ExternalAddressesConfigData,
+  Name,
+  VisitedLevels,
+  WorldPrompt
+} from "../codegen/index.sol";
+import {
+  MAX_ROOM_PROMPT_LENGTH,
+  MIN_ROOM_PROMPT_LENGTH,
+  MAX_INVENTORY_SIZE,
+  MAX_TRAITS_SIZE,
+  COOLDOWN_CLOSE_ROOM,
+  COOLDOWN_REENTER_ROOM
+} from "../constants.sol";
 import { LibUtils } from "./LibUtils.sol";
 import { SlopERC20 } from "../external/SlopERC20.sol";
 import { GamePool } from "../external/GamePool.sol";

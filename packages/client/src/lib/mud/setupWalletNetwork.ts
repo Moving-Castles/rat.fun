@@ -3,20 +3,11 @@
  * (https://viem.sh/docs/getting-started.html).
  * This line imports the functions we need from it.
  */
-import {
-  Hex,
-  getContract,
-  Client,
-  Transport,
-  Chain,
-  Account,
-} from "viem"
+import { Hex, getContract, Client, Transport, Chain, Account } from "viem"
 import { encodeEntity } from "@latticexyz/store-sync/recs"
 
 import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json"
-import {
-  ContractWrite,
-} from "@latticexyz/common"
+import { ContractWrite } from "@latticexyz/common"
 import { transactionQueue, writeObserver } from "@latticexyz/common/actions"
 
 import { Subject, share } from "rxjs"
@@ -25,7 +16,10 @@ import { SetupPublicNetworkResult } from "./setupPublicNetwork"
 
 export type SetupWalletNetworkResult = Awaited<ReturnType<typeof setupWalletNetwork>>
 
-export function setupWalletNetwork(publicNetwork: SetupPublicNetworkResult, walletClient: Client<Transport, Chain, Account>) {
+export function setupWalletNetwork(
+  publicNetwork: SetupPublicNetworkResult,
+  walletClient: Client<Transport, Chain, Account>
+) {
   const networkConfig = publicNetwork.config
 
   /*
@@ -44,18 +38,15 @@ export function setupWalletNetwork(publicNetwork: SetupPublicNetworkResult, wall
   const worldContract = getContract({
     address: networkConfig.worldAddress as Hex,
     abi: IWorldAbi,
-    client: { public: publicNetwork.publicClient, wallet: walletClient },
+    client: { public: publicNetwork.publicClient, wallet: walletClient }
   })
 
   // console.log("worldContract", worldContract)
 
   return {
-    playerEntity: encodeEntity(
-      { address: "address" },
-      { address: walletClient.account.address }
-    ),
+    playerEntity: encodeEntity({ address: "address" }, { address: walletClient.account.address }),
     walletClient,
     worldContract,
-    write$: write$.asObservable().pipe(share()),
+    write$: write$.asObservable().pipe(share())
   }
 }

@@ -18,9 +18,7 @@ export function toCamelCase(s: string): string {
   return (
     s
       // Remove all underscores and hyphens and convert the following letter to uppercase
-      .replace(/([-_][a-z])/gi, $1 =>
-        $1.toUpperCase().replace("-", "").replace("_", "")
-      )
+      .replace(/([-_][a-z])/gi, $1 => $1.toUpperCase().replace("-", "").replace("_", ""))
       // Ensure the first character is in lowercase
       .replace(/^./, str => str.toLowerCase())
   )
@@ -95,9 +93,7 @@ export function filterObjectByKey(
  * @param obj The object to remove private keys from
  * @returns The object with private keys removed
  */
-export function removePrivateKeys(
-  obj: Record<string, any>
-): Record<string, any> {
+export function removePrivateKeys(obj: Record<string, any>): Record<string, any> {
   let newObj: Record<string, any> = {}
   for (const key in obj) {
     if (!key.startsWith("__")) {
@@ -355,9 +351,7 @@ export function getRandomUint32(): number {
  * @param content The string to parse
  * @returns The parsed JSON
  */
-export function parseJSONFromContent<T = Record<string, unknown>>(
-  content: string
-): T {
+export function parseJSONFromContent<T = Record<string, unknown>>(content: string): T {
   // Regex to detect a ```json code block
   const regex = /```json([\s\S]*?)```/
   const match = content.match(regex)
@@ -397,11 +391,7 @@ export function truncateString(str: string, maxLength: number) {
  * @param renderCodepoints Whether to render codepoints
  * @returns The rendered string
  */
-export function renderSafeString(
-  input: string,
-  placeholder = "💀",
-  renderCodepoints = false
-) {
+export function renderSafeString(input: string, placeholder = "💀", renderCodepoints = false) {
   return [...input]
     .map(char => {
       const code = char.codePointAt(0)
@@ -436,12 +426,7 @@ export function renderSafeString(
         (code >= 0x1d159 && code <= 0x1d165) // Combining musical notation
 
       const isSuspicious =
-        isPUA ||
-        isTagsBlock ||
-        isNonCharacter ||
-        isControl ||
-        isZeroWidth ||
-        isObscureOrDeprecated
+        isPUA || isTagsBlock || isNonCharacter || isControl || isZeroWidth || isObscureOrDeprecated
 
       if (isSuspicious) {
         if (renderCodepoints) {
@@ -469,14 +454,14 @@ export function clickToCopy(node: HTMLElement, text: string) {
 
       node.dispatchEvent(
         new CustomEvent("copysuccess", {
-          bubbles: true,
+          bubbles: true
         })
       )
     } catch (error) {
       node.dispatchEvent(
         new CustomEvent("copyerror", {
           bubbles: true,
-          detail: error,
+          detail: error
         })
       )
     }
@@ -487,7 +472,7 @@ export function clickToCopy(node: HTMLElement, text: string) {
   return {
     destroy() {
       node.removeEventListener("click", copyText)
-    },
+    }
   }
 }
 
@@ -499,19 +484,19 @@ export function clickToCopy(node: HTMLElement, text: string) {
  */
 export function addressToNumber(address: string, max: number): number {
   if (!address) return 0
-  
+
   // Remove '0x' prefix if present
-  const cleanAddress = address.startsWith('0x') ? address.slice(2) : address
-  
+  const cleanAddress = address.startsWith("0x") ? address.slice(2) : address
+
   // Use the entire address to create a hash-like number
   // This ensures sequential addresses map to different numbers
   let hash = 0
   for (let i = 0; i < cleanAddress.length; i++) {
     const char = cleanAddress.charCodeAt(i)
-    hash = ((hash << 5) - hash) + char
+    hash = (hash << 5) - hash + char
     hash = hash & hash // Convert to 32-bit integer
   }
-  
+
   // Make sure the number is positive and within range
   return Math.abs(hash) % (max + 1)
 }
@@ -526,6 +511,3 @@ export function addressToRatImage(address: string, maxRats: number = 50): string
   const ratNumber = addressToNumber(address, maxRats - 1) // -1 because we want 0-based indexing
   return `/images/rats/rat_${ratNumber}.png`
 }
-
-
-

@@ -2,7 +2,22 @@
 pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { GameConfig, EntityType, Balance, Dead, Health, Traits, Inventory, Owner, VisitCount, KillCount, Level, LastVisitBlock, RoomCreationCost, WorldPrompt } from "../codegen/index.sol";
+import {
+  GameConfig,
+  EntityType,
+  Balance,
+  Dead,
+  Health,
+  Traits,
+  Inventory,
+  Owner,
+  VisitCount,
+  KillCount,
+  Level,
+  LastVisitBlock,
+  RoomCreationCost,
+  WorldPrompt
+} from "../codegen/index.sol";
 import { LibManager, LibRat } from "../libraries/Libraries.sol";
 import { ENTITY_TYPE } from "../codegen/common.sol";
 import { Item } from "../structs.sol";

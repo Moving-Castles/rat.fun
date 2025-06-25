@@ -8,8 +8,7 @@
   import NoImage from "$lib/components/Main/Shared/NoImage/NoImage.svelte"
   // import ShareButton from "$lib/components/Main/Shared/RoomPreview/ShareButton.svelte"
 
-  let { room, sanityRoomContent }: { room: Room; sanityRoomContent: any } =
-    $props()
+  let { room, sanityRoomContent }: { room: Room; sanityRoomContent: any } = $props()
 
   let { modal } = getModalState()
   let showImageModal = $state(false)

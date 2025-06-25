@@ -9,7 +9,7 @@
 
   const {
     staticRoomContent,
-    onComplete,
+    onComplete
   }: {
     staticRoomContent: any
     onComplete: () => void
@@ -23,16 +23,11 @@
 
   // Create parent timeline
   const splashScreenTimeline = gsap.timeline({
-    defaults: { duration: 0.75, ease: "power2.out" },
+    defaults: { duration: 0.75, ease: "power2.out" }
   })
 
   onMount(() => {
-    if (
-      !roomInnerElement ||
-      !imageContainerElement ||
-      !promptElement ||
-      !roomIndexElement
-    ) {
+    if (!roomInnerElement || !imageContainerElement || !promptElement || !roomIndexElement) {
       console.error("RoomMeta: Missing elements")
       return
     }
@@ -46,14 +41,14 @@
     splashScreenTimeline.to(roomIndexElement, {
       opacity: 1,
       scale: 1,
-      delay: 0.5,
+      delay: 0.5
     })
     splashScreenTimeline.to(imageContainerElement, { opacity: 1, scale: 1 })
     splashScreenTimeline.to(promptElement, { opacity: 1, scale: 1 })
     splashScreenTimeline.to(roomInnerElement, {
       opacity: 0,
       delay: 2,
-      duration: 0.5,
+      duration: 0.5
     })
 
     // Return to parent

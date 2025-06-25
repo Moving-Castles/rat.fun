@@ -3,12 +3,8 @@
   import type { Hex } from "viem"
   import { ENVIRONMENT } from "$lib/mud/enums"
   import { onMount, onDestroy } from "svelte"
-  import { pushState, goto } from '$app/navigation';
-  import {
-    player,
-    rooms as roomsState,
-    rat as ratState,
-  } from "$lib/modules/state/base/stores"
+  import { pushState, goto } from "$app/navigation"
+  import { player, rooms as roomsState, rat as ratState } from "$lib/modules/state/base/stores"
   import {
     ROOM_RESULT_STATE,
     SHOW_INFO_BOXES,
@@ -17,7 +13,7 @@
     transitionTo,
     transitionToResultSummary,
     resetRoomResultState,
-    freezeObjects,
+    freezeObjects
   } from "$lib/components/Main/RoomResult/state.svelte"
   import { staticContent } from "$lib/modules/content"
   import { enterRoom } from "$lib/components/Main/RoomResult/enterRoom"
@@ -34,7 +30,7 @@
 
   let {
     environment,
-    roomId,
+    roomId
   }: {
     environment: ENVIRONMENT
     roomId: string | null
@@ -47,9 +43,7 @@
   let room = $derived($roomsState?.[roomId ?? ""])
 
   // Get static room content from cms
-  let staticRoomContent = $derived(
-    $staticContent.rooms.find(r => r._id == (roomId ?? ""))
-  )
+  let staticRoomContent = $derived($staticContent.rooms.find(r => r._id == (roomId ?? "")))
 
   const processRoom = async () => {
     if (!roomId) {
@@ -57,11 +51,7 @@
     }
 
     try {
-      const ret = enterRoom(
-        environment,
-        roomId,
-        $player.ownedRat
-      )
+      const ret = enterRoom(environment, roomId, $player.ownedRat)
 
       try {
         result = await ret

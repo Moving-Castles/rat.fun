@@ -1,14 +1,14 @@
-import type { Outcome as OutcomeDoc, Room as RoomDoc} from "@sanity-public-cms-types"
-import type { Rat, Room, Player } from "@modules/types";
-import type { CorrectionReturnValue, OutcomeReturnValue } from '@modules/types'
+import type { Outcome as OutcomeDoc, Room as RoomDoc } from "@sanity-public-cms-types"
+import type { Rat, Room, Player } from "@modules/types"
+import type { CorrectionReturnValue, OutcomeReturnValue } from "@modules/types"
 
 import { publicSanityClient } from "@modules/cms/public/sanity"
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid"
 import { CMSError, CMSAPIError } from "@modules/cms"
 
 // Define a type for new outcome documents that omits Sanity-specific fields
-type NewOutcomeDoc = Omit<OutcomeDoc, '_createdAt' | '_updatedAt' | '_rev'>;
-type NewRoomDoc = Omit<RoomDoc, '_createdAt' | '_updatedAt' | '_rev'>;
+type NewOutcomeDoc = Omit<OutcomeDoc, "_createdAt" | "_updatedAt" | "_rev">
+type NewRoomDoc = Omit<RoomDoc, "_createdAt" | "_updatedAt" | "_rev">
 
 export async function writeRoomToCMS(
   worldAddress: string,
@@ -19,7 +19,7 @@ export async function writeRoomToCMS(
 ): Promise<RoomDoc> {
   try {
     const imageAsset = await publicSanityClient.assets.upload("image", imageBuffer, {
-      filename: `room-${roomID}.webp`,
+      filename: `room-${roomID}.webp`
     })
 
     // Create the room document with the uploaded image reference
@@ -35,30 +35,30 @@ export async function writeRoomToCMS(
         _type: "image",
         asset: {
           _type: "reference",
-          _ref: imageAsset._id,
-        },
+          _ref: imageAsset._id
+        }
       },
       slug: {
         _type: "slug",
-        current: roomID,
-      },
+        current: roomID
+      }
     }
 
     // Create the room document in Sanity
-    const room = await publicSanityClient.create(newRoomDoc) as RoomDoc
+    const room = (await publicSanityClient.create(newRoomDoc)) as RoomDoc
 
     return room
   } catch (error) {
     // If it's already one of our custom errors, rethrow it
     if (error instanceof CMSError) {
-      throw error;
+      throw error
     }
-    
+
     // Otherwise, wrap it in our custom error
     throw new CMSAPIError(
       `Error writing room to CMS: ${error instanceof Error ? error.message : String(error)}`,
       error
-    );
+    )
   }
 }
 
@@ -99,8 +99,8 @@ export async function writeOutcomeToCMS(
       playerName: player.name,
       slug: {
         _type: "slug",
-        current: outcomeID,
-      },
+        current: outcomeID
+      }
     }
 
     // Health change
@@ -111,7 +111,7 @@ export async function writeOutcomeToCMS(
     if (outcome.balanceTransfer) {
       newOutcomeDoc.balanceTransfer = createBalanceTransfer(outcome.balanceTransfer)
     }
-    
+
     // Trait changes
     if (outcome.traitChanges && outcome.traitChanges.length > 0) {
       newOutcomeDoc.traitChanges = createTraitChanges(outcome.traitChanges)
@@ -123,40 +123,40 @@ export async function writeOutcomeToCMS(
     }
 
     // Create the outcome document in Sanity
-    const outcomeDoc = await publicSanityClient.create(newOutcomeDoc) as OutcomeDoc
+    const outcomeDoc = (await publicSanityClient.create(newOutcomeDoc)) as OutcomeDoc
 
     return outcomeDoc
   } catch (error) {
     // If it's already one of our custom errors, rethrow it
     if (error instanceof CMSError) {
-      throw error;
+      throw error
     }
-    
+
     // Otherwise, wrap it in our custom error
     throw new CMSAPIError(
       `Error writing outcome to CMS: ${error instanceof Error ? error.message : String(error)}`,
       error
-    );
+    )
   }
 }
 
 function createOutcomeEvents(events: CorrectionReturnValue) {
-  return (events?.log ?? []).map((event) => ({
+  return (events?.log ?? []).map(event => ({
     _key: uuidv4(),
     event: event.event,
-    timestamp: event.timestamp,
+    timestamp: event.timestamp
   }))
 }
 
-function createHealthChange(healthChange: OutcomeReturnValue['healthChange']) {
+function createHealthChange(healthChange: OutcomeReturnValue["healthChange"]) {
   return {
     _key: uuidv4(),
     logStep: healthChange.logStep,
-    amount: healthChange.amount,
+    amount: healthChange.amount
   }
 }
 
-function createBalanceTransfer(balanceTransfer: OutcomeReturnValue['balanceTransfer']) {
+function createBalanceTransfer(balanceTransfer: OutcomeReturnValue["balanceTransfer"]) {
   return {
     _key: uuidv4(),
     logStep: balanceTransfer.logStep,
@@ -164,24 +164,24 @@ function createBalanceTransfer(balanceTransfer: OutcomeReturnValue['balanceTrans
   }
 }
 
-function createTraitChanges(traitChanges: OutcomeReturnValue['traitChanges']) {
-  return traitChanges.map((traitChange) => ({
+function createTraitChanges(traitChanges: OutcomeReturnValue["traitChanges"]) {
+  return traitChanges.map(traitChange => ({
     _key: uuidv4(),
     logStep: traitChange.logStep,
     type: traitChange.type,
     name: traitChange.name,
     value: traitChange.value,
-    id: traitChange.id ?? "",
+    id: traitChange.id ?? ""
   }))
 }
 
-function createItemChanges(itemChanges: OutcomeReturnValue['itemChanges']) {
-  return itemChanges.map((itemChange) => ({
+function createItemChanges(itemChanges: OutcomeReturnValue["itemChanges"]) {
+  return itemChanges.map(itemChange => ({
     _key: uuidv4(),
     logStep: itemChange.logStep,
     type: itemChange.type,
     name: itemChange.name,
     value: itemChange.value,
-    id: itemChange.id ?? "",
+    id: itemChange.id ?? ""
   }))
 }

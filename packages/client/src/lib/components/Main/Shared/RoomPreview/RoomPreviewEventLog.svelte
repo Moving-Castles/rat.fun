@@ -4,8 +4,7 @@
 
   import RoomEventLog from "$lib/components/Main/Shared/RoomEventLog/RoomEventLog.svelte"
 
-  let { roomId, roomOutcomes }: { roomId: Hex; roomOutcomes?: Outcome[] } =
-    $props()
+  let { roomId, roomOutcomes }: { roomId: Hex; roomOutcomes?: Outcome[] } = $props()
 </script>
 
 {#if roomOutcomes}

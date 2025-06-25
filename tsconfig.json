@@ -1,4 +1,3 @@
 {
-    "extends": "@latticexyz/common/tsconfig.base.json"
+  "extends": "@latticexyz/common/tsconfig.base.json"
 }
-  

@@ -3,11 +3,7 @@
   import { onMount } from "svelte"
   import { gsap } from "gsap"
 
-  let {
-    slide,
-    buttons,
-    onclick,
-  }: { slide: Slide; buttons: any; onclick: () => void } = $props()
+  let { slide, buttons, onclick }: { slide: Slide; buttons: any; onclick: () => void } = $props()
 
   let content = $state<HTMLElement>()
   let text = $state<HTMLElement>()
@@ -16,8 +12,7 @@
   const timeline = gsap.timeline()
 
   const init = () => {
-    if (!content || !text || !buttonsContainer)
-      throw Error("Could not initialize timeline")
+    if (!content || !text || !buttonsContainer) throw Error("Could not initialize timeline")
 
     gsap.set(content, { opacity: 0, scale: 0.95 })
     gsap.set(text, { opacity: 0, scale: 0.95 })
@@ -27,21 +22,21 @@
       scale: 1,
       opacity: 1,
       duration: 0.3,
-      ease: "power2.out",
+      ease: "power2.out"
     })
 
     timeline.to(text, {
       scale: 1,
       opacity: 1,
       duration: 0.3,
-      ease: "power2.out",
+      ease: "power2.out"
     })
 
     timeline.to(buttonsContainer, {
       scale: 1,
       opacity: 1,
       duration: 0.3,
-      ease: "power2.out",
+      ease: "power2.out"
     })
     timeline.play()
   }
@@ -54,8 +49,7 @@
 <div {onclick} class="slide">
   <div bind:this={content} class="slide-content">
     {#if slide.type === "video" && slide.content?.source}
-      <video class="video" src={slide.content.source} autoplay muted loop
-      ></video>
+      <video class="video" src={slide.content.source} autoplay muted loop></video>
     {/if}
     {#if slide.type === "image" && slide.content?.source}
       <img class="image" src={slide.content.source} alt={slide.text} />

@@ -6,7 +6,7 @@
     noclose = false,
     fullscreen = false,
     onclose,
-    target = "main",
+    target = "main"
   }: {
     content: ReturnType<import("svelte").Snippet>
     noclose: boolean
