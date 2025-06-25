@@ -4,7 +4,7 @@
     gameConfig,
     ratLevelIndex,
     ratLevel,
-    ratTotalValue,
+    ratTotalValue
   } from "$lib/modules/state/base/stores"
 
   import FloorItem from "./FloorItem.svelte"
@@ -23,11 +23,8 @@
   }
 
   let floorProgress = $derived.by(() => {
-    const range =
-      Number($ratLevel?.levelMaxBalance ?? 0) -
-      Number($ratLevel?.levelMinBalance ?? 0)
-    const value =
-      Number($ratTotalValue) - Number($ratLevel?.levelMinBalance ?? 0)
+    const range = Number($ratLevel?.levelMaxBalance ?? 0) - Number($ratLevel?.levelMinBalance ?? 0)
+    const value = Number($ratTotalValue) - Number($ratLevel?.levelMinBalance ?? 0)
 
     return value / range
   })
@@ -116,10 +113,10 @@
       transform: scale(1.2);
       background: linear-gradient(
         90deg,
-        rgba(0,0,0,.4),
-        rgba(0,0,0,0) 20%,
-        rgba(0,0,0,0) 80%,
-        rgba(0,0,0,.4) 100%
+        rgba(0, 0, 0, 0.4),
+        rgba(0, 0, 0, 0) 20%,
+        rgba(0, 0, 0, 0) 80%,
+        rgba(0, 0, 0, 0.4) 100%
       );
     }
   }

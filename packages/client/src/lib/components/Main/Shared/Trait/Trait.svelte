@@ -6,13 +6,9 @@
 
   // Trait might be the id of a trait or a TempItem object
 
-  const name = $derived(
-    typeof trait === "string" ? ($traits[trait]?.name ?? "---") : trait.name
-  )
+  const name = $derived(typeof trait === "string" ? ($traits[trait]?.name ?? "---") : trait.name)
 
-  const value = $derived(
-    typeof trait === "string" ? ($traits[trait]?.value ?? 0) : trait.value
-  )
+  const value = $derived(typeof trait === "string" ? ($traits[trait]?.value ?? 0) : trait.value)
 </script>
 
 <div class="list-item">

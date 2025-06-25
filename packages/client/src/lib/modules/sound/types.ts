@@ -1,15 +1,15 @@
-import type { Howl } from "howler";
+import type { Howl } from "howler"
 
 export type Sound = {
-  src: string;
-  volume: number;
-  sound?: Howl;
-};
+  src: string
+  volume: number
+  sound?: Howl
+}
 
 export type SoundAssets = {
-  [index: string]: Sound;
-};
+  [index: string]: Sound
+}
 
 export type SoundLibrary = {
-  [index: string]: SoundAssets;
-};
+  [index: string]: SoundAssets
+}

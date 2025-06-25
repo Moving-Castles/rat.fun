@@ -1,9 +1,9 @@
-import { Howl } from "howler";
-import { writable } from "svelte/store";
-import { soundLibrary } from "./sound-library";
+import { Howl } from "howler"
+import { writable } from "svelte/store"
+import { soundLibrary } from "./sound-library"
 
-export const music = writable(new Howl({ src: [""] }));
-export const fx = writable([new Howl({ src: [""] })]);
+export const music = writable(new Howl({ src: [""] }))
+export const fx = writable([new Howl({ src: [""] })])
 
 /**
  * Initializes and preloads all sounds from the `tcm` property of the `soundLibrary` object.
@@ -35,8 +35,13 @@ export function initSound(): void {
  * @param {number} [pitch=1] - The pitch of the sound.
  * @returns {Howl | undefined} - The Howl object of the sound.
  */
-export function playSound(category: string, id: string, loop: boolean = false, fade: boolean = false, pitch: number = 1): Howl | undefined {
-
+export function playSound(
+  category: string,
+  id: string,
+  loop: boolean = false,
+  fade: boolean = false,
+  pitch: number = 1
+): Howl | undefined {
   const sound = soundLibrary[category][id].sound
 
   if (!sound) return
@@ -47,24 +52,24 @@ export function playSound(category: string, id: string, loop: boolean = false, f
 
   if (fade) {
     // Fade on begin and end
-    const FADE_TIME = 2000;
+    const FADE_TIME = 2000
 
     // Init
     sound.rate(pitch)
-    sound.play();
-    sound.fade(0, soundLibrary[category][id].volume, FADE_TIME);
+    sound.play()
+    sound.fade(0, soundLibrary[category][id].volume, FADE_TIME)
   } else {
     sound.rate(pitch)
-    sound.play();
+    sound.play()
   }
 
   return sound
 }
 /**
- * @returns {number} - A random pitch 
+ * @returns {number} - A random pitch
  */
 export function randomPitch(): number {
-  const max = 2;
-  const min = 0.8;
-  return Math.random() * (max - min) + min;
+  const max = 2
+  const min = 0.8
+  return Math.random() * (max - min) + min
 }

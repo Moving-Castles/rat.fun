@@ -1,6 +1,6 @@
-import type { AppAccountClient } from "@latticexyz/account-kit/bundle";
+import type { AppAccountClient } from "@latticexyz/account-kit/bundle"
 
 export type AccountKitConnectReturn = {
-    appAccountClient: AppAccountClient
-    userAddress: string
+  appAccountClient: AppAccountClient
+  userAddress: string
 }

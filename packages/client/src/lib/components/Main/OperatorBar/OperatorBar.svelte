@@ -15,7 +15,7 @@
           <div
             use:tippy={{
               content: `${$player.name}: This is you, an operator of the firm`,
-              placement: "bottom",
+              placement: "bottom"
             }}
             class="inner-wrapper operator"
           >
@@ -27,7 +27,7 @@
         <div
           use:tippy={{
             content: `This is available funds in your operator wallet, spend wisely`,
-            placement: "bottom",
+            placement: "bottom"
           }}
           class="stat-item"
         >

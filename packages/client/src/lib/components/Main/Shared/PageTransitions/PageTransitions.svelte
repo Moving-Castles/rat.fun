@@ -13,9 +13,9 @@
     defaultIn = "fade",
     defaultOut = "fade"
   }: {
-    children: import("svelte").Snippet,
-    config: TransitionConfig[],
-    defaultIn?: TransitionFunction,
+    children: import("svelte").Snippet
+    config: TransitionConfig[]
+    defaultIn?: TransitionFunction
     defaultOut?: TransitionFunction
   } = $props()
 
@@ -28,9 +28,13 @@
   let wanted = $state<TransitionConfig>()
   let display = $state("contents")
 
-  beforeNavigate((e) => {
+  beforeNavigate(e => {
     // Determine if and which one we want to use
-    wanted = config.find(entry => (entry.from === "*" || entry.from === e.from?.route.id) && entry.to === "*" || entry.to === e.to?.route.id)
+    wanted = config.find(
+      entry =>
+        ((entry.from === "*" || entry.from === e.from?.route.id) && entry.to === "*") ||
+        entry.to === e.to?.route.id
+    )
     if (wanted) {
       display = "block"
       transitionFunctionIn = transitionFunctions?.[wanted?.in?.transition || "none"]
@@ -39,14 +43,10 @@
       outParams = wanted?.out?.params || {}
     }
   })
- </script>
+</script>
 
 {#key `${wanted?.from}-${wanted?.to}`}
-  <div
-    in:transitionFunctionIn={inParams}
-    out:transitionFunctionOut={outParams}
-    >
-    
+  <div in:transitionFunctionIn={inParams} out:transitionFunctionOut={outParams}>
     {@render children?.()}
   </div>
 {/key}

@@ -1,4 +1,4 @@
-import type { LayoutLoad } from './$types';
+import type { LayoutLoad } from "./$types"
 import { ENVIRONMENT, WALLET_TYPE } from "$lib/mud/enums"
 
 export const prerender = true
@@ -17,10 +17,10 @@ const getEnvironment = (url: URL) => {
 const getWalletType = (url: URL) => {
   const hostname = url.hostname
 
-  if(hostname.includes("accountkit") || url.searchParams.has("accountkit")) {
+  if (hostname.includes("accountkit") || url.searchParams.has("accountkit")) {
     return WALLET_TYPE.ACCOUNTKIT
   }
-  
+
   return WALLET_TYPE.BURNER
 }
 

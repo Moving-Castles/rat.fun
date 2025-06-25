@@ -31,7 +31,6 @@
       font-size: var(--font-size-extra-large);
       transition: transform 0.2s ease-in-out;
       letter-spacing: -0.2em;
-
     }
     &:hover {
       background: var(--color-alert-priority);

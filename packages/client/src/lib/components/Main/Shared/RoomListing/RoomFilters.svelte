@@ -6,7 +6,7 @@
     entriesByVisit,
     entriesByBalance,
     entriesByKillCount,
-    entriesByPopularity,
+    entriesByPopularity
   } from "./sortFunctions"
 
   let {
@@ -17,7 +17,7 @@
     onTextFilterChange,
     onTextFilterClear,
     onToggleDepleted,
-    roomsAmount,
+    roomsAmount
   } = $props<{
     textFilter: string
     sortFunction: (a: [string, any], b: [string, any]) => number
@@ -34,7 +34,7 @@
   <!-- ROOM COUNTER -->
   <div
     use:tippy={{
-      content: `There are ${Object.keys($roomStore).length} rooms on your floor`,
+      content: `There are ${Object.keys($roomStore).length} rooms on your floor`
     }}
     class="floor-stats"
   >
@@ -60,7 +60,7 @@
     <button
       use:tippy={{
         placement: "top",
-        content: "sort by popularity",
+        content: "sort by popularity"
       }}
       class:active={sortFunction === entriesByPopularity}
       class="sort-button"
@@ -72,7 +72,7 @@
     <button
       use:tippy={{
         placement: "top",
-        content: "sort chronologically",
+        content: "sort chronologically"
       }}
       class:active={sortFunction === entriesChronologically}
       class="sort-button"
@@ -84,7 +84,7 @@
     <button
       use:tippy={{
         placement: "top",
-        content: "sort by visit",
+        content: "sort by visit"
       }}
       class:active={sortFunction === entriesByVisit}
       class="sort-button"
@@ -96,7 +96,7 @@
     <button
       use:tippy={{
         placement: "top",
-        content: "sort by balance",
+        content: "sort by balance"
       }}
       class:active={sortFunction === entriesByBalance}
       class="sort-button"
@@ -108,7 +108,7 @@
     <button
       use:tippy={{
         placement: "top",
-        content: "sort by kill count",
+        content: "sort by kill count"
       }}
       class:active={sortFunction === entriesByKillCount}
       class="sort-button"
@@ -123,7 +123,7 @@
       class:active={showDepletedRooms}
       use:tippy={{
         placement: "top",
-        content: "show depleted rooms",
+        content: "show depleted rooms"
       }}
       onclick={onToggleDepleted}
     >

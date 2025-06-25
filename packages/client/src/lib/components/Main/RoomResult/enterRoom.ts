@@ -38,22 +38,20 @@ export async function enterRoom(
     const response = await fetch(url, {
       method: "POST",
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Type": "application/x-www-form-urlencoded"
       },
-      body: formData,
+      body: formData
     })
 
     if (!response.ok) {
-      const error = (await response.json())
+      const error = await response.json()
       throw new Error(`${error.error}: ${error.message}`)
     }
 
     const outcome = (await response.json()) as EnterRoomReturnValue
 
     const endTime = performance.now()
-    console.log(
-      `Operation took ${(endTime - startTime).toFixed(3)} milliseconds`
-    )
+    console.log(`Operation took ${(endTime - startTime).toFixed(3)} milliseconds`)
 
     return outcome
   } catch (err) {

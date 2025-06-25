@@ -56,7 +56,7 @@ const spinner = {
       process.stdout.write("\r\x1B[K") // Clear line
       process.stdout.write("\x1B[?25h") // Show cursor
     }
-  },
+  }
 }
 
 const opts = { schema }
@@ -73,10 +73,7 @@ async function routes(fastify: FastifyInstance) {
         const playerId = getSenderId(signature)
 
         // Get onchain data
-        const { gameConfig, player, level } = await getCreateRoomData(
-          playerId,
-          levelId
-        )
+        const { gameConfig, player, level } = await getCreateRoomData(playerId, levelId)
 
         // Validate data
         validateInputData(gameConfig, roomPrompt, player, level)
@@ -103,13 +100,7 @@ async function routes(fastify: FastifyInstance) {
             const worldAddress = resolvedNetwork.worldContract?.address ?? "0x0"
 
             // Write the document
-            await writeRoomToCMS(
-              worldAddress,
-              roomId,
-              roomPrompt,
-              player,
-              imageBuffer
-            )
+            await writeRoomToCMS(worldAddress, roomId, roomPrompt, player, imageBuffer)
           } catch (error) {
             // Handle CMS-specific errors
             if (error instanceof CMSError) {
@@ -118,10 +109,7 @@ async function routes(fastify: FastifyInstance) {
               // But we do want to log it properly
             } else {
               // For unexpected errors, log them but don't fail the request
-              console.error(
-                "Unexpected error in image generation or CMS write:",
-                error
-              )
+              console.error("Unexpected error in image generation or CMS write:", error)
             }
           } finally {
             spinner.stop()
@@ -139,7 +127,7 @@ async function routes(fastify: FastifyInstance) {
 
         reply.send({
           success: true,
-          roomId,
+          roomId
         })
       } catch (error) {
         return handleError(error, reply)

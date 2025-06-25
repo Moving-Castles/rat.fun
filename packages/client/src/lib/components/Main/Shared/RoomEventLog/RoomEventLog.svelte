@@ -7,19 +7,14 @@
   import { publicNetwork } from "$lib/modules/network"
   import { staticContent } from "$lib/modules/content"
 
-  let {
-    roomId,
-    initialOutcomes,
-  }: { roomId: string; initialOutcomes: Outcome[] } = $props()
+  let { roomId, initialOutcomes }: { roomId: string; initialOutcomes: Outcome[] } = $props()
 
   let subscription = $state<any>(null)
 
   const query = queries.outcomesForRoom
   const params = { roomId, worldAddress: $publicNetwork.worldAddress }
 
-  let roomOutcomes = $derived(
-    $staticContent?.outcomes?.filter(o => o.roomId == roomId) || []
-  )
+  let roomOutcomes = $derived($staticContent?.outcomes?.filter(o => o.roomId == roomId) || [])
 
   const callback = (update: Outcome[]) => {
     if (!outcomes) {

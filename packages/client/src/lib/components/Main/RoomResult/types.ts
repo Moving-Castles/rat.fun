@@ -1,10 +1,16 @@
 import { Hex } from "viem"
-import { LogEntry, HealthChange,  BalanceTransfer, TraitChange, ItemChange } from "@server/modules/types"
+import {
+  LogEntry,
+  HealthChange,
+  BalanceTransfer,
+  TraitChange,
+  ItemChange
+} from "@server/modules/types"
 
 export type TempItem = {
-  name: string,
+  name: string
   value: number
-}  
+}
 
 export type FrozenRat = Rat & {
   inventory: Array<string | TempItem>
@@ -24,9 +30,9 @@ export type MergedLogEntry = LogEntry & {
 }
 
 export type OutcomeDataStringMap = {
-  type: string,
-  action: string,
-  value: string,
-  name?: string,
+  type: string
+  action: string
+  value: string
+  name?: string
   id?: string
 }

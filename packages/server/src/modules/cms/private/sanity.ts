@@ -11,7 +11,7 @@ export const privateSanityClient = createClient({
   dataset: "production",
   token: PRIVATE_SANITY_CMS_TOKEN,
   apiVersion: "2025-04-18",
-  useCdn: false, // `false` if you want to ensure fresh data
+  useCdn: false // `false` if you want to ensure fresh data
 })
 
 export const loadDataPrivateSanity = async (query: string, params: any) => {

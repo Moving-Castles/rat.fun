@@ -1,27 +1,19 @@
 import { get } from "svelte/store"
 import { publicNetwork } from "$lib/modules/network"
-import {
-  filterObjectByKey,
-  toCamelCase,
-  removePrivateKeys,
-} from "$lib/modules/utils"
+import { filterObjectByKey, toCamelCase, removePrivateKeys } from "$lib/modules/utils"
 import { entities } from "$lib/modules/state/base/stores"
 // import { playerAddress } from "$lib/modules/state/base/stores"
 // import { addressToId } from "$lib/modules/utils"
 import { createComponentSystem } from "$lib/modules/systems"
 
 export function initEntities() {
-
   const tableKeys = get(publicNetwork).tableKeys
 
   // console.log("initEntities", tableKeys)
 
-  // console.log('tableKeys', tableKeys) 
+  // console.log('tableKeys', tableKeys)
 
-  const filteredComponents = filterObjectByKey(
-    get(publicNetwork).components,
-    tableKeys
-  )
+  const filteredComponents = filterObjectByKey(get(publicNetwork).components, tableKeys)
 
   // console.log('filteredComponents', filteredComponents)
 
@@ -57,11 +49,9 @@ export function initEntities() {
           const entityKey = key.description as string
           // Create empty object if key is not present
           if (!syncEntities[entityKey]) syncEntities[entityKey] = {} as Entity
-          if (!syncEntities[entityKey][propertyName])
-            syncEntities[entityKey][propertyName] = {}
+          if (!syncEntities[entityKey][propertyName]) syncEntities[entityKey][propertyName] = {}
           // Set property
-          syncEntities[entityKey][propertyName][structPropertyName] =
-            structPropertyValue
+          syncEntities[entityKey][propertyName][structPropertyName] = structPropertyValue
         })
       })
     }

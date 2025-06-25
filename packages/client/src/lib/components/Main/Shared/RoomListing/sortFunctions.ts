@@ -1,10 +1,7 @@
 import { get } from "svelte/store"
 import { blockNumber } from "$lib/modules/network"
 
-export const entriesChronologically = (
-  a: [string, Room],
-  b: [string, Room]
-) => {
+export const entriesChronologically = (a: [string, Room], b: [string, Room]) => {
   return Number(b[1]?.index || 0) - Number(a[1].index || 0)
 }
 

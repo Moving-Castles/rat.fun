@@ -26,11 +26,7 @@
   }
 </script>
 
-<a
-  href="/{roomId}"
-  class="room-listing-item"
-  class:disabled={Number(room.balance) == 0}
->
+<a href="/{roomId}" class="room-listing-item" class:disabled={Number(room.balance) == 0}>
   <!-- COLUMN LEFT -->
   <div class="column left">
     <div class="room-image">
@@ -67,9 +63,7 @@
         <span class="divider">•</span>
         <!-- CREATION TIME  -->
         <span class="creation-time small">
-          {blocksToReadableTime(
-            Number($blockNumber) - Number(room.creationBlock)
-          )}
+          {blocksToReadableTime(Number($blockNumber) - Number(room.creationBlock))}
         </span>
       </div>
       <!-- PROMPT -->

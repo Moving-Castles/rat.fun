@@ -14,22 +14,22 @@
  * from packages/contracts/worlds.json. When the contracts package
  * deploys a new `World`, it updates this file.
  */
-import worlds from "contracts/worlds.json";
+import worlds from "contracts/worlds.json"
 
 /*
  * The supported chains.
  */
 
-import { supportedChains } from "./supportedChains";
+import { supportedChains } from "./supportedChains"
 
 export async function getNetworkConfig(privateKey: string, chainId: number) {
   /*
    * Find the chain (unless it isn't in the list of supported chains).
    */
-  const chainIndex = supportedChains.findIndex((c) => c.id === chainId);
-  const chain = supportedChains[chainIndex];
+  const chainIndex = supportedChains.findIndex(c => c.id === chainId)
+  const chain = supportedChains[chainIndex]
   if (!chain) {
-    throw new Error(`Chain ${chainId} not found`);
+    throw new Error(`Chain ${chainId} not found`)
   }
 
   /*
@@ -37,10 +37,10 @@ export async function getNetworkConfig(privateKey: string, chainId: number) {
    * different address than the one in worlds.json,
    * provide it as worldAddress in the query string.
    */
-  const world = worlds[chain.id.toString()];
-  const worldAddress = world?.address;
+  const world = worlds[chain.id.toString()]
+  const worldAddress = world?.address
   if (!worldAddress) {
-    throw new Error(`No world address found for chain ${chainId}. Did you run \`mud deploy\`?`);
+    throw new Error(`No world address found for chain ${chainId}. Did you run \`mud deploy\`?`)
   }
 
   /*
@@ -50,7 +50,7 @@ export async function getNetworkConfig(privateKey: string, chainId: number) {
    * on the URL (as initialBlockNumber) or in the worlds.json
    * file. If neither has it, it starts at the first block, zero.
    */
-  const initialBlockNumber = world?.blockNumber ?? 0n;
+  const initialBlockNumber = world?.blockNumber ?? 0n
 
   // Garnet: 0x6b3875c240bcde26fc32b1d23d746a42901956a2ddf11da050593ad6725b18ec
   return {
@@ -58,6 +58,6 @@ export async function getNetworkConfig(privateKey: string, chainId: number) {
     chainId,
     chain,
     worldAddress,
-    initialBlockNumber,
-  };
+    initialBlockNumber
+  }
 }

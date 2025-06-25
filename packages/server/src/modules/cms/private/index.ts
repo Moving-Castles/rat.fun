@@ -18,28 +18,30 @@ export const getSystemPrompts = async () => {
       queries.activePrompts,
       {}
     )) as ExpandedActivePrompts
-    
-    if (!activePrompts || !activePrompts.activeEventPrompt || !activePrompts.activeCorrectionPrompt) {
-      throw new CMSDataError('Missing required prompt data', activePrompts);
+
+    if (
+      !activePrompts ||
+      !activePrompts.activeEventPrompt ||
+      !activePrompts.activeCorrectionPrompt
+    ) {
+      throw new CMSDataError("Missing required prompt data", activePrompts)
     }
-    
+
     return {
       combinedSystemPrompt: combineSystemPrompts(activePrompts.activeEventPrompt),
-      correctionSystemPrompt: combineSystemPrompts(
-        activePrompts.activeCorrectionPrompt
-      ),
+      correctionSystemPrompt: combineSystemPrompts(activePrompts.activeCorrectionPrompt)
     }
   } catch (error) {
     // If it's already one of our custom errors, rethrow it
     if (error instanceof CMSError) {
-      throw error;
+      throw error
     }
-    
+
     // Otherwise, wrap it in our custom error
     throw new CMSAPIError(
       `Error fetching system prompts: ${error instanceof Error ? error.message : String(error)}`,
       error
-    );
+    )
   }
 }
 

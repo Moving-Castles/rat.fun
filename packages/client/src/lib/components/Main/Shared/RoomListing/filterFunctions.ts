@@ -24,4 +24,4 @@ export const filterDepletedRooms = (entries: [string, Room][], showDepletedRooms
     return entries.filter(([_, room]) => Number(room.balance || 0) > 0)
   }
   return entries
-} 
+}

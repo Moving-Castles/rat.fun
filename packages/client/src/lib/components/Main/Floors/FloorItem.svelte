@@ -4,8 +4,6 @@
 
   const { levelId, i }: { levelId: string; i: number } = $props()
 
-  // Prompt: ${$levels[levelId].prompt}
-  // Name: ${$levels[levelId].name} /
   let toolTipText = $derived(
     `Min: ${$levels[levelId].levelMinBalance} / Max: ${$levels[levelId].levelMaxBalance}`
   )
@@ -13,7 +11,7 @@
 
 <div
   use:tippy={{
-    content: toolTipText,
+    content: toolTipText
   }}
   class="floor-item"
 >

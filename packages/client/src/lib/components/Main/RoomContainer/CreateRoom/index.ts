@@ -1,7 +1,4 @@
-import type {
-  EnterRoomReturnValue,
-  CreateRoomReturnValue,
-} from "@server/modules/types"
+import type { EnterRoomReturnValue, CreateRoomReturnValue } from "@server/modules/types"
 import { getSignature } from "$lib/modules/signature"
 
 import { ENVIRONMENT } from "$lib/mud/enums"
@@ -13,7 +10,7 @@ export async function createRoom(
 ): Promise<CreateRoomReturnValue> {
   const startTime = performance.now()
 
-  const url = [ENVIRONMENT.PYROPE ].includes(environment)
+  const url = [ENVIRONMENT.PYROPE].includes(environment)
     ? "https://reality-model-1.mc-infra.com/room/create"
     : "http://localhost:3131/room/create"
 
@@ -28,9 +25,9 @@ export async function createRoom(
     const response = await fetch(url, {
       method: "POST",
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Type": "application/x-www-form-urlencoded"
       },
-      body: formData,
+      body: formData
     })
 
     if (!response.ok) {
@@ -46,9 +43,7 @@ export async function createRoom(
 
     const endTime = performance.now()
 
-    console.log(
-      `Operation took ${(endTime - startTime).toFixed(3)} milliseconds`
-    )
+    console.log(`Operation took ${(endTime - startTime).toFixed(3)} milliseconds`)
 
     return result
   } catch (err) {

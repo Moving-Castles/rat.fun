@@ -8,12 +8,12 @@ import { program } from "commander"
 
 // Load .env from parent directory
 import dotenv from "dotenv"
-dotenv.config({ path: path.resolve(__dirname, '../.env') })
+dotenv.config({ path: path.resolve(__dirname, "../.env") })
 
 const FIXED_PROMPT = "A rat."
 
 const client = new Replicate({
-  auth: process.env.REPLICATE_API_TOKEN,
+  auth: process.env.REPLICATE_API_TOKEN
 })
 
 function pickRandomMultiple<T>(array: T[], count: number): T[] {
@@ -27,17 +27,17 @@ const MODEL = {
 const sanitizePrompt = (prompt: string): string => {
   return prompt
     .toLowerCase()
-    .replace(/[^a-z0-9]/g, '_')
-    .replace(/_+/g, '_')
+    .replace(/[^a-z0-9]/g, "_")
+    .replace(/_+/g, "_")
     .substring(0, 100)
 }
 
 const createOutputDirectory = (prompt: string): string => {
-  const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
+  const timestamp = new Date().toISOString().replace(/[:.]/g, "-")
   const sanitizedPrompt = sanitizePrompt(prompt)
   const dirName = `${timestamp}_${sanitizedPrompt}`
-  const outputDir = path.join(process.cwd(), 'output', dirName)
-  
+  const outputDir = path.join(process.cwd(), "output", dirName)
+
   fs.mkdirSync(outputDir, { recursive: true })
 
   return outputDir
@@ -59,33 +59,30 @@ export const generateImage = async (prompt: string) => {
       output_format: "png",
       output_quality: 80,
       prompt_strength: 0.79,
-      steps: 28,
+      steps: 28
     }
   }
 
   // Log prompt to root prompts.txt
   const timecode = new Date().toISOString()
-  fs.appendFileSync(
-    path.join(process.cwd(), 'prompts.txt'),
-    `${timecode}: ${fullPrompt}\n`
-  )
+  fs.appendFileSync(path.join(process.cwd(), "prompts.txt"), `${timecode}: ${fullPrompt}\n`)
 
   try {
-    const output = await client.run(MODEL.SD, { input: INPUT.SD }) as FileOutput[]
+    const output = (await client.run(MODEL.SD, { input: INPUT.SD })) as FileOutput[]
 
     if (!output[0]) throw new Error("No output received from Replicate")
 
     // Get the image data directly as a blob
     const blob = await output[0].blob()
-    
+
     // Convert blob to buffer
     const arrayBuffer = await blob.arrayBuffer()
     const buffer = Buffer.from(arrayBuffer)
-    
+
     // Process image with sharp
     const processedBuffer = await sharp(buffer)
       .modulate({
-        saturation: 3,
+        saturation: 3
       })
       .toBuffer()
 
@@ -99,11 +96,11 @@ const processRun = async (variations: number) => {
   const prompt = FIXED_PROMPT
   console.log(`\nProcessing run with prompt: "${prompt}"`)
   console.log(`Generating ${variations} variations...`)
-  
+
   const outputDir = createOutputDirectory(prompt)
   console.log(`Saving images to: ${outputDir}`)
 
-  const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
+  const timestamp = new Date().toISOString().replace(/[:.]/g, "-")
 
   for (let i = 0; i < variations; i++) {
     console.log(`Generating image ${i + 1}/${variations}...`)
@@ -121,12 +118,12 @@ const processRun = async (variations: number) => {
 
 const main = async () => {
   program
-    .requiredOption('-n, --number <number>', 'Number of images to generate', parseInt)
+    .requiredOption("-n, --number <number>", "Number of images to generate", parseInt)
     .parse(process.argv)
 
   const { number } = program.opts()
   await processRun(number)
-  console.log('\nAll generations complete!')
+  console.log("\nAll generations complete!")
 }
 
 main().catch(console.error)

@@ -6,7 +6,7 @@ export enum TransactionState {
   INITIATED,
   WAITING,
   SENDING,
-  DONE,
+  DONE
 }
 
 /**

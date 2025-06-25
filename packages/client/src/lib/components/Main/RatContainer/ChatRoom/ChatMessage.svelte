@@ -5,10 +5,8 @@
   import { tippy } from "svelte-tippy"
   import { playSound } from "$lib/modules/sound"
 
-  let {
-    event,
-    suppressSound = false,
-  }: { event: OffChainMessage; suppressSound?: boolean } = $props()
+  let { event, suppressSound = false }: { event: OffChainMessage; suppressSound?: boolean } =
+    $props()
 
   onMount(() => {
     if (!suppressSound) {
@@ -20,7 +18,7 @@
 <div id={event.id} class="chat-message">
   <span
     use:tippy={{
-      content: formatDate(new Date(event.timestamp)),
+      content: formatDate(new Date(event.timestamp))
     }}
     class="timestamp"
   >

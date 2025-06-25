@@ -1,7 +1,21 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { getUniqueEntity } from "@latticexyz/world-modules/src/modules/uniqueentity/getUniqueEntity.sol";
-import { Dead, Health, Balance, Inventory, Traits, Value, Level, VisitedLevels, LevelMinBalance, LevelMaxBalance, LevelList, Index, Owner } from "../codegen/index.sol";
+import {
+  Dead,
+  Health,
+  Balance,
+  Inventory,
+  Traits,
+  Value,
+  Level,
+  VisitedLevels,
+  LevelMinBalance,
+  LevelMaxBalance,
+  LevelList,
+  Index,
+  Owner
+} from "../codegen/index.sol";
 import { ENTITY_TYPE } from "../codegen/common.sol";
 import { LibUtils } from "./LibUtils.sol";
 import { LibItem } from "./LibItem.sol";

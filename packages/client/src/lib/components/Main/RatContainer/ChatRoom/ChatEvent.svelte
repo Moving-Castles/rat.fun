@@ -6,10 +6,8 @@
   import { tippy } from "svelte-tippy"
   import { playSound } from "$lib/modules/sound"
 
-  let {
-    event,
-    suppressSound = false,
-  }: { event: OffChainMessage; suppressSound?: boolean } = $props()
+  let { event, suppressSound = false }: { event: OffChainMessage; suppressSound?: boolean } =
+    $props()
 
   onMount(() => {
     if (!suppressSound) {
@@ -23,7 +21,7 @@
     <!-- ROOM CREATION -->
     <span
       use:tippy={{
-        content: formatDate(new Date(event.timestamp)),
+        content: formatDate(new Date(event.timestamp))
       }}
       class="timestamp"
     >
@@ -34,7 +32,7 @@
     <!-- ROOM LIQUIDATION -->
     <span
       use:tippy={{
-        content: formatDate(new Date(event.timestamp)),
+        content: formatDate(new Date(event.timestamp))
       }}
       class="timestamp"
     >
@@ -45,7 +43,7 @@
     <!-- ROOM OUTCOME -->
     <span
       use:tippy={{
-        content: formatDate(new Date(event.timestamp)),
+        content: formatDate(new Date(event.timestamp))
       }}
       class="timestamp"
     >
@@ -58,7 +56,7 @@
     <!-- DEATH IN ROOM -->
     <span
       use:tippy={{
-        content: formatDate(new Date(event.timestamp)),
+        content: formatDate(new Date(event.timestamp))
       }}
       class="timestamp"
     >
@@ -70,7 +68,7 @@
     <!-- DEPLOY -->
     <span
       use:tippy={{
-        content: formatDate(new Date(event.timestamp)),
+        content: formatDate(new Date(event.timestamp))
       }}
       class="timestamp"
     >
@@ -81,7 +79,7 @@
     <!-- LIQUIDATE -->
     <span
       use:tippy={{
-        content: formatDate(new Date(event.timestamp)),
+        content: formatDate(new Date(event.timestamp))
       }}
       class="timestamp"
     >

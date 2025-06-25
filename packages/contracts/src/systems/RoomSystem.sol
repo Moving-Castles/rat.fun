@@ -2,7 +2,18 @@
 pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { GameConfig, EntityType, Balance, Level, VisitedLevels, RoomCreationCost, LevelList, Owner, OwnedRat, CreationBlock } from "../codegen/index.sol";
+import {
+  GameConfig,
+  EntityType,
+  Balance,
+  Level,
+  VisitedLevels,
+  RoomCreationCost,
+  LevelList,
+  Owner,
+  OwnedRat,
+  CreationBlock
+} from "../codegen/index.sol";
 import { LibRoom, LibUtils, LibWorld } from "../libraries/Libraries.sol";
 import { MAX_ROOM_PROMPT_LENGTH } from "../constants.sol";
 import { ENTITY_TYPE } from "../codegen/common.sol";

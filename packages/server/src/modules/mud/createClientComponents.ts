@@ -9,16 +9,16 @@
  * an onchain component.
  */
 
-import { SetupNetworkResult } from "./setupNetwork";
+import { SetupNetworkResult } from "./setupNetwork"
 
 export type ClientComponents = {
   // define the structure of ClientComponents explicitly
-  [key: string]: any;
-};
+  [key: string]: any
+}
 
 export function createClientComponents({ components }: SetupNetworkResult): ClientComponents {
   return {
-    ...components,
+    ...components
     // add your client components or overrides here
-  };
+  }
 }

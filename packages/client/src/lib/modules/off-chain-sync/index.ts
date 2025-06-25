@@ -4,7 +4,7 @@ import {
   clientList,
   latestEvents,
   roundTriptime,
-  websocketConnected,
+  websocketConnected
 } from "$lib/modules/off-chain-sync/stores"
 import { getSignature } from "$lib/modules/signature"
 
@@ -20,16 +20,16 @@ export function initOffChainSync(environment: ENVIRONMENT, playerId: string) {
   // Clean up any existing connection
   if (socket) {
     try {
-      socket.close();
+      socket.close()
     } catch (e) {
-      console.error('Error closing existing socket:', e);
+      console.error("Error closing existing socket:", e)
     }
   }
 
   // Clear any pending reconnection
   if (reconnectTimeout) {
-    clearTimeout(reconnectTimeout);
-    reconnectTimeout = null;
+    clearTimeout(reconnectTimeout)
+    reconnectTimeout = null
   }
 
   let url = `ws://localhost:3131/ws/${playerId}`
@@ -88,16 +88,16 @@ export function initOffChainSync(environment: ENVIRONMENT, playerId: string) {
 
 function attemptReconnect(environment: ENVIRONMENT, playerId: string) {
   if (reconnectTimeout) {
-    clearTimeout(reconnectTimeout);
+    clearTimeout(reconnectTimeout)
   }
 
-  const delay = Math.min(1000 * Math.pow(2, reconnectAttempts), MAX_RECONNECTION_DELAY);
-  reconnectAttempts++;
+  const delay = Math.min(1000 * Math.pow(2, reconnectAttempts), MAX_RECONNECTION_DELAY)
+  reconnectAttempts++
 
   reconnectTimeout = setTimeout(() => {
-    console.log(`Attempting to reconnect (attempt ${reconnectAttempts})...`);
-    initOffChainSync(environment, playerId);
-  }, delay);
+    console.log(`Attempting to reconnect (attempt ${reconnectAttempts})...`)
+    initOffChainSync(environment, playerId)
+  }, delay)
 }
 
 export function ping() {
@@ -105,7 +105,7 @@ export function ping() {
   socket.send(
     JSON.stringify({
       topic: "test",
-      message: "ping",
+      message: "ping"
     })
   )
 }
@@ -114,10 +114,7 @@ export function ping() {
  * CHAT MESSAGE
  *****************/
 
-export async function sendChatMessage(
-  level: string,
-  message: string
-) {
+export async function sendChatMessage(level: string, message: string) {
   const signature = await getSignature()
 
   if (socket) {
@@ -126,7 +123,7 @@ export async function sendChatMessage(
         topic: "chat__message",
         level: level,
         message: message,
-        signature: signature,
+        signature: signature
       })
     )
   } else {
@@ -145,7 +142,7 @@ export async function sendDeployRatMessage() {
     socket.send(
       JSON.stringify({
         topic: "rat__deploy",
-        signature: signature,
+        signature: signature
       })
     )
   } else {
@@ -165,7 +162,7 @@ export async function sendLiquidateRatMessage(ratId: string) {
       JSON.stringify({
         topic: "rat__liquidate",
         ratId: ratId,
-        signature: signature, 
+        signature: signature
       })
     )
   } else {
@@ -184,10 +181,9 @@ export async function sendLiquidateRoomMessage(roomId: string) {
     socket.send(
       JSON.stringify({
         topic: "room__liquidation",
-        roomId: roomId,        
-        signature: signature,
+        roomId: roomId,
+        signature: signature
       })
     )
   }
 }
-

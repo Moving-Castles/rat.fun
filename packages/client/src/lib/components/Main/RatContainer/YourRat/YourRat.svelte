@@ -53,11 +53,7 @@
 {/snippet}
 
 {#if showRatModal}
-  <ModalTarget
-    fullscreen={true}
-    onclose={() => (showRatModal = false)}
-    content={ratModal}
-  />
+  <ModalTarget fullscreen={true} onclose={() => (showRatModal = false)} content={ratModal} />
 {/if}
 
 <style lang="scss">

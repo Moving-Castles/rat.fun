@@ -14,7 +14,7 @@
       <div
         class="header"
         use:tippy={{
-          content: "Permanent personality traits of your rat.",
+          content: "Permanent personality traits of your rat."
         }}
       >
         <div class="label">Traits</div>
@@ -32,8 +32,7 @@
         <div
           class="label"
           use:tippy={{
-            content:
-              "Items carried by your rat. You can drop them by clicking on them.",
+            content: "Items carried by your rat. You can drop them by clicking on them."
           }}
         >
           Inventory

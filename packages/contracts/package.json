@@ -31,8 +31,6 @@
     "@types/node": "^24.0.1",
     "ds-test": "https://github.com/dapphub/ds-test.git#e282159d5170298eb2455a6c05280ab5a73a4ef0",
     "forge-std": "https://github.com/foundry-rs/forge-std.git#74cfb77e308dd188d2f58864aaf44963ae6b88b1",
-    "prettier": "^3.5.3",
-    "prettier-plugin-solidity": "^2.0.0",
     "solhint": "^5.1.0",
     "solhint-config-mud": "2.2.22-fc522a899c932f53675e624805e97a4eeefca9e8",
     "solhint-plugin-mud": "2.2.22-fc522a899c932f53675e624805e97a4eeefca9e8",

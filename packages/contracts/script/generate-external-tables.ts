@@ -1,9 +1,9 @@
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-import { defineStore } from "@latticexyz/store";
-import { tablegen } from "@latticexyz/store/codegen";
+import path from "node:path"
+import { fileURLToPath } from "node:url"
+import { defineStore } from "@latticexyz/store"
+import { tablegen } from "@latticexyz/store/codegen"
 
-const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..")
 
 const config = defineStore({
   codegen: {
@@ -16,8 +16,8 @@ const config = defineStore({
         initialized: "bool",
         admin: "address",
         incomeRecipient: "address",
-        tokenForSale: "address",
-      },
+        tokenForSale: "address"
+      }
     },
     MutableConfig: {
       key: [],
@@ -25,41 +25,41 @@ const config = defineStore({
         paused: "bool",
         usdEthPriceAggregator: "address",
         usdEurPriceAggregator: "address",
-        eurTokenPrice: "uint256",
-      },
+        eurTokenPrice: "uint256"
+      }
     },
     AcceptedERC20: {
       key: ["erc20"],
       schema: {
         erc20: "address",
-        usdERC20PriceAggregator: "address",
+        usdERC20PriceAggregator: "address"
       },
       codegen: {
-        dataStruct: true,
-      },
+        dataStruct: true
+      }
     },
     TransactionTotals: {
       key: [],
       schema: {
         tokensSold: "uint256",
-        eurReceived: "uint256",
-      },
+        eurReceived: "uint256"
+      }
     },
     TransactionLimits: {
       key: [],
       schema: {
         walletEurSpendLimit: "uint256",
-        totalEurSpendLimit: "uint256",
-      },
+        totalEurSpendLimit: "uint256"
+      }
     },
     WalletEurSpent: {
       key: ["walletAddress"],
       schema: {
         walletAddress: "address",
-        value: "uint256",
-      },
-    },
-  },
-});
+        value: "uint256"
+      }
+    }
+  }
+})
 
-tablegen({ rootDir, config });
+tablegen({ rootDir, config })

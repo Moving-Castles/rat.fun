@@ -1,9 +1,6 @@
 import { writable } from "svelte/store"
 import { client, loadData } from "./sanity"
-import type {
-  Room as SanityRoom,
-  Outcome as SanityOutcome,
-} from "@sanity-types"
+import type { Room as SanityRoom, Outcome as SanityOutcome } from "@sanity-types"
 import { queries } from "./sanity/groq"
 
 // --- TYPES ------------------------------------------------------------
@@ -26,7 +23,7 @@ export async function initStaticContent(worldAddress: string) {
 
   staticContent.set({
     rooms,
-    outcomes,
+    outcomes
   })
 
   // Subscribe to changes to rooms in sanity DB

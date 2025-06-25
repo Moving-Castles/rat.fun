@@ -38,7 +38,7 @@ export const getModalState = () => {
       },
       get current() {
         return modalState
-      },
-    },
+      }
+    }
   }
 }

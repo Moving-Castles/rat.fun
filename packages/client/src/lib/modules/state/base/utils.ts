@@ -16,14 +16,9 @@ import { get } from "svelte/store"
  * @param entityType The entity type to filter by
  * @returns The filtered entities
  */
-export function filterByEntitytype(
-  entities: Entities,
-  entityType: ENTITY_TYPE
-): Entities {
+export function filterByEntitytype(entities: Entities, entityType: ENTITY_TYPE): Entities {
   return Object.fromEntries(
-    Object.entries(entities).filter(
-      ([, entity]) => entity.entityType === entityType
-    )
+    Object.entries(entities).filter(([, entity]) => entity.entityType === entityType)
   )
 }
 
@@ -34,9 +29,7 @@ export function filterByEntitytype(
  * @returns The filtered rooms
  */
 export function filterByLevel(rooms: Rooms, level: string): Rooms {
-  return Object.fromEntries(
-    Object.entries(rooms).filter(([, room]) => room.level === level)
-  )
+  return Object.fromEntries(Object.entries(rooms).filter(([, room]) => room.level === level))
 }
 
 /**
@@ -46,9 +39,7 @@ export function filterByLevel(rooms: Rooms, level: string): Rooms {
  * @returns The filtered rooms
  */
 export function filterByPlayer(rooms: Rooms, playerId: Hex): Rooms {
-  return Object.fromEntries(
-    Object.entries(rooms).filter(([, room]) => room.owner === playerId)
-  )
+  return Object.fromEntries(Object.entries(rooms).filter(([, room]) => room.owner === playerId))
 }
 
 /**
@@ -58,11 +49,8 @@ export function filterByPlayer(rooms: Rooms, playerId: Hex): Rooms {
  * @returns The filtered rooms
  */
 export function filterByOthers(rooms: Rooms, playerId: Hex): Rooms {
-  return Object.fromEntries(
-    Object.entries(rooms).filter(([, room]) => room.owner !== playerId)
-  )
+  return Object.fromEntries(Object.entries(rooms).filter(([, room]) => room.owner !== playerId))
 }
-
 
 /**
  * Checks if a room is owned by a player
@@ -85,4 +73,3 @@ export function getRoomOwnerName(room: Room) {
   }
   return get(players)[room.owner]?.name ?? "unknown"
 }
-

@@ -4,25 +4,12 @@
 
 <div class="pane-switch">
   <!-- ALL ROOMS -->
-  <div
-    class="pane-switch-item"
-    class:selected={page.url.pathname.includes("/landlord")}
-  >
-    <a
-      href="/"
-    >
-      ALL ROOMS
-    </a>
+  <div class="pane-switch-item" class:selected={page.url.pathname.includes("/landlord")}>
+    <a href="/"> ALL ROOMS </a>
   </div>
   <!-- YOUR ROOMS -->
-  <div
-    class="pane-switch-item"
-    class:selected={false}
-  >
-    <a href="/landlord"
-    >
-      YOUR ROOMS
-    </a>
+  <div class="pane-switch-item" class:selected={false}>
+    <a href="/landlord"> YOUR ROOMS </a>
   </div>
 </div>
 
@@ -58,7 +45,7 @@
         text-decoration: none;
         transition: transform 0.2s ease-in-out;
       }
-      
+
       &:hover {
         background: var(--color-grey-light);
         a {

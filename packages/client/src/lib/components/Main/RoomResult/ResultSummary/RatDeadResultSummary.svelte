@@ -19,11 +19,11 @@
     }
 
     gsap.set([messageElement, closeButtonElement], {
-      opacity: 0,
+      opacity: 0
     })
 
     gsap.set(innerContainerElement, {
-      scale: 0,
+      scale: 0
     })
 
     timeline.call(() => {
@@ -33,19 +33,19 @@
     timeline.to(innerContainerElement, {
       scale: 1,
       duration: 0.4,
-      ease: "power2.out",
+      ease: "power2.out"
     })
 
     timeline.to(messageElement, {
       opacity: 1,
       duration: 0.3,
-      ease: "power2.out",
+      ease: "power2.out"
     })
 
     timeline.to(closeButtonElement, {
       opacity: 1,
       duration: 0.3,
-      ease: "power2.out",
+      ease: "power2.out"
     })
   })
 </script>
@@ -74,11 +74,7 @@
         </button>
       </div>
       <div class="background">
-        <img
-          class="background-image"
-          src={$frozenRat?.image}
-          alt={$frozenRat?.name}
-        />
+        <img class="background-image" src={$frozenRat?.image} alt={$frozenRat?.name} />
       </div>
     </div>
   </div>

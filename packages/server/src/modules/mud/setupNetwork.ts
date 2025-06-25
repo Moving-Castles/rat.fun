@@ -11,17 +11,17 @@ import {
   createWalletClient,
   Hex,
   ClientConfig,
-  getContract,
-} from "viem";
-import { encodeEntity, syncToRecs } from "@latticexyz/store-sync/recs";
+  getContract
+} from "viem"
+import { encodeEntity, syncToRecs } from "@latticexyz/store-sync/recs"
 
-import { getNetworkConfig } from "./getNetworkConfig";
-import { world } from "./world";
-import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json";
-import { createBurnerAccount, transportObserver, ContractWrite } from "@latticexyz/common";
-import { transactionQueue, writeObserver } from "@latticexyz/common/actions";
+import { getNetworkConfig } from "./getNetworkConfig"
+import { world } from "./world"
+import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json"
+import { createBurnerAccount, transportObserver, ContractWrite } from "@latticexyz/common"
+import { transactionQueue, writeObserver } from "@latticexyz/common/actions"
 
-import { Subject, share } from "rxjs";
+import { Subject, share } from "rxjs"
 
 /*
  * Import our MUD config, which includes strong types for
@@ -31,27 +31,30 @@ import { Subject, share } from "rxjs";
  * See https://mud.dev/templates/typescript/contracts#mudconfigts
  * for the source of this information.
  */
-import mudConfig from "contracts/mud.config";
+import mudConfig from "contracts/mud.config"
 
-export type SetupNetworkResult = Awaited<ReturnType<typeof setupNetwork>>;
+export type SetupNetworkResult = Awaited<ReturnType<typeof setupNetwork>>
 
-import { Observable } from "rxjs";
+import { Observable } from "rxjs"
 
 export type SetupNetworkReturnType = {
-  world: typeof world;
-  components: typeof components;
-  playerEntity: ReturnType<typeof encodeEntity>;
-  publicClient: ReturnType<typeof createPublicClient>;
-  walletClient: ReturnType<typeof createWalletClient>;
-  latestBlock$: Observable<any>;
-  storedBlockLogs$: Observable<any>;
-  waitForTransaction: typeof waitForTransaction;
-  worldContract: ReturnType<typeof getContract>;
-  write$: Observable<ContractWrite>;
-};
+  world: typeof world
+  components: typeof components
+  playerEntity: ReturnType<typeof encodeEntity>
+  publicClient: ReturnType<typeof createPublicClient>
+  walletClient: ReturnType<typeof createWalletClient>
+  latestBlock$: Observable<any>
+  storedBlockLogs$: Observable<any>
+  waitForTransaction: typeof waitForTransaction
+  worldContract: ReturnType<typeof getContract>
+  write$: Observable<ContractWrite>
+}
 
-export async function setupNetwork(privateKey: string, chainId: number): Promise<SetupNetworkReturnType> {
-  const networkConfig = await getNetworkConfig(privateKey, chainId);
+export async function setupNetwork(
+  privateKey: string,
+  chainId: number
+): Promise<SetupNetworkReturnType> {
+  const networkConfig = await getNetworkConfig(privateKey, chainId)
 
   /*
    * Create a viem public (read only) client
@@ -60,28 +63,28 @@ export async function setupNetwork(privateKey: string, chainId: number): Promise
   const clientOptions = {
     chain: networkConfig.chain,
     transport: transportObserver(fallback([webSocket(), http()])),
-    pollingInterval: 1000,
-  } as const satisfies ClientConfig;
+    pollingInterval: 1000
+  } as const satisfies ClientConfig
 
-  const publicClient = createPublicClient(clientOptions);
+  const publicClient = createPublicClient(clientOptions)
 
   /*
    * Create an observable for contract writes that we can
    * pass into MUD dev tools for transaction observability.
    */
-  const write$ = new Subject<ContractWrite>();
+  const write$ = new Subject<ContractWrite>()
 
   /*
    * Create a temporary wallet and a viem client for it
    * (see https://viem.sh/docs/clients/wallet.html).
    */
-  const burnerAccount = createBurnerAccount(networkConfig.privateKey as Hex);
+  const burnerAccount = createBurnerAccount(networkConfig.privateKey as Hex)
   const burnerWalletClient = createWalletClient({
     ...clientOptions,
-    account: burnerAccount,
+    account: burnerAccount
   })
     .extend(transactionQueue())
-    .extend(writeObserver({ onWrite: (write) => write$.next(write) }));
+    .extend(writeObserver({ onWrite: write => write$.next(write) }))
 
   /*
    * Create an object for communicating with the deployed World.
@@ -89,8 +92,8 @@ export async function setupNetwork(privateKey: string, chainId: number): Promise
   const worldContract = getContract({
     address: networkConfig.worldAddress as Hex,
     abi: IWorldAbi,
-    client: { public: publicClient, wallet: burnerWalletClient },
-  });
+    client: { public: publicClient, wallet: burnerWalletClient }
+  })
 
   /*
    * Sync on-chain state into RECS and keeps our client in sync.
@@ -103,19 +106,22 @@ export async function setupNetwork(privateKey: string, chainId: number): Promise
     config: mudConfig.default,
     address: networkConfig.worldAddress as Hex,
     publicClient,
-    startBlock: BigInt(networkConfig.initialBlockNumber),
-  });
+    startBlock: BigInt(networkConfig.initialBlockNumber)
+  })
 
   return {
     world,
     components,
-    playerEntity: encodeEntity({ address: "address" }, { address: burnerWalletClient.account.address }),
+    playerEntity: encodeEntity(
+      { address: "address" },
+      { address: burnerWalletClient.account.address }
+    ),
     publicClient,
     walletClient: burnerWalletClient,
     latestBlock$,
     storedBlockLogs$,
     waitForTransaction,
     worldContract,
-    write$: write$.asObservable().pipe(share()),
-  };
+    write$: write$.asObservable().pipe(share())
+  }
 }

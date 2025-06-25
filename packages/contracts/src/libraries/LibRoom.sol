@@ -1,7 +1,19 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { getUniqueEntity } from "@latticexyz/world-modules/src/modules/uniqueentity/getUniqueEntity.sol";
-import { EntityType, Prompt, Owner, Index, GameConfig, Balance, Level, RoomCreationCost, Name, VisitCount, CreationBlock } from "../codegen/index.sol";
+import {
+  EntityType,
+  Prompt,
+  Owner,
+  Index,
+  GameConfig,
+  Balance,
+  Level,
+  RoomCreationCost,
+  Name,
+  VisitCount,
+  CreationBlock
+} from "../codegen/index.sol";
 import { ENTITY_TYPE } from "../codegen/common.sol";
 
 library LibRoom {

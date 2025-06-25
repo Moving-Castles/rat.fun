@@ -8,7 +8,7 @@ import { deepEqual } from "@wagmi/core"
 export function createComponentSystem(componentKey: string) {
   // console.log('createComponentSystem', componentKey);
   // console.log('xxx', (get(publicNetwork).components as any)[componentKey]);
-  (get(publicNetwork).components as any)[componentKey].update$.subscribe(
+  ;(get(publicNetwork).components as any)[componentKey].update$.subscribe(
     (update: ComponentUpdate) => {
       // console.log('___________ comp. update', update)
 
@@ -28,7 +28,6 @@ export function createComponentSystem(componentKey: string) {
           ? nextValue.value
           : nextValue
 
-
       entities.update(value => {
         // Create an empty entity if it does not exist
         if (value[entityID] === undefined) value[entityID] = {} as Entity
@@ -42,5 +41,6 @@ export function createComponentSystem(componentKey: string) {
 
         return value
       })
-    })
+    }
+  )
 }

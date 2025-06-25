@@ -3,14 +3,7 @@
  * (https://viem.sh/docs/getting-started.html).
  * This line imports the functions we need from it.
  */
-import {
-  createPublicClient,
-  fallback,
-  webSocket,
-  http,
-  Hex,
-  ClientConfig,
-} from "viem"
+import { createPublicClient, fallback, webSocket, http, Hex, ClientConfig } from "viem"
 import { syncToRecs } from "@latticexyz/store-sync/recs"
 
 import { getNetworkConfig } from "./getNetworkConfig"
@@ -38,7 +31,6 @@ import mudConfig from "contracts/mud.config"
 export type SetupPublicNetworkResult = Awaited<ReturnType<typeof setupPublicNetwork>>
 
 export async function setupPublicNetwork(environment: ENVIRONMENT) {
-  
   // console.log('setup public network')
 
   const networkConfig = getNetworkConfig(environment)
@@ -56,7 +48,7 @@ export async function setupPublicNetwork(environment: ENVIRONMENT) {
   const clientOptions = {
     chain: networkConfig.chain,
     transport: transportObserver(fallback([webSocket(), http()])),
-    pollingInterval: 1000,
+    pollingInterval: 1000
   } as const satisfies ClientConfig
 
   const publicClient = createPublicClient(clientOptions)
@@ -69,21 +61,20 @@ export async function setupPublicNetwork(environment: ENVIRONMENT) {
    * to the viem publicClient to make RPC calls to fetch MUD
    * events from the chain.
    */
-  const { components, latestBlock$, storedBlockLogs$, waitForTransaction } =
-    await syncToRecs({
-      world,
-      config: mudConfig,
-      address: networkConfig.worldAddress as Hex,
-      publicClient,
-      startBlock: BigInt(networkConfig.initialBlockNumber),
-      indexerUrl: networkConfig.indexerUrl,
-      // filters,
-      // tables: extraTables,
-    })
+  const { components, latestBlock$, storedBlockLogs$, waitForTransaction } = await syncToRecs({
+    world,
+    config: mudConfig,
+    address: networkConfig.worldAddress as Hex,
+    publicClient,
+    startBlock: BigInt(networkConfig.initialBlockNumber),
+    indexerUrl: networkConfig.indexerUrl
+    // filters,
+    // tables: extraTables,
+  })
 
   // Allows us to to only listen to the game sepcific tables
   const tableKeys = [
-    ...Object.keys(mudConfig.tables).map(key => key.split('__')[1]), // Strips everything before and including '__'
+    ...Object.keys(mudConfig.tables).map(key => key.split("__")[1]) // Strips everything before and including '__'
     // ...Object.keys(extraTables),
   ]
 
@@ -96,6 +87,6 @@ export async function setupPublicNetwork(environment: ENVIRONMENT) {
     latestBlock$,
     storedBlockLogs$,
     waitForTransaction,
-    tableKeys,
+    tableKeys
   }
 }

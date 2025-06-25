@@ -11,7 +11,7 @@
     CHARACTER_DELAY,
     OUTCOME_DELAY,
     OUTCOME_DURATION,
-    OUTCOME_START_DELAY,
+    OUTCOME_START_DELAY
   } from "./config"
 
   gsap.registerPlugin(TextPlugin)
@@ -33,7 +33,7 @@
   let {
     logEntry,
     delay = 0,
-    onTimeline,
+    onTimeline
   }: {
     logEntry: MergedLogEntry
     delay: number
@@ -61,9 +61,7 @@
   // Outcome sound helper
   const playOutcomeSound = (action: string) => {
     const soundName =
-      action === "increase" || action === "add"
-        ? "acceptOrderSuccessOld"
-        : "acceptOrderFail"
+      action === "increase" || action === "add" ? "acceptOrderSuccessOld" : "acceptOrderFail"
     const sound = playSound("tcm", soundName)
     if (sound) sound.play()
   }
@@ -79,10 +77,8 @@
     return {
       destroy: () => {
         // console.log("Destroying outcome:", data.type) // For debugging
-        registeredOutcomes = registeredOutcomes.filter(
-          item => item.node !== node
-        )
-      },
+        registeredOutcomes = registeredOutcomes.filter(item => item.node !== node)
+      }
     }
   }
 
@@ -90,7 +86,7 @@
   const prepare = () => {
     // Ensure all parts start invisible
     gsap.set([timestampElement, logTextElement, ".outcome-wrapper"], {
-      opacity: 0,
+      opacity: 0
     })
     // Clear potential previous text content if element re-renders
     if (logTextElement) logTextElement.textContent = ""
@@ -106,13 +102,13 @@
     timeline.to(timestampElement, {
       opacity: 1,
       duration: TIMESTAMP_DURATION,
-      ease: "power2.out",
+      ease: "power2.out"
     })
 
     // Typing Animation
     timeline.set(logTextElement, {
       text: "",
-      opacity: 1,
+      opacity: 1
     })
     const chars = logEntry.event.split("")
     for (let i = 0; i < chars.length; i++) {
@@ -127,11 +123,7 @@
       const outcomeStartTime = `outcomesStart+=${index * OUTCOME_DELAY}`
 
       // State update
-      timeline.call(
-        updateFrozenState,
-        [data as OutcomeDataStringMap],
-        outcomeStartTime
-      )
+      timeline.call(updateFrozenState, [data as OutcomeDataStringMap], outcomeStartTime)
       // Sound
       timeline.call(playOutcomeSound, [data.action], outcomeStartTime)
       // Visuals
@@ -140,7 +132,7 @@
         {
           opacity: 1,
           duration: OUTCOME_DURATION,
-          ease: "power2.out",
+          ease: "power2.out"
         },
         outcomeStartTime
       )
@@ -191,7 +183,7 @@
           type: "health",
           action: logEntry.healthChange.amount < 0 ? "reduce" : "increase",
           value: logEntry.healthChange.amount,
-          name: "Health",
+          name: "Health"
         }}
       >
         <OutcomeItem
@@ -208,7 +200,7 @@
           type: "balance",
           action: logEntry.balanceTransfer.amount < 0 ? "reduce" : "increase",
           value: logEntry.balanceTransfer.amount,
-          name: "Balance",
+          name: "Balance"
         }}
       >
         <OutcomeItem
@@ -227,7 +219,7 @@
             action: traitChange.type,
             id: traitChange.id,
             value: traitChange.value,
-            name: traitChange.name,
+            name: traitChange.name
           }}
         >
           <OutcomeItem
@@ -247,7 +239,7 @@
             action: itemChange.type,
             id: itemChange.id,
             value: itemChange.value,
-            name: itemChange.name,
+            name: itemChange.name
           }}
         >
           <OutcomeItem

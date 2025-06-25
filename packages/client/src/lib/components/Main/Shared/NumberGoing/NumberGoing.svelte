@@ -9,7 +9,7 @@
     warn = -1,
     step = 10,
     muted = false,
-    going = $bindable(false),
+    going = $bindable(false)
   } = $props()
 
   const DURATION = 500

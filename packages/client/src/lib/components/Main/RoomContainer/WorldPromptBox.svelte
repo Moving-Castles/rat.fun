@@ -53,7 +53,7 @@
   <div
     class="header"
     use:tippy={{
-      content: "Situation will change when timer reaches 0.",
+      content: "Situation will change when timer reaches 0."
     }}
   >
     <div class="countdown" class:flashing={isFlashing}>{timeLeft}</div>
@@ -61,7 +61,7 @@
   <div
     class="prompt"
     use:tippy={{
-      content: "Current situation in the facility. Affects all rooms.",
+      content: "Current situation in the facility. Affects all rooms."
     }}
   >
     <div class="alert">!!!</div>
