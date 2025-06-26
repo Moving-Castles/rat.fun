@@ -42,14 +42,13 @@ export const wipe = (
     duration: params.duration || 400,
     easing: params.easing || linear,
     css: (t, u) => {
-      console.log("WIPE DIRECTION DFEFALT", params.direction)
-      const progress = params.direction === "in" ? u : t
+      const progress = u
       const halfWidth = progress * 50 // Expands from 0% to 50% on each side
       const centerLeft = 50 - halfWidth
       const centerRight = 50 + halfWidth
       const angle = 90
-      const fromColor = params.direction === "in" ? "#ffff" : "#0000"
-      const toColor = params.direction === "in" ? "#0000" : "#ffff"
+      const fromColor = "#ffff"
+      const toColor = "#0000"
 
       return `
         position: fixed;

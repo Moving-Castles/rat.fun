@@ -35,7 +35,7 @@
       out: {
         transition: "wipe",
         params: {
-          duration: 2000,
+          duration: 1000,
           direction: "in"
         }
       },
@@ -51,17 +51,17 @@
       from: "/(rooms)/[roomId]/enter",
       to: "*",
       out: {
-        transition: "wipe",
+        transition: "fade",
         params: {
-          duration: 2000,
-          direction: "in"
+          duration: 400,
+          delay: 200
         }
       },
       in: {
-        transition: "fade",
+        transition: "wipe",
         params: {
           duration: 1000,
-          delay: 200
+          direction: "out"
         }
       }
     }
