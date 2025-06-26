@@ -15,3 +15,5 @@ mprocs.log
 *.db-journal
 
 .env
+
+NOTES.md

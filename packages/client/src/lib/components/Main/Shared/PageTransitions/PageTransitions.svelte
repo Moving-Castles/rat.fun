@@ -41,7 +41,14 @@
       transitionFunctionOut = transitionFunctions?.[wanted?.out?.transition || "none"]
       inParams = wanted?.in?.params || {}
       outParams = wanted?.out?.params || {}
+    } else {
+      transitionFunctionIn = transitionFunctions["none"]
+      transitionFunctionOut = transitionFunctions["none"]
     }
+  })
+
+  $effect(() => {
+    console.log("wanted", $state.snapshot(wanted))
   })
 </script>
 
