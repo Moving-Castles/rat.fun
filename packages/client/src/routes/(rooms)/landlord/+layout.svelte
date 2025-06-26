@@ -27,10 +27,18 @@
       from: "/(rooms)/landlord/[roomId]",
       to: "/(rooms)/landlord",
       in: {
-        transition: "slideFromRight"
+        transition: "slideFromLeft",
+        params: {
+          duration: 1000,
+          easing
+        }
       },
       out: {
-        transition: "slideLeft"
+        transition: "slideRight",
+        params: {
+          duration: 1000,
+          easing
+        }
       }
     }
   ]

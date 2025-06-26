@@ -38,7 +38,7 @@
   </div>
 
   <div class="main-content">
-    <PageTransitions wrapperClass="main-area-inner" {config}>
+    <PageTransitions id="main" wrapperClass="main-area-inner" {config}>
       {@render children?.()}
     </PageTransitions>
   </div>

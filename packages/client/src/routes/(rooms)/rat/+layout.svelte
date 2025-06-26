@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { circOut as easing } from "svelte/easing"
   import CenterBar from "$lib/components/Main/CenterBar/CenterBar.svelte"
   import RatContainer from "$lib/components/Main/RatContainer/RatContainer.svelte"
   import PageTransitions from "$lib/components/Main/Shared/PageTransitions/PageTransitions.svelte"
@@ -10,13 +11,15 @@
       in: {
         transition: "slideFromRight",
         params: {
-          duration: 1000
+          duration: 1000,
+          easing
         }
       },
       out: {
         transition: "slideLeft",
         params: {
-          duration: 1000
+          duration: 1000,
+          easing
         }
       }
     },
@@ -24,10 +27,18 @@
       from: "/(rooms)/rat/[roomId]",
       to: "/(rooms)/rat",
       in: {
-        transition: "slideFromRight"
+        transition: "slideFromLeft",
+        params: {
+          duration: 1000,
+          easing
+        }
       },
       out: {
-        transition: "slideLeft"
+        transition: "slideRight",
+        params: {
+          duration: 1000,
+          easing
+        }
       }
     }
   ]

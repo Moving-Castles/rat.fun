@@ -22,7 +22,7 @@
   import WalletInfo from "$lib/components/Debug/WalletInfo.svelte"
   import Loading from "$lib/components/Loading/Loading.svelte"
   import Spawn from "$lib/components/Spawn/Spawn.svelte"
-  import PageTransitions from "$lib/components/Main/Shared/PageTransitions/PageTransitions.svelte"
+  // import PageTransitions from "$lib/components/Main/Shared/PageTransitions/PageTransitions.svelte"
 
   let { children, data }: LayoutProps = $props()
 
@@ -121,9 +121,7 @@
       </main>
     {:else if $UIState === UI.READY}
       <div class="layer-game">
-        <PageTransitions config={transitionsConfig}>
-          {@render children?.()}
-        </PageTransitions>
+        {@render children?.()}
       </div>
     {/if}
   </div>

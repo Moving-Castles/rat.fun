@@ -50,30 +50,30 @@
   })
 </script>
 
-{#key roomId}
-  {#if room}
-    <div class="room-inner-container">
-      <a href="/landlord"> Back </a>
-      <RoomPreviewHeader {room} {sanityRoomContent} />
-      <RoomPreviewPrompt {room} />
-
-      {#if showLiquidateButton}
-        <LiquidateRoom {roomId} {room} {isOwnRoomListing} />
-      {/if}
-
-      {#if showNoRatWarning}
-        <NoRatWarning />
-      {/if}
-
-      {#if showEnterButton}
-        <EnterRoomButton {roomId} />
-      {/if}
-
-      <RoomPreviewGraph {roomOutcomes} {sanityRoomContent} />
-      <RoomPreviewEventLog {roomId} {roomOutcomes} />
-    </div>
+<div class="room-inner-container">
+  {#if isOwnRoomListing}
+    <a class="back-button" href="/landlord"> {"<"} rooms</a>
+  {:else}
+    <a class="back-button" href="/rat"> Back </a>
   {/if}
-{/key}
+  <RoomPreviewHeader {room} {sanityRoomContent} />
+  <RoomPreviewPrompt {room} />
+
+  {#if showLiquidateButton}
+    <LiquidateRoom {roomId} {room} {isOwnRoomListing} />
+  {/if}
+
+  {#if showNoRatWarning}
+    <NoRatWarning />
+  {/if}
+
+  {#if showEnterButton}
+    <EnterRoomButton {roomId} />
+  {/if}
+
+  <RoomPreviewGraph {roomOutcomes} {sanityRoomContent} />
+  <RoomPreviewEventLog {roomId} {roomOutcomes} />
+</div>
 
 <style lang="scss">
   .room-inner-container {
@@ -83,5 +83,12 @@
     height: 100%;
     max-height: 100%;
     padding-bottom: calc(var(--pane-switch-height) + var(--world-prompt-box-height) + 20px);
+  }
+
+  .back-button {
+    display: block;
+    color: var(--color-grey-mid);
+    border-bottom: 1px solid var(--color-grey-mid);
+    padding: 12px;
   }
 </style>
