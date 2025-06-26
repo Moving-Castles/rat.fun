@@ -1,3 +1,4 @@
+import { maxUint256 } from "viem"
 import { WALLET_TYPE } from "$lib/mud/enums"
 import { get } from "svelte/store"
 import { walletType } from "../network"
@@ -41,6 +42,11 @@ export function approve(address: string, value: bigint) {
   const scaledValue = value * 10n ** 18n
   const useUserAccount = get(walletType) === WALLET_TYPE.ACCOUNTKIT
   return addToSequencer(WorldFunctions.Approve, [address, scaledValue], useUserAccount)
+}
+
+export function approveMax(address: string) {
+  const useUserAccount = get(walletType) === WALLET_TYPE.ACCOUNTKIT
+  return addToSequencer(WorldFunctions.Approve, [address, maxUint256], useUserAccount)
 }
 
 export function giveCallerTokens() {
