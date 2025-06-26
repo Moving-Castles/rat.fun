@@ -1,15 +1,20 @@
 <script lang="ts">
   import { page } from "$app/state"
+
+  $inspect(page.route.id)
 </script>
 
 <div class="pane-switch">
   <!-- ALL ROOMS -->
-  <div class="pane-switch-item" class:selected={page.url.pathname.includes("/landlord")}>
-    <a href="/"> ALL ROOMS </a>
+  <div
+    class="pane-switch-item"
+    class:selected={page.route.id === "/(rooms)" || page.route.id === "/(rooms)/[roomId]"}
+  >
+    <a href="/">RAT</a>
   </div>
   <!-- YOUR ROOMS -->
-  <div class="pane-switch-item" class:selected={false}>
-    <a href="/landlord"> YOUR ROOMS </a>
+  <div class="pane-switch-item" class:selected={page.route.id?.includes("/landlord")}>
+    <a href="/landlord">LANDLORD</a>
   </div>
 </div>
 
@@ -29,7 +34,7 @@
       font-family: var(--label-font-stack);
       background: var(--color-grey-mid);
       color: var(--background);
-      width: 50%;
+      width: 100%;
 
       a {
         width: 100%;
@@ -55,7 +60,9 @@
 
       &.selected {
         background: var(--color-alert);
-        color: var(--foreground);
+        a {
+          color: var(--white);
+        }
 
         &:hover {
           // background: var(--color-alert-priority);

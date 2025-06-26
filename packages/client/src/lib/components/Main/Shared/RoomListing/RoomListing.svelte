@@ -47,98 +47,78 @@
   let previewing = $state(false)
 </script>
 
-<div class="wrapper">
-  <div class="rooms">
-    <div class="floor-content">
-      <div class:previewing class:animated={false} class="room-listing">
-        {#if !isOwnRoomListing}
-          <!-- <FloorHeader /> -->
-          <RoomFilters
-            roomsAmount={activeList.length}
-            {textFilter}
-            {sortFunction}
-            {showDepletedRooms}
-            onSort={fn => {
-              sortFunction = fn
+<div class="floor-content">
+  <div class:previewing class:animated={false} class="room-listing">
+    {#if !isOwnRoomListing}
+      <!-- <FloorHeader /> -->
+      <RoomFilters
+        roomsAmount={activeList.length}
+        {textFilter}
+        {sortFunction}
+        {showDepletedRooms}
+        onSort={fn => {
+          sortFunction = fn
+          updateRooms()
+        }}
+        onTextFilterChange={value => {
+          textFilter = value
+        }}
+        onTextFilterClear={() => {
+          textFilter = ""
+        }}
+        onToggleDepleted={() => {
+          showDepletedRooms = !showDepletedRooms
+        }}
+      />
+    {:else if !showCreateRoom}
+      <CreateRoomButton onclick={() => (showCreateRoom = true)} />
+    {/if}
+
+    {#if showCreateRoom}
+      <CreateRoom />
+    {:else if activeList.length > 0}
+      {#if activeList.length < roomList.length}
+        {#key roomList.length}
+          <button
+            onclick={() => {
+              sortFunction = entriesChronologically
               updateRooms()
             }}
-            onTextFilterChange={value => {
-              textFilter = value
-            }}
-            onTextFilterClear={() => {
-              textFilter = ""
-            }}
-            onToggleDepleted={() => {
-              showDepletedRooms = !showDepletedRooms
-            }}
-          />
-        {:else if !showCreateRoom}
-          <CreateRoomButton onclick={() => (showCreateRoom = true)} />
-        {/if}
-
-        {#if showCreateRoom}
-          <CreateRoom />
-        {:else if activeList.length > 0}
-          {#if activeList.length < roomList.length}
-            {#key roomList.length}
-              <button
-                onclick={() => {
-                  sortFunction = entriesChronologically
-                  updateRooms()
-                }}
-                class="new-rooms-button flash-fast-thrice"
-              >
-                {roomList.length - activeList.length} new rooms added
-              </button>
-            {/key}
-          {/if}
-          {#each activeList as roomEntry (roomEntry[0])}
-            {#if isOwnRoomListing}
-              <OwnRoomItem roomId={roomEntry[0] as Hex} room={roomEntry[1]} />
-            {:else}
-              <RoomItem roomId={roomEntry[0] as Hex} room={roomEntry[1]} />
-            {/if}
-          {/each}
+            class="new-rooms-button flash-fast-thrice"
+          >
+            {roomList.length - activeList.length} new rooms added
+          </button>
+        {/key}
+      {/if}
+      {#each activeList as roomEntry (roomEntry[0])}
+        {#if isOwnRoomListing}
+          <OwnRoomItem roomId={roomEntry[0] as Hex} room={roomEntry[1]} />
         {:else}
-          <div class="empty-listing">
-            <div>
-              {#if isOwnRoomListing}
-                NO ROOMS CREATED YET
-              {:else}
-                NO ROOMS
-              {/if}
-            </div>
-          </div>
+          <RoomItem roomId={roomEntry[0] as Hex} room={roomEntry[1]} />
         {/if}
+      {/each}
+    {:else}
+      <div class="empty-listing">
+        <div>
+          {#if isOwnRoomListing}
+            NO ROOMS CREATED YET
+          {:else}
+            NO ROOMS
+          {/if}
+        </div>
       </div>
-    </div>
+    {/if}
   </div>
 </div>
 
 <style lang="scss">
-  .wrapper {
-    position: relative;
-    height: calc(100% - 60px);
-    overflow: hidden;
-  }
-
-  .rooms {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    display: grid;
-    grid-template-rows: 1fr;
-    grid-template-columns: 1fr;
-    transition: grid-template-rows 0.1s ease;
-  }
-
   .floor-content {
     position: relative;
   }
 
   .room-listing {
     overflow-y: scroll;
-    padding-bottom: 200px;
+    // padding-bottom: 200px;
     background-image: url("/images/texture-5.png");
     background-size: 200px;
   }

@@ -4,7 +4,7 @@
   import { page } from "$app/state"
   import RoomPreview from "$lib/components/Main/Shared/RoomPreview/RoomPreview.svelte"
   import CenterBar from "$lib/components/Main/CenterBar/CenterBar.svelte"
-  import RatContainer from "$lib/components/Main/RatContainer/RatContainer.svelte"
+  import RoomContainer from "$lib/components/Main/RoomContainer/RoomContainer.svelte"
   import SEO from "$lib/components/Kit/SEO.svelte"
 
   let prompt = $derived($rooms?.[page.params.roomId]?.prompt)
@@ -14,14 +14,14 @@
 <SEO prependTitle={truncatedTitle} />
 
 <!-- Grid position 1  -->
-<RatContainer />
+<RoomContainer />
 <!-- Grid position 2 -->
 <CenterBar />
 <!-- Grid position 3 -->
 
 <RoomPreview
   roomId={page.params.roomId}
-  isOwnRoomListing={page.url.searchParams.has("landlord")}
+  isOwnRoomListing={true}
   room={$rooms?.[page.params.roomId]}
 />
 

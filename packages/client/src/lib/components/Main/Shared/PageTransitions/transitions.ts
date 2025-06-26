@@ -105,12 +105,55 @@ export function whoosh(
   }
 }
 
+export const strobeWipe = (
+  _: HTMLElement,
+  params: {
+    delay?: number
+    duration?: number
+    feather?: number
+    cycles?: number
+    easing?: (t: number) => number
+  } = {}
+) => {
+  return {
+    delay: params.delay || 0,
+    duration: params.duration || 800,
+    easing: params.easing || linear,
+    css: (t, u) => {
+      const cycles = params.cycles || 10
+      const feather = params.feather || 100
+      const progress = u
+      
+      // Create cycling effect - repeat the sweep multiple times
+      const cycleProgress = (progress * cycles) % 1
+      
+      // Scan lines move from bottom (100%) to top (0%)
+      const scanPosition = 100 - (cycleProgress * 100)
+      const scanStart = Math.max(0, scanPosition - feather)
+      const scanEnd = Math.min(100, scanPosition + feather)
+      
+      return `
+        position: absolute;
+        z-index: 1000000000;
+        inset: 0;
+        -webkit-mask-image: linear-gradient(0deg, #0000 ${scanStart}%, #ffff ${scanPosition}%, #0000 ${scanEnd}%);
+        mask-image: linear-gradient(0deg, #0000 ${scanStart}%, #ffff ${scanPosition}%, #0000 ${scanEnd}%);
+        -webkit-mask-size: 100% 100%;
+        mask-size: 100% 100%;
+        mask-position: 50% 50%;
+        mask-repeat: no-repeat;
+      `
+    }
+  }
+}
+
 export const transitionFunctions = {
   none: (_: HTMLElement, __: object) => {},
   fade,
   fly,
   wipe: wipe,
-  leftToRight
+  leftToRight,
+  strobeWipe
 }
 
 export type TransitionFunction = keyof typeof transitionFunctions
