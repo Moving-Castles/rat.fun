@@ -2,10 +2,13 @@
   import { createRat, approve } from "$lib/modules/action"
   import { waitForCompletion } from "$lib/modules/action/actionSequencer/utils"
   import { playSound } from "$lib/modules/sound"
-  import { gameConfig, playerERC20Balance } from "$lib/modules/state/base/stores"
+  import {
+    gameConfig,
+    playerERC20Allowance,
+    playerERC20Balance
+  } from "$lib/modules/state/base/stores"
   import { generateRatName } from "./index"
   import { sendDeployRatMessage } from "$lib/modules/off-chain-sync"
-  import { walletNetwork } from "$lib/modules/network"
 
   import VideoLoader from "$lib/components/Main/Shared/Loaders/VideoLoader.svelte"
   import BigButton from "$lib/components/Main/Shared/Buttons/BigButton.svelte"
@@ -19,11 +22,13 @@
     playSound("tcm", "blink")
     busy = true
     try {
-      const approveAction = approve(
-        $gameConfig.externalAddressesConfig.gamePoolAddress,
-        $gameConfig.gameConfig.ratCreationCost
-      )
-      await waitForCompletion(approveAction)
+      if ($playerERC20Allowance < $gameConfig.gameConfig.ratCreationCost) {
+        const approveAction = approve(
+          $gameConfig.externalAddressesConfig.gamePoolAddress,
+          $gameConfig.gameConfig.ratCreationCost
+        )
+        await waitForCompletion(approveAction)
+      }
       const createRatAction = createRat(name)
       await waitForCompletion(createRatAction)
     } catch (e) {

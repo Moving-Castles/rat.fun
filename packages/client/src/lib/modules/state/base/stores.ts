@@ -86,6 +86,7 @@ export const playerRooms = derived(
 )
 
 export const playerERC20Balance = writable(0 as number)
+export const playerERC20Allowance = writable(0 as number)
 
 // * * * * * * * * * * * * * * * * *
 // PLAYER RAT STORES

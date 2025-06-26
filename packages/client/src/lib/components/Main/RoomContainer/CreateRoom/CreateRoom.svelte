@@ -5,7 +5,8 @@
     rat,
     gameConfig,
     levels,
-    playerERC20Balance
+    playerERC20Balance,
+    playerERC20Allowance
   } from "$lib/modules/state/base/stores"
   import { waitForCompletion } from "$lib/modules/action/actionSequencer/utils"
   import { createRoom } from "./index"
@@ -40,11 +41,13 @@
     const newPrompt = roomDescription
 
     try {
-      const approveAction = approve(
-        $gameConfig.externalAddressesConfig.gamePoolAddress,
-        roomCreationCost
-      )
-      await waitForCompletion(approveAction)
+      if ($playerERC20Allowance < $gameConfig.gameConfig.ratCreationCost) {
+        const approveAction = approve(
+          $gameConfig.externalAddressesConfig.gamePoolAddress,
+          roomCreationCost
+        )
+        await waitForCompletion(approveAction)
+      }
     } catch (e) {
       console.error(e)
       busy = false

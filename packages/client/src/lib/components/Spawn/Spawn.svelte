@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Hex } from "viem"
+  import { maxUint256, type Hex } from "viem"
   import type { SetupWalletNetworkResult } from "$lib/mud/setupWalletNetwork"
 
   import { WALLET_TYPE } from "$lib/mud/enums"
@@ -10,7 +10,8 @@
   import { store as accountKitStore } from "@latticexyz/account-kit/bundle"
 
   import { onMount } from "svelte"
-  import { spawn } from "$lib/modules/action"
+  import { gameConfig, playerERC20Allowance } from "$lib/modules/state/base/stores"
+  import { approveMax, spawn } from "$lib/modules/action"
   import { waitForCompletion } from "$lib/modules/action/actionSequencer/utils"
   import { playSound } from "$lib/modules/sound"
   import { publicNetwork } from "$lib/modules/network"
@@ -74,6 +75,15 @@
       accountKitConnectReturn.userAddress as Hex,
       WALLET_TYPE.ACCOUNTKIT
     )
+
+    if ($playerERC20Allowance < 100) {
+      try {
+        const approveAction = approveMax($gameConfig.externalAddressesConfig.gamePoolAddress)
+        await waitForCompletion(approveAction)
+      } catch (e) {
+        console.error(e)
+      }
+    }
 
     if (isSpawned) {
       // Connected and spawned - go to next step
