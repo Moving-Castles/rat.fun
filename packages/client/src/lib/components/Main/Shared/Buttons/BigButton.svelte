@@ -20,13 +20,15 @@
     playSound("tcm", "TRX_wait_b")
   }
 
+  let conditionalAction = $derived(tippyText ? tippy : () => {})
+
   const onmouseup = () => {
     playSound("tcm", "selectionEnter")
     onclick()
   }
 </script>
 
-<button class:disabled {onmouseup} {onmousedown} use:tippy={{ content: tippyText }}>
+<button class:disabled {onmouseup} {onmousedown} use:conditionalAction={{ content: tippyText }}>
   <span class="button-text">{text}</span>
   {#if cost}
     <span class="button-cost">({cost})</span>
