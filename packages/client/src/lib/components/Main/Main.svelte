@@ -2,13 +2,11 @@
   import { ENVIRONMENT } from "$lib/mud/enums"
   import OperatorBar from "$lib/components/Main/OperatorBar/OperatorBar.svelte"
   import PaneSwitch from "$lib/components/Main/RoomContainer/PaneSwitch.svelte"
-  import RatContainer from "$lib/components/Main/RatContainer/RatContainer.svelte"
-  import CenterBar from "$lib/components/Main/CenterBar/CenterBar.svelte"
   import PageTransitions from "./Shared/PageTransitions/PageTransitions.svelte"
 
   const config = [
     {
-      from: "/(rooms)",
+      from: "/(rooms)/rat",
       to: "/(rooms)/landlord",
       in: {
         transition: "fade"
@@ -19,7 +17,7 @@
     },
     {
       from: "/(rooms)/landlord",
-      to: "/(rooms)",
+      to: "/(rooms)/rat",
       in: {
         transition: "fade"
       },

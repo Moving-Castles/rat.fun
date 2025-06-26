@@ -1,4 +1,5 @@
 import { PageLoad } from "./$types"
+import { redirect } from "@sveltejs/kit"
 export const load: PageLoad = async ({ parent }) => {
-  return { ...(await parent()) }
+  return redirect(302, "/rat")
 }

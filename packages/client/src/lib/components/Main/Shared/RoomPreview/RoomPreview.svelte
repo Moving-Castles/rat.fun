@@ -53,6 +53,7 @@
 {#key roomId}
   {#if room}
     <div class="room-inner-container">
+      <a href="/landlord"> Back </a>
       <RoomPreviewHeader {room} {sanityRoomContent} />
       <RoomPreviewPrompt {room} />
 

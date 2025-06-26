@@ -70,13 +70,9 @@
           showDepletedRooms = !showDepletedRooms
         }}
       />
-    {:else if !showCreateRoom}
-      <CreateRoomButton onclick={() => (showCreateRoom = true)} />
     {/if}
 
-    {#if showCreateRoom}
-      <CreateRoom />
-    {:else if activeList.length > 0}
+    {#if activeList.length > 0}
       {#if activeList.length < roomList.length}
         {#key roomList.length}
           <button
@@ -114,11 +110,15 @@
 <style lang="scss">
   .floor-content {
     position: relative;
+    overflow-y: scroll;
+    height: 100%;
+    max-height: 100%;
   }
 
   .room-listing {
     overflow-y: scroll;
-    // padding-bottom: 200px;
+    height: 100%;
+    max-height: 100%;
     background-image: url("/images/texture-5.png");
     background-size: 200px;
   }
@@ -134,7 +134,6 @@
 
   .room-preview,
   .room-listing {
-    position: absolute;
     width: 100%;
     flex-basis: 100%;
     flex-shrink: 0;

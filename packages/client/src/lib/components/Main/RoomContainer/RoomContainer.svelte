@@ -1,9 +1,28 @@
 <script lang="ts">
+  import { player, playerERC20Balance } from "$lib/modules/state/base/stores"
   // import YourRat from "$lib/components/Main/RatContainer/YourRat/YourRat.svelte"
+  import CreateRoom from "$lib/components/Main/RoomContainer/CreateRoom/CreateRoom.svelte"
+  import CreateRoomButton from "$lib/components/Main/Shared/RoomListing/CreateRoomButton.svelte"
   import ChatRoom from "$lib/components/Main/Shared/ChatRoom/ChatRoom.svelte"
+
+  let showCreateRoom = $state(false)
 </script>
 
 <div class="room-container">
+  <div class="">
+    {#if !showCreateRoom}
+      <div class="plot">
+        <div class="top">
+          <span>
+            Welcome back, {$player.name}
+          </span>
+        </div>
+        <CreateRoomButton onclick={() => (showCreateRoom = true)} />
+      </div>
+    {:else}
+      <CreateRoom />
+    {/if}
+  </div>
   <!-- YOUR ROOM -->
   <div class="spacer"></div>
   <div class="remaining"></div>
@@ -19,6 +38,17 @@
     grid-template-rows: 440px 40px minmax(100px, 1fr);
     position: relative;
     background: black;
+  }
+
+  .plot {
+    display: flex;
+    justify-content: space-between;
+    flex-flow: column nowrap;
+    height: 100%;
+
+    .top {
+      padding: 12px;
+    }
   }
 
   .spacer {

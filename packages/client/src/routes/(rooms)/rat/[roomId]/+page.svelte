@@ -13,12 +13,6 @@
 
 <SEO prependTitle={truncatedTitle} />
 
-<!-- Grid position 1  -->
-<RatContainer />
-<!-- Grid position 2 -->
-<CenterBar />
-<!-- Grid position 3 -->
-
 <RoomPreview
   roomId={page.params.roomId}
   isOwnRoomListing={page.url.searchParams.has("landlord")}

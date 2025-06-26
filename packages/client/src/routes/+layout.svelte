@@ -30,8 +30,8 @@
 
   const transitionsConfig = [
     {
-      from: "/(rooms)/[roomId]",
-      to: "/(rooms)/[roomId]/enter",
+      from: "/(rooms)/rat/[roomId]",
+      to: "/(rooms)/rat/[roomId]/enter",
       out: {
         transition: "wipe",
         params: {
@@ -48,7 +48,7 @@
       }
     },
     {
-      from: "/(rooms)/[roomId]/enter",
+      from: "/(rooms)/rat/[roomId]/enter",
       to: "*",
       out: {
         transition: "fade",

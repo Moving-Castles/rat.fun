@@ -6,14 +6,11 @@
 
 <div class="pane-switch">
   <!-- ALL ROOMS -->
-  <div
-    class="pane-switch-item"
-    class:selected={page.route.id === "/(rooms)" || page.route.id === "/(rooms)/[roomId]"}
-  >
-    <a href="/">RAT</a>
+  <div class="pane-switch-item" class:selected={page.route.id?.includes("/(rooms)/rat")}>
+    <a href="/rat">RAT</a>
   </div>
   <!-- YOUR ROOMS -->
-  <div class="pane-switch-item" class:selected={page.route.id?.includes("/landlord")}>
+  <div class="pane-switch-item" class:selected={page.route.id?.includes("/(rooms)/landlord")}>
     <a href="/landlord">LANDLORD</a>
   </div>
 </div>

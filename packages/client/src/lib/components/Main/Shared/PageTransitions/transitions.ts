@@ -5,9 +5,10 @@ import { elasticOut, linear } from "svelte/easing"
 type LayoutRouteId =
   | "/"
   | "/(rooms)"
-  | "/(rooms)/[roomId]"
-  | "/(rooms)/[roomId]/enter"
+  | "/(rooms)/rat/[roomId]"
+  | "/(rooms)/rat/[roomId]/enter"
   | "/(rooms)/landlord"
+  | "/(rooms)/landlord/[roomId]"
   | "/outcome/[id]"
   | null
 
@@ -147,13 +148,121 @@ export const strobeWipe = (
   }
 }
 
+export const slideLeft = (
+  node: HTMLElement,
+  params: {
+    delay?: number
+    duration?: number
+    easing?: (t: number) => number
+  } = {}
+) => {
+  const existingTransform = getComputedStyle(node).transform.replace("none", "")
+  
+  return {
+    delay: params.delay || 0,
+    duration: params.duration || 400,
+    easing: params.easing || linear,
+    css: (t, u) => `
+      position: absolute;
+      display: block !important;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      transform: ${existingTransform} translateX(${u * -100}%);
+    `
+  }
+}
+
+export const slideRight = (
+  node: HTMLElement,
+  params: {
+    delay?: number
+    duration?: number
+    easing?: (t: number) => number
+  } = {}
+) => {
+  const existingTransform = getComputedStyle(node).transform.replace("none", "")
+  
+  return {
+    delay: params.delay || 0,
+    duration: params.duration || 400,
+    easing: params.easing || linear,
+    css: (t, u) => `
+      position: absolute;
+      display: block !important;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      transform: ${existingTransform} translateX(${u * 100}%);
+    `
+  }
+}
+
+export const slideFromLeft = (
+  node: HTMLElement,
+  params: {
+    delay?: number
+    duration?: number
+    easing?: (t: number) => number
+  } = {}
+) => {
+  const existingTransform = getComputedStyle(node).transform.replace("none", "")
+  
+  return {
+    delay: params.delay || 0,
+    duration: params.duration || 400,
+    easing: params.easing || linear,
+    css: (t, u) => `
+      position: absolute;
+      display: block !important;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      transform: ${existingTransform} translateX(${(1-t) * -100}%);
+    `
+  }
+}
+
+export const slideFromRight = (
+  node: HTMLElement,
+  params: {
+    delay?: number
+    duration?: number
+    easing?: (t: number) => number
+  } = {}
+) => {
+  const existingTransform = getComputedStyle(node).transform.replace("none", "")
+  
+  return {
+    delay: params.delay || 0,
+    duration: params.duration || 400,
+    easing: params.easing || linear,
+    css: (t, u) => `
+      position: absolute;
+      display: block !important;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      transform: ${existingTransform} translateX(${(1-t) * 100}%);
+    `
+  }
+}
+
 export const transitionFunctions = {
   none: (_: HTMLElement, __: object) => {},
   fade,
   fly,
   wipe: wipe,
   leftToRight,
-  strobeWipe
+  strobeWipe,
+  slideLeft,
+  slideRight,
+  slideFromLeft,
+  slideFromRight
 }
 
 export type TransitionFunction = keyof typeof transitionFunctions

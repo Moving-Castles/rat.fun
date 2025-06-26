@@ -7,10 +7,4 @@
 
 <SEO prependTitle="LANDLORD" />
 
-<!-- Grid position 1  -->
-<RoomContainer />
-<!-- <RatContainer /> -->
-<!-- Grid position 2 -->
-<CenterBar />
-<!-- Grid position 3 -->
 <RoomListing isOwnRoomListing={true} />

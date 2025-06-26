@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { page } from "$app/state"
   import {
     transitionFunctions,
     type TransitionConfig,
@@ -41,11 +40,15 @@
       transitionFunctionOut = transitionFunctions?.[wanted?.out?.transition || "none"]
       inParams = wanted?.in?.params || {}
       outParams = wanted?.out?.params || {}
+
+      console.log("starting")
     } else {
       transitionFunctionIn = transitionFunctions["none"]
       transitionFunctionOut = transitionFunctions["none"]
     }
   })
+
+  $inspect(wanted)
 </script>
 
 {#key `${wanted?.from}-${wanted?.to}`}
