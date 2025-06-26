@@ -22,19 +22,6 @@
   })
 </script>
 
-<div class="main-area">
-  <Main {environment}>
-    {@render children?.()}
-  </Main>
-</div>
-
-<style lang="scss">
-  .main-area {
-    width: 100%;
-    height: var(--game-window-height);
-    display: grid;
-    grid-template-columns: calc(var(--game-window-width) * 0.46) 1fr calc(
-        var(--game-window-width) * 0.46
-      );
-  }
-</style>
+<Main {environment}>
+  {@render children?.()}
+</Main>

@@ -66,7 +66,7 @@
     <VideoLoader duration={6000} />
   {:else}
     <!-- LEVEL SELECTION -->
-    <div class="form-group level-selection">
+    <!-- <div class="form-group level-selection">
       <label for="level-toggles">
         <span class="highlight">Select rat level</span>
       </label>
@@ -82,7 +82,7 @@
           </button>
         {/each}
       </div>
-    </div>
+    </div> -->
 
     <!-- ROOM DESCRIPTION -->
     <div class="form-group">

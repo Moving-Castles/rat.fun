@@ -14,3 +14,10 @@
 <a href="/{roomId}/enter" class="room-enter">
   <BigButton text="Send rat to room" onclick={sendEnterRoom} />
 </a>
+
+<style>
+  .room-enter {
+    display: block;
+    height: 90px;
+  }
+</style>

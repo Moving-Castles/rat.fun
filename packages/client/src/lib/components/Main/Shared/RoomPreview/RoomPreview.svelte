@@ -75,20 +75,12 @@
 {/key}
 
 <style lang="scss">
-  .room-preview {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
+  .room-inner-container {
+    overflow-y: auto;
+    flex: 1;
+    min-height: 0;
     height: 100%;
-    background-image: url("/images/texture2.jpg");
-    background-size: 100px;
-
-    .room-inner-container {
-      overflow-y: auto;
-      flex: 1;
-      min-height: 0;
-      height: 100%;
-      padding-bottom: calc(var(--pane-switch-height) + var(--world-prompt-box-height) + 20px);
-    }
+    max-height: 100%;
+    padding-bottom: calc(var(--pane-switch-height) + var(--world-prompt-box-height) + 20px);
   }
 </style>
