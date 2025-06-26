@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { EnterRoomReturnValue } from "@server/modules/types"
   import { onMount } from "svelte"
-  import FloorDescription from "$lib/components/Main/Floors/FloorDescription.svelte"
+  import FloorDescription from "$lib/components/Old/Floors/FloorDescription.svelte"
   import { goto } from "$app/navigation"
   import { frozenRat } from "$lib/components/Main/RoomResult/state.svelte"
   import { ratLevel } from "$lib/modules/state/base/stores"

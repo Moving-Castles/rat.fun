@@ -2,15 +2,15 @@
   // ...
 </script>
 
-<div class="floor-bar"></div>
+<div class="center-bar"></div>
 
 <style lang="scss">
-  .floor-bar {
+  .center-bar {
     width: 100%;
     height: 100%;
+    position: relative;
     border-right: var(--dashed-border-style);
     border-left: var(--dashed-border-style);
-    position: relative;
     background: repeating-linear-gradient(
       45deg,
       #000000,

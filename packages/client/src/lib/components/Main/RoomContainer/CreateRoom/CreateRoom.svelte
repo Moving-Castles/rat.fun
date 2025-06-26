@@ -68,7 +68,7 @@
     <!-- LEVEL SELECTION -->
     <div class="form-group level-selection">
       <label for="level-toggles">
-        <span class="highlight">Select floor</span>
+        <span class="highlight">Select rat level</span>
       </label>
       <div id="level-toggles" class="level-toggles" role="radiogroup" aria-label="Select level">
         {#each Object.entries($levels) as [key, level]}

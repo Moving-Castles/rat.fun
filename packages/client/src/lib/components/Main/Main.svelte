@@ -3,7 +3,7 @@
   import WorldPromptBox from "$lib/components/Main/RoomContainer/WorldPromptBox.svelte"
   import PaneSwitch from "$lib/components/Main/RoomContainer/PaneSwitch.svelte"
   import RatContainer from "$lib/components/Main/RatContainer/RatContainer.svelte"
-  import Floors from "$lib/components/Main/Floors/Floors.svelte"
+  import CenterBar from "$lib/components/Main/CenterBar/CenterBar.svelte"
 
   let { children }: { children: import("svelte").Snippet; environment: ENVIRONMENT } = $props()
 </script>
@@ -11,7 +11,7 @@
 <div class="dust"></div>
 
 <RatContainer />
-<Floors />
+<CenterBar />
 
 <div class="scroll-container">
   <WorldPromptBox />

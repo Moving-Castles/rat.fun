@@ -33,8 +33,8 @@
     width: 100%;
     height: var(--game-window-height);
     display: grid;
-    grid-template-columns: calc(var(--game-window-width) * 0.44) 1fr calc(
-        var(--game-window-width) * 0.44
+    grid-template-columns: calc(var(--game-window-width) * 0.46) 1fr calc(
+        var(--game-window-width) * 0.46
       );
   }
 </style>

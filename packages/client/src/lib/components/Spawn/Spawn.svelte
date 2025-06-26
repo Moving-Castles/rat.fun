@@ -158,13 +158,7 @@
       <!-- INTRO TEXT -->
       <div class="content">
         <p class="header">
-          <span class="inverted">Welcome to Rat Rooms Playtest #5</span>
-        </p>
-        <p class="small">
-          You are an Operator working for the Firm. Your objective is to regain access to the
-          underground floors of Facility F which has gone rogue. Use a remote controlled Rat to
-          enter the facility by sending it down the (rat-sized) elevator to explore its many rooms,
-          collecting items, traits and currency on your rat.
+          <span class="inverted">Welcome to RAT.FUN</span>
         </p>
         <ol class="small">
           <li>Study the rooms</li>
