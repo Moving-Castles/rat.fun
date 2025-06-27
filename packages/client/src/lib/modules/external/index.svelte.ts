@@ -28,8 +28,8 @@ export const busy = $state({
   Spawn: new Tween(0, { duration: DEFAULT_TIMINGS.Spawn, easing })
 })
 
-/** Create room
- *
+/**
+ * Create room
  *
  */
 export async function sendCreateRoom(newPrompt: string, levelId: string, roomCreationCost: bigint) {
@@ -67,8 +67,8 @@ export async function sendCreateRoom(newPrompt: string, levelId: string, roomCre
   }
 }
 
-/** Create rat
- *
+/**
+ * Create rat
  *
  */
 export async function sendCreateRat(name: string) {
@@ -97,8 +97,8 @@ export async function sendCreateRat(name: string) {
   }
 }
 
-/** Spawn
- *
+/**
+ * Spawn
  *
  */
 export async function sendSpawn(name: string) {
@@ -119,7 +119,6 @@ export async function sendSpawn(name: string) {
 /**
  * Liquidate Rat
  *
- *
  */
 export async function sendLiquidateRat() {
   if (busy.LiquidateRat.current !== 0) return
@@ -137,7 +136,6 @@ export async function sendLiquidateRat() {
 
 /**
  * Liquidate Room
- *
  *
  */
 export async function sendLiquidateRoom(roomId: string) {
