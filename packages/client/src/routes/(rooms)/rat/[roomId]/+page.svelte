@@ -11,11 +11,7 @@
 <SEO prependTitle={truncatedTitle} />
 
 {#if room}
-  <RoomPreview
-    roomId={page.params.roomId}
-    isOwnRoomListing={page.url.searchParams.has("landlord")}
-    {room}
-  />
+  <RoomPreview roomId={page.params.roomId} isOwnRoomListing={false} {room} />
 {/if}
 
 <style>

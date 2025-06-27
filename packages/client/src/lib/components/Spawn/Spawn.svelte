@@ -67,8 +67,8 @@
           currentState = SPAWN_STATE.SHOW_SPAWN_FORM
         }
       } else {
-        // Wallet not connected - show connect wallet form
-        currentState = SPAWN_STATE.CONNECT_WALLET
+        // New user – show introduction
+        currentState = SPAWN_STATE.INTRODUCTION
       }
     } else {
       // For burner wallet, connect immediately

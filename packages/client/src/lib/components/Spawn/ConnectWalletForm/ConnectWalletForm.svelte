@@ -23,12 +23,12 @@
   async function connectAccountKit() {
     let accountKitConnectReturn: AccountKitConnectReturn | null = null
 
-    while (!accountKitConnectReturn) {
-      try {
-        accountKitConnectReturn = await connect()
-      } catch (e) {
-        console.log("Account kit error", e)
-      }
+    try {
+      accountKitConnectReturn = await connect()
+    } catch (e) {
+      // This probably means the user closed the account kit modal
+      console.log("Account kit error", e)
+      return
     }
 
     const wallet = setupWalletNetwork(

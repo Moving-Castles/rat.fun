@@ -4,7 +4,6 @@ import { ENTITY_TYPE } from "contracts/enums"
 import { get } from "svelte/store"
 import { walletNetwork, walletType } from "$lib/modules/network"
 import { player, playerAddress } from "$lib/modules/state/base/stores"
-import { initActionSequencer } from "$lib/modules/action/actionSequencer"
 import { initErc20Listener } from "$lib/modules/state/base/erc20Listener"
 import { WALLET_TYPE } from "./mud/enums"
 
@@ -16,7 +15,6 @@ export function initWalletNetwork(
   walletType.set(type)
   walletNetwork.set(wallet)
   playerAddress.set(address)
-  initActionSequencer()
   initErc20Listener()
   // Check if player is already spawned
   return get(player)?.entityType === ENTITY_TYPE.PLAYER ? true : false

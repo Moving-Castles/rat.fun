@@ -13,9 +13,6 @@
   let going = $state(false)
   let confirming = $state(false)
   let liquidationMessage = $state("CONFIRM RAT LIQUIDATION")
-
-  // Withhold changes to this value until the
-  // ratTotalValue
 </script>
 
 <div class="liquidate-rat">
