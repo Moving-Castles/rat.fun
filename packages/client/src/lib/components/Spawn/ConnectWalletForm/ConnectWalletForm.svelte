@@ -7,9 +7,6 @@
   import type { AccountKitConnectReturn } from "$lib/modules/account-kit/types"
   import { connect } from "$lib/modules/account-kit/connect"
 
-  import { gameConfig, playerERC20Allowance } from "$lib/modules/state/base/stores"
-  import { approveMax } from "$lib/modules/action"
-  import { waitForCompletion } from "$lib/modules/action/actionSequencer/utils"
   import { publicNetwork } from "$lib/modules/network"
   import { setupWalletNetwork } from "$lib/mud/setupWalletNetwork"
   import { initWalletNetwork } from "$lib/initWalletNetwork"
@@ -41,15 +38,6 @@
       accountKitConnectReturn.userAddress as Hex,
       WALLET_TYPE.ACCOUNTKIT
     )
-
-    if ($playerERC20Allowance < 100) {
-      try {
-        const approveAction = approveMax($gameConfig.externalAddressesConfig.gamePoolAddress)
-        await waitForCompletion(approveAction)
-      } catch (e) {
-        console.error(e)
-      }
-    }
 
     onComplete(isSpawned)
   }

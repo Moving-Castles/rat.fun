@@ -13,9 +13,12 @@
   import { setupBurnerWalletNetwork } from "$lib/mud/setupBurnerWalletNetwork"
   import { initWalletNetwork } from "$lib/initWalletNetwork"
 
+  import { playerERC20Allowance } from "$lib/modules/state/base/stores"
+
   import { VideoLoader } from "$lib/components/Shared"
   import Introduction from "$lib/components/Spawn/Introduction/Introduction.svelte"
   import ConnectWalletForm from "$lib/components/Spawn/ConnectWalletForm/ConnectWalletForm.svelte"
+  import RequestApprovalForm from "$lib/components/Spawn/RequestApprovalForm/RequestApprovalForm.svelte"
   import SpawnForm from "$lib/components/Spawn/SpawnForm/SpawnForm.svelte"
 
   const { walletType, spawned = () => {} } = $props<{
@@ -92,8 +95,15 @@
         if (isSpawned) {
           spawned()
         } else {
-          currentState = SPAWN_STATE.SHOW_SPAWN_FORM
+          currentState =
+            $playerERC20Allowance < 100 ? SPAWN_STATE.REQUEST_APPROVAL : SPAWN_STATE.SHOW_SPAWN_FORM
         }
+      }}
+    />
+  {:else if currentState === SPAWN_STATE.REQUEST_APPROVAL}
+    <RequestApprovalForm
+      onComplete={() => {
+        currentState = SPAWN_STATE.SHOW_SPAWN_FORM
       }}
     />
   {:else if currentState === SPAWN_STATE.SHOW_SPAWN_FORM}
