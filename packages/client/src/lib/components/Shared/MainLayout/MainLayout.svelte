@@ -31,7 +31,6 @@
 <div class="main-area">
   <div class="header">
     <OperatorBar />
-
     <PaneSwitch />
   </div>
 
@@ -45,10 +44,6 @@
 <div class="dust"></div>
 
 <style lang="scss">
-  .black {
-    width: 100%;
-  }
-
   .main-area {
     width: 100%;
     height: var(--game-window-height);

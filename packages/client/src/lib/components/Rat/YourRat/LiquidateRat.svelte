@@ -5,7 +5,6 @@
   import { playSound } from "$lib/modules/sound"
   import { player, ratImageUrl } from "$lib/modules/state/base/stores"
   import { tippy } from "svelte-tippy"
-  import { walletNetwork } from "$lib/modules/network"
 
   import { NumberGoing, VideoLoader, DangerButton, ModalTarget } from "$lib/components/Shared"
   import { getModalState } from "$lib/components/Shared/Modal/state.svelte"

@@ -124,15 +124,15 @@ export const strobeWipe = (
       const cycles = params.cycles || 10
       const feather = params.feather || 100
       const progress = u
-      
+
       // Create cycling effect - repeat the sweep multiple times
       const cycleProgress = (progress * cycles) % 1
-      
+
       // Scan lines move from bottom (100%) to top (0%)
-      const scanPosition = 100 - (cycleProgress * 100)
+      const scanPosition = 100 - cycleProgress * 100
       const scanStart = Math.max(0, scanPosition - feather)
       const scanEnd = Math.min(100, scanPosition + feather)
-      
+
       return `
         position: absolute;
         z-index: 1000000000;
@@ -157,7 +157,7 @@ export const slideLeft = (
   } = {}
 ) => {
   const existingTransform = getComputedStyle(node).transform.replace("none", "")
-  
+
   return {
     delay: params.delay || 0,
     duration: params.duration || 400,
@@ -183,7 +183,7 @@ export const slideRight = (
   } = {}
 ) => {
   const existingTransform = getComputedStyle(node).transform.replace("none", "")
-  
+
   return {
     delay: params.delay || 0,
     duration: params.duration || 400,
@@ -209,7 +209,7 @@ export const slideFromLeft = (
   } = {}
 ) => {
   const existingTransform = getComputedStyle(node).transform.replace("none", "")
-  
+
   return {
     delay: params.delay || 0,
     duration: params.duration || 400,
@@ -221,7 +221,7 @@ export const slideFromLeft = (
       left: 0;
       width: 100%;
       height: 100%;
-      transform: ${existingTransform} translateX(${(1-t) * -100}%);
+      transform: ${existingTransform} translateX(${(1 - t) * -100}%);
     `
   }
 }
@@ -235,7 +235,7 @@ export const slideFromRight = (
   } = {}
 ) => {
   const existingTransform = getComputedStyle(node).transform.replace("none", "")
-  
+
   return {
     delay: params.delay || 0,
     duration: params.duration || 400,
@@ -247,7 +247,7 @@ export const slideFromRight = (
       left: 0;
       width: 100%;
       height: 100%;
-      transform: ${existingTransform} translateX(${(1-t) * 100}%);
+      transform: ${existingTransform} translateX(${(1 - t) * 100}%);
     `
   }
 }

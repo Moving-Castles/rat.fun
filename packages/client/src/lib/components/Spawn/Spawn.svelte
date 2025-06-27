@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { maxUint256, type Hex } from "viem"
+  import type { Hex } from "viem"
   import type { SetupWalletNetworkResult } from "$lib/mud/setupWalletNetwork"
 
   import { WALLET_TYPE } from "$lib/mud/enums"

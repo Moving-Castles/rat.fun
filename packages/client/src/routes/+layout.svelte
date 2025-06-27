@@ -4,10 +4,9 @@
 
   import type { LayoutProps } from "./$types"
 
-  import { Modal, WalletInfo, Loading, Spawn, PageTransitions } from "$lib/components/Shared"
   import { onMount } from "svelte"
   import { initStaticContent } from "$lib/modules/content"
-  import { publicNetwork, walletNetwork } from "$lib/modules/network"
+  import { publicNetwork } from "$lib/modules/network"
   import { initSound, playSound } from "$lib/modules/sound"
   import { UIState, UILocation } from "$lib/modules/ui/stores"
   import { UI, LOCATION } from "$lib/modules/ui/enums"
@@ -16,8 +15,11 @@
   import { websocketConnected } from "$lib/modules/off-chain-sync/stores"
   import { EMPTY_CONNECTION } from "$lib/modules/utils/constants"
   import { WALLET_TYPE } from "$lib/mud/enums"
-  import { gameConfig } from "$lib/modules/state/base/stores"
   import { mountAccountKit } from "$lib/modules/account-kit/mount"
+
+  import Spawn from "$lib/components/Spawn/Spawn.svelte"
+  import Loading from "$lib/components/Loading/Loading.svelte"
+  import { Modal, PageTransitions, WalletInfo } from "$lib/components/Shared"
 
   let { children, data }: LayoutProps = $props()
 

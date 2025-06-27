@@ -1,7 +1,5 @@
 <script lang="ts">
   import { page } from "$app/state"
-
-  $inspect(page.route.id)
 </script>
 
 <div class="pane-switch">
