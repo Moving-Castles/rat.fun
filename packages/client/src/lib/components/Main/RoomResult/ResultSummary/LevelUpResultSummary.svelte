@@ -57,7 +57,7 @@
 
 <div
   onclick={() => {
-    goto("/")
+    goto("/rat")
   }}
   role="presentation"
   class="popup-container"
@@ -72,7 +72,7 @@
           <FloorDescription />
         </h1>
 
-        <a bind:this={closeButtonElement} class="close-button" href="/"> LEAVE ROOM </a>
+        <a bind:this={closeButtonElement} class="close-button" href="/rat"> LEAVE ROOM </a>
       </div>
 
       <div class="background">

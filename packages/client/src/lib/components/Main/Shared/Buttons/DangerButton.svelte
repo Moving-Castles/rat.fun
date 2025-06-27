@@ -22,9 +22,11 @@
     playSound("tcm", "selectionEnter")
     onclick()
   }
+
+  let conditionalAction = $derived(tippyText ? tippy : () => {})
 </script>
 
-<button class:disabled {onmouseup} {onmousedown} use:tippy={{ content: tippyText }}>
+<button class:disabled {onmouseup} {onmousedown} use:conditionalAction={{ content: tippyText }}>
   <span class="button-text">{text}</span>
 </button>
 

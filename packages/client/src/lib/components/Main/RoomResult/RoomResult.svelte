@@ -69,13 +69,13 @@
     } catch (error) {
       console.log("catch result error", error)
       transitionTo(ROOM_RESULT_STATE.ERROR)
-      goto("/")
+      await goto("/rat")
       return
     }
   }
 
   onMount(() => {
-    if (!$ratState) goto("/")
+    if (!$ratState) goto("/rat")
     freezeObjects($ratState, room, roomId as Hex, $player.ownedRat as Hex)
     resetRoomResultState()
     processRoom()

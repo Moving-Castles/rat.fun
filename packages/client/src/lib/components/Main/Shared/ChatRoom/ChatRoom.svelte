@@ -77,6 +77,7 @@
     background: url("/images/bg-test.jpg");
     background-size: 100px;
     border-top: var(--default-border-style);
+    min-height: 100px;
 
     .chat-scroll {
       // display: flex;

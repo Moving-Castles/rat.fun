@@ -90,5 +90,7 @@
     color: var(--color-grey-mid);
     border-bottom: 1px solid var(--color-grey-mid);
     padding: 12px;
+    position: sticky;
+    top: 0;
   }
 </style>

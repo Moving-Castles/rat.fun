@@ -31,7 +31,7 @@
       font-family: var(--label-font-stack);
       background: var(--color-grey-mid);
       color: var(--background);
-      width: 100%;
+      width: 200px;
 
       a {
         width: 100%;

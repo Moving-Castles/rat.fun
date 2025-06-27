@@ -25,8 +25,9 @@
   </div>
   <!-- YOUR ROOM -->
   <div class="spacer"></div>
-  <div class="remaining"></div>
-  <ChatRoom />
+  <div class="remaining">
+    <ChatRoom />
+  </div>
 </div>
 
 <style lang="scss">

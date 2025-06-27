@@ -67,7 +67,7 @@
 
 <div
   onclick={() => {
-    goto("/")
+    goto("/rat")
   }}
   role="presentation"
   class="popup-container"

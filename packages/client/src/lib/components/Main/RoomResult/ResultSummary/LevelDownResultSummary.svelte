@@ -62,7 +62,7 @@
           <FloorDescription />
         </h1>
 
-        <a href="/" bind:this={closeButtonElement} class="close-button"> LEAVE ROOM </a>
+        <a href="/rat" bind:this={closeButtonElement} class="close-button"> LEAVE ROOM </a>
       </div>
 
       <div class="background">

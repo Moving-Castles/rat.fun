@@ -59,7 +59,7 @@
 
     if (result.roomId) {
       // Go to the preview
-      goto(`/${result.roomId}`)
+      goto(`/landlord/${result.roomId}`)
     }
   }
 </script>

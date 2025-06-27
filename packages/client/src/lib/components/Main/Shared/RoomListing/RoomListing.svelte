@@ -50,7 +50,26 @@
 <div class="floor-content">
   <div class:previewing class:animated={false} class="room-listing">
     {#if !isOwnRoomListing}
-      <!-- <FloorHeader /> -->
+      <RoomFilters
+        roomsAmount={activeList.length}
+        {textFilter}
+        {sortFunction}
+        {showDepletedRooms}
+        onSort={fn => {
+          sortFunction = fn
+          updateRooms()
+        }}
+        onTextFilterChange={value => {
+          textFilter = value
+        }}
+        onTextFilterClear={() => {
+          textFilter = ""
+        }}
+        onToggleDepleted={() => {
+          showDepletedRooms = !showDepletedRooms
+        }}
+      />
+    {:else}
       <RoomFilters
         roomsAmount={activeList.length}
         {textFilter}
@@ -111,16 +130,13 @@
   .floor-content {
     position: relative;
     overflow-y: scroll;
-    height: 100%;
+    height: calc(var(--game-window-height) - 120px);
     max-height: 100%;
   }
 
   .room-listing {
-    overflow-y: scroll;
     height: 100%;
     max-height: 100%;
-    background-image: url("/images/texture-5.png");
-    background-size: 200px;
   }
 
   .new-rooms-button {
@@ -138,6 +154,7 @@
     flex-basis: 100%;
     flex-shrink: 0;
     height: 100%;
+    min-height: 100%;
     inset: 0;
 
     &.animated {
@@ -154,7 +171,7 @@
   }
 
   .empty-listing {
-    height: 100%;
+    height: calc(100% - 60px);
     display: flex;
     justify-content: center;
     align-items: center;

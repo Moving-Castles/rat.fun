@@ -22,13 +22,13 @@
   import WalletInfo from "$lib/components/Debug/WalletInfo.svelte"
   import Loading from "$lib/components/Loading/Loading.svelte"
   import Spawn from "$lib/components/Spawn/Spawn.svelte"
-  // import PageTransitions from "$lib/components/Main/Shared/PageTransitions/PageTransitions.svelte"
+  import PageTransitions from "$lib/components/Main/Shared/PageTransitions/PageTransitions.svelte"
 
   let { children, data }: LayoutProps = $props()
 
   const { environment, walletType } = data
 
-  const transitionsConfig = [
+  const config = [
     {
       from: "/(rooms)/rat/[roomId]",
       to: "/(rooms)/rat/[roomId]/enter",
@@ -121,7 +121,9 @@
       </main>
     {:else if $UIState === UI.READY}
       <div class="layer-game">
-        {@render children?.()}
+        <PageTransitions {config}>
+          {@render children?.()}
+        </PageTransitions>
       </div>
     {/if}
   </div>
