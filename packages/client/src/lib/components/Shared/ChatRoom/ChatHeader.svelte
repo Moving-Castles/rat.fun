@@ -9,7 +9,7 @@
       Floor #{$ratLevel?.index ?? 0}: {$ratLevel?.name ?? ""}
     </span>
     <span class="status" class:connected={$websocketConnected}>
-      {$clientList.length ?? 0} operator{Object.keys($clientList).length > 1 ? "s" : ""} online
+      {$clientList.length ?? 0} player{Object.keys($clientList).length > 1 ? "s" : ""} online
     </span>
   </div>
 </div>

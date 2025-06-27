@@ -50,7 +50,7 @@
       text={blockUntilUnlock <= 0
         ? `Liquidate Room (Get ${room.balance})`
         : `Liquidation unlocked in ${blockUntilUnlock} blocks`}
-      tippyText="Liquidate room to get the value added to your operator wallet"
+      tippyText="Liquidate room to get the value added to your wallet"
       onclick={() => (confirming = true)}
       disabled={busy || blockUntilUnlock > 0}
     />

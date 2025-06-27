@@ -52,7 +52,7 @@
   <div class="action">
     <DangerButton
       text="Liquidate Rat"
-      tippyText="Kill rat to get the value added to your operator wallet"
+      tippyText="Kill rat to get the value added to your wallet"
       onclick={() => (confirming = true)}
       disabled={busy}
     />

@@ -180,7 +180,7 @@
 
       <!-- FORM -->
       <div class="form">
-        <p>Sign with operator name to proceed.</p>
+        <p>Sign with name to proceed.</p>
         <!-- INPUT -->
         <input
           type="text"

@@ -47,8 +47,8 @@
   --rat-main-info-height: 160px;
   --rat-inventory-height: 220px;
 
-  /* Layout: Operator Bar */
-  --operator-bar-height: 60px;
+  /* Layout: Top Bar */
+  --top-bar-height: 60px;
 
   /* Layout: Your Rooms */
   --world-prompt-box-height: 80px;
@@ -65,7 +65,6 @@
 
   /* Sizing */
   --default-padding: 14px;
-  --top-bar-height: 40px;
   --tab-bar-height: 90px;
 
   /* Border */

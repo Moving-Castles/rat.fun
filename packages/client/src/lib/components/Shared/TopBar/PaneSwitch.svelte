@@ -1,16 +1,23 @@
 <script lang="ts">
   import { page } from "$app/state"
+
+  let selectionIndicator = $state<HTMLElement>()
+
+  $effect(() => {
+    if (selectionIndicator) {
+      selectionIndicator.style.transform = `translateX(${page.route.id?.includes("/(rooms)/rat") ? 0 : 200}px)`
+    }
+  })
 </script>
 
 <div class="pane-switch">
-  <!-- ALL ROOMS -->
   <div class="pane-switch-item" class:selected={page.route.id?.includes("/(rooms)/rat")}>
     <a href="/rat">RAT</a>
   </div>
-  <!-- YOUR ROOMS -->
   <div class="pane-switch-item" class:selected={page.route.id?.includes("/(rooms)/landlord")}>
     <a href="/landlord">LANDLORD</a>
   </div>
+  <div class="selection-indicator" bind:this={selectionIndicator}></div>
 </div>
 
 <style lang="scss">
@@ -20,6 +27,9 @@
     border-bottom: var(--default-border-style);
     height: var(--pane-switch-height);
     line-height: var(--pane-switch-height);
+    width: 400px;
+    background: var(--color-grey-mid);
+    position: relative;
 
     .pane-switch-item {
       text-align: center;
@@ -27,9 +37,13 @@
       border: none;
       outline: none;
       font-family: var(--label-font-stack);
-      background: var(--color-grey-mid);
       color: var(--background);
       width: 200px;
+      z-index: 100;
+
+      &:first-child {
+        border-right: var(--default-border-style);
+      }
 
       a {
         width: 100%;
@@ -47,22 +61,21 @@
       }
 
       &:hover {
-        background: var(--color-grey-light);
         a {
           transform: scale(1.4);
         }
       }
+    }
 
-      &.selected {
-        background: var(--color-alert);
-        a {
-          color: var(--white);
-        }
-
-        &:hover {
-          // background: var(--color-alert-priority);
-        }
-      }
+    .selection-indicator {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 200px;
+      height: 100%;
+      background: var(--color-alert);
+      z-index: 10;
+      transition: transform 0.2s ease-out;
     }
   }
 </style>

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import OperatorInfo from "./OperatorInfo.svelte"
+  import OperatorInfo from "./PlayerInfo.svelte"
   import PaneSwitch from "./PaneSwitch.svelte"
 </script>
 
@@ -15,7 +15,7 @@
     border-bottom: var(--default-border-style);
     display: flex;
     justify-content: space-between;
-    height: var(--operator-bar-height);
+    height: var(--top-bar-height);
     background: var(--black);
     user-select: none;
     overflow-y: hidden;

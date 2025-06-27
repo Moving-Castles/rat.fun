@@ -5,7 +5,7 @@
   let balanceGoing = $state(false)
 </script>
 
-<div class="operator-info">
+<div class="player-info">
   <!-- PLAYER STATS -->
   {#if $player}
     <div class="player-stats">
@@ -13,25 +13,23 @@
       <div class="stat-item">
         <div
           use:tippy={{
-            content: `${$player.name}: This is you, an operator of the firm`,
+            content: `This is you`,
             placement: "bottom"
           }}
-          class="inner-wrapper operator"
+          class="inner-wrapper player"
         >
-          <div class="label">Operator:</div>
           <div class="value">{$player.name}</div>
         </div>
       </div>
       <!-- BALANCE -->
       <div
         use:tippy={{
-          content: `This is available funds in your operator wallet, spend wisely`,
+          content: `This is available tokens in your wallet`,
           placement: "bottom"
         }}
         class="stat-item"
       >
         <div class:priority={balanceGoing} class="inner-wrapper balance">
-          <div class="label">Balance:</div>
           <div class="value">
             $<NumberGoing bind:going={balanceGoing} muted={true} value={$playerERC20Balance ?? 0} />
           </div>
@@ -51,8 +49,7 @@
 </div>
 
 <style lang="scss">
-  .operator-info {
-    width: 100%;
+  .player-info {
     .player-stats {
       display: flex;
       align-items: center;
@@ -61,7 +58,7 @@
       .stat-item {
         display: flex;
         height: 100%;
-        line-height: var(--operator-bar-height);
+        line-height: var(--top-bar-height);
         border: 0;
         background: transparent;
         border-right: var(--default-border-style);
@@ -85,7 +82,7 @@
             color: var(--black);
           }
 
-          &.operator {
+          &.player {
             color: var(--foreground);
           }
         }

@@ -7,8 +7,6 @@
   let staticOutcomeContent = $derived(
     $staticContent?.outcomes?.find(r => r._id == (page.params.id ?? ""))
   )
-
-  $inspect(staticOutcomeContent)
 </script>
 
 {#if staticOutcomeContent}

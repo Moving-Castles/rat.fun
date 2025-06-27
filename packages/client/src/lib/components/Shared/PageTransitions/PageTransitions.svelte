@@ -54,8 +54,6 @@
       // Keep the same key if no transition should occur
     }
   })
-
-  $inspect(wanted)
 </script>
 
 {#key transitionKey}
