@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { VideoLoader } from "$lib/components/Shared"
+  import { VideoLoaderDuration } from "$lib/components/Shared"
 </script>
 
 <div class="waiting-for-result">
-  <!-- <VideoLoader duration={11000} /> -->
+  <VideoLoaderDuration duration={11000} />
 </div>
 
 <style lang="scss">

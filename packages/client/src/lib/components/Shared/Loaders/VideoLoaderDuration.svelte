@@ -1,6 +1,25 @@
 <script lang="ts">
-  import { type Tween } from "svelte/motion"
-  let { progress, text }: { progress: Tween<number>; text?: string } = $props()
+  import { onMount } from "svelte"
+  import { cubicOut as easing } from "svelte/easing"
+  const { duration = 4000, text }: { duration?: number; text?: string } = $props()
+
+  let progress = $state(0)
+  const startTime = Date.now()
+  const targetProgress = 0.99 // Will approach but never reach 100%
+
+  function animate() {
+    const elapsed = Date.now() - startTime
+    const t = Math.min(elapsed / duration, 1)
+    progress = targetProgress * easing(t)
+    if (t < 1) {
+      requestAnimationFrame(animate)
+    }
+  }
+
+  // Start animation when component mounts
+  onMount(() => {
+    animate()
+  })
 </script>
 
 <div class="video-loader">
@@ -8,7 +27,7 @@
     <div class="text">{text}</div>
   {/if}
   <div class="loading-bar-container">
-    <div class="loading-bar" style="transform: scaleX({progress.current})"></div>
+    <div class="loading-bar" style="transform: scaleX({progress})"></div>
   </div>
   <video class="video" src="/videos/loading.mov" autoplay loop muted playsinline></video>
 </div>

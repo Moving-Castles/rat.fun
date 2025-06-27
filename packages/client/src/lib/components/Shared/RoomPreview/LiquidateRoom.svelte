@@ -1,21 +1,17 @@
 <script lang="ts">
-  import { goto } from "$app/navigation"
-  import { closeRoom } from "$lib/modules/action"
-  import { playSound } from "$lib/modules/sound"
-  import { waitForCompletion } from "$lib/modules/action/actionSequencer/utils"
   import { getModalState } from "$lib/components/Shared/Modal/state.svelte"
   import { gameConfig } from "$lib/modules/state/base/stores"
   import { blockNumber } from "$lib/modules/network"
   import { staticContent, lastUpdated } from "$lib/modules/content"
   import { urlFor } from "$lib/modules/content/sanity"
-  import { sendLiquidateRoomMessage } from "$lib/modules/off-chain-sync"
   import { ModalTarget, NoImage, VideoLoader, DangerButton } from "$lib/components/Shared"
+  import { busy, sendLiquidateRoom } from "$lib/modules/external/index.svelte"
+  import { sendLiquidateRoomMessage } from "$lib/modules/off-chain-sync"
 
   let sanityRoomContent = $derived($staticContent.rooms.find(r => r.title == roomId))
   let { room, roomId }: { room: Room; roomId: string; isOwnRoomListing: boolean } = $props()
   let { modal } = getModalState()
 
-  let busy = $state(false)
   let confirming = $state(false)
   let liquidationMessage = $state("CONFIRM ROOM LIQUIDATION")
 
@@ -23,25 +19,6 @@
   let blockUntilUnlock = $derived(
     Number(room.creationBlock) + $gameConfig.gameConfig.cooldownCloseRoom - Number($blockNumber)
   )
-
-  async function sendLiquidateRoom() {
-    if (busy) return
-    playSound("tcm", "blink")
-    busy = true
-    const action = closeRoom(roomId)
-    try {
-      liquidationMessage = "Liquidating room..."
-      await waitForCompletion(action)
-      liquidationMessage = "Liquidation complete"
-    } catch (e) {
-      console.error(e)
-      liquidationMessage = "Could not liquidate room"
-    } finally {
-      sendLiquidateRoomMessage(roomId)
-      goto("/landlord")
-      modal.close()
-    }
-  }
 </script>
 
 <div class="liquidate-room">
@@ -52,15 +29,15 @@
         : `Liquidation unlocked in ${blockUntilUnlock} blocks`}
       tippyText="Liquidate room to get the value added to your wallet"
       onclick={() => (confirming = true)}
-      disabled={busy || blockUntilUnlock > 0}
+      disabled={busy.CloseRoom.current !== 0 || blockUntilUnlock > 0}
     />
   </div>
 </div>
 
 {#snippet confirmLiquidation()}
   <div class="confirmation-modal danger">
-    {#if busy}
-      <!-- <VideoLoader duration={6000} /> -->
+    {#if busy.CloseRoom.current !== 0}
+      <VideoLoader progress={busy.CloseRoom} />
     {:else}
       <div class="content">
         <div class="room-image">
@@ -72,7 +49,22 @@
             {/if}
           {/key}
         </div>
-        <DangerButton text={liquidationMessage} onclick={sendLiquidateRoom} disabled={busy} />
+        <DangerButton
+          text={liquidationMessage}
+          onclick={async () => {
+            try {
+              liquidationMessage = "Liquidating room..."
+              await sendLiquidateRoom(roomId)
+            } catch (error) {
+              liquidationMessage = "Could not liquidate room"
+              console.error(error)
+            } finally {
+              sendLiquidateRoomMessage(roomId)
+              modal.close()
+            }
+          }}
+          disabled={busy.CloseRoom.current !== 0}
+        />
       </div>
     {/if}
   </div>

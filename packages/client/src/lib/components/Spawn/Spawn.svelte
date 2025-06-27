@@ -7,9 +7,7 @@
   import { store as accountKitStore } from "@latticexyz/account-kit/bundle"
 
   import { onMount } from "svelte"
-  import { spawn } from "$lib/modules/action"
-  import { waitForCompletion } from "$lib/modules/action/actionSequencer/utils"
-  import { playSound } from "$lib/modules/sound"
+  import { busy, sendSpawn } from "$lib/modules/external/index.svelte"
   import { publicNetwork } from "$lib/modules/network"
   import { setupWalletNetwork } from "$lib/mud/setupWalletNetwork"
   import { setupBurnerWalletNetwork } from "$lib/mud/setupBurnerWalletNetwork"
@@ -26,24 +24,6 @@
   }>()
 
   let currentState = $state<SPAWN_STATE>(SPAWN_STATE.INTRODUCTION)
-
-  async function sendSpawn(name: string) {
-    if (!name) {
-      return
-    }
-
-    playSound("tcm", "blink")
-    currentState = SPAWN_STATE.BUSY
-
-    try {
-      const spawnAction = spawn(name)
-      await waitForCompletion(spawnAction)
-      spawned()
-    } catch (e) {
-      console.error(e)
-      currentState = SPAWN_STATE.SHOW_SPAWN_FORM
-    }
-  }
 
   async function connectBurner() {
     const wallet = setupBurnerWalletNetwork($publicNetwork)
@@ -118,12 +98,20 @@
     />
   {:else if currentState === SPAWN_STATE.SHOW_SPAWN_FORM}
     <SpawnForm
-      onComplete={name => {
-        sendSpawn(name)
+      onComplete={async name => {
+        try {
+          currentState = SPAWN_STATE.BUSY
+          await sendSpawn(name)
+          spawned()
+        } catch (error) {
+          console.error(error)
+        } finally {
+          currentState = SPAWN_STATE.SHOW_SPAWN_FORM
+        }
       }}
     />
   {:else if currentState === SPAWN_STATE.BUSY}
-    <!-- <VideoLoader duration={6000} /> -->
+    <VideoLoader progress={busy.Spawn} />
   {/if}
 </div>
 
