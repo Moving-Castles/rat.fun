@@ -1,9 +1,8 @@
 <script lang="ts">
   import type { TempItem } from "$lib/components/Room/RoomResult/types"
   import { items } from "$lib/modules/state/base/stores"
-  import { dropItem } from "$lib/modules/action"
+  import { dropItem } from "$lib/modules/on-chain-action"
   import { playSound } from "$lib/modules/sound"
-  import { waitForCompletion } from "$lib/modules/action/actionSequencer/utils"
   import { ModalTarget, Spinner } from "$lib/components/Shared"
   import { getModalState } from "$lib/components/Shared/Modal/state.svelte"
 
@@ -34,12 +33,12 @@
       return
     }
     if (busy) return
-    playSound("tcm", "blink")
-    busy = true
-    dropMessage = "Dropping item..."
-    const action = dropItem(item)
+
     try {
-      await waitForCompletion(action)
+      playSound("tcm", "blink")
+      busy = true
+      dropMessage = "Dropping item..."
+      await dropItem(item)
       playSound("tcm", "TRX_no")
       dropCompleted = true
       dropMessage = "Close"

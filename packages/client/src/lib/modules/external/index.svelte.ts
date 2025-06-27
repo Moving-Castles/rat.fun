@@ -5,18 +5,7 @@ import { getEnvironment } from "$lib/modules/network"
 import { playSound } from "$lib/modules/sound"
 import { goto } from "$app/navigation"
 import { gameConfig, playerERC20Allowance } from "$lib/modules/state/base/stores"
-import {
-  spawn,
-  createRat,
-  liquidateRat,
-  dropItem,
-  closeRoom,
-  approve,
-  approveMax,
-  giveCallerTokens
-} from "$lib/modules/action"
-
-import { waitForCompletion } from "$lib/modules/action/actionSequencer/utils"
+import { spawn, createRat, liquidateRat, closeRoom, approve } from "$lib/modules/on-chain-action"
 import { createRoom } from "$lib/components/Landlord/CreateRoom"
 
 const DEFAULT_TIMINGS = {
@@ -54,11 +43,7 @@ export async function sendCreateRoom(newPrompt: string, levelId: string, roomCre
   // Approve
   try {
     if (_playerERC20Allowance < _gameConfig.gameConfig.roomCreationCost) {
-      const approveAction = approve(
-        _gameConfig.externalAddressesConfig.gamePoolAddress,
-        roomCreationCost
-      )
-      await waitForCompletion(approveAction)
+      await approve(_gameConfig.externalAddressesConfig.gamePoolAddress, roomCreationCost)
     }
   } catch (e) {
     console.error(e)
@@ -96,15 +81,13 @@ export async function sendCreateRat(name: string) {
   // Approve
   try {
     if (_playerERC20Allowance < _gameConfig.gameConfig.ratCreationCost) {
-      const approveAction = approve(
+      await approve(
         _gameConfig.externalAddressesConfig.gamePoolAddress,
         _gameConfig.gameConfig.ratCreationCost
       )
-      await waitForCompletion(approveAction)
     }
     // Do the thing
-    const createRatAction = createRat(name)
-    await waitForCompletion(createRatAction)
+    await createRat(name)
   } catch (e) {
     console.error(e)
     throw new Error(e)
@@ -125,8 +108,7 @@ export async function sendSpawn(name: string) {
   busy.Spawn.set(0.99, { duration: DEFAULT_TIMINGS.Spawn }) // we never get to 1
 
   try {
-    const spawnAction = spawn(name)
-    await waitForCompletion(spawnAction)
+    await spawn(name)
   } catch (e) {
     throw new Error(e)
   } finally {
@@ -145,10 +127,8 @@ export async function sendLiquidateRat() {
   playSound("tcm", "ratScream")
   busy.LiquidateRat.set(0.99, { duration: DEFAULT_TIMINGS.LiquidateRat })
 
-  const action = liquidateRat()
-
   try {
-    await waitForCompletion(action)
+    await liquidateRat()
   } catch (e) {
     busy.LiquidateRat.set(0, { duration: 0 })
     console.error(e)
@@ -165,10 +145,9 @@ export async function sendLiquidateRoom(roomId: string) {
   playSound("tcm", "blink")
 
   busy.CloseRoom.set(0.99, { duration: DEFAULT_TIMINGS.CloseRoom })
-  const action = closeRoom(roomId)
 
   try {
-    await waitForCompletion(action)
+    await closeRoom(roomId)
   } catch (e) {
     throw new Error(e)
   } finally {

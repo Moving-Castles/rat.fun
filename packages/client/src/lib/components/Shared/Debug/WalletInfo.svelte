@@ -3,8 +3,7 @@
   import { playerAddress } from "$lib/modules/state/base/stores"
   import { ENTITY_TYPE } from "contracts/enums"
   import { player } from "$lib/modules/state/base/stores"
-  import { giveCallerTokens } from "$lib/modules/action"
-  import { waitForCompletion } from "$lib/modules/action/actionSequencer/utils"
+  import { giveCallerTokens } from "$lib/modules/on-chain-action"
 
   let { walletType, environment }: { walletType: WALLET_TYPE; environment: ENVIRONMENT } = $props()
 
@@ -19,8 +18,7 @@
     if (busy) return
     busy = true
     try {
-      const action = giveCallerTokens()
-      await waitForCompletion(action)
+      await giveCallerTokens()
     } catch (e) {
       console.error(e)
     } finally {

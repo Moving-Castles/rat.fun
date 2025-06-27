@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type { Hex } from "viem"
   import { rooms } from "$lib/modules/state/base/stores"
   import { page } from "$app/state"
   import { RoomPreview, SEO } from "$lib/components/Shared"
