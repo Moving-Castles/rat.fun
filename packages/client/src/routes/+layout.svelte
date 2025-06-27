@@ -5,6 +5,7 @@
   import type { LayoutProps } from "./$types"
 
   import { onMount } from "svelte"
+  import { goto } from "$app/navigation"
   import { initStaticContent } from "$lib/modules/content"
   import { publicNetwork } from "$lib/modules/network"
   import { initSound, playSound } from "$lib/modules/sound"
@@ -65,10 +66,15 @@
   ]
 
   const environmentLoaded = async () => {
-    console.log($publicNetwork.worldAddress)
-    // Get content from CMS
-    await initStaticContent($publicNetwork.worldAddress)
-    UIState.set(UI.SPAWNING)
+    try {
+      // Get content from CMS
+      await initStaticContent($publicNetwork.worldAddress)
+      console.log("environment loaded, static content inited")
+      UIState.set(UI.SPAWNING)
+    } catch (error) {
+      console.error(error)
+      goto("/")
+    }
   }
 
   const playerSpawned = () => {

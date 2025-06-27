@@ -1,10 +1,8 @@
 <script lang="ts">
   import { ratTotalValue } from "$lib/modules/state/base/stores"
-  import { liquidateRat } from "$lib/modules/action"
-  import { waitForCompletion } from "$lib/modules/action/actionSequencer/utils"
-  import { playSound } from "$lib/modules/sound"
   import { player, ratImageUrl } from "$lib/modules/state/base/stores"
   import { tippy } from "svelte-tippy"
+  import { busy, sendLiquidateRat } from "$lib/modules/external/index.svelte"
 
   import { NumberGoing, VideoLoader, DangerButton, ModalTarget } from "$lib/components/Shared"
   import { getModalState } from "$lib/components/Shared/Modal/state.svelte"
@@ -12,28 +10,9 @@
 
   let { modal } = getModalState()
 
-  let busy = $state(false)
   let going = $state(false)
   let confirming = $state(false)
   let liquidationMessage = $state("CONFIRM RAT LIQUIDATION")
-
-  const sendLiquidateRat = async () => {
-    if (busy) return
-    busy = true
-    playSound("tcm", "ratScream")
-    const action = liquidateRat()
-
-    try {
-      liquidationMessage = "Eliminating rat..."
-      await waitForCompletion(action)
-    } catch (e) {
-      busy = false
-      console.error(e)
-    } finally {
-      sendLiquidateRatMessage($player.ownedRat)
-      modal.close()
-    }
-  }
 
   // Withhold changes to this value until the
   // ratTotalValue
@@ -54,19 +33,33 @@
       text="Liquidate Rat"
       tippyText="Kill rat to get the value added to your wallet"
       onclick={() => (confirming = true)}
-      disabled={busy}
+      disabled={busy.LiquidateRat.current !== 0}
     />
   </div>
 </div>
 
 {#snippet confirmLiquidation()}
   <div class="confirmation danger">
-    {#if busy}
-      <!-- <VideoLoader duration={6000} /> -->
+    {#if busy.LiquidateRat.current !== 0}
+      <VideoLoader progress={busy.LiquidateRat} />
     {:else}
       <div class="content">
         <img class="liquidate-image" src={$ratImageUrl} alt="Confirm Liquidation" />
-        <DangerButton text={liquidationMessage} onclick={sendLiquidateRat} disabled={busy} />
+        <DangerButton
+          text={liquidationMessage}
+          onclick={async () => {
+            liquidationMessage = "Eliminating rat..."
+            try {
+              await sendLiquidateRat()
+              sendLiquidateRatMessage($player.ownedRat)
+            } catch (er) {
+              console.error(er)
+            } finally {
+              modal.close()
+            }
+          }}
+          disabled={busy.LiquidateRat.current !== 0}
+        />
       </div>
     {/if}
   </div>

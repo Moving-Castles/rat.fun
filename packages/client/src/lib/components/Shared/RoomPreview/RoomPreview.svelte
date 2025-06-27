@@ -85,6 +85,7 @@
     height: 100%;
     max-height: 100%;
     padding-bottom: calc(var(--pane-switch-height) + var(--world-prompt-box-height) + 20px);
+    overflow-x: hidden;
   }
 
   .back-button {

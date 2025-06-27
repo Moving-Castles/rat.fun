@@ -1,8 +1,7 @@
 <script lang="ts">
-  import { sendCreateRoom } from "$lib/modules/action/index.svelte"
   import { rat, gameConfig, levels, playerERC20Balance } from "$lib/modules/state/base/stores"
   import { CharacterCounter, VideoLoader, BigButton } from "$lib/components/Shared"
-  import { busy } from "$lib/modules/action/index.svelte"
+  import { busy, sendCreateRoom } from "$lib/modules/external/index.svelte"
 
   let roomDescription: string = $state("")
   let levelId: string = $state($rat?.level ?? $gameConfig.levelList[0])
@@ -14,7 +13,7 @@
 
   let disabled = $derived(
     invalidRoomDescriptionLength ||
-      busy.Approve.current !== 0 ||
+      busy.CreateRoom.current !== 0 ||
       $playerERC20Balance < Number($levels[levelId].roomCreationCost ?? 0)
   )
 
@@ -24,8 +23,8 @@
 </script>
 
 <div class="create-room">
-  {#if busy.Approve.current !== 0}
-    <VideoLoader progress={busy.Approve} />
+  {#if busy.CreateRoom.current !== 0}
+    <VideoLoader progress={busy.CreateRoom} />
   {:else}
     <!-- ROOM DESCRIPTION -->
     <div class="form-group">
@@ -37,7 +36,7 @@
         />
       </label>
       <textarea
-        disabled={busy.Approve.current !== 0}
+        disabled={busy.CreateRoom.current !== 0}
         id="room-description"
         rows="6"
         placeholder="You're creating a room that can modify traits, items, health, and tokens of rats that enter. Your room balance decreases whenever a rat gains something, and increases when your room takes something. You can withdraw remaining balance from your room."
@@ -50,7 +49,7 @@
       <BigButton
         text="Create room"
         cost={Number(roomCreationCost)}
-        disabled={busy.Approve.current !== 0}
+        disabled={busy.CreateRoom.current !== 0}
         onclick={async () => {
           try {
             await sendCreateRoom(roomDescription, levelId, roomCreationCost)

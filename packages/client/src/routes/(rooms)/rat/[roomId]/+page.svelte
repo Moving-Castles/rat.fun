@@ -5,15 +5,18 @@
 
   let prompt = $derived($rooms?.[page.params.roomId]?.prompt)
   let truncatedTitle = $derived(prompt.length > 32 ? `${prompt?.slice(0, 32)}...` : prompt)
+  let room = $derived($rooms?.[page.params.roomId])
 </script>
 
 <SEO prependTitle={truncatedTitle} />
 
-<RoomPreview
-  roomId={page.params.roomId}
-  isOwnRoomListing={page.url.searchParams.has("landlord")}
-  room={$rooms?.[page.params.roomId]}
-/>
+{#if room}
+  <RoomPreview
+    roomId={page.params.roomId}
+    isOwnRoomListing={page.url.searchParams.has("landlord")}
+    {room}
+  />
+{/if}
 
 <style>
   .slide-container {

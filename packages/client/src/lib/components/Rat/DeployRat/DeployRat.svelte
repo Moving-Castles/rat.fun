@@ -1,11 +1,9 @@
 <script lang="ts">
-  import { sendCreateRat } from "$lib/modules/action/index.svelte"
+  import { busy, sendCreateRat } from "$lib/modules/external/index.svelte"
   import { gameConfig, playerERC20Balance } from "$lib/modules/state/base/stores"
   import { generateRatName } from "./index"
   import { sendDeployRatMessage } from "$lib/modules/off-chain-sync"
   import { VideoLoader, BigButton } from "$lib/components/Shared"
-
-  let busy = $state(false)
 
   const name: string = generateRatName()
 
@@ -14,8 +12,8 @@
   )
 </script>
 
-{#if busy}
-  <!-- <VideoLoader duration={10000} /> -->
+{#if busy.CreateRat.current !== 0}
+  <VideoLoader progress={busy.CreateRat} />
 {:else}
   <div class="deploy-rat">
     <div class="image-container warning-mute-inverse">

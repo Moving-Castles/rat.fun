@@ -125,7 +125,7 @@
   .floor-content {
     position: relative;
     overflow-y: scroll;
-    height: calc(var(--game-window-height) - 120px);
+    height: calc(var(--game-window-height) - 60px);
     max-height: 100%;
   }
 
