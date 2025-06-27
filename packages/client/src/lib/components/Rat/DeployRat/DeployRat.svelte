@@ -1,12 +1,6 @@
 <script lang="ts">
-  import { createRat, approve } from "$lib/modules/action"
-  import { waitForCompletion } from "$lib/modules/action/actionSequencer/utils"
-  import { playSound } from "$lib/modules/sound"
-  import {
-    gameConfig,
-    playerERC20Allowance,
-    playerERC20Balance
-  } from "$lib/modules/state/base/stores"
+  import { sendCreateRat } from "$lib/modules/action/index.svelte"
+  import { gameConfig, playerERC20Balance } from "$lib/modules/state/base/stores"
   import { generateRatName } from "./index"
   import { sendDeployRatMessage } from "$lib/modules/off-chain-sync"
   import { VideoLoader, BigButton } from "$lib/components/Shared"
@@ -15,35 +9,13 @@
 
   const name: string = generateRatName()
 
-  async function sendCreateRat() {
-    if (busy) return
-    playSound("tcm", "blink")
-    busy = true
-    try {
-      if ($playerERC20Allowance < $gameConfig.gameConfig.ratCreationCost) {
-        const approveAction = approve(
-          $gameConfig.externalAddressesConfig.gamePoolAddress,
-          $gameConfig.gameConfig.ratCreationCost
-        )
-        await waitForCompletion(approveAction)
-      }
-      const createRatAction = createRat(name)
-      await waitForCompletion(createRatAction)
-    } catch (e) {
-      console.error(e)
-      busy = false
-    } finally {
-      sendDeployRatMessage()
-    }
-  }
-
   let disabled = $derived(
     !name || ($playerERC20Balance ?? 0) < Number($gameConfig?.gameConfig?.ratCreationCost ?? 0)
   )
 </script>
 
 {#if busy}
-  <VideoLoader duration={10000} />
+  <!-- <VideoLoader duration={10000} /> -->
 {:else}
   <div class="deploy-rat">
     <div class="image-container warning-mute-inverse">
@@ -54,7 +26,10 @@
         text="Deploy new rat"
         cost={Number($gameConfig?.gameConfig?.ratCreationCost)}
         {disabled}
-        onclick={sendCreateRat}
+        onclick={async () => {
+          await sendCreateRat(name)
+          sendDeployRatMessage()
+        }}
       />
     </div>
   </div>

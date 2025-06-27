@@ -1,7 +1,7 @@
 import { writable } from "svelte/store"
 import { SetupPublicNetworkResult } from "$lib/mud/setupPublicNetwork"
 import { SetupWalletNetworkResult } from "$lib/mud/setupWalletNetwork"
-import { WALLET_TYPE } from "$lib/mud/enums"
+import { ENVIRONMENT, WALLET_TYPE } from "$lib/mud/enums"
 
 // ----------------------------------------------------------------------------
 
@@ -15,3 +15,13 @@ export const blockNumber = writable(BigInt(0))
 export const ready = writable(false)
 export const loadingMessage = writable("Loading")
 export const walletType = writable(WALLET_TYPE.BURNER as WALLET_TYPE)
+
+export const getEnvironment = (url: URL) => {
+  const hostname = url.hostname
+
+  if (hostname.includes("pyrope") || url.searchParams.has("pyrope")) {
+    return ENVIRONMENT.PYROPE
+  }
+
+  return ENVIRONMENT.DEVELOPMENT
+}

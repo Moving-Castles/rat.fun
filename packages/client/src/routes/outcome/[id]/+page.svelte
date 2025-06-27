@@ -13,6 +13,4 @@
   {#each staticOutcomeContent?.log as logEntry, i}
     <LogItem delay={i * 2} {logEntry} />
   {/each}
-{:else}
-  <VideoLoader duration={500} />
 {/if}

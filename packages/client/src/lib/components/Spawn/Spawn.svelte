@@ -123,7 +123,7 @@
       }}
     />
   {:else if currentState === SPAWN_STATE.BUSY}
-    <VideoLoader duration={6000} />
+    <!-- <VideoLoader duration={6000} /> -->
   {/if}
 </div>
 

@@ -3,7 +3,7 @@
 </script>
 
 <div class="waiting-for-result">
-  <VideoLoader duration={11000} />
+  <!-- <VideoLoader duration={11000} /> -->
 </div>
 
 <style lang="scss">

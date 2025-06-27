@@ -4,8 +4,8 @@
   import { page } from "$app/state"
   import { RoomPreview, SEO } from "$lib/components/Shared"
 
-  let prompt = $derived($rooms?.[page.params.roomId]?.prompt)
-  let truncatedTitle = $derived(prompt.length > 32 ? `${prompt?.slice(0, 32)}...` : prompt)
+  let prompt = $derived($rooms?.[page.params.roomId]?.prompt || "")
+  let truncatedTitle = $derived(prompt?.length > 32 ? `${prompt?.slice(0, 32)}...` : prompt)
 </script>
 
 <SEO prependTitle={truncatedTitle} />

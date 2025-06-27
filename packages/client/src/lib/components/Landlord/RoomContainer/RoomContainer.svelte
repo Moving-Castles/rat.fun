@@ -8,18 +8,7 @@
 
 <div class="room-container">
   <div class="">
-    {#if !showCreateRoom}
-      <div class="plot">
-        <div class="top">
-          <span>
-            Welcome back, {$player.name}
-          </span>
-        </div>
-        <CreateRoomButton onclick={() => (showCreateRoom = true)} />
-      </div>
-    {:else}
-      <CreateRoom />
-    {/if}
+    <CreateRoom />
   </div>
   <!-- YOUR ROOM -->
   <div class="spacer"></div>

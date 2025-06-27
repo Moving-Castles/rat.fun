@@ -60,7 +60,7 @@
 {#snippet confirmLiquidation()}
   <div class="confirmation-modal danger">
     {#if busy}
-      <VideoLoader duration={6000} />
+      <!-- <VideoLoader duration={6000} /> -->
     {:else}
       <div class="content">
         <div class="room-image">

@@ -62,7 +62,7 @@
 {#snippet confirmLiquidation()}
   <div class="confirmation danger">
     {#if busy}
-      <VideoLoader duration={6000} />
+      <!-- <VideoLoader duration={6000} /> -->
     {:else}
       <div class="content">
         <img class="liquidate-image" src={$ratImageUrl} alt="Confirm Liquidation" />

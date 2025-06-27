@@ -1,19 +1,9 @@
 <script lang="ts">
-  import { approve } from "$lib/modules/action"
-  import {
-    rat,
-    gameConfig,
-    levels,
-    playerERC20Balance,
-    playerERC20Allowance
-  } from "$lib/modules/state/base/stores"
-  import { waitForCompletion } from "$lib/modules/action/actionSequencer/utils"
-  import { createRoom } from "./index"
-  import { goto } from "$app/navigation"
-  import { page } from "$app/state"
+  import { sendCreateRoom } from "$lib/modules/action/index.svelte"
+  import { rat, gameConfig, levels, playerERC20Balance } from "$lib/modules/state/base/stores"
   import { CharacterCounter, VideoLoader, BigButton } from "$lib/components/Shared"
+  import { busy } from "$lib/modules/action/index.svelte"
 
-  let busy = $state(false)
   let roomDescription: string = $state("")
   let levelId: string = $state($rat?.level ?? $gameConfig.levelList[0])
 
@@ -24,66 +14,19 @@
 
   let disabled = $derived(
     invalidRoomDescriptionLength ||
-      busy ||
+      busy.Approve.current !== 0 ||
       $playerERC20Balance < Number($levels[levelId].roomCreationCost ?? 0)
   )
 
   let roomCreationCost = $derived(
     $levels[levelId]?.roomCreationCost ?? $levels[$gameConfig.levelList[0]]?.roomCreationCost ?? 0
   )
-
-  async function sendCreateRoom() {
-    if (busy) return
-    busy = true
-    const newPrompt = roomDescription
-
-    try {
-      if ($playerERC20Allowance < $gameConfig.gameConfig.ratCreationCost) {
-        const approveAction = approve(
-          $gameConfig.externalAddressesConfig.gamePoolAddress,
-          roomCreationCost
-        )
-        await waitForCompletion(approveAction)
-      }
-    } catch (e) {
-      console.error(e)
-      busy = false
-      return
-    }
-
-    const result = await createRoom(page.data.environment, newPrompt, levelId)
-    busy = false
-
-    if (result.roomId) {
-      // Go to the preview
-      goto(`/landlord/${result.roomId}`)
-    }
-  }
 </script>
 
 <div class="create-room">
-  {#if busy}
-    <VideoLoader duration={6000} />
+  {#if busy.Approve.current !== 0}
+    <VideoLoader progress={busy.Approve} />
   {:else}
-    <!-- LEVEL SELECTION -->
-    <!-- <div class="form-group level-selection">
-      <label for="level-toggles">
-        <span class="highlight">Select rat level</span>
-      </label>
-      <div id="level-toggles" class="level-toggles" role="radiogroup" aria-label="Select level">
-        {#each Object.entries($levels) as [key, level]}
-          <button
-            class:active={levelId === key}
-            class:disabled={!$player.visitedLevels.includes(key as `0x${string}`)}
-            onclick={() => (levelId = key)}
-            disabled={!$player.visitedLevels.includes(key as `0x${string}`)}
-          >
-            {Number(level.index) * -1}
-          </button>
-        {/each}
-      </div>
-    </div> -->
-
     <!-- ROOM DESCRIPTION -->
     <div class="form-group">
       <label for="room-description">
@@ -94,7 +37,7 @@
         />
       </label>
       <textarea
-        disabled={busy}
+        disabled={busy.Approve.current !== 0}
         id="room-description"
         rows="6"
         placeholder="You're creating a room that can modify traits, items, health, and tokens of rats that enter. Your room balance decreases whenever a rat gains something, and increases when your room takes something. You can withdraw remaining balance from your room."
@@ -107,8 +50,15 @@
       <BigButton
         text="Create room"
         cost={Number(roomCreationCost)}
-        {disabled}
-        onclick={sendCreateRoom}
+        disabled={busy.Approve.current !== 0}
+        onclick={async () => {
+          try {
+            await sendCreateRoom(roomDescription, levelId, roomCreationCost)
+          } catch {
+            roomDescription = ""
+          }
+          roomDescription = ""
+        }}
       />
     </div>
   {/if}
