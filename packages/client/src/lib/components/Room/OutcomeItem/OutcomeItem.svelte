@@ -1,5 +1,5 @@
 <script lang="ts">
-  let { type, negative, value } = $props()
+  let { type, negative, value }: { type: string; negative: boolean; value: number } = $props()
 </script>
 
 <div class="outcome {type}" class:negative>

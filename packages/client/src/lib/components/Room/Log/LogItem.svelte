@@ -4,7 +4,6 @@
   import { gsap } from "gsap"
   import { TextPlugin } from "gsap/TextPlugin"
   import { playSound, randomPitch } from "$lib/modules/sound"
-  import { OutcomeItem } from "$lib/components/Shared"
   import {
     TIMESTAMP_DURATION,
     CHARACTER_DELAY,
@@ -12,6 +11,8 @@
     OUTCOME_DURATION,
     OUTCOME_START_DELAY
   } from "./config"
+
+  import OutcomeItem from "$lib/components/Room/OutcomeItem/OutcomeItem.svelte"
 
   gsap.registerPlugin(TextPlugin)
 

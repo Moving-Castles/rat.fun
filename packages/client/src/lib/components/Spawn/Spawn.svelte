@@ -19,7 +19,8 @@
   import { setupBurnerWalletNetwork } from "$lib/mud/setupBurnerWalletNetwork"
   import { initWalletNetwork } from "$lib/initWalletNetwork"
 
-  import { Slides, VideoLoader, BigButton } from "$lib/components/Shared"
+  import { VideoLoader, BigButton } from "$lib/components/Shared"
+  import Slides from "$lib/components/Spawn/Slides/Slides.svelte"
 
   const { walletType, spawned = () => {} } = $props<{
     walletType: WALLET_TYPE

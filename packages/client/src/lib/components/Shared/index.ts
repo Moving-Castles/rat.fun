@@ -50,9 +50,8 @@ export { default as RoomPreviewHeader } from "./RoomPreview/RoomPreviewHeader.sv
 export { default as RoomPreviewPrompt } from "./RoomPreview/RoomPreviewPrompt.svelte"
 export { default as ShareButton } from "./RoomPreview/ShareButton.svelte"
 
-/* Slides */
-export { default as Slide } from "./Slides/Slide.svelte"
-export { default as Slides } from "./Slides/Slides.svelte"
+/* Top Bar */
+export { default as TopBar } from "./TopBar/TopBar.svelte"
 
 /* Layout Components */
 export { default as CenterBar } from "./CenterBar/CenterBar.svelte"
@@ -60,13 +59,10 @@ export { default as CharacterCounter } from "./CharacterCounter/CharacterCounter
 export { default as MainLayout } from "./MainLayout/MainLayout.svelte"
 export { default as NoImage } from "./NoImage/NoImage.svelte"
 export { default as NumberGoing } from "./NumberGoing/NumberGoing.svelte"
-export { default as OperatorBar } from "./OperatorBar/OperatorBar.svelte"
 export { default as PageTransitions } from "./PageTransitions/PageTransitions.svelte"
-export { default as PaneSwitch } from "./PaneSwitch/PaneSwitch.svelte"
 
 /* Item Components */
 export { default as Item } from "./Item/Item.svelte"
-export { default as OutcomeItem } from "./OutcomeItem/OutcomeItem.svelte"
 export { default as OwnRoomItem } from "./OwnRoomItem/OwnRoomItem.svelte"
 export { default as Trait } from "./Trait/Trait.svelte"
 
