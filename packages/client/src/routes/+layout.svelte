@@ -8,8 +8,8 @@
   import { initStaticContent } from "$lib/modules/content"
   import { publicNetwork } from "$lib/modules/network"
   import { initSound, playSound } from "$lib/modules/sound"
-  import { UIState, UILocation } from "$lib/modules/ui/stores"
-  import { UI, LOCATION } from "$lib/modules/ui/enums"
+  import { UIState } from "$lib/modules/ui/stores"
+  import { UI } from "$lib/modules/ui/enums"
   import { initOffChainSync } from "$lib/modules/off-chain-sync"
   import { playerId } from "$lib/modules/state/base/stores"
   import { websocketConnected } from "$lib/modules/off-chain-sync/stores"
@@ -73,7 +73,6 @@
 
   const playerSpawned = () => {
     UIState.set(UI.READY)
-    UILocation.set(LOCATION.MAIN)
   }
 
   // Init of chain sync when player is ready
