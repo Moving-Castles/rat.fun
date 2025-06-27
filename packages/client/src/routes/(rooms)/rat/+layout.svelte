@@ -1,8 +1,7 @@
 <script lang="ts">
   import { circOut as easing } from "svelte/easing"
-  import CenterBar from "$lib/components/Main/CenterBar/CenterBar.svelte"
-  import RatContainer from "$lib/components/Main/RatContainer/RatContainer.svelte"
-  import PageTransitions from "$lib/components/Main/Shared/PageTransitions/PageTransitions.svelte"
+  import { RatContainer } from "$lib/components/Rat"
+  import { PageTransitions, CenterBar } from "$lib/components/Shared"
 
   const config = [
     {
@@ -11,14 +10,14 @@
       in: {
         transition: "slideFromRight",
         params: {
-          duration: 1000,
+          duration: 200,
           easing
         }
       },
       out: {
         transition: "slideLeft",
         params: {
-          duration: 1000,
+          duration: 200,
           easing
         }
       }
@@ -29,14 +28,14 @@
       in: {
         transition: "slideFromLeft",
         params: {
-          duration: 1000,
+          duration: 200,
           easing
         }
       },
       out: {
         transition: "slideRight",
         params: {
-          duration: 1000,
+          duration: 200,
           easing
         }
       }

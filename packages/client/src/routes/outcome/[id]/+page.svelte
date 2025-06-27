@@ -1,8 +1,8 @@
 <script lang="ts">
   import { page } from "$app/state"
   import { staticContent } from "$lib/modules/content"
-  import VideoLoader from "$lib/components/Main/Shared/Loaders/VideoLoader.svelte"
-  import LogItem from "$lib/components/Main/RoomResult/Log/LogItem.svelte"
+  import { VideoLoader } from "$lib/components/Shared"
+  import { LogItem } from "$lib/components/Room"
 
   let staticOutcomeContent = $derived(
     $staticContent?.outcomes?.find(r => r._id == (page.params.id ?? ""))

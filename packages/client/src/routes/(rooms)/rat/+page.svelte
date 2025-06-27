@@ -1,6 +1,5 @@
 <script lang="ts">
-  import SEO from "$lib/components/Kit/SEO.svelte"
-  import RoomListing from "$lib/components/Main/Shared/RoomListing/RoomListing.svelte"
+  import { RoomListing, SEO } from "$lib/components/Shared"
 </script>
 
 <SEO prependTitle="ROOMS" />

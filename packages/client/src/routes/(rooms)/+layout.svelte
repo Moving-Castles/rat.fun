@@ -1,13 +1,10 @@
 <script lang="ts">
   import "../../app.css"
   import "tippy.js/dist/tippy.css"
-
   import type { LayoutProps } from "./$types"
-
   import { onMount } from "svelte"
   import { initSound } from "$lib/modules/sound"
-
-  import Main from "$lib/components/Main/Main.svelte"
+  import { MainLayout } from "$lib/components/Shared"
 
   let { children, data }: LayoutProps = $props()
 
@@ -22,6 +19,6 @@
   })
 </script>
 
-<Main {environment}>
+<MainLayout {environment}>
   {@render children?.()}
-</Main>
+</MainLayout>

@@ -1,8 +1,7 @@
 <script lang="ts">
   import { circOut as easing } from "svelte/easing"
-  import CenterBar from "$lib/components/Main/CenterBar/CenterBar.svelte"
-  import RoomContainer from "$lib/components/Main/RoomContainer/RoomContainer.svelte"
-  import PageTransitions from "$lib/components/Main/Shared/PageTransitions/PageTransitions.svelte"
+  import { PageTransitions, CenterBar } from "$lib/components/Shared"
+  import { RoomContainer } from "$lib/components/Landlord"
 
   const config = [
     {
@@ -11,14 +10,14 @@
       in: {
         transition: "slideFromRight",
         params: {
-          duration: 1000,
+          duration: 200,
           easing
         }
       },
       out: {
         transition: "slideLeft",
         params: {
-          duration: 1000,
+          duration: 200,
           easing
         }
       }
@@ -29,14 +28,14 @@
       in: {
         transition: "slideFromLeft",
         params: {
-          duration: 1000,
+          duration: 200,
           easing
         }
       },
       out: {
         transition: "slideRight",
         params: {
-          duration: 1000,
+          duration: 200,
           easing
         }
       }
@@ -61,7 +60,7 @@
   .right-column {
     position: relative;
     overflow-x: hidden;
-    overflow-y: hidden;
+    overflow-y: scroll;
     height: calc(var(--game-window-height) - 60px);
     background-image: url("/images/texture-5.png");
     background-size: 200px;

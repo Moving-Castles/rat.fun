@@ -4,7 +4,7 @@
 
   import type { LayoutProps } from "./$types"
 
-  import { Modal } from "$lib/components/Main/Modal/state.svelte"
+  import { Modal, WalletInfo, Loading, Spawn, PageTransitions } from "$lib/components/Shared"
   import { onMount } from "svelte"
   import { initStaticContent } from "$lib/modules/content"
   import { publicNetwork, walletNetwork } from "$lib/modules/network"
@@ -18,11 +18,6 @@
   import { WALLET_TYPE } from "$lib/mud/enums"
   import { gameConfig } from "$lib/modules/state/base/stores"
   import { mountAccountKit } from "$lib/modules/account-kit/mount"
-
-  import WalletInfo from "$lib/components/Debug/WalletInfo.svelte"
-  import Loading from "$lib/components/Loading/Loading.svelte"
-  import Spawn from "$lib/components/Spawn/Spawn.svelte"
-  import PageTransitions from "$lib/components/Main/Shared/PageTransitions/PageTransitions.svelte"
 
   let { children, data }: LayoutProps = $props()
 
@@ -66,11 +61,6 @@
       }
     }
   ]
-
-  $effect(() => {
-    console.log("$walletNetwork", $walletNetwork)
-    console.log("$gameConfig", $gameConfig)
-  })
 
   const environmentLoaded = async () => {
     console.log($publicNetwork.worldAddress)

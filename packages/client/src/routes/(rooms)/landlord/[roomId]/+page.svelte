@@ -1,8 +1,7 @@
 <script lang="ts">
   import { rooms } from "$lib/modules/state/base/stores"
   import { page } from "$app/state"
-  import RoomPreview from "$lib/components/Main/Shared/RoomPreview/RoomPreview.svelte"
-  import SEO from "$lib/components/Kit/SEO.svelte"
+  import { RoomPreview, SEO } from "$lib/components/Shared"
 
   let prompt = $derived($rooms?.[page.params.roomId]?.prompt)
   let truncatedTitle = $derived(prompt.length > 32 ? `${prompt?.slice(0, 32)}...` : prompt)
