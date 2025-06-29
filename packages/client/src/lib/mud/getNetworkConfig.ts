@@ -16,8 +16,8 @@ export function getNetworkConfig(environment: ENVIRONMENT) {
 
   if ([ENVIRONMENT.PYROPE].includes(environment)) {
     chainId = 695569
-  } else if ([ENVIRONMENT.REDSTONE].includes(environment)) {
-    chainId = 690
+  } else if ([ENVIRONMENT.BASE_SEPOLIA].includes(environment)) {
+    chainId = 84532
   }
 
   const chain = getChain(chainId)

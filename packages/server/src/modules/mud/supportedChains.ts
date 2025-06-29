@@ -11,10 +11,11 @@
  */
 
 import { MUDChain, mudFoundry, redstone } from "@latticexyz/common/chains"
+import { base, baseSepolia } from "viem/chains"
 import { pyrope } from "./pyropeChain"
 
 /*
  * See https://mud.dev/guides/hello-world/add-chain-client
  * for instructions on how to add networks.
  */
-export const supportedChains: MUDChain[] = [mudFoundry, redstone, pyrope]
+export const supportedChains: MUDChain[] = [mudFoundry, redstone, pyrope, base, baseSepolia]

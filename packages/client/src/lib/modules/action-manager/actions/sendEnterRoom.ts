@@ -23,9 +23,17 @@ export async function sendEnterRoom(roomId: string, ratId: string) {
 
   const startTime = performance.now()
 
-  const url = [ENVIRONMENT.PYROPE].includes(environment)
-    ? `https://${PUBLIC_PYROPE_SERVER_HOST}/room/enter`
-    : `http://${PUBLIC_DEVELOPMENT_SERVER_HOST}/room/enter`
+  let url = ""
+  switch (environment) {
+    case ENVIRONMENT.PYROPE:
+      url = `https://${PUBLIC_PYROPE_SERVER_HOST}/room/enter`
+      break
+    case ENVIRONMENT.BASE_SEPOLIA:
+      url = `https://${PUBLIC_BASE_SEPOLIA_SERVER_HOST}/room/enter`
+      break
+    default:
+      url = `http://${PUBLIC_DEVELOPMENT_SERVER_HOST}/room/enter`
+  }
 
   const signature = await getSignature()
 
