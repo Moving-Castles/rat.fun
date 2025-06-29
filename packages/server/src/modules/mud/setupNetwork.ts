@@ -106,8 +106,6 @@ export async function setupNetwork(
     client: { public: publicClient, wallet: burnerWalletClient }
   })
 
-  console.log("mudConfig.default", mudConfig.default)
-
   /*
    * Sync on-chain state into RECS and keeps our client in sync.
    * Uses the MUD indexer if available, otherwise falls back
