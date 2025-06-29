@@ -10,6 +10,7 @@ import { createRoom } from "$lib/components/Landlord/CreateRoom"
 
 const DEFAULT_TIMINGS = {
   CreateRoom: 4000,
+  EnterRoom: 4000,
   CloseRoom: 4000,
   CreateRat: 4000,
   DropItem: 4000,
@@ -20,6 +21,7 @@ const DEFAULT_TIMINGS = {
 
 export const busy = $state({
   CreateRoom: new Tween(0, { duration: DEFAULT_TIMINGS.CreateRoom, easing }),
+  EnterRoom: new Tween(0, { duration: DEFAULT_TIMINGS.EnterRoom, easing }),
   CloseRoom: new Tween(0, { duration: DEFAULT_TIMINGS.CloseRoom, easing }),
   CreateRat: new Tween(0, { duration: DEFAULT_TIMINGS.CreateRat, easing }),
   DropItem: new Tween(0, { duration: DEFAULT_TIMINGS.DropItem, easing }),
@@ -65,6 +67,15 @@ export async function sendCreateRoom(newPrompt: string, levelId: string, roomCre
   } finally {
     busy.CreateRoom.set(0, { duration: 0 })
   }
+}
+
+/**
+ * Enter room
+ *
+ */
+export async function sendEnterRoom(roomId: string) {
+  if (busy.EnterRoom.current !== 0) return
+  busy.EnterRoom.set(0.99, { duration: DEFAULT_TIMINGS.EnterRoom })
 }
 
 /**

@@ -52,7 +52,7 @@
     {#if busy.Spawn.current > 0}
       <VideoLoader progress={busy.Spawn} />
     {:else}
-      <img class="image" src="/images/cashier.jpg" alt="RAT.FUN" bind:this={imageElement} />
+      <img class="image" src="/images/bouncer3.png" alt="RAT.FUN" bind:this={imageElement} />
       <!-- INTRO TEXT -->
       <div class="text" bind:this={textElement}>
         <!-- <p>OK {shortenAddress($playerAddress)}</p> -->

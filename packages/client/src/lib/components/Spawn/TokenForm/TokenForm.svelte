@@ -62,7 +62,7 @@
     {#if busy}
       <VideoLoader progress={busyState.Spawn} />
     {:else}
-      <img class="image" src="/images/cashier.jpg" alt="RAT.FUN" bind:this={imageElement} />
+      <img class="image" src="/images/cashier2.png" alt="RAT.FUN" bind:this={imageElement} />
       <p bind:this={messageElement}>{message}</p>
       <div class="button" bind:this={buttonElement}>
         <BigButton text={buttonText} onclick={getTokens} />

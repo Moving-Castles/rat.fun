@@ -30,7 +30,7 @@
 
 <div class="outer-container">
   <div class="inner-container">
-    <img class="image" src="/images/enter.jpg" alt="RAT.FUN" bind:this={imageElement} />
+    <img class="image" src="/images/enter2.jpg" alt="RAT.FUN" bind:this={imageElement} />
     <div class="button" bind:this={enterButtonElement}>
       <BigButton text="Enter" onclick={onComplete} />
     </div>

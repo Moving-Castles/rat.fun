@@ -99,7 +99,7 @@
 
 <div class="outer-container">
   <div class="inner-container">
-    <img src="/images/bouncer.jpg" alt="BASE(TM) ID" bind:this={imageElement} />
+    <img src="/images/bouncer2.png" alt="BASE(TM) ID" bind:this={imageElement} />
     <p bind:this={messageElement}>{message}</p>
     <div class="button" bind:this={buttonElement}>
       <BigButton
