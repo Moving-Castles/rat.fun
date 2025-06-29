@@ -35,19 +35,17 @@ import mudConfig from "contracts/mud.config"
 
 export type SetupNetworkResult = Awaited<ReturnType<typeof setupNetwork>>
 
-import { Observable } from "rxjs"
-
 export type SetupNetworkReturnType = {
   world: typeof world
-  components: typeof components
+  components: any
   playerEntity: ReturnType<typeof encodeEntity>
   publicClient: ReturnType<typeof createPublicClient>
   walletClient: ReturnType<typeof createWalletClient>
-  latestBlock$: Observable<any>
-  storedBlockLogs$: Observable<any>
-  waitForTransaction: typeof waitForTransaction
+  latestBlock$: any
+  storedBlockLogs$: any
+  waitForTransaction: any
   worldContract: ReturnType<typeof getContract>
-  write$: Observable<ContractWrite>
+  write$: any
 }
 
 export async function setupNetwork(
@@ -55,12 +53,6 @@ export async function setupNetwork(
   chainId: number
 ): Promise<SetupNetworkReturnType> {
   const networkConfig = await getNetworkConfig(privateKey, chainId)
-
-  /*
-   * Create a viem public (read only) client
-   * (https://viem.sh/docs/clients/public.html)
-   */
-
   /*
    * Create a viem public (read only) client
    * (https://viem.sh/docs/clients/public.html)
@@ -68,12 +60,15 @@ export async function setupNetwork(
   const transports = []
 
   // Add WebSocket transport if WebSocket URL is available
-  if (networkConfig.provider.wsRpcUrl) {
-    transports.push(webSocket(networkConfig.provider.wsRpcUrl))
+  if (
+    "webSocket" in networkConfig.chain.rpcUrls.default &&
+    networkConfig.chain.rpcUrls.default.webSocket?.[0]
+  ) {
+    transports.push(webSocket(networkConfig.chain.rpcUrls.default.webSocket[0]))
   }
 
   // Always add HTTP transport as fallback
-  transports.push(http(networkConfig.provider.jsonRpcUrl))
+  transports.push(http(networkConfig.chain.rpcUrls.default.http[0]))
 
   const clientOptions = {
     chain: networkConfig.chain,
@@ -118,7 +113,7 @@ export async function setupNetwork(
    */
   const { components, latestBlock$, storedBlockLogs$, waitForTransaction } = await syncToRecs({
     world,
-    config: mudConfig.default,
+    config: mudConfig,
     address: networkConfig.worldAddress as Hex,
     publicClient,
     startBlock: BigInt(networkConfig.initialBlockNumber)
