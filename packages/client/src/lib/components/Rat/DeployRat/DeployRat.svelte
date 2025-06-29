@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { busy, sendCreateRat } from "$lib/modules/external/index.svelte"
+  import { busy, sendCreateRat } from "$lib/modules/action-manager/index.svelte"
   import { gameConfig, playerERC20Balance } from "$lib/modules/state/base/stores"
   import { generateRatName } from "./index"
   import { sendDeployRatMessage } from "$lib/modules/off-chain-sync"

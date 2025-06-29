@@ -5,7 +5,7 @@
   import { staticContent, lastUpdated } from "$lib/modules/content"
   import { urlFor } from "$lib/modules/content/sanity"
   import { ModalTarget, NoImage, VideoLoader, DangerButton } from "$lib/components/Shared"
-  import { busy, sendLiquidateRoom } from "$lib/modules/external/index.svelte"
+  import { busy, sendLiquidateRoom } from "$lib/modules/action-manager/index.svelte"
   import { sendLiquidateRoomMessage } from "$lib/modules/off-chain-sync"
 
   let sanityRoomContent = $derived($staticContent.rooms.find(r => r.title == roomId))

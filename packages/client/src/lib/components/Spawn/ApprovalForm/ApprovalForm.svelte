@@ -1,7 +1,7 @@
 <script lang="ts">
   import { gameConfig } from "$lib/modules/state/base/stores"
   import { approveMax } from "$lib/modules/on-chain-action"
-  import { busy as busyState } from "$lib/modules/external/index.svelte"
+  import { busy as busyState } from "$lib/modules/action-manager/index.svelte"
   import { playerERC20Balance } from "$lib/modules/state/base/stores"
 
   import gsap from "gsap"

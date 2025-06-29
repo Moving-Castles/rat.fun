@@ -1,7 +1,7 @@
 <script lang="ts">
   import { rat, gameConfig, levels, playerERC20Balance } from "$lib/modules/state/base/stores"
   import { CharacterCounter, VideoLoader, BigButton } from "$lib/components/Shared"
-  import { busy, sendCreateRoom } from "$lib/modules/external/index.svelte"
+  import { busy, sendCreateRoom } from "$lib/modules/action-manager/index.svelte"
 
   let roomDescription: string = $state("")
   let levelId: string = $state($rat?.level ?? $gameConfig.levelList[0])

@@ -9,11 +9,11 @@ import { spawn, createRat, liquidateRat, closeRoom, approve } from "$lib/modules
 import { createRoom } from "$lib/components/Landlord/CreateRoom"
 
 const DEFAULT_TIMINGS = {
-  CreateRoom: 6000,
-  CloseRoom: 6000,
-  CreateRat: 10000,
-  DropItem: 1000,
-  GiveCallerTokens: 1000,
+  CreateRoom: 4000,
+  CloseRoom: 4000,
+  CreateRat: 4000,
+  DropItem: 4000,
+  GiveCallerTokens: 4000,
   LiquidateRat: 2000,
   Spawn: 1000
 }

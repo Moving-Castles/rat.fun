@@ -1,6 +1,6 @@
 <script lang="ts">
   import { giveCallerTokens } from "$lib/modules/on-chain-action"
-  import { busy as busyState } from "$lib/modules/external/index.svelte"
+  import { busy as busyState } from "$lib/modules/action-manager/index.svelte"
   import gsap from "gsap"
   import { onMount } from "svelte"
   import { player } from "$lib/modules/state/base/stores"

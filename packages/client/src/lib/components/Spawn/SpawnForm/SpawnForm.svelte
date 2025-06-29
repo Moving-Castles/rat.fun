@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { busy, sendSpawn } from "$lib/modules/external/index.svelte"
+  import { busy, sendSpawn } from "$lib/modules/action-manager/index.svelte"
   import { playerAddress } from "$lib/modules/state/base/stores"
   import { shortenAddress } from "$lib/modules/utils"
   import gsap from "gsap"
