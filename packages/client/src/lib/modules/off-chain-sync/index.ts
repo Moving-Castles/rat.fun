@@ -10,7 +10,7 @@ import { getSignature } from "$lib/modules/signature"
 import {
   PUBLIC_DEVELOPMENT_SERVER_HOST,
   PUBLIC_PYROPE_SERVER_HOST,
-  PUBLIC_BASE
+  PUBLIC_BASE_SEPOLIA_SERVER_HOST
 } from "$env/static/public"
 
 const MAX_RECONNECTION_DELAY = 30000 // Maximum delay of 30 seconds
