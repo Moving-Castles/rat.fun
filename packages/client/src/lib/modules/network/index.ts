@@ -23,5 +23,9 @@ export const getEnvironment = (url: URL) => {
     return ENVIRONMENT.PYROPE
   }
 
+  if (hostname.includes("base-sepolia") || url.searchParams.has("base-sepolia")) {
+    return ENVIRONMENT.BASE_SEPOLIA
+  }
+
   return ENVIRONMENT.DEVELOPMENT
 }

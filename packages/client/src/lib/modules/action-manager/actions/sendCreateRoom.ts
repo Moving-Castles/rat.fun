@@ -35,9 +35,17 @@ export async function sendCreateRoom(
       await approve(_gameConfig.externalAddressesConfig.gamePoolAddress, roomCreationCost)
     }
 
-    const url = [ENVIRONMENT.PYROPE].includes(environment)
-      ? `https://${PUBLIC_PYROPE_SERVER_HOST}/room/create`
-      : `http://${PUBLIC_DEVELOPMENT_SERVER_HOST}/room/create`
+    let url = ""
+    switch (environment) {
+      case ENVIRONMENT.PYROPE:
+        url = `https://${PUBLIC_PYROPE_SERVER_HOST}/room/create`
+        break
+      case ENVIRONMENT.BASE_SEPOLIA:
+        url = `https://${PUBLIC_BASE_SEPOLIA_SERVER_HOST}/room/create`
+        break
+      default:
+        url = `http://${PUBLIC_DEVELOPMENT_SERVER_HOST}/room/create`
+    }
 
     const signature = await getSignature()
 
