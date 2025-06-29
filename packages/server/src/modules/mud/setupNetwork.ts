@@ -60,9 +60,24 @@ export async function setupNetwork(
    * Create a viem public (read only) client
    * (https://viem.sh/docs/clients/public.html)
    */
+
+  /*
+   * Create a viem public (read only) client
+   * (https://viem.sh/docs/clients/public.html)
+   */
+  const transports = []
+
+  // Add WebSocket transport if WebSocket URL is available
+  if (networkConfig.provider.wsRpcUrl) {
+    transports.push(webSocket(networkConfig.provider.wsRpcUrl))
+  }
+
+  // Always add HTTP transport as fallback
+  transports.push(http(networkConfig.provider.jsonRpcUrl))
+
   const clientOptions = {
     chain: networkConfig.chain,
-    transport: transportObserver(fallback([webSocket(), http()])),
+    transport: transportObserver(fallback(transports)),
     pollingInterval: 1000
   } as const satisfies ClientConfig
 
