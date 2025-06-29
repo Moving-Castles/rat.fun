@@ -4,12 +4,6 @@
  */
 
 /*
- * By default the template just creates a temporary wallet
- * (called a burner wallet).
- */
-// import { getBurnerPrivateKey } from "@latticexyz/common";
-
-/*
  * Import the addresses of the World, possibly on multiple chains,
  * from packages/contracts/worlds.json. When the contracts package
  * deploys a new `World`, it updates this file.
@@ -37,7 +31,7 @@ export async function getNetworkConfig(privateKey: string, chainId: number) {
    * different address than the one in worlds.json,
    * provide it as worldAddress in the query string.
    */
-  const world = worlds[chain.id.toString()]
+  const world = worlds[chain.id.toString() as keyof typeof worlds]
   const worldAddress = world?.address
   if (!worldAddress) {
     throw new Error(`No world address found for chain ${chainId}. Did you run \`mud deploy\`?`)
@@ -50,9 +44,8 @@ export async function getNetworkConfig(privateKey: string, chainId: number) {
    * on the URL (as initialBlockNumber) or in the worlds.json
    * file. If neither has it, it starts at the first block, zero.
    */
-  const initialBlockNumber = world?.blockNumber ?? 0n
+  const initialBlockNumber = (world as any)?.blockNumber ?? 0n
 
-  // Garnet: 0x6b3875c240bcde26fc32b1d23d746a42901956a2ddf11da050593ad6725b18ec
   return {
     privateKey,
     chainId,

@@ -36,30 +36,6 @@ import { handleError } from "./errorHandling"
 // Utils
 import { generateRandomBytes32 } from "@modules/utils"
 
-// Spinner utility
-const spinner = {
-  chars: ["/", "-", "\\", "|"],
-  currentIndex: 0,
-  interval: null as NodeJS.Timeout | null,
-
-  start(message: string) {
-    process.stdout.write("\x1B[?25l") // Hide cursor
-    this.interval = setInterval(() => {
-      process.stdout.write(`\r${this.chars[this.currentIndex]} ${message}`)
-      this.currentIndex = (this.currentIndex + 1) % this.chars.length
-    }, 100)
-  },
-
-  stop() {
-    if (this.interval) {
-      clearInterval(this.interval)
-      this.interval = null
-      process.stdout.write("\r\x1B[K") // Clear line
-      process.stdout.write("\x1B[?25h") // Show cursor
-    }
-  }
-}
-
 const opts = { schema }
 
 async function routes(fastify: FastifyInstance) {
@@ -90,7 +66,7 @@ async function routes(fastify: FastifyInstance) {
 
         // Start image generation and CMS write in the background
         const handleImageAndCMS = async () => {
-          spinner.start("Generating image and writing to CMS...")
+          console.log("Generating image and writing to CMS...")
           console.time("–– Image generation")
           try {
             // Get the image data
@@ -113,7 +89,6 @@ async function routes(fastify: FastifyInstance) {
               console.error("Unexpected error in image generation or CMS write:", error)
             }
           } finally {
-            spinner.stop()
             console.timeEnd("–– Image generation")
           }
         }
