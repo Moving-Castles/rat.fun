@@ -8,7 +8,8 @@ export enum UI {
 export enum SPAWN_STATE {
   INTRODUCTION = "introduction",
   CONNECT_WALLET = "connect_wallet",
-  REQUEST_APPROVAL = "request_approval",
-  SHOW_SPAWN_FORM = "show_spawn_form",
-  BUSY = "busy"
+  SPAWN_FORM = "spawn_form",
+  TOKEN_FORM = "token_form",
+  APPROVAL_FORM = "approval_form",
+  HERO_IMAGE = "hero_image"
 }

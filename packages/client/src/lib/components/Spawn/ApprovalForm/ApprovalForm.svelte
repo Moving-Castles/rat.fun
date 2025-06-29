@@ -1,7 +1,9 @@
 <script lang="ts">
-  import { busy, sendSpawn } from "$lib/modules/external/index.svelte"
-  import { playerAddress } from "$lib/modules/state/base/stores"
-  import { shortenAddress } from "$lib/modules/utils"
+  import { gameConfig } from "$lib/modules/state/base/stores"
+  import { approveMax } from "$lib/modules/on-chain-action"
+  import { busy as busyState } from "$lib/modules/external/index.svelte"
+  import { playerERC20Balance } from "$lib/modules/state/base/stores"
+
   import gsap from "gsap"
   import { onMount } from "svelte"
 
@@ -9,18 +11,26 @@
   import VideoLoader from "$lib/components/Shared/Loaders/VideoLoader.svelte"
 
   const { onComplete = () => {} } = $props<{
-    onComplete: (name: string) => void
+    onComplete: () => void
   }>()
 
-  let name = $state("")
+  let textElement: HTMLDivElement | null = $state(null)
   let imageElement: HTMLImageElement | null = $state(null)
   let buttonElement: HTMLDivElement | null = $state(null)
-  let textElement: HTMLDivElement | null = $state(null)
+  let busy = $state(false)
   const timeline = gsap.timeline()
 
-  async function submitForm() {
-    await sendSpawn(name)
-    onComplete()
+  async function sendApproval() {
+    if (busy) return
+    busy = true
+    try {
+      await approveMax($gameConfig.externalAddressesConfig.gamePoolAddress)
+    } catch (e) {
+      console.error(e)
+    } finally {
+      busy = false
+      onComplete()
+    }
   }
 
   onMount(() => {
@@ -28,8 +38,8 @@
 
     // Set initial opacity to 0
     imageElement.style.opacity = "0"
-    buttonElement.style.opacity = "0"
     textElement.style.opacity = "0"
+    buttonElement.style.opacity = "0"
 
     timeline.to(imageElement, {
       opacity: 1,
@@ -49,26 +59,16 @@
 
 <div class="outer-container">
   <div class="inner-container">
-    {#if busy.Spawn.current > 0}
-      <VideoLoader progress={busy.Spawn} />
+    {#if busy}
+      <VideoLoader progress={busyState.Spawn} />
     {:else}
       <img class="image" src="/images/cashier.jpg" alt="RAT.FUN" bind:this={imageElement} />
-      <!-- INTRO TEXT -->
       <div class="text" bind:this={textElement}>
-        <!-- <p>OK {shortenAddress($playerAddress)}</p> -->
-        <p>ID checks out. You can enter. But we need your name to proceed.</p>
+        <p>Good. You now have {$playerERC20Balance} tokens.</p>
+        <p>You just need give us permission to spend them.</p>
       </div>
-
-      <!-- FORM -->
-      <div class="form" bind:this={buttonElement}>
-        <!-- INPUT -->
-        <input
-          type="text"
-          placeholder="YOUR NAME"
-          bind:value={name}
-          onkeydown={e => e.key === "Enter" && submitForm()}
-        />
-        <BigButton text="SIGN" onclick={submitForm} disabled={!name} />
+      <div class="button" bind:this={buttonElement}>
+        <BigButton text="APPROVE" onclick={sendApproval} />
       </div>
     {/if}
   </div>
@@ -93,29 +93,9 @@
         width: 100%;
       }
 
-      .form {
-        display: flex;
+      .button {
         width: 100%;
-
-        input {
-          height: 4em;
-          width: 300px;
-          margin-right: 10px;
-          font-size: 18px;
-          padding: 10px;
-          background: var(--color-alert);
-          color: var(--background);
-          border: none;
-          margin-bottom: 0.5em;
-          font-family: "Rock Salt", cursive;
-          text-transform: uppercase;
-          border-bottom: var(--default-border-style);
-          outline: none;
-
-          &::placeholder {
-            color: var(--color-grey-dark);
-          }
-        }
+        height: 80px;
       }
     }
   }

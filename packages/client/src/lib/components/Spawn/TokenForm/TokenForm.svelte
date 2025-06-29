@@ -1,0 +1,99 @@
+<script lang="ts">
+  import { giveCallerTokens } from "$lib/modules/on-chain-action"
+  import { busy as busyState } from "$lib/modules/external/index.svelte"
+  import gsap from "gsap"
+  import { onMount } from "svelte"
+  import { player } from "$lib/modules/state/base/stores"
+
+  import { BigButton } from "$lib/components/Shared"
+  import VideoLoader from "$lib/components/Shared/Loaders/VideoLoader.svelte"
+
+  const { onComplete = () => {} } = $props<{
+    onComplete: (isSpawned: boolean) => void
+  }>()
+
+  let buttonText = "Get RatFunTokens"
+  let message = `${$player.name}, your money is not good here. You need RatFunTokens to play.`
+  let busy = $state(false)
+  let imageElement: HTMLImageElement | null = $state(null)
+  let messageElement: HTMLParagraphElement | null = $state(null)
+  let buttonElement: HTMLDivElement | null = $state(null)
+  const timeline = gsap.timeline()
+
+  async function getTokens() {
+    if (busy) return
+    busy = true
+    try {
+      await giveCallerTokens()
+      onComplete()
+    } catch (e) {
+      console.error(e)
+    } finally {
+      busy = false
+    }
+  }
+
+  onMount(() => {
+    if (!buttonElement || !messageElement || !imageElement) return
+
+    // Set initial opacity to 0
+    imageElement.style.opacity = "0"
+    buttonElement.style.opacity = "0"
+    messageElement.style.opacity = "0"
+
+    timeline.to(imageElement, {
+      opacity: 1,
+      duration: 0.4,
+      delay: 0.4
+    })
+    timeline.to(messageElement, {
+      opacity: 1,
+      duration: 0.4
+    })
+    timeline.to(buttonElement, {
+      opacity: 1,
+      duration: 0.4
+    })
+  })
+</script>
+
+<div class="outer-container">
+  <div class="inner-container">
+    {#if busy}
+      <VideoLoader progress={busyState.Spawn} />
+    {:else}
+      <img class="image" src="/images/cashier.jpg" alt="RAT.FUN" bind:this={imageElement} />
+      <p bind:this={messageElement}>{message}</p>
+      <div class="button" bind:this={buttonElement}>
+        <BigButton text={buttonText} onclick={getTokens} />
+      </div>
+    {/if}
+  </div>
+</div>
+
+<style lang="scss">
+  .outer-container {
+    display: flex;
+    flex-flow: column nowrap;
+    height: var(--game-window-height);
+    align-items: center;
+    justify-content: center;
+
+    .inner-container {
+      display: flex;
+      flex-flow: column nowrap;
+      align-items: center;
+      justify-content: center;
+      width: 500px;
+
+      .image {
+        width: 100%;
+      }
+
+      .button {
+        width: 100%;
+        height: 80px;
+      }
+    }
+  }
+</style>
