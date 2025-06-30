@@ -1,12 +1,11 @@
 import type { FastifyInstance, FastifyRequest } from "fastify"
-import type { Hex } from "viem"
 import { schema } from "@routes/room/create/schema"
 import dotenv from "dotenv"
 
 dotenv.config()
 
 // Types
-import { CreateRoomBody } from "@modules/types"
+import { CreateRoomRequestBody, SignedRequest } from "@modules/types"
 
 // CMS
 import { CMSError } from "@modules/cms"
@@ -21,7 +20,7 @@ import { getCreateRoomData } from "@modules/mud/getOnchainData/getCreateRoomData
 import { generateImage } from "@modules/image-generation/replicate"
 
 // Signature
-import { getSenderId } from "@modules/signature"
+import { verifyRequest } from "@modules/signature"
 
 // Validation
 import { validateInputData } from "./validation"
@@ -42,12 +41,12 @@ async function routes(fastify: FastifyInstance) {
   fastify.post(
     "/room/create",
     opts,
-    async (request: FastifyRequest<{ Body: CreateRoomBody }>, reply) => {
+    async (request: FastifyRequest<{ Body: SignedRequest<CreateRoomRequestBody> }>, reply) => {
       try {
-        const { signature, roomPrompt, levelId } = request.body
+        const { roomPrompt, levelId } = request.body.data
 
         // Recover player address from signature and convert to MUD bytes32 format
-        const playerId = await getSenderId(signature as Hex)
+        const playerId = await verifyRequest(request.body)
 
         // Get onchain data
         const { gameConfig, player, level } = await getCreateRoomData(playerId, levelId)

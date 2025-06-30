@@ -1,32 +1,31 @@
-import type { OffChainMessage, WebSocketInterface } from "@modules/types"
-import type { Hex } from "viem"
+import type { OffChainMessage, SignedRequest, WebSocketInterface } from "@modules/types"
 import { v4 as uuidv4 } from "uuid"
-import { getSenderId } from "@modules/signature"
+import { verifyRequest } from "@modules/signature"
 import { getEntityName, getEntityLevel, getRatId } from "@modules/mud/getOnchainData"
 import { broadcast } from "@modules/websocket"
 
 export async function handleMessage(
-  message: OffChainMessage,
+  request: SignedRequest<OffChainMessage>,
   socket: WebSocketInterface
 ): Promise<void> {
-  switch (message.topic) {
+  switch (request.data.topic) {
     case "test":
       await handleTestMessage(socket)
       break
     case "chat__message":
-      await handleChatMessage(message)
+      await handleChatMessage(request)
       break
     case "rat__deploy":
-      await handleRatDeploy(message)
+      await handleRatDeploy(request)
       break
     case "rat__liquidate":
-      await handleRatLiquidate(message)
+      await handleRatLiquidate(request)
       break
     case "room__liquidation":
-      await handleRoomLiquidation(message)
+      await handleRoomLiquidation(request)
       break
     default:
-      console.log("Unknown message topic:", message.topic)
+      console.log("Unknown message topic:", request.data.topic)
   }
 }
 
@@ -49,25 +48,15 @@ async function handleTestMessage(socket: WebSocketInterface): Promise<void> {
  * CHAT MESSAGE
  *****************/
 
-async function handleChatMessage(message: OffChainMessage): Promise<void> {
-  if (!message.signature) {
-    console.error("Missing signature in chat message")
-    return
-  }
-
-  const senderId = await getSenderId(message.signature as Hex)
-
-  if (!senderId) {
-    console.error("Missing senderId in chat message")
-    return
-  }
+async function handleChatMessage(request: SignedRequest<OffChainMessage>): Promise<void> {
+  const senderId = await verifyRequest(request)
 
   const newMessage: OffChainMessage = {
     id: uuidv4(),
     topic: "chat__message",
-    level: message?.level ?? "unknown level",
+    level: request.data?.level ?? "unknown level",
     playerName: getEntityName(senderId),
-    message: message.message,
+    message: request.data.message,
     timestamp: Date.now()
   }
 
@@ -78,18 +67,8 @@ async function handleChatMessage(message: OffChainMessage): Promise<void> {
  * RAT DEPLOYMENT
  *****************/
 
-async function handleRatDeploy(message: OffChainMessage): Promise<void> {
-  if (!message.signature) {
-    console.error("Missing signature in rat deploy message")
-    return
-  }
-
-  const senderId = await getSenderId(message.signature as Hex)
-
-  if (!senderId) {
-    console.error("Missing senderId in rat deploy message")
-    return
-  }
+async function handleRatDeploy(request: SignedRequest<OffChainMessage>): Promise<void> {
+  const senderId = await verifyRequest(request)
 
   const ratId = getRatId(senderId)
   const ratLevel = getEntityLevel(ratId)
@@ -110,21 +89,11 @@ async function handleRatDeploy(message: OffChainMessage): Promise<void> {
  * RAT LIQUIDATION
  *****************/
 
-async function handleRatLiquidate(message: OffChainMessage): Promise<void> {
-  if (!message.signature) {
-    console.error("Missing signature in rat deploy message")
-    return
-  }
+async function handleRatLiquidate(request: SignedRequest<OffChainMessage>): Promise<void> {
+  const senderId = await verifyRequest(request)
 
-  const senderId = await getSenderId(message.signature as Hex)
-
-  if (!senderId) {
-    console.error("Missing senderId in rat deploy message")
-    return
-  }
-
-  const ratName = getEntityName(message.ratId ?? "unknown rat")
-  const level = getEntityLevel(message.ratId ?? "unknown rat")
+  const ratName = getEntityName(request.data.ratId ?? "unknown rat")
+  const level = getEntityLevel(request.data.ratId ?? "unknown rat")
 
   const newMessage: OffChainMessage = {
     id: uuidv4(),
@@ -142,27 +111,22 @@ async function handleRatLiquidate(message: OffChainMessage): Promise<void> {
  * ROOM LIQUIDATION
  *****************/
 
-async function handleRoomLiquidation(message: OffChainMessage): Promise<void> {
-  if (!message.signature) {
-    console.error("Missing signature in room liquidation message")
-    return
-  }
-
-  const senderId = await getSenderId(message.signature as Hex)
+async function handleRoomLiquidation(request: SignedRequest<OffChainMessage>): Promise<void> {
+  const senderId = await verifyRequest(request)
 
   if (!senderId) {
     console.error("Missing senderId in room liquidation message")
     return
   }
 
-  const level = getEntityLevel(message.roomId ?? "unknown room")
+  const level = getEntityLevel(request.data.roomId ?? "unknown room")
 
   const newMessage: OffChainMessage = {
     id: uuidv4(),
     topic: "room__liquidation",
     level,
-    roomIndex: message.roomIndex,
-    roomId: message.roomId,
+    roomIndex: request.data.roomIndex,
+    roomId: request.data.roomId,
     playerName: getEntityName(senderId),
     timestamp: Date.now()
   }

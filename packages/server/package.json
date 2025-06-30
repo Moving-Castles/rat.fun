@@ -17,6 +17,7 @@
     "@latticexyz/common": "2.2.23-c9a7e15b89f6e4486abcb46c3a75c213741816a4",
     "@latticexyz/recs": "2.2.23-c9a7e15b89f6e4486abcb46c3a75c213741816a4",
     "@latticexyz/schema-type": "2.2.23-c9a7e15b89f6e4486abcb46c3a75c213741816a4",
+    "@latticexyz/store": "2.2.23-c9a7e15b89f6e4486abcb46c3a75c213741816a4",
     "@latticexyz/store-sync": "2.2.23-c9a7e15b89f6e4486abcb46c3a75c213741816a4",
     "@latticexyz/utils": "2.2.23-c9a7e15b89f6e4486abcb46c3a75c213741816a4",
     "@latticexyz/world": "2.2.23-c9a7e15b89f6e4486abcb46c3a75c213741816a4",

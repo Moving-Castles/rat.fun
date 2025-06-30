@@ -333,6 +333,9 @@ importers:
       '@latticexyz/schema-type':
         specifier: 2.2.23-c9a7e15b89f6e4486abcb46c3a75c213741816a4
         version: 2.2.23-c9a7e15b89f6e4486abcb46c3a75c213741816a4(typescript@5.8.3)(viem@2.30.6(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+      '@latticexyz/store':
+        specifier: 2.2.23-c9a7e15b89f6e4486abcb46c3a75c213741816a4
+        version: 2.2.23-c9a7e15b89f6e4486abcb46c3a75c213741816a4(@aws-sdk/client-kms@3.828.0)(asn1.js@5.4.1)(typescript@5.8.3)(viem@2.30.6(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
       '@latticexyz/store-sync':
         specifier: 2.2.23-c9a7e15b89f6e4486abcb46c3a75c213741816a4
         version: 2.2.23-c9a7e15b89f6e4486abcb46c3a75c213741816a4(@aws-sdk/client-kms@3.828.0)(@opentelemetry/api@1.9.0)(@tanstack/react-query@5.80.7(react@19.1.0))(@types/react@19.1.8)(asn1.js@5.4.1)(better-sqlite3@8.7.0)(immer@10.1.1)(pg@8.16.0)(react@19.1.0)(typescript@5.8.3)(viem@2.30.6(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.23.8))(wagmi@2.15.5(@tanstack/query-core@5.80.7)(@tanstack/react-query@5.80.7(react@19.1.0))(@types/react@19.1.8)(bufferutil@4.0.9)(immer@10.1.1)(react@19.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(viem@2.30.6(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8))(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))
