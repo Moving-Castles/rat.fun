@@ -83,7 +83,7 @@ export async function getCreateRoomData(
     const gameConfigEntity = (await network).world.registerEntity({ id: GAME_CONFIG_ID })
 
     const gameConfig = getComponentValue(GameConfig, gameConfigEntity) as GameConfig
-    const worldPrompt = getComponentValue(WorldPrompt, gameConfigEntity)?.value as string
+    const worldPrompt = (getComponentValue(WorldPrompt, gameConfigEntity)?.value ?? "") as string
 
     // Check if game config exists
     if (!gameConfig) {

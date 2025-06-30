@@ -12,7 +12,7 @@
   }>()
 
   let buttonText = "Get RatFunTokens"
-  let message = `${$player.name}, your money is not good here. You need RatFunTokens to play.`
+  let message = `${$player?.name ?? "Loser"}, your money is not good here. You need RatFunTokens to play.`
 
   let imageElement: HTMLImageElement | null = $state(null)
   let messageElement: HTMLParagraphElement | null = $state(null)

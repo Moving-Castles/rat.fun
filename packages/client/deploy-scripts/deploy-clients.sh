@@ -17,7 +17,10 @@ cd ./build
 # Deploy for Pyrope
 # NETLIFY_SITE_ID=$PYROPE_CLIENT_ID netlify deploy --dir=. --prod --auth=$NETLIFY_AUTH_TOKEN
 
-# Deploy for Base Sepolia
+# Deploy for Base Sepolia (burner wallet)
 NETLIFY_SITE_ID=$BASE_SEPOLIA_CLIENT_ID netlify deploy --dir=. --prod --auth=$NETLIFY_AUTH_TOKEN
+
+# Deploy for Base Sepolia (account kit)
+NETLIFY_SITE_ID=$BASE_SEPOLIA_ACCOUNTKIT_CLIENT_ID netlify deploy --dir=. --prod --auth=$NETLIFY_AUTH_TOKEN
 
 # pnpm preview

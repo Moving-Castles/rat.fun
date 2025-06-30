@@ -8,7 +8,7 @@
 
   let { walletType, environment }: { walletType: WALLET_TYPE; environment: ENVIRONMENT } = $props()
 
-  let isMinimized = $state(false)
+  let isMinimized = $state(true)
 
   function toggleMinimize() {
     isMinimized = !isMinimized

@@ -21,7 +21,7 @@
     </div>
     <div class="button-container">
       <BigButton
-        text="Deploy new rat"
+        text="Insert rat"
         cost={Number($gameConfig?.gameConfig?.ratCreationCost)}
         {disabled}
         onclick={async () => {

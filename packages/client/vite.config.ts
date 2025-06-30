@@ -7,6 +7,8 @@ export default defineConfig({
   define: {
     // Fix for RAINBOW_PROVIDER_API_KEY error
     // https://github.com/rainbow-me/rainbowkit/discussions/2003
-    "process.env.RAINBOW_PROVIDER_API_KEY": JSON.stringify("")
+    "process.env.RAINBOW_PROVIDER_API_KEY": JSON.stringify(
+      process.env.RAINBOW_PROVIDER_API_KEY || ""
+    )
   }
 })
