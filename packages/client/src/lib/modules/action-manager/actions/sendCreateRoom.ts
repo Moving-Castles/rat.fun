@@ -3,7 +3,7 @@ import { goto } from "$app/navigation"
 import { gameConfig, playerERC20Allowance } from "$lib/modules/state/base/stores"
 import { approve } from "$lib/modules/on-chain-transactions"
 import { busy } from "../index.svelte"
-import type { CreateRoomReturnValue } from "@server/modules/types"
+import type { CreateRoomBody, CreateRoomReturnValue } from "@server/modules/types"
 import { getSignature } from "$lib/modules/signature"
 import { getEnvironment } from "$lib/modules/network"
 import { ENVIRONMENT } from "$lib/mud/enums"
@@ -53,17 +53,18 @@ export async function sendCreateRoom(
 
     const signature = await getSignature()
 
-    const formData = new URLSearchParams()
-    formData.append("signature", signature)
-    formData.append("roomPrompt", roomPrompt)
-    formData.append("levelId", levelId)
+    const formData: CreateRoomBody = {
+      signature,
+      roomPrompt,
+      levelId
+    }
 
     const response = await fetch(url, {
       method: "POST",
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded"
+        "Content-Type": "application/json"
       },
-      body: formData
+      body: JSON.stringify(formData)
     })
 
     if (!response.ok) {
