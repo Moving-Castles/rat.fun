@@ -6,7 +6,7 @@ import {
   roundTriptime,
   websocketConnected
 } from "$lib/modules/off-chain-sync/stores"
-import { getSignature } from "$lib/modules/signature"
+import { signRequest } from "$lib/modules/signature"
 import {
   PUBLIC_DEVELOPMENT_SERVER_HOST,
   PUBLIC_PYROPE_SERVER_HOST,
@@ -121,25 +121,25 @@ export function ping() {
   )
 }
 
+async function sendMessageRequest(topic: OffChainMessage["topic"], data: Record<string, unknown>) {
+  const signedRequest = await signRequest({
+    topic,
+    ...data
+  })
+
+  if (socket) {
+    socket.send(JSON.stringify(signedRequest))
+  } else {
+    console.error("No socket")
+  }
+}
+
 /****************
  * CHAT MESSAGE
  *****************/
 
 export async function sendChatMessage(level: string, message: string) {
-  const signature = await getSignature()
-
-  if (socket) {
-    socket.send(
-      JSON.stringify({
-        topic: "chat__message",
-        level: level,
-        message: message,
-        signature: signature
-      })
-    )
-  } else {
-    console.error("No socket")
-  }
+  sendMessageRequest("chat__message", { level, message })
 }
 
 /****************
@@ -147,18 +147,7 @@ export async function sendChatMessage(level: string, message: string) {
  *****************/
 
 export async function sendDeployRatMessage() {
-  const signature = await getSignature()
-
-  if (socket) {
-    socket.send(
-      JSON.stringify({
-        topic: "rat__deploy",
-        signature: signature
-      })
-    )
-  } else {
-    console.error("No socket")
-  }
+  sendMessageRequest("rat__deploy", {})
 }
 
 /****************
@@ -166,19 +155,7 @@ export async function sendDeployRatMessage() {
  *****************/
 
 export async function sendLiquidateRatMessage(ratId: string) {
-  const signature = await getSignature()
-
-  if (socket) {
-    socket.send(
-      JSON.stringify({
-        topic: "rat__liquidate",
-        ratId: ratId,
-        signature: signature
-      })
-    )
-  } else {
-    console.error("No socket")
-  }
+  sendMessageRequest("rat__liquidate", { ratId })
 }
 
 /****************
@@ -186,15 +163,5 @@ export async function sendLiquidateRatMessage(ratId: string) {
  *****************/
 
 export async function sendLiquidateRoomMessage(roomId: string) {
-  const signature = await getSignature()
-
-  if (socket) {
-    socket.send(
-      JSON.stringify({
-        topic: "room__liquidation",
-        roomId: roomId,
-        signature: signature
-      })
-    )
-  }
+  sendMessageRequest("room__liquidation", { roomId })
 }

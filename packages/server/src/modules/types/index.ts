@@ -1,3 +1,4 @@
+import type { Hex } from "viem"
 import { TableRecord } from "@latticexyz/store-sync"
 import mudConfig from "contracts/mud.config"
 
@@ -132,20 +133,42 @@ export type EnterRoomReturnValue = OutcomeReturnValue & {
   roomDepleted: boolean
   levelUp: boolean
   levelDown: boolean
+  log: LogEntry[]
 }
 
 /**
  * API Types
  */
 
-export type EnterRoomBody = {
-  signature: string
+export type SignedRequestInfo = {
+  /**
+   * Helps prevent replay attacks using a stale signature.
+   * Also allows the server to not store old nonces permanently.
+   */
+  timestamp: number
+  /**
+   * Prevents short-term replay attacks within the timestamp window.
+   */
+  nonce: number
+  /**
+   * Delegator address, if signing was delegated to a session wallet.
+   * Reuses MUD's delegation and `callFrom` logic.
+   */
+  calledFrom: Hex | null
+}
+
+export type SignedRequest<T> = {
+  data: T
+  info: SignedRequestInfo
+  signature: Hex
+}
+
+export type EnterRoomRequestBody = {
   roomId: string
   ratId: string
 }
 
-export type CreateRoomBody = {
-  signature: string
+export type CreateRoomRequestBody = {
   roomPrompt: string
   levelId: string
 }
@@ -189,8 +212,12 @@ export type OffChainMessage = {
 }
 
 // For the message store
-export type DatabaseSchema = {
+export type MessageDatabaseSchema = {
   messages: OffChainMessage[]
+}
+
+export type NonceDatabaseSchema = {
+  nonces: Record<number, boolean>
 }
 
 export interface WebSocketInterface {
