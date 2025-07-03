@@ -12,18 +12,18 @@ export async function signRequest<T>(data: T): Promise<SignedRequest<T>> {
   const info: SignedRequestInfo = {
     timestamp: Date.now(),
     nonce: Math.floor(Math.random() * 1e12),
-    calledFrom: getCalledFrom(),
+    calledFrom: getCalledFrom()
   }
 
   const signature = await signMessage(client, {
     account: client.account,
-    message: stringifyRequestForSignature({ data, info }),
+    message: stringifyRequestForSignature({ data, info })
   })
 
   return {
     data,
     info,
-    signature,
+    signature
   }
 }
 
