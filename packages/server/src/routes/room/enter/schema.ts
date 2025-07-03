@@ -1,12 +1,27 @@
 export const schema = {
   body: {
     type: "object",
-    required: ["signature", "roomId", "ratId"],
     properties: {
-      signature: { type: "string", description: "The cryptographic signature for validation" },
-      roomId: { type: "string", description: "The ID of the room" },
-      ratId: { type: "string", description: "The unique identifier for the rat" }
-    }
+      data: {
+        type: "object",
+        properties: {
+          roomId: { type: "string", description: "The ID of the room" },
+          ratId: { type: "string", description: "The unique identifier for the rat" }
+        },
+        required: ["roomId", "ratId"]
+      },
+      info: {
+        type: "object",
+        properties: {
+          timestamp: { type: "number" },
+          nonce: { type: "number" },
+          calledFrom: { type: ["string", "null"] }
+        },
+        required: ["timestamp", "nonce", "calledFrom"]
+      },
+      signature: { type: "string" }
+    },
+    required: ["data", "info", "signature"]
   },
   response: {
     200: {

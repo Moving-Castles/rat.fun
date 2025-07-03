@@ -3,7 +3,8 @@ import formbody from "@fastify/formbody"
 import cors from "@fastify/cors"
 import websocket from "@fastify/websocket"
 
-import { initializeDB } from "@modules/message-store"
+import { initializeMessagesDB } from "@modules/message-store"
+import { initializeNoncesDB } from "@modules/signature/db"
 
 import { PORT } from "@config"
 
@@ -40,8 +41,9 @@ fastify.register(wsConnect)
 const start = async (port: number) => {
   try {
     await fastify.listen({ port })
-    // Initialize message store after server starts
-    await initializeDB()
+    // Initialize databases after server starts
+    await initializeMessagesDB()
+    await initializeNoncesDB()
   } catch (err) {
     fastify.log.error(err)
     process.exit(1)

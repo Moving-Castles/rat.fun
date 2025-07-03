@@ -6,11 +6,12 @@ dotenv.config()
 
 // Types
 import {
-  EnterRoomBody,
   EnterRoomData,
   EnterRoomReturnValue,
   EventsReturnValue,
-  CorrectionReturnValue
+  CorrectionReturnValue,
+  SignedRequest,
+  EnterRoomRequestBody
 } from "@modules/types"
 
 // WebSocket
@@ -30,7 +31,7 @@ import { getEnterRoomData } from "@modules/mud/getOnchainData/getEnterRoomData"
 import { systemCalls, network } from "@modules/mud/initMud"
 
 // Signature
-import { getSenderId } from "@modules/signature"
+import { verifyRequest } from "@modules/signature"
 
 // CMS
 // import { CMSError } from '@modules/cms';
@@ -53,12 +54,12 @@ async function routes(fastify: FastifyInstance) {
   fastify.post(
     "/room/enter",
     opts,
-    async (request: FastifyRequest<{ Body: EnterRoomBody }>, reply) => {
+    async (request: FastifyRequest<{ Body: SignedRequest<EnterRoomRequestBody> }>, reply) => {
       try {
-        const { signature, roomId, ratId } = request.body
+        const { roomId, ratId } = request.body.data
 
         // Recover player address from signature and convert to MUD bytes32 format
-        const playerId = await getSenderId(signature as Hex)
+        const playerId = await verifyRequest(request.body)
 
         // Get onchain data
         console.time("–– Get on chain data")

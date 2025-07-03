@@ -1,8 +1,8 @@
 import { busy } from "../index.svelte"
 import { getEnvironment } from "$lib/modules/network"
 import { ENVIRONMENT } from "$lib/mud/enums"
-import { getSignature } from "$lib/modules/signature"
-import type { EnterRoomReturnValue } from "@server/modules/types"
+import { signRequest } from "$lib/modules/signature"
+import type { EnterRoomRequestBody, EnterRoomReturnValue } from "@server/modules/types"
 import {
   PUBLIC_DEVELOPMENT_SERVER_HOST,
   PUBLIC_PYROPE_SERVER_HOST,
@@ -39,20 +39,20 @@ export async function sendEnterRoom(roomId: string, ratId: string) {
       url = `http://${PUBLIC_DEVELOPMENT_SERVER_HOST}/room/enter`
   }
 
-  const signature = await getSignature()
+  const requestBody: EnterRoomRequestBody = {
+    roomId,
+    ratId
+  }
 
-  const formData = new URLSearchParams()
-  formData.append("signature", signature)
-  formData.append("roomId", roomId)
-  formData.append("ratId", ratId)
+  const signedRequest = await signRequest(requestBody)
 
   try {
     const response = await fetch(url, {
       method: "POST",
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded"
+        "Content-Type": "application/json"
       },
-      body: formData
+      body: JSON.stringify(signedRequest)
     })
 
     if (!response.ok) {

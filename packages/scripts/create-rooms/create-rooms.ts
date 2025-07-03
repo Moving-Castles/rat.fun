@@ -6,7 +6,6 @@ import * as path from "path"
 import * as dotenv from "dotenv"
 import { ethers } from "ethers"
 import fetch from "node-fetch"
-import { URLSearchParams } from "url"
 import { fileURLToPath } from "url"
 
 const __filename = fileURLToPath(import.meta.url)
@@ -53,6 +52,12 @@ interface RoomDetails {
 
 interface RoomData {
   rooms: RoomDetails[]
+}
+
+interface CreateRoomBody {
+  signature: string
+  roomPrompt: string
+  levelId: string
 }
 
 // Parse command line arguments
@@ -145,19 +150,20 @@ async function signMessage(): Promise<string> {
 
 // Send the request to the API for a single room
 async function sendRequest(signature: string, room: RoomDetails): Promise<void> {
-  const formData = new URLSearchParams()
-  formData.append("signature", signature)
-  formData.append("roomPrompt", room.roomPrompt)
-  formData.append("levelId", room.levelId)
+  const formData: CreateRoomBody = {
+    signature,
+    roomPrompt: room.roomPrompt,
+    levelId: room.levelId
+  }
 
   try {
     log(`Sending request for room: ${room.roomPrompt}...`)
     const response = await fetch(apiUrl, {
       method: "POST",
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded"
+        "Content-Type": "application/json"
       },
-      body: formData
+      body: JSON.stringify(formData)
     })
 
     if (!response.ok) {

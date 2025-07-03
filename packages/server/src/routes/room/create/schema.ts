@@ -2,17 +2,29 @@ export const schema = {
   body: {
     type: "object",
     properties: {
-      signature: {
-        type: "string",
-        description: "The cryptographic signature for validation"
+      data: {
+        type: "object",
+        properties: {
+          levelId: {
+            type: "string",
+            description: "The id of the level to create the room on"
+          },
+          roomPrompt: { type: "string", description: "The prompt for the room" }
+        },
+        required: ["roomPrompt", "levelId"]
       },
-      levelId: {
-        type: "string",
-        description: "The id of the level to create the room on"
+      info: {
+        type: "object",
+        properties: {
+          timestamp: { type: "number" },
+          nonce: { type: "number" },
+          calledFrom: { type: ["string", "null"] }
+        },
+        required: ["timestamp", "nonce", "calledFrom"]
       },
-      roomPrompt: { type: "string", description: "The prompt for the room" }
+      signature: { type: "string" }
     },
-    required: ["signature", "roomPrompt", "levelId"]
+    required: ["data", "info", "signature"]
   },
   response: {
     200: {

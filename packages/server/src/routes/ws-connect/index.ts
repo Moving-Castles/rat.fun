@@ -4,7 +4,7 @@ import { broadcast, wsConnections } from "@modules/websocket"
 import { v4 as uuidv4 } from "uuid"
 
 // Types
-import type { WebSocketParams, OffChainMessage } from "@modules/types"
+import type { WebSocketParams, OffChainMessage, SignedRequest } from "@modules/types"
 
 // Message store
 import { getMessages } from "@modules/message-store"
@@ -52,10 +52,11 @@ async function routes(fastify: FastifyInstance) {
         }).catch(console.error)
 
         // Add message handler
-        socket.on("message", async (message: OffChainMessage) => {
+        socket.on("message", async (message: Buffer) => {
+          //SignedRequest<OffChainMessage>
           try {
-            const data = JSON.parse(message.toString())
-            await handleMessage(data, socket)
+            const signedRequest = JSON.parse(message.toString()) as SignedRequest<OffChainMessage>
+            await handleMessage(signedRequest, socket)
           } catch (error) {
             handleError(error, socket)
           }

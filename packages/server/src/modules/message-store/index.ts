@@ -1,12 +1,12 @@
 import { Low, Memory } from "lowdb"
-import { OffChainMessage, DatabaseSchema } from "@modules/types"
+import { OffChainMessage, MessageDatabaseSchema } from "@modules/types"
 
 // Initialize the database with in-memory adapter
-const adapter = new Memory<DatabaseSchema>()
-const db = new Low<DatabaseSchema>(adapter, { messages: [] })
+const adapter = new Memory<MessageDatabaseSchema>()
+const db = new Low<MessageDatabaseSchema>(adapter, { messages: [] })
 
 // Initialize the database
-export async function initializeDB() {
+export async function initializeMessagesDB() {
   await db.read()
   if (!db.data) {
     db.data = { messages: [] }
