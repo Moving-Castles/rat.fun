@@ -1,8 +1,12 @@
-import { Low, Memory } from "lowdb"
+import { mkdirSync } from "fs"
+import { Low } from "lowdb"
+import { JSONFile } from "lowdb/node"
 import { OffChainMessage, MessageDatabaseSchema } from "@modules/types"
 
-// Initialize the database with in-memory adapter
-const adapter = new Memory<MessageDatabaseSchema>()
+// Initialize the database with file adapter
+// (the file can be periodically pruned/deleted, only the last few messages are needed)
+mkdirSync("db-files", { recursive: true })
+const adapter = new JSONFile<MessageDatabaseSchema>("db-files/messages.json")
 const db = new Low<MessageDatabaseSchema>(adapter, { messages: [] })
 
 // Initialize the database
