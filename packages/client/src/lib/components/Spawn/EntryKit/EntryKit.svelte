@@ -32,6 +32,8 @@
         createElement(AccountButton)
       )
 
+      console.log(networkConfig)
+
       const providers = createElement(
         WagmiProvider,
         { config: wagmiConfig },
