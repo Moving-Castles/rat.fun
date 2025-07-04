@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { busy, sendCreateRat } from "$lib/modules/external/index.svelte"
+  import { busy, sendCreateRat } from "$lib/modules/action-manager/index.svelte"
   import { gameConfig, playerERC20Balance } from "$lib/modules/state/base/stores"
   import { generateRatName } from "./index"
   import { sendDeployRatMessage } from "$lib/modules/off-chain-sync"
@@ -21,7 +21,7 @@
     </div>
     <div class="button-container">
       <BigButton
-        text="Deploy new rat"
+        text="Insert rat"
         cost={Number($gameConfig?.gameConfig?.ratCreationCost)}
         {disabled}
         onclick={async () => {

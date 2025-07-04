@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { TempItem } from "$lib/components/Room/RoomResult/types"
   import { items } from "$lib/modules/state/base/stores"
-  import { dropItem } from "$lib/modules/on-chain-action"
+  import { dropItem } from "$lib/modules/on-chain-transactions"
   import { playSound } from "$lib/modules/sound"
   import { ModalTarget, Spinner } from "$lib/components/Shared"
   import { getModalState } from "$lib/components/Shared/Modal/state.svelte"

@@ -35,19 +35,17 @@ import mudConfig from "contracts/mud.config"
 
 export type SetupNetworkResult = Awaited<ReturnType<typeof setupNetwork>>
 
-import { Observable } from "rxjs"
-
 export type SetupNetworkReturnType = {
   world: typeof world
-  components: typeof components
+  components: any
   playerEntity: ReturnType<typeof encodeEntity>
   publicClient: ReturnType<typeof createPublicClient>
   walletClient: ReturnType<typeof createWalletClient>
-  latestBlock$: Observable<any>
-  storedBlockLogs$: Observable<any>
-  waitForTransaction: typeof waitForTransaction
+  latestBlock$: any
+  storedBlockLogs$: any
+  waitForTransaction: any
   worldContract: ReturnType<typeof getContract>
-  write$: Observable<ContractWrite>
+  write$: any
 }
 
 export async function setupNetwork(
@@ -60,9 +58,22 @@ export async function setupNetwork(
    * Create a viem public (read only) client
    * (https://viem.sh/docs/clients/public.html)
    */
+  const transports = []
+
+  // Add WebSocket transport if WebSocket URL is available
+  if (
+    "webSocket" in networkConfig.chain.rpcUrls.default &&
+    networkConfig.chain.rpcUrls.default.webSocket?.[0]
+  ) {
+    transports.push(webSocket(networkConfig.chain.rpcUrls.default.webSocket[0]))
+  }
+
+  // Always add HTTP transport as fallback
+  transports.push(http(networkConfig.chain.rpcUrls.default.http[0]))
+
   const clientOptions = {
     chain: networkConfig.chain,
-    transport: transportObserver(fallback([webSocket(), http()])),
+    transport: transportObserver(fallback(transports)),
     pollingInterval: 1000
   } as const satisfies ClientConfig
 

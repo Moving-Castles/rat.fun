@@ -6,6 +6,9 @@ dotenv.config()
 const PUBLIC_SANITY_CMS_ID = process.env.PUBLIC_SANITY_CMS_ID
 const PUBLIC_SANITY_CMS_TOKEN = process.env.PUBLIC_SANITY_CMS_TOKEN
 
+console.log("PUBLIC_SANITY_CMS_ID", PUBLIC_SANITY_CMS_ID)
+console.log("PUBLIC_SANITY_CMS_TOKEN", PUBLIC_SANITY_CMS_TOKEN)
+
 export const publicSanityClient = createClient({
   projectId: PUBLIC_SANITY_CMS_ID,
   dataset: "production",

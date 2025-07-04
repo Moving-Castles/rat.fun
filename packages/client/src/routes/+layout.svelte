@@ -16,7 +16,6 @@
   import { websocketConnected } from "$lib/modules/off-chain-sync/stores"
   import { EMPTY_CONNECTION } from "$lib/modules/utils/constants"
   import { WALLET_TYPE } from "$lib/mud/enums"
-  import { mountAccountKit } from "$lib/modules/account-kit/mount"
 
   import Spawn from "$lib/components/Spawn/Spawn.svelte"
   import Loading from "$lib/components/Loading/Loading.svelte"
@@ -93,7 +92,7 @@
       // = = = = = = = = = = = =
       // Mount account kit
       // = = = = = = = = = = = =
-      mountAccountKit(data.environment)
+      // mountAccountKit(data.environment)
     }
 
     // Remove preloader

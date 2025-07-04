@@ -5,4 +5,4 @@
   import { page } from "$app/state"
 </script>
 
-<RoomResult roomId={page.params.roomId} environment={page.data.environment} />
+<RoomResult roomId={page.params.roomId} />

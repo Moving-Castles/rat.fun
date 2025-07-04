@@ -42,7 +42,7 @@ export const wipe = (
     delay: params.delay || 0,
     duration: params.duration || 400,
     easing: params.easing || linear,
-    css: (t, u) => {
+    css: (t: number, u: number) => {
       const progress = u
       const halfWidth = progress * 50 // Expands from 0% to 50% on each side
       const centerLeft = 50 - halfWidth
@@ -75,7 +75,7 @@ export const leftToRight = (
     easing?: (t: number) => number
   }
 ) => {
-  const css = (t, _) => `
+  const css = (t: number, _: number) => `
   -webkit-mask-image: linear-gradient(to left,  #ffff ${t * 100}%, ${fromColor} ${t * 100 + (params?.feather || 0)}%);
   mask-image: linear-gradient(to left,  #ffff ${t * 100}%, ${fromColor} ${t * 100 + (params?.feather || 0)}%);
   -webkit-mask-size: 100vw 100vh;

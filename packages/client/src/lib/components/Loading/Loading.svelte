@@ -5,6 +5,7 @@
   import { initEntities } from "$lib/modules/systems/initEntities"
   import { ENVIRONMENT } from "$lib/mud/enums"
   import { gsap } from "gsap"
+  import { mountAccountKit } from "$lib/modules/account-kit/mount"
 
   const { environment, loaded = () => {} } = $props<{
     environment: ENVIRONMENT
@@ -36,6 +37,8 @@
 
   onMount(async () => {
     await initPublicNetwork(environment)
+    console.log("public network initialised")
+    mountAccountKit(environment)
   })
 </script>
 

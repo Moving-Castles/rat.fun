@@ -12,12 +12,5 @@
 <SEO prependTitle={truncatedTitle} />
 
 {#if room}
-  <RoomPreview roomId={page.params.roomId} isOwnRoomListing={true} {room} />
+  <RoomPreview roomId={page.params.roomId as Hex} isOwnRoomListing={true} {room} />
 {/if}
-
-<style>
-  .slide-container {
-    overflow: hidden;
-    width: 100%;
-  }
-</style>

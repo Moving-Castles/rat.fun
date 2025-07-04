@@ -1,4 +1,7 @@
 <script lang="ts">
+  import { busy, sendSpawn } from "$lib/modules/action-manager/index.svelte"
+  import gsap from "gsap"
+  import { onMount } from "svelte"
   import { BigButton } from "$lib/components/Shared"
   import { typeHit } from "$lib/modules/sound"
 
@@ -7,95 +10,111 @@
   }>()
 
   let name = $state("")
+  let imageElement: HTMLImageElement | null = $state(null)
+  let buttonElement: HTMLDivElement | null = $state(null)
+  let textElement: HTMLDivElement | null = $state(null)
+  const timeline = gsap.timeline()
 
-  const submitForm = () => {
-    onComplete(name)
+  async function submitForm() {
+    await sendSpawn(name)
+    onComplete()
   }
+
+  onMount(() => {
+    if (!buttonElement || !textElement || !imageElement) return
+
+    // Set initial opacity to 0
+    imageElement.style.opacity = "0"
+    buttonElement.style.opacity = "0"
+    textElement.style.opacity = "0"
+
+    timeline.to(imageElement, {
+      opacity: 1,
+      duration: 0.4,
+      delay: 0.4
+    })
+    timeline.to(textElement, {
+      opacity: 1,
+      duration: 0.4
+    })
+    timeline.to(buttonElement, {
+      opacity: 1,
+      duration: 0.4
+    })
+  })
 </script>
 
-<div class="container">
-  <div class="main">
-    <!-- INTRO TEXT -->
-    <div class="content">
-      <p class="header">
-        <span class="inverted">Welcome to RAT.FUN</span>
-      </p>
-    </div>
+<div class="outer-container">
+  <div class="inner-container">
+    {#if busy.Spawn.current > 0}
+      <VideoLoader progress={busy.Spawn} />
+    {:else}
+      <img class="image" src="/images/bouncer3.png" alt="RAT.FUN" bind:this={imageElement} />
+      <!-- INTRO TEXT -->
+      <div class="text" bind:this={textElement}>
+        <!-- <p>OK {shortenAddress($playerAddress)}</p> -->
+        <p>ID checks out. You can enter. But we need your name to proceed.</p>
+      </div>
 
-    <!-- FORM -->
-    <div class="form">
-      <p>Sign with name to proceed.</p>
-      <!-- INPUT -->
-      <input
-        oninput={typeHit}
-        type="text"
-        placeholder="YOUR NAME"
-        bind:value={name}
-        onkeydown={e => e.key === "Enter" && submitForm()}
-      />
-      <BigButton text="SIGN" onclick={submitForm} disabled={!name} />
-    </div>
+      <!-- FORM -->
+      <div class="form" bind:this={buttonElement}>
+        <!-- INPUT -->
+        <input
+          type="text"
+          placeholder="YOUR NAME"
+          bind:value={name}
+          oninput={typeHit}
+          onkeydown={e => e.key === "Enter" && submitForm()}
+        />
+        <BigButton text="SIGN" onclick={submitForm} disabled={!name} />
+      </div>
+    {/if}
   </div>
 </div>
 
 <style lang="scss">
-  .container {
-    width: 100vw;
-    height: 100vh;
-    background: var(--background);
-    color: var(--foreground);
-    font-family: var(--special-font-stack);
-    text-transform: none;
-    font-size: var(--font-size-large);
-  }
+  .outer-container {
+    display: flex;
+    flex-flow: column nowrap;
+    height: var(--game-window-height);
+    align-items: center;
+    justify-content: center;
 
-  .main {
-    width: 100%;
-    height: 100%;
-    max-width: calc(var(--game-window-width) * 0.9);
-    padding: 10px 30px;
-    padding-bottom: 30px;
-    max-width: 60ch;
-  }
+    .inner-container {
+      display: flex;
+      flex-flow: column nowrap;
+      align-items: center;
+      justify-content: center;
+      width: 500px;
 
-  p {
-    margin-bottom: 1em;
-  }
+      .image {
+        width: 100%;
+      }
 
-  .inverted {
-    background: var(--color-alert-priority);
-    color: var(--background);
-    padding: 5px;
-  }
+      .form {
+        display: flex;
+        width: 100%;
 
-  .header {
-    margin-bottom: 2em;
-    display: block;
-  }
+        input {
+          height: 4em;
+          width: 300px;
+          margin-right: 10px;
+          font-size: 18px;
+          padding: 10px;
+          background: var(--color-alert);
+          color: var(--background);
+          border: none;
+          margin-bottom: 0.5em;
+          font-family: "Rock Salt", cursive;
+          text-transform: uppercase;
+          border-bottom: var(--default-border-style);
+          outline: none;
 
-  .content {
-    padding-top: 1em;
-    padding-bottom: 1em;
-    border-bottom: 1px dashed var(--foreground);
-    margin-bottom: 1em;
-  }
-
-  input {
-    height: 4em;
-    width: 300px;
-    font-size: 18px;
-    padding: 10px;
-    background: var(--color-alert);
-    color: var(--background);
-    border: none;
-    margin-bottom: 0.5em;
-    font-family: "Rock Salt", cursive;
-    text-transform: uppercase;
-    border-bottom: var(--default-border-style);
-    outline: none;
-
-    &::placeholder {
-      color: var(--color-grey-dark);
+          &::placeholder {
+            color: var(--color-grey-dark);
+          }
+        }
+      }
     }
   }
 </style>

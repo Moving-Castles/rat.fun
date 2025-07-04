@@ -6,6 +6,9 @@ dotenv.config()
 const PRIVATE_SANITY_CMS_ID = process.env.PRIVATE_SANITY_CMS_ID
 const PRIVATE_SANITY_CMS_TOKEN = process.env.PRIVATE_SANITY_CMS_TOKEN
 
+console.log("PRIVATE_SANITY_CMS_ID", PRIVATE_SANITY_CMS_ID)
+console.log("PRIVATE_SANITY_CMS_TOKEN", PRIVATE_SANITY_CMS_TOKEN)
+
 export const privateSanityClient = createClient({
   projectId: PRIVATE_SANITY_CMS_ID,
   dataset: "production",

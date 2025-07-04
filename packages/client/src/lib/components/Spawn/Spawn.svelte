@@ -7,19 +7,19 @@
   import { store as accountKitStore } from "@latticexyz/account-kit/bundle"
 
   import { onMount } from "svelte"
-  import { busy, sendSpawn } from "$lib/modules/external/index.svelte"
   import { publicNetwork } from "$lib/modules/network"
   import { setupWalletNetwork } from "$lib/mud/setupWalletNetwork"
   import { setupBurnerWalletNetwork } from "$lib/mud/setupBurnerWalletNetwork"
   import { initWalletNetwork } from "$lib/initWalletNetwork"
 
-  import { playerERC20Allowance } from "$lib/modules/state/base/stores"
+  import { playerERC20Allowance, playerERC20Balance } from "$lib/modules/state/base/stores"
 
-  import { VideoLoader } from "$lib/components/Shared"
   import Introduction from "$lib/components/Spawn/Introduction/Introduction.svelte"
   import ConnectWalletForm from "$lib/components/Spawn/ConnectWalletForm/ConnectWalletForm.svelte"
-  import RequestApprovalForm from "$lib/components/Spawn/RequestApprovalForm/RequestApprovalForm.svelte"
   import SpawnForm from "$lib/components/Spawn/SpawnForm/SpawnForm.svelte"
+  import TokenForm from "$lib/components/Spawn/TokenForm/TokenForm.svelte"
+  import ApprovalForm from "$lib/components/Spawn/ApprovalForm/ApprovalForm.svelte"
+  import HeroImage from "$lib/components/Spawn/HeroImage/HeroImage.svelte"
 
   const { walletType, spawned = () => {} } = $props<{
     walletType: WALLET_TYPE
@@ -67,7 +67,7 @@
           spawned()
         } else {
           // Connected but not spawned - show spawn form
-          currentState = SPAWN_STATE.SHOW_SPAWN_FORM
+          currentState = SPAWN_STATE.SPAWN_FORM
         }
       } else {
         // New user – show introduction
@@ -82,46 +82,54 @@
 
 <div class="container">
   {#if currentState === SPAWN_STATE.INTRODUCTION}
-    <Introduction
-      onComplete={() =>
-        (currentState =
-          walletType === WALLET_TYPE.ACCOUNTKIT
-            ? SPAWN_STATE.CONNECT_WALLET
-            : SPAWN_STATE.SHOW_SPAWN_FORM)}
-    />
+    <Introduction onComplete={() => (currentState = SPAWN_STATE.CONNECT_WALLET)} />
   {:else if currentState === SPAWN_STATE.CONNECT_WALLET}
     <ConnectWalletForm
+      {walletType}
       onComplete={isSpawned => {
         if (isSpawned) {
           spawned()
         } else {
-          currentState =
-            $playerERC20Allowance < 100 ? SPAWN_STATE.REQUEST_APPROVAL : SPAWN_STATE.SHOW_SPAWN_FORM
+          currentState = SPAWN_STATE.SPAWN_FORM
         }
       }}
     />
-  {:else if currentState === SPAWN_STATE.REQUEST_APPROVAL}
-    <RequestApprovalForm
-      onComplete={() => {
-        currentState = SPAWN_STATE.SHOW_SPAWN_FORM
-      }}
-    />
-  {:else if currentState === SPAWN_STATE.SHOW_SPAWN_FORM}
+  {:else if currentState === SPAWN_STATE.SPAWN_FORM}
     <SpawnForm
-      onComplete={async name => {
-        try {
-          currentState = SPAWN_STATE.BUSY
-          await sendSpawn(name)
-          spawned()
-        } catch (error) {
-          console.error(error)
-        } finally {
-          currentState = SPAWN_STATE.SHOW_SPAWN_FORM
+      onComplete={() => {
+        if ($playerERC20Balance < 100) {
+          currentState = SPAWN_STATE.TOKEN_FORM
+        } else {
+          if ($playerERC20Allowance < 100) {
+            currentState = SPAWN_STATE.APPROVAL_FORM
+          } else {
+            currentState = SPAWN_STATE.HERO_IMAGE
+          }
         }
       }}
     />
-  {:else if currentState === SPAWN_STATE.BUSY}
-    <VideoLoader progress={busy.Spawn} />
+  {:else if currentState === SPAWN_STATE.TOKEN_FORM}
+    <TokenForm
+      onComplete={() => {
+        if ($playerERC20Allowance < 100) {
+          currentState = SPAWN_STATE.APPROVAL_FORM
+        } else {
+          currentState = SPAWN_STATE.HERO_IMAGE
+        }
+      }}
+    />
+  {:else if currentState === SPAWN_STATE.APPROVAL_FORM}
+    <ApprovalForm
+      onComplete={() => {
+        currentState = SPAWN_STATE.HERO_IMAGE
+      }}
+    />
+  {:else if currentState === SPAWN_STATE.HERO_IMAGE}
+    <HeroImage
+      onComplete={() => {
+        spawned()
+      }}
+    />
   {/if}
 </div>
 

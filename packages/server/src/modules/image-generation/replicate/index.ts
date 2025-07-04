@@ -12,7 +12,6 @@ const client = new Replicate({
 })
 
 const MODEL = {
-  FLUX: "black-forest-labs/flux-dev",
   SD: "stability-ai/stable-diffusion-3.5-large" //.5-large
 }
 
@@ -23,19 +22,6 @@ const makePrompt = (prompt: string) => {
 
 export const generateImage = async (prompt: string) => {
   const INPUT = {
-    FLUX: {
-      image: "https://rat-room-pyrope.netlify.app/images/room-templates/room-8.jpg",
-      prompt: makePrompt(prompt),
-      go_fast: true,
-      guidance: 3.5,
-      megapixels: "1",
-      num_outputs: 1,
-      aspect_ratio: "1:1",
-      output_format: "webp",
-      output_quality: 80,
-      prompt_strength: 0.7, // 0.73
-      num_inference_steps: 30 // 28
-    },
     SD: {
       image: "https://rat-room-pyrope.netlify.app/images/room-templates/room-8.jpg",
       prompt: makePrompt(prompt),

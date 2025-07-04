@@ -85,18 +85,4 @@
       }
     }
   }
-
-  .header {
-    border-bottom: var(--dashed-border-style);
-    padding: 10px;
-    display: flex;
-    justify-content: space-between;
-
-    .counter {
-      font-size: var(--font-size-small);
-      color: var(--color-grey-light);
-      position: relative;
-      top: 3px;
-    }
-  }
 </style>

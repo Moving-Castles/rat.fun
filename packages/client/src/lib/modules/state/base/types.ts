@@ -137,7 +137,6 @@ declare global {
     entityType: ENTITY_TYPE.LEVEL
     index: mudComponents["Index"]
     name: mudComponents["Name"]
-    prompt: mudComponents["Prompt"]
     levelMinBalance: mudComponents["LevelMinBalance"]
     levelMaxBalance: mudComponents["LevelMaxBalance"]
     roomCreationCost: mudComponents["RoomCreationCost"]

@@ -61,6 +61,7 @@ contract RoomSystemTest is BaseTest {
   function testRevertBalanceTooLow() public {
     vm.startPrank(alice);
     bytes32 playerId = world.ratroom__spawn("alice");
+    world.ratroom__giveCallerTokens();
     approveGamePool(type(uint256).max);
     vm.stopPrank();
 

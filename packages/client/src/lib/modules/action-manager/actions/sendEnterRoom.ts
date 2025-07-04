@@ -1,31 +1,43 @@
-/**
- * ========================================
- *  RoomResult/enterRoom.ts
- * ========================================
- * This module is responsible for makeing the API call to send a rat to a room.
- */
-
-import type { EnterRoomReturnValue } from "@server/modules/types"
+import { busy } from "../index.svelte"
+import { getEnvironment } from "$lib/modules/network"
 import { ENVIRONMENT } from "$lib/mud/enums"
 import { getSignature } from "$lib/modules/signature"
+import type { EnterRoomReturnValue } from "@server/modules/types"
+import {
+  PUBLIC_DEVELOPMENT_SERVER_HOST,
+  PUBLIC_PYROPE_SERVER_HOST,
+  PUBLIC_BASE_SEPOLIA_SERVER_HOST
+} from "$env/static/public"
+
+const DEFAULT_TIMING = 4000
 
 /**
- * Makes the API call to send a rat to a room
- * @param environment The environment to enter the room in
- * @param walletNetwork The wallet network to use
+ * Enter room
  * @param roomId The ID of the room to enter
  * @param ratId The ID of the rat to enter the room with
  */
-export async function enterRoom(
-  environment: ENVIRONMENT,
-  roomId: string,
-  ratId: string
-): Promise<EnterRoomReturnValue | null> {
+export async function sendEnterRoom(roomId: string, ratId: string) {
+  const environment = getEnvironment(new URL(window.location.href))
+
+  if (busy.EnterRoom.current !== 0) {
+    return null
+  }
+
+  busy.EnterRoom.set(0.99, { duration: DEFAULT_TIMING })
+
   const startTime = performance.now()
 
-  const url = [ENVIRONMENT.PYROPE].includes(environment)
-    ? "https://reality-model-1.mc-infra.com/room/enter"
-    : "http://localhost:3131/room/enter"
+  let url = ""
+  switch (environment) {
+    case ENVIRONMENT.PYROPE:
+      url = `https://${PUBLIC_PYROPE_SERVER_HOST}/room/enter`
+      break
+    case ENVIRONMENT.BASE_SEPOLIA:
+      url = `https://${PUBLIC_BASE_SEPOLIA_SERVER_HOST}/room/enter`
+      break
+    default:
+      url = `http://${PUBLIC_DEVELOPMENT_SERVER_HOST}/room/enter`
+  }
 
   const signature = await getSignature()
 
@@ -53,10 +65,12 @@ export async function enterRoom(
     const endTime = performance.now()
     console.log(`Operation took ${(endTime - startTime).toFixed(3)} milliseconds`)
 
+    busy.EnterRoom.set(0, { duration: 0 })
     return outcome
   } catch (err) {
     console.error(err)
     window.alert(`SERVER ERROR: ${err}`)
+    busy.EnterRoom.set(0, { duration: 0 })
     return null
   }
 }

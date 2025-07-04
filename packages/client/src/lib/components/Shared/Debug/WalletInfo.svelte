@@ -3,27 +3,15 @@
   import { playerAddress } from "$lib/modules/state/base/stores"
   import { ENTITY_TYPE } from "contracts/enums"
   import { player } from "$lib/modules/state/base/stores"
-  import { giveCallerTokens } from "$lib/modules/on-chain-action"
+  import { playerERC20Allowance, playerERC20Balance } from "$lib/modules/state/base/stores"
+  import { sendGiveCallerTokens } from "$lib/modules/action-manager/index.svelte"
 
   let { walletType, environment }: { walletType: WALLET_TYPE; environment: ENVIRONMENT } = $props()
 
   let isMinimized = $state(true)
-  let busy = $state(false)
 
   function toggleMinimize() {
     isMinimized = !isMinimized
-  }
-
-  async function sendGiveCallerTokens() {
-    if (busy) return
-    busy = true
-    try {
-      await giveCallerTokens()
-    } catch (e) {
-      console.error(e)
-    } finally {
-      busy = false
-    }
   }
 </script>
 
@@ -41,7 +29,9 @@
     <p>Wallet Type: {walletType}</p>
     <p>Player Address: {$playerAddress}</p>
     <p>Spawned: {$player?.entityType == ENTITY_TYPE.PLAYER}</p>
-    <button disabled={busy} onclick={sendGiveCallerTokens}>Get tokens</button>
+    <p>Tokens: {$playerERC20Balance}</p>
+    <p>Allowance: {$playerERC20Allowance}</p>
+    <button onclick={sendGiveCallerTokens}>Get tokens</button>
   {/if}
 </div>
 

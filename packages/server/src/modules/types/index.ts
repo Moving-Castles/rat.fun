@@ -1,6 +1,5 @@
 import { TableRecord } from "@latticexyz/store-sync"
 import mudConfig from "contracts/mud.config"
-import { Hex } from "viem"
 
 export type Room = {
   id: string
@@ -33,15 +32,13 @@ export type Player = {
 
 export type Level = {
   id: string
-  name: string
-  prompt: string
   index: number
   minBalance: number
   maxBalance: number
   roomCreationCost: number
 }
 
-export type MinimalLevel = Pick<Level, "id" | "roomCreationCost" | "prompt">
+export type MinimalLevel = Pick<Level, "id" | "roomCreationCost">
 
 export type Trait = {
   id: string

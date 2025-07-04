@@ -9,7 +9,7 @@
 <div class="floor-header">
   <div class="inner">
     <div class="title">
-      <span>World prompt: {$gameConfig?.worldPrompt}</span>
+      <span>World prompt: {$gameConfig?.worldPrompt ?? ""}</span>
       <!-- <span>Floor #{Number(currentFloor.index) * -1}: {currentFloor.name}</span> -->
     </div>
     <!-- {#if currentFloor.prompt}

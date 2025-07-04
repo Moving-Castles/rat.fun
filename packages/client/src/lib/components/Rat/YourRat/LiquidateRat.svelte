@@ -2,7 +2,7 @@
   import { ratTotalValue } from "$lib/modules/state/base/stores"
   import { player, ratImageUrl } from "$lib/modules/state/base/stores"
   import { tippy } from "svelte-tippy"
-  import { busy, sendLiquidateRat } from "$lib/modules/external/index.svelte"
+  import { busy, sendLiquidateRat } from "$lib/modules/action-manager/index.svelte"
 
   import { NumberGoing, VideoLoader, DangerButton, ModalTarget } from "$lib/components/Shared"
   import { getModalState } from "$lib/components/Shared/Modal/state.svelte"

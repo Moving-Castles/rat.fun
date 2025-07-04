@@ -99,7 +99,7 @@
     "file": "test/systems/PlayerSystem.t.sol:PlayerSystemTest",
     "test": "testSpawn",
     "name": "Spawn",
-    "gasUsed": 294531
+    "gasUsed": 235230
   },
   {
     "file": "test/systems/RatSystem.t.sol:RatSystemTest",

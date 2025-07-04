@@ -1,9 +1,6 @@
 <script lang="ts">
-  import { player } from "$lib/modules/state/base/stores"
   import { CreateRoom } from "$lib/components/Landlord"
-  import { CreateRoomButton, ChatRoom } from "$lib/components/Shared"
-
-  let showCreateRoom = $state(false)
+  import { ChatRoom } from "$lib/components/Shared"
 </script>
 
 <div class="room-container">
@@ -26,17 +23,6 @@
     grid-template-rows: 440px 40px minmax(100px, 1fr);
     position: relative;
     background: black;
-  }
-
-  .plot {
-    display: flex;
-    justify-content: space-between;
-    flex-flow: column nowrap;
-    height: 100%;
-
-    .top {
-      padding: 12px;
-    }
   }
 
   .spacer {

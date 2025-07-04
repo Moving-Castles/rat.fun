@@ -178,7 +178,6 @@ export async function getEnterRoomData(
 
     const levelEntity = (await network).world.registerEntity({ id: ratLevel })
 
-    const levelPrompt = getComponentValue(Prompt, levelEntity)?.value as string
     const levelIndex = getComponentValue(Index, levelEntity)?.value as number
     const levelMinBalance = getComponentValue(LevelMinBalance, levelEntity)?.value as number
     const levelMaxBalance = getComponentValue(LevelMaxBalance, levelEntity)?.value as number
@@ -186,7 +185,6 @@ export async function getEnterRoomData(
 
     const level = {
       id: ratLevel,
-      prompt: levelPrompt,
       index: levelIndex,
       minBalance: levelMinBalance,
       maxBalance: levelMaxBalance,
@@ -202,7 +200,7 @@ export async function getEnterRoomData(
     const gameConfigEntity = (await network).world.registerEntity({ id: GAME_CONFIG_ID })
 
     const gameConfig = getComponentValue(GameConfig, gameConfigEntity) as GameConfig
-    const worldPrompt = getComponentValue(WorldPrompt, gameConfigEntity)?.value as string
+    const worldPrompt = (getComponentValue(WorldPrompt, gameConfigEntity)?.value ?? "") as string
 
     // Check if game config exists
     if (!gameConfig) {

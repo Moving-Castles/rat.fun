@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type { Hex } from "viem"
   import { rooms } from "$lib/modules/state/base/stores"
   import { page } from "$app/state"
   import { RoomPreview, SEO } from "$lib/components/Shared"
@@ -11,12 +12,5 @@
 <SEO prependTitle={truncatedTitle} />
 
 {#if room}
-  <RoomPreview roomId={page.params.roomId} isOwnRoomListing={false} {room} />
+  <RoomPreview roomId={page.params.roomId as Hex} isOwnRoomListing={false} {room} />
 {/if}
-
-<style>
-  .slide-container {
-    overflow: hidden;
-    width: 100%;
-  }
-</style>

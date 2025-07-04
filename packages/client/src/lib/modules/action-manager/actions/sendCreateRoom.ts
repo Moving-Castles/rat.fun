@@ -1,0 +1,88 @@
+import { get } from "svelte/store"
+import { goto } from "$app/navigation"
+import { gameConfig, playerERC20Allowance } from "$lib/modules/state/base/stores"
+import { approve } from "$lib/modules/on-chain-transactions"
+import { busy } from "../index.svelte"
+import type { CreateRoomReturnValue } from "@server/modules/types"
+import { getSignature } from "$lib/modules/signature"
+import { getEnvironment } from "$lib/modules/network"
+import { ENVIRONMENT } from "$lib/mud/enums"
+import {
+  PUBLIC_DEVELOPMENT_SERVER_HOST,
+  PUBLIC_PYROPE_SERVER_HOST,
+  PUBLIC_BASE_SEPOLIA_SERVER_HOST
+} from "$env/static/public"
+
+const DEFAULT_TIMING = 4000
+
+/**
+ * Create room
+ * @param roomPrompt The prompt for the room
+ * @param levelId The level ID of the room
+ * @param roomCreationCost The cost of the room
+ */
+export async function sendCreateRoom(
+  roomPrompt: string,
+  levelId: string,
+  roomCreationCost: bigint
+) {
+  const _gameConfig = get(gameConfig)
+  const _playerERC20Allowance = get(playerERC20Allowance)
+  const environment = getEnvironment(new URL(window.location.href))
+
+  if (busy.CreateRoom.current !== 0) return
+  busy.CreateRoom.set(0.99, { duration: DEFAULT_TIMING })
+
+  // Approve
+  try {
+    if (_playerERC20Allowance < _gameConfig.gameConfig.roomCreationCost) {
+      await approve(_gameConfig.externalAddressesConfig.gamePoolAddress, roomCreationCost)
+    }
+
+    let url = ""
+    switch (environment) {
+      case ENVIRONMENT.PYROPE:
+        url = `https://${PUBLIC_PYROPE_SERVER_HOST}/room/create`
+        break
+      case ENVIRONMENT.BASE_SEPOLIA:
+        url = `https://${PUBLIC_BASE_SEPOLIA_SERVER_HOST}/room/create`
+        break
+      default:
+        url = `http://${PUBLIC_DEVELOPMENT_SERVER_HOST}/room/create`
+    }
+
+    const signature = await getSignature()
+
+    const formData = new URLSearchParams()
+    formData.append("signature", signature)
+    formData.append("roomPrompt", roomPrompt)
+    formData.append("levelId", levelId)
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: formData
+    })
+
+    if (!response.ok) {
+      console.log("response", response)
+      const error = await response.json()
+      console.log("error", error)
+      throw new Error(`${error.error}: ${error.message}`)
+    }
+
+    const result = (await response.json()) as CreateRoomReturnValue
+
+    if (result.roomId) {
+      goto(`/landlord/${result.roomId}`)
+    }
+  } catch (e) {
+    console.error(e)
+    window.alert(`SERVER ERROR: ${e}`)
+    throw new Error(String(e))
+  } finally {
+    busy.CreateRoom.set(0, { duration: 0 })
+  }
+}

@@ -47,7 +47,7 @@ export enum ROOM_RESULT_STATE {
 }
 
 /** Current state of the room result flow */
-export let roomResultState: { state: ROOM_RESULT_STATE; errorMessage: string | null } = $state({
+export const roomResultState: { state: ROOM_RESULT_STATE; errorMessage: string | null } = $state({
   state: ROOM_RESULT_STATE.SPLASH_SCREEN,
   errorMessage: null
 })

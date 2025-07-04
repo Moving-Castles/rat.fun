@@ -1,7 +1,6 @@
 <script lang="ts">
   import type { EnterRoomReturnValue } from "@server/modules/types"
   import type { Hex } from "viem"
-  import { ENVIRONMENT } from "$lib/mud/enums"
   import { onMount, onDestroy } from "svelte"
   import { pushState, goto } from "$app/navigation"
   import { player, rooms as roomsState, rat as ratState } from "$lib/modules/state/base/stores"
@@ -27,18 +26,16 @@
     LevelDownResultSummary
   } from "$lib/components/Room"
   import { staticContent } from "$lib/modules/content"
-  import { enterRoom } from "$lib/components/Room/RoomResult/enterRoom"
+  import { sendEnterRoom } from "$lib/modules/action-manager/index.svelte"
 
   let {
-    environment,
     roomId
   }: {
-    environment: ENVIRONMENT
     roomId: string | null
   } = $props()
 
   // Result of the room entry, returned by the server
-  let result: EnterRoomReturnValue | null = $state(null)
+  let result: EnterRoomReturnValue | null | undefined = $state(null)
 
   // Get room info from global store based on id
   let room = $derived($roomsState?.[roomId ?? ""])
@@ -54,7 +51,7 @@
     }
 
     try {
-      const ret = enterRoom(environment, roomId, $player.ownedRat)
+      const ret = sendEnterRoom(roomId, $player.ownedRat)
 
       try {
         result = await ret
