@@ -4,6 +4,7 @@
   import { onMount } from "svelte"
   import { BigButton } from "$lib/components/Shared"
   import { typeHit } from "$lib/modules/sound"
+  import { VideoLoader } from "$lib/components/Shared"
 
   const { onComplete = () => {} } = $props<{
     onComplete: (name: string) => void
