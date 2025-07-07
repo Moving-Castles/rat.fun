@@ -9,10 +9,10 @@ import { initializeNoncesDB } from "@modules/signature/db"
 import { PORT } from "@config"
 
 import ping from "@routes/test/ping"
-import debug from "@routes/test/debug"
 import enter from "@routes/room/enter"
 import create from "@routes/room/create"
 import wsConnect from "@routes/ws-connect"
+import healthz from "@routes/healthz"
 
 const fastify = Fastify({
   logger: {
@@ -31,16 +31,19 @@ fastify.register(cors, {
 })
 
 // Register routes
-fastify.register(ping)
-fastify.register(debug)
 fastify.register(enter)
 fastify.register(create)
 fastify.register(wsConnect)
+fastify.register(ping)
+fastify.register(healthz)
 
 // Start the server
 const start = async (port: number) => {
   try {
-    await fastify.listen({ port })
+    await fastify.listen({
+      port,
+      host: "0.0.0.0" // Listen on all interfaces for Docker
+    })
     // Initialize databases after server starts
     await initializeMessagesDB()
     await initializeNoncesDB()

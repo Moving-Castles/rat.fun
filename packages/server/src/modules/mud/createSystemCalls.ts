@@ -53,7 +53,7 @@ export function createSystemCalls(network: SetupNetworkResult) {
       //   throw new ContractCallError('World contract write method not available');
       // }
 
-      const tx = await network.worldContract.write.ratroom__applyOutcome(args)
+      const tx = await (network as any).worldContract.write.ratroom__applyOutcome(args)
       await network.waitForTransaction(tx)
 
       // Suggested outcomes were sent to the chain
@@ -114,7 +114,7 @@ export function createSystemCalls(network: SetupNetworkResult) {
     roomPrompt: string
   ) => {
     try {
-      const tx = await network.worldContract.write.ratroom__createRoom([
+      const tx = await (network as any).worldContract.write.ratroom__createRoom([
         playerId,
         levelId,
         roomID,
