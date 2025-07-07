@@ -5,10 +5,10 @@ import websocket from "@fastify/websocket"
 
 import { PORT } from "@config"
 
-import ping from "@routes/test/ping"
 import enter from "@routes/room/enter"
 import create from "@routes/room/create"
 import wsConnect from "@routes/ws-connect"
+import ping from "@routes/test/ping"
 import healthz from "@routes/healthz"
 
 const fastify = Fastify({
