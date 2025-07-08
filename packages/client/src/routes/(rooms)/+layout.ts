@@ -7,10 +7,6 @@ export const ssr = false
 const getEnvironment = (url: URL) => {
   const hostname = url.hostname
 
-  if (hostname.includes("pyrope") || url.searchParams.has("pyrope")) {
-    return ENVIRONMENT.PYROPE
-  }
-
   if (hostname.includes("base-sepolia") || url.searchParams.has("base-sepolia")) {
     return ENVIRONMENT.BASE_SEPOLIA
   }

@@ -7,11 +7,7 @@ import type { CreateRoomRequestBody, CreateRoomReturnValue } from "@server/modul
 import { signRequest } from "$lib/modules/signature"
 import { getEnvironment } from "$lib/modules/network"
 import { ENVIRONMENT } from "$lib/mud/enums"
-import {
-  PUBLIC_DEVELOPMENT_SERVER_HOST,
-  PUBLIC_PYROPE_SERVER_HOST,
-  PUBLIC_BASE_SEPOLIA_SERVER_HOST
-} from "$env/static/public"
+import { PUBLIC_DEVELOPMENT_SERVER_HOST, PUBLIC_BASE_SEPOLIA_SERVER_HOST } from "$env/static/public"
 
 const DEFAULT_TIMING = 4000
 
@@ -41,9 +37,6 @@ export async function sendCreateRoom(
 
     let url = ""
     switch (environment) {
-      case ENVIRONMENT.PYROPE:
-        url = `https://${PUBLIC_PYROPE_SERVER_HOST}/room/create`
-        break
       case ENVIRONMENT.BASE_SEPOLIA:
         url = `https://${PUBLIC_BASE_SEPOLIA_SERVER_HOST}/room/create`
         break

@@ -22,13 +22,6 @@ import {
   sepolia
 } from "viem/chains"
 
-import { pyrope } from "./pyropeChain"
-
-const extendedPyrope = {
-  ...pyrope,
-  faucetUrl: "https://pyrope-faucet.jimmy9-infra.com/trpc/drip"
-} as const satisfies MUDChain
-
 const extendedBaseSepolia = {
   ...baseSepolia,
   faucetUrl: "https://pyrope-faucet.jimmy9-infra.com/trpc/drip"
@@ -38,7 +31,6 @@ export const supportedChains = [
   mudFoundry,
   mainnet,
   holesky,
-  extendedPyrope,
   sepolia,
   optimism,
   optimismSepolia,

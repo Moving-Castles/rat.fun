@@ -52,7 +52,7 @@ export const generateImage = async (prompt: string) => {
   const fullPrompt = makePrompt(prompt)
   const INPUT = {
     SD: {
-      image: "https://rat-room-pyrope.netlify.app/images/rat-template/rat-template.png",
+      image: "https://rat-fun-base-sepolia.netlify.app/images/rat-template/rat-template.png",
       prompt: fullPrompt,
       cfg: 3,
       aspect_ratio: "1:1",

@@ -19,10 +19,6 @@ export const walletType = writable(WALLET_TYPE.BURNER as WALLET_TYPE)
 export const getEnvironment = (url: URL) => {
   const hostname = url.hostname
 
-  if (hostname.includes("pyrope") || url.searchParams.has("pyrope")) {
-    return ENVIRONMENT.PYROPE
-  }
-
   if (hostname.includes("base-sepolia") || url.searchParams.has("base-sepolia")) {
     return ENVIRONMENT.BASE_SEPOLIA
   }

@@ -14,9 +14,6 @@ ls
 # Change directory to the location of the built frontend
 cd ./build
 
-# Deploy for Pyrope
-# NETLIFY_SITE_ID=$PYROPE_CLIENT_ID netlify deploy --dir=. --prod --auth=$NETLIFY_AUTH_TOKEN
-
 # Deploy for Base Sepolia (burner wallet)
 NETLIFY_SITE_ID=$BASE_SEPOLIA_CLIENT_ID netlify deploy --dir=. --prod --auth=$NETLIFY_AUTH_TOKEN
 

@@ -23,7 +23,7 @@ const makePrompt = (prompt: string) => {
 export const generateImage = async (prompt: string) => {
   const INPUT = {
     SD: {
-      image: "https://rat-room-pyrope.netlify.app/images/room-templates/room-8.jpg",
+      image: "https://rat-fun-base-sepolia.netlify.app/images/room-templates/room-8.jpg",
       prompt: makePrompt(prompt),
       cfg: 2,
       aspect_ratio: "1:1",

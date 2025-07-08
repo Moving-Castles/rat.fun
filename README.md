@@ -54,9 +54,8 @@ Copy `.env.example` to `.env` and fill in the values.
 
 - `PUBLIC_SANITY_CMS_ID` (required): Public CMS ID for Sanity. Needed to fetch room images and other metadata.
 - `PUBLIC_DEVELOPMENT_SERVER_HOST` (required): Host of the development server.
-- `PUBLIC_PYROPE_SERVER_HOST` (not required): Host of the pyrope server.
+- `PUBLIC_BASE_SEPOLIA_SERVER_HOST` (not required): Host of the base sepolia server.
 - `NETLIFY_AUTH_TOKEN` (not required): Netlify authentication token. Needed to deploy clients to Netlify.
-- `PYROPE_CLIENT_ID` (not required): ID of netlify deployment for client for pyrope testnet.
 - `DOCS_ID` (not required): ID of netlify deployment for docs.
 
 #### contracts

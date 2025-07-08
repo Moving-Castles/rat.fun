@@ -5,7 +5,6 @@
   "scripts": {
     "build": "tsx ./script/generate-external-tables.ts && mud build",
     "clean": "forge clean && shx rm -rf src/**/codegen",
-    "deploy:pyrope": "mud deploy --profile=pyrope --forgeScriptOptions='--slow'",
     "deploy:base-sepolia": "mud deploy --profile=base-sepolia --forgeScriptOptions='--slow'",
     "deploy:base-mainnet": "mud deploy --profile=base-mainnet --forgeScriptOptions='--slow'",
     "deploy:local": "mud deploy",

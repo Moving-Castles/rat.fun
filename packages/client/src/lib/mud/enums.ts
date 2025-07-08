@@ -1,6 +1,5 @@
 export enum ENVIRONMENT {
   DEVELOPMENT = "development",
-  PYROPE = "pyrope",
   BASE = "base",
   BASE_SEPOLIA = "base-sepolia"
 }
