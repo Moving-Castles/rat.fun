@@ -24,7 +24,8 @@ import {
 
 const extendedBaseSepolia = {
   ...baseSepolia,
-  faucetUrl: "https://pyrope-faucet.jimmy9-infra.com/trpc/drip"
+  faucetUrl: "https://pyrope-faucet.jimmy9-infra.com/trpc/drip",
+  indexerUrl: "https://rat-fun-indexer.com"
 } as const satisfies MUDChain
 
 export const supportedChains = [
