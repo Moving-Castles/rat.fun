@@ -18,6 +18,10 @@ export function getNetworkConfig(environment: ENVIRONMENT) {
     chainId = 84532
   }
 
+  if (environment === ENVIRONMENT.BASE) {
+    chainId = 8453
+  }
+
   const chain = getChain(chainId)
 
   /*

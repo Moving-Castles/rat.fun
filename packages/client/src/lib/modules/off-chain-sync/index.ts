@@ -7,7 +7,11 @@ import {
   websocketConnected
 } from "$lib/modules/off-chain-sync/stores"
 import { signRequest } from "$lib/modules/signature"
-import { PUBLIC_DEVELOPMENT_SERVER_HOST, PUBLIC_BASE_SEPOLIA_SERVER_HOST } from "$env/static/public"
+import {
+  PUBLIC_DEVELOPMENT_SERVER_HOST,
+  PUBLIC_BASE_SEPOLIA_SERVER_HOST,
+  PUBLIC_BASE_SERVER_HOST
+} from "$env/static/public"
 
 const MAX_RECONNECTION_DELAY = 30000 // Maximum delay of 30 seconds
 const MAX_EVENTS = 200
@@ -37,6 +41,9 @@ export function initOffChainSync(environment: ENVIRONMENT, playerId: string) {
   switch (environment) {
     case ENVIRONMENT.BASE_SEPOLIA:
       url = `wss://${PUBLIC_BASE_SEPOLIA_SERVER_HOST}/ws/${playerId}`
+      break
+    case ENVIRONMENT.BASE:
+      url = `wss://${PUBLIC_BASE_SERVER_HOST}/ws/${playerId}`
       break
     default:
       url = `ws://${PUBLIC_DEVELOPMENT_SERVER_HOST}/ws/${playerId}`
