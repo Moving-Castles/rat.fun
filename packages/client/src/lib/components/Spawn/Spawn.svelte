@@ -73,6 +73,8 @@
         // New user – show introduction
         currentState = SPAWN_STATE.INTRODUCTION
       }
+    } else if (walletType === WALLET_TYPE.ENTRYKIT) {
+      console.log("Connect entrykit")
     } else {
       // For burner wallet, connect immediately
       connectBurner()

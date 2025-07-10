@@ -5,18 +5,8 @@
 
   import { WALLET_TYPE } from "$lib/mud/enums"
 
-  import type { AccountKitConnectReturn } from "$lib/modules/entrykit/types"
-  import { connect } from "$lib/modules/entrykit/connect"
-
   import { onMount } from "svelte"
   import gsap from "gsap"
-
-  import { publicNetwork } from "$lib/modules/network"
-  import { setupWalletNetwork } from "$lib/mud/setupWalletNetwork"
-  import { setupBurnerWalletNetwork } from "$lib/mud/setupBurnerWalletNetwork"
-  import { initWalletNetwork } from "$lib/initWalletNetwork"
-
-  import { BigButton } from "$lib/components/Shared"
 
   const { walletType, onComplete = () => {} } = $props<{
     walletType: WALLET_TYPE
@@ -24,48 +14,13 @@
   }>()
 
   let buttonText = $derived(
-    walletType === WALLET_TYPE.ACCOUNTKIT ? "CONNECT WALLET" : "CONNECT BURNER"
+    walletType === WALLET_TYPE.ENTRYKIT ? "CONNECT WALLET" : "CONNECT BURNER"
   )
   let message = $derived(
-    walletType === WALLET_TYPE.ACCOUNTKIT
+    walletType === WALLET_TYPE.ENTRYKIT
       ? "Stop. You need an offical BASE(TM) WALLET TO ENTER."
       : "Stop. Connect your burner ID (wallet) to enter"
   )
-
-  async function connectAccountKit() {
-    let accountKitConnectReturn: AccountKitConnectReturn | null = null
-
-    try {
-      accountKitConnectReturn = await connect()
-    } catch (e) {
-      // This probably means the user closed the account kit modal
-      console.log("Account kit error", e)
-      return
-    }
-
-    const wallet = setupWalletNetwork(
-      $publicNetwork,
-      accountKitConnectReturn.appAccountClient
-    ) as SetupWalletNetworkResult
-
-    const isSpawned = initWalletNetwork(
-      wallet,
-      accountKitConnectReturn.userAddress as Hex,
-      WALLET_TYPE.ACCOUNTKIT
-    )
-
-    onComplete(isSpawned)
-  }
-
-  async function connectBurner() {
-    const wallet = setupBurnerWalletNetwork($publicNetwork)
-    const isSpawned = initWalletNetwork(
-      wallet,
-      wallet.walletClient?.account.address,
-      WALLET_TYPE.BURNER
-    )
-    onComplete(isSpawned)
-  }
 
   let imageElement: HTMLImageElement | null = $state(null)
   let messageElement: HTMLParagraphElement | null = $state(null)
