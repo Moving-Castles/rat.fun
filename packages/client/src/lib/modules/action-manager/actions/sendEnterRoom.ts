@@ -5,8 +5,8 @@ import { signRequest } from "$lib/modules/signature"
 import type { EnterRoomRequestBody, EnterRoomReturnValue } from "@server/modules/types"
 import {
   PUBLIC_DEVELOPMENT_SERVER_HOST,
-  PUBLIC_PYROPE_SERVER_HOST,
-  PUBLIC_BASE_SEPOLIA_SERVER_HOST
+  PUBLIC_BASE_SEPOLIA_SERVER_HOST,
+  PUBLIC_BASE_SERVER_HOST
 } from "$env/static/public"
 
 const DEFAULT_TIMING = 4000
@@ -29,11 +29,11 @@ export async function sendEnterRoom(roomId: string, ratId: string) {
 
   let url = ""
   switch (environment) {
-    case ENVIRONMENT.PYROPE:
-      url = `https://${PUBLIC_PYROPE_SERVER_HOST}/room/enter`
-      break
     case ENVIRONMENT.BASE_SEPOLIA:
       url = `https://${PUBLIC_BASE_SEPOLIA_SERVER_HOST}/room/enter`
+      break
+    case ENVIRONMENT.BASE:
+      url = `https://${PUBLIC_BASE_SERVER_HOST}/room/enter`
       break
     default:
       url = `http://${PUBLIC_DEVELOPMENT_SERVER_HOST}/room/enter`

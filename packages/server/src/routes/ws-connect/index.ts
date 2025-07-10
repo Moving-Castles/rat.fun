@@ -32,9 +32,7 @@ async function routes(fastify: FastifyInstance) {
         }
 
         // Store the WebSocket connection
-        wsConnections[playerId] = socket
-        // console.log(`WebSocket connected for Player ID: ${playerId}`);
-        // console.log('Object.keys(wsConnections)', Object.keys(wsConnections))
+        wsConnections[playerId] = socket as unknown as WebSocket
 
         // Send last 30 messages to the newly connected user
         const lastMessages = await getMessages(30)
@@ -58,7 +56,7 @@ async function routes(fastify: FastifyInstance) {
             const signedRequest = JSON.parse(message.toString()) as SignedRequest<OffChainMessage>
             await handleMessage(signedRequest, socket)
           } catch (error) {
-            handleError(error, socket)
+            handleError(error, socket as unknown as WebSocket)
           }
         })
 
@@ -75,7 +73,7 @@ async function routes(fastify: FastifyInstance) {
           })
         })
       } catch (error) {
-        handleError(error, socket)
+        handleError(error, socket as unknown as WebSocket)
       }
     }
   )

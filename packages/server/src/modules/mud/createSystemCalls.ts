@@ -48,12 +48,7 @@ export function createSystemCalls(network: SetupNetworkResult) {
     try {
       const args = createOutcomeCallArgs(rat, room, outcome)
 
-      // Fix for the linter error - check if worldContract has a write property
-      // if (!network.worldContract || typeof network.worldContract.write !== 'function') {
-      //   throw new ContractCallError('World contract write method not available');
-      // }
-
-      const tx = await network.worldContract.write.ratroom__applyOutcome(args)
+      const tx = await (network as any).worldContract.write.ratroom__applyOutcome(args)
       await network.waitForTransaction(tx)
 
       // Suggested outcomes were sent to the chain
@@ -114,7 +109,7 @@ export function createSystemCalls(network: SetupNetworkResult) {
     roomPrompt: string
   ) => {
     try {
-      const tx = await network.worldContract.write.ratroom__createRoom([
+      const tx = await (network as any).worldContract.write.ratroom__createRoom([
         playerId,
         levelId,
         roomID,

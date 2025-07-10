@@ -22,27 +22,25 @@ import {
   sepolia
 } from "viem/chains"
 
-import { pyrope } from "./pyropeChain"
-
-const extendedPyrope = {
-  ...pyrope,
-  faucetUrl: "https://pyrope-faucet.jimmy9-infra.com/trpc/drip"
-} as const satisfies MUDChain
-
 const extendedBaseSepolia = {
   ...baseSepolia,
-  faucetUrl: "https://pyrope-faucet.jimmy9-infra.com/trpc/drip"
+  faucetUrl: "https://pyrope-faucet.jimmy9-infra.com/trpc/drip",
+  indexerUrl: "https://base-sepolia.rat-fun-indexer.com"
+} as const satisfies MUDChain
+
+const extendedBase = {
+  ...base,
+  indexerUrl: "https://base.rat-fun-indexer.com"
 } as const satisfies MUDChain
 
 export const supportedChains = [
   mudFoundry,
   mainnet,
   holesky,
-  extendedPyrope,
   sepolia,
   optimism,
   optimismSepolia,
-  base,
+  extendedBase,
   extendedBaseSepolia,
   arbitrum,
   arbitrumNova,

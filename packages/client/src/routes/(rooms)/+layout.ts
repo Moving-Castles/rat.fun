@@ -1,22 +1,9 @@
 import type { LayoutLoad } from "./$types"
-import { ENVIRONMENT, WALLET_TYPE } from "$lib/mud/enums"
+import { WALLET_TYPE } from "$lib/mud/enums"
+import { getEnvironment } from "$lib/modules/network"
 
 export const prerender = true
 export const ssr = false
-
-const getEnvironment = (url: URL) => {
-  const hostname = url.hostname
-
-  if (hostname.includes("pyrope") || url.searchParams.has("pyrope")) {
-    return ENVIRONMENT.PYROPE
-  }
-
-  if (hostname.includes("base-sepolia") || url.searchParams.has("base-sepolia")) {
-    return ENVIRONMENT.BASE_SEPOLIA
-  }
-
-  return ENVIRONMENT.DEVELOPMENT
-}
 
 const getWalletType = (url: URL) => {
   const hostname = url.hostname

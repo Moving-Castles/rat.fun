@@ -3,38 +3,43 @@
   "version": "1.0.0",
   "main": "dist/index.js",
   "scripts": {
-    "start": "tsc && tsx src/index.ts",
-    "build": "tsc",
-    "dev": "tsx src/index.ts"
+    "start": "node dist/index.js",
+    "build": "tsup src/index.ts --format esm --dts --target esnext",
+    "dev": "tsx src/index.ts",
+    "prebuild": "rm -rf dist"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.55.0",
-    "@fastify/compress": "^8.0.3",
+    "@anthropic-ai/sdk": "^0.56.0",
+    "@fastify/compress": "^8.1.0",
     "@fastify/cors": "^11.0.1",
     "@fastify/formbody": "^8.0.2",
     "@fastify/one-line-logger": "^2.0.2",
     "@fastify/websocket": "^11.1.0",
-    "@latticexyz/common": "2.2.23-c9a7e15b89f6e4486abcb46c3a75c213741816a4",
-    "@latticexyz/recs": "2.2.23-c9a7e15b89f6e4486abcb46c3a75c213741816a4",
-    "@latticexyz/schema-type": "2.2.23-c9a7e15b89f6e4486abcb46c3a75c213741816a4",
-    "@latticexyz/store": "2.2.23-c9a7e15b89f6e4486abcb46c3a75c213741816a4",
-    "@latticexyz/store-sync": "2.2.23-c9a7e15b89f6e4486abcb46c3a75c213741816a4",
-    "@latticexyz/utils": "2.2.23-c9a7e15b89f6e4486abcb46c3a75c213741816a4",
-    "@latticexyz/world": "2.2.23-c9a7e15b89f6e4486abcb46c3a75c213741816a4",
+    "@latticexyz/common": "2.2.23-a8c404b4b10462f5f390a82f9e40ceb80bc5eb23",
+    "@latticexyz/recs": "2.2.23-a8c404b4b10462f5f390a82f9e40ceb80bc5eb23",
+    "@latticexyz/schema-type": "2.2.23-a8c404b4b10462f5f390a82f9e40ceb80bc5eb23",
+    "@latticexyz/store": "2.2.23-a8c404b4b10462f5f390a82f9e40ceb80bc5eb23",
+    "@latticexyz/store-sync": "2.2.23-a8c404b4b10462f5f390a82f9e40ceb80bc5eb23",
+    "@latticexyz/utils": "2.2.23-a8c404b4b10462f5f390a82f9e40ceb80bc5eb23",
+    "@latticexyz/world": "2.2.23-a8c404b4b10462f5f390a82f9e40ceb80bc5eb23",
     "@sanity/client": "^7.6.0",
     "contracts": "workspace:*",
-    "dotenv": "^16.5.0",
+    "dotenv": "^17.0.1",
     "fastify": "^5.4.0",
-    "lowdb": "^7.0.1",
+    "redis": "^5.5.6",
     "replicate": "^1.0.1",
     "rxjs": "^7.8.2",
     "sharp": "^0.34.2",
-    "tsx": "4.19.4",
     "uuid": "^11.1.0",
     "viem": "2.30.6"
   },
   "engines": {
     "node": "^20"
   },
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "@types/ws": "^8.18.1",
+    "tsup": "^8.5.0",
+    "tsx": "4.20.3"
+  }
 }

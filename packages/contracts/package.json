@@ -5,7 +5,6 @@
   "scripts": {
     "build": "tsx ./script/generate-external-tables.ts && mud build",
     "clean": "forge clean && shx rm -rf src/**/codegen",
-    "deploy:pyrope": "mud deploy --profile=pyrope --forgeScriptOptions='--slow'",
     "deploy:base-sepolia": "mud deploy --profile=base-sepolia --forgeScriptOptions='--slow'",
     "deploy:base-mainnet": "mud deploy --profile=base-mainnet --forgeScriptOptions='--slow'",
     "deploy:local": "mud deploy",
@@ -20,12 +19,12 @@
   },
   "dependencies": {
     "@chainlink/contracts": "^1.4.0",
-    "@latticexyz/cli": "2.2.23-c9a7e15b89f6e4486abcb46c3a75c213741816a4",
-    "@latticexyz/gas-report": "2.2.23-c9a7e15b89f6e4486abcb46c3a75c213741816a4",
-    "@latticexyz/schema-type": "2.2.23-c9a7e15b89f6e4486abcb46c3a75c213741816a4",
-    "@latticexyz/store": "2.2.23-c9a7e15b89f6e4486abcb46c3a75c213741816a4",
-    "@latticexyz/world": "2.2.23-c9a7e15b89f6e4486abcb46c3a75c213741816a4",
-    "@latticexyz/world-modules": "2.2.23-c9a7e15b89f6e4486abcb46c3a75c213741816a4",
+    "@latticexyz/cli": "2.2.23-a8c404b4b10462f5f390a82f9e40ceb80bc5eb23",
+    "@latticexyz/gas-report": "2.2.23-a8c404b4b10462f5f390a82f9e40ceb80bc5eb23",
+    "@latticexyz/schema-type": "2.2.23-a8c404b4b10462f5f390a82f9e40ceb80bc5eb23",
+    "@latticexyz/store": "2.2.23-a8c404b4b10462f5f390a82f9e40ceb80bc5eb23",
+    "@latticexyz/world": "2.2.23-a8c404b4b10462f5f390a82f9e40ceb80bc5eb23",
+    "@latticexyz/world-modules": "2.2.23-a8c404b4b10462f5f390a82f9e40ceb80bc5eb23",
     "@openzeppelin/contracts": "^5.3.0"
   },
   "devDependencies": {
@@ -33,8 +32,8 @@
     "ds-test": "https://github.com/dapphub/ds-test.git#e282159d5170298eb2455a6c05280ab5a73a4ef0",
     "forge-std": "https://github.com/foundry-rs/forge-std.git#74cfb77e308dd188d2f58864aaf44963ae6b88b1",
     "solhint": "^5.1.0",
-    "solhint-config-mud": "2.2.23-c9a7e15b89f6e4486abcb46c3a75c213741816a4",
-    "solhint-plugin-mud": "2.2.23-c9a7e15b89f6e4486abcb46c3a75c213741816a4",
+    "solhint-config-mud": "2.2.23-a8c404b4b10462f5f390a82f9e40ceb80bc5eb23",
+    "solhint-plugin-mud": "2.2.23-a8c404b4b10462f5f390a82f9e40ceb80bc5eb23",
     "tsx": "4.19.4"
   }
 }

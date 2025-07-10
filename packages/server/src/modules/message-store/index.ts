@@ -1,30 +1,15 @@
-import { Low, Memory } from "lowdb"
-import { OffChainMessage, MessageDatabaseSchema } from "@modules/types"
+import { createStore } from "@modules/redis"
+import type { OffChainMessage } from "@modules/types"
 
-// Initialize the database with in-memory adapter
-const adapter = new Memory<MessageDatabaseSchema>()
-const db = new Low<MessageDatabaseSchema>(adapter, { messages: [] })
-
-// Initialize the database
-export async function initializeMessagesDB() {
-  await db.read()
-  if (!db.data) {
-    db.data = { messages: [] }
-    await db.write()
-  }
-}
+// Create the store instance
+const store = createStore()
 
 // Store a new message
 export async function storeMessage(message: OffChainMessage): Promise<OffChainMessage> {
-  await db.read()
-  db.data?.messages.push(message)
-  await db.write()
-  return message
+  return await store.storeMessage(message)
 }
 
 // Get messages
 export async function getMessages(limit?: number): Promise<OffChainMessage[]> {
-  await db.read()
-  const messages = db.data?.messages || []
-  return limit ? messages.slice(-limit) : messages
+  return await store.getMessages(limit)
 }

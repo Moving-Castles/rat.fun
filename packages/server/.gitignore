@@ -1,3 +1,2 @@
 ecosystem.config.cjs
 /dist
-/db-files
