@@ -79,8 +79,8 @@ async function routes(fastify: FastifyInstance) {
         console.timeEnd("–– CMS")
 
         // Call event model
-        console.time("–– Event LLM")
         const eventMessages = constructEventMessages(rat, room, worldPrompt)
+
         const eventResults = (await callModel(
           llmClient,
           eventMessages,

@@ -71,6 +71,8 @@ function parseReturnMessage(msg: Anthropic.Messages.Message) {
     // Fix for the linter error - check if content exists and has a text property
     let rawText = ""
     if (msg.content && msg.content.length > 0) {
+      console.log("msg")
+      console.log(msg)
       const contentBlock = msg.content[0]
       if ("text" in contentBlock) {
         rawText = contentBlock.text
@@ -84,6 +86,8 @@ function parseReturnMessage(msg: Anthropic.Messages.Message) {
     // Parse the text into a native object
     try {
       const returnValue = JSON.parse(rawText)
+      console.log("rawText")
+      console.log(rawText)
       return returnValue
     } catch (parseError) {
       console.error("Failed to parse JSON:", parseError)
