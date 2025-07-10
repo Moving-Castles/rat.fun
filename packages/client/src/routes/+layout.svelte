@@ -4,7 +4,7 @@
 
   import type { LayoutProps } from "./$types"
 
-  import { onMount } from "svelte"
+  import { onMount, onDestroy } from "svelte"
   import { goto } from "$app/navigation"
   import { initStaticContent } from "$lib/modules/content"
   import { publicNetwork } from "$lib/modules/network"
@@ -68,7 +68,6 @@
     try {
       // Get content from CMS
       await initStaticContent($publicNetwork.worldAddress)
-      console.log("environment loaded, static content inited")
       UIState.set(UI.SPAWNING)
     } catch (error) {
       console.error(error)
@@ -83,18 +82,16 @@
   // Init of chain sync when player is ready
   $effect(() => {
     if ($playerId && $playerId !== EMPTY_CONNECTION && !$websocketConnected) {
-      initOffChainSync(data.environment, $playerId)
+      // initOffChainSync(data.environment, $playerId)
     }
   })
 
-  onMount(async () => {
-    if (data.walletType === WALLET_TYPE.ACCOUNTKIT) {
-      // = = = = = = = = = = = =
-      // Mount account kit
-      // = = = = = = = = = = = =
-      // mountAccountKit(data.environment)
-    }
+  onDestroy(() => {
+    console.log("Removing layout")
+    // publicNetwork.set(null)
+  })
 
+  onMount(async () => {
     // Remove preloader
     document.querySelector(".preloader")?.remove()
 
@@ -111,7 +108,7 @@
       <main>
         <Loading {environment} loaded={environmentLoaded} />
       </main>
-    {:else if $UIState === UI.SPAWNING}
+      <!-- {:else if $UIState === UI.SPAWNING}
       <main>
         <Spawn spawned={playerSpawned} {walletType} />
       </main>
@@ -120,14 +117,14 @@
         <PageTransitions {config}>
           {@render children?.()}
         </PageTransitions>
-      </div>
+      </div> -->
     {/if}
   </div>
 </div>
 
 <Modal />
 
-<WalletInfo {walletType} {environment} />
+<!-- <WalletInfo {walletType} {environment} /> -->
 
 <style lang="scss">
   .context-main {
