@@ -21,7 +21,7 @@ export default (S: any) =>
         .child(S.documentList().title("Prompts").filter('_type == "prompt"').schemaType("prompt")),
       S.listItem()
         .title("Test prompts")
-        .icon(MdCarpenter)
+        .icon(MdScience)
         .child(
           S.documentList()
             .id("testPrompt")
