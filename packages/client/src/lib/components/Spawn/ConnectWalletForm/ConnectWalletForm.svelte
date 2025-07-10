@@ -5,8 +5,8 @@
 
   import { WALLET_TYPE } from "$lib/mud/enums"
 
-  import type { AccountKitConnectReturn } from "$lib/modules/account-kit/types"
-  import { connect } from "$lib/modules/account-kit/connect"
+  import type { AccountKitConnectReturn } from "$lib/modules/entrykit/types"
+  import { connect } from "$lib/modules/entrykit/connect"
 
   import { onMount } from "svelte"
   import gsap from "gsap"
@@ -104,10 +104,6 @@
     <p bind:this={messageElement}>{message}</p>
     <div class="button" bind:this={buttonElement}>
       <EntryKit {onComplete} />
-      <!-- <BigButton
-        text={buttonText}
-        onclick={walletType === WALLET_TYPE.ACCOUNTKIT ? connectAccountKit : connectBurner}
-      /> -->
     </div>
   </div>
 </div>
