@@ -25,9 +25,6 @@ fs_permissions = [{ access = "read", path = "./"}]
 [doc]
 ignore=["codegen"]
 
-[profile.pyrope]
-eth_rpc_url = "https://rpc.pyropechain.com/"
-
 [profile.base-sepolia]
 eth_rpc_url = "https://sepolia.base.org"
 

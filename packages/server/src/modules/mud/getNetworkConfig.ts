@@ -8,7 +8,7 @@
  * from packages/contracts/worlds.json. When the contracts package
  * deploys a new `World`, it updates this file.
  */
-import worlds from "contracts/worlds.json"
+import worlds from "../../../../contracts/worlds.json"
 
 /*
  * The supported chains.
@@ -27,12 +27,12 @@ export async function getNetworkConfig(privateKey: string, chainId: number) {
   }
 
   /*
-   * Get the address of the World. If you want to use a
-   * different address than the one in worlds.json,
-   * provide it as worldAddress in the query string.
+   * Get the address of the World. Environment variables can override
+   * the address from worlds.json. The format is WORLD_ADDRESS.
    */
   const world = worlds[chain.id.toString() as keyof typeof worlds]
-  const worldAddress = world?.address
+  const envWorldAddress = process.env.WORLD_ADDRESS
+  const worldAddress = envWorldAddress || world?.address
   if (!worldAddress) {
     throw new Error(`No world address found for chain ${chainId}. Did you run \`mud deploy\`?`)
   }
@@ -41,10 +41,14 @@ export async function getNetworkConfig(privateKey: string, chainId: number) {
    * MUD clients use events to synchronize the database, meaning
    * they need to look as far back as when the World was started.
    * The block number for the World start can be specified either
-   * on the URL (as initialBlockNumber) or in the worlds.json
-   * file. If neither has it, it starts at the first block, zero.
+   * via environment variable (INITIAL_BLOCK), on the URL
+   * (as initialBlockNumber) or in the worlds.json file. If none
+   * are provided, it starts at the first block, zero.
    */
-  const initialBlockNumber = (world as any)?.blockNumber ?? 0n
+  const envInitialBlock = process.env.INITIAL_BLOCK
+  const initialBlockNumber = envInitialBlock
+    ? BigInt(envInitialBlock)
+    : ((world as any)?.blockNumber ?? 0n)
 
   return {
     privateKey,

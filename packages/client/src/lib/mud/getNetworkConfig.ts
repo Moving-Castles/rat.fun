@@ -14,10 +14,12 @@ export function getNetworkConfig(environment: ENVIRONMENT) {
   // Default to local development chain
   let chainId = 31337
 
-  if ([ENVIRONMENT.PYROPE].includes(environment)) {
-    chainId = 695569
-  } else if ([ENVIRONMENT.BASE_SEPOLIA].includes(environment)) {
+  if ([ENVIRONMENT.BASE_SEPOLIA].includes(environment)) {
     chainId = 84532
+  }
+
+  if (environment === ENVIRONMENT.BASE) {
+    chainId = 8453
   }
 
   const chain = getChain(chainId)
