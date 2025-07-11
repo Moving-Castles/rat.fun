@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type { Hex } from "viem"
   import { WagmiProvider } from "wagmi"
   import { createElement } from "react"
   import { createRoot } from "react-dom/client"
@@ -9,7 +10,6 @@
   import { getEnvironment } from "$lib/modules/network"
   import SessionBridge from "./SessionBridge"
   import { entryKitSession } from "./stores"
-
   let rootEl: HTMLElement
 
   const environment = getEnvironment(new URL(window.location.href))
@@ -27,7 +27,7 @@
         {
           config: defineConfig({
             chainId: networkConfig.chainId,
-            worldAddress: networkConfig.worldAddress
+            worldAddress: networkConfig.worldAddress as Hex
           })
         },
         [

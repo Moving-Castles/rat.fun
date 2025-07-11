@@ -19,17 +19,19 @@ import {
   sepolia
 } from "viem/chains"
 import { MUDChain, mudFoundry } from "@latticexyz/common/chains"
-import { base, baseSepolia } from "$lib/mud/chainConfigs"
+import { extendedBase, extendedBaseSepolia } from "$lib/mud/extendedChainConfigs"
 
 export const supportedChains = [
+  // Deployment chains
   mudFoundry,
+  extendedBase,
+  extendedBaseSepolia,
+  // Other chains
   mainnet,
   holesky,
   sepolia,
   optimism,
   optimismSepolia,
-  base,
-  baseSepolia,
   arbitrum,
   arbitrumNova,
   arbitrumSepolia

@@ -1,12 +1,21 @@
-import { Chain, http, webSocket } from "viem"
+import { Chain, http } from "viem"
 import { createWagmiConfig } from "@latticexyz/entrykit/internal"
-import { baseSepolia, anvil } from "$lib/mud/chainConfigs"
+import { extendedBaseSepolia } from "$lib/mud/extendedChainConfigs"
 
-export const chains = [baseSepolia, anvil] as const satisfies Chain[]
+const extendedBaseSepoliaWithBundler = {
+  ...extendedBaseSepolia,
+  rpcUrls: {
+    ...extendedBaseSepolia.rpcUrls,
+    bundler: {
+      http: ["https://public.pimlico.io/v2/84532/rpc"]
+    }
+  }
+}
+
+export const chains = [extendedBaseSepoliaWithBundler] as const satisfies Chain[]
 
 export const transports = {
-  [anvil.id]: webSocket(),
-  [baseSepolia.id]: http()
+  [extendedBaseSepoliaWithBundler.id]: http()
 } as const
 
 export const wagmiConfig = (chainId: number) =>
@@ -17,7 +26,6 @@ export const wagmiConfig = (chainId: number) =>
     chains,
     transports,
     pollingInterval: {
-      [anvil.id]: 2000,
-      [baseSepolia.id]: 2000
+      [extendedBaseSepoliaWithBundler.id]: 2000
     }
   })

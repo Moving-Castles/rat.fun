@@ -29,3 +29,13 @@ export const getEnvironment = (url: URL) => {
 
   return ENVIRONMENT.DEVELOPMENT
 }
+
+export const getWalletType = (url: URL) => {
+  const hostname = url.hostname
+
+  if (hostname.includes("entrykit") || url.searchParams.has("entrykit")) {
+    return WALLET_TYPE.ENTRYKIT
+  }
+
+  return WALLET_TYPE.BURNER
+}
