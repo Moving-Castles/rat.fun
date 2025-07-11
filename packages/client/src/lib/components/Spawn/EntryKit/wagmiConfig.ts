@@ -17,7 +17,7 @@ export const wagmiConfig = (chainId: number) =>
     chains,
     transports,
     pollingInterval: {
-      [anvil.id]: 500,
+      [anvil.id]: 2000,
       [baseSepolia.id]: 2000
     }
   })

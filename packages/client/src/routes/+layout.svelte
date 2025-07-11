@@ -82,13 +82,8 @@
   // Init of chain sync when player is ready
   $effect(() => {
     if ($playerId && $playerId !== EMPTY_CONNECTION && !$websocketConnected) {
-      // initOffChainSync(data.environment, $playerId)
+      initOffChainSync(data.environment, $playerId)
     }
-  })
-
-  onDestroy(() => {
-    console.log("Removing layout")
-    // publicNetwork.set(null)
   })
 
   onMount(async () => {
@@ -108,7 +103,7 @@
       <main>
         <Loading {environment} loaded={environmentLoaded} />
       </main>
-      <!-- {:else if $UIState === UI.SPAWNING}
+    {:else if $UIState === UI.SPAWNING}
       <main>
         <Spawn spawned={playerSpawned} {walletType} />
       </main>
@@ -117,7 +112,7 @@
         <PageTransitions {config}>
           {@render children?.()}
         </PageTransitions>
-      </div> -->
+      </div>
     {/if}
   </div>
 </div>
