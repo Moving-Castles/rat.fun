@@ -7,6 +7,7 @@ import { addChain, switchChain } from "viem/actions"
 import { gameConfig } from "$lib/modules/state/base/stores"
 import { WorldFunctions } from "./index"
 import { getChain } from "$lib/mud/utils"
+import { entryKitSession } from "$lib/mud/stores"
 
 /**
  * Executes an on-chain transaction.
@@ -64,8 +65,10 @@ export async function executeTransaction(
 }
 
 async function prepareUserAccountClient() {
-  const userAccountClient = false // replace with entryKitSession info
-  // const userAccountClient = accountKitStore.getState().userAccountClient
+  const userAccountClient = get(entryKitSession)
+
+  console.log("userAccountClient", userAccountClient)
+
   if (!userAccountClient) {
     throw new Error("User account client is not available")
   }

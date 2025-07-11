@@ -9,7 +9,7 @@
   import { getNetworkConfig } from "$lib/mud/getNetworkConfig"
   import { getEnvironment } from "$lib/modules/network"
   import SessionBridge from "./SessionBridge"
-  import { entryKitSession } from "./stores"
+  import { entryKitSession } from "$lib/mud/stores"
   let rootEl: HTMLElement
 
   const environment = getEnvironment(new URL(window.location.href))
@@ -20,6 +20,9 @@
 
   $effect(() => {
     const root = createRoot(rootEl)
+    const config = wagmiConfig(networkConfig.chainId)
+
+    console.log("Resolved config", config)
 
     import("@latticexyz/entrykit/internal").then(({ EntryKitProvider }) => {
       const entrykit = createElement(
@@ -40,7 +43,7 @@
 
       const providers = createElement(
         WagmiProvider,
-        { config: wagmiConfig(networkConfig.chainId) },
+        { config },
         //
         createElement(
           QueryClientProvider,

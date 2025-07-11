@@ -2,20 +2,10 @@ import { Chain, http } from "viem"
 import { createWagmiConfig } from "@latticexyz/entrykit/internal"
 import { extendedBaseSepolia } from "$lib/mud/extendedChainConfigs"
 
-const extendedBaseSepoliaWithBundler = {
-  ...extendedBaseSepolia,
-  rpcUrls: {
-    ...extendedBaseSepolia.rpcUrls,
-    bundler: {
-      http: ["https://public.pimlico.io/v2/84532/rpc"]
-    }
-  }
-}
-
-export const chains = [extendedBaseSepoliaWithBundler] as const satisfies Chain[]
+export const chains = [extendedBaseSepolia] as const satisfies Chain[]
 
 export const transports = {
-  [extendedBaseSepoliaWithBundler.id]: http()
+  [extendedBaseSepolia.id]: http(extendedBaseSepolia.rpcUrls.default.http[0]) // this is annoying. But needed
 } as const
 
 export const wagmiConfig = (chainId: number) =>
@@ -26,6 +16,6 @@ export const wagmiConfig = (chainId: number) =>
     chains,
     transports,
     pollingInterval: {
-      [extendedBaseSepoliaWithBundler.id]: 2000
+      [extendedBaseSepolia.id]: 2000
     }
   })

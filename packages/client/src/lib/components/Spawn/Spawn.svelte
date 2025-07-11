@@ -10,7 +10,7 @@
   import { setupWalletNetwork } from "$lib/mud/setupWalletNetwork"
   import { setupBurnerWalletNetwork } from "$lib/mud/setupBurnerWalletNetwork"
   import { initWalletNetwork } from "$lib/initWalletNetwork"
-  import { entryKitSession } from "$lib/components/Spawn/EntryKit/stores"
+  import { entryKitSession } from "$lib/mud/stores"
 
   import { playerERC20Allowance, playerERC20Balance } from "$lib/modules/state/base/stores"
 
@@ -49,42 +49,28 @@
   }
 
   const onWalletConnectionComplete = () => {
-    console.log("Here my wallet type is ", walletType)
     if (walletType === WALLET_TYPE.ENTRYKIT) {
-      console.log("entrykitStore", $entryKitSession)
-
-      /* We get the account kit store state
-       * If appAccountClient and userAddress are set the user is connected
-       * We set up the wallet network using the appAccountClient
-       * and set playerAddress to the user address
-       */
-
-      console.log("entryKitSession", $entryKitSession)
-
-      if (entrykitStoreState.appAccountClient && entrykitStoreState.userAddress) {
-        const wallet = setupWalletNetwork(
-          $publicNetwork,
-          entrykitStoreState.appAccountClient
-        ) as SetupWalletNetworkResult
-
-        const isSpawned = initWalletNetwork(wallet, entrykitStoreState.userAddress, walletType)
-
-        if (isSpawned) {
-          // Connected and spawned - finish spawn process
-          spawned()
-        } else {
-          // Connected but not spawned - show spawn form
-          currentState = SPAWN_STATE.SPAWN_FORM
-        }
-      } else {
-        // New user – show introduction
-        currentState = SPAWN_STATE.INTRODUCTION
-      }
+      // This is now just here for the burner. Entrykit is moved to $effect call below
     } else {
-      // Burna
+      // Burner
       currentState = SPAWN_STATE.SPAWN_FORM
     }
   }
+
+  $effect(() => {
+    if ($entryKitSession) {
+      if ($entryKitSession?.account?.client && $entryKitSession.userAddress) {
+        const wallet = setupWalletNetwork($publicNetwork, $entryKitSession)
+        const isSpawned = initWalletNetwork(wallet, $entryKitSession.userAddress, walletType)
+
+        if (isSpawned) {
+          spawned()
+        } else {
+          currentState = SPAWN_STATE.SPAWN_FORM
+        }
+      }
+    }
+  })
 
   onMount(() => {
     if (walletType === WALLET_TYPE.BURNER) connectBurner()

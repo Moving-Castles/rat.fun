@@ -1,13 +1,12 @@
 import { useEffect } from "react"
 import { useSessionClient } from "@latticexyz/entrykit/internal"
-import { entryKitSession } from "./stores"
+import { entryKitSession } from "$lib/mud/stores"
 
-export default function SessionBridge({ userAddress }: { userAddress: string }) {
-  const sessionClient = useSessionClient(userAddress)
+export default function SessionBridge() {
+  const sessionClient = useSessionClient()
 
   useEffect(() => {
-    console.log("sessionClient", sessionClient)
-    entryKitSession.set(sessionClient)
+    entryKitSession.set(sessionClient.data)
   }, [sessionClient.data, sessionClient])
 
   return null
