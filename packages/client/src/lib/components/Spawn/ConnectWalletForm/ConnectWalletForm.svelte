@@ -5,6 +5,7 @@
 
   import { onMount } from "svelte"
   import gsap from "gsap"
+  import BigButton from "$lib/components/Shared/Buttons/BigButton.svelte"
 
   const { walletType, onComplete = () => {} } = $props<{
     walletType: WALLET_TYPE
@@ -58,7 +59,7 @@
     {#if walletType === WALLET_TYPE.ENTRYKIT}
       <EntryKit />
     {:else}
-      <div class="button" bind:this={buttonElement} onclick={onComplete}>Connect Burner</div>
+      <BigButton onclick={onComplete} text="Connect Burner"></BigButton>
     {/if}
   </div>
 </div>
