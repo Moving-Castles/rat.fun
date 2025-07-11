@@ -1,9 +1,9 @@
-import { anvil as anvilConfig } from "viem/chains"
+import { mudFoundry } from "@latticexyz/common/chains"
 
-export const anvil = {
-  ...anvilConfig,
+export const extendedMudFoundry = {
+  ...mudFoundry,
   rpcUrls: {
-    ...anvilConfig.rpcUrls
+    ...mudFoundry.rpcUrls
     // default: {
     //   http: ["https://anvil.tunnel.offchain.dev"],
     //   webSocket: ["wss://anvil.tunnel.offchain.dev"]

@@ -4,7 +4,7 @@
 
   import type { LayoutProps } from "./$types"
 
-  import { onMount, onDestroy } from "svelte"
+  import { onMount } from "svelte"
   import { goto } from "$app/navigation"
   import { initStaticContent } from "$lib/modules/content"
   import { publicNetwork } from "$lib/modules/network"
@@ -15,7 +15,6 @@
   import { playerId } from "$lib/modules/state/base/stores"
   import { websocketConnected } from "$lib/modules/off-chain-sync/stores"
   import { EMPTY_CONNECTION } from "$lib/modules/utils/constants"
-  import { WALLET_TYPE } from "$lib/mud/enums"
 
   import Spawn from "$lib/components/Spawn/Spawn.svelte"
   import Loading from "$lib/components/Loading/Loading.svelte"
@@ -119,7 +118,7 @@
 
 <Modal />
 
-<!-- <WalletInfo {walletType} {environment} /> -->
+<WalletInfo {walletType} {environment} />
 
 <style lang="scss">
   .context-main {
