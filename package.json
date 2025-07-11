@@ -19,10 +19,10 @@
     "format:check": "prettier --check ."
   },
   "devDependencies": {
-    "@latticexyz/cli": "2.2.23-a8c404b4b10462f5f390a82f9e40ceb80bc5eb23",
-    "@latticexyz/common": "2.2.23-a8c404b4b10462f5f390a82f9e40ceb80bc5eb23",
-    "@latticexyz/explorer": "2.2.23-a8c404b4b10462f5f390a82f9e40ceb80bc5eb23",
-    "@latticexyz/store-indexer": "2.2.23-a8c404b4b10462f5f390a82f9e40ceb80bc5eb23",
+    "@latticexyz/cli": "2.2.23-ba07cf09273fba0a246eaf341cdb4eec5328f120",
+    "@latticexyz/common": "2.2.23-ba07cf09273fba0a246eaf341cdb4eec5328f120",
+    "@latticexyz/explorer": "2.2.23-ba07cf09273fba0a246eaf341cdb4eec5328f120",
+    "@latticexyz/store-indexer": "2.2.23-ba07cf09273fba0a246eaf341cdb4eec5328f120",
     "@typescript-eslint/eslint-plugin": "8.36.0",
     "@typescript-eslint/parser": "8.36.0",
     "eslint": "9.30.1",

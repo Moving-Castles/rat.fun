@@ -19,12 +19,12 @@
   },
   "dependencies": {
     "@chainlink/contracts": "^1.4.0",
-    "@latticexyz/cli": "2.2.23-a8c404b4b10462f5f390a82f9e40ceb80bc5eb23",
-    "@latticexyz/gas-report": "2.2.23-a8c404b4b10462f5f390a82f9e40ceb80bc5eb23",
-    "@latticexyz/schema-type": "2.2.23-a8c404b4b10462f5f390a82f9e40ceb80bc5eb23",
-    "@latticexyz/store": "2.2.23-a8c404b4b10462f5f390a82f9e40ceb80bc5eb23",
-    "@latticexyz/world": "2.2.23-a8c404b4b10462f5f390a82f9e40ceb80bc5eb23",
-    "@latticexyz/world-modules": "2.2.23-a8c404b4b10462f5f390a82f9e40ceb80bc5eb23",
+    "@latticexyz/cli": "2.2.23-ba07cf09273fba0a246eaf341cdb4eec5328f120",
+    "@latticexyz/gas-report": "2.2.23-ba07cf09273fba0a246eaf341cdb4eec5328f120",
+    "@latticexyz/schema-type": "2.2.23-ba07cf09273fba0a246eaf341cdb4eec5328f120",
+    "@latticexyz/store": "2.2.23-ba07cf09273fba0a246eaf341cdb4eec5328f120",
+    "@latticexyz/world": "2.2.23-ba07cf09273fba0a246eaf341cdb4eec5328f120",
+    "@latticexyz/world-modules": "2.2.23-ba07cf09273fba0a246eaf341cdb4eec5328f120",
     "@openzeppelin/contracts": "^5.3.0"
   },
   "devDependencies": {
@@ -32,8 +32,8 @@
     "ds-test": "https://github.com/dapphub/ds-test.git#e282159d5170298eb2455a6c05280ab5a73a4ef0",
     "forge-std": "https://github.com/foundry-rs/forge-std.git#74cfb77e308dd188d2f58864aaf44963ae6b88b1",
     "solhint": "^5.1.0",
-    "solhint-config-mud": "2.2.23-a8c404b4b10462f5f390a82f9e40ceb80bc5eb23",
-    "solhint-plugin-mud": "2.2.23-a8c404b4b10462f5f390a82f9e40ceb80bc5eb23",
+    "solhint-config-mud": "2.2.23-ba07cf09273fba0a246eaf341cdb4eec5328f120",
+    "solhint-plugin-mud": "2.2.23-ba07cf09273fba0a246eaf341cdb4eec5328f120",
     "tsx": "4.19.4"
   }
 }

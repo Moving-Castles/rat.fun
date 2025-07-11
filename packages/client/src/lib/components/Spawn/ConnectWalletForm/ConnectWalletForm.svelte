@@ -1,10 +1,9 @@
 <script lang="ts">
-  import EntryKit from "$lib/components/Spawn/EntryKit/EntryKit.svelte"
-
   import { WALLET_TYPE } from "$lib/mud/enums"
-
   import { onMount } from "svelte"
   import gsap from "gsap"
+
+  import EntryKit from "$lib/components/Spawn/EntryKit/EntryKit.svelte"
   import BigButton from "$lib/components/Shared/Buttons/BigButton.svelte"
 
   const { walletType, onComplete = () => {} } = $props<{
@@ -12,9 +11,10 @@
     onComplete: () => void
   }>()
 
-  let buttonText = $derived(
-    walletType === WALLET_TYPE.ENTRYKIT ? "CONNECT WALLET" : "CONNECT BURNER"
-  )
+  // let buttonText = $derived(
+  //   walletType === WALLET_TYPE.ENTRYKIT ? "CONNECT WALLET" : "CONNECT BURNER"
+  // )
+
   let message = $derived(
     walletType === WALLET_TYPE.ENTRYKIT
       ? "Stop. You need an offical BASE(TM) WALLET TO ENTER."
@@ -59,7 +59,9 @@
     {#if walletType === WALLET_TYPE.ENTRYKIT}
       <EntryKit />
     {:else}
-      <BigButton onclick={onComplete} text="Connect Burner"></BigButton>
+      <div bind:this={buttonElement}>
+        <BigButton text="Connect Burner" onclick={onComplete} />
+      </div>
     {/if}
   </div>
 </div>
