@@ -97,7 +97,7 @@
         width: 100%;
 
         input {
-          height: 4em;
+          height: 100%;
           width: 300px;
           margin-right: 10px;
           font-size: 18px;
@@ -105,7 +105,7 @@
           background: var(--color-alert);
           color: var(--background);
           border: none;
-          margin-bottom: 0.5em;
+          margin-bottom: 0;
           font-family: "Rock Salt", cursive;
           text-transform: uppercase;
           border-bottom: var(--default-border-style);
