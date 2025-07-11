@@ -17,11 +17,11 @@
     if ($ready) {
       console.log("READY")
       // Done here because currently we are not filtering on by playerAddress
-      // initEntities()
+      initEntities()
       // console.log("entities inited")
       // Animate out
       // console.log("sequence inited")
-      // initSequence()
+      initSequence()
     }
   })
 

@@ -35,6 +35,8 @@ export async function setupPublicNetwork(environment: ENVIRONMENT) {
 
   const networkConfig = getNetworkConfig(environment)
 
+  console.log("SETUP PNW ", networkConfig)
+
   // networkConfig.indexerUrl = undefined
 
   // console.log('networkConfig', networkConfig)
@@ -49,7 +51,11 @@ export async function setupPublicNetwork(environment: ENVIRONMENT) {
 
   // Add WebSocket transport if WebSocket URL is available
   if (networkConfig.provider.wsRpcUrl) {
-    transports.push(webSocket(networkConfig.provider.wsRpcUrl))
+    if (import.meta.env.DEV) {
+      console.log("Skipping websockets url")
+    } else {
+      transports.push(webSocket(networkConfig.provider.wsRpcUrl))
+    }
   }
 
   // Always add HTTP transport as fallback
@@ -58,7 +64,7 @@ export async function setupPublicNetwork(environment: ENVIRONMENT) {
   const clientOptions = {
     chain: networkConfig.chain,
     transport: transportObserver(fallback(transports)),
-    pollingInterval: 1000
+    pollingInterval: 2000
   } as const satisfies ClientConfig
 
   const publicClient = createPublicClient(clientOptions)
@@ -81,6 +87,8 @@ export async function setupPublicNetwork(environment: ENVIRONMENT) {
     // filters,
     // tables: extraTables,
   })
+
+  console.log(networkConfig.indexerUrl)
 
   // Allows us to to only listen to the game sepcific tables
   const tableKeys = [
