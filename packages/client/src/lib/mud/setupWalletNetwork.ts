@@ -28,9 +28,9 @@ export function setupWalletNetwork(
    */
   const write$ = new Subject<ContractWrite>()
 
-  walletClient
-    .extend(transactionQueue())
-    .extend(writeObserver({ onWrite: write => write$.next(write) }))
+  // walletClient
+  // .extend(transactionQueue())
+  // .extend(writeObserver({ onWrite: write => write$.next(write) }))
 
   /*
    * Create an object for communicating with the deployed World.

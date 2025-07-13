@@ -5,7 +5,7 @@ import { extendedBaseSepolia } from "$lib/mud/extendedChainConfigs"
 export const chains = [extendedBaseSepolia] as const satisfies Chain[]
 
 export const transports = {
-  [extendedBaseSepolia.id]: http(extendedBaseSepolia.rpcUrls.default.http[0]) // this is annoying. But needed
+  [extendedBaseSepolia.id]: http()
 } as const
 
 export const wagmiConfig = (chainId: number) =>

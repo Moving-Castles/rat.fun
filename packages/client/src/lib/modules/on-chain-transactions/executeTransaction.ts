@@ -1,6 +1,6 @@
 import type { Hex } from "viem"
 import { get } from "svelte/store"
-import { transactionQueue } from "@latticexyz/common/actions"
+// import { transactionQueue } from "@latticexyz/common/actions"
 import { publicNetwork, walletNetwork } from "$lib/modules/network"
 import { erc20Abi } from "viem"
 import { addChain, switchChain } from "viem/actions"
@@ -83,5 +83,6 @@ async function prepareUserAccountClient() {
     }
   }
   // MUD's `transactionQueue` extends the client with `writeContract` method
-  return userAccountClient.extend(transactionQueue({}))
+  return userAccountClient
+  // .extend(transactionQueue())
 }
