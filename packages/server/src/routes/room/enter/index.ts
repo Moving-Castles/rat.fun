@@ -125,6 +125,8 @@ async function routes(fastify: FastifyInstance) {
         const newMessage = createOutcomeMessage(player, rat, newRatHealth, room, validatedOutcome)
         await broadcast(newMessage)
 
+        console.time("–– CMS write")
+
         // Await the network promise before accessing its properties
         const resolvedNetwork = await network
         const outcomeDocument = await writeOutcomeToCMS(

@@ -2,6 +2,7 @@ import Fastify from "fastify"
 import formbody from "@fastify/formbody"
 import cors from "@fastify/cors"
 import websocket from "@fastify/websocket"
+import compress from "@fastify/compress"
 
 import { PORT } from "@config"
 import { errorHandler } from "@modules/error-handling"
@@ -22,6 +23,7 @@ const fastify = Fastify({
 
 // Register plugins
 fastify.register(websocket)
+fastify.register(compress)
 fastify.register(formbody)
 fastify.register(cors, {
   origin: "*", // Allow all origins (restrict for production)
