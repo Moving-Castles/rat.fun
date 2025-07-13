@@ -1,9 +1,9 @@
 {
-  "name": "rat-room",
+  "name": "rat.fun",
   "version": "0.1.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/moving-castles/rat-room.git"
+    "url": "https://github.com/Moving-Castles/rat.fun.git"
   },
   "scripts": {
     "build": "pnpm recursive run build",
