@@ -25,6 +25,9 @@ procs:
       RPC_HTTP_URL: "http://127.0.0.1:8545"
       FOLLOW_BLOCK_TAG: "latest"
       SQLITE_FILENAME: "indexer.db"
+  entrykit:
+    cwd: packages/client
+    shell: PRIVATE_KEY="0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d" ./node_modules/@latticexyz/entrykit/bin/deploy.js
   explorer:
     cwd: packages/contracts
     shell: pnpm explorer
