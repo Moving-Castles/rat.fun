@@ -44,7 +44,8 @@ export async function getCreateRoomData(
       throw new OnchainDataError("Player ID is required")
     }
 
-    const { Name, VisitedLevels, RoomCreationCost, GameConfig, Prompt, WorldPrompt } = components
+    const { Name, VisitedLevels, RoomCreationCost, GameConfig, Prompt, WorldPrompt, MasterKey } =
+      components
 
     const result = {} as CreateRoomData
 
@@ -55,6 +56,8 @@ export async function getCreateRoomData(
     const playerEntity = (await network).world.registerEntity({ id: playerId })
 
     const playerName = getComponentValue(Name, playerEntity)?.value as string
+
+    const playerMasterKey = getComponentValue(MasterKey, playerEntity)?.value as boolean
 
     const playerBalance = (await network.publicClient.readContract({
       address: network.worldContract.address,
@@ -73,7 +76,8 @@ export async function getCreateRoomData(
       id: playerId,
       name: playerName,
       balance: Number(playerBalance / 10n ** 18n),
-      visitedLevels: playerVisitedLevels
+      visitedLevels: playerVisitedLevels,
+      masterKey: playerMasterKey
     }
 
     /////////////////

@@ -6,6 +6,11 @@ export function getRatId(playerId: string) {
   return (getComponentValue(OwnedRat, playerId as Entity)?.value ?? "unknown rat") as string
 }
 
+export function getPlayerMasterKey(playerId: string) {
+  const { MasterKey } = components
+  return (getComponentValue(MasterKey, playerId as Entity)?.value ?? false) as boolean
+}
+
 export function getEntityIndex(id: string) {
   const { Index } = components
   return (getComponentValue(Index, id as Entity)?.value ?? 0) as number

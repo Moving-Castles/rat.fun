@@ -133,8 +133,28 @@ export function createSystemCalls(network: SetupNetworkResult) {
     }
   }
 
+  const giveMasterKey = async (playerId: string) => {
+    try {
+      const tx = await (network as any).worldContract.write.ratroom__giveMasterKey([playerId])
+      await network.waitForTransaction(tx)
+      return true
+    } catch (error) {
+      // If it's already one of our custom errors, rethrow it
+      if (error instanceof SystemCallError) {
+        throw error
+      }
+
+      // Otherwise, wrap it in our custom error
+      throw new ContractCallError(
+        `Error giving master key: ${error instanceof Error ? error.message : String(error)}`,
+        error
+      )
+    }
+  }
+
   return {
     applyOutcome,
-    createRoom
+    createRoom,
+    giveMasterKey
   }
 }

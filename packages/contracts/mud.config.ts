@@ -69,6 +69,7 @@ export default defineWorld({
     // ...
     Level: "bytes32", // Id of level. Set on rat and room.
     VisitedLevels: "bytes32[]", // Set on player. List of levels any of the player's rats have visited.
+    MasterKey: "bool", // Set on player. Gives access to in-game admin area.
     Index: "uint256", // Set on rat and room
     Balance: "uint256", // Amount of credits. Set on player, rat and room.
     Value: "uint256", // Value of a trait can be negative

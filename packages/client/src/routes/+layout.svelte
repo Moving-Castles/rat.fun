@@ -26,8 +26,8 @@
 
   const config = [
     {
-      from: "/(rooms)/rat/[roomId]",
-      to: "/(rooms)/rat/[roomId]/enter",
+      from: "/(rooms)/game/[roomId]",
+      to: "/(rooms)/game/[roomId]/enter",
       out: {
         transition: "wipe",
         params: {
@@ -44,7 +44,7 @@
       }
     },
     {
-      from: "/(rooms)/rat/[roomId]/enter",
+      from: "/(rooms)/game/[roomId]/enter",
       to: "*",
       out: {
         transition: "fade",

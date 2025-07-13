@@ -1,11 +1,14 @@
 <script lang="ts">
+  import { player } from "$lib/modules/state/base/stores"
   import OperatorInfo from "./PlayerInfo.svelte"
   import PaneSwitch from "./PaneSwitch.svelte"
 </script>
 
 <div class="top-bar">
   <OperatorInfo />
-  <PaneSwitch />
+  {#if $player?.masterKey}
+    <PaneSwitch />
+  {/if}
 </div>
 
 <style lang="scss">

@@ -3,6 +3,6 @@
   import { RoomListing } from "$lib/components/Shared"
 </script>
 
-<SEO prependTitle="LANDLORD" />
+<SEO prependTitle="ADMIN" />
 
 <RoomListing isOwnRoomListing={true} />

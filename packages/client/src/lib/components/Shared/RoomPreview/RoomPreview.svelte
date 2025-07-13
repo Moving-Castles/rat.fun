@@ -54,9 +54,9 @@
 
 <div class="room-inner-container">
   {#if isOwnRoomListing}
-    <a class="back-button" href="/landlord">Back</a>
+    <a class="back-button" href="/admin">Back</a>
   {:else}
-    <a class="back-button" href="/rat">Back</a>
+    <a class="back-button" href="/game">Back</a>
   {/if}
   <RoomPreviewHeader {room} {sanityRoomContent} />
   <RoomPreviewPrompt {room} />

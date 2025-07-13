@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { CreateRoom } from "$lib/components/Landlord"
+  import { CreateRoom } from "$lib/components/Admin"
   import { ChatRoom } from "$lib/components/Shared"
 </script>
 

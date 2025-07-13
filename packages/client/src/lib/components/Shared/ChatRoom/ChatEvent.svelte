@@ -27,7 +27,7 @@
     >
       {event.playerName}
     </span>
-    created room <a href="/rat/{event.roomId}">#{event.roomIndex ?? "unknown"}</a>
+    created room <a href="/game/{event.roomId}">#{event.roomIndex ?? "unknown"}</a>
   {:else if event.topic == "room__liquidation"}
     <!-- ROOM LIQUIDATION -->
     <span
@@ -38,7 +38,7 @@
     >
       {event.playerName}
     </span>
-    destroyed room <a href="/rat/{event.roomId}">#{event.roomIndex ?? "unknown"}</a>
+    destroyed room <a href="/game/{event.roomId}">#{event.roomIndex ?? "unknown"}</a>
   {:else if event.topic == "room__outcome"}
     <!-- ROOM OUTCOME -->
     <span
@@ -50,7 +50,7 @@
       {event.playerName}
     </span>
     sent <span class="rat-name">{event.ratName}</span> to room
-    <a href="/rat/{event.roomId}">#{event.roomIndex ?? "unknown"}.</a>
+    <a href="/game/{event.roomId}">#{event.roomIndex ?? "unknown"}.</a>
     {event.message}
   {:else if event.topic == "rat__death"}
     <!-- DEATH IN ROOM -->
@@ -63,7 +63,7 @@
       {event.playerName}
     </span>
     let <span class="rat-name">{event.ratName}</span> die in room
-    <a href="/rat/{event.roomId}">#{event.roomIndex ?? "unknown"}</a>
+    <a href="/game/{event.roomId}">#{event.roomIndex ?? "unknown"}</a>
   {:else if event.topic == "rat__deploy"}
     <!-- DEPLOY -->
     <span
@@ -86,6 +86,17 @@
       {event.playerName}
     </span>
     liquidated <span class="rat-name">{event.ratName}</span>
+  {:else if event.topic == "key__activation"}
+    <!-- KEY ACTIVATION -->
+    <span
+      use:tippy={{
+        content: formatDate(new Date(event.timestamp))
+      }}
+      class="timestamp"
+    >
+      {event.playerName}
+    </span>
+    Supervisor mode activated
   {:else}
     <!-- FALLBACK -->
     <span class="message-body">
@@ -158,6 +169,12 @@
         color: var(--background);
         padding: 2px;
       }
+    }
+
+    &.key__activation {
+      background: #dd00ff;
+      color: var(--background);
+      padding: 2px;
     }
 
     .timestamp {

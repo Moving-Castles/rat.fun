@@ -1,12 +1,12 @@
 <script lang="ts">
   import { circOut as easing } from "svelte/easing"
   import { PageTransitions, CenterBar } from "$lib/components/Shared"
-  import { RoomContainer } from "$lib/components/Landlord"
+  import { RoomContainer } from "$lib/components/Admin"
 
   const config = [
     {
-      from: "/(rooms)/landlord",
-      to: "/(rooms)/landlord/[roomId]",
+      from: "/(rooms)/admin",
+      to: "/(rooms)/admin/[roomId]",
       in: {
         transition: "slideFromRight",
         params: {
@@ -23,8 +23,8 @@
       }
     },
     {
-      from: "/(rooms)/landlord/[roomId]",
-      to: "/(rooms)/landlord",
+      from: "/(rooms)/admin/[roomId]",
+      to: "/(rooms)/admin",
       in: {
         transition: "slideFromLeft",
         params: {

@@ -76,7 +76,7 @@ export async function sendCreateRoom(
     const result = (await response.json()) as CreateRoomReturnValue
 
     if (result.roomId) {
-      goto(`/landlord/${result.roomId}`)
+      goto(`/admin/${result.roomId}`)
     }
   } catch (e) {
     console.error(e)

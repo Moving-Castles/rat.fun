@@ -74,10 +74,11 @@ declare global {
     levelMaxBalance?: mudComponents["LevelMaxBalance"]
     visitCount?: mudComponents["VisitCount"]
     killCount?: mudComponents["KillCount"]
+    masterKey?: mudComponents["MasterKey"]
   }
 
   type Player = {
-    [key: string]: number | bigint | ENTITY_TYPE | Hex | readonly Hex[] | string
+    [key: string]: number | bigint | ENTITY_TYPE | Hex | readonly Hex[] | string | boolean
     entityType: ENTITY_TYPE.PLAYER
     name: mudComponents["Name"]
     visitedLevels: mudComponents["VisitedLevels"]
@@ -85,6 +86,7 @@ declare global {
     ownedRat: mudComponents["OwnedRat"]
     pastRats: mudComponents["PastRats"]
     creationBlock: mudComponents["CreationBlock"]
+    masterKey: mudComponents["MasterKey"]
   }
 
   type Rat = {

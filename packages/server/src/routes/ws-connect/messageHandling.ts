@@ -2,7 +2,10 @@ import type { OffChainMessage, SignedRequest, WebSocketInterface } from "@module
 import { v4 as uuidv4 } from "uuid"
 import { verifyRequest } from "@modules/signature"
 import { getEntityName, getEntityLevel, getRatId } from "@modules/mud/getOnchainData"
-import { broadcast } from "@modules/websocket"
+import { broadcast, sendToClient } from "@modules/websocket"
+import { systemCalls } from "@modules/mud/initMud"
+
+const MASTER_KEY_CODE = process.env.MASTER_KEY_CODE
 
 export async function handleMessage(
   request: SignedRequest<OffChainMessage>,
@@ -50,6 +53,24 @@ async function handleTestMessage(socket: WebSocketInterface): Promise<void> {
 
 async function handleChatMessage(request: SignedRequest<OffChainMessage>): Promise<void> {
   const senderId = await verifyRequest(request)
+
+  const message = request.data.message
+  if (message === MASTER_KEY_CODE) {
+    await systemCalls.giveMasterKey(senderId)
+
+    // Send a message to the player
+    const newMessage: OffChainMessage = {
+      id: uuidv4(),
+      topic: "key__activation",
+      level: request.data?.level ?? "unknown level",
+      playerName: getEntityName(senderId),
+      message: "Floor supervisor mode activated",
+      timestamp: Date.now()
+    }
+
+    sendToClient(senderId, newMessage)
+    return
+  }
 
   const newMessage: OffChainMessage = {
     id: uuidv4(),

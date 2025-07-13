@@ -5,10 +5,10 @@ import { elasticOut, linear } from "svelte/easing"
 type LayoutRouteId =
   | "/"
   | "/(rooms)"
-  | "/(rooms)/rat/[roomId]"
-  | "/(rooms)/rat/[roomId]/enter"
-  | "/(rooms)/landlord"
-  | "/(rooms)/landlord/[roomId]"
+  | "/(rooms)/game/[roomId]"
+  | "/(rooms)/game/[roomId]/enter"
+  | "/(rooms)/admin"
+  | "/(rooms)/admin/[roomId]"
   | "/outcome/[id]"
   | null
 

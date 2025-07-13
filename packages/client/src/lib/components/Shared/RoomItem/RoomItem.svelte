@@ -24,7 +24,7 @@
   }
 </script>
 
-<a href="/rat/{roomId}" class="room-listing-item" class:disabled={Number(room.balance) == 0}>
+<a href="/game/{roomId}" class="room-listing-item" class:disabled={Number(room.balance) == 0}>
   <!-- COLUMN LEFT -->
   <div class="column left">
     <div class="room-image">

@@ -6,6 +6,11 @@ export function validateInputData(
   player: Player,
   level: MinimalLevel
 ) {
+  // Check if player has master key
+  if (!player.masterKey) {
+    throw new Error("Not authorized.")
+  }
+
   // Check if player has enough balance to create a room
   if (player.balance < Number(level.roomCreationCost)) {
     throw new Error("Not enough balance to create room.")

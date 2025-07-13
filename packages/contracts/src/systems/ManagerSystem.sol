@@ -16,7 +16,8 @@ import {
   Level,
   LastVisitBlock,
   RoomCreationCost,
-  WorldPrompt
+  WorldPrompt,
+  MasterKey
 } from "../codegen/index.sol";
 import { LibManager, LibRat } from "../libraries/Libraries.sol";
 import { ENTITY_TYPE } from "../codegen/common.sol";
@@ -142,5 +143,9 @@ contract ManagerSystem is System {
    */
   function setWorldPrompt(string memory _worldPrompt) public onlyAdmin {
     WorldPrompt.set(_worldPrompt);
+  }
+
+  function giveMasterKey(bytes32 playerId) public onlyAdmin {
+    MasterKey.set(playerId, true);
   }
 }

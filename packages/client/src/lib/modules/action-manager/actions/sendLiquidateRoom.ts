@@ -21,6 +21,6 @@ export async function sendLiquidateRoom(roomId: string) {
     throw new Error(String(e))
   } finally {
     busy.CloseRoom.set(0, { duration: 0 })
-    goto("/landlord")
+    goto("/admin")
   }
 }

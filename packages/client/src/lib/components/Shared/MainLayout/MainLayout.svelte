@@ -4,8 +4,8 @@
 
   const config = [
     {
-      from: "/(rooms)/rat",
-      to: "/(rooms)/landlord",
+      from: "/(rooms)/game",
+      to: "/(rooms)/admin",
       in: {
         transition: "fade"
       },
@@ -14,8 +14,8 @@
       }
     },
     {
-      from: "/(rooms)/landlord",
-      to: "/(rooms)/rat",
+      from: "/(rooms)/admin",
+      to: "/(rooms)/game",
       in: {
         transition: "fade"
       },

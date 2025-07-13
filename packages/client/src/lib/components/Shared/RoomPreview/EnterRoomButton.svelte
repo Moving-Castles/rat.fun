@@ -11,7 +11,7 @@
   }
 </script>
 
-<a href="/rat/{roomId}/enter" class="room-enter">
+<a href="/game/{roomId}/enter" class="room-enter">
   <BigButton text="Send rat to room" onclick={sendEnterRoom} />
 </a>
 

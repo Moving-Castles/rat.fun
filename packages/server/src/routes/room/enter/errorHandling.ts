@@ -8,7 +8,6 @@ import {
   PlayerNotFoundError
 } from "@modules/mud/getOnchainData/getEnterRoomData"
 import { LLMError, LLMAPIError, LLMParseError } from "@modules/llm/anthropic/callModel"
-import { CMSError } from "@modules/cms"
 import {
   SystemCallError,
   ContractCallError,

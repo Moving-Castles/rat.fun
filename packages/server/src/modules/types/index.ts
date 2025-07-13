@@ -29,6 +29,7 @@ export type Player = {
   name: string
   balance: number
   visitedLevels: string[]
+  masterKey: boolean
 }
 
 export type Level = {
@@ -194,6 +195,7 @@ export type OffChainMessage = {
     | "test"
     | "clients__update"
     | "chat__message"
+    | "key__activation"
     | "room__creation"
     | "room__outcome"
     | "room__liquidation"

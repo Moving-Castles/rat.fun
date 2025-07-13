@@ -5,8 +5,8 @@
 
   const config = [
     {
-      from: "/(rooms)/rat",
-      to: "/(rooms)/rat/[roomId]",
+      from: "/(rooms)/game",
+      to: "/(rooms)/game/[roomId]",
       in: {
         transition: "slideFromRight",
         params: {
@@ -23,8 +23,8 @@
       }
     },
     {
-      from: "/(rooms)/rat/[roomId]",
-      to: "/(rooms)/rat",
+      from: "/(rooms)/game/[roomId]",
+      to: "/(rooms)/game",
       in: {
         transition: "slideFromLeft",
         params: {

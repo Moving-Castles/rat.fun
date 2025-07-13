@@ -41,7 +41,7 @@
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <!-- svelte-ignore a11y_click_events_have_key_events -->
-<a href="/landlord/{roomId}" class="room-listing-item" class:depleted={Number(room.balance) == 0}>
+<a href="/admin/{roomId}" class="room-listing-item" class:depleted={Number(room.balance) == 0}>
   {#if Number(room.balance) == 0}
     <div class="depleted-indicator">
       <Xed />

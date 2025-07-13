@@ -5,17 +5,17 @@
 
   $effect(() => {
     if (selectionIndicator) {
-      selectionIndicator.style.transform = `translateX(${page.route.id?.includes("/(rooms)/rat") ? 0 : 200}px)`
+      selectionIndicator.style.transform = `translateX(${page.route.id?.includes("/(rooms)/game") ? 0 : 200}px)`
     }
   })
 </script>
 
 <div class="pane-switch">
   <div class="pane-switch-item">
-    <a class:selected={page.route.id?.includes("/(rooms)/rat")} href="/rat">RAT</a>
+    <a class:selected={page.route.id?.includes("/(rooms)/game")} href="/game">GAME</a>
   </div>
   <div class="pane-switch-item">
-    <a class:selected={page.route.id?.includes("/(rooms)/landlord")} href="/landlord">LANDLORD</a>
+    <a class:selected={page.route.id?.includes("/(rooms)/admin")} href="/admin">ADMIN</a>
   </div>
   <div class="selection-indicator" bind:this={selectionIndicator}></div>
 </div>
