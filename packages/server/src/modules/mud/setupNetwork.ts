@@ -95,8 +95,8 @@ export async function setupNetwork(
     ...clientOptions,
     account: burnerAccount
   })
-    .extend(transactionQueue())
-    .extend(writeObserver({ onWrite: write => write$.next(write) }))
+  // .extend(transactionQueue())
+  // .extend(writeObserver({ onWrite: write => write$.next(write) }))
 
   /*
    * Create an object for communicating with the deployed World.

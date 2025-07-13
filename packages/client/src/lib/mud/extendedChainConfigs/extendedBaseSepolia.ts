@@ -6,7 +6,7 @@ export const extendedBaseSepolia = {
   rpcUrls: {
     ...baseSepoliaConfig.rpcUrls,
     bundler: {
-      http: ["https://public.pimlico.io/v2/84532/rpc"]
+      http: ["https://api.pimlico.io/v2/84532/rpc?apikey=pim_8gQqpbnmKF1njADAZmuHy5"]
     }
   },
   indexerUrl: "https://base-sepolia.rat-fun-indexer.com",
