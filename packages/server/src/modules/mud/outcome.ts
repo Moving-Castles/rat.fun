@@ -53,10 +53,6 @@ export function updateOutcome(
   // Deep clone the old outcome
   const newOutcome = JSON.parse(JSON.stringify(oldOutcome))
 
-  // console.log('old outcome:', oldOutcome);
-  // console.log('old rat:', oldRat);
-  // console.log('new rat:', newRat);
-
   // - - - - - - - - -
   // ID
   // - - - - - - - - -

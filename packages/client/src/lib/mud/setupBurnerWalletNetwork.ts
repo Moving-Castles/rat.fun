@@ -56,8 +56,6 @@ export function setupBurnerWalletNetwork(publicNetwork: SetupPublicNetworkResult
     account: burnerAccount
   })
 
-  // console.log(networkConfig)
-
   if (networkConfig.faucetServiceUrl) {
     setupDrip(
       publicNetwork.publicClient,
@@ -70,7 +68,6 @@ export function setupBurnerWalletNetwork(publicNetwork: SetupPublicNetworkResult
 }
 
 async function setupDrip(publicClient: PublicClient, faucetServiceUrl: string, address: Hex) {
-  // console.log("Setup drip")
   /*
    * If there is a faucet, request (test) ETH if you have
    * less than 0.01 ETH. Repeat every 20 seconds to ensure you don't
@@ -79,7 +76,6 @@ async function setupDrip(publicClient: PublicClient, faucetServiceUrl: string, a
   console.info("[Dev Faucet]: Player address -> ", address)
 
   const requestDrip = async () => {
-    // console.log()
     const balance = await publicClient.getBalance({ address })
     console.info(`[Dev Faucet]: Player balance -> ${balance}`)
     const lowBalance = balance < parseEther("0.01")

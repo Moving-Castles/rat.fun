@@ -35,8 +35,6 @@ export const getEnvironment = (url: URL) => {
 export const getWalletType = (url: URL) => {
   const hostname = url.hostname
 
-  console.log(hostname, url.searchParams.get("entrykit"))
-
   if (hostname.includes("entrykit") || url.searchParams.has("entrykit")) {
     return WALLET_TYPE.ENTRYKIT
   }

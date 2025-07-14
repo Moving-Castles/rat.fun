@@ -43,8 +43,6 @@
   // Get static room content from cms
   let staticRoomContent = $derived($staticContent.rooms.find(r => r._id == (roomId ?? "")))
 
-  $inspect(staticRoomContent)
-
   const processRoom = async () => {
     if (!roomId) {
       return

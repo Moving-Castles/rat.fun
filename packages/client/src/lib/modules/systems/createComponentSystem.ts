@@ -6,12 +6,8 @@ import { ComponentUpdate } from "@latticexyz/recs"
 import { deepEqual } from "@wagmi/core"
 
 export function createComponentSystem(componentKey: string) {
-  // console.log('createComponentSystem', componentKey);
-  // console.log('xxx', (get(publicNetwork).components as any)[componentKey]);
   ;(get(publicNetwork).components as any)[componentKey].update$.subscribe(
     (update: ComponentUpdate) => {
-      // console.log('___________ comp. update', update)
-
       const [nextValue, prevValue] = update.value
 
       // If the values are the same we assume

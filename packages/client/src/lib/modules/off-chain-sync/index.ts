@@ -58,7 +58,6 @@ export function initOffChainSync(environment: ENVIRONMENT, playerId: string) {
   }
 
   socket.onmessage = (message: MessageEvent<string>) => {
-    // console.log("Received message:", message)
     const messageContent = JSON.parse(message.data) as OffChainMessage
 
     // Update client list when players connect/disconnect
@@ -76,7 +75,6 @@ export function initOffChainSync(environment: ENVIRONMENT, playerId: string) {
     latestEvents.update(state => {
       // Check if message with this ID already exists
       if (state.some(event => event.id == messageContent.id)) {
-        console.log("Duplicate message id found:", messageContent.id)
         return state
       }
       // Add new message and limit array to MAX_EVENTS items

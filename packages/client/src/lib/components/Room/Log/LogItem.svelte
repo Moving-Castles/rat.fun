@@ -68,14 +68,12 @@
   // Action to register the nodes
   const register = (node: HTMLElement, data: LogEntryFields) => {
     const registration: RegisteredOutcome = { node, data }
-    console.log(node)
 
     registeredOutcomes = [...registeredOutcomes, registration]
 
     // Return destroy function for cleanup
     return {
       destroy: () => {
-        // console.log("Destroying outcome:", data.type) // For debugging
         registeredOutcomes = registeredOutcomes.filter(item => item.node !== node)
       }
     }
@@ -145,7 +143,6 @@
     if (timeline && onTimeline) {
       onTimeline(timeline)
     }
-    // console.log("Timeline built:", timeline.duration()) // For debugging
   }
 
   // Run once

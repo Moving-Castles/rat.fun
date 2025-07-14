@@ -12,5 +12,3 @@ export const extendedBaseSepolia = {
   indexerUrl: "https://base-sepolia.rat-fun-indexer.com",
   faucetUrl: "https://pyrope-faucet.jimmy9-infra.com/trpc/drip"
 } as const satisfies MUDChain
-
-console.log("Extended config", extendedBaseSepolia)

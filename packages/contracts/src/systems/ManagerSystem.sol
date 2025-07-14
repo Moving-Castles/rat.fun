@@ -74,16 +74,12 @@ contract ManagerSystem is System {
     // A room can give a maximum of half of its creation cost
     uint256 roomBudget = LibUtils.min(RoomCreationCost.get(_roomId) / 2, Balance.get(_roomId));
 
-    // console.log("1: roomBudget", roomBudget);
-
     // * * * * * * * * * * * * *
     // HEALTH
     // * * * * * * * * * * * * *
 
     // Health change can have positive or negative value: effect on room balance unknown
     roomBudget = LibManager.updateHealth(roomBudget, _ratId, _roomId, _healthChange);
-
-    // console.log("2: roomBudget", roomBudget);
 
     // Exit early if dead
     if (Health.get(_ratId) == 0) {
@@ -100,8 +96,6 @@ contract ManagerSystem is System {
     // As traits always have positive value, this will always decrease the room balance
     roomBudget = LibManager.addTraitsToRat(roomBudget, _ratId, _roomId, _traitToAddToRat);
 
-    // console.log("3: roomBudget", roomBudget);
-
     // * * * * * * * * * * * * *
     // ITEMS
     // * * * * * * * * * * * * *
@@ -110,8 +104,6 @@ contract ManagerSystem is System {
     LibManager.removeItemsFromRat(_ratId, _roomId, _itemsToRemoveFromRat);
     // As items always have positive value, this will always decrease the room balance
     roomBudget = LibManager.addItemsToRat(roomBudget, _ratId, _roomId, _itemsToAddToRat);
-
-    // console.log("4: roomBudget", roomBudget);
 
     // * * * * * * * * * * * * *
     // BALANCE
