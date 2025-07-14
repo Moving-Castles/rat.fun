@@ -41,8 +41,6 @@ export function setupWalletNetwork(
     client: { public: publicNetwork.publicClient, wallet: walletClient }
   })
 
-  // console.log("worldContract", worldContract)
-
   return {
     playerEntity: encodeEntity({ address: "address" }, { address: walletClient.account.address }),
     walletClient,

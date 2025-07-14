@@ -10,12 +10,6 @@ import { getNetworkConfig } from "./getNetworkConfig"
 import { world } from "./world"
 import { transportObserver } from "@latticexyz/common"
 
-// import {
-//   tables as extraTables,
-//   syncFilters as extraSyncFilters,
-// } from "./extraTables"
-// import { createSyncFilters } from "./createSyncFilters"
-
 import { ENVIRONMENT } from "./enums"
 
 /*
@@ -36,12 +30,6 @@ export async function setupPublicNetwork(environment: ENVIRONMENT) {
   const networkConfig = getNetworkConfig(environment)
 
   console.log("SETUP PNW ", networkConfig)
-
-  // networkConfig.indexerUrl = undefined
-
-  // console.log('networkConfig', networkConfig)
-
-  // const filters = [...createSyncFilters(null), ...extraSyncFilters]
 
   /*
    * Create a viem public (read only) client
@@ -69,8 +57,6 @@ export async function setupPublicNetwork(environment: ENVIRONMENT) {
 
   const publicClient = createPublicClient(clientOptions)
 
-  // console.log('publicClient', publicClient)
-
   /*
    * Sync on-chain state into RECS and keeps our client in sync.
    * Uses the MUD indexer if available, otherwise falls back
@@ -84,14 +70,11 @@ export async function setupPublicNetwork(environment: ENVIRONMENT) {
     publicClient,
     startBlock: BigInt(networkConfig.initialBlockNumber),
     indexerUrl: networkConfig.indexerUrl
-    // filters,
-    // tables: extraTables,
   })
 
-  // Allows us to to only listen to the game sepcific tables
+  // Allows us to to only listen to the game specific tables
   const tableKeys = [
     ...Object.keys(mudConfig.tables).map(key => key.split("__")[1]) // Strips everything before and including '__'
-    // ...Object.keys(extraTables),
   ]
 
   return {

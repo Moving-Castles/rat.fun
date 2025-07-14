@@ -163,7 +163,6 @@
       display: flex;
       flex-flow: column nowrap;
       gap: 12px;
-      // margin-inline: 1rem;
       overflow: hidden;
     }
   }

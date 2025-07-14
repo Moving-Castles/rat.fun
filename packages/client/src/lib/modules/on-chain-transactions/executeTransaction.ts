@@ -7,7 +7,7 @@ import { addChain, switchChain } from "viem/actions"
 import { gameConfig } from "$lib/modules/state/base/stores"
 import { WorldFunctions } from "./index"
 import { getChain } from "$lib/mud/utils"
-import { entryKitSession } from "$lib/mud/stores"
+import { entryKitSession } from "$lib/modules/entry-kit/stores"
 
 /**
  * Executes an on-chain transaction.

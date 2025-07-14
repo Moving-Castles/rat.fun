@@ -1,28 +1,27 @@
 <script lang="ts">
   import type { Hex } from "viem"
   import { WagmiProvider } from "wagmi"
-  import { createElement } from "react"
-  import { createRoot } from "react-dom/client"
-  import { wagmiConfig } from "./wagmiConfig"
-  import { QueryClientProvider, QueryClient } from "@tanstack/react-query"
-  import { defineConfig, AccountButton } from "@latticexyz/entrykit/internal"
+
   import { getNetworkConfig } from "$lib/mud/getNetworkConfig"
   import { getEnvironment } from "$lib/modules/network"
-  import SessionBridge from "./SessionBridge"
-  import { entryKitSession } from "$lib/mud/stores"
+
+  import { createElement } from "react"
+  import { createRoot } from "react-dom/client"
+  import { QueryClientProvider, QueryClient } from "@tanstack/react-query"
+  import { defineConfig, AccountButton } from "@latticexyz/entrykit/internal"
+
+  import { wagmiConfig } from "$lib/modules/entry-kit/wagmiConfig"
+  import SessionBridge from "$lib/modules/entry-kit/SessionBridge"
+
   let rootEl: HTMLElement
 
   const environment = getEnvironment(new URL(window.location.href))
   const networkConfig = getNetworkConfig(environment)
   const queryClient = new QueryClient()
 
-  $inspect($entryKitSession)
-
   $effect(() => {
     const root = createRoot(rootEl)
     const config = wagmiConfig(networkConfig.chainId)
-
-    console.log("Resolved config", config)
 
     import("@latticexyz/entrykit/internal").then(({ EntryKitProvider }) => {
       const entrykit = createElement(

@@ -10,7 +10,7 @@
   import { setupWalletNetwork } from "$lib/mud/setupWalletNetwork"
   import { setupBurnerWalletNetwork } from "$lib/mud/setupBurnerWalletNetwork"
   import { initWalletNetwork } from "$lib/initWalletNetwork"
-  import { entryKitSession } from "$lib/mud/stores"
+  import { entryKitSession } from "$lib/modules/entry-kit/stores"
 
   import { playerERC20Allowance, playerERC20Balance } from "$lib/modules/state/base/stores"
 

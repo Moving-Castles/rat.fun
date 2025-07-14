@@ -7,6 +7,7 @@
 import { getBurnerPrivateKey } from "@latticexyz/common"
 import { getChain, getWorldFromChainId } from "./utils"
 import { ENVIRONMENT } from "./enums"
+import { MUDChain } from "@latticexyz/common/chains"
 
 export function getNetworkConfig(environment: ENVIRONMENT) {
   const params = new URLSearchParams(window.location.search)
@@ -47,8 +48,7 @@ export function getNetworkConfig(environment: ENVIRONMENT) {
     ? Number(params.get("initialBlockNumber"))
     : (world?.blockNumber ?? -1) // -1 will attempt to find the block number from RPC
 
-  let indexerUrl = chain.indexerUrl
-  if (params.has("indexer")) indexerUrl = params.get("indexer")
+  let indexerUrl = (chain as MUDChain).indexerUrl
   if (params.has("disableIndexer")) indexerUrl = undefined
 
   return {
@@ -60,7 +60,7 @@ export function getNetworkConfig(environment: ENVIRONMENT) {
     privateKey: params.get("privateKey") ?? getBurnerPrivateKey(),
     useBurner: params.has("useBurner"),
     chainId,
-    faucetServiceUrl: params.get("faucet") ?? chain.faucetUrl,
+    faucetServiceUrl: params.get("faucet") ?? (chain as MUDChain).faucetUrl,
     worldAddress,
     initialBlockNumber,
     disableCache: import.meta.env.PROD,

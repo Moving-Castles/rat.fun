@@ -11,10 +11,6 @@
     onComplete: () => void
   }>()
 
-  // let buttonText = $derived(
-  //   walletType === WALLET_TYPE.ENTRYKIT ? "CONNECT WALLET" : "CONNECT BURNER"
-  // )
-
   let message = $derived(
     walletType === WALLET_TYPE.ENTRYKIT
       ? "Stop. You need an offical BASE(TM) WALLET TO ENTER."
@@ -83,11 +79,6 @@
 
       img {
         height: 60dvh;
-      }
-
-      .button {
-        width: 400px;
-        height: 80px;
       }
     }
   }

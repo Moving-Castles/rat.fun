@@ -3,7 +3,7 @@ import { Hex } from "viem"
 import { signMessage } from "viem/actions"
 import { SignedRequest, SignedRequestInfo } from "@server/modules/types"
 import { stringifyRequestForSignature } from "@server/modules/signature/stringifyRequestForSignature"
-import { entryKitSession } from "$lib/mud/stores"
+import { entryKitSession } from "$lib/modules/entry-kit/stores"
 import { walletNetwork } from "$lib/modules/network"
 
 export async function signRequest<T>(data: T): Promise<SignedRequest<T>> {
