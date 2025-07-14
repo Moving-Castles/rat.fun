@@ -4,7 +4,7 @@ import type { CorrectionReturnValue, OutcomeReturnValue } from "@modules/types"
 
 import { publicSanityClient } from "@modules/cms/public/sanity"
 import { v4 as uuidv4 } from "uuid"
-import { CMSError, CMSAPIError } from "@modules/cms"
+import { CMSError, CMSAPIError } from "@modules/error-handling/errors"
 
 // Define a type for new outcome documents that omits Sanity-specific fields
 type NewOutcomeDoc = Omit<OutcomeDoc, "_createdAt" | "_updatedAt" | "_rev">

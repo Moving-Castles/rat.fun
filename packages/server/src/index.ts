@@ -4,7 +4,6 @@ import cors from "@fastify/cors"
 import websocket from "@fastify/websocket"
 import compress from "@fastify/compress"
 
-import { PORT } from "@config"
 import { errorHandler } from "@modules/error-handling"
 
 import enter from "@routes/room/enter"
@@ -53,4 +52,4 @@ const start = async (port: number) => {
   }
 }
 
-start(PORT)
+start(Number(process.env.PORT))

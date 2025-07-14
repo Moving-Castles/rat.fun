@@ -30,8 +30,8 @@ export const generateImage = async (prompt: string) => {
       aspect_ratio: "1:1",
       output_format: "webp",
       output_quality: 80,
-      prompt_strength: 0.72, // 0.73
-      steps: 28 // 28
+      prompt_strength: 0.72,
+      steps: 28
     }
   }
 

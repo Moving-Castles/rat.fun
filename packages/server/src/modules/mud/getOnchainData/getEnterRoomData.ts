@@ -17,7 +17,7 @@ export async function getEnterRoomData(
 ): Promise<EnterRoomData> {
   try {
     if (!ratId) {
-      throw new OnchainDataError("Rat ID is required")
+      throw new OnchainDataError("RAT_ID_REQUIRED", "Validation failed", "Rat ID is required")
     }
 
     const {
@@ -190,6 +190,8 @@ export async function getEnterRoomData(
 
     // Otherwise, wrap it in our custom error
     throw new OnchainDataError(
+      "ONCHAIN_DATA_ERROR",
+      "Onchain data error",
       `Error fetching onchain data: ${error instanceof Error ? error.message : String(error)}`
     )
   }

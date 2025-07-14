@@ -82,11 +82,10 @@ async function routes(fastify: FastifyInstance) {
           llmClient,
           eventMessages,
           combinedSystemPrompt,
-          0.5
+          process.env.EVENT_MODEL ?? "claude-sonnet-4-20250514",
+          Number(process.env.EVENT_TEMPERATURE)
         )) as EventsReturnValue
         console.timeEnd("–– Event LLM")
-
-        // console.log('Event results:', eventResults);
 
         // Apply the outcome suggested by the LLM to the onchain state and get back the actual outcome.
         console.time("–– Chain")
@@ -115,11 +114,10 @@ async function routes(fastify: FastifyInstance) {
           llmClient,
           correctionMessages,
           correctionSystemPrompt,
-          0
+          process.env.CORRECTION_MODEL ?? "claude-sonnet-4-20250514",
+          Number(process.env.CORRECTION_TEMPERATURE)
         )) as CorrectionReturnValue
         console.timeEnd("–– Correction LLM")
-
-        // console.log('Corrected events:', correctedEvents);
 
         // Broadcast outcome message
         const newMessage = createOutcomeMessage(player, rat, newRatHealth, room, validatedOutcome)

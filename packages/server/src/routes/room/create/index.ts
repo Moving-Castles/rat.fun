@@ -8,7 +8,7 @@ dotenv.config()
 import { CreateRoomRequestBody, SignedRequest } from "@modules/types"
 
 // CMS
-import { CMSError } from "@modules/cms"
+import { CMSError } from "@modules/error-handling/errors"
 import { writeRoomToCMS } from "@modules/cms/public"
 
 // MUD
@@ -62,7 +62,6 @@ async function routes(fastify: FastifyInstance) {
 
         // Start image generation and CMS write in the background
         const handleImageAndCMS = async () => {
-          console.log("Generating image and writing to CMS...")
           console.time("–– Image generation")
           try {
             // Get the image data
@@ -94,8 +93,6 @@ async function routes(fastify: FastifyInstance) {
 
         // Broadcast room creation message
         await broadcast(createRoomCreationMessage(roomId, player))
-
-        console.log("Returning Room ID", roomId)
 
         reply.send({
           success: true,

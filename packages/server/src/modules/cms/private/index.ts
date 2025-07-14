@@ -1,7 +1,7 @@
 import type { ActivePrompts, Prompt } from "@sanity-private-cms-types"
 import { loadDataPrivateSanity } from "@modules/cms/private/sanity"
 import { queries } from "@modules/cms/private/groq"
-import { CMSError, CMSAPIError, CMSDataError } from "@modules/cms"
+import { CMSError, CMSAPIError, CMSDataError } from "@modules/error-handling/errors"
 
 // - - - - - -
 // READ

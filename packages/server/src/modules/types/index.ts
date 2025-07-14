@@ -29,7 +29,7 @@ export type Player = {
   name: string
   balance: number
   visitedLevels: string[]
-  masterKey: boolean
+  masterKey?: boolean
 }
 
 export type Level = {

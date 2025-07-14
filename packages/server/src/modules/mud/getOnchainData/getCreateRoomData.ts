@@ -15,7 +15,7 @@ export async function getCreateRoomData(
 ): Promise<CreateRoomData> {
   try {
     if (!playerId) {
-      throw new OnchainDataError("Player ID is required")
+      throw new OnchainDataError("PLAYER_ID_REQUIRED", "Validation failed", "Player ID is required")
     }
 
     const { Name, VisitedLevels, RoomCreationCost, GameConfig, Prompt, WorldPrompt, MasterKey } =
@@ -104,6 +104,8 @@ export async function getCreateRoomData(
 
     // Otherwise, wrap it in our custom error
     throw new OnchainDataError(
+      "ONCHAIN_DATA_ERROR",
+      "Onchain data error",
       `Error fetching onchain data: ${error instanceof Error ? error.message : String(error)}`
     )
   }
