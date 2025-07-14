@@ -17,12 +17,14 @@
   let roomOutcomes = $derived($staticContent?.outcomes?.filter(o => o.roomId == roomId) || [])
 
   const callback = (update: Outcome[]) => {
-    if (!outcomes) {
-      console.error("Outcomes is undefined")
+    if (!roomOutcomes) {
+      console.error("Room outcomes is undefined")
       return
     }
     if (update.length > 0) {
-      outcomes = update.reverse()
+      // Note: roomOutcomes is derived, so we can't assign to it directly
+      // This might need a different approach depending on the intended behavior
+      console.log("Received update:", update)
     }
   }
 

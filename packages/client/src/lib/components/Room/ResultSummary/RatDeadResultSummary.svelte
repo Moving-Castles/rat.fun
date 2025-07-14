@@ -1,10 +1,21 @@
 <script lang="ts">
+  import type { EnterRoomReturnValue } from "@server/modules/types"
   import { onMount } from "svelte"
   import { frozenRat } from "$lib/components/Room/RoomResult/state.svelte"
   import { playSound } from "$lib/modules/sound"
   import { gsap } from "gsap"
   import { goto } from "$app/navigation"
   import { navigating } from "$app/state"
+
+  let {
+    result,
+    room,
+    staticRoomContent
+  }: {
+    result: EnterRoomReturnValue | null
+    room: Room | undefined
+    staticRoomContent: any
+  } = $props()
 
   let innerContainerElement = $state<HTMLDivElement | null>(null)
   let messageElement = $state<HTMLHeadingElement | null>(null)
@@ -70,7 +81,7 @@
           bind:this={closeButtonElement}
           class="close-button"
           onclick={() => {
-            rooms.close(false)
+            goto("/game")
           }}
         >
           LEAVE ROOM
@@ -121,12 +132,6 @@
         line-height: calc(var(--font-size-extra-large) * 0.7);
         font-weight: normal;
         text-align: center;
-
-        .digit {
-          display: inline-block;
-          width: 50%;
-          text-align: center;
-        }
       }
 
       .background {

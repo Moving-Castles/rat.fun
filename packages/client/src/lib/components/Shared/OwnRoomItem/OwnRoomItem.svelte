@@ -238,16 +238,6 @@
       .creation-time {
         color: var(--color-grey-mid);
       }
-
-      .name {
-        background: var(--color-alert);
-        color: var(--background);
-        padding: 5px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 25ch;
-      }
     }
 
     &.depleted {

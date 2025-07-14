@@ -143,7 +143,6 @@
     outline: none;
   }
 
-  .room-preview,
   .room-listing {
     width: 100%;
     flex-basis: 100%;
@@ -155,10 +154,6 @@
     &.animated {
       transition: transform 0.2s ease 0.1s;
     }
-  }
-
-  .room-preview {
-    left: 100%;
   }
 
   .previewing {

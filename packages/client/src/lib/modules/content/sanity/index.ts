@@ -22,10 +22,10 @@ export const loadData = async (query: string, params: any) => {
   try {
     const res = await client.fetch(query, params)
     if (res === null) {
-      return Promise.reject(new Error(404))
+      return Promise.reject(new Error("404"))
     }
     return res
   } catch (err) {
-    return Promise.reject(new Error(404))
+    return Promise.reject(new Error("404"))
   }
 }

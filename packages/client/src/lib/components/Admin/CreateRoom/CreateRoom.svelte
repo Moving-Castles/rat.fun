@@ -79,14 +79,6 @@
       margin-bottom: 15px;
       width: 100%;
 
-      &.level-selection {
-        margin-top: 15px;
-        padding-top: 15px;
-        padding-bottom: 15px;
-        border-top: var(--default-border-style);
-        border-bottom: var(--default-border-style);
-      }
-
       label {
         display: block;
         margin-bottom: 10px;
@@ -102,42 +94,6 @@
         }
       }
 
-      .level-toggles {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-
-        button {
-          width: 40px;
-          height: 40px;
-          padding: 0;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: var(--foreground);
-          border: var(--default-border-style);
-          cursor: pointer;
-          font-family: var(--typewriter-font-stack);
-          font-size: var(--font-size-normal);
-
-          &.active {
-            background: var(--color-alert-priority);
-            color: var(--background);
-          }
-
-          &.disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-          }
-
-          &:not(.disabled):hover {
-            background: var(--color-alert);
-            color: var(--background);
-          }
-        }
-      }
-
-      input,
       textarea {
         width: 100%;
         padding: 5px;
@@ -152,38 +108,11 @@
       }
     }
 
-    .info {
-      background: var(--color-grey-light);
-      padding: 15px;
-      font-size: var(--font-size-small);
-      color: var(--background);
-    }
-
     .actions {
       display: flex;
       flex-flow: column nowrap;
       gap: 12px;
       overflow: hidden;
-    }
-  }
-
-  .level-description {
-    display: flex;
-    flex-flow: column nowrap;
-    gap: 12px;
-    background: var(--color-grey-dark);
-    padding: 10px;
-    margin-top: 10px;
-    max-width: 50ch;
-
-    .level-name {
-      border-bottom: var(--default-border-style);
-      color: var(--color-grey-light);
-    }
-
-    .level-prompt {
-      font-family: var(--special-font-stack);
-      font-size: 20px;
     }
   }
 </style>

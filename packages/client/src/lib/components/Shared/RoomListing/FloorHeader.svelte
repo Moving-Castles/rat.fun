@@ -46,16 +46,6 @@
           color: var(--background);
         }
       }
-
-      .prompt {
-        font-size: var(--font-size-small);
-
-        span {
-          background: var(--color-alert-priority);
-          padding: 5px;
-          color: var(--background);
-        }
-      }
     }
   }
 </style>

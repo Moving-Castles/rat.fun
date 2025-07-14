@@ -35,7 +35,7 @@
   } = $props()
 
   // Result of the room entry, returned by the server
-  let result: EnterRoomReturnValue | null | undefined = $state(null)
+  let result: EnterRoomReturnValue | null = $state(null)
 
   // Get room info from global store based on id
   let room = $derived($roomsState?.[roomId ?? ""])
@@ -117,7 +117,9 @@
       {result}
       onComplete={() => {
         setTimeout(() => {
-          transitionToResultSummary(result as EnterRoomReturnValue)
+          if (result) {
+            transitionToResultSummary(result)
+          }
         }, 1000)
       }}
     />
