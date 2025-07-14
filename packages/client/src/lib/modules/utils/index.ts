@@ -358,7 +358,8 @@ export function parseJSONFromContent<T = Record<string, unknown>>(content: strin
   try {
     return JSON.parse(jsonString) as T
   } catch (error) {
-    throw new Error("Failed to parse JSON: " + error.message)
+    const errorMessage = error instanceof Error ? error.message : String(error)
+    throw new Error("Failed to parse JSON: " + errorMessage)
   }
 }
 

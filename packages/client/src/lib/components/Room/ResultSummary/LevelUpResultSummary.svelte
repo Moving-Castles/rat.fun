@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type { EnterRoomReturnValue } from "@server/modules/types"
   import { onMount } from "svelte"
   import { goto } from "$app/navigation"
   import { navigating } from "$app/state"
@@ -6,6 +7,16 @@
   import { ratLevel } from "$lib/modules/state/base/stores"
   import { playSound } from "$lib/modules/sound"
   import { gsap } from "gsap"
+
+  let {
+    result,
+    room,
+    staticRoomContent
+  }: {
+    result: EnterRoomReturnValue | null
+    room: Room | undefined
+    staticRoomContent: any
+  } = $props()
 
   let innerContainerElement = $state<HTMLDivElement | null>(null)
   let messageElement = $state<HTMLHeadingElement | null>(null)
@@ -119,12 +130,6 @@
         line-height: calc(var(--font-size-extra-large) * 0.7);
         font-weight: normal;
         text-align: center;
-
-        .digit {
-          display: inline-block;
-          width: 50%;
-          text-align: center;
-        }
       }
 
       .background {
@@ -142,12 +147,6 @@
           width: 100%;
           height: 100%;
           object-fit: contain;
-        }
-
-        &.room-depleted {
-          .background-image {
-            animation: fade-out 60s ease;
-          }
         }
       }
 

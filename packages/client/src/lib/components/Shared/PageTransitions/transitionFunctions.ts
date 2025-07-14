@@ -215,7 +215,7 @@ export const slideFromRight = (
     delay: params.delay || 0,
     duration: params.duration || 400,
     easing: params.easing || linear,
-    css: (t, u) => `
+    css: (t: number, u: number) => `
       position: absolute;
       display: block !important;
       top: 0;

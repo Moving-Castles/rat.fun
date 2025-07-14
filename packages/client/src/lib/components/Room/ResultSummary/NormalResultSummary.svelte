@@ -10,11 +10,13 @@
   import { OutcomeItem } from "$lib/components/Room"
 
   let {
-    result
+    result,
+    room,
+    staticRoomContent
   }: {
-    room: Room
-    staticRoomContent: any
     result: EnterRoomReturnValue | null
+    room: Room | undefined
+    staticRoomContent: any
   } = $props()
 
   let innerContainerElement = $state<HTMLDivElement | null>(null)
@@ -96,7 +98,7 @@
           bind:this={closeButtonElement}
           class="close-button"
           onclick={() => {
-            rooms.close(false)
+            goto("/game")
           }}
         >
           LEAVE ROOM
@@ -168,12 +170,6 @@
           object-fit: contain;
           object-position: center;
           opacity: 0.5;
-        }
-
-        &.room-depleted {
-          .background-image {
-            animation: fade-out 60s ease;
-          }
         }
       }
 

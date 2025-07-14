@@ -186,11 +186,4 @@
   a:visited {
     color: inherit;
   }
-
-  .rat-name {
-    // background: var(--background);
-    // color: var(--foreground);
-    // border: var(--default-border-style);
-    // padding: 2px;
-  }
 </style>

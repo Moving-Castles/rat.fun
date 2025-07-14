@@ -55,7 +55,9 @@ export function getNetworkConfig(environment: ENVIRONMENT) {
     provider: {
       chainId,
       jsonRpcUrl: params.get("rpc") ?? chain.rpcUrls.default.http[0],
-      wsRpcUrl: params.get("wsRpc") ?? chain.rpcUrls.default.webSocket?.[0]
+      wsRpcUrl:
+        params.get("wsRpc") ??
+        ("webSocket" in chain.rpcUrls.default ? chain.rpcUrls.default.webSocket?.[0] : undefined)
     },
     privateKey: params.get("privateKey") ?? getBurnerPrivateKey(),
     useBurner: params.has("useBurner"),

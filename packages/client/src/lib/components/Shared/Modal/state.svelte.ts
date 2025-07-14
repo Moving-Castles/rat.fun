@@ -9,7 +9,7 @@ let modalConfig = $state<{
 }>({})
 
 export const getModalState = () => {
-  const setState = children => {
+  const setState = (children: Snippet | null) => {
     if (children === null) {
       modalState = null
       showModal = false
@@ -19,7 +19,7 @@ export const getModalState = () => {
     }
   }
 
-  const setConfig = c => (modalConfig = { ...modalConfig, ...c })
+  const setConfig = (c: Partial<typeof modalConfig>) => (modalConfig = { ...modalConfig, ...c })
 
   const closeModal = () => setState(null)
 

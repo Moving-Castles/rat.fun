@@ -205,11 +205,6 @@
     width: 30px;
     height: 100%;
     position: absolute;
-
-    .label {
-      display: inline-block;
-      padding: 10px 8px 0 6px;
-    }
   }
 
   .x-axis {
@@ -219,12 +214,6 @@
     position: absolute;
     bottom: 0;
     z-index: var(--z-base);
-
-    .label {
-      text-align: right;
-      display: inline-block;
-      padding: 8px 0 6px calc(100% - 50px);
-    }
   }
 
   .graph {

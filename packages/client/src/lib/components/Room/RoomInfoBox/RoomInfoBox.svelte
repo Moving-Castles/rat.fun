@@ -84,12 +84,6 @@
       object-fit: cover;
       opacity: 0.8;
     }
-
-    .death {
-      position: absolute;
-      inset: 0;
-      z-index: var(--z-high);
-    }
   }
 
   .column {
@@ -100,19 +94,6 @@
 
     &.double {
       width: calc(200% / 3);
-    }
-
-    .header {
-      width: 100%;
-      padding-bottom: 10px;
-      margin-bottom: 10px;
-      border-bottom: var(--dashed-border-style);
-    }
-
-    &.info {
-      display: grid;
-      grid-template-rows: 1fr 20px;
-      gap: 12px;
     }
 
     &:last-child {
@@ -132,12 +113,6 @@
       font-size: var(--font-size-small);
     }
 
-    .name {
-      background: var(--color-alert);
-      padding: 5px;
-      color: var(--background);
-    }
-
     .balance {
       background: var(--color-value);
       padding: 5px;
@@ -147,17 +122,6 @@
         background: var(--color-death);
       }
     }
-
-    .health {
-      background: var(--color-health);
-      padding: 5px;
-      color: var(--background);
-    }
-  }
-
-  .header {
-    border-bottom: var(--dashed-border-style);
-    padding: 5px;
   }
 
   .room-description {
