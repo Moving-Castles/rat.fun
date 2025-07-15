@@ -4,8 +4,8 @@ import { LogEntry, OutcomeReturnValue } from "@modules/types"
 
 export function constructEventMessages(rat: Rat, room: Room, worldPrompt: string): MessageParam[] {
   const messages: MessageParam[] = []
-  // Level / floor
-  messages.push({ role: "user", content: `WorldDescription: ${worldPrompt}` })
+  // World event
+  messages.push({ role: "user", content: `WorldEvent: ${worldPrompt}` })
   // Room
   messages.push({ role: "user", content: `RoomDescription: ${room.prompt}` })
   messages.push({ role: "user", content: `RoomBalance: ${room.balance}` })

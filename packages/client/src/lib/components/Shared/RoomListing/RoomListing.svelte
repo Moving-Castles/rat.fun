@@ -42,7 +42,7 @@
   let previewing = $state(false)
 </script>
 
-<div class="floor-content">
+<div class="content">
   <div class:previewing class:animated={false} class="room-listing">
     {#if !isOwnRoomListing}
       <RoomFilters
@@ -122,7 +122,7 @@
 </div>
 
 <style lang="scss">
-  .floor-content {
+  .content {
     position: relative;
     overflow-y: scroll;
     height: calc(var(--game-window-height) - 60px);

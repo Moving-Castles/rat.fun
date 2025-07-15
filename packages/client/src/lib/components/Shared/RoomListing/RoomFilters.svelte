@@ -31,13 +31,13 @@
   }>()
 </script>
 
-<div class="floor-header">
+<div class="level-header">
   <!-- ROOM COUNTER -->
   <div
     use:tippy={{
-      content: `There are ${Object.keys($roomStore).length} rooms on your floor`
+      content: `There are ${Object.keys($roomStore).length} rooms on your level`
     }}
-    class="floor-stats"
+    class="level-stats"
   >
     {roomsAmount} room{roomsAmount === 0 || roomsAmount > 1 ? "s" : ""}
   </div>
@@ -59,7 +59,7 @@
     {/if}
   </div>
   <!-- SORT BUTTONS -->
-  <div class="floor-filter">
+  <div class="filters">
     <!-- SORT BY HOT -->
     <button
       use:tippy={{
@@ -157,7 +157,7 @@
     font-family: var(--font-mono);
   }
 
-  .floor-header {
+  .level-header {
     line-height: 60px;
     border-bottom: var(--default-border-style);
     padding-inline: 20px;
@@ -166,7 +166,6 @@
     overflow: hidden;
     position: sticky;
     top: 0;
-    // top: 61px; // respecting the floor header component above it
     z-index: var(--z-high);
     background: var(--background);
   }
@@ -198,12 +197,12 @@
     }
   }
 
-  .floor-stats {
+  .level-stats {
     font-size: var(--font-size-small);
     width: 10ch;
   }
 
-  .floor-filter {
+  .filters {
     width: 28ch;
     text-align: right;
     white-space: nowrap;
