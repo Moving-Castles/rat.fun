@@ -22,6 +22,10 @@ extra_output_files = [
 ]
 fs_permissions = [{ access = "read", path = "./"}]
 
+# Silence address(this) errors in deploy script in latest versions of foundry
+# https://github.com/foundry-rs/foundry/releases/tag/v1.2.0
+script_execution_protection = false
+
 [doc]
 ignore=["codegen"]
 
