@@ -58,7 +58,7 @@ declare global {
     creationBlock?: mudComponents["CreationBlock"]
     lastVisitBlock?: mudComponents["LastVisitBlock"]
     level?: mudComponents["Level"]
-    visitedLevels?: mudComponents["VisitedLevels"]
+    achievedLevels?: mudComponents["AchievedLevels"]
     value?: mudComponents["Value"]
     dead?: mudComponents["Dead"]
     health?: mudComponents["Health"]
@@ -81,7 +81,7 @@ declare global {
     [key: string]: number | bigint | ENTITY_TYPE | Hex | readonly Hex[] | string | boolean
     entityType: ENTITY_TYPE.PLAYER
     name: mudComponents["Name"]
-    visitedLevels: mudComponents["VisitedLevels"]
+    achievedLevels: mudComponents["AchievedLevels"]
     balance: mudComponents["Balance"]
     currentRat: mudComponents["CurrentRat"]
     pastRats: mudComponents["PastRats"]

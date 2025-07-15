@@ -28,7 +28,7 @@ export type Player = {
   id: string
   name: string
   balance: number
-  visitedLevels: string[]
+  achievedLevels: string[]
   masterKey?: boolean
 }
 

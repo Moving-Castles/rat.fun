@@ -22,8 +22,8 @@ contract RatSystemTest is BaseTest {
 
     // Check player
     assertEq(CurrentRat.get(playerId), ratId);
-    assertEq(VisitedLevels.get(playerId).length, 1);
-    assertEq(VisitedLevels.getItem(playerId, 0), LevelList.getItem(0));
+    assertEq(AchievedLevels.get(playerId).length, 1);
+    assertEq(AchievedLevels.getItem(playerId, 0), LevelList.getItem(0));
 
     // Check rat
     assertEq(uint8(EntityType.get(ratId)), uint8(ENTITY_TYPE.RAT));

@@ -6,7 +6,7 @@ import {
   ExternalAddressesConfig,
   ExternalAddressesConfigData,
   Name,
-  VisitedLevels,
+  AchievedLevels,
   WorldPrompt
 } from "../codegen/index.sol";
 import {
@@ -25,7 +25,7 @@ library LibWorld {
   /**
    * @notice Set game config and create tutorial orders
    * @param _adminAddress The address of the admin
-   * @param _levels The levels to add to the admin's VisitedLevels
+   * @param _levels The levels to add to the admin's AchievedLevels
    */
   function init(
     address _adminAddress,
@@ -68,9 +68,9 @@ library LibWorld {
     // Set admin name
     Name.set(adminId, "RATKING");
 
-    // Add all levels to admins VisitedLevels
+    // Add all levels to admins AchievedLevels
     for (uint256 i = 0; i < _levels.length; i++) {
-      VisitedLevels.push(adminId, _levels[i]);
+      AchievedLevels.push(adminId, _levels[i]);
     }
   }
 

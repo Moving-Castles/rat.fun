@@ -18,7 +18,7 @@ export async function getCreateRoomData(
       throw new OnchainDataError("PLAYER_ID_REQUIRED", "Validation failed", "Player ID is required")
     }
 
-    const { Name, VisitedLevels, RoomCreationCost, GameConfig, Prompt, WorldPrompt, MasterKey } =
+    const { Name, AchievedLevels, RoomCreationCost, GameConfig, Prompt, WorldPrompt, MasterKey } =
       components
 
     const result = {} as CreateRoomData
@@ -39,7 +39,7 @@ export async function getCreateRoomData(
       functionName: "ratroom__balanceOf",
       args: [playerId]
     })) as bigint
-    const playerVisitedLevels = getComponentValue(VisitedLevels, playerEntity)?.value as string[]
+    const playerAchievedLevels = getComponentValue(AchievedLevels, playerEntity)?.value as string[]
 
     // Check if player exists
     if (!playerName) {
@@ -50,7 +50,7 @@ export async function getCreateRoomData(
       id: playerId,
       name: playerName,
       balance: Number(playerBalance / 10n ** 18n),
-      visitedLevels: playerVisitedLevels,
+      achievedLevels: playerAchievedLevels,
       masterKey: playerMasterKey
     }
 

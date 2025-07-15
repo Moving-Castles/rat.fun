@@ -5,7 +5,7 @@ import {
   GameConfig,
   EntityType,
   Balance,
-  VisitedLevels,
+  AchievedLevels,
   RoomCreationCost,
   Owner,
   CreationBlock
@@ -37,8 +37,8 @@ contract RoomSystem is System {
     bytes32 _roomId,
     string memory _prompt
   ) public onlyAdmin returns (bytes32 newRoomId) {
-    // Player can only create rooms on levels that their rats have visited
-    require(LibUtils.arrayIncludes(VisitedLevels.get(_playerId), _levelId), "invalid level");
+    // Player can only create rooms on levels that their rats have achieved in the past
+    require(LibUtils.arrayIncludes(AchievedLevels.get(_playerId), _levelId), "invalid level");
 
     // Room id can be 0 (which generates a new id) or an unused entity id
     require(_roomId == bytes32(0) || EntityType.get(_roomId) == ENTITY_TYPE.NONE, "room id already in use");

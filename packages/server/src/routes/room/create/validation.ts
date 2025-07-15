@@ -22,8 +22,8 @@ export function validateInputData(
     throw new InsufficientBalanceError("Not enough balance to create room.")
   }
 
-  // Check if player has visited the level
-  if (!player.visitedLevels.includes(level.id)) {
+  // Check if player has achieved the level
+  if (!player.achievedLevels.includes(level.id)) {
     throw new InvalidLevelError()
   }
 

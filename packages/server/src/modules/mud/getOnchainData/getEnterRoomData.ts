@@ -33,7 +33,7 @@ export async function getEnterRoomData(
       Index,
       GameConfig,
       Level,
-      VisitedLevels,
+      AchievedLevels,
       LevelMinBalance,
       LevelMaxBalance,
       RoomCreationCost
@@ -125,7 +125,8 @@ export async function getEnterRoomData(
 
       const playerName = getComponentValue(Name, playerEntity)?.value as string
       const playerBalance = Number(getComponentValue(Balance, playerEntity)?.value ?? 0)
-      const playerVisitedLevels = getComponentValue(VisitedLevels, playerEntity)?.value as string[]
+      const playerAchievedLevels = getComponentValue(AchievedLevels, playerEntity)
+        ?.value as string[]
 
       // Check if player exists
       if (!playerName) {
@@ -136,7 +137,7 @@ export async function getEnterRoomData(
         id: playerId,
         name: playerName,
         balance: playerBalance,
-        visitedLevels: playerVisitedLevels
+        achievedLevels: playerAchievedLevels
       }
     }
 

@@ -9,7 +9,7 @@ import {
   Traits,
   Value,
   Level,
-  VisitedLevels,
+  AchievedLevels,
   LevelMinBalance,
   LevelMaxBalance,
   LevelList,
@@ -332,11 +332,11 @@ library LibManager {
       Level.set(_ratId, newLevelId);
     }
 
-    // On change, add level to visited levels
+    // On change, add level to achieved levels
     if (newLevelId != currentLevelId) {
       bytes32 playerId = Owner.get(_ratId);
-      if (!LibUtils.arrayIncludes(VisitedLevels.get(playerId), newLevelId)) {
-        VisitedLevels.push(playerId, newLevelId);
+      if (!LibUtils.arrayIncludes(AchievedLevels.get(playerId), newLevelId)) {
+        AchievedLevels.push(playerId, newLevelId);
       }
     }
   }

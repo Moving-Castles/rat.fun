@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { System } from "@latticexyz/world/src/System.sol";
-import { EntityType, Name, CreationBlock, VisitedLevels, LevelList, MasterKey } from "../codegen/index.sol";
+import { EntityType, Name, CreationBlock, AchievedLevels, LevelList, MasterKey } from "../codegen/index.sol";
 import { LibUtils, LibWorld } from "../libraries/Libraries.sol";
 import { ENTITY_TYPE } from "../codegen/common.sol";
 
@@ -19,12 +19,12 @@ contract PlayerSystem is System {
     Name.set(playerId, _name);
     CreationBlock.set(playerId, block.number);
     MasterKey.set(playerId, false);
-    // Set first level as visited
-    VisitedLevels.push(playerId, LevelList.getItem(0));
+    // Set first level as achieved
+    AchievedLevels.push(playerId, LevelList.getItem(0));
   }
 
   /**
-   * @notice Get the ERC20 tokenbalance of a player
+   * @notice Get the ERC20 token balance of a player
    * @param playerId The id of the player
    * @return balance The balance of the player
    */
