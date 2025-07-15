@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
-import { Owner, CurrentRat, Dead, Inventory, GameConfig } from "../codegen/index.sol";
+import { Owner, CurrentRat, Dead, Inventory, GameConfig, Value } from "../codegen/index.sol";
 import { System } from "@latticexyz/world/src/System.sol";
 import { LibUtils, LibRat, LibWorld } from "../libraries/Libraries.sol";
 
@@ -51,10 +51,10 @@ contract RatSystem is System {
   }
 
   /**
-   * @notice Drop an item
+   * @notice Sell an item
    * @param _itemId The id of the item
    */
-  function dropItem(bytes32 _itemId) public {
+  function sellItem(bytes32 _itemId) public {
     bytes32 playerId = LibUtils.addressToEntityKey(_msgSender());
     bytes32 ratId = CurrentRat.get(playerId);
 
@@ -65,5 +65,11 @@ contract RatSystem is System {
 
     // Remove it from the inventory
     Inventory.set(ratId, LibUtils.removeFromArray(Inventory.get(ratId), _itemId));
+
+    uint256 balanceToTransfer = Value.get(_itemId);
+
+    // Withdraw tokens equal to item value from pool to player
+    // ERC-20 will check that pool has sufficient balance
+    LibWorld.gamePool().withdrawTokens(_msgSender(), balanceToTransfer * 10 ** LibWorld.erc20().decimals());
   }
 }

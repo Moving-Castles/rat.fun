@@ -33,16 +33,9 @@ class RedisStore {
   private isConnected = false
 
   constructor(redisUrl?: string) {
-    if (redisUrl) {
-      this.client = createClient({
-        url: redisUrl
-      })
-    } else {
-      // Fallback to localhost for development
-      this.client = createClient({
-        url: "redis://localhost:6379"
-      })
-    }
+    this.client = createClient({
+      url: redisUrl
+    })
 
     this.client.on("error", err => {
       console.error("Redis Client Error:", err)
@@ -110,7 +103,7 @@ class RedisStore {
 export function createStore(): InMemoryStore | RedisStore {
   const redisUrl = process.env.REDIS_URL
 
-  if (process.env.NODE_ENV === "production" && redisUrl) {
+  if (redisUrl) {
     console.log("Using Redis store")
     return new RedisStore(redisUrl)
   } else {

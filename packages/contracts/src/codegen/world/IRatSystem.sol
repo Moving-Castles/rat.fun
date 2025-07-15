@@ -13,5 +13,5 @@ interface IRatSystem {
 
   function ratroom__liquidateRat() external;
 
-  function ratroom__dropItem(bytes32 _itemId) external;
+  function ratroom__sellItem(bytes32 _itemId) external;
 }

@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { TempItem } from "$lib/components/Room/RoomResult/types"
   import { items } from "$lib/modules/state/base/stores"
-  import { dropItem } from "$lib/modules/on-chain-transactions"
+  import { sellItem } from "$lib/modules/on-chain-transactions"
   import { playSound } from "$lib/modules/sound"
   import { ModalTarget, Spinner } from "$lib/components/Shared"
   import { getModalState } from "$lib/components/Shared/Modal/state.svelte"
@@ -16,9 +16,9 @@
 
   let busy = $state(false)
   let confirming = $state(false)
-  let dropMessage = $state("CONFIRM ITEM DROP")
+  let saleMessage = $state("CONFIRM ITEM SALE")
   let isHovered = $state(false)
-  let dropCompleted = $state(false)
+  let saleCompleted = $state(false)
 
   let { modal } = getModalState()
 
@@ -27,7 +27,7 @@
 
   const value = $derived(typeof item === "string" ? ($items[item]?.value ?? 0) : item.value)
 
-  const sendDropItem = async () => {
+  const sendSellItem = async () => {
     if (typeof item !== "string") {
       console.error("Not id")
       return
@@ -37,14 +37,14 @@
     try {
       playSound("tcm", "blink")
       busy = true
-      dropMessage = "Dropping item..."
-      await dropItem(item)
+      saleMessage = "Selling item..."
+      await sellItem(item)
       playSound("tcm", "TRX_no")
-      dropCompleted = true
-      dropMessage = "Close"
+      saleCompleted = true
+      saleMessage = "Close"
     } catch (e) {
       console.error(e)
-      dropMessage = "Error occurred"
+      saleMessage = "Error occurred"
     } finally {
       busy = false
     }
@@ -53,8 +53,8 @@
   const handleModalClose = () => {
     modal.close()
     confirming = false
-    dropCompleted = false
-    dropMessage = "CONFIRM ITEM DROP"
+    saleCompleted = false
+    saleMessage = "CONFIRM ITEM SALE"
   }
 </script>
 
@@ -66,29 +66,29 @@
   onclick={() => !isRoomInfoBox && (confirming = true)}
 >
   <!-- NAME -->
-  <div class="name">{isRoomInfoBox || !isHovered ? name : "Drop item"}</div>
+  <div class="name">{isRoomInfoBox || !isHovered ? name : "Sell item"}</div>
   <!-- VALUE -->
   <span class="value" class:negative={value < 0}>${value}</span>
 </button>
 
-{#snippet confirmDrop()}
+{#snippet confirmSale()}
   <div class="confirmation danger">
     <div class="content">
-      <div class="drop-message">Drop {name}?</div>
+      <div class="sale-message">Sell {name}?</div>
       <button
         disabled={busy}
-        onclick={dropCompleted
+        onclick={saleCompleted
           ? () => {
               modal.close()
             }
-          : sendDropItem}
+          : sendSellItem}
         class="modal-button"
-        class:close-button={dropCompleted}
+        class:close-button={saleCompleted}
       >
         {#if busy}
           <Spinner />
         {:else}
-          {dropMessage}
+          {saleMessage}
         {/if}
       </button>
     </div>
@@ -96,7 +96,7 @@
 {/snippet}
 
 {#if confirming}
-  <ModalTarget onclose={handleModalClose} content={confirmDrop} noclose={false} />
+  <ModalTarget onclose={handleModalClose} content={confirmSale} noclose={false} />
 {/if}
 
 <style lang="scss">
@@ -145,7 +145,7 @@
       padding: var(--default-padding);
     }
 
-    .drop-message {
+    .sale-message {
       font-size: var(--font-size-large);
       margin-bottom: var(--default-padding);
     }

@@ -119,17 +119,20 @@ contract RatSystemTest is BaseTest {
     assertNotEq(ratId, newRatId);
   }
 
-  function testDropItem() public {
+  function testSellItem() public {
     setInitialBalance(alice);
+
     // As alice
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
     approveGamePool(type(uint256).max);
 
     bytes32 ratId = world.ratroom__createRat("roger");
+    uint256 aliceBalance = LibWorld.erc20().balanceOf(alice);
     vm.stopPrank();
 
     setInitialBalance(bob);
+
     // As bob
     vm.startPrank(bob);
     bytes32 bobId = world.ratroom__spawn("bob");
@@ -140,7 +143,7 @@ contract RatSystemTest is BaseTest {
     bytes32 roomId = world.ratroom__createRoom(bobId, LevelList.getItem(0), bytes32(0), "test room");
     vm.stopPrank();
 
-    // Trait to add
+    // Item to add
     Item[] memory newItems = new Item[](1);
     newItems[0] = Item("cheese", 40);
 
@@ -156,14 +159,14 @@ contract RatSystemTest is BaseTest {
     assertEq(Value.get(newItemId), 40);
     assertEq(Name.get(newItemId), "cheese");
 
-    // Drop item
+    // Sell item
     vm.startPrank(alice);
-    world.ratroom__dropItem(newItemId);
+    startGasReport("Sell item");
+    world.ratroom__sellItem(newItemId);
+    endGasReport();
     vm.stopPrank();
 
-    // Check item is destroyed
-    // assertEq(Inventory.get(ratId).length, 0);
-    // assertEq(Value.get(newItemId), 0);
-    // assertEq(Name.get(newItemId), "");
+    // Check that value in ERC20 token was transfered to player
+    assertEq(LibWorld.erc20().balanceOf(alice), aliceBalance + 40 * 10 ** LibWorld.erc20().decimals());
   }
 }

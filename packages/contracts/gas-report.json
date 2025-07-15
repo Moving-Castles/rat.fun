@@ -105,13 +105,19 @@
     "file": "test/systems/RatSystem.t.sol:RatSystemTest",
     "test": "testCreateRat",
     "name": "Create rat",
-    "gasUsed": 491312
+    "gasUsed": 491290
   },
   {
     "file": "test/systems/RatSystem.t.sol:RatSystemTest",
     "test": "testLiquidateRat",
     "name": "Liquidate rat",
-    "gasUsed": 156484
+    "gasUsed": 156529
+  },
+  {
+    "file": "test/systems/RatSystem.t.sol:RatSystemTest",
+    "test": "testSellItem",
+    "name": "Sell item",
+    "gasUsed": 48410
   },
   {
     "file": "test/systems/RoomSystem.t.sol:RoomSystemTest",
