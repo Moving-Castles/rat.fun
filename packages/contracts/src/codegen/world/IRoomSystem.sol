@@ -9,12 +9,12 @@ pragma solidity >=0.8.24;
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IRoomSystem {
-  function ratroom__createRoom(
+  function ratfun__createRoom(
     bytes32 _playerId,
     bytes32 _levelId,
     bytes32 _roomId,
     string memory _prompt
   ) external returns (bytes32 newRoomId);
 
-  function ratroom__closeRoom(bytes32 _roomId) external;
+  function ratfun__closeRoom(bytes32 _roomId) external;
 }

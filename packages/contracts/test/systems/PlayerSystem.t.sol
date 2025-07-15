@@ -10,7 +10,7 @@ contract PlayerSystemTest is BaseTest {
     vm.startPrank(alice);
 
     startGasReport("Spawn");
-    bytes32 playerId = world.ratroom__spawn("alice");
+    bytes32 playerId = world.ratfun__spawn("alice");
     endGasReport();
 
     vm.stopPrank();
@@ -25,10 +25,10 @@ contract PlayerSystemTest is BaseTest {
   function testRevertAlreadySpawned() public {
     vm.startPrank(alice);
 
-    world.ratroom__spawn("alice");
+    world.ratfun__spawn("alice");
 
     vm.expectRevert("already spawned");
-    world.ratroom__spawn("alice");
+    world.ratfun__spawn("alice");
 
     vm.stopPrank();
   }

@@ -11,14 +11,14 @@ contract RoomSystemTest is BaseTest {
     uint256 initialBalance = setInitialBalance(alice);
     // As alice
     vm.startPrank(alice);
-    bytes32 playerId = world.ratroom__spawn("alice");
+    bytes32 playerId = world.ratfun__spawn("alice");
     approveGamePool(type(uint256).max);
     vm.stopPrank();
 
     // As admin
     prankAdmin();
     startGasReport("Create room (user)");
-    bytes32 roomId = world.ratroom__createRoom(playerId, LevelList.getItem(0), bytes32(0), "A test room");
+    bytes32 roomId = world.ratfun__createRoom(playerId, LevelList.getItem(0), bytes32(0), "A test room");
     endGasReport();
     vm.stopPrank();
 
@@ -41,14 +41,14 @@ contract RoomSystemTest is BaseTest {
     setInitialBalance(alice);
     // As alice
     vm.startPrank(alice);
-    bytes32 playerId = world.ratroom__spawn("alice");
+    bytes32 playerId = world.ratfun__spawn("alice");
     approveGamePool(type(uint256).max);
     vm.stopPrank();
 
     // As admin
     prankAdmin();
     startGasReport("Create room: long prompt");
-    world.ratroom__createRoom(
+    world.ratfun__createRoom(
       playerId,
       LevelList.getItem(0),
       bytes32(0),
@@ -60,8 +60,8 @@ contract RoomSystemTest is BaseTest {
 
   function testRevertBalanceTooLow() public {
     vm.startPrank(alice);
-    bytes32 playerId = world.ratroom__spawn("alice");
-    world.ratroom__giveCallerTokens();
+    bytes32 playerId = world.ratfun__spawn("alice");
+    world.ratfun__giveCallerTokens();
     approveGamePool(type(uint256).max);
     vm.stopPrank();
 
@@ -76,22 +76,22 @@ contract RoomSystemTest is BaseTest {
         GameConfig.getRoomCreationCost() * 10 ** LibWorld.erc20().decimals()
       )
     );
-    world.ratroom__createRoom(playerId, firstLevelId, bytes32(0), "A test room");
+    world.ratfun__createRoom(playerId, firstLevelId, bytes32(0), "A test room");
     vm.stopPrank();
   }
 
   function testRevertIdAlreadyInUse() public {
     setInitialBalance(alice);
     vm.startPrank(alice);
-    bytes32 playerId = world.ratroom__spawn("alice");
+    bytes32 playerId = world.ratfun__spawn("alice");
     approveGamePool(type(uint256).max);
     vm.stopPrank();
 
     prankAdmin();
     bytes32 firstLevelId = LevelList.getItem(0);
-    world.ratroom__createRoom(playerId, firstLevelId, bytes32("666"), "A test room");
+    world.ratfun__createRoom(playerId, firstLevelId, bytes32("666"), "A test room");
     vm.expectRevert("room id already in use");
-    world.ratroom__createRoom(playerId, firstLevelId, bytes32("666"), "A test room");
+    world.ratfun__createRoom(playerId, firstLevelId, bytes32("666"), "A test room");
     vm.stopPrank();
   }
 
@@ -99,13 +99,13 @@ contract RoomSystemTest is BaseTest {
     uint256 initialBalance = setInitialBalance(alice);
     // As alice
     vm.startPrank(alice);
-    bytes32 playerId = world.ratroom__spawn("alice");
+    bytes32 playerId = world.ratfun__spawn("alice");
     approveGamePool(type(uint256).max);
     vm.stopPrank();
 
     // As admin
     prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(playerId, LevelList.getItem(0), bytes32(0), "A test room");
+    bytes32 roomId = world.ratfun__createRoom(playerId, LevelList.getItem(0), bytes32(0), "A test room");
     vm.stopPrank();
 
     // Check player balance
@@ -125,7 +125,7 @@ contract RoomSystemTest is BaseTest {
     // Close room
     vm.startPrank(alice);
     startGasReport("Close room");
-    world.ratroom__closeRoom(roomId);
+    world.ratfun__closeRoom(roomId);
     endGasReport();
 
     vm.stopPrank();
@@ -150,13 +150,13 @@ contract RoomSystemTest is BaseTest {
     setInitialBalance(alice);
     // As alice
     vm.startPrank(alice);
-    bytes32 playerId = world.ratroom__spawn("alice");
+    bytes32 playerId = world.ratfun__spawn("alice");
     approveGamePool(type(uint256).max);
     vm.stopPrank();
 
     // As admin
     prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(playerId, LevelList.getItem(0), bytes32(0), "A test room");
+    bytes32 roomId = world.ratfun__createRoom(playerId, LevelList.getItem(0), bytes32(0), "A test room");
     vm.stopPrank();
 
     // Advance blocks but not enough to pass cooldown
@@ -164,7 +164,7 @@ contract RoomSystemTest is BaseTest {
 
     vm.startPrank(alice);
     vm.expectRevert("in cooldown");
-    world.ratroom__closeRoom(roomId);
+    world.ratfun__closeRoom(roomId);
     vm.stopPrank();
   }
 
@@ -172,19 +172,19 @@ contract RoomSystemTest is BaseTest {
     setInitialBalance(alice);
     // As alice
     vm.startPrank(alice);
-    bytes32 aliceId = world.ratroom__spawn("alice");
+    bytes32 aliceId = world.ratfun__spawn("alice");
     approveGamePool(type(uint256).max);
     vm.stopPrank();
 
     setInitialBalance(bob);
     // As bob
     vm.startPrank(bob);
-    world.ratroom__spawn("bob");
+    world.ratfun__spawn("bob");
     vm.stopPrank();
 
     // As admin
     prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(aliceId, LevelList.getItem(0), bytes32(0), "A test room");
+    bytes32 roomId = world.ratfun__createRoom(aliceId, LevelList.getItem(0), bytes32(0), "A test room");
     vm.stopPrank();
 
     // Check room balance
@@ -193,7 +193,7 @@ contract RoomSystemTest is BaseTest {
     // Bob tries to close alice's room
     vm.startPrank(bob);
     vm.expectRevert("not owner");
-    world.ratroom__closeRoom(roomId);
+    world.ratfun__closeRoom(roomId);
     vm.stopPrank();
   }
 }

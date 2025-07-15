@@ -33,13 +33,13 @@ contract GamePool {
 
   /**
    * Deposit tokens to the pool from the specified address.
-   * Requires the caller to have "ratroom" namespace access.
+   * Requires the caller to have "ratfun" namespace access.
    * This function allows ERC-20 approval to be granted to the pool contract only, rather than systems that use it.
    * (it is dangerous to approve a system, since it can be registered on another world and used by anyone)
    * @param from address to deposit tokens from.
    * @param amount amount of tokens to deposit.
    */
-  function depositTokens(address from, uint256 amount) external onlyNamespace("ratroom") {
+  function depositTokens(address from, uint256 amount) external onlyNamespace("ratfun") {
     require(amount > 0, "invalid amount");
     // ERC-20 will ensure that addresses are non-zero, pool has approval, and `from` has sufficient balance for the transfer
     erc20.transferFrom(from, address(this), amount);
@@ -47,11 +47,11 @@ contract GamePool {
 
   /**
    * Withdraw tokens from the pool to the specified address.
-   * Requires the caller to have "ratroom" namespace access.
+   * Requires the caller to have "ratfun" namespace access.
    * @param to address to withdraw tokens to.
    * @param amount amount of tokens to withdraw.
    */
-  function withdrawTokens(address to, uint256 amount) external onlyNamespace("ratroom") {
+  function withdrawTokens(address to, uint256 amount) external onlyNamespace("ratfun") {
     require(amount > 0, "invalid amount");
     // ERC-20 will ensure that `to` is non-zero, and the pool has sufficient balance for the transfer
     erc20.transfer(to, amount);

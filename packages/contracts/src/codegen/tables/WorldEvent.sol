@@ -24,8 +24,8 @@ struct WorldEventData {
 }
 
 library WorldEvent {
-  // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "ratroom", name: "WorldEvent", typeId: RESOURCE_TABLE });`
-  ResourceId constant _tableId = ResourceId.wrap(0x7462726174726f6f6d00000000000000576f726c644576656e74000000000000);
+  // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "ratfun", name: "WorldEvent", typeId: RESOURCE_TABLE });`
+  ResourceId constant _tableId = ResourceId.wrap(0x746272617466756e0000000000000000576f726c644576656e74000000000000);
 
   FieldLayout constant _fieldLayout =
     FieldLayout.wrap(0x0040020220200000000000000000000000000000000000000000000000000000);

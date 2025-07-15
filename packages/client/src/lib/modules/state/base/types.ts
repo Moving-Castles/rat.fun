@@ -11,8 +11,8 @@ import { ENTITY_TYPE } from "contracts/enums"
 import mudConfig from "contracts/mud.config"
 
 type mudSchemas = {
-  [table in keyof typeof mudConfig.namespaces.ratroom.tables]: TableRecord<
-    (typeof mudConfig.namespaces.ratroom.tables)[table]
+  [table in keyof typeof mudConfig.namespaces.ratfun.tables]: TableRecord<
+    (typeof mudConfig.namespaces.ratfun.tables)[table]
   >["fields"]
 }
 

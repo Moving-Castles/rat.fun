@@ -22,7 +22,7 @@ contract SalePlaceholder {
     _;
   }
 
-  function transferStartingTokens(SlopERC20 erc20, address to) external onlyNamespace("ratroom") {
+  function transferStartingTokens(SlopERC20 erc20, address to) external onlyNamespace("ratfun") {
     erc20.transfer(to, 2000 * 10 ** erc20.decimals());
   }
 }

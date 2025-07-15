@@ -4,7 +4,7 @@ import { get } from "svelte/store"
 import { walletType } from "$lib/modules/network"
 import { executeTransaction } from "./executeTransaction"
 
-const NAMESPACE = "ratroom__"
+const NAMESPACE = "ratfun__"
 
 export enum WorldFunctions {
   Spawn = NAMESPACE + "spawn",

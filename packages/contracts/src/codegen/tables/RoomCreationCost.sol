@@ -17,8 +17,8 @@ import { EncodedLengths, EncodedLengthsLib } from "@latticexyz/store/src/Encoded
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 
 library RoomCreationCost {
-  // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "ratroom", name: "RoomCreationCost", typeId: RESOURCE_TABLE });`
-  ResourceId constant _tableId = ResourceId.wrap(0x7462726174726f6f6d00000000000000526f6f6d4372656174696f6e436f7374);
+  // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "ratfun", name: "RoomCreationCost", typeId: RESOURCE_TABLE });`
+  ResourceId constant _tableId = ResourceId.wrap(0x746272617466756e0000000000000000526f6f6d4372656174696f6e436f7374);
 
   FieldLayout constant _fieldLayout =
     FieldLayout.wrap(0x0020010020000000000000000000000000000000000000000000000000000000);

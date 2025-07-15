@@ -11,11 +11,11 @@ contract RatSystemTest is BaseTest {
     setInitialBalance(alice);
     vm.startPrank(alice);
 
-    bytes32 playerId = world.ratroom__spawn("alice");
+    bytes32 playerId = world.ratfun__spawn("alice");
     approveGamePool(type(uint256).max);
 
     startGasReport("Create rat");
-    bytes32 ratId = world.ratroom__createRat("roger");
+    bytes32 ratId = world.ratfun__createRat("roger");
     endGasReport();
 
     vm.stopPrank();
@@ -40,13 +40,13 @@ contract RatSystemTest is BaseTest {
   function testRevertAlreadyHasRat() public {
     setInitialBalance(alice);
     vm.startPrank(alice);
-    world.ratroom__spawn("alice");
+    world.ratfun__spawn("alice");
     approveGamePool(type(uint256).max);
 
-    world.ratroom__createRat("roger");
+    world.ratfun__createRat("roger");
 
     vm.expectRevert("already has rat");
-    world.ratroom__createRat("roger");
+    world.ratfun__createRat("roger");
 
     vm.stopPrank();
   }
@@ -55,18 +55,18 @@ contract RatSystemTest is BaseTest {
     setInitialBalance(alice);
     vm.startPrank(alice);
 
-    bytes32 playerId = world.ratroom__spawn("alice");
+    bytes32 playerId = world.ratfun__spawn("alice");
     approveGamePool(type(uint256).max);
 
     uint256 initialBalance = setInitialBalance(alice);
 
-    bytes32 ratId = world.ratroom__createRat("roger");
+    bytes32 ratId = world.ratfun__createRat("roger");
 
     // Get admin balance before liquidation
     uint256 adminBalanceBefore = LibWorld.erc20().balanceOf(GameConfig.getAdminAddress());
 
     startGasReport("Liquidate rat");
-    world.ratroom__liquidateRat();
+    world.ratfun__liquidateRat();
     endGasReport();
 
     // Calculate tax based on rat value (health = 100)
@@ -91,15 +91,15 @@ contract RatSystemTest is BaseTest {
   function testRevertLiquidateNoRat() public {
     setInitialBalance(alice);
     vm.startPrank(alice);
-    world.ratroom__spawn("alice");
+    world.ratfun__spawn("alice");
     approveGamePool(type(uint256).max);
 
-    world.ratroom__createRat("roger");
+    world.ratfun__createRat("roger");
 
-    world.ratroom__liquidateRat();
+    world.ratfun__liquidateRat();
 
     vm.expectRevert("no rat");
-    world.ratroom__liquidateRat();
+    world.ratfun__liquidateRat();
 
     vm.stopPrank();
   }
@@ -107,10 +107,10 @@ contract RatSystemTest is BaseTest {
   function testRevertLiquidateDeadRat() public {
     setInitialBalance(alice);
     vm.startPrank(alice);
-    world.ratroom__spawn("alice");
+    world.ratfun__spawn("alice");
     approveGamePool(type(uint256).max);
 
-    bytes32 ratId = world.ratroom__createRat("roger");
+    bytes32 ratId = world.ratfun__createRat("roger");
     vm.stopPrank();
 
     prankAdmin();
@@ -120,10 +120,10 @@ contract RatSystemTest is BaseTest {
     vm.startPrank(alice);
     // Dead rat cannot be liquidated
     vm.expectRevert("rat is dead");
-    world.ratroom__liquidateRat();
+    world.ratfun__liquidateRat();
 
     // But a new rat can be created
-    bytes32 newRatId = world.ratroom__createRat("roger");
+    bytes32 newRatId = world.ratfun__createRat("roger");
     vm.stopPrank();
 
     assertNotEq(ratId, newRatId);
@@ -134,9 +134,9 @@ contract RatSystemTest is BaseTest {
 
     // As alice
     vm.startPrank(alice);
-    world.ratroom__spawn("alice");
+    world.ratfun__spawn("alice");
     approveGamePool(type(uint256).max);
-    bytes32 ratId = world.ratroom__createRat("roger");
+    bytes32 ratId = world.ratfun__createRat("roger");
     vm.stopPrank();
 
     uint256 aliceBalance = LibWorld.erc20().balanceOf(alice);
@@ -148,8 +148,8 @@ contract RatSystemTest is BaseTest {
     // As admin
     prankAdmin();
     approveGamePool(type(uint256).max);
-    bytes32 roomId = world.ratroom__createRoom(GameConfig.getAdminId(), LevelList.getItem(0), bytes32(0), "test room");
-    world.ratroom__applyOutcome(ratId, roomId, 0, 0, new bytes32[](0), new Item[](0), new bytes32[](0), newItems);
+    bytes32 roomId = world.ratfun__createRoom(GameConfig.getAdminId(), LevelList.getItem(0), bytes32(0), "test room");
+    world.ratfun__applyOutcome(ratId, roomId, 0, 0, new bytes32[](0), new Item[](0), new bytes32[](0), newItems);
     vm.stopPrank();
 
     bytes32 newItemId = Inventory.getItem(ratId, 0);
@@ -164,7 +164,7 @@ contract RatSystemTest is BaseTest {
     // Sell item
     vm.startPrank(alice);
     startGasReport("Sell item");
-    world.ratroom__sellItem(newItemId);
+    world.ratfun__sellItem(newItemId);
     endGasReport();
     vm.stopPrank();
 

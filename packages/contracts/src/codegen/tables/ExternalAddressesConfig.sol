@@ -25,8 +25,8 @@ struct ExternalAddressesConfigData {
 }
 
 library ExternalAddressesConfig {
-  // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "ratroom", name: "ExternalAddresse", typeId: RESOURCE_TABLE });`
-  ResourceId constant _tableId = ResourceId.wrap(0x7462726174726f6f6d0000000000000045787465726e616c4164647265737365);
+  // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "ratfun", name: "ExternalAddresse", typeId: RESOURCE_TABLE });`
+  ResourceId constant _tableId = ResourceId.wrap(0x746272617466756e000000000000000045787465726e616c4164647265737365);
 
   FieldLayout constant _fieldLayout =
     FieldLayout.wrap(0x0064050014141414140000000000000000000000000000000000000000000000);

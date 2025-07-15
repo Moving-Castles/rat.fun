@@ -28,7 +28,10 @@
         ? `Liquidate Room (Get ${room.balance})`
         : `Liquidation unlocked in ${blockUntilUnlock} blocks`}
       tippyText="Liquidate room to get the value added to your wallet"
-      onclick={() => (confirming = true)}
+      onclick={async () => {
+        await sendLiquidateRoom(roomId)
+        sendLiquidateRoomMessage(roomId)
+      }}
       disabled={busy.CloseRoom.current !== 0 || blockUntilUnlock > 0}
     />
   </div>

@@ -41,7 +41,7 @@ contract GamePoolTest is BaseTest {
     erc20.transfer(address(gamePool), 1000 * 1e18);
 
     // Register a withdrawal system in the namespace with GamePool access
-    systemIdGood = WorldResourceIdLib.encode(RESOURCE_SYSTEM, "ratroom", "InteractionSyste");
+    systemIdGood = WorldResourceIdLib.encode(RESOURCE_SYSTEM, "ratfun", "InteractionSyste");
     world.registerSystem(systemIdGood, new InteractionSystem(), true);
     // And a namespace without access
     world.registerNamespace(WorldResourceIdLib.encodeNamespace("testnamespace"));

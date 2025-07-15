@@ -33,8 +33,8 @@ struct GameConfigData {
 }
 
 library GameConfig {
-  // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "ratroom", name: "GameConfig", typeId: RESOURCE_TABLE });`
-  ResourceId constant _tableId = ResourceId.wrap(0x7462726174726f6f6d0000000000000047616d65436f6e666967000000000000);
+  // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "ratfun", name: "GameConfig", typeId: RESOURCE_TABLE });`
+  ResourceId constant _tableId = ResourceId.wrap(0x746272617466756e000000000000000047616d65436f6e666967000000000000);
 
   FieldLayout constant _fieldLayout =
     FieldLayout.wrap(0x00d00d0014202020202004040404040404000000000000000000000000000000);

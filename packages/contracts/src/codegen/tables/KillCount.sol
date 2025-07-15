@@ -17,8 +17,8 @@ import { EncodedLengths, EncodedLengthsLib } from "@latticexyz/store/src/Encoded
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 
 library KillCount {
-  // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "ratroom", name: "KillCount", typeId: RESOURCE_TABLE });`
-  ResourceId constant _tableId = ResourceId.wrap(0x7462726174726f6f6d000000000000004b696c6c436f756e7400000000000000);
+  // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "ratfun", name: "KillCount", typeId: RESOURCE_TABLE });`
+  ResourceId constant _tableId = ResourceId.wrap(0x746272617466756e00000000000000004b696c6c436f756e7400000000000000);
 
   FieldLayout constant _fieldLayout =
     FieldLayout.wrap(0x0020010020000000000000000000000000000000000000000000000000000000);

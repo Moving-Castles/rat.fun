@@ -2,7 +2,7 @@ import { defineWorld } from "@latticexyz/world"
 import { ENTITY_TYPE_ARRAY } from "./enums"
 
 export default defineWorld({
-  namespace: "ratroom",
+  namespace: "ratfun",
   enums: {
     ENTITY_TYPE: ENTITY_TYPE_ARRAY
   },

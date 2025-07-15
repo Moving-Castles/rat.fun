@@ -11,7 +11,7 @@ import { Item } from "../../structs.sol";
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IManagerSystem {
-  function ratroom__applyOutcome(
+  function ratfun__applyOutcome(
     bytes32 _ratId,
     bytes32 _roomId,
     int256 _healthChange,
@@ -22,5 +22,5 @@ interface IManagerSystem {
     Item[] calldata _itemsToAddToRat
   ) external;
 
-  function ratroom__giveMasterKey(bytes32 playerId) external;
+  function ratfun__giveMasterKey(bytes32 playerId) external;
 }

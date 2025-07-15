@@ -9,9 +9,9 @@ pragma solidity >=0.8.24;
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IDevSystem {
-  function ratroom__giveCallerTokens() external;
+  function ratfun__giveCallerTokens() external;
 
-  function ratroom__updateLevel(
+  function ratfun__updateLevel(
     bytes32 _levelId,
     uint256 _levelMinBalance,
     uint256 _levelMaxBalance,

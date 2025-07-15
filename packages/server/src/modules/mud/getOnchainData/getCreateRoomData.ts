@@ -35,7 +35,7 @@ export async function getCreateRoomData(
     const playerBalance = (await network.publicClient.readContract({
       address: network.worldContract.address,
       abi: network.worldContract.abi,
-      functionName: "ratroom__balanceOf",
+      functionName: "ratfun__balanceOf",
       args: [playerId]
     })) as bigint
     const playerAchievedLevels = getComponentValue(AchievedLevels, playerEntity)?.value as string[]

@@ -54,8 +54,8 @@ export type Item = {
   value: number
 }
 
-export type GameConfig = TableRecord<typeof mudConfig.tables.ratroom__GameConfig>["fields"]
-export type WorldEvent = TableRecord<typeof mudConfig.tables.ratroom__WorldEvent>["fields"]
+export type GameConfig = TableRecord<typeof mudConfig.tables.ratfun__GameConfig>["fields"]
+export type WorldEvent = TableRecord<typeof mudConfig.tables.ratfun__WorldEvent>["fields"]
 
 export type EnterRoomData = {
   gameConfig: GameConfig

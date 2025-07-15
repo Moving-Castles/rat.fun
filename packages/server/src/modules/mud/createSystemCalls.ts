@@ -22,7 +22,7 @@ export function createSystemCalls(network: SetupNetworkResult) {
     try {
       const args = createOutcomeCallArgs(rat, room, outcome)
 
-      const tx = await (network as any).worldContract.write.ratroom__applyOutcome(args)
+      const tx = await (network as any).worldContract.write.ratfun__applyOutcome(args)
       await network.waitForTransaction(tx)
 
       // Suggested outcomes were sent to the chain
@@ -83,7 +83,7 @@ export function createSystemCalls(network: SetupNetworkResult) {
     roomPrompt: string
   ) => {
     try {
-      const tx = await (network as any).worldContract.write.ratroom__createRoom([
+      const tx = await (network as any).worldContract.write.ratfun__createRoom([
         playerId,
         levelId,
         roomID,
@@ -109,7 +109,7 @@ export function createSystemCalls(network: SetupNetworkResult) {
 
   const giveMasterKey = async (playerId: string) => {
     try {
-      const tx = await (network as any).worldContract.write.ratroom__giveMasterKey([playerId])
+      const tx = await (network as any).worldContract.write.ratfun__giveMasterKey([playerId])
       await network.waitForTransaction(tx)
       return true
     } catch (error) {

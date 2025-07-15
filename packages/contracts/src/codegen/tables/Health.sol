@@ -17,8 +17,8 @@ import { EncodedLengths, EncodedLengthsLib } from "@latticexyz/store/src/Encoded
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 
 library Health {
-  // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "ratroom", name: "Health", typeId: RESOURCE_TABLE });`
-  ResourceId constant _tableId = ResourceId.wrap(0x7462726174726f6f6d000000000000004865616c746800000000000000000000);
+  // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "ratfun", name: "Health", typeId: RESOURCE_TABLE });`
+  ResourceId constant _tableId = ResourceId.wrap(0x746272617466756e00000000000000004865616c746800000000000000000000);
 
   FieldLayout constant _fieldLayout =
     FieldLayout.wrap(0x0020010020000000000000000000000000000000000000000000000000000000);
