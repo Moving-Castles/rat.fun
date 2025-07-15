@@ -1,6 +1,6 @@
 import { getComponentValue, Entity } from "@latticexyz/recs"
 import { components, network } from "@modules/mud/initMud"
-import { firstValueFrom } from "rxjs"
+import { firstValueFrom, timeout, catchError, of } from "rxjs"
 
 export function getRatId(playerId: string) {
   const { CurrentRat } = components
@@ -29,7 +29,16 @@ export function getEntityName(id: string) {
 
 export async function getLatestBlockNumber() {
   const { latestBlock$ } = network
-  return firstValueFrom(latestBlock$).then((block: unknown) => {
+  return firstValueFrom(
+    latestBlock$.pipe(
+      timeout(10000), // 10 second timeout
+      catchError(error => {
+        // If timeout or other error occurs, return BigInt(0)
+        console.warn("Failed to get latest block number:", error)
+        return of({ number: BigInt(0) })
+      })
+    )
+  ).then((block: unknown) => {
     return ((block as any).number as bigint) ?? BigInt(0)
   })
 }
