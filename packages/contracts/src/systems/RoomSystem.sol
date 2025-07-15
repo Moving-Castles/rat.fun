@@ -11,7 +11,6 @@ import {
   RoomCreationCost,
   LevelList,
   Owner,
-  OwnedRat,
   CreationBlock
 } from "../codegen/index.sol";
 import { LibRoom, LibUtils, LibWorld } from "../libraries/Libraries.sol";

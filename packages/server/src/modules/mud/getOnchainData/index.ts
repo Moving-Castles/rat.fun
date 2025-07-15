@@ -2,8 +2,8 @@ import { getComponentValue, Entity } from "@latticexyz/recs"
 import { components } from "@modules/mud/initMud"
 
 export function getRatId(playerId: string) {
-  const { OwnedRat } = components
-  return (getComponentValue(OwnedRat, playerId as Entity)?.value ?? "unknown rat") as string
+  const { CurrentRat } = components
+  return (getComponentValue(CurrentRat, playerId as Entity)?.value ?? "unknown rat") as string
 }
 
 export function getPlayerMasterKey(playerId: string) {

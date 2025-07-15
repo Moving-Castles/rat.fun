@@ -14,7 +14,7 @@
 
 <div class="your-rat">
   <div class="your-rat-track">
-    {#if $player?.ownedRat}
+    {#if $player?.currentRat}
       <div class="your-rat-top">
         <div class="rat-main">
           <!-- Info -->

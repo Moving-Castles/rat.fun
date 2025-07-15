@@ -16,9 +16,9 @@ import { Schema } from "@latticexyz/store/src/Schema.sol";
 import { EncodedLengths, EncodedLengthsLib } from "@latticexyz/store/src/EncodedLengths.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 
-library OwnedRat {
-  // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "ratroom", name: "OwnedRat", typeId: RESOURCE_TABLE });`
-  ResourceId constant _tableId = ResourceId.wrap(0x7462726174726f6f6d000000000000004f776e65645261740000000000000000);
+library CurrentRat {
+  // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "ratroom", name: "CurrentRat", typeId: RESOURCE_TABLE });`
+  ResourceId constant _tableId = ResourceId.wrap(0x7462726174726f6f6d0000000000000043757272656e74526174000000000000);
 
   FieldLayout constant _fieldLayout =
     FieldLayout.wrap(0x0020010020000000000000000000000000000000000000000000000000000000);
