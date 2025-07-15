@@ -21,7 +21,7 @@ import { MasterKey } from "./tables/MasterKey.sol";
 import { Index } from "./tables/Index.sol";
 import { Balance } from "./tables/Balance.sol";
 import { Value } from "./tables/Value.sol";
-import { OwnedRat } from "./tables/OwnedRat.sol";
+import { CurrentRat } from "./tables/CurrentRat.sol";
 import { PastRats } from "./tables/PastRats.sol";
 import { Owner } from "./tables/Owner.sol";
 import { VisitCount } from "./tables/VisitCount.sol";

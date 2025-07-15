@@ -15,7 +15,7 @@ import {
   LevelList,
   Name,
   Owner,
-  OwnedRat,
+  CurrentRat,
   CreationBlock,
   PastRats
 } from "../codegen/index.sol";
@@ -86,7 +86,7 @@ library LibRat {
     // Add to history of rats
     PastRats.push(playerId, _ratId);
     // Then disconnect the rat from the player
-    OwnedRat.deleteRecord(playerId);
+    CurrentRat.deleteRecord(playerId);
   }
 
   /**

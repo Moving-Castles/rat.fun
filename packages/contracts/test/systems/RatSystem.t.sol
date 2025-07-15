@@ -21,7 +21,7 @@ contract RatSystemTest is BaseTest {
     vm.stopPrank();
 
     // Check player
-    assertEq(OwnedRat.get(playerId), ratId);
+    assertEq(CurrentRat.get(playerId), ratId);
     assertEq(VisitedLevels.get(playerId).length, 1);
     assertEq(VisitedLevels.getItem(playerId, 0), LevelList.getItem(0));
 

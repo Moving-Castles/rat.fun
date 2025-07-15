@@ -50,7 +50,7 @@
             liquidationMessage = "Eliminating rat..."
             try {
               await sendLiquidateRat()
-              sendLiquidateRatMessage($player.ownedRat)
+              sendLiquidateRatMessage($player.currentRat)
             } catch (er) {
               console.error(er)
             } finally {

@@ -92,7 +92,7 @@ export const playerERC20Allowance = writable(0 as number)
 // PLAYER RAT STORES
 // * * * * * * * * * * * * * * * * *
 
-export const rat = derived([player, rats], ([$player, $rats]) => $rats[$player?.ownedRat] as Rat)
+export const rat = derived([player, rats], ([$player, $rats]) => $rats[$player?.currentRat] as Rat)
 
 export const ratTraits = derived(
   [rat, traits],
@@ -114,8 +114,8 @@ export const ratLevelIndex = derived([gameConfig, rat], ([$gameConfig, $rat]) =>
 })
 
 export const ratImageUrl = derived([player], ([$player]) => {
-  if (!$player?.ownedRat) return "/images/rat.png"
-  return addressToRatImage($player.ownedRat)
+  if (!$player?.currentRat) return "/images/rat.png"
+  return addressToRatImage($player.currentRat)
 })
 
 /**

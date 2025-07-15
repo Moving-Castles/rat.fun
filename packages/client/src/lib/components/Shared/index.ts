@@ -36,7 +36,6 @@ export { default as RoomItem } from "./RoomItem/RoomItem.svelte"
 
 /* RoomListing */
 export { default as CreateRoomButton } from "./RoomListing/CreateRoomButton.svelte"
-export { default as FloorHeader } from "./RoomListing/FloorHeader.svelte"
 export { default as RoomFilters } from "./RoomListing/RoomFilters.svelte"
 export { default as RoomListing } from "./RoomListing/RoomListing.svelte"
 

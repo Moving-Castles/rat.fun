@@ -49,7 +49,7 @@
     }
 
     try {
-      const ret = sendEnterRoom(roomId, $player.ownedRat)
+      const ret = sendEnterRoom(roomId, $player.currentRat)
 
       try {
         result = await ret
@@ -74,7 +74,7 @@
 
   onMount(() => {
     if (!$ratState) goto("/game")
-    freezeObjects($ratState, room, roomId as Hex, $player.ownedRat as Hex)
+    freezeObjects($ratState, room, roomId as Hex, $player.currentRat as Hex)
     resetRoomResultState()
     processRoom()
   })

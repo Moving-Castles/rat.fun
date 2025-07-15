@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
-import { Owner, OwnedRat, Dead, Index, Inventory, GameConfig, VisitedLevels, Level } from "../codegen/index.sol";
+import { Owner, CurrentRat, Dead, Index, Inventory, GameConfig, VisitedLevels, Level } from "../codegen/index.sol";
 import { System } from "@latticexyz/world/src/System.sol";
 import { LibUtils, LibRat, LibItem, LibWorld } from "../libraries/Libraries.sol";
 
@@ -13,7 +13,7 @@ contract RatSystem is System {
   function createRat(string calldata _name) public returns (bytes32 ratId) {
     bytes32 playerId = LibUtils.addressToEntityKey(_msgSender());
 
-    bytes32 currentRat = OwnedRat.get(playerId);
+    bytes32 currentRat = CurrentRat.get(playerId);
 
     // A player can only have one rat at a time
     require(currentRat == bytes32(0) || Dead.get(currentRat), "already has rat");
@@ -21,7 +21,7 @@ contract RatSystem is System {
     ratId = LibRat.createRat(_name);
 
     // Set ownership
-    OwnedRat.set(playerId, ratId);
+    CurrentRat.set(playerId, ratId);
     Owner.set(ratId, playerId);
 
     // Deposit player tokens in pool
@@ -37,7 +37,7 @@ contract RatSystem is System {
    */
   function liquidateRat() public {
     bytes32 playerId = LibUtils.addressToEntityKey(_msgSender());
-    bytes32 ratId = OwnedRat.get(playerId);
+    bytes32 ratId = CurrentRat.get(playerId);
 
     require(ratId != bytes32(0), "no rat");
 
@@ -56,7 +56,7 @@ contract RatSystem is System {
    */
   function dropItem(bytes32 _itemId) public {
     bytes32 playerId = LibUtils.addressToEntityKey(_msgSender());
-    bytes32 ratId = OwnedRat.get(playerId);
+    bytes32 ratId = CurrentRat.get(playerId);
 
     require(ratId != bytes32(0), "no rat");
 
