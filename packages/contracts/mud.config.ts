@@ -21,10 +21,11 @@ export default defineWorld({
         roomCreationCost: "uint256",
         maxInventorySize: "uint32",
         maxTraitsSize: "uint32",
-        minRoomPromptLength: "uint32",
         maxRoomPromptLength: "uint32",
         cooldownCloseRoom: "uint32",
-        cooldownReenterRoom: "uint32"
+        taxationSellItem: "uint32",
+        taxationLiquidateRat: "uint32",
+        taxationCloseRoom: "uint32"
       },
       codegen: {
         dataStruct: true

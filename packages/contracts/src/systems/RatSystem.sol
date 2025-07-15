@@ -44,10 +44,18 @@ contract RatSystem is System {
     // Check that the rat is alive
     require(!Dead.get(ratId), "rat is dead");
 
-    uint256 balanceToTransfer = LibRat.killRat(ratId, true);
-    // Withdraw tokens equal to rat value from pool to player
+    uint256 valueToPlayer = LibRat.killRat(ratId, true);
+
+    // Calculate tax
+    uint256 tax = (valueToPlayer * GameConfig.getTaxationLiquidateRat()) / 100;
+    valueToPlayer -= tax;
+
+    // Withdraw tokens equal to rat value minus tax from pool to player
     // ERC-20 will check that pool has sufficient balance
-    LibWorld.gamePool().withdrawTokens(_msgSender(), balanceToTransfer * 10 ** LibWorld.erc20().decimals());
+    LibWorld.gamePool().withdrawTokens(_msgSender(), valueToPlayer * 10 ** LibWorld.erc20().decimals());
+
+    // Withdraw tokens equal to tax from pool to admin
+    LibWorld.gamePool().withdrawTokens(GameConfig.getAdminAddress(), tax * 10 ** LibWorld.erc20().decimals());
   }
 
   /**
@@ -66,10 +74,17 @@ contract RatSystem is System {
     // Remove it from the inventory
     Inventory.set(ratId, LibUtils.removeFromArray(Inventory.get(ratId), _itemId));
 
-    uint256 balanceToTransfer = Value.get(_itemId);
+    uint256 valueToPlayer = Value.get(_itemId);
 
-    // Withdraw tokens equal to item value from pool to player
+    // Calculate tax
+    uint256 tax = (valueToPlayer * GameConfig.getTaxationSellItem()) / 100;
+    valueToPlayer -= tax;
+
+    // Withdraw tokens equal to item value minus tax from pool to player
     // ERC-20 will check that pool has sufficient balance
-    LibWorld.gamePool().withdrawTokens(_msgSender(), balanceToTransfer * 10 ** LibWorld.erc20().decimals());
+    LibWorld.gamePool().withdrawTokens(_msgSender(), valueToPlayer * 10 ** LibWorld.erc20().decimals());
+
+    // Withdraw tokens equal to tax from pool to admin
+    LibWorld.gamePool().withdrawTokens(GameConfig.getAdminAddress(), tax * 10 ** LibWorld.erc20().decimals());
   }
 }

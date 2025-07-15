@@ -7,4 +7,7 @@ uint32 constant MAX_ROOM_PROMPT_LENGTH = 280;
 uint32 constant MIN_ROOM_PROMPT_LENGTH = 10;
 
 uint32 constant COOLDOWN_CLOSE_ROOM = 60; // About 2 minutes
-uint32 constant COOLDOWN_REENTER_ROOM = 10; // About 20 seconds
+
+uint32 constant TAXATION_SELL_ITEM = 10; // 10%
+uint32 constant TAXATION_LIQUIDATE_RAT = 10; // 10%
+uint32 constant TAXATION_CLOSE_ROOM = 10; // 10%

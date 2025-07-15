@@ -62,16 +62,26 @@ contract RatSystemTest is BaseTest {
 
     bytes32 ratId = world.ratroom__createRat("roger");
 
-    assertEq(
-      LibWorld.erc20().balanceOf(alice),
-      initialBalance - GameConfig.getRatCreationCost() * 10 ** LibWorld.erc20().decimals()
-    );
+    // Get admin balance before liquidation
+    uint256 adminBalanceBefore = LibWorld.erc20().balanceOf(GameConfig.getAdminAddress());
 
     startGasReport("Liquidate rat");
     world.ratroom__liquidateRat();
     endGasReport();
 
-    assertEq(LibWorld.erc20().balanceOf(alice), initialBalance);
+    // Calculate tax based on rat value (health = 100)
+    uint256 ratValue = 100;
+    uint256 tax = (ratValue * GameConfig.getTaxationLiquidateRat()) / 100;
+
+    // Check that tax was transferred to admin
+    assertEq(
+      LibWorld.erc20().balanceOf(GameConfig.getAdminAddress()),
+      adminBalanceBefore + (tax * 10 ** LibWorld.erc20().decimals())
+    );
+
+    // Check that value minus tax was transfered back to player
+    assertEq(LibWorld.erc20().balanceOf(alice), initialBalance - (tax * 10 ** LibWorld.erc20().decimals()));
+
     assertEq(PastRats.length(playerId), 1);
     assertEq(PastRats.getItem(playerId, 0), ratId);
 
@@ -126,22 +136,10 @@ contract RatSystemTest is BaseTest {
     vm.startPrank(alice);
     world.ratroom__spawn("alice");
     approveGamePool(type(uint256).max);
-
     bytes32 ratId = world.ratroom__createRat("roger");
+    vm.stopPrank();
+
     uint256 aliceBalance = LibWorld.erc20().balanceOf(alice);
-    vm.stopPrank();
-
-    setInitialBalance(bob);
-
-    // As bob
-    vm.startPrank(bob);
-    bytes32 bobId = world.ratroom__spawn("bob");
-    approveGamePool(type(uint256).max);
-    vm.stopPrank();
-
-    prankAdmin();
-    bytes32 roomId = world.ratroom__createRoom(bobId, LevelList.getItem(0), bytes32(0), "test room");
-    vm.stopPrank();
 
     // Item to add
     Item[] memory newItems = new Item[](1);
@@ -149,6 +147,8 @@ contract RatSystemTest is BaseTest {
 
     // As admin
     prankAdmin();
+    approveGamePool(type(uint256).max);
+    bytes32 roomId = world.ratroom__createRoom(GameConfig.getAdminId(), LevelList.getItem(0), bytes32(0), "test room");
     world.ratroom__applyOutcome(ratId, roomId, 0, 0, new bytes32[](0), new Item[](0), new bytes32[](0), newItems);
     vm.stopPrank();
 
@@ -159,6 +159,8 @@ contract RatSystemTest is BaseTest {
     assertEq(Value.get(newItemId), 40);
     assertEq(Name.get(newItemId), "cheese");
 
+    uint256 adminBalance = LibWorld.erc20().balanceOf(GameConfig.getAdminAddress());
+
     // Sell item
     vm.startPrank(alice);
     startGasReport("Sell item");
@@ -166,7 +168,16 @@ contract RatSystemTest is BaseTest {
     endGasReport();
     vm.stopPrank();
 
-    // Check that value in ERC20 token was transfered to player
-    assertEq(LibWorld.erc20().balanceOf(alice), aliceBalance + 40 * 10 ** LibWorld.erc20().decimals());
+    // Calculate tax
+    uint256 tax = (40 * GameConfig.getTaxationSellItem()) / 100;
+
+    // Check that tax was transferred to admin
+    assertEq(
+      LibWorld.erc20().balanceOf(GameConfig.getAdminAddress()),
+      adminBalance + tax * 10 ** LibWorld.erc20().decimals()
+    );
+
+    // Check that value minus tax was transfered to player
+    assertEq(LibWorld.erc20().balanceOf(alice), aliceBalance + (40 - tax) * 10 ** LibWorld.erc20().decimals());
   }
 }

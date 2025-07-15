@@ -29,8 +29,9 @@
     <DangerButton
       text="Liquidate Rat"
       tippyText="Kill rat to get the value added to your wallet"
-      onclick={() => {
-        confirming = true
+      onclick={async () => {
+        await sendLiquidateRat()
+        sendLiquidateRatMessage($player.currentRat)
       }}
       disabled={busy.LiquidateRat.current !== 0}
     />

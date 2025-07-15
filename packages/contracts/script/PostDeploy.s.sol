@@ -44,11 +44,11 @@ contract PostDeploy is Script {
 
     // Create levels
     bytes32[] memory levels = new bytes32[](5);
-    levels[0] = LibLevel.createLevel(0, "Freezer", 0, 250, 250);
-    levels[1] = LibLevel.createLevel(1, "Dark ages", 250, 500, 500);
-    levels[2] = LibLevel.createLevel(2, "Water world", 500, 1000, 1000);
-    levels[3] = LibLevel.createLevel(3, "Demon town", 1000, 2500, 2500);
-    levels[4] = LibLevel.createLevel(4, "Fire", 2500, 10000, 10000);
+    levels[0] = LibLevel.createLevel(0, "Punter", 0, 250, 250);
+    levels[1] = LibLevel.createLevel(1, "Loser", 250, 500, 500);
+    levels[2] = LibLevel.createLevel(2, "Mediocrat", 500, 1000, 1000);
+    levels[3] = LibLevel.createLevel(3, "Normal", 1000, 2500, 2500);
+    levels[4] = LibLevel.createLevel(4, "Customer", 2500, 10000, 10000);
 
     // Root namespace owner is admin
     LibWorld.init(

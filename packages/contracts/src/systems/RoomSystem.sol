@@ -65,11 +65,19 @@ contract RoomSystem is System {
     require(Owner.get(_roomId) == playerId, "not owner");
     require(block.number > (CreationBlock.get(_roomId) + GameConfig.getCooldownCloseRoom()), "in cooldown");
 
-    uint256 balanceToTransfer = Balance.get(_roomId);
+    uint256 valueToPlayer = Balance.get(_roomId);
+
+    // Calculate tax
+    uint256 tax = (valueToPlayer * GameConfig.getTaxationCloseRoom()) / 100;
+    valueToPlayer -= tax;
+
     Balance.set(_roomId, 0);
 
     // Withdraw tokens equal to room value from pool to player
     // ERC-20 will check that pool has sufficient balance
-    LibWorld.gamePool().withdrawTokens(_msgSender(), balanceToTransfer * 10 ** LibWorld.erc20().decimals());
+    LibWorld.gamePool().withdrawTokens(_msgSender(), valueToPlayer * 10 ** LibWorld.erc20().decimals());
+
+    // Withdraw tokens equal to tax from pool to admin
+    LibWorld.gamePool().withdrawTokens(GameConfig.getAdminAddress(), tax * 10 ** LibWorld.erc20().decimals());
   }
 }

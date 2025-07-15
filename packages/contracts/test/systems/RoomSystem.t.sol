@@ -120,6 +120,8 @@ contract RoomSystemTest is BaseTest {
     // Wait for cooldown
     vm.roll(block.number + GameConfig.getCooldownCloseRoom() + 1);
 
+    uint256 adminBalanceBefore = LibWorld.erc20().balanceOf(GameConfig.getAdminAddress());
+
     // Close room
     vm.startPrank(alice);
     startGasReport("Close room");
@@ -128,11 +130,20 @@ contract RoomSystemTest is BaseTest {
 
     vm.stopPrank();
 
+    // Calculate tax
+    uint256 tax = (GameConfig.getRoomCreationCost() * GameConfig.getTaxationCloseRoom()) / 100;
+
+    // Check that tax was transferred to admin
+    assertEq(
+      LibWorld.erc20().balanceOf(GameConfig.getAdminAddress()),
+      adminBalanceBefore + (tax * 10 ** LibWorld.erc20().decimals())
+    );
+
+    // Check that value minus tax was transfered back to player
+    assertEq(LibWorld.erc20().balanceOf(alice), initialBalance - (tax * 10 ** LibWorld.erc20().decimals()));
+
     // Check room balance
     assertEq(Balance.get(roomId), 0);
-
-    // Check player balance
-    assertEq(LibWorld.erc20().balanceOf(alice), initialBalance);
   }
 
   function testCloseRoomRevertInCooldown() public {

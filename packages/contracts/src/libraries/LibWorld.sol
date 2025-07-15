@@ -16,7 +16,9 @@ import {
   MAX_INVENTORY_SIZE,
   MAX_TRAITS_SIZE,
   COOLDOWN_CLOSE_ROOM,
-  COOLDOWN_REENTER_ROOM
+  TAXATION_SELL_ITEM,
+  TAXATION_LIQUIDATE_RAT,
+  TAXATION_CLOSE_ROOM
 } from "../constants.sol";
 import { LibUtils } from "./LibUtils.sol";
 import { SlopERC20 } from "../external/SlopERC20.sol";
@@ -50,10 +52,11 @@ library LibWorld {
         ratCreationCost: 100,
         maxInventorySize: MAX_INVENTORY_SIZE,
         maxTraitsSize: MAX_TRAITS_SIZE,
-        minRoomPromptLength: MIN_ROOM_PROMPT_LENGTH,
         maxRoomPromptLength: MAX_ROOM_PROMPT_LENGTH,
         cooldownCloseRoom: COOLDOWN_CLOSE_ROOM,
-        cooldownReenterRoom: COOLDOWN_REENTER_ROOM
+        taxationSellItem: TAXATION_SELL_ITEM,
+        taxationLiquidateRat: TAXATION_LIQUIDATE_RAT,
+        taxationCloseRoom: TAXATION_CLOSE_ROOM
       })
     );
     ExternalAddressesConfig.set(
