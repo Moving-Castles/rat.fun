@@ -10,7 +10,6 @@ import {
   Balance,
   Level,
   RoomCreationCost,
-  Name,
   VisitCount,
   CreationBlock
 } from "../codegen/index.sol";

@@ -64,15 +64,6 @@ library LibUtils {
   }
 
   /**
-   * @notice Returns the absolute difference.
-   * @param _a First number
-   * @param _b Second number
-   */
-  function absDif(int32 _a, int32 _b) internal pure returns (uint32) {
-    return uint32(_a > _b ? _a - _b : _b - _a);
-  }
-
-  /**
    * @notice Conversion from address to bytes32.
    * @param _address The address to convert
    */

@@ -29,12 +29,12 @@
     "@openzeppelin/contracts": "^5.3.0"
   },
   "devDependencies": {
-    "@types/node": "^24.0.1",
+    "@types/node": "^24.0.14",
     "ds-test": "https://github.com/dapphub/ds-test.git#e282159d5170298eb2455a6c05280ab5a73a4ef0",
     "forge-std": "https://github.com/foundry-rs/forge-std.git#74cfb77e308dd188d2f58864aaf44963ae6b88b1",
-    "solhint": "^5.1.0",
+    "solhint": "^6.0.0",
     "solhint-config-mud": "2.2.23-e9e21c9f1f7d164af1b19f327d798ed2f2d0fd95",
     "solhint-plugin-mud": "2.2.23-e9e21c9f1f7d164af1b19f327d798ed2f2d0fd95",
-    "tsx": "4.19.4"
+    "tsx": "4.20.3"
   }
 }

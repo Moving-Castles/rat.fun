@@ -23,6 +23,11 @@ contract PlayerSystem is System {
     VisitedLevels.push(playerId, LevelList.getItem(0));
   }
 
+  /**
+   * @notice Get the ERC20 tokenbalance of a player
+   * @param playerId The id of the player
+   * @return balance The balance of the player
+   */
   function balanceOf(bytes32 playerId) external view returns (uint256) {
     return LibWorld.erc20().balanceOf(LibUtils.entityKeyToAddress(playerId));
   }

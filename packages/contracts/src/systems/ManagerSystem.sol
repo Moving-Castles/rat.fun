@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
-import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
 import {
   GameConfig,
@@ -8,9 +7,6 @@ import {
   Balance,
   Dead,
   Health,
-  Traits,
-  Inventory,
-  Owner,
   VisitCount,
   KillCount,
   Level,
@@ -122,6 +118,11 @@ contract ManagerSystem is System {
     LastVisitBlock.set(_roomId, block.number);
   }
 
+  /**
+   * @notice Kill a rat
+   * @param _ratId The id of the rat
+   * @param _roomId The id of the room
+   */
   function _killRat(bytes32 _ratId, bytes32 _roomId) internal {
     uint256 balanceToTransfer = LibRat.killRat(_ratId, false);
     Balance.set(_roomId, Balance.get(_roomId) + balanceToTransfer);
@@ -137,6 +138,11 @@ contract ManagerSystem is System {
     WorldPrompt.set(_worldPrompt);
   }
 
+  /**
+   * @notice Give in game admin access to a player
+   * @dev Only admin can call this function
+   * @param playerId The id of the player
+   */
   function giveMasterKey(bytes32 playerId) public onlyAdmin {
     MasterKey.set(playerId, true);
   }

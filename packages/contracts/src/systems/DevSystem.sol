@@ -21,6 +21,9 @@ contract DevSystem is System {
     _;
   }
 
+  /**
+   * @dev Give the caller tokens. REMOVE IN PRODUCTION.
+   */
   function giveCallerTokens() public {
     SalePlaceholder(ExternalAddressesConfig.getServiceAddress()).transferStartingTokens(LibWorld.erc20(), _msgSender());
   }

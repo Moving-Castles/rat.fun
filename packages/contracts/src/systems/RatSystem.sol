@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
-import { Owner, CurrentRat, Dead, Index, Inventory, GameConfig, VisitedLevels, Level } from "../codegen/index.sol";
+import { Owner, CurrentRat, Dead, Inventory, GameConfig } from "../codegen/index.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { LibUtils, LibRat, LibItem, LibWorld } from "../libraries/Libraries.sol";
+import { LibUtils, LibRat, LibWorld } from "../libraries/Libraries.sol";
 
 contract RatSystem is System {
   /**

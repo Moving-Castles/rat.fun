@@ -4,11 +4,11 @@ import { getUniqueEntity } from "@latticexyz/world-modules/src/modules/uniqueent
 import {
   EntityType,
   Index,
+  Name,
   LevelMinBalance,
   LevelMaxBalance,
   RoomCreationCost,
-  LevelList,
-  Name
+  LevelList
 } from "../codegen/index.sol";
 import { ENTITY_TYPE } from "../codegen/common.sol";
 
