@@ -1,5 +1,6 @@
 import { getComponentValue, Entity } from "@latticexyz/recs"
-import { components } from "@modules/mud/initMud"
+import { components, network } from "@modules/mud/initMud"
+import { firstValueFrom } from "rxjs"
 
 export function getRatId(playerId: string) {
   const { CurrentRat } = components
@@ -24,4 +25,11 @@ export function getEntityLevel(id: string) {
 export function getEntityName(id: string) {
   const { Name } = components
   return (getComponentValue(Name, id as Entity)?.value ?? "unknown entity") as string
+}
+
+export async function getLatestBlockNumber() {
+  const { latestBlock$ } = network
+  return firstValueFrom(latestBlock$).then((block: unknown) => {
+    return ((block as any).number as bigint) ?? BigInt(0)
+  })
 }

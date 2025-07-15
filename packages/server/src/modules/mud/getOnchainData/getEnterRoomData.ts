@@ -1,4 +1,4 @@
-import type { EnterRoomData, Trait, Item, GameConfig } from "@modules/types"
+import type { EnterRoomData, Trait, Item, GameConfig, WorldEvent } from "@modules/types"
 import { getComponentValue, Entity } from "@latticexyz/recs"
 import { components, network } from "@modules/mud/initMud"
 import { GAME_CONFIG_ID } from "@config"
@@ -24,7 +24,7 @@ export async function getEnterRoomData(
       Owner,
       Name,
       Prompt,
-      WorldPrompt,
+      WorldEvent,
       Dead,
       Traits,
       Health,
@@ -169,7 +169,7 @@ export async function getEnterRoomData(
     const gameConfigEntity = (await network).world.registerEntity({ id: GAME_CONFIG_ID })
 
     const gameConfig = getComponentValue(GameConfig, gameConfigEntity) as GameConfig
-    const worldPrompt = (getComponentValue(WorldPrompt, gameConfigEntity)?.value ?? "") as string
+    const worldEvent = getComponentValue(WorldEvent, gameConfigEntity) as WorldEvent
 
     // Check if game config exists
     if (!gameConfig) {
@@ -177,7 +177,7 @@ export async function getEnterRoomData(
     }
 
     result.gameConfig = gameConfig
-    result.worldPrompt = worldPrompt
+    result.worldEvent = worldEvent
 
     /////////////////
     // RETURN RESULT

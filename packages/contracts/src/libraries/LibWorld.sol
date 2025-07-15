@@ -7,7 +7,8 @@ import {
   ExternalAddressesConfigData,
   Name,
   AchievedLevels,
-  WorldPrompt
+  WorldEvent,
+  WorldEventData
 } from "../codegen/index.sol";
 import {
   MAX_ROOM_PROMPT_LENGTH,
@@ -75,11 +76,20 @@ library LibWorld {
   }
 
   /**
-   * @notice Set the world prompt
-   * @param _worldPrompt The prompt for the world
+   * @notice Create a world event
+   * @param _title The title of the world event
+   * @param _prompt The prompt for the world event
+   * @param _durationInBlocks The duration of the world event in blocks
    */
-  function setWorldPrompt(string memory _worldPrompt) internal {
-    WorldPrompt.set(_worldPrompt);
+  function createWorldEvent(string memory _title, string memory _prompt, uint256 _durationInBlocks) internal {
+    WorldEvent.set(
+      WorldEventData({
+        title: _title,
+        prompt: _prompt,
+        creationBlock: block.number,
+        expirationBlock: block.number + _durationInBlocks
+      })
+    );
   }
 
   /**

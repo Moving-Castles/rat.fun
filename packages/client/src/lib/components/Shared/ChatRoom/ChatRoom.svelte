@@ -13,6 +13,7 @@
   let value = $state("")
   let scrollElement = $state<null | HTMLElement>(null)
   let suppressSound = $state(true)
+  let inputElement = $state<HTMLInputElement | null>(null)
 
   onMount(() => {
     // Suppress sounds for the first 2 seconds
@@ -24,6 +25,14 @@
   $effect(() => {
     if ($latestEventsOnRatLevel && scrollElement) {
       scrollElement.scrollTop = scrollElement?.scrollHeight ?? 0
+    }
+  })
+
+  // HACK: for some reason the reactivity of the input element is not working
+  // so we need to manually clear the value when the value is empty
+  $effect(() => {
+    if (value === "" && inputElement) {
+      inputElement.value = ""
     }
   })
 
@@ -55,17 +64,27 @@
     {/each}
   </div>
   <!-- Chat input container -->
-  <form autocomplete="off" class="chat-input-container" onsubmit={sendMessage}>
+  <div class="chat-input-container">
     <!-- Chat input -->
-    <input oninput={typeHit} bind:value class="chat-input" type="text" name="text" id="text" />
+    <input
+      bind:this={inputElement}
+      oninput={typeHit}
+      bind:value
+      class="chat-input"
+      type="text"
+      name="text"
+      id="text"
+      onkeydown={e => e.key === "Enter" && sendMessage(e)}
+    />
     <!-- Chat submit -->
     <input
       disabled={!$websocketConnected || value === ""}
       class="chat-submit"
-      type="submit"
+      type="button"
       value="Send"
+      onclick={sendMessage}
     />
-  </form>
+  </div>
 </div>
 
 <style lang="scss">

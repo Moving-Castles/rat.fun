@@ -60,11 +60,6 @@ contract PostDeploy is Script {
       usdcAddress,
       levels
     );
-    // bytes32 adminId = GameConfig.getAdminId();
-
-    // Set world prompt
-    // LibWorld.setWorldPrompt("Heating systems are broken: -5C/23F in all rooms.");
-
     vm.stopBroadcast();
   }
 

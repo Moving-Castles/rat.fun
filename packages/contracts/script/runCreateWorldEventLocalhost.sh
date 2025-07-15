@@ -1,0 +1,4 @@
+RPC=http://localhost:8545
+WORLD_ADDRESS=0x6439113f0e1f64018c3167DA2aC21e2689818086
+
+forge script CreateWorldEvent --sig run\(address\) $WORLD_ADDRESS --broadcast --rpc-url $RPC -vvvv

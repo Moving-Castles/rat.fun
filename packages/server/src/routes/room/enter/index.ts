@@ -60,7 +60,7 @@ async function routes(fastify: FastifyInstance) {
 
         // Get onchain data
         console.time("–– Get on chain data")
-        const { room, rat, player, level, worldPrompt } = (await getEnterRoomData(
+        const { room, rat, player, level, worldEvent } = (await getEnterRoomData(
           ratId,
           roomId,
           playerId
@@ -76,8 +76,11 @@ async function routes(fastify: FastifyInstance) {
         console.timeEnd("–– CMS")
 
         // Call event model
-        const eventMessages = constructEventMessages(rat, room, worldPrompt)
+        console.time("–– Construct event messages")
+        const eventMessages = await constructEventMessages(rat, room, worldEvent)
+        console.timeEnd("–– Construct event messages")
 
+        console.time("–– Event LLM")
         const eventResults = (await callModel(
           llmClient,
           eventMessages,

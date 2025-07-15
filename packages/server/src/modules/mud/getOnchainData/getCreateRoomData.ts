@@ -18,8 +18,7 @@ export async function getCreateRoomData(
       throw new OnchainDataError("PLAYER_ID_REQUIRED", "Validation failed", "Player ID is required")
     }
 
-    const { Name, AchievedLevels, RoomCreationCost, GameConfig, Prompt, WorldPrompt, MasterKey } =
-      components
+    const { Name, AchievedLevels, RoomCreationCost, GameConfig, Prompt, MasterKey } = components
 
     const result = {} as CreateRoomData
 
@@ -61,7 +60,6 @@ export async function getCreateRoomData(
     const gameConfigEntity = (await network).world.registerEntity({ id: GAME_CONFIG_ID })
 
     const gameConfig = getComponentValue(GameConfig, gameConfigEntity) as GameConfig
-    const worldPrompt = (getComponentValue(WorldPrompt, gameConfigEntity)?.value ?? "") as string
 
     // Check if game config exists
     if (!gameConfig) {
@@ -69,7 +67,6 @@ export async function getCreateRoomData(
     }
 
     result.gameConfig = gameConfig
-    result.worldPrompt = worldPrompt
 
     /////////////////
     // LEVEL

@@ -1,11 +1,19 @@
 import { MessageParam } from "@anthropic-ai/sdk/resources"
-import { Rat, Room } from "@modules/types"
+import { Rat, Room, WorldEvent } from "@modules/types"
 import { LogEntry, OutcomeReturnValue } from "@modules/types"
+import { getLatestBlockNumber } from "@modules/mud/getOnchainData"
 
-export function constructEventMessages(rat: Rat, room: Room, worldPrompt: string): MessageParam[] {
+export async function constructEventMessages(
+  rat: Rat,
+  room: Room,
+  worldEvent: WorldEvent | undefined
+): Promise<MessageParam[]> {
   const messages: MessageParam[] = []
-  // World event
-  messages.push({ role: "user", content: `WorldEvent: ${worldPrompt}` })
+  // Check if there is an active world event
+  const latestBlockNumber = await getLatestBlockNumber()
+  if (worldEvent?.prompt && worldEvent.expirationBlock > latestBlockNumber) {
+    messages.push({ role: "user", content: `WorldEvent: ${worldEvent.prompt}` })
+  }
   // Room
   messages.push({ role: "user", content: `RoomDescription: ${room.prompt}` })
   messages.push({ role: "user", content: `RoomBalance: ${room.balance}` })

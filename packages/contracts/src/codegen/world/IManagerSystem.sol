@@ -22,7 +22,5 @@ interface IManagerSystem {
     Item[] calldata _itemsToAddToRat
   ) external;
 
-  function ratroom__setWorldPrompt(string memory _worldPrompt) external;
-
   function ratroom__giveMasterKey(bytes32 playerId) external;
 }

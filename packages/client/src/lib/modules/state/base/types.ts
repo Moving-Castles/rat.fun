@@ -24,12 +24,13 @@ type mudComponents = {
 
 declare global {
   type GameConfigObject = mudSchemas["GameConfig"]
+  type WorldEventObject = mudSchemas["WorldEvent"]
 
   type GameConfig = {
     gameConfig: GameConfigObject
     externalAddressesConfig: mudSchemas["ExternalAddressesConfig"]
     levelList: Hex[]
-    worldPrompt: string
+    worldEvent: WorldEventObject
   }
 
   // * * * * * * * * * * * * * * * * *

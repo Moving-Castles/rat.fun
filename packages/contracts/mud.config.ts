@@ -49,10 +49,13 @@ export default defineWorld({
         value: "bytes32[]"
       }
     },
-    WorldPrompt: {
+    WorldEvent: {
       key: [],
       schema: {
-        value: "string"
+        creationBlock: "uint256",
+        expirationBlock: "uint256",
+        title: "string",
+        prompt: "string"
       }
     },
     // ...

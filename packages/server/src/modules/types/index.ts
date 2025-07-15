@@ -55,19 +55,19 @@ export type Item = {
 }
 
 export type GameConfig = TableRecord<typeof mudConfig.tables.ratroom__GameConfig>["fields"]
+export type WorldEvent = TableRecord<typeof mudConfig.tables.ratroom__WorldEvent>["fields"]
 
 export type EnterRoomData = {
   gameConfig: GameConfig
-  worldPrompt: string
   rat: Rat
   level: Level
+  worldEvent: WorldEvent | undefined
   player?: Player
   room?: Room
 }
 
 export type CreateRoomData = {
   gameConfig: GameConfig
-  worldPrompt: string
   level: MinimalLevel
   player: Player
 }

@@ -7,6 +7,7 @@
 
 import { writable, derived } from "svelte/store"
 import { addressToId, addressToRatImage } from "$lib/modules/utils"
+import { blockNumber } from "$lib/modules/network"
 import { ENTITY_TYPE } from "contracts/enums"
 import { filterByEntitytype, filterByLevel, filterByPlayer, filterByOthers } from "./utils"
 import { GAME_CONFIG_ID } from "./constants"
@@ -28,6 +29,23 @@ export const entities = writable({} as Entities)
 export const gameConfig = derived(
   entities,
   $entities => ($entities[GAME_CONFIG_ID] || {}) as GameConfig
+)
+
+// * * * * * * * * * * * * * * * * *
+// WORLD EVENT
+// * * * * * * * * * * * * * * * * *
+
+export const activeWorldEvent = derived(
+  [gameConfig, blockNumber],
+  ([$gameConfig, $blockNumber]) => {
+    if (!$gameConfig?.worldEvent) {
+      return undefined
+    }
+    if ($gameConfig.worldEvent.expirationBlock < $blockNumber) {
+      return undefined
+    }
+    return $gameConfig.worldEvent
+  }
 )
 
 // * * * * * * * * * * * * * * * * *
@@ -60,7 +78,7 @@ export const levels = derived(
 )
 
 // * * * * * * * * * * * * * * * * *
-// PLAYER STORES
+// PLAYER
 // * * * * * * * * * * * * * * * * *
 
 export const playerAddress = writable("0x0" as string)
@@ -89,19 +107,19 @@ export const playerERC20Balance = writable(0 as number)
 export const playerERC20Allowance = writable(0 as number)
 
 // * * * * * * * * * * * * * * * * *
-// PLAYER RAT STORES
+// PLAYER RAT
 // * * * * * * * * * * * * * * * * *
 
 export const rat = derived([player, rats], ([$player, $rats]) => $rats[$player?.currentRat] as Rat)
 
 export const ratTraits = derived(
   [rat, traits],
-  ([$rat, $traits]) => $rat?.traits?.map(trait => $traits[trait]) as Trait[]
+  ([$rat, $traits]) => $rat?.traits?.map(trait => $traits[trait]) ?? ([] as Trait[])
 )
 
 export const ratInventory = derived(
   [rat, items],
-  ([$rat, $items]) => $rat?.inventory?.map(item => $items[item]) as Item[]
+  ([$rat, $items]) => $rat?.inventory?.map(item => $items[item]) ?? ([] as Item[])
 )
 
 export const ratLevel = derived([rat, levels], ([$rat, $levels]) => $levels[$rat?.level] as Level)
@@ -128,8 +146,8 @@ export const ratTotalValue = derived(
       ? 0
       : Number($rat.balance ?? 0) + // Balance
         Number($rat.health ?? 0) + // Health
-        ($ratInventory ?? []).reduce((acc, item) => acc + (Number(item?.value) ?? 0), 0) + // Inventory
-        ($ratTraits ?? []).reduce((acc, trait) => acc + (Number(trait?.value) ?? 0), 0) // Traits
+        $ratInventory.reduce((acc, item) => acc + (item?.value ? Number(item.value) : 0), 0) + // Inventory
+        $ratTraits.reduce((acc, trait) => acc + (trait?.value ? Number(trait.value) : 0), 0) // Traits
     return totalValue
   }
 )

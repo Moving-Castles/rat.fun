@@ -14,6 +14,7 @@ packages/contracts/cache/
 packages/contracts/broadcast/
 packages/contracts/deploys/
 packages/contracts/out/
+packages/contracts/docs/
 packages/contracts/src/codegen/
 packages/contracts/src/external/codegen/
 

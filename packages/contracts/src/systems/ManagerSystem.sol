@@ -12,7 +12,6 @@ import {
   Level,
   LastVisitBlock,
   RoomCreationCost,
-  WorldPrompt,
   MasterKey
 } from "../codegen/index.sol";
 import { LibManager, LibRat } from "../libraries/Libraries.sol";
@@ -127,15 +126,6 @@ contract ManagerSystem is System {
     uint256 balanceToTransfer = LibRat.killRat(_ratId, false);
     Balance.set(_roomId, Balance.get(_roomId) + balanceToTransfer);
     KillCount.set(_roomId, KillCount.get(_roomId) + 1);
-  }
-
-  /**
-   * @notice Set the world prompt
-   * @dev Only admin can call this function
-   * @param _worldPrompt The new world prompt
-   */
-  function setWorldPrompt(string memory _worldPrompt) public onlyAdmin {
-    WorldPrompt.set(_worldPrompt);
   }
 
   /**
