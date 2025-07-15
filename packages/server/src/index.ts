@@ -8,6 +8,7 @@ import { errorHandler } from "@modules/error-handling"
 
 import enter from "@routes/room/enter"
 import create from "@routes/room/create"
+import createSpecial from "@routes/room/createSpecial"
 import wsConnect from "@routes/ws-connect"
 import ping from "@routes/test/ping"
 import healthz from "@routes/healthz"
@@ -35,6 +36,7 @@ fastify.setErrorHandler(errorHandler)
 // Register routes
 fastify.register(enter)
 fastify.register(create)
+fastify.register(createSpecial)
 fastify.register(wsConnect)
 fastify.register(ping)
 fastify.register(healthz)

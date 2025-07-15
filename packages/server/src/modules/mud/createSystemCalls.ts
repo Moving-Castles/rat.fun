@@ -107,6 +107,43 @@ export function createSystemCalls(network: SetupNetworkResult) {
     }
   }
 
+  const createSpecialRoom = async (
+    levelId: string,
+    roomID: string,
+    roomCreationCost: number,
+    maxValuePerWin: number,
+    roomPrompt: string
+  ) => {
+    try {
+      const tx = await (network as any).worldContract.write.ratfun__createSpecialRoom([
+        levelId,
+        roomID,
+        roomCreationCost,
+        maxValuePerWin,
+        roomPrompt
+      ])
+
+      console.log("tx", tx)
+
+      await network.waitForTransaction(tx)
+
+      console.log("after tx")
+
+      return true
+    } catch (error) {
+      // If it's already one of our custom errors, rethrow it
+      if (error instanceof SystemCallError) {
+        throw error
+      }
+
+      // Otherwise, wrap it in our custom error
+      throw new ContractCallError(
+        `Error creating room: ${error instanceof Error ? error.message : String(error)}`,
+        error
+      )
+    }
+  }
+
   const giveMasterKey = async (playerId: string) => {
     try {
       const tx = await (network as any).worldContract.write.ratfun__giveMasterKey([playerId])
@@ -129,6 +166,7 @@ export function createSystemCalls(network: SetupNetworkResult) {
   return {
     applyOutcome,
     createRoom,
+    createSpecialRoom,
     giveMasterKey
   }
 }

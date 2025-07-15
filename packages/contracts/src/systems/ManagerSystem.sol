@@ -12,7 +12,9 @@ import {
   Level,
   LastVisitBlock,
   RoomCreationCost,
-  MasterKey
+  MasterKey,
+  IsSpecialRoom,
+  MaxValuePerWin
 } from "../codegen/index.sol";
 import { LibManager, LibRat } from "../libraries/Libraries.sol";
 import { ENTITY_TYPE } from "../codegen/common.sol";
@@ -66,8 +68,15 @@ contract ManagerSystem is System {
     // BUDGETING
     // * * * * * * * * * * * * *
 
-    // A room can give a maximum of half of its creation cost
-    uint256 roomBudget = LibUtils.min(RoomCreationCost.get(_roomId) / 2, Balance.get(_roomId));
+    uint256 roomBudget;
+
+    if (IsSpecialRoom.get(_roomId)) {
+      // If the room is special, it has a custom max value per win
+      roomBudget = MaxValuePerWin.get(_roomId);
+    } else {
+      // A normal room can give a maximum of half of its creation cost
+      roomBudget = LibUtils.min(RoomCreationCost.get(_roomId) / 2, Balance.get(_roomId));
+    }
 
     // * * * * * * * * * * * * *
     // HEALTH

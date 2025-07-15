@@ -196,4 +196,43 @@ contract RoomSystemTest is BaseTest {
     world.ratfun__closeRoom(roomId);
     vm.stopPrank();
   }
+
+  function testCreateSpecialRoom() public {
+    uint256 customCreationCost = 1000;
+    uint256 customMaxValuePerWin = 500;
+    uint256 initialAdminBalance = setInitialBalance(GameConfig.getAdminAddress());
+
+    // As admin
+    prankAdmin();
+    approveGamePool(type(uint256).max);
+    startGasReport("Create special room");
+    bytes32 roomId = world.ratfun__createSpecialRoom(
+      LevelList.getItem(0),
+      bytes32(0),
+      customCreationCost,
+      customMaxValuePerWin,
+      "A special test room"
+    );
+    endGasReport();
+    vm.stopPrank();
+
+    // Check admin balance (should be reduced by custom creation cost)
+    assertEq(
+      LibWorld.erc20().balanceOf(GameConfig.getAdminAddress()),
+      initialAdminBalance - customCreationCost * 10 ** LibWorld.erc20().decimals()
+    );
+
+    // Check room properties
+    assertEq(uint8(EntityType.get(roomId)), uint8(ENTITY_TYPE.ROOM));
+    assertEq(IsSpecialRoom.get(roomId), true);
+    assertEq(Prompt.get(roomId), "A special test room");
+    assertEq(Balance.get(roomId), customCreationCost);
+    assertEq(Owner.get(roomId), GameConfig.getAdminId()); // Special rooms are owned by admin
+    assertEq(Level.get(roomId), LevelList.getItem(0));
+    assertEq(CreationBlock.get(roomId), block.number);
+
+    // Check that MaxValuePerWin was set correctly
+    uint256 actualMaxValue = MaxValuePerWin.get(roomId);
+    assertEq(actualMaxValue, customMaxValuePerWin);
+  }
 }

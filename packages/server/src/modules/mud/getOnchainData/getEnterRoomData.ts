@@ -36,7 +36,9 @@ export async function getEnterRoomData(
       AchievedLevels,
       LevelMinBalance,
       LevelMaxBalance,
-      RoomCreationCost
+      RoomCreationCost,
+      IsSpecialRoom,
+      MaxValuePerWin
     } = components
 
     const result = {} as EnterRoomData
@@ -103,13 +105,19 @@ export async function getEnterRoomData(
       const roomIndex = (getComponentValue(Index, roomEntity)?.value ?? 0) as number
       const roomBalance = (getComponentValue(Balance, roomEntity)?.value ?? 0) as number
       const roomLevel = (getComponentValue(Level, roomEntity)?.value ?? "") as string
+      const isSpecialRoom = (getComponentValue(IsSpecialRoom, roomEntity)?.value ??
+        false) as boolean
+      const roomMaxValuePerWin = (getComponentValue(MaxValuePerWin, roomEntity)?.value ??
+        0) as number
 
       const room = {
         id: roomId,
         prompt: roomPrompt,
         level: roomLevel,
         balance: Number(roomBalance),
-        index: roomIndex
+        index: roomIndex,
+        isSpecialRoom,
+        maxValuePerWin: roomMaxValuePerWin
       }
 
       result.room = room

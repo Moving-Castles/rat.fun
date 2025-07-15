@@ -16,5 +16,13 @@ interface IRoomSystem {
     string memory _prompt
   ) external returns (bytes32 newRoomId);
 
+  function ratfun__createSpecialRoom(
+    bytes32 _levelId,
+    bytes32 _roomId,
+    uint256 _roomCreationCost,
+    uint256 _maxValuePerWin,
+    string memory _prompt
+  ) external returns (bytes32 newRoomId);
+
   function ratfun__closeRoom(bytes32 _roomId) external;
 }

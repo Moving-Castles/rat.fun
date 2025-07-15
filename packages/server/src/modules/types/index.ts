@@ -8,6 +8,8 @@ export type Room = {
   prompt: string
   balance: number
   index: number
+  isSpecialRoom?: boolean
+  maxValuePerWin?: number
 }
 
 export type Rat = {
@@ -172,6 +174,13 @@ export type EnterRoomRequestBody = {
 export type CreateRoomRequestBody = {
   roomPrompt: string
   levelId: string
+}
+
+export type CreateSpecialRoomRequestBody = {
+  roomPrompt: string
+  levelId: string
+  roomCreationCost: number
+  maxValuePerWin: number
 }
 
 export type CreateRoomReturnValue = {

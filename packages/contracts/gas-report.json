@@ -129,12 +129,18 @@
     "file": "test/systems/RoomSystem.t.sol:RoomSystemTest",
     "test": "testCreateRoom",
     "name": "Create room (user)",
-    "gasUsed": 485254
+    "gasUsed": 485300
+  },
+  {
+    "file": "test/systems/RoomSystem.t.sol:RoomSystemTest",
+    "test": "testCreateSpecialRoom",
+    "name": "Create special room",
+    "gasUsed": 558979
   },
   {
     "file": "test/systems/RoomSystem.t.sol:RoomSystemTest",
     "test": "testLongRoomPrompt",
     "name": "Create room: long prompt",
-    "gasUsed": 621828
+    "gasUsed": 621874
   }
 ]

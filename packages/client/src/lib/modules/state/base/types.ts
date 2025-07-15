@@ -70,6 +70,8 @@ declare global {
     prompt?: mudComponents["Prompt"]
     index?: mudComponents["Index"]
     roomCreationCost?: mudComponents["RoomCreationCost"]
+    isSpecialRoom?: mudComponents["IsSpecialRoom"]
+    maxValuePerWin?: mudComponents["MaxValuePerWin"]
     levelList?: mudComponents["LevelList"]
     levelMinBalance?: mudComponents["LevelMinBalance"]
     levelMaxBalance?: mudComponents["LevelMaxBalance"]
@@ -106,7 +108,7 @@ declare global {
   }
 
   type Room = {
-    [key: string]: number | bigint | ENTITY_TYPE | string
+    [key: string]: number | bigint | ENTITY_TYPE | string | boolean
     entityType: ENTITY_TYPE.ROOM
     owner: mudComponents["Owner"]
     index: mudComponents["Index"]
@@ -119,6 +121,8 @@ declare global {
     creationBlock: mudComponents["CreationBlock"]
     lastVisitBlock: mudComponents["LastVisitBlock"]
     roomCreationCost: mudComponents["RoomCreationCost"]
+    isSpecialRoom: mudComponents["IsSpecialRoom"]
+    maxValuePerWin: mudComponents["MaxValuePerWin"]
   }
 
   type Trait = {

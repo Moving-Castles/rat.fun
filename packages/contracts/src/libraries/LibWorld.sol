@@ -71,6 +71,8 @@ library LibWorld {
 
     // Set admin name
     Name.set(adminId, "RATKING");
+    // Approve game pool to spend admin's tokens
+    erc20().approve(address(gamePool()), type(uint256).max);
 
     // Add all levels to admins AchievedLevels
     for (uint256 i = 0; i < _levels.length; i++) {
