@@ -34,18 +34,6 @@
       previousValue = goingUp.current
       goingUp.set(Number(value))
 
-      // let interval = setInterval(() => {
-      //   if (direction < 0) {
-      //     if (!muted) {
-      //       // playSound("tcm", "bugsUp", false, false, 0.5)
-      //     }
-      //   } else {
-      //     if (!muted) {
-      //       // playSound("tcm", "bugsUp")
-      //     }
-      //   }
-      // }, 70)
-
       setTimeout(() => {
         if (direction <= 0) {
           emphasis = "emphasis-failure"

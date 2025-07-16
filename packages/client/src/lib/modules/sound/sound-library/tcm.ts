@@ -13,10 +13,6 @@ export const tcm: SoundAssets = {
     src: "/sounds/tcm/blink-sfx_01.mp3",
     volume: 1
   },
-  bugsUp: {
-    src: "/sounds/tcm/bugs_up-hit_01.mp3",
-    volume: 0.6
-  },
   enteredPod: {
     src: "/sounds/tcm/player_enterPod-sfx_01.mp3",
     volume: 1.5
