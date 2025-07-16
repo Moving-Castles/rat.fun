@@ -5,6 +5,7 @@ import websocket from "@fastify/websocket"
 import compress from "@fastify/compress"
 
 import { errorHandler } from "@modules/error-handling"
+import { initializeSentry, closeSentry } from "@modules/sentry"
 
 import enter from "@routes/room/enter"
 import create from "@routes/room/create"
@@ -12,6 +13,9 @@ import createSpecial from "@routes/room/createSpecial"
 import wsConnect from "@routes/ws-connect"
 import ping from "@routes/test/ping"
 import healthz from "@routes/healthz"
+
+// Initialize Sentry before creating the Fastify instance
+initializeSentry()
 
 const fastify = Fastify({
   logger: {
@@ -40,6 +44,25 @@ fastify.register(createSpecial)
 fastify.register(wsConnect)
 fastify.register(ping)
 fastify.register(healthz)
+
+// Graceful shutdown handler
+const gracefulShutdown = async (signal: string) => {
+  console.log(`Received ${signal}. Starting graceful shutdown...`)
+
+  try {
+    await closeSentry()
+    await fastify.close()
+    console.log("Server closed successfully")
+    process.exit(0)
+  } catch (error) {
+    console.error("Error during shutdown:", error)
+    process.exit(1)
+  }
+}
+
+// Handle shutdown signals
+process.on("SIGTERM", () => gracefulShutdown("SIGTERM"))
+process.on("SIGINT", () => gracefulShutdown("SIGINT"))
 
 // Start the server
 const start = async (port: number) => {
