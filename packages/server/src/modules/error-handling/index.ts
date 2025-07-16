@@ -36,6 +36,7 @@ import {
   RedisOperationError,
   RedisDataError
 } from "./errors"
+import { captureError, captureMessage } from "../sentry"
 
 /**
  * Helper function to create client error responses (400)
@@ -80,6 +81,16 @@ export function errorHandler(error: FastifyError, request: FastifyRequest, reply
     msg: errorMessage // This will be the main message shown by one-line-logger
   })
 
+  // Capture error in Sentry with additional context
+  const sentryContext = {
+    url: request.url,
+    method: request.method,
+    userAgent: request.headers["user-agent"],
+    ip: request.ip,
+    errorCode,
+    errorType: error instanceof AppError ? error.errorType : "UNKNOWN_ERROR"
+  }
+
   // Handle client errors (400)
   if (
     error instanceof ValidationError ||
@@ -100,6 +111,9 @@ export function errorHandler(error: FastifyError, request: FastifyRequest, reply
     error instanceof NonceUsedError ||
     error instanceof DelegationNotFoundError
   ) {
+    // For client errors, we still capture them in Sentry but with a warning level
+    // as they might indicate issues with our validation or client behavior
+    captureMessage(`Client Error: ${errorCode}`, "warning", sentryContext)
     return createClientErrorResponse(reply, request, error)
   }
 
@@ -123,11 +137,18 @@ export function errorHandler(error: FastifyError, request: FastifyRequest, reply
     error instanceof RedisOperationError ||
     error instanceof RedisDataError
   ) {
+    // Capture server errors in Sentry with error level
+    captureError(error, sentryContext)
     return createServerErrorResponse(reply, request, error)
   }
 
   // Handle Fastify validation errors
   if (error.validation) {
+    captureMessage(`Validation Error: ${error.message}`, "warning", {
+      ...sentryContext,
+      validation: error.validation
+    })
+
     return reply.status(400).send({
       error: "Validation failed",
       code: "VALIDATION_ERROR",
@@ -140,6 +161,13 @@ export function errorHandler(error: FastifyError, request: FastifyRequest, reply
 
   // Handle unknown errors
   const isDevelopment = process.env.NODE_ENV === "development"
+
+  // Capture unknown errors in Sentry with error level
+  captureError(error, {
+    ...sentryContext,
+    isDevelopment,
+    unknownError: true
+  })
 
   return reply.status(500).send({
     error: "Internal server error",
@@ -168,6 +196,19 @@ export function handleWebSocketError(error: unknown, socket: WebSocket): void {
     ...baseResponse
   }
 
+  // Capture WebSocket errors in Sentry
+  if (error instanceof Error) {
+    captureError(error, {
+      context: "websocket",
+      errorCode: error instanceof AppError ? error.code : "UNKNOWN_ERROR"
+    })
+  } else {
+    captureMessage(`WebSocket Error: ${String(error)}`, "error", {
+      context: "websocket",
+      errorType: typeof error
+    })
+  }
+
   socket.send(JSON.stringify(errorMessage))
 }
 
@@ -184,4 +225,19 @@ export function handleBackgroundError(error: unknown, context: string): void {
     stack: error instanceof Error ? error.stack : undefined,
     context
   })
+
+  // Capture background errors in Sentry
+  if (error instanceof Error) {
+    captureError(error, {
+      context: "background",
+      backgroundContext: context,
+      errorCode
+    })
+  } else {
+    captureMessage(`Background Error [${context}]: ${String(error)}`, "error", {
+      context: "background",
+      backgroundContext: context,
+      errorType: typeof error
+    })
+  }
 }
