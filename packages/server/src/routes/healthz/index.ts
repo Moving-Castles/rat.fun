@@ -1,6 +1,7 @@
 import { FastifyInstance } from "fastify"
 import { createStore } from "@modules/redis"
 import { getLatestBlockNumber } from "@modules/mud/getOnchainData"
+import { network } from "@modules/mud/initMud"
 
 async function routes(fastify: FastifyInstance, options: object) {
   fastify.get("/healthz", async (request, reply) => {
@@ -13,8 +14,9 @@ async function routes(fastify: FastifyInstance, options: object) {
         redis: { status: "unknown" as string, error: null as string | null },
         blockchain: {
           status: "unknown" as string,
-          error: null as string | null,
-          latestBlock: null as number | null
+          world_address: network?.worldContract?.address ?? "unknown",
+          latestBlock: null as number | null,
+          error: null as string | null
         }
       }
     }
