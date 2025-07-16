@@ -51,7 +51,6 @@
     </span>
     sent <span class="rat-name">{event.ratName}</span> to room
     <a href="/game/{event.roomId}">#{event.roomIndex ?? "unknown"}.</a>
-    {event.message}
   {:else if event.topic == "rat__death"}
     <!-- DEATH IN ROOM -->
     <span
@@ -100,7 +99,7 @@
   {:else}
     <!-- FALLBACK -->
     <span class="message-body">
-      {event.topic}: {event.message}
+      {event.topic}
     </span>
   {/if}
 </div>

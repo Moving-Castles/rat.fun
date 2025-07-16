@@ -289,13 +289,6 @@
         },
         "optional": true
       },
-      "outcomeMessage": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
-        },
-        "optional": true
-      },
       "roomValue": {
         "type": "objectAttribute",
         "value": {

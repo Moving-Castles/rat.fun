@@ -67,7 +67,6 @@ export async function writeOutcomeToCMS(
   player: Player,
   room: Room,
   rat: Rat,
-  message: string,
   newRoomValue: number,
   roomValueChange: number,
   newRatValue: number,
@@ -95,7 +94,6 @@ export async function writeOutcomeToCMS(
       roomValueChange: roomValueChange,
       ratValue: newRatValue,
       ratValueChange: ratValueChange,
-      outcomeMessage: message,
       playerName: player.name,
       slug: {
         _type: "slug",

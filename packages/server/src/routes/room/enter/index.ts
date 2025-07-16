@@ -122,20 +122,23 @@ async function routes(fastify: FastifyInstance) {
         )) as CorrectionReturnValue
         console.timeEnd("–– Correction LLM")
 
-        // Broadcast outcome message
-        const newMessage = createOutcomeMessage(player, rat, newRatHealth, room, validatedOutcome)
-        await broadcast(newMessage)
+        // Create and broadcast outcome message
+        const outcomeMessage = createOutcomeMessage(
+          player,
+          rat,
+          newRatHealth,
+          room,
+          validatedOutcome
+        )
+        await broadcast(outcomeMessage)
 
         console.time("–– CMS write")
 
-        // Await the network promise before accessing its properties
-        const resolvedNetwork = await network
         const outcomeDocument = await writeOutcomeToCMS(
-          resolvedNetwork.worldContract?.address ?? "0x0",
+          network.worldContract?.address ?? "0x0",
           player,
           room,
           rat,
-          newMessage.message as string,
           newRoomValue,
           roomValueChange,
           newRatValue,

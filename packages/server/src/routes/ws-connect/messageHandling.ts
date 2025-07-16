@@ -77,7 +77,7 @@ async function handleChatMessage(request: SignedRequest<OffChainMessage>): Promi
     topic: "chat__message",
     level: request.data?.level ?? "unknown level",
     playerName: getEntityName(senderId),
-    message: request.data.message,
+    message,
     timestamp: Date.now()
   }
 
