@@ -4,6 +4,9 @@ import Replicate from "replicate"
 import type { FileOutput } from "replicate"
 import sharp from "sharp"
 import { ReplicateError } from "@modules/error-handling/errors"
+import fs from "fs"
+import path from "path"
+import { fileURLToPath } from "url"
 
 import dotenv from "dotenv"
 dotenv.config()
@@ -13,7 +16,7 @@ const client = new Replicate({
 })
 
 const MODEL = {
-  SD: "stability-ai/stable-diffusion-3.5-large" //.5-large
+  SD: "stability-ai/stable-diffusion-3.5-large"
 }
 
 const makePrompt = (prompt: string) => {
@@ -22,9 +25,17 @@ const makePrompt = (prompt: string) => {
 }
 
 export const generateImage = async (prompt: string) => {
+  // Get the directory path for ES modules
+  const __filename = fileURLToPath(import.meta.url)
+  const __dirname = path.dirname(__filename)
+
+  // Read the local image file
+  const imagePath = path.join(__dirname, "room-image-templates", "room-image-template-1.jpg")
+  const imageBuffer = fs.readFileSync(imagePath)
+
   const INPUT = {
     SD: {
-      image: "https://rat-fun-base-sepolia.netlify.app/images/room-templates/room-8.jpg",
+      image: imageBuffer,
       prompt: makePrompt(prompt),
       cfg: 2,
       aspect_ratio: "1:1",
@@ -50,7 +61,7 @@ export const generateImage = async (prompt: string) => {
     // Process image with sharp
     const processedBuffer = await sharp(buffer)
       .modulate({
-        saturation: 3 // Increase saturation by 20%
+        saturation: 3
       })
       .toBuffer()
 
