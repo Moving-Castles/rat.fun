@@ -10,97 +10,19 @@ export function createOutcomeMessage(
   room: Room,
   validatedOutcome: OutcomeReturnValue
 ): OffChainMessage {
-  // Death
-  if (newRatHealth == 0) {
-    return {
-      id: uuidv4(),
-      topic: "rat__death",
-      level: room.level,
-      playerName: player.name,
-      ratName: rat.name,
-      roomId: room.id,
-      roomIndex: Number(room.index),
-      message: `died in room #${room.index}`,
-      timestamp: Date.now()
-    }
-  }
-
-  // Outcome
-  const addedItems = (validatedOutcome?.itemChanges ?? [])
-    .filter(item => item.type == "add")
-    .map(item => {
-      return `${item.name} ($${item.value})`
-    })
-    .join(", ")
-  const removedItems = (validatedOutcome?.itemChanges ?? [])
-    .filter(item => item.type == "remove")
-    .map(item => {
-      return `${item.name} ($${item.value})`
-    })
-    .join(", ")
-
-  const addedTraits = (validatedOutcome?.traitChanges ?? [])
-    .filter(trait => trait.type == "add")
-    .map(trait => {
-      return `${trait.name} ($${trait.value})`
-    })
-    .join(", ")
-  const removedTraits = (validatedOutcome?.traitChanges ?? [])
-    .filter(trait => trait.type == "remove")
-    .map(trait => {
-      return `${trait.name} ($${trait.value})`
-    })
-    .join(", ")
-
-  let message = "Result: "
-
-  let hasMessage = false
-
-  if ((validatedOutcome?.healthChange?.amount ?? 0) !== 0) {
-    message += ` (Health change: ${validatedOutcome?.healthChange?.amount})`
-    hasMessage = true
-  }
-
-  if ((validatedOutcome?.balanceTransfer?.amount ?? 0) !== 0) {
-    message += ` (Balance change: ${validatedOutcome?.balanceTransfer?.amount})`
-    hasMessage = true
-  }
-
-  if (addedItems.length > 0) {
-    message += ` got ${addedItems}`
-    hasMessage = true
-  }
-
-  if (removedItems.length > 0) {
-    message += ` lost ${removedItems}`
-    hasMessage = true
-  }
-
-  if (addedTraits.length > 0) {
-    message += ` got ${addedTraits}`
-    hasMessage = true
-  }
-
-  if (removedTraits.length > 0) {
-    message += ` lost ${removedTraits}`
-    hasMessage = true
-  }
-
-  if (!hasMessage) {
-    message += " no change"
-  }
-
-  return {
+  const outcomeMessage: OffChainMessage = {
     id: uuidv4(),
-    topic: "room__outcome",
+    topic: newRatHealth == 0 ? "rat__death" : "room__outcome",
     level: room.level,
-    message,
+    outcome: validatedOutcome,
     playerName: player.name,
     roomId: room.id,
     roomIndex: Number(room.index),
     ratName: rat.name,
     timestamp: Date.now()
   }
+
+  return outcomeMessage
 }
 
 export function createRoomCreationMessage(roomId: string, player: Player): OffChainMessage {
@@ -108,7 +30,6 @@ export function createRoomCreationMessage(roomId: string, player: Player): OffCh
     id: uuidv4(),
     topic: "room__creation",
     level: getEntityLevel(roomId),
-    message: "created a room",
     playerName: player.name,
     roomId: roomId,
     roomIndex: Number(getEntityIndex(roomId)),

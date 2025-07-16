@@ -24,8 +24,6 @@ export { default as Modal } from "./Modal/Modal.svelte"
 export { default as ModalTarget } from "./Modal/ModalTarget.svelte"
 
 /* RoomEventLog */
-export { default as OutcomeMessage } from "./RoomEventLog/OutcomeMessage.svelte"
-export { default as OutcomeMessageTemp } from "./RoomEventLog/OutcomeMessageTemp.svelte"
 export { default as RoomEventLog } from "./RoomEventLog/RoomEventLog.svelte"
 
 /* RoomGraph */

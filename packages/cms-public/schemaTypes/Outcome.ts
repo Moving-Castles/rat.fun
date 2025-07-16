@@ -140,12 +140,6 @@ export default {
       ]
     },
     {
-      title: "Outcome message",
-      name: "outcomeMessage",
-      type: "string",
-      readOnly: true
-    },
-    {
       title: "Room value",
       name: "roomValue",
       type: "number",

@@ -218,6 +218,7 @@ export type OffChainMessage = {
   roomIndex?: number
   roomId?: string
   message?: string | string[]
+  outcome?: OutcomeReturnValue
   timestamp: number
   signature?: string
 }

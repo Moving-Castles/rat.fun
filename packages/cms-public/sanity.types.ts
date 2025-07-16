@@ -56,7 +56,6 @@ export type Outcome = {
     id?: string
     _key: string
   }>
-  outcomeMessage?: string
   roomValue?: number
   roomValueChange?: number
   ratValue?: number
