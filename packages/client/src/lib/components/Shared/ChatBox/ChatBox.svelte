@@ -51,7 +51,7 @@
   }
 </script>
 
-<div class="chat-window">
+<div class="chat-box">
   <ChatHeader />
   <!-- Chat scroll -->
   <div bind:this={scrollElement} class="chat-scroll">
@@ -88,7 +88,7 @@
 </div>
 
 <style lang="scss">
-  .chat-window {
+  .chat-box {
     height: 100%;
     display: flex;
     overflow: hidden;

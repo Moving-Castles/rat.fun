@@ -51,7 +51,7 @@
       <BigButton
         text="Create room"
         cost={Number(roomCreationCost)}
-        disabled={busy.CreateRoom.current !== 0}
+        {disabled}
         onclick={async () => {
           try {
             await sendCreateRoom(roomDescription, levelId, roomCreationCost)

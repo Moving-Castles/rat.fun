@@ -2,11 +2,8 @@
 export { default as BigButton } from "./Buttons/BigButton.svelte"
 export { default as DangerButton } from "./Buttons/DangerButton.svelte"
 
-/* ChatRoom */
-export { default as ChatEvent } from "./ChatRoom/ChatEvent.svelte"
-export { default as ChatHeader } from "./ChatRoom/ChatHeader.svelte"
-export { default as ChatMessage } from "./ChatRoom/ChatMessage.svelte"
-export { default as ChatRoom } from "./ChatRoom/ChatRoom.svelte"
+/* ChatBox */
+export { default as ChatBox } from "./ChatBox/ChatBox.svelte"
 
 /* Graphics */
 export { default as Circle } from "./Graphics/Circle.svelte"
@@ -33,7 +30,6 @@ export { default as RoomGraph } from "./RoomGraph/RoomGraph.svelte"
 export { default as RoomItem } from "./RoomItem/RoomItem.svelte"
 
 /* RoomListing */
-export { default as CreateRoomButton } from "./RoomListing/CreateRoomButton.svelte"
 export { default as RoomFilters } from "./RoomListing/RoomFilters.svelte"
 export { default as RoomListing } from "./RoomListing/RoomListing.svelte"
 

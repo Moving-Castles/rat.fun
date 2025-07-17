@@ -1,13 +1,26 @@
 import devtoolsJson from "vite-plugin-devtools-json"
 import { sveltekit } from "@sveltejs/kit/vite"
 import { defineConfig } from "vite"
+import { readFileSync } from "fs"
 
-export default defineConfig(({ mode }) => {
-  // Load env file based on `mode` in the current working directory.
-  // Set the third parameter to '' to load all env regardless of the
-  // `VITE_` prefix.
+export default defineConfig(() => {
   return {
-    plugins: [sveltekit(), devtoolsJson()],
+    plugins: [
+      sveltekit(),
+      devtoolsJson(),
+      {
+        name: "glsl-loader",
+        transform(code, id) {
+          if (id.endsWith(".glsl")) {
+            const source = readFileSync(id, "utf-8")
+            return {
+              code: `export default ${JSON.stringify(source)};`,
+              map: null
+            }
+          }
+        }
+      }
+    ],
     build: {
       sourcemap: true
     }

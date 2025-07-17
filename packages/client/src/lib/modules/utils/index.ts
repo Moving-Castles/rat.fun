@@ -310,6 +310,16 @@ export function padToUint256(num: number | bigint): string {
 }
 
 /**
+ * Generates a random number between two numbers
+ * @param min The minimum number
+ * @param max The maximum number
+ * @returns The random number
+ */
+export function getRandomNumber(min: number, max: number): number {
+  return Math.floor(Math.random() * (max - min + 1)) + min
+}
+
+/**
  * Generates a random uint256 number
  * @returns A random uint256 number
  */

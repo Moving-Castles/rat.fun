@@ -15,8 +15,8 @@ contract RatSystem is System {
 
     bytes32 currentRat = CurrentRat.get(playerId);
 
-    // A player can only have one rat at a time
-    require(currentRat == bytes32(0) || Dead.get(currentRat), "already has rat");
+    // Can't create a new rat if the player already has a live rat
+    require(currentRat == bytes32(0) || Dead.get(currentRat), "already has live rat");
 
     ratId = LibRat.createRat(_name);
 

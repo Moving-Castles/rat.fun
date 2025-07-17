@@ -15,12 +15,12 @@ export async function constructEventMessages(
     messages.push({ role: "user", content: `WorldEvent: ${worldEvent.prompt}` })
   }
   // Room
-  messages.push({ role: "user", content: `RoomDescription: ${room.prompt}` })
-  messages.push({ role: "user", content: `RoomBalance: ${room.balance}` })
-  if (room.isSpecialRoom) {
+  if (room.isSpecialRoom && room.maxValuePerWin) {
     messages.push({ role: "user", content: `RoomIsSpecial: true` })
     messages.push({ role: "user", content: `RoomMaxValuePerWin: ${room.maxValuePerWin}` })
   }
+  messages.push({ role: "user", content: `RoomDescription: ${room.prompt}` })
+  messages.push({ role: "user", content: `RoomBalance: ${room.balance}` })
   // Rat
   messages.push({ role: "user", content: `RatName: ${rat.name}` })
   messages.push({ role: "user", content: `RatTraits: ${JSON.stringify(rat.traits)}` })

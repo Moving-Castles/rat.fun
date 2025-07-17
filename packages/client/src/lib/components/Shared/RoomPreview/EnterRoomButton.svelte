@@ -1,19 +1,21 @@
 <script lang="ts">
   import type { Hex } from "viem"
   import { playSound } from "$lib/modules/sound"
+  import { goto } from "$app/navigation"
 
   import { BigButton } from "$lib/components/Shared"
 
   let { roomId }: { roomId: Hex } = $props()
 
-  const sendEnterRoom = () => {
+  const onClick = () => {
     playSound("tcm", "enteredPod")
+    goto(`/game/${roomId}/enter`)
   }
 </script>
 
-<a href="/game/{roomId}/enter" class="room-enter">
-  <BigButton text="Send rat to room" onclick={sendEnterRoom} />
-</a>
+<div class="room-enter">
+  <BigButton text="Send rat to room" onclick={onClick} />
+</div>
 
 <style>
   .room-enter {

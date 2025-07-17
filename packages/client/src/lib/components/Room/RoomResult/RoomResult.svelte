@@ -2,7 +2,8 @@
   import type { EnterRoomReturnValue } from "@server/modules/types"
   import type { Hex } from "viem"
   import { onMount, onDestroy } from "svelte"
-  import { pushState, goto } from "$app/navigation"
+  import { goto } from "$app/navigation"
+  import { navigating } from "$app/state"
   import { player, rooms as roomsState, rat as ratState } from "$lib/modules/state/base/stores"
   import {
     ROOM_RESULT_STATE,
@@ -58,8 +59,6 @@
         }
         // Result returned, transition to showing results
         transitionTo(ROOM_RESULT_STATE.SHOWING_RESULTS)
-        console.log("result", result)
-        pushState(`/outcome/${result.outcomeId}`, {})
       } catch (err) {
         console.log("catch outcome error", err)
         throw err
@@ -73,7 +72,17 @@
   }
 
   onMount(() => {
-    if (!$ratState) goto("/game")
+    if (!$ratState) {
+      goto("/game")
+      return
+    }
+
+    // Temporary fix to prevent server call when navigating back to game page
+    // Fundamental problem is why RoomResult is remounted after result summary
+    if (navigating.to?.route.id === "/(rooms)/game") {
+      return
+    }
+
     freezeObjects($ratState, room, roomId as Hex, $player.currentRat as Hex)
     resetRoomResultState()
     processRoom()
@@ -118,7 +127,7 @@
           if (result) {
             transitionToResultSummary(result)
           }
-        }, 1000)
+        }, 500)
       }}
     />
   {/if}
