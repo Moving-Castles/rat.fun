@@ -113,7 +113,7 @@ export const transitionToResultSummary = (result: EnterRoomReturnValue) => {
 export const transitionTo = (newState: ROOM_RESULT_STATE) => {
   const validTransitions = VALID_TRANSITIONS[roomResultState.state]
   if (!validTransitions.includes(newState)) {
-    console.error(`Invalid state transition from ${roomResultState} to ${newState}`)
+    console.error(`Invalid state transition from ${roomResultState.state} to ${newState}`)
     return
   }
   roomResultState.state = newState

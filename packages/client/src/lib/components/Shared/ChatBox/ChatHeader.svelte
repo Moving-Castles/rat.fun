@@ -6,7 +6,7 @@
 <div class="chat-header">
   <div class="header-content">
     <span class="title">
-      Floor #{$ratLevel?.index ?? 0}: {$ratLevel?.name ?? ""}
+      Level #{$ratLevel?.index ?? 0}: {$ratLevel?.name ?? ""}
     </span>
     <span class="status" class:connected={$websocketConnected}>
       {$clientList.length ?? 0} player{Object.keys($clientList).length > 1 ? "s" : ""} online
