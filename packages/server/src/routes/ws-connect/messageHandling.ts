@@ -64,7 +64,7 @@ async function handleChatMessage(request: SignedRequest<OffChainMessage>): Promi
       topic: "key__activation",
       level: request.data?.level ?? "unknown level",
       playerName: getEntityName(senderId),
-      message: "Floor supervisor mode activated",
+      message: "Supervisor mode activated",
       timestamp: Date.now()
     }
 
