@@ -1,9 +1,10 @@
 import { get } from "svelte/store"
 import { Hex } from "viem"
 import { signMessage } from "viem/actions"
+import { SessionClient } from "@latticexyz/entrykit/internal"
 import { SignedRequest, SignedRequestInfo } from "@server/modules/types"
 import { stringifyRequestForSignature } from "@server/modules/signature/stringifyRequestForSignature"
-import { entryKitSession } from "$lib/modules/entry-kit/stores"
+import { entryKitConnector } from "$lib/modules/entry-kit/stores"
 import { walletNetwork } from "$lib/modules/network"
 
 export async function signRequest<T>(data: T): Promise<SignedRequest<T>> {
@@ -15,10 +16,20 @@ export async function signRequest<T>(data: T): Promise<SignedRequest<T>> {
     calledFrom: getCalledFrom()
   }
 
-  const signature = await signMessage(client, {
-    account: client,
-    message: stringifyRequestForSignature({ data, info })
-  })
+  let signature: Hex
+  // TODO this is a workaround:
+  // It's unknown whether the client is a SessionClient (entrykit is, burner isn't)
+  // And SessionClient's signMessage method does not work as expected, requiring the use of its internal_signer
+  if ("internal_signer" in client) {
+    signature = await (client as SessionClient).internal_signer.signMessage({
+      message: stringifyRequestForSignature({ data, info })
+    })
+  } else {
+    signature = await signMessage(client, {
+      account: client.account,
+      message: stringifyRequestForSignature({ data, info })
+    })
+  }
 
   return {
     data,
@@ -28,13 +39,10 @@ export async function signRequest<T>(data: T): Promise<SignedRequest<T>> {
 }
 
 function getCalledFrom(): Hex | null {
-  const userAccountClient = get(entryKitSession)
-
-  console.log("userAccountClient", userAccountClient)
-
-  if (!userAccountClient) {
+  const connectorClient = get(entryKitConnector)
+  console.log("connector client", connectorClient)
+  if (!connectorClient) {
     return null
   }
-
-  return userAccountClient.internal_signer.address
+  return connectorClient.account.address
 }
