@@ -308,12 +308,6 @@ importers:
       solhint:
         specifier: ^6.0.0
         version: 6.0.0(typescript@5.8.3)
-      solhint-config-mud:
-        specifier: 2.2.23-b803eb1d495ce20f644a81c61473d0c33f9ecf54
-        version: 2.2.23-b803eb1d495ce20f644a81c61473d0c33f9ecf54
-      solhint-plugin-mud:
-        specifier: 2.2.23-b803eb1d495ce20f644a81c61473d0c33f9ecf54
-        version: 2.2.23-b803eb1d495ce20f644a81c61473d0c33f9ecf54
       tsx:
         specifier: 4.20.3
         version: 4.20.3
@@ -10191,12 +10185,6 @@ packages:
 
   solady@0.0.182:
     resolution: {integrity: sha512-FW6xo1akJoYpkXMzu58/56FcNU3HYYNamEbnFO3iSibXk0nSHo0DV2Gu/zI3FPg3So5CCX6IYli1TT1IWATnvg==}
-
-  solhint-config-mud@2.2.23-b803eb1d495ce20f644a81c61473d0c33f9ecf54:
-    resolution: {integrity: sha512-NCbCj3QiqdfiEhH/GU5q4z6mz6Iz9DgVJQsrfguEIx/RpKrRoP3oakSeAWbpiWh+RN166jyLkUneuGInfDaVDw==}
-
-  solhint-plugin-mud@2.2.23-b803eb1d495ce20f644a81c61473d0c33f9ecf54:
-    resolution: {integrity: sha512-jzqx4ZOBZ089rEjaJuJgYpJFV48Y2MpDNzh8+9oiUwdFmDuC05lksn0+R3ZoXLJnZ/s8RURHdvHadi1ojVSvzw==}
 
   solhint@6.0.0:
     resolution: {integrity: sha512-PQGfwFqfeYdebi2tEG1fhVfMjqSzbW3Noz+LYf8UusKe5nkikCghdgEjYQPcGfFZj4snlVyJQt//AaxkubOtVQ==}
@@ -26908,12 +26896,6 @@ snapshots:
       - supports-color
 
   solady@0.0.182: {}
-
-  solhint-config-mud@2.2.23-b803eb1d495ce20f644a81c61473d0c33f9ecf54: {}
-
-  solhint-plugin-mud@2.2.23-b803eb1d495ce20f644a81c61473d0c33f9ecf54:
-    dependencies:
-      '@solidity-parser/parser': 0.16.2
 
   solhint@6.0.0(typescript@5.8.3):
     dependencies:
