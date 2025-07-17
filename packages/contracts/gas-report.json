@@ -45,7 +45,7 @@
     "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
     "test": "testApplyOutcomeOverReduceHealth",
     "name": "Apply outcome (over-reduce health)",
-    "gasUsed": 299444
+    "gasUsed": 297959
   },
   {
     "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
@@ -93,7 +93,7 @@
     "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
     "test": "testApplyOutcomeValueTransferOnDeath",
     "name": "Apply outcome (value transfer on death)",
-    "gasUsed": 258909
+    "gasUsed": 257424
   },
   {
     "file": "test/systems/PlayerSystem.t.sol:PlayerSystemTest",
@@ -111,7 +111,7 @@
     "file": "test/systems/RatSystem.t.sol:RatSystemTest",
     "test": "testLiquidateRat",
     "name": "Liquidate rat",
-    "gasUsed": 181513
+    "gasUsed": 180029
   },
   {
     "file": "test/systems/RatSystem.t.sol:RatSystemTest",
