@@ -1,13 +1,13 @@
 import type { Hex } from "viem"
 import { get } from "svelte/store"
-// import { transactionQueue } from "@latticexyz/common/actions"
+import { transactionQueue } from "@latticexyz/common/actions"
 import { publicNetwork, walletNetwork } from "$lib/modules/network"
 import { erc20Abi } from "viem"
 import { addChain, switchChain } from "viem/actions"
 import { gameConfig } from "$lib/modules/state/base/stores"
 import { WorldFunctions } from "./index"
 import { getChain } from "$lib/mud/utils"
-import { entryKitSession } from "$lib/modules/entry-kit/stores"
+import { entryKitConnector } from "$lib/modules/entry-kit/stores"
 
 /**
  * Executes an on-chain transaction.
@@ -18,12 +18,12 @@ import { entryKitSession } from "$lib/modules/entry-kit/stores"
 export async function executeTransaction(
   systemId: string,
   params: (string | Hex | number | bigint)[] = [],
-  useUserAccount: boolean = false
+  useConnectorClient: boolean = false
 ) {
   try {
     // Prepare the action's client
-    const client = useUserAccount
-      ? await prepareUserAccountClient()
+    const client = useConnectorClient
+      ? await prepareConnectorClient()
       : get(walletNetwork).walletClient
 
     let tx
@@ -64,25 +64,24 @@ export async function executeTransaction(
   }
 }
 
-async function prepareUserAccountClient() {
-  const userAccountClient = get(entryKitSession)
+async function prepareConnectorClient() {
+  const connectorClient = get(entryKitConnector)
 
-  console.log("userAccountClient", userAccountClient)
+  console.log("connectorClient", connectorClient)
 
-  if (!userAccountClient) {
-    throw new Error("User account client is not available")
+  if (!connectorClient) {
+    throw new Error("Connector client is not available")
   }
   // User's wallet may switch between different chains, ensure the current chain is correct
   const expectedChainId = get(publicNetwork).config.chain.id
-  if (userAccountClient.chain.id !== expectedChainId) {
+  if (connectorClient.chain.id !== expectedChainId) {
     try {
-      await switchChain(userAccountClient, { id: expectedChainId })
+      await switchChain(connectorClient, { id: expectedChainId })
     } catch (e) {
-      await addChain(userAccountClient, { chain: getChain(expectedChainId) })
-      await switchChain(userAccountClient, { id: expectedChainId })
+      await addChain(connectorClient, { chain: getChain(expectedChainId) })
+      await switchChain(connectorClient, { id: expectedChainId })
     }
   }
   // MUD's `transactionQueue` extends the client with `writeContract` method
-  return userAccountClient
-  // .extend(transactionQueue())
+  return connectorClient.extend(transactionQueue())
 }

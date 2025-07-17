@@ -40,13 +40,13 @@ export async function closeRoom(roomId: string) {
 
 export async function approve(address: string, value: bigint) {
   const scaledValue = value * 10n ** 18n
-  const useUserAccount = get(walletType) === WALLET_TYPE.ENTRYKIT
-  return await executeTransaction(WorldFunctions.Approve, [address, scaledValue], useUserAccount)
+  const useConnectorClient = get(walletType) === WALLET_TYPE.ENTRYKIT
+  return await executeTransaction(WorldFunctions.Approve, [address, scaledValue], useConnectorClient)
 }
 
 export async function approveMax(address: string) {
-  const useUserAccount = get(walletType) === WALLET_TYPE.ENTRYKIT
-  return await executeTransaction(WorldFunctions.Approve, [address, maxUint256], useUserAccount)
+  const useConnectorClient = get(walletType) === WALLET_TYPE.ENTRYKIT
+  return await executeTransaction(WorldFunctions.Approve, [address, maxUint256], useConnectorClient)
 }
 
 export async function giveCallerTokens() {
