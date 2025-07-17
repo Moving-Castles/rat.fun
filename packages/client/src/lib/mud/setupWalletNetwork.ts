@@ -30,6 +30,6 @@ export function setupWalletNetwork(
   return {
     playerEntity: encodeEntity({ address: "address" }, { address: walletClient.account.address }),
     walletClient,
-    worldContract,
+    worldContract
   }
 }

@@ -6,7 +6,7 @@ export const chains = [extendedMudFoundry, extendedBaseSepolia] as const satisfi
 
 export const transports = {
   [extendedBaseSepolia.id]: http(),
-  [extendedMudFoundry.id]: http(),
+  [extendedMudFoundry.id]: http()
 } as const
 
 export const wagmiConfig = (chainId: number) =>

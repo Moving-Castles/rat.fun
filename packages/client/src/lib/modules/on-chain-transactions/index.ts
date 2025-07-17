@@ -41,7 +41,11 @@ export async function closeRoom(roomId: string) {
 export async function approve(address: string, value: bigint) {
   const scaledValue = value * 10n ** 18n
   const useConnectorClient = get(walletType) === WALLET_TYPE.ENTRYKIT
-  return await executeTransaction(WorldFunctions.Approve, [address, scaledValue], useConnectorClient)
+  return await executeTransaction(
+    WorldFunctions.Approve,
+    [address, scaledValue],
+    useConnectorClient
+  )
 }
 
 export async function approveMax(address: string) {

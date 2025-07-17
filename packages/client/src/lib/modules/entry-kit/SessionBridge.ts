@@ -4,7 +4,7 @@ import { entryKitConnector, entryKitSession } from "$lib/modules/entry-kit/store
 import { useConnectorClient } from "wagmi"
 
 export default function SessionBridge() {
-  const { chainId } = useEntryKitConfig();
+  const { chainId } = useEntryKitConfig()
   const sessionClient = useSessionClient()
 
   const connectorClient = useConnectorClient({ chainId })

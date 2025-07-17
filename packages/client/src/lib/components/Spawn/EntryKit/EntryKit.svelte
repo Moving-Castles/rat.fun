@@ -36,7 +36,7 @@
           // The button
           createElement(AccountButton, { key: "account-button" }),
           // State sync
-          createElement(SessionBridge, { key: "session-bridge" }),
+          createElement(SessionBridge, { key: "session-bridge" })
         ]
       )
 

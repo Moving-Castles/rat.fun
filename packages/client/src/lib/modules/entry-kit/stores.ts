@@ -6,4 +6,6 @@ import { Config } from "wagmi"
 
 export const entryKitSession = writable<SessionClient<Chain> | undefined | null>(null)
 
-export const entryKitConnector = writable<GetConnectorClientData<Config, number> | undefined | null>(null)
+export const entryKitConnector = writable<
+  GetConnectorClientData<Config, number> | undefined | null
+>(null)

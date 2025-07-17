@@ -3,15 +3,7 @@
  * (https://viem.sh/docs/getting-started.html).
  * This line imports the functions we need from it.
  */
-import {
-  fallback,
-  webSocket,
-  http,
-  createWalletClient,
-  Hex,
-  ClientConfig,
-  parseEther
-} from "viem"
+import { fallback, webSocket, http, createWalletClient, Hex, ClientConfig, parseEther } from "viem"
 
 import { createBurnerAccount, transportObserver } from "@latticexyz/common"
 import { transactionQueue } from "@latticexyz/common/actions"
@@ -69,7 +61,11 @@ export function setupBurnerWalletNetwork(publicNetwork: SetupPublicNetworkResult
   return setupWalletNetwork(publicNetwork, burnerWalletClient)
 }
 
-async function setupDrip(publicClient: SetupPublicNetworkResult["publicClient"], faucetServiceUrl: string, address: Hex) {
+async function setupDrip(
+  publicClient: SetupPublicNetworkResult["publicClient"],
+  faucetServiceUrl: string,
+  address: Hex
+) {
   /*
    * If there is a faucet, request (test) ETH if you have
    * less than 0.01 ETH. Repeat every 20 seconds to ensure you don't

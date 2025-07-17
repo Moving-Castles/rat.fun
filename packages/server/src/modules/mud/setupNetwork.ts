@@ -85,8 +85,7 @@ export async function setupNetwork(
   const burnerWalletClient = createWalletClient({
     ...clientOptions,
     account: burnerAccount
-  })
-  .extend(transactionQueue())
+  }).extend(transactionQueue())
 
   /*
    * Create an object for communicating with the deployed World.
@@ -123,6 +122,6 @@ export async function setupNetwork(
     latestBlock$,
     storedBlockLogs$,
     waitForTransaction,
-    worldContract,
+    worldContract
   }
 }
