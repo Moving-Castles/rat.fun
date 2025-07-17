@@ -15,5 +15,7 @@ docs/
 
 # Ignore all deploy artifacts
 deploys/**/*.json
-# Except the latest ones (so we can load these into client)
-!deploys/**/latest.json
+# Except the latest ones in non-31337 directories (so we can load these into client)
+!deploys/*/latest.json
+# But still ignore the latest one in 31337 directory
+deploys/31337/latest.json
