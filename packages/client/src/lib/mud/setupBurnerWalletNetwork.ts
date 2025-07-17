@@ -10,11 +10,11 @@ import {
   createWalletClient,
   Hex,
   ClientConfig,
-  PublicClient,
   parseEther
 } from "viem"
 
 import { createBurnerAccount, transportObserver } from "@latticexyz/common"
+import { transactionQueue } from "@latticexyz/common/actions"
 
 import { setupWalletNetwork } from "./setupWalletNetwork"
 import { SetupPublicNetworkResult } from "./setupPublicNetwork"
@@ -56,6 +56,8 @@ export function setupBurnerWalletNetwork(publicNetwork: SetupPublicNetworkResult
     account: burnerAccount
   })
 
+  burnerWalletClient.extend(transactionQueue())
+
   if (networkConfig.faucetServiceUrl) {
     setupDrip(
       publicNetwork.publicClient,
@@ -67,7 +69,7 @@ export function setupBurnerWalletNetwork(publicNetwork: SetupPublicNetworkResult
   return setupWalletNetwork(publicNetwork, burnerWalletClient)
 }
 
-async function setupDrip(publicClient: PublicClient, faucetServiceUrl: string, address: Hex) {
+async function setupDrip(publicClient: SetupPublicNetworkResult["publicClient"], faucetServiceUrl: string, address: Hex) {
   /*
    * If there is a faucet, request (test) ETH if you have
    * less than 0.01 ETH. Repeat every 20 seconds to ensure you don't
