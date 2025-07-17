@@ -45,10 +45,29 @@ contract RatSystemTest is BaseTest {
 
     world.ratfun__createRat("roger");
 
-    vm.expectRevert("already has rat");
+    vm.expectRevert("already has live rat");
     world.ratfun__createRat("roger");
 
     vm.stopPrank();
+  }
+
+  function testCreateRatWithDeadRat() public {
+    setInitialBalance(alice);
+    vm.startPrank(alice);
+
+    bytes32 alice = world.ratfun__spawn("alice");
+    approveGamePool(type(uint256).max);
+
+    bytes32 ratId = world.ratfun__createRat("roger");
+
+    world.ratfun__liquidateRat();
+
+    bytes32 ratId2 = world.ratfun__createRat("roger2");
+
+    vm.stopPrank();
+
+    assertNotEq(ratId, ratId2);
+    assertEq(CurrentRat.get(alice), ratId2);
   }
 
   function testLiquidateRat() public {
@@ -94,11 +113,23 @@ contract RatSystemTest is BaseTest {
     world.ratfun__spawn("alice");
     approveGamePool(type(uint256).max);
 
+    vm.expectRevert("no rat");
+    world.ratfun__liquidateRat();
+
+    vm.stopPrank();
+  }
+
+  function testRevertLiquidateRatIsDead() public {
+    setInitialBalance(alice);
+    vm.startPrank(alice);
+    world.ratfun__spawn("alice");
+    approveGamePool(type(uint256).max);
+
     world.ratfun__createRat("roger");
 
     world.ratfun__liquidateRat();
 
-    vm.expectRevert("no rat");
+    vm.expectRevert("rat is dead");
     world.ratfun__liquidateRat();
 
     vm.stopPrank();
