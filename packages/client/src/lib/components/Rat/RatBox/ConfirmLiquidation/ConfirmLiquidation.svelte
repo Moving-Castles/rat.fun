@@ -18,8 +18,31 @@
   <div class="confirm-liquidation-text">
     <h1>Are you sure you want to liquidate {$rat?.name}?</h1>
   </div>
-  <div class="confirm-liquidation-buttons">
+  <div class="button-container">
     <BigButton text="Confirm" onclick={onClickConfirm} />
     <BigButton text="Abort" onclick={onClickAbort} />
   </div>
 </div>
+
+<style lang="scss">
+  .confirm-liquidation {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+    text-align: center;
+
+    .button-container {
+      overflow: hidden;
+      width: 80%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      display: flex;
+      flex-direction: row;
+      gap: 10px;
+    }
+  }
+</style>

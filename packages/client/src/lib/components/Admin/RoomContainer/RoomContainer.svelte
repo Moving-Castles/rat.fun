@@ -12,9 +12,7 @@
   .room-container {
     height: calc(var(--game-window-height) - 60px);
     width: 100%;
-    border-bottom: var(--default-border-style);
     display: grid;
     grid-template-rows: 440px minmax(100px, 1fr);
-    background: black;
   }
 </style>
