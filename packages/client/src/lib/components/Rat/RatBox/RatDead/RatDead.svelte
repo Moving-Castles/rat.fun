@@ -17,5 +17,37 @@
   <div class="rat-dead-text">
     <h1>{$rat?.name} is dead</h1>
   </div>
-  <BigButton text="OK" onclick={onClick} />
+  <div class="button-container">
+    <BigButton text="OK" onclick={onClick} />
+  </div>
 </div>
+
+<style lang="scss">
+  .rat-dead {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+
+    .rat-dead-image {
+      width: 100px;
+      height: 100px;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+    }
+
+    .button-container {
+      overflow: hidden;
+      width: 80%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+</style>

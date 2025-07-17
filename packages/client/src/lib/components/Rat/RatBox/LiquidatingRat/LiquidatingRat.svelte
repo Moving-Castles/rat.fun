@@ -9,8 +9,8 @@
   onMount(async () => {
     await sendLiquidateRat()
     sendLiquidateRatMessage($player.currentRat)
-    // RAT_BOX_STATE.LIQUIDATING_RAT -> RAT_BOX_STATE.NO_RAT
-    transitionTo(RAT_BOX_STATE.NO_RAT)
+    // RAT_BOX_STATE.LIQUIDATING_RAT -> RAT_BOX_STATE.DEAD_RAT
+    transitionTo(RAT_BOX_STATE.DEAD_RAT)
   })
 </script>
 
