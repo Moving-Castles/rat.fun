@@ -4,7 +4,7 @@
   import { goto } from "$app/navigation"
   import { navigating } from "$app/state"
   import { frozenRat } from "$lib/components/Room/RoomResult/state.svelte"
-  import { ratLevel } from "$lib/modules/state/base/stores"
+  import { ratLevel } from "$lib/modules/state/stores"
   import { playSound } from "$lib/modules/sound"
   import { gsap } from "gsap"
 

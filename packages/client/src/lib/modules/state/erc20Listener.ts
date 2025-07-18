@@ -6,7 +6,7 @@ import {
   playerAddress,
   playerERC20Allowance,
   playerERC20Balance
-} from "$lib/modules/state/base/stores"
+} from "$lib/modules/state/stores"
 import { SetupPublicNetworkResult } from "$lib/mud/setupPublicNetwork"
 
 export function initErc20Listener() {

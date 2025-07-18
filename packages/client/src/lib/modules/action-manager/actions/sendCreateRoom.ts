@@ -1,6 +1,6 @@
 import { get } from "svelte/store"
 import { goto } from "$app/navigation"
-import { gameConfig, playerERC20Allowance } from "$lib/modules/state/base/stores"
+import { gameConfig, playerERC20Allowance } from "$lib/modules/state/stores"
 import { approve } from "$lib/modules/on-chain-transactions"
 import { busy } from "../index.svelte"
 import type { CreateRoomRequestBody, CreateRoomReturnValue } from "@server/modules/types"

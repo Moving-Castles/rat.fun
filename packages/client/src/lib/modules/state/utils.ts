@@ -1,13 +1,13 @@
 /**
  * ========================================
- * state/base/utils.ts
+ * state/utils.ts
  * ========================================
  * Utility functions for the on-chain entities of the game.
  */
 
 import { Hex } from "viem"
 import { ENTITY_TYPE } from "./enums"
-import { players, gameConfig } from "$lib/modules/state/base/stores"
+import { players, gameConfig } from "$lib/modules/state/stores"
 import { get } from "svelte/store"
 
 /**

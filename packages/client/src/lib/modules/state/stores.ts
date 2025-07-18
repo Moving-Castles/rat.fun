@@ -1,6 +1,6 @@
 /*
  * ========================================
- * state/base/stores.ts
+ * state/stores.ts
  * ========================================
  * Central store for all entities in the game.
  */

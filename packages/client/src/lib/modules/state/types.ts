@@ -1,6 +1,6 @@
 /**
  * ========================================
- * state/base/types.ts
+ * state/types.ts
  * ========================================
  * Types for the on-chain entities of the game.
  */

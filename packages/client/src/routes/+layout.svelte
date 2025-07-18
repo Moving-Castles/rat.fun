@@ -12,9 +12,9 @@
   import { UIState } from "$lib/modules/ui/stores"
   import { UI } from "$lib/modules/ui/enums"
   import { initOffChainSync } from "$lib/modules/off-chain-sync"
-  import { playerId } from "$lib/modules/state/base/stores"
+  import { playerId } from "$lib/modules/state/stores"
   import { websocketConnected } from "$lib/modules/off-chain-sync/stores"
-  import { EMPTY_ID } from "$lib/modules/state/base/constants"
+  import { EMPTY_ID } from "$lib/modules/state/constants"
   import { outerLayoutTransitionConfig } from "$lib/components/Shared/PageTransitions/transitionConfigs"
 
   import Spawn from "$lib/components/Spawn/Spawn.svelte"

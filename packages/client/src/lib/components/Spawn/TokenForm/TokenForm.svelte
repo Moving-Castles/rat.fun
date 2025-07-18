@@ -2,7 +2,7 @@
   import { sendGiveCallerTokens, busy } from "$lib/modules/action-manager/index.svelte"
   import gsap from "gsap"
   import { onMount } from "svelte"
-  import { player } from "$lib/modules/state/base/stores"
+  import { player } from "$lib/modules/state/stores"
 
   import { BigButton } from "$lib/components/Shared"
   import VideoLoader from "$lib/components/Shared/Loaders/VideoLoader.svelte"

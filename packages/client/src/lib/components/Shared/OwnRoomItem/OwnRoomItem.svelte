@@ -3,7 +3,7 @@
   import type { PlotPoint } from "$lib/components/Shared/RoomGraph/types"
   import { blocksToReadableTime, renderSafeString } from "$lib/modules/utils"
   import { blockNumber } from "$lib/modules/network"
-  import { levels } from "$lib/modules/state/base/stores"
+  import { levels } from "$lib/modules/state/stores"
   import { staticContent } from "$lib/modules/content"
   import { RoomGraph, Xed } from "$lib/components/Shared"
 

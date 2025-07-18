@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Hex } from "viem"
   import { get } from "svelte/store"
-  import { roomsOnCurrentLevel, playerRooms } from "$lib/modules/state/base/stores"
+  import { roomsOnCurrentLevel, playerRooms } from "$lib/modules/state/stores"
   import { entriesByPopularity, entriesChronologically } from "./sortFunctions"
   import { filterRooms, filterDepletedRooms } from "./filterFunctions"
   import { blockNumber } from "$lib/modules/network"

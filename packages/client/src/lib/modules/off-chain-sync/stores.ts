@@ -1,7 +1,7 @@
 import { writable, derived } from "svelte/store"
 import type { Writable } from "svelte/store"
 import type { OffChainMessage } from "@server/modules/types"
-import { rat, gameConfig } from "../state/base/stores"
+import { rat, gameConfig } from "$lib/modules/state/stores"
 
 export const websocketConnected = writable(false)
 export const clientList = writable([] as string[])

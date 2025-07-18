@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { TempItem } from "$lib/components/Room/RoomResult/types"
-  import { traits } from "$lib/modules/state/base/stores"
+  import { traits } from "$lib/modules/state/stores"
 
   let { trait }: { trait: string | TempItem } = $props()
 

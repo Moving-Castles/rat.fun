@@ -2,7 +2,7 @@
   import type { EnterRoomReturnValue } from "@server/modules/types"
   import { onMount } from "svelte"
   import { frozenRat } from "$lib/components/Room/RoomResult/state.svelte"
-  import { ratLevel } from "$lib/modules/state/base/stores"
+  import { ratLevel } from "$lib/modules/state/stores"
   import { playSound } from "$lib/modules/sound"
   import { gsap } from "gsap"
   import { navigating } from "$app/state"

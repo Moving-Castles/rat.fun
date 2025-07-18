@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { rat } from "$lib/modules/state/base/stores"
+  import { rat } from "$lib/modules/state/stores"
   import { NumberGoing } from "$lib/components/Shared"
   let balanceGoing = $state(false)
   let healthGoing = $state(false)

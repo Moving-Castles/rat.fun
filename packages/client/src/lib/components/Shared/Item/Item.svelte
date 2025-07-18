@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { TempItem } from "$lib/components/Room/RoomResult/types"
-  import { items } from "$lib/modules/state/base/stores"
+  import { items } from "$lib/modules/state/stores"
   import { sellItem } from "$lib/modules/on-chain-transactions"
   import { playSound } from "$lib/modules/sound"
   import { ModalTarget, Spinner } from "$lib/components/Shared"

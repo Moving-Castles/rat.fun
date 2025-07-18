@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { player, playerERC20Balance } from "$lib/modules/state/base/stores"
+  import { player, playerERC20Balance } from "$lib/modules/state/stores"
   import { NumberGoing } from "$lib/components/Shared"
   import { tippy } from "svelte-tippy"
   let balanceGoing = $state(false)

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { activeWorldEvent } from "$lib/modules/state/base/stores"
+  import { activeWorldEvent } from "$lib/modules/state/stores"
 </script>
 
 <div class="world-event">

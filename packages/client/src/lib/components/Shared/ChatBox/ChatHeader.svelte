@@ -1,6 +1,6 @@
 <script lang="ts">
   import { websocketConnected, clientList } from "$lib/modules/off-chain-sync/stores"
-  import { ratLevel } from "$lib/modules/state/base/stores"
+  import { ratLevel } from "$lib/modules/state/stores"
 </script>
 
 <div class="chat-header">

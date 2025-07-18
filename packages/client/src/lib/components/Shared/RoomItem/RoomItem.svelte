@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Hex } from "viem"
   import { urlFor } from "$lib/modules/content/sanity"
-  import { getRoomOwnerName } from "$lib/modules/state/base/utils"
+  import { getRoomOwnerName } from "$lib/modules/state/utils"
   import { blocksToReadableTime, renderSafeString } from "$lib/modules/utils"
   import { blockNumber } from "$lib/modules/network"
   import { staticContent } from "$lib/modules/content"
