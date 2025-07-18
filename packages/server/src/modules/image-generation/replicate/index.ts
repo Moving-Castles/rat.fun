@@ -1,12 +1,10 @@
+import { ResolvedTemplateImages } from "@modules/types"
 import { pickRandomMultiple } from "@modules/utils"
 import { PROMPTS } from "./prompts"
 import Replicate from "replicate"
 import type { FileOutput } from "replicate"
 import sharp from "sharp"
 import { ReplicateError } from "@modules/error-handling/errors"
-import fs from "fs"
-import path from "path"
-import { fileURLToPath } from "url"
 
 import dotenv from "dotenv"
 dotenv.config()
@@ -24,18 +22,19 @@ const makePrompt = (prompt: string) => {
   return `STYLE: ${randomPrompts}. !! Important !! A scene of: ${prompt}`
 }
 
-export const generateImage = async (prompt: string) => {
-  // Get the directory path for ES modules
-  const __filename = fileURLToPath(import.meta.url)
-  const __dirname = path.dirname(__filename)
-
-  // Read the local image file
-  const imagePath = path.join(__dirname, "room-image-templates", "room-image-template-1.jpg")
-  const imageBuffer = fs.readFileSync(imagePath)
+/**
+ * Generate an image using Replicate
+ * @param prompt - The prompt for the image
+ * @param templateImages - The template images to use for the image
+ * @returns The generated image
+ */
+export const generateImage = async (prompt: string, templateImages: ResolvedTemplateImages) => {
+  // Just get the first image for now
+  const image = templateImages?.roomImages?.[0]
 
   const INPUT = {
     SD: {
-      image: imageBuffer,
+      image,
       prompt: makePrompt(prompt),
       cfg: 2,
       aspect_ratio: "1:1",

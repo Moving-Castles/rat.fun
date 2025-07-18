@@ -1,5 +1,5 @@
 // ICONS
-import { MdRoom, MdStar } from "react-icons/md"
+import { MdRoom, MdStar, MdImage } from "react-icons/md"
 
 export default (S: any) =>
   S.list()
@@ -15,5 +15,15 @@ export default (S: any) =>
         .icon(MdStar)
         .child(
           S.documentList().title("Outcomes").filter('_type == "outcome"').schemaType("outcome")
+        ),
+      S.divider(),
+      S.listItem()
+        .title("Template images")
+        .icon(MdImage)
+        .child(
+          S.editor()
+            .id("template-images")
+            .schemaType("templateImages")
+            .documentId("template-images")
         )
     ])

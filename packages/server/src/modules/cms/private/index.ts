@@ -45,6 +45,10 @@ export const getSystemPrompts = async () => {
   }
 }
 
+// - - - - - -
+// HELPERS
+// - - - - - -
+
 function combineSystemPrompts(doc: Prompt) {
   return `Return format: ${doc.returnFormat?.code ?? ""} // ${doc.prompt ?? ""}`
 }

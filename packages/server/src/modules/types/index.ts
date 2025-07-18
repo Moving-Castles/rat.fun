@@ -235,3 +235,13 @@ export type NonceDatabaseSchema = {
 export interface WebSocketInterface {
   send: (data: string) => void
 }
+
+/**
+ * CMS Types
+ */
+
+import type { TemplateImages } from "@sanity-public-cms-types"
+
+export type ResolvedTemplateImages = Omit<TemplateImages, "roomImages"> & {
+  roomImages?: string[]
+}

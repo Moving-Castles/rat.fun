@@ -13,6 +13,28 @@
  */
 
 // Source: schema.json
+export type TemplateImages = {
+  _id: string
+  _type: "templateImages"
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  roomImages?: Array<{
+    asset?: {
+      _ref: string
+      _type: "reference"
+      _weak?: boolean
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset"
+    }
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: "image"
+    _key: string
+  }>
+}
+
 export type Outcome = {
   _id: string
   _type: "outcome"
@@ -209,6 +231,7 @@ export type SanityAssetSourceData = {
 }
 
 export type AllSanitySchemaTypes =
+  | TemplateImages
   | Outcome
   | Room
   | SanityImagePaletteSwatch

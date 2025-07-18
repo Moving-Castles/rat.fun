@@ -1,7 +1,6 @@
 import { createStore } from "@modules/redis"
 import type { OffChainMessage } from "@modules/types"
 
-// Create the store instance
 const store = createStore()
 
 // Store a new message
