@@ -1,6 +1,6 @@
 <script lang="ts">
   import { tippy } from "svelte-tippy"
-  import { rooms as roomStore } from "$lib/modules/state/base/stores"
+  import { rooms as roomStore } from "$lib/modules/state/stores"
   import {
     entriesChronologically,
     entriesByVisit,

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { gameConfig, playerERC20Balance } from "$lib/modules/state/base/stores"
+  import { gameConfig, playerERC20Balance } from "$lib/modules/state/stores"
   import { BigButton } from "$lib/components/Shared"
   import { transitionTo, RAT_BOX_STATE } from "../state.svelte"
 

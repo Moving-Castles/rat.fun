@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ratTotalValue } from "$lib/modules/state/base/stores"
+  import { ratTotalValue } from "$lib/modules/state/stores"
   import { tippy } from "svelte-tippy"
   import { transitionTo, RAT_BOX_STATE } from "../state.svelte"
 

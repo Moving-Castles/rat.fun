@@ -1,6 +1,6 @@
 import { get } from "svelte/store"
 import { playSound } from "$lib/modules/sound"
-import { gameConfig, playerERC20Allowance } from "$lib/modules/state/base/stores"
+import { gameConfig, playerERC20Allowance } from "$lib/modules/state/stores"
 import { createRat, approve } from "$lib/modules/on-chain-transactions"
 import { busy } from "../index.svelte"
 

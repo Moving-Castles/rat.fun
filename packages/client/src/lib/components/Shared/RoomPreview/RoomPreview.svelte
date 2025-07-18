@@ -4,7 +4,7 @@
 
   import { onMount } from "svelte"
   import { staticContent } from "$lib/modules/content"
-  import { rat } from "$lib/modules/state/base/stores"
+  import { rat } from "$lib/modules/state/stores"
 
   import {
     RoomPreviewHeader,

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { getModalState } from "$lib/components/Shared/Modal/state.svelte"
-  import { gameConfig } from "$lib/modules/state/base/stores"
+  import { gameConfig } from "$lib/modules/state/stores"
   import { blockNumber } from "$lib/modules/network"
   import { staticContent, lastUpdated } from "$lib/modules/content"
   import { urlFor } from "$lib/modules/content/sanity"

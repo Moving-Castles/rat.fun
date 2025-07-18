@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ratImageUrl } from "$lib/modules/state/base/stores"
+  import { ratImageUrl } from "$lib/modules/state/stores"
 
   import RatStats from "$lib/components/Rat/RatBox/RatInfo/RatStats.svelte"
   import RatInventory from "$lib/components/Rat/RatBox/RatInfo/RatInventory.svelte"

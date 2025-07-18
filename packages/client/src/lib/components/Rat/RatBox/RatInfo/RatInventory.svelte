@@ -1,6 +1,6 @@
 <script lang="ts">
   import { tippy } from "svelte-tippy"
-  import { rat } from "$lib/modules/state/base/stores"
+  import { rat } from "$lib/modules/state/stores"
 
   import { Trait, Item } from "$lib/components/Shared"
 </script>

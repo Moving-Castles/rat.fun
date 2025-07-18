@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte"
-  import { player } from "$lib/modules/state/base/stores"
-  import { waitForPropertyChange } from "$lib/modules/state/base/utils"
+  import { player } from "$lib/modules/state/stores"
+  import { waitForPropertyChange } from "$lib/modules/state/utils"
   import { sendCreateRat } from "$lib/modules/action-manager/index.svelte"
   import { generateRatName } from "./ratNameGenerator"
   import { sendDeployRatMessage } from "$lib/modules/off-chain-sync"

@@ -12,7 +12,7 @@
   import { initWalletNetwork } from "$lib/initWalletNetwork"
   import { entryKitSession } from "$lib/modules/entry-kit/stores"
 
-  import { playerERC20Allowance, playerERC20Balance } from "$lib/modules/state/base/stores"
+  import { playerERC20Allowance, playerERC20Balance } from "$lib/modules/state/stores"
 
   import Introduction from "$lib/components/Spawn/Introduction/Introduction.svelte"
   import ConnectWalletForm from "$lib/components/Spawn/ConnectWalletForm/ConnectWalletForm.svelte"

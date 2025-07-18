@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { gameConfig, rat } from "$lib/modules/state/base/stores"
+  import { gameConfig, rat } from "$lib/modules/state/stores"
   import { latestEventsOnRatLevel } from "$lib/modules/off-chain-sync/stores"
   import { sendChatMessage } from "$lib/modules/off-chain-sync"
   import { websocketConnected } from "$lib/modules/off-chain-sync/stores"

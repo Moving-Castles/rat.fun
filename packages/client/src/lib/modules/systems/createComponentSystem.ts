@@ -1,5 +1,5 @@
 import { get } from "svelte/store"
-import { entities } from "$lib/modules/state/base/stores"
+import { entities } from "$lib/modules/state/stores"
 import { publicNetwork } from "$lib/modules/network"
 import { toCamelCase } from "$lib/modules/utils"
 import { ComponentUpdate } from "@latticexyz/recs"

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getRoomOwnerName } from "$lib/modules/state/base/utils"
+  import { getRoomOwnerName } from "$lib/modules/state/utils"
   import { lastUpdated } from "$lib/modules/content"
   import { urlFor } from "$lib/modules/content/sanity"
   import { getModalState } from "$lib/components/Shared/Modal/state.svelte"

@@ -1,5 +1,5 @@
 import { get } from "svelte/store"
-import { gameConfig } from "$lib/modules/state/base/stores"
+import { gameConfig } from "$lib/modules/state/stores"
 import { approveMax } from "$lib/modules/on-chain-transactions"
 import { busy } from "../index.svelte"
 

@@ -4,7 +4,7 @@
   import { onMount, onDestroy } from "svelte"
   import { goto } from "$app/navigation"
   import { navigating } from "$app/state"
-  import { player, rooms as roomsState, rat as ratState } from "$lib/modules/state/base/stores"
+  import { player, rooms as roomsState, rat as ratState } from "$lib/modules/state/stores"
   import {
     ROOM_RESULT_STATE,
     SHOW_INFO_BOXES,

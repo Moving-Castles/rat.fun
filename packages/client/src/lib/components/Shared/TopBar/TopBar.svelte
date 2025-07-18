@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { player } from "$lib/modules/state/base/stores"
+  import { player } from "$lib/modules/state/stores"
   import OperatorInfo from "./PlayerInfo.svelte"
   import PaneSwitch from "./PaneSwitch.svelte"
-  import { activeWorldEvent } from "$lib/modules/state/base/stores"
+  import { activeWorldEvent } from "$lib/modules/state/stores"
   import WorldEvent from "./WorldEvent.svelte"
 </script>
 
