@@ -6,7 +6,7 @@
  */
 
 import { Hex } from "viem"
-import { ENTITY_TYPE } from "./enums"
+import { ENTITY_TYPE } from "contracts/enums"
 import { players, gameConfig } from "$lib/modules/state/stores"
 import { get } from "svelte/store"
 
@@ -75,7 +75,7 @@ export function getRoomOwnerName(room: Room) {
 }
 
 // * * * * * * * * * * * * * * * * *
-// UTILITY FUNCTIONS
+// STORE UTILITY FUNCTIONS
 // * * * * * * * * * * * * * * * * *
 
 /**

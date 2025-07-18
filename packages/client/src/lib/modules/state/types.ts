@@ -52,6 +52,7 @@ declare global {
       | string
       | GameConfigObject
       | mudSchemas["ExternalAddressesConfig"]
+      | WorldEventObject
       | undefined
     entityType?: ENTITY_TYPE
     name?: mudComponents["Name"]
@@ -66,18 +67,23 @@ declare global {
     traits?: mudComponents["Traits"]
     inventory?: mudComponents["Inventory"]
     currentRat?: mudComponents["CurrentRat"]
+    pastRats: mudComponents["PastRats"]
     owner?: mudComponents["Owner"]
     prompt?: mudComponents["Prompt"]
     index?: mudComponents["Index"]
     roomCreationCost?: mudComponents["RoomCreationCost"]
     isSpecialRoom?: mudComponents["IsSpecialRoom"]
     maxValuePerWin?: mudComponents["MaxValuePerWin"]
-    levelList?: mudComponents["LevelList"]
     levelMinBalance?: mudComponents["LevelMinBalance"]
     levelMaxBalance?: mudComponents["LevelMaxBalance"]
     visitCount?: mudComponents["VisitCount"]
     killCount?: mudComponents["KillCount"]
     masterKey?: mudComponents["MasterKey"]
+    // Gameconfig related fields
+    gameConfig: GameConfigObject
+    externalAddressesConfig: mudSchemas["ExternalAddressesConfig"]
+    levelList: Hex[]
+    worldEvent: WorldEventObject
   }
 
   type Player = {
