@@ -1,5 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte"
+  import { player } from "$lib/modules/state/base/stores"
+  import { waitForPropertyChange } from "$lib/modules/state/base/utils"
   import { sendCreateRat } from "$lib/modules/action-manager/index.svelte"
   import { generateRatName } from "./ratNameGenerator"
   import { sendDeployRatMessage } from "$lib/modules/off-chain-sync"
@@ -9,10 +11,17 @@
   const name: string = generateRatName()
 
   onMount(async () => {
+    const oldRatId = $player?.currentRat ?? ""
     await sendCreateRat(name)
-    sendDeployRatMessage()
-    // RAT_BOX_STATE.DEPLOYING_RAT -> RAT_BOX_STATE.HAS_RAT
-    transitionTo(RAT_BOX_STATE.HAS_RAT)
+
+    try {
+      // Make sure new rat is available to avoid flash of old info
+      await waitForPropertyChange(player, "currentRat", oldRatId, 10000)
+      sendDeployRatMessage()
+      transitionTo(RAT_BOX_STATE.HAS_RAT)
+    } catch (error) {
+      console.error("Timeout waiting for rat creation:", error)
+    }
   })
 </script>
 
