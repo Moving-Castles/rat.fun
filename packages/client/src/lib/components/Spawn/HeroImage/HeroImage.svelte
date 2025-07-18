@@ -60,7 +60,11 @@
       width: 500px;
 
       img {
-        height: 60dvh;
+        height: 50dvh;
+        @media (max-width: 900px) {
+          width: 70dvw;
+          height: auto;
+        }
       }
 
       .button {

@@ -53,13 +53,20 @@
       width: 500px;
 
       img {
-        height: 60dvh;
+        height: 50dvh;
+        @media (max-width: 900px) {
+          width: 70dvw;
+          height: auto;
+        }
       }
 
       .button {
         margin-top: 20px;
         width: 400px;
         height: 80px;
+        @media (max-width: 900px) {
+          width: 70dvw;
+        }
       }
     }
   }

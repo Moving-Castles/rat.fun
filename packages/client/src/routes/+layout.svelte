@@ -107,7 +107,7 @@
     inset: 0;
     z-index: var(--z-background);
     background: var(--background);
-    background-image: url("/images/textures/2.jpg");
+    background-image: url("/images/tiles.png");
     background-size: 300px;
   }
 </style>

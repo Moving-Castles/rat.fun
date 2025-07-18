@@ -78,10 +78,13 @@
       justify-content: center;
       width: 500px;
 
-      .image {
-        width: 100%;
+      img {
+        height: 50dvh;
+        @media (max-width: 900px) {
+          width: 70dvw;
+          height: auto;
+        }
       }
-
       .button {
         width: 100%;
         height: 80px;

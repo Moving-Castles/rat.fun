@@ -49,7 +49,10 @@ export function getNetworkConfig(environment: ENVIRONMENT) {
     : (world?.blockNumber ?? -1) // -1 will attempt to find the block number from RPC
 
   let indexerUrl = (chain as MUDChain).indexerUrl
-  if (params.has("disableIndexer")) indexerUrl = undefined
+  if (params.has("disableIndexer")) {
+    indexerUrl = undefined
+    console.log("Indexer disabled")
+  }
 
   return {
     provider: {
