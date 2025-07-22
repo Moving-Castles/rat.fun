@@ -36,7 +36,7 @@
 
 <style lang="scss">
   .room-preview-stats {
-    background: var(--background);
+    background: var(--background-semi-transparent);
 
     .header {
       border-top: 1px solid var(--color-grey-mid);

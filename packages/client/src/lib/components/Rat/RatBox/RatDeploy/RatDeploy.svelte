@@ -16,7 +16,7 @@
 
 <div class="deploy-rat">
   <div class="image-container">
-    <img src="/images/rat.png" alt="Rat" />
+    <img src="/images/mickey-rat.png" alt="Rat" />
   </div>
   <div class="button-container">
     <BigButton
@@ -36,22 +36,26 @@
     height: 100%;
     overflow: hidden;
     position: relative;
+    background-image: url("/images/texture-2.png");
+    background-size: 200px;
 
     .image-container {
       display: flex;
       flex-flow: column nowrap;
+      justify-content: center;
+      align-items: center;
       height: 100%;
 
       img {
-        width: 100%;
-        height: 100%;
+        width: auto;
+        height: 60%;
         object-fit: contain;
       }
     }
 
     .button-container {
       position: absolute;
-      bottom: 50%;
+      bottom: 20%;
       left: 50%;
       transform: translateX(-50%) translateY(50%);
       overflow: hidden;

@@ -1,33 +1,76 @@
 <script lang="ts">
-  import { rat, gameConfig, levels, playerERC20Balance } from "$lib/modules/state/stores"
-  import { CharacterCounter, VideoLoader, BigButton } from "$lib/components/Shared"
-  import { busy, sendCreateRoom } from "$lib/modules/action-manager/index.svelte"
+  import { rat, gameConfig, levels, playerERC20Balance, rooms } from "$lib/modules/state/stores"
+  import { CharacterCounter, VideoLoaderDuration, BigButton } from "$lib/components/Shared"
+  import { sendCreateRoom } from "$lib/modules/action-manager/index.svelte"
+  import { goto } from "$app/navigation"
   import { typeHit } from "$lib/modules/sound"
   import { errorHandler } from "$lib/modules/error-handling"
   import { CharacterLimitError, InputValidationError } from "$lib/modules/error-handling/errors"
+  import { waitForPropertyChange } from "$lib/modules/state/utils"
 
   let roomDescription: string = $state("")
   let levelId: string = $state($rat?.level ?? $gameConfig.levelList[0])
+  let busy: boolean = $state(false)
 
-  let invalidRoomDescriptionLength = $derived(
+  // Prompt has to be between 1 and MAX_ROOM_PROMPT_LENGTH characters
+  const invalidRoomDescriptionLength = $derived(
     roomDescription.length < 1 ||
       roomDescription.length > $gameConfig.gameConfig.maxRoomPromptLength
   )
 
-  let disabled = $derived(
+  const roomCreationCost = $derived(
+    $levels[levelId]?.roomCreationCost ?? $levels[$gameConfig.levelList[0]]?.roomCreationCost ?? 0
+  )
+
+  // Disabled if:
+  // - Room description is invalid
+  // - Room creation is busy
+  // - Player has insufficient balance
+  const disabled = $derived(
     invalidRoomDescriptionLength ||
-      busy.CreateRoom.current !== 0 ||
+      busy ||
       $playerERC20Balance < Number($levels[levelId].roomCreationCost ?? 0)
   )
 
-  let roomCreationCost = $derived(
-    $levels[levelId]?.roomCreationCost ?? $levels[$gameConfig.levelList[0]]?.roomCreationCost ?? 0
-  )
+  const placeholder =
+    "You're creating a room that can modify traits, items, health, and tokens of rats that enter. Your room balance decreases whenever a rat gains something, and increases when your room takes something. You can withdraw remaining balance from your room."
+
+  async function onClick() {
+    busy = true
+    try {
+      // Validate room description before sending
+      if (!roomDescription || roomDescription.trim() === "") {
+        throw new InputValidationError(
+          "Room description cannot be empty",
+          "roomDescription",
+          roomDescription
+        )
+      }
+      if (roomDescription.length > $gameConfig.gameConfig.maxRoomPromptLength) {
+        throw new CharacterLimitError(
+          roomDescription.length,
+          $gameConfig.gameConfig.maxRoomPromptLength,
+          "room description"
+        )
+      }
+      const result = await sendCreateRoom(roomDescription, levelId, roomCreationCost)
+      if (result?.roomId) {
+        // Wait for created room to be available in the store
+        await waitForPropertyChange(rooms, result.roomId, undefined, 10000)
+        goto(`/admin/${result.roomId}`)
+        busy = false
+      }
+    } catch (error) {
+      errorHandler(error)
+      roomDescription = ""
+    }
+    roomDescription = ""
+  }
 </script>
 
 <div class="create-room">
-  {#if busy.CreateRoom.current !== 0}
-    <VideoLoader progress={busy.CreateRoom} />
+  {#if busy}
+    <VideoLoaderDuration duration={6000} />
   {:else}
     <!-- ROOM DESCRIPTION -->
     <div class="form-group">
@@ -39,10 +82,10 @@
         />
       </label>
       <textarea
-        disabled={busy.CreateRoom.current !== 0}
+        disabled={busy}
         id="room-description"
         rows="6"
-        placeholder="You're creating a room that can modify traits, items, health, and tokens of rats that enter. Your room balance decreases whenever a rat gains something, and increases when your room takes something. You can withdraw remaining balance from your room."
+        {placeholder}
         oninput={typeHit}
         bind:value={roomDescription}
       ></textarea>
@@ -50,37 +93,7 @@
 
     <!-- ACTIONS -->
     <div class="actions">
-      <BigButton
-        text="Create room"
-        cost={Number(roomCreationCost)}
-        {disabled}
-        onclick={async () => {
-          try {
-            // Validate room description before sending
-            if (!roomDescription || roomDescription.trim() === "") {
-              throw new InputValidationError(
-                "Room description cannot be empty",
-                "roomDescription",
-                roomDescription
-              )
-            }
-
-            if (roomDescription.length > $gameConfig.gameConfig.maxRoomPromptLength) {
-              throw new CharacterLimitError(
-                roomDescription.length,
-                $gameConfig.gameConfig.maxRoomPromptLength,
-                "room description"
-              )
-            }
-
-            await sendCreateRoom(roomDescription, levelId, roomCreationCost)
-            roomDescription = ""
-          } catch (error) {
-            errorHandler(error)
-            roomDescription = ""
-          }
-        }}
-      />
+      <BigButton text="Create room" cost={Number(roomCreationCost)} {disabled} onclick={onClick} />
     </div>
   {/if}
 </div>
@@ -88,10 +101,11 @@
 <style lang="scss">
   .create-room {
     height: 100%;
-    background: var(--black);
     display: flex;
     flex-flow: column nowrap;
     justify-content: space-between;
+    background-image: url("/images/texture-3.png");
+    background-size: 200px;
 
     .form-group {
       padding: 1rem;

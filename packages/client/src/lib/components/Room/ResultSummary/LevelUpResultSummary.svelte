@@ -7,7 +7,7 @@
   import { ratLevel } from "$lib/modules/state/stores"
   import { playSound } from "$lib/modules/sound"
   import { UIError } from "$lib/modules/error-handling/errors"
-  import { handleError } from "$lib/modules/error-handling"
+  import { errorHandler } from "$lib/modules/error-handling"
   import { gsap } from "gsap"
 
   let {
@@ -31,7 +31,7 @@
     if (navigating.to) return
 
     if (!innerContainerElement || !messageElement || !closeLinkElement) {
-      handleError(new UIError("Missing elements"))
+      errorHandler(new UIError("Missing elements"))
       return
     }
 

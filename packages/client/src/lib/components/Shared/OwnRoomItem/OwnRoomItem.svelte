@@ -129,7 +129,7 @@
     color: var(--foreground);
     text-align: left;
     overflow: hidden;
-    background-color: var(--background);
+    background-color: var(--background-semi-transparent);
     position: relative;
 
     .depleted-indicator {
@@ -142,7 +142,7 @@
     }
 
     &:hover {
-      background-color: var(--color-grey-darker);
+      background-color: var(--background);
 
       :global(.fake-background) {
         fill: var(--color-grey-darker);

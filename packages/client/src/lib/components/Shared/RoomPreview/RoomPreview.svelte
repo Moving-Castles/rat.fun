@@ -100,6 +100,7 @@
     font-family: var(--special-font-stack);
     font-size: 20px;
     text-transform: uppercase;
+    background: var(--background-semi-transparent);
 
     &:hover {
       color: var(--white);

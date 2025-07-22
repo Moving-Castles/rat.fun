@@ -24,7 +24,7 @@
     display: flex;
     justify-content: space-between;
     height: var(--top-bar-height);
-    background: var(--black);
+    background: var(--background-semi-transparent);
     user-select: none;
     overflow-y: hidden;
     overflow-x: scroll;

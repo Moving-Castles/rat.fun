@@ -1,39 +1,63 @@
 <script lang="ts">
   import { onMount } from "svelte"
-  import { BigButton } from "$lib/components/Shared"
   import gsap from "gsap"
 
   let { onComplete }: { onComplete: () => void } = $props()
 
-  let imageElement: HTMLImageElement | null = $state(null)
-  let enterButtonElement: HTMLDivElement | null = $state(null)
+  // Configuration for slides - easily customizable
+  const slides = [
+    { image: "/images/enter3.png", width: 400 },
+    { image: "/images/enter4.png", width: 400 },
+    { image: "/images/enter2.jpg", width: 400 }
+  ]
+
+  let currentSlide = $state(0)
+  let imageElements: HTMLImageElement[] = $state([])
+  let containerElement: HTMLDivElement | null = $state(null)
 
   const timeline = gsap.timeline()
 
   onMount(() => {
-    if (!imageElement || !enterButtonElement) return
+    if (!containerElement || imageElements.length === 0) return
 
-    // Set initial opacity to 0
-    imageElement.style.opacity = "0"
-    enterButtonElement.style.opacity = "0"
-
-    timeline.to(imageElement, {
-      opacity: 1,
-      duration: 0.4
-    })
-    timeline.to(enterButtonElement, {
-      opacity: 1,
-      duration: 0.4
+    // Set initial state - only first image visible
+    imageElements.forEach((img, index) => {
+      img.style.opacity = index === 0 ? "1" : "0"
+      img.style.width = `${slides[index].width}px`
     })
   })
+
+  function onClick() {
+    if (currentSlide >= slides.length - 1) {
+      // Last slide - trigger completion
+      onComplete()
+      return
+    }
+
+    // Fade out current image
+    timeline.to(imageElements[currentSlide], {
+      opacity: 0,
+      duration: 0.2
+    })
+
+    // Move to next slide
+    currentSlide++
+
+    // Fade in next image
+    timeline.to(imageElements[currentSlide], {
+      opacity: 1,
+      duration: 0.3
+    })
+  }
 </script>
 
-<div class="outer-container">
+<div class="outer-container" bind:this={containerElement}>
   <div class="inner-container">
-    <img class="image" src="/images/enter2.jpg" alt="RAT.FUN" bind:this={imageElement} />
-    <div class="button" bind:this={enterButtonElement}>
-      <BigButton text="Enter" onclick={onComplete} />
-    </div>
+    {#each slides as slide, index}
+      <button class="slide-button" onclick={onClick} aria-label="Continue to next slide">
+        <img class="slide-image" src={slide.image} alt="RAT.FUN" bind:this={imageElements[index]} />
+      </button>
+    {/each}
   </div>
 </div>
 
@@ -50,22 +74,24 @@
       flex-flow: column nowrap;
       align-items: center;
       justify-content: center;
-      width: 500px;
+      position: relative;
 
-      img {
-        height: 50dvh;
-        @media (max-width: 900px) {
-          width: 70dvw;
-          height: auto;
-        }
+      .slide-button {
+        position: absolute;
+        background: none;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        outline: none;
       }
 
-      .button {
-        margin-top: 20px;
-        width: 400px;
-        height: 80px;
+      .slide-image {
+        height: auto;
+        transition: opacity 0.3s ease-out;
+
         @media (max-width: 900px) {
-          width: 70dvw;
+          width: 70dvw !important;
+          height: auto;
         }
       }
     }

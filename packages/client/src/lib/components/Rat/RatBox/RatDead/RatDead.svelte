@@ -30,6 +30,8 @@
     justify-content: center;
     position: relative;
     width: 100%;
+    background-image: url("/images/texture-2.png");
+    background-size: 200px;
 
     .rat-dead-image {
       width: 100px;
