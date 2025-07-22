@@ -18,14 +18,5 @@ export default (S: any) =>
       S.listItem()
         .title("Prompts")
         .icon(MdList)
-        .child(S.documentList().title("Prompts").filter('_type == "prompt"').schemaType("prompt")),
-      S.listItem()
-        .title("Test prompts")
-        .icon(MdScience)
-        .child(
-          S.documentList()
-            .id("testPrompt")
-            .filter('_type == "testPrompt"')
-            .schemaType("testPrompts")
-        )
+        .child(S.documentList().title("Prompts").filter('_type == "prompt"').schemaType("prompt"))
     ])

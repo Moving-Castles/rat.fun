@@ -126,21 +126,12 @@
   .container {
     width: 100vw;
     height: 100vh;
-    background: var(--background);
+    // background: var(--background);
     color: var(--foreground);
     font-family: var(--special-font-stack);
     text-transform: none;
     font-size: var(--font-size-large);
     position: relative;
-  }
-
-  .shader-test {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
   }
 
   .content {

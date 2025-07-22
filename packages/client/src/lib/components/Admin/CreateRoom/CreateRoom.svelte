@@ -68,10 +68,11 @@
 <style lang="scss">
   .create-room {
     height: 100%;
-    background: var(--black);
     display: flex;
     flex-flow: column nowrap;
     justify-content: space-between;
+    background-image: url("/images/texture-3.png");
+    background-size: 200px;
 
     .form-group {
       padding: 1rem;

@@ -109,9 +109,7 @@
     color: var(--foreground);
     text-align: left;
     overflow: hidden;
-    background-color: var(--background);
-    background-image: url("/images/texture-6.png");
-    background-size: 100px;
+    background: var(--background-semi-transparent);
 
     &.disabled {
       opacity: 0.5;
@@ -131,11 +129,10 @@
         z-index: var(--z-base);
 
         .room-image {
-          border: 15px solid transparent;
-          border-image: url("/images/border-2.png") 20 repeat;
           line-height: 0;
           width: 100%;
           aspect-ratio: 1/1;
+          border: var(--default-border-style);
 
           img {
             display: block;

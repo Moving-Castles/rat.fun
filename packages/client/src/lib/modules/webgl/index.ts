@@ -1,8 +1,12 @@
 import type { WebGLRenderer, ShaderSource, WebGLUniforms, WebGLRendererOptions } from "./types"
 
+/**
+ * A general-purpose WebGL renderer that can render shaders to a canvas.
+ * Supports automatic rendering, uniform management, and performance monitoring.
+ */
 export class WebGLGeneralRenderer implements WebGLRenderer {
   canvas: HTMLCanvasElement
-  gl!: WebGLRenderingContext
+  gl!: WebGLRenderingContext | WebGL2RenderingContext
   program!: WebGLProgram
   startTime: number
   animationId?: number
@@ -14,15 +18,32 @@ export class WebGLGeneralRenderer implements WebGLRenderer {
   private uniformLocations: Map<string, WebGLUniformLocation | null> = new Map()
   private uniforms: WebGLUniforms
   private autoRender: boolean
+  private frameCount: number = 0
+  private lastFrameTime: number = 0
+  private fps: number = 0
+  private frameInterval: number = 1000 / 60
 
+  /**
+   * Creates a new WebGL renderer instance.
+   * @param canvas - The HTML canvas element to render to
+   * @param options - Configuration options for the renderer
+   */
   constructor(canvas: HTMLCanvasElement, options: WebGLRendererOptions) {
     this.canvas = canvas
-    this.startTime = Date.now()
+    this.startTime = performance.now()
     this.uniforms = options.uniforms || {}
     this.autoRender = options.autoRender ?? true
+    this.frameInterval = 1000 / 60
     this.initWebGL(options.shader)
   }
 
+  /**
+   * Creates and compiles a WebGL shader.
+   * @param type - The shader type (VERTEX_SHADER or FRAGMENT_SHADER)
+   * @param source - The shader source code
+   * @returns The compiled WebGL shader
+   * @throws Error if shader creation or compilation fails
+   */
   private createShader(type: number, source: string): WebGLShader {
     const shader = this.gl.createShader(type)
     if (!shader) throw new Error("Failed to create shader")
@@ -37,6 +58,13 @@ export class WebGLGeneralRenderer implements WebGLRenderer {
     return shader
   }
 
+  /**
+   * Creates and links a WebGL program from vertex and fragment shaders.
+   * @param vertexShader - The compiled vertex shader
+   * @param fragmentShader - The compiled fragment shader
+   * @returns The linked WebGL program
+   * @throws Error if program creation or linking fails
+   */
   private createProgram(vertexShader: WebGLShader, fragmentShader: WebGLShader): WebGLProgram {
     const program = this.gl.createProgram()
     if (!program) throw new Error("Failed to create program")
@@ -52,14 +80,18 @@ export class WebGLGeneralRenderer implements WebGLRenderer {
     return program
   }
 
+  /**
+   * Initializes the WebGL context and sets up the rendering pipeline.
+   * Creates shaders, program, buffers, and configures the rendering state.
+   * @param shader - The shader source code for vertex and fragment shaders
+   * @throws Error if WebGL is not supported or initialization fails
+   */
   private initWebGL(shader: ShaderSource): void {
-    const gl = this.canvas.getContext("webgl")
-    if (!gl) throw new Error("WebGL not supported")
-    this.gl = gl
+    this.gl = this.canvas.getContext("webgl")!
 
     // Create shaders
-    this.vertexShader = this.createShader(gl.VERTEX_SHADER, shader.vertex)
-    this.fragmentShader = this.createShader(gl.FRAGMENT_SHADER, shader.fragment)
+    this.vertexShader = this.createShader(this.gl.VERTEX_SHADER, shader.vertex)
+    this.fragmentShader = this.createShader(this.gl.FRAGMENT_SHADER, shader.fragment)
 
     // Create program
     this.program = this.createProgram(this.vertexShader, this.fragmentShader)
@@ -67,17 +99,17 @@ export class WebGLGeneralRenderer implements WebGLRenderer {
     // Create a simple quad geometry
     const positions = new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1])
 
-    this.positionBuffer = gl.createBuffer()!
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer)
-    gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW)
+    this.positionBuffer = this.gl.createBuffer()!
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.positionBuffer)
+    this.gl.bufferData(this.gl.ARRAY_BUFFER, positions, this.gl.STATIC_DRAW)
 
     // Get attribute and uniform locations
-    this.positionLocation = gl.getAttribLocation(this.program, "a_position")
+    this.positionLocation = this.gl.getAttribLocation(this.program, "a_position")
 
     // Setup rendering
-    gl.useProgram(this.program)
-    gl.enableVertexAttribArray(this.positionLocation)
-    gl.vertexAttribPointer(this.positionLocation, 2, gl.FLOAT, false, 0, 0)
+    this.gl.useProgram(this.program)
+    this.gl.enableVertexAttribArray(this.positionLocation)
+    this.gl.vertexAttribPointer(this.positionLocation, 2, this.gl.FLOAT, false, 0, 0)
 
     // Cache uniform locations
     this.cacheUniformLocations()
@@ -87,14 +119,25 @@ export class WebGLGeneralRenderer implements WebGLRenderer {
     this.resize()
   }
 
+  /**
+   * Caches uniform locations for efficient uniform updates.
+   * Stores uniform locations in a Map for quick access during rendering.
+   */
   private cacheUniformLocations(): void {
     this.uniformLocations.clear()
-    for (const [name] of Object.entries(this.uniforms)) {
+
+    // Cache all uniform locations including time and resolution
+    const uniformNames = [...Object.keys(this.uniforms), "u_time", "u_resolution"]
+    for (const name of uniformNames) {
       const location = this.gl.getUniformLocation(this.program, name)
       this.uniformLocations.set(name, location)
     }
   }
 
+  /**
+   * Updates all uniforms in the shader program.
+   * Sets uniform values based on their type (float, vec2, vec3, vec4, int, bool).
+   */
   private updateUniforms(): void {
     for (const [name, uniform] of Object.entries(this.uniforms)) {
       const location = this.uniformLocations.get(name)
@@ -129,6 +172,13 @@ export class WebGLGeneralRenderer implements WebGLRenderer {
     }
   }
 
+  /**
+   * Sets a uniform value in the shader program.
+   * @param name - The name of the uniform variable
+   * @param value - The value to set (number, array, or boolean)
+   * @param type - Optional type override for the uniform
+   * @throws Error if the uniform is not found in the shader
+   */
   setUniform(
     name: string,
     value: number | number[] | boolean,
@@ -175,13 +225,32 @@ export class WebGLGeneralRenderer implements WebGLRenderer {
     }
   }
 
+  /**
+   * Renders a single frame using the current shader program.
+   * Updates time uniform, clears the viewport, and draws the quad.
+   * If autoRender is enabled, schedules the next frame.
+   */
   render(): void {
     if (!this.gl || !this.program) return
 
-    // Update time uniform if it exists
-    const timeLocation = this.gl.getUniformLocation(this.program, "u_time")
+    const currentTime = performance.now()
+
+    // Frame rate limiting
+    if (currentTime - this.lastFrameTime < this.frameInterval) {
+      if (this.autoRender) {
+        this.animationId = requestAnimationFrame(() => this.render())
+      }
+      return
+    }
+
+    this.lastFrameTime = currentTime
+    this.frameCount++
+
+    // Update time uniform if it exists (using cached location)
+    const timeLocation = this.uniformLocations.get("u_time")
     if (timeLocation) {
-      const time = (Date.now() - this.startTime) * 0.001
+      // Use performance.now() for more precise timing
+      const time = (currentTime - this.startTime) * 0.001
       this.gl.uniform1f(timeLocation, time)
     }
 
@@ -189,31 +258,59 @@ export class WebGLGeneralRenderer implements WebGLRenderer {
     this.gl.viewport(0, 0, this.canvas.width, this.canvas.height)
     this.gl.drawArrays(this.gl.TRIANGLE_STRIP, 0, 4)
 
+    // Calculate FPS every 60 frames
+    if (this.frameCount % 60 === 0) {
+      const elapsed = currentTime - this.startTime
+      this.fps = Math.round((this.frameCount / elapsed) * 1000)
+    }
+
     if (this.autoRender) {
       this.animationId = requestAnimationFrame(() => this.render())
     }
   }
 
+  /**
+   * Resizes the canvas and updates the resolution uniform.
+   * Adjusts canvas size based on device pixel ratio and updates u_resolution uniform.
+   */
   resize(): void {
     const rect = this.canvas.getBoundingClientRect()
     this.canvas.width = rect.width * window.devicePixelRatio
     this.canvas.height = rect.height * window.devicePixelRatio
 
-    // Update resolution uniform if it exists
-    const resolutionLocation = this.gl.getUniformLocation(this.program, "u_resolution")
+    // Update resolution uniform if it exists (using cached location)
+    const resolutionLocation = this.uniformLocations.get("u_resolution")
     if (resolutionLocation) {
       this.gl.uniform2f(resolutionLocation, this.canvas.width, this.canvas.height)
     }
   }
 
+  /**
+   * Gets the current FPS of the renderer.
+   * @returns The current frames per second
+   */
+  getFPS(): number {
+    return this.fps
+  }
+
+  /**
+   * Destroys the renderer and cleans up resources.
+   * Cancels any pending animation frames and frees WebGL resources.
+   */
   destroy(): void {
     if (this.animationId) {
       cancelAnimationFrame(this.animationId)
+      this.animationId = undefined
     }
   }
 }
 
-// Factory function for creating general renderers
+/**
+ * Factory function for creating WebGL renderers.
+ * @param canvas - The HTML canvas element to render to
+ * @param options - Configuration options for the renderer
+ * @returns A new WebGLGeneralRenderer instance
+ */
 export function createWebGLRenderer(
   canvas: HTMLCanvasElement,
   options: WebGLRendererOptions

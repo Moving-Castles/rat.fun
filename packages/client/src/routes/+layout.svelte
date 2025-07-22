@@ -20,6 +20,7 @@
   import Spawn from "$lib/components/Spawn/Spawn.svelte"
   import Loading from "$lib/components/Loading/Loading.svelte"
   import { Modal, PageTransitions, WalletInfo } from "$lib/components/Shared"
+  import ShaderTest from "$lib/components/Shared/ShaderTest/ShaderTest.svelte"
 
   let { children, data }: LayoutProps = $props()
 
@@ -57,29 +58,38 @@
   })
 </script>
 
-<div class="bg">
-  <div class="context-main">
-    {#if $UIState === UI.LOADING}
+{#if $UIState === UI.LOADING}
+  <div class="bg">
+    <div class="context-main">
       <main>
         <Loading {environment} loaded={environmentLoaded} />
       </main>
-    {:else if $UIState === UI.SPAWNING}
+    </div>
+  </div>
+{:else if $UIState === UI.SPAWNING}
+  <div class="bg">
+    <div class="context-main">
       <main>
         <Spawn spawned={playerSpawned} {walletType} />
       </main>
-    {:else if $UIState === UI.READY}
+    </div>
+  </div>
+{:else if $UIState === UI.READY}
+  <div class="bg">
+    <ShaderTest />
+    <div class="context-main">
       <div class="layer-game">
         <PageTransitions config={outerLayoutTransitionConfig}>
           {@render children?.()}
         </PageTransitions>
       </div>
-    {/if}
+    </div>
   </div>
-</div>
+{/if}
 
 <Modal />
 
-<WalletInfo {walletType} {environment} />
+<!-- <WalletInfo {walletType} {environment} /> -->
 
 <style lang="scss">
   .context-main {
@@ -91,7 +101,7 @@
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    background: var(--background);
+    // background: var(--background);
   }
 
   main {
@@ -106,8 +116,12 @@
     position: fixed;
     inset: 0;
     z-index: var(--z-background);
-    background: var(--background);
-    background-image: url("/images/tiles.png");
-    background-size: 300px;
+    // background: var(--background);
+    // background-image: url("/images/tiles.png");
+    // background-size: 300px;
+  }
+
+  .layer-game {
+    border: var(--default-border-style);
   }
 </style>

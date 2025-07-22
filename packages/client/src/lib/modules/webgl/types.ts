@@ -25,4 +25,5 @@ export interface WebGLRendererOptions {
   shader: ShaderSource
   uniforms?: WebGLUniforms
   autoRender?: boolean
+  targetFPS?: number
 }
