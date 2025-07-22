@@ -1,3 +1,6 @@
+import { errorHandler } from "$lib/modules/error-handling"
+import { InvalidStateTransitionError } from "$lib/modules/error-handling/errors"
+
 /**
  * ========================================
  *  Rat/state.svelte.ts
@@ -70,7 +73,10 @@ const VALID_TRANSITIONS: Record<RAT_BOX_STATE, RAT_BOX_STATE[]> = {
 export const transitionTo = (newState: RAT_BOX_STATE) => {
   const validTransitions = VALID_TRANSITIONS[ratBoxState.state]
   if (!validTransitions.includes(newState)) {
-    console.error(`Invalid state transition from ${ratBoxState.state} to ${newState}`)
+    const err = new InvalidStateTransitionError(
+      `Invalid state transition from ${ratBoxState.state} to ${newState}`
+    )
+    errorHandler(err)
     return
   }
   ratBoxState.state = newState

@@ -6,6 +6,7 @@
  */
 
 import { Hex } from "viem"
+import { JSONParseError } from "../error-handling/errors"
 
 const BLOCKTIME = 2
 
@@ -369,7 +370,7 @@ export function parseJSONFromContent<T = Record<string, unknown>>(content: strin
     return JSON.parse(jsonString) as T
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error)
-    throw new Error("Failed to parse JSON: " + errorMessage)
+    throw new JSONParseError("Failed to parse JSON: " + errorMessage, jsonString)
   }
 }
 

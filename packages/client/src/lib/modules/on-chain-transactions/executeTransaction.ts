@@ -8,6 +8,12 @@ import { gameConfig } from "$lib/modules/state/stores"
 import { WorldFunctions } from "./index"
 import { getChain } from "$lib/mud/utils"
 import { entryKitConnector } from "$lib/modules/entry-kit/stores"
+import { errorHandler } from "$lib/modules/error-handling"
+import {
+  TransactionError,
+  ConnectorClientUnavailableError,
+  type ExpectedError
+} from "../error-handling/errors"
 
 /**
  * Executes an on-chain transaction.
@@ -56,11 +62,11 @@ export async function executeTransaction(
       if (receipt.status == "success") {
         return receipt
       } else {
-        throw new Error(`Transaction failed: ${receipt.transactionHash}`)
+        throw new TransactionError(`Transaction failed: ${receipt.transactionHash}`)
       }
     }
-  } catch (e) {
-    console.error("error", e)
+  } catch (e: unknown) {
+    errorHandler(e)
   }
 }
 
@@ -70,7 +76,7 @@ async function prepareConnectorClient() {
   console.log("connectorClient", connectorClient)
 
   if (!connectorClient) {
-    throw new Error("Connector client is not available")
+    throw new ConnectorClientUnavailableError()
   }
   // User's wallet may switch between different chains, ensure the current chain is correct
   const expectedChainId = get(publicNetwork).config.chain.id

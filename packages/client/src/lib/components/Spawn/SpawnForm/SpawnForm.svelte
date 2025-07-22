@@ -5,6 +5,7 @@
   import { BigButton } from "$lib/components/Shared"
   import { typeHit } from "$lib/modules/sound"
   import { VideoLoader } from "$lib/components/Shared"
+  import { InputValidationError } from "$lib/modules/error-handling/errors"
 
   const { onComplete = () => {} } = $props<{
     onComplete: (name: string) => void
@@ -17,8 +18,27 @@
   const timeline = gsap.timeline()
 
   async function submitForm() {
-    await sendSpawn(name)
-    onComplete()
+    try {
+      // Validate name is not empty
+      if (!name || name.trim() === "") {
+        throw new InputValidationError("Name cannot be empty", "name", name)
+      }
+
+      // Additional name validation (optional - can add more rules as needed)
+      if (name.length > 50) {
+        throw new InputValidationError("Name is too long (maximum 50 characters)", "name", name)
+      }
+
+      await sendSpawn(name)
+      onComplete(name)
+    } catch (error) {
+      if (error instanceof InputValidationError) {
+        // In a real UI, you might want to show this error to the user
+        // For now, validation errors are handled silently
+      } else {
+        throw error // Re-throw non-validation errors
+      }
+    }
   }
 
   onMount(() => {

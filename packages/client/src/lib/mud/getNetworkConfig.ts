@@ -8,6 +8,7 @@ import { getBurnerPrivateKey } from "@latticexyz/common"
 import { getChain, getWorldFromChainId } from "./utils"
 import { ENVIRONMENT } from "./enums"
 import { MUDChain } from "@latticexyz/common/chains"
+import { WorldAddressNotFoundError } from "$lib/modules/error-handling/errors"
 
 export function getNetworkConfig(environment: ENVIRONMENT) {
   const params = new URLSearchParams(window.location.search)
@@ -34,7 +35,7 @@ export function getNetworkConfig(environment: ENVIRONMENT) {
 
   const worldAddress = params.get("worldAddress") || world?.address
   if (!worldAddress) {
-    throw new Error(`No world address found for chain ${chainId}. Did you run \`mud deploy\`?`)
+    throw new WorldAddressNotFoundError(chainId.toString())
   }
 
   /*

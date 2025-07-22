@@ -1,5 +1,6 @@
 import { giveCallerTokens } from "$lib/modules/on-chain-transactions"
 import { busy } from "../index.svelte"
+import { TransactionError } from "$lib/modules/error-handling/errors"
 
 const DEFAULT_TIMING = 4000
 
@@ -14,7 +15,7 @@ export async function sendGiveCallerTokens() {
   try {
     await giveCallerTokens()
   } catch (e) {
-    console.error(e)
+    throw new TransactionError("Failed to give caller tokens", e)
   } finally {
     busy.GiveCallerTokens.set(0, { duration: 0 })
   }

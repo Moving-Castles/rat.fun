@@ -1,6 +1,7 @@
 import { playSound } from "$lib/modules/sound"
 import { liquidateRat } from "$lib/modules/on-chain-transactions"
 import { busy } from "../index.svelte"
+import { LiquidationError, RatError } from "$lib/modules/error-handling/errors"
 
 const DEFAULT_TIMING = 4000
 
@@ -17,7 +18,7 @@ export async function sendLiquidateRat() {
   try {
     await liquidateRat()
   } catch (e) {
-    console.error(e)
+    throw new LiquidationError("Failed to liquidate rat", undefined, e)
   } finally {
     busy.LiquidateRat.set(0, { duration: 0 })
   }

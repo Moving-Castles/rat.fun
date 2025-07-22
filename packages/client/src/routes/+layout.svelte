@@ -4,6 +4,7 @@
 
   import type { LayoutProps } from "./$types"
 
+  import { initializeSentry } from "$lib/modules/error-handling"
   import { onMount } from "svelte"
   import { goto } from "$app/navigation"
   import { initStaticContent } from "$lib/modules/content"
@@ -39,6 +40,8 @@
   const playerSpawned = () => {
     UIState.set(UI.READY)
   }
+
+  initializeSentry()
 
   // Init of chain sync when player is ready
   $effect(() => {

@@ -12,6 +12,8 @@ import {
   PUBLIC_BASE_SEPOLIA_SERVER_HOST,
   PUBLIC_BASE_SERVER_HOST
 } from "$env/static/public"
+import { errorHandler } from "$lib/modules/error-handling"
+import { APIError, RoomError } from "$lib/modules/error-handling/errors"
 
 const DEFAULT_TIMING = 4000
 
@@ -70,7 +72,7 @@ export async function sendCreateRoom(
       console.log("response", response)
       const error = await response.json()
       console.log("error", error)
-      throw new Error(`${error.error}: ${error.message}`)
+      throw new APIError(`${error.error}: ${error.message}`, error)
     }
 
     const result = (await response.json()) as CreateRoomReturnValue
@@ -79,9 +81,11 @@ export async function sendCreateRoom(
       goto(`/admin/${result.roomId}`)
     }
   } catch (e) {
-    console.error(e)
-    window.alert(`SERVER ERROR: ${e}`)
-    throw new Error(String(e))
+    errorHandler(e)
+    if (e instanceof APIError) {
+      throw e
+    }
+    throw new RoomError(`Failed to create room: ${roomPrompt.substring(0, 50)}...`)
   } finally {
     busy.CreateRoom.set(0, { duration: 0 })
   }

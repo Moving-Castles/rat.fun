@@ -10,6 +10,7 @@ import { transactionQueue } from "@latticexyz/common/actions"
 
 import { setupWalletNetwork } from "./setupWalletNetwork"
 import { SetupPublicNetworkResult } from "./setupPublicNetwork"
+import { FaucetError } from "$lib/modules/error-handling/errors"
 
 export function setupBurnerWalletNetwork(publicNetwork: SetupPublicNetworkResult) {
   const networkConfig = publicNetwork.config
@@ -97,7 +98,7 @@ async function setupDrip(
       })
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
+        throw new FaucetError(`HTTP error! status: ${response.status}`)
       }
 
       await response.json()

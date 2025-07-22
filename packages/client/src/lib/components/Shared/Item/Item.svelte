@@ -29,7 +29,6 @@
 
   const sendSellItem = async () => {
     if (typeof item !== "string") {
-      console.error("Not id")
       return
     }
     if (busy) return
@@ -43,7 +42,6 @@
       saleCompleted = true
       saleMessage = "Close"
     } catch (e) {
-      console.error(e)
       saleMessage = "Error occurred"
     } finally {
       busy = false

@@ -7,6 +7,12 @@
 
   import { BigButton } from "$lib/components/Shared"
   import VideoLoader from "$lib/components/Shared/Loaders/VideoLoader.svelte"
+  import { errorHandler } from "$lib/modules/error-handling"
+  import {
+    TransactionError,
+    NetworkError,
+    BlockchainError
+  } from "$lib/modules/error-handling/errors"
 
   const { onComplete = () => {} } = $props<{
     onComplete: () => void
@@ -20,8 +26,8 @@
   async function sendApproval() {
     try {
       await sendApproveMax()
-    } catch (e) {
-      console.error(e)
+    } catch (error) {
+      errorHandler(error)
     } finally {
       onComplete()
     }

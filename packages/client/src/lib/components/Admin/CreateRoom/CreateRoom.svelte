@@ -3,6 +3,8 @@
   import { CharacterCounter, VideoLoader, BigButton } from "$lib/components/Shared"
   import { busy, sendCreateRoom } from "$lib/modules/action-manager/index.svelte"
   import { typeHit } from "$lib/modules/sound"
+  import { errorHandler } from "$lib/modules/error-handling"
+  import { CharacterLimitError, InputValidationError } from "$lib/modules/error-handling/errors"
 
   let roomDescription: string = $state("")
   let levelId: string = $state($rat?.level ?? $gameConfig.levelList[0])
@@ -54,11 +56,29 @@
         {disabled}
         onclick={async () => {
           try {
+            // Validate room description before sending
+            if (!roomDescription || roomDescription.trim() === "") {
+              throw new InputValidationError(
+                "Room description cannot be empty",
+                "roomDescription",
+                roomDescription
+              )
+            }
+
+            if (roomDescription.length > $gameConfig.gameConfig.maxRoomPromptLength) {
+              throw new CharacterLimitError(
+                roomDescription.length,
+                $gameConfig.gameConfig.maxRoomPromptLength,
+                "room description"
+              )
+            }
+
             await sendCreateRoom(roomDescription, levelId, roomCreationCost)
-          } catch {
+            roomDescription = ""
+          } catch (error) {
+            errorHandler(error)
             roomDescription = ""
           }
-          roomDescription = ""
         }}
       />
     </div>

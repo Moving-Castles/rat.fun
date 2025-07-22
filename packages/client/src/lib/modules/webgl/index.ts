@@ -1,4 +1,10 @@
 import type { WebGLRenderer, ShaderSource, WebGLUniforms, WebGLRendererOptions } from "./types"
+import {
+  WebGLContextError,
+  ShaderError,
+  WebGLError,
+  UniformLocationError
+} from "$lib/modules/error-handling/errors"
 
 export class WebGLGeneralRenderer implements WebGLRenderer {
   canvas: HTMLCanvasElement
@@ -25,13 +31,18 @@ export class WebGLGeneralRenderer implements WebGLRenderer {
 
   private createShader(type: number, source: string): WebGLShader {
     const shader = this.gl.createShader(type)
-    if (!shader) throw new Error("Failed to create shader")
+    if (!shader) throw new WebGLError("Failed to create shader")
 
     this.gl.shaderSource(shader, source)
     this.gl.compileShader(shader)
 
     if (!this.gl.getShaderParameter(shader, this.gl.COMPILE_STATUS)) {
-      throw new Error("Shader compilation error: " + this.gl.getShaderInfoLog(shader))
+      const shaderType = type === this.gl.VERTEX_SHADER ? "vertex" : "fragment"
+      throw new ShaderError(
+        "Shader compilation error: " + this.gl.getShaderInfoLog(shader),
+        shaderType,
+        source
+      )
     }
 
     return shader
@@ -39,14 +50,14 @@ export class WebGLGeneralRenderer implements WebGLRenderer {
 
   private createProgram(vertexShader: WebGLShader, fragmentShader: WebGLShader): WebGLProgram {
     const program = this.gl.createProgram()
-    if (!program) throw new Error("Failed to create program")
+    if (!program) throw new WebGLError("Failed to create program")
 
     this.gl.attachShader(program, vertexShader)
     this.gl.attachShader(program, fragmentShader)
     this.gl.linkProgram(program)
 
     if (!this.gl.getProgramParameter(program, this.gl.LINK_STATUS)) {
-      throw new Error("Program linking error: " + this.gl.getProgramInfoLog(program))
+      throw new WebGLError("Program linking error: " + this.gl.getProgramInfoLog(program))
     }
 
     return program
@@ -54,7 +65,7 @@ export class WebGLGeneralRenderer implements WebGLRenderer {
 
   private initWebGL(shader: ShaderSource): void {
     const gl = this.canvas.getContext("webgl")
-    if (!gl) throw new Error("WebGL not supported")
+    if (!gl) throw new WebGLContextError("WebGL not supported")
     this.gl = gl
 
     // Create shaders
@@ -135,7 +146,7 @@ export class WebGLGeneralRenderer implements WebGLRenderer {
     type?: "float" | "vec2" | "vec3" | "vec4" | "int" | "bool"
   ): void {
     if (!this.uniforms[name]) {
-      throw new Error(`Uniform '${name}' not found in shader`)
+      throw new UniformLocationError(name)
     }
 
     this.uniforms[name].value = value

@@ -5,6 +5,7 @@
   import { websocketConnected } from "$lib/modules/off-chain-sync/stores"
   import { onMount } from "svelte"
   import { typeHit } from "$lib/modules/sound"
+  import { CharacterLimitError, ChatValidationError } from "$lib/modules/error-handling/errors"
 
   import ChatEvent from "./ChatEvent.svelte"
   import ChatMessage from "./ChatMessage.svelte"
@@ -38,15 +39,25 @@
 
   const sendMessage = async (e: Event) => {
     e.preventDefault()
-    // Limit message length to 500 characters
-    if (!value || value.length > 500) return
+
     try {
+      // Validate message is not empty
+      if (!value || value.trim() === "") {
+        throw new ChatValidationError("Message cannot be empty", value)
+      }
+
+      // Validate message length
+      if (value.length > 500) {
+        throw new CharacterLimitError(value.length, 500, "chat message")
+      }
+
       // Level of the player's rat, or the first level if the rat is not deployed
       const level = $rat?.level ?? $gameConfig?.levelList[0] ?? "unknown level"
       await sendChatMessage(level, value)
       value = ""
-    } catch (e) {
-      console.error(e)
+    } catch (error) {
+      // Validation errors are handled silently in the UI
+      // Other errors will be thrown by sendChatMessage if needed
     }
   }
 </script>

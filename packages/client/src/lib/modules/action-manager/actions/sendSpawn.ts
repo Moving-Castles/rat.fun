@@ -1,5 +1,6 @@
 import { spawn } from "$lib/modules/on-chain-transactions"
 import { busy } from "../index.svelte"
+import { SpawnError } from "$lib/modules/error-handling/errors"
 
 const DEFAULT_TIMING = 4000
 
@@ -15,7 +16,7 @@ export async function sendSpawn(name: string) {
   try {
     await spawn(name)
   } catch (e) {
-    throw new Error(String(e))
+    throw new SpawnError(`Failed to spawn player "${name}"`, e)
   } finally {
     busy.Spawn.set(0, { duration: 0 })
   }

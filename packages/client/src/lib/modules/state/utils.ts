@@ -9,6 +9,7 @@ import { Hex } from "viem"
 import { ENTITY_TYPE } from "contracts/enums"
 import { players, gameConfig } from "$lib/modules/state/stores"
 import { get } from "svelte/store"
+import { PropertyChangeTimeoutError, StoreTimeoutError } from "$lib/modules/error-handling/errors"
 
 /**
  * Filters entities by entity type
@@ -99,11 +100,7 @@ export function waitForPropertyChange<T, K extends keyof T>(
       if (unsubscribe) {
         unsubscribe()
       }
-      reject(
-        new Error(
-          `Timeout waiting for property '${String(propertyPath)}' to change from '${oldValue}'`
-        )
-      )
+      reject(new PropertyChangeTimeoutError(String(propertyPath), timeoutMs))
     }, timeoutMs)
 
     unsubscribe = store.subscribe((value: T) => {
@@ -140,9 +137,7 @@ export function waitForNestedPropertyChange(
       if (unsubscribe) {
         unsubscribe()
       }
-      reject(
-        new Error(`Timeout waiting for property '${propertyPath}' to change from '${oldValue}'`)
-      )
+      reject(new PropertyChangeTimeoutError(propertyPath, timeoutMs))
     }, timeoutMs)
 
     unsubscribe = store.subscribe((value: unknown) => {
@@ -179,7 +174,12 @@ export function waitForStoreChange<T>(
       if (unsubscribe) {
         unsubscribe()
       }
-      reject(new Error(`Timeout waiting for store value to change from '${oldValue}'`))
+      reject(
+        new StoreTimeoutError(
+          `Timeout waiting for store value to change from '${oldValue}'`,
+          timeoutMs
+        )
+      )
     }, timeoutMs)
 
     unsubscribe = store.subscribe((value: T) => {

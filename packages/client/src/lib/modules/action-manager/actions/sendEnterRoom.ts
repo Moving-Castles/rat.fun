@@ -8,6 +8,8 @@ import {
   PUBLIC_BASE_SEPOLIA_SERVER_HOST,
   PUBLIC_BASE_SERVER_HOST
 } from "$env/static/public"
+import { errorHandler } from "$lib/modules/error-handling"
+import { APIError, RoomError } from "$lib/modules/error-handling/errors"
 
 const DEFAULT_TIMING = 4000
 
@@ -57,7 +59,7 @@ export async function sendEnterRoom(roomId: string, ratId: string) {
 
     if (!response.ok) {
       const error = await response.json()
-      throw new Error(`${error.error}: ${error.message}`)
+      throw new APIError(`${error.error}: ${error.message}`, error)
     }
 
     const outcome = (await response.json()) as EnterRoomReturnValue
@@ -68,9 +70,11 @@ export async function sendEnterRoom(roomId: string, ratId: string) {
     busy.EnterRoom.set(0, { duration: 0 })
     return outcome
   } catch (err) {
-    console.error(err)
-    window.alert(`SERVER ERROR: ${err}`)
+    errorHandler(err)
     busy.EnterRoom.set(0, { duration: 0 })
+    if (!(err instanceof APIError)) {
+      throw new RoomError(`Failed to enter room ${roomId}`, roomId)
+    }
     return null
   }
 }

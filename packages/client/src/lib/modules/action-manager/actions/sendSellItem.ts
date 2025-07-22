@@ -1,5 +1,6 @@
 import { sellItem } from "$lib/modules/on-chain-transactions"
 import { busy } from "../index.svelte"
+import { TransactionError } from "$lib/modules/error-handling/errors"
 
 const DEFAULT_TIMING = 4000
 
@@ -15,7 +16,7 @@ export async function sendSellItem(itemId: string) {
   try {
     await sellItem(itemId)
   } catch (e) {
-    console.error(e)
+    throw new TransactionError(`Failed to sell item ${itemId}`, e)
   } finally {
     busy.SellItem.set(0, { duration: 0 })
   }

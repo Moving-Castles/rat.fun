@@ -3,6 +3,7 @@ import { playSound } from "$lib/modules/sound"
 import { gameConfig, playerERC20Allowance } from "$lib/modules/state/stores"
 import { createRat, approve } from "$lib/modules/on-chain-transactions"
 import { busy } from "../index.svelte"
+import { RatError } from "$lib/modules/error-handling/errors"
 
 /**
  * Create rat
@@ -25,8 +26,7 @@ export async function sendCreateRat(name: string) {
     }
     await createRat(name)
   } catch (e) {
-    console.error(e)
-    throw new Error(String(e))
+    throw new RatError(`Failed to create rat "${name}"`, undefined)
   } finally {
     busy.CreateRat.set(0, { duration: 0 })
   }

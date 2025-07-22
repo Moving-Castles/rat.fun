@@ -28,6 +28,7 @@
   } from "$lib/components/Room"
   import { staticContent } from "$lib/modules/content"
   import { sendEnterRoom } from "$lib/modules/action-manager/index.svelte"
+  import { RoomError, APIError, NetworkError } from "$lib/modules/error-handling/errors"
 
   let {
     roomId
@@ -46,7 +47,7 @@
 
   const processRoom = async () => {
     if (!roomId) {
-      return
+      throw new RoomError("No room ID provided")
     }
 
     try {
@@ -55,16 +56,29 @@
       try {
         result = await ret
         if (!result) {
-          throw new Error("No result returned")
+          throw new RoomError("No result returned from room entry", roomId)
         }
         // Result returned, transition to showing results
         transitionTo(ROOM_RESULT_STATE.SHOWING_RESULTS)
       } catch (err) {
         console.log("catch outcome error", err)
+        // Wrap the error in more specific error types based on the error
+        if (err instanceof Error) {
+          if (err.message.includes("network") || err.message.includes("fetch")) {
+            throw new NetworkError(
+              "ROOM_ENTRY_NETWORK_ERROR",
+              "Network error during room entry",
+              err.message
+            )
+          } else if (err.message.includes("api") || err.message.includes("server")) {
+            throw new APIError("Room entry API error: " + err.message, err)
+          } else {
+            throw new RoomError("Room entry failed: " + err.message, roomId)
+          }
+        }
         throw err
       }
     } catch (error) {
-      console.log("catch result error", error)
       transitionTo(ROOM_RESULT_STATE.ERROR)
       await goto("/game")
       return
