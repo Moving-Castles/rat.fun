@@ -21,7 +21,7 @@
 
   $effect(() => {
     const root = createRoot(rootEl)
-    const config = wagmiConfig(networkConfig.chainId)
+    const config = wagmiConfig()
 
     import("@latticexyz/entrykit/internal").then(({ EntryKitProvider }) => {
       const entrykit = createElement(
