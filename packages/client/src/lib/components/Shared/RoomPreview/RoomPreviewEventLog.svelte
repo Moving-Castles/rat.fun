@@ -15,6 +15,6 @@
 
 <style lang="scss">
   .room-preview-event-log {
-    background: var(--background);
+    background: var(--background-semi-transparent);
   }
 </style>

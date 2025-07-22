@@ -56,6 +56,9 @@
     overflow: hidden;
     display: flex;
     position: relative;
+    background-color: var(--background-semi-transparent);
+    background-image: url("/images/texture-3.png");
+    background-size: 200px;
 
     &.depleted {
       &::after {

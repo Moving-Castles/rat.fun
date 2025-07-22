@@ -11,6 +11,7 @@
     position: relative;
     border-right: var(--dashed-border-style);
     border-left: var(--dashed-border-style);
+    opacity: 0.8;
     background: repeating-linear-gradient(
       45deg,
       #000000,

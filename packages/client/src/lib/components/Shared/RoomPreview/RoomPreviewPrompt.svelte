@@ -26,7 +26,7 @@
     font-family: var(--special-font-stack);
     background: var(--color-alert);
     min-height: 200px;
-    background: url("/images/bg-test.jpg");
+    background: url("/images/texture-2.png");
 
     .content {
       max-width: 55ch;

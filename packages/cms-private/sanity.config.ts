@@ -23,7 +23,7 @@ export default defineConfig({
   document: {
     newDocumentOptions: (prev, { creationContext }) => {
       const { type } = creationContext
-      const DISABLED_TYPES = ["activePrompts", "templateImages"]
+      const DISABLED_TYPES = ["activePrompts", "templateImages", "testPrompts"]
       if (type === "global") {
         return prev.filter(template => !DISABLED_TYPES.includes(template.templateId))
       }

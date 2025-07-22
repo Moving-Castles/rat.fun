@@ -9,7 +9,7 @@
 <style lang="scss">
   .waiting-for-result {
     margin-bottom: 20px;
-    height: calc(var(--game-window-height) - 300px);
+    height: calc(var(--game-window-height) - 260px);
     border: var(--default-border-style);
     border-top: none;
     position: relative;

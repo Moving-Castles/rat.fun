@@ -33,6 +33,8 @@
     position: relative;
     width: 100%;
     text-align: center;
+    background-image: url("/images/texture-2.png");
+    background-size: 200px;
 
     .button-container {
       overflow: hidden;

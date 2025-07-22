@@ -60,7 +60,7 @@
 <div class="log" bind:this={logElement}>
   {#if mergedLog && mergedLog.length > 0}
     {#each mergedLog as logEntry, i (i)}
-      <LogItem {logEntry} onTimeline={addToTimeline} />
+      <LogItem {logEntry} onTimeline={addToTimeline} delay={0} />
     {/each}
   {/if}
 </div>
@@ -68,11 +68,12 @@
 <style lang="scss">
   .log {
     margin-bottom: 20px;
-    height: calc(var(--game-window-height) - 300px);
+    height: calc(var(--game-window-height) - 260px);
     padding: 10px;
-    border: var(--default-border-style);
     border-top: none;
     position: relative;
-    background-image: url("/images/bg-test.jpg");
+    background-color: var(--background-semi-transparent);
+    background-image: url("/images/texture-6.png");
+    background-size: 200px;
   }
 </style>

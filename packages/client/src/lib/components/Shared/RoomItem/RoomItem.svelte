@@ -30,11 +30,7 @@
     <div class="room-image">
       {#if sanityRoomContent?.image}
         <img
-          src={urlFor(sanityRoomContent?.image)
-            .width(400)
-            .auto("format")
-            // .saturation(-100)
-            .url()}
+          src={urlFor(sanityRoomContent?.image).width(400).auto("format").url()}
           alt={`room #${room.index}`}
         />
       {:else}
@@ -45,7 +41,6 @@
       <!-- BALANCE -->
       <span class="balance" class:depleted={Number(room.balance) == 0}>
         Balance: $<NumberGoing muted={true} value={room.balance} />
-        <!-- Balance: ${room.balance} -->
       </span>
     </div>
   </div>
@@ -109,16 +104,14 @@
     color: var(--foreground);
     text-align: left;
     overflow: hidden;
-    background-color: var(--background);
-    background-image: url("/images/texture-6.png");
-    background-size: 100px;
+    background: var(--background-semi-transparent);
 
     &.disabled {
       opacity: 0.5;
     }
 
     &:hover {
-      background-color: var(--color-grey-darker);
+      background-color: var(--background);
     }
 
     .column {
@@ -131,11 +124,10 @@
         z-index: var(--z-base);
 
         .room-image {
-          border: 15px solid transparent;
-          border-image: url("/images/border-2.png") 20 repeat;
           line-height: 0;
           width: 100%;
           aspect-ratio: 1/1;
+          border: var(--default-border-style);
 
           img {
             display: block;

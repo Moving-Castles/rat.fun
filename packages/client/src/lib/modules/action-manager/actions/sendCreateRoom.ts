@@ -1,5 +1,4 @@
 import { get } from "svelte/store"
-import { goto } from "$app/navigation"
 import { gameConfig, playerERC20Allowance } from "$lib/modules/state/stores"
 import { approve } from "$lib/modules/on-chain-transactions"
 import { busy } from "../index.svelte"
@@ -76,10 +75,7 @@ export async function sendCreateRoom(
     }
 
     const result = (await response.json()) as CreateRoomReturnValue
-
-    if (result.roomId) {
-      goto(`/admin/${result.roomId}`)
-    }
+    return result
   } catch (e) {
     errorHandler(e)
     if (e instanceof APIError) {
