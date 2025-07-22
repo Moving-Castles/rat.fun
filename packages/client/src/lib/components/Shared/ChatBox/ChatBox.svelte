@@ -6,9 +6,15 @@
   import { onMount } from "svelte"
   import { typeHit } from "$lib/modules/sound"
 
-  import ChatEvent from "./ChatEvent.svelte"
-  import ChatMessage from "./ChatMessage.svelte"
   import ChatHeader from "./ChatHeader.svelte"
+  import ChatEvent_RoomCreation from "./ChatEvent/ChatEvent_RoomCreation.svelte"
+  import ChatEvent_RoomLiquidation from "./ChatEvent/ChatEvent_RoomLiquidation.svelte"
+  import ChatEvent_RoomOutcome from "./ChatEvent/ChatEvent_RoomOutcome.svelte"
+  import ChatEvent_RatDeath from "./ChatEvent/ChatEvent_RatDeath.svelte"
+  import ChatEvent_RatDeploy from "./ChatEvent/ChatEvent_RatDeploy.svelte"
+  import ChatEvent_RatLiquidate from "./ChatEvent/ChatEvent_RatLiquidate.svelte"
+  import ChatEvent_KeyActivation from "./ChatEvent/ChatEvent_KeyActivation.svelte"
+  import ChatEvent_ChatMessage from "./ChatEvent/ChatEvent_ChatMessage.svelte"
 
   let value = $state("")
   let scrollElement = $state<null | HTMLElement>(null)
@@ -56,10 +62,22 @@
   <!-- Chat scroll -->
   <div bind:this={scrollElement} class="chat-scroll">
     {#each $latestEventsOnRatLevel as event (event.id)}
-      {#if event.topic == "chat__message"}
-        <ChatMessage {event} {suppressSound} />
-      {:else}
-        <ChatEvent {event} {suppressSound} />
+      {#if event.topic == "room__creation"}
+        <ChatEvent_RoomCreation {event} {suppressSound} />
+      {:else if event.topic == "room__liquidation"}
+        <ChatEvent_RoomLiquidation {event} {suppressSound} />
+      {:else if event.topic == "room__outcome"}
+        <ChatEvent_RoomOutcome {event} {suppressSound} />
+      {:else if event.topic == "rat__death"}
+        <ChatEvent_RatDeath {event} {suppressSound} />
+      {:else if event.topic == "rat__deploy"}
+        <ChatEvent_RatDeploy {event} {suppressSound} />
+      {:else if event.topic == "rat__liquidate"}
+        <ChatEvent_RatLiquidate {event} {suppressSound} />
+      {:else if event.topic == "key__activation"}
+        <ChatEvent_KeyActivation {event} {suppressSound} />
+      {:else if event.topic == "chat__message"}
+        <ChatEvent_ChatMessage {event} {suppressSound} />
       {/if}
     {/each}
   </div>
@@ -94,16 +112,15 @@
     overflow: hidden;
     flex-flow: column nowrap;
     position: relative;
-    background: url("/images/bg-test.jpg");
+    background-color: var(--background-semi-transparent);
+    background-image: url("/images/texture-3.png");
     background-size: 100px;
     border-top: var(--default-border-style);
     min-height: 100px;
 
     .chat-scroll {
-      // display: flex;
       flex-flow: column nowrap;
       height: 100%;
-      // background: red;
       overflow-y: scroll;
       padding: 8px;
       gap: 4px;
@@ -131,17 +148,14 @@
         color: var(--white);
         border: var(--default-border-style);
         cursor: pointer;
-
-        &:hover {
-          background: var(--background);
-        }
-      }
-
-      .chat-submit {
         font-family: var(--typewriter-font-stack);
         width: 100px;
         height: 100%;
         color: var(--foreground);
+
+        &:hover {
+          background: var(--background);
+        }
       }
 
       .chat-input {
