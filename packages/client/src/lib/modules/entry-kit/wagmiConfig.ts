@@ -21,9 +21,9 @@ export function wagmiConfig(): Config<typeof chains, typeof transports> {
   connectors.push(
     coinbaseWallet({
       appName,
-      overrideIsMetaMask: false,
+      overrideIsMetaMask: false
     }),
-    injected({ target: "metaMask" }),
+    injected({ target: "metaMask" })
   )
 
   // If we're in an iframe, include the SafeConnector
@@ -31,8 +31,8 @@ export function wagmiConfig(): Config<typeof chains, typeof transports> {
   if (shouldUseSafeConnector) {
     connectors.push(
       safe({
-        allowedDomains: [/gnosis-safe.io$/, /app.safe.global$/],
-      }),
+        allowedDomains: [/gnosis-safe.io$/, /app.safe.global$/]
+      })
     )
   }
 
@@ -45,7 +45,7 @@ export function wagmiConfig(): Config<typeof chains, typeof transports> {
     appName: document.title,
     walletConnectProjectId: "",
     enableFamily: false,
-    connectors,
+    connectors
   })
 
   return createConfig(configParams) as never
