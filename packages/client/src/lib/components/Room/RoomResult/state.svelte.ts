@@ -116,6 +116,8 @@ export const transitionTo = (newState: ROOM_RESULT_STATE) => {
   if (!validTransitions.includes(newState)) {
     errorHandler(
       new InvalidStateTransitionError(
+        "INVALID_STATE_TRANSITION_ERROR",
+        "State management error",
         `Invalid state transition from ${roomResultState.state} to ${newState}`
       )
     )
