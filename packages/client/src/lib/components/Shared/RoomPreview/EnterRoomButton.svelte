@@ -9,7 +9,7 @@
 
   const onClick = () => {
     playSound("tcm", "enteredPod")
-    goto(`/game/${roomId}/enter`)
+    goto(`/${roomId}/enter`)
   }
 </script>
 

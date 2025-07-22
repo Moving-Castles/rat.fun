@@ -67,7 +67,7 @@
 
 <div
   onclick={() => {
-    goto("/game")
+    goto("/")
   }}
   role="presentation"
   class="popup-container"
@@ -81,7 +81,7 @@
           )}
         </h1>
 
-        <a bind:this={closeLinkElement} class="close-button" href="/game"> LEAVE ROOM </a>
+        <a bind:this={closeLinkElement} class="close-button" href="/"> LEAVE ROOM </a>
       </div>
 
       <div class="background">

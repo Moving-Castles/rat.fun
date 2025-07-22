@@ -3,7 +3,7 @@ import { circOut as easing } from "svelte/easing"
 
 const mainLayoutTransitionConfig: TransitionConfig[] = [
   {
-    from: "/(rooms)/game",
+    from: "/(rooms)/(game)",
     to: "/(rooms)/admin",
     in: {
       transition: "fade",
@@ -16,7 +16,7 @@ const mainLayoutTransitionConfig: TransitionConfig[] = [
   },
   {
     from: "/(rooms)/admin",
-    to: "/(rooms)/game",
+    to: "/(rooms)/(game)",
     in: {
       transition: "fade",
       params: {}
@@ -30,8 +30,8 @@ const mainLayoutTransitionConfig: TransitionConfig[] = [
 
 const outerLayoutTransitionConfig: TransitionConfig[] = [
   {
-    from: "/(rooms)/game/[roomId]",
-    to: "/(rooms)/game/[roomId]/enter",
+    from: "/(rooms)/[roomId]",
+    to: "/(rooms)/[roomId]/enter",
     in: {
       transition: "fade",
       params: {
@@ -48,7 +48,7 @@ const outerLayoutTransitionConfig: TransitionConfig[] = [
     }
   },
   {
-    from: "/(rooms)/game/[roomId]/enter",
+    from: "/(rooms)/[roomId]/enter",
     to: "*",
     in: {
       transition: "wipe",
@@ -108,8 +108,8 @@ const adminLayoutTransitionConfig: TransitionConfig[] = [
 
 const gameLayoutTransitionConfig: TransitionConfig[] = [
   {
-    from: "/(rooms)/game",
-    to: "/(rooms)/game/[roomId]",
+    from: "/(rooms)/(game)",
+    to: "/(rooms)/[roomId]",
     in: {
       transition: "slideFromRight",
       params: {
@@ -126,8 +126,8 @@ const gameLayoutTransitionConfig: TransitionConfig[] = [
     }
   },
   {
-    from: "/(rooms)/game/[roomId]",
-    to: "/(rooms)/game",
+    from: "/(rooms)/[roomId]",
+    to: "/(rooms)/(game)",
     in: {
       transition: "slideFromLeft",
       params: {

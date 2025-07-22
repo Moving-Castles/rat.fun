@@ -2,10 +2,9 @@ import type { TransitionFunction } from "./transitionFunctions"
 
 export type LayoutRouteId =
   | "/"
-  | "/(rooms)"
-  | "/(rooms)/game"
-  | "/(rooms)/game/[roomId]"
-  | "/(rooms)/game/[roomId]/enter"
+  | "/(rooms)/(game)"
+  | "/(rooms)/[roomId]"
+  | "/(rooms)/[roomId]/enter"
   | "/(rooms)/admin"
   | "/(rooms)/admin/[roomId]"
   | "/outcome/[id]"

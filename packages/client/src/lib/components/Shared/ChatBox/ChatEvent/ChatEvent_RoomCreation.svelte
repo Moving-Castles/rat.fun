@@ -16,7 +16,7 @@
 
 <div id={event.id} class="room__creation">
   <ChatEvent_Label {event} />
-  created room <a href="/game/{event.roomId}">#{event.roomIndex ?? "unknown"}</a>
+  created room <a href="/{event.roomId}">#{event.roomIndex ?? "unknown"}</a>
 </div>
 
 <style lang="scss">
