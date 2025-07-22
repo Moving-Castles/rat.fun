@@ -1,9 +1,18 @@
 <script lang="ts">
+  import { onMount } from "svelte"
+  import { goto } from "$app/navigation"
   import { PageTransitions, CenterBar } from "$lib/components/Shared"
+  import { player } from "$lib/modules/state/stores"
   import AdminContainer from "$lib/components/Admin/AdminContainer.svelte"
   import { adminLayoutTransitionConfig } from "$lib/components/Shared/PageTransitions/transitionConfigs"
 
   let { children } = $props()
+
+  onMount(() => {
+    if (!$player?.masterKey) {
+      goto("/")
+    }
+  })
 </script>
 
 <!-- Grid position 1  -->
