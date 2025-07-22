@@ -5,4 +5,6 @@
   import { page } from "$app/state"
 </script>
 
+<!-- Enter is first hit, that route creates the outcome while serving a splash screen -->
+
 <RoomResult roomId={page.params.roomId} />
