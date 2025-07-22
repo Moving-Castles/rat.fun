@@ -103,7 +103,7 @@ async function setupDrip(
 
       await response.json()
     } catch (error) {
-      console.error("Error:", error)
+      errorHandler(error)
     }
   }
 

@@ -5,6 +5,7 @@
   import { frozenRoom } from "$lib/components/Room/RoomResult/state.svelte"
   import { renderSafeString } from "$lib/modules/utils"
   import { NoImage } from "$lib/components/Shared"
+  import { errorHandler, UIError } from "$lib/modules/error-handling"
 
   const {
     staticRoomContent,
@@ -27,7 +28,7 @@
 
   onMount(() => {
     if (!roomInnerElement || !imageContainerElement || !promptElement || !roomIndexElement) {
-      console.error("RoomMeta: Missing elements")
+      errorHandler(new UIError("Missing elements"))
       return
     }
 

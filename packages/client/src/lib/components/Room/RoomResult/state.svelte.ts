@@ -20,6 +20,7 @@ import type { FrozenRat, FrozenRoom, OutcomeDataStringMap } from "./types"
 import type { EnterRoomReturnValue } from "@server/modules/types"
 import type { Hex } from "viem"
 import { addressToRatImage } from "$lib/modules/utils"
+import { errorHandler, InvalidStateTransitionError } from "$lib/modules/error-handling"
 
 /*
  * ─────────────────────────────────────────────
@@ -113,7 +114,11 @@ export const transitionToResultSummary = (result: EnterRoomReturnValue) => {
 export const transitionTo = (newState: ROOM_RESULT_STATE) => {
   const validTransitions = VALID_TRANSITIONS[roomResultState.state]
   if (!validTransitions.includes(newState)) {
-    console.error(`Invalid state transition from ${roomResultState.state} to ${newState}`)
+    errorHandler(
+      new InvalidStateTransitionError(
+        `Invalid state transition from ${roomResultState.state} to ${newState}`
+      )
+    )
     return
   }
   roomResultState.state = newState

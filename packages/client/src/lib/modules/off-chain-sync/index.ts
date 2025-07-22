@@ -12,6 +12,7 @@ import {
   PUBLIC_BASE_SEPOLIA_SERVER_HOST,
   PUBLIC_BASE_SERVER_HOST
 } from "$env/static/public"
+import { errorHandler, WebSocketError } from "$lib/modules/error-handling"
 
 const MAX_RECONNECTION_DELAY = 30000 // Maximum delay of 30 seconds
 const MAX_EVENTS = 200
@@ -27,7 +28,7 @@ export function initOffChainSync(environment: ENVIRONMENT, playerId: string) {
     try {
       socket.close()
     } catch (e) {
-      console.error("Error closing existing socket:", e)
+      errorHandler(new WebSocketError(`Error closing existing socket: ${e}`))
     }
   }
 
@@ -90,7 +91,7 @@ export function initOffChainSync(environment: ENVIRONMENT, playerId: string) {
   }
 
   socket.onerror = (error: Event) => {
-    console.error("WebSocket error:", error)
+    errorHandler(new WebSocketError(undefined, error))
     socket.close() // Ensure connection is properly closed before reconnecting
   }
 }
@@ -128,7 +129,7 @@ async function sendMessageRequest(topic: OffChainMessage["topic"], data: Record<
   if (socket) {
     socket.send(JSON.stringify(signedRequest))
   } else {
-    console.error("No socket")
+    errorHandler(new WebSocketError("No socket"))
   }
 }
 

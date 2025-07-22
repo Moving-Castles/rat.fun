@@ -7,6 +7,7 @@
   import { ModalTarget, NoImage, VideoLoader, DangerButton } from "$lib/components/Shared"
   import { busy, sendLiquidateRoom } from "$lib/modules/action-manager/index.svelte"
   import { sendLiquidateRoomMessage } from "$lib/modules/off-chain-sync"
+  import { errorHandler } from "$lib/modules/error-handling"
 
   let sanityRoomContent = $derived($staticContent.rooms.find(r => r.title == roomId))
   let { room, roomId }: { room: Room; roomId: string; isOwnRoomListing: boolean } = $props()
@@ -59,8 +60,8 @@
               liquidationMessage = "Liquidating room..."
               await sendLiquidateRoom(roomId)
             } catch (error) {
+              errorHandler(error)
               liquidationMessage = "Could not liquidate room"
-              console.error(error)
             } finally {
               sendLiquidateRoomMessage(roomId)
               modal.close()

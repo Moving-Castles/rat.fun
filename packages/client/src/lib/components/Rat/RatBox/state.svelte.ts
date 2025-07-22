@@ -74,6 +74,8 @@ export const transitionTo = (newState: RAT_BOX_STATE) => {
   const validTransitions = VALID_TRANSITIONS[ratBoxState.state]
   if (!validTransitions.includes(newState)) {
     const err = new InvalidStateTransitionError(
+      undefined,
+      undefined,
       `Invalid state transition from ${ratBoxState.state} to ${newState}`
     )
     errorHandler(err)

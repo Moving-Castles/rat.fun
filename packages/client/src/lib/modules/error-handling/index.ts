@@ -3,6 +3,7 @@ import { PUBLIC_SENTRY_DSN } from "$env/static/public"
 import { getEnvironment } from "$lib/modules/network"
 import { version } from "$app/environment"
 import { AppError, type ExpectedError } from "./errors"
+export * from "./errors"
 
 export function captureMessage(
   message: string,
@@ -21,9 +22,9 @@ export function captureMessage(
   }
 }
 
-export function errorHandler(error: ExpectedError | unknown) {
+export function errorHandler(error: ExpectedError | unknown, message = "") {
   const errorCode = error instanceof AppError ? error.code : "UNKNOWN_ERROR"
-  const errorMessage = `${errorCode}: ${error?.message || ""}`
+  const errorMessage = `${errorCode}: ${message ? message + error?.message : error?.message || ""}`
 
   // Determine severity level based on error type
   let severity: Sentry.SeverityLevel = "error"
@@ -51,6 +52,7 @@ export function errorHandler(error: ExpectedError | unknown) {
 
   captureMessage(errorMessage, severity, sentryContext)
 
+  // Log the error to the console
   console.error(error)
 }
 

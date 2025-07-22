@@ -17,6 +17,7 @@
   import { websocketConnected } from "$lib/modules/off-chain-sync/stores"
   import { EMPTY_ID } from "$lib/modules/state/constants"
   import { outerLayoutTransitionConfig } from "$lib/components/Shared/PageTransitions/transitionConfigs"
+  import { errorHandler, WebSocketError } from "$lib/modules/error-handling"
 
   import Spawn from "$lib/components/Spawn/Spawn.svelte"
   import Loading from "$lib/components/Loading/Loading.svelte"
@@ -32,7 +33,7 @@
       await initStaticContent($publicNetwork.worldAddress)
       UIState.set(UI.SPAWNING)
     } catch (error) {
-      console.error(error)
+      errorHandler(error) // CMS error
       goto("/")
     }
   }

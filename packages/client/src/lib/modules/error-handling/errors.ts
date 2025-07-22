@@ -37,10 +37,10 @@ export class APIError extends NetworkError {
 
 export class WebSocketError extends NetworkError {
   constructor(
-    message: string,
+    message?: string,
     public originalError?: unknown
   ) {
-    super("WEBSOCKET_ERROR", "WebSocket connection error", message)
+    super("WEBSOCKET_ERROR", "WebSocket connection error", message || "")
   }
 }
 
@@ -107,6 +107,12 @@ export class WorldAddressNotFoundError extends BlockchainError {
 export class ConnectorClientUnavailableError extends BlockchainError {
   constructor(message: string = "Connector client is not available") {
     super("CONNECTOR_CLIENT_UNAVAILABLE", "Wallet connection error", message)
+  }
+}
+
+export class BlockTimeoutError extends BlockchainError {
+  constructor(message: string = "Block Timeout") {
+    super("BLOCK_TIMEOUT_ERROR", "Block timeout error", message)
   }
 }
 
@@ -253,6 +259,16 @@ export class ContentInitializationError extends ContentError {
 }
 
 // ============================================================================
+// UI Errors
+// ============================================================================
+
+export class UIError extends AppError {
+  constructor(message: string) {
+    super("UI_ERROR", "UI error", message)
+  }
+}
+
+// ============================================================================
 // Validation Errors
 // ============================================================================
 
@@ -354,6 +370,7 @@ export type ExpectedError =
   | ChainConfigError
   | WorldAddressNotFoundError
   | ConnectorClientUnavailableError
+  | BlockTimeoutError
   | GraphicsError
   | WebGLError
   | ShaderError
@@ -361,6 +378,7 @@ export type ExpectedError =
   | UniformLocationError
   | StateError
   | InvalidStateTransitionError
+  | UIError
   | StoreTimeoutError
   | PropertyChangeTimeoutError
   | StateSyncError

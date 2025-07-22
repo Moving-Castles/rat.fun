@@ -6,8 +6,9 @@
   import OutcomeMessage from "./OutcomeMessage.svelte"
   import { publicNetwork } from "$lib/modules/network"
   import { staticContent } from "$lib/modules/content"
+  import { errorHandler, CMSError } from "$lib/modules/error-handling"
 
-  let { roomId, initialOutcomes }: { roomId: string; initialOutcomes: Outcome[] } = $props()
+  let { roomId }: { roomId: string; initialOutcomes: Outcome[] } = $props()
 
   let subscription = $state<any>(null)
 
@@ -18,7 +19,7 @@
 
   const callback = (update: Outcome[]) => {
     if (!roomOutcomes) {
-      console.error("Room outcomes is undefined")
+      errorHandler(new CMSError("Room outcomes is undefined"))
       return
     }
     if (update.length > 0) {

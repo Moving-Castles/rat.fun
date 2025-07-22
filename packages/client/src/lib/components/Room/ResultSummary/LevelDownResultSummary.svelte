@@ -6,6 +6,7 @@
   import { playSound } from "$lib/modules/sound"
   import { gsap } from "gsap"
   import { navigating } from "$app/state"
+  import { errorHandler, UIError } from "$lib/modules/error-handling"
 
   let {
     result,
@@ -28,7 +29,7 @@
     if (navigating.to) return
 
     if (!innerContainerElement || !messageElement || !closeLinkElement) {
-      console.error("Missing elements")
+      errorHandler(new UIError("Missing elements"))
       return
     }
 

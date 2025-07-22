@@ -2,7 +2,7 @@ import { goto } from "$app/navigation"
 import { playSound } from "$lib/modules/sound"
 import { closeRoom } from "$lib/modules/on-chain-transactions"
 import { busy } from "../index.svelte"
-import { LiquidationError, RoomError } from "$lib/modules/error-handling/errors"
+import { LiquidationError } from "$lib/modules/error-handling/errors"
 
 const DEFAULT_TIMING = 4000
 

@@ -6,6 +6,8 @@
   import { frozenRat } from "$lib/components/Room/RoomResult/state.svelte"
   import { ratLevel } from "$lib/modules/state/stores"
   import { playSound } from "$lib/modules/sound"
+  import { UIError } from "$lib/modules/error-handling/errors"
+  import { handleError } from "$lib/modules/error-handling"
   import { gsap } from "gsap"
 
   let {
@@ -29,7 +31,7 @@
     if (navigating.to) return
 
     if (!innerContainerElement || !messageElement || !closeLinkElement) {
-      console.error("Missing elements")
+      handleError(new UIError("Missing elements"))
       return
     }
 

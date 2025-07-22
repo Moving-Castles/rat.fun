@@ -7,6 +7,8 @@
   import { sendDeployRatMessage } from "$lib/modules/off-chain-sync"
   import { VideoLoaderDuration } from "$lib/components/Shared"
   import { transitionTo, RAT_BOX_STATE } from "../state.svelte"
+  import { PropertyChangeTimeoutError } from "$lib/modules/error-handling/errors"
+  import { errorHandler } from "$lib/modules/error-handling"
 
   const name: string = generateRatName()
 
@@ -20,6 +22,10 @@
       sendDeployRatMessage()
       transitionTo(RAT_BOX_STATE.HAS_RAT)
     } catch (error) {
+      if (error instanceof PropertyChangeTimeoutError) {
+        errorHandler(error)
+      }
+
       console.error("Timeout waiting for rat creation:", error)
     }
   })
