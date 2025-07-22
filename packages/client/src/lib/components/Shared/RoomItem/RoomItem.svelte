@@ -30,11 +30,7 @@
     <div class="room-image">
       {#if sanityRoomContent?.image}
         <img
-          src={urlFor(sanityRoomContent?.image)
-            .width(400)
-            .auto("format")
-            // .saturation(-100)
-            .url()}
+          src={urlFor(sanityRoomContent?.image).width(400).auto("format").url()}
           alt={`room #${room.index}`}
         />
       {:else}
@@ -45,7 +41,6 @@
       <!-- BALANCE -->
       <span class="balance" class:depleted={Number(room.balance) == 0}>
         Balance: $<NumberGoing muted={true} value={room.balance} />
-        <!-- Balance: ${room.balance} -->
       </span>
     </div>
   </div>
@@ -116,7 +111,7 @@
     }
 
     &:hover {
-      background-color: var(--color-grey-darker);
+      background-color: var(--background);
     }
 
     .column {

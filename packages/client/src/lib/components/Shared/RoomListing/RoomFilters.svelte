@@ -137,26 +137,6 @@
 </div>
 
 <style lang="scss">
-  input[type="text"] {
-    color: var(--background);
-    background: var(--color-grey-light);
-    border: none;
-    outline: none;
-    font-family: var(--font-mono);
-    height: 20px;
-    line-height: 22px;
-
-    &.active {
-      background: var(--color-alert);
-      color: var(--foreground);
-    }
-  }
-
-  input[type="text"]::placeholder {
-    color: var(--color-grey-dark);
-    font-family: var(--font-mono);
-  }
-
   .level-header {
     line-height: 60px;
     border-bottom: var(--default-border-style);
@@ -167,7 +147,7 @@
     position: sticky;
     top: 0;
     z-index: var(--z-high);
-    background: var(--background);
+    background: var(--background-semi-transparent);
   }
 
   .text-filter {
@@ -216,5 +196,25 @@
     display: inline-block;
     position: relative;
     top: 4px;
+  }
+
+  input[type="text"] {
+    color: var(--background);
+    background: var(--color-grey-light);
+    border: none;
+    outline: none;
+    font-family: var(--font-mono);
+    height: 20px;
+    line-height: 22px;
+
+    &.active {
+      background: var(--color-alert);
+      color: var(--foreground);
+    }
+  }
+
+  input[type="text"]::placeholder {
+    color: var(--color-grey-dark);
+    font-family: var(--font-mono);
   }
 </style>

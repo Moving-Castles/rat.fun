@@ -89,7 +89,7 @@ export function getRoomOwnerName(room: Room) {
 export function waitForPropertyChange<T, K extends keyof T>(
   store: { subscribe: (callback: (value: T) => void) => () => void },
   propertyPath: K,
-  oldValue: T[K],
+  oldValue: T[K] | undefined,
   timeoutMs: number = 30000
 ): Promise<T[K]> {
   return new Promise((resolve, reject) => {

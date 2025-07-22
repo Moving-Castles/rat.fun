@@ -94,7 +94,7 @@
     height: var(--game-window-height);
     justify-content: center;
     align-items: center;
-    background: var(--background);
+    background: var(--background-semi-transparent);
     color: var(--foreground);
     background-image: url("/images/texture-2.png");
 

@@ -1,15 +1,15 @@
 <script lang="ts">
-  import { CreateRoom } from "$lib/components/Admin"
+  import CreateRoom from "$lib/components/Admin/CreateRoom/CreateRoom.svelte"
   import { ChatBox } from "$lib/components/Shared"
 </script>
 
-<div class="room-container">
+<div class="admin-container">
   <CreateRoom />
   <ChatBox />
 </div>
 
 <style lang="scss">
-  .room-container {
+  .admin-container {
     height: calc(var(--game-window-height) - 60px);
     width: 100%;
     display: grid;

@@ -1,13 +1,13 @@
 <script lang="ts">
   import { PageTransitions, CenterBar } from "$lib/components/Shared"
-  import { RoomContainer } from "$lib/components/Admin"
+  import AdminContainer from "$lib/components/Admin/AdminContainer.svelte"
   import { adminLayoutTransitionConfig } from "$lib/components/Shared/PageTransitions/transitionConfigs"
 
   let { children } = $props()
 </script>
 
 <!-- Grid position 1  -->
-<RoomContainer />
+<AdminContainer />
 <!-- Grid position 2 -->
 <CenterBar />
 

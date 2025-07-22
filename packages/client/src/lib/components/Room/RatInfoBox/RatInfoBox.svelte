@@ -68,6 +68,9 @@
     border-right: none;
     overflow: hidden;
     display: flex;
+    background-color: var(--background-semi-transparent);
+    background-image: url("/images/texture-5.png");
+    background-size: 200px;
   }
 
   .image-container {
