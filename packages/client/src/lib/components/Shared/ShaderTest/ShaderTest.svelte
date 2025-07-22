@@ -3,9 +3,24 @@
   import { fade } from "svelte/transition"
   import { createWebGLRenderer } from "$lib/modules/webgl"
   import { shaders } from "$lib/modules/webgl/shaders"
+  import { page } from "$app/stores"
 
   let canvas: HTMLCanvasElement
   let renderer: any
+
+  function setShaderMode(mode: "admin" | "home") {
+    if (renderer) {
+      renderer.setUniform("u_invert", mode === "admin", "bool")
+    }
+  }
+
+  $effect(() => {
+    if ($page.url.pathname.includes("/admin")) {
+      setShaderMode("admin")
+    } else {
+      setShaderMode("home")
+    }
+  })
 
   // Debounced resize handler
   let resizeTimeout: ReturnType<typeof setTimeout>
@@ -22,8 +37,18 @@
     if (!canvas) return
 
     renderer = createWebGLRenderer(canvas, {
-      shader: shaders.plasma
+      shader: shaders.plasma,
+      uniforms: {
+        u_invert: { type: "bool", value: false }
+      }
     })
+
+    if ($page.url.pathname.includes("/admin")) {
+      setShaderMode("admin")
+    } else {
+      setShaderMode("home")
+    }
+
     renderer.render()
 
     // Add debounced resize listener
