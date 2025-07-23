@@ -104,6 +104,10 @@ contract RatSystemTest is BaseTest {
     assertEq(PastRats.length(playerId), 1);
     assertEq(PastRats.getItem(playerId, 0), ratId);
 
+    // Global stats set
+    assertEq(WorldStats.getGlobalRatKillCount(), 1);
+    assertEq(WorldStats.getLastKilledRatBlock(), block.number);
+
     vm.stopPrank();
   }
 

@@ -1,13 +1,17 @@
 <script lang="ts">
-  import { player } from "$lib/modules/state/stores"
+  import { player, worldStats, activeWorldEvent } from "$lib/modules/state/stores"
+
   import OperatorInfo from "./PlayerInfo.svelte"
   import PaneSwitch from "./PaneSwitch.svelte"
-  import { activeWorldEvent } from "$lib/modules/state/stores"
   import WorldEvent from "./WorldEvent.svelte"
+  import GlobalStats from "./GlobalStats.svelte"
 </script>
 
 <div class="top-bar">
   <OperatorInfo />
+  {#if $worldStats}
+    <GlobalStats />
+  {/if}
   {#if $activeWorldEvent}
     <WorldEvent />
   {/if}
@@ -30,5 +34,6 @@
     overflow-x: scroll;
     grid-column: 1 / span 3;
     display: flex;
+    font-size: var(--font-size-small);
   }
 </style>

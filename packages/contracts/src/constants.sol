@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
+uint256 constant RAT_CREATION_COST = 100;
+
 uint32 constant MAX_INVENTORY_SIZE = 5;
 uint32 constant MAX_TRAITS_SIZE = 5;
 uint32 constant MAX_ROOM_PROMPT_LENGTH = 280;

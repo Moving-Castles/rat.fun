@@ -10,7 +10,7 @@ import { addressToId, addressToRatImage } from "$lib/modules/utils"
 import { blockNumber } from "$lib/modules/network"
 import { ENTITY_TYPE } from "contracts/enums"
 import { filterByEntitytype, filterByLevel, filterByPlayer, filterByOthers } from "./utils"
-import { GAME_CONFIG_ID } from "./constants"
+import { WORLD_OBJECT_ID } from "./constants"
 
 // * * * * * * * * * * * * * * * * *
 // DEFAULT ENTITY TYPES
@@ -23,28 +23,41 @@ import { GAME_CONFIG_ID } from "./constants"
 export const entities = writable({} as Entities)
 
 // * * * * * * * * * * * * * * * * *
-// GAME CONFIG ENTITIES
+// WORLD OBJECT ENTITIES
 // * * * * * * * * * * * * * * * * *
 
-export const gameConfig = derived(
+export const worldObject = derived(
   entities,
-  $entities => ($entities[GAME_CONFIG_ID] || {}) as GameConfig
+  $entities => ($entities[WORLD_OBJECT_ID] || {}) as WorldObject
 )
 
-// * * * * * * * * * * * * * * * * *
-// WORLD EVENT
-// * * * * * * * * * * * * * * * * *
+// GAME CONFIG
+export const gameConfig = derived(worldObject, $worldObject => $worldObject.gameConfig)
 
+// WORLD STATS
+export const worldStats = derived(worldObject, $worldObject => $worldObject.worldStats)
+
+// EXTERNAL ADDRESSES CONFIG
+export const externalAddressesConfig = derived(
+  worldObject,
+  $worldObject => $worldObject.externalAddressesConfig
+)
+
+// LEVEL LIST
+export const levelList = derived(worldObject, $worldObject => $worldObject.levelList)
+
+// WORLD EVENT
+export const worldEvent = derived(worldObject, $worldObject => $worldObject.worldEvent)
 export const activeWorldEvent = derived(
-  [gameConfig, blockNumber],
-  ([$gameConfig, $blockNumber]) => {
-    if (!$gameConfig?.worldEvent) {
+  [worldEvent, blockNumber],
+  ([$worldEvent, $blockNumber]) => {
+    if (!$worldEvent) {
       return undefined
     }
-    if ($gameConfig.worldEvent.expirationBlock < $blockNumber) {
+    if ($worldEvent.expirationBlock < $blockNumber) {
       return undefined
     }
-    return $gameConfig.worldEvent
+    return $worldEvent
   }
 )
 
@@ -124,9 +137,9 @@ export const ratInventory = derived(
 
 export const ratLevel = derived([rat, levels], ([$rat, $levels]) => $levels[$rat?.level] as Level)
 
-export const ratLevelIndex = derived([gameConfig, rat], ([$gameConfig, $rat]) => {
-  if ($gameConfig?.levelList) {
-    return $gameConfig?.levelList?.findIndex(lvl => lvl === ($rat?.level ?? 0))
+export const ratLevelIndex = derived([levelList, rat], ([$levelList, $rat]) => {
+  if ($levelList) {
+    return $levelList?.findIndex(lvl => lvl === ($rat?.level ?? 0))
   }
   return 0
 })
@@ -153,12 +166,12 @@ export const ratTotalValue = derived(
 )
 
 export const roomsOnCurrentLevel = derived(
-  [rat, rooms, gameConfig],
-  ([$rat, $rooms, $gameConfig]) => {
+  [rat, rooms, levelList],
+  ([$rat, $rooms, $levelList]) => {
     if (!$rat) {
       // Show room on first level if no rat
       // Assumes that the first element in the levelList is the first level...
-      return filterByLevel($rooms, $gameConfig?.levelList?.[0]) as Rooms
+      return filterByLevel($rooms, $levelList?.[0]) as Rooms
     }
     return filterByLevel($rooms, $rat?.level) as Rooms
   }

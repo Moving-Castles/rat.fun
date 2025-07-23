@@ -15,8 +15,6 @@ export default defineWorld({
       schema: {
         adminAddress: "address",
         adminId: "bytes32",
-        globalRoomIndex: "uint256",
-        globalRatIndex: "uint256",
         ratCreationCost: "uint256",
         roomCreationCost: "uint256",
         maxInventorySize: "uint32",
@@ -29,6 +27,15 @@ export default defineWorld({
       },
       codegen: {
         dataStruct: true
+      }
+    },
+    WorldStats: {
+      key: [],
+      schema: {
+        globalRoomIndex: "uint256",
+        globalRatIndex: "uint256",
+        globalRatKillCount: "uint256",
+        lastKilledRatBlock: "uint256"
       }
     },
     ExternalAddressesConfig: {

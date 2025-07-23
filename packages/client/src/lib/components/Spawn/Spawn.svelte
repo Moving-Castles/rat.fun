@@ -1,6 +1,4 @@
 <script lang="ts">
-  import type { SetupWalletNetworkResult } from "$lib/mud/setupWalletNetwork"
-
   import { onMount } from "svelte"
 
   import { WALLET_TYPE } from "$lib/mud/enums"

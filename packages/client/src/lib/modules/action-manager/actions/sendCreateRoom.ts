@@ -1,5 +1,9 @@
 import { get } from "svelte/store"
-import { gameConfig, playerERC20Allowance } from "$lib/modules/state/stores"
+import {
+  gameConfig,
+  externalAddressesConfig,
+  playerERC20Allowance
+} from "$lib/modules/state/stores"
 import { approve } from "$lib/modules/on-chain-transactions"
 import { busy } from "../index.svelte"
 import type { CreateRoomRequestBody, CreateRoomReturnValue } from "@server/modules/types"
@@ -28,6 +32,7 @@ export async function sendCreateRoom(
   roomCreationCost: bigint
 ) {
   const _gameConfig = get(gameConfig)
+  const _externalAddressesConfig = get(externalAddressesConfig)
   const _playerERC20Allowance = get(playerERC20Allowance)
   const environment = getEnvironment(new URL(window.location.href))
 
@@ -36,8 +41,8 @@ export async function sendCreateRoom(
 
   // Approve
   try {
-    if (_playerERC20Allowance < _gameConfig.gameConfig.roomCreationCost) {
-      await approve(_gameConfig.externalAddressesConfig.gamePoolAddress, roomCreationCost)
+    if (_playerERC20Allowance < _gameConfig.roomCreationCost) {
+      await approve(_externalAddressesConfig.gamePoolAddress, roomCreationCost)
     }
 
     let url = ""

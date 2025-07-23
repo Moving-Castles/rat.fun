@@ -2,7 +2,7 @@ import { derived } from "svelte/store"
 import { erc20Abi, Hex, parseAbiItem } from "viem"
 import { publicNetwork } from "$lib/modules/network"
 import {
-  gameConfig,
+  externalAddressesConfig,
   playerAddress,
   playerERC20Allowance,
   playerERC20Balance
@@ -14,11 +14,11 @@ export function initErc20Listener() {
   let unwatchTo: (() => void) | undefined
   let unwatchOwner: (() => void) | undefined
 
-  derived([publicNetwork, playerAddress, gameConfig], stores => stores).subscribe(
-    ([publicNetwork, playerAddress, gameConfig]) => {
-      if (!publicNetwork || !playerAddress || !gameConfig?.externalAddressesConfig) return
+  derived([publicNetwork, playerAddress, externalAddressesConfig], stores => stores).subscribe(
+    ([publicNetwork, playerAddress, externalAddressesConfig]) => {
+      if (!publicNetwork || !playerAddress || !externalAddressesConfig) return
 
-      const address = gameConfig.externalAddressesConfig.erc20Address
+      const address = externalAddressesConfig.erc20Address
       const transferEvent = parseAbiItem(
         "event Transfer(address indexed from, address indexed to, uint256 value)"
       )
@@ -29,16 +29,16 @@ export function initErc20Listener() {
         updatePlayerERC20Balance(
           publicNetwork,
           playerAddress as Hex,
-          gameConfig.externalAddressesConfig.erc20Address
+          externalAddressesConfig.erc20Address
         )
 
       const onApprovalLogs = () => {
-        const spenderAddress = gameConfig.externalAddressesConfig.gamePoolAddress
+        const spenderAddress = externalAddressesConfig.gamePoolAddress
         updatePlayerERC20Allowance(
           publicNetwork,
           playerAddress as Hex,
           spenderAddress,
-          gameConfig.externalAddressesConfig.erc20Address
+          externalAddressesConfig.erc20Address
         )
       }
 

@@ -1,6 +1,10 @@
 import { get } from "svelte/store"
 import { playSound } from "$lib/modules/sound"
-import { gameConfig, playerERC20Allowance } from "$lib/modules/state/stores"
+import {
+  gameConfig,
+  externalAddressesConfig,
+  playerERC20Allowance
+} from "$lib/modules/state/stores"
 import { createRat, approve } from "$lib/modules/on-chain-transactions"
 import { busy } from "../index.svelte"
 import { RatError } from "$lib/modules/error-handling/errors"
@@ -11,6 +15,7 @@ import { RatError } from "$lib/modules/error-handling/errors"
  */
 export async function sendCreateRat(name: string) {
   const _gameConfig = get(gameConfig)
+  const _externalAddressesConfig = get(externalAddressesConfig)
   const _playerERC20Allowance = get(playerERC20Allowance)
 
   if (busy.CreateRat.current !== 0) return
@@ -18,11 +23,8 @@ export async function sendCreateRat(name: string) {
   busy.CreateRat.set(0.99)
   // Approve
   try {
-    if (_playerERC20Allowance < _gameConfig.gameConfig.ratCreationCost) {
-      await approve(
-        _gameConfig.externalAddressesConfig.gamePoolAddress,
-        _gameConfig.gameConfig.ratCreationCost
-      )
+    if (_playerERC20Allowance < _gameConfig.ratCreationCost) {
+      await approve(_externalAddressesConfig.gamePoolAddress, _gameConfig.ratCreationCost)
     }
     await createRat(name)
   } catch (e) {

@@ -1,5 +1,12 @@
 <script lang="ts">
-  import { rat, gameConfig, levels, playerERC20Balance, rooms } from "$lib/modules/state/stores"
+  import {
+    rat,
+    levelList,
+    gameConfig,
+    levels,
+    playerERC20Balance,
+    rooms
+  } from "$lib/modules/state/stores"
   import { CharacterCounter, VideoLoaderDuration, BigButton } from "$lib/components/Shared"
   import { sendCreateRoom } from "$lib/modules/action-manager/index.svelte"
   import { goto } from "$app/navigation"
@@ -9,19 +16,16 @@
   import { waitForPropertyChange } from "$lib/modules/state/utils"
 
   let roomDescription: string = $state("")
-  let levelId: string = $state($rat?.level ?? $gameConfig?.levelList?.[0])
+  let levelId: string = $state($rat?.level ?? $levelList[0])
   let busy: boolean = $state(false)
 
   // Prompt has to be between 1 and MAX_ROOM_PROMPT_LENGTH characters
   const invalidRoomDescriptionLength = $derived(
-    roomDescription.length < 1 ||
-      roomDescription.length > $gameConfig.gameConfig.maxRoomPromptLength
+    roomDescription.length < 1 || roomDescription.length > $gameConfig.maxRoomPromptLength
   )
 
   const roomCreationCost = $derived(
-    $levels[levelId]?.roomCreationCost ??
-      $levels[$gameConfig?.levelList?.[0]]?.roomCreationCost ??
-      0
+    $levels[levelId]?.roomCreationCost ?? $levels[$levelList[0]]?.roomCreationCost ?? 0
   )
 
   // Disabled if:
@@ -48,10 +52,10 @@
           roomDescription
         )
       }
-      if (roomDescription.length > $gameConfig.gameConfig.maxRoomPromptLength) {
+      if (roomDescription.length > $gameConfig.maxRoomPromptLength) {
         throw new CharacterLimitError(
           roomDescription.length,
-          $gameConfig.gameConfig.maxRoomPromptLength,
+          $gameConfig.maxRoomPromptLength,
           "room description"
         )
       }
@@ -80,7 +84,7 @@
         <span class="highlight">Room Description</span>
         <CharacterCounter
           currentLength={roomDescription.length}
-          maxLength={$gameConfig.gameConfig.maxRoomPromptLength}
+          maxLength={$gameConfig.maxRoomPromptLength}
         />
       </label>
       <textarea

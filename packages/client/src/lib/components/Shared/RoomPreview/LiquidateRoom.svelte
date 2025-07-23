@@ -18,7 +18,7 @@
 
   // Cooldown until room can be liquidated
   let blockUntilUnlock = $derived(
-    Number(room.creationBlock) + $gameConfig.gameConfig.cooldownCloseRoom - Number($blockNumber)
+    Number(room.creationBlock) + $gameConfig.cooldownCloseRoom - Number($blockNumber)
   )
 </script>
 

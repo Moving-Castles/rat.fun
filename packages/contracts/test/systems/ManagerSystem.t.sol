@@ -303,6 +303,10 @@ contract ManagerSystemTest is BaseTest {
     assertTrue(Dead.get(ratId));
     // Rat is cleared
     assertEq(Balance.get(ratId), 0);
+
+    // Global stats set
+    assertEq(WorldStats.getGlobalRatKillCount(), 1);
+    assertEq(WorldStats.getLastKilledRatBlock(), block.number);
   }
 
   // * * * *

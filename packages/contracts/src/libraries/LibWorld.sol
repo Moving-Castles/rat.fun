@@ -11,6 +11,7 @@ import {
   WorldEventData
 } from "../codegen/index.sol";
 import {
+  RAT_CREATION_COST,
   MAX_ROOM_PROMPT_LENGTH,
   MIN_ROOM_PROMPT_LENGTH,
   MAX_INVENTORY_SIZE,
@@ -46,10 +47,8 @@ library LibWorld {
       GameConfigData({
         adminAddress: _adminAddress,
         adminId: adminId,
-        globalRoomIndex: 0,
-        globalRatIndex: 0,
-        roomCreationCost: 250,
-        ratCreationCost: 100,
+        roomCreationCost: 250, // TODO: remove this as room creation cost is set per level
+        ratCreationCost: RAT_CREATION_COST,
         maxInventorySize: MAX_INVENTORY_SIZE,
         maxTraitsSize: MAX_TRAITS_SIZE,
         maxRoomPromptLength: MAX_ROOM_PROMPT_LENGTH,
@@ -59,6 +58,7 @@ library LibWorld {
         taxationCloseRoom: TAXATION_CLOSE_ROOM
       })
     );
+
     ExternalAddressesConfig.set(
       ExternalAddressesConfigData({
         erc20Address: erc20Address,

@@ -4,9 +4,7 @@
   import { transitionTo, RAT_BOX_STATE } from "../state.svelte"
 
   // Not enough balance
-  let disabled = $derived(
-    ($playerERC20Balance ?? 0) < Number($gameConfig?.gameConfig?.ratCreationCost ?? 0)
-  )
+  let disabled = $derived(($playerERC20Balance ?? 0) < Number($gameConfig?.ratCreationCost ?? 0))
 
   const onClick = async () => {
     // RAT_BOX_STATE.NO_RAT -> RAT_BOX_STATE.DEPLOYING_RAT
@@ -21,7 +19,7 @@
   <div class="button-container">
     <BigButton
       text="Insert rat"
-      cost={Number($gameConfig?.gameConfig?.ratCreationCost)}
+      cost={Number($gameConfig?.ratCreationCost)}
       {disabled}
       onclick={onClick}
     />
