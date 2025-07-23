@@ -2,13 +2,15 @@
 
 <script lang="ts">
   import { RoomResult } from "$lib/components/Room"
-  import { page } from "$app/state"
   import { sessionId } from "$lib/modules/session/state.svelte"
   import { onMount } from "svelte"
   import { goto } from "$app/navigation"
+  import { page } from "$app/state"
+
+  let valid = $derived($sessionId === page.url?.searchParams.get("sessionId"))
 
   onMount(() => {
-    if ($sessionId !== new URL(window.location.href).searchParams.get("sessionId")) {
+    if (!valid) {
       console.warn("session ID mismatch")
       goto("/")
     } else {
@@ -17,4 +19,4 @@
   })
 </script>
 
-<RoomResult roomId={page.params.roomId} />
+<RoomResult roomId={page.params.roomId} {valid} />

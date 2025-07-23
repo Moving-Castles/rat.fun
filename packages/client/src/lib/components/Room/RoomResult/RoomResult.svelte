@@ -31,9 +31,11 @@
   import { RoomError, APIError, NetworkError } from "$lib/modules/error-handling/errors"
 
   let {
-    roomId
+    roomId,
+    valid
   }: {
     roomId: string | null
+    valid: boolean
   } = $props()
 
   // Result of the room entry, returned by the server
@@ -86,14 +88,8 @@
   }
 
   onMount(() => {
-    if (!$ratState) {
+    if (!$ratState || !valid) {
       goto("/")
-      return
-    }
-
-    // Temporary fix to prevent server call when navigating back to game page
-    // Fundamental problem is why RoomResult is remounted after result summary
-    if (navigating.to?.route.id === "/(rooms)/") {
       return
     }
 
