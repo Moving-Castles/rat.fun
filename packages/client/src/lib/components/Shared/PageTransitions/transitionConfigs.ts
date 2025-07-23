@@ -30,8 +30,8 @@ const mainLayoutTransitionConfig: TransitionConfig[] = [
 
 const outerLayoutTransitionConfig: TransitionConfig[] = [
   {
-    from: "/(rooms)/[roomId]",
-    to: "/(rooms)/[roomId]/enter",
+    from: "/(rooms)/(game)/[roomId]",
+    to: "/(rooms)/(game)/[roomId]/enter",
     in: {
       transition: "fade",
       params: {
@@ -48,7 +48,7 @@ const outerLayoutTransitionConfig: TransitionConfig[] = [
     }
   },
   {
-    from: "/(rooms)/[roomId]/enter",
+    from: "/(rooms)/(game)/[roomId]/enter",
     to: "*",
     in: {
       transition: "wipe",
@@ -109,7 +109,7 @@ const adminLayoutTransitionConfig: TransitionConfig[] = [
 const gameLayoutTransitionConfig: TransitionConfig[] = [
   {
     from: "/(rooms)/(game)",
-    to: "/(rooms)/[roomId]",
+    to: "/(rooms)/(game)/[roomId]",
     in: {
       transition: "slideFromRight",
       params: {
@@ -126,7 +126,7 @@ const gameLayoutTransitionConfig: TransitionConfig[] = [
     }
   },
   {
-    from: "/(rooms)/[roomId]",
+    from: "/(rooms)/(game)/[roomId]",
     to: "/(rooms)/(game)",
     in: {
       transition: "slideFromLeft",
