@@ -4,7 +4,7 @@ import { Script } from "forge-std/Script.sol";
 import { StoreSwitch } from "@latticexyz/store/src/StoreSwitch.sol";
 import { LibWorld } from "../src/libraries/Libraries.sol";
 
-contract CreateWorldEvent is Script {
+contract RemoveWorldEvent is Script {
   function run(address worldAddress) external {
     // Specify a store so that you can use tables directly in PostDeploy
     StoreSwitch.setStoreAddress(worldAddress);
@@ -13,7 +13,7 @@ contract CreateWorldEvent is Script {
     uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
     vm.startBroadcast(deployerPrivateKey);
 
-    LibWorld.createWorldEvent("Oktoberfest", "All rats are drunk.", 10000);
+    LibWorld.removeWorldEvent();
 
     vm.stopBroadcast();
   }
