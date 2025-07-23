@@ -5,7 +5,7 @@
   import { RoomPreview, SEO } from "$lib/components/Shared"
 
   let prompt = $derived($rooms?.[page.params.roomId]?.prompt)
-  let truncatedTitle = $derived(prompt.length > 32 ? `${prompt?.slice(0, 32)}...` : prompt)
+  let truncatedTitle = $derived(prompt?.length > 32 ? `${prompt?.slice(0, 32)}...` : prompt)
   let room = $derived($rooms?.[page.params.roomId])
 </script>
 
