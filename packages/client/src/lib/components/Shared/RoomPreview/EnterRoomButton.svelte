@@ -1,15 +1,19 @@
 <script lang="ts">
   import type { Hex } from "viem"
   import { playSound } from "$lib/modules/sound"
+  import { player } from "$lib/modules/state/stores"
+  import { sessionId } from "$lib/modules/session/state.svelte"
   import { goto } from "$app/navigation"
+  import { v4 as uuid } from "uuid"
 
   import { BigButton } from "$lib/components/Shared"
 
   let { roomId }: { roomId: Hex } = $props()
 
-  const onClick = () => {
+  const onClick = async () => {
+    sessionId.set(uuid())
     playSound("tcm", "enteredPod")
-    goto(`/game/${roomId}/enter`)
+    goto(`/${roomId}/enter?sessionId=${$sessionId}`)
   }
 </script>
 

@@ -80,20 +80,20 @@
       }
     } catch (error) {
       transitionTo(ROOM_RESULT_STATE.ERROR)
-      await goto("/game")
+      await goto("/")
       return
     }
   }
 
   onMount(() => {
     if (!$ratState) {
-      goto("/game")
+      goto("/")
       return
     }
 
     // Temporary fix to prevent server call when navigating back to game page
     // Fundamental problem is why RoomResult is remounted after result summary
-    if (navigating.to?.route.id === "/(rooms)/game") {
+    if (navigating.to?.route.id === "/(rooms)/") {
       return
     }
 

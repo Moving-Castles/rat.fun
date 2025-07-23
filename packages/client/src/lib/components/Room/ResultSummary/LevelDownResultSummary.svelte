@@ -75,7 +75,7 @@
           )}
         </h1>
 
-        <a href="/game" bind:this={closeLinkElement} class="close-button"> LEAVE ROOM </a>
+        <a href="/" bind:this={closeLinkElement} class="close-button"> LEAVE ROOM </a>
       </div>
 
       <div class="background">

@@ -56,7 +56,7 @@
   {#if isOwnRoomListing}
     <a class="back-button" href="/admin">Back</a>
   {:else}
-    <a class="back-button" href="/game">Back</a>
+    <a class="back-button" href="/">Back</a>
   {/if}
   <RoomPreviewHeader {room} {sanityRoomContent} />
   <RoomPreviewPrompt {room} />

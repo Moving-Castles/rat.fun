@@ -73,7 +73,7 @@
 
 <div
   onclick={() => {
-    goto("/game")
+    goto("/")
   }}
   role="presentation"
   class="popup-container"
@@ -99,7 +99,7 @@
           bind:this={closeButtonElement}
           class="close-button"
           onclick={() => {
-            goto("/game")
+            goto("/")
           }}
         >
           LEAVE ROOM
