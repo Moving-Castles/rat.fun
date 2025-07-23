@@ -6,7 +6,7 @@ import {
   Prompt,
   Owner,
   Index,
-  GameConfig,
+  WorldStats,
   Balance,
   Level,
   RoomCreationCost,
@@ -41,8 +41,8 @@ library LibRoom {
     EntityType.set(newRoomId, ENTITY_TYPE.ROOM);
     Prompt.set(newRoomId, _prompt);
 
-    uint256 newRoomIndex = GameConfig.getGlobalRoomIndex() + 1;
-    GameConfig.setGlobalRoomIndex(newRoomIndex);
+    uint256 newRoomIndex = WorldStats.getGlobalRoomIndex() + 1;
+    WorldStats.setGlobalRoomIndex(newRoomIndex);
     Index.set(newRoomId, newRoomIndex);
     CreationBlock.set(newRoomId, block.number);
 

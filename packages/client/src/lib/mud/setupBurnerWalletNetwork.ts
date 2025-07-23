@@ -11,6 +11,7 @@ import { transactionQueue } from "@latticexyz/common/actions"
 import { setupWalletNetwork } from "./setupWalletNetwork"
 import { SetupPublicNetworkResult } from "./setupPublicNetwork"
 import { FaucetError } from "$lib/modules/error-handling/errors"
+import { errorHandler } from "$lib/modules/error-handling"
 
 export function setupBurnerWalletNetwork(publicNetwork: SetupPublicNetworkResult) {
   const networkConfig = publicNetwork.config

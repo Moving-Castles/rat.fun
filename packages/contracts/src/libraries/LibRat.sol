@@ -3,7 +3,7 @@ pragma solidity >=0.8.24;
 import { getUniqueEntity } from "@latticexyz/world-modules/src/modules/uniqueentity/getUniqueEntity.sol";
 import {
   EntityType,
-  GameConfig,
+  WorldStats,
   Dead,
   Health,
   Index,
@@ -37,8 +37,8 @@ library LibRat {
     Level.set(ratId, LevelList.getItem(0));
     CreationBlock.set(ratId, block.number);
 
-    uint256 newRatIndex = GameConfig.getGlobalRatIndex() + 1;
-    GameConfig.setGlobalRatIndex(newRatIndex);
+    uint256 newRatIndex = WorldStats.getGlobalRatIndex() + 1;
+    WorldStats.setGlobalRatIndex(newRatIndex);
     Index.set(ratId, newRatIndex);
   }
 

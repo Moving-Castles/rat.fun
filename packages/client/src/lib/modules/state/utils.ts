@@ -69,7 +69,7 @@ export function isPlayerRoom(room: Room, playerId: Hex) {
  * @returns The name of the owner of the room
  */
 export function getRoomOwnerName(room: Room) {
-  if (room.owner === get(gameConfig)?.gameConfig?.adminId) {
+  if (room.owner === get(gameConfig)?.adminId) {
     return "ratking"
   }
   return get(players)[room.owner]?.name ?? "unknown"

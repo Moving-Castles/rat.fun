@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { gameConfig, rat } from "$lib/modules/state/stores"
+  import { rat, levelList } from "$lib/modules/state/stores"
   import { latestEventsOnRatLevel } from "$lib/modules/off-chain-sync/stores"
   import { sendChatMessage } from "$lib/modules/off-chain-sync"
   import { websocketConnected } from "$lib/modules/off-chain-sync/stores"
@@ -50,7 +50,7 @@
       }
 
       // Level of the player's rat, or the first level if the rat is not deployed
-      const level = $rat?.level ?? $gameConfig?.levelList[0] ?? "unknown level"
+      const level = $rat?.level ?? $levelList[0] ?? "unknown level"
       await sendChatMessage(level, value)
       value = ""
     } catch (error) {

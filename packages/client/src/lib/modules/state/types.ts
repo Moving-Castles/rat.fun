@@ -25,10 +25,13 @@ type mudComponents = {
 declare global {
   type GameConfigObject = mudSchemas["GameConfig"]
   type WorldEventObject = mudSchemas["WorldEvent"]
+  type WorldStatsObject = mudSchemas["WorldStats"]
+  type ExternalAddressesConfigObject = mudSchemas["ExternalAddressesConfig"]
 
-  type GameConfig = {
+  type WorldObject = {
     gameConfig: GameConfigObject
-    externalAddressesConfig: mudSchemas["ExternalAddressesConfig"]
+    worldStats: WorldStatsObject
+    externalAddressesConfig: ExternalAddressesConfigObject
     levelList: Hex[]
     worldEvent: WorldEventObject
   }
@@ -53,6 +56,7 @@ declare global {
       | GameConfigObject
       | mudSchemas["ExternalAddressesConfig"]
       | WorldEventObject
+      | WorldStatsObject
       | undefined
     entityType?: ENTITY_TYPE
     name?: mudComponents["Name"]
@@ -84,6 +88,7 @@ declare global {
     externalAddressesConfig: mudSchemas["ExternalAddressesConfig"]
     levelList: Hex[]
     worldEvent: WorldEventObject
+    worldStats: WorldStatsObject
   }
 
   type Player = {

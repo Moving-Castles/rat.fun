@@ -4,16 +4,12 @@ import { transactionQueue } from "@latticexyz/common/actions"
 import { publicNetwork, walletNetwork } from "$lib/modules/network"
 import { erc20Abi } from "viem"
 import { addChain, switchChain } from "viem/actions"
-import { gameConfig } from "$lib/modules/state/stores"
+import { externalAddressesConfig } from "$lib/modules/state/stores"
 import { WorldFunctions } from "./index"
 import { getChain } from "$lib/mud/utils"
 import { entryKitConnector } from "$lib/modules/entry-kit/stores"
 import { errorHandler } from "$lib/modules/error-handling"
-import {
-  TransactionError,
-  ConnectorClientUnavailableError,
-  type ExpectedError
-} from "../error-handling/errors"
+import { TransactionError, ConnectorClientUnavailableError } from "../error-handling/errors"
 
 /**
  * Executes an on-chain transaction.
@@ -35,7 +31,7 @@ export async function executeTransaction(
     let tx
     if (systemId === WorldFunctions.Approve) {
       tx = await client.writeContract({
-        address: get(gameConfig).externalAddressesConfig.erc20Address,
+        address: get(externalAddressesConfig).erc20Address,
         abi: erc20Abi,
         functionName: "approve",
         args: params,
