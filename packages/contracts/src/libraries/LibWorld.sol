@@ -98,6 +98,13 @@ library LibWorld {
   }
 
   /**
+   * @notice Remove the world event
+   */
+  function removeWorldEvent() internal {
+    WorldEvent.set(WorldEventData({ title: "", prompt: "", creationBlock: 0, expirationBlock: 0 }));
+  }
+
+  /**
    * @notice Get the erc20 token contract used by the world
    */
   function erc20() internal view returns (SlopERC20) {
