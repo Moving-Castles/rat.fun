@@ -1,0 +1,13 @@
+[build]
+  command = """
+    curl -L https://foundry.paradigm.xyz | bash && \
+    export PATH="$HOME/.foundry/bin:$PATH" && \
+    foundryup && \
+    pnpm --filter 'contracts' run build && \
+    pnpm --filter 'client' run build
+  """
+  publish = "packages/client/build"
+
+[build.environment]
+  # Add this to help with shell detection
+  SHELL = "/bin/bash"
