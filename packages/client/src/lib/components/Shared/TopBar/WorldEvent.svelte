@@ -3,7 +3,7 @@
 </script>
 
 <div class="world-event">
-  <p>ALERT!!! {$activeWorldEvent?.prompt}</p>
+  <p>ALERT!!! {$activeWorldEvent?.title}:<br /> {$activeWorldEvent?.prompt}</p>
 </div>
 
 <style lang="scss">
@@ -16,6 +16,6 @@
     width: 400px;
     background: var(--color-grey-mid);
     position: relative;
-    background: red;
+    background: rgba(255, 0, 0, 0.5);
   }
 </style>

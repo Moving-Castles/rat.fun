@@ -35,14 +35,6 @@
     }
   })
 
-  // HACK: for some reason the reactivity of the input element is not working
-  // so we need to manually clear the value when the value is empty
-  $effect(() => {
-    if (value === "" && inputElement) {
-      inputElement.value = ""
-    }
-  })
-
   const sendMessage = async (e: Event) => {
     e.preventDefault()
 
