@@ -1,7 +1,6 @@
 import type { LayoutLoad } from "./$types"
 import { getEnvironment, getWalletType } from "$lib/modules/network"
 
-export const prerender = "auto"
 export const ssr = false
 
 export const load: LayoutLoad = async ({ url }) => {
