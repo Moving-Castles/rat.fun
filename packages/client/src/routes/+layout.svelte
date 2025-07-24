@@ -6,6 +6,7 @@
 
   import { type Outcome as SanityOutcome } from "@sanity-types"
   import { initializeSentry } from "$lib/modules/error-handling"
+  import { browser } from "$app/environment"
   import { onMount } from "svelte"
   import { goto } from "$app/navigation"
   import { page } from "$app/state"
@@ -59,7 +60,9 @@
     UIState.set(UI.READY)
   }
 
-  initializeSentry()
+  if (browser) {
+    initializeSentry()
+  }
 
   // Init of chain sync when player is ready
   $effect(() => {
@@ -106,7 +109,9 @@
 
 <!-- This needs to always render -->
 <div inert={$UIState !== UI.READY} class="bg">
-  <ShaderTest />
+  {#if browser}
+    <ShaderTest />
+  {/if}
   <div class="context-main">
     <div class="layer-game">
       <PageTransitions config={outerLayoutTransitionConfig}>

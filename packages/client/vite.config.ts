@@ -23,6 +23,18 @@ export default defineConfig(() => {
     ],
     build: {
       sourcemap: true
+    },
+    ssr: {
+      noExternal: [
+        "@latticexyz/common",
+        "@latticexyz/dev",
+        "@latticexyz/entrykit",
+        "@latticexyz/recs",
+        "@latticexyz/schema",
+        "@latticexyz/store",
+        "@latticexyz/utils",
+        "@latticexyz/world"
+      ]
     }
   }
 })
