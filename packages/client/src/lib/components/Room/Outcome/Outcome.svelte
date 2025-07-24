@@ -43,13 +43,24 @@
   </div>
 
   <div class="box">
-    {#each outcome.itemChanges as itemChange}
-      <OutcomeItem
-        type="item"
-        negative={itemChange.type === "remove"}
-        value={`${itemChange.name} ($${itemChange.value})`}
-      />
-    {/each}
+    <div class="left">
+      {#each outcome.itemChanges as itemChange}
+        <OutcomeItem
+          type="item"
+          negative={itemChange.type === "remove"}
+          value={`${itemChange.name} ($${itemChange.value})`}
+        />
+      {/each}
+    </div>
+    <div class="right">
+      {#each outcome.traitChanges as traitChange}
+        <OutcomeItem
+          type="item"
+          negative={traitChange.type === "remove"}
+          value={`${traitChange.name} ($${traitChange.value})`}
+        />
+      {/each}
+    </div>
   </div>
 
   <!-- Add the received items here -->

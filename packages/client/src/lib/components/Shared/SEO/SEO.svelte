@@ -10,7 +10,7 @@
     language = "en-us",
     imageWidth = "1200",
     imageHeight = "600"
-  } = $props()
+  }: Record<string, string> = $props()
 
   let finalTitle = $derived(prependTitle ? `${prependTitle} | ${title}` : title)
 </script>
