@@ -12,7 +12,7 @@
 
 <RoomSEO room={data.roomContent} />
 
-{#if data.roomContent}
+{#if room && data.roomContent}
   <RoomPreview
     {room}
     roomId={page.params.roomId as Hex}
