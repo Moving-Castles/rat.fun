@@ -3,7 +3,7 @@ import { loadData } from "$lib/modules/content/sanity"
 import { queries } from "$lib/modules/content/sanity/groq"
 import { errorHandler, CMSError } from "$lib/modules/error-handling"
 
-export const prerender = false
+export const ssr = true
 
 export const load: PageLoad = async ({ params }) => {
   try {

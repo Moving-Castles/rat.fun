@@ -6,14 +6,17 @@
   import { RoomPreview } from "$lib/components/Shared"
 
   let { data } = $props()
+
+  let room = $derived($rooms[page.params.roomId])
 </script>
 
 <RoomSEO room={data.roomContent} />
 
 {#if data.roomContent}
   <RoomPreview
+    {room}
     roomId={page.params.roomId as Hex}
     isOwnRoomListing={false}
-    room={data.roomContent}
+    sanityRoomContent={data.roomContent}
   />
 {/if}

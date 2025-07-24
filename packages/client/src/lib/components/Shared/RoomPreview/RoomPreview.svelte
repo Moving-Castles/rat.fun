@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { Hex } from "viem"
   import type { Outcome } from "@sanity-types"
+  import type { Room as SanityRoom } from "@sanity-types"
 
   import { onMount } from "svelte"
   import { staticContent } from "$lib/modules/content"
@@ -16,10 +17,13 @@
     LiquidateRoom
   } from "$lib/components/Shared"
 
-  let { roomId, room, isOwnRoomListing }: { roomId: Hex; room: Room; isOwnRoomListing: boolean } =
+  let {
+    roomId,
+    room,
+    isOwnRoomListing,
+    sanityRoomContent
+  }: { roomId: Hex; room: Room; isOwnRoomListing: boolean; sanityRoomContent: SanityRoom } =
     $props()
-
-  let sanityRoomContent = $derived($staticContent?.rooms?.find(r => r.title == roomId))
 
   let roomOutcomes = $state<Outcome[]>()
 
