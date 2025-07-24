@@ -8,6 +8,7 @@
   import { initializeSentry } from "$lib/modules/error-handling"
   import { onMount } from "svelte"
   import { goto } from "$app/navigation"
+  import { page } from "$app/state"
   import { initStaticContent, staticContent } from "$lib/modules/content"
   import { publicNetwork } from "$lib/modules/network"
   import { initSound, playSound } from "$lib/modules/sound"
@@ -33,13 +34,21 @@
   let outcomeId = $state("")
   let outcome = $state<SanityOutcome | undefined>()
 
+  const allowedRoutes = ["/(rooms)/(game)/[roomId]"]
+
   const { environment, walletType } = data
 
   const environmentLoaded = async () => {
     try {
       // Get content from CMS
       await initStaticContent($publicNetwork.worldAddress)
-      UIState.set(UI.SPAWNING)
+
+      // Set next UI state based on the URL
+      if (!allowedRoutes.includes(page.route.id)) {
+        UIState.set(UI.SPAWNING)
+      } else {
+        UIState.set(UI.READY)
+      }
     } catch (error) {
       errorHandler(error) // CMS error
       goto("/")

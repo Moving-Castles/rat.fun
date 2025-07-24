@@ -2,6 +2,9 @@
   import { gameConfig, playerERC20Balance } from "$lib/modules/state/stores"
   import { BigButton } from "$lib/components/Shared"
   import { transitionTo, RAT_BOX_STATE } from "../state.svelte"
+  import { player } from "$lib/modules/state/stores"
+  import { UIState } from "$lib/modules/ui/stores"
+  import { UI } from "$lib/modules/ui/enums"
 
   // Not enough balance
   let disabled = $derived(($playerERC20Balance ?? 0) < Number($gameConfig?.ratCreationCost ?? 0))
@@ -10,6 +13,10 @@
     // RAT_BOX_STATE.NO_RAT -> RAT_BOX_STATE.DEPLOYING_RAT
     transitionTo(RAT_BOX_STATE.DEPLOYING_RAT)
   }
+
+  const onSpawnClick = () => {
+    UIState.set(UI.SPAWNING)
+  }
 </script>
 
 <div class="deploy-rat">
@@ -17,12 +24,16 @@
     <img src="/images/mickey-rat.png" alt="Rat" />
   </div>
   <div class="button-container">
-    <BigButton
-      text="Insert rat"
-      cost={Number($gameConfig?.ratCreationCost)}
-      {disabled}
-      onclick={onClick}
-    />
+    {#if $player}
+      <BigButton
+        text="Insert rat"
+        cost={Number($gameConfig?.ratCreationCost)}
+        {disabled}
+        onclick={onClick}
+      />
+    {:else}
+      <BigButton text="Spawn" onclick={onSpawnClick} />
+    {/if}
   </div>
 </div>
 
