@@ -1,0 +1,26 @@
+{
+  "name": "world-event-creation",
+  "version": "1.0.0",
+  "description": "Interactive script to view world event definitions",
+  "main": "index.ts",
+  "scripts": {
+    "start": "ts-node index.ts",
+    "build": "tsc",
+    "dev": "ts-node --watch index.ts"
+  },
+  "author": "",
+  "license": "MIT",
+  "packageManager": "pnpm@10.8.0",
+  "dependencies": {
+    "dotenv": "^17.2.0",
+    "prompts": "^2.4.2",
+    "@sanity/client": "^7.8.1",
+    "viem": "^2.33.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "ts-node": "^10.9.2",
+    "@types/prompts": "^2.4.9",
+    "typescript": "^5.8.3"
+  }
+}

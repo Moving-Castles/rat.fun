@@ -11,7 +11,7 @@ import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 contract DeployTest is BaseTest {
   using WorldResourceIdInstance for ResourceId;
 
-  function testWorldExists() public {
+  function testWorldExists() public view {
     uint256 codeSize;
     address addr = worldAddress;
     assembly {
@@ -20,7 +20,7 @@ contract DeployTest is BaseTest {
     assertTrue(codeSize > 0);
   }
 
-  function testERC20Supply() public {
+  function testERC20Supply() public view {
     assertEq(LibWorld.erc20().totalSupply(), 53_200_000 * 1e18);
   }
 }

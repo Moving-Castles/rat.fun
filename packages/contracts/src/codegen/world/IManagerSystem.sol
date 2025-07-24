@@ -23,4 +23,13 @@ interface IManagerSystem {
   ) external;
 
   function ratfun__giveMasterKey(bytes32 playerId) external;
+
+  function ratfun__setWorldEvent(
+    string memory cmsId,
+    string memory title,
+    string memory prompt,
+    uint256 durationInBlocks
+  ) external;
+
+  function ratfun__removeWorldEvent() external;
 }

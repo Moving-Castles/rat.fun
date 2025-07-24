@@ -7,36 +7,43 @@ export default {
       title: "Title",
       name: "title",
       type: "string",
+      readOnly: true,
       validation: (Rule: any) => Rule.required()
     },
     {
       title: "World address",
       name: "worldAddress",
       type: "string",
+      readOnly: true,
       validation: (Rule: any) => Rule.required()
     },
     {
       title: "Owner",
       name: "owner",
-      type: "string"
-      // validation: (Rule: any) => Rule.required()
+      type: "string",
+      readOnly: true,
+      validation: (Rule: any) => Rule.required()
     },
     {
       title: "Owner name",
       name: "ownerName",
-      type: "string"
-      // validation: (Rule: any) => Rule.required()
+      type: "string",
+      readOnly: true,
+      validation: (Rule: any) => Rule.required()
     },
     {
       title: "Prompt",
       name: "prompt",
-      type: "text"
+      type: "text",
+      readOnly: true,
+      validation: (Rule: any) => Rule.required()
     },
     {
       title: "Image",
       name: "image",
-      type: "image"
-      // validation: (Rule: any) => Rule.required()
+      type: "image",
+      readOnly: true,
+      validation: (Rule: any) => Rule.required()
     },
     {
       title: "Slug",

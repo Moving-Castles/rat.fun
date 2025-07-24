@@ -20,6 +20,7 @@ import { LibManager, LibRat } from "../libraries/Libraries.sol";
 import { ENTITY_TYPE } from "../codegen/common.sol";
 import { Item } from "../structs.sol";
 import { LibUtils } from "../libraries/LibUtils.sol";
+import { LibWorld } from "../libraries/LibWorld.sol";
 
 /**
  * @dev Only admin can call these function
@@ -144,5 +145,28 @@ contract ManagerSystem is System {
    */
   function giveMasterKey(bytes32 playerId) public onlyAdmin {
     MasterKey.set(playerId, true);
+  }
+
+  /**
+   * @notice Set a world event
+   * @param cmsId The id of the world event in the CMS
+   * @param title The title of the world event
+   * @param prompt The prompt for the world event
+   * @param durationInBlocks The duration of the world event in blocks
+   */
+  function setWorldEvent(
+    string memory cmsId,
+    string memory title,
+    string memory prompt,
+    uint256 durationInBlocks
+  ) public onlyAdmin {
+    LibWorld.setWorldEvent(cmsId, title, prompt, durationInBlocks);
+  }
+
+  /**
+   * @notice Remove the world event
+   */
+  function removeWorldEvent() public onlyAdmin {
+    LibWorld.removeWorldEvent();
   }
 }

@@ -62,6 +62,7 @@ export default defineWorld({
       schema: {
         creationBlock: "uint256",
         expirationBlock: "uint256",
+        cmsId: "string",
         title: "string",
         prompt: "string"
       }

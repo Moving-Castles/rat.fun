@@ -13,7 +13,7 @@ contract CreateWorldEvent is Script {
     uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
     vm.startBroadcast(deployerPrivateKey);
 
-    LibWorld.createWorldEvent("Oktoberfest", "All rats are drunk.", 10000);
+    LibWorld.setWorldEvent("ABC", "Oktoberfest", "All rats are drunk.", 10000);
 
     vm.stopBroadcast();
   }

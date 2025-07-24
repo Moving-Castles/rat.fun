@@ -81,14 +81,21 @@ library LibWorld {
   }
 
   /**
-   * @notice Create a world event
+   * @notice Set a world event
+   * @param _cmsId The id of the world event in the CMS
    * @param _title The title of the world event
    * @param _prompt The prompt for the world event
    * @param _durationInBlocks The duration of the world event in blocks
    */
-  function createWorldEvent(string memory _title, string memory _prompt, uint256 _durationInBlocks) internal {
+  function setWorldEvent(
+    string memory _cmsId,
+    string memory _title,
+    string memory _prompt,
+    uint256 _durationInBlocks
+  ) internal {
     WorldEvent.set(
       WorldEventData({
+        cmsId: _cmsId,
         title: _title,
         prompt: _prompt,
         creationBlock: block.number,
@@ -101,7 +108,7 @@ library LibWorld {
    * @notice Remove the world event
    */
   function removeWorldEvent() internal {
-    WorldEvent.set(WorldEventData({ title: "", prompt: "", creationBlock: 0, expirationBlock: 0 }));
+    WorldEvent.set(WorldEventData({ cmsId: "", title: "", prompt: "", creationBlock: 0, expirationBlock: 0 }));
   }
 
   /**

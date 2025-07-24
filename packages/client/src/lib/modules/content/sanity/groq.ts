@@ -9,6 +9,7 @@
 export const queries = {
   rooms: '*[_type == "room" && worldAddress == $worldAddress]',
   outcomes: '*[_type == "outcome" && worldAddress == $worldAddress]',
+  worldEvents: '*[_type == "worldEvent" && worldAddress == $worldAddress]',
   outcomesForRoom: '*[_type == "outcome" && roomId == $roomId && worldAddress == $worldAddress]',
   outcomesForRat: '*[_type == "outcome" && ratId == $ratId && worldAddress == $worldAddress]'
 }

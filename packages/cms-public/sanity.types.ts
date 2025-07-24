@@ -13,6 +13,33 @@
  */
 
 // Source: schema.json
+export type WorldEvent = {
+  _id: string
+  _type: "worldEvent"
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  worldAddress?: string
+  announcementText?: string
+  activationDateTime?: string
+  activationText?: string
+  duration?: number
+  prompt?: string
+  image?: {
+    asset?: {
+      _ref: string
+      _type: "reference"
+      _weak?: boolean
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset"
+    }
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: "image"
+  }
+}
+
 export type TemplateImages = {
   _id: string
   _type: "templateImages"
@@ -231,6 +258,7 @@ export type SanityAssetSourceData = {
 }
 
 export type AllSanitySchemaTypes =
+  | WorldEvent
   | TemplateImages
   | Outcome
   | Room

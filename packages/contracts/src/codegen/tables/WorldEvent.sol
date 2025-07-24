@@ -19,6 +19,7 @@ import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 struct WorldEventData {
   uint256 creationBlock;
   uint256 expirationBlock;
+  string cmsId;
   string title;
   string prompt;
 }
@@ -28,12 +29,12 @@ library WorldEvent {
   ResourceId constant _tableId = ResourceId.wrap(0x746272617466756e0000000000000000576f726c644576656e74000000000000);
 
   FieldLayout constant _fieldLayout =
-    FieldLayout.wrap(0x0040020220200000000000000000000000000000000000000000000000000000);
+    FieldLayout.wrap(0x0040020320200000000000000000000000000000000000000000000000000000);
 
   // Hex-encoded key schema of ()
   Schema constant _keySchema = Schema.wrap(0x0000000000000000000000000000000000000000000000000000000000000000);
-  // Hex-encoded value schema of (uint256, uint256, string, string)
-  Schema constant _valueSchema = Schema.wrap(0x004002021f1fc5c5000000000000000000000000000000000000000000000000);
+  // Hex-encoded value schema of (uint256, uint256, string, string, string)
+  Schema constant _valueSchema = Schema.wrap(0x004002031f1fc5c5c50000000000000000000000000000000000000000000000);
 
   /**
    * @notice Get the table's key field names.
@@ -48,11 +49,12 @@ library WorldEvent {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](4);
+    fieldNames = new string[](5);
     fieldNames[0] = "creationBlock";
     fieldNames[1] = "expirationBlock";
-    fieldNames[2] = "title";
-    fieldNames[3] = "prompt";
+    fieldNames[2] = "cmsId";
+    fieldNames[3] = "title";
+    fieldNames[4] = "prompt";
   }
 
   /**
@@ -146,12 +148,160 @@ library WorldEvent {
   }
 
   /**
+   * @notice Get cmsId.
+   */
+  function getCmsId() internal view returns (string memory cmsId) {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 0);
+    return (string(_blob));
+  }
+
+  /**
+   * @notice Get cmsId.
+   */
+  function _getCmsId() internal view returns (string memory cmsId) {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 0);
+    return (string(_blob));
+  }
+
+  /**
+   * @notice Set cmsId.
+   */
+  function setCmsId(string memory cmsId) internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    StoreSwitch.setDynamicField(_tableId, _keyTuple, 0, bytes((cmsId)));
+  }
+
+  /**
+   * @notice Set cmsId.
+   */
+  function _setCmsId(string memory cmsId) internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    StoreCore.setDynamicField(_tableId, _keyTuple, 0, bytes((cmsId)));
+  }
+
+  /**
+   * @notice Get the length of cmsId.
+   */
+  function lengthCmsId() internal view returns (uint256) {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 0);
+    unchecked {
+      return _byteLength / 1;
+    }
+  }
+
+  /**
+   * @notice Get the length of cmsId.
+   */
+  function _lengthCmsId() internal view returns (uint256) {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 0);
+    unchecked {
+      return _byteLength / 1;
+    }
+  }
+
+  /**
+   * @notice Get an item of cmsId.
+   * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
+   */
+  function getItemCmsId(uint256 _index) internal view returns (string memory) {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    unchecked {
+      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 1, (_index + 1) * 1);
+      return (string(_blob));
+    }
+  }
+
+  /**
+   * @notice Get an item of cmsId.
+   * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
+   */
+  function _getItemCmsId(uint256 _index) internal view returns (string memory) {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    unchecked {
+      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 1, (_index + 1) * 1);
+      return (string(_blob));
+    }
+  }
+
+  /**
+   * @notice Push a slice to cmsId.
+   */
+  function pushCmsId(string memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    StoreSwitch.pushToDynamicField(_tableId, _keyTuple, 0, bytes((_slice)));
+  }
+
+  /**
+   * @notice Push a slice to cmsId.
+   */
+  function _pushCmsId(string memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    StoreCore.pushToDynamicField(_tableId, _keyTuple, 0, bytes((_slice)));
+  }
+
+  /**
+   * @notice Pop a slice from cmsId.
+   */
+  function popCmsId() internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 0, 1);
+  }
+
+  /**
+   * @notice Pop a slice from cmsId.
+   */
+  function _popCmsId() internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    StoreCore.popFromDynamicField(_tableId, _keyTuple, 0, 1);
+  }
+
+  /**
+   * @notice Update a slice of cmsId at `_index`.
+   */
+  function updateCmsId(uint256 _index, string memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    unchecked {
+      bytes memory _encoded = bytes((_slice));
+      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 1), uint40(_encoded.length), _encoded);
+    }
+  }
+
+  /**
+   * @notice Update a slice of cmsId at `_index`.
+   */
+  function _updateCmsId(uint256 _index, string memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    unchecked {
+      bytes memory _encoded = bytes((_slice));
+      StoreCore.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 1), uint40(_encoded.length), _encoded);
+    }
+  }
+
+  /**
    * @notice Get title.
    */
   function getTitle() internal view returns (string memory title) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 0);
+    bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 1);
     return (string(_blob));
   }
 
@@ -161,7 +311,7 @@ library WorldEvent {
   function _getTitle() internal view returns (string memory title) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 0);
+    bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 1);
     return (string(_blob));
   }
 
@@ -171,7 +321,7 @@ library WorldEvent {
   function setTitle(string memory title) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreSwitch.setDynamicField(_tableId, _keyTuple, 0, bytes((title)));
+    StoreSwitch.setDynamicField(_tableId, _keyTuple, 1, bytes((title)));
   }
 
   /**
@@ -180,7 +330,7 @@ library WorldEvent {
   function _setTitle(string memory title) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreCore.setDynamicField(_tableId, _keyTuple, 0, bytes((title)));
+    StoreCore.setDynamicField(_tableId, _keyTuple, 1, bytes((title)));
   }
 
   /**
@@ -189,7 +339,7 @@ library WorldEvent {
   function lengthTitle() internal view returns (uint256) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 0);
+    uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 1);
     unchecked {
       return _byteLength / 1;
     }
@@ -201,7 +351,7 @@ library WorldEvent {
   function _lengthTitle() internal view returns (uint256) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 0);
+    uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 1);
     unchecked {
       return _byteLength / 1;
     }
@@ -215,7 +365,7 @@ library WorldEvent {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
     unchecked {
-      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 1, (_index + 1) * 1);
+      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 1, _index * 1, (_index + 1) * 1);
       return (string(_blob));
     }
   }
@@ -228,7 +378,7 @@ library WorldEvent {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
     unchecked {
-      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 1, (_index + 1) * 1);
+      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 1, _index * 1, (_index + 1) * 1);
       return (string(_blob));
     }
   }
@@ -239,7 +389,7 @@ library WorldEvent {
   function pushTitle(string memory _slice) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreSwitch.pushToDynamicField(_tableId, _keyTuple, 0, bytes((_slice)));
+    StoreSwitch.pushToDynamicField(_tableId, _keyTuple, 1, bytes((_slice)));
   }
 
   /**
@@ -248,7 +398,7 @@ library WorldEvent {
   function _pushTitle(string memory _slice) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreCore.pushToDynamicField(_tableId, _keyTuple, 0, bytes((_slice)));
+    StoreCore.pushToDynamicField(_tableId, _keyTuple, 1, bytes((_slice)));
   }
 
   /**
@@ -257,7 +407,7 @@ library WorldEvent {
   function popTitle() internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 0, 1);
+    StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 1, 1);
   }
 
   /**
@@ -266,7 +416,7 @@ library WorldEvent {
   function _popTitle() internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreCore.popFromDynamicField(_tableId, _keyTuple, 0, 1);
+    StoreCore.popFromDynamicField(_tableId, _keyTuple, 1, 1);
   }
 
   /**
@@ -277,7 +427,7 @@ library WorldEvent {
 
     unchecked {
       bytes memory _encoded = bytes((_slice));
-      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 1), uint40(_encoded.length), _encoded);
+      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 1, uint40(_index * 1), uint40(_encoded.length), _encoded);
     }
   }
 
@@ -289,7 +439,7 @@ library WorldEvent {
 
     unchecked {
       bytes memory _encoded = bytes((_slice));
-      StoreCore.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 1), uint40(_encoded.length), _encoded);
+      StoreCore.spliceDynamicData(_tableId, _keyTuple, 1, uint40(_index * 1), uint40(_encoded.length), _encoded);
     }
   }
 
@@ -299,7 +449,7 @@ library WorldEvent {
   function getPrompt() internal view returns (string memory prompt) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 1);
+    bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 2);
     return (string(_blob));
   }
 
@@ -309,7 +459,7 @@ library WorldEvent {
   function _getPrompt() internal view returns (string memory prompt) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 1);
+    bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 2);
     return (string(_blob));
   }
 
@@ -319,7 +469,7 @@ library WorldEvent {
   function setPrompt(string memory prompt) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreSwitch.setDynamicField(_tableId, _keyTuple, 1, bytes((prompt)));
+    StoreSwitch.setDynamicField(_tableId, _keyTuple, 2, bytes((prompt)));
   }
 
   /**
@@ -328,7 +478,7 @@ library WorldEvent {
   function _setPrompt(string memory prompt) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreCore.setDynamicField(_tableId, _keyTuple, 1, bytes((prompt)));
+    StoreCore.setDynamicField(_tableId, _keyTuple, 2, bytes((prompt)));
   }
 
   /**
@@ -337,7 +487,7 @@ library WorldEvent {
   function lengthPrompt() internal view returns (uint256) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 1);
+    uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 2);
     unchecked {
       return _byteLength / 1;
     }
@@ -349,7 +499,7 @@ library WorldEvent {
   function _lengthPrompt() internal view returns (uint256) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 1);
+    uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 2);
     unchecked {
       return _byteLength / 1;
     }
@@ -363,7 +513,7 @@ library WorldEvent {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
     unchecked {
-      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 1, _index * 1, (_index + 1) * 1);
+      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 2, _index * 1, (_index + 1) * 1);
       return (string(_blob));
     }
   }
@@ -376,7 +526,7 @@ library WorldEvent {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
     unchecked {
-      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 1, _index * 1, (_index + 1) * 1);
+      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 2, _index * 1, (_index + 1) * 1);
       return (string(_blob));
     }
   }
@@ -387,7 +537,7 @@ library WorldEvent {
   function pushPrompt(string memory _slice) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreSwitch.pushToDynamicField(_tableId, _keyTuple, 1, bytes((_slice)));
+    StoreSwitch.pushToDynamicField(_tableId, _keyTuple, 2, bytes((_slice)));
   }
 
   /**
@@ -396,7 +546,7 @@ library WorldEvent {
   function _pushPrompt(string memory _slice) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreCore.pushToDynamicField(_tableId, _keyTuple, 1, bytes((_slice)));
+    StoreCore.pushToDynamicField(_tableId, _keyTuple, 2, bytes((_slice)));
   }
 
   /**
@@ -405,7 +555,7 @@ library WorldEvent {
   function popPrompt() internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 1, 1);
+    StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 2, 1);
   }
 
   /**
@@ -414,7 +564,7 @@ library WorldEvent {
   function _popPrompt() internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreCore.popFromDynamicField(_tableId, _keyTuple, 1, 1);
+    StoreCore.popFromDynamicField(_tableId, _keyTuple, 2, 1);
   }
 
   /**
@@ -425,7 +575,7 @@ library WorldEvent {
 
     unchecked {
       bytes memory _encoded = bytes((_slice));
-      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 1, uint40(_index * 1), uint40(_encoded.length), _encoded);
+      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 2, uint40(_index * 1), uint40(_encoded.length), _encoded);
     }
   }
 
@@ -437,7 +587,7 @@ library WorldEvent {
 
     unchecked {
       bytes memory _encoded = bytes((_slice));
-      StoreCore.spliceDynamicData(_tableId, _keyTuple, 1, uint40(_index * 1), uint40(_encoded.length), _encoded);
+      StoreCore.spliceDynamicData(_tableId, _keyTuple, 2, uint40(_index * 1), uint40(_encoded.length), _encoded);
     }
   }
 
@@ -472,11 +622,17 @@ library WorldEvent {
   /**
    * @notice Set the full data using individual values.
    */
-  function set(uint256 creationBlock, uint256 expirationBlock, string memory title, string memory prompt) internal {
+  function set(
+    uint256 creationBlock,
+    uint256 expirationBlock,
+    string memory cmsId,
+    string memory title,
+    string memory prompt
+  ) internal {
     bytes memory _staticData = encodeStatic(creationBlock, expirationBlock);
 
-    EncodedLengths _encodedLengths = encodeLengths(title, prompt);
-    bytes memory _dynamicData = encodeDynamic(title, prompt);
+    EncodedLengths _encodedLengths = encodeLengths(cmsId, title, prompt);
+    bytes memory _dynamicData = encodeDynamic(cmsId, title, prompt);
 
     bytes32[] memory _keyTuple = new bytes32[](0);
 
@@ -486,11 +642,17 @@ library WorldEvent {
   /**
    * @notice Set the full data using individual values.
    */
-  function _set(uint256 creationBlock, uint256 expirationBlock, string memory title, string memory prompt) internal {
+  function _set(
+    uint256 creationBlock,
+    uint256 expirationBlock,
+    string memory cmsId,
+    string memory title,
+    string memory prompt
+  ) internal {
     bytes memory _staticData = encodeStatic(creationBlock, expirationBlock);
 
-    EncodedLengths _encodedLengths = encodeLengths(title, prompt);
-    bytes memory _dynamicData = encodeDynamic(title, prompt);
+    EncodedLengths _encodedLengths = encodeLengths(cmsId, title, prompt);
+    bytes memory _dynamicData = encodeDynamic(cmsId, title, prompt);
 
     bytes32[] memory _keyTuple = new bytes32[](0);
 
@@ -503,8 +665,8 @@ library WorldEvent {
   function set(WorldEventData memory _table) internal {
     bytes memory _staticData = encodeStatic(_table.creationBlock, _table.expirationBlock);
 
-    EncodedLengths _encodedLengths = encodeLengths(_table.title, _table.prompt);
-    bytes memory _dynamicData = encodeDynamic(_table.title, _table.prompt);
+    EncodedLengths _encodedLengths = encodeLengths(_table.cmsId, _table.title, _table.prompt);
+    bytes memory _dynamicData = encodeDynamic(_table.cmsId, _table.title, _table.prompt);
 
     bytes32[] memory _keyTuple = new bytes32[](0);
 
@@ -517,8 +679,8 @@ library WorldEvent {
   function _set(WorldEventData memory _table) internal {
     bytes memory _staticData = encodeStatic(_table.creationBlock, _table.expirationBlock);
 
-    EncodedLengths _encodedLengths = encodeLengths(_table.title, _table.prompt);
-    bytes memory _dynamicData = encodeDynamic(_table.title, _table.prompt);
+    EncodedLengths _encodedLengths = encodeLengths(_table.cmsId, _table.title, _table.prompt);
+    bytes memory _dynamicData = encodeDynamic(_table.cmsId, _table.title, _table.prompt);
 
     bytes32[] memory _keyTuple = new bytes32[](0);
 
@@ -540,17 +702,23 @@ library WorldEvent {
   function decodeDynamic(
     EncodedLengths _encodedLengths,
     bytes memory _blob
-  ) internal pure returns (string memory title, string memory prompt) {
+  ) internal pure returns (string memory cmsId, string memory title, string memory prompt) {
     uint256 _start;
     uint256 _end;
     unchecked {
       _end = _encodedLengths.atIndex(0);
     }
-    title = (string(SliceLib.getSubslice(_blob, _start, _end).toBytes()));
+    cmsId = (string(SliceLib.getSubslice(_blob, _start, _end).toBytes()));
 
     _start = _end;
     unchecked {
       _end += _encodedLengths.atIndex(1);
+    }
+    title = (string(SliceLib.getSubslice(_blob, _start, _end).toBytes()));
+
+    _start = _end;
+    unchecked {
+      _end += _encodedLengths.atIndex(2);
     }
     prompt = (string(SliceLib.getSubslice(_blob, _start, _end).toBytes()));
   }
@@ -568,7 +736,7 @@ library WorldEvent {
   ) internal pure returns (WorldEventData memory _table) {
     (_table.creationBlock, _table.expirationBlock) = decodeStatic(_staticData);
 
-    (_table.title, _table.prompt) = decodeDynamic(_encodedLengths, _dynamicData);
+    (_table.cmsId, _table.title, _table.prompt) = decodeDynamic(_encodedLengths, _dynamicData);
   }
 
   /**
@@ -602,12 +770,13 @@ library WorldEvent {
    * @return _encodedLengths The lengths of the dynamic fields (packed into a single bytes32 value).
    */
   function encodeLengths(
+    string memory cmsId,
     string memory title,
     string memory prompt
   ) internal pure returns (EncodedLengths _encodedLengths) {
     // Lengths are effectively checked during copy by 2**40 bytes exceeding gas limits
     unchecked {
-      _encodedLengths = EncodedLengthsLib.pack(bytes(title).length, bytes(prompt).length);
+      _encodedLengths = EncodedLengthsLib.pack(bytes(cmsId).length, bytes(title).length, bytes(prompt).length);
     }
   }
 
@@ -615,8 +784,12 @@ library WorldEvent {
    * @notice Tightly pack dynamic (variable length) data using this table's schema.
    * @return The dynamic data, encoded into a sequence of bytes.
    */
-  function encodeDynamic(string memory title, string memory prompt) internal pure returns (bytes memory) {
-    return abi.encodePacked(bytes((title)), bytes((prompt)));
+  function encodeDynamic(
+    string memory cmsId,
+    string memory title,
+    string memory prompt
+  ) internal pure returns (bytes memory) {
+    return abi.encodePacked(bytes((cmsId)), bytes((title)), bytes((prompt)));
   }
 
   /**
@@ -628,13 +801,14 @@ library WorldEvent {
   function encode(
     uint256 creationBlock,
     uint256 expirationBlock,
+    string memory cmsId,
     string memory title,
     string memory prompt
   ) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
     bytes memory _staticData = encodeStatic(creationBlock, expirationBlock);
 
-    EncodedLengths _encodedLengths = encodeLengths(title, prompt);
-    bytes memory _dynamicData = encodeDynamic(title, prompt);
+    EncodedLengths _encodedLengths = encodeLengths(cmsId, title, prompt);
+    bytes memory _dynamicData = encodeDynamic(cmsId, title, prompt);
 
     return (_staticData, _encodedLengths, _dynamicData);
   }
