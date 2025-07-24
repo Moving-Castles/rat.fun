@@ -105,7 +105,7 @@
 {/if}
 
 <!-- This needs to always render -->
-<div class="bg">
+<div inert={$UIState !== UI.READY} class="bg">
   <ShaderTest />
   <div class="context-main">
     <div class="layer-game">
