@@ -80,8 +80,8 @@
 
 <svelte:window
   onhashchange={e => {
+    console.log("hash change, ", e)
     outcomeId = new URL(e.newURL).hash.replace("#", "")
-    console.log(outcomeId)
     outcome = $staticContent.outcomes.find(o => o._id === outcomeId)
   }}
 />
@@ -115,12 +115,14 @@
   </div>
 {/if}
 
-{#if outcome}
-  {#snippet content()}
-    <Outcome {outcome} />
-  {/snippet}
-  <ModalTarget onclose={removeHash} {content}></ModalTarget>
-{/if}
+{#key outcomeId}
+  {#if outcome}
+    {#snippet content()}
+      <Outcome {outcome} />
+    {/snippet}
+    <ModalTarget onclose={removeHash} {content}></ModalTarget>
+  {/if}
+{/key}
 
 <Modal />
 

@@ -42,7 +42,7 @@
   <div class="header">ROOM LOGS</div>
   {#if roomOutcomes.length > 0}
     <div class="logs">
-      {#each roomOutcomes as outcome (outcome._id)}
+      {#each roomOutcomes.sort((a, b) => new Date(b._createdAt).getTime() - new Date(a._createdAt).getTime()) as outcome (outcome._id)}
         <OutcomeMessage {outcome} />
       {/each}
     </div>

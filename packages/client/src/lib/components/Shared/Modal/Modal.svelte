@@ -9,7 +9,14 @@
       modal.close()
     }
   }
+
+  const onKeyPress = e => {
+    console.log(e)
+    if (e.key === "Escape") modal.close()
+  }
 </script>
+
+<svelte:window onkeydown={onKeyPress} />
 
 {#if modal.show}
   <!-- svelte-ignore a11y_click_events_have_key_events -->
