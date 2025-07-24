@@ -1,23 +1,23 @@
 {
-  "name": "generate-textures",
+  "name": "generate-rat-images",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "start": "ts-node index.ts"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "packageManager": "pnpm@10.8.0",
   "dependencies": {
     "commander": "^14.0.0",
-    "dotenv": "^16.5.0",
+    "dotenv": "^17.2.0",
     "replicate": "^1.0.1",
-    "sharp": "^0.34.2"
+    "sharp": "^0.34.3"
   },
   "devDependencies": {
     "ts-node": "^10.9.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.8.3"
   }
 }

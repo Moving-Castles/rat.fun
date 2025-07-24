@@ -39,7 +39,7 @@ fi
 
 # Navigate to repository root (where pnpm-workspace.yaml is located)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
 echo -e "${YELLOW}📁 Script location: $SCRIPT_DIR${NC}"
 echo -e "${YELLOW}📁 Repository root: $REPO_ROOT${NC}"

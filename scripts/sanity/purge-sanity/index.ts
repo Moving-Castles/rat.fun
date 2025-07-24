@@ -27,7 +27,7 @@ const client = createClient({
   projectId: "kupagww3",
   dataset: "production",
   apiVersion: "2025-04-01",
-  token: process.env.SANITY_PUBLIC_CMS_TOKEN, // Make sure to set this environment variable
+  token: process.env.PUBLIC_SANITY_CMS_TOKEN, // Make sure to set this environment variable
   useCdn: false
 })
 
@@ -162,11 +162,11 @@ async function purgeWorld() {
   }
 }
 
-// Check if SANITY_PUBLIC_CMS_TOKEN is set
-if (!process.env.SANITY_PUBLIC_CMS_TOKEN) {
-  console.error("Error: SANITY_PUBLIC_CMS_TOKEN environment variable is not set.")
+// Check if PUBLIC_SANITY_CMS_TOKEN is set
+if (!process.env.PUBLIC_SANITY_CMS_TOKEN) {
+  console.error("Error: PUBLIC_SANITY_CMS_TOKEN environment variable is not set.")
   console.error(
-    "Please add it to your .env file or set it with: export SANITY_PUBLIC_CMS_TOKEN=your_token"
+    "Please add it to your .env file or set it with: export PUBLIC_SANITY_CMS_TOKEN=your_token"
   )
   process.exit(1)
 }

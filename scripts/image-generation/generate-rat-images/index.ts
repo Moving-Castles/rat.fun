@@ -8,7 +8,7 @@ import { program } from "commander"
 
 // Load .env from parent directory
 import dotenv from "dotenv"
-dotenv.config({ path: path.resolve(__dirname, "../.env") })
+dotenv.config({ path: path.resolve(__dirname, "../../.env") })
 
 const FIXED_PROMPT = "A rat."
 

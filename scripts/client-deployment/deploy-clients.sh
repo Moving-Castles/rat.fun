@@ -4,7 +4,7 @@
 source ../.env
 
 # Change directory to the client package
-cd ..
+cd ../../packages/client
 
 # build the frontend
 pnpm build

@@ -27,7 +27,7 @@ function log(message: string, type: "info" | "error" | "success" = "info"): void
 
 // Load environment variables from .env file in parent directory
 try {
-  const envPath = path.resolve(__dirname, "../.env")
+  const envPath = path.resolve(__dirname, "../../../.env")
   log(`Loading environment variables from ${envPath}`)
   dotenv.config({ path: envPath })
 } catch (error) {
