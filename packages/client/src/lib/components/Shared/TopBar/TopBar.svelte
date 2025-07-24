@@ -9,15 +9,17 @@
 
 <div class="top-bar">
   <OperatorInfo />
-  {#if $worldStats}
-    <GlobalStats />
-  {/if}
-  {#if $activeWorldEvent}
-    <WorldEvent />
-  {/if}
-  {#if $player?.masterKey}
-    <PaneSwitch />
-  {/if}
+  <div class="right">
+    {#if $worldStats}
+      <GlobalStats />
+    {/if}
+    {#if $activeWorldEvent}
+      <WorldEvent />
+    {/if}
+    {#if $player?.masterKey}
+      <PaneSwitch />
+    {/if}
+  </div>
 </div>
 
 <style lang="scss">
@@ -35,5 +37,9 @@
     grid-column: 1 / span 3;
     display: flex;
     font-size: var(--font-size-small);
+  }
+
+  .right {
+    display: flex;
   }
 </style>
