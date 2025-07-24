@@ -1,23 +1,29 @@
 <script lang="ts">
   import type { Outcome, Room } from "@sanity-types"
   import { addressToRatImage } from "$lib/modules/utils"
-  import OutcomeStats from "../OutcomeStats/OutcomeStats.svelte"
+  import OutcomeItem from "../OutcomeItem/OutcomeItem.svelte"
   import { timeSince } from "$lib/modules/utils"
   // import { staticContent } from "$lib/modules/content"
 
   let { outcome }: { outcome: Outcome } = $props()
 
+  $inspect(outcome)
+
   // let room = $derived($staticContent?.rooms.find(r => r._id === outcome.roomId))
 </script>
 
 <div class="outcome">
+  <div class="meta">
+    {outcome.playerName} sent {outcome?.ratName} to room #{outcome.roomIndex}
+    {timeSince(new Date(outcome._createdAt))} ago
+  </div>
   <div class="outcome-header">
     <div class="rat">
       <img class="rat-image" src={addressToRatImage(outcome?.ratId)} />
     </div>
     <div class="stats">
       <div class="headline">
-        {outcome?.ratName} entered {timeSince(new Date(outcome._createdAt))} ago
+        {outcome?.ratName}
       </div>
       <div class="health">HEALTH: {outcome.ratHealth} ({outcome.healthChange.amount})</div>
       <div class="balance">
@@ -25,14 +31,28 @@
       </div>
     </div>
   </div>
-  {#each outcome.log as item (item)}
-    <p class="log-entry">
-      <span class="timestamp-container">{item.timestamp}</span>
-      <span class="log-text">
-        {item.event}
-      </span>
-    </p>
-  {/each}
+  <div class="logs">
+    {#each outcome.log as item (item)}
+      <p class="log-entry">
+        <span class="timestamp-container">{item.timestamp}</span>
+        <span class="log-text">
+          {item.event}
+        </span>
+      </p>
+    {/each}
+  </div>
+
+  <div class="box">
+    {#each outcome.itemChanges as itemChange}
+      <OutcomeItem
+        type="item"
+        negative={itemChange.type === "remove"}
+        value={`${itemChange.name} ($${itemChange.value})`}
+      />
+    {/each}
+  </div>
+
+  <!-- Add the received items here -->
 </div>
 
 <style lang="scss">
@@ -40,6 +60,13 @@
     background: var(--color-grey-dark);
     padding: 1rem;
     width: 600px;
+
+    .meta {
+      font-size: 10px;
+      color: var(--color-grey-light);
+      text-align: center;
+      margin-bottom: 20px;
+    }
 
     .outcome-header {
       display: grid;
@@ -65,7 +92,7 @@
           color: var(--background);
           font-size: 30px;
           display: inline-block;
-          margin-bottom: 10px;
+          margin-bottom: 8px;
         }
 
         .balance {
@@ -83,6 +110,17 @@
         }
       }
     }
+
+    .box {
+      height: 100px;
+      background-image: url("/images/texture-5.png");
+      background-size: 200px;
+      padding: 5px;
+    }
+  }
+
+  .logs {
+    margin-bottom: 20px;
   }
   .log-entry {
     display: flex;
