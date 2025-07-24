@@ -4,7 +4,7 @@
 source ../.env
 
 # Change directory to where the forge command should be executed
-cd ../../contracts
+cd ../../packages/contracts
 
 # Build the docs using forge
 forge doc -b 

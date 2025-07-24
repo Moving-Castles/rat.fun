@@ -7,7 +7,7 @@ import fs from "fs"
 import { program } from "commander"
 
 // Load .env from parent directory
-dotenv.config({ path: path.resolve(__dirname, "../.env") })
+dotenv.config({ path: path.resolve(__dirname, "../../.env") })
 
 const FIXED_PROMPT =
   " Absolutely flat texture. Seamless. Hyperrealistic. Extreme detail. 4K. Trending on artstation. Unreal engine."
