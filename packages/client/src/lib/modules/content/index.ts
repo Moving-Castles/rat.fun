@@ -49,6 +49,7 @@ export async function initStaticContent(worldAddress: string) {
 
   // Subscribe to changes to rooms in sanity DB
   client.listen(queries.rooms, { worldAddress }).subscribe(update => {
+    console.log("rooms update", update)
     staticContent.update(content => ({
       ...content,
       rooms: handleSanityUpdate<SanityRoom>(update, content.rooms, (item, id) => item._id === id)
@@ -57,6 +58,7 @@ export async function initStaticContent(worldAddress: string) {
 
   // Subscribe to changes to outcomes in sanity DB
   client.listen(queries.outcomes, { worldAddress }).subscribe(update => {
+    console.log("outcomes update", update)
     staticContent.update(content => ({
       ...content,
       outcomes: handleSanityUpdate<SanityOutcome>(
@@ -69,6 +71,7 @@ export async function initStaticContent(worldAddress: string) {
 
   // Subscribe to changes to world events in sanity DB
   client.listen(queries.worldEvents, { worldAddress }).subscribe(update => {
+    console.log("world events update", update)
     staticContent.update(content => ({
       ...content,
       worldEvents: handleSanityUpdate<SanityWorldEvent>(
@@ -96,9 +99,16 @@ function handleSanityUpdate<T>(
       // Add new item to the array
       return [...contentArray, result as T]
 
-    case "update":
+    case "update": {
       // Update existing item in the array
-      return contentArray.map(item => (findById(item, result._id) ? (result as T) : item))
+      const updatedArray = contentArray.map(item =>
+        findById(item, result._id) ? (result as T) : item
+      )
+      // Check if anything actually changed to prevent unnecessary updates
+      return contentArray.some((item, index) => item !== updatedArray[index])
+        ? updatedArray
+        : contentArray
+    }
 
     case "disappear":
       // Remove item from the array
