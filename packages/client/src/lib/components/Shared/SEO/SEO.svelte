@@ -13,6 +13,8 @@
   }: Record<string, string> = $props()
 
   let finalTitle = $derived(prependTitle ? `${prependTitle} | ${title}` : title)
+
+  console.log("WE HAVE SEO")
 </script>
 
 <svelte:head>
@@ -30,6 +32,7 @@
   <meta name="twitter:title" content={finalTitle} />
   <meta name="twitter:description" content={description} />
   <meta name="twitter:image" content={imageUrl} />
+  <meta name="twitter:creator" content="@movingcastles_" />
 
   <meta property="og:site_name" content={finalTitle} />
   <meta property="og:locale" content={language} />
