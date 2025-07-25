@@ -32,34 +32,34 @@ const sanitizeSanityData = (data: any): any => {
     return data.map(sanitizeSanityData)
   }
 
-  if (typeof data === 'object') {
+  if (typeof data === "object") {
     const sanitized: any = {}
-    
+
     for (const [key, value] of Object.entries(data)) {
       // Skip symbol properties (like internalGroqTypeReferenceTo)
-      if (typeof key === 'symbol') {
+      if (typeof key === "symbol") {
         continue
       }
-      
+
       // Skip properties with symbol keys
-      if (key.startsWith('[') && key.includes('Symbol')) {
+      if (key.startsWith("[") && key.includes("Symbol")) {
         continue
       }
-      
+
       // Handle media field that can contain unknown types
-      if (key === 'media' && value !== null && value !== undefined) {
+      if (key === "media" && value !== null && value !== undefined) {
         // Only include media if it's a basic serializable type
-        if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+        if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
           sanitized[key] = value
         }
         // Skip complex media objects that might not be serializable
         continue
       }
-      
+
       // Recursively sanitize nested objects
       sanitized[key] = sanitizeSanityData(value)
     }
-    
+
     return sanitized
   }
 
