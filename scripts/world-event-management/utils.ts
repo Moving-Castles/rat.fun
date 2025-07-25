@@ -1,15 +1,7 @@
 import path from "path"
 import fs from "fs"
+import chalk from "chalk"
 import { WorldEvent } from "./types"
-
-// ANSI color codes for background colors
-export const colors = {
-  red: "\x1b[41m",
-  yellow: "\x1b[43m",
-  blue: "\x1b[44m",
-  green: "\x1b[42m",
-  reset: "\x1b[0m"
-}
 
 // Utility functions
 export function loadEventDefinitions(): WorldEvent[] {
@@ -32,18 +24,18 @@ export function loadEventDefinitions(): WorldEvent[] {
   return eventDefs
 }
 
-export function getStateColor(state: string): string {
+export function getStateColor(state: string): (text: string) => string {
   switch (state) {
     case "draft":
-      return colors.red
+      return chalk.bgRed.white
     case "initialized":
-      return colors.yellow
+      return chalk.bgYellow.black
     case "announced":
-      return colors.blue
+      return chalk.bgBlue.white
     case "activated":
-      return colors.green
+      return chalk.bgGreen.black
     default:
-      return colors.reset
+      return chalk.reset
   }
 }
 
@@ -53,7 +45,7 @@ export function displayEvent(event: WorldEvent): void {
   console.log("=".repeat(50))
 
   const stateColor = getStateColor(event.state)
-  console.log(`State: ${stateColor}${event.state}${colors.reset}`)
+  console.log(`State: ${stateColor(event.state)}`)
 
   console.log(`Working Title: ${event.workingTitle}`)
   console.log(`World Address: ${event.worldAddress || "Not set"}`)
@@ -98,17 +90,14 @@ export function isValidISODate(dateStr: string): boolean {
 export function formatRequiredPropsStatus(obj: any, requiredProps: string[]): string {
   const valid: string[] = []
   const invalid: string[] = []
-  const green = "\x1b[32m"
-  const red = "\x1b[31m"
-  const reset = "\x1b[0m"
 
   for (const prop of requiredProps) {
     // Support dot notation (e.g. 'activation.title')
     const value = prop.split(".").reduce((acc, key) => acc && acc[key], obj)
     if (value !== undefined && value !== null && value !== "") {
-      valid.push(`${green}${prop}${reset}`)
+      valid.push(chalk.bgGreen.black(prop))
     } else {
-      invalid.push(`${red}${prop}${reset}`)
+      invalid.push(chalk.bgRed.white(prop))
     }
   }
 

@@ -12,15 +12,16 @@
   "license": "MIT",
   "packageManager": "pnpm@10.8.0",
   "dependencies": {
+    "@sanity/client": "^7.8.1",
+    "chalk": "^5.4.1",
     "dotenv": "^17.2.0",
     "prompts": "^2.4.2",
-    "@sanity/client": "^7.8.1",
     "viem": "^2.33.0"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
-    "ts-node": "^10.9.2",
     "@types/prompts": "^2.4.9",
+    "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   }
 }
