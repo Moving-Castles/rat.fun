@@ -4,12 +4,12 @@ import dotenv from "dotenv"
 dotenv.config({ path: require("path").resolve(__dirname, "../.env") })
 
 import prompts from "prompts"
+import chalk from "chalk"
 import { WorldEvent } from "./types"
 import {
   loadEventDefinitions,
   displayEvent,
   getStateColor,
-  colors,
   writeEventDefinition,
   isValidISODate,
   formatRequiredPropsStatus
@@ -48,7 +48,7 @@ async function postEventMenu(event: WorldEvent): Promise<EventAction> {
   const response = await prompts({
     type: "select",
     name: "action",
-    message: "What do you want to do?",
+    message: "Action >>",
     choices
   })
   return response.action
@@ -74,7 +74,7 @@ async function main(): Promise<void> {
         choices: events.map(event => {
           const stateColor = getStateColor(event.state)
           return {
-            title: `${event.index}: ${event.workingTitle} (${stateColor}${event.state}${colors.reset})`,
+            title: `${event.index}: ${event.workingTitle} (${stateColor(event.state)})`,
             value: event.index
           }
         })
@@ -104,16 +104,16 @@ async function main(): Promise<void> {
         continue // Go back to listing
       } else if (action === "initialise") {
         await initialiseEvent(event)
-        console.log("\n✅ Event initialised successfully!")
+        console.log("\n" + chalk.bgGreen.black("✅ Event initialised successfully"))
       } else if (action === "announce") {
         await announceEvent(event)
-        console.log("\n✅ Event announced successfully!")
+        console.log("\n" + chalk.bgGreen.black("✅ Event announced successfully"))
       } else if (action === "activate") {
         await activateEvent(event)
-        console.log("\n✅ Event activated successfully!")
+        console.log("\n" + chalk.bgGreen.black("✅ Event activated successfully"))
       } else if (action === "destroy") {
         destroyEvent(event)
-        console.log("\n✅ Event destroyed successfully!")
+        console.log("\n" + chalk.bgGreen.black("✅ Event destroyed successfully"))
       }
 
       // After any action, reload events and continue to listing
@@ -121,7 +121,7 @@ async function main(): Promise<void> {
       continue
     }
   } catch (error) {
-    console.error("Error:", (error as Error).message)
+    console.error(chalk.bgRed.white("Error:"), (error as Error).message)
   }
 }
 
@@ -130,7 +130,11 @@ async function initialiseEvent(event: WorldEvent): Promise<void> {
   const status = formatRequiredPropsStatus(event, required)
   console.log(status)
   if (!event.worldAddress || event.worldAddress.trim() === "") {
-    console.log("Cannot initialise: world address is not set in the event definition JSON file.")
+    console.log(
+      chalk.bgRed.white(
+        "Cannot initialise: world address is not set in the event definition JSON file."
+      )
+    )
     return
   }
   // Generate a random UUID for the event id
@@ -151,7 +155,11 @@ async function announceEvent(event: WorldEvent): Promise<void> {
   // Check activationDateTime is set and valid
   const activationDate = event.announcement.activationDateTime
   if (!activationDate || !isValidISODate(activationDate)) {
-    console.log("Cannot announce: activationDateTime is not set or not a valid ISO date string.")
+    console.log(
+      chalk.bgRed.white(
+        "Cannot announce: activationDateTime is not set or not a valid ISO date string."
+      )
+    )
     return
   }
   // Create a new document in public Sanity
@@ -171,7 +179,10 @@ async function announceEvent(event: WorldEvent): Promise<void> {
     writeEventDefinition(event)
     console.log("Event state updated to 'announced' in JSON file.")
   } catch (err) {
-    console.error("Failed to create announcement in Sanity:", (err as Error).message)
+    console.error(
+      chalk.bgRed.white("Failed to create announcement in Sanity:"),
+      (err as Error).message
+    )
   }
 }
 
@@ -192,7 +203,9 @@ async function activateEvent(event: WorldEvent): Promise<void> {
     event.activation.duration === 0
   ) {
     console.log(
-      "Cannot activate: all properties in activation prop must be set, except image which can be let empty"
+      chalk.bgRed.white(
+        "Cannot activate: all properties in activation prop must be set, except image which can be let empty"
+      )
     )
     return
   }
@@ -245,11 +258,11 @@ async function activateEvent(event: WorldEvent): Promise<void> {
           .commit()
         console.log("Image uploaded and set in Sanity doc.")
       } else {
-        console.warn("Image file not found:", imagePath)
+        console.warn(chalk.bgYellow.black("Image file not found:"), imagePath)
       }
     }
   } else {
-    console.error("Failed to set world event on chain")
+    console.error(chalk.bgRed.white("Failed to set world event on chain"))
   }
 }
 
