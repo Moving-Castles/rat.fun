@@ -1,5 +1,11 @@
 <script lang="ts">
-  import { player, worldStats, worldEvent, activeWorldEvent } from "$lib/modules/state/stores"
+  import {
+    player,
+    worldStats,
+    worldEvent,
+    activeWorldEvent,
+    activeWorldEventContent
+  } from "$lib/modules/state/stores"
   import { staticContent, upcomingWorldEvent } from "$lib/modules/content"
   import { notificationsRead } from "$lib/modules/ui/stores"
 
@@ -8,6 +14,8 @@
   import WorldEvent from "./WorldEvent.svelte"
   import WorldEventCountdown from "./WorldEventCountdown.svelte"
   import GlobalStats from "./GlobalStats.svelte"
+
+  $inspect($activeWorldEventContent)
 </script>
 
 <div class="top-bar">
