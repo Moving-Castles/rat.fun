@@ -131,11 +131,16 @@
   {/if}
 {/key}
 
-{#if $activeWorldEvent && !notificationsRead.current.includes($activeWorldEvent.id)}
+{#if $activeWorldEvent && !notificationsRead.current.includes($activeWorldEvent.cmsId)}
   {#snippet worldEventContent()}
     <WorldEventPopup />
   {/snippet}
-  <ModalTarget content={worldEventContent}></ModalTarget>
+  <ModalTarget
+    onclose={() => {
+      notificationsRead.set([...notificationsRead.current, $activeWorldEvent.cmsId])
+    }}
+    content={worldEventContent}
+  ></ModalTarget>
 {/if}
 
 <Modal />
