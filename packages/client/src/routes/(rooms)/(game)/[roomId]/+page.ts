@@ -1,8 +1,7 @@
 import type { PageLoad } from "./$types"
 import { loadData } from "$lib/modules/content/sanity"
 import { queries } from "$lib/modules/content/sanity/groq"
-import { error, redirect } from "@sveltejs/kit"
-import { CMSError } from "$lib/modules/error-handling"
+import { redirect } from "@sveltejs/kit"
 
 export const load: PageLoad = async ({ params }) => {
   try {
