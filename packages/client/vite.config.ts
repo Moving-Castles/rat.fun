@@ -21,9 +21,6 @@ export default defineConfig(() => {
         }
       }
     ],
-    build: {
-      sourcemap: true
-    },
     ssr: {
       noExternal: [
         "@latticexyz/common",
