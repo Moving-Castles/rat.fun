@@ -23,7 +23,6 @@ export async function constructEventMessages(
   messages.push({ role: "user", content: `RoomBalance: ${room.balance}` })
   // Rat
   messages.push({ role: "user", content: `RatName: ${rat.name}` })
-  messages.push({ role: "user", content: `RatTraits: ${JSON.stringify(rat.traits)}` })
   messages.push({ role: "user", content: `RatItems: ${JSON.stringify(rat.inventory)}` })
   messages.push({ role: "user", content: `RatBalance: ${rat.balance}` })
   return messages

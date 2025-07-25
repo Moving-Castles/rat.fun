@@ -85,14 +85,6 @@ export type Outcome = {
     logStep?: number
     amount?: number
   }
-  traitChanges?: Array<{
-    name?: string
-    logStep?: number
-    type?: string
-    value?: number
-    id?: string
-    _key: string
-  }>
   itemChanges?: Array<{
     name?: string
     logStep?: number
@@ -115,6 +107,7 @@ export type Room = {
   _updatedAt: string
   _rev: string
   title?: string
+  index?: number
   worldAddress?: string
   owner?: string
   ownerName?: string

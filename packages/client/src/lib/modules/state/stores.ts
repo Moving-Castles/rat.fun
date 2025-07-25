@@ -77,10 +77,6 @@ export const rooms = derived(
   entities,
   $entities => filterByEntitytype($entities, ENTITY_TYPE.ROOM) as Rooms
 )
-export const traits = derived(
-  entities,
-  $entities => filterByEntitytype($entities, ENTITY_TYPE.TRAIT) as Traits
-)
 export const items = derived(
   entities,
   $entities => filterByEntitytype($entities, ENTITY_TYPE.ITEM) as Items
@@ -125,11 +121,6 @@ export const playerERC20Allowance = writable(0 as number)
 
 export const rat = derived([player, rats], ([$player, $rats]) => $rats[$player?.currentRat] as Rat)
 
-export const ratTraits = derived(
-  [rat, traits],
-  ([$rat, $traits]) => $rat?.traits?.map(trait => $traits[trait]) ?? ([] as Trait[])
-)
-
 export const ratInventory = derived(
   [rat, items],
   ([$rat, $items]) => $rat?.inventory?.map(item => $items[item]) ?? ([] as Item[])
@@ -150,19 +141,15 @@ export const ratImageUrl = derived([player], ([$player]) => {
 })
 
 /**
- * Calculated by adding up the balance, inventory value and trait value
+ * Calculated by adding up the balance andinventory value
  */
-export const ratTotalValue = derived(
-  [rat, ratInventory, ratTraits],
-  ([$rat, $ratInventory, $ratTraits]) => {
-    const totalValue = !$rat
-      ? 0
-      : Number($rat.balance ?? 0) + // Balance
-        $ratInventory.reduce((acc, item) => acc + (item?.value ? Number(item.value) : 0), 0) + // Inventory
-        $ratTraits.reduce((acc, trait) => acc + (trait?.value ? Number(trait.value) : 0), 0) // Traits
-    return totalValue
-  }
-)
+export const ratTotalValue = derived([rat, ratInventory], ([$rat, $ratInventory]) => {
+  const totalValue = !$rat
+    ? 0
+    : Number($rat.balance ?? 0) + // Balance
+      $ratInventory.reduce((acc, item) => acc + (item?.value ? Number(item.value) : 0), 0) // Inventory
+  return totalValue
+})
 
 export const roomsOnCurrentLevel = derived(
   [rat, rooms, levelList],

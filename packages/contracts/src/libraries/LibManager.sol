@@ -5,7 +5,6 @@ import {
   Dead,
   Balance,
   Inventory,
-  Traits,
   Value,
   Level,
   AchievedLevels,
@@ -18,10 +17,9 @@ import {
 import { ENTITY_TYPE } from "../codegen/common.sol";
 import { LibUtils } from "./LibUtils.sol";
 import { LibItem } from "./LibItem.sol";
-import { LibTrait } from "./LibTrait.sol";
 import { LibRat } from "./LibRat.sol";
 import { Item } from "../structs.sol";
-import { MAX_INVENTORY_SIZE, MAX_TRAITS_SIZE } from "../constants.sol";
+import { MAX_INVENTORY_SIZE } from "../constants.sol";
 
 library LibManager {
   /**
@@ -81,86 +79,6 @@ library LibManager {
 
       // Reduce the available budget
       _roomBudget = _roomBudget - valueChangeAmount;
-    }
-
-    return _roomBudget;
-  }
-
-  /**
-   * @notice Remove traits from rat
-   * @dev Used by the Manager system to apply changes to a rat after room events
-   * @param _ratId Id of the rat
-   * @param _roomId Id of the room
-   * @param _traitsToRemoveFromRat Ids of traits to remove from rat
-   */
-  function removeTraitsFromRat(bytes32 _ratId, bytes32 _roomId, bytes32[] calldata _traitsToRemoveFromRat) internal {
-    // - - - - - - - - -
-    // Function removes traits from rat
-    // - - - - - - - - -
-    // Value of trait is always positive.
-    // Removing a trait adds the value to the room balance
-    // - - - - - - - - -
-
-    // If list is empty, exit early
-    if (_traitsToRemoveFromRat.length == 0) {
-      return;
-    }
-
-    for (uint i = 0; i < _traitsToRemoveFromRat.length; i++) {
-      bytes32 traitId = _traitsToRemoveFromRat[i];
-      // Trait value is positive, add value to room balance
-      Balance.set(_roomId, Balance.get(_roomId) + Value.get(traitId));
-      // Remove trait from rat
-      Traits.set(_ratId, LibUtils.removeFromArray(Traits.get(_ratId), traitId));
-    }
-  }
-
-  /**
-   * @notice Add traits to rat
-   * @dev Used by the Manager system to apply changes to a rat after room events
-   * @param _ratId Id of the rat
-   * @param _roomId Id of the room
-   * @param _roomBudget The budget of the room
-   * @param _traitsToAddToRat Information about traits to add to rat
-   */
-  function addTraitsToRat(
-    uint256 _roomBudget,
-    bytes32 _ratId,
-    bytes32 _roomId,
-    Item[] calldata _traitsToAddToRat
-  ) internal returns (uint256) {
-    // - - - - - - - - -
-    // Function adds traits to rat
-    // - - - - - - - - -
-    // Value of item is always positive.
-    // Adding an item subtracts the value from the room balance
-    // Caveats:
-    // - Room can not add traits with positive value if it does not have the available budget to cover it
-    // - A rat can have a maximum of 5 traits
-    // - - - - - - - - -
-
-    // If list is empty, exit early
-    if (_traitsToAddToRat.length == 0) {
-      return _roomBudget;
-    }
-
-    for (uint i = 0; i < _traitsToAddToRat.length; i++) {
-      // Abort if traits are full
-      if (Traits.length(_ratId) >= MAX_TRAITS_SIZE) {
-        return _roomBudget;
-      }
-
-      Item calldata newTrait = _traitsToAddToRat[i];
-
-      // Trait value is positive, make sure room has enough available budget to cover it
-      if (_roomBudget >= newTrait.value) {
-        // If so, remove value from room balance
-        Balance.set(_roomId, LibUtils.safeSubtract(Balance.get(_roomId), newTrait.value));
-        // Reduce the available budget
-        _roomBudget = _roomBudget - newTrait.value;
-        // Create trait and add it to the rat
-        Traits.push(_ratId, LibTrait.createTrait(newTrait));
-      }
     }
 
     return _roomBudget;

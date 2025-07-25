@@ -1,5 +1,5 @@
 import { Hex } from "viem"
-import { LogEntry, BalanceTransfer, TraitChange, ItemChange } from "@server/modules/types"
+import { LogEntry, BalanceTransfer, ItemChange } from "@server/modules/types"
 
 export type TempItem = {
   name: string
@@ -8,7 +8,6 @@ export type TempItem = {
 
 export type FrozenRat = Rat & {
   inventory: Array<string | TempItem>
-  traits: Array<string | TempItem>
   image: string
 }
 
@@ -18,7 +17,6 @@ export type FrozenRoom = Room & {
 
 export type MergedLogEntry = LogEntry & {
   balanceTransfer?: BalanceTransfer
-  traitChanges?: TraitChange[]
   itemChanges?: ItemChange[]
 }
 

@@ -39,8 +39,6 @@ contract ManagerSystem is System {
    * @param _ratId Id of the rat
    * @param _roomId Id of the room
    * @param _balanceTransferToOrFromRat Credits to transfer to or from rat
-   * @param _traitsToRemoveFromRat Traits to remove from rat (IDs)
-   * @param _traitToAddToRat Trait to add to rat
    * @param _itemsToRemoveFromRat Items to remove from rat (IDs)
    * @param _itemsToAddToRat Items to add to rat
    */
@@ -48,8 +46,6 @@ contract ManagerSystem is System {
     bytes32 _ratId,
     bytes32 _roomId,
     int256 _balanceTransferToOrFromRat,
-    bytes32[] calldata _traitsToRemoveFromRat,
-    Item[] calldata _traitToAddToRat,
     bytes32[] calldata _itemsToRemoveFromRat,
     Item[] calldata _itemsToAddToRat
   ) public onlyAdmin {
@@ -89,15 +85,6 @@ contract ManagerSystem is System {
       _killRat(_ratId, _roomId);
       return;
     }
-
-    // * * * * * * * * * * * * *
-    // TRAITS
-    // * * * * * * * * * * * * *
-
-    // As traits always have positive value, this will always increase the room balance
-    LibManager.removeTraitsFromRat(_ratId, _roomId, _traitsToRemoveFromRat);
-    // As traits always have positive value, this will always decrease the room balance
-    roomBudget = LibManager.addTraitsToRat(roomBudget, _ratId, _roomId, _traitToAddToRat);
 
     // * * * * * * * * * * * * *
     // ITEMS

@@ -39,7 +39,7 @@
   )
 
   const placeholder =
-    "You're creating a room that can modify traits, items, and tokens of rats that enter. Your room balance decreases whenever a rat gains something, and increases when your room takes something. You can withdraw remaining balance from your room."
+    "You're creating a room that can modify items, and tokens of rats that enter. Your room balance decreases whenever a rat gains something, and increases when your room takes something. You can withdraw remaining balance from your room."
 
   async function onClick() {
     busy = true

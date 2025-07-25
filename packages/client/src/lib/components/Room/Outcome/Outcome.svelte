@@ -51,15 +51,6 @@
         />
       {/each}
     </div>
-    <div class="right">
-      {#each outcome.traitChanges as traitChange}
-        <OutcomeItem
-          type="item"
-          negative={traitChange.type === "remove"}
-          value={`${traitChange.name} ($${traitChange.value})`}
-        />
-      {/each}
-    </div>
   </div>
 
   <!-- Add the received items here -->

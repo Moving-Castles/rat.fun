@@ -13,17 +13,6 @@
     />
   </div>
 {/if}
-{#if logEntry?.traitChanges}
-  {#each logEntry?.traitChanges as traitChange}
-    <div class="outcome-wrapper">
-      <OutcomeItem
-        type="trait"
-        negative={traitChange.type === "remove"}
-        value={`${traitChange.name} ($${traitChange.value})`}
-      />
-    </div>
-  {/each}
-{/if}
 {#if logEntry?.itemChanges}
   {#each logEntry?.itemChanges as itemChange}
     <div class="outcome-wrapper">

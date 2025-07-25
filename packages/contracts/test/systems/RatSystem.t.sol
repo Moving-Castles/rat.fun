@@ -184,7 +184,7 @@ contract RatSystemTest is BaseTest {
     prankAdmin();
     approveGamePool(type(uint256).max);
     bytes32 roomId = world.ratfun__createRoom(GameConfig.getAdminId(), LevelList.getItem(0), bytes32(0), "test room");
-    world.ratfun__applyOutcome(ratId, roomId, 0, new bytes32[](0), new Item[](0), new bytes32[](0), newItems);
+    world.ratfun__applyOutcome(ratId, roomId, 0, new bytes32[](0), newItems);
     vm.stopPrank();
 
     bytes32 newItemId = Inventory.getItem(ratId, 0);

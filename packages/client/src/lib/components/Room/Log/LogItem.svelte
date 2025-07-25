@@ -189,26 +189,6 @@
         />
       </div>
     {/if}
-    {#if logEntry?.traitChanges}
-      {#each logEntry?.traitChanges as traitChange}
-        <div
-          class="outcome-wrapper"
-          use:register={{
-            type: "trait",
-            action: traitChange.type,
-            id: traitChange.id,
-            value: traitChange.value,
-            name: traitChange.name
-          }}
-        >
-          <OutcomeItem
-            type="trait"
-            negative={traitChange.type === "remove"}
-            value={`${traitChange.name} ($${traitChange.value})`}
-          />
-        </div>
-      {/each}
-    {/if}
     {#if logEntry?.itemChanges}
       {#each logEntry?.itemChanges as itemChange}
         <div

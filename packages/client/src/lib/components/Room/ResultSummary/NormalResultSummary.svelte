@@ -23,10 +23,7 @@
   let innerContainerElement = $state<HTMLDivElement | null>(null)
   let messageElement = $state<HTMLHeadingElement | null>(null)
   let closeButtonElement = $state<HTMLButtonElement | null>(null)
-  let changes = $derived([
-    ...(result?.itemChanges || []).map(itm => ({ ...itm, type: "item" })),
-    ...(result?.traitChanges || []).map(trt => ({ ...trt, type: "trait" }))
-  ])
+  let changes = $derived([...(result?.itemChanges || []).map(itm => ({ ...itm, type: "item" }))])
 
   // Timeline
   const timeline = gsap.timeline()

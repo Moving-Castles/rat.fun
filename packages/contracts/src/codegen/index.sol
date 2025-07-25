@@ -14,7 +14,6 @@ import { CreationBlock } from "./tables/CreationBlock.sol";
 import { LastVisitBlock } from "./tables/LastVisitBlock.sol";
 import { Balance } from "./tables/Balance.sol";
 import { Dead } from "./tables/Dead.sol";
-import { Traits } from "./tables/Traits.sol";
 import { Inventory } from "./tables/Inventory.sol";
 import { Level } from "./tables/Level.sol";
 import { AchievedLevels } from "./tables/AchievedLevels.sol";

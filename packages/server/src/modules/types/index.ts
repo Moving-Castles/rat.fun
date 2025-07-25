@@ -17,7 +17,6 @@ export type Rat = {
   name: string
   level: string
   balance: number
-  traits: Trait[]
   inventory: Item[]
   dead: boolean
   owner: string
@@ -40,12 +39,6 @@ export type Level = {
 }
 
 export type MinimalLevel = Pick<Level, "id" | "roomCreationCost">
-
-export type Trait = {
-  id: string
-  name: string
-  value: number
-}
 
 export type Item = {
   id: string
@@ -71,14 +64,6 @@ export type CreateRoomData = {
   player: Player
 }
 
-export type TraitChange = {
-  logStep: number
-  type: "add" | "remove"
-  name: string
-  value: number
-  id?: string // Is only set if type == "remove"
-}
-
 export type ItemChange = {
   logStep: number
   type: "add" | "remove"
@@ -100,7 +85,6 @@ export type LogEntry = {
 export type OutcomeReturnValue = {
   id?: string
   outcomeId: string
-  traitChanges: TraitChange[]
   itemChanges: ItemChange[]
   balanceTransfer: BalanceTransfer
 }

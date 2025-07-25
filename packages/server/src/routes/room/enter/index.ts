@@ -153,7 +153,6 @@ async function routes(fastify: FastifyInstance) {
           id: ratId as Hex,
           log: correctedEvents.log ?? [],
           outcomeId: outcomeDocument._id,
-          traitChanges: validatedOutcome.traitChanges,
           itemChanges: validatedOutcome.itemChanges,
           balanceTransfer: validatedOutcome.balanceTransfer,
           ratDead: newRatBalance == 0,

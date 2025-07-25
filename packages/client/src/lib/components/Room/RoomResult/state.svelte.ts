@@ -171,7 +171,6 @@ export const frozenRat = writable<FrozenRat | null>(null)
 export function freezeObjects(rat: Rat, room: Room, roomId: Hex, ratId: Hex) {
   const preppedRat = structuredClone(rat) as FrozenRat
   if (!preppedRat.inventory) preppedRat.inventory = []
-  if (!preppedRat.traits) preppedRat.traits = []
   preppedRat.image = addressToRatImage(ratId)
   frozenRat.set(preppedRat)
 
@@ -204,13 +203,6 @@ export const updateFrozenState = (dataset: OutcomeDataStringMap) => {
         addItem(name ?? "", numericValue)
       } else if (action === "remove") {
         removeItem(id ?? "", numericValue)
-      }
-      break
-    case "trait":
-      if (action === "add") {
-        addTrait(name ?? "", numericValue)
-      } else if (action === "remove") {
-        removeTrait(id ?? "", numericValue)
       }
       break
   }
@@ -282,52 +274,6 @@ function removeItem(id: string, itemValue: number) {
   frozenRoom.update(room => {
     if (!room) return null
     room.balance = room.balance + BigInt(itemValue)
-    return room
-  })
-}
-
-// ======= Traits =======
-
-/**
- * Adds a trait to the rat and reduce the room balance by the trait value
- * @param traitName The name of the trait
- * @param traitValue The value of the trait
- */
-function addTrait(traitName: string, traitValue: number) {
-  frozenRat.update(rat => {
-    if (!rat) return null
-    const newTempItem = {
-      name: traitName,
-      value: traitValue
-    }
-    rat.traits.push(newTempItem)
-    return rat
-  })
-
-  // Change room balance
-  frozenRoom.update(room => {
-    if (!room) return null
-    room.balance = room.balance - BigInt(traitValue)
-    return room
-  })
-}
-
-/**
- * Removes a trait from the rat and increase the room balance by the trait value
- * @param id The ID of the trait
- * @param traitValue The value of the trait
- */
-function removeTrait(id: string, traitValue: number) {
-  frozenRat.update(rat => {
-    if (!rat) return null
-    rat.traits = rat.traits.filter(t => t !== id)
-    return rat
-  })
-
-  // Change room balance
-  frozenRoom.update(room => {
-    if (!room) return null
-    room.balance = room.balance + BigInt(traitValue)
     return room
   })
 }

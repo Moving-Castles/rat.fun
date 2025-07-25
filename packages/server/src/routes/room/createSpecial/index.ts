@@ -8,10 +8,11 @@ dotenv.config()
 import { CreateSpecialRoomRequestBody, SignedRequest } from "@modules/types"
 
 // CMS
-import { writeRoomToCMS } from "@modules/cms/public"
+import { writeRoomToCMS, getTemplateImages } from "@modules/cms/public"
 
 // MUD
 import { systemCalls, network } from "@modules/mud/initMud"
+import { getRoomIndex } from "@modules/mud/getOnchainData"
 import { getCreateRoomData } from "@modules/mud/getOnchainData/getCreateRoomData"
 
 // Image generation
@@ -55,6 +56,11 @@ async function routes(fastify: FastifyInstance) {
         // Validate data
         validateInputData(gameConfig, roomPrompt, player, level)
 
+        // Get template images from CMS
+        console.time("–– CMS")
+        const templateImages = await getTemplateImages()
+        console.timeEnd("–– CMS")
+
         // We need to generate a unique ID here
         // Doing it onchain does not allow us to use it to connect the room to the image
         const roomId = generateRandomBytes32()
@@ -75,14 +81,16 @@ async function routes(fastify: FastifyInstance) {
           console.time("–– Image generation")
           try {
             // Get the image data
-            const imageBuffer = await generateImage(roomPrompt)
+            const imageBuffer = await generateImage(roomPrompt, templateImages)
 
             // Get world address - await the network promise first
             const resolvedNetwork = await network
             const worldAddress = resolvedNetwork.worldContract?.address ?? "0x0"
 
+            const roomIndex = Number(getRoomIndex(roomId))
+
             // Write the document
-            await writeRoomToCMS(worldAddress, roomId, roomPrompt, player, imageBuffer)
+            await writeRoomToCMS(worldAddress, roomIndex, roomId, roomPrompt, player, imageBuffer)
           } catch (error) {
             handleBackgroundError(error, "Special Room Creation - Image Generation & CMS")
           } finally {

@@ -15,7 +15,6 @@ import {
   MAX_ROOM_PROMPT_LENGTH,
   MIN_ROOM_PROMPT_LENGTH,
   MAX_INVENTORY_SIZE,
-  MAX_TRAITS_SIZE,
   COOLDOWN_CLOSE_ROOM,
   TAXATION_SELL_ITEM,
   TAXATION_LIQUIDATE_RAT,
@@ -50,7 +49,6 @@ library LibWorld {
         roomCreationCost: 250, // TODO: remove this as room creation cost should be set per level
         ratCreationCost: RAT_CREATION_COST,
         maxInventorySize: MAX_INVENTORY_SIZE,
-        maxTraitsSize: MAX_TRAITS_SIZE,
         maxRoomPromptLength: MAX_ROOM_PROMPT_LENGTH,
         cooldownCloseRoom: COOLDOWN_CLOSE_ROOM,
         taxationSellItem: TAXATION_SELL_ITEM,

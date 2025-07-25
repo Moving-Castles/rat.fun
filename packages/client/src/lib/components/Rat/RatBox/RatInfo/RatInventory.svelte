@@ -2,28 +2,11 @@
   import { tippy } from "svelte-tippy"
   import { rat } from "$lib/modules/state/stores"
 
-  import { Trait, Item } from "$lib/components/Shared"
+  import { Item } from "$lib/components/Shared"
 </script>
 
 <div class="rat-info-box">
   {#if $rat}
-    <!-- TRAITS -->
-    <div class="column traits">
-      <!-- HEADER -->
-      <div
-        class="header"
-        use:tippy={{
-          content: "Permanent personality traits of your rat."
-        }}
-      >
-        <div class="label">Traits</div>
-        <div class="counter">{$rat?.traits?.length ?? 0}/5</div>
-      </div>
-      <!-- TRAITS -->
-      {#each $rat?.traits ?? [] as trait}
-        <Trait {trait} />
-      {/each}
-    </div>
     <!-- INVENTORY -->
     <div class="column inventory">
       <!-- HEADER -->
@@ -56,16 +39,12 @@
   }
 
   .column {
-    width: 50%;
+    width: 100%;
     border-right: var(--dashed-border-style);
     overflow-x: hidden;
     overflow-y: scroll;
     background-image: url("/images/texture-3.png");
     background-size: 200px;
-
-    &:last-child {
-      border-right: none;
-    }
   }
 
   .header {

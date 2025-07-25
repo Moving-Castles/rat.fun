@@ -18,7 +18,6 @@ export default defineWorld({
         ratCreationCost: "uint256",
         roomCreationCost: "uint256",
         maxInventorySize: "uint32",
-        maxTraitsSize: "uint32",
         maxRoomPromptLength: "uint32",
         cooldownCloseRoom: "uint32",
         taxationSellItem: "uint32",
@@ -77,14 +76,13 @@ export default defineWorld({
     // ...
     Dead: "bool", // Set on rat
     // ...
-    Traits: "bytes32[]", // Traits of rat
     Inventory: "bytes32[]", // Items carried by player and rat
     // ...
     Level: "bytes32", // Id of level. Set on rat and room.
     AchievedLevels: "bytes32[]", // Set on player. List of levels any of the player's rats have achieved.
     MasterKey: "bool", // Set on player. Gives access to in-game admin area.
     Index: "uint256", // Set on rat and room
-    Value: "uint256", // Set on traits and items
+    Value: "uint256", // Set on items
     CurrentRat: "bytes32", // Set on player
     PastRats: "bytes32[]", // Set on player. List of rats the player has owned.
     Owner: "bytes32", // Set on room and rat

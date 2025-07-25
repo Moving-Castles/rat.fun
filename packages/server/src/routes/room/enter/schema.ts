@@ -41,19 +41,6 @@ export const schema = {
         outcomeId: {
           type: "string"
         },
-        traitChanges: {
-          type: "array",
-          items: {
-            type: "object",
-            properties: {
-              logStep: { type: "number" },
-              type: { type: "string" },
-              id: { type: "string" },
-              name: { type: "string" },
-              value: { type: "number" }
-            }
-          }
-        },
         itemChanges: {
           type: "array",
           items: {
@@ -84,7 +71,6 @@ export const schema = {
       required: [
         "log",
         "outcomeId",
-        "traitChanges",
         "itemChanges",
         "balanceTransfer",
         "ratDead",

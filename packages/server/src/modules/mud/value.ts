@@ -26,10 +26,5 @@ function calculateTotalRatValue(rat: Rat) {
     0
   )
 
-  const traitsValue = (rat.traits ?? []).reduce(
-    (acc, trait) => acc + (Number(trait?.value) ?? 0),
-    0
-  )
-
-  return balanceValue + inventoryValue + traitsValue
+  return balanceValue + inventoryValue
 }

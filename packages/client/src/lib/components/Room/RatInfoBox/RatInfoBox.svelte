@@ -1,6 +1,6 @@
 <script lang="ts">
   import { frozenRat } from "$lib/components/Room/RoomResult/state.svelte"
-  import { NumberGoing, Trait, Item } from "$lib/components/Shared"
+  import { NumberGoing, Item } from "$lib/components/Shared"
 
   let balanceGoing = $state(false)
 </script>
@@ -27,18 +27,6 @@
           >$<NumberGoing bind:going={balanceGoing} value={$frozenRat.balance} /></span
         >
       </div>
-    </div>
-    <!-- TRAITS -->
-    <div class="column traits">
-      <!-- HEADER -->
-      <div class="header">
-        <div class="label">Traits</div>
-        <div class="counter">{$frozenRat?.traits.length}/5</div>
-      </div>
-      <!-- TRAITS -->
-      {#each $frozenRat.traits as trait}
-        <Trait {trait} />
-      {/each}
     </div>
     <!-- INVENTORY -->
     <div class="column inventory">
@@ -82,7 +70,7 @@
   }
 
   .column {
-    width: calc(100% / 3);
+    width: calc(100% / 2);
     border-right: var(--dashed-border-style);
     overflow-x: hidden;
     overflow-y: scroll;

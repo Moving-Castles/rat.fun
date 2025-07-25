@@ -11,6 +11,13 @@ export default {
       validation: (Rule: any) => Rule.required()
     },
     {
+      title: "Index",
+      name: "index",
+      type: "number",
+      readOnly: true,
+      validation: (Rule: any) => Rule.required()
+    },
+    {
       title: "World address",
       name: "worldAddress",
       type: "string",

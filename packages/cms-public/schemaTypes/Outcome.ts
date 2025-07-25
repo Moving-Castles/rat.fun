@@ -94,24 +94,6 @@ export default {
       ]
     },
     {
-      title: "Trait changes",
-      name: "traitChanges",
-      type: "array",
-      readOnly: true,
-      of: [
-        {
-          type: "object",
-          fields: [
-            { type: "string", name: "name" },
-            { type: "number", name: "logStep" },
-            { type: "string", name: "type" },
-            { type: "number", name: "value" },
-            { type: "string", name: "id" }
-          ]
-        }
-      ]
-    },
-    {
       title: "Item changes",
       name: "itemChanges",
       type: "array",

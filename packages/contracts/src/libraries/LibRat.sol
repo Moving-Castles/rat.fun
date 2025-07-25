@@ -7,7 +7,6 @@ import {
   Dead,
   Index,
   Balance,
-  Traits,
   Inventory,
   Value,
   Level,
@@ -50,14 +49,6 @@ library LibRat {
     Dead.set(_ratId, true);
 
     // * * * *
-    // Traits
-    // * * * *
-    bytes32[] memory traits = Traits.get(_ratId);
-    for (uint i = 0; i < traits.length; i++) {
-      balanceToTransfer += Value.get(traits[i]);
-    }
-
-    // * * * *
     // Items
     // * * * *
     bytes32[] memory items = Inventory.get(_ratId);
@@ -87,12 +78,6 @@ library LibRat {
    */
   function getTotalRatValue(bytes32 _ratId) internal view returns (uint256) {
     uint256 totalValue = 0;
-
-    // Traits
-    bytes32[] memory traits = Traits.get(_ratId);
-    for (uint i = 0; i < traits.length; i++) {
-      totalValue += Value.get(traits[i]);
-    }
 
     // Items
     bytes32[] memory items = Inventory.get(_ratId);

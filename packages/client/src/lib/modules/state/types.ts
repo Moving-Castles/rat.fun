@@ -67,7 +67,6 @@ declare global {
     achievedLevels?: mudComponents["AchievedLevels"]
     value?: mudComponents["Value"]
     dead?: mudComponents["Dead"]
-    traits?: mudComponents["Traits"]
     inventory?: mudComponents["Inventory"]
     currentRat?: mudComponents["CurrentRat"]
     pastRats: mudComponents["PastRats"]
@@ -111,7 +110,6 @@ declare global {
     level: mudComponents["Level"]
     owner: mudComponents["Owner"]
     dead: mudComponents["Dead"]
-    traits: mudComponents["Traits"]
     inventory: mudComponents["Inventory"]
     creationBlock: mudComponents["CreationBlock"]
   }
@@ -132,13 +130,6 @@ declare global {
     roomCreationCost: mudComponents["RoomCreationCost"]
     isSpecialRoom: mudComponents["IsSpecialRoom"]
     maxValuePerWin: mudComponents["MaxValuePerWin"]
-  }
-
-  type Trait = {
-    [key: string]: ENTITY_TYPE | string | bigint
-    entityType: ENTITY_TYPE.TRAIT
-    name: mudComponents["Name"]
-    value: mudComponents["Value"]
   }
 
   type Item = {
@@ -176,10 +167,6 @@ declare global {
 
   type Rooms = {
     [index: string]: Room
-  }
-
-  type Traits = {
-    [index: string]: Trait
   }
 
   type Items = {
