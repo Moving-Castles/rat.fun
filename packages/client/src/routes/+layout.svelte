@@ -13,10 +13,10 @@
   import { initStaticContent, staticContent } from "$lib/modules/content"
   import { publicNetwork } from "$lib/modules/network"
   import { initSound, playSound } from "$lib/modules/sound"
-  import { UIState } from "$lib/modules/ui/stores"
+  import { UIState, notificationsRead } from "$lib/modules/ui/stores"
   import { UI } from "$lib/modules/ui/enums"
   import { initOffChainSync } from "$lib/modules/off-chain-sync"
-  import { playerId } from "$lib/modules/state/stores"
+  import { playerId, activeWorldEvent } from "$lib/modules/state/stores"
   import { websocketConnected } from "$lib/modules/off-chain-sync/stores"
   import { EMPTY_ID } from "$lib/modules/state/constants"
   import { outerLayoutTransitionConfig } from "$lib/components/Shared/PageTransitions/transitionConfigs"
@@ -28,6 +28,7 @@
   import Loading from "$lib/components/Loading/Loading.svelte"
   import ShaderTest from "$lib/components/Shared/ShaderTest/ShaderTest.svelte"
   import ModalTarget from "$lib/components/Shared/Modal/ModalTarget.svelte"
+  import WorldEventPopup from "$lib/components/Shared/WorldEventPopup/WorldEventPopup.svelte"
   import { Outcome } from "$lib/components/Room"
 
   let { children, data }: LayoutProps = $props()
@@ -129,6 +130,13 @@
     <ModalTarget onclose={removeHash} {content}></ModalTarget>
   {/if}
 {/key}
+
+{#if $activeWorldEvent && !notificationsRead.current.includes($activeWorldEvent.id)}
+  {#snippet worldEventContent()}
+    <WorldEventPopup />
+  {/snippet}
+  <ModalTarget content={worldEventContent}></ModalTarget>
+{/if}
 
 <Modal />
 

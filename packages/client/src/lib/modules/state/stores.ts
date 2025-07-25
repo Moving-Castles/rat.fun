@@ -64,7 +64,9 @@ export const activeWorldEvent = derived(
 export const activeWorldEventContent = derived(
   [staticContent, activeWorldEvent],
   ([$staticContent, $activeWorldEvent]) => {
-    const event = $staticContent?.worldEvents.find(e => e.id === $activeWorldEvent.id)
+    if (!$activeWorldEvent || !$staticContent.worldEvents) return undefined
+
+    const event = $staticContent?.worldEvents.find(e => e._id === $activeWorldEvent.cmsId)
 
     if (event) {
       return event
