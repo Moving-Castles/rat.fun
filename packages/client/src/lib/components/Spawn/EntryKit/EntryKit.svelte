@@ -15,7 +15,7 @@
 
   let rootEl: HTMLElement
 
-  const environment = getEnvironment(new URL(window.location.href))
+  const environment = getEnvironment(new URL(window?.location?.href, ""))
   const networkConfig = getNetworkConfig(environment)
   const queryClient = new QueryClient()
 

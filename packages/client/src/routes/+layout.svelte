@@ -6,6 +6,7 @@
 
   import { type Outcome as SanityOutcome } from "@sanity-types"
   import { initializeSentry } from "$lib/modules/error-handling"
+  import { browser } from "$app/environment"
   import { onMount } from "svelte"
   import { goto } from "$app/navigation"
   import { page } from "$app/state"
@@ -59,7 +60,9 @@
     UIState.set(UI.READY)
   }
 
-  initializeSentry()
+  if (browser) {
+    initializeSentry()
+  }
 
   // Init of chain sync when player is ready
   $effect(() => {
@@ -87,7 +90,7 @@
 />
 
 {#if $UIState === UI.LOADING}
-  <div class="bg">
+  <div class="bg over">
     <div class="context-main">
       <main>
         <Loading {environment} loaded={environmentLoaded} />
@@ -95,25 +98,28 @@
     </div>
   </div>
 {:else if $UIState === UI.SPAWNING}
-  <div class="bg">
+  <div class="bg over">
     <div class="context-main">
       <main>
         <Spawn spawned={playerSpawned} {walletType} />
       </main>
     </div>
   </div>
-{:else if $UIState === UI.READY}
-  <div class="bg">
+{/if}
+
+<!-- This needs to always render -->
+<div inert={$UIState !== UI.READY} class="bg">
+  {#if browser}
     <ShaderTest />
-    <div class="context-main">
-      <div class="layer-game">
-        <PageTransitions config={outerLayoutTransitionConfig}>
-          {@render children?.()}
-        </PageTransitions>
-      </div>
+  {/if}
+  <div class="context-main">
+    <div class="layer-game">
+      <PageTransitions config={outerLayoutTransitionConfig}>
+        {@render children?.()}
+      </PageTransitions>
     </div>
   </div>
-{/if}
+</div>
 
 {#key outcomeId}
   {#if outcome}
@@ -153,6 +159,11 @@
     position: fixed;
     inset: 0;
     z-index: var(--z-background);
+
+    &.over {
+      z-index: 100;
+      background: black;
+    }
     // background: var(--background);
     // background-image: url("/images/tiles.png");
     // background-size: 300px;

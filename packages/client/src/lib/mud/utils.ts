@@ -1,4 +1,4 @@
-import worldsJson from "contracts/worlds.json"
+import worldsJson from "contracts/worlds.json" with { type: "json" }
 import { supportedChains } from "./supportedChains"
 import { getNetworkConfig } from "./getNetworkConfig"
 

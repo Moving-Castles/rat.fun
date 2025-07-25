@@ -11,5 +11,7 @@ export const queries = {
   outcomes: '*[_type == "outcome" && worldAddress == $worldAddress]',
   worldEvents: '*[_type == "worldEvent" && worldAddress == $worldAddress]',
   outcomesForRoom: '*[_type == "outcome" && roomId == $roomId && worldAddress == $worldAddress]',
-  outcomesForRat: '*[_type == "outcome" && ratId == $ratId && worldAddress == $worldAddress]'
+  outcomesForRat: '*[_type == "outcome" && ratId == $ratId && worldAddress == $worldAddress]',
+  singleRoom: `*[_type == "room" && _id == $id][0]`,
+  singleOutcome: `*[_type == "outcome" && _id == $id][0]`
 }
