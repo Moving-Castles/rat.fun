@@ -31,6 +31,7 @@
   <meta name="twitter:description" content={description} />
   <meta name="twitter:image" content={imageUrl} />
 
+  <meta property="og:type" content="website" />
   <meta property="og:site_name" content={finalTitle} />
   <meta property="og:locale" content={language} />
   <meta property="og:url" content={url} />
@@ -41,4 +42,5 @@
   <meta property="og:image:width" content={imageWidth} />
   <meta property="og:image:height" content={imageHeight} />
   <meta property="og:image:alt" content={imageAlt} />
+  <meta property="og:image:type" content="image/png" />
 </svelte:head>
