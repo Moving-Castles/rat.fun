@@ -2,6 +2,6 @@
   import { RoomListing, SEO } from "$lib/components/Shared"
 </script>
 
-<SEO prependTitle="ROOMS" />
+<SEO prependTitle="" />
 
 <RoomListing isOwnRoomListing={false} />

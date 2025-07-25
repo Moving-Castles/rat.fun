@@ -8,9 +8,12 @@
 
   let { children } = $props()
 
-  onMount(() => {
-    if (!$player?.masterKey) {
-      goto("/")
+  $effect(() => {
+    if ($player) {
+      console.log("player populated")
+      if (!$player.masterKey) {
+        goto("/")
+      }
     }
   })
 </script>

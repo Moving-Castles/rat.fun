@@ -5,6 +5,7 @@
   import { getNetworkConfig } from "$lib/mud/getNetworkConfig"
   import { getEnvironment } from "$lib/modules/network"
 
+  import { page } from "$app/state"
   import { createElement } from "react"
   import { createRoot } from "react-dom/client"
   import { QueryClientProvider, QueryClient } from "@tanstack/react-query"
@@ -15,7 +16,9 @@
 
   let rootEl: HTMLElement
 
-  const environment = getEnvironment(new URL(window?.location?.href, ""))
+  console.log(page.url)
+
+  const environment = getEnvironment(page.url)
   const networkConfig = getNetworkConfig(environment)
   const queryClient = new QueryClient()
 

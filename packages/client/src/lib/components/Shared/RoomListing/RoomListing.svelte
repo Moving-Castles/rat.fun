@@ -14,7 +14,6 @@
   } = $props()
 
   let sortFunction = $state(entriesByPopularity)
-  let showCreateRoom = $state(false)
   let showDepletedRooms = $state(isOwnRoomListing ? true : false)
   let textFilter = $state("")
   let lastChecked = $state<number>(Number(get(blockNumber)))
@@ -35,8 +34,13 @@
   })
 
   let activeList = $derived.by(() => {
+    console.log("activeList updated")
     // activeList
-    return roomList.filter(r => r[1].creationBlock <= lastChecked)
+    if (lastChecked > 0) {
+      return roomList.filter(r => Number(r[1].creationBlock) <= lastChecked)
+    } else {
+      return roomList
+    }
   })
 
   let previewing = $state(false)

@@ -7,8 +7,6 @@
 
   let { data } = $props()
 
-  console.log("WE HAVE DATA", data.roomContent)
-
   let room = $derived($rooms[page.params.roomId])
 </script>
 
