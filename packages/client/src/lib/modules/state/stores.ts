@@ -10,6 +10,7 @@ import { addressToId, addressToRatImage } from "$lib/modules/utils"
 import { blockNumber } from "$lib/modules/network"
 import { ENTITY_TYPE } from "contracts/enums"
 import { filterByEntitytype, filterByLevel, filterByPlayer, filterByOthers } from "./utils"
+import { staticContent } from "$lib/modules/content"
 import { WORLD_OBJECT_ID } from "./constants"
 
 // * * * * * * * * * * * * * * * * *
@@ -58,6 +59,20 @@ export const activeWorldEvent = derived(
       return undefined
     }
     return $worldEvent
+  }
+)
+export const activeWorldEventContent = derived(
+  [staticContent, activeWorldEvent],
+  ([$staticContent, $activeWorldEvent]) => {
+    if (!$activeWorldEvent || !$staticContent.worldEvents) return undefined
+
+    const event = $staticContent?.worldEvents.find(e => e._id === $activeWorldEvent.cmsId)
+
+    if (event) {
+      return event
+    }
+
+    return undefined
   }
 )
 
