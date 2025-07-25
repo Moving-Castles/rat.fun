@@ -172,23 +172,6 @@
 
   <!-- Outcomes -->
   <div class="outcome-list">
-    {#if logEntry.healthChange}
-      <div
-        class="outcome-wrapper"
-        use:register={{
-          type: "health",
-          action: logEntry.healthChange.amount < 0 ? "reduce" : "increase",
-          value: logEntry.healthChange.amount,
-          name: "Health"
-        }}
-      >
-        <OutcomeItem
-          type="health"
-          negative={logEntry.healthChange.amount < 0}
-          value={logEntry.healthChange.amount}
-        />
-      </div>
-    {/if}
     {#if logEntry.balanceTransfer}
       <div
         class="outcome-wrapper"
@@ -205,26 +188,6 @@
           value={`$${logEntry.balanceTransfer.amount}`}
         />
       </div>
-    {/if}
-    {#if logEntry?.traitChanges}
-      {#each logEntry?.traitChanges as traitChange}
-        <div
-          class="outcome-wrapper"
-          use:register={{
-            type: "trait",
-            action: traitChange.type,
-            id: traitChange.id,
-            value: traitChange.value,
-            name: traitChange.name
-          }}
-        >
-          <OutcomeItem
-            type="trait"
-            negative={traitChange.type === "remove"}
-            value={`${traitChange.name} ($${traitChange.value})`}
-          />
-        </div>
-      {/each}
     {/if}
     {#if logEntry?.itemChanges}
       {#each logEntry?.itemChanges as itemChange}

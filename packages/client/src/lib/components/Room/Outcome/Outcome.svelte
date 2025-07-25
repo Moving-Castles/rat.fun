@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Outcome, Room } from "@sanity-types"
+  import type { Outcome } from "@sanity-types"
   import { addressToRatImage } from "$lib/modules/utils"
   import OutcomeItem from "../OutcomeItem/OutcomeItem.svelte"
   import { timeSince } from "$lib/modules/utils"
@@ -19,13 +19,12 @@
   </div>
   <div class="outcome-header">
     <div class="rat">
-      <img class="rat-image" src={addressToRatImage(outcome?.ratId)} />
+      <img class="rat-image" alt="Rat" src={addressToRatImage(outcome?.ratId)} />
     </div>
     <div class="stats">
       <div class="headline">
         {outcome?.ratName}
       </div>
-      <div class="health">HEALTH: {outcome.ratHealth} ({outcome.healthChange.amount})</div>
       <div class="balance">
         $ {outcome.ratValue} ({outcome.ratValueChange})
       </div>
@@ -49,15 +48,6 @@
           type="item"
           negative={itemChange.type === "remove"}
           value={`${itemChange.name} ($${itemChange.value})`}
-        />
-      {/each}
-    </div>
-    <div class="right">
-      {#each outcome.traitChanges as traitChange}
-        <OutcomeItem
-          type="item"
-          negative={traitChange.type === "remove"}
-          value={`${traitChange.name} ($${traitChange.value})`}
         />
       {/each}
     </div>
@@ -108,13 +98,6 @@
 
         .balance {
           background: var(--color-value);
-          padding: 5px;
-          color: var(--background);
-          display: inline-block;
-        }
-
-        .health {
-          background: var(--color-health);
           padding: 5px;
           color: var(--background);
           display: inline-block;

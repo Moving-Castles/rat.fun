@@ -21,7 +21,7 @@
 
 <style lang="scss">
   .room__creation {
-    color: var(--color-health);
+    color: var(--color-success);
     font-size: var(--font-size-small);
     line-height: 1.6;
 

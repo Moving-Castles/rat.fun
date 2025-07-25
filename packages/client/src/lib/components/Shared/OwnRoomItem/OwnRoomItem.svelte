@@ -168,7 +168,7 @@
 
         &.positive {
           color: var(--background);
-          background-color: var(--color-health);
+          background-color: var(--color-success);
         }
 
         &.negative {

@@ -4,7 +4,6 @@ enum ENTITY_TYPE {
   RAT,
   ROOM,
   ITEM,
-  TRAIT,
   LEVEL
 }
 

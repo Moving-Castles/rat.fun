@@ -5,7 +5,6 @@ import { LibWorld } from "./LibWorld.sol";
 import { LibUtils } from "./LibUtils.sol";
 import { LibRoom } from "./LibRoom.sol";
 import { LibRat } from "./LibRat.sol";
-import { LibTrait } from "./LibTrait.sol";
 import { LibItem } from "./LibItem.sol";
 import { LibLevel } from "./LibLevel.sol";
 import { LibManager } from "./LibManager.sol";

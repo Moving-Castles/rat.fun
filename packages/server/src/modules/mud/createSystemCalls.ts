@@ -35,9 +35,9 @@ export function createSystemCalls(network: SetupNetworkResult) {
 
         const { newRoomValue, roomValueChange } = getRoomValue(room, newOnChainData.room)
 
-        const { newRatValue, ratValueChange } = getRatValue(rat, newOnChainData.rat)
+        const newRatBalance = newOnChainData.rat?.balance ?? 0
 
-        const newRatHealth = newOnChainData.rat?.stats?.health ?? 0
+        const { newRatValue, ratValueChange } = getRatValue(rat, newOnChainData.rat)
 
         const newRatLevelIndex = newOnChainData.level?.index ?? 0
 
@@ -45,9 +45,9 @@ export function createSystemCalls(network: SetupNetworkResult) {
           validatedOutcome,
           newRoomValue,
           roomValueChange,
+          newRatBalance,
           newRatValue,
           ratValueChange,
-          newRatHealth,
           newRatLevelIndex
         }
       } catch (error) {

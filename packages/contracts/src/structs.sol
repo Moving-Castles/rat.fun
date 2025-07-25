@@ -2,7 +2,7 @@
 pragma solidity >=0.8.24;
 
 /**
- * @dev Used for both items in inventory and traits
+ * @dev Items in inventory
  */
 struct Item {
   string name;

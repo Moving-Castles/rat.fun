@@ -9,7 +9,7 @@
   let { outcome }: { outcome: OutcomeSanityDoc } = $props()
 
   let topic = $derived.by(() => {
-    if (outcome.ratHealth === 0) return "rat__death"
+    if (outcome.ratBalance === 0) return "rat__death"
     return "room__outcome"
   })
 
@@ -71,10 +71,10 @@
     line-height: 1.6;
 
     &.room__creation {
-      color: var(--color-health);
+      color: var(--color-success);
 
       .timestamp {
-        background: var(--color-health);
+        background: var(--color-success);
         color: var(--background);
         padding: 2px;
       }
@@ -91,10 +91,10 @@
     }
 
     &.rat__deploy {
-      color: var(--color-health);
+      color: var(--color-success);
 
       .timestamp {
-        background: var(--color-health);
+        background: var(--color-success);
         color: var(--background);
         padding: 2px;
       }

@@ -14,10 +14,7 @@ interface IManagerSystem {
   function ratfun__applyOutcome(
     bytes32 _ratId,
     bytes32 _roomId,
-    int256 _healthChange,
     int256 _balanceTransferToOrFromRat,
-    bytes32[] calldata _traitsToRemoveFromRat,
-    Item[] calldata _traitToAddToRat,
     bytes32[] calldata _itemsToRemoveFromRat,
     Item[] calldata _itemsToAddToRat
   ) external;

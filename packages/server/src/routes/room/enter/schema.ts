@@ -38,28 +38,8 @@ export const schema = {
             }
           }
         },
-        healthChange: {
-          type: "object",
-          properties: {
-            logStep: { type: "number" },
-            amount: { type: "number" }
-          }
-        },
         outcomeId: {
           type: "string"
-        },
-        traitChanges: {
-          type: "array",
-          items: {
-            type: "object",
-            properties: {
-              logStep: { type: "number" },
-              type: { type: "string" },
-              id: { type: "string" },
-              name: { type: "string" },
-              value: { type: "number" }
-            }
-          }
         },
         itemChanges: {
           type: "array",
@@ -90,9 +70,7 @@ export const schema = {
       },
       required: [
         "log",
-        "healthChange",
         "outcomeId",
-        "traitChanges",
         "itemChanges",
         "balanceTransfer",
         "ratDead",

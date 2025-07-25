@@ -71,7 +71,7 @@
           padding: 5px;
 
           &.ready {
-            background: var(--color-health);
+            background: var(--color-success);
           }
         }
       }

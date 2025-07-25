@@ -27,11 +27,11 @@
   --color-button: rgb(86, 138, 51);
 
   --color-secondary: rgb(163, 66, 31);
-  --color-health: rgb(109, 196, 109);
+  --color-success: rgb(109, 196, 109);
   --color-value: rgb(194, 164, 12);
   --color-death: rgb(190, 0, 32);
   --color-item: rgb(160, 98, 177);
-  --color-value-up: var(--color-health);
+  --color-value-up: var(--color-success);
   --color-value-down: var(--color-death);
 
   --game-window-width: calc(min(100vw, 1920px) - 30px);

@@ -81,22 +81,10 @@ export type Outcome = {
     event?: string
     _key: string
   }>
-  healthChange?: {
-    logStep?: number
-    amount?: number
-  }
   balanceTransfer?: {
     logStep?: number
     amount?: number
   }
-  traitChanges?: Array<{
-    name?: string
-    logStep?: number
-    type?: string
-    value?: number
-    id?: string
-    _key: string
-  }>
   itemChanges?: Array<{
     name?: string
     logStep?: number
@@ -109,7 +97,6 @@ export type Outcome = {
   roomValueChange?: number
   ratValue?: number
   ratValueChange?: number
-  ratHealth?: number
   slug?: Slug
 }
 
@@ -120,6 +107,7 @@ export type Room = {
   _updatedAt: string
   _rev: string
   title?: string
+  index?: number
   worldAddress?: string
   owner?: string
   ownerName?: string

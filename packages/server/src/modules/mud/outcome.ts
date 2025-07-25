@@ -1,23 +1,8 @@
-import { OutcomeReturnValue, TraitChange, ItemChange } from "@modules/types"
+import { OutcomeReturnValue, ItemChange } from "@modules/types"
 import { Rat, Room } from "@modules/types"
 
 export function createOutcomeCallArgs(rat: Rat, room: Room, outcome: OutcomeReturnValue) {
-  const healthChange = outcome?.healthChange?.amount ?? 0
   const balanceTransfer = outcome?.balanceTransfer?.amount ?? 0
-
-  // Only ID
-  const traitsToRemoveFromRat =
-    outcome?.traitChanges.filter(c => c.type === "remove").map(c => c.id) ?? []
-
-  // TRAIT struct
-  const traitsToAddToRat =
-    outcome?.traitChanges
-      .filter(c => c.type === "add")
-      .map(c => {
-        // Limit name length
-        // Value is always positive
-        return { name: c.name.slice(0, 48), value: Math.abs(c.value) }
-      }) ?? []
 
   // Only ID
   const itemsToRemoveFromRat =
@@ -33,16 +18,7 @@ export function createOutcomeCallArgs(rat: Rat, room: Room, outcome: OutcomeRetu
         return { name: c.name.slice(0, 48), value: Math.abs(c.value) }
       }) ?? []
 
-  return [
-    rat.id,
-    room.id,
-    healthChange,
-    balanceTransfer,
-    traitsToRemoveFromRat,
-    traitsToAddToRat,
-    itemsToRemoveFromRat,
-    itemsToAddToRat
-  ]
+  return [rat.id, room.id, balanceTransfer, itemsToRemoveFromRat, itemsToAddToRat]
 }
 
 export function updateOutcome(
@@ -58,58 +34,6 @@ export function updateOutcome(
   // - - - - - - - - -
 
   newOutcome.id = newRat.id
-
-  // - - - - - - - - -
-  // HEALTH
-  // - - - - - - - - -
-
-  // Guard against undefined healthChange
-  if (!newOutcome.healthChange) {
-    newOutcome.healthChange = {
-      amount: 0,
-      logStep: 0
-    }
-  }
-
-  newOutcome.healthChange.amount = newRat.stats.health - oldRat.stats.health
-
-  // - - - - - - - - -
-  // TRAITS
-  // - - - - - - - - -
-
-  newOutcome.traitChanges = []
-
-  // Iterate over traits in new rat and compare with old rat
-  for (let i = 0; i < newRat.traits.length; i++) {
-    // If trait is not in old rat, it was added
-    if (!oldRat.traits.find(trait => trait.id === newRat.traits[i].id)) {
-      // Get logStep for new trait
-      const logStep = getLogStep(newRat.traits[i].name, oldOutcome.traitChanges)
-      newOutcome.traitChanges.push({
-        logStep,
-        type: "add",
-        name: newRat.traits[i].name,
-        value: newRat.traits[i].value,
-        id: newRat.traits[i].id
-      })
-    }
-  }
-
-  // Iterate over traits in old rat and compare with new rat
-  for (let i = 0; i < oldRat.traits.length; i++) {
-    // If trait is not in new rat, it was removed
-    if (!newRat.traits.find(trait => trait.id === oldRat.traits[i].id)) {
-      // Get logStep removed trait
-      const logStep = getLogStep(oldRat.traits[i].name, oldOutcome.traitChanges)
-      newOutcome.traitChanges.push({
-        logStep,
-        type: "remove",
-        name: oldRat.traits[i].name,
-        value: oldRat.traits[i].value,
-        id: oldRat.traits[i].id
-      })
-    }
-  }
 
   // - - - - - - - - -
   // ITEMS
@@ -166,7 +90,7 @@ export function updateOutcome(
   return newOutcome
 }
 
-function getLogStep(name: string, list: TraitChange[] | ItemChange[]) {
+function getLogStep(name: string, list: ItemChange[]) {
   const item = list.find(i => i.name === name)
   return item?.logStep ?? 0
 }

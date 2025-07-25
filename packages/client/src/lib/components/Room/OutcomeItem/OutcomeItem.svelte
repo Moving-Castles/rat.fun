@@ -3,9 +3,7 @@
 </script>
 
 <div class="outcome {type}" class:negative>
-  {#if type === "health"}
-    <span class="title">Health</span>
-  {:else if type === "balance"}
+  {#if type === "balance"}
     <span class="title">Balance</span>
   {/if}
   <span class="value">{value}</span>
@@ -13,7 +11,7 @@
 
 <style lang="scss">
   .outcome {
-    background: var(--color-health);
+    background: var(--color-success);
     color: var(--background);
     font-size: var(--font-size-small);
     height: 30px;
@@ -22,11 +20,6 @@
     font-size: 12px;
     position: relative;
     display: inline-block;
-
-    &.health {
-      background: var(--color-health);
-      color: var(--background);
-    }
 
     &.balance {
       background: var(--color-value);

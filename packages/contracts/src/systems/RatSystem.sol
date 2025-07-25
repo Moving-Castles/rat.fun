@@ -44,7 +44,7 @@ contract RatSystem is System {
     // Check that the rat is alive
     require(!Dead.get(ratId), "rat is dead");
 
-    uint256 valueToPlayer = LibRat.killRat(ratId, true);
+    uint256 valueToPlayer = LibRat.killRat(ratId);
 
     // Calculate tax
     uint256 tax = (valueToPlayer * GameConfig.getTaxationLiquidateRat()) / 100;
