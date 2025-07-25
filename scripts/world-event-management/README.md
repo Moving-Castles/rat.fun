@@ -2,11 +2,11 @@ Script to create a world event.
 
 Happens in two steps:
 
-1. Announcement
+1. Publication
 
 - New world event document is created on the public sanity cms
 - Including activation date and time (required)
-- Announcement text (optional)
+- Publication text (optional)
 
 2. Activation
 
@@ -29,10 +29,10 @@ pnpm i --ignore-workspace
 pnpm start list
 ```
 
-### Announce an event (Phase 1)
+### Publish an event (Phase 1)
 
 ```bash
-pnpm start announce <event-index>
+pnpm start publish <event-index>
 ```
 
 ### Activate an event (Phase 2)
@@ -65,13 +65,13 @@ Each event should be defined in `event-definitions/<index>/info.json`:
     "id": "",
     "worldAddress": "",
     "state": "draft",
-    "announcement": {
-      "title": "Event Title",
+    "publication": {
+      "publicationTitle": "Event Title",
       "activationDateTime": "2024-01-01T12:00:00Z",
-      "announcementText": "Optional announcement text"
+      "publicationText": "Optional publication text"
     },
     "activation": {
-      "title": "Event Title",
+      "activationTitle": "Event Title",
       "prompt": "Event prompt",
       "activationDateTime": "2024-01-01T12:00:00Z",
       "activationText": "Activation text",
