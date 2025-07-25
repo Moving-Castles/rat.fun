@@ -8,12 +8,12 @@ dotenv.config()
 import { CreateRoomRequestBody, SignedRequest } from "@modules/types"
 
 // CMS
-import { writeRoomToCMS } from "@modules/cms/public"
-import { getTemplateImages } from "@modules/cms/public"
+import { writeRoomToCMS, getTemplateImages } from "@modules/cms/public"
 
 // MUD
 import { systemCalls, network } from "@modules/mud/initMud"
 import { getCreateRoomData } from "@modules/mud/getOnchainData/getCreateRoomData"
+import { getRoomIndex } from "@modules/mud/getOnchainData"
 
 // Image generation
 // Replicate
@@ -54,7 +54,7 @@ async function routes(fastify: FastifyInstance) {
         // Validate data
         validateInputData(gameConfig, roomPrompt, player, level)
 
-        // Get system prompts from CMS
+        // Get template images from CMS
         console.time("–– CMS")
         const templateImages = await getTemplateImages()
         console.timeEnd("–– CMS")
@@ -79,8 +79,10 @@ async function routes(fastify: FastifyInstance) {
             const resolvedNetwork = await network
             const worldAddress = resolvedNetwork.worldContract?.address ?? "0x0"
 
+            const roomIndex = Number(getRoomIndex(roomId))
+
             // Write the document
-            await writeRoomToCMS(worldAddress, roomId, roomPrompt, player, imageBuffer)
+            await writeRoomToCMS(worldAddress, roomIndex, roomId, roomPrompt, player, imageBuffer)
           } catch (error) {
             handleBackgroundError(error, "Room Creation - Image Generation & CMS")
           } finally {

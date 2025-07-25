@@ -58,7 +58,6 @@ export { default as PageTransitions } from "./PageTransitions/PageTransitions.sv
 /* Item Components */
 export { default as Item } from "./Item/Item.svelte"
 export { default as OwnRoomItem } from "./OwnRoomItem/OwnRoomItem.svelte"
-export { default as Trait } from "./Trait/Trait.svelte"
 
 /* Utility Components */
 export { default as SEO } from "./SEO/SEO.svelte"

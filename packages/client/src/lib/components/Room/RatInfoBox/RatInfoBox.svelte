@@ -1,8 +1,7 @@
 <script lang="ts">
   import { frozenRat } from "$lib/components/Room/RoomResult/state.svelte"
-  import { NumberGoing, Trait, Item } from "$lib/components/Shared"
+  import { NumberGoing, Item } from "$lib/components/Shared"
 
-  let healthGoing = $state(false)
   let balanceGoing = $state(false)
 </script>
 
@@ -27,23 +26,7 @@
         <span class:priority={balanceGoing} class="balance"
           >$<NumberGoing bind:going={balanceGoing} value={$frozenRat.balance} /></span
         >
-        <!-- HEALTH -->
-        <span class:priority={healthGoing} class="health" class:dead={$frozenRat.health <= 0}>
-          HEALTH <NumberGoing bind:going={healthGoing} value={$frozenRat.health} />
-        </span>
       </div>
-    </div>
-    <!-- TRAITS -->
-    <div class="column traits">
-      <!-- HEADER -->
-      <div class="header">
-        <div class="label">Traits</div>
-        <div class="counter">{$frozenRat?.traits.length}/5</div>
-      </div>
-      <!-- TRAITS -->
-      {#each $frozenRat.traits as trait}
-        <Trait {trait} />
-      {/each}
     </div>
     <!-- INVENTORY -->
     <div class="column inventory">
@@ -87,7 +70,7 @@
   }
 
   .column {
-    width: calc(100% / 3);
+    width: calc(100% / 2);
     border-right: var(--dashed-border-style);
     overflow-x: hidden;
     overflow-y: scroll;
@@ -119,16 +102,6 @@
       background: var(--color-value);
       padding: 5px;
       color: var(--background);
-    }
-
-    .health {
-      background: var(--color-health);
-      padding: 5px;
-      color: var(--background);
-
-      &.dead {
-        background: var(--color-death);
-      }
     }
   }
 

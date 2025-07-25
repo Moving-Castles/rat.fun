@@ -8,7 +8,7 @@ export * from "./errors"
 export function captureMessage(
   message: string,
   level: Sentry.SeverityLevel = "error",
-  context?: Record<string, any>
+  context?: Record<string, unknown>
 ): void {
   if (context) {
     Sentry.withScope((scope: Sentry.Scope) => {

@@ -1,4 +1,4 @@
-import type { EnterRoomData, Trait, Item, GameConfig, WorldEvent } from "@modules/types"
+import type { EnterRoomData, Item, GameConfig, WorldEvent } from "@modules/types"
 import { getComponentValue, Entity } from "@latticexyz/recs"
 import { components, network } from "@modules/mud/initMud"
 import { GAME_CONFIG_ID } from "@config"
@@ -26,8 +26,6 @@ export async function getEnterRoomData(
       Prompt,
       WorldEvent,
       Dead,
-      Traits,
-      Health,
       Balance,
       Inventory,
       Index,
@@ -59,29 +57,20 @@ export async function getEnterRoomData(
 
     // Get rat data
     const ratDead = (getComponentValue(Dead, ratEntity)?.value ?? false) as boolean
-    const ratHealth = (getComponentValue(Health, ratEntity)?.value ?? 0) as number
     const ratBalance = (getComponentValue(Balance, ratEntity)?.value ?? 0) as number
     const ratInventory = (getComponentValue(Inventory, ratEntity)?.value ?? [""]) as string[]
-    const ratTraits = (getComponentValue(Traits, ratEntity)?.value ?? [""]) as string[]
     const ratLevel = (getComponentValue(Level, ratEntity)?.value ?? "") as string
 
-    const traitsObjects = constructTraitsObject(ratTraits)
     const inventoryObjects = constructInventoryObject(ratInventory)
-
-    const ratStats = {
-      health: Number(ratHealth)
-    }
 
     const rat = {
       id: ratId,
       name: ratName,
       level: ratLevel,
-      traits: traitsObjects,
       balance: Number(ratBalance),
       inventory: inventoryObjects,
       dead: ratDead,
-      owner: ratOwner,
-      stats: ratStats
+      owner: ratOwner
     }
 
     result.rat = rat
@@ -204,20 +193,6 @@ export async function getEnterRoomData(
       `Error fetching onchain data: ${error instanceof Error ? error.message : String(error)}`
     )
   }
-}
-
-function constructTraitsObject(ratTraits: string[]) {
-  const { Name, Value } = components
-  const traitsObject: Trait[] = []
-  for (let i = 0; i < ratTraits.length; i++) {
-    if (!ratTraits[i]) continue
-    traitsObject.push({
-      id: ratTraits[i],
-      name: (getComponentValue(Name, ratTraits[i] as Entity)?.value ?? "") as string,
-      value: Number(getComponentValue(Value, ratTraits[i] as Entity)?.value ?? 0) as number
-    })
-  }
-  return traitsObject
 }
 
 function constructInventoryObject(ratInventory: string[]) {

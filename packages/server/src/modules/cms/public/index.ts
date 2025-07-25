@@ -47,6 +47,7 @@ export const getTemplateImages = async () => {
  * Write room metadata to offchain CMS.
  * Mostly used for the room image.
  * @param worldAddress - The world address of the room
+ * @param roomIndex - The index of the room
  * @param roomID - The ID of the room
  * @param prompt - The prompt for the room
  * @param player - The player who created the room
@@ -55,6 +56,7 @@ export const getTemplateImages = async () => {
  */
 export async function writeRoomToCMS(
   worldAddress: string,
+  roomIndex: number,
   roomID: string,
   prompt: string,
   player: Player,
@@ -71,6 +73,7 @@ export async function writeRoomToCMS(
       title: roomID,
       _id: roomID,
       worldAddress: worldAddress,
+      index: roomIndex,
       owner: player.id,
       ownerName: player.name,
       prompt,
@@ -118,7 +121,6 @@ export async function writeOutcomeToCMS(
   roomValueChange: number,
   newRatValue: number,
   ratValueChange: number,
-  newRatHealth: number,
   events: CorrectionReturnValue,
   outcome: OutcomeReturnValue
 ): Promise<OutcomeDoc> {
@@ -136,7 +138,6 @@ export async function writeOutcomeToCMS(
       log: createOutcomeEvents(events),
       ratId: rat.id,
       ratName: rat.name,
-      ratHealth: newRatHealth,
       roomValue: newRoomValue,
       roomValueChange: roomValueChange,
       ratValue: newRatValue,
@@ -148,18 +149,8 @@ export async function writeOutcomeToCMS(
       }
     }
 
-    // Health change
-    if (outcome.healthChange) {
-      newOutcomeDoc.healthChange = createHealthChange(outcome.healthChange)
-    }
-
     if (outcome.balanceTransfer) {
       newOutcomeDoc.balanceTransfer = createBalanceTransfer(outcome.balanceTransfer)
-    }
-
-    // Trait changes
-    if (outcome.traitChanges && outcome.traitChanges.length > 0) {
-      newOutcomeDoc.traitChanges = createTraitChanges(outcome.traitChanges)
     }
 
     // Item changes
@@ -197,31 +188,12 @@ function createOutcomeEvents(events: CorrectionReturnValue) {
   }))
 }
 
-function createHealthChange(healthChange: OutcomeReturnValue["healthChange"]) {
-  return {
-    _key: uuidv4(),
-    logStep: healthChange.logStep,
-    amount: healthChange.amount
-  }
-}
-
 function createBalanceTransfer(balanceTransfer: OutcomeReturnValue["balanceTransfer"]) {
   return {
     _key: uuidv4(),
     logStep: balanceTransfer.logStep,
     amount: balanceTransfer.amount
   }
-}
-
-function createTraitChanges(traitChanges: OutcomeReturnValue["traitChanges"]) {
-  return traitChanges.map(traitChange => ({
-    _key: uuidv4(),
-    logStep: traitChange.logStep,
-    type: traitChange.type,
-    name: traitChange.name,
-    value: traitChange.value,
-    id: traitChange.id ?? ""
-  }))
 }
 
 function createItemChanges(itemChanges: OutcomeReturnValue["itemChanges"]) {

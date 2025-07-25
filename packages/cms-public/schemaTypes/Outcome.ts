@@ -84,16 +84,6 @@ export default {
       ]
     },
     {
-      title: "Health change",
-      name: "healthChange",
-      type: "object",
-      readOnly: true,
-      fields: [
-        { type: "number", name: "logStep" },
-        { type: "number", name: "amount" }
-      ]
-    },
-    {
       title: "Balance transfer",
       name: "balanceTransfer",
       type: "object",
@@ -101,24 +91,6 @@ export default {
       fields: [
         { type: "number", name: "logStep" },
         { type: "number", name: "amount" }
-      ]
-    },
-    {
-      title: "Trait changes",
-      name: "traitChanges",
-      type: "array",
-      readOnly: true,
-      of: [
-        {
-          type: "object",
-          fields: [
-            { type: "string", name: "name" },
-            { type: "number", name: "logStep" },
-            { type: "string", name: "type" },
-            { type: "number", name: "value" },
-            { type: "string", name: "id" }
-          ]
-        }
       ]
     },
     {
@@ -163,13 +135,6 @@ export default {
     {
       title: "Rat value change",
       name: "ratValueChange",
-      type: "number",
-      readOnly: true,
-      validation: (Rule: any) => Rule.required()
-    },
-    {
-      title: "Rat health",
-      name: "ratHealth",
       type: "number",
       readOnly: true,
       validation: (Rule: any) => Rule.required()

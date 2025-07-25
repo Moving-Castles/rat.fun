@@ -2,7 +2,6 @@
   import { rat } from "$lib/modules/state/stores"
   import { NumberGoing } from "$lib/components/Shared"
   let balanceGoing = $state(false)
-  let healthGoing = $state(false)
 </script>
 
 <div class="rat-info-box">
@@ -21,15 +20,9 @@
 
       <!-- BALANCE -->
       <div class="info-item" class:priority={balanceGoing}>
-        <span class="balance">$ <NumberGoing bind:going={balanceGoing} value={$rat.balance} /></span
+        <span class="balance"
+          >DOPAMINE BALANCE:<NumberGoing bind:going={balanceGoing} value={$rat.balance} /></span
         >
-      </div>
-
-      <!-- HEALTH -->
-      <div class="info-item">
-        <span class="health" class:priority={healthGoing} class:dead={$rat.health <= 0}>
-          HEALTH <NumberGoing bind:going={healthGoing} value={$rat.health} />
-        </span>
       </div>
     </div>
   {/if}
@@ -73,16 +66,6 @@
       background: var(--color-value);
       padding: 5px;
       color: var(--background);
-    }
-
-    .health {
-      background: var(--color-health);
-      padding: 5px;
-      color: var(--background);
-
-      &.dead {
-        background: var(--color-death);
-      }
     }
   }
 </style>

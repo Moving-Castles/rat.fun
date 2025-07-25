@@ -27,6 +27,11 @@ export function getEntityName(id: string) {
   return (getComponentValue(Name, id as Entity)?.value ?? "unknown entity") as string
 }
 
+export function getRoomIndex(roomId: string) {
+  const { Index } = components
+  return (getComponentValue(Index, roomId as Entity)?.value ?? 0) as number
+}
+
 export async function getLatestBlockNumber() {
   const { latestBlock$ } = network
   return firstValueFrom(
