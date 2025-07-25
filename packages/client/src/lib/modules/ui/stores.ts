@@ -8,3 +8,6 @@ export const UIState = writable(UI.LOADING)
 //
 //
 export const notificationsRead = new LocalStorage("rat.fun.notifications", [])
+
+// Session ID is used to prevent accidental double entries into rooms
+export const sessionId = writable("")

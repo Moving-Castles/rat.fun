@@ -2,7 +2,7 @@
 
 <script lang="ts">
   import { RoomResult } from "$lib/components/Room"
-  import { sessionId } from "$lib/modules/session/state.svelte"
+  import { sessionId } from "$lib/modules/ui/stores"
   import { onMount } from "svelte"
   import { goto } from "$app/navigation"
   import { page } from "$app/state"

@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Hex } from "viem"
   import { playSound } from "$lib/modules/sound"
-  import { sessionId } from "$lib/modules/session/state.svelte"
+  import { sessionId } from "$lib/modules/ui/stores"
   import { goto } from "$app/navigation"
   import { v4 as uuid } from "uuid"
 
