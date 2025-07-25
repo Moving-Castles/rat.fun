@@ -73,7 +73,8 @@ export default defineWorld({
     CreationBlock: "uint256", // Set on player, rat and room
     LastVisitBlock: "uint256", // Set on room
     // ...
-    Health: "uint256", // Set on rat
+    Balance: "uint256", // Amount of credits. Set on player, rat and room.
+    // ...
     Dead: "bool", // Set on rat
     // ...
     Traits: "bytes32[]", // Traits of rat
@@ -83,7 +84,6 @@ export default defineWorld({
     AchievedLevels: "bytes32[]", // Set on player. List of levels any of the player's rats have achieved.
     MasterKey: "bool", // Set on player. Gives access to in-game admin area.
     Index: "uint256", // Set on rat and room
-    Balance: "uint256", // Amount of credits. Set on player, rat and room.
     Value: "uint256", // Set on traits and items
     CurrentRat: "bytes32", // Set on player
     PastRats: "bytes32[]", // Set on player. List of rats the player has owned.

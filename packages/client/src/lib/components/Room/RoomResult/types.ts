@@ -1,11 +1,5 @@
 import { Hex } from "viem"
-import {
-  LogEntry,
-  HealthChange,
-  BalanceTransfer,
-  TraitChange,
-  ItemChange
-} from "@server/modules/types"
+import { LogEntry, BalanceTransfer, TraitChange, ItemChange } from "@server/modules/types"
 
 export type TempItem = {
   name: string
@@ -23,7 +17,6 @@ export type FrozenRoom = Room & {
 }
 
 export type MergedLogEntry = LogEntry & {
-  healthChange?: HealthChange
   balanceTransfer?: BalanceTransfer
   traitChanges?: TraitChange[]
   itemChanges?: ItemChange[]

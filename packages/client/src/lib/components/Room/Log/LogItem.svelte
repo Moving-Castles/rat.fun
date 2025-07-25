@@ -172,23 +172,6 @@
 
   <!-- Outcomes -->
   <div class="outcome-list">
-    {#if logEntry.healthChange}
-      <div
-        class="outcome-wrapper"
-        use:register={{
-          type: "health",
-          action: logEntry.healthChange.amount < 0 ? "reduce" : "increase",
-          value: logEntry.healthChange.amount,
-          name: "Health"
-        }}
-      >
-        <OutcomeItem
-          type="health"
-          negative={logEntry.healthChange.amount < 0}
-          value={logEntry.healthChange.amount}
-        />
-      </div>
-    {/if}
     {#if logEntry.balanceTransfer}
       <div
         class="outcome-wrapper"

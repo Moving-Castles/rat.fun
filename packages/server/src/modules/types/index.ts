@@ -21,9 +21,6 @@ export type Rat = {
   inventory: Item[]
   dead: boolean
   owner: string
-  stats: {
-    health: number
-  }
 }
 
 export type Player = {
@@ -90,11 +87,6 @@ export type ItemChange = {
   id?: string // Is only set if type == "remove"
 }
 
-export type HealthChange = {
-  logStep: number
-  amount: number
-}
-
 export type BalanceTransfer = {
   logStep: number
   amount: number
@@ -110,7 +102,6 @@ export type OutcomeReturnValue = {
   outcomeId: string
   traitChanges: TraitChange[]
   itemChanges: ItemChange[]
-  healthChange: HealthChange
   balanceTransfer: BalanceTransfer
 }
 

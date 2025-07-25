@@ -6,13 +6,13 @@ import { v4 as uuidv4 } from "uuid"
 export function createOutcomeMessage(
   player: Player,
   rat: Rat,
-  newRatHealth: number,
+  newRatBalance: number,
   room: Room,
   validatedOutcome: OutcomeReturnValue
 ): OffChainMessage {
   const outcomeMessage: OffChainMessage = {
     id: uuidv4(),
-    topic: newRatHealth == 0 ? "rat__death" : "room__outcome",
+    topic: newRatBalance == 0 ? "rat__death" : "room__outcome",
     level: room.level,
     outcome: validatedOutcome,
     playerName: player.name,

@@ -38,13 +38,6 @@ export const schema = {
             }
           }
         },
-        healthChange: {
-          type: "object",
-          properties: {
-            logStep: { type: "number" },
-            amount: { type: "number" }
-          }
-        },
         outcomeId: {
           type: "string"
         },
@@ -90,7 +83,6 @@ export const schema = {
       },
       required: [
         "log",
-        "healthChange",
         "outcomeId",
         "traitChanges",
         "itemChanges",

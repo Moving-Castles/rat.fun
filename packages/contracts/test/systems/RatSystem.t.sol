@@ -5,6 +5,7 @@ import "../../src/codegen/index.sol";
 import "../../src/libraries/Libraries.sol";
 import { ENTITY_TYPE } from "../../src/codegen/common.sol";
 import { Item } from "../../src/structs.sol";
+import { RAT_CREATION_COST } from "../../src/constants.sol";
 
 contract RatSystemTest is BaseTest {
   function testCreateRat() public {
@@ -29,8 +30,7 @@ contract RatSystemTest is BaseTest {
     assertEq(uint8(EntityType.get(ratId)), uint8(ENTITY_TYPE.RAT));
     assertEq(Name.get(ratId), "roger");
     assertEq(Dead.get(ratId), false);
-    assertEq(Health.get(ratId), 100);
-    assertEq(Balance.get(ratId), 0);
+    assertEq(Balance.get(ratId), RAT_CREATION_COST);
     assertEq(Index.get(ratId), 1);
     assertEq(Level.get(ratId), LevelList.getItem(0));
     assertEq(Owner.get(ratId), playerId);
@@ -88,8 +88,8 @@ contract RatSystemTest is BaseTest {
     world.ratfun__liquidateRat();
     endGasReport();
 
-    // Calculate tax based on rat value (health = 100)
-    uint256 ratValue = 100;
+    // Calculate tax based on rat value
+    uint256 ratValue = RAT_CREATION_COST;
     uint256 tax = (ratValue * GameConfig.getTaxationLiquidateRat()) / 100;
 
     // Check that tax was transferred to admin
@@ -184,7 +184,7 @@ contract RatSystemTest is BaseTest {
     prankAdmin();
     approveGamePool(type(uint256).max);
     bytes32 roomId = world.ratfun__createRoom(GameConfig.getAdminId(), LevelList.getItem(0), bytes32(0), "test room");
-    world.ratfun__applyOutcome(ratId, roomId, 0, 0, new bytes32[](0), new Item[](0), new bytes32[](0), newItems);
+    world.ratfun__applyOutcome(ratId, roomId, 0, new bytes32[](0), new Item[](0), new bytes32[](0), newItems);
     vm.stopPrank();
 
     bytes32 newItemId = Inventory.getItem(ratId, 0);

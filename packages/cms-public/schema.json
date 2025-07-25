@@ -409,29 +409,6 @@
         },
         "optional": true
       },
-      "healthChange": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "object",
-          "attributes": {
-            "logStep": {
-              "type": "objectAttribute",
-              "value": {
-                "type": "number"
-              },
-              "optional": true
-            },
-            "amount": {
-              "type": "objectAttribute",
-              "value": {
-                "type": "number"
-              },
-              "optional": true
-            }
-          }
-        },
-        "optional": true
-      },
       "balanceTransfer": {
         "type": "objectAttribute",
         "value": {
@@ -593,13 +570,6 @@
         "optional": true
       },
       "ratValueChange": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "number"
-        },
-        "optional": true
-      },
-      "ratHealth": {
         "type": "objectAttribute",
         "value": {
           "type": "number"

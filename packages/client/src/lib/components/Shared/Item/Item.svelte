@@ -114,7 +114,7 @@
     text-align: left;
 
     .value {
-      color: var(--color-health);
+      color: var(--color-success);
       &.negative {
         color: var(--color-death);
       }
@@ -161,7 +161,7 @@
       }
 
       &.close-button {
-        background: var(--color-health);
+        background: var(--color-success);
 
         &:hover {
           background: var(--background);

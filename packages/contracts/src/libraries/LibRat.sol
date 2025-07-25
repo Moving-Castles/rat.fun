@@ -5,7 +5,6 @@ import {
   EntityType,
   WorldStats,
   Dead,
-  Health,
   Index,
   Balance,
   Traits,
@@ -19,6 +18,7 @@ import {
   PastRats
 } from "../codegen/index.sol";
 import { ENTITY_TYPE } from "../codegen/common.sol";
+import { RAT_CREATION_COST } from "../constants.sol";
 
 library LibRat {
   /**
@@ -32,8 +32,7 @@ library LibRat {
     EntityType.set(ratId, ENTITY_TYPE.RAT);
     Name.set(ratId, _name);
     Dead.set(ratId, false);
-    Health.set(ratId, 100);
-    Balance.set(ratId, 0);
+    Balance.set(ratId, RAT_CREATION_COST);
     Level.set(ratId, LevelList.getItem(0));
     CreationBlock.set(ratId, block.number);
 
@@ -45,19 +44,10 @@ library LibRat {
   /**
    * @notice Process a rat's death, getting the total value left behind
    * @param _ratId The id of the rat
-   * @param _isLiquidation Whether this is a liquidation (true) or death (false)
    * @return balanceToTransfer The total value of the rat to be transferred to room or player
    */
-  function killRat(bytes32 _ratId, bool _isLiquidation) internal returns (uint256 balanceToTransfer) {
+  function killRat(bytes32 _ratId) internal returns (uint256 balanceToTransfer) {
     Dead.set(_ratId, true);
-
-    // * * * *
-    // Health
-    // * * * *
-    if (_isLiquidation) {
-      balanceToTransfer += Health.get(_ratId);
-      Health.set(_ratId, 0);
-    }
 
     // * * * *
     // Traits
@@ -97,9 +87,6 @@ library LibRat {
    */
   function getTotalRatValue(bytes32 _ratId) internal view returns (uint256) {
     uint256 totalValue = 0;
-
-    // Health
-    totalValue += Health.get(_ratId);
 
     // Traits
     bytes32[] memory traits = Traits.get(_ratId);

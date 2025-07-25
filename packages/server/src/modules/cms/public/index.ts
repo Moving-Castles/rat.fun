@@ -118,7 +118,6 @@ export async function writeOutcomeToCMS(
   roomValueChange: number,
   newRatValue: number,
   ratValueChange: number,
-  newRatHealth: number,
   events: CorrectionReturnValue,
   outcome: OutcomeReturnValue
 ): Promise<OutcomeDoc> {
@@ -136,7 +135,6 @@ export async function writeOutcomeToCMS(
       log: createOutcomeEvents(events),
       ratId: rat.id,
       ratName: rat.name,
-      ratHealth: newRatHealth,
       roomValue: newRoomValue,
       roomValueChange: roomValueChange,
       ratValue: newRatValue,
@@ -146,11 +144,6 @@ export async function writeOutcomeToCMS(
         _type: "slug",
         current: outcomeID
       }
-    }
-
-    // Health change
-    if (outcome.healthChange) {
-      newOutcomeDoc.healthChange = createHealthChange(outcome.healthChange)
     }
 
     if (outcome.balanceTransfer) {
@@ -195,14 +188,6 @@ function createOutcomeEvents(events: CorrectionReturnValue) {
     event: event.event,
     timestamp: event.timestamp
   }))
-}
-
-function createHealthChange(healthChange: OutcomeReturnValue["healthChange"]) {
-  return {
-    _key: uuidv4(),
-    logStep: healthChange.logStep,
-    amount: healthChange.amount
-  }
 }
 
 function createBalanceTransfer(balanceTransfer: OutcomeReturnValue["balanceTransfer"]) {

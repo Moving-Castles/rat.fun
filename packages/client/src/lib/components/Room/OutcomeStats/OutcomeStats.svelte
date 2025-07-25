@@ -4,15 +4,6 @@
   let { logEntry } = $props()
 </script>
 
-{#if logEntry.healthChange}
-  <div class="outcome-wrapper">
-    <OutcomeItem
-      type="health"
-      negative={logEntry.healthChange.amount < 0}
-      value={logEntry.healthChange.amount}
-    />
-  </div>
-{/if}
 {#if logEntry.balanceTransfer}
   <div class="outcome-wrapper">
     <OutcomeItem

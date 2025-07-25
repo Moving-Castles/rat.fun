@@ -20,7 +20,6 @@ function calculateTotalRatValue(rat: Rat) {
   if (!rat) return 0
 
   const balanceValue = Number(rat.balance ?? 0)
-  const healthValue = Number(rat.stats?.health ?? 0)
 
   const inventoryValue = (rat.inventory ?? []).reduce(
     (acc, item) => acc + (Number(item?.value) ?? 0),
@@ -32,5 +31,5 @@ function calculateTotalRatValue(rat: Rat) {
     0
   )
 
-  return balanceValue + healthValue + inventoryValue + traitsValue
+  return balanceValue + inventoryValue + traitsValue
 }

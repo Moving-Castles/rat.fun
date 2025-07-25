@@ -81,10 +81,6 @@ export type Outcome = {
     event?: string
     _key: string
   }>
-  healthChange?: {
-    logStep?: number
-    amount?: number
-  }
   balanceTransfer?: {
     logStep?: number
     amount?: number
@@ -109,7 +105,6 @@ export type Outcome = {
   roomValueChange?: number
   ratValue?: number
   ratValueChange?: number
-  ratHealth?: number
   slug?: Slug
 }
 

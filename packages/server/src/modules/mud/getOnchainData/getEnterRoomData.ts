@@ -27,7 +27,6 @@ export async function getEnterRoomData(
       WorldEvent,
       Dead,
       Traits,
-      Health,
       Balance,
       Inventory,
       Index,
@@ -59,7 +58,6 @@ export async function getEnterRoomData(
 
     // Get rat data
     const ratDead = (getComponentValue(Dead, ratEntity)?.value ?? false) as boolean
-    const ratHealth = (getComponentValue(Health, ratEntity)?.value ?? 0) as number
     const ratBalance = (getComponentValue(Balance, ratEntity)?.value ?? 0) as number
     const ratInventory = (getComponentValue(Inventory, ratEntity)?.value ?? [""]) as string[]
     const ratTraits = (getComponentValue(Traits, ratEntity)?.value ?? [""]) as string[]
@@ -67,10 +65,6 @@ export async function getEnterRoomData(
 
     const traitsObjects = constructTraitsObject(ratTraits)
     const inventoryObjects = constructInventoryObject(ratInventory)
-
-    const ratStats = {
-      health: Number(ratHealth)
-    }
 
     const rat = {
       id: ratId,
@@ -80,8 +74,7 @@ export async function getEnterRoomData(
       balance: Number(ratBalance),
       inventory: inventoryObjects,
       dead: ratDead,
-      owner: ratOwner,
-      stats: ratStats
+      owner: ratOwner
     }
 
     result.rat = rat

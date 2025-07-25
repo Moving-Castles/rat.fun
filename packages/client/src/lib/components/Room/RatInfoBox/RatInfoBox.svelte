@@ -2,7 +2,6 @@
   import { frozenRat } from "$lib/components/Room/RoomResult/state.svelte"
   import { NumberGoing, Trait, Item } from "$lib/components/Shared"
 
-  let healthGoing = $state(false)
   let balanceGoing = $state(false)
 </script>
 
@@ -27,10 +26,6 @@
         <span class:priority={balanceGoing} class="balance"
           >$<NumberGoing bind:going={balanceGoing} value={$frozenRat.balance} /></span
         >
-        <!-- HEALTH -->
-        <span class:priority={healthGoing} class="health" class:dead={$frozenRat.health <= 0}>
-          HEALTH <NumberGoing bind:going={healthGoing} value={$frozenRat.health} />
-        </span>
       </div>
     </div>
     <!-- TRAITS -->
@@ -119,16 +114,6 @@
       background: var(--color-value);
       padding: 5px;
       color: var(--background);
-    }
-
-    .health {
-      background: var(--color-health);
-      padding: 5px;
-      color: var(--background);
-
-      &.dead {
-        background: var(--color-death);
-      }
     }
   }
 

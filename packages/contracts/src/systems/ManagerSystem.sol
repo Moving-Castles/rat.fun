@@ -6,7 +6,6 @@ import {
   EntityType,
   Balance,
   Dead,
-  Health,
   VisitCount,
   KillCount,
   Level,
@@ -39,7 +38,6 @@ contract ManagerSystem is System {
    * @dev Only admin can call this function
    * @param _ratId Id of the rat
    * @param _roomId Id of the room
-   * @param _healthChange Change to the rat's health
    * @param _balanceTransferToOrFromRat Credits to transfer to or from rat
    * @param _traitsToRemoveFromRat Traits to remove from rat (IDs)
    * @param _traitToAddToRat Trait to add to rat
@@ -49,7 +47,6 @@ contract ManagerSystem is System {
   function applyOutcome(
     bytes32 _ratId,
     bytes32 _roomId,
-    int256 _healthChange,
     int256 _balanceTransferToOrFromRat,
     bytes32[] calldata _traitsToRemoveFromRat,
     Item[] calldata _traitToAddToRat,
@@ -80,14 +77,15 @@ contract ManagerSystem is System {
     }
 
     // * * * * * * * * * * * * *
-    // HEALTH
+    // BALANCE
     // * * * * * * * * * * * * *
 
-    // Health change can have positive or negative value: effect on room balance unknown
-    roomBudget = LibManager.updateHealth(roomBudget, _ratId, _roomId, _healthChange);
+    // Balance transfer can have positive or negative value: effect on room balance unknown
+    roomBudget = LibManager.updateBalance(roomBudget, _ratId, _roomId, _balanceTransferToOrFromRat);
 
-    // Exit early if dead
-    if (Health.get(_ratId) == 0) {
+    // A rat is dead if balance is 0
+    // If so, kill the rat and abort
+    if (Balance.get(_ratId) == 0) {
       _killRat(_ratId, _roomId);
       return;
     }
@@ -111,13 +109,6 @@ contract ManagerSystem is System {
     roomBudget = LibManager.addItemsToRat(roomBudget, _ratId, _roomId, _itemsToAddToRat);
 
     // * * * * * * * * * * * * *
-    // BALANCE
-    // * * * * * * * * * * * * *
-
-    // Balance transfer can have positive or negative value: effect on room balance unknown
-    LibManager.updateBalance(roomBudget, _ratId, _roomId, _balanceTransferToOrFromRat);
-
-    // * * * * * * * * * * * * *
     // LEVEL CHANGE
     // * * * * * * * * * * * * *
 
@@ -133,7 +124,7 @@ contract ManagerSystem is System {
    * @param _roomId The id of the room
    */
   function _killRat(bytes32 _ratId, bytes32 _roomId) internal {
-    uint256 balanceToTransfer = LibRat.killRat(_ratId, false);
+    uint256 balanceToTransfer = LibRat.killRat(_ratId);
     Balance.set(_roomId, Balance.get(_roomId) + balanceToTransfer);
     KillCount.set(_roomId, KillCount.get(_roomId) + 1);
   }

@@ -2,7 +2,6 @@ import { OutcomeReturnValue, TraitChange, ItemChange } from "@modules/types"
 import { Rat, Room } from "@modules/types"
 
 export function createOutcomeCallArgs(rat: Rat, room: Room, outcome: OutcomeReturnValue) {
-  const healthChange = outcome?.healthChange?.amount ?? 0
   const balanceTransfer = outcome?.balanceTransfer?.amount ?? 0
 
   // Only ID
@@ -36,7 +35,6 @@ export function createOutcomeCallArgs(rat: Rat, room: Room, outcome: OutcomeRetu
   return [
     rat.id,
     room.id,
-    healthChange,
     balanceTransfer,
     traitsToRemoveFromRat,
     traitsToAddToRat,
@@ -58,20 +56,6 @@ export function updateOutcome(
   // - - - - - - - - -
 
   newOutcome.id = newRat.id
-
-  // - - - - - - - - -
-  // HEALTH
-  // - - - - - - - - -
-
-  // Guard against undefined healthChange
-  if (!newOutcome.healthChange) {
-    newOutcome.healthChange = {
-      amount: 0,
-      logStep: 0
-    }
-  }
-
-  newOutcome.healthChange.amount = newRat.stats.health - oldRat.stats.health
 
   // - - - - - - - - -
   // TRAITS

@@ -82,7 +82,7 @@ export function getRoomOwnerName(room: Room) {
 /**
  * Waits for a specific property in a store to change from an old value
  * @param store The Svelte store to watch
- * @param propertyPath The property path to watch (e.g., 'currentRat' or 'rat.health')
+ * @param propertyPath The property path to watch (e.g., 'currentRat' or 'rat.balance')
  * @param oldValue The value to wait for to change from
  * @param timeoutMs Optional timeout in milliseconds (default: 30000)
  * @returns Promise that resolves with the new value when it changes
@@ -119,7 +119,7 @@ export function waitForPropertyChange<T, K extends keyof T>(
 /**
  * Waits for a nested property in a store to change from an old value
  * @param store The Svelte store to watch
- * @param propertyPath The dot-separated property path (e.g., 'rat.health')
+ * @param propertyPath The dot-separated property path (e.g., 'rat.balance')
  * @param oldValue The value to wait for to change from
  * @param timeoutMs Optional timeout in milliseconds (default: 30000)
  * @returns Promise that resolves with the new value when it changes

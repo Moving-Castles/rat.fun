@@ -150,7 +150,7 @@ export const ratImageUrl = derived([player], ([$player]) => {
 })
 
 /**
- * Calculated by adding up the balance, health, inventory value and trait value
+ * Calculated by adding up the balance, inventory value and trait value
  */
 export const ratTotalValue = derived(
   [rat, ratInventory, ratTraits],
@@ -158,7 +158,6 @@ export const ratTotalValue = derived(
     const totalValue = !$rat
       ? 0
       : Number($rat.balance ?? 0) + // Balance
-        Number($rat.health ?? 0) + // Health
         $ratInventory.reduce((acc, item) => acc + (item?.value ? Number(item.value) : 0), 0) + // Inventory
         $ratTraits.reduce((acc, trait) => acc + (trait?.value ? Number(trait.value) : 0), 0) // Traits
     return totalValue

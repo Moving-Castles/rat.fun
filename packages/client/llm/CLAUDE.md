@@ -87,7 +87,7 @@ The project uses `mprocs` to run 7 concurrent processes:
 
 - `GameConfig` - Global game settings and costs
 - `Name`, `EntityType`, `Level` - Core entity properties
-- `Health`, `Dead`, `Traits`, `Inventory` - Rat attributes
+- `Dead`, `Traits`, `Inventory` - Rat attributes
 - `Prompt`, `VisitCount`, `KillCount` - Room properties
 - `Balance`, `Owner` - Economic and ownership data
 

@@ -96,9 +96,9 @@ async function routes(fastify: FastifyInstance) {
           validatedOutcome,
           newRoomValue,
           roomValueChange,
+          newRatBalance,
           newRatValue,
           ratValueChange,
-          newRatHealth,
           newRatLevelIndex
         } = await systemCalls.applyOutcome(rat, room, eventResults.outcome)
         console.timeEnd("–– Chain")
@@ -126,7 +126,7 @@ async function routes(fastify: FastifyInstance) {
         const outcomeMessage = createOutcomeMessage(
           player,
           rat,
-          newRatHealth,
+          newRatBalance,
           room,
           validatedOutcome
         )
@@ -143,7 +143,6 @@ async function routes(fastify: FastifyInstance) {
           roomValueChange,
           newRatValue,
           ratValueChange,
-          newRatHealth,
           correctedEvents,
           validatedOutcome
         )
@@ -154,11 +153,10 @@ async function routes(fastify: FastifyInstance) {
           id: ratId as Hex,
           log: correctedEvents.log ?? [],
           outcomeId: outcomeDocument._id,
-          healthChange: validatedOutcome.healthChange,
           traitChanges: validatedOutcome.traitChanges,
           itemChanges: validatedOutcome.itemChanges,
           balanceTransfer: validatedOutcome.balanceTransfer,
-          ratDead: newRatHealth == 0,
+          ratDead: newRatBalance == 0,
           roomDepleted: newRoomValue == 0,
           levelUp: newRatLevelIndex > level.index,
           levelDown: newRatLevelIndex < level.index

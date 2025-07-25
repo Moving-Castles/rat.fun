@@ -196,9 +196,6 @@ export const updateFrozenState = (dataset: OutcomeDataStringMap) => {
   const numericValue = Number(value)
 
   switch (type) {
-    case "health":
-      changeHealth(numericValue)
-      break
     case "balance":
       changeBalance(numericValue)
       break
@@ -217,27 +214,6 @@ export const updateFrozenState = (dataset: OutcomeDataStringMap) => {
       }
       break
   }
-}
-
-// ======= Health =======
-
-/**
- * Changes the health of the rat and change the room balance by the inverse amount
- * @param healthChange The amount to change the health by
- */
-function changeHealth(healthChange: number) {
-  frozenRat.update(rat => {
-    if (!rat) return null
-    rat.health = rat.health + BigInt(healthChange)
-    return rat
-  })
-
-  // Inverse rat health change to get room balance change
-  frozenRoom.update(room => {
-    if (!room) return null
-    room.balance = room.balance - BigInt(healthChange)
-    return room
-  })
 }
 
 // ======= Balance =======

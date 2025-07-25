@@ -34,7 +34,7 @@
     }
 
     .value {
-      color: var(--color-health);
+      color: var(--color-success);
       padding: 2px 6px;
       line-height: 1;
       &.negative {

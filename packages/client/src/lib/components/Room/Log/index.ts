@@ -9,11 +9,6 @@ export function mergeLog(result: EnterRoomReturnValue): MergedLogEntry[] {
   const mergedLog: MergedLogEntry[] = JSON.parse(JSON.stringify(result.log))
 
   for (let i = 0; i < mergedLog.length; i++) {
-    // Health change
-    if (result.healthChange.logStep === i && result.healthChange.amount !== 0) {
-      mergedLog[i].healthChange = result.healthChange
-    }
-
     // Balance transfer
     if (result.balanceTransfer.logStep === i && result.balanceTransfer.amount !== 0) {
       mergedLog[i].balanceTransfer = result.balanceTransfer
