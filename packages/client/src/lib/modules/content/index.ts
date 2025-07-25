@@ -1,5 +1,6 @@
 import { writable, derived } from "svelte/store"
 import { client, loadData } from "./sanity"
+import { blockNumber } from "$lib/modules/network"
 import type {
   Room as SanityRoom,
   Outcome as SanityOutcome,
@@ -19,9 +20,18 @@ export type StaticContent = {
 
 export const staticContent = writable({} as StaticContent)
 export const lastUpdated = writable(performance.now())
-export const upcomingEvent = derived(staticContent, ($staticContent: StaticContent) => {
-  return $staticContent?.worldEvents?.[0] || undefined
-})
+export const upcomingWorldEvent = derived(
+  [staticContent, blockNumber],
+  ([$staticContent, _]: [StaticContent, bigint]) => {
+    const event = $staticContent?.worldEvents?.[0]
+
+    if (event && event?.publicationText !== "") {
+      return event
+    }
+
+    return undefined
+  }
+)
 
 // --- API --------------------------------------------------------------
 
