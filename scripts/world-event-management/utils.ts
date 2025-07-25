@@ -28,9 +28,9 @@ export function getStateColor(state: string): (text: string) => string {
   switch (state) {
     case "draft":
       return chalk.bgRed.white
-    case "initialized":
+    case "initialised":
       return chalk.bgYellow.black
-    case "announced":
+    case "published":
       return chalk.bgBlue.white
     case "activated":
       return chalk.bgGreen.black
@@ -51,15 +51,15 @@ export function displayEvent(event: WorldEvent): void {
   console.log(`World Address: ${event.worldAddress || "Not set"}`)
   console.log(`ID: ${event.id || "Not set"}`)
 
-  console.log("\n--- Announcement ---")
-  console.log(`Title: ${event.announcement.announcementTitle}`)
-  console.log(`Activation Date: ${event.announcement.activationDateTime}`)
-  if (event.announcement.announcementText) {
-    console.log(`Announcement Text: ${event.announcement.announcementText}`)
+  console.log("\n--- Publication ---")
+  console.log(`Title: ${event.publication.publicationTitle}`)
+  console.log(`Activation Date: ${event.publication.activationDateTime}`)
+  if (event.publication.publicationText) {
+    console.log(`Publication Text: ${event.publication.publicationText}`)
   }
 
   console.log("\n--- Activation ---")
-  console.log(`Title: ${event.activation.publicTitle}`)
+  console.log(`Title: ${event.activation.activationTitle}`)
   console.log(`Prompt: ${event.activation.prompt}`)
   console.log(`Activation Text: ${event.activation.activationText}`)
   console.log(`Duration: ${event.activation.duration} blocks`)

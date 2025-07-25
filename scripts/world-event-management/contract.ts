@@ -34,7 +34,7 @@ export async function callSetWorldEvent(event: WorldEvent) {
     functionName: "ratfun__setWorldEvent",
     args: [
       event.id,
-      event.activation.publicTitle,
+      event.activation.activationTitle,
       event.activation.prompt,
       BigInt(event.activation.duration)
     ]

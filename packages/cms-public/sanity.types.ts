@@ -21,7 +21,7 @@ export type WorldEvent = {
   _rev: string
   title?: string
   worldAddress?: string
-  announcementText?: string
+  publicationText?: string
   activationDateTime?: string
   activationText?: string
   duration?: number

@@ -29,7 +29,7 @@ const sanityClient = createClient({
   useCdn: false
 })
 
-type EventAction = "back" | "initialise" | "announce" | "activate" | "destroy"
+type EventAction = "back" | "initialise" | "publish" | "activate" | "destroy"
 
 async function postEventMenu(event: WorldEvent): Promise<EventAction> {
   // Build menu options based on event state
@@ -39,8 +39,8 @@ async function postEventMenu(event: WorldEvent): Promise<EventAction> {
   if (event.state === "draft") {
     choices.push({ title: "Initialise", value: "initialise" })
   } else if (event.state === "initialised") {
-    choices.push({ title: "Announce", value: "announce" })
-  } else if (event.state === "announced") {
+    choices.push({ title: "Publish", value: "publish" })
+  } else if (event.state === "published") {
     choices.push({ title: "Activate", value: "activate" })
   } else if (event.state === "activated") {
     choices.push({ title: "Destroy", value: "destroy" })
@@ -71,18 +71,27 @@ async function main(): Promise<void> {
         type: "select",
         name: "eventIndex",
         message: "Select event:",
-        choices: events.map(event => {
-          const stateColor = getStateColor(event.state)
-          return {
-            title: `${event.index}: ${event.workingTitle} (${stateColor(event.state)})`,
-            value: event.index
-          }
-        })
+        choices: [
+          ...events.map(event => {
+            const stateColor = getStateColor(event.state)
+            return {
+              title: `${event.index}: ${event.workingTitle} (${stateColor(event.state)})`,
+              value: event.index
+            }
+          }),
+          { title: "Quit", value: "quit" }
+        ]
       })
 
       // Handle case where user cancels or does not select an event
       if (!response.eventIndex) {
         console.log("No event selected.")
+        return
+      }
+
+      // Handle quit option
+      if (response.eventIndex === "quit") {
+        console.log("Goodbye")
         return
       }
 
@@ -104,20 +113,20 @@ async function main(): Promise<void> {
         continue // Go back to listing
       } else if (action === "initialise") {
         await initialiseEvent(event)
-        console.log("\n" + chalk.bgGreen.black("✅ Event initialised successfully"))
-      } else if (action === "announce") {
-        await announceEvent(event)
-        console.log("\n" + chalk.bgGreen.black("✅ Event announced successfully"))
+        console.log("\n" + chalk.bgGreen.black("Event initialised successfully"))
+      } else if (action === "publish") {
+        await publishEvent(event)
+        console.log("\n" + chalk.bgGreen.black("Event published successfully"))
       } else if (action === "activate") {
         await activateEvent(event)
-        console.log("\n" + chalk.bgGreen.black("✅ Event activated successfully"))
+        console.log("\n" + chalk.bgGreen.black("Event activated successfully"))
       } else if (action === "destroy") {
         destroyEvent(event)
-        console.log("\n" + chalk.bgGreen.black("✅ Event destroyed successfully"))
+        console.log("\n" + chalk.bgGreen.black("Event destroyed successfully"))
       }
 
       // After any action, reload events and continue to listing
-      console.log("\n🔄 Returning to event listing...\n")
+      console.log("\nReturning to event listing...\n")
       continue
     }
   } catch (error) {
@@ -140,7 +149,7 @@ async function initialiseEvent(event: WorldEvent): Promise<void> {
   // Generate a random UUID for the event id
   event.id = randomUUID()
   // Set the title to 'event-<index>'
-  event.announcement.announcementTitle = `event-${event.index}`
+  event.publication.publicationTitle = `event-${event.index}`
   // Set state to 'initialised'
   event.state = "initialised"
   // Write the updated event back to its JSON file
@@ -148,16 +157,16 @@ async function initialiseEvent(event: WorldEvent): Promise<void> {
   console.log("Event initialised and saved.")
 }
 
-async function announceEvent(event: WorldEvent): Promise<void> {
-  const required = ["announcement.announcementTitle", "announcement.activationDateTime"]
+async function publishEvent(event: WorldEvent): Promise<void> {
+  const required = ["publication.publicationTitle", "publication.activationDateTime"]
   const status = formatRequiredPropsStatus(event, required)
   console.log(status)
   // Check activationDateTime is set and valid
-  const activationDate = event.announcement.activationDateTime
+  const activationDate = event.publication.activationDateTime
   if (!activationDate || !isValidISODate(activationDate)) {
     console.log(
       chalk.bgRed.white(
-        "Cannot announce: activationDateTime is not set or not a valid ISO date string."
+        "Cannot publish: activationDateTime is not set or not a valid ISO date string."
       )
     )
     return
@@ -167,20 +176,20 @@ async function announceEvent(event: WorldEvent): Promise<void> {
     const doc = {
       _id: event.id,
       _type: "worldEvent",
-      title: event.announcement.announcementTitle,
+      title: event.publication.publicationTitle,
       worldAddress: event.worldAddress,
       activationDateTime: activationDate,
-      announcementText: event.announcement.announcementText || undefined
+      publicationText: event.publication.publicationText || undefined
     }
     const returnedDoc = (await sanityClient.createIfNotExists(doc)) as SanityWorldEvent
-    console.log("Announcement created in Sanity with ID:", returnedDoc._id)
-    // Set state to 'announced' and write back to JSON
-    event.state = "announced"
+    console.log("Publication created in Sanity with ID:", returnedDoc._id)
+    // Set state to 'published' and write back to JSON
+    event.state = "published"
     writeEventDefinition(event)
-    console.log("Event state updated to 'announced' in JSON file.")
+    console.log("Event state updated to 'published' in JSON file.")
   } catch (err) {
     console.error(
-      chalk.bgRed.white("Failed to create announcement in Sanity:"),
+      chalk.bgRed.white("Failed to create publication in Sanity:"),
       (err as Error).message
     )
   }
@@ -188,7 +197,7 @@ async function announceEvent(event: WorldEvent): Promise<void> {
 
 async function activateEvent(event: WorldEvent): Promise<void> {
   const required = [
-    "activation.publicTitle",
+    "activation.activationTitle",
     "activation.prompt",
     "activation.activationText",
     "activation.duration"
@@ -197,7 +206,7 @@ async function activateEvent(event: WorldEvent): Promise<void> {
   console.log(status)
   // Verify that all properties in activation prop are set, except image which can be let empty
   if (
-    !event.activation.publicTitle ||
+    !event.activation.activationTitle ||
     !event.activation.prompt ||
     !event.activation.activationText ||
     event.activation.duration === 0
@@ -222,7 +231,7 @@ async function activateEvent(event: WorldEvent): Promise<void> {
     await sanityClient
       .patch(event.id)
       .set({
-        title: event.activation.publicTitle,
+        title: event.activation.activationTitle,
         activationText: event.activation.activationText,
         prompt: event.activation.prompt,
         duration: event.activation.duration
@@ -269,10 +278,18 @@ async function activateEvent(event: WorldEvent): Promise<void> {
 async function destroyEvent(event: WorldEvent): Promise<void> {
   // Delete the event from Sanity
   await sanityClient.delete(event.id)
-  await callRemoveWorldEvent()
-  event.state = "draft"
-  writeEventDefinition(event)
-  console.log("Event state set to 'draft' in JSON file.")
+
+  // Send on-chain transaction to remove event and wait for confirmation
+  const success = await callRemoveWorldEvent()
+
+  if (success) {
+    // Update event in JSON file
+    event.state = "draft"
+    writeEventDefinition(event)
+    console.log("Event state set to 'draft' in JSON file.")
+  } else {
+    console.error(chalk.bgRed.white("Failed to remove world event on chain"))
+  }
 }
 
 main()

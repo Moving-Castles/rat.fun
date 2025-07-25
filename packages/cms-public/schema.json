@@ -48,7 +48,7 @@
         },
         "optional": true
       },
-      "announcementText": {
+      "publicationText": {
         "type": "objectAttribute",
         "value": {
           "type": "string"

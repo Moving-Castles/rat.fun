@@ -1,25 +1,24 @@
-export interface WorldEvent {
+export type WorldEvent = {
   index: number
   id: string
   workingTitle: string
   worldAddress: string
-  state: "draft" | "initialised" | "announced" | "activated"
-  announcement: {
-    announcementTitle: string
+  state: "draft" | "initialised" | "published" | "activated"
+  publication: {
+    publicationTitle: string
     activationDateTime: string
-    announcementText?: string
+    publicationText?: string
   }
   activation: {
-    publicTitle: string
+    activationTitle: string
     prompt: string
-    activationDateTime: string
     activationText: string
     duration: number
     image?: string
   }
 }
 
-export interface SanityConfig {
+export type SanityConfig = {
   projectId: string
   dataset: string
   token: string
