@@ -13,8 +13,6 @@
   }: Record<string, string> = $props()
 
   let finalTitle = $derived(prependTitle ? `${prependTitle} | ${title}` : title)
-
-  console.log("WE HAVE SEO")
 </script>
 
 <svelte:head>

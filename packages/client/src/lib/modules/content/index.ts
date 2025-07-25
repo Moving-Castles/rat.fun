@@ -7,6 +7,7 @@ import type {
   WorldEvent as SanityWorldEvent
 } from "@sanity-types"
 import { queries } from "./sanity/groq"
+import type { MutationEvent } from "@sanity/client"
 
 // --- TYPES ------------------------------------------------------------
 
@@ -22,7 +23,7 @@ export const staticContent = writable({} as StaticContent)
 export const lastUpdated = writable(performance.now())
 export const upcomingWorldEvent = derived(
   [staticContent, blockNumber],
-  ([$staticContent, _]: [StaticContent, bigint]) => {
+  ([$staticContent]: [StaticContent, bigint]) => {
     const event = $staticContent?.worldEvents?.[0]
 
     if (event && event?.publicationText !== "") {
@@ -48,37 +49,62 @@ export async function initStaticContent(worldAddress: string) {
 
   // Subscribe to changes to rooms in sanity DB
   client.listen(queries.rooms, { worldAddress }).subscribe(update => {
-    if (update.transition == "appear" && update.result) {
-      const room = update.result as SanityRoom
-
-      staticContent.update(content => {
-        content.rooms.push(room)
-        return content
-      })
-    }
+    staticContent.update(content => ({
+      ...content,
+      rooms: handleSanityUpdate<SanityRoom>(update, content.rooms, (item, id) => item._id === id)
+    }))
   })
 
   // Subscribe to changes to outcomes in sanity DB
   client.listen(queries.outcomes, { worldAddress }).subscribe(update => {
-    if (update.transition == "appear" && update.result) {
-      const outcome = update.result as SanityOutcome
-
-      staticContent.update(content => {
-        content.outcomes.push(outcome)
-        return content
-      })
-    }
+    staticContent.update(content => ({
+      ...content,
+      outcomes: handleSanityUpdate<SanityOutcome>(
+        update,
+        content.outcomes,
+        (item, id) => item._id === id
+      )
+    }))
   })
 
   // Subscribe to changes to world events in sanity DB
   client.listen(queries.worldEvents, { worldAddress }).subscribe(update => {
-    if (update.transition == "appear" && update.result) {
-      const worldEvent = update.result as SanityWorldEvent
-
-      staticContent.update(content => {
-        content.worldEvents.push(worldEvent)
-        return content
-      })
-    }
+    staticContent.update(content => ({
+      ...content,
+      worldEvents: handleSanityUpdate<SanityWorldEvent>(
+        update,
+        content.worldEvents,
+        (item, id) => item._id === id
+      )
+    }))
   })
+}
+
+// --- HELPER FUNCTIONS -------------------------------------------------
+
+function handleSanityUpdate<T>(
+  update: MutationEvent<Record<string, unknown>>,
+  contentArray: T[],
+  findById: (item: T, id: string) => boolean
+) {
+  const { transition, result } = update
+
+  if (!result) return contentArray
+
+  switch (transition) {
+    case "appear":
+      // Add new item to the array
+      return [...contentArray, result as T]
+
+    case "update":
+      // Update existing item in the array
+      return contentArray.map(item => (findById(item, result._id) ? (result as T) : item))
+
+    case "disappear":
+      // Remove item from the array
+      return contentArray.filter(item => !findById(item, result._id))
+
+    default:
+      return contentArray
+  }
 }

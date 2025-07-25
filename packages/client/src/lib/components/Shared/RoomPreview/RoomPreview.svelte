@@ -33,7 +33,7 @@
   //  * - Rat exists and is alive
   //  * - Room is at the same level as the rat
   let showEnterButton = $derived(
-    !isOwnRoomListing && room.balance > 0 && !$rat?.dead && room.level == $rat.level
+    !isOwnRoomListing && (room?.balance ?? 0) > 0 && !$rat?.dead && room.level == $rat?.level
   )
 
   // Show no rat warning if:
