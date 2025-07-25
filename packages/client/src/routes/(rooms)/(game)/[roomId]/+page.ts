@@ -6,17 +6,15 @@ import { CMSError } from "$lib/modules/error-handling"
 
 export const load: PageLoad = async ({ params }) => {
   try {
-    console.log("room content getting loaded")
+    console.log("trying")
     const roomContent = await loadData(queries.singleRoom, { id: params.roomId })
 
-    if (!roomContent) {
-      redirect(302, "/")
-    }
-
+    console.log("success")
     return {
       roomContent
     }
-  } catch (e) {
-    return error(500, new CMSError(e.message))
+  } catch (err) {
+    console.error(err)
+    redirect(302, "/")
   }
 }
