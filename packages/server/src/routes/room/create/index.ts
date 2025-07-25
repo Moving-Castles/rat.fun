@@ -8,7 +8,7 @@ dotenv.config()
 import { CreateRoomRequestBody, SignedRequest } from "@modules/types"
 
 // CMS
-import { writeRoomToCMS, getTemplateImages } from "@modules/cms/public"
+import { writeRoomToCMS, updateRoomWithImage, getTemplateImages } from "@modules/cms/public"
 
 // MUD
 import { systemCalls, network } from "@modules/mud/initMud"
@@ -68,21 +68,23 @@ async function routes(fastify: FastifyInstance) {
         await systemCalls.createRoom(playerId, levelId, roomId, roomPrompt)
         console.timeEnd("–– Chain call")
 
-        // Start image generation and CMS write in the background
-        const handleImageAndCMS = async () => {
+        // Write room text data to CMS immediately
+        console.time("–– CMS text write")
+        const resolvedNetwork = await network
+        const worldAddress = resolvedNetwork.worldContract?.address ?? "0x0"
+        const roomIndex = Number(getRoomIndex(roomId))
+        await writeRoomToCMS(worldAddress, roomIndex, roomId, roomPrompt, player)
+        console.timeEnd("–– CMS text write")
+
+        // Start image generation and CMS image update in the background
+        const handleImageGeneration = async () => {
           console.time("–– Image generation")
           try {
             // Get the image data
             const imageBuffer = await generateImage(roomPrompt, templateImages)
 
-            // Get world address - await the network promise first
-            const resolvedNetwork = await network
-            const worldAddress = resolvedNetwork.worldContract?.address ?? "0x0"
-
-            const roomIndex = Number(getRoomIndex(roomId))
-
-            // Write the document
-            await writeRoomToCMS(worldAddress, roomIndex, roomId, roomPrompt, player, imageBuffer)
+            // Update the room document with the image
+            await updateRoomWithImage(roomId, imageBuffer)
           } catch (error) {
             handleBackgroundError(error, "Room Creation - Image Generation & CMS")
           } finally {
@@ -91,7 +93,7 @@ async function routes(fastify: FastifyInstance) {
         }
 
         // Start the background process without awaiting
-        handleImageAndCMS()
+        handleImageGeneration()
 
         // Broadcast room creation message
         await broadcast(createRoomCreationMessage(roomId, player))

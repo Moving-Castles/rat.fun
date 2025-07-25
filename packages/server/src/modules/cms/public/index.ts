@@ -44,14 +44,13 @@ export const getTemplateImages = async () => {
 }
 
 /**
- * Write room metadata to offchain CMS.
- * Mostly used for the room image.
+ * Write room text metadata to offchain CMS.
+ * Called immediately after room creation onchain.
  * @param worldAddress - The world address of the room
  * @param roomIndex - The index of the room
  * @param roomID - The ID of the room
  * @param prompt - The prompt for the room
  * @param player - The player who created the room
- * @param imageBuffer - Generate room image
  * @returns The room document
  */
 export async function writeRoomToCMS(
@@ -59,15 +58,10 @@ export async function writeRoomToCMS(
   roomIndex: number,
   roomID: string,
   prompt: string,
-  player: Player,
-  imageBuffer: Buffer
+  player: Player
 ): Promise<RoomDoc> {
   try {
-    const imageAsset = await publicSanityClient.assets.upload("image", imageBuffer, {
-      filename: `room-${roomID}.webp`
-    })
-
-    // Create the room document with the uploaded image reference
+    // Create the room document without image reference
     const newRoomDoc: NewRoomDoc = {
       _type: "room",
       title: roomID,
@@ -77,13 +71,6 @@ export async function writeRoomToCMS(
       owner: player.id,
       ownerName: player.name,
       prompt,
-      image: {
-        _type: "image",
-        asset: {
-          _type: "reference",
-          _ref: imageAsset._id
-        }
-      },
       slug: {
         _type: "slug",
         current: roomID
@@ -102,7 +89,49 @@ export async function writeRoomToCMS(
 
     // Otherwise, wrap it in our custom error
     throw new CMSAPIError(
-      `Error writing room to CMS: ${error instanceof Error ? error.message : String(error)}`,
+      `Error writing room text to CMS: ${error instanceof Error ? error.message : String(error)}`,
+      error
+    )
+  }
+}
+
+/**
+ * Update room document with image.
+ * Called after image generation is complete.
+ * @param roomID - The ID of the room
+ * @param imageBuffer - The generated room image
+ * @returns The updated room document
+ */
+export async function updateRoomWithImage(roomID: string, imageBuffer: Buffer): Promise<RoomDoc> {
+  try {
+    const imageAsset = await publicSanityClient.assets.upload("image", imageBuffer, {
+      filename: `room-${roomID}.webp`
+    })
+
+    // Update the room document with the image reference
+    const room = (await publicSanityClient
+      .patch(roomID)
+      .set({
+        image: {
+          _type: "image",
+          asset: {
+            _type: "reference",
+            _ref: imageAsset._id
+          }
+        }
+      })
+      .commit()) as RoomDoc
+
+    return room
+  } catch (error) {
+    // If it's already one of our custom errors, rethrow it
+    if (error instanceof CMSError) {
+      throw error
+    }
+
+    // Otherwise, wrap it in our custom error
+    throw new CMSAPIError(
+      `Error updating room with image: ${error instanceof Error ? error.message : String(error)}`,
       error
     )
   }
