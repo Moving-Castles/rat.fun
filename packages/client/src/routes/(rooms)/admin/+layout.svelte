@@ -15,10 +15,12 @@
   })
 </script>
 
-<!-- Grid position 1  -->
-<AdminContainer />
-<!-- Grid position 2 -->
-<CenterBar />
+{#if $player}
+  <!-- Grid position 1  -->
+  <AdminContainer />
+  <!-- Grid position 2 -->
+  <CenterBar />
+{/if}
 
 <div class="right-column">
   <PageTransitions config={adminLayoutTransitionConfig}>

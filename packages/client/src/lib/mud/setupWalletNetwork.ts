@@ -6,7 +6,7 @@
 import { Hex, getContract, Client, Transport, Chain, Account } from "viem"
 import { encodeEntity } from "@latticexyz/store-sync/recs"
 
-import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json"
+import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json" with { type: "json" }
 
 import { SetupPublicNetworkResult } from "./setupPublicNetwork"
 

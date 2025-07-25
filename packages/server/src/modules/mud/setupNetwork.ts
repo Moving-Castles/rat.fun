@@ -17,7 +17,7 @@ import { encodeEntity, syncToRecs } from "@latticexyz/store-sync/recs"
 
 import { getNetworkConfig } from "./getNetworkConfig"
 import { world } from "./world"
-import IWorldAbi from "../../../../contracts/out/IWorld.sol/IWorld.abi.json"
+import IWorldAbi from "../../../../contracts/out/IWorld.sol/IWorld.abi.json" with { type: "json" }
 import { createBurnerAccount, transportObserver } from "@latticexyz/common"
 import { transactionQueue } from "@latticexyz/common/actions"
 
