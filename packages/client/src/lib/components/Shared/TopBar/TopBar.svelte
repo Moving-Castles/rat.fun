@@ -1,19 +1,21 @@
 <script lang="ts">
-  import { player, worldStats, worldEvent, activeWorldEvent } from "$lib/modules/state/stores"
-  import { staticContent, upcomingWorldEvent } from "$lib/modules/content"
-  import { notificationsRead } from "$lib/modules/ui/stores"
+  import { player, worldStats, activeWorldEvent } from "$lib/modules/state/stores"
+  import { upcomingWorldEvent } from "$lib/modules/content"
+  import { page } from "$app/state"
 
-  import OperatorInfo from "./PlayerInfo.svelte"
+  import PlayerInfo from "./PlayerInfo.svelte"
   import PaneSwitch from "./PaneSwitch.svelte"
   import WorldEvent from "./WorldEvent.svelte"
   import WorldEventCountdown from "./WorldEventCountdown.svelte"
   import GlobalStats from "./GlobalStats.svelte"
+
+  const isAdminView = $derived(page.route?.id?.includes("/(rooms)/admin") ?? false)
 </script>
 
 <div class="top-bar">
-  <OperatorInfo />
+  <PlayerInfo {isAdminView} />
   <div class="right">
-    {#if $worldStats}
+    {#if isAdminView && $worldStats}
       <GlobalStats />
     {/if}
     {#if $activeWorldEvent}
@@ -22,7 +24,7 @@
       <WorldEventCountdown />
     {/if}
     {#if $player?.masterKey}
-      <PaneSwitch />
+      <PaneSwitch {isAdminView} />
     {/if}
   </div>
 </div>

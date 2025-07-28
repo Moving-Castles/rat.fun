@@ -13,7 +13,7 @@
   import { initStaticContent, staticContent } from "$lib/modules/content"
   import { publicNetwork } from "$lib/modules/network"
   import { initSound, playSound } from "$lib/modules/sound"
-  import { UIState } from "$lib/modules/ui/stores"
+  import { UIState } from "$lib/modules/ui/state.svelte"
   import { UI } from "$lib/modules/ui/enums"
   import { initOffChainSync } from "$lib/modules/off-chain-sync"
   import { playerId } from "$lib/modules/state/stores"
@@ -35,8 +35,6 @@
   let outcomeId = $state("")
   let outcome = $state<SanityOutcome | undefined>()
 
-  const allowedRoutes = ["/(rooms)/(game)/[roomId]"]
-
   const { environment, walletType } = data
 
   const environmentLoaded = async () => {
@@ -46,6 +44,7 @@
 
       // Bypass spawning if user is navigating directly to a room
       // This is to allow un-spawned users to see the room info
+      const allowedRoutes = ["/(rooms)/(game)/[roomId]"]
       if (allowedRoutes.includes(page.route.id ?? "")) {
         UIState.set(UI.READY)
       } else {

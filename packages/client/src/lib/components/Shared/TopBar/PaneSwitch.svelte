@@ -1,23 +1,17 @@
 <script lang="ts">
-  import { page } from "$app/state"
-
-  let selectionIndicator = $state<HTMLElement>()
-
-  $effect(() => {
-    if (selectionIndicator) {
-      selectionIndicator.style.transform = `translateX(${page.route.id?.includes("/(rooms)/(game)") ? 0 : 200}px)`
-    }
-  })
+  let { isAdminView }: { isAdminView: boolean } = $props()
 </script>
 
 <div class="pane-switch">
-  <div class="pane-switch-item">
-    <a class:selected={page.route.id?.includes("/(rooms)/(game)")} href="/">Game</a>
-  </div>
-  <div class="pane-switch-item">
-    <a class:selected={page.route.id?.includes("/(rooms)/admin")} href="/admin">ADMIN</a>
-  </div>
-  <div class="selection-indicator" bind:this={selectionIndicator}></div>
+  {#if isAdminView}
+    <div class="pane-switch-item">
+      <a href="/">X</a>
+    </div>
+  {:else}
+    <div class="pane-switch-item">
+      <a href="/admin">⚙</a>
+    </div>
+  {/if}
 </div>
 
 <style lang="scss">
@@ -27,7 +21,7 @@
     border-bottom: var(--default-border-style);
     height: var(--pane-switch-height);
     line-height: var(--pane-switch-height);
-    width: 400px;
+    width: 100px;
     background: var(--color-grey-mid);
     position: relative;
 
@@ -38,7 +32,7 @@
       outline: none;
       font-family: var(--label-font-stack);
       color: var(--background);
-      width: 200px;
+      width: 100px;
       z-index: 100;
 
       &:first-child {
@@ -53,17 +47,13 @@
         display: block;
         background: transparent;
         font-family: var(--label-font-stack);
-        font-size: var(--font-size-large);
+        font-size: 40px;
         letter-spacing: -0.2em;
         text-decoration: none;
         transition:
           transform 0.2s ease-in-out,
           color 0.2s;
         color: var(--background);
-
-        &.selected {
-          color: var(--white);
-        }
       }
 
       &:hover {
@@ -71,17 +61,6 @@
           transform: scale(1.4);
         }
       }
-    }
-
-    .selection-indicator {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 200px;
-      height: 100%;
-      background: var(--color-alert);
-      z-index: 10;
-      transition: transform 0.2s ease-out;
     }
   }
 </style>

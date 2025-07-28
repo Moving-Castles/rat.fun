@@ -16,9 +16,9 @@
     align-items: center;
     border-bottom: var(--default-border-style);
     height: var(--pane-switch-height);
-    width: 400px;
     background: var(--color-grey-mid);
     position: relative;
     background: rgba(255, 0, 0, 0.5);
+    padding-inline: 40px;
   }
 </style>

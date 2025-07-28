@@ -2,6 +2,8 @@
   import { player, playerERC20Balance } from "$lib/modules/state/stores"
   import { NumberGoing } from "$lib/components/Shared"
   import { tippy } from "svelte-tippy"
+  let { isAdminView }: { isAdminView: boolean } = $props()
+
   let balanceGoing = $state(false)
 </script>
 
@@ -36,7 +38,7 @@
         </div>
       </div>
       <!-- RATS KILLED -->
-      {#if $player?.pastRats?.length > 0}
+      {#if isAdminView && $player?.pastRats?.length > 0}
         <div class="stat-item rats-killed">
           <div class="inner-wrapper">
             <div class="label">Rats killed:</div>
