@@ -23,17 +23,17 @@ export default defineConfig(() => {
     ],
     ssr: {
       noExternal: [
-        "@latticexyz/common",
-        "@latticexyz/dev",
-        "@latticexyz/entrykit",
-        "@latticexyz/recs",
-        "@latticexyz/schema",
-        "@latticexyz/store",
-        "@latticexyz/utils",
-        "@latticexyz/world",
-        "@sentry/sveltekit",
-        "viem",
-        "ox"
+        // "@latticexyz/common",
+        // "@latticexyz/dev",
+        // "@latticexyz/entrykit",
+        // "@latticexyz/recs",
+        // "@latticexyz/schema",
+        // "@latticexyz/store",
+        // "@latticexyz/utils",
+        // "@latticexyz/world",
+        // "@sentry/sveltekit",
+        // "viem",
+        // "ox"
       ]
     }
   }
