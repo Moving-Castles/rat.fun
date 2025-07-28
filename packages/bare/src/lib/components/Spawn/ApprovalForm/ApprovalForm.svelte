@@ -1,0 +1,101 @@
+<script lang="ts">
+  import { sendApproveMax, busy } from "$lib/modules/action-manager/index.svelte"
+  import { playerERC20Balance } from "$lib/modules/state/stores"
+
+  import gsap from "gsap"
+  import { onMount } from "svelte"
+
+  import { BigButton } from "$lib/components/Shared"
+  import VideoLoader from "$lib/components/Shared/Loaders/VideoLoader.svelte"
+  import { errorHandler } from "$lib/modules/error-handling"
+
+  const { onComplete = () => {} } = $props<{
+    onComplete: () => void
+  }>()
+
+  let textElement: HTMLDivElement | null = $state(null)
+  let imageElement: HTMLImageElement | null = $state(null)
+  let buttonElement: HTMLDivElement | null = $state(null)
+  const timeline = gsap.timeline()
+
+  async function sendApproval() {
+    try {
+      await sendApproveMax()
+    } catch (error) {
+      errorHandler(error)
+    } finally {
+      onComplete()
+    }
+  }
+
+  onMount(() => {
+    if (!buttonElement || !textElement || !imageElement) return
+
+    // Set initial opacity to 0
+    imageElement.style.opacity = "0"
+    textElement.style.opacity = "0"
+    buttonElement.style.opacity = "0"
+
+    timeline.to(imageElement, {
+      opacity: 1,
+      duration: 0.4,
+      delay: 0.4
+    })
+    timeline.to(textElement, {
+      opacity: 1,
+      duration: 0.4
+    })
+    timeline.to(buttonElement, {
+      opacity: 1,
+      duration: 0.4
+    })
+  })
+</script>
+
+<div class="outer-container">
+  <div class="inner-container">
+    {#if busy.ApproveMax.current !== 0}
+      <VideoLoader progress={busy.ApproveMax} />
+    {:else}
+      <img class="image" src="/images/cashier3.png" alt="RAT.FUN" bind:this={imageElement} />
+      <div class="text" bind:this={textElement}>
+        <p>Good. You now have {$playerERC20Balance} tokens.</p>
+        <p>You just need give us permission to spend them.</p>
+      </div>
+      <div class="button" bind:this={buttonElement}>
+        <BigButton text="APPROVE" onclick={sendApproval} />
+      </div>
+    {/if}
+  </div>
+</div>
+
+<style lang="scss">
+  .outer-container {
+    display: flex;
+    flex-flow: column nowrap;
+    height: var(--game-window-height);
+    align-items: center;
+    justify-content: center;
+
+    .inner-container {
+      display: flex;
+      flex-flow: column nowrap;
+      align-items: center;
+      justify-content: center;
+      width: 500px;
+
+      img {
+        height: 50dvh;
+        @media (max-width: 900px) {
+          width: 70dvw;
+          height: auto;
+        }
+      }
+
+      .button {
+        width: 100%;
+        height: 80px;
+      }
+    }
+  }
+</style>

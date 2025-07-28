@@ -84,7 +84,6 @@
 
 <svelte:window
   onhashchange={e => {
-    console.log("hash change, ", e)
     outcomeId = new URL(e.newURL).hash.replace("#", "")
     outcome = $staticContent.outcomes.find(o => o._id === outcomeId)
   }}
