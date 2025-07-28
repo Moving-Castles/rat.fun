@@ -5,6 +5,7 @@ import { getNetworkConfig } from '$lib/mud/getNetworkConfig';
 export const prerender = true
 
 export const load: LayoutLoad = async ({ url }) => {
+  // Pass all kinds of Network stuff to the main layout
   const environment = getEnvironment(url);
   const networkConfig = getNetworkConfig(environment, url);
 	const walletType = getWalletType(url);
