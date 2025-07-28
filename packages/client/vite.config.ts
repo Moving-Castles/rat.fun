@@ -34,7 +34,8 @@ export default defineConfig(() => {
         "@sentry/sveltekit",
         "viem",
         "ox"
-      ]
+      ],
+      external: ["fsevents"]
     }
   }
 })
