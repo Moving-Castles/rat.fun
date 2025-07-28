@@ -3,7 +3,7 @@
   import { fade } from "svelte/transition"
   import { createWebGLRenderer } from "$lib/modules/webgl"
   import { shaders } from "$lib/modules/webgl/shaders"
-  import { page } from "$app/stores"
+  import { page } from "$app/state"
 
   let canvas: HTMLCanvasElement
   let renderer: any
@@ -15,7 +15,7 @@
   }
 
   $effect(() => {
-    if ($page.url.pathname.includes("/admin")) {
+    if ((page.route?.id ?? "").includes("/admin")) {
       setShaderMode("admin")
     } else {
       setShaderMode("home")
@@ -37,13 +37,13 @@
     if (!canvas) return
 
     renderer = createWebGLRenderer(canvas, {
-      shader: shaders.plasma,
+      shader: shaders.clouds,
       uniforms: {
         u_invert: { type: "bool", value: false }
       }
     })
 
-    if ($page.url.pathname.includes("/admin")) {
+    if ((page.route?.id ?? "").includes("/admin")) {
       setShaderMode("admin")
     } else {
       setShaderMode("home")
