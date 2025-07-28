@@ -2,6 +2,12 @@ import type { Hex } from "viem"
 import { TableRecord } from "@latticexyz/store-sync"
 import mudConfig from "../../../../contracts/mud.config"
 
+/*
+ * ─────────────────────────────────────────────
+ * Onchain entities
+ * ─────────────────────────────────────────────
+ */
+
 export type Room = {
   id: string
   level: string
@@ -49,6 +55,13 @@ export type Item = {
 export type GameConfig = TableRecord<typeof mudConfig.tables.ratfun__GameConfig>["fields"]
 export type WorldEvent = TableRecord<typeof mudConfig.tables.ratfun__WorldEvent>["fields"]
 
+/*
+ * ─────────────────────────────────────────────
+ * Onchain data objects
+ * ─────────────────────────────────────────────
+ * Returned from the MUD get data functions
+ */
+
 export type EnterRoomData = {
   gameConfig: GameConfig
   rat: Rat
@@ -62,6 +75,28 @@ export type CreateRoomData = {
   gameConfig: GameConfig
   level: MinimalLevel
   player: Player
+}
+
+/*
+ * ─────────────────────────────────────────────
+ * LLM Return values: Event and correction
+ * ─────────────────────────────────────────────
+ */
+
+export type EventsReturnValue = {
+  log: LogEntry[]
+  outcome: OutcomeReturnValue
+}
+
+export type CorrectionReturnValue = {
+  log: LogEntry[]
+}
+
+export type OutcomeReturnValue = {
+  id?: string
+  outcomeId: string
+  itemChanges: ItemChange[]
+  balanceTransfer: BalanceTransfer
 }
 
 export type ItemChange = {
@@ -82,28 +117,10 @@ export type LogEntry = {
   event: string
 }
 
-export type OutcomeReturnValue = {
-  id?: string
-  outcomeId: string
-  itemChanges: ItemChange[]
-  balanceTransfer: BalanceTransfer
-}
-
-/**
- * LLM Return values
- */
-
-export type EventsReturnValue = {
-  log: LogEntry[]
-  outcome: OutcomeReturnValue
-}
-
-export type CorrectionReturnValue = {
-  log: LogEntry[]
-}
-
-/**
- * Return value for the EnterRoom function
+/*
+ * ─────────────────────────────────────────────
+ * Return values to client
+ * ─────────────────────────────────────────────
  */
 
 export type EnterRoomReturnValue = OutcomeReturnValue & {
@@ -114,8 +131,38 @@ export type EnterRoomReturnValue = OutcomeReturnValue & {
   log: LogEntry[]
 }
 
-/**
+export type CreateRoomReturnValue = {
+  success: boolean
+  roomId: string
+}
+
+/*
+ * ─────────────────────────────────────────────
+ * Fastify request body types
+ * ─────────────────────────────────────────────
+ */
+
+export type EnterRoomRequestBody = {
+  roomId: string
+  ratId: string
+}
+
+export type CreateRoomRequestBody = {
+  roomPrompt: string
+  levelId: string
+}
+
+export type CreateSpecialRoomRequestBody = {
+  roomPrompt: string
+  levelId: string
+  roomCreationCost: number
+  maxValuePerWin: number
+}
+
+/*
+ * ─────────────────────────────────────────────
  * API Types
+ * ─────────────────────────────────────────────
  */
 
 export type SignedRequestInfo = {
@@ -141,30 +188,10 @@ export type SignedRequest<T> = {
   signature: Hex
 }
 
-export type EnterRoomRequestBody = {
-  roomId: string
-  ratId: string
-}
-
-export type CreateRoomRequestBody = {
-  roomPrompt: string
-  levelId: string
-}
-
-export type CreateSpecialRoomRequestBody = {
-  roomPrompt: string
-  levelId: string
-  roomCreationCost: number
-  maxValuePerWin: number
-}
-
-export type CreateRoomReturnValue = {
-  success: boolean
-  roomId: string
-}
-
-/**
+/*
+ * ─────────────────────────────────────────────
  * WebSocket Types
+ * ─────────────────────────────────────────────
  */
 
 export interface WebSocketParams {
@@ -211,8 +238,10 @@ export interface WebSocketInterface {
   send: (data: string) => void
 }
 
-/**
+/*
+ * ─────────────────────────────────────────────
  * CMS Types
+ * ─────────────────────────────────────────────
  */
 
 import type { TemplateImages } from "@sanity-public-cms-types"

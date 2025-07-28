@@ -1,7 +1,12 @@
 <script lang="ts">
-  import { player, worldStats, activeWorldEvent } from "$lib/modules/state/stores"
-  import { upcomingWorldEvent } from "$lib/modules/content"
   import { page } from "$app/state"
+  import {
+    player,
+    worldStats,
+    activeWorldEvent,
+    activeWorldEventContent
+  } from "$lib/modules/state/stores"
+  import { upcomingWorldEvent } from "$lib/modules/content"
 
   import PlayerInfo from "./PlayerInfo.svelte"
   import PaneSwitch from "./PaneSwitch.svelte"
@@ -10,6 +15,7 @@
   import GlobalStats from "./GlobalStats.svelte"
 
   const isAdminView = $derived(page.route?.id?.includes("/(rooms)/admin") ?? false)
+  $inspect($activeWorldEventContent)
 </script>
 
 <div class="top-bar">
