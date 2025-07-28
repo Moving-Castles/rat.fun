@@ -26,7 +26,7 @@
     "@latticexyz/store": "2.2.23-94cac741be24bb5743f2f36235cc3bb40012417a",
     "@latticexyz/world": "2.2.23-94cac741be24bb5743f2f36235cc3bb40012417a",
     "@latticexyz/world-modules": "2.2.23-94cac741be24bb5743f2f36235cc3bb40012417a",
-    "@openzeppelin/contracts": "^5.3.0",
+    "@openzeppelin/contracts": "^5.4.0",
     "better-sqlite3": "^12.2.0"
   },
   "devDependencies": {
