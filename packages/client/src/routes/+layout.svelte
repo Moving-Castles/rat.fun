@@ -20,7 +20,7 @@
   import { websocketConnected } from "$lib/modules/off-chain-sync/stores"
   import { EMPTY_ID } from "$lib/modules/state/constants"
   import { outerLayoutTransitionConfig } from "$lib/components/Shared/PageTransitions/transitionConfigs"
-  import { errorHandler, WebSocketError } from "$lib/modules/error-handling"
+  import { errorHandler } from "$lib/modules/error-handling"
   import { Modal, PageTransitions, WalletInfo } from "$lib/components/Shared"
   import { removeHash } from "$lib/modules/utils"
 
@@ -44,11 +44,12 @@
       // Get content from CMS
       await initStaticContent($publicNetwork.worldAddress)
 
-      // Set next UI state based on the URL
-      if (!allowedRoutes.includes(page.route.id)) {
-        UIState.set(UI.SPAWNING)
-      } else {
+      // Bypass spawning if user is navigating directly to a room
+      // This is to allow un-spawned users to see the room info
+      if (allowedRoutes.includes(page.route.id ?? "")) {
         UIState.set(UI.READY)
+      } else {
+        UIState.set(UI.SPAWNING)
       }
     } catch (error) {
       errorHandler(error) // CMS error
@@ -144,7 +145,6 @@
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    // background: var(--background);
   }
 
   main {
@@ -164,9 +164,6 @@
       z-index: 100;
       background: black;
     }
-    // background: var(--background);
-    // background-image: url("/images/tiles.png");
-    // background-size: 300px;
   }
 
   .layer-game {

@@ -13,7 +13,8 @@ export const publicNetwork = writable({} as SetupPublicNetworkResult)
 export const walletNetwork = writable({} as SetupWalletNetworkResult)
 export const blockNumber = writable(BigInt(0))
 export const ready = writable(false)
-export const loadingMessage = writable("Loading")
+export const loadingMessage = writable("Loading started")
+export const loadingPercentage = writable(0)
 export const walletType = writable(WALLET_TYPE.BURNER as WALLET_TYPE)
 
 // ----------------------------------------------------------------------------

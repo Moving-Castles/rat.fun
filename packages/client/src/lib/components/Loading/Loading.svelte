@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte"
-  import { ready, loadingMessage } from "$lib/modules/network"
+  import { ready, loadingMessage, loadingPercentage } from "$lib/modules/network"
   import { initPublicNetwork } from "$lib/initPublicNetwork"
   import { initEntities } from "$lib/modules/systems/initEntities"
   import { ENVIRONMENT } from "$lib/mud/enums"
@@ -12,6 +12,11 @@
   }>()
 
   let innerElement: HTMLDivElement
+
+  // Debugging
+  $effect(() => {
+    console.log($loadingMessage, $loadingPercentage)
+  })
 
   $effect(() => {
     if ($ready) {
@@ -39,11 +44,15 @@
   })
 </script>
 
-<div class="loading" class:done={Number($loadingMessage) === 100}>
+<div class="loading">
   <div class="inner" bind:this={innerElement}>
     <img src="/images/logo.png" alt="logo" />
     <div class="message">
-      <span class="highlight" class:ready={$ready}>{$loadingMessage}</span>
+      {#if $ready}
+        <span class="highlight ready">All systems ready</span>
+      {:else}
+        <span class="highlight">Booting machine: {$loadingPercentage}%</span>
+      {/if}
     </div>
   </div>
 </div>
@@ -58,20 +67,21 @@
       align-items: center;
       justify-content: center;
       height: 100%;
+
       img {
-        height: 200px;
+        height: 160px;
       }
 
       .message {
         margin-top: 20px;
 
         .highlight {
-          background: var(--color-value);
+          background: var(--foreground);
           color: var(--background);
           padding: 5px;
 
           &.ready {
-            background: var(--color-success);
+            background: var(--color-alert-priority);
           }
         }
       }
