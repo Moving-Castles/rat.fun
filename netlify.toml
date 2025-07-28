@@ -11,3 +11,11 @@
 [build.environment]
   # Add this to help with shell detection
   SHELL = "/bin/bash"
+
+[[edge_functions]]
+  function = "room-seo"
+  path = "/rooms/game/*"
+
+[[edge_functions]]
+  function = "test"
+  path = "/test"
