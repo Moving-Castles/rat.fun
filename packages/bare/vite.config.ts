@@ -7,21 +7,26 @@ export default defineConfig(() => {
   return {
     plugins: [
       sveltekit(),
-      devtoolsJson(),
-      {
-        name: "glsl-loader",
-        transform(code, id) {
-          if (id.endsWith(".glsl")) {
-            const source = readFileSync(id, "utf-8")
-            return {
-              code: `export default ${JSON.stringify(source)};`,
-              map: null
-            }
-          }
-        }
-      }
+      // devtoolsJson(),
+      // {
+      //   name: "glsl-loader",
+      //   transform(code, id) {
+      //     if (id.endsWith(".glsl")) {
+      //       const source = readFileSync(id, "utf-8")
+      //       return {
+      //         code: `export default ${JSON.stringify(source)};`,
+      //         map: null
+      //       }
+      //     }
+      //   }
+      // }
     ],
     ssr: {
+          external: [
+      'fsevents', 
+      'chokidar',
+      // Add other Node.js specific packages if needed
+      ],
       noExternal: [
         "@latticexyz/common",
         "@latticexyz/dev",
@@ -32,9 +37,9 @@ export default defineConfig(() => {
         "@latticexyz/utils",
         "@latticexyz/world",
         "@sentry/sveltekit",
-        "viem",
-        "ox"
+        "viem"
       ]
     }
   }
 })
+
