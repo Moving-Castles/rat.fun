@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: 
+
+Sitemap: https://rat-fun-base-sepolia-entrykit-auto.netlify.app/sitemap.xml
