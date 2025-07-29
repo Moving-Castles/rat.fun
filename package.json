@@ -13,7 +13,7 @@
     "dev:contracts": "pnpm --filter 'contracts' run dev",
     "foundry:up": "curl -L https://foundry.paradigm.xyz | bash && bash $HOME/.foundry/bin/foundryup",
     "mud:up": "pnpm mud set-version --tag main && pnpm install",
-    "prepare": "if [ \"$NETLIFY\" = \"true\" ]; then echo 'Skipping prepare on Netlify'; else (forge --version || pnpm foundry:up); fi",
+    "prepare": "(forge --version || pnpm foundry:up)",
     "test": "pnpm recursive run test",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
@@ -49,8 +49,5 @@
       "wagmi": "2.15.6",
       "@tanstack/react-query": "5.81.5"
     }
-  },
-  "dependencies": {
-    "@sveltejs/adapter-static": "^3.0.8"
   }
 }

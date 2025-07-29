@@ -13,4 +13,4 @@ forge doc -b
 cd docs/book
 
 # Deploy dev docs to Netlify
-NETLIFY_SITE_ID=$DOCS_ID netlify deploy --dir=. --prod --auth=$NETLIFY_AUTH_TOKEN
+NETLIFY_SITE_ID=$DOCS_ID netlify deploy --dir=. --prod --auth=$NETLIFY_AUTH_TOKEN --no-build
