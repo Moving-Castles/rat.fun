@@ -11,6 +11,7 @@
   import { QueryClientProvider, QueryClient } from "@tanstack/react-query"
   import { defineConfig, AccountButton } from "@latticexyz/entrykit/internal"
 
+  import { paymasters } from "$lib/modules/entry-kit/paymasters"
   import { wagmiConfig } from "$lib/modules/entry-kit/wagmiConfig"
   import SessionBridge from "$lib/modules/entry-kit/SessionBridge"
 
@@ -32,8 +33,9 @@
         {
           config: defineConfig({
             chainId: networkConfig.chainId,
-            worldAddress: networkConfig.worldAddress as Hex
-          })
+            worldAddress: networkConfig.worldAddress as Hex,
+            paymasterOverride: paymasters[networkConfig.chainId],
+          }),
         },
         [
           // The button
