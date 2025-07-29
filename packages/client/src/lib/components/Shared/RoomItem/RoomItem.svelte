@@ -128,6 +128,7 @@
           width: 100%;
           aspect-ratio: 1/1;
           border: var(--default-border-style);
+          border-bottom: none;
 
           img {
             display: block;

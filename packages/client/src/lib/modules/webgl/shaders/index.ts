@@ -5,6 +5,7 @@ import { waves } from "./waves"
 import { plasma } from "./plasma"
 import { plasmaHue } from "./plasma-hue"
 import { plasmaOptimized } from "./plasma-optimized"
+import { clouds } from "./clouds"
 
 const shaders = {
   noise,
@@ -12,7 +13,8 @@ const shaders = {
   waves,
   plasma,
   plasmaOptimized,
-  plasmaHue
+  plasmaHue,
+  clouds
 }
 
 export { shaders }
