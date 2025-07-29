@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte"
-  import { rat } from "$lib/modules/state/stores"
+  import { rat, player } from "$lib/modules/state/stores"
 
   import RatInfo from "$lib/components/Rat/RatBox/RatInfo/RatInfo.svelte"
   import DeployRat from "$lib/components/Rat/RatBox/RatDeploy/RatDeploy.svelte"

@@ -1,10 +1,13 @@
 <script lang="ts">
   import RatBox from "$lib/components/Rat/RatBox/RatBox.svelte"
+  import { player } from "$lib/modules/state/stores"
   import { ChatBox } from "$lib/components/Shared"
 </script>
 
 <div class="rat-container">
-  <RatBox />
+  {#if $player}
+    <RatBox />
+  {/if}
   <ChatBox />
 </div>
 

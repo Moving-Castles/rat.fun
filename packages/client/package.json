@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev",
+    "dev:netlify": "netlify dev --debug",
     "build": "vite build",
     "preview": "vite preview",
     "prepare": "svelte-kit sync || echo ''",
@@ -49,6 +50,7 @@
     "@latticexyz/store-sync": "2.2.23-94cac741be24bb5743f2f36235cc3bb40012417a",
     "@latticexyz/utils": "2.2.23-94cac741be24bb5743f2f36235cc3bb40012417a",
     "@latticexyz/world": "2.2.23-94cac741be24bb5743f2f36235cc3bb40012417a",
+    "@netlify/edge-functions": "^2.16.2",
     "@sanity/client": "^7.8.1",
     "@sanity/image-url": "^1.1.0",
     "@sentry/sveltekit": "^9.40.0",
