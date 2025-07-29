@@ -57,7 +57,7 @@ contract ManagerSystemTest is BaseTest {
   // Items
   // * * * *
 
-  function testApplyOutcomeAddPositiveItem() public {
+  function testApplyOutcomeAddItem() public {
     setInitialBalance(alice);
     // As alice
     vm.startPrank(alice);
@@ -83,7 +83,7 @@ contract ManagerSystemTest is BaseTest {
 
     // As admin
     prankAdmin();
-    startGasReport("Apply outcome (add positive item)");
+    startGasReport("Apply outcome (add item)");
     world.ratfun__applyOutcome(ratId, roomId, 0, new bytes32[](0), newItems);
     endGasReport();
     vm.stopPrank();
@@ -97,7 +97,7 @@ contract ManagerSystemTest is BaseTest {
     assertEq(Balance.get(roomId), GameConfig.getRoomCreationCost() - 40);
   }
 
-  function testApplyOutcomeAddPositiveItemTooExpensive() public {
+  function testApplyOutcomeAddItemTooExpensive() public {
     setInitialBalance(alice);
     // As alice
     vm.startPrank(alice);
@@ -123,7 +123,7 @@ contract ManagerSystemTest is BaseTest {
 
     // As admin
     prankAdmin();
-    startGasReport("Apply outcome (add positive item: too expensive)");
+    startGasReport("Apply outcome (add item: too expensive)");
     world.ratfun__applyOutcome(ratId, roomId, 0, new bytes32[](0), newItems);
     endGasReport();
     vm.stopPrank();
@@ -134,7 +134,57 @@ contract ManagerSystemTest is BaseTest {
     assertEq(Balance.get(roomId), GameConfig.getRoomCreationCost());
   }
 
-  function testApplyOutcomeRemovePositiveItem() public {
+  function testApplyOutcomeAddItemInventoryFull() public {
+    setInitialBalance(alice);
+    // As alice
+    vm.startPrank(alice);
+    world.ratfun__spawn("alice");
+    approveGamePool(type(uint256).max);
+    bytes32 ratId = world.ratfun__createRat("roger");
+    vm.stopPrank();
+
+    setInitialBalance(bob);
+    // As bob
+    vm.startPrank(bob);
+    bytes32 bobId = world.ratfun__spawn("bob");
+    approveGamePool(type(uint256).max);
+    vm.stopPrank();
+
+    prankAdmin();
+    bytes32 roomId = world.ratfun__createRoom(bobId, LevelList.getItem(0), bytes32(0), "test room");
+    vm.stopPrank();
+
+    uint256 maxInventorySize = GameConfig.getMaxInventorySize();
+
+    // Item to add
+    Item[] memory newItems = new Item[](maxInventorySize);
+
+    for (uint256 i = 0; i < maxInventorySize; i++) {
+      newItems[i] = Item(string(abi.encodePacked("cheese ", i)), 1);
+    }
+
+    // As admin
+    prankAdmin();
+    world.ratfun__applyOutcome(ratId, roomId, 0, new bytes32[](0), newItems);
+    vm.stopPrank();
+
+    // Check inventory length
+    assertEq(Inventory.length(ratId), maxInventorySize);
+
+    Item[] memory extraItems = new Item[](3);
+    extraItems[0] = Item("extra cheese", 1);
+    extraItems[1] = Item("extra cheese 2", 1);
+    extraItems[2] = Item("extra cheese 3", 1);
+
+    prankAdmin();
+    world.ratfun__applyOutcome(ratId, roomId, 0, new bytes32[](0), extraItems);
+    vm.stopPrank();
+
+    // Inventory length should still be maxInventorySize
+    assertEq(Inventory.length(ratId), maxInventorySize);
+  }
+
+  function testApplyOutcomeRemoveItem() public {
     setInitialBalance(alice);
     // As alice
     vm.startPrank(alice);
@@ -177,7 +227,7 @@ contract ManagerSystemTest is BaseTest {
 
     // As admin
     prankAdmin();
-    startGasReport("Apply outcome (remove positive item)");
+    startGasReport("Apply outcome (remove item)");
     world.ratfun__applyOutcome(ratId, roomId, 0, itemsToRemove, new Item[](0));
     endGasReport();
     vm.stopPrank();

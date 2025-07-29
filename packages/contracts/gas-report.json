@@ -1,15 +1,15 @@
 [
   {
     "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
-    "test": "testApplyOutcomeAddPositiveItem",
-    "name": "Apply outcome (add positive item)",
+    "test": "testApplyOutcomeAddItem",
+    "name": "Apply outcome (add item)",
     "gasUsed": 392523
   },
   {
     "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
-    "test": "testApplyOutcomeAddPositiveItemTooExpensive",
-    "name": "Apply outcome (add positive item: too expensive)",
-    "gasUsed": 167455
+    "test": "testApplyOutcomeAddItemTooExpensive",
+    "name": "Apply outcome (add item: too expensive)",
+    "gasUsed": 167459
   },
   {
     "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
@@ -31,8 +31,8 @@
   },
   {
     "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
-    "test": "testApplyOutcomeRemovePositiveItem",
-    "name": "Apply outcome (remove positive item)",
+    "test": "testApplyOutcomeRemoveItem",
+    "name": "Apply outcome (remove item)",
     "gasUsed": 120330
   },
   {
