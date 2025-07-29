@@ -20,7 +20,7 @@ export default defineWorld({
         maxInventorySize: "uint32",
         maxRoomPromptLength: "uint32",
         cooldownCloseRoom: "uint32",
-        taxationSellItem: "uint32",
+        taxationReAbsorbItem: "uint32",
         taxationLiquidateRat: "uint32",
         taxationCloseRoom: "uint32"
       },

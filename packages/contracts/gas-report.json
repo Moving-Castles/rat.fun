@@ -73,9 +73,9 @@
   },
   {
     "file": "test/systems/RatSystem.t.sol:RatSystemTest",
-    "test": "testSellItem",
-    "name": "Sell item",
-    "gasUsed": 72752
+    "test": "testReAbsorbItem",
+    "name": "Re-absorb item",
+    "gasUsed": 72015
   },
   {
     "file": "test/systems/RoomSystem.t.sol:RoomSystemTest",

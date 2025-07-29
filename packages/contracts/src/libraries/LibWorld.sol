@@ -16,7 +16,7 @@ import {
   MIN_ROOM_PROMPT_LENGTH,
   MAX_INVENTORY_SIZE,
   COOLDOWN_CLOSE_ROOM,
-  TAXATION_SELL_ITEM,
+  TAXATION_RE_ABSORB_ITEM,
   TAXATION_LIQUIDATE_RAT,
   TAXATION_CLOSE_ROOM
 } from "../constants.sol";
@@ -51,7 +51,7 @@ library LibWorld {
         maxInventorySize: MAX_INVENTORY_SIZE,
         maxRoomPromptLength: MAX_ROOM_PROMPT_LENGTH,
         cooldownCloseRoom: COOLDOWN_CLOSE_ROOM,
-        taxationSellItem: TAXATION_SELL_ITEM,
+        taxationReAbsorbItem: TAXATION_RE_ABSORB_ITEM,
         taxationLiquidateRat: TAXATION_LIQUIDATE_RAT,
         taxationCloseRoom: TAXATION_CLOSE_ROOM
       })

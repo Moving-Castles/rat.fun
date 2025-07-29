@@ -24,7 +24,7 @@ struct GameConfigData {
   uint32 maxInventorySize;
   uint32 maxRoomPromptLength;
   uint32 cooldownCloseRoom;
-  uint32 taxationSellItem;
+  uint32 taxationReAbsorbItem;
   uint32 taxationLiquidateRat;
   uint32 taxationCloseRoom;
 }
@@ -62,7 +62,7 @@ library GameConfig {
     fieldNames[4] = "maxInventorySize";
     fieldNames[5] = "maxRoomPromptLength";
     fieldNames[6] = "cooldownCloseRoom";
-    fieldNames[7] = "taxationSellItem";
+    fieldNames[7] = "taxationReAbsorbItem";
     fieldNames[8] = "taxationLiquidateRat";
     fieldNames[9] = "taxationCloseRoom";
   }
@@ -348,9 +348,9 @@ library GameConfig {
   }
 
   /**
-   * @notice Get taxationSellItem.
+   * @notice Get taxationReAbsorbItem.
    */
-  function getTaxationSellItem() internal view returns (uint32 taxationSellItem) {
+  function getTaxationReAbsorbItem() internal view returns (uint32 taxationReAbsorbItem) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 7, _fieldLayout);
@@ -358,9 +358,9 @@ library GameConfig {
   }
 
   /**
-   * @notice Get taxationSellItem.
+   * @notice Get taxationReAbsorbItem.
    */
-  function _getTaxationSellItem() internal view returns (uint32 taxationSellItem) {
+  function _getTaxationReAbsorbItem() internal view returns (uint32 taxationReAbsorbItem) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 7, _fieldLayout);
@@ -368,21 +368,21 @@ library GameConfig {
   }
 
   /**
-   * @notice Set taxationSellItem.
+   * @notice Set taxationReAbsorbItem.
    */
-  function setTaxationSellItem(uint32 taxationSellItem) internal {
+  function setTaxationReAbsorbItem(uint32 taxationReAbsorbItem) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 7, abi.encodePacked((taxationSellItem)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 7, abi.encodePacked((taxationReAbsorbItem)), _fieldLayout);
   }
 
   /**
-   * @notice Set taxationSellItem.
+   * @notice Set taxationReAbsorbItem.
    */
-  function _setTaxationSellItem(uint32 taxationSellItem) internal {
+  function _setTaxationReAbsorbItem(uint32 taxationReAbsorbItem) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 7, abi.encodePacked((taxationSellItem)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 7, abi.encodePacked((taxationReAbsorbItem)), _fieldLayout);
   }
 
   /**
@@ -500,7 +500,7 @@ library GameConfig {
     uint32 maxInventorySize,
     uint32 maxRoomPromptLength,
     uint32 cooldownCloseRoom,
-    uint32 taxationSellItem,
+    uint32 taxationReAbsorbItem,
     uint32 taxationLiquidateRat,
     uint32 taxationCloseRoom
   ) internal {
@@ -512,7 +512,7 @@ library GameConfig {
       maxInventorySize,
       maxRoomPromptLength,
       cooldownCloseRoom,
-      taxationSellItem,
+      taxationReAbsorbItem,
       taxationLiquidateRat,
       taxationCloseRoom
     );
@@ -536,7 +536,7 @@ library GameConfig {
     uint32 maxInventorySize,
     uint32 maxRoomPromptLength,
     uint32 cooldownCloseRoom,
-    uint32 taxationSellItem,
+    uint32 taxationReAbsorbItem,
     uint32 taxationLiquidateRat,
     uint32 taxationCloseRoom
   ) internal {
@@ -548,7 +548,7 @@ library GameConfig {
       maxInventorySize,
       maxRoomPromptLength,
       cooldownCloseRoom,
-      taxationSellItem,
+      taxationReAbsorbItem,
       taxationLiquidateRat,
       taxationCloseRoom
     );
@@ -573,7 +573,7 @@ library GameConfig {
       _table.maxInventorySize,
       _table.maxRoomPromptLength,
       _table.cooldownCloseRoom,
-      _table.taxationSellItem,
+      _table.taxationReAbsorbItem,
       _table.taxationLiquidateRat,
       _table.taxationCloseRoom
     );
@@ -598,7 +598,7 @@ library GameConfig {
       _table.maxInventorySize,
       _table.maxRoomPromptLength,
       _table.cooldownCloseRoom,
-      _table.taxationSellItem,
+      _table.taxationReAbsorbItem,
       _table.taxationLiquidateRat,
       _table.taxationCloseRoom
     );
@@ -627,7 +627,7 @@ library GameConfig {
       uint32 maxInventorySize,
       uint32 maxRoomPromptLength,
       uint32 cooldownCloseRoom,
-      uint32 taxationSellItem,
+      uint32 taxationReAbsorbItem,
       uint32 taxationLiquidateRat,
       uint32 taxationCloseRoom
     )
@@ -646,7 +646,7 @@ library GameConfig {
 
     cooldownCloseRoom = (uint32(Bytes.getBytes4(_blob, 124)));
 
-    taxationSellItem = (uint32(Bytes.getBytes4(_blob, 128)));
+    taxationReAbsorbItem = (uint32(Bytes.getBytes4(_blob, 128)));
 
     taxationLiquidateRat = (uint32(Bytes.getBytes4(_blob, 132)));
 
@@ -672,7 +672,7 @@ library GameConfig {
       _table.maxInventorySize,
       _table.maxRoomPromptLength,
       _table.cooldownCloseRoom,
-      _table.taxationSellItem,
+      _table.taxationReAbsorbItem,
       _table.taxationLiquidateRat,
       _table.taxationCloseRoom
     ) = decodeStatic(_staticData);
@@ -708,7 +708,7 @@ library GameConfig {
     uint32 maxInventorySize,
     uint32 maxRoomPromptLength,
     uint32 cooldownCloseRoom,
-    uint32 taxationSellItem,
+    uint32 taxationReAbsorbItem,
     uint32 taxationLiquidateRat,
     uint32 taxationCloseRoom
   ) internal pure returns (bytes memory) {
@@ -721,7 +721,7 @@ library GameConfig {
         maxInventorySize,
         maxRoomPromptLength,
         cooldownCloseRoom,
-        taxationSellItem,
+        taxationReAbsorbItem,
         taxationLiquidateRat,
         taxationCloseRoom
       );
@@ -741,7 +741,7 @@ library GameConfig {
     uint32 maxInventorySize,
     uint32 maxRoomPromptLength,
     uint32 cooldownCloseRoom,
-    uint32 taxationSellItem,
+    uint32 taxationReAbsorbItem,
     uint32 taxationLiquidateRat,
     uint32 taxationCloseRoom
   ) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
@@ -753,7 +753,7 @@ library GameConfig {
       maxInventorySize,
       maxRoomPromptLength,
       cooldownCloseRoom,
-      taxationSellItem,
+      taxationReAbsorbItem,
       taxationLiquidateRat,
       taxationCloseRoom
     );
