@@ -1,13 +1,13 @@
 import { useEffect } from "react"
 import { useEntryKitConfig, useSessionClient } from "@latticexyz/entrykit/internal"
 import { entryKitConnector, entryKitSession } from "$lib/modules/entry-kit/stores"
-import { useConnectorClient } from "wagmi"
+import { useWalletClient } from "wagmi"
 
 export default function SessionBridge() {
   const { chainId } = useEntryKitConfig()
   const sessionClient = useSessionClient()
 
-  const connectorClient = useConnectorClient({ chainId })
+  const connectorClient = useWalletClient({ chainId })
 
   // Transfer session updates to svelte store
   useEffect(() => {
