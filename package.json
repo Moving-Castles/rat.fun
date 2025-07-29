@@ -23,9 +23,9 @@
     "@latticexyz/common": "2.2.23-94cac741be24bb5743f2f36235cc3bb40012417a",
     "@latticexyz/explorer": "2.2.23-94cac741be24bb5743f2f36235cc3bb40012417a",
     "@latticexyz/store-indexer": "2.2.23-94cac741be24bb5743f2f36235cc3bb40012417a",
-    "@typescript-eslint/eslint-plugin": "8.37.0",
-    "@typescript-eslint/parser": "8.37.0",
-    "eslint": "9.31.0",
+    "@typescript-eslint/eslint-plugin": "8.38.0",
+    "@typescript-eslint/parser": "8.38.0",
+    "eslint": "9.32.0",
     "mprocs": "^0.7.3",
     "prettier": "^3.6.2",
     "prettier-plugin-solidity": "^2.1.0",
@@ -49,5 +49,8 @@
       "wagmi": "2.15.6",
       "@tanstack/react-query": "5.81.5"
     }
+  },
+  "dependencies": {
+    "@sveltejs/adapter-static": "^3.0.8"
   }
 }

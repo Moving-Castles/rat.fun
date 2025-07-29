@@ -13,14 +13,14 @@
   import { initStaticContent, staticContent } from "$lib/modules/content"
   import { publicNetwork } from "$lib/modules/network"
   import { initSound, playSound } from "$lib/modules/sound"
-  import { UIState, notificationsRead } from "$lib/modules/ui/stores"
+  import { UIState, notificationsRead } from "$lib/modules/ui/state.svelte"
   import { UI } from "$lib/modules/ui/enums"
   import { initOffChainSync } from "$lib/modules/off-chain-sync"
   import { playerId, activeWorldEvent } from "$lib/modules/state/stores"
   import { websocketConnected } from "$lib/modules/off-chain-sync/stores"
   import { EMPTY_ID } from "$lib/modules/state/constants"
   import { outerLayoutTransitionConfig } from "$lib/components/Shared/PageTransitions/transitionConfigs"
-  import { errorHandler, WebSocketError } from "$lib/modules/error-handling"
+  import { errorHandler } from "$lib/modules/error-handling"
   import { Modal, PageTransitions, WalletInfo } from "$lib/components/Shared"
   import { removeHash } from "$lib/modules/utils"
 
@@ -36,8 +36,6 @@
   let outcomeId = $state("")
   let outcome = $state<SanityOutcome | undefined>()
 
-  const allowedRoutes = ["/(rooms)/(game)/[roomId]"]
-
   const { environment, walletType } = data
 
   const environmentLoaded = async () => {
@@ -45,11 +43,13 @@
       // Get content from CMS
       await initStaticContent($publicNetwork.worldAddress)
 
-      // Set next UI state based on the URL
-      if (!allowedRoutes.includes(page.route.id)) {
-        UIState.set(UI.SPAWNING)
-      } else {
+      // Bypass spawning if user is navigating directly to a room
+      // This is to allow un-spawned users to see the room info
+      const allowedRoutes = ["/(rooms)/(game)/[roomId]"]
+      if (allowedRoutes.includes(page.route.id ?? "")) {
         UIState.set(UI.READY)
+      } else {
+        UIState.set(UI.SPAWNING)
       }
     } catch (error) {
       errorHandler(error) // CMS error
@@ -156,7 +156,6 @@
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    // background: var(--background);
   }
 
   main {
@@ -176,9 +175,6 @@
       z-index: 100;
       background: black;
     }
-    // background: var(--background);
-    // background-image: url("/images/tiles.png");
-    // background-size: 300px;
   }
 
   .layer-game {

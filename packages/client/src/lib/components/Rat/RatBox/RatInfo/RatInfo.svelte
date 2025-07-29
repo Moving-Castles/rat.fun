@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { ratImageUrl } from "$lib/modules/state/stores"
-
   import RatStats from "$lib/components/Rat/RatBox/RatInfo/RatStats.svelte"
   import RatInventory from "$lib/components/Rat/RatBox/RatInfo/RatInventory.svelte"
   import LiquidateRat from "$lib/components/Rat/RatBox/RatInfo/LiquidateRat.svelte"
@@ -12,10 +10,6 @@
     <div class="rat-stats">
       <RatStats />
     </div>
-    <!-- Rat image -->
-    <button class="rat-image-container">
-      <img src={$ratImageUrl} alt="Rat Cam" />
-    </button>
   </div>
   <!-- Inventory -->
   <div class="rat-inventory">
@@ -43,22 +37,6 @@
     height: var(--rat-main-info-height);
     border-bottom: var(--default-border-style);
     overflow: hidden;
-
-    .rat-image-container {
-      border: none;
-      padding: 0;
-      height: 100%;
-      width: var(--rat-main-cam-width);
-      overflow: hidden;
-      border-left: var(--default-border-style);
-      cursor: pointer;
-
-      img {
-        height: 100%;
-        width: 100%;
-        object-fit: cover;
-      }
-    }
 
     .rat-stats {
       flex: 1;
