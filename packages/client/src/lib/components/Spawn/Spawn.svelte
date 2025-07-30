@@ -38,7 +38,10 @@
     )
 
     // Check if player is already spawned
-    if (isSpawned) {
+    if (
+      isSpawned ||
+      (page.route.id === "/(rooms)/(game)/[roomId]" && !page.url.searchParams.has("spawn"))
+    ) {
       // Connected and spawned - finish spawn process
       spawned()
     } else {
@@ -55,12 +58,6 @@
       currentState = SPAWN_STATE.SPAWN_FORM
     }
   }
-
-  $effect(() => {
-    if (page.route.id === "/(rooms)/(game)/[roomId]" && !page.url.searchParams.has("spawn")) {
-      spawned()
-    }
-  })
 
   $effect(() => {
     if ($entryKitSession) {

@@ -95,7 +95,7 @@
         <Spawn spawned={playerSpawned} {walletType} />
       </main>
     </div>
-  {:else if $UIState === UI.READY}
+  {:else}
     {#if browser}
       <ShaderTest />
     {/if}

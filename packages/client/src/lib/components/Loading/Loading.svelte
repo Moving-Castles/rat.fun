@@ -25,8 +25,6 @@
       initEntities()
       // Animate out
       initSequence()
-
-      // console.log($player)
     }
   })
 
