@@ -3,7 +3,7 @@
   import type { Hex } from "viem"
   import { onMount, onDestroy } from "svelte"
   import { goto } from "$app/navigation"
-  import { navigating } from "$app/state"
+  import { page } from "$app/state"
   import { player, rooms as roomsState, rat as ratState } from "$lib/modules/state/stores"
   import {
     ROOM_RESULT_STATE,
@@ -40,6 +40,10 @@
 
   // Result of the room entry, returned by the server
   let result: EnterRoomReturnValue | null = $state(null)
+
+  let timeout: ReturnType<typeof setTimeout> = $state()
+
+  let destroyed = false
 
   // Get room info from global store based on id
   let room = $derived($roomsState?.[roomId ?? ""])
@@ -88,6 +92,7 @@
   }
 
   onMount(() => {
+    console.log("onmount")
     if (!$ratState || !valid) {
       goto("/")
       return
@@ -99,7 +104,8 @@
   })
 
   onDestroy(() => {
-    resetRoomResultState()
+    destroyed = true
+    clearTimeout(timeout)
   })
 </script>
 
@@ -109,6 +115,9 @@
     <SplashScreen
       {staticRoomContent}
       onComplete={() => {
+        if (destroyed) return
+        console.log(performance.now() + " Completed splash")
+        console.log(page.route.id)
         transitionTo(ROOM_RESULT_STATE.WAITING_FOR_RESULT)
       }}
     />
@@ -133,7 +142,8 @@
     <Log
       {result}
       onComplete={() => {
-        setTimeout(() => {
+        console.log(performance.now() + " Completed")
+        timeout = setTimeout(() => {
           if (result) {
             transitionToResultSummary(result)
           }
