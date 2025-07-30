@@ -43,14 +43,7 @@
       // Get content from CMS
       await initStaticContent($publicNetwork.worldAddress)
 
-      // Bypass spawning if user is navigating directly to a room
-      // This is to allow un-spawned users to see the room info
-      const allowedRoutes = ["/(rooms)/(game)/[roomId]"]
-      if (allowedRoutes.includes(page.route.id ?? "")) {
-        UIState.set(UI.READY)
-      } else {
-        UIState.set(UI.SPAWNING)
-      }
+      UIState.set(UI.SPAWNING)
     } catch (error) {
       errorHandler(error) // CMS error
       goto("/")
@@ -89,36 +82,31 @@
   }}
 />
 
-{#if $UIState === UI.LOADING}
-  <div class="bg over">
+<div class="bg">
+  {#if $UIState === UI.LOADING}
     <div class="context-main">
       <main>
         <Loading {environment} loaded={environmentLoaded} />
       </main>
     </div>
-  </div>
-{:else if $UIState === UI.SPAWNING}
-  <div class="bg over">
+  {:else if $UIState === UI.SPAWNING}
     <div class="context-main">
       <main>
         <Spawn spawned={playerSpawned} {walletType} />
       </main>
     </div>
-  </div>
-{/if}
-
-<!-- This needs to always render -->
-<div inert={$UIState !== UI.READY} class="bg">
-  {#if browser}
-    <ShaderTest />
-  {/if}
-  <div class="context-main">
-    <div class="layer-game">
-      <PageTransitions config={outerLayoutTransitionConfig}>
-        {@render children?.()}
-      </PageTransitions>
+  {:else if $UIState === UI.READY}
+    {#if browser}
+      <ShaderTest />
+    {/if}
+    <div class="context-main">
+      <div class="layer-game">
+        <PageTransitions config={outerLayoutTransitionConfig}>
+          {@render children?.()}
+        </PageTransitions>
+      </div>
     </div>
-  </div>
+  {/if}
 </div>
 
 {#key outcomeId}

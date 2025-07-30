@@ -5,6 +5,7 @@
   import { player } from "$lib/modules/state/stores"
   import { UIState } from "$lib/modules/ui/state.svelte"
   import { UI } from "$lib/modules/ui/enums"
+  import { goto } from "$app/navigation"
 
   // Not enough balance
   let disabled = $derived(($playerERC20Balance ?? 0) < Number($gameConfig?.ratCreationCost ?? 0))
@@ -15,6 +16,7 @@
   }
 
   const onSpawnClick = () => {
+    goto("?spawn")
     UIState.set(UI.SPAWNING)
   }
 </script>
