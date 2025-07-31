@@ -2,22 +2,21 @@
   import type { Hex } from "viem"
   import { rooms } from "$lib/modules/state/stores"
   import { page } from "$app/state"
-  import { RoomPreview, SEO } from "$lib/components/Shared"
+  import { AdminRoomPreview, SEO } from "$lib/components/Shared"
 
   let { data } = $props()
 
-  let prompt = $derived($rooms?.[page.params.roomId]?.prompt || "")
+  let prompt = $derived($rooms?.[page.params.roomId as Hex]?.prompt || "")
   let truncatedTitle = $derived(prompt?.length > 32 ? `${prompt?.slice(0, 32)}...` : prompt)
-  let room = $derived($rooms?.[page.params.roomId])
+  let room = $derived($rooms?.[page.params.roomId as Hex])
 </script>
 
 <SEO prependTitle={truncatedTitle} />
 
 {#if room}
-  <RoomPreview
+  <AdminRoomPreview
     sanityRoomContent={data.roomContent}
     roomId={page.params.roomId as Hex}
-    isOwnRoomListing={true}
     {room}
   />
 {/if}

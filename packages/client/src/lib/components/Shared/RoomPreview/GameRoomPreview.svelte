@@ -13,38 +13,28 @@
     RoomPreviewGraph,
     RoomPreviewEventLog,
     NoRatWarning,
-    EnterRoomButton,
-    LiquidateRoom
+    EnterRoomButton
   } from "$lib/components/Shared"
 
   let {
     roomId,
     room,
-    isOwnRoomListing,
     sanityRoomContent
-  }: { roomId: Hex; room: Room; isOwnRoomListing: boolean; sanityRoomContent: SanityRoom } =
-    $props()
+  }: { roomId: Hex; room: Room; sanityRoomContent: SanityRoom } = $props()
 
   let roomOutcomes = $state<Outcome[]>()
 
   //  Show enter button if:
-  //  * - Not in own room listing
   //  * - Room is not depleted
   //  * - Rat exists and is alive
   //  * - Room is at the same level as the rat
   let showEnterButton = $derived(
-    !isOwnRoomListing && (room?.balance ?? 0) > 0 && !$rat?.dead && room.level == $rat?.level
+    (room?.balance ?? 0) > 0 && !$rat?.dead && room.level == $rat?.level
   )
 
   // Show no rat warning if:
-  //  * - Not in own room listing
   //  * - Rat does not exist or is dead
-  let showNoRatWarning = $derived(!isOwnRoomListing && $rat?.dead)
-
-  // Show liquidate button if:
-  //  * - In own room listing
-  //  * - Room is not depleted
-  let showLiquidateButton = $derived(isOwnRoomListing && room.balance > 0)
+  let showNoRatWarning = $derived($rat?.dead)
 
   onMount(() => {
     const outcomes = $staticContent?.outcomes?.filter(o => o.roomId == roomId) || []
@@ -56,18 +46,10 @@
   })
 </script>
 
+<a class="back-button" href="/">Back</a>
 <div class="room-inner-container">
-  {#if isOwnRoomListing}
-    <a class="back-button" href="/admin">Back</a>
-  {:else}
-    <a class="back-button" href="/">Back</a>
-  {/if}
   <RoomPreviewHeader {room} {sanityRoomContent} />
   <RoomPreviewPrompt {room} />
-
-  {#if showLiquidateButton}
-    <LiquidateRoom {roomId} {room} {isOwnRoomListing} />
-  {/if}
 
   {#if showNoRatWarning}
     <NoRatWarning />

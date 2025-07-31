@@ -9,8 +9,13 @@
   import { sendLiquidateRoomMessage } from "$lib/modules/off-chain-sync"
   import { errorHandler } from "$lib/modules/error-handling"
 
+  let {
+    room,
+    roomId,
+    onclick
+  }: { room: Room; roomId: string; isOwnRoomListing: boolean; onclick: () => void } = $props()
+
   let sanityRoomContent = $derived($staticContent.rooms.find(r => r.title == roomId))
-  let { room, roomId }: { room: Room; roomId: string; isOwnRoomListing: boolean } = $props()
   let { modal } = getModalState()
 
   let confirming = $state(false)
@@ -26,13 +31,10 @@
   <div class="action">
     <DangerButton
       text={blockUntilUnlock <= 0
-        ? `Liquidate Room (Get ${Math.floor(Number(room.balance) * ((100 - $gameConfig.taxationCloseRoom) / 100))})`
+        ? `Liquidate Room)`
         : `Liquidation unlocked in ${blockUntilUnlock} blocks`}
       tippyText="Liquidate room to get the value added to your wallet"
-      onclick={async () => {
-        await sendLiquidateRoom(roomId)
-        sendLiquidateRoomMessage(roomId)
-      }}
+      {onclick}
       disabled={busy.CloseRoom.current !== 0 || blockUntilUnlock > 0}
     />
   </div>
