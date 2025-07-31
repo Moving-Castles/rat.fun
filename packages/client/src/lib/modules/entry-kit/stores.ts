@@ -4,4 +4,6 @@ import { writable } from "svelte/store"
 
 export const entryKitSession = writable<SessionClient<Chain> | undefined | null>(null)
 
-export const entryKitConnector = writable<WalletClient<Transport, Chain, Account> | undefined | null>(null)
+export const entryKitConnector = writable<
+  WalletClient<Transport, Chain, Account> | undefined | null
+>(null)

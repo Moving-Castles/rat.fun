@@ -34,8 +34,8 @@
           config: defineConfig({
             chainId: networkConfig.chainId,
             worldAddress: networkConfig.worldAddress as Hex,
-            paymasterOverride: paymasters[networkConfig.chainId],
-          }),
+            paymasterOverride: paymasters[networkConfig.chainId]
+          })
         },
         [
           // The button

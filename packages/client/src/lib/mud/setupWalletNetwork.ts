@@ -14,7 +14,7 @@ export type SetupWalletNetworkResult = Awaited<ReturnType<typeof setupWalletNetw
 
 export function setupWalletNetwork(
   publicNetwork: SetupPublicNetworkResult,
-  walletClient: WalletClient<Transport, Chain, Account>,
+  walletClient: WalletClient<Transport, Chain, Account>
 ) {
   const networkConfig = publicNetwork.config
 
