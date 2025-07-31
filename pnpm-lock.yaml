@@ -34,6 +34,9 @@ importers:
       eslint:
         specifier: 9.32.0
         version: 9.32.0(jiti@2.5.1)
+      husky:
+        specifier: ^8.0.0
+        version: 8.0.3
       mprocs:
         specifier: ^0.7.3
         version: 0.7.3
@@ -8201,6 +8204,11 @@ packages:
 
   humanize-list@1.0.1:
     resolution: {integrity: sha512-4+p3fCRF21oUqxhK0yZ6yaSP/H5/wZumc7q1fH99RkW7Q13aAxDeP78BKjoR+6y+kaHqKF/JWuQhsNuuI2NKtA==}
+
+  husky@8.0.3:
+    resolution: {integrity: sha512-+dQSyqPh4x1hlO1swXBiNb2HzTDN1I2IGLQx1GrBuiqFJfoMrnZWwVmatvSiO+Iz8fBUnf+lekwNo4c2LlXItg==}
+    engines: {node: '>=14'}
+    hasBin: true
 
   i18next@23.16.8:
     resolution: {integrity: sha512-06r/TitrM88Mg5FdUXAKL96dJMzgqLE5dv3ryBAra4KCwD9mJ4ndOTS95ZuymIGoE+2hzfdaMak2X11/es7ZWg==}
@@ -25931,6 +25939,8 @@ snapshots:
   human-signals@8.0.1: {}
 
   humanize-list@1.0.1: {}
+
+  husky@8.0.3: {}
 
   i18next@23.16.8:
     dependencies:
