@@ -13,10 +13,11 @@
     "dev:contracts": "pnpm --filter 'contracts' run dev",
     "foundry:up": "curl -L https://foundry.paradigm.xyz | bash && bash $HOME/.foundry/bin/foundryup",
     "mud:up": "pnpm mud set-version --tag main && pnpm install",
-    "prepare": "(forge --version || pnpm foundry:up)",
+    "prepare": "(forge --version || pnpm foundry:up) && husky install",
     "test": "pnpm recursive run test",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "pre-commit": "node scripts/pre-commit/check-credentials.js && node scripts/pre-commit/check-env-files.js"
   },
   "devDependencies": {
     "@latticexyz/cli": "2.2.23-94cac741be24bb5743f2f36235cc3bb40012417a",
@@ -26,6 +27,7 @@
     "@typescript-eslint/eslint-plugin": "8.38.0",
     "@typescript-eslint/parser": "8.38.0",
     "eslint": "9.32.0",
+    "husky": "^8.0.0",
     "mprocs": "^0.7.3",
     "prettier": "^3.6.2",
     "prettier-plugin-solidity": "^2.1.0",

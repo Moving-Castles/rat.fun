@@ -9,7 +9,6 @@
   import { browser } from "$app/environment"
   import { onMount } from "svelte"
   import { goto } from "$app/navigation"
-  import { page } from "$app/state"
   import { initStaticContent, staticContent } from "$lib/modules/content"
   import { publicNetwork } from "$lib/modules/network"
   import { initSound, playSound } from "$lib/modules/sound"
@@ -21,7 +20,7 @@
   import { EMPTY_ID } from "$lib/modules/state/constants"
   import { outerLayoutTransitionConfig } from "$lib/components/Shared/PageTransitions/transitionConfigs"
   import { errorHandler } from "$lib/modules/error-handling"
-  import { Modal, PageTransitions, WalletInfo } from "$lib/components/Shared"
+  import { Modal, PageTransitions } from "$lib/components/Shared"
   import { removeHash } from "$lib/modules/utils"
 
   import Spawn from "$lib/components/Spawn/Spawn.svelte"
@@ -133,8 +132,6 @@
 {/if}
 
 <Modal />
-
-<!-- <WalletInfo {walletType} {environment} /> -->
 
 <style lang="scss">
   .context-main {
