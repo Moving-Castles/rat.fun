@@ -13,11 +13,7 @@ const patterns = [
   /SENTRY_DSN\s*=/,
   /MASTER_KEY_CODE\s*=/,
   /NETLIFY_AUTH_TOKEN\s*=/,
-<<<<<<< HEAD
   /_TOKEN\s*=/
-=======
-  /SANITY_TOKEN\s*=/
->>>>>>> 6c9175502acd16e611502f6ac753bed7b90f6c58
 ]
 
 try {
@@ -38,22 +34,12 @@ try {
       continue
     }
 
-<<<<<<< HEAD
-    // Skip pre-commit scripts themselves to avoid self-blocking
-    if (file.includes("scripts/pre-commit/")) {
-      continue
-    }
-
-    // Skip GitHub workflow files that intentionally contain patterns for CI/CD
-    if (file.includes(".github/workflows/")) {
-=======
     // Skip our own credential checking files and documentation
     if (
       file.includes("scripts/pre-commit/") ||
       file.includes(".github/workflows/credential-check.yml") ||
       file.includes("scripts/README.md")
     ) {
->>>>>>> 6c9175502acd16e611502f6ac753bed7b90f6c58
       continue
     }
 
