@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { rat } from "$lib/modules/state/stores"
+  import { rat, gameConfig } from "$lib/modules/state/stores"
   import { BigButton } from "$lib/components/Shared"
   import { transitionTo, RAT_BOX_STATE } from "../state.svelte"
 
@@ -22,6 +22,11 @@
     <BigButton text="Confirm" onclick={onClickConfirm} />
     <BigButton text="Abort" onclick={onClickAbort} />
   </div>
+  <p>
+    You will recover <span class="value"
+      >{(Number($rat.balance) * (100 - $gameConfig.taxationLiquidateRat)) / 100} SLOPAMINE</span
+    >
+  </p>
 </div>
 
 <style lang="scss">
@@ -45,6 +50,12 @@
       display: flex;
       flex-direction: row;
       gap: 10px;
+    }
+
+    .value {
+      background: var(--color-value);
+      color: var(--black);
+      padding: 5px;
     }
   }
 </style>

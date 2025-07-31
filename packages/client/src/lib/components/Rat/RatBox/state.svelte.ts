@@ -1,5 +1,7 @@
 import { errorHandler } from "$lib/modules/error-handling"
 import { InvalidStateTransitionError } from "$lib/modules/error-handling/errors"
+import { items } from "$lib/modules/state/stores"
+import { get } from "svelte/store"
 
 /**
  * ========================================
@@ -59,7 +61,11 @@ const VALID_TRANSITIONS: Record<RAT_BOX_STATE, RAT_BOX_STATE[]> = {
     RAT_BOX_STATE.CONFIRM_RE_ABSORB_ITEM,
     RAT_BOX_STATE.ERROR
   ],
-  [RAT_BOX_STATE.CONFIRM_RE_ABSORB_ITEM]: [RAT_BOX_STATE.RE_ABSORBING_ITEM, RAT_BOX_STATE.ERROR],
+  [RAT_BOX_STATE.CONFIRM_RE_ABSORB_ITEM]: [
+    RAT_BOX_STATE.RE_ABSORBING_ITEM,
+    RAT_BOX_STATE.HAS_RAT,
+    RAT_BOX_STATE.ERROR
+  ],
   [RAT_BOX_STATE.RE_ABSORBING_ITEM]: [RAT_BOX_STATE.HAS_RAT, RAT_BOX_STATE.ERROR],
   [RAT_BOX_STATE.CONFIRM_LIQUIDATION]: [
     RAT_BOX_STATE.HAS_RAT,
@@ -95,4 +101,24 @@ export const transitionTo = (newState: RAT_BOX_STATE) => {
 export const resetRatBoxState = () => {
   ratBoxState.state = RAT_BOX_STATE.INIT
   ratBoxState.errorMessage = null
+}
+
+let itemState = $state("")
+const itemDerived = $derived.by(() => {
+  const values = get(items)
+  return values?.[itemState] || false
+})
+
+export const getItemState = () => {
+  return {
+    item: {
+      set: (newState: string) => (itemState = newState),
+      get entity() {
+        return itemDerived
+      },
+      get current() {
+        return itemState
+      }
+    }
+  }
 }

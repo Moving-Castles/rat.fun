@@ -1,27 +1,37 @@
 <script lang="ts">
-  import { rat } from "$lib/modules/state/stores"
+  import { gameConfig } from "$lib/modules/state/stores"
   import { BigButton } from "$lib/components/Shared"
-  import { transitionTo, RAT_BOX_STATE } from "../state.svelte"
+  import { transitionTo, RAT_BOX_STATE, getItemState } from "../state.svelte"
+
+  let { item } = getItemState()
+
+  $inspect(item.current)
 
   const onClickConfirm = () => {
-    // RAT_BOX_STATE.CONFIRM_RE_ABSORB_ITEM -> RAT_BOX_STATE.RE_ABSORBING_ITEM
+    console.log("RE_ABSORBING_ITEM")
     transitionTo(RAT_BOX_STATE.RE_ABSORBING_ITEM)
   }
 
   const onClickAbort = () => {
-    // RAT_BOX_STATE.CONFIRM_RE_ABSORB_ITEM -> RAT_BOX_STATE.HAS_RAT
+    item.set("")
     transitionTo(RAT_BOX_STATE.HAS_RAT)
   }
 </script>
 
 <div class="confirm-re-absorb-item">
   <div class="confirm-re-absorb-item-text">
-    <h1>xxxxx?</h1>
+    <h1>Will you re-absorb {item.entity.name}?</h1>
   </div>
   <div class="button-container">
     <BigButton text="Confirm" onclick={onClickConfirm} />
     <BigButton text="Abort" onclick={onClickAbort} />
   </div>
+  <p>
+    You will recover
+    <span class="value"
+      >{(Number(item.entity.value) * (100 - $gameConfig.taxationReAbsorbItem)) / 100} SLOPAMINE</span
+    >
+  </p>
 </div>
 
 <style lang="scss">
@@ -45,6 +55,12 @@
       display: flex;
       flex-direction: row;
       gap: 10px;
+    }
+
+    .value {
+      background: var(--color-value);
+      color: var(--black);
+      padding: 5px;
     }
   }
 </style>

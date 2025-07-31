@@ -3,6 +3,11 @@
   import { items } from "$lib/modules/state/stores"
   import { reAbsorbItem } from "$lib/modules/on-chain-transactions"
   import { playSound } from "$lib/modules/sound"
+  import {
+    RAT_BOX_STATE,
+    transitionTo,
+    getItemState
+  } from "$lib/components/Rat/RatBox/state.svelte"
 
   let {
     item,
@@ -12,6 +17,8 @@
     isRoomInfoBox?: boolean
   } = $props()
 
+  let { item: itemState } = getItemState()
+
   let busy = $state(false)
   let isHovered = $state(false)
 
@@ -19,24 +26,6 @@
   const name = $derived(typeof item === "string" ? ($items[item]?.name ?? "---") : item.name)
 
   const value = $derived(typeof item === "string" ? ($items[item]?.value ?? 0) : item.value)
-
-  const sendReAbsorbItem = async () => {
-    if (typeof item !== "string") {
-      return
-    }
-    if (busy) return
-
-    try {
-      playSound("tcm", "blink")
-      busy = true
-      await reAbsorbItem(item)
-      playSound("tcm", "TRX_no")
-    } catch (e) {
-      console.error(e)
-    } finally {
-      busy = false
-    }
-  }
 </script>
 
 <button
@@ -45,7 +34,11 @@
   class:disabled={busy}
   onmouseenter={() => !isRoomInfoBox && (isHovered = true)}
   onmouseleave={() => !isRoomInfoBox && (isHovered = false)}
-  onclick={sendReAbsorbItem}
+  onclick={() => {
+    console.log("setting item", item)
+    itemState.set(item)
+    transitionTo(RAT_BOX_STATE.CONFIRM_RE_ABSORB_ITEM)
+  }}
 >
   <!-- NAME -->
   <div class="name">{isRoomInfoBox || !isHovered ? name : "Re-absorb item"}</div>
