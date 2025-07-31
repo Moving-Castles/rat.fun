@@ -34,10 +34,11 @@ export { default as RoomFilters } from "./RoomListing/RoomFilters.svelte"
 export { default as RoomListing } from "./RoomListing/RoomListing.svelte"
 
 /* RoomPreview */
+export { default as AdminRoomPreview } from "./RoomPreview/AdminRoomPreview.svelte"
 export { default as EnterRoomButton } from "./RoomPreview/EnterRoomButton.svelte"
+export { default as GameRoomPreview } from "./RoomPreview/GameRoomPreview.svelte"
 export { default as LiquidateRoom } from "./RoomPreview/LiquidateRoom.svelte"
 export { default as NoRatWarning } from "./RoomPreview/NoRatWarning.svelte"
-export { default as RoomPreview } from "./RoomPreview/RoomPreview.svelte"
 export { default as RoomPreviewEventLog } from "./RoomPreview/RoomPreviewEventLog.svelte"
 export { default as RoomPreviewGraph } from "./RoomPreview/RoomPreviewGraph.svelte"
 export { default as RoomPreviewHeader } from "./RoomPreview/RoomPreviewHeader.svelte"
