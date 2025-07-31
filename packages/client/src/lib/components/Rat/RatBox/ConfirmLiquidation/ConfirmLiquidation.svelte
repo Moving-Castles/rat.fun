@@ -24,7 +24,7 @@
   </div>
   <p>
     You will recover <span class="value"
-      >{(Number($rat.balance) * (100 - $gameConfig.taxationLiquidateRat)) / 100} SLOPAMINE</span
+      >{Math.floor((Number($rat.balance) * (100 - $gameConfig.taxationLiquidateRat)) / 100)} SLOPAMINE</span
     >
   </p>
 </div>

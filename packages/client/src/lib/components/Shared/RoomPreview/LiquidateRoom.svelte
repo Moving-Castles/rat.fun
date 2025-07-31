@@ -26,7 +26,7 @@
   <div class="action">
     <DangerButton
       text={blockUntilUnlock <= 0
-        ? `Liquidate Room (Get ${Number(room.balance) * ((100 - $gameConfig.taxationCloseRoom) / 100)})`
+        ? `Liquidate Room (Get ${Math.floor(Number(room.balance) * ((100 - $gameConfig.taxationCloseRoom) / 100))})`
         : `Liquidation unlocked in ${blockUntilUnlock} blocks`}
       tippyText="Liquidate room to get the value added to your wallet"
       onclick={async () => {

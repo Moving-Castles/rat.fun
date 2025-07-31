@@ -29,7 +29,7 @@
   <p>
     You will recover
     <span class="value"
-      >{(Number(item.entity.value) * (100 - $gameConfig.taxationReAbsorbItem)) / 100} SLOPAMINE</span
+      >{Math.floor((Number(item.entity.value) * (100 - $gameConfig.taxationReAbsorbItem)) / 100)} SLOPAMINE</span
     >
   </p>
 </div>
