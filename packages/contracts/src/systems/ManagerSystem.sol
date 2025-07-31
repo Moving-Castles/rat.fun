@@ -52,8 +52,11 @@ contract ManagerSystem is System {
     require(EntityType.get(_ratId) == ENTITY_TYPE.RAT, "not rat");
     require(Dead.get(_ratId) == false, "rat is dead");
     require(EntityType.get(_roomId) == ENTITY_TYPE.ROOM, "not room");
-    require(Balance.get(_roomId) >= 0, "no room balance");
     require(Level.get(_roomId) == Level.get(_ratId), "rat and room level mismatch");
+
+    // Check that room is not depleted
+    uint256 roomBalance = Balance.get(_roomId);
+    require(roomBalance >= 0, "no room balance");
 
     // Increment visitor count
     VisitCount.set(_roomId, VisitCount.get(_roomId) + 1);
@@ -66,10 +69,10 @@ contract ManagerSystem is System {
 
     if (IsSpecialRoom.get(_roomId)) {
       // If the room is special, it has a custom max value per win
-      roomBudget = MaxValuePerWin.get(_roomId);
+      roomBudget = LibUtils.min(MaxValuePerWin.get(_roomId), roomBalance);
     } else {
       // A normal room can give a maximum of half of its creation cost
-      roomBudget = LibUtils.min(RoomCreationCost.get(_roomId) / 2, Balance.get(_roomId));
+      roomBudget = LibUtils.min(RoomCreationCost.get(_roomId) / 2, roomBalance);
     }
 
     // * * * * * * * * * * * * *
