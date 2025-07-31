@@ -73,16 +73,14 @@ function checkForHardcodedEnvVars() {
     for (const file of stagedFiles) {
       // Only check code files
       if (file.match(/\.(js|ts|jsx|tsx|svelte|vue|json|md|txt|yml|yaml)$/)) {
-        // Skip pre-commit scripts themselves to avoid self-blocking
-        if (file.includes("scripts/pre-commit/")) {
+        // Skip our own credential checking files and documentation
+        if (
+          file.includes("scripts/pre-commit/") ||
+          file.includes(".github/workflows/credential-check.yml") ||
+          file.includes("scripts/README.md")
+        ) {
           continue
         }
-
-        // Skip GitHub workflow files that intentionally contain patterns for CI/CD
-        if (file.includes(".github/workflows/")) {
-          continue
-        }
-
         try {
           const content = execSync(`git show :${file}`, { encoding: "utf8" })
 

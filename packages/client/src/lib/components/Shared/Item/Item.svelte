@@ -1,7 +1,6 @@
 <script lang="ts">
   import type { TempItem } from "$lib/components/Room/RoomResult/types"
   import { items } from "$lib/modules/state/stores"
-
   import {
     RAT_BOX_STATE,
     transitionTo,

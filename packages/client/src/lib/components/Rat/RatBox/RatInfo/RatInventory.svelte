@@ -2,7 +2,7 @@
   import { tippy } from "svelte-tippy"
   import { rat } from "$lib/modules/state/stores"
 
-  import { InteractiveItem } from "$lib/components/Shared"
+  import { Item } from "$lib/components/Shared"
 </script>
 
 <div class="rat-info-box">
