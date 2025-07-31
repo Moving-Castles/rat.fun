@@ -3,7 +3,7 @@
  * (https://viem.sh/docs/getting-started.html).
  * This line imports the functions we need from it.
  */
-import { Hex, getContract, Client, Transport, Chain, Account } from "viem"
+import { Hex, getContract, WalletClient, Chain, Account, Transport } from "viem"
 import { encodeEntity } from "@latticexyz/store-sync/recs"
 
 import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json" with { type: "json" }
@@ -14,7 +14,7 @@ export type SetupWalletNetworkResult = Awaited<ReturnType<typeof setupWalletNetw
 
 export function setupWalletNetwork(
   publicNetwork: SetupPublicNetworkResult,
-  walletClient: Client<Transport, Chain, Account>
+  walletClient: WalletClient<Transport, Chain, Account>
 ) {
   const networkConfig = publicNetwork.config
 
