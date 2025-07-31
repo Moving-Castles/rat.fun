@@ -1,4 +1,4 @@
-import { mudFoundry } from "@latticexyz/common/chains"
+import { MUDChain, mudFoundry } from "@latticexyz/common/chains"
 
 export const extendedMudFoundry = {
   ...mudFoundry,
@@ -21,4 +21,4 @@ export const extendedMudFoundry = {
       url: "http://localhost:13690/anvil/worlds"
     }
   }
-}
+} as const satisfies MUDChain
