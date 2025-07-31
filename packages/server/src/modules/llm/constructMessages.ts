@@ -9,18 +9,28 @@ export async function constructEventMessages(
   worldEvent: WorldEvent | undefined
 ): Promise<MessageParam[]> {
   const messages: MessageParam[] = []
-  // Check if there is an active world event
+  // World event
   const latestBlockNumber = await getLatestBlockNumber()
   if (worldEvent?.prompt && worldEvent.expirationBlock > latestBlockNumber) {
     messages.push({ role: "user", content: `WorldEvent: ${worldEvent.prompt}` })
   }
+
   // Room
-  if (room.isSpecialRoom && room.maxValuePerWin) {
-    messages.push({ role: "user", content: `RoomIsSpecial: true` })
-    messages.push({ role: "user", content: `RoomMaxValuePerWin: ${room.maxValuePerWin}` })
-  }
   messages.push({ role: "user", content: `RoomDescription: ${room.prompt}` })
   messages.push({ role: "user", content: `RoomBalance: ${room.balance}` })
+
+  // If room is special, use the max value per win.
+  // Otherwise, use half of the room creation cost.
+  const valueLimit = room.isSpecialRoom
+    ? (Number(room.maxValuePerWin) ?? 0)
+    : Number(room.roomCreationCost) / 2
+  // Max value per win is capped at the room balance.
+  const maxValuePerWin = Math.min(valueLimit, room.balance)
+  messages.push({
+    role: "user",
+    content: `RoomMaxValuePerWin: ${maxValuePerWin}`
+  })
+
   // Rat
   messages.push({ role: "user", content: `RatName: ${rat.name}` })
   messages.push({ role: "user", content: `RatItems: ${JSON.stringify(rat.inventory)}` })

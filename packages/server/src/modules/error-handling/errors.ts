@@ -87,6 +87,15 @@ export class LLMParseError extends LLMError {
   }
 }
 
+export class LLMOverloadedError extends LLMError {
+  constructor(
+    message: string = "Anthropic API is currently overloaded",
+    public originalError?: unknown
+  ) {
+    super("LLM_OVERLOADED_ERROR", "LLM service overloaded", message)
+  }
+}
+
 // ============================================================================
 // Onchain Data Errors
 // ============================================================================
