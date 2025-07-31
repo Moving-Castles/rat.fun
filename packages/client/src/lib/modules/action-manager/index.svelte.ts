@@ -10,7 +10,7 @@ export { sendEnterRoom } from "./actions/sendEnterRoom"
 export { sendCreateRoom } from "./actions/sendCreateRoom"
 export { sendLiquidateRat } from "./actions/sendLiquidateRat"
 export { sendLiquidateRoom } from "./actions/sendLiquidateRoom"
-export { sendSellItem } from "./actions/sendSellItem"
+export { sendReAbsorbItem } from "./actions/sendReAbsorbItem"
 
 const DEFAULT_TIMINGS = {
   Spawn: 4000,
@@ -22,7 +22,7 @@ const DEFAULT_TIMINGS = {
   CreateRat: 4000,
   LiquidateRat: 4000,
   LiquidateRoom: 4000,
-  SellItem: 4000
+  ReAbsorbItem: 4000
 }
 
 export const busy = $state({
@@ -35,5 +35,5 @@ export const busy = $state({
   CreateRat: new Tween(0, { duration: DEFAULT_TIMINGS.CreateRat, easing }),
   LiquidateRat: new Tween(0, { duration: DEFAULT_TIMINGS.LiquidateRat, easing }),
   LiquidateRoom: new Tween(0, { duration: DEFAULT_TIMINGS.LiquidateRoom, easing }),
-  SellItem: new Tween(0, { duration: DEFAULT_TIMINGS.SellItem, easing })
+  ReAbsorbItem: new Tween(0, { duration: DEFAULT_TIMINGS.ReAbsorbItem, easing })
 })

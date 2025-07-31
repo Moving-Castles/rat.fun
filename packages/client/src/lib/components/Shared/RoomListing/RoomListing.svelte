@@ -34,7 +34,6 @@
   })
 
   let activeList = $derived.by(() => {
-    console.log("activeList updated")
     // activeList
     if (lastChecked > 0) {
       return roomList.filter(r => Number(r[1].creationBlock) <= lastChecked)

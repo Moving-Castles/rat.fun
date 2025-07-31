@@ -13,5 +13,5 @@ interface IRatSystem {
 
   function ratfun__liquidateRat() external;
 
-  function ratfun__sellItem(bytes32 _itemId) external;
+  function ratfun__reAbsorbItem(bytes32 _itemId) external;
 }

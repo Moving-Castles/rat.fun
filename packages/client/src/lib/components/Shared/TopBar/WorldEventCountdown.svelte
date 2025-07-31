@@ -7,13 +7,13 @@
   let interval: ReturnType<typeof setInterval>
   let countdown = $derived.by(() => {
     if (tick) {
-      return timeUntil(new Date($upcomingWorldEvent.activationDateTime).getTime())
+      return timeUntil(new Date($upcomingWorldEvent?.activationDateTime ?? "").getTime())
     } else {
       return "00:00:00"
     }
   })
   let almost = $derived(
-    millisUntil(new Date($upcomingWorldEvent.activationDateTime).getTime()) < 60000 &&
+    millisUntil(new Date($upcomingWorldEvent?.activationDateTime ?? "").getTime()) < 60000 &&
       tick % 2 === 0
   ) // one minute before
 

@@ -3,6 +3,7 @@
   import { ready, loadingMessage, loadingPercentage } from "$lib/modules/network"
   import { initPublicNetwork } from "$lib/initPublicNetwork"
   import { initEntities } from "$lib/modules/systems/initEntities"
+  import { player } from "$lib/modules/state/stores"
   import { ENVIRONMENT } from "$lib/mud/enums"
   import { gsap } from "gsap"
 

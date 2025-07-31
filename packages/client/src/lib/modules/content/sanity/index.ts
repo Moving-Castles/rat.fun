@@ -17,7 +17,11 @@ export const client = createClient({
 
 const builder = imageUrlBuilder(client)
 
-export const urlFor = (source: any) => builder.image(source)
+export const urlFor = (source: any) => {
+  // console.log("urlFor", source)
+  if (!source) return undefined
+  return builder.image(source)
+}
 
 /**
  * Sanitizes Sanity CMS data to ensure it's serializable by removing

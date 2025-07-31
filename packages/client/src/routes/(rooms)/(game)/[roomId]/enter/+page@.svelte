@@ -10,6 +10,7 @@
   let valid = $derived($sessionId === page.url?.searchParams.get("sessionId"))
 
   onMount(() => {
+    console.log("mount " + performance.now())
     if (!valid) {
       console.warn("session ID mismatch")
       goto("/")
@@ -19,4 +20,6 @@
   })
 </script>
 
-<RoomResult roomId={page.params.roomId} {valid} />
+{#key page.route.id}
+  <RoomResult roomId={page.params.roomId} {valid} />
+{/key}

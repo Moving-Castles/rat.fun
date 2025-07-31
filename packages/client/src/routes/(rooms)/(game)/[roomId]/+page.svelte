@@ -7,6 +7,8 @@
 
   let { data } = $props()
 
+  $inspect(data)
+
   let room = $derived($rooms[page.params.roomId])
 </script>
 

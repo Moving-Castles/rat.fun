@@ -7,6 +7,7 @@
 
 import { Hex } from "viem"
 import { JSONParseError } from "../error-handling/errors"
+import { pushState } from "$app/navigation"
 
 const BLOCKTIME = 2
 
@@ -553,5 +554,5 @@ export function addressToRatImage(address: string, maxRats: number = 50): string
  * Remove hash from the current URL
  */
 export function removeHash() {
-  history.pushState("", document.title, window.location.pathname + window.location.search)
+  pushState("", document.title, window.location.pathname + window.location.search)
 }

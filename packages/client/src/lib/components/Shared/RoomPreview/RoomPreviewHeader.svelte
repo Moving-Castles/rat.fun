@@ -17,9 +17,10 @@
   <!-- svelte-ignore a11y_no_static_element_interactions -->
   <div class="image" onclick={() => (showImageModal = true)}>
     {#key $lastUpdated}
-      {#if sanityRoomContent}
+      {console.log(urlFor(sanityRoomContent?.image))}
+      {#if sanityRoomContent?.image?.asset}
         <img
-          src={urlFor(sanityRoomContent?.image).width(600).auto("format").url()}
+          src={urlFor(sanityRoomContent?.image)?.width?.(600)?.height(600)?.url() ?? ""}
           alt={`room #${room.index}`}
         />
       {:else}
@@ -65,10 +66,12 @@
   <!-- svelte-ignore a11y_click_events_have_key_events -->
   <!-- svelte-ignore a11y_no_static_element_interactions -->
   <div class="image-modal" onclick={() => modal.close()}>
-    <img
-      src={urlFor(sanityRoomContent?.image).width(1200).auto("format").url()}
-      alt={`room #${room.index}`}
-    />
+    {#if sanityRoomContent?.image?.asset}
+      <img
+        src={urlFor(sanityRoomContent?.image).width(1200).auto("format").url()}
+        alt={`room #${room.index}`}
+      />
+    {/if}
   </div>
 {/snippet}
 

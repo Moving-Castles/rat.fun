@@ -15,6 +15,16 @@
     $staticContent?.rooms?.find(r => r._id.trim() == roomId.trim()) ?? undefined
   )
 
+  let roomImageUrl = $derived.by(() => {
+    const image = sanityRoomContent?.image
+    if (image) {
+      // Only call urlFor if image is defined
+      return urlFor(image)?.width(400)?.auto("format")?.url()
+    } else {
+      return false
+    }
+  })
+
   function getPromptLengthClass(prompt: string) {
     const length = prompt.length
     if (length > 200) return "extra-long"
@@ -28,11 +38,8 @@
   <!-- COLUMN LEFT -->
   <div class="column left">
     <div class="room-image">
-      {#if sanityRoomContent?.image}
-        <img
-          src={urlFor(sanityRoomContent?.image).width(400).auto("format").url()}
-          alt={`room #${room.index}`}
-        />
+      {#if roomImageUrl}
+        <img src={roomImageUrl} alt={`room #${room.index}`} />
       {:else}
         <NoImage />
       {/if}

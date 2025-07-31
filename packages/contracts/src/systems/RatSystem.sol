@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
-import { Owner, CurrentRat, Dead, Inventory, GameConfig, Value } from "../codegen/index.sol";
+import { Owner, CurrentRat, Dead, Inventory, GameConfig, Value, Balance } from "../codegen/index.sol";
 import { System } from "@latticexyz/world/src/System.sol";
 import { LibUtils, LibRat, LibWorld } from "../libraries/Libraries.sol";
 
@@ -59,10 +59,10 @@ contract RatSystem is System {
   }
 
   /**
-   * @notice Sell an item
+   * @notice Re-absorb an item into the Rrt. Destroy item and transfer value to rat balance.
    * @param _itemId The id of the item
    */
-  function sellItem(bytes32 _itemId) public {
+  function reAbsorbItem(bytes32 _itemId) public {
     bytes32 playerId = LibUtils.addressToEntityKey(_msgSender());
     bytes32 ratId = CurrentRat.get(playerId);
 
@@ -74,15 +74,14 @@ contract RatSystem is System {
     // Remove it from the inventory
     Inventory.set(ratId, LibUtils.removeFromArray(Inventory.get(ratId), _itemId));
 
-    uint256 valueToPlayer = Value.get(_itemId);
+    uint256 valueToRat = Value.get(_itemId);
 
     // Calculate tax
-    uint256 tax = (valueToPlayer * GameConfig.getTaxationSellItem()) / 100;
-    valueToPlayer -= tax;
+    uint256 tax = (valueToRat * GameConfig.getTaxationReAbsorbItem()) / 100;
+    valueToRat -= tax;
 
-    // Withdraw tokens equal to item value minus tax from pool to player
-    // ERC-20 will check that pool has sufficient balance
-    LibWorld.gamePool().withdrawTokens(_msgSender(), valueToPlayer * 10 ** LibWorld.erc20().decimals());
+    // Add value to rat balance
+    Balance.set(ratId, Balance.get(ratId) + valueToRat);
 
     // Withdraw tokens equal to tax from pool to admin
     LibWorld.gamePool().withdrawTokens(GameConfig.getAdminAddress(), tax * 10 ** LibWorld.erc20().decimals());

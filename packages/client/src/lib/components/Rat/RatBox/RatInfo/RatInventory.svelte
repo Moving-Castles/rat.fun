@@ -14,7 +14,7 @@
         <div
           class="label"
           use:tippy={{
-            content: "Items carried by your rat. You can sell them by clicking on them."
+            content: "Items carried by your rat. You can re-absorb them by clicking."
           }}
         >
           Inventory

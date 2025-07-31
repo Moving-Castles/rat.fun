@@ -1,6 +1,8 @@
 <script lang="ts">
   import { onMount } from "svelte"
 
+  import { page } from "$app/state"
+
   import { WALLET_TYPE } from "$lib/mud/enums"
   import { SPAWN_STATE } from "$lib/modules/ui/enums"
 
@@ -36,7 +38,10 @@
     )
 
     // Check if player is already spawned
-    if (isSpawned) {
+    if (
+      isSpawned ||
+      (page.route.id === "/(rooms)/(game)/[roomId]" && !page.url.searchParams.has("spawn"))
+    ) {
       // Connected and spawned - finish spawn process
       spawned()
     } else {

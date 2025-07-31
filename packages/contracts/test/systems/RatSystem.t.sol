@@ -164,7 +164,7 @@ contract RatSystemTest is BaseTest {
     assertNotEq(ratId, newRatId);
   }
 
-  function testSellItem() public {
+  function testReAbsorbItem() public {
     setInitialBalance(alice);
 
     // As alice
@@ -173,8 +173,6 @@ contract RatSystemTest is BaseTest {
     approveGamePool(type(uint256).max);
     bytes32 ratId = world.ratfun__createRat("roger");
     vm.stopPrank();
-
-    uint256 aliceBalance = LibWorld.erc20().balanceOf(alice);
 
     // Item to add
     Item[] memory newItems = new Item[](1);
@@ -196,15 +194,15 @@ contract RatSystemTest is BaseTest {
 
     uint256 adminBalance = LibWorld.erc20().balanceOf(GameConfig.getAdminAddress());
 
-    // Sell item
+    // Re-absorb item
     vm.startPrank(alice);
-    startGasReport("Sell item");
-    world.ratfun__sellItem(newItemId);
+    startGasReport("Re-absorb item");
+    world.ratfun__reAbsorbItem(newItemId);
     endGasReport();
     vm.stopPrank();
 
     // Calculate tax
-    uint256 tax = (40 * GameConfig.getTaxationSellItem()) / 100;
+    uint256 tax = (40 * GameConfig.getTaxationReAbsorbItem()) / 100;
 
     // Check that tax was transferred to admin
     assertEq(
@@ -212,7 +210,10 @@ contract RatSystemTest is BaseTest {
       adminBalance + tax * 10 ** LibWorld.erc20().decimals()
     );
 
-    // Check that value minus tax was transfered to player
-    assertEq(LibWorld.erc20().balanceOf(alice), aliceBalance + (40 - tax) * 10 ** LibWorld.erc20().decimals());
+    // Check that item was removed from inventory
+    assertEq(Inventory.length(ratId), 0);
+
+    // Check that value was added to rat balance
+    assertEq(Balance.get(ratId), RAT_CREATION_COST + 40 - tax);
   }
 }

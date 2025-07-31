@@ -21,9 +21,9 @@
       <!-- IMAGE -->
       <div class="image-container">
         {#key $lastUpdated}
-          {#if staticRoomContent}
+          {#if staticRoomContent?.image?.asset}
             <img
-              src={urlFor(staticRoomContent?.image).width(300).auto("format").url()}
+              src={urlFor(staticRoomContent?.image)?.width(300)?.auto("format")?.url()}
               alt={`room #${$frozenRoom.index}`}
             />
           {:else}
