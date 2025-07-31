@@ -13,6 +13,7 @@ export type Room = {
   level: string
   prompt: string
   balance: number
+  roomCreationCost: number
   index: number
   isSpecialRoom?: boolean
   maxValuePerWin?: number
