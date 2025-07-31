@@ -65,11 +65,7 @@
     <div class="image-container" bind:this={imageContainerElement}>
       {#if staticRoomContent}
         <img
-          src={urlFor(staticRoomContent?.image)
-            .width(500)
-            .auto("format")
-            // .saturation(-100)
-            .url()}
+          src={urlFor(staticRoomContent?.image)?.width(500)?.auto("format").url()}
           alt={`room #${$frozenRoom?.index ?? ""}`}
         />
       {:else}

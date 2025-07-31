@@ -15,8 +15,8 @@
     transitionTo(RAT_BOX_STATE.DEPLOYING_RAT)
   }
 
-  const onSpawnClick = () => {
-    goto("?spawn")
+  const onSpawnClick = async () => {
+    await goto("?spawn")
     UIState.set(UI.SPAWNING)
   }
 </script>

@@ -42,6 +42,7 @@
       isSpawned ||
       (page.route.id === "/(rooms)/(game)/[roomId]" && !page.url.searchParams.has("spawn"))
     ) {
+      console.log("spawned already")
       // Connected and spawned - finish spawn process
       spawned()
     } else {
@@ -75,7 +76,11 @@
   })
 
   onMount(() => {
-    if (walletType === WALLET_TYPE.BURNER) connectBurner()
+    if (walletType === WALLET_TYPE.BURNER) {
+      connectBurner()
+    } else {
+      console.log("missing clause for entrykit")
+    }
   })
 </script>
 

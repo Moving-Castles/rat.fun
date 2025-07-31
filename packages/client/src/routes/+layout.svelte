@@ -38,6 +38,8 @@
 
   const { environment, walletType } = data
 
+  $inspect($UIState)
+
   const environmentLoaded = async () => {
     try {
       // Get content from CMS
