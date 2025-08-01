@@ -32,6 +32,9 @@ export function initEntities() {
     }
   }
   const filteredEntities = syncEntities
+
+  console.log("filteredEntities", filteredEntities)
+
   entities.set(filteredEntities)
   for (const componentKey of get(publicNetwork).tableKeys) {
     createComponentSystem(componentKey)

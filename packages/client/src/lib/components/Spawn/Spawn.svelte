@@ -174,11 +174,11 @@
   </div>
 </div>
 
-<!-- <div class="hidden">
+<div class="hidden">
   {#if walletType === WALLET_TYPE.ENTRYKIT}
     <EntryKit />
   {/if}
-</div> -->
+</div>
 
 <style lang="scss">
   .container {
@@ -195,5 +195,10 @@
   .content {
     position: relative;
     z-index: 1;
+  }
+
+  .hidden {
+    position: absolute;
+    opacity: 0;
   }
 </style>
