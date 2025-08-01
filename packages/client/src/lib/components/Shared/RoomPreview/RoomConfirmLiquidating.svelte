@@ -28,17 +28,19 @@
     <VideoLoaderDuration duration={4000} />
   {:else}
     <div class="confirm-liquidation-text">
-      <h1>Are you sure you want to liquidate room #{roomContent.index}?</h1>
+      <h1>
+        Are you sure you want to liquidate room #{roomContent.index}?<br />
+        We deduct {$gameConfig.taxationCloseRoom}% TraumwertSteuer,<br />
+        You will recover
+        <span class="value"
+          >{Math.floor((Number(room.balance) * (100 - $gameConfig.taxationCloseRoom)) / 100)} SLOPAMINE</span
+        >
+      </h1>
     </div>
     <div class="button-container">
       <BigButton text="Confirm" onclick={onClickConfirm} />
       <BigButton text="Abort" onclick={onAbort} />
     </div>
-    <p>
-      You will recover <span class="value"
-        >{Math.floor((Number(room.balance) * (100 - $gameConfig.taxationCloseRoom)) / 100)} SLOPAMINE</span
-      >
-    </p>
   {/if}
 </div>
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import RatBox from "$lib/components/Rat/RatBox/RatBox.svelte"
+  import { RatBox } from "$lib/components/Rat"
   import { ChatBox } from "$lib/components/Shared"
 </script>
 

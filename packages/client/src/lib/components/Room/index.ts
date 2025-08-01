@@ -1,4 +1,3 @@
-export { default as AdminRoomPreview } from "./RoomPreview/AdminRoomPreview.svelte"
 export { default as EnterRoomButton } from "./RoomPreview/EnterRoomButton.svelte"
 export { default as GameRoomPreview } from "./RoomPreview/GameRoomPreview.svelte"
 export { default as LevelDownResultSummary } from "./ResultSummary/LevelDownResultSummary.svelte"

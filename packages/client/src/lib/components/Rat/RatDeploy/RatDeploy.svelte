@@ -1,7 +1,7 @@
 <script lang="ts">
   import { gameConfig, playerERC20Balance } from "$lib/modules/state/stores"
   import { BigButton } from "$lib/components/Shared"
-  import { transitionTo, RAT_BOX_STATE } from "../state.svelte"
+  import { transitionTo, RAT_BOX_STATE } from "../RatBox/state.svelte"
   import { player } from "$lib/modules/state/stores"
   import { UIState } from "$lib/modules/ui/state.svelte"
   import { UI } from "$lib/modules/ui/enums"

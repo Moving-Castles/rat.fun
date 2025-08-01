@@ -5,7 +5,7 @@
   import { entriesByPopularity, entriesChronologically } from "./sortFunctions"
   import { filterRooms, filterDepletedRooms } from "./filterFunctions"
   import { blockNumber } from "$lib/modules/network"
-  import { OwnRoomItem } from "$lib/components/Shared"
+  import { AdminRoomItem } from "$lib/components/Admin"
   import { RoomItem, RoomFilters } from "$lib/components/Room"
 
   let {
@@ -106,7 +106,7 @@
       {/if}
       {#each activeList as roomEntry (roomEntry[0])}
         {#if isOwnRoomListing}
-          <OwnRoomItem roomId={roomEntry[0] as Hex} room={roomEntry[1]} />
+          <AdminRoomItem roomId={roomEntry[0] as Hex} room={roomEntry[1]} />
         {:else}
           <RoomItem roomId={roomEntry[0] as Hex} room={roomEntry[1]} />
         {/if}

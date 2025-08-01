@@ -1,41 +1,38 @@
 <script lang="ts">
-  import { gameConfig } from "$lib/modules/state/stores"
+  import { rat, gameConfig } from "$lib/modules/state/stores"
   import { BigButton } from "$lib/components/Shared"
-  import { transitionTo, RAT_BOX_STATE, getItemState } from "../state.svelte"
-
-  let { item } = getItemState()
-
-  $inspect(item.current)
+  import { transitionTo, RAT_BOX_STATE } from "../RatBox/state.svelte"
 
   const onClickConfirm = () => {
-    console.log("RE_ABSORBING_ITEM")
-    transitionTo(RAT_BOX_STATE.RE_ABSORBING_ITEM)
+    // RAT_BOX_STATE.CONFIRM_LIQUIDATION -> RAT_BOX_STATE.LIQUIDATING_RAT
+    transitionTo(RAT_BOX_STATE.LIQUIDATING_RAT)
   }
 
   const onClickAbort = () => {
-    item.set("")
+    // RAT_BOX_STATE.CONFIRM_LIQUIDATION -> RAT_BOX_STATE.HAS_RAT
     transitionTo(RAT_BOX_STATE.HAS_RAT)
   }
 </script>
 
-<div class="confirm-re-absorb-item">
-  <div class="confirm-re-absorb-item-text">
-    <h1>Will you re-absorb {item.entity.name}?</h1>
+<div class="confirm-liquidation">
+  <div class="confirm-liquidation-text">
+    <h1>
+      Are you sure you want to liquidate {$rat?.name}?<br />
+      We deduct {$gameConfig.taxationLiquidateRat}% TraumwertSteuer,<br />
+      You will recover
+      <span class="value"
+        >{Math.floor((Number($rat.balance) * (100 - $gameConfig.taxationLiquidateRat)) / 100)} SLOPAMINE</span
+      >
+    </h1>
   </div>
   <div class="button-container">
     <BigButton text="Confirm" onclick={onClickConfirm} />
     <BigButton text="Abort" onclick={onClickAbort} />
   </div>
-  <p>
-    You will recover
-    <span class="value"
-      >{Math.floor((Number(item.entity.value) * (100 - $gameConfig.taxationReAbsorbItem)) / 100)} SLOPAMINE</span
-    >
-  </p>
 </div>
 
 <style lang="scss">
-  .confirm-re-absorb-item {
+  .confirm-liquidation {
     display: flex;
     flex-direction: column;
     align-items: center;

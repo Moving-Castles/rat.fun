@@ -10,7 +10,7 @@
   import { setupWalletNetwork } from "$lib/mud/setupWalletNetwork"
   import { setupBurnerWalletNetwork } from "$lib/mud/setupBurnerWalletNetwork"
   import { initWalletNetwork } from "$lib/initWalletNetwork"
-  import { entryKitSession } from "$lib/modules/entry-kit/stores"
+  import { entryKitSession, entryKitConnector } from "$lib/modules/entry-kit/stores"
 
   import { playerERC20Allowance, playerERC20Balance } from "$lib/modules/state/stores"
 
@@ -51,6 +51,29 @@
     }
   }
 
+  async function connectEntryKit() {
+    if ($entryKitConnector && $entryKitSession?.userAddress) {
+      const wallet = setupWalletNetwork($publicNetwork, $entryKitConnector)
+      const isSpawned = initWalletNetwork(wallet, $entryKitSession.userAddress, walletType)
+
+      // Check if player is already spawned
+      if (
+        isSpawned ||
+        (page.route.id === "/(rooms)/(game)/[roomId]" && !page.url.searchParams.has("spawn"))
+      ) {
+        console.log("spawned already")
+        // Connected and spawned - finish spawn process
+        spawned()
+      } else {
+        // New user – show spawn form directly
+        currentState = SPAWN_STATE.SPAWN_FORM
+      }
+    } else {
+      // No EntryKit session - show introduction
+      currentState = SPAWN_STATE.INTRODUCTION
+    }
+  }
+
   const onWalletConnectionComplete = () => {
     if (walletType === WALLET_TYPE.ENTRYKIT) {
       // This is now just here for the burner. Entrykit is moved to $effect call below
@@ -60,10 +83,11 @@
     }
   }
 
+  // Handle EntryKit session changes
   $effect(() => {
-    if ($entryKitSession) {
-      if ($entryKitSession?.account?.client && $entryKitSession.userAddress) {
-        const wallet = setupWalletNetwork($publicNetwork, $entryKitSession)
+    if (walletType === WALLET_TYPE.ENTRYKIT && $entryKitSession && $entryKitConnector) {
+      if ($entryKitSession?.userAddress) {
+        const wallet = setupWalletNetwork($publicNetwork, $entryKitConnector)
         const isSpawned = initWalletNetwork(wallet, $entryKitSession.userAddress, walletType)
 
         if (isSpawned) {
@@ -78,8 +102,16 @@
   onMount(() => {
     if (walletType === WALLET_TYPE.BURNER) {
       connectBurner()
+    } else if (walletType === WALLET_TYPE.ENTRYKIT) {
+      // For EntryKit, check if session already exists immediately
+      if ($entryKitConnector && $entryKitSession?.userAddress) {
+        connectEntryKit()
+      } else {
+        // No session yet, wait for it in the $effect
+        currentState = SPAWN_STATE.INTRODUCTION
+      }
     } else {
-      console.log("missing clause for entrykit")
+      console.log("missing clause for wallet type:", walletType)
     }
   })
 </script>

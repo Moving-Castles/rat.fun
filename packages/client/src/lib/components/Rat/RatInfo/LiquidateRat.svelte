@@ -1,6 +1,6 @@
 <script lang="ts">
   import { DangerButton } from "$lib/components/Shared"
-  import { transitionTo, RAT_BOX_STATE } from "../state.svelte"
+  import { transitionTo, RAT_BOX_STATE } from "../RatBox/state.svelte"
 
   const onClick = async () => {
     // RAT_BOX_STATE.HAS_RAT -> RAT_BOX_STATE.CONFIRM_LIQUIDATION

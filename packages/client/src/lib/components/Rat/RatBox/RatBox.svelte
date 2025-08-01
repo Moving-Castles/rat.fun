@@ -1,15 +1,16 @@
 <script lang="ts">
   import { onMount } from "svelte"
   import { rat } from "$lib/modules/state/stores"
-
-  import RatInfo from "$lib/components/Rat/RatBox/RatInfo/RatInfo.svelte"
-  import DeployRat from "$lib/components/Rat/RatBox/RatDeploy/RatDeploy.svelte"
-  import DeployingRat from "$lib/components/Rat/RatBox/DeployingRat/DeployingRat.svelte"
-  import ConfirmLiquidation from "$lib/components/Rat/RatBox/ConfirmLiquidation/ConfirmLiquidation.svelte"
-  import LiquidatingRat from "$lib/components/Rat/RatBox/LiquidatingRat/LiquidatingRat.svelte"
-  import ConfirmReAbsorbItem from "$lib/components/Rat/RatBox/ConfirmReAbsorbItem/ConfirmReAbsorbItem.svelte"
-  import ReAbsorbItem from "$lib/components/Rat/RatBox/ReAbsorbingItem/ReAbsorbingItem.svelte"
-  import RatDead from "$lib/components/Rat/RatBox/RatDead/RatDead.svelte"
+  import {
+    RatInfo,
+    RatDeploy,
+    DeployingRat,
+    ConfirmLiquidation,
+    LiquidatingRat,
+    ConfirmReAbsorbItem,
+    ReAbsorbItem,
+    RatDead
+  } from "$lib/components/Rat"
 
   import { ratBoxState, RAT_BOX_STATE, transitionTo, resetRatBoxState } from "./state.svelte"
 
@@ -30,7 +31,7 @@
 
 <div class="rat-box">
   {#if ratBoxState.state === RAT_BOX_STATE.NO_RAT}
-    <DeployRat />
+    <RatDeploy />
   {:else if ratBoxState.state === RAT_BOX_STATE.DEPLOYING_RAT}
     <DeployingRat />
   {:else if ratBoxState.state === RAT_BOX_STATE.HAS_RAT}

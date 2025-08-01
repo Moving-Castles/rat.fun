@@ -3,7 +3,7 @@
   import { reAbsorbItem } from "$lib/modules/on-chain-transactions"
   import { playSound } from "$lib/modules/sound"
   import { VideoLoaderDuration } from "$lib/components/Shared"
-  import { transitionTo, RAT_BOX_STATE, getItemState } from "../state.svelte"
+  import { transitionTo, RAT_BOX_STATE, getItemState } from "../RatBox/state.svelte"
 
   let busy = $state(false)
 

@@ -33,8 +33,6 @@ export { default as PageTransitions } from "./PageTransitions/PageTransitions.sv
 
 /* Item Components */
 export { default as Item } from "./Item/Item.svelte"
-export { default as OwnRoomItem } from "../Room/OwnRoomItem/OwnRoomItem.svelte"
-export { default as InteractiveItem } from "./Item/InteractiveItem.svelte"
 export { default as DisplayItem } from "./Item/DisplayItem.svelte"
 
 /* Utility Components */

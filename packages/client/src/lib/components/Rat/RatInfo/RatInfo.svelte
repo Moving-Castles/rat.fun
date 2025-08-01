@@ -1,7 +1,5 @@
 <script lang="ts">
-  import RatStats from "$lib/components/Rat/RatBox/RatInfo/RatStats.svelte"
-  import RatInventory from "$lib/components/Rat/RatBox/RatInfo/RatInventory.svelte"
-  import LiquidateRat from "$lib/components/Rat/RatBox/RatInfo/LiquidateRat.svelte"
+  import { RatStats, RatInventory, LiquidateRat } from "$lib/components/Rat"
 </script>
 
 <div class="rat-info">

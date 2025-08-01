@@ -1,8 +1,7 @@
 <script lang="ts">
   import { tippy } from "svelte-tippy"
   import { rat } from "$lib/modules/state/stores"
-
-  import { Item } from "$lib/components/Shared"
+  import { InteractiveItem } from "$lib/components/Rat"
 </script>
 
 <div class="rat-info-box">

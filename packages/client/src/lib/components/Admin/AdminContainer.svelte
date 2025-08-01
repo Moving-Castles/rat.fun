@@ -1,5 +1,5 @@
 <script lang="ts">
-  import CreateRoom from "$lib/components/Admin/CreateRoom/CreateRoom.svelte"
+  import { CreateRoom } from "$lib/components/Admin"
   import { ChatBox } from "$lib/components/Shared"
 </script>
 
