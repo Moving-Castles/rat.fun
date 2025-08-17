@@ -40,17 +40,11 @@
       WALLET_TYPE.BURNER
     )
 
-    console.log("IS SPAWNED? ", isSpawned)
-    console.log("player? ", $player)
-    console.log("address? ", $playerAddress)
-    console.log("entities? ", $entities)
-
     // Check if player is already spawned
     if (
       isSpawned ||
       (page.route.id === "/(rooms)/(game)/[roomId]" && !page.url.searchParams.has("spawn"))
     ) {
-      console.log("spawned already")
       // Connected and spawned - finish spawn process
       spawned()
     } else {
@@ -94,16 +88,28 @@
   // Handle EntryKit session changes
   $effect(() => {
     if (walletType === WALLET_TYPE.ENTRYKIT && $entryKitSession && $entryKitConnector) {
+      console.log("__ EntryKit session effect triggered", $entryKitSession)
       if ($entryKitSession?.userAddress) {
         const wallet = setupWalletNetwork($publicNetwork, $entryKitConnector)
         const isSpawned = initWalletNetwork(wallet, $entryKitSession.userAddress, walletType)
 
-        console.log("IS SPAWNED? ", isSpawned, $player)
-        console.log("address? ", $playerAddress)
-        console.log("entities? ", $entities)
-
         if (isSpawned) {
-          spawned()
+          // Player is spawned via EntryKit
+          console.log("!!! spawned")
+          console.log("!!! player", $player)
+          console.log("!!! playerERC20Balance", $playerERC20Balance)
+          console.log("!!! playerERC20Allowance", $playerERC20Allowance)
+
+          if ($playerERC20Balance < 100) {
+            // Player has no tokens => go to token form
+            currentState = SPAWN_STATE.TOKEN_FORM
+          } else if ($playerERC20Allowance < 100) {
+            // Player has tokens, but not enough allowance => go to approval form
+            currentState = SPAWN_STATE.APPROVAL_FORM
+          } else {
+            // Player has tokens and allowance => go to game
+            spawned()
+          }
         } else {
           currentState = SPAWN_STATE.SPAWN_FORM
         }
