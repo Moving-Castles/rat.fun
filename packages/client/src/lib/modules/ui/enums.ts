@@ -6,7 +6,6 @@ export enum UI {
 }
 
 export enum SPAWN_STATE {
-  NONE = "none",
   INTRODUCTION = "introduction",
   CONNECT_WALLET = "connect_wallet",
   SPAWN_FORM = "spawn_form",
