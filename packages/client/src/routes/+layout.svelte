@@ -70,8 +70,6 @@
     document.querySelector(".preloader")?.remove()
     // Preload sounds
     initSound()
-    // Play background sound
-    playSound("tcm", "podBg", true, true)
   })
 </script>
 

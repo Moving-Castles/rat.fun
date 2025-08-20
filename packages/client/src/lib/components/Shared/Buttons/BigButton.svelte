@@ -17,13 +17,13 @@
   } = $props()
 
   const onmousedown = () => {
-    playSound("tcm", "TRX_wait_b")
+    playSound("ratfun", "mousedown")
   }
 
   let conditionalAction = $derived(tippyText ? tippy : () => {})
 
   const onmouseup = () => {
-    playSound("tcm", "selectionEnter")
+    playSound("ratfun", "mouseup")
     onclick()
   }
 </script>

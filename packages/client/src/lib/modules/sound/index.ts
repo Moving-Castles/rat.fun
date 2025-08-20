@@ -22,6 +22,13 @@ export function initSound(): void {
       preload: true
     })
   }
+  for (const key in soundLibrary.ratfun) {
+    soundLibrary.ratfun[key].sound = new Howl({
+      src: [soundLibrary.ratfun[key].src],
+      volume: soundLibrary.ratfun[key].volume,
+      preload: true
+    })
+  }
 }
 
 /**
@@ -40,11 +47,22 @@ export function playSound(
   id: string,
   loop: boolean = false,
   fade: boolean = false,
-  pitch: number = 1
+  pitch: number = 1,
+  play: boolean = true // useful to just fetch the sound
 ): Howl | undefined {
   const sound = soundLibrary[category][id].sound
 
   if (!sound) return
+
+  if (sound._src.includes("XXX.mp3")) {
+    console.warn(
+      "It looks like you might be playing silence. Are you enjoying that? Information: (%o)",
+      {
+        category,
+        id
+      }
+    )
+  }
 
   if (loop) {
     sound.loop(true)
@@ -56,11 +74,15 @@ export function playSound(
 
     // Init
     sound.rate(pitch)
-    sound.play()
-    sound.fade(0, soundLibrary[category][id].volume, FADE_TIME)
+    if (play) {
+      sound.play()
+      sound.fade(0, soundLibrary[category][id].volume, FADE_TIME)
+    }
   } else {
     sound.rate(pitch)
-    sound.play()
+    if (play) {
+      sound.play()
+    }
   }
 
   return sound
@@ -75,7 +97,7 @@ export function randomPitch(): number {
 }
 
 export const typeHit = () => {
-  const sound = playSound("tcm", "type2", false, false, randomPitch())
+  const sound = playSound("ratfun", "type", false, false, randomPitch())
   if (sound) {
     sound.play()
   }

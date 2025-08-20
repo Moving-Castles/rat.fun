@@ -11,7 +11,7 @@
 
   const onClick = async () => {
     sessionId.set(uuid())
-    playSound("tcm", "enteredPod")
+    playSound("ratfun", "enteredPod")
     goto(`/${roomId}/enter?sessionId=${$sessionId}`)
   }
 </script>

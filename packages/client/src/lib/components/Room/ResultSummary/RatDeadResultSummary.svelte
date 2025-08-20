@@ -42,7 +42,7 @@
     })
 
     timeline.call(() => {
-      playSound("tcm", "ratsDown")
+      playSound("ratfun", "ratsDown")
     })
 
     timeline.to(innerContainerElement, {

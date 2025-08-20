@@ -4,6 +4,7 @@ export type Sound = {
   src: string
   volume: number
   sound?: Howl
+  author?: string
 }
 
 export type SoundAssets = {

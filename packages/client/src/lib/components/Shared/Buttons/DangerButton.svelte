@@ -15,11 +15,11 @@
   } = $props()
 
   const onmousedown = () => {
-    playSound("tcm", "TRX_wait_b")
+    playSound("ratfun", "mousedown")
   }
 
   const onmouseup = () => {
-    playSound("tcm", "selectionEnter")
+    playSound("ratfun", "mouseupdanger")
     onclick()
   }
 

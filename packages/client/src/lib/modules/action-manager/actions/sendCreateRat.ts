@@ -19,7 +19,7 @@ export async function sendCreateRat(name: string) {
   const _playerERC20Allowance = get(playerERC20Allowance)
 
   if (busy.CreateRat.current !== 0) return
-  playSound("tcm", "blink")
+  playSound("ratfun", "blink")
   busy.CreateRat.set(0.99)
   // Approve
   try {

@@ -61,7 +61,7 @@
   const playOutcomeSound = (action: string) => {
     const soundName =
       action === "increase" || action === "add" ? "acceptOrderSuccessOld" : "acceptOrderFail"
-    const sound = playSound("tcm", soundName)
+    const sound = playSound("ratfun", soundName)
     if (sound) sound.play()
   }
 
@@ -93,7 +93,7 @@
   const main = () => {
     // Timestamp Animation
     timeline.call(() => {
-      const sound = playSound("tcm", "textLineHit")
+      const sound = playSound("ratfun", "textLineHit")
       if (sound) sound.play()
     })
     timeline.to(timestampElement, {

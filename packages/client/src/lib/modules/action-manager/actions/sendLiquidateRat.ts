@@ -12,7 +12,7 @@ const DEFAULT_TIMING = 4000
 export async function sendLiquidateRat() {
   if (busy.LiquidateRat.current !== 0) return
 
-  playSound("tcm", "ratScream")
+  playSound("ratfun", "ratScream")
   busy.LiquidateRat.set(0.99, { duration: DEFAULT_TIMING })
 
   try {

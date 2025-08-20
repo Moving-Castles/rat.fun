@@ -16,10 +16,10 @@
     if (busy) return
 
     try {
-      playSound("tcm", "blink")
+      playSound("ratfun", "blink")
       busy = true
       await reAbsorbItem(item.current)
-      playSound("tcm", "TRX_no")
+      playSound("ratfun", "TRX_no")
     } catch (e) {
       console.error(e)
     } finally {

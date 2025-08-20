@@ -9,7 +9,7 @@
   onMount(() => {
     timer = window.setInterval(() => {
       spinner = getRandomUint32()
-      playSound("tcm", "TRX_wait_a")
+      playSound("ratfun", "TRX_wait_a")
     }, 100)
   })
 

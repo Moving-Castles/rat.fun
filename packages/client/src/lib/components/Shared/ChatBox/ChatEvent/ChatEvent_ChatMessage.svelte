@@ -10,7 +10,7 @@
 
   onMount(() => {
     if (!suppressSound) {
-      playSound("tcm", "selectionScroll")
+      playSound("ratfun", "selectionScroll")
     }
   })
 </script>

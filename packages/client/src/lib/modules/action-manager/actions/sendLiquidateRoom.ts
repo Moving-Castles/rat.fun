@@ -12,7 +12,7 @@ const DEFAULT_TIMING = 4000
  */
 export async function sendLiquidateRoom(roomId: string) {
   if (busy.CloseRoom.current !== 0 || !roomId) return
-  playSound("tcm", "blink")
+  playSound("ratfun", "blink")
 
   busy.CloseRoom.set(0.99, { duration: DEFAULT_TIMING })
 
