@@ -19,7 +19,13 @@ export async function callModel(
       model,
       max_tokens: 1024,
       messages,
-      system,
+      system: [
+        {
+          type: "text",
+          text: system,
+          cache_control: { type: "ephemeral" }
+        }
+      ],
       temperature
     })
 
