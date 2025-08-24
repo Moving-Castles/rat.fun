@@ -43,7 +43,7 @@
   "dependencies": {
     "@latticexyz/common": "2.2.23-94cac741be24bb5743f2f36235cc3bb40012417a",
     "@latticexyz/dev-tools": "2.2.23-94cac741be24bb5743f2f36235cc3bb40012417a",
-    "@latticexyz/entrykit": "npm:@dk1a/entrykit-fork@2.2.23-04b65b3dc23f761b292e1f26110fd3ab3ff35a1d",
+    "@latticexyz/entrykit": "npm:@dk1a/entrykit-fork@2.2.23-1f1bd88c0e36ce47338cd54a3dc01c674afab152-3",
     "@latticexyz/recs": "2.2.23-94cac741be24bb5743f2f36235cc3bb40012417a",
     "@latticexyz/schema-type": "2.2.23-94cac741be24bb5743f2f36235cc3bb40012417a",
     "@latticexyz/store-sync": "2.2.23-94cac741be24bb5743f2f36235cc3bb40012417a",
