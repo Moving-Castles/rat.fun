@@ -6,10 +6,11 @@
   import { getEnvironment } from "$lib/modules/network"
   import { v4 as uuid } from "uuid"
   import { ENVIRONMENT, WALLET_TYPE } from "$lib/mud/enums"
+  import { busy } from "$lib/modules/action-manager/index.svelte"
 
   import { BigButton } from "$lib/components/Shared"
 
-  let { roomId }: { roomId: Hex } = $props()
+  let { roomId, disabled }: { roomId: Hex; disabled: boolean } = $props()
 
   const onClick = async () => {
     const environment = getEnvironment()
@@ -22,7 +23,7 @@
 </script>
 
 <div class="room-enter">
-  <BigButton text="Send rat to room" onclick={onClick} />
+  <BigButton {disabled} text="Send rat to room" onclick={onClick} />
 </div>
 
 <style>

@@ -60,6 +60,7 @@
     align-items: flex-start;
     gap: 12px;
     transition: all 0.2s ease;
+    overflow: hidden;
 
     &:hover {
       opacity: 0.8;

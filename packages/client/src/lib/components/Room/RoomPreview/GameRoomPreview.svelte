@@ -6,6 +6,7 @@
   import { onMount } from "svelte"
   import { staticContent } from "$lib/modules/content"
   import { rat } from "$lib/modules/state/stores"
+  import { busy } from "$lib/modules/action-manager/index.svelte"
 
   import {
     RoomPreviewHeader,
@@ -56,7 +57,7 @@
   {/if}
 
   {#if showEnterButton}
-    <EnterRoomButton {roomId} />
+    <EnterRoomButton disabled={busy.LiquidateRat.current != 0} {roomId} />
   {/if}
 
   <RoomPreviewGraph {roomOutcomes} {sanityRoomContent} />

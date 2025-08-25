@@ -76,6 +76,43 @@ export class TransactionError extends BlockchainError {
   }
 }
 
+export class TransactionRevertedError extends BlockchainError {
+  constructor(
+    message: string,
+    public reason?: string,
+    public originalError?: unknown
+  ) {
+    super("TRANSACTION_REVERTED", "Transaction reverted", message)
+  }
+}
+
+export class InsufficientFundsError extends BlockchainError {
+  constructor(
+    message: string,
+    public originalError?: unknown
+  ) {
+    super("INSUFFICIENT_FUNDS", "Insufficient funds", message)
+  }
+}
+
+export class UserRejectedTransactionError extends BlockchainError {
+  constructor(
+    message: string = "User rejected the transaction",
+    public originalError?: unknown
+  ) {
+    super("USER_REJECTED", "Transaction rejected", message)
+  }
+}
+
+export class GasEstimationError extends BlockchainError {
+  constructor(
+    message: string,
+    public originalError?: unknown
+  ) {
+    super("GAS_ESTIMATION_ERROR", "Gas estimation failed", message)
+  }
+}
+
 export class ContractCallError extends BlockchainError {
   constructor(
     message: string,
@@ -366,6 +403,10 @@ export type ExpectedError =
   | FaucetError
   | BlockchainError
   | TransactionError
+  | TransactionRevertedError
+  | InsufficientFundsError
+  | UserRejectedTransactionError
+  | GasEstimationError
   | ContractCallError
   | ChainConfigError
   | WorldAddressNotFoundError

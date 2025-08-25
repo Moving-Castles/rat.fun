@@ -48,10 +48,6 @@ export async function executeTransaction(
       })
     }
 
-    console.log("tx", tx)
-
-    console.log(get(publicNetwork))
-
     // Wait for transaction to be executed
     const receipt = await get(publicNetwork).publicClient.waitForTransactionReceipt({
       hash: tx
@@ -66,6 +62,7 @@ export async function executeTransaction(
       }
     }
   } catch (e: unknown) {
+    console.log("HERE WE GO", e)
     errorHandler(e)
   }
 }
@@ -89,7 +86,9 @@ async function prepareConnectorClient() {
 
     // manually update the connector and its chain id
     // (syncing wagmi state update from react to svelte can take a while and the config state is likely stale)
-    connectorClient = await getConnectorClient(wagmiConfig, { connector: getAccount(wagmiConfig).connector })
+    connectorClient = await getConnectorClient(wagmiConfig, {
+      connector: getAccount(wagmiConfig).connector
+    })
   }
   // MUD's `transactionQueue` extends the client with `writeContract` method
   return connectorClient.extend(transactionQueue())

@@ -4,6 +4,7 @@ import { getEnvironment } from "$lib/modules/network"
 import { version } from "$app/environment"
 import { AppError, type ExpectedError } from "./errors"
 import { toastManager } from "$lib/modules/ui/toasts.svelte"
+import { parseViemError } from "./viemErrorParser"
 export * from "./errors"
 
 export function captureMessage(
@@ -24,22 +25,42 @@ export function captureMessage(
 }
 
 export function errorHandler(error: ExpectedError | unknown, message = "") {
-  const errorCode = error instanceof AppError ? error.code : "UNKNOWN_ERROR"
-  const errorMessage = `${errorCode}: ${message ? message + error?.message : error?.message || ""}`
+  let processedError: ExpectedError | unknown = error
+
+  // Auto-detect and parse viem errors
+  if (error && typeof error === 'object' && 'name' in error) {
+    // Check if it's a viem BaseError by checking for viem-specific properties
+    if ('shortMessage' in error || 'code' in error || error.constructor.name.includes('Error')) {
+      try {
+        // Try to parse as viem error
+        processedError = parseViemError(error as any)
+      } catch (parseError) {
+        // If parsing fails, keep original error
+        console.warn('Failed to parse potential viem error:', parseError)
+      }
+    }
+  }
+
+  const errorCode = processedError instanceof AppError ? processedError.code : "UNKNOWN_ERROR"
+  const errorMessage = `${errorCode}: ${message ? message + (processedError as any)?.message : (processedError as any)?.message || ""}`
 
   // Determine severity level based on error type
   let severity: Sentry.SeverityLevel = "error"
-  if (error instanceof AppError) {
+  if (processedError instanceof AppError) {
+    // User-rejected transactions are info level (not really errors)
+    if (processedError.code === "USER_REJECTED") {
+      severity = "info"
+    }
     // Expected validation and user input errors are warnings
-    if (error.code.includes("VALIDATION") || error.code.includes("CHARACTER_LIMIT")) {
+    else if (processedError.code.includes("VALIDATION") || processedError.code.includes("CHARACTER_LIMIT")) {
       severity = "warning"
     }
     // Network and temporary issues are info level
-    else if (error.code.includes("NETWORK") || error.code.includes("TIMEOUT")) {
+    else if (processedError.code.includes("NETWORK") || processedError.code.includes("TIMEOUT")) {
       severity = "info"
     }
     // Critical system errors remain as errors
-    else if (error.code.includes("WEBGL_CONTEXT") || error.code.includes("WORLD_ADDRESS")) {
+    else if (processedError.code.includes("WEBGL_CONTEXT") || processedError.code.includes("WORLD_ADDRESS")) {
       severity = "error"
     }
   }
@@ -48,14 +69,14 @@ export function errorHandler(error: ExpectedError | unknown, message = "") {
     url: window.location.href,
     errorCode,
     errorMessage,
-    errorType: error instanceof AppError ? error.errorType : "UNKNOWN_ERROR"
+    errorType: processedError instanceof AppError ? processedError.errorType : "UNKNOWN_ERROR"
   }
 
   toastManager.add({ message: errorMessage, type: severity })
   captureMessage(errorMessage, severity, sentryContext)
 
   // Log the error to the console
-  console.error(error)
+  console.error(processedError)
 }
 
 /**

@@ -4,6 +4,7 @@
   import { sessionId } from "$lib/modules/ui/state.svelte"
   import { goto } from "$app/navigation"
   import { v4 as uuid } from "uuid"
+  import { busy } from "$lib/modules/action-manager/index.svelte"
 
   import { BigButton } from "$lib/components/Shared"
 
@@ -17,6 +18,9 @@
 </script>
 
 <div class="room-enter">
+  <p>
+    Busy? :{busy.LiquidateRat.current}
+  </p>
   <BigButton text="Send rat to room" onclick={onClick} />
 </div>
 

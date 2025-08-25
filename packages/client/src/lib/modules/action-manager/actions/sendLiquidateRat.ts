@@ -20,6 +20,9 @@ export async function sendLiquidateRat() {
   } catch (e) {
     throw new LiquidationError("Failed to liquidate rat", undefined, e)
   } finally {
-    busy.LiquidateRat.set(0, { duration: 0 })
+    // Add delay to prevent showing enter button before rat state updates
+    setTimeout(() => {
+      busy.LiquidateRat.set(0, { duration: 0 })
+    }, 3000)
   }
 }
