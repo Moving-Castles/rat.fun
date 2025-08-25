@@ -24,7 +24,6 @@ import { constructEventMessages, constructCorrectionMessages } from "@modules/ll
 // Anthropic
 import { getLLMClient } from "@modules/llm/anthropic"
 import { callModel } from "@modules/llm/anthropic/callModel"
-const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY as string
 
 // MUD
 import { getEnterRoomData } from "@modules/mud/getOnchainData/getEnterRoomData"
@@ -43,7 +42,7 @@ import { validateInputData } from "./validation"
 import { Hex } from "viem"
 
 // Initialize LLM: Anthropic
-const llmClient = getLLMClient(ANTHROPIC_API_KEY)
+const llmClient = getLLMClient(process.env.ANTHROPIC_API_KEY as string)
 
 const opts = { schema }
 
@@ -154,7 +153,7 @@ async function routes(fastify: FastifyInstance) {
           log: correctedEvents.log ?? [],
           outcomeId: outcomeDocument._id,
           itemChanges: validatedOutcome.itemChanges,
-          balanceTransfer: validatedOutcome.balanceTransfer,
+          balanceTransfers: validatedOutcome.balanceTransfers,
           ratDead: newRatBalance == 0,
           roomDepleted: newRoomValue == 0,
           levelUp: newRatLevelIndex > level.index,

@@ -97,7 +97,7 @@ export type OutcomeReturnValue = {
   id?: string
   outcomeId: string
   itemChanges: ItemChange[]
-  balanceTransfer: BalanceTransfer
+  balanceTransfers: BalanceTransfer[]
 }
 
 export type ItemChange = {

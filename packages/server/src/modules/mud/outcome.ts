@@ -2,7 +2,7 @@ import { OutcomeReturnValue, ItemChange } from "@modules/types"
 import { Rat, Room } from "@modules/types"
 
 export function createOutcomeCallArgs(rat: Rat, room: Room, outcome: OutcomeReturnValue) {
-  const balanceTransfer = outcome?.balanceTransfer?.amount ?? 0
+  const balanceTransfer = outcome?.balanceTransfers?.reduce((sum, b) => sum + b.amount, 0) ?? 0
 
   // Only ID
   const itemsToRemoveFromRat =
@@ -77,15 +77,28 @@ export function updateOutcome(
   // BALANCE
   // - - - - - - - - -
 
-  // Guard against undefined balanceTransfer
-  if (!newOutcome.balanceTransfer) {
-    newOutcome.balanceTransfer = {
-      amount: 0,
-      logStep: 0
-    }
+  // Guard against undefined balanceTransfers
+  if (!newOutcome.balanceTransfers) {
+    newOutcome.balanceTransfers = []
   }
 
-  newOutcome.balanceTransfer.amount = newRat.balance - oldRat.balance
+  let validatedBalanceChange = newRat.balance - oldRat.balance
+
+  // At this point we have the oldOutcome, with potentially multiple balanceTransfers taking place at multiple logSteps
+  // We have a validated total balance change.
+  // We need to add the balanceChanges that fit within the validatedBalanceChange to newOutcome
+  // Positive balance changes are room => rat
+  // Negative balance changes are rat => room
+
+  // We need to iterate over the oldOutcome.balanceTransfers
+  // add the balanceChanges that fit within the validatedBalanceChange to newOutcome
+  for (let i = 0; i < oldOutcome.balanceTransfers.length; i++) {
+    const balanceTransfer = oldOutcome.balanceTransfers[i]
+    if (balanceTransfer.amount <= validatedBalanceChange) {
+      newOutcome.balanceTransfers.push(balanceTransfer)
+      validatedBalanceChange -= balanceTransfer.amount
+    }
+  }
 
   return newOutcome
 }

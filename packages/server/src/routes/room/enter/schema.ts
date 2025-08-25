@@ -54,13 +54,14 @@ export const schema = {
             }
           }
         },
-        balanceTransfer: {
-          type: "object",
-          properties: {
-            logStep: { type: "number" },
-            from: { type: "string" },
-            to: { type: "string" },
-            amount: { type: "number" }
+        balanceTransfers: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              logStep: { type: "number" },
+              amount: { type: "number" }
+            }
           }
         },
         ratDead: { type: "boolean" },
@@ -72,7 +73,7 @@ export const schema = {
         "log",
         "outcomeId",
         "itemChanges",
-        "balanceTransfer",
+        "balanceTransfers",
         "ratDead",
         "roomDepleted",
         "levelUp",
