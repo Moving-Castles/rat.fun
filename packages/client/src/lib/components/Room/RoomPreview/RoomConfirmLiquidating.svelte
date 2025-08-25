@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { getQueryClientContext } from "@tanstack/svelte-query"
   import { gameConfig } from "$lib/modules/state/stores"
   import { BigButton } from "$lib/components/Shared"
   import type { Room as SanityRoom } from "@sanity-types"
@@ -13,11 +14,13 @@
     onAbort
   }: { room: Room; roomContent: SanityRoom; onDone: () => void; onAbort: () => void } = $props()
 
+  const queryClient = getQueryClientContext()
+
   let liquidating = $state(false)
 
   const onClickConfirm = async () => {
     liquidating = true
-    await sendLiquidateRoom(roomContent._id)
+    await sendLiquidateRoom(queryClient, roomContent._id)
     sendLiquidateRoomMessage(roomContent._id)
     onDone()
   }

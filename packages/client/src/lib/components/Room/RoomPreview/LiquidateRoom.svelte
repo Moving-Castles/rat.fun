@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { getQueryClientContext } from "@tanstack/svelte-query"
   import { getModalState } from "$lib/components/Shared/Modal/state.svelte"
   import { gameConfig } from "$lib/modules/state/stores"
   import { blockNumber } from "$lib/modules/network"
@@ -14,6 +15,8 @@
     roomId,
     onclick
   }: { room: Room; roomId: string; isOwnRoomListing: boolean; onclick: () => void } = $props()
+
+  const queryClient = getQueryClientContext()
 
   let sanityRoomContent = $derived($staticContent.rooms.find(r => r.title == roomId))
   let { modal } = getModalState()
@@ -60,7 +63,7 @@
           onclick={async () => {
             try {
               liquidationMessage = "Liquidating room..."
-              await sendLiquidateRoom(roomId)
+              await sendLiquidateRoom(queryClient, roomId)
             } catch (error) {
               errorHandler(error)
               liquidationMessage = "Could not liquidate room"

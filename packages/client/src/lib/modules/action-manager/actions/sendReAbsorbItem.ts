@@ -1,6 +1,7 @@
 import { reAbsorbItem } from "$lib/modules/on-chain-transactions"
 import { busy } from "../index.svelte"
 import { TransactionError } from "$lib/modules/error-handling/errors"
+import { QueryClient } from "@tanstack/svelte-query"
 
 const DEFAULT_TIMING = 4000
 
@@ -8,13 +9,13 @@ const DEFAULT_TIMING = 4000
  * Sell Item
  * @param itemId The ID of the item to sell
  */
-export async function sendReAbsorbItem(itemId: string) {
+export async function sendReAbsorbItem(queryClient: QueryClient, itemId: string) {
   if (busy.ReAbsorbItem.current !== 0) return
 
   busy.ReAbsorbItem.set(0.99, { duration: DEFAULT_TIMING })
 
   try {
-    await reAbsorbItem(itemId)
+    await reAbsorbItem(queryClient, itemId)
   } catch (e) {
     throw new TransactionError(`Failed to re-absorb item ${itemId}`, e)
   } finally {

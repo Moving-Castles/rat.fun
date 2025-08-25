@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte"
+  import { getQueryClientContext } from "@tanstack/svelte-query"
   import { reAbsorbItem } from "$lib/modules/on-chain-transactions"
   import { playSound } from "$lib/modules/sound"
   import { VideoLoaderDuration } from "$lib/components/Shared"
@@ -8,6 +9,8 @@
   let busy = $state(false)
 
   let { item } = getItemState()
+
+  const queryClient = getQueryClientContext()
 
   const sendReAbsorbItem = async () => {
     if (typeof item.current !== "string") {
@@ -18,7 +21,7 @@
     try {
       playSound("ratfun", "blink")
       busy = true
-      await reAbsorbItem(item.current)
+      await reAbsorbItem(queryClient, item.current)
       playSound("ratfun", "TRX_no")
     } catch (e) {
       console.error(e)

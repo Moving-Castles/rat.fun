@@ -2,6 +2,7 @@
   import { sendGiveCallerTokens, busy } from "$lib/modules/action-manager/index.svelte"
   import gsap from "gsap"
   import { onMount } from "svelte"
+  import { getQueryClientContext } from "@tanstack/svelte-query"
   import { player } from "$lib/modules/state/stores"
 
   import { BigButton } from "$lib/components/Shared"
@@ -10,6 +11,8 @@
   const { onComplete = () => {} } = $props<{
     onComplete: (isSpawned: boolean) => void
   }>()
+
+  const queryClient = getQueryClientContext()
 
   let buttonText = "Get Slopamine"
   let message = `${$player?.name ?? "Loser"}, you need Slopamine to play.`
@@ -21,7 +24,7 @@
   const timeline = gsap.timeline()
 
   async function getTokens() {
-    await sendGiveCallerTokens()
+    await sendGiveCallerTokens(queryClient)
     onComplete()
   }
 

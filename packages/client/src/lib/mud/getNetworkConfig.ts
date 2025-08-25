@@ -27,6 +27,8 @@ export function getNetworkConfig(environment: ENVIRONMENT, url?: string | URL) {
     chainId = 8453
   }
 
+  chainId = 84532
+
   const chain = getChain(chainId)
 
   /*

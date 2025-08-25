@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { getQueryClientContext } from "@tanstack/svelte-query"
   import { playerAddress } from "$lib/modules/state/stores"
   import { onMount, onDestroy } from "svelte"
   import { playerERC20Allowance, playerERC20Balance } from "$lib/modules/state/stores"
@@ -7,6 +8,8 @@
   import { playSound } from "$lib/modules/sound"
 
   let isMinimized = $state(true)
+
+  const queryClient = getQueryClientContext()
 
   function toggleMinimize() {
     isMinimized = !isMinimized
@@ -59,12 +62,12 @@
   <div class="actions">
     <SmallButton
       tippyText="Request tokens from the contract"
-      onclick={sendGiveCallerTokens}
+      onclick={() => sendGiveCallerTokens(queryClient)}
       text="Get tokens"
     ></SmallButton>
     <SmallButton
       tippyText="Allow the contract to spend on your behalf"
-      onclick={sendApproveMax}
+      onclick={() => sendApproveMax(queryClient)}
       text="Approve max allowance"
     ></SmallButton>
   </div>

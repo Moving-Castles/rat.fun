@@ -1,6 +1,7 @@
 import type { Hex } from "viem"
 import { get } from "svelte/store"
 import { transactionQueue } from "@latticexyz/common/actions"
+import { QueryClient } from "@tanstack/svelte-query"
 import { publicNetwork, walletNetwork } from "$lib/modules/network"
 import { erc20Abi } from "viem"
 import { addChain, switchChain } from "viem/actions"
@@ -10,6 +11,7 @@ import { WorldFunctions } from "./index"
 import { getChain } from "$lib/mud/utils"
 import { wagmiConfigStateful } from "$lib/modules/entry-kit/stores"
 import { errorHandler } from "$lib/modules/error-handling"
+import { refetchAllowance, refetchBalance } from "$lib/modules/state/erc20Listener"
 import { TransactionError, WagmiConfigUnavailableError } from "../error-handling/errors"
 
 /**
@@ -19,6 +21,7 @@ import { TransactionError, WagmiConfigUnavailableError } from "../error-handling
  * @returns receipt
  */
 export async function executeTransaction(
+  queryClient: QueryClient,
   systemId: string,
   params: (string | Hex | number | bigint)[] = [],
   useConnectorClient: boolean = false
@@ -52,6 +55,13 @@ export async function executeTransaction(
     const receipt = await get(publicNetwork).publicClient.waitForTransactionReceipt({
       hash: tx
     })
+
+    // Force an erc20 query refetch for calls that definitely update balance or allowance
+    if (systemId === WorldFunctions.Approve) {
+      refetchAllowance(queryClient)
+    } else if (systemId === WorldFunctions.GiveCallerTokens) {
+      refetchBalance(queryClient)
+    }
 
     if (receipt) {
       if (receipt.status == "success") {

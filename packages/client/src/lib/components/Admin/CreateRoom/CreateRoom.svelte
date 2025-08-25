@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { getQueryClientContext } from "@tanstack/svelte-query"
   import {
     rat,
     levelList,
@@ -14,6 +15,8 @@
   import { errorHandler } from "$lib/modules/error-handling"
   import { CharacterLimitError, InputValidationError } from "$lib/modules/error-handling/errors"
   import { waitForPropertyChange } from "$lib/modules/state/utils"
+
+  const queryClient = getQueryClientContext()
 
   let roomDescription: string = $state("")
   let levelId: string = $state($rat?.level ?? $levelList[0])
@@ -59,7 +62,7 @@
           "room description"
         )
       }
-      const result = await sendCreateRoom(roomDescription, levelId, roomCreationCost)
+      const result = await sendCreateRoom(queryClient, roomDescription, levelId, roomCreationCost)
       if (result?.roomId) {
         // Wait for created room to be available in the store
         await waitForPropertyChange(rooms, result.roomId, undefined, 10000)

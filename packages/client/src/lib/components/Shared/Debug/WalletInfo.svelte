@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { getQueryClientContext } from "@tanstack/svelte-query"
   import { playerAddress } from "$lib/modules/state/stores"
   import { ENTITY_TYPE } from "contracts/enums"
   import { player } from "$lib/modules/state/stores"
@@ -7,6 +8,8 @@
   import { walletType, environment } from "$lib/modules/network"
 
   let isMinimized = $state(true)
+
+  const queryClient = getQueryClientContext()
 
   function toggleMinimize() {
     isMinimized = !isMinimized
@@ -29,8 +32,8 @@
     <p>Spawned: {$player?.entityType == ENTITY_TYPE.PLAYER}</p>
     <p>Tokens: {$playerERC20Balance}</p>
     <p>Allowance: {$playerERC20Allowance}</p>
-    <button onclick={sendGiveCallerTokens}>Get tokens</button>
-    <button onclick={sendApproveMax}>Approve max</button>
+    <button onclick={() => sendGiveCallerTokens(queryClient)}>Get tokens</button>
+    <button onclick={() => sendApproveMax(queryClient)}>Approve max</button>
   {/if}
 </div>
 

@@ -1,4 +1,5 @@
 import { get } from "svelte/store"
+import { QueryClient } from "@tanstack/svelte-query"
 import {
   gameConfig,
   externalAddressesConfig,
@@ -28,6 +29,7 @@ const DEFAULT_TIMING = 4000
  * @param roomCreationCost The cost of the room
  */
 export async function sendCreateRoom(
+  queryClient: QueryClient,
   roomPrompt: string,
   levelId: string,
   roomCreationCost: bigint
@@ -43,7 +45,7 @@ export async function sendCreateRoom(
   // Approve
   try {
     if (_playerERC20Allowance < _gameConfig.roomCreationCost) {
-      await approve(_externalAddressesConfig.gamePoolAddress, roomCreationCost)
+      await approve(queryClient, _externalAddressesConfig.gamePoolAddress, roomCreationCost)
     }
 
     let url = ""
