@@ -3,6 +3,7 @@ import { PUBLIC_SENTRY_DSN } from "$env/static/public"
 import { getEnvironment } from "$lib/modules/network"
 import { version } from "$app/environment"
 import { AppError, type ExpectedError } from "./errors"
+import { toastManager } from "$lib/modules/ui/toasts.svelte"
 export * from "./errors"
 
 export function captureMessage(
@@ -50,6 +51,7 @@ export function errorHandler(error: ExpectedError | unknown, message = "") {
     errorType: error instanceof AppError ? error.errorType : "UNKNOWN_ERROR"
   }
 
+  toastManager.add({ message: errorMessage, type: severity })
   captureMessage(errorMessage, severity, sentryContext)
 
   // Log the error to the console

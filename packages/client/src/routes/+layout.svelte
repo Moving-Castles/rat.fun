@@ -36,6 +36,8 @@
   } from "$lib/components/Shared"
   import { Outcome } from "$lib/components/Room"
   import EntryKit from "$lib/components/Spawn/EntryKit/EntryKit.svelte"
+  import Toasts from "$lib/components/Shared/Toasts/Toasts.svelte"
+  import { toastManager } from "$lib/modules/ui/toasts.svelte"
 
   let { children, data }: LayoutProps = $props()
 
@@ -141,6 +143,8 @@
 <EntryKit />
 
 <Modal />
+
+<Toasts />
 
 <WalletInfo {walletType} {environment} />
 

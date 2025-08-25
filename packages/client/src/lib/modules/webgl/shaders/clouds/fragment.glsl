@@ -2,12 +2,24 @@ precision mediump float;
 
 uniform float u_time;
 uniform vec2 u_resolution;
-uniform bool u_invert;
+uniform float u_invert;
 uniform float u_saturation;
+uniform float u_contrast;
+uniform float u_exposure;
 
 // Simple hash function for noise
 float hash(vec2 p){
   return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);
+}
+
+// Contrast
+vec3 adjustContrast(vec3 color,float value){
+  return.5+(1.+value)*(color-.5);
+}
+
+// Exposure
+vec3 adjustExposure(vec3 color,float value){
+  return(1.+value)*color;
 }
 
 // Smooth interpolation
@@ -70,9 +82,7 @@ void main(){
   // Mix sky and clouds
   vec3 color=mix(skyColor,vec3(1.),clouds*.9);
   
-  if(u_invert){
-    color=vec3(1.)-color;
-  }
+  color=mix(color,vec3(1.)-color,u_invert);
   
   // Use saturation factor to blend between greyscale and color
   float greyScaleValue=color.r*.3+color.g*.59+color.b*.11;
@@ -84,6 +94,12 @@ void main(){
   
   // Put them together
   vec3 adjustedColor=vec3(rValue,gValue,bValue);
+  
+  // Contrast adjustment
+  // adjustedColor=adjustContrast(adjustedColor,u_contrast);
+  
+  // exposure adjustment
+  // adjustedColor=adjustExposure(adjustedColor,u_exposure);
   
   gl_FragColor=vec4(adjustedColor,1.);
 }
