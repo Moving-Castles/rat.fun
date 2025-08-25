@@ -16,7 +16,7 @@
 
 <div id={event.id} class="room__outcome">
   <ChatEvent_Label {event} />
-  sent <span class="rat-name">{event.ratName}</span> to room
+  sent <span class="rat-name">{event.ratName}</span> to trip
   <a href="/{event.roomId}">#{event.roomIndex ?? "unknown"}.</a>
 </div>
 

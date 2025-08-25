@@ -53,7 +53,7 @@
 
   const processRoom = async () => {
     if (!roomId) {
-      throw new RoomError("No room ID provided")
+      throw new RoomError("No trip ID provided")
     }
 
     try {
@@ -62,7 +62,7 @@
       try {
         result = await ret
         if (!result) {
-          throw new RoomError("No result returned from room entry", roomId)
+          throw new RoomError("No result returned from trip entry", roomId)
         }
         // Result returned, transition to showing results
         transitionTo(ROOM_RESULT_STATE.SHOWING_RESULTS)
@@ -77,9 +77,9 @@
               err.message
             )
           } else if (err.message.includes("api") || err.message.includes("server")) {
-            throw new APIError("Room entry API error: " + err.message, err)
+            throw new APIError("Trip entry API error: " + err.message, err)
           } else {
-            throw new RoomError("Room entry failed: " + err.message, roomId)
+            throw new RoomError("Trip entry failed: " + err.message, roomId)
           }
         }
         throw err

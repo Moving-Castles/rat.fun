@@ -114,9 +114,9 @@
       <div class="empty-listing">
         <div>
           {#if isOwnRoomListing}
-            NO ROOMS CREATED YET
+            NO TRIPS CREATED YET
           {:else}
-            NO ROOMS
+            NO TRIPS
           {/if}
         </div>
       </div>

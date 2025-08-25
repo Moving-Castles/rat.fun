@@ -80,7 +80,7 @@
       <div class="content">
         <div class="message" bind:this={messageElement}>
           <h1>
-            {$frozenRat?.name} LIVED
+            {$frozenRat?.name} SURVIVED
           </h1>
 
           {#if changes.length > 0}
@@ -99,7 +99,7 @@
             goto("/")
           }}
         >
-          LEAVE ROOM
+          COME DOWN
         </button>
       </div>
 

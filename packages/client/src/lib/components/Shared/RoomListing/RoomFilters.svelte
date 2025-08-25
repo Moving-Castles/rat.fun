@@ -39,7 +39,7 @@
     }}
     class="level-stats"
   >
-    {roomsAmount} room{roomsAmount === 0 || roomsAmount > 1 ? "s" : ""}
+    {roomsAmount} trip{roomsAmount === 0 || roomsAmount > 1 ? "s" : ""}
   </div>
   <!-- TEXT FILTER -->
   <div class="text-filter">
@@ -127,7 +127,7 @@
       class:active={showDepletedRooms}
       use:tippy={{
         placement: "top",
-        content: "show depleted rooms"
+        content: "show depleted trips"
       }}
       onclick={onToggleDepleted}
     >

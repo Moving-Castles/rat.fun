@@ -4,7 +4,7 @@
 </script>
 
 <div class="create-room-button">
-  <BigButton {onclick} text="Create Room" />
+  <BigButton {onclick} text="Create Trip" />
 </div>
 
 <style lang="scss">

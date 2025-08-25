@@ -16,7 +16,7 @@
     <div class="column">
       <!-- ID -->
       <div class="info-item">
-        <span class="id">ROOM #{$frozenRoom.index}</span>
+        <span class="id">TRIP #{$frozenRoom.index}</span>
       </div>
       <!-- IMAGE -->
       <div class="image-container">
@@ -24,7 +24,7 @@
           {#if staticRoomContent?.image?.asset}
             <img
               src={urlFor(staticRoomContent?.image)?.width(300)?.auto("format")?.url()}
-              alt={`room #${$frozenRoom.index}`}
+              alt={`trip #${$frozenRoom.index}`}
             />
           {:else}
             <NoImage />

@@ -72,9 +72,9 @@
       <!-- VISITOR COUNT -->
       <span class="visit-count small">
         {#if Number(room.visitCount) === 1}
-          {room.visitCount} visit
+          {room.visitCount} tripped
         {:else}
-          {room.visitCount} visits
+          {room.visitCount} trips
         {/if}
       </span>
       {#if room?.killCount > 0}
@@ -94,7 +94,7 @@
       <!-- TOP ROW -->
       <div class="room-info-row top">
         <!-- INDEX -->
-        <span class="index small">Room #{room.index}</span>
+        <span class="index small">Trip #{room.index}</span>
         <!-- DIVIDER -->
         <span class="divider">•</span>
         <!-- CREATION TIME  -->

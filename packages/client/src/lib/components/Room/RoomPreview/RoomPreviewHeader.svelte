@@ -20,7 +20,7 @@
       {#if sanityRoomContent?.image?.asset}
         <img
           src={urlFor(sanityRoomContent?.image)?.width?.(600)?.height(600)?.url() ?? ""}
-          alt={`room #${room.index}`}
+          alt={`trip #${room.index}`}
         />
       {:else}
         <div class="image-placeholder">
@@ -33,7 +33,7 @@
   <div class="info">
     <!-- INDEX -->
     <div class="row index">
-      <div class="label">ROOM</div>
+      <div class="label">TRIP</div>
       <div class="value">#{room.index}</div>
     </div>
     <!-- OWNER -->
@@ -68,7 +68,7 @@
     {#if sanityRoomContent?.image?.asset}
       <img
         src={urlFor(sanityRoomContent?.image).width(1200).auto("format").url()}
-        alt={`room #${room.index}`}
+        alt="trip #{room.index}"
       />
     {/if}
   </div>

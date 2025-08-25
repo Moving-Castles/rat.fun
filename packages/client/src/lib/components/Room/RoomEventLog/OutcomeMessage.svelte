@@ -43,7 +43,7 @@
     >
       {outcome.playerName}
     </span>
-    sent <span class="rat-name">{outcome.ratName}</span> to room #{outcome.roomIndex ?? "unknown"}.
+    sent <span class="rat-name">{outcome.ratName}</span> to trip #{outcome.roomIndex ?? "unknown"}.
   {:else if topic == "rat__death"}
     <!-- DEATH IN ROOM -->
     <span
@@ -54,7 +54,7 @@
     >
       {outcome.playerName}
     </span>
-    let <span class="rat-name">{outcome.ratName}</span> die in room #{outcome.roomIndex ??
+    let <span class="rat-name">{outcome.ratName}</span> die from trip #{outcome.roomIndex ??
       "unknown"}
   {:else}
     <!-- FALLBACK -->

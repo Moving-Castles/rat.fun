@@ -88,7 +88,7 @@ export async function sendCreateRoom(
     if (e instanceof APIError) {
       throw e
     }
-    throw new RoomError(`Failed to create room: ${roomPrompt.substring(0, 50)}...`)
+    throw new RoomError(`Failed to create trip: ${roomPrompt.substring(0, 50)}...`)
   } finally {
     busy.CreateRoom.set(0, { duration: 0 })
   }

@@ -16,7 +16,7 @@
 
 <div id={event.id} class="rat__death">
   <ChatEvent_Label {event} />
-  let <span class="rat-name">{event.ratName}</span> die in room
+  let <span class="rat-name">{event.ratName}</span> die in trip
   <a href="/{event.roomId}">#{event.roomIndex ?? "unknown"}</a>
 </div>
 

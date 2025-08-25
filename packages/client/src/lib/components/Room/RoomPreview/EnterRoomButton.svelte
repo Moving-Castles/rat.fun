@@ -23,7 +23,7 @@
 </script>
 
 <div class="room-enter">
-  <BigButton {disabled} text="Send rat to room" onclick={onClick} />
+  <BigButton {disabled} text="Send rat to trip" onclick={onClick} />
 </div>
 
 <style>

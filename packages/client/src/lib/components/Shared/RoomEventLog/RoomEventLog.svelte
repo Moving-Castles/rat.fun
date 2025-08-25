@@ -39,7 +39,7 @@
 </script>
 
 <div class="outcomes">
-  <div class="header">ROOM LOGS</div>
+  <div class="header">TRIP LOGS</div>
   {#if roomOutcomes.length > 0}
     <div class="logs">
       {#each roomOutcomes.sort((a, b) => new Date(b._createdAt).getTime() - new Date(a._createdAt).getTime()) as outcome (outcome._id)}

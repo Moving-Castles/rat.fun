@@ -6,13 +6,11 @@
   // import { staticContent } from "$lib/modules/content"
 
   let { outcome }: { outcome: Outcome } = $props()
-
-  // let room = $derived($staticContent?.rooms.find(r => r._id === outcome.roomId))
 </script>
 
 <div class="outcome">
   <div class="meta">
-    {outcome.playerName} sent {outcome?.ratName} to room #{outcome.roomIndex}
+    {outcome.playerName} created tripreport #{outcome.roomIndex} for {outcome?.ratName}
     {timeSince(new Date(outcome._createdAt))} ago
   </div>
   <div class="outcome-header">

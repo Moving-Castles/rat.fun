@@ -16,7 +16,7 @@
 
 <div id={event.id} class="room__liquidation">
   <ChatEvent_Label {event} />
-  destroyed room <a href="/{event.roomId}">#{event.roomIndex ?? "unknown"}</a>
+  destroyed trip <a href="/{event.roomId}">#{event.roomIndex ?? "unknown"}</a>
 </div>
 
 <style lang="scss">

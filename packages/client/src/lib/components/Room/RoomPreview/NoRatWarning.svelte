@@ -2,7 +2,7 @@
   // ...
 </script>
 
-<div class="no-rat-warning">Deploy a rat to access this room</div>
+<div class="no-rat-warning">Deploy a rat to access this trip</div>
 
 <style lang="scss">
   .no-rat-warning {

@@ -2,7 +2,6 @@
   import type { Hex } from "viem"
   import type { Outcome } from "@sanity-types"
   import type { Room as SanityRoom } from "@sanity-types"
-
   import { onMount } from "svelte"
   import { staticContent } from "$lib/modules/content"
   import { goto } from "$app/navigation"

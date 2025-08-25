@@ -39,7 +39,7 @@
   <div class="column left">
     <div class="room-image">
       {#if roomImageUrl}
-        <img src={roomImageUrl} alt={`room #${room.index}`} />
+        <img src={roomImageUrl} alt={`trip #${room.index}`} />
       {:else}
         <NoImage />
       {/if}
@@ -58,7 +58,7 @@
       <!-- TOP ROW -->
       <div class="room-info-row top">
         <!-- INDEX -->
-        <span class="index small">Room #{room.index}</span>
+        <span class="index small">Trip #{room.index}</span>
         <!-- DIVIDER -->
         <span class="divider">•</span>
         <!-- CREATION TIME  -->

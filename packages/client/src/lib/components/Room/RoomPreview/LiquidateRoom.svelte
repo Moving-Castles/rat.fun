@@ -19,7 +19,7 @@
   let { modal } = getModalState()
 
   let confirming = $state(false)
-  let liquidationMessage = $state("CONFIRM ROOM LIQUIDATION")
+  let liquidationMessage = $state("CONFIRM TRIP LIQUIDATION")
 
   // Cooldown until room can be liquidated
   let blockUntilUnlock = $derived(
@@ -31,9 +31,9 @@
   <div class="action">
     <DangerButton
       text={blockUntilUnlock <= 0
-        ? `Liquidate Room)`
+        ? `Liquidate Trip)`
         : `Liquidation unlocked in ${blockUntilUnlock} blocks`}
-      tippyText="Liquidate room to get the value added to your wallet"
+      tippyText="Liquidate trip to get the value added to your wallet"
       {onclick}
       disabled={busy.CloseRoom.current !== 0 || blockUntilUnlock > 0}
     />
@@ -59,11 +59,11 @@
           text={liquidationMessage}
           onclick={async () => {
             try {
-              liquidationMessage = "Liquidating room..."
+              liquidationMessage = "Liquidating trip..."
               await sendLiquidateRoom(roomId)
             } catch (error) {
               errorHandler(error)
-              liquidationMessage = "Could not liquidate room"
+              liquidationMessage = "Could not liquidate trip"
             } finally {
               sendLiquidateRoomMessage(roomId)
               modal.close()

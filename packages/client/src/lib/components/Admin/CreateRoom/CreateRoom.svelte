@@ -39,7 +39,7 @@
   )
 
   const placeholder =
-    "You're creating a room that can modify items, and tokens of rats that enter. Your room balance decreases whenever a rat gains something, and increases when your room takes something. You can withdraw remaining balance from your room."
+    "You're creating a trip that can modify items, and tokens of rats that enter. Your trip balance decreases whenever a rat gains something, and increases when your trip takes something. You can withdraw remaining balance from your trip."
 
   async function onClick() {
     busy = true
@@ -47,7 +47,7 @@
       // Validate room description before sending
       if (!roomDescription || roomDescription.trim() === "") {
         throw new InputValidationError(
-          "Room description cannot be empty",
+          "Trip description cannot be empty",
           "roomDescription",
           roomDescription
         )
@@ -81,7 +81,7 @@
     <!-- ROOM DESCRIPTION -->
     <div class="form-group">
       <label for="room-description">
-        <span class="highlight">Room Description</span>
+        <span class="highlight">Trip Description</span>
         <CharacterCounter
           currentLength={roomDescription.length}
           maxLength={$gameConfig.maxRoomPromptLength}
@@ -99,7 +99,7 @@
 
     <!-- ACTIONS -->
     <div class="actions">
-      <BigButton text="Create room" cost={Number(roomCreationCost)} {disabled} onclick={onClick} />
+      <BigButton text="Create trip" cost={Number(roomCreationCost)} {disabled} onclick={onClick} />
     </div>
   {/if}
 </div>

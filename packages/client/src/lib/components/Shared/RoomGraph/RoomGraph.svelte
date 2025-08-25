@@ -93,7 +93,7 @@
   })
 
   const generateTooltipContent = (point: PlotPoint) => {
-    let toolTipContent = `<div>Room balance: <span class="tooltip-value">$${point?.meta?.roomValue}</span>`
+    let toolTipContent = `<div>Trip balance: <span class="tooltip-value">$${point?.meta?.roomValue}</span>`
 
     if (point?.meta?.roomValueChange) {
       const valueChangeClass =

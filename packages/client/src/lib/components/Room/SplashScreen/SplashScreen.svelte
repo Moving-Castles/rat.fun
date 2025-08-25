@@ -59,14 +59,14 @@
 <div class="splash-screen">
   <div class="inner" bind:this={roomInnerElement}>
     <div class="room-index" bind:this={roomIndexElement}>
-      ROOM #{$frozenRoom?.index ?? ""}
+      TRIP #{$frozenRoom?.index ?? ""}
     </div>
     <!-- IMAGE -->
     <div class="image-container" bind:this={imageContainerElement}>
       {#if staticRoomContent}
         <img
           src={urlFor(staticRoomContent?.image)?.width(500)?.auto("format").url()}
-          alt={`room #${$frozenRoom?.index ?? ""}`}
+          alt={`trip #${$frozenRoom?.index ?? ""}`}
         />
       {:else}
         <div class="image-placeholder">

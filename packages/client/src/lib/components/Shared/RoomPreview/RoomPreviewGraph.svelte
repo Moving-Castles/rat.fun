@@ -28,7 +28,7 @@
 </script>
 
 <div class="room-preview-stats">
-  <div class="header">ROOM BALANCE OVER TIME</div>
+  <div class="header">TRIP BALANCE OVER TIME</div>
   <div class="content" class:empty={plotData.length == 1}>
     <RoomGraph height={300} {plotData} isEmpty={plotData.length == 1} />
   </div>

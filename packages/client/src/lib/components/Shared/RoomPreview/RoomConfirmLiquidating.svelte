@@ -2,7 +2,7 @@
   import { gameConfig } from "$lib/modules/state/stores"
   import { BigButton } from "$lib/components/Shared"
   import type { Room as SanityRoom } from "@sanity-types"
-  import { busy, sendLiquidateRoom } from "$lib/modules/action-manager/index.svelte"
+  import { sendLiquidateRoom } from "$lib/modules/action-manager/index.svelte"
   import { sendLiquidateRoomMessage } from "$lib/modules/off-chain-sync"
   import { VideoLoaderDuration } from "$lib/components/Shared"
 
@@ -29,7 +29,7 @@
   {:else}
     <div class="confirm-liquidation-text">
       <h1>
-        Are you sure you want to liquidate room #{roomContent.index}?<br />
+        Are you sure you want to liquidate trip #{roomContent.index}?<br />
         We deduct {$gameConfig.taxationCloseRoom}% TraumwertSteuer,<br />
         You will recover
         <span class="value"

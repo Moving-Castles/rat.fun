@@ -73,7 +73,7 @@ export async function sendEnterRoom(roomId: string, ratId: string) {
     errorHandler(err)
     busy.EnterRoom.set(0, { duration: 0 })
     if (!(err instanceof APIError)) {
-      throw new RoomError(`Failed to enter room ${roomId}`, roomId)
+      throw new RoomError(`Failed to enter trip ${roomId}`, roomId)
     }
     return null
   }

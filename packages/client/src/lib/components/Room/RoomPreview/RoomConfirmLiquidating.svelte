@@ -29,7 +29,7 @@
   {:else}
     <div class="confirm-liquidation-text">
       <h1>
-        Are you sure you want to liquidate room #{roomContent.index}?<br />
+        Are you sure you want to liquidate trip #{roomContent.index}?<br />
         We deduct {$gameConfig.taxationCloseRoom}% TraumwertSteuer,<br />
         You will recover
         <span class="value"

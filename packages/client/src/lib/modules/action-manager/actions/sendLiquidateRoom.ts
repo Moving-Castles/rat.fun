@@ -19,7 +19,7 @@ export async function sendLiquidateRoom(roomId: string) {
   try {
     await closeRoom(roomId)
   } catch (e) {
-    throw new LiquidationError(`Failed to liquidate room ${roomId}`, roomId, e)
+    throw new LiquidationError(`Failed to liquidate trip ${roomId}`, roomId, e)
   } finally {
     busy.CloseRoom.set(0, { duration: 0 })
     goto("/admin")
