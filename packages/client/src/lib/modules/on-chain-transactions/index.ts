@@ -60,7 +60,7 @@ export async function buyWithEth(purchaseTokenAmount: number, countryCode: strin
     WorldFunctions.BuyWithEth,
     [BigInt(purchaseTokenAmount), countryCode],
     useConnectorClient,
-    parseEther("0.01")
+    parseEther("0.001")
   )
 }
 

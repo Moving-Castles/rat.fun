@@ -72,7 +72,7 @@
     <SmallButton
       tippyText="Request tokens from the contract"
       onclick={sendBuyWithEth}
-      text="Buy $Slopamine (0.01ETH)"
+      text="Buy $Slopamine (0.001ETH)"
     ></SmallButton>
     <SmallButton
       tippyText="Allow the contract to spend on your behalf"

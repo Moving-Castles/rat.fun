@@ -38,11 +38,11 @@
   // do so inside the uniform's individual getter functions
   let spiral = new Tween(getSpiralValue(getShaderMode(page.url)), {
     easing: cubicInOut,
-    duration: 3000
+    duration: 1000
   })
   let invert = new Tween(getInversionValue(getShaderMode(page.url)), {
     easing: cubicInOut,
-    duration: 2000
+    duration: 500
   })
   let saturation = new Tween(getSaturationValue(getShaderMode(page.url)))
   let contrast = new Tween(getContrastValue(getShaderMode(page.url)))

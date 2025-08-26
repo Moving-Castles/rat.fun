@@ -13,8 +13,8 @@ export async function sendBuyWithEth() {
   busy.BuyWithEth.set(0.99, { duration: DEFAULT_TIMING })
 
   try {
-    // Try to buy 10 tokens
-    await buyWithEth(10, "US")
+    // Try to buy 1 token
+    await buyWithEth(1, "US")
   } catch (e) {
     throw new TransactionError("Failed buy tokens with ETH", e)
   } finally {
