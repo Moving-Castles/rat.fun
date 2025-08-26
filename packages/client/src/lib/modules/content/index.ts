@@ -1,3 +1,4 @@
+import { isBefore } from "date-fns"
 import { writable, derived } from "svelte/store"
 import { client, loadData } from "./sanity"
 import { blockNumber } from "$lib/modules/network"
@@ -26,6 +27,14 @@ export const upcomingWorldEvent = derived(
   ([$staticContent]: [StaticContent, bigint]) => {
     const event = $staticContent?.worldEvents?.[0]
 
+    console.log(
+      "world evenets",
+      $staticContent?.worldEvents?.map(e => ({
+        activation: e.activationDateTime,
+        duration: e.duration
+      }))
+    )
+
     if (event && event?.publicationText !== "") {
       return event
     }
@@ -41,10 +50,12 @@ export async function initStaticContent(worldAddress: string) {
   const outcomes = await loadData(queries.outcomes, { worldAddress })
   const worldEvents = await loadData(queries.worldEvents, { worldAddress })
 
+  const processedWorldEvents = worldEvents.filter(upcomingWorldEventFilter)
+
   staticContent.set({
     rooms,
     outcomes,
-    worldEvents
+    worldEvents: processedWorldEvents
   })
 
   // Subscribe to changes to rooms in sanity DB
@@ -69,18 +80,42 @@ export async function initStaticContent(worldAddress: string) {
 
   // Subscribe to changes to world events in sanity DB
   client.listen(queries.worldEvents, { worldAddress }).subscribe(update => {
-    staticContent.update(content => ({
-      ...content,
-      worldEvents: handleSanityUpdate<SanityWorldEvent>(
-        update,
-        content.worldEvents,
-        (item, id) => item._id === id
-      )
-    }))
+    staticContent.update(content => {
+      const filteredWorldEvents = content.worldEvents.filter(upcomingWorldEventFilter)
+
+      console.log("filtered events", filteredWorldEvents)
+
+      return {
+        ...content,
+        worldEvents: handleSanityUpdate<SanityWorldEvent>(
+          update,
+          filteredWorldEvents,
+          (item, id) => item._id === id
+        )
+      }
+    })
   })
 }
 
 // --- HELPER FUNCTIONS -------------------------------------------------
+function upcomingWorldEventFilter(e: SanityWorldEvent) {
+  // If no duration is specified, filter out
+  if (!e.duration) return false
+
+  // Calculate the end timestamp for this one.
+  // Duration is defined in block time ±2s per block
+  const startTimeInMillis = new Date(e?.activationDateTime)?.getTime()
+  const blockTimeInMillis = e.duration * 2000
+
+  // More dates needed for comparison
+  const now = new Date()
+  const endOfBlockWindow = new Date(startTimeInMillis + blockTimeInMillis)
+
+  const endResult = isBefore(now, endOfBlockWindow)
+
+  // If we are after the window of the event itself
+  return endResult
+}
 
 function handleSanityUpdate<T>(
   update: MutationEvent<Record<string, unknown>>,
