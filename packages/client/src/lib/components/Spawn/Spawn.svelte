@@ -12,9 +12,13 @@
   import { initWalletNetwork } from "$lib/initWalletNetwork"
   import { entryKitSession } from "$lib/modules/entry-kit/stores"
 
+  import { playerERC20Allowance, playerERC20Balance } from "$lib/modules/state/stores"
+
   import Introduction from "$lib/components/Spawn/Introduction/Introduction.svelte"
   import ConnectWalletForm from "$lib/components/Spawn/ConnectWalletForm/ConnectWalletForm.svelte"
   import SpawnForm from "$lib/components/Spawn/SpawnForm/SpawnForm.svelte"
+  import TokenForm from "$lib/components/Spawn/TokenForm/TokenForm.svelte"
+  import ApprovalForm from "$lib/components/Spawn/ApprovalForm/ApprovalForm.svelte"
   import HeroImage from "$lib/components/Spawn/HeroImage/HeroImage.svelte"
 
   const { walletType, spawned = () => {} } = $props<{
@@ -84,6 +88,30 @@
       <ConnectWalletForm {walletType} onComplete={onWalletConnectionComplete} />
     {:else if currentState === SPAWN_STATE.SPAWN_FORM}
       <SpawnForm
+        onComplete={() => {
+          if ($playerERC20Balance < 100) {
+            currentState = SPAWN_STATE.TOKEN_FORM
+          } else {
+            if ($playerERC20Allowance < 100) {
+              currentState = SPAWN_STATE.APPROVAL_FORM
+            } else {
+              currentState = SPAWN_STATE.HERO_IMAGE
+            }
+          }
+        }}
+      />
+    {:else if currentState === SPAWN_STATE.TOKEN_FORM}
+      <TokenForm
+        onComplete={() => {
+          if ($playerERC20Allowance < 100) {
+            currentState = SPAWN_STATE.APPROVAL_FORM
+          } else {
+            currentState = SPAWN_STATE.HERO_IMAGE
+          }
+        }}
+      />
+    {:else if currentState === SPAWN_STATE.APPROVAL_FORM}
+      <ApprovalForm
         onComplete={() => {
           currentState = SPAWN_STATE.HERO_IMAGE
         }}

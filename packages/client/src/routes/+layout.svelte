@@ -21,7 +21,6 @@
   import { outerLayoutTransitionConfig } from "$lib/components/Shared/PageTransitions/transitionConfigs"
   import { errorHandler } from "$lib/modules/error-handling"
   import { removeHash } from "$lib/modules/utils"
-  import { entryKitSession, wagmiConfigStateful } from "$lib/modules/entry-kit/stores"
   import { walletType as walletTypeStore } from "$lib/modules/network"
 
   // Components
@@ -47,9 +46,6 @@
   const { environment, walletType, saleStatus } = data
 
   walletTypeStore.set(walletType)
-
-  $inspect("entryKitSession", $entryKitSession)
-  $inspect("wagmiConfigStateful", $wagmiConfigStateful)
 
   const environmentLoaded = async () => {
     try {
