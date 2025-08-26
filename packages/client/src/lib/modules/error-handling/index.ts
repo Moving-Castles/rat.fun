@@ -28,15 +28,15 @@ export function errorHandler(error: ExpectedError | unknown, message = "") {
   let processedError: ExpectedError | unknown = error
 
   // Auto-detect and parse viem errors
-  if (error && typeof error === 'object' && 'name' in error) {
+  if (error && typeof error === "object" && "name" in error) {
     // Check if it's a viem BaseError by checking for viem-specific properties
-    if ('shortMessage' in error || 'code' in error || error.constructor.name.includes('Error')) {
+    if ("shortMessage" in error || "code" in error || error.constructor.name.includes("Error")) {
       try {
         // Try to parse as viem error
         processedError = parseViemError(error as any)
       } catch (parseError) {
         // If parsing fails, keep original error
-        console.warn('Failed to parse potential viem error:', parseError)
+        console.warn("Failed to parse potential viem error:", parseError)
       }
     }
   }
@@ -52,7 +52,10 @@ export function errorHandler(error: ExpectedError | unknown, message = "") {
       severity = "info"
     }
     // Expected validation and user input errors are warnings
-    else if (processedError.code.includes("VALIDATION") || processedError.code.includes("CHARACTER_LIMIT")) {
+    else if (
+      processedError.code.includes("VALIDATION") ||
+      processedError.code.includes("CHARACTER_LIMIT")
+    ) {
       severity = "warning"
     }
     // Network and temporary issues are info level
@@ -60,7 +63,10 @@ export function errorHandler(error: ExpectedError | unknown, message = "") {
       severity = "info"
     }
     // Critical system errors remain as errors
-    else if (processedError.code.includes("WEBGL_CONTEXT") || processedError.code.includes("WORLD_ADDRESS")) {
+    else if (
+      processedError.code.includes("WEBGL_CONTEXT") ||
+      processedError.code.includes("WORLD_ADDRESS")
+    ) {
       severity = "error"
     }
   }

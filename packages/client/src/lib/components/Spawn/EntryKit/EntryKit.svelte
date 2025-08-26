@@ -25,7 +25,9 @@
   const queryClient = new QueryClient()
 
   function AccountButtonPortal() {
-    const syncedEntryKitButton = useSyncExternalStore(entryKitButton.subscribe, () => get(entryKitButton))
+    const syncedEntryKitButton = useSyncExternalStore(entryKitButton.subscribe, () =>
+      get(entryKitButton)
+    )
     if (!syncedEntryKitButton) {
       return null
     } else {
