@@ -4,9 +4,11 @@ import { type MUDChain } from "@latticexyz/common/chains"
 export const extendedBaseSepolia = {
   ...baseSepoliaConfig,
   rpcUrls: {
-    ...baseSepoliaConfig.rpcUrls,
+    default: {
+      http: ["https://api.developer.coinbase.com/rpc/v1/base-sepolia/3ewNiMtI6Vj7q6XobGjyWILDJNKFHkh1x"]
+    },
     bundler: {
-      http: ["https://api.pimlico.io/v2/84532/rpc?apikey=pim_8gQqpbnmKF1njADAZmuHy5"]
+      http: ["https://api.developer.coinbase.com/rpc/v1/base-sepolia/3ewNiMtI6Vj7q6XobGjyWILDJNKFHkh1"]
     }
   },
   indexerUrl: "https://base-sepolia.rat-fun-indexer.com",
