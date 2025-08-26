@@ -21,13 +21,13 @@
   import { outerLayoutTransitionConfig } from "$lib/components/Shared/PageTransitions/transitionConfigs"
   import { errorHandler } from "$lib/modules/error-handling"
   import { removeHash } from "$lib/modules/utils"
+  import { entryKitSession, wagmiConfigStateful } from "$lib/modules/entry-kit/stores"
   import { walletType as walletTypeStore } from "$lib/modules/network"
 
   // Components
   import Spawn from "$lib/components/Spawn/Spawn.svelte"
   import Loading from "$lib/components/Loading/Loading.svelte"
   import {
-    WalletInfo,
     ShaderTest,
     Modal,
     PageTransitions,
@@ -46,9 +46,10 @@
 
   const { environment, walletType, saleStatus } = data
 
-  console.log("saleStatus", saleStatus)
-
   walletTypeStore.set(walletType)
+
+  $inspect("entryKitSession", $entryKitSession)
+  $inspect("wagmiConfigStateful", $wagmiConfigStateful)
 
   const environmentLoaded = async () => {
     try {

@@ -5,7 +5,7 @@ uniform vec2 u_resolution;
 uniform float u_invert;
 uniform float u_saturation;
 uniform float u_contrast;
-uniform float u_exposure;
+uniform float u_spiral;
 
 // Simple hash function for noise
 float hash(vec2 p){
@@ -51,8 +51,59 @@ float fractalNoise(vec2 p){
   return value;
 }
 
+mat2 rotate(float a){
+  float s=sin(a);
+  float c=cos(a);
+  
+  return mat2(c,-s,s,c);
+}
+
+vec2 twirl(vec2 uv,vec2 center,float range,float strength){
+  float d=distance(uv,center);
+  uv-=center;
+  
+  d=smoothstep(0.,range,range-d)*strength;
+  uv*=rotate(d);
+  uv+=center;
+  
+  return uv;
+}
+
+// Infinite zoom effect
+vec2 infiniteZoom(vec2 uv,vec2 center,float zoomSpeed,float strength){
+  // Move to center-based coordinates
+  uv-=center;
+  
+  // Create smooth continuous zoom in (smaller scale = zoom in)
+  float zoom=1./(1.+strength*u_time*zoomSpeed);
+  
+  // Scale UVs and move back
+  uv*=zoom;
+  uv+=center;
+  
+  return uv;
+}
+
 void main(){
   vec2 uv=gl_FragCoord.xy/u_resolution;
+  
+  // Apply a spiraling effect
+  vec2 pos=vec2(.5);
+  float range=.5;
+  float speed=.5;
+  float strength=10.;
+  
+  float spiralTime=strength*sin(u_time*speed);
+  
+  // Mix uv's based on spiral amount
+  uv=mix(uv,twirl(uv,pos,range,spiralTime),u_spiral);
+  
+  // Add infinite zoom when spiral is active
+  if(u_spiral>.01){
+    float zoomSpeed=.3*u_spiral;// Zoom speed proportional to spiral strength
+    float zoomStrength=.8+.4*u_spiral;// Base zoom with spiral influence
+    uv=infiniteZoom(uv,pos,zoomSpeed,zoomStrength);
+  }
   
   // Sky gradient from light blue to darker blue
   vec3 skyColor=mix(
