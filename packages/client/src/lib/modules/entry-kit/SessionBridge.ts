@@ -11,7 +11,6 @@ export default function SessionBridge() {
   // Transfer session updates to svelte store
   useEffect(() => {
     entryKitSession.set(sessionClient.data)
-    console.log("We have established the bridge between entrykit and the app", sessionClient.data)
   }, [sessionClient.data])
 
   // Transfer wagmi config state updates to svelte store

@@ -27,14 +27,6 @@ export const upcomingWorldEvent = derived(
   ([$staticContent]: [StaticContent, bigint]) => {
     const event = $staticContent?.worldEvents?.[0]
 
-    console.log(
-      "world evenets",
-      $staticContent?.worldEvents?.map(e => ({
-        activation: e.activationDateTime,
-        duration: e.duration
-      }))
-    )
-
     if (event && event?.publicationText !== "") {
       return event
     }
