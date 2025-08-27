@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte"
+  import { getQueryClientContext } from "@tanstack/svelte-query"
   import { player } from "$lib/modules/state/stores"
   import { waitForPropertyChange } from "$lib/modules/state/utils"
   import { sendCreateRat } from "$lib/modules/action-manager/index.svelte"
@@ -10,11 +11,13 @@
   import { PropertyChangeTimeoutError, RatError } from "$lib/modules/error-handling/errors"
   import { errorHandler } from "$lib/modules/error-handling"
 
+  const queryClient = getQueryClientContext()
+
   const name: string = generateRatName()
 
   onMount(async () => {
     const oldRatId = $player?.currentRat ?? ""
-    await sendCreateRat(name)
+    await sendCreateRat(queryClient, name)
 
     try {
       // Make sure new rat is available to avoid flash of old info

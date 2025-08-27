@@ -55,6 +55,7 @@
     "@sanity/image-url": "^1.1.0",
     "@sentry/sveltekit": "^9.40.1",
     "@tanstack/react-query": "^5.83.0",
+    "@tanstack/svelte-query": "^5.83.1",
     "@wagmi/core": "2.18.0",
     "connectkit": "^1.9.1",
     "d3-array": "^3.2.4",

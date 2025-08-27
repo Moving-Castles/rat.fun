@@ -4,6 +4,7 @@
 
   import type { LayoutProps } from "./$types"
 
+  import { QueryClientProvider } from "@tanstack/svelte-query"
   import { type Outcome as SanityOutcome } from "@sanity-types"
   import { initializeSentry } from "$lib/modules/error-handling"
   import { browser } from "$app/environment"
@@ -31,7 +32,8 @@
     Modal,
     PageTransitions,
     ModalTarget,
-    WorldEventPopup
+    WorldEventPopup,
+    WalletInfo
   } from "$lib/components/Shared"
   import { Outcome } from "$lib/components/Room"
   import EntryKit from "$lib/components/Spawn/EntryKit/EntryKit.svelte"
@@ -89,64 +91,63 @@
   }}
 />
 
-<div class="bg">
-  {#if $UIState === UI.LOADING}
-    <div class="context-main">
-      <main>
-        <Loading {environment} loaded={environmentLoaded} />
-      </main>
-    </div>
-  {:else if $UIState === UI.SPAWNING}
-    {#if browser}
-      <ShaderTest />
-    {/if}
-    <div class="context-main">
-      <main>
-        <Spawn spawned={playerSpawned} {walletType} />
-      </main>
-    </div>
-  {:else}
-    {#if browser}
-      <ShaderTest />
-    {/if}
-    <div class="context-main">
-      <div class="layer-game">
-        <PageTransitions config={outerLayoutTransitionConfig}>
-          {@render children?.()}
-        </PageTransitions>
+<QueryClientProvider client={data.queryClient}>
+  <div class="bg">
+    {#if $UIState === UI.LOADING}
+      <div class="context-main">
+        <main>
+          <Loading {environment} loaded={environmentLoaded} />
+        </main>
       </div>
-    </div>
-  {/if}
-</div>
+    {:else if $UIState === UI.SPAWNING}
+      <div class="context-main">
+        <main>
+          <Spawn spawned={playerSpawned} {walletType} />
+        </main>
+      </div>
+    {:else}
+      {#if browser}
+        <ShaderTest />
+      {/if}
+      <div class="context-main">
+        <div class="layer-game">
+          <PageTransitions config={outerLayoutTransitionConfig}>
+            {@render children?.()}
+          </PageTransitions>
+        </div>
+      </div>
+    {/if}
+  </div>
 
-{#key outcomeId}
-  {#if outcome}
-    {#snippet content()}
-      <Outcome {outcome} />
+  {#key outcomeId}
+    {#if outcome}
+      {#snippet content()}
+        <Outcome {outcome} />
+      {/snippet}
+      <ModalTarget onclose={removeHash} {content}></ModalTarget>
+    {/if}
+  {/key}
+
+  {#if $activeWorldEvent && !notificationsRead.current.includes($activeWorldEvent.cmsId)}
+    {#snippet worldEventContent()}
+      <WorldEventPopup />
     {/snippet}
-    <ModalTarget onclose={removeHash} {content}></ModalTarget>
+    <ModalTarget
+      onclose={() => {
+        notificationsRead.set([...notificationsRead.current, $activeWorldEvent.cmsId])
+      }}
+      content={worldEventContent}
+    ></ModalTarget>
   {/if}
-{/key}
 
-{#if $activeWorldEvent && !notificationsRead.current.includes($activeWorldEvent.cmsId)}
-  {#snippet worldEventContent()}
-    <WorldEventPopup />
-  {/snippet}
-  <ModalTarget
-    onclose={() => {
-      notificationsRead.set([...notificationsRead.current, $activeWorldEvent.cmsId])
-    }}
-    content={worldEventContent}
-  ></ModalTarget>
-{/if}
+  <EntryKit />
 
-<EntryKit />
+  <Modal />
 
-<Modal />
+  <Toasts />
 
-<Toasts />
-
-<!-- <WalletInfo {walletType} {environment} /> -->
+  <WalletInfo {walletType} {environment} />
+</QueryClientProvider>
 
 <style lang="scss">
   .context-main {

@@ -1,5 +1,6 @@
 import { derived } from "svelte/store"
-import { erc20Abi, Hex, parseAbiItem } from "viem"
+import { erc20Abi, Hex } from "viem"
+import { createQuery, getQueryClientContext, QueryClient } from "@tanstack/svelte-query"
 import { publicNetwork } from "$lib/modules/network"
 import {
   externalAddressesConfig,
@@ -9,79 +10,59 @@ import {
 } from "$lib/modules/state/stores"
 import { SetupPublicNetworkResult } from "$lib/mud/setupPublicNetwork"
 
+export function refetchBalance(queryClient: QueryClient) {
+  queryClient.refetchQueries({ queryKey: ["erc20-query", "balance"] })
+}
+
+export function refetchAllowance(queryClient: QueryClient) {
+  queryClient.refetchQueries({ queryKey: ["erc20-query", "allowance"] })
+}
+
 export function initErc20Listener() {
-  let unwatchFrom: (() => void) | undefined
-  let unwatchTo: (() => void) | undefined
-  let unwatchOwner: (() => void) | undefined
+  let unsubscribeBalance: (() => void) | undefined
+  let unsubscribeAllowance: (() => void) | undefined
+
+  const queryClient = getQueryClientContext()
 
   derived([publicNetwork, playerAddress, externalAddressesConfig], stores => stores).subscribe(
     ([publicNetwork, playerAddress, externalAddressesConfig]) => {
       if (!publicNetwork || !playerAddress || !externalAddressesConfig) return
 
-      const address = externalAddressesConfig.erc20Address
-      const transferEvent = parseAbiItem(
-        "event Transfer(address indexed from, address indexed to, uint256 value)"
-      )
-      const approvalEvent = parseAbiItem(
-        "event Approval(address indexed owner, address indexed spender, uint256 value)"
-      )
-      const onTransferLogs = () =>
-        updatePlayerERC20Balance(
-          publicNetwork,
-          playerAddress as Hex,
-          externalAddressesConfig.erc20Address
-        )
+      const erc20Address = externalAddressesConfig.erc20Address
 
-      const onApprovalLogs = () => {
-        const spenderAddress = externalAddressesConfig.gamePoolAddress
-        updatePlayerERC20Allowance(
-          publicNetwork,
-          playerAddress as Hex,
-          spenderAddress,
-          externalAddressesConfig.erc20Address
-        )
-      }
-
-      // Set initial balance and allowance
-      onTransferLogs()
-      onApprovalLogs()
-
-      unwatchFrom = publicNetwork.publicClient.watchEvent({
-        address,
-        event: transferEvent,
-        args: {
-          from: playerAddress as Hex
-        },
-        onLogs: onTransferLogs
+      // Query ERC20 balance
+      const balanceQueryKey = ["erc20-query", "balance", publicNetwork.config.chainId, playerAddress, erc20Address]
+      const balanceQuery = createQuery({
+        queryKey: balanceQueryKey,
+        queryFn: async () => readPlayerERC20Balance(publicNetwork, playerAddress as Hex, erc20Address),
+        // TODO reconsider refetching frequency based on alternative solutions, rate limits and other infra expectations
+        // Refetch every 10 seconds
+        refetchInterval: 10_000,
       })
+      unsubscribeBalance = balanceQuery.subscribe((balance) => playerERC20Balance.set(balance.data ?? 0))
 
-      unwatchTo = publicNetwork.publicClient.watchEvent({
-        address,
-        event: transferEvent,
-        args: {
-          to: playerAddress as Hex
-        },
-        onLogs: onTransferLogs
+      // Query ERC20 allowance
+      const spenderAddress = externalAddressesConfig.gamePoolAddress
+      const allowanceQueryKey = ["erc20-query", "allowance", publicNetwork.config.chainId, playerAddress, spenderAddress, erc20Address]
+      const allowanceQuery = createQuery({
+        queryKey: allowanceQueryKey,
+        queryFn: async () => readPlayerERC20Allowance(publicNetwork, playerAddress as Hex, spenderAddress, erc20Address),
+        // Refetch every minute
+        refetchInterval: 60_000,
       })
-
-      unwatchOwner = publicNetwork.publicClient.watchEvent({
-        address,
-        event: approvalEvent,
-        args: {
-          owner: playerAddress as Hex
-        },
-        onLogs: onApprovalLogs
-      })
+      unsubscribeAllowance = allowanceQuery.subscribe((allowance) => playerERC20Allowance.set(allowance.data ?? 0))
     },
     () => {
-      unwatchFrom?.()
-      unwatchTo?.()
-      unwatchOwner?.()
+      // Cancel ongoing queries
+      queryClient.cancelQueries({ queryKey: ["erc20-query"] })
+      // Unsusbscribe store setters
+      unsubscribeBalance?.()
+      unsubscribeAllowance?.()
     }
   )
 }
 
-async function updatePlayerERC20Balance(
+async function readPlayerERC20Balance(
   publicNetwork: SetupPublicNetworkResult,
   playerAddress: Hex,
   erc20Address: Hex
@@ -93,10 +74,10 @@ async function updatePlayerERC20Balance(
     args: [playerAddress]
   })
 
-  playerERC20Balance.set(Number(balance / 10n ** 18n))
+  return Number(balance / 10n ** 18n)
 }
 
-async function updatePlayerERC20Allowance(
+async function readPlayerERC20Allowance(
   publicNetwork: SetupPublicNetworkResult,
   playerAddress: Hex,
   spenderAddress: Hex,
@@ -109,5 +90,5 @@ async function updatePlayerERC20Allowance(
     args: [playerAddress, spenderAddress]
   })
 
-  playerERC20Allowance.set(Number(allowance / 10n ** 18n))
+  return Number(allowance / 10n ** 18n)
 }

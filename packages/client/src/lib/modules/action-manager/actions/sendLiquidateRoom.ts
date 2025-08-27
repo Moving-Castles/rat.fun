@@ -1,3 +1,4 @@
+import { QueryClient } from "@tanstack/svelte-query"
 import { goto } from "$app/navigation"
 import { playSound } from "$lib/modules/sound"
 import { closeRoom } from "$lib/modules/on-chain-transactions"
@@ -10,14 +11,14 @@ const DEFAULT_TIMING = 4000
  * Liquidate Room
  * @param roomId The ID of the room to liquidate
  */
-export async function sendLiquidateRoom(roomId: string) {
+export async function sendLiquidateRoom(queryClient: QueryClient, roomId: string) {
   if (busy.CloseRoom.current !== 0 || !roomId) return
   playSound("ratfun", "blink")
 
   busy.CloseRoom.set(0.99, { duration: DEFAULT_TIMING })
 
   try {
-    await closeRoom(roomId)
+    await closeRoom(queryClient, roomId)
   } catch (e) {
     throw new LiquidationError(`Failed to liquidate trip ${roomId}`, roomId, e)
   } finally {
