@@ -128,7 +128,7 @@
           margin-right: 10px;
           font-size: 18px;
           padding: 10px;
-          background: var(--color-alert);
+          background: var(--white);
           color: var(--background);
           border: none;
           margin-bottom: 0;

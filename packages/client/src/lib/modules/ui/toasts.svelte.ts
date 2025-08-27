@@ -5,6 +5,19 @@ export interface Toast {
   duration?: number
 }
 
+// shorten words that are extremely long (always the motherfn addresses...)
+const processMessage = (msg: string) => {
+  return msg
+    .split(" ")
+    .map(word => {
+      if (word.length > 32) {
+        return `${word.substring(0, 32)}...`
+      }
+      return word
+    })
+    .join(" ")
+}
+
 class ToastManager {
   toasts = $state<Toast[]>([])
 
@@ -16,6 +29,7 @@ class ToastManager {
       duration: 10000,
       ...toast
     }
+    newToast.message = processMessage(newToast.message)
 
     this.toasts.push(newToast)
 
