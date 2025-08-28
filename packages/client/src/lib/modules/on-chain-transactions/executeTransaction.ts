@@ -22,7 +22,6 @@ import mainSaleAbi from "contracts/out/MainSale.sol/MainSale.abi.json"
  * @returns receipt
  */
 export async function executeTransaction(
-  queryClient: QueryClient,
   systemId: string,
   params: (string | Hex | number | bigint)[] = [],
   useConnectorClient: boolean = false,
@@ -71,9 +70,9 @@ export async function executeTransaction(
 
     // Force an erc20 query refetch for calls that definitely update balance or allowance
     if (systemId === WorldFunctions.Approve) {
-      refetchAllowance()
+      await refetchAllowance()
     } else if (systemId === WorldFunctions.GiveCallerTokens) {
-      refetchBalance()
+      await refetchBalance()
     }
 
     if (receipt) {

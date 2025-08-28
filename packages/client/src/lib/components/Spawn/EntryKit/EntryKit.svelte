@@ -17,7 +17,7 @@
   import { paymasters } from "$lib/modules/entry-kit/paymasters"
   import { wagmiConfig } from "$lib/modules/entry-kit/wagmiConfig"
   import SessionBridge from "$lib/modules/entry-kit/SessionBridge"
-  import { entryKitButton, entryKitSession } from "$lib/modules/entry-kit/stores"
+  import { entryKitButton } from "$lib/modules/entry-kit/stores"
   import { UIState } from "$lib/modules/ui/state.svelte"
   import { UI } from "$lib/modules/ui/enums"
 

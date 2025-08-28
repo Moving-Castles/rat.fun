@@ -13,5 +13,6 @@ export enum SALE_STATUS {
   TESTING = "testing",
   PREVIEW = "preview",
   LIVE = "live",
-  COMPLETED = "completed"
+  COMPLETED = "completed",
+  NOT_STARTED = "not_started"
 }

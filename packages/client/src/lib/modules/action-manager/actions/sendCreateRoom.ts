@@ -29,7 +29,6 @@ const DEFAULT_TIMING = 4000
  * @param roomCreationCost The cost of the room
  */
 export async function sendCreateRoom(
-  queryClient: QueryClient,
   roomPrompt: string,
   levelId: string,
   roomCreationCost: bigint

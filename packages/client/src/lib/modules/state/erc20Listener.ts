@@ -1,6 +1,5 @@
 import { derived } from "svelte/store"
 import { erc20Abi, Hex } from "viem"
-import { createQuery, getQueryClientContext, QueryClient } from "@tanstack/svelte-query"
 import { publicNetwork } from "$lib/modules/network"
 import {
   externalAddressesConfig,
@@ -10,76 +9,95 @@ import {
 } from "$lib/modules/state/stores"
 import { SetupPublicNetworkResult } from "$lib/mud/setupPublicNetwork"
 
-export function refetchBalance() {
-  queryClient.refetchQueries({ queryKey: ["erc20-query", "balance"] })
+let balanceInterval: NodeJS.Timeout | undefined
+let allowanceInterval: NodeJS.Timeout | undefined
+let currentNetwork: SetupPublicNetworkResult | null = null
+let currentPlayerAddress: Hex | null = null
+let currentExternalAddresses: any = null
+
+export async function refetchAllowance() {
+  if (currentNetwork && currentPlayerAddress && currentExternalAddresses) {
+    await updateAllowance(currentNetwork, currentPlayerAddress, currentExternalAddresses)
+  }
 }
 
-export function refetchAllowance() {
-  queryClient.refetchQueries({ queryKey: ["erc20-query", "allowance"] })
+export async function refetchBalance() {
+  if (currentNetwork && currentPlayerAddress && currentExternalAddresses) {
+    await updateBalance(currentNetwork, currentPlayerAddress, currentExternalAddresses.erc20Address)
+  }
+}
+
+async function updateBalance(
+  network: SetupPublicNetworkResult,
+  playerAddr: Hex,
+  erc20Address: Hex
+) {
+  try {
+    const balance = await readPlayerERC20Balance(network, playerAddr, erc20Address)
+    playerERC20Balance.set(balance)
+  } catch (error) {
+    console.error("Failed to update ERC20 balance:", error)
+  }
+}
+
+async function updateAllowance(
+  network: SetupPublicNetworkResult,
+  playerAddr: Hex,
+  externalAddresses: any
+) {
+  try {
+    const allowance = await readPlayerERC20Allowance(
+      network,
+      playerAddr,
+      externalAddresses.gamePoolAddress,
+      externalAddresses.erc20Address
+    )
+    playerERC20Allowance.set(allowance)
+  } catch (error) {
+    console.error("Failed to update ERC20 allowance:", error)
+  }
 }
 
 export function initErc20Listener() {
-  let unsubscribeBalance: (() => void) | undefined
-  let unsubscribeAllowance: (() => void) | undefined
-
   derived([publicNetwork, playerAddress, externalAddressesConfig], stores => stores).subscribe(
     ([publicNetwork, playerAddress, externalAddressesConfig]) => {
-      if (!publicNetwork || !playerAddress || !externalAddressesConfig) return
+      // Clear existing intervals
+      if (balanceInterval) clearInterval(balanceInterval)
+      if (allowanceInterval) clearInterval(allowanceInterval)
+
+      if (!publicNetwork || !playerAddress || !externalAddressesConfig) {
+        currentNetwork = null
+        currentPlayerAddress = null
+        currentExternalAddresses = null
+        return
+      }
+
+      // Store current values for refetch functions
+      currentNetwork = publicNetwork
+      currentPlayerAddress = playerAddress as Hex
+      currentExternalAddresses = externalAddressesConfig
 
       const erc20Address = externalAddressesConfig.erc20Address
 
-      // Query ERC20 balance
-      const balanceQueryKey = [
-        "erc20-query",
-        "balance",
-        publicNetwork.config.chainId,
-        playerAddress,
-        erc20Address
-      ]
-      const balanceQuery = createQuery({
-        queryKey: balanceQueryKey,
-        queryFn: async () =>
-          readPlayerERC20Balance(publicNetwork, playerAddress as Hex, erc20Address),
-        // TODO reconsider refetching frequency based on alternative solutions, rate limits and other infra expectations
-        // Refetch every 10 seconds
-        refetchInterval: 10_000
-      })
-      unsubscribeBalance = balanceQuery.subscribe(balance =>
-        playerERC20Balance.set(balance.data ?? 0)
-      )
+      // Initial fetch and set up balance interval
+      updateBalance(publicNetwork, playerAddress as Hex, erc20Address)
+      balanceInterval = setInterval(() => {
+        updateBalance(publicNetwork, playerAddress as Hex, erc20Address)
+      }, 2_000) // Refetch every 2 seconds
 
-      // Query ERC20 allowance
-      const spenderAddress = externalAddressesConfig.gamePoolAddress
-      const allowanceQueryKey = [
-        "erc20-query",
-        "allowance",
-        publicNetwork.config.chainId,
-        playerAddress,
-        spenderAddress,
-        erc20Address
-      ]
-      const allowanceQuery = createQuery({
-        queryKey: allowanceQueryKey,
-        queryFn: async () =>
-          readPlayerERC20Allowance(
-            publicNetwork,
-            playerAddress as Hex,
-            spenderAddress,
-            erc20Address
-          ),
-        // Refetch every minute
-        refetchInterval: 60_000
-      })
-      unsubscribeAllowance = allowanceQuery.subscribe(allowance =>
-        playerERC20Allowance.set(allowance.data ?? 0)
-      )
+      // Initial fetch and set up allowance interval
+      updateAllowance(publicNetwork, playerAddress as Hex, externalAddressesConfig)
+      allowanceInterval = setInterval(() => {
+        updateAllowance(publicNetwork, playerAddress as Hex, externalAddressesConfig)
+      }, 60_000) // Refetch every minute
     },
     () => {
-      // Cancel ongoing queries
-      queryClient.cancelQueries({ queryKey: ["erc20-query"] })
-      // Unsusbscribe store setters
-      unsubscribeBalance?.()
-      unsubscribeAllowance?.()
+      // Cleanup intervals on unsubscribe
+      if (balanceInterval) clearInterval(balanceInterval)
+      if (allowanceInterval) clearInterval(allowanceInterval)
+      currentNetwork = null
+      currentPlayerAddress = null
+      currentExternalAddresses = null
     }
   )
 }

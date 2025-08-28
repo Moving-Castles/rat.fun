@@ -54,11 +54,7 @@ export async function approveMax(address: string) {
   return await executeTransaction(WorldFunctions.Approve, [address, maxUint256], useConnectorClient)
 }
 
-export async function buyWithEth(
-  queryClient: QueryClient,
-  purchaseTokenAmount: number,
-  countryCode: string
-) {
+export async function buyWithEth(purchaseTokenAmount: number, countryCode: string) {
   const useConnectorClient = get(walletType) === WALLET_TYPE.ENTRYKIT
   return await executeTransaction(
     WorldFunctions.BuyWithEth,
