@@ -19,8 +19,8 @@ export const loadingMessage = writable("Loading started")
 export const loadingPercentage = writable(0)
 
 // Persistent stores
-export const environment = writable() // important to be undefined first
-export const walletType = writable() // same
+export const environment = writable<ENVIRONMENT>() // important to be undefined first
+export const walletType = writable<WALLET_TYPE>() // same
 
 // ----------------------------------------------------------------------------
 
@@ -38,7 +38,7 @@ export const getEnvironmentFromUrl = (url: URL) => {
   return ENVIRONMENT.DEVELOPMENT
 }
 
-export const getEnvironment = () => {
+export const getEnvironment = (): ENVIRONMENT => {
   if (browser) {
     const storedEnvironment = get(environment)
     if (storedEnvironment) {

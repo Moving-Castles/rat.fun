@@ -66,7 +66,6 @@
       tippyText="Request tokens from the contract"
       onclick={async () => {
         await sendGiveCallerTokens()
-        console.log("CLOSE MOTHERFUCKER")
         close()
       }}
       text="Get tokens"
@@ -83,9 +82,8 @@
     <SmallButton
       disabled={busy.ApproveMax.current !== 0}
       tippyText="Allow the contract to spend on your behalf"
-      onclick={() => {
-        sendApproveMax()
-        console.log("CLOSE MOTHERFUCKER")
+      onclick={async () => {
+        await sendApproveMax()
         close()
       }}
       text="Approve max allowance"

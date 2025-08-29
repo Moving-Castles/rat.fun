@@ -10,24 +10,24 @@ import { ENVIRONMENT } from "./enums"
 import { MUDChain } from "@latticexyz/common/chains"
 import { WorldAddressNotFoundError } from "$lib/modules/error-handling/errors"
 
-export function getNetworkConfig(environment: ENVIRONMENT, url?: string | URL) {
+export function getNetworkConfig(environment: ENVIRONMENT, url?: URL) {
   // Use provided URL or fallback to empty search params for SSR
-  const searchParams = url
-    ? new URLSearchParams(typeof url === "string" ? new URL(url).search : url.search)
-    : new URLSearchParams()
+  const searchParams = url?.searchParams
 
   // Default to local development chain
   let chainId = 31337
 
-  if ([ENVIRONMENT.BASE_SEPOLIA].includes(environment)) {
-    chainId = 84532
+  switch (environment) {
+    case ENVIRONMENT.BASE_SEPOLIA:
+      chainId = 84532
+      break
+    case ENVIRONMENT.BASE:
+      chainId = 8453
+      break
+    default:
+      chainId = 31337
+      break
   }
-
-  if (environment === ENVIRONMENT.BASE) {
-    chainId = 8453
-  }
-
-  chainId = 84532
 
   const chain = getChain(chainId)
 
@@ -38,7 +38,7 @@ export function getNetworkConfig(environment: ENVIRONMENT, url?: string | URL) {
    */
   const world = getWorldFromChainId(chain.id)
 
-  const worldAddress = searchParams.get("worldAddress") || world?.address
+  const worldAddress = searchParams?.get("worldAddress") || world?.address
   if (!worldAddress) {
     throw new WorldAddressNotFoundError(chainId.toString())
   }
@@ -50,32 +50,33 @@ export function getNetworkConfig(environment: ENVIRONMENT, url?: string | URL) {
    * on the URL (as initialBlockNumber) or in the worlds.json
    * file. If neither has it, it starts at the first block, zero.
    */
-  const initialBlockNumber = searchParams.has("initialBlockNumber")
+  const initialBlockNumber = searchParams?.has("initialBlockNumber")
     ? Number(searchParams.get("initialBlockNumber"))
     : (world?.blockNumber ?? -1) // -1 will attempt to find the block number from RPC
 
   let indexerUrl = (chain as MUDChain).indexerUrl
-  if (searchParams.has("disableIndexer")) {
+  if (searchParams?.has("disableIndexer")) {
     indexerUrl = undefined
     console.log("Indexer disabled")
   }
 
   // Only call getBurnerPrivateKey if we're in a browser environment
   const privateKey =
-    searchParams.get("privateKey") ?? (typeof window !== "undefined" ? getBurnerPrivateKey() : null)
+    searchParams?.get("privateKey") ??
+    (typeof window !== "undefined" ? getBurnerPrivateKey() : null)
 
   return {
     provider: {
       chainId,
-      jsonRpcUrl: searchParams.get("rpc") ?? chain.rpcUrls.default.http[0],
+      jsonRpcUrl: searchParams?.get("rpc") ?? chain.rpcUrls.default.http[0],
       wsRpcUrl:
-        searchParams.get("wsRpc") ??
+        searchParams?.get("wsRpc") ??
         ("webSocket" in chain.rpcUrls.default ? chain.rpcUrls.default.webSocket?.[0] : undefined)
     },
-    privateKey: searchParams.get("privateKey") ?? privateKey, // do not run getBurnerPrivateKey in
-    useBurner: searchParams.has("useBurner"),
+    privateKey: searchParams?.get("privateKey") ?? privateKey, // do not run getBurnerPrivateKey in
+    useBurner: searchParams?.has("useBurner"),
     chainId,
-    faucetServiceUrl: searchParams.get("faucet") ?? (chain as MUDChain).faucetUrl,
+    faucetServiceUrl: searchParams?.get("faucet") ?? (chain as MUDChain).faucetUrl, // Todo, update
     worldAddress,
     initialBlockNumber,
     disableCache: import.meta.env.PROD,

@@ -25,6 +25,8 @@ import mudConfig from "contracts/mud.config"
 export type SetupPublicNetworkResult = Awaited<ReturnType<typeof setupPublicNetwork>>
 
 export async function setupPublicNetwork(environment: ENVIRONMENT) {
+  console.log("setting up public network for ", environment)
+
   const networkConfig = getNetworkConfig(environment)
 
   /*
@@ -53,20 +55,24 @@ export async function setupPublicNetwork(environment: ENVIRONMENT) {
 
   const publicClient = createPublicClient(clientOptions)
 
-  /*
-   * Sync on-chain state into RECS and keeps our client in sync.
-   * Uses the MUD indexer if available, otherwise falls back
-   * to the viem publicClient to make RPC calls to fetch MUD
-   * events from the chain.
-   */
-  const { components, latestBlock$, storedBlockLogs$, waitForTransaction } = await syncToRecs({
+  const resolvedConfig = {
     world,
     config: mudConfig,
     address: networkConfig.worldAddress as Hex,
     publicClient,
     startBlock: BigInt(networkConfig.initialBlockNumber),
     indexerUrl: networkConfig.indexerUrl
-  })
+  }
+
+  console.log("resolvedConfig", resolvedConfig)
+  /*
+   * Sync on-chain state into RECS and keeps our client in sync.
+   * Uses the MUD indexer if available, otherwise falls back
+   * to the viem publicClient to make RPC calls to fetch MUD
+   * events from the chain.
+   */
+  const { components, latestBlock$, storedBlockLogs$, waitForTransaction } =
+    await syncToRecs(resolvedConfig)
 
   // Allows us to to only listen to the game specific tables
   const tableKeys = [

@@ -10,7 +10,9 @@ export const prerender = false
 export const load: LayoutLoad = async ({ url }) => {
   // Pass all kinds of Network stuff to the main layout
   const environment = getEnvironmentFromUrl(url)
+  console.log("env from url", environment)
   const walletType = getWalletTypeFromUrl(url)
+  console.log("wallet from url", walletType)
   const saleStatus = (PUBLIC_SALE_STATUS ?? SALE_STATUS.NOT_STARTED) as SALE_STATUS
   const networkConfig = getNetworkConfig(environment, url)
 
