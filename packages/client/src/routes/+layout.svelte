@@ -7,6 +7,7 @@
   import { type Outcome as SanityOutcome } from "@sanity-types"
   import { initializeSentry } from "$lib/modules/error-handling"
   import { browser } from "$app/environment"
+  import { afterNavigate } from "$app/navigation"
   import { onMount } from "svelte"
   import { goto } from "$app/navigation"
   import { initStaticContent, staticContent } from "$lib/modules/content"
@@ -29,7 +30,7 @@
   import Loading from "$lib/components/Loading/Loading.svelte"
   import {
     Shader,
-    ShaderTest,
+    ShaderRenderer,
     Modal,
     PageTransitions,
     ModalTarget,
@@ -45,7 +46,7 @@
   let outcomeId = $state("")
   let outcome = $state<SanityOutcome | undefined>()
 
-  const { environment, walletType, saleStatus } = data
+  const { environment, walletType } = data
 
   walletTypeStore.set(walletType)
 
@@ -63,9 +64,9 @@
 
   const playerSpawned = () => {
     UIState.set(UI.READY)
+    //
+    goto("/")
   }
-
-  $inspect(busy.BuyWithEth.current)
 
   if (browser) {
     initializeSentry()
@@ -83,6 +84,12 @@
     document.querySelector(".preloader")?.remove()
     // Preload sounds
     initSound()
+  })
+
+  afterNavigate(({ to }) => {
+    if (to.url.searchParams.has("spawn")) {
+      UIState.set(UI.SPAWNING)
+    }
   })
 </script>
 
@@ -118,7 +125,7 @@
 
   {#if $UIState !== UI.LOADING}
     {#if browser}
-      <Shader />
+      <ShaderRenderer />
     {/if}
   {/if}
 </div>

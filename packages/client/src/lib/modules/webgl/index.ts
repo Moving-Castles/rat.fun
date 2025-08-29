@@ -1,4 +1,5 @@
 import type { WebGLRenderer, ShaderSource, WebGLUniforms, WebGLRendererOptions } from "./types"
+import type { UniformDefinition, UniformPropValue, UniformType } from "./shaders/index.svelte"
 import {
   WebGLContextError,
   ShaderError,

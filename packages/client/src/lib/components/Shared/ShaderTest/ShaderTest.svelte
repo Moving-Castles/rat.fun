@@ -3,7 +3,7 @@
   import { Tween } from "svelte/motion"
   import { fade } from "svelte/transition"
   import { createWebGLRenderer } from "$lib/modules/webgl"
-  import { shaders } from "$lib/modules/webgl/shaders"
+  import { shaders } from "$lib/modules/webgl/shaders/index.svelte"
   import { cubicInOut } from "svelte/easing"
   import { page } from "$app/state"
 
@@ -23,6 +23,8 @@
   // Admin: slightly psychedelic, inverted
   // ---
   // Layer: Clouds form together Starry, more noisy small clusters
+  // Inspired by: https://www.shadertoy.com/view/Xdl3D2
+  //
   // Adjustments: Inversion, blur / sharpen
   //
   // Outcome: Spiraling, tripping

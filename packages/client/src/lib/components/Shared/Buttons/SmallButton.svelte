@@ -7,12 +7,14 @@
     cost,
     tippyText,
     disabled = false,
+    extraClass = "",
     onclick
   }: {
     text: string
     cost?: number
     tippyText?: string
     disabled?: boolean
+    extraClass?: string
     onclick: () => void
   } = $props()
 
@@ -28,7 +30,13 @@
   }
 </script>
 
-<button class:disabled {onmouseup} {onmousedown} use:conditionalAction={{ content: tippyText }}>
+<button
+  class={extraClass}
+  class:disabled
+  {onmouseup}
+  {onmousedown}
+  use:conditionalAction={{ content: tippyText }}
+>
   <span class="button-text">{text}</span>
   {#if cost}
     <span class="button-cost">({cost})</span>
@@ -45,6 +53,10 @@
     border-width: 4px;
     border-color: rgba(0, 0, 0, 0.5);
 
+    &.red {
+      background: var(--color-death);
+    }
+
     .button-text {
       letter-spacing: -0.2em;
       font-size: var(--font-size-large);
@@ -57,16 +69,24 @@
 
     &:hover {
       background: var(--color-alert-priority-light);
+
+      &.red {
+        background: var(--color-death-light);
+      }
     }
 
     &:active {
       background: var(--color-alert-priority-muted);
       border-style: inset;
       transform: translateY(2px);
-      border-width: 8px;
+      border-width: 4px;
       position: relative;
       top: -2px;
       color: white;
+
+      &.red {
+        background: var(--color-death-muted);
+      }
     }
 
     &.disabled {
