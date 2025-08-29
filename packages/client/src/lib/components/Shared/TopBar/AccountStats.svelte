@@ -64,11 +64,12 @@
     <SmallButton
       disabled={busy.GiveCallerTokens.current !== 0}
       tippyText="Request tokens from the contract"
+      extraClass="red"
       onclick={async () => {
         await sendGiveCallerTokens()
         close()
       }}
-      text="Get tokens"
+      text="Get 2000 free $SLopamine"
     ></SmallButton>
     <SmallButton
       disabled={busy.BuyWithEth.current !== 0}
@@ -77,7 +78,7 @@
         await sendBuyWithEth()
         close()
       }}
-      text="Buy 1 $Slopamine (0.001ETH)"
+      text="Buy 1 $Slopamine for 0.001ETH"
     ></SmallButton>
     <SmallButton
       disabled={busy.ApproveMax.current !== 0}

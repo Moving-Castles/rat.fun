@@ -29,10 +29,13 @@
   --color-secondary: rgb(163, 66, 31);
   --color-success: rgb(109, 196, 109);
   --color-value: rgb(194, 164, 12);
-  --color-death: rgb(190, 0, 32);
   --color-item: rgb(160, 98, 177);
   --color-value-up: var(--color-success);
   --color-value-down: var(--color-death);
+
+  --color-death-muted: rgb(160, 0, 20);
+  --color-death: rgb(190, 0, 32);
+  --color-death-light: rgb(200, 0, 40);
 
   --game-window-width: calc(min(100vw, 1920px) - 30px);
   --game-window-height: calc(100vh - 30px);

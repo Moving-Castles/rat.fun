@@ -56,7 +56,7 @@ export const shaderConfig: ShaderConfiguration<ShaderMode> = {
     }),
     invert: new Tween(0, {
       easing: cubicInOut,
-      duration: 500
+      duration: 0
     }),
     saturation: new Tween(1, {
       duration: 300
