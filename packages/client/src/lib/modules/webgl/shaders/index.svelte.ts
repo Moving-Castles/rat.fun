@@ -3,18 +3,27 @@ import { ShaderConfiguration, ShaderManager, ShaderModeConfig } from "./ShaderMa
 // Re-export all shaders from their respective folders
 import { main, type ShaderMode as MainMode } from "./main"
 import { noise, type ShaderMode as NoiseMode } from "./noise"
-import { gradient } from "./gradient"
-import { waves } from "./waves"
-import { plasma } from "./plasma"
-import { plasmaHue } from "./plasma-hue"
-import { plasmaOptimized } from "./plasma-optimized"
-import { clouds } from "./clouds"
-import { zoomTunnel } from "./zoom-tunnel"
-import { spiralVortex } from "./spiral-vortex"
-import { colorCyclingPlasma } from "./color-cycling-plasma"
-import { checkerZoomer } from "./checker-zoomer"
-import { lissajousWarpField } from "./lissajous-warp-field"
-import { kaleidoscopeTunnel } from "./kaleidoscope-tunnel"
+import { gradient, type ShaderMode as GradientMode } from "./gradient"
+import { waves, type ShaderMode as WavesMode } from "./waves"
+import { plasma, type ShaderMode as PlasmaMode } from "./plasma"
+import { plasmaHue, type ShaderMode as PlasmaHueMode } from "./plasma-hue"
+import { plasmaOptimized, type ShaderMode as PlasmaOptimizedMode } from "./plasma-optimized"
+import { clouds, type ShaderMode as CloudsMode } from "./clouds"
+import { zoomTunnel, type ShaderMode as ZoomTunnelMode } from "./zoom-tunnel"
+import { spiralVortex, type ShaderMode as SpiralVortexMode } from "./spiral-vortex"
+import {
+  colorCyclingPlasma,
+  type ShaderMode as ColorCyclingPlasmaMode
+} from "./color-cycling-plasma"
+import { checkerZoomer, type ShaderMode as CheckerZoomerMode } from "./checker-zoomer"
+import {
+  lissajousWarpField,
+  type ShaderMode as LissajousWarpFieldMode
+} from "./lissajous-warp-field"
+import {
+  kaleidoscopeTunnel,
+  type ShaderMode as KaleidoscopeTunnelMode
+} from "./kaleidoscope-tunnel"
 
 const shaders = {
   main,
@@ -56,6 +65,18 @@ function defineShaderModes<TMode extends string>(
 type ShaderModes = {
   Main: MainMode
   Noise: NoiseMode
+  Gradient: GradientMode
+  Waves: WavesMode
+  Plasma: PlasmaMode
+  PlasmaHue: PlasmaHueMode
+  PlasmaOptimized: PlasmaOptimizedMode
+  Clouds: CloudsMode
+  ZoomTunnel: ZoomTunnelMode
+  SpiralVortex: SpiralVortexMode
+  ColorCyclingPlasma: ColorCyclingPlasmaMode
+  CheckerZoomer: CheckerZoomerMode
+  LissajousWarpField: LissajousWarpFieldMode
+  KaleidoscopeTunnel: KaleidoscopeTunnelMode
 }
 
 export {
