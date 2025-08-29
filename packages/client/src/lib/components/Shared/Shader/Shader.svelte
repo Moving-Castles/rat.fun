@@ -2,7 +2,7 @@
   import { onMount, onDestroy } from "svelte"
   import { fade } from "svelte/transition"
   import { createWebGLRenderer } from "$lib/modules/webgl"
-  import { shaders } from "$lib/modules/webgl/shaders"
+  import { shaders } from "$lib/modules/webgl/shaders/index.svelte"
   import { page } from "$app/state"
 
   let canvas: HTMLCanvasElement

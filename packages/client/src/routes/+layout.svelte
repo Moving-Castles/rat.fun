@@ -29,7 +29,7 @@
   import Loading from "$lib/components/Loading/Loading.svelte"
   import {
     Shader,
-    ShaderTest,
+    ShaderRenderer,
     Modal,
     PageTransitions,
     ModalTarget,
@@ -64,8 +64,6 @@
   const playerSpawned = () => {
     UIState.set(UI.READY)
   }
-
-  $inspect(busy.BuyWithEth.current)
 
   if (browser) {
     initializeSentry()
@@ -118,7 +116,7 @@
 
   {#if $UIState !== UI.LOADING}
     {#if browser}
-      <Shader />
+      <ShaderRenderer />
     {/if}
   {/if}
 </div>

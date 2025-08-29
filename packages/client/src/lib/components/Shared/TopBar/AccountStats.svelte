@@ -66,7 +66,6 @@
       tippyText="Request tokens from the contract"
       onclick={async () => {
         await sendGiveCallerTokens()
-        console.log("CLOSE MOTHERFUCKER")
         close()
       }}
       text="Get tokens"
@@ -78,14 +77,13 @@
         await sendBuyWithEth()
         close()
       }}
-      text="Buy $Slopamine (0.001ETH)"
+      text="Buy 1 $Slopamine (0.001ETH)"
     ></SmallButton>
     <SmallButton
       disabled={busy.ApproveMax.current !== 0}
       tippyText="Allow the contract to spend on your behalf"
-      onclick={() => {
-        sendApproveMax()
-        console.log("CLOSE MOTHERFUCKER")
+      onclick={async () => {
+        await sendApproveMax()
         close()
       }}
       text="Approve max allowance"

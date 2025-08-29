@@ -16,10 +16,10 @@ import { ABIS } from "./abi"
 function decodeRevertData(hexData: string) {
   const selector = slice(hexData as `0x${string}`, 0, 4)
   const parametersHex = slice(hexData as `0x${string}`, 4)
-  
+
   console.log("selector", toHex(selector))
   console.log("parameters hex", toHex(parametersHex))
-  
+
   // Try to decode using each ABI
   for (const abi of ABIS) {
     try {
@@ -27,9 +27,9 @@ function decodeRevertData(hexData: string) {
         abi,
         data: hexData as `0x${string}`
       })
-      
+
       console.log("Decoded error:", decoded)
-      
+
       if (decoded) {
         const argsString = decoded.args ? `(${decoded.args.join(", ")})` : ""
         return `${decoded.errorName}${argsString}`
@@ -39,7 +39,7 @@ function decodeRevertData(hexData: string) {
       continue
     }
   }
-  
+
   // Fallback if no ABI matches
   return `Unknown error: Selector ${toHex(selector)}, Data: ${toHex(parametersHex)}`
 }
@@ -66,8 +66,6 @@ function extractRevertData(errorMessage: string): string | null {
  * Parses viem errors and converts them to structured AppError instances
  */
 export function parseViemError(error: BaseError): ExpectedError {
-  console.log("PARSE VIEM ERROR", error.name)
-
   // User rejected transaction
   if (error.name === "UserRejectedRequestError") {
     return new UserRejectedTransactionError(
@@ -91,7 +89,6 @@ export function parseViemError(error: BaseError): ExpectedError {
 
   // Transaction execution errors (reverts, etc.)
   if (error.name === "TransactionExecutionError" || error.name === "UserOperationExecutionError") {
-    console.log("We are decoding")
     const cause = error.cause as any
     let revertReason = cause?.reason || cause?.shortMessage
 
@@ -102,17 +99,8 @@ export function parseViemError(error: BaseError): ExpectedError {
     if (revertData) {
       const decoded = decodeRevertData(revertData)
 
-      console.log(decoded)
-
       if (decoded) {
         revertReason = decoded
-        // const decodedInfo = decoded.parameters
-        //   ? `Selector: ${decoded.selector}, Params: [${decoded.parameters.join(", ")}]`
-        //   : `Selector: ${decoded.selector}, Raw: ${decoded.rawParameters}`
-
-        // revertReason = revertReason
-        //   ? `${revertReason} (${decodedInfo})`
-        //   : `Revert data: ${decodedInfo}`
       }
     }
 
