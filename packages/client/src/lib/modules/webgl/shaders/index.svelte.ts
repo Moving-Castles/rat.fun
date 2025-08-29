@@ -2,6 +2,7 @@ import { ShaderConfiguration, ShaderManager, ShaderModeConfig } from "./ShaderMa
 
 // Re-export all shaders from their respective folders
 import { main, type ShaderMode as MainMode } from "./main"
+import { copy, type ShaderMode as CopyMode } from "./copy"
 import { noise, type ShaderMode as NoiseMode } from "./noise"
 import { gradient, type ShaderMode as GradientMode } from "./gradient"
 import { waves, type ShaderMode as WavesMode } from "./waves"
@@ -26,7 +27,14 @@ import {
 } from "./kaleidoscope-tunnel"
 
 const shaders = {
+  //
+  // Main game shader
   main,
+  //
+  // This could be yours
+  copy,
+  //
+  // Other ones
   noise,
   gradient,
   waves,
@@ -64,6 +72,7 @@ function defineShaderModes<TMode extends string>(
 
 type ShaderModes = {
   Main: MainMode
+  Copy: CopyMode
   Noise: NoiseMode
   Gradient: GradientMode
   Waves: WavesMode
