@@ -13,11 +13,10 @@
 <div class="player-info">
   <!-- PLAYER STATS -->
   {#if $player}
-    <div class="player-stats">
+    <div class="player-stats" onclick={() => (showAccountStats = !showAccountStats)}>
       <!-- NAME -->
       <div class="stat-item">
         <div
-          onclick={() => (showAccountStats = !showAccountStats)}
           use:tippy={{
             content: `This is you`,
             placement: "bottom"
