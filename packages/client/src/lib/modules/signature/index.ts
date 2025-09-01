@@ -1,5 +1,7 @@
 import { get } from "svelte/store"
 import { Hex } from "viem"
+import { walletType } from "$lib/modules/network"
+import { WALLET_TYPE } from "$lib/mud/enums"
 import { signMessage } from "viem/actions"
 import { SessionClient } from "@latticexyz/entrykit/internal"
 import { SignedRequest, SignedRequestInfo } from "@server/modules/types"
@@ -45,6 +47,9 @@ async function getCalledFrom(): Promise<Hex | null> {
   if (!wagmiConfig) {
     throw new WagmiConfigUnavailableError()
   }
+
+  if (get(walletType) === WALLET_TYPE.BURNER) return null
+
   const connectorClient = await getConnectorClient(wagmiConfig)
   console.log("connector client", connectorClient)
   if (!connectorClient) {
