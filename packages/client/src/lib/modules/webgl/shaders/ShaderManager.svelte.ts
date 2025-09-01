@@ -10,7 +10,10 @@ export type UniformDefinition = {
 }
 
 // Generic types for shader configuration
-export type ShaderModeConfig<TMode extends string = string> = Record<TMode, Record<string, number | boolean>>
+export type ShaderModeConfig<TMode extends string = string> = Record<
+  TMode,
+  Record<string, number | boolean>
+>
 
 export interface ShaderConfiguration<TMode extends string = string> {
   modes: ShaderModeConfig<TMode>
@@ -41,10 +44,10 @@ export class ShaderManager<TMode extends string = string> {
     // Initialize boolean uniforms by scanning all modes for non-tween values
     const tweenNames = new Set(Object.keys(config.tweens))
     const booleanUniformNames = new Set<string>()
-    
+
     Object.values(this.modes).forEach(mode => {
       Object.entries(mode).forEach(([uniformName, value]) => {
-        if (!tweenNames.has(uniformName) && typeof value === 'boolean') {
+        if (!tweenNames.has(uniformName) && typeof value === "boolean") {
           booleanUniformNames.add(uniformName)
         }
       })
@@ -114,11 +117,11 @@ export class ShaderManager<TMode extends string = string> {
     // Update all tweens and boolean uniforms to new target values
     Object.entries(modeConfig).forEach(([uniformName, targetValue]) => {
       const tween = this.tweens.get(uniformName)
-      if (tween && typeof targetValue === 'number') {
+      if (tween && typeof targetValue === "number") {
         // Handle tween-based uniforms
         tween.set(targetValue)
         console.log(`Updated tween uniform ${uniformName} to:`, targetValue)
-      } else if (typeof targetValue === 'boolean') {
+      } else if (typeof targetValue === "boolean") {
         // Handle boolean uniforms
         this.booleanUniforms[uniformName] = targetValue
         console.log(`Updated boolean uniform ${uniformName} to:`, targetValue)

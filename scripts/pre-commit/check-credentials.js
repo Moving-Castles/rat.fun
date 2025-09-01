@@ -38,24 +38,28 @@ try {
       const content = execSync(`git show :${file}`, { encoding: "utf8" })
 
       for (const pattern of patterns) {
-        const matches = content.match(pattern, 'g')
+        const matches = content.match(pattern, "g")
         if (matches) {
-          const lines = content.split('\n')
+          const lines = content.split("\n")
           for (const match of matches) {
             const lineIndex = lines.findIndex(line => line.includes(match))
             if (lineIndex !== -1) {
               const line = lines[lineIndex]
-              
+
               // Skip if it's environment variable usage
-              if (line.includes('process.env.')) {
+              if (line.includes("process.env.")) {
                 continue
               }
-              
+
               // Skip if it's a comment
-              if (line.trim().startsWith('//') || line.trim().startsWith('/*') || line.trim().startsWith('*')) {
+              if (
+                line.trim().startsWith("//") ||
+                line.trim().startsWith("/*") ||
+                line.trim().startsWith("*")
+              ) {
                 continue
               }
-              
+
               console.error(`❌ Found credential pattern in ${file}`)
               console.error(`   Pattern: ${pattern.source}`)
               console.error(`   Line: ${line.trim()}`)
