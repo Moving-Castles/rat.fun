@@ -12,6 +12,7 @@ import { plasmaOptimized, type ShaderMode as PlasmaOptimizedMode } from "./plasm
 import { clouds, type ShaderMode as CloudsMode } from "./clouds"
 import { zoomTunnel, type ShaderMode as ZoomTunnelMode } from "./zoom-tunnel"
 import { spiralVortex, type ShaderMode as SpiralVortexMode } from "./spiral-vortex"
+import { starspeed, type ShaderMode as StarSpeedMode } from "./starspeed"
 import {
   colorCyclingPlasma,
   type ShaderMode as ColorCyclingPlasmaMode
@@ -49,7 +50,8 @@ const shaders = {
   checkerZoomer,
   lissajousWarpField,
   kaleidoscopeTunnel,
-  starfield
+  starfield,
+  starspeed
 }
 
 /**
@@ -89,6 +91,7 @@ type ShaderModes = {
   LissajousWarpField: LissajousWarpFieldMode
   KaleidoscopeTunnel: KaleidoscopeTunnelMode
   Starfield: StarfieldMode
+  StarSpeed: StarSpeedMode
 }
 
 export {

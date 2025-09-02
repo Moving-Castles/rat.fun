@@ -118,6 +118,7 @@ export class ShaderManager<TMode extends string = string> {
     Object.entries(modeConfig).forEach(([uniformName, targetValue]) => {
       const tween = this.tweens.get(uniformName)
       if (tween && typeof targetValue === "number") {
+        console.log(uniformName, targetValue)
         // Handle tween-based uniforms
         tween.set(targetValue)
         console.log(`Updated tween uniform ${uniformName} to:`, targetValue)
