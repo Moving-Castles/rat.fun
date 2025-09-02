@@ -27,13 +27,13 @@
     "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
     "test": "testApplyOutcomeOverTransferToRoom",
     "name": "Apply outcome (over transfer to room)",
-    "gasUsed": 314384
+    "gasUsed": 323532
   },
   {
     "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
     "test": "testApplyOutcomeRemoveItem",
     "name": "Apply outcome (remove item)",
-    "gasUsed": 117087
+    "gasUsed": 128436
   },
   {
     "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
@@ -51,13 +51,13 @@
     "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
     "test": "testApplyOutcomeValueTransferOnDeath",
     "name": "Apply outcome (value transfer on death)",
-    "gasUsed": 322078
+    "gasUsed": 331226
   },
   {
     "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
     "test": "testSpecialRoomBudgetLimitedByBalance",
     "name": "Apply outcome (special room balance limit)",
-    "gasUsed": 245994
+    "gasUsed": 255142
   },
   {
     "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
@@ -81,19 +81,19 @@
     "file": "test/systems/RatSystem.t.sol:RatSystemTest",
     "test": "testLiquidateRat",
     "name": "Liquidate rat",
-    "gasUsed": 227371
+    "gasUsed": 243953
   },
   {
     "file": "test/systems/RatSystem.t.sol:RatSystemTest",
     "test": "testReAbsorbItem",
     "name": "Re-absorb item",
-    "gasUsed": 72015
+    "gasUsed": 83364
   },
   {
     "file": "test/systems/RoomSystem.t.sol:RoomSystemTest",
     "test": "testCloseRoom",
     "name": "Close room",
-    "gasUsed": 61597
+    "gasUsed": 78179
   },
   {
     "file": "test/systems/RoomSystem.t.sol:RoomSystemTest",
