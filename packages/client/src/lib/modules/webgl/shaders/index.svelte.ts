@@ -25,6 +25,7 @@ import {
   kaleidoscopeTunnel,
   type ShaderMode as KaleidoscopeTunnelMode
 } from "./kaleidoscope-tunnel"
+import { starfield, type ShaderMode as StarfieldMode } from "./starfield"
 
 const shaders = {
   //
@@ -47,7 +48,8 @@ const shaders = {
   colorCyclingPlasma,
   checkerZoomer,
   lissajousWarpField,
-  kaleidoscopeTunnel
+  kaleidoscopeTunnel,
+  starfield
 }
 
 /**
@@ -86,6 +88,7 @@ type ShaderModes = {
   CheckerZoomer: CheckerZoomerMode
   LissajousWarpField: LissajousWarpFieldMode
   KaleidoscopeTunnel: KaleidoscopeTunnelMode
+  Starfield: StarfieldMode
 }
 
 export {
