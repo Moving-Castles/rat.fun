@@ -9,28 +9,33 @@
   import { sendEnterRoom } from "$lib/modules/action-manager/index.svelte"
   import { RoomError, APIError, NetworkError } from "$lib/modules/error-handling/errors"
   import { player, rooms as roomsState, rat } from "$lib/modules/state/stores"
-  import { freezeObjects, stringifyWithBigInt, parseWithBigInt } from "$lib/components/Room/RoomResult/state.svelte"
+  import {
+    freezeObjects,
+    stringifyWithBigInt,
+    parseWithBigInt,
+    ROOM_RESULT_STATE
+  } from "$lib/components/Room/RoomResult/state.svelte"
+  import { createRoomResultTransitions } from "$lib/modules/page-state/room-result-transitions"
 
   // Incoming data
   let { data } = $props()
 
-  let entryState = $state<{
-    valid: boolean
-    processing: boolean
-    result: EnterRoomReturnValue | null
-    error: boolean
-    frozenRat: FrozenRat | null
-    frozenRoom: FrozenRoom | null
-  }>({
+  let entryState = $state<App.PageState["entryState"]>({
     valid: false,
     processing: false,
     result: null,
     error: false,
+    state: ROOM_RESULT_STATE.SPLASH_SCREEN,
     frozenRat: null,
     frozenRoom: null
   })
 
   let room = $derived($roomsState?.[data.roomId ?? ""])
+
+  // Create state transition functions
+  let { transitionTo, transitionToResultSummary } = $derived(
+    createRoomResultTransitions(entryState)
+  )
 
   // Capture a snapshot of the currently processing state
   export const snapshot: Snapshot = {
@@ -48,6 +53,7 @@
       console.log("Restoring while entering")
       if (value?.valid && Date.now() - value.timestamp < 300000) {
         const parsed = parseWithBigInt(stringifyWithBigInt(value))
+        console.log(parsed)
         entryState.valid = true
         entryState.processing = parsed.processing || false
         entryState.frozenRat = parsed.frozenRat
@@ -78,15 +84,21 @@
       }
 
       // Determine what to do based on the result
-      if (result?.outcomeId) {
-        await goto(`/${data.roomId}/${result.outcomeId}`)
-      } else if (result) {
+      if (result) {
+        // Already has an ID
+        entryState.state = ROOM_RESULT_STATE.SHOWING_RESULTS
         entryState.result = result
+        replaceState(`/${data.roomId}/result/${result.outcomeId}`, {
+          entryState: JSON.parse(stringifyWithBigInt(entryState))
+        })
       } else {
+        entryState.state = ROOM_RESULT_STATE.ERROR
         goto("/")
       }
     } catch (err) {
+      entryState.state = ROOM_RESULT_STATE.ERROR
       entryState.error = true
+      entryState.errorMessage = err.message
       if (err instanceof Error) {
         if (err.message.includes("network") || err.message.includes("fetch")) {
           throw new NetworkError(
@@ -121,9 +133,4 @@
   })
 </script>
 
-<RoomResult
-  roomId={data.roomId}
-  valid={entryState.valid}
-  hasError={entryState.error}
-  result={entryState.result}
-/>
+<RoomResult roomId={data.roomId} {entryState} {transitionTo} {transitionToResultSummary} />

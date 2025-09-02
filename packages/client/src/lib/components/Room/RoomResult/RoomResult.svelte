@@ -1,15 +1,11 @@
 <script lang="ts">
   import type { EnterRoomReturnValue } from "@server/modules/types"
-  import type { Hex } from "viem"
-  import { onMount, onDestroy } from "svelte"
-  import { player, rooms as roomsState, rat as ratState } from "$lib/modules/state/stores"
+  import { onDestroy } from "svelte"
+  import { rooms as roomsState } from "$lib/modules/state/stores"
   import {
     ROOM_RESULT_STATE,
     SHOW_INFO_BOXES,
-    SHOW_LOG,
-    roomResultState,
-    transitionTo,
-    transitionToResultSummary
+    SHOW_LOG
   } from "$lib/components/Room/RoomResult/state.svelte"
   import {
     SplashScreen,
@@ -28,57 +24,25 @@
 
   let {
     roomId,
-    result: externalResult,
-    valid,
-    hasError = false
+    entryState,
+    transitionTo,
+    transitionToResultSummary
   }: {
-    roomId: string | null
-    result: EnterRoomReturnValue | null
-    valid: boolean
-    hasError?: boolean
+    roomId: string
+    entryState: App.PageState["entryState"]
+    transitionTo: (newState: ROOM_RESULT_STATE) => void
+    transitionToResultSummary: (result: EnterRoomReturnValue) => void
   } = $props()
 
-  // Result of the room entry, returned by the server
-  let result: EnterRoomReturnValue | null = $state(externalResult)
-
   let timeout: ReturnType<typeof setTimeout> = $state()
-
   let destroyed = false
 
   // Get room info from global store based on id
   let room = $derived($roomsState?.[roomId ?? ""])
-
-  $inspect(room)
+  let result = $derived(entryState?.result)
 
   // Get static room content from cms
   let staticRoomContent = $derived($staticContent.rooms.find(r => r._id == (roomId ?? "")))
-
-  $inspect(staticRoomContent)
-
-  // const processRoom = async () => {
-  //   if (!roomId) {
-  //     throw new RoomError("No trip ID provided")
-  //   }
-
-  //   try {
-  //     const ret = sendEnterRoom(roomId, $player.currentRat)
-
-  //     try {
-  //       result = await ret
-
-  //       // Result returned, transition to showing results
-  //       transitionTo(ROOM_RESULT_STATE.SHOWING_RESULTS)
-  //     } catch (err) {
-  //       console.log("catch outcome error", err)
-  //       // Wrap the error in more specific error types based on the error
-
-  //       throw err
-  //     }
-  //   } catch (error) {
-  //     transitionTo(ROOM_RESULT_STATE.ERROR)
-  //     return
-  //   }
-  // }
 
   onDestroy(() => {
     destroyed = true
@@ -86,9 +50,15 @@
   })
 </script>
 
+{#if import.meta.DEV}
+  <p>
+    ROom state {entryState.state}
+  </p>
+{/if}
+
 <div class="room-result">
   <!-- SPLASH SCREEN -->
-  {#if roomResultState.state === ROOM_RESULT_STATE.SPLASH_SCREEN}
+  {#if entryState?.state === ROOM_RESULT_STATE.SPLASH_SCREEN}
     <SplashScreen
       {staticRoomContent}
       onComplete={() => {
@@ -99,7 +69,7 @@
   {/if}
 
   <!-- INFO BOXES -->
-  {#if SHOW_INFO_BOXES.includes(roomResultState.state)}
+  {#if SHOW_INFO_BOXES.includes(entryState?.state || ROOM_RESULT_STATE.SPLASH_SCREEN)}
     <div class="info-boxes">
       <RatInfoBox />
       <div class="divider"></div>
@@ -108,12 +78,13 @@
   {/if}
 
   <!-- WAITING FOR RESULT -->
-  {#if roomResultState.state === ROOM_RESULT_STATE.WAITING_FOR_RESULT}
+  {#if entryState?.state === ROOM_RESULT_STATE.WAITING_FOR_RESULT}
     <WaitingForResult />
   {/if}
 
   <!-- LOG -->
-  {#if SHOW_LOG.includes(roomResultState.state)}
+  {#if entryState?.state === ROOM_RESULT_STATE.SHOWING_RESULTS && result}
+    BOTH THERE
     <Log
       {result}
       onComplete={() => {
@@ -128,29 +99,29 @@
   {/if}
 
   <!-- Result Summary: Normal -->
-  {#if roomResultState.state === ROOM_RESULT_STATE.RESULT_SUMMARY_NORMAL}
+  {#if entryState?.state === ROOM_RESULT_STATE.RESULT_SUMMARY_NORMAL}
     <NormalResultSummary {result} {room} {staticRoomContent} />
   {/if}
 
   <!-- Result Summary: Rat Dead -->
-  {#if roomResultState.state === ROOM_RESULT_STATE.RESULT_SUMMARY_RAT_DEAD}
+  {#if entryState?.state === ROOM_RESULT_STATE.RESULT_SUMMARY_RAT_DEAD}
     <RatDeadResultSummary {result} {room} {staticRoomContent} />
   {/if}
 
   <!-- Result Summary: Level Up -->
-  {#if roomResultState.state === ROOM_RESULT_STATE.RESULT_SUMMARY_LEVEL_UP}
+  {#if entryState?.state === ROOM_RESULT_STATE.RESULT_SUMMARY_LEVEL_UP}
     <LevelUpResultSummary {result} {room} {staticRoomContent} />
   {/if}
 
   <!-- Result Summary: Level Down -->
-  {#if roomResultState.state === ROOM_RESULT_STATE.RESULT_SUMMARY_LEVEL_DOWN}
+  {#if entryState?.state === ROOM_RESULT_STATE.RESULT_SUMMARY_LEVEL_DOWN}
     <LevelDownResultSummary {result} {room} {staticRoomContent} />
   {/if}
 
   <!-- Error -->
-  {#if roomResultState.state === ROOM_RESULT_STATE.ERROR}
+  {#if entryState?.state === ROOM_RESULT_STATE.ERROR}
     <div class="error">
-      {roomResultState.errorMessage}
+      {entryState?.errorMessage}
     </div>
   {/if}
 </div>

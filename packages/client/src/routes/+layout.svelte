@@ -62,8 +62,6 @@
 
   const playerSpawned = () => {
     UIState.set(UI.READY)
-    //
-    goto("/")
   }
 
   if (browser) {
