@@ -1,32 +1,37 @@
 <script lang="ts">
   // Outcome logs
-  import { Outcome, RoomResult } from "$lib/components/Room"
+  import { RoomResult } from "$lib/components/Room"
   // import { staticContent } from "$lib/modules/content"
   import { page } from "$app/state"
   import { onMount } from "svelte"
   import { replaceState } from "$app/navigation"
-  import {
-    stringifyWithBigInt,
-    parseWithBigInt
-  } from "$lib/components/Room/RoomResult/state.svelte"
+  import { stringifyWithBigInt, parseWithBigInt } from "$lib/modules/state/utils"
+  import { createRoomResultTransitions } from "$lib/modules/page-state/room-result-transitions"
+  import { frozenRat, frozenRoom } from "$lib/components/Room/RoomResult/state.svelte"
 
   let { data } = $props()
 
-  let entryState = $derived(parseWithBigInt(stringifyWithBigInt(page.state?.entryState)) || {})
+  $inspect("result", data.entryState)
 
-  // Clear entryState once the outcome has been successfully viewed
+  frozenRoom.set(data.entryState.frozenRoom)
+  frozenRat.set(data.entryState.frozenRat)
+
+  let entryState = $derived(
+    page.state?.entryState
+      ? parseWithBigInt(stringifyWithBigInt(page.state.entryState))
+      : data?.entryState || {}
+  )
+
+  let { transitionTo, transitionToResultSummary } = $derived(
+    createRoomResultTransitions(entryState)
+  )
+
   onMount(() => {
     if (page.state?.entryState) {
-      // Clear the entryState from page state to prepare for future room entries
+      // Clear the entryState from page state
       replaceState(page.url.pathname, {})
     }
   })
 </script>
 
-<RoomResult
-  roomId={data.roomId}
-  valid={entryState?.valid || false}
-  hasError={entryState?.error || false}
-  errorMessage={entryState?.errorMessage}
-  result={entryState?.result || {}}
-/>
+<RoomResult roomId={data.roomId} {entryState} {transitionTo} {transitionToResultSummary} />

@@ -14,7 +14,7 @@ export function mergeLog(result: EnterRoomReturnValue): MergedLogEntry[] {
       mergedLog[i].balanceTransfer = result.balanceTransfer
     }
     // Item changes
-    const itemChanges = result.itemChanges.filter(iC => iC.logStep === i)
+    const itemChanges = (result?.itemChanges || []).filter(iC => iC.logStep === i)
     if (itemChanges.length > 0) {
       mergedLog[i].itemChanges = itemChanges
     }

@@ -158,9 +158,9 @@ export const resetRoomResultState = () => {
  */
 
 /** Room information frozen before entering a room */
-export const frozenRoom = writable<FrozenRoom | null>(null)
+export const frozenRoom = writable<Partial<FrozenRoom> | null>(null)
 /** Rat information frozen before entering a room */
-export const frozenRat = writable<FrozenRat | null>(null)
+export const frozenRat = writable<Partial<FrozenRat> | null>(null)
 
 /**
  * Freezes the rat and room objects before entering a room
@@ -182,27 +182,6 @@ export function freezeObjects(rat: Rat, room: Room, roomId: Hex, ratId: Hex) {
     frozenRat: preppedRat,
     frozenRoom: preppedRoom
   }
-}
-
-// Prepare for serialization with big int inside
-export function stringifyWithBigInt(obj: any): string {
-  return JSON.stringify(obj, (key, value) => {
-    if (typeof value === 'bigint') {
-      return { __bigint: value.toString() }
-    }
-    return value
-  })
-}
-
-// We need to serialize the JSON data so we can store in session sometimes. This means encoding BigInt values
-// This function brings the Bigints back
-export function parseWithBigInt(str: string): any {
-  return JSON.parse(str, (key, value) => {
-    if (value && typeof value === 'object' && '__bigint' in value) {
-      return BigInt(value.__bigint)
-    }
-    return value
-  })
 }
 
 // ======= Route updates to frozen state =======

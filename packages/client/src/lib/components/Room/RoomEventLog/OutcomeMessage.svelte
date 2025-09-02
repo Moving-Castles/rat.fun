@@ -32,7 +32,8 @@
   })
 </script>
 
-<a href="#{outcome._id}" class="chat-event {topic}">
+<!-- Deprecated; modal view #{outcome._id} -->
+<a href="/{outcome.roomId}/result/{outcome._id}" class="chat-event {topic}">
   {#if topic == "room__outcome"}
     <!-- ROOM OUTCOME -->
     <span

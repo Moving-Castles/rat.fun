@@ -8,6 +8,8 @@
   let { staticRoomContent }: { staticRoomContent: any } = $props()
 
   let depleted = false
+
+  $inspect($frozenRoom)
 </script>
 
 <div class="room-info-box" class:depleted>

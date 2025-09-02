@@ -1,6 +1,4 @@
 <script lang="ts">
-  import type { FrozenRat, FrozenRoom } from "$lib/components/Room/RoomResult/types"
-  import type { EnterRoomReturnValue } from "@server/modules/types"
   import type { Snapshot } from "./$types"
   import { onMount } from "svelte"
   import { replaceState, goto } from "$app/navigation"
@@ -9,12 +7,8 @@
   import { sendEnterRoom } from "$lib/modules/action-manager/index.svelte"
   import { RoomError, APIError, NetworkError } from "$lib/modules/error-handling/errors"
   import { player, rooms as roomsState, rat } from "$lib/modules/state/stores"
-  import {
-    freezeObjects,
-    stringifyWithBigInt,
-    parseWithBigInt,
-    ROOM_RESULT_STATE
-  } from "$lib/components/Room/RoomResult/state.svelte"
+  import { freezeObjects, ROOM_RESULT_STATE } from "$lib/components/Room/RoomResult/state.svelte"
+  import { stringifyWithBigInt, parseWithBigInt } from "$lib/modules/state/utils"
   import { createRoomResultTransitions } from "$lib/modules/page-state/room-result-transitions"
 
   // Incoming data
@@ -68,15 +62,6 @@
     entryState.processing = true
 
     try {
-      const { frozenRat, frozenRoom } = freezeObjects(
-        $rat,
-        room,
-        data.roomId as `0x${string}`,
-        $player.currentRat
-      )
-      entryState.frozenRat = frozenRat
-      entryState.frozenRoom = frozenRoom
-
       const result = await sendEnterRoom(data.roomId, $player.currentRat)
 
       if (!result) {
@@ -125,6 +110,14 @@
       console.log("We can start getting the result")
       entryState.valid = true
       replaceState(`/${data.roomId}/result`, {})
+      const { frozenRat, frozenRoom } = freezeObjects(
+        $rat,
+        room,
+        data.roomId as `0x${string}`,
+        $player.currentRat
+      )
+      entryState.frozenRat = frozenRat
+      entryState.frozenRoom = frozenRoom
       await processRoomEntry()
     } else if (!entryState.valid) {
       console.log("We mounted and we cannot enter")

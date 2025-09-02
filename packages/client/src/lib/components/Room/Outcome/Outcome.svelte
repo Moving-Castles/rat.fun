@@ -39,7 +39,7 @@
 
   <div class="box">
     <div class="left">
-      {#each outcome.itemChanges as itemChange}
+      {#each outcome?.itemChanges as itemChange}
         <OutcomeItem
           type="item"
           negative={itemChange.type === "remove"}

@@ -2,11 +2,7 @@
   import type { EnterRoomReturnValue } from "@server/modules/types"
   import { onDestroy } from "svelte"
   import { rooms as roomsState } from "$lib/modules/state/stores"
-  import {
-    ROOM_RESULT_STATE,
-    SHOW_INFO_BOXES,
-    SHOW_LOG
-  } from "$lib/components/Room/RoomResult/state.svelte"
+  import { ROOM_RESULT_STATE, SHOW_INFO_BOXES } from "$lib/components/Room/RoomResult/state.svelte"
   import {
     SplashScreen,
     WaitingForResult,
@@ -19,8 +15,6 @@
     LevelDownResultSummary
   } from "$lib/components/Room"
   import { staticContent } from "$lib/modules/content"
-  import { sendEnterRoom } from "$lib/modules/action-manager/index.svelte"
-  import { RoomError } from "$lib/modules/error-handling/errors"
 
   let {
     roomId,
@@ -50,12 +44,6 @@
   })
 </script>
 
-{#if import.meta.DEV}
-  <p>
-    ROom state {entryState.state}
-  </p>
-{/if}
-
 <div class="room-result">
   <!-- SPLASH SCREEN -->
   {#if entryState?.state === ROOM_RESULT_STATE.SPLASH_SCREEN}
@@ -84,7 +72,6 @@
 
   <!-- LOG -->
   {#if entryState?.state === ROOM_RESULT_STATE.SHOWING_RESULTS && result}
-    BOTH THERE
     <Log
       {result}
       onComplete={() => {
