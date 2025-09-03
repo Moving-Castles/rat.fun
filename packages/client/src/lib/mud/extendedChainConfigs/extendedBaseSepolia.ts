@@ -1,19 +1,16 @@
 import { baseSepolia as baseSepoliaConfig } from "viem/chains"
 import { type MUDChain } from "@latticexyz/common/chains"
+import { PUBLIC_BASE_SEPOLIA_RPC_URL, PUBLIC_BASE_SEPOLIA_BUNDLER_URL } from "$env/static/public"
 
 export const extendedBaseSepolia = {
   ...baseSepoliaConfig,
   rpcUrls: {
     default: {
-      http: [
-        "https://base-sepolia.g.alchemy.com/v2/3--gazgbtdp7YdVU6sigj",
-        ...baseSepoliaConfig.rpcUrls.default.http
-      ]
+      http: [PUBLIC_BASE_SEPOLIA_RPC_URL, ...baseSepoliaConfig.rpcUrls.default.http]
     },
     bundler: {
-      http: ["https://api.pimlico.io/v2/84532/rpc?apikey=pim_8gQqpbnmKF1njADAZmuHy5"]
+      http: [PUBLIC_BASE_SEPOLIA_BUNDLER_URL]
     }
   },
-  indexerUrl: "https://base-sepolia.rat-fun-indexer.com",
-  faucetUrl: "https://pyrope-faucet.jimmy9-infra.com/trpc/drip"
+  indexerUrl: "https://base-sepolia.rat-fun-indexer.com"
 } as const satisfies MUDChain

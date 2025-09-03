@@ -10,9 +10,7 @@
     RatInfoBox,
     RoomInfoBox,
     NormalResultSummary,
-    RatDeadResultSummary,
-    LevelUpResultSummary,
-    LevelDownResultSummary
+    RatDeadResultSummary
   } from "$lib/components/Room"
   import { staticContent } from "$lib/modules/content"
 
@@ -90,16 +88,6 @@
   <!-- Result Summary: Rat Dead -->
   {#if entryState?.state === ROOM_RESULT_STATE.RESULT_SUMMARY_RAT_DEAD}
     <RatDeadResultSummary {result} {room} {staticRoomContent} />
-  {/if}
-
-  <!-- Result Summary: Level Up -->
-  {#if entryState?.state === ROOM_RESULT_STATE.RESULT_SUMMARY_LEVEL_UP}
-    <LevelUpResultSummary {result} {room} {staticRoomContent} />
-  {/if}
-
-  <!-- Result Summary: Level Down -->
-  {#if entryState?.state === ROOM_RESULT_STATE.RESULT_SUMMARY_LEVEL_DOWN}
-    <LevelDownResultSummary {result} {room} {staticRoomContent} />
   {/if}
 
   <!-- Error -->

@@ -1,14 +1,15 @@
 import { base as baseConfig } from "viem/chains"
 import { type MUDChain } from "@latticexyz/common/chains"
+import { PUBLIC_BASE_RPC_URL, PUBLIC_BASE_BUNDLER_URL } from "$env/static/public"
 
 export const extendedBase = {
   ...baseConfig,
   rpcUrls: {
     default: {
-      http: [
-        "https://base-mainnet.g.alchemy.com/v2/3--gazgbtdp7YdVU6sigj",
-        ...baseConfig.rpcUrls.default.http
-      ]
+      http: [PUBLIC_BASE_RPC_URL, ...baseConfig.rpcUrls.default.http]
+    },
+    bundler: {
+      http: [PUBLIC_BASE_BUNDLER_URL]
     }
   },
   indexerUrl: "https://base.rat-fun-indexer.com"

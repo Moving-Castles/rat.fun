@@ -1,6 +1,4 @@
 export { default as GameRoomPreview } from "./RoomPreview/GameRoomPreview.svelte"
-export { default as LevelDownResultSummary } from "./ResultSummary/LevelDownResultSummary.svelte"
-export { default as LevelUpResultSummary } from "./ResultSummary/LevelUpResultSummary.svelte"
 export { default as Log } from "./Log/Log.svelte"
 export { default as LiquidateRoom } from "./RoomPreview/LiquidateRoom.svelte"
 export { default as LogItem } from "./Log/LogItem.svelte"
