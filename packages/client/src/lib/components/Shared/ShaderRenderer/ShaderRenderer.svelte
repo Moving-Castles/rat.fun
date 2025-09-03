@@ -6,12 +6,19 @@
   import ShaderManager from "./ShaderManager.svelte"
 
   let canvas = $state<HTMLCanvasElement>()
-  let currentShader = $state("main")
-  let shaderManager = $state(createShaderManager(shaders.main.config))
+  let currentShader = $state("ratfun")
+  let currentConfig = $derived(shaders?.[currentShader]?.config || null)
+  // Initial check
+  if (!currentConfig) {
+    throw new Error("ShaderError: Could not instantiate shader: ", currentShader)
+  }
+  let shaderManager = $state(createShaderManager(currentConfig))
 
-  function getMode(page: import("@sveltejs/kit").Page, shader: string = "main"): string {
-    console.log("Get mode called for:", page.url.pathname, page.route.id, "shader:", shader)
-
+  function getMode(page: import("@sveltejs/kit").Page, shader: string = "ratfun"): string {
+    // Use provided mode getter if it's available
+    if (shaders[currentShader].config?.getMode) {
+      return shaders[currentShader].config.getMode(page)
+    }
     // Handle different shader types
     if (shader === "main") {
       if (page.route.id?.includes("admin")) return "admin"
@@ -97,7 +104,6 @@
 
   onDestroy(() => {
     shaderManager.destroy()
-    console.log("Shader manager destroyed")
   })
 </script>
 

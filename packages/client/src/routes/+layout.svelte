@@ -29,6 +29,7 @@
   import Loading from "$lib/components/Loading/Loading.svelte"
   import {
     ShaderRenderer,
+    Shader,
     Modal,
     PageTransitions,
     ModalTarget,
@@ -41,8 +42,10 @@
 
   let { children, data }: LayoutProps = $props()
 
+  let DEBUG_SHADER = $state(false)
   let outcomeId = $state("")
   let outcome = $state<SanityOutcome | undefined>()
+  let debuggingShader = $derived(import.meta.env.DEV && DEBUG_SHADER)
 
   const { environment, walletType } = data
 
@@ -90,6 +93,11 @@
 </script>
 
 <svelte:window
+  onkeypress={e => {
+    if (e.keyCode == 94) {
+      DEBUG_SHADER = !DEBUG_SHADER
+    }
+  }}
   onhashchange={e => {
     outcomeId = new URL(e.newURL).hash.replace("#", "")
     outcome = $staticContent.outcomes.find(o => o._id === outcomeId)
@@ -121,7 +129,11 @@
 
   {#if $UIState !== UI.LOADING}
     {#if browser}
-      <ShaderRenderer />
+      {#if debuggingShader}
+        <ShaderRenderer />
+      {:else}
+        <Shader />
+      {/if}
     {/if}
   {/if}
 </div>

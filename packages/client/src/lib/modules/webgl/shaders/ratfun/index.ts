@@ -9,13 +9,16 @@ import {
 export type ShaderMode = "stars" | "clouds" | "clouds-inverted" | "hyperspeed" | "warpspeed"
 
 export const shaderConfig: ShaderConfiguration<ShaderMode> = {
+  // Start style
   initialMode: "stars",
+  // Modes
   modes: defineShaderModes({
     stars: {
       speed: 1.0,
       invert: 0.0,
       clouds_amount: 0.0
     },
+    // Have to add
     clouds: {
       speed: 1.0,
       invert: 0.0,
@@ -45,16 +48,16 @@ export const shaderConfig: ShaderConfiguration<ShaderMode> = {
   getMode: (page: import("@sveltejs/kit").Page): string => {
     if (!page.route.id) return "normal"
 
-    if (page.route.id.includes("(game)")) {
-      return "clouds"
-    } else if (page.route.id.includes("admin")) {
-      return "clouds-inverted"
-    } else if (page.route.id.includes("result")) {
+    if (page.route.id.includes("result")) {
       if (page.url.searchParams.has("hyperspeed")) {
         return "hyperspeed"
       } else {
         return "warpspeed"
       }
+    } else if (page.route.id.includes("(game)")) {
+      return "clouds"
+    } else if (page.route.id.includes("admin")) {
+      return "clouds-inverted"
     }
 
     return "stars"

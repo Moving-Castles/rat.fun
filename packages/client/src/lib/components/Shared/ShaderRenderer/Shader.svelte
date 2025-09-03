@@ -5,7 +5,7 @@
   import { shaders, createShaderManager } from "$lib/modules/webgl/shaders/index.svelte"
 
   let canvas = $state<HTMLCanvasElement>()
-  let currentShader = $state("starspeed")
+  let currentShader = $state("ratfun")
   let shaderManager = $state(createShaderManager(shaders.ratfun.config))
 
   const currentMode = $derived(shaders.ratfun.config?.getMode?.(page))
