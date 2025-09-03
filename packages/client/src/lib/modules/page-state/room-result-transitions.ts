@@ -39,10 +39,6 @@ const VALID_TRANSITIONS: Record<ROOM_RESULT_STATE, ROOM_RESULT_STATE[]> = {
 export const determineResultSummaryState = (result: EnterRoomReturnValue): ROOM_RESULT_STATE => {
   if (result?.ratDead) {
     return ROOM_RESULT_STATE.RESULT_SUMMARY_RAT_DEAD
-  } else if (result?.levelUp) {
-    return ROOM_RESULT_STATE.RESULT_SUMMARY_LEVEL_UP
-  } else if (result?.levelDown) {
-    return ROOM_RESULT_STATE.RESULT_SUMMARY_LEVEL_DOWN
   }
   return ROOM_RESULT_STATE.RESULT_SUMMARY_NORMAL
 }
@@ -52,19 +48,27 @@ export const determineResultSummaryState = (result: EnterRoomReturnValue): ROOM_
  */
 export const createRoomResultTransitions = (entryState: App.PageState["entryState"]) => {
   const transitionTo = (newState: ROOM_RESULT_STATE) => {
-    const validTransitions = VALID_TRANSITIONS[entryState.state]
+    const currentState = entryState.state
+    const validTransitions = VALID_TRANSITIONS[currentState]
     if (!validTransitions.includes(newState)) {
-      console.error(`Invalid state transition from ${entryState.state} to ${newState}`)
+      console.error(`Invalid state transition from ${currentState} to ${newState}`)
       entryState.state = ROOM_RESULT_STATE.ERROR
       entryState.error = true
-      entryState.errorMessage = `Invalid state transition from ${entryState.state} to ${newState}`
+      entryState.errorMessage = `Invalid state transition from ${currentState} to ${newState}`
       return
     }
     entryState.state = newState
+
+    console.log("NEW STATE", entryState.state)
   }
 
-  const transitionToResultSummary = (result: EnterRoomReturnValue) => {
-    transitionTo(determineResultSummaryState(result))
+  const transitionToResultSummary = (result?: EnterRoomReturnValue) => {
+    console.log("Transition called")
+    if (result) {
+      transitionTo(determineResultSummaryState(result))
+    } else {
+      transitionTo(ROOM_RESULT_STATE.RESULT_SUMMARY_NORMAL)
+    }
   }
 
   return {

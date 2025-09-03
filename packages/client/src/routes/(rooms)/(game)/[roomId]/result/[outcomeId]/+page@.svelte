@@ -16,7 +16,7 @@
   frozenRoom.set(data.entryState.frozenRoom)
   frozenRat.set(data.entryState.frozenRat)
 
-  let entryState = $derived(
+  let entryState = $state(
     page.state?.entryState
       ? parseWithBigInt(stringifyWithBigInt(page.state.entryState))
       : data?.entryState || {}

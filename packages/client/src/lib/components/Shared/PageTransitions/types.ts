@@ -5,6 +5,7 @@ export type LayoutRouteId =
   | "/(rooms)/(game)"
   | "/(rooms)/(game)/[roomId]"
   | "/(rooms)/(game)/[roomId]/result"
+  | "/(rooms)/(game)/[roomId]/result/[outcomeId]"
   | "/(rooms)/admin"
   | "/(rooms)/admin/[roomId]"
   | "/outcome/[id]"

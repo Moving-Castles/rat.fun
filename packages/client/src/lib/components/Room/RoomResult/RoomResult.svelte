@@ -25,7 +25,7 @@
     roomId: string
     entryState: App.PageState["entryState"]
     transitionTo: (newState: ROOM_RESULT_STATE) => void
-    transitionToResultSummary: (result: EnterRoomReturnValue) => void
+    transitionToResultSummary: (result?: EnterRoomReturnValue) => void
   } = $props()
 
   let timeout: ReturnType<typeof setTimeout> = $state()
@@ -77,17 +77,12 @@
     <Log
       {result}
       onComplete={() => {
-        console.log(performance.now() + " Completed")
-        timeout = setTimeout(() => {
-          if (result) {
-            transitionToResultSummary(result)
-          }
-        }, 500)
+        console.log("COMPLETE")
+        transitionToResultSummary(result)
       }}
     />
   {/if}
 
-  <!-- Result Summary: Normal -->
   {#if entryState?.state === ROOM_RESULT_STATE.RESULT_SUMMARY_NORMAL}
     <NormalResultSummary {result} {room} {staticRoomContent} />
   {/if}

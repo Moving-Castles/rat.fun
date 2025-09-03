@@ -103,8 +103,12 @@ export const SHOW_LOG = [
  * Transitions to the appropriate result summary state based on the room result
  * @param result The result returned from entering a room
  */
-export const transitionToResultSummary = (result: EnterRoomReturnValue) => {
-  transitionTo(determineResultSummaryState(result))
+export const transitionToResultSummary = (result?: EnterRoomReturnValue) => {
+  if (result) {
+    transitionTo(determineResultSummaryState(result))
+  } else {
+    transitionTo(ROOM_RESULT_STATE.RESULT_SUMMARY_NORMAL)
+  }
 }
 
 /**
@@ -134,10 +138,6 @@ export const transitionTo = (newState: ROOM_RESULT_STATE) => {
 const determineResultSummaryState = (result: EnterRoomReturnValue): ROOM_RESULT_STATE => {
   if (result?.ratDead) {
     return ROOM_RESULT_STATE.RESULT_SUMMARY_RAT_DEAD
-  } else if (result?.levelUp) {
-    return ROOM_RESULT_STATE.RESULT_SUMMARY_LEVEL_UP
-  } else if (result?.levelDown) {
-    return ROOM_RESULT_STATE.RESULT_SUMMARY_LEVEL_DOWN
   }
   return ROOM_RESULT_STATE.RESULT_SUMMARY_NORMAL
 }
@@ -222,14 +222,14 @@ export const updateFrozenState = (dataset: OutcomeDataStringMap) => {
 function changeBalance(balanceChange: number) {
   frozenRat.update(rat => {
     if (!rat) return null
-    rat.balance = rat.balance + BigInt(balanceChange)
+    rat.balance = BigInt(rat?.balance || 0) + BigInt(balanceChange)
     return rat
   })
 
   // Inverse rat balance change to get room balance change
   frozenRoom.update(room => {
     if (!room) return null
-    room.balance = room.balance - BigInt(balanceChange)
+    room.balance = BigInt(room?.balance || 0) - BigInt(balanceChange)
     return room
   })
 }
@@ -257,7 +257,7 @@ function addItem(itemName: string, itemValue: number) {
   // Items always have positive value
   frozenRoom.update(room => {
     if (!room) return null
-    room.balance = room.balance - BigInt(itemValue)
+    room.balance = BigInt(room?.balance || 0) - BigInt(itemValue)
     return room
   })
 }
@@ -270,7 +270,7 @@ function addItem(itemName: string, itemValue: number) {
 function removeItem(id: string, itemValue: number) {
   frozenRat.update(rat => {
     if (!rat) return null
-    rat.inventory = rat.inventory.filter(i => i !== id)
+    rat.inventory = rat?.inventory?.filter(i => i !== id)
     return rat
   })
 
@@ -278,7 +278,7 @@ function removeItem(id: string, itemValue: number) {
   // Items always have positive value
   frozenRoom.update(room => {
     if (!room) return null
-    room.balance = room.balance + BigInt(itemValue)
+    room.balance = BigInt(room?.balance || 0) + BigInt(itemValue)
     return room
   })
 }
