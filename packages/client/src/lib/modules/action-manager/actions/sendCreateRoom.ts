@@ -45,7 +45,7 @@ export async function sendCreateRoom(
   // Approve
   try {
     if (_playerERC20Allowance < _gameConfig.roomCreationCost) {
-      await approve(_externalAddressesConfig.gamePoolAddress, roomCreationCost)
+      await approve(_externalAddressesConfig.gamePoolAddress, BigInt(roomCreationCost))
     }
 
     let url = ""
