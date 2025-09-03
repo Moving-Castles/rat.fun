@@ -5,16 +5,10 @@
   import { shaders, createShaderManager } from "$lib/modules/webgl/shaders/index.svelte"
 
   let canvas = $state<HTMLCanvasElement>()
-  let currentShader = $state("main")
-  let shaderManager = $state(createShaderManager(shaders.main.config))
+  let currentShader = $state("starspeed")
+  let shaderManager = $state(createShaderManager(shaders.ratfun.config))
 
-  function getMode(page: import("@sveltejs/kit").Page): string {
-    if (page.route.id?.includes("admin")) return "admin"
-    if (page.route.id?.includes("outcome")) return "outcome"
-    return "introduction"
-  }
-
-  const currentMode = $derived(getMode(page))
+  const currentMode = $derived(shaders.ratfun.config?.getMode?.(page))
   const uniformValues = $derived(shaderManager.uniformValues)
 
   $effect(() => {

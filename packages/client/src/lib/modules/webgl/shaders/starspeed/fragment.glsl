@@ -40,22 +40,17 @@ void main(){
   col+=vec3(.55,.75,1.225)*vDrop(p,t+.33)*intensity;// blue
   col+=vec3(.45,1.15,.425)*vDrop(p,t+.66)*intensity;// green
   
-  // Add extra effects for higher speed modes
-  if(u_speed>.5){
-    // Add extra color layers for warpspeed and hyperwarp
-    col+=vec3(1.,.8,.4)*vDrop(p,t+1.)*(u_speed-.5);
-    col+=vec3(.8,.4,1.)*vDrop(p,t+1.33)*(u_speed-.5);
-  }
+  // Add extra color layers for warpspeed and hyperwarp
+  col+=vec3(1.,.8,.4)*vDrop(p,t+1.)*(u_speed-.5);
+  col+=vec3(.8,.4,1.)*vDrop(p,t+1.33)*(u_speed-.5);
   
-  if(u_speed>1.5){
-    // Hyperwarp: intense flickering and additional color shifts
-    float flicker=sin(u_time*20.)*.3+.7;
-    col*=flicker;
-    
-    // Additional rainbow effects
-    col+=vec3(1.,.5,1.)*vDrop(p,t+2.)*(u_speed-1.5)*.8;
-    col+=vec3(.5,1.,1.)*vDrop(p,t+2.33)*(u_speed-1.5)*.8;
-  }
+  // Hyperwarp: intense flickering and additional color shifts
+  float flicker=sin(u_time*20.)*.3+.7;
+  col*=flicker;
+  
+  // Additional rainbow effects
+  col+=vec3(1.,.5,1.)*vDrop(p,t+2.)*(u_speed-1.5)*.8;
+  col+=vec3(.5,1.,1.)*vDrop(p,t+2.33)*(u_speed-1.5)*.8;
   
   gl_FragColor=vec4(col*(d*d),1.);
 }

@@ -27,6 +27,7 @@ import {
   type ShaderMode as KaleidoscopeTunnelMode
 } from "./kaleidoscope-tunnel"
 import { starfield, type ShaderMode as StarfieldMode } from "./starfield"
+import { ratfun, type ShaderMode as RatfunMode } from "./ratfun"
 
 const shaders = {
   //
@@ -51,7 +52,8 @@ const shaders = {
   lissajousWarpField,
   kaleidoscopeTunnel,
   starfield,
-  starspeed
+  starspeed,
+  ratfun
 }
 
 /**
@@ -92,6 +94,7 @@ type ShaderModes = {
   KaleidoscopeTunnel: KaleidoscopeTunnelMode
   Starfield: StarfieldMode
   StarSpeed: StarSpeedMode
+  RatFun: RatfunMode
 }
 
 export {

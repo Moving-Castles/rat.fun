@@ -19,6 +19,7 @@ export interface ShaderConfiguration<TMode extends string = string> {
   modes: ShaderModeConfig<TMode>
   tweens: Record<string, Tween<number>>
   initialMode: TMode
+  getMode?: (page: import("@sveltejs/kit").Page) => string
 }
 
 export class ShaderManager<TMode extends string = string> {
