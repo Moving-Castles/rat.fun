@@ -5,13 +5,12 @@ export const schema = {
       data: {
         type: "object",
         properties: {
-          levelId: {
-            type: "string",
-            description: "The id of the level to create the room on"
-          },
-          roomPrompt: { type: "string", description: "The prompt for the room" }
+          roomPrompt: { type: "string", description: "The prompt for the room" },
+          roomCreationCost: { type: "number", description: "The creation cost for the room" },
+          maxValuePerWin: { type: "number", description: "The max value per win for the room" },
+          minRatValueToEnter: { type: "number", description: "The min value to enter for the room" }
         },
-        required: ["roomPrompt", "levelId"]
+        required: ["roomPrompt", "roomCreationCost", "maxValuePerWin", "minRatValueToEnter"]
       },
       info: {
         type: "object",

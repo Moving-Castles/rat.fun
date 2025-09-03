@@ -19,11 +19,8 @@ export async function constructEventMessages(
   messages.push({ role: "user", content: `TripDescription: ${room.prompt}` })
   messages.push({ role: "user", content: `TripSlopamineBalance: ${room.balance}` })
 
-  // If room is special, use the max value per win.
-  // Otherwise, use half of the room creation cost.
-  const valueLimit = room.isSpecialRoom
-    ? (Number(room.maxValuePerWin) ?? 0)
-    : Number(room.roomCreationCost) / 2
+  // Max value per win
+  const valueLimit = Number(room.maxValuePerWin) ?? 0
   // Max value per win is capped at the room balance.
   const maxValuePerWin = Math.min(valueLimit, room.balance)
   messages.push({

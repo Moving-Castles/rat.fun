@@ -2,8 +2,8 @@ import { Rat, Room, Player } from "@modules/types"
 import {
   RatOwnershipError,
   RatDeadError,
-  LevelMismatchError,
-  RoomBalanceError
+  RoomBalanceError,
+  RatValueError
 } from "@modules/error-handling/errors"
 
 export function validateInputData(player: Player, rat: Rat, room: Room) {
@@ -17,9 +17,9 @@ export function validateInputData(player: Player, rat: Rat, room: Room) {
     throw new RatDeadError()
   }
 
-  // Check that rat and room level are the same
-  if (rat.level !== room.level) {
-    throw new LevelMismatchError()
+  // Check that the rat has enough value to enter the room
+  if (rat.balance < room.minRatValueToEnter) {
+    throw new RatValueError()
   }
 
   // Check that room balance is positive

@@ -5,7 +5,6 @@ import {
   externalAddressesConfig,
   playerERC20Allowance
 } from "$lib/modules/state/stores"
-import { page } from "$app/state"
 import { approve } from "$lib/modules/on-chain-transactions"
 import { busy } from "../index.svelte"
 import type { CreateRoomRequestBody, CreateRoomReturnValue } from "@server/modules/types"
@@ -25,13 +24,15 @@ const DEFAULT_TIMING = 4000
 /**
  * Create room
  * @param roomPrompt The prompt for the room
- * @param levelId The level ID of the room
  * @param roomCreationCost The cost of the room
+ * @param maxValuePerWin The max value per win for the room
+ * @param minRatValueToEnter The min value to enter for the room
  */
 export async function sendCreateRoom(
   roomPrompt: string,
-  levelId: string,
-  roomCreationCost: bigint
+  roomCreationCost: number,
+  maxValuePerWin: number,
+  minRatValueToEnter: number
 ) {
   const _gameConfig = get(gameConfig)
   const _externalAddressesConfig = get(externalAddressesConfig)
@@ -62,7 +63,9 @@ export async function sendCreateRoom(
 
     const requestBody: CreateRoomRequestBody = {
       roomPrompt,
-      levelId
+      roomCreationCost,
+      maxValuePerWin,
+      minRatValueToEnter
     }
 
     const signedRequest = await signRequest(requestBody)

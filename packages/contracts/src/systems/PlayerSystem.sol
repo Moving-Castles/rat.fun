@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { System } from "@latticexyz/world/src/System.sol";
-import { EntityType, Name, CreationBlock, AchievedLevels, LevelList, MasterKey } from "../codegen/index.sol";
+import { EntityType, Name, CreationBlock, MasterKey } from "../codegen/index.sol";
 import { LibUtils, LibWorld } from "../libraries/Libraries.sol";
 import { ENTITY_TYPE } from "../codegen/common.sol";
 
@@ -19,8 +19,6 @@ contract PlayerSystem is System {
     Name.set(playerId, _name);
     CreationBlock.set(playerId, block.number);
     MasterKey.set(playerId, false);
-    // Set first level as achieved
-    AchievedLevels.push(playerId, LevelList.getItem(0));
   }
 
   /**

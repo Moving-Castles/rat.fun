@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Hex } from "viem"
   import { get } from "svelte/store"
-  import { roomsOnCurrentLevel, playerRooms } from "$lib/modules/state/stores"
+  import { rooms, playerRooms } from "$lib/modules/state/stores"
   import { entriesByPopularity, entriesChronologically } from "./sortFunctions"
   import { filterRooms, filterDepletedRooms } from "./filterFunctions"
   import { blockNumber } from "$lib/modules/network"
@@ -25,9 +25,7 @@
 
   // Here we add once there are a couple of updates
   let roomList = $derived.by(() => {
-    let entries = isOwnRoomListing
-      ? Object.entries($playerRooms)
-      : Object.entries($roomsOnCurrentLevel)
+    let entries = isOwnRoomListing ? Object.entries($playerRooms) : Object.entries($rooms)
 
     entries = filterDepletedRooms(entries, showDepletedRooms)
     entries = filterRooms(entries, textFilter)

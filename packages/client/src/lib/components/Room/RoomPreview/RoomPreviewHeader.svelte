@@ -53,6 +53,18 @@
         <div class="value">{room?.killCount}</div>
       </div>
     {/if}
+    {#if room?.minRatValueToEnter > 0}
+      <div class="row min-rat-value-to-enter">
+        <div class="label">MIN RAT VALUE TO ENTER</div>
+        <div class="value">${room?.minRatValueToEnter}</div>
+      </div>
+    {/if}
+    {#if room?.maxValuePerWin > 0}
+      <div class="row max-value-per-win">
+        <div class="label">MAX VALUE PER WIN</div>
+        <div class="value">${room?.maxValuePerWin}</div>
+      </div>
+    {/if}
     <!-- BALANCE -->
     <div class="row balance" class:depleted={Number(room.balance) == 0}>
       <div class="label">BALANCE</div>

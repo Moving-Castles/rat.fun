@@ -17,11 +17,6 @@ export function getEntityIndex(id: string) {
   return (getComponentValue(Index, id as Entity)?.value ?? 0) as number
 }
 
-export function getEntityLevel(id: string) {
-  const { Level } = components
-  return (getComponentValue(Level, id as Entity)?.value ?? "unknown level") as string
-}
-
 export function getEntityName(id: string) {
   const { Name } = components
   return (getComponentValue(Name, id as Entity)?.value ?? "unknown entity") as string

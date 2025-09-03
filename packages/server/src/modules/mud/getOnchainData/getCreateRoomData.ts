@@ -5,20 +5,16 @@ import { GAME_CONFIG_ID } from "@config"
 import {
   OnchainDataError,
   PlayerNotFoundError,
-  GameConfigNotFoundError,
-  LevelNotFoundError
+  GameConfigNotFoundError
 } from "@modules/error-handling/errors"
 
-export async function getCreateRoomData(
-  playerId: string,
-  levelId: string
-): Promise<CreateRoomData> {
+export async function getCreateRoomData(playerId: string): Promise<CreateRoomData> {
   try {
     if (!playerId) {
       throw new OnchainDataError("PLAYER_ID_REQUIRED", "Validation failed", "Player ID is required")
     }
 
-    const { Name, AchievedLevels, RoomCreationCost, GameConfig, Prompt, MasterKey } = components
+    const { Name, RoomCreationCost, GameConfig, Prompt, MasterKey } = components
 
     const result = {} as CreateRoomData
 
@@ -27,9 +23,7 @@ export async function getCreateRoomData(
     /////////////////
 
     const playerEntity = (await network).world.registerEntity({ id: playerId })
-
     const playerName = getComponentValue(Name, playerEntity)?.value as string
-
     const playerMasterKey = getComponentValue(MasterKey, playerEntity)?.value as boolean
 
     const playerBalance = (await network.publicClient.readContract({
@@ -38,7 +32,6 @@ export async function getCreateRoomData(
       functionName: "ratfun__balanceOf",
       args: [playerId]
     })) as bigint
-    const playerAchievedLevels = getComponentValue(AchievedLevels, playerEntity)?.value as string[]
 
     // Check if player exists
     if (!playerName) {
@@ -49,7 +42,6 @@ export async function getCreateRoomData(
       id: playerId,
       name: playerName,
       balance: Number(playerBalance / 10n ** 18n),
-      achievedLevels: playerAchievedLevels,
       masterKey: playerMasterKey
     }
 
@@ -58,7 +50,6 @@ export async function getCreateRoomData(
     /////////////////
 
     const gameConfigEntity = (await network).world.registerEntity({ id: GAME_CONFIG_ID })
-
     const gameConfig = getComponentValue(GameConfig, gameConfigEntity) as GameConfig
 
     // Check if game config exists
@@ -69,29 +60,9 @@ export async function getCreateRoomData(
     result.gameConfig = gameConfig
 
     /////////////////
-    // LEVEL
-    /////////////////
-
-    const levelEntity = (await network).world.registerEntity({ id: levelId })
-
-    const levelRoomCreationCost = getComponentValue(RoomCreationCost, levelEntity)?.value as number
-    const levelPrompt = getComponentValue(Prompt, levelEntity)?.value as string
-
-    if (!levelRoomCreationCost) {
-      throw new LevelNotFoundError(levelId)
-    }
-
-    const level = {
-      id: levelId,
-      roomCreationCost: levelRoomCreationCost,
-      prompt: levelPrompt
-    }
-
-    result.level = level
-
-    /////////////////
     // RETURN RESULT
     /////////////////
+
     return result
   } catch (error) {
     // If it's already one of our custom errors, rethrow it

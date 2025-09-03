@@ -86,7 +86,7 @@ The project uses `mprocs` to run 7 concurrent processes:
 ### Key Tables in MUD Schema
 
 - `GameConfig` - Global game settings and costs
-- `Name`, `EntityType`, `Level` - Core entity properties
+- `Name`, `EntityType` - Core entity properties
 - `Dead`, `Inventory` - Rat attributes
 - `Prompt`, `VisitCount`, `KillCount` - Room properties
 - `Balance`, `Owner` - Economic and ownership data

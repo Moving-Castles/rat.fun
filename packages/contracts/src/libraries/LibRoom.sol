@@ -8,8 +8,9 @@ import {
   Index,
   WorldStats,
   Balance,
-  Level,
   RoomCreationCost,
+  MaxValuePerWin,
+  MinRatValueToEnter,
   VisitCount,
   CreationBlock
 } from "../codegen/index.sol";
@@ -20,16 +21,16 @@ library LibRoom {
    * @notice Create a room
    * @param _prompt The prompt for the room
    * @param _roomOwner Id of the owner of the room
-   * @param _roomLevel Id of the level that the room is on
    * @param _roomCreationCost The creation cost of the room
    * @return newRoomId The id of the new room
    */
   function createRoom(
-    string memory _prompt,
     bytes32 _roomOwner,
-    bytes32 _roomLevel,
     bytes32 _roomId,
-    uint256 _roomCreationCost
+    uint256 _roomCreationCost,
+    uint256 _maxValuePerWin,
+    uint256 _minRatValueToEnter,
+    string memory _prompt
   ) internal returns (bytes32 newRoomId) {
     // If _roomId is not provided, generate a new unique id
     if (_roomId == bytes32(0)) {
@@ -37,6 +38,8 @@ library LibRoom {
     } else {
       newRoomId = _roomId;
     }
+
+    Owner.set(newRoomId, _roomOwner);
 
     EntityType.set(newRoomId, ENTITY_TYPE.ROOM);
     Prompt.set(newRoomId, _prompt);
@@ -46,11 +49,11 @@ library LibRoom {
     Index.set(newRoomId, newRoomIndex);
     CreationBlock.set(newRoomId, block.number);
 
-    Level.set(newRoomId, _roomLevel);
-    Owner.set(newRoomId, _roomOwner);
+    MaxValuePerWin.set(newRoomId, _maxValuePerWin);
+    MinRatValueToEnter.set(newRoomId, _minRatValueToEnter);
+
     VisitCount.set(newRoomId, 0);
 
-    // Add to room's balance
     Balance.set(newRoomId, _roomCreationCost);
     RoomCreationCost.set(newRoomId, _roomCreationCost);
   }

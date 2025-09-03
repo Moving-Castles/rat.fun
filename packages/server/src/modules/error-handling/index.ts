@@ -4,11 +4,9 @@ import {
   ValidationError,
   AuthorizationError,
   InsufficientBalanceError,
-  InvalidLevelError,
   InvalidPromptError,
   RatOwnershipError,
   RatDeadError,
-  LevelMismatchError,
   RoomBalanceError,
   StaleRequestError,
   NonceUsedError,
@@ -21,7 +19,6 @@ import {
   RoomNotFoundError,
   PlayerNotFoundError,
   GameConfigNotFoundError,
-  LevelNotFoundError,
   SystemCallError,
   ContractCallError,
   OutcomeUpdateError,
@@ -100,12 +97,9 @@ export function errorHandler(error: FastifyError, request: FastifyRequest, reply
     error instanceof RoomNotFoundError ||
     error instanceof PlayerNotFoundError ||
     error instanceof GameConfigNotFoundError ||
-    error instanceof LevelNotFoundError ||
     error instanceof RatOwnershipError ||
     error instanceof RatDeadError ||
-    error instanceof LevelMismatchError ||
     error instanceof RoomBalanceError ||
-    error instanceof InvalidLevelError ||
     error instanceof InvalidPromptError ||
     error instanceof StaleRequestError ||
     error instanceof NonceUsedError ||

@@ -67,20 +67,9 @@ export const schema = {
           }
         },
         ratDead: { type: "boolean" },
-        roomDepleted: { type: "boolean" },
-        levelUp: { type: "boolean" },
-        levelDown: { type: "boolean" }
+        roomDepleted: { type: "boolean" }
       },
-      required: [
-        "log",
-        "outcomeId",
-        "itemChanges",
-        "balanceTransfers",
-        "ratDead",
-        "roomDepleted",
-        "levelUp",
-        "levelDown"
-      ]
+      required: ["log", "outcomeId", "itemChanges", "balanceTransfers", "ratDead", "roomDepleted"]
     },
     403: {
       type: "object",

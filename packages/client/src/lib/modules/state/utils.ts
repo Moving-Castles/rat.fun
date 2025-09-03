@@ -24,16 +24,6 @@ export function filterByEntitytype(entities: Entities, entityType: ENTITY_TYPE):
 }
 
 /**
- * Filters rooms by level
- * @param rooms The rooms to filter
- * @param level The level to filter by
- * @returns The filtered rooms
- */
-export function filterByLevel(rooms: Rooms, level: string): Rooms {
-  return Object.fromEntries(Object.entries(rooms).filter(([, room]) => room.level === level))
-}
-
-/**
  * Filters rooms by player
  * @param rooms The rooms to filter
  * @param playerId The player id to filter by

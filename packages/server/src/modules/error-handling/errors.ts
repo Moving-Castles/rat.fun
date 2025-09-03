@@ -138,12 +138,6 @@ export class GameConfigNotFoundError extends OnchainDataError {
   }
 }
 
-export class LevelNotFoundError extends OnchainDataError {
-  constructor(levelId: string) {
-    super("LEVEL_NOT_FOUND", "Resource not found", `Level with ID ${levelId} not found`)
-  }
-}
-
 // ============================================================================
 // System Call Errors
 // ============================================================================
@@ -202,12 +196,6 @@ export class InsufficientBalanceError extends ValidationError {
   }
 }
 
-export class InvalidLevelError extends ValidationError {
-  constructor(message: string = "Invalid level ID.") {
-    super("INVALID_LEVEL_ERROR", "Invalid level", message)
-  }
-}
-
 export class InvalidPromptError extends ValidationError {
   constructor(message: string = "Invalid prompt.") {
     super("INVALID_PROMPT_ERROR", "Invalid prompt", message)
@@ -226,9 +214,9 @@ export class RatDeadError extends ValidationError {
   }
 }
 
-export class LevelMismatchError extends ValidationError {
-  constructor(message: string = "The rat and room level are different.") {
-    super("LEVEL_MISMATCH_ERROR", "Level mismatch", message)
+export class RatValueError extends ValidationError {
+  constructor(message: string = "The rat has not enough value to enter the room.") {
+    super("RAT_VALUE_ERROR", "Rat value error", message)
   }
 }
 

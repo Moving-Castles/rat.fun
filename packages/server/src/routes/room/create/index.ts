@@ -43,16 +43,24 @@ async function routes(fastify: FastifyInstance) {
     opts,
     async (request: FastifyRequest<{ Body: SignedRequest<CreateRoomRequestBody> }>, reply) => {
       try {
-        const { roomPrompt, levelId } = request.body.data
+        const { roomPrompt, roomCreationCost, maxValuePerWin, minRatValueToEnter } =
+          request.body.data
 
         // Recover player address from signature and convert to MUD bytes32 format
         const playerId = await verifyRequest(request.body)
 
         // Get onchain data
-        const { gameConfig, player, level } = await getCreateRoomData(playerId, levelId)
+        const { gameConfig, player } = await getCreateRoomData(playerId)
 
         // Validate data
-        validateInputData(gameConfig, roomPrompt, player, level)
+        validateInputData(
+          gameConfig,
+          player,
+          roomPrompt,
+          roomCreationCost,
+          maxValuePerWin,
+          minRatValueToEnter
+        )
 
         // Get template images from CMS
         console.time("–– CMS")
@@ -65,7 +73,14 @@ async function routes(fastify: FastifyInstance) {
 
         // Create room onchain
         console.time("–– Chain call")
-        await systemCalls.createRoom(playerId, levelId, roomId, roomPrompt)
+        await systemCalls.createRoom(
+          playerId,
+          roomId,
+          roomCreationCost,
+          maxValuePerWin,
+          minRatValueToEnter,
+          roomPrompt
+        )
         console.timeEnd("–– Chain call")
 
         // Write room text data to CMS immediately

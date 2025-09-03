@@ -11,16 +11,10 @@ pragma solidity >=0.8.24;
 interface IRoomSystem {
   function ratfun__createRoom(
     bytes32 _playerId,
-    bytes32 _levelId,
-    bytes32 _roomId,
-    string memory _prompt
-  ) external returns (bytes32 newRoomId);
-
-  function ratfun__createSpecialRoom(
-    bytes32 _levelId,
     bytes32 _roomId,
     uint256 _roomCreationCost,
     uint256 _maxValuePerWin,
+    uint256 _minRatValueToEnter,
     string memory _prompt
   ) external returns (bytes32 newRoomId);
 

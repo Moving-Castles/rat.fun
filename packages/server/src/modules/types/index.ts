@@ -10,19 +10,17 @@ import mudConfig from "../../../../contracts/mud.config"
 
 export type Room = {
   id: string
-  level: string
+  index: number
   prompt: string
   balance: number
   roomCreationCost: number
-  index: number
-  isSpecialRoom?: boolean
-  maxValuePerWin?: number
+  maxValuePerWin: number
+  minRatValueToEnter: number
 }
 
 export type Rat = {
   id: string
   name: string
-  level: string
   balance: number
   inventory: Item[]
   dead: boolean
@@ -33,19 +31,8 @@ export type Player = {
   id: string
   name: string
   balance: number
-  achievedLevels: string[]
   masterKey?: boolean
 }
-
-export type Level = {
-  id: string
-  index: number
-  minBalance: number
-  maxBalance: number
-  roomCreationCost: number
-}
-
-export type MinimalLevel = Pick<Level, "id" | "roomCreationCost">
 
 export type Item = {
   id: string
@@ -66,7 +53,6 @@ export type WorldEvent = TableRecord<typeof mudConfig.tables.ratfun__WorldEvent>
 export type EnterRoomData = {
   gameConfig: GameConfig
   rat: Rat
-  level: Level
   worldEvent: WorldEvent | undefined
   player?: Player
   room?: Room
@@ -74,7 +60,6 @@ export type EnterRoomData = {
 
 export type CreateRoomData = {
   gameConfig: GameConfig
-  level: MinimalLevel
   player: Player
 }
 
@@ -127,8 +112,6 @@ export type LogEntry = {
 export type EnterRoomReturnValue = OutcomeReturnValue & {
   ratDead: boolean
   roomDepleted: boolean
-  levelUp: boolean
-  levelDown: boolean
   log: LogEntry[]
 }
 
@@ -150,14 +133,9 @@ export type EnterRoomRequestBody = {
 
 export type CreateRoomRequestBody = {
   roomPrompt: string
-  levelId: string
-}
-
-export type CreateSpecialRoomRequestBody = {
-  roomPrompt: string
-  levelId: string
   roomCreationCost: number
   maxValuePerWin: number
+  minRatValueToEnter: number
 }
 
 /*
@@ -214,7 +192,6 @@ export type OffChainMessage = {
     | "rat__deploy"
     | "rat__death"
     | "rat__liquidate"
-  level: string
   playerName?: string
   ratName?: string
   ratId?: string

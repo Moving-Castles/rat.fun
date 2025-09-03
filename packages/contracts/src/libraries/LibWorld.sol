@@ -6,7 +6,6 @@ import {
   ExternalAddressesConfig,
   ExternalAddressesConfigData,
   Name,
-  AchievedLevels,
   WorldEvent,
   WorldEventData
 } from "../codegen/index.sol";
@@ -28,7 +27,11 @@ library LibWorld {
   /**
    * @notice Set game config and create tutorial orders
    * @param _adminAddress The address of the admin
-   * @param _levels The levels to add to the admin's AchievedLevels
+   * @param erc20Address The address of the erc20 token
+   * @param gamePoolAddress The address of the game pool
+   * @param mainSaleAddress The address of the main sale
+   * @param serviceAddress The address of the service
+   * @param usdcAddress The address of the usdc token
    */
   function init(
     address _adminAddress,
@@ -36,8 +39,7 @@ library LibWorld {
     address gamePoolAddress,
     address mainSaleAddress,
     address serviceAddress,
-    address usdcAddress,
-    bytes32[] memory _levels
+    address usdcAddress
   ) internal {
     bytes32 adminId = LibUtils.addressToEntityKey(_adminAddress);
 
@@ -46,7 +48,7 @@ library LibWorld {
       GameConfigData({
         adminAddress: _adminAddress,
         adminId: adminId,
-        roomCreationCost: 250, // TODO: remove this as room creation cost should be set per level
+        roomCreationCost: 250, // TODO: remove this as room creation cost should be set per room
         ratCreationCost: RAT_CREATION_COST,
         maxInventorySize: MAX_INVENTORY_SIZE,
         maxRoomPromptLength: MAX_ROOM_PROMPT_LENGTH,
@@ -71,11 +73,6 @@ library LibWorld {
     Name.set(adminId, "RATKING");
     // Approve game pool to spend admin's tokens
     erc20().approve(address(gamePool()), type(uint256).max);
-
-    // Add all levels to admins AchievedLevels
-    for (uint256 i = 0; i < _levels.length; i++) {
-      AchievedLevels.push(adminId, _levels[i]);
-    }
   }
 
   /**

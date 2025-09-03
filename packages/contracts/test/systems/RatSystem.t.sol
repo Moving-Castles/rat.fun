@@ -23,8 +23,6 @@ contract RatSystemTest is BaseTest {
 
     // Check player
     assertEq(CurrentRat.get(playerId), ratId);
-    assertEq(AchievedLevels.get(playerId).length, 1);
-    assertEq(AchievedLevels.getItem(playerId, 0), LevelList.getItem(0));
 
     // Check rat
     assertEq(uint8(EntityType.get(ratId)), uint8(ENTITY_TYPE.RAT));
@@ -32,7 +30,6 @@ contract RatSystemTest is BaseTest {
     assertEq(Dead.get(ratId), false);
     assertEq(Balance.get(ratId), RAT_CREATION_COST);
     assertEq(Index.get(ratId), 1);
-    assertEq(Level.get(ratId), LevelList.getItem(0));
     assertEq(Owner.get(ratId), playerId);
     assertEq(CreationBlock.get(ratId), block.number);
   }
@@ -181,7 +178,7 @@ contract RatSystemTest is BaseTest {
     // As admin
     prankAdmin();
     approveGamePool(type(uint256).max);
-    bytes32 roomId = world.ratfun__createRoom(GameConfig.getAdminId(), LevelList.getItem(0), bytes32(0), "test room");
+    bytes32 roomId = world.ratfun__createRoom(GameConfig.getAdminId(), bytes32(0), 250, 100, 10, "test room");
     world.ratfun__applyOutcome(ratId, roomId, 0, new bytes32[](0), newItems);
     vm.stopPrank();
 

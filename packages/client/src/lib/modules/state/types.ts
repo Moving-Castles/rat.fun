@@ -32,7 +32,6 @@ declare global {
     gameConfig: GameConfigObject
     worldStats: WorldStatsObject
     externalAddressesConfig: ExternalAddressesConfigObject
-    levelList: Hex[]
     worldEvent: WorldEventObject
   }
 
@@ -63,8 +62,6 @@ declare global {
     balance?: mudComponents["Balance"]
     creationBlock?: mudComponents["CreationBlock"]
     lastVisitBlock?: mudComponents["LastVisitBlock"]
-    level?: mudComponents["Level"]
-    achievedLevels?: mudComponents["AchievedLevels"]
     value?: mudComponents["Value"]
     dead?: mudComponents["Dead"]
     inventory?: mudComponents["Inventory"]
@@ -74,17 +71,14 @@ declare global {
     prompt?: mudComponents["Prompt"]
     index?: mudComponents["Index"]
     roomCreationCost?: mudComponents["RoomCreationCost"]
-    isSpecialRoom?: mudComponents["IsSpecialRoom"]
     maxValuePerWin?: mudComponents["MaxValuePerWin"]
-    levelMinBalance?: mudComponents["LevelMinBalance"]
-    levelMaxBalance?: mudComponents["LevelMaxBalance"]
+    minRatValueToEnter?: mudComponents["MinRatValueToEnter"]
     visitCount?: mudComponents["VisitCount"]
     killCount?: mudComponents["KillCount"]
     masterKey?: mudComponents["MasterKey"]
     // Gameconfig related fields
     gameConfig: GameConfigObject
     externalAddressesConfig: mudSchemas["ExternalAddressesConfig"]
-    levelList: Hex[]
     worldEvent: WorldEventObject
     worldStats: WorldStatsObject
   }
@@ -93,7 +87,6 @@ declare global {
     [key: string]: number | bigint | ENTITY_TYPE | Hex | readonly Hex[] | string | boolean
     entityType: ENTITY_TYPE.PLAYER
     name: mudComponents["Name"]
-    achievedLevels: mudComponents["AchievedLevels"]
     balance: mudComponents["Balance"]
     currentRat: mudComponents["CurrentRat"]
     pastRats: mudComponents["PastRats"]
@@ -107,7 +100,6 @@ declare global {
     name: mudComponents["Name"]
     index: mudComponents["Index"]
     balance: mudComponents["Balance"]
-    level: mudComponents["Level"]
     owner: mudComponents["Owner"]
     dead: mudComponents["Dead"]
     inventory: mudComponents["Inventory"]
@@ -120,7 +112,6 @@ declare global {
     owner: mudComponents["Owner"]
     index: mudComponents["Index"]
     balance: mudComponents["Balance"]
-    level: mudComponents["Level"]
     name: mudComponents["Name"]
     prompt: mudComponents["Prompt"]
     visitCount: mudComponents["VisitCount"]
@@ -128,8 +119,8 @@ declare global {
     creationBlock: mudComponents["CreationBlock"]
     lastVisitBlock: mudComponents["LastVisitBlock"]
     roomCreationCost: mudComponents["RoomCreationCost"]
-    isSpecialRoom: mudComponents["IsSpecialRoom"]
     maxValuePerWin: mudComponents["MaxValuePerWin"]
+    minRatValueToEnter: mudComponents["MinRatValueToEnter"]
   }
 
   type Item = {
@@ -138,17 +129,6 @@ declare global {
     name: mudComponents["Name"]
     value: mudComponents["Value"]
   }
-
-  type Level = {
-    [key: string]: ENTITY_TYPE | number | bigint | string
-    entityType: ENTITY_TYPE.LEVEL
-    index: mudComponents["Index"]
-    name: mudComponents["Name"]
-    levelMinBalance: mudComponents["LevelMinBalance"]
-    levelMaxBalance: mudComponents["LevelMaxBalance"]
-    roomCreationCost: mudComponents["RoomCreationCost"]
-  }
-
   // * * * * * * * * * * * * * * * * *
   // GAME PLAY ENTITY TYPES
   // * * * * * * * * * * * * * * * * *
@@ -171,9 +151,5 @@ declare global {
 
   type Items = {
     [index: string]: Item
-  }
-
-  type Levels = {
-    [index: string]: Level
   }
 }

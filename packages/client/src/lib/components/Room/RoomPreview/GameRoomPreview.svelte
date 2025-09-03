@@ -28,10 +28,8 @@
   //  Show enter button if:
   //  * - Room is not depleted
   //  * - Rat exists and is alive
-  //  * - Room is at the same level as the rat
-  let showEnterButton = $derived(
-    (room?.balance ?? 0) > 0 && !$rat?.dead && room.level == $rat?.level
-  )
+  //  * - TODO: rat has min value to enter
+  let showEnterButton = $derived((room?.balance ?? 0) > 0 && !$rat?.dead)
 
   // Show no rat warning if:
   //  * - Rat does not exist or is dead

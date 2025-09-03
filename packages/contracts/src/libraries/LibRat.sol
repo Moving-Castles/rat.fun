@@ -9,8 +9,6 @@ import {
   Balance,
   Inventory,
   Value,
-  Level,
-  LevelList,
   Name,
   Owner,
   CreationBlock,
@@ -32,7 +30,6 @@ library LibRat {
     Name.set(ratId, _name);
     Dead.set(ratId, false);
     Balance.set(ratId, RAT_CREATION_COST);
-    Level.set(ratId, LevelList.getItem(0));
     CreationBlock.set(ratId, block.number);
 
     uint256 newRatIndex = WorldStats.getGlobalRatIndex() + 1;

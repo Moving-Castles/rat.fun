@@ -1,7 +1,7 @@
 import type { OffChainMessage, SignedRequest, WebSocketInterface } from "@modules/types"
 import { v4 as uuidv4 } from "uuid"
 import { verifyRequest } from "@modules/signature"
-import { getEntityName, getEntityLevel, getRatId } from "@modules/mud/getOnchainData"
+import { getEntityName, getRatId } from "@modules/mud/getOnchainData"
 import { broadcast, sendToClient } from "@modules/websocket"
 import { systemCalls } from "@modules/mud/initMud"
 
@@ -40,7 +40,6 @@ async function handleTestMessage(socket: WebSocketInterface): Promise<void> {
   const newMessage: OffChainMessage = {
     id: uuidv4(),
     topic: "test",
-    level: "0",
     message: "pong",
     timestamp: Date.now()
   }
@@ -62,7 +61,6 @@ async function handleChatMessage(request: SignedRequest<OffChainMessage>): Promi
     const newMessage: OffChainMessage = {
       id: uuidv4(),
       topic: "key__activation",
-      level: request.data?.level ?? "unknown level",
       playerName: getEntityName(senderId),
       message: "Supervisor mode activated",
       timestamp: Date.now()
@@ -75,7 +73,6 @@ async function handleChatMessage(request: SignedRequest<OffChainMessage>): Promi
   const newMessage: OffChainMessage = {
     id: uuidv4(),
     topic: "chat__message",
-    level: request.data?.level ?? "unknown level",
     playerName: getEntityName(senderId),
     message,
     timestamp: Date.now()
@@ -92,12 +89,10 @@ async function handleRatDeploy(request: SignedRequest<OffChainMessage>): Promise
   const senderId = await verifyRequest(request)
 
   const ratId = getRatId(senderId)
-  const ratLevel = getEntityLevel(ratId)
 
   const newMessage: OffChainMessage = {
     id: uuidv4(),
     topic: "rat__deploy",
-    level: ratLevel,
     playerName: getEntityName(senderId),
     ratName: getEntityName(ratId),
     timestamp: Date.now()
@@ -114,12 +109,10 @@ async function handleRatLiquidate(request: SignedRequest<OffChainMessage>): Prom
   const senderId = await verifyRequest(request)
 
   const ratName = getEntityName(request.data.ratId ?? "unknown rat")
-  const level = getEntityLevel(request.data.ratId ?? "unknown rat")
 
   const newMessage: OffChainMessage = {
     id: uuidv4(),
     topic: "rat__liquidate",
-    level,
     playerName: getEntityName(senderId),
     ratName,
     timestamp: Date.now()
@@ -140,12 +133,9 @@ async function handleRoomLiquidation(request: SignedRequest<OffChainMessage>): P
     return
   }
 
-  const level = getEntityLevel(request.data.roomId ?? "unknown room")
-
   const newMessage: OffChainMessage = {
     id: uuidv4(),
     topic: "room__liquidation",
-    level,
     roomIndex: request.data.roomIndex,
     roomId: request.data.roomId,
     playerName: getEntityName(senderId),

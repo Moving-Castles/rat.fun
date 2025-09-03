@@ -30,13 +30,9 @@ export async function getEnterRoomData(
       Inventory,
       Index,
       GameConfig,
-      Level,
-      AchievedLevels,
-      LevelMinBalance,
-      LevelMaxBalance,
       RoomCreationCost,
-      IsSpecialRoom,
-      MaxValuePerWin
+      MaxValuePerWin,
+      MinRatValueToEnter
     } = components
 
     const result = {} as EnterRoomData
@@ -59,14 +55,11 @@ export async function getEnterRoomData(
     const ratDead = (getComponentValue(Dead, ratEntity)?.value ?? false) as boolean
     const ratBalance = (getComponentValue(Balance, ratEntity)?.value ?? 0) as number
     const ratInventory = (getComponentValue(Inventory, ratEntity)?.value ?? [""]) as string[]
-    const ratLevel = (getComponentValue(Level, ratEntity)?.value ?? "") as string
-
     const inventoryObjects = constructInventoryObject(ratInventory)
 
     const rat = {
       id: ratId,
       name: ratName,
-      level: ratLevel,
       balance: Number(ratBalance),
       inventory: inventoryObjects,
       dead: ratDead,
@@ -93,23 +86,21 @@ export async function getEnterRoomData(
 
       const roomIndex = (getComponentValue(Index, roomEntity)?.value ?? 0) as number
       const roomBalance = (getComponentValue(Balance, roomEntity)?.value ?? 0) as number
-      const roomLevel = (getComponentValue(Level, roomEntity)?.value ?? "") as string
       const roomCreationCost = (getComponentValue(RoomCreationCost, roomEntity)?.value ??
         0) as number
-      const isSpecialRoom = (getComponentValue(IsSpecialRoom, roomEntity)?.value ??
-        false) as boolean
       const roomMaxValuePerWin = (getComponentValue(MaxValuePerWin, roomEntity)?.value ??
+        0) as number
+      const roomMinRatValueToEnter = (getComponentValue(MinRatValueToEnter, roomEntity)?.value ??
         0) as number
 
       const room = {
         id: roomId,
         prompt: roomPrompt,
-        level: roomLevel,
         balance: Number(roomBalance),
         roomCreationCost: roomCreationCost,
         index: roomIndex,
-        isSpecialRoom,
-        maxValuePerWin: roomMaxValuePerWin
+        maxValuePerWin: roomMaxValuePerWin,
+        minRatValueToEnter: roomMinRatValueToEnter
       }
 
       result.room = room
@@ -125,8 +116,6 @@ export async function getEnterRoomData(
 
       const playerName = getComponentValue(Name, playerEntity)?.value as string
       const playerBalance = Number(getComponentValue(Balance, playerEntity)?.value ?? 0)
-      const playerAchievedLevels = getComponentValue(AchievedLevels, playerEntity)
-        ?.value as string[]
 
       // Check if player exists
       if (!playerName) {
@@ -136,31 +125,9 @@ export async function getEnterRoomData(
       result.player = {
         id: playerId,
         name: playerName,
-        balance: playerBalance,
-        achievedLevels: playerAchievedLevels
+        balance: playerBalance
       }
     }
-
-    /////////////////
-    // LEVEL
-    /////////////////
-
-    const levelEntity = (await network).world.registerEntity({ id: ratLevel })
-
-    const levelIndex = getComponentValue(Index, levelEntity)?.value as number
-    const levelMinBalance = getComponentValue(LevelMinBalance, levelEntity)?.value as number
-    const levelMaxBalance = getComponentValue(LevelMaxBalance, levelEntity)?.value as number
-    const levelRoomCreationCost = getComponentValue(RoomCreationCost, levelEntity)?.value as number
-
-    const level = {
-      id: ratLevel,
-      index: levelIndex,
-      minBalance: levelMinBalance,
-      maxBalance: levelMaxBalance,
-      roomCreationCost: levelRoomCreationCost
-    }
-
-    result.level = level
 
     /////////////////
     // GAME CONFIG

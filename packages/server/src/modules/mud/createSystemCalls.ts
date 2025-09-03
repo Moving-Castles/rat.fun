@@ -39,16 +39,13 @@ export function createSystemCalls(network: SetupNetworkResult) {
 
         const { newRatValue, ratValueChange } = getRatValue(rat, newOnChainData.rat)
 
-        const newRatLevelIndex = newOnChainData.level?.index ?? 0
-
         return {
           validatedOutcome,
           newRoomValue,
           roomValueChange,
           newRatBalance,
           newRatValue,
-          ratValueChange,
-          newRatLevelIndex
+          ratValueChange
         }
       } catch (error) {
         // If it's already one of our custom errors, rethrow it
@@ -78,56 +75,23 @@ export function createSystemCalls(network: SetupNetworkResult) {
 
   const createRoom = async (
     playerId: string,
-    levelId: string,
     roomID: string,
+    roomCreationCost: number,
+    maxValuePerWin: number,
+    minRatValueToEnter: number,
     roomPrompt: string
   ) => {
     try {
       const tx = await (network as any).worldContract.write.ratfun__createRoom([
         playerId,
-        levelId,
-        roomID,
-        roomPrompt
-      ])
-
-      await network.waitForTransaction(tx)
-
-      return true
-    } catch (error) {
-      // If it's already one of our custom errors, rethrow it
-      if (error instanceof SystemCallError) {
-        throw error
-      }
-
-      // Otherwise, wrap it in our custom error
-      throw new ContractCallError(
-        `Error creating room: ${error instanceof Error ? error.message : String(error)}`,
-        error
-      )
-    }
-  }
-
-  const createSpecialRoom = async (
-    levelId: string,
-    roomID: string,
-    roomCreationCost: number,
-    maxValuePerWin: number,
-    roomPrompt: string
-  ) => {
-    try {
-      const tx = await (network as any).worldContract.write.ratfun__createSpecialRoom([
-        levelId,
         roomID,
         roomCreationCost,
         maxValuePerWin,
+        minRatValueToEnter,
         roomPrompt
       ])
 
-      console.log("tx", tx)
-
       await network.waitForTransaction(tx)
-
-      console.log("after tx")
 
       return true
     } catch (error) {
@@ -166,7 +130,6 @@ export function createSystemCalls(network: SetupNetworkResult) {
   return {
     applyOutcome,
     createRoom,
-    createSpecialRoom,
     giveMasterKey
   }
 }

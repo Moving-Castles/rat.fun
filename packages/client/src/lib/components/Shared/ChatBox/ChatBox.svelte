@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { rat, levelList } from "$lib/modules/state/stores"
-  import { latestEventsOnRatLevel } from "$lib/modules/off-chain-sync/stores"
+  import { rat } from "$lib/modules/state/stores"
+  import { latestEvents } from "$lib/modules/off-chain-sync/stores"
   import { sendChatMessage } from "$lib/modules/off-chain-sync"
   import { websocketConnected } from "$lib/modules/off-chain-sync/stores"
   import { onMount } from "svelte"
@@ -30,7 +30,7 @@
   })
 
   $effect(() => {
-    if ($latestEventsOnRatLevel && scrollElement) {
+    if ($latestEvents && scrollElement) {
       scrollElement.scrollTop = scrollElement?.scrollHeight ?? 0
     }
   })
@@ -49,9 +49,7 @@
         throw new CharacterLimitError(value.length, 500, "chat message")
       }
 
-      // Level of the player's rat, or the first level if the rat is not deployed
-      const level = $rat?.level ?? $levelList[0] ?? "unknown level"
-      await sendChatMessage(level, value)
+      await sendChatMessage(value)
       value = ""
     } catch (error) {
       // Validation errors are handled silently in the UI
@@ -64,7 +62,7 @@
   <ChatHeader />
   <!-- Chat scroll -->
   <div bind:this={scrollElement} class="chat-scroll">
-    {#each $latestEventsOnRatLevel as event (event.id)}
+    {#each $latestEvents as event (event.id)}
       {#if event.topic == "room__creation"}
         <ChatEvent_RoomCreation {event} {suppressSound} />
       {:else if event.topic == "room__liquidation"}

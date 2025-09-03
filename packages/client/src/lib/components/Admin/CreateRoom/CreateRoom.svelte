@@ -1,12 +1,5 @@
 <script lang="ts">
-  import {
-    rat,
-    levelList,
-    gameConfig,
-    levels,
-    playerERC20Balance,
-    rooms
-  } from "$lib/modules/state/stores"
+  import { rat, gameConfig, playerERC20Balance, rooms } from "$lib/modules/state/stores"
   import { CharacterCounter, VideoLoaderDuration, BigButton } from "$lib/components/Shared"
   import { sendCreateRoom } from "$lib/modules/action-manager/index.svelte"
   import { goto } from "$app/navigation"
@@ -16,7 +9,6 @@
   import { waitForPropertyChange } from "$lib/modules/state/utils"
 
   let roomDescription: string = $state("")
-  let levelId: string = $state($rat?.level ?? $levelList[0])
   let busy: boolean = $state(false)
 
   // Prompt has to be between 1 and MAX_ROOM_PROMPT_LENGTH characters
@@ -24,18 +16,16 @@
     roomDescription.length < 1 || roomDescription.length > $gameConfig.maxRoomPromptLength
   )
 
-  const roomCreationCost = $derived(
-    $levels[levelId]?.roomCreationCost ?? $levels[$levelList[0]]?.roomCreationCost ?? 0
-  )
+  const roomCreationCost = $state(250)
+  const maxValuePerWin = $state(100)
+  const minRatValueToEnter = $state(10)
 
   // Disabled if:
   // - Room description is invalid
   // - Room creation is busy
   // - Player has insufficient balance
   const disabled = $derived(
-    invalidRoomDescriptionLength ||
-      busy ||
-      $playerERC20Balance < Number($levels[levelId].roomCreationCost ?? 0)
+    invalidRoomDescriptionLength || busy || $playerERC20Balance < Number(roomCreationCost)
   )
 
   const placeholder =
@@ -59,7 +49,13 @@
           "room description"
         )
       }
-      const result = await sendCreateRoom(roomDescription, levelId, roomCreationCost)
+      const result = await sendCreateRoom(
+        roomDescription,
+        roomCreationCost,
+        maxValuePerWin,
+        minRatValueToEnter
+      )
+
       if (result?.roomId) {
         // Wait for created room to be available in the store
         await waitForPropertyChange(rooms, result.roomId, undefined, 10000)

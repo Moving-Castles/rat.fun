@@ -137,8 +137,8 @@ async function sendMessageRequest(topic: OffChainMessage["topic"], data: Record<
  * CHAT MESSAGE
  *****************/
 
-export async function sendChatMessage(level: string, message: string) {
-  sendMessageRequest("chat__message", { level, message })
+export async function sendChatMessage(message: string) {
+  sendMessageRequest("chat__message", { message })
 }
 
 /****************

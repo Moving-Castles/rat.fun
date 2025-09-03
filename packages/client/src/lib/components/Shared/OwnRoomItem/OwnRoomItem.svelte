@@ -3,13 +3,12 @@
   import type { PlotPoint } from "$lib/components/Shared/RoomGraph/types"
   import { blocksToReadableTime, renderSafeString } from "$lib/modules/utils"
   import { blockNumber } from "$lib/modules/network"
-  import { levels } from "$lib/modules/state/stores"
   import { staticContent } from "$lib/modules/content"
   import { RoomGraph, Xed } from "$lib/components/Shared"
 
   let { roomId, room }: { roomId: Hex; room: Room } = $props()
 
-  let profit = $derived(Number(room.balance) - Number($levels[room.level]?.roomCreationCost ?? 0))
+  let profit = $derived(Number(room.balance) - Number(room.roomCreationCost ?? 0))
 
   let plotData: PlotPoint[] = $derived.by(() => {
     let sanityRoomContent = $staticContent?.rooms?.find(r => r.title == roomId)

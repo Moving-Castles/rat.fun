@@ -1,19 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { getUniqueEntity } from "@latticexyz/world-modules/src/modules/uniqueentity/getUniqueEntity.sol";
-import {
-  Dead,
-  Balance,
-  Inventory,
-  Value,
-  Level,
-  AchievedLevels,
-  LevelMinBalance,
-  LevelMaxBalance,
-  LevelList,
-  Index,
-  Owner
-} from "../codegen/index.sol";
+import { Dead, Balance, Inventory, Value, Index, Owner } from "../codegen/index.sol";
 import { ENTITY_TYPE } from "../codegen/common.sol";
 import { LibUtils } from "./LibUtils.sol";
 import { LibItem } from "./LibItem.sol";
@@ -162,43 +150,6 @@ library LibManager {
       Balance.set(_roomId, Balance.get(_roomId) + itemValueAmount);
       // Remove item from rat
       Inventory.set(_ratId, LibUtils.removeFromArray(Inventory.get(_ratId), itemId));
-    }
-  }
-
-  /**
-   * @notice Check if the rat should level up or down
-   * @dev Used by the Manager system to apply changes to a rat after room events
-   * @param _ratId Id of the rat
-   */
-  function checkLevelChange(bytes32 _ratId) internal {
-    // Get the total value of the rat
-    uint256 totalRatValue = LibRat.getTotalRatValue(_ratId);
-
-    // Get the level of the rat
-    bytes32 currentLevelId = Level.get(_ratId);
-    uint256 currentLevelIndex = Index.get(currentLevelId);
-    bytes32 newLevelId = currentLevelId;
-
-    // Check if the rat is below the min balance
-    if (totalRatValue < LevelMinBalance.get(currentLevelId) && currentLevelIndex > 0) {
-      // Level down if we are not at the lowest level
-      newLevelId = LevelList.getItem(currentLevelIndex - 1);
-      Level.set(_ratId, newLevelId);
-    }
-
-    // Check if the rat is above the max balance
-    if (totalRatValue >= LevelMaxBalance.get(currentLevelId) && currentLevelIndex < LevelList.length() - 1) {
-      // Level up if we are not at the highest level
-      newLevelId = LevelList.getItem(currentLevelIndex + 1);
-      Level.set(_ratId, newLevelId);
-    }
-
-    // On change, add level to achieved levels
-    if (newLevelId != currentLevelId) {
-      bytes32 playerId = Owner.get(_ratId);
-      if (!LibUtils.arrayIncludes(AchievedLevels.get(playerId), newLevelId)) {
-        AchievedLevels.push(playerId, newLevelId);
-      }
     }
   }
 }

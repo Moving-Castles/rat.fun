@@ -35,7 +35,7 @@
   <!-- ROOM COUNTER -->
   <div
     use:tippy={{
-      content: `There are ${Object.keys($roomStore).length} rooms on your level`
+      content: `There are ${Object.keys($roomStore).length} trips`
     }}
     class="level-stats"
   >

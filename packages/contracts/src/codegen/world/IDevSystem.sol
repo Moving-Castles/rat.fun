@@ -10,11 +10,4 @@ pragma solidity >=0.8.24;
  */
 interface IDevSystem {
   function ratfun__giveCallerTokens() external;
-
-  function ratfun__updateLevel(
-    bytes32 _levelId,
-    uint256 _levelMinBalance,
-    uint256 _levelMaxBalance,
-    uint256 _roomCreationCost
-  ) external;
 }

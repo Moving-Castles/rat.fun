@@ -9,7 +9,7 @@ import { writable, derived } from "svelte/store"
 import { addressToId, addressToRatImage } from "$lib/modules/utils"
 import { blockNumber } from "$lib/modules/network"
 import { ENTITY_TYPE } from "contracts/enums"
-import { filterByEntitytype, filterByLevel, filterByPlayer, filterByOthers } from "./utils"
+import { filterByEntitytype, filterByPlayer, filterByOthers } from "./utils"
 import { staticContent } from "$lib/modules/content"
 import { WORLD_OBJECT_ID } from "./constants"
 
@@ -43,9 +43,6 @@ export const externalAddressesConfig = derived(
   worldObject,
   $worldObject => $worldObject.externalAddressesConfig
 )
-
-// LEVEL LIST
-export const levelList = derived(worldObject, $worldObject => $worldObject.levelList)
 
 // WORLD EVENT
 export const worldEvent = derived(worldObject, $worldObject => $worldObject.worldEvent)
@@ -96,10 +93,6 @@ export const items = derived(
   entities,
   $entities => filterByEntitytype($entities, ENTITY_TYPE.ITEM) as Items
 )
-export const levels = derived(
-  entities,
-  $entities => filterByEntitytype($entities, ENTITY_TYPE.LEVEL) as Levels
-)
 
 // * * * * * * * * * * * * * * * * *
 // PLAYER
@@ -141,15 +134,6 @@ export const ratInventory = derived(
   ([$rat, $items]) => $rat?.inventory?.map(item => $items[item]) ?? ([] as Item[])
 )
 
-export const ratLevel = derived([rat, levels], ([$rat, $levels]) => $levels[$rat?.level] as Level)
-
-export const ratLevelIndex = derived([levelList, rat], ([$levelList, $rat]) => {
-  if ($levelList) {
-    return $levelList?.findIndex(lvl => lvl === ($rat?.level ?? 0))
-  }
-  return 0
-})
-
 export const ratImageUrl = derived([player], ([$player]) => {
   if (!$player?.currentRat) return "/images/rat.png"
   return addressToRatImage($player.currentRat)
@@ -165,15 +149,3 @@ export const ratTotalValue = derived([rat, ratInventory], ([$rat, $ratInventory]
       $ratInventory.reduce((acc, item) => acc + (item?.value ? Number(item.value) : 0), 0) // Inventory
   return totalValue
 })
-
-export const roomsOnCurrentLevel = derived(
-  [rat, rooms, levelList],
-  ([$rat, $rooms, $levelList]) => {
-    if (!$rat) {
-      // Show room on first level if no rat
-      // Assumes that the first element in the levelList is the first level...
-      return filterByLevel($rooms, $levelList?.[0]) as Rooms
-    }
-    return filterByLevel($rooms, $rat?.level) as Rooms
-  }
-)

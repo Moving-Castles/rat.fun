@@ -3,8 +3,7 @@ enum ENTITY_TYPE {
   PLAYER,
   RAT,
   ROOM,
-  ITEM,
-  LEVEL
+  ITEM
 }
 
 // TODO remove placeholder workaround if you find a better solution (eg make string[] work)

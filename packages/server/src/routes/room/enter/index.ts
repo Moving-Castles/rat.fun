@@ -60,7 +60,7 @@ async function routes(fastify: FastifyInstance) {
 
         // Get onchain data
         console.time("–– Get on chain data")
-        const { room, rat, player, level, worldEvent } = (await getEnterRoomData(
+        const { room, rat, player, worldEvent } = (await getEnterRoomData(
           ratId,
           roomId,
           playerId
@@ -98,8 +98,7 @@ async function routes(fastify: FastifyInstance) {
           roomValueChange,
           newRatBalance,
           newRatValue,
-          ratValueChange,
-          newRatLevelIndex
+          ratValueChange
         } = await systemCalls.applyOutcome(rat, room, eventResults.outcome)
         console.timeEnd("–– Chain")
 
@@ -156,9 +155,7 @@ async function routes(fastify: FastifyInstance) {
           itemChanges: validatedOutcome.itemChanges,
           balanceTransfers: validatedOutcome.balanceTransfers,
           ratDead: newRatBalance == 0,
-          roomDepleted: newRoomValue == 0,
-          levelUp: newRatLevelIndex > level.index,
-          levelDown: newRatLevelIndex < level.index
+          roomDepleted: newRoomValue == 0
         }
 
         reply.send(response)

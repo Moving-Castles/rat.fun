@@ -12,7 +12,7 @@ import { NamespaceOwner } from "@latticexyz/world/src/codegen/tables/NamespaceOw
 
 import { GameConfig } from "../src/codegen/index.sol";
 
-import { LibWorld, LibLevel, LibRoom } from "../src/libraries/Libraries.sol";
+import { LibWorld, LibRoom } from "../src/libraries/Libraries.sol";
 
 import { SlopERC20 } from "../src/external/SlopERC20.sol";
 import { GamePool } from "../src/external/GamePool.sol";
@@ -42,14 +42,6 @@ contract PostDeploy is Script {
     // Initialize MainSale
     address usdcAddress = _initMainSale(mainSale, incomeRecipient, address(erc20));
 
-    // Create levels
-    bytes32[] memory levels = new bytes32[](5);
-    levels[0] = LibLevel.createLevel(0, "Punter", 0, 250, 250);
-    levels[1] = LibLevel.createLevel(1, "Loser", 250, 500, 500);
-    levels[2] = LibLevel.createLevel(2, "Mediocrat", 500, 1000, 1000);
-    levels[3] = LibLevel.createLevel(3, "Normal", 1000, 2500, 2500);
-    levels[4] = LibLevel.createLevel(4, "Customer", 2500, 10000, 10000);
-
     // Root namespace owner is admin
     LibWorld.init(
       NamespaceOwner.get(ROOT_NAMESPACE_ID),
@@ -57,8 +49,7 @@ contract PostDeploy is Script {
       address(gamePool),
       address(mainSale),
       serviceAddress,
-      usdcAddress,
-      levels
+      usdcAddress
     );
     vm.stopBroadcast();
   }

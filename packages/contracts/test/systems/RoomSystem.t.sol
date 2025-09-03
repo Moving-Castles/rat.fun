@@ -18,7 +18,7 @@ contract RoomSystemTest is BaseTest {
     // As admin
     prankAdmin();
     startGasReport("Create room (user)");
-    bytes32 roomId = world.ratfun__createRoom(playerId, LevelList.getItem(0), bytes32(0), "A test room");
+    bytes32 roomId = world.ratfun__createRoom(playerId, bytes32(0), 250, 100, 10, "A test room");
     endGasReport();
     vm.stopPrank();
 
@@ -33,7 +33,6 @@ contract RoomSystemTest is BaseTest {
     assertEq(Prompt.get(roomId), "A test room");
     assertEq(Balance.get(roomId), GameConfig.getRoomCreationCost());
     assertEq(Owner.get(roomId), playerId);
-    assertEq(Level.get(roomId), LevelList.getItem(0));
     assertEq(CreationBlock.get(roomId), block.number);
   }
 
@@ -50,8 +49,10 @@ contract RoomSystemTest is BaseTest {
     startGasReport("Create room: long prompt");
     world.ratfun__createRoom(
       playerId,
-      LevelList.getItem(0),
       bytes32(0),
+      250,
+      100,
+      10,
       "The room has two doors. One doors lead to death, the other to freedom. If a rat does not make a choice within 10 minutes it is killed and the body removed. Each door has a guardian mouse that needs to be defeated to pass."
     );
     endGasReport();
@@ -67,7 +68,6 @@ contract RoomSystemTest is BaseTest {
 
     prankAdmin();
     LibWorld.gamePool().depositTokens(alice, LibWorld.erc20().balanceOf(alice));
-    bytes32 firstLevelId = LevelList.getItem(0);
     vm.expectRevert(
       abi.encodeWithSelector(
         IERC20Errors.ERC20InsufficientBalance.selector,
@@ -76,7 +76,7 @@ contract RoomSystemTest is BaseTest {
         GameConfig.getRoomCreationCost() * 10 ** LibWorld.erc20().decimals()
       )
     );
-    world.ratfun__createRoom(playerId, firstLevelId, bytes32(0), "A test room");
+    world.ratfun__createRoom(playerId, bytes32(0), 250, 100, 10, "A test room");
     vm.stopPrank();
   }
 
@@ -88,10 +88,9 @@ contract RoomSystemTest is BaseTest {
     vm.stopPrank();
 
     prankAdmin();
-    bytes32 firstLevelId = LevelList.getItem(0);
-    world.ratfun__createRoom(playerId, firstLevelId, bytes32("666"), "A test room");
+    world.ratfun__createRoom(playerId, bytes32(uint256(666)), 250, 100, 10, "A test room");
     vm.expectRevert("room id already in use");
-    world.ratfun__createRoom(playerId, firstLevelId, bytes32("666"), "A test room");
+    world.ratfun__createRoom(playerId, bytes32(uint256(666)), 250, 100, 10, "Another test room");
     vm.stopPrank();
   }
 
@@ -105,7 +104,7 @@ contract RoomSystemTest is BaseTest {
 
     // As admin
     prankAdmin();
-    bytes32 roomId = world.ratfun__createRoom(playerId, LevelList.getItem(0), bytes32(0), "A test room");
+    bytes32 roomId = world.ratfun__createRoom(playerId, bytes32(0), 250, 100, 10, "A test room");
     vm.stopPrank();
 
     // Check player balance
@@ -156,7 +155,7 @@ contract RoomSystemTest is BaseTest {
 
     // As admin
     prankAdmin();
-    bytes32 roomId = world.ratfun__createRoom(playerId, LevelList.getItem(0), bytes32(0), "A test room");
+    bytes32 roomId = world.ratfun__createRoom(playerId, bytes32(0), 250, 100, 10, "A test room");
     vm.stopPrank();
 
     // Advance blocks but not enough to pass cooldown
@@ -184,7 +183,7 @@ contract RoomSystemTest is BaseTest {
 
     // As admin
     prankAdmin();
-    bytes32 roomId = world.ratfun__createRoom(aliceId, LevelList.getItem(0), bytes32(0), "A test room");
+    bytes32 roomId = world.ratfun__createRoom(aliceId, bytes32(0), 250, 100, 10, "A test room");
     vm.stopPrank();
 
     // Check room balance
@@ -195,44 +194,5 @@ contract RoomSystemTest is BaseTest {
     vm.expectRevert("not owner");
     world.ratfun__closeRoom(roomId);
     vm.stopPrank();
-  }
-
-  function testCreateSpecialRoom() public {
-    uint256 customCreationCost = 1000;
-    uint256 customMaxValuePerWin = 500;
-    uint256 initialAdminBalance = setInitialBalance(GameConfig.getAdminAddress());
-
-    // As admin
-    prankAdmin();
-    approveGamePool(type(uint256).max);
-    startGasReport("Create special room");
-    bytes32 roomId = world.ratfun__createSpecialRoom(
-      LevelList.getItem(0),
-      bytes32(0),
-      customCreationCost,
-      customMaxValuePerWin,
-      "A special test room"
-    );
-    endGasReport();
-    vm.stopPrank();
-
-    // Check admin balance (should be reduced by custom creation cost)
-    assertEq(
-      LibWorld.erc20().balanceOf(GameConfig.getAdminAddress()),
-      initialAdminBalance - customCreationCost * 10 ** LibWorld.erc20().decimals()
-    );
-
-    // Check room properties
-    assertEq(uint8(EntityType.get(roomId)), uint8(ENTITY_TYPE.ROOM));
-    assertEq(IsSpecialRoom.get(roomId), true);
-    assertEq(Prompt.get(roomId), "A special test room");
-    assertEq(Balance.get(roomId), customCreationCost);
-    assertEq(Owner.get(roomId), GameConfig.getAdminId()); // Special rooms are owned by admin
-    assertEq(Level.get(roomId), LevelList.getItem(0));
-    assertEq(CreationBlock.get(roomId), block.number);
-
-    // Check that MaxValuePerWin was set correctly
-    uint256 actualMaxValue = MaxValuePerWin.get(roomId);
-    assertEq(actualMaxValue, customMaxValuePerWin);
   }
 }

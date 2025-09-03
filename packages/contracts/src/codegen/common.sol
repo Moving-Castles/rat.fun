@@ -8,6 +8,5 @@ enum ENTITY_TYPE {
   PLAYER,
   RAT,
   ROOM,
-  ITEM,
-  LEVEL
+  ITEM
 }
