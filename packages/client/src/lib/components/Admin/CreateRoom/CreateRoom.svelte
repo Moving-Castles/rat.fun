@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { rat, gameConfig, playerERC20Balance, rooms } from "$lib/modules/state/stores"
+  import { gameConfig, playerERC20Balance, rooms } from "$lib/modules/state/stores"
   import { CharacterCounter, VideoLoaderDuration, BigButton } from "$lib/components/Shared"
   import { sendCreateRoom } from "$lib/modules/action-manager/index.svelte"
   import { goto } from "$app/navigation"

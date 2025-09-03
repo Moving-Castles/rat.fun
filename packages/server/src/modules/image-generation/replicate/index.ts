@@ -19,7 +19,7 @@ const MODEL = {
 
 const makePrompt = (prompt: string) => {
   const randomPrompts = pickRandomMultiple(PROMPTS, 4).join(" ")
-  return `STYLE: ${randomPrompts}. !! Important !! A scene of: ${prompt}`
+  return `STYLE: ${randomPrompts}. !! Important !! A square acid blotter printed with: ${prompt}`
 }
 
 /**
