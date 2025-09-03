@@ -16,16 +16,21 @@
     roomDescription.length < 1 || roomDescription.length > $gameConfig.maxRoomPromptLength
   )
 
-  const roomCreationCost = $state(250)
-  const maxValuePerWin = $state(100)
-  const minRatValueToEnter = $state(10)
+  let roomCreationCost = $state(250)
+  let maxValuePerWin = $state(100)
+  let minRatValueToEnter = $state(10)
 
   // Disabled if:
   // - Room description is invalid
   // - Room creation is busy
   // - Player has insufficient balance
   const disabled = $derived(
-    invalidRoomDescriptionLength || busy || $playerERC20Balance < Number(roomCreationCost)
+    invalidRoomDescriptionLength ||
+      busy ||
+      !maxValuePerWin ||
+      !minRatValueToEnter ||
+      !roomCreationCost ||
+      $playerERC20Balance < Number(roomCreationCost)
   )
 
   const placeholder =
@@ -93,6 +98,30 @@
       ></textarea>
     </div>
 
+    <!-- MAX VALUE PER WIN -->
+    <div class="form-group-small">
+      <label for="max-value-per-win">
+        <span class="highlight">MAX VALUE PER WIN</span>
+      </label>
+      <input type="number" id="max-value-per-win" bind:value={maxValuePerWin} />
+    </div>
+
+    <!-- MIN RAT VALUE TO ENTER -->
+    <div class="form-group-small">
+      <label for="min-rat-value-to-enter">
+        <span class="highlight">MIN RAT VALUE TO ENTER</span>
+      </label>
+      <input type="number" id="min-rat-value-to-enter" bind:value={minRatValueToEnter} />
+    </div>
+
+    <!-- ROOM CREATION COST -->
+    <div class="form-group-small">
+      <label for="room-creation-cost">
+        <span class="highlight">ROOM CREATION COST</span>
+      </label>
+      <input type="number" id="room-creation-cost" bind:value={roomCreationCost} />
+    </div>
+
     <!-- ACTIONS -->
     <div class="actions">
       <BigButton text="Create trip" cost={Number(roomCreationCost)} {disabled} onclick={onClick} />
@@ -128,6 +157,13 @@
           color: var(--background);
           font-weight: normal;
         }
+      }
+
+      .form-group-small {
+        padding: 1rem;
+        display: block;
+        margin-bottom: 0;
+        width: 100%;
       }
 
       textarea {
