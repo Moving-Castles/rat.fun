@@ -134,8 +134,6 @@ export type EnterRoomRequestBody = {
 export type CreateRoomRequestBody = {
   roomPrompt: string
   roomCreationCost: number
-  maxValuePerWin: number
-  minRatValueToEnter: number
 }
 
 /*

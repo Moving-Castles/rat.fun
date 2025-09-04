@@ -6,11 +6,9 @@ export const schema = {
         type: "object",
         properties: {
           roomPrompt: { type: "string", description: "The prompt for the room" },
-          roomCreationCost: { type: "number", description: "The creation cost for the room" },
-          maxValuePerWin: { type: "number", description: "The max value per win for the room" },
-          minRatValueToEnter: { type: "number", description: "The min value to enter for the room" }
+          roomCreationCost: { type: "number", description: "The creation cost for the room" }
         },
-        required: ["roomPrompt", "roomCreationCost", "maxValuePerWin", "minRatValueToEnter"]
+        required: ["roomPrompt", "roomCreationCost"]
       },
       info: {
         type: "object",

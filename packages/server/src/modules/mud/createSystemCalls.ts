@@ -14,6 +14,7 @@ import {
   ContractCallError,
   OutcomeUpdateError
 } from "@modules/error-handling/errors"
+import { MIN_RAT_VALUE_TO_ENTER_FACTOR, MAX_VALUE_PER_WIN_FACTOR } from "../../config"
 
 export type SystemCalls = ReturnType<typeof createSystemCalls>
 
@@ -77,10 +78,10 @@ export function createSystemCalls(network: SetupNetworkResult) {
     playerId: string,
     roomID: string,
     roomCreationCost: number,
-    maxValuePerWin: number,
-    minRatValueToEnter: number,
     roomPrompt: string
   ) => {
+    const { maxValuePerWin, minRatValueToEnter } = calculateRoomValues(roomCreationCost)
+
     try {
       const tx = await (network as any).worldContract.write.ratfun__createRoom([
         playerId,
@@ -132,4 +133,12 @@ export function createSystemCalls(network: SetupNetworkResult) {
     createRoom,
     giveMasterKey
   }
+}
+
+function calculateRoomValues(roomCreationCost: number) {
+  // 10% of room creation cost
+  const minRatValueToEnter = roomCreationCost * MIN_RAT_VALUE_TO_ENTER_FACTOR
+  // 25% of room creation cost
+  const maxValuePerWin = roomCreationCost * MAX_VALUE_PER_WIN_FACTOR
+  return { maxValuePerWin, minRatValueToEnter }
 }

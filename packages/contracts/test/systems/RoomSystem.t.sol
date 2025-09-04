@@ -17,7 +17,7 @@ contract RoomSystemTest is BaseTest {
 
     // As admin
     prankAdmin();
-    startGasReport("Create room (user)");
+    startGasReport("Create room");
     bytes32 roomId = world.ratfun__createRoom(playerId, bytes32(0), 250, 100, 10, "A test room");
     endGasReport();
     vm.stopPrank();

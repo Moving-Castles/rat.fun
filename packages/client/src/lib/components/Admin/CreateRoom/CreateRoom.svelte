@@ -7,6 +7,11 @@
   import { errorHandler } from "$lib/modules/error-handling"
   import { CharacterLimitError, InputValidationError } from "$lib/modules/error-handling/errors"
   import { waitForPropertyChange } from "$lib/modules/state/utils"
+  import {
+    MIN_ROOM_CREATION_COST,
+    MIN_RAT_VALUE_TO_ENTER_FACTOR,
+    MAX_VALUE_PER_WIN_FACTOR
+  } from "@server/config"
 
   let roomDescription: string = $state("")
   let busy: boolean = $state(false)
@@ -16,20 +21,26 @@
     roomDescription.length < 1 || roomDescription.length > $gameConfig.maxRoomPromptLength
   )
 
-  let roomCreationCost = $state(250)
-  let maxValuePerWin = $state(100)
-  let minRatValueToEnter = $state(10)
+  let roomCreationCost = $state(200)
+
+  // 10% of room creation cost
+  let minRatValueToEnter = $derived(Math.floor(roomCreationCost * MIN_RAT_VALUE_TO_ENTER_FACTOR))
+  // 25% of room creation cost
+  let maxValuePerWin = $derived(Math.floor(roomCreationCost * MAX_VALUE_PER_WIN_FACTOR))
 
   // Disabled if:
   // - Room description is invalid
   // - Room creation is busy
+  // - Max value per win is not set
+  // - Min rat value to enter is not set
+  // - Room creation cost is less than minimum
   // - Player has insufficient balance
   const disabled = $derived(
     invalidRoomDescriptionLength ||
       busy ||
       !maxValuePerWin ||
       !minRatValueToEnter ||
-      !roomCreationCost ||
+      (roomCreationCost ?? 0) < MIN_ROOM_CREATION_COST ||
       $playerERC20Balance < Number(roomCreationCost)
   )
 
@@ -54,12 +65,7 @@
           "room description"
         )
       }
-      const result = await sendCreateRoom(
-        roomDescription,
-        roomCreationCost,
-        maxValuePerWin,
-        minRatValueToEnter
-      )
+      const result = await sendCreateRoom(roomDescription, roomCreationCost)
 
       if (result?.roomId) {
         // Wait for created room to be available in the store
@@ -98,12 +104,20 @@
       ></textarea>
     </div>
 
+    <!-- ROOM CREATION COST -->
+    <div class="form-group-small">
+      <label for="room-creation-cost">
+        <span class="highlight">ROOM CREATION COST</span>
+      </label>
+      <input type="number" id="room-creation-cost" bind:value={roomCreationCost} />
+    </div>
+
     <!-- MAX VALUE PER WIN -->
     <div class="form-group-small">
       <label for="max-value-per-win">
         <span class="highlight">MAX VALUE PER WIN</span>
       </label>
-      <input type="number" id="max-value-per-win" bind:value={maxValuePerWin} />
+      <div>${maxValuePerWin}</div>
     </div>
 
     <!-- MIN RAT VALUE TO ENTER -->
@@ -111,15 +125,7 @@
       <label for="min-rat-value-to-enter">
         <span class="highlight">MIN RAT VALUE TO ENTER</span>
       </label>
-      <input type="number" id="min-rat-value-to-enter" bind:value={minRatValueToEnter} />
-    </div>
-
-    <!-- ROOM CREATION COST -->
-    <div class="form-group-small">
-      <label for="room-creation-cost">
-        <span class="highlight">ROOM CREATION COST</span>
-      </label>
-      <input type="number" id="room-creation-cost" bind:value={roomCreationCost} />
+      <div>${minRatValueToEnter}</div>
     </div>
 
     <!-- ACTIONS -->
