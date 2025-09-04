@@ -1,9 +1,9 @@
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces
-import { ROOM_RESULT_STATE } from "$lib/components/Room/RoomResult/state.svelte"
+import { TRIP_STATE } from "$lib/components/Room/Trip/state.svelte"
 
 type RoomEntryState = {
-  state: ROOM_RESULT_STATE
+  state: TRIP_STATE
   valid: boolean
   processing: boolean
   result: EnterRoomReturnValue | null

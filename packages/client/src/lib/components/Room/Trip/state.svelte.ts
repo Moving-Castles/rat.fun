@@ -1,6 +1,6 @@
 /**
  * ========================================
- *  RoomResult/state.svelte.ts
+ *  Trip/state.svelte.ts
  * ========================================
  * This module keeps track of the state of the room result flow.
  * There are two main parts:
@@ -31,23 +31,23 @@ import { errorHandler, InvalidStateTransitionError } from "$lib/modules/error-ha
 
 /**
  * The flow is:
- * 1. Show splash screen
- * 2. Wait for result
+ * 1. Wait for result / Trip setup ± 5s
+ * 2. Wait for result / Trip visualizer ± 5-10s depending on outcome
  * 3. Show results
  * 4. Show result summary depending on outcome
  */
-export enum ROOM_RESULT_STATE {
-  SPLASH_SCREEN = "SPLASH_SCREEN",
-  WAITING_FOR_RESULT = "WAITING_FOR_RESULT",
-  SHOWING_RESULTS = "SHOWING_RESULTS",
-  RESULT_SUMMARY_NORMAL = "RESULT_SUMMARY_NORMAL",
-  RESULT_SUMMARY_RAT_DEAD = "RESULT_SUMMARY_RAT_DEAD",
+export enum TRIP_STATE {
+  SETUP = "SETUP",
+  PROCESSING = "PROCESSING",
+  RESULTS = "RESULTS",
+  SUMMARY = "SUMMARY",
+  SUMMARY_RAT_DEAD = "SUMMARY_RAT_DEAD",
   ERROR = "ERROR"
 }
 
 /** Current state of the room result flow */
-export const roomResultState: { state: ROOM_RESULT_STATE; errorMessage: string | null } = $state({
-  state: ROOM_RESULT_STATE.SPLASH_SCREEN,
+export const roomResultState: { state: TRIP_STATE; errorMessage: string | null } = $state({
+  state: TRIP_STATE.SETUP,
   errorMessage: null
 })
 
@@ -55,39 +55,20 @@ export const roomResultState: { state: ROOM_RESULT_STATE; errorMessage: string |
  * Defines valid state transitions between room result states
  * Maps each state to an array of valid states it can transition to
  */
-const VALID_TRANSITIONS: Record<ROOM_RESULT_STATE, ROOM_RESULT_STATE[]> = {
-  [ROOM_RESULT_STATE.SPLASH_SCREEN]: [
-    ROOM_RESULT_STATE.WAITING_FOR_RESULT,
-    ROOM_RESULT_STATE.ERROR
-  ],
-  [ROOM_RESULT_STATE.WAITING_FOR_RESULT]: [
-    ROOM_RESULT_STATE.SHOWING_RESULTS,
-    ROOM_RESULT_STATE.ERROR
-  ],
-  [ROOM_RESULT_STATE.SHOWING_RESULTS]: [
-    ROOM_RESULT_STATE.RESULT_SUMMARY_NORMAL,
-    ROOM_RESULT_STATE.RESULT_SUMMARY_RAT_DEAD,
-    ROOM_RESULT_STATE.ERROR
-  ],
-  [ROOM_RESULT_STATE.RESULT_SUMMARY_NORMAL]: [ROOM_RESULT_STATE.ERROR],
-  [ROOM_RESULT_STATE.RESULT_SUMMARY_RAT_DEAD]: [ROOM_RESULT_STATE.ERROR],
-  [ROOM_RESULT_STATE.ERROR]: []
+const VALID_TRANSITIONS: Record<TRIP_STATE, TRIP_STATE[]> = {
+  [TRIP_STATE.SETUP]: [TRIP_STATE.PROCESSING, TRIP_STATE.ERROR],
+  [TRIP_STATE.PROCESSING]: [TRIP_STATE.RESULTS, TRIP_STATE.ERROR],
+  [TRIP_STATE.RESULTS]: [TRIP_STATE.SUMMARY, TRIP_STATE.SUMMARY_RAT_DEAD, TRIP_STATE.ERROR],
+  [TRIP_STATE.SUMMARY]: [TRIP_STATE.ERROR],
+  [TRIP_STATE.SUMMARY_RAT_DEAD]: [TRIP_STATE.ERROR],
+  [TRIP_STATE.ERROR]: []
 }
 
 /** States where info boxes should be shown (all except splash screen and error) */
-export const SHOW_INFO_BOXES = [
-  ROOM_RESULT_STATE.WAITING_FOR_RESULT,
-  ROOM_RESULT_STATE.SHOWING_RESULTS,
-  ROOM_RESULT_STATE.RESULT_SUMMARY_NORMAL,
-  ROOM_RESULT_STATE.RESULT_SUMMARY_RAT_DEAD
-]
+export const SHOW_INFO_BOXES = [TRIP_STATE.RESULTS, TRIP_STATE.SUMMARY, TRIP_STATE.SUMMARY_RAT_DEAD]
 
 /** States where the log should be shown */
-export const SHOW_LOG = [
-  ROOM_RESULT_STATE.SHOWING_RESULTS,
-  ROOM_RESULT_STATE.RESULT_SUMMARY_NORMAL,
-  ROOM_RESULT_STATE.RESULT_SUMMARY_RAT_DEAD
-]
+export const SHOW_LOG = [TRIP_STATE.RESULTS, TRIP_STATE.SUMMARY, TRIP_STATE.SUMMARY_RAT_DEAD]
 
 /**
  * Transitions to the appropriate result summary state based on the room result
@@ -97,7 +78,7 @@ export const transitionToResultSummary = (result?: EnterRoomReturnValue) => {
   if (result) {
     transitionTo(determineResultSummaryState(result))
   } else {
-    transitionTo(ROOM_RESULT_STATE.RESULT_SUMMARY_NORMAL)
+    transitionTo(TRIP_STATE.SUMMARY)
   }
 }
 
@@ -105,7 +86,7 @@ export const transitionToResultSummary = (result?: EnterRoomReturnValue) => {
  * Transitions to a new state if the transition is valid
  * @param newState The state to transition to
  */
-export const transitionTo = (newState: ROOM_RESULT_STATE) => {
+export const transitionTo = (newState: TRIP_STATE) => {
   const validTransitions = VALID_TRANSITIONS[roomResultState.state]
   if (!validTransitions.includes(newState)) {
     errorHandler(
@@ -125,16 +106,16 @@ export const transitionTo = (newState: ROOM_RESULT_STATE) => {
  * @param result The result returned from entering a room
  * @returns The appropriate result summary state
  */
-const determineResultSummaryState = (result: EnterRoomReturnValue): ROOM_RESULT_STATE => {
+const determineResultSummaryState = (result: EnterRoomReturnValue): TRIP_STATE => {
   if (result?.ratDead) {
-    return ROOM_RESULT_STATE.RESULT_SUMMARY_RAT_DEAD
+    return TRIP_STATE.SUMMARY_RAT_DEAD
   }
-  return ROOM_RESULT_STATE.RESULT_SUMMARY_NORMAL
+  return TRIP_STATE.SUMMARY
 }
 
 /** Resets the room result state back to the initial splash screen */
-export const resetRoomResultState = () => {
-  roomResultState.state = ROOM_RESULT_STATE.SPLASH_SCREEN
+export const resetTripState = () => {
+  roomResultState.state = TRIP_STATE.SETUP
   roomResultState.errorMessage = null
 }
 

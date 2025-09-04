@@ -1,5 +1,5 @@
 import { redirect } from "@sveltejs/kit"
-import { ROOM_RESULT_STATE } from "$lib/components/Room/RoomResult/state.svelte"
+import { TRIP_STATE } from "$lib/components/Room/Trip/state.svelte"
 import { loadData } from "$lib/modules/content/sanity"
 import { queries } from "$lib/modules/content/sanity/groq"
 import { addressToRatImage } from "$lib/modules/utils"
@@ -12,7 +12,7 @@ export const load = async ({ params }) => {
   try {
     return {
       entryState: {
-        state: ROOM_RESULT_STATE.SHOWING_RESULTS,
+        state: TRIP_STATE.RESULTS,
         valid: true,
         processing: false,
         result,

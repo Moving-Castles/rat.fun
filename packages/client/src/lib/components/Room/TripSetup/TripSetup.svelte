@@ -2,7 +2,7 @@
   import { onMount } from "svelte"
   import { gsap } from "gsap"
   import { urlFor } from "$lib/modules/content/sanity"
-  import { frozenRoom } from "$lib/components/Room/RoomResult/state.svelte"
+  import { frozenRoom } from "$lib/components/Room/Trip/state.svelte"
   import { renderSafeString } from "$lib/modules/utils"
   import { NoImage } from "$lib/components/Shared"
   import { errorHandler, UIError } from "$lib/modules/error-handling"

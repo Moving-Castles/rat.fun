@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { frozenRat } from "$lib/components/Room/RoomResult/state.svelte"
+  import { frozenRat } from "$lib/components/Room/Trip/state.svelte"
   import { NumberGoing, Item } from "$lib/components/Shared"
 
   let balanceGoing = $state(false)

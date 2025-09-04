@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { frozenRoom } from "$lib/components/Room/RoomResult/state.svelte"
+  import { frozenRoom } from "$lib/components/Room/Trip/state.svelte"
   import { lastUpdated } from "$lib/modules/content"
   import { urlFor } from "$lib/modules/content/sanity"
   import { renderSafeString } from "$lib/modules/utils"

@@ -2,14 +2,11 @@
   import type { EnterRoomReturnValue } from "@server/modules/types"
   import { onDestroy } from "svelte"
   import { rooms as roomsState } from "$lib/modules/state/stores"
-  import { ROOM_RESULT_STATE, SHOW_INFO_BOXES } from "$lib/components/Room/RoomResult/state.svelte"
-  import { fade } from "svelte/transition"
+  import { TRIP_STATE } from "$lib/components/Room/Trip/state.svelte"
   import {
-    SplashScreen,
-    WaitingForResult,
-    Log,
-    RatInfoBox,
-    RoomInfoBox,
+    TripSetup,
+    TripProcessing,
+    TripReport,
     NormalResultSummary,
     RatDeadResultSummary
   } from "$lib/components/Room"
@@ -23,7 +20,7 @@
   }: {
     roomId: string
     entryState: App.PageState["entryState"]
-    transitionTo: (newState: ROOM_RESULT_STATE) => void
+    transitionTo: (newState: TRIP_STATE) => void
     transitionToResultSummary: (result?: EnterRoomReturnValue) => void
   } = $props()
 
@@ -43,56 +40,46 @@
   })
 </script>
 
-<div class="room-result">
-  <!-- SPLASH SCREEN -->
-  {#if entryState?.state === ROOM_RESULT_STATE.SPLASH_SCREEN}
-    <SplashScreen
+<div class="trip">
+  <!-- ### 1. TRIP SETUP ### -->
+  {#if entryState?.state === TRIP_STATE.SETUP}
+    <TripSetup
       {staticRoomContent}
       onComplete={() => {
         if (destroyed) return
-        transitionTo(ROOM_RESULT_STATE.WAITING_FOR_RESULT)
+        transitionTo(TRIP_STATE.PROCESSING)
       }}
     />
   {/if}
 
-  <!-- INFO BOXES -->
-  {#if SHOW_INFO_BOXES.includes(entryState?.state || ROOM_RESULT_STATE.SPLASH_SCREEN)}
-    <div transition:fade|global class="info-boxes">
-      <RatInfoBox />
-      <div class="divider"></div>
-      <RoomInfoBox {staticRoomContent} />
-    </div>
+  <!-- ### 2. TRIP PROCESSING ### -->
+  {#if entryState?.state === TRIP_STATE.PROCESSING}
+    <TripProcessing />
   {/if}
 
-  <!-- WAITING FOR RESULT -->
-  {#if entryState?.state === ROOM_RESULT_STATE.WAITING_FOR_RESULT}
-    <WaitingForResult />
-  {/if}
-
-  <!-- LOG -->
-  {#if entryState?.state === ROOM_RESULT_STATE.SHOWING_RESULTS || (entryState?.state
+  {#if entryState?.state === TRIP_STATE.RESULTS || (entryState?.state
       ?.toLowerCase()
       .includes("summary") && result)}
-    <Log
+    <TripReport
       {result}
+      {staticRoomContent}
       onComplete={() => {
-        console.log("COMPLETE")
         transitionToResultSummary(result)
       }}
     />
   {/if}
 
-  {#if entryState?.state === ROOM_RESULT_STATE.RESULT_SUMMARY_NORMAL}
+  {#if entryState?.state === TRIP_STATE.SUMMARY}
     <NormalResultSummary {result} {room} {staticRoomContent} />
   {/if}
 
   <!-- Result Summary: Rat Dead -->
-  {#if entryState?.state === ROOM_RESULT_STATE.RESULT_SUMMARY_RAT_DEAD}
+  {#if entryState?.state === TRIP_STATE.SUMMARY_RAT_DEAD}
     <RatDeadResultSummary {result} {room} {staticRoomContent} />
   {/if}
 
   <!-- Error -->
-  {#if entryState?.state === ROOM_RESULT_STATE.ERROR}
+  {#if entryState?.state === TRIP_STATE.ERROR}
     <div class="error">
       {entryState?.errorMessage}
     </div>
@@ -100,32 +87,12 @@
 </div>
 
 <style lang="scss">
-  .room-result {
+  .trip {
     height: 100%;
     color: var(--white);
     z-index: var(--z-high);
     font-size: var(--font-size-normal);
     overflow-y: auto;
     top: 32px;
-  }
-
-  .info-boxes {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    height: var(--info-box-height);
-  }
-
-  .divider {
-    width: 100px;
-    height: 100%;
-    background: repeating-linear-gradient(
-      45deg,
-      #000000,
-      #000000 20px,
-      var(--color-grey-dark) 20px,
-      var(--color-grey-dark) 40px
-    );
-    border: var(--default-border-style);
   }
 </style>

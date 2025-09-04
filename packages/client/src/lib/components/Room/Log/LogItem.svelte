@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { MergedLogEntry, OutcomeDataStringMap } from "$lib/components/Room/RoomResult/types"
-  import { updateFrozenState } from "$lib/components/Room/RoomResult/state.svelte"
+  import type { MergedLogEntry, OutcomeDataStringMap } from "$lib/components/Room/Trip/types"
+  import { updateFrozenState } from "$lib/components/Room/Trip/state.svelte"
   import { gsap } from "gsap"
   import { TextPlugin } from "gsap/TextPlugin"
   import { playSound, typeHit } from "$lib/modules/sound"

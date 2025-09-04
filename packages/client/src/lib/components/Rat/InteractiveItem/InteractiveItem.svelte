@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { TempItem } from "$lib/components/Room/RoomResult/types"
+  import type { TempItem } from "$lib/components/Room/Trip/types"
   import { items } from "$lib/modules/state/stores"
   import {
     RAT_BOX_STATE,
