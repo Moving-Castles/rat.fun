@@ -196,6 +196,6 @@
   }
 
   .layer-game {
-    border: var(--default-border-style);
+    // border: var(--default-border-style);
   }
 </style>

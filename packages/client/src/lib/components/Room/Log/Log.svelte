@@ -73,8 +73,6 @@
     padding: 10px;
     border-top: none;
     position: relative;
-    background-color: var(--background-semi-transparent);
-    background-image: url("/images/texture-6.png");
     background-size: 200px;
   }
 </style>

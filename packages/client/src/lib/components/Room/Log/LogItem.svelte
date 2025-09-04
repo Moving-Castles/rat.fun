@@ -216,7 +216,8 @@
   .log-entry {
     display: flex;
     margin-bottom: 0.5em;
-    line-height: 1.4em;
+    line-height: 1.2em;
+    font-size: 44px;
 
     .timestamp-container {
       margin-right: 10px;
@@ -226,6 +227,7 @@
         background: var(--color-alert-priority);
         padding: 5px;
         color: var(--background);
+        font-size: 14px;
       }
     }
 
@@ -236,7 +238,6 @@
       color: var(--background);
       max-width: 60%;
       font-family: var(--special-font-stack);
-      font-size: 24px;
     }
 
     .outcome-list {

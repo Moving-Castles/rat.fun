@@ -5,11 +5,11 @@
   let { onComplete, result, staticRoomContent } = $props()
 </script>
 
-<div transition:fade|global class="info-boxes">
-  <RatInfoBox />
-  <div class="divider"></div>
-  <RoomInfoBox {staticRoomContent} />
-</div>
+<!-- <div transition:fade|global class="info-boxes"> -->
+<!-- <RatInfoBox /> -->
+<!-- <div class="divider"></div> -->
+<!-- <RoomInfoBox {staticRoomContent} /> -->
+<!-- </div> -->
 
 <!-- LOG -->
 <Log {result} {onComplete} />

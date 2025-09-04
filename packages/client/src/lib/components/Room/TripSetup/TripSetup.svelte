@@ -1,10 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte"
   import { gsap } from "gsap"
-  import { urlFor } from "$lib/modules/content/sanity"
-  import { frozenRoom } from "$lib/components/Room/Trip/state.svelte"
-  import { renderSafeString } from "$lib/modules/utils"
-  import { NoImage } from "$lib/components/Shared"
   import { errorHandler, UIError } from "$lib/modules/error-handling"
 
   const {
@@ -27,58 +23,41 @@
   })
 
   onMount(() => {
-    if (!roomInnerElement || !imageContainerElement || !promptElement || !roomIndexElement) {
-      errorHandler(new UIError("Missing elements"))
-      return
-    }
+    // if (!roomInnerElement || !imageContainerElement || !promptElement || !roomIndexElement) {
+    //   errorHandler(new UIError("Missing elements"))
+    //   return
+    // }
 
-    // Set initial values
-    gsap.set(imageContainerElement, { opacity: 0, scale: 0.95 })
-    gsap.set(promptElement, { opacity: 0, scale: 0.95 })
-    gsap.set(roomIndexElement, { opacity: 0, scale: 0.95 })
+    // // Set initial values
+    // gsap.set(imageContainerElement, { opacity: 0, scale: 0.95 })
+    // gsap.set(promptElement, { opacity: 0, scale: 0.95 })
+    // gsap.set(roomIndexElement, { opacity: 0, scale: 0.95 })
 
-    // Add to timeline
-    splashScreenTimeline.to(roomIndexElement, {
-      opacity: 1,
-      scale: 1,
-      delay: 0.5
-    })
-    splashScreenTimeline.to(imageContainerElement, { opacity: 1, scale: 1 })
-    splashScreenTimeline.to(promptElement, { opacity: 1, scale: 1 })
-    splashScreenTimeline.to(roomInnerElement, {
-      opacity: 0,
-      delay: 2,
-      duration: 0.5
-    })
+    // // Add to timeline
+    // splashScreenTimeline.to(roomIndexElement, {
+    //   opacity: 1,
+    //   scale: 1,
+    //   delay: 0.5
+    // })
+    // splashScreenTimeline.to(imageContainerElement, { opacity: 1, scale: 1 })
+    // splashScreenTimeline.to(promptElement, { opacity: 1, scale: 1 })
+    // splashScreenTimeline.to(roomInnerElement, {
+    //   opacity: 0,
+    //   delay: 2,
+    //   duration: 0.5
+    // })
 
-    // Return to parent
-    splashScreenTimeline.call(onComplete)
+    // // Return to parent
+    // splashScreenTimeline.call(onComplete)
+
+    setTimeout(() => {
+      onComplete()
+    }, 4000)
   })
 </script>
 
 <div class="splash-screen">
-  <div class="inner" bind:this={roomInnerElement}>
-    <div class="room-index" bind:this={roomIndexElement}>
-      TRIP #{$frozenRoom?.index ?? ""}
-    </div>
-    <!-- IMAGE -->
-    <div class="image-container" bind:this={imageContainerElement}>
-      {#if staticRoomContent}
-        <img
-          src={urlFor(staticRoomContent?.image)?.width(500)?.auto("format").url()}
-          alt={`trip #${$frozenRoom?.index ?? ""}`}
-        />
-      {:else}
-        <div class="image-placeholder">
-          <NoImage />
-        </div>
-      {/if}
-    </div>
-    <!-- PROMPT -->
-    <div class="prompt" bind:this={promptElement}>
-      {renderSafeString($frozenRoom?.prompt ?? "")}
-    </div>
-  </div>
+  <div class="inner" bind:this={roomInnerElement}>SETUP PHASE</div>
 </div>
 
 <style lang="scss">
@@ -92,6 +71,7 @@
     justify-content: center;
     align-items: center;
     color: var(--foreground);
+    font-size: 64px;
 
     .inner {
       display: flex;
