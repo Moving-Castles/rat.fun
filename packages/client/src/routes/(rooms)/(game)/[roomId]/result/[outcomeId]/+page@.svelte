@@ -1,13 +1,13 @@
 <script lang="ts">
   // Outcome logs
-  import { RoomResult } from "$lib/components/Room"
+  import { Trip } from "$lib/components/Room"
   // import { staticContent } from "$lib/modules/content"
   import { page } from "$app/state"
   import { onMount } from "svelte"
   import { replaceState } from "$app/navigation"
   import { stringifyWithBigInt, parseWithBigInt } from "$lib/modules/state/utils"
-  import { createRoomResultTransitions } from "$lib/modules/page-state/room-result-transitions"
-  import { frozenRat, frozenRoom } from "$lib/components/Room/RoomResult/state.svelte"
+  import { createTripTransitions } from "$lib/modules/page-state/trip-transitions"
+  import { frozenRat, frozenRoom } from "$lib/components/Room/Trip/state.svelte"
 
   let { data } = $props()
 
@@ -22,9 +22,7 @@
       : data?.entryState || {}
   )
 
-  let { transitionTo, transitionToResultSummary } = $derived(
-    createRoomResultTransitions(entryState)
-  )
+  let { transitionTo, transitionToResultSummary } = $derived(createTripTransitions(entryState))
 
   onMount(() => {
     if (page.state?.entryState) {
@@ -34,4 +32,4 @@
   })
 </script>
 
-<RoomResult roomId={data.roomId} {entryState} {transitionTo} {transitionToResultSummary} />
+<Trip roomId={data.roomId} {entryState} {transitionTo} {transitionToResultSummary} />

@@ -3,13 +3,13 @@
   import { onMount } from "svelte"
   import { replaceState, goto } from "$app/navigation"
   import { page } from "$app/state"
-  import { RoomResult } from "$lib/components/Room"
+  import { Trip } from "$lib/components/Room"
   import { sendEnterRoom } from "$lib/modules/action-manager/index.svelte"
   import { RoomError, APIError, NetworkError } from "$lib/modules/error-handling/errors"
   import { player, rooms as roomsState, rat } from "$lib/modules/state/stores"
-  import { freezeObjects, ROOM_RESULT_STATE } from "$lib/components/Room/RoomResult/state.svelte"
+  import { freezeObjects, TRIP_STATE } from "$lib/components/Room/Trip/state.svelte"
   import { stringifyWithBigInt, parseWithBigInt } from "$lib/modules/state/utils"
-  import { createRoomResultTransitions } from "$lib/modules/page-state/room-result-transitions"
+  import { createTripTransitions } from "$lib/modules/page-state/trip-transitions"
 
   // Incoming data
   let { data } = $props()
@@ -19,7 +19,7 @@
     processing: false,
     result: null,
     error: false,
-    state: ROOM_RESULT_STATE.SPLASH_SCREEN,
+    state: TRIP_STATE.SETUP,
     frozenRat: null,
     frozenRoom: null
   })
@@ -27,9 +27,7 @@
   let room = $derived($roomsState?.[data.roomId ?? ""])
 
   // Create state transition functions
-  let { transitionTo, transitionToResultSummary } = $derived(
-    createRoomResultTransitions(entryState)
-  )
+  let { transitionTo, transitionToResultSummary } = $derived(createTripTransitions(entryState))
 
   // Capture a snapshot of the currently processing state
   export const snapshot: Snapshot = {
@@ -71,17 +69,17 @@
       // Determine what to do based on the result
       if (result) {
         // Already has an ID
-        entryState.state = ROOM_RESULT_STATE.SHOWING_RESULTS
+        entryState.state = TRIP_STATE.RESULTS
         entryState.result = result
         replaceState(`/${data.roomId}/result/${result.outcomeId}`, {
           entryState: JSON.parse(stringifyWithBigInt(entryState))
         })
       } else {
-        entryState.state = ROOM_RESULT_STATE.ERROR
+        entryState.state = TRIP_STATE.ERROR
         goto("/")
       }
     } catch (err) {
-      entryState.state = ROOM_RESULT_STATE.ERROR
+      entryState.state = TRIP_STATE.ERROR
       entryState.error = true
       entryState.errorMessage = err.message
       if (err instanceof Error) {
@@ -126,4 +124,4 @@
   })
 </script>
 
-<RoomResult roomId={data.roomId} {entryState} {transitionTo} {transitionToResultSummary} />
+<Trip roomId={data.roomId} {entryState} {transitionTo} {transitionToResultSummary} />
