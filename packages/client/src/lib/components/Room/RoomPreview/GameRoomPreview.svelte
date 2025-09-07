@@ -56,7 +56,7 @@
 
   {#if showEnterButton}
     <EnterRoomButton
-      disabled={busy.LiquidateRat.current != 0 || $rat.balance < room.minRatValueToEnter}
+      disabled={busy.LiquidateRat.current != 0 || ($rat?.balance || 0) < room.minRatValueToEnter}
       {roomId}
     />
   {/if}

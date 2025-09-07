@@ -112,7 +112,7 @@
     <!-- ROOM CREATION COST SLIDER -->
     <div class="slider-group">
       <label for="room-creation-cost-slider">
-        <span class="highlight">ROOM CREATION COST</span>
+        <span class="highlight">TRIP CREATION COST</span>
         <span class="cost-display">${flooredRoomCreationCost}</span>
       </label>
       <div class="slider-container">
@@ -134,7 +134,9 @@
     <!-- CALCULATED VALUES -->
     <div class="calculated-values">
       <div class="value-box">
-        <div class="value-label">MIN RAT VALUE TO ENTER</div>
+        <div class="value-label">
+          MIN RAT VALUE TO TRIP {#if import.meta.env.DEV}BALLS{/if}
+        </div>
         <div class="value-amount">${minRatValueToEnter}</div>
       </div>
       <div class="value-box">
