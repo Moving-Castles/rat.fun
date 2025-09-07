@@ -7,6 +7,11 @@
   import { errorHandler } from "$lib/modules/error-handling"
   import { CharacterLimitError, InputValidationError } from "$lib/modules/error-handling/errors"
   import { waitForPropertyChange } from "$lib/modules/state/utils"
+  import {
+    MIN_ROOM_CREATION_COST,
+    MIN_RAT_VALUE_TO_ENTER_FACTOR,
+    MAX_VALUE_PER_WIN_FACTOR
+  } from "@server/config"
 
   let roomDescription: string = $state("")
   let busy: boolean = $state(false)
@@ -16,21 +21,32 @@
     roomDescription.length < 1 || roomDescription.length > $gameConfig.maxRoomPromptLength
   )
 
-  let roomCreationCost = $state(250)
-  let maxValuePerWin = $state(100)
-  let minRatValueToEnter = $state(10)
+  let roomCreationCost = $state(200)
+
+  // Floor the room creation cost to ensure it's an integer
+  let flooredRoomCreationCost = $derived(Math.floor(roomCreationCost))
+
+  // 10% of room creation cost
+  let minRatValueToEnter = $derived(
+    Math.floor(flooredRoomCreationCost * MIN_RAT_VALUE_TO_ENTER_FACTOR)
+  )
+  // 25% of room creation cost
+  let maxValuePerWin = $derived(Math.floor(flooredRoomCreationCost * MAX_VALUE_PER_WIN_FACTOR))
 
   // Disabled if:
   // - Room description is invalid
   // - Room creation is busy
+  // - Max value per win is not set
+  // - Min rat value to enter is not set
+  // - Room creation cost is less than minimum
   // - Player has insufficient balance
   const disabled = $derived(
     invalidRoomDescriptionLength ||
       busy ||
       !maxValuePerWin ||
       !minRatValueToEnter ||
-      !roomCreationCost ||
-      $playerERC20Balance < Number(roomCreationCost)
+      flooredRoomCreationCost < MIN_ROOM_CREATION_COST ||
+      $playerERC20Balance < flooredRoomCreationCost
   )
 
   const placeholder =
@@ -54,12 +70,7 @@
           "room description"
         )
       }
-      const result = await sendCreateRoom(
-        roomDescription,
-        roomCreationCost,
-        maxValuePerWin,
-        minRatValueToEnter
-      )
+      const result = await sendCreateRoom(roomDescription, flooredRoomCreationCost)
 
       if (result?.roomId) {
         // Wait for created room to be available in the store
@@ -98,33 +109,43 @@
       ></textarea>
     </div>
 
-    <!-- MAX VALUE PER WIN -->
-    <div class="form-group-small">
-      <label for="max-value-per-win">
-        <span class="highlight">MAX VALUE PER WIN</span>
-      </label>
-      <input type="number" id="max-value-per-win" bind:value={maxValuePerWin} />
-    </div>
-
-    <!-- MIN RAT VALUE TO ENTER -->
-    <div class="form-group-small">
-      <label for="min-rat-value-to-enter">
-        <span class="highlight">MIN RAT VALUE TO ENTER</span>
-      </label>
-      <input type="number" id="min-rat-value-to-enter" bind:value={minRatValueToEnter} />
-    </div>
-
-    <!-- ROOM CREATION COST -->
-    <div class="form-group-small">
-      <label for="room-creation-cost">
+    <!-- ROOM CREATION COST SLIDER -->
+    <div class="slider-group">
+      <label for="room-creation-cost-slider">
         <span class="highlight">ROOM CREATION COST</span>
+        <span class="cost-display">${flooredRoomCreationCost}</span>
       </label>
-      <input type="number" id="room-creation-cost" bind:value={roomCreationCost} />
+      <div class="slider-container">
+        <input
+          type="range"
+          id="room-creation-cost-slider"
+          class="cost-slider"
+          min={MIN_ROOM_CREATION_COST}
+          max={$playerERC20Balance}
+          bind:value={roomCreationCost}
+        />
+        <div class="slider-labels">
+          <span class="slider-min">${MIN_ROOM_CREATION_COST}</span>
+          <span class="slider-max">${$playerERC20Balance}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CALCULATED VALUES -->
+    <div class="calculated-values">
+      <div class="value-box">
+        <div class="value-label">MIN RAT VALUE TO ENTER</div>
+        <div class="value-amount">${minRatValueToEnter}</div>
+      </div>
+      <div class="value-box">
+        <div class="value-label">MAX VALUE PER WIN</div>
+        <div class="value-amount">${maxValuePerWin}</div>
+      </div>
     </div>
 
     <!-- ACTIONS -->
     <div class="actions">
-      <BigButton text="Create trip" cost={Number(roomCreationCost)} {disabled} onclick={onClick} />
+      <BigButton text="Create trip" cost={flooredRoomCreationCost} {disabled} onclick={onClick} />
     </div>
   {/if}
 </div>
@@ -159,13 +180,6 @@
         }
       }
 
-      .form-group-small {
-        padding: 1rem;
-        display: block;
-        margin-bottom: 0;
-        width: 100%;
-      }
-
       textarea {
         width: 100%;
         padding: 5px;
@@ -177,6 +191,105 @@
         resize: none;
         outline-color: var(--color-alert);
         outline-width: 1px;
+      }
+    }
+
+    .slider-group {
+      padding-left: 1rem;
+      padding-right: 1rem;
+      display: block;
+      width: 100%;
+
+      .cost-display {
+        background: var(--color-alert);
+        padding: 5px;
+        color: var(--background);
+        font-weight: normal;
+        font-family: var(--typewriter-font-stack);
+      }
+    }
+
+    .slider-container {
+      width: 100%;
+      margin-top: 10px;
+
+      .cost-slider {
+        width: 100%;
+        height: 8px;
+        background: var(--background);
+        border: 1px solid var(--foreground);
+        outline: none;
+        -webkit-appearance: none;
+        appearance: none;
+        cursor: pointer;
+
+        &::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 20px;
+          height: 20px;
+          background: var(--foreground);
+          border: 2px solid var(--background);
+          cursor: pointer;
+        }
+
+        &::-moz-range-thumb {
+          width: 20px;
+          height: 20px;
+          background: var(--foreground);
+          border: 2px solid var(--background);
+          cursor: pointer;
+          border-radius: 0;
+        }
+
+        &::-webkit-slider-track {
+          background: var(--background);
+          height: 8px;
+        }
+
+        &::-moz-range-track {
+          background: var(--background);
+          height: 8px;
+          border: none;
+        }
+      }
+
+      .slider-labels {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 5px;
+        font-family: var(--typewriter-font-stack);
+        font-size: var(--font-size-small);
+        color: var(--foreground);
+      }
+    }
+
+    .calculated-values {
+      padding-left: 1rem;
+      padding-right: 1rem;
+      display: flex;
+      gap: 0;
+      margin-bottom: 0;
+
+      .value-box {
+        flex: 1;
+        padding: 10px;
+        border: 1px solid var(--color-border);
+        background: var(--background);
+
+        .value-label {
+          font-family: var(--typewriter-font-stack);
+          font-size: var(--font-size-small);
+          color: var(--color-grey-light);
+          margin-bottom: 5px;
+        }
+
+        .value-amount {
+          font-family: var(--typewriter-font-stack);
+          font-size: var(--font-size-medium);
+          color: var(--foreground);
+          font-weight: bold;
+        }
       }
     }
 

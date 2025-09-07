@@ -31,7 +31,7 @@
   <div class="action">
     <DangerButton
       text={blockUntilUnlock <= 0
-        ? `Liquidate Trip)`
+        ? `Liquidate Trip`
         : `Liquidation unlocked in ${blockUntilUnlock} blocks`}
       tippyText="Liquidate trip to get the value added to your wallet"
       {onclick}

@@ -54,7 +54,11 @@
 
   <!-- ### 2. TRIP PROCESSING ### -->
   {#if entryState?.state === TRIP_STATE.PROCESSING}
-    <TripProcessing />
+    <TripProcessing
+      onComplete={() => {
+        transitionTo(TRIP_STATE.RESULTS)
+      }}
+    />
   {/if}
 
   {#if entryState?.state === TRIP_STATE.RESULTS || (entryState?.state

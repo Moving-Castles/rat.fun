@@ -36,25 +36,26 @@
     transitionTo(RAT_BOX_STATE.CONFIRM_RE_ABSORB_ITEM)
   }}
 >
-  <!-- NAME -->
-  <div class="name">{!isHovered ? name : "Re-absorb item"}</div>
-  <!-- VALUE -->
-  <span class="value" class:negative={value < 0}>${value}</span>
+  <div class="inner">
+    <!-- NAME -->
+    <div class="name">{!isHovered ? name : "Re-absorb item"}</div>
+    <!-- VALUE -->
+    <span class="value" class:negative={value < 0}>${value}</span>
+  </div>
 </button>
 
 <style lang="scss">
   .list-item {
-    font-size: var(--font-size-small);
+    font-size: var(--font-size-normal);
     display: flex;
-    gap: 10px;
     background: var(--color-grey-dark);
     color: var(--foreground);
     padding: 5px;
-    margin: 5px;
-    justify-content: space-between;
+    justify-content: center;
+    align-items: center;
     border: none;
     outline: none;
-    width: calc(100% - 10px);
+    width: 100%;
     cursor: pointer;
     text-align: left;
 
@@ -73,6 +74,10 @@
         color: var(--background);
       }
     }
+  }
+
+  .inner {
+    text-align: center;
   }
 
   button[disabled] {

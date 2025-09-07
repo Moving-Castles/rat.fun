@@ -17,7 +17,7 @@ export async function constructEventMessages(
 
   // Room
   messages.push({ role: "user", content: `TripDescription: ${room.prompt}` })
-  messages.push({ role: "user", content: `TripSlopamineBalance: ${room.balance}` })
+  // messages.push({ role: "user", content: `TripSlopamineBalance: ${room.balance}` })
 
   // Max value per win
   const valueLimit = Number(room.maxValuePerWin) ?? 0

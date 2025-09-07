@@ -17,6 +17,8 @@ const firstNameFragments = [
   "Gnaw",
   "Korn",
   "Majestica",
+  "Fetus",
+  "Phetus",
   "Biggo",
   "Max",
   "Buddy",
@@ -45,6 +47,8 @@ const firstNameFragments = [
 ]
 
 const lastNameFragments = [
+  "Fetus",
+  "Phetus",
   "HoldEm",
   "Harvester",
   "Bone",

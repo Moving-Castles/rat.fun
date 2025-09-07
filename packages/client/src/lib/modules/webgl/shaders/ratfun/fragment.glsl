@@ -136,12 +136,12 @@ void main(){
   cloudColor=mix(cloudColor,vec3(1.)-cloudColor,u_invert);
   
   // # Stars
-  vec3 starColor=vec3(1.55,.65,.225)*vDrop(p,t)*intensity;// red
-  starColor+=vec3(.55,.75,1.225)*vDrop(p,t+.33)*intensity;// blue
-  starColor+=vec3(.45,1.15,.425)*vDrop(p,t+.66)*intensity;// green
+  vec3 starColor=vec3(1.0,1.0,1.0)*vDrop(p,t)*intensity;// white
+  starColor+=vec3(1.0,1.0,1.0)*vDrop(p,t+.33)*intensity;// white
+  starColor+=vec3(1.0,1.0,1.0)*vDrop(p,t+.66)*intensity;// white
   
-  starColor+=vec3(1.,.8,.4)*vDrop(p,t+1.)*(u_speed-.5);
-  starColor+=vec3(.8,.4,1.)*vDrop(p,t+1.33)*(u_speed-.5);
+  starColor+=vec3(1.0,1.0,1.0)*vDrop(p,t+1.)*(u_speed-.5);
+  starColor+=vec3(1.0,1.0,1.0)*vDrop(p,t+1.33)*(u_speed-.5);
   
   starColor=mix(starColor,vec3(1.)-starColor,u_invert);
   starColor*=(d*d);

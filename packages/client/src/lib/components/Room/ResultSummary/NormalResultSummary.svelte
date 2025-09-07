@@ -26,13 +26,13 @@
 
 <style lang="scss">
   .summary {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    flex-direction: column;
     position: relative;
     bottom: 0;
-    height: 100px;
+    height: 200px;
     width: var(--game-window-width);
-    background: var(--background-semi-transparent);
+    width: 50vw;
 
     .event {
       background: var(--color-secondary);
@@ -42,10 +42,12 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      height: 80px;
     }
 
     .close-button {
       border: none;
+      height: 80px;
 
       background: var(--black);
       background: var(--color-alert-priority);

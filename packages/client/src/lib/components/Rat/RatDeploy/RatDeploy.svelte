@@ -23,7 +23,7 @@
 
 <div class="deploy-rat">
   <div class="image-container">
-    <img src="/images/mickey-rat.png" alt="Rat" />
+    <img src="/images/mascot1.png" alt="Rat" />
   </div>
   <div class="button-container">
     {#if $player}
@@ -58,9 +58,11 @@
       height: 100%;
 
       img {
-        width: auto;
-        height: 60%;
-        object-fit: contain;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: 100% 20%;
+        filter: grayscale(100%);
       }
     }
 

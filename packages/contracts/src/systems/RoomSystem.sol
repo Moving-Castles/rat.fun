@@ -36,9 +36,6 @@ contract RoomSystem is System {
     // Room id can be 0 (which generates a new id) or an unused entity id
     require(_roomId == bytes32(0) || EntityType.get(_roomId) == ENTITY_TYPE.NONE, "room id already in use");
 
-    // TODO: check that player has enough balance to create the room
-    // TODO: validate _maxValuePerWin and _minRatValueToEnter in relation to _roomCreationCost
-
     newRoomId = LibRoom.createRoom(
       _playerId,
       _roomId,

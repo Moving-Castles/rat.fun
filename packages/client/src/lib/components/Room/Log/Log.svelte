@@ -69,12 +69,9 @@
 <style lang="scss">
   .log {
     margin-bottom: 0;
-    height: calc(var(--game-window-height) - 360px);
     padding: 10px;
     border-top: none;
     position: relative;
-    background-color: var(--background-semi-transparent);
-    background-image: url("/images/texture-6.png");
     background-size: 200px;
   }
 </style>

@@ -33,8 +33,8 @@
     Modal,
     PageTransitions,
     ModalTarget,
-    WorldEventPopup,
-    WalletInfo
+    WorldEventPopup
+    // WalletInfo
   } from "$lib/components/Shared"
   import { Outcome } from "$lib/components/Room"
   import EntryKit from "$lib/components/Spawn/EntryKit/EntryKit.svelte"
@@ -162,7 +162,8 @@
 <EntryKit />
 <Modal />
 <Toasts />
-<WalletInfo />
+
+<!-- <WalletInfo /> -->
 
 <style lang="scss">
   .context-main {
@@ -196,6 +197,6 @@
   }
 
   .layer-game {
-    border: var(--default-border-style);
+    // border: var(--default-border-style);
   }
 </style>

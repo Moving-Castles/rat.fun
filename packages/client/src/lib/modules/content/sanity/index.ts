@@ -18,7 +18,7 @@ export const client = createClient({
 const builder = imageUrlBuilder(client)
 
 export const urlFor = (source: any) => {
-  if (!source) return undefined
+  if (!source) return { url: "" }
   return builder.image(source)
 }
 

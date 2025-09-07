@@ -1,6 +1,7 @@
 <script lang="ts">
   import { rat } from "$lib/modules/state/stores"
   import { NumberGoing } from "$lib/components/Shared"
+  import { ratImageUrl } from "$lib/modules/state/stores"
   let balanceGoing = $state(false)
 </script>
 
@@ -26,6 +27,11 @@
         </span>
       </div>
     </div>
+
+    <!-- IMAGE -->
+    <div class="image-container">
+      <img src={$ratImageUrl} alt={$rat.name} />
+    </div>
   {/if}
 </div>
 
@@ -38,6 +44,7 @@
     display: flex;
     background-image: url("/images/texture-5.png");
     background-size: 100px;
+    justify-content: space-between;
   }
 
   .info-item {
@@ -67,6 +74,21 @@
       background: var(--color-value);
       padding: 5px;
       color: var(--background);
+    }
+  }
+
+  .image-container {
+    width: 140px;
+    height: 140px;
+    // border: var(--default-border-style);
+    margin: 10px;
+    border-radius: 50%;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
     }
   }
 </style>

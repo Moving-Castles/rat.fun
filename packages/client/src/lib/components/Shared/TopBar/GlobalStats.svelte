@@ -18,7 +18,7 @@
     height: var(--pane-switch-height);
     background: var(--color-grey-mid);
     position: relative;
-    background: rgba(255, 0, 0, 0.5);
+    background: var(--color-death);
     padding-inline: 40px;
   }
 </style>

@@ -202,6 +202,12 @@ export class InvalidPromptError extends ValidationError {
   }
 }
 
+export class InvalidRoomCreationCostError extends ValidationError {
+  constructor(message: string = "Invalid room creation cost.") {
+    super("INVALID_ROOM_CREATION_COST_ERROR", "Invalid room creation cost", message)
+  }
+}
+
 export class RatOwnershipError extends ValidationError {
   constructor(message: string = "You are not the owner of the rat.") {
     super("RAT_OWNERSHIP_ERROR", "Rat ownership error", message)

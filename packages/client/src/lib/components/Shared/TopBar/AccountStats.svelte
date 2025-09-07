@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { playerAddress, externalAddressesConfig } from "$lib/modules/state/stores"
+  import { playerAddress } from "$lib/modules/state/stores"
   import { onMount, onDestroy } from "svelte"
   import { playerERC20Allowance, playerERC20Balance } from "$lib/modules/state/stores"
   import {
@@ -67,7 +67,7 @@
       extraClass="red"
       onclick={async () => {
         await sendGiveCallerTokens()
-        close()
+        playSound("ratfun", "coins")
       }}
       text="Get 2000 free $SLopamine"
     ></SmallButton>
@@ -76,7 +76,7 @@
       tippyText="Buy some $Slopamine"
       onclick={async () => {
         await sendBuyWithEth()
-        close()
+        playSound("ratfun", "coins")
       }}
       text="Buy 1 $Slopamine for 0.001ETH"
     ></SmallButton>
@@ -85,7 +85,7 @@
       tippyText="Allow the contract to spend on your behalf"
       onclick={async () => {
         await sendApproveMax()
-        close()
+        playSound("ratfun", "coins")
       }}
       text="Approve max allowance"
     ></SmallButton>

@@ -17,25 +17,25 @@
   --color-grey-darker: #222;
 
   /* --color-alert: rgb(255, 69, 0); */
-  --color-alert: rgb(122, 94, 52);
+  --color-alert: rgb(104, 104, 103);
   /* --color-alert-priority: rgb(255, 128, 0); */
 
-  --color-alert-priority: rgb(236, 77, 3);
-  --color-alert-priority-muted: rgb(178, 57, 1);
-  --color-alert-priority-light: rgb(247, 81, 3);
+  --color-alert-priority: rgb(146, 146, 146);
+  --color-alert-priority-muted: rgb(98, 98, 98);
+  --color-alert-priority-light: rgb(195, 195, 195);
 
-  --color-button: rgb(86, 138, 51);
+  --color-button: rgb(130, 130, 130);
 
-  --color-secondary: rgb(163, 66, 31);
-  --color-success: rgb(109, 196, 109);
-  --color-value: rgb(194, 164, 12);
-  --color-item: rgb(160, 98, 177);
+  --color-secondary: rgb(141, 141, 141);
+  --color-success: rgb(112, 112, 112);
+  --color-value: rgb(200, 200, 200);
+  --color-item: rgb(145, 145, 145);
   --color-value-up: var(--color-success);
   --color-value-down: var(--color-death);
 
-  --color-death-muted: rgb(160, 0, 20);
-  --color-death: rgb(190, 0, 32);
-  --color-death-light: rgb(200, 0, 40);
+  --color-death-muted: rgb(145, 145, 145);
+  --color-death: rgb(94, 94, 94);
+  --color-death-light: rgb(209, 209, 209);
 
   --game-window-width: calc(min(100vw, 1920px) - 30px);
   --game-window-height: calc(100vh - 30px);

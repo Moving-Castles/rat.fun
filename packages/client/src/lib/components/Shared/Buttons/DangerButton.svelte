@@ -39,7 +39,7 @@
     border-width: 7px;
     border-color: rgba(0, 0, 0, 0.5);
 
-    background: repeating-linear-gradient(45deg, #cc0000, #cc0000 20px, #9e0000 20px, #9e0000 40px);
+    background: var(--color-death);
 
     .button-text {
       letter-spacing: -0.2em;
@@ -48,13 +48,7 @@
     }
 
     &:hover {
-      background: repeating-linear-gradient(
-        45deg,
-        #cc0000,
-        #cc0000 20px,
-        #9e0000 40px,
-        #9e0000 20px
-      );
+      background: var(--color-death);
     }
 
     &:active {

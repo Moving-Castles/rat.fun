@@ -52,6 +52,7 @@
       // This is now just here for the burner. Entrykit is moved to $effect call below
     } else {
       // Burner
+      console.log("going to spawn form")
       currentState = SPAWN_STATE.SPAWN_FORM
     }
   }
@@ -72,7 +73,9 @@
   })
 
   onMount(() => {
-    if (walletType === WALLET_TYPE.BURNER) connectBurner()
+    if (walletType === WALLET_TYPE.BURNER) {
+      connectBurner()
+    }
   })
 </script>
 
@@ -85,6 +88,7 @@
     {:else if currentState === SPAWN_STATE.SPAWN_FORM}
       <SpawnForm
         onComplete={() => {
+          console.log("going to hero image")
           currentState = SPAWN_STATE.HERO_IMAGE
         }}
       />

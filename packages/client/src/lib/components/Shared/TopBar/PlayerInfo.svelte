@@ -1,6 +1,6 @@
 <script lang="ts">
   import { player, playerERC20Balance } from "$lib/modules/state/stores"
-  import { NumberGoing, WalletInfo } from "$lib/components/Shared"
+  import { NumberGoing } from "$lib/components/Shared"
   import { tippy } from "svelte-tippy"
   import AccountStats from "./AccountStats.svelte"
 
@@ -12,10 +12,13 @@
 
 <div class="player-info">
   <!-- PLAYER STATS -->
+  <!-- svelte-ignore a11y_no_static_element_interactions -->
   {#if $player}
+    <!-- svelte-ignore a11y_click_events_have_key_events -->
     <div class="player-stats" onclick={() => (showAccountStats = !showAccountStats)}>
       <!-- NAME -->
       <div class="stat-item">
+        <!-- AVATAR -->
         <div
           use:tippy={{
             content: `This is you`,
@@ -23,6 +26,7 @@
           }}
           class="inner-wrapper player"
         >
+          <div class="avatar"></div>
           <div class="value">{$player.name}</div>
         </div>
       </div>
@@ -36,7 +40,8 @@
       >
         <div class:priority={balanceGoing} class="inner-wrapper balance">
           <div class="value">
-            $<NumberGoing bind:going={balanceGoing} muted={true} value={$playerERC20Balance ?? 0} />
+            <span class="unit">SLOPAMINE</span>
+            <NumberGoing bind:going={balanceGoing} muted={true} value={$playerERC20Balance ?? 0} />
           </div>
         </div>
       </div>
@@ -85,11 +90,18 @@
 
         .inner-wrapper {
           display: inline-flex;
-          padding-inline: 20px;
+          padding-inline: 10px;
+          align-items: center;
 
           &.balance {
             background: var(--color-value);
             color: var(--black);
+
+            .value {
+              position: relative;
+              font-size: var(--font-size-large);
+              top: 4px;
+            }
           }
 
           &.player {
@@ -98,5 +110,20 @@
         }
       }
     }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      background: var(--color-value);
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+  }
+
+  .unit {
+    font-size: var(--font-size-small);
+    background: black;
+    padding: 5px;
+    color: white;
   }
 </style>

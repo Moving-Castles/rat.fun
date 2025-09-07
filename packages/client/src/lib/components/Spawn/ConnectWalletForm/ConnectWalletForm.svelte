@@ -50,7 +50,7 @@
 
 <div class="outer-container">
   <div class="inner-container">
-    <img src="/images/bouncer2.png" alt="BASE(TM) ID" bind:this={imageElement} />
+    <img src="/images/mascot1.png" alt="Mascot" bind:this={imageElement} />
     <p bind:this={messageElement}>{message}</p>
     {#if walletType === WALLET_TYPE.ENTRYKIT}
       <div bind:this={$entryKitButton}></div>

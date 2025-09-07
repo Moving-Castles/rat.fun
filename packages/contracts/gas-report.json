@@ -86,8 +86,8 @@
   {
     "file": "test/systems/RoomSystem.t.sol:RoomSystemTest",
     "test": "testCreateRoom",
-    "name": "Create room (user)",
-    "gasUsed": 519106
+    "name": "Create room",
+    "gasUsed": 519107
   },
   {
     "file": "test/systems/RoomSystem.t.sol:RoomSystemTest",

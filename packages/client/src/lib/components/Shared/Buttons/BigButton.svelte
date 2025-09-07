@@ -63,9 +63,9 @@
       background: var(--color-alert-priority-muted);
       border-style: inset;
       transform: translateY(2px);
-      border-width: 8px;
       position: relative;
-      top: -2px;
+      // border-width: 8px;
+      // top: -2px;
       color: white;
     }
 

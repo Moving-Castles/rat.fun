@@ -52,7 +52,7 @@ export const shaderConfig: ShaderConfiguration<ShaderMode> = {
       if (page.url.searchParams.has("hyperspeed")) {
         return "hyperspeed"
       } else {
-        return "warpspeed"
+        return "hyperspeed"
       }
     } else if (page.route.id.includes("(game)")) {
       return "clouds"

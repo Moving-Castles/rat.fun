@@ -28,6 +28,8 @@
         var(--game-window-width) * 0.46
       );
 
+    border: var(--default-border-style);
+
     .main-content {
       grid-row: 2 / 3;
       grid-column: 1 / 4;

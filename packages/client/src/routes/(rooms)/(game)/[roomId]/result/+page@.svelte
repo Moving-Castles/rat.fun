@@ -69,7 +69,7 @@
       // Determine what to do based on the result
       if (result) {
         // Already has an ID
-        entryState.state = TRIP_STATE.RESULTS
+        // entryState.state = TRIP_STATE.RESULTS
         entryState.result = result
         replaceState(`/${data.roomId}/result/${result.outcomeId}`, {
           entryState: JSON.parse(stringifyWithBigInt(entryState))

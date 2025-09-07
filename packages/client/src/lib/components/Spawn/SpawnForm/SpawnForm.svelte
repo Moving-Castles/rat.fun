@@ -1,25 +1,29 @@
 <script lang="ts">
-  import { busy, sendSpawn } from "$lib/modules/action-manager/index.svelte"
+  import { sendSpawn } from "$lib/modules/action-manager/index.svelte"
   import gsap from "gsap"
   import { onMount } from "svelte"
 
   import { BigButton } from "$lib/components/Shared"
   import { player } from "$lib/modules/state/stores"
   import { typeHit } from "$lib/modules/sound"
-  import { VideoLoader } from "$lib/components/Shared"
   import { InputValidationError } from "$lib/modules/error-handling/errors"
+  import { waitForPropertyChange } from "$lib/modules/state/utils"
+  import SmallSpinner from "$lib/components/Shared/Loaders/SmallSpinner.svelte"
 
   const { onComplete = () => {} } = $props<{
     onComplete: (name: string) => void
   }>()
 
   let name = $state("")
+  let busy = $state(false)
+
   let imageElement: HTMLImageElement | null = $state(null)
   let buttonElement: HTMLDivElement | null = $state(null)
   let textElement: HTMLDivElement | null = $state(null)
   const timeline = gsap.timeline()
 
   async function submitForm() {
+    busy = true
     try {
       // Validate name is not empty
       if (!name || name.trim() === "") {
@@ -32,6 +36,7 @@
       }
 
       await sendSpawn(name)
+      await waitForPropertyChange(player, "name", undefined, 10000)
       onComplete(name)
     } catch (error) {
       console.error(error)
@@ -70,13 +75,13 @@
 
 <div class="outer-container">
   <div class="inner-container">
-    {#if busy.Spawn.current > 0}
-      <VideoLoader progress={busy.Spawn} />
+    {#if busy}
+      <div>Issuing member card</div>
+      <SmallSpinner />
     {:else}
-      <img class="image" src="/images/bouncer3.png" alt="RAT.FUN" bind:this={imageElement} />
+      <img class="image" src="/images/mascot2.png" alt="RAT.FUN" bind:this={imageElement} />
       <!-- INTRO TEXT -->
       <div class="text" bind:this={textElement}>
-        <!-- <p>OK {shortenAddress($playerAddress)}</p> -->
         <p>{$player?.name}ID checks out. You can enter. But we need your name to proceed.</p>
       </div>
 

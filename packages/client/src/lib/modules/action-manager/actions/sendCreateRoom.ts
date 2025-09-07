@@ -25,15 +25,8 @@ const DEFAULT_TIMING = 4000
  * Create room
  * @param roomPrompt The prompt for the room
  * @param roomCreationCost The cost of the room
- * @param maxValuePerWin The max value per win for the room
- * @param minRatValueToEnter The min value to enter for the room
  */
-export async function sendCreateRoom(
-  roomPrompt: string,
-  roomCreationCost: number,
-  maxValuePerWin: number,
-  minRatValueToEnter: number
-) {
+export async function sendCreateRoom(roomPrompt: string, roomCreationCost: number) {
   const _gameConfig = get(gameConfig)
   const _externalAddressesConfig = get(externalAddressesConfig)
   const _playerERC20Allowance = get(playerERC20Allowance)
@@ -63,9 +56,7 @@ export async function sendCreateRoom(
 
     const requestBody: CreateRoomRequestBody = {
       roomPrompt,
-      roomCreationCost,
-      maxValuePerWin,
-      minRatValueToEnter
+      roomCreationCost
     }
 
     const signedRequest = await signRequest(requestBody)

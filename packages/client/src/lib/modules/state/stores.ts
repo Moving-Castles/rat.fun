@@ -135,8 +135,9 @@ export const ratInventory = derived(
 )
 
 export const ratImageUrl = derived([player], ([$player]) => {
-  if (!$player?.currentRat) return "/images/rat.png"
-  return addressToRatImage($player.currentRat)
+  return "/images/mickey-rat.png"
+  // if (!$player?.currentRat) return "/images/rat.png"
+  // return addressToRatImage($player.currentRat)
 })
 
 /**

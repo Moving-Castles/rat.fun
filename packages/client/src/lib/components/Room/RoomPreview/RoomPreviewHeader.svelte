@@ -102,8 +102,6 @@
     background: var(--background);
 
     .image {
-      border: 15px solid transparent;
-      border-image: url("/images/border-2.png") 20 repeat;
       aspect-ratio: 1/1;
       width: 50%;
       line-height: 0;

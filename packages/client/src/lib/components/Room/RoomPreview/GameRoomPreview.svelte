@@ -55,7 +55,10 @@
   {/if}
 
   {#if showEnterButton}
-    <EnterRoomButton disabled={busy.LiquidateRat.current != 0} {roomId} />
+    <EnterRoomButton
+      disabled={busy.LiquidateRat.current != 0 || $rat.balance < room.minRatValueToEnter}
+      {roomId}
+    />
   {/if}
 
   <RoomPreviewGraph {room} {roomOutcomes} {sanityRoomContent} />

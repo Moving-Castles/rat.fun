@@ -8,7 +8,9 @@
     <div class="image-container">
       <h1 class="world-event-title">{$activeWorldEventContent?.title}</h1>
       <img
-        src={urlFor($activeWorldEventContent?.image).width(500).url()}
+        src={urlFor($activeWorldEventContent?.image ?? "")
+          ?.width(500)
+          ?.url() ?? ""}
         alt={$activeWorldEventContent?.title}
       />
     </div>

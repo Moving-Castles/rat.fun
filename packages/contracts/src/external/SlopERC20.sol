@@ -13,7 +13,7 @@ uint256 constant SERVICE_AMOUNT = 10_000_000;
 uint256 constant TREASURY_AMOUNT = 100_000;
 
 contract SlopERC20 is ERC20, ERC20Burnable {
-  constructor(address mainSaleAddress, address serviceAddress, address treasuryAddress) ERC20("Slop", "SLOP") {
+  constructor(address mainSaleAddress, address serviceAddress, address treasuryAddress) ERC20("Slopamine", "SLOP") {
     // Mint the total supply
     _mint(mainSaleAddress, MAIN_SALE_AMOUNT * 10 ** decimals());
     _mint(serviceAddress, SERVICE_AMOUNT * 10 ** decimals());

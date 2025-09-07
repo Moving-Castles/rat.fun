@@ -19,7 +19,7 @@ const MODEL = {
 
 const makePrompt = (prompt: string) => {
   const randomPrompts = pickRandomMultiple(PROMPTS, 4).join(" ")
-  return `STYLE: ${randomPrompts}. !! Important !! A square acid blotter printed with: ${prompt}`
+  return `STYLE: ${randomPrompts}. !! Important: no text !! A square acid blotter printed with: ${prompt}`
 }
 
 /**
@@ -40,7 +40,7 @@ export const generateImage = async (prompt: string, templateImages: ResolvedTemp
       aspect_ratio: "1:1",
       output_format: "webp",
       output_quality: 80,
-      prompt_strength: 0.72,
+      prompt_strength: 0.9,
       steps: 28
     }
   }
