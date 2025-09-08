@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { gameConfig } from "$lib/modules/state/stores"
-  import { BigButton } from "$lib/components/Shared"
+  import { BigButton, ValueBreakdown } from "$lib/components/Shared"
   import { transitionTo, RAT_BOX_STATE, getItemState } from "../RatBox/state.svelte"
 
   let { item } = getItemState()
@@ -20,24 +19,11 @@
     <h1>
       Will you re-absorb {item.entity.name}?
     </h1>
-    <div class="value-breakdown">
-      <div class="value-line">
-        Item value: <span class="value">{item.entity.value} SLOPAMINE</span>
-      </div>
-      <div class="value-line">
-        TraumwertSteuer ({$gameConfig.taxationReAbsorbItem}%):
-        <span class="value negative"
-          >-{Math.floor((Number(item.entity.value) * $gameConfig.taxationReAbsorbItem) / 100)} SLOPAMINE</span
-        >
-      </div>
-      <div class="value-line">
-        Payout: <span class="value payout"
-          >{Math.floor(
-            (Number(item.entity.value) * (100 - $gameConfig.taxationReAbsorbItem)) / 100
-          )} SLOPAMINE</span
-        >
-      </div>
-    </div>
+    <ValueBreakdown
+      originalValue={Number(item.entity.value)}
+      originalLabel="Item value"
+      taxRateKey="taxationReAbsorbItem"
+    />
   </div>
   <div class="button-container">
     <BigButton text="Confirm" onclick={onClickConfirm} />
@@ -72,40 +58,6 @@
       display: flex;
       flex-direction: row;
       gap: 10px;
-    }
-
-    .value-breakdown {
-      margin-top: 20px;
-      text-align: left;
-      font-size: var(--font-size-normal);
-      background: rgba(0, 0, 0, 0.8);
-      padding: 15px;
-      color: var(--foreground);
-    }
-
-    .value-line {
-      margin: 8px 0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .value {
-      background: var(--color-value);
-      color: var(--black);
-      padding: 3px 8px;
-      border-radius: 3px;
-      font-weight: bold;
-
-      &.negative {
-        background: var(--color-death);
-        color: var(--background);
-      }
-
-      &.payout {
-        background: var(--color-success);
-        color: var(--black);
-      }
     }
   }
 </style>

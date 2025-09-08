@@ -6,7 +6,7 @@
   import { onMount } from "svelte"
   import { staticContent } from "$lib/modules/content"
   import { goto } from "$app/navigation"
-  import RoomConfirmLiquidating from "$lib/components/Shared/RoomPreview/RoomConfirmLiquidating.svelte"
+  import RoomConfirmLiquidation from "$lib/components/Shared/RoomPreview/RoomConfirmLiquidation.svelte"
 
   import {
     RoomPreviewHeader,
@@ -54,16 +54,14 @@
     <RoomPreviewEventLog {roomId} {roomOutcomes} />
   </div>
 {:else}
-  <RoomConfirmLiquidating
+  <RoomConfirmLiquidation
     {room}
     roomContent={sanityRoomContent}
     onDone={async () => {
-      console.log("ON DONE")
       await goto("/admin")
       liquidating = false
     }}
     onAbort={() => {
-      console.log("ON ABORT")
       liquidating = false
     }}
   />
