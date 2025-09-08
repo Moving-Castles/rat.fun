@@ -17,6 +17,7 @@
   import ChatEvent_KeyActivation from "./ChatEvent/ChatEvent_KeyActivation.svelte"
   import ChatEvent_ChatMessage from "./ChatEvent/ChatEvent_ChatMessage.svelte"
 
+  let { collapsed = $bindable() } = $props()
   let value = $state("")
   let scrollElement = $state<null | HTMLElement>(null)
   let suppressSound = $state(true)
@@ -56,11 +57,15 @@
       // Other errors will be thrown by sendChatMessage if needed
     }
   }
+
+  const toggle = () => {
+    collapsed = !collapsed
+  }
 </script>
 
-<div class="chat-box">
-  <ChatHeader />
-  <!-- Chat scroll -->
+<div class:collapsed class="chat-box">
+  <ChatHeader {collapsed} onclick={toggle} />
+
   <div bind:this={scrollElement} class="chat-scroll">
     {#each $latestEvents as event (event.id)}
       {#if event.topic == "room__creation"}
@@ -109,6 +114,9 @@
 <style lang="scss">
   .chat-box {
     height: 100%;
+    // &.collapsed {
+    //   height: 40px;
+    // }
     display: flex;
     overflow: hidden;
     flex-flow: column nowrap;

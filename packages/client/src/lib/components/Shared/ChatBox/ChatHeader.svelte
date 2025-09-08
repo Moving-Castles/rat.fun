@@ -1,11 +1,13 @@
 <script lang="ts">
   import { websocketConnected, clientList } from "$lib/modules/off-chain-sync/stores"
+  let { onclick, collapsed } = $props()
 </script>
 
-<div class="chat-header">
+<div {onclick} class="chat-header" class:collapsed>
   <div class="header-content">
+    <div class="chat-label">TRIP SITTERS</div>
     <span class="status" class:connected={$websocketConnected}>
-      {$clientList.length ?? 0} player{Object.keys($clientList).length > 1 ? "s" : ""} online
+      {$clientList.length ?? 0} online
     </span>
   </div>
 </div>
@@ -20,6 +22,23 @@
     font-size: var(--font-size-small);
     font-family: var(--typewriter-font-stack);
     color: var(--foreground);
+    cursor: pointer;
+
+    .chat-label {
+      color: var(--background);
+      background-color: var(--foreground);
+    }
+    &:hover {
+      background: var(--foreground);
+      .status,
+      .chat-label {
+        color: var(--foreground);
+        background-color: var(--background);
+      }
+    }
+
+    &.collapsed {
+    }
   }
 
   .header-content {

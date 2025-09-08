@@ -2,8 +2,10 @@
   import { gameConfig, playerERC20Balance } from "$lib/modules/state/stores"
   import { BigButton } from "$lib/components/Shared"
   import { transitionTo, RAT_BOX_STATE } from "../RatBox/state.svelte"
+  import { onMount } from "svelte"
   import { player } from "$lib/modules/state/stores"
   import { UIState } from "$lib/modules/ui/state.svelte"
+  import { Spring } from "svelte/motion"
   import { UI } from "$lib/modules/ui/enums"
   import { goto } from "$app/navigation"
 
@@ -15,15 +17,35 @@
     transitionTo(RAT_BOX_STATE.DEPLOYING_RAT)
   }
 
+  let contrast = new Spring(1.0)
+  let brightness = new Spring(2, { stiffness: 0.5 })
+  let filter = $derived(
+    `grayscale(100%) contrast(${contrast.current}) brightness(${brightness.current})`
+  )
+
   const onSpawnClick = async () => {
     await goto("?spawn")
     UIState.set(UI.SPAWNING)
   }
+
+  onMount(() => {
+    const randomTimeout = () => 400 + Math.random() * 2000
+    const tick = () => {
+      brightness.set(0.9 + Math.random() / 2)
+      contrast.set(0.9 + Math.random() / 2)
+      setTimeout(tick, randomTimeout())
+    }
+    // const contrastTick = () => {
+    //   setTimeout(tick, randomTimeout())
+    // }
+    tick()
+    // contrastTick()
+  })
 </script>
 
 <div class="deploy-rat">
   <div class="image-container">
-    <img src="/images/mascot1.png" alt="Rat" />
+    <img style:filter src="/images/mascot1.png" alt="Rat" />
   </div>
   <div class="button-container">
     {#if $player}
@@ -56,21 +78,20 @@
       justify-content: center;
       align-items: center;
       height: 100%;
-
       img {
         width: 100%;
         height: 100%;
         object-fit: cover;
         object-position: 100% 20%;
-        filter: grayscale(100%);
+        opacity: 0.8;
       }
     }
 
     .button-container {
       position: absolute;
-      bottom: 20%;
+      bottom: 40px;
       left: 50%;
-      transform: translateX(-50%) translateY(50%);
+      transform: translateX(-50%) translateY(0);
       overflow: hidden;
       width: 80%;
       display: flex;
