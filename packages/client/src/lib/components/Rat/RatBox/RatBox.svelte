@@ -12,7 +12,7 @@
     RatDead
   } from "$lib/components/Rat"
 
-  import { ratBoxState, RAT_BOX_STATE, transitionTo, resetRatBoxState } from "./state.svelte"
+  import { RAT_BOX_STATE, ratBoxState, transitionTo, resetRatBoxState } from "./state.svelte"
 
   onMount(() => {
     // Set state to RAT_BOX_STATE.INIT

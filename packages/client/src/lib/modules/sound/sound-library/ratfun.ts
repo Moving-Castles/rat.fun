@@ -20,12 +20,18 @@ export const ratfun: SoundAssets = {
   mainAll: {
     src: "/sounds/ratfun/bossajazzloop.mp3",
     author: "leo",
-    volume: 0.001
+    volume: 1
   },
+  //
   main: {
     src: "/sounds/ratfun/baseloop181.mp3",
     author: "leo",
-    volume: 0.01
+    volume: 1
+  },
+  upwardspiral: {
+    src: "/sounds/ratfun/upwardspiral181.mp3",
+    author: "leo",
+    volume: 1
   },
   mousedown: {
     src: "/sounds/ratfun/FTSTP_LYR1_KICK_3.mp3",

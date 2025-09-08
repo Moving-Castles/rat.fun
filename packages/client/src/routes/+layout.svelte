@@ -5,6 +5,7 @@
   import type { LayoutProps } from "./$types"
 
   import { type Outcome as SanityOutcome } from "@sanity-types"
+  import * as Tone from "tone"
   import { initializeSentry } from "$lib/modules/error-handling"
   import { browser } from "$app/environment"
   import { afterNavigate } from "$app/navigation"
@@ -12,7 +13,6 @@
   import { goto } from "$app/navigation"
   import { initStaticContent, staticContent } from "$lib/modules/content"
   import { publicNetwork } from "$lib/modules/network"
-  import { initSound } from "$lib/modules/sound"
   import { UIState, notificationsRead } from "$lib/modules/ui/state.svelte"
   import { UI } from "$lib/modules/ui/enums"
   import { initOffChainSync } from "$lib/modules/off-chain-sync"
@@ -81,8 +81,6 @@
   onMount(async () => {
     // Remove preloader
     document.querySelector(".preloader")?.remove()
-    // Preload sounds
-    initSound()
   })
 
   afterNavigate(({ to }) => {

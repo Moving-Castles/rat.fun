@@ -4,7 +4,7 @@
   import type { LayoutProps } from "./$types"
   import { onMount } from "svelte"
   import { page } from "$app/state"
-  import { initSound } from "$lib/modules/sound"
+  import { initSound, startAudioContext } from "$lib/modules/sound"
   import { UIState } from "$lib/modules/ui/state.svelte"
   import { UI } from "$lib/modules/ui/enums"
   import { MainLayout } from "$lib/components/Shared"
@@ -17,39 +17,45 @@
 
   const { environment } = data
 
-  const getEnvironmentalSound = routeId => {
+  const getEnvironmentalSound = async routeId => {
     let s
 
     if ($UIState === UI.LOADING || $UIState === UI.SPAWNING) {
-      s = playSound("ratfun", "intro", true, true, 1, false)
+      s = await playSound("ratfun", "intro", true, true, 1, false)
     } else {
       console.log(page.route.id)
       console.log(page.url)
       if (routeId.includes("admin")) {
-        s = playSound("ratfun", "admin", true, true, 1, false)
+        s = await playSound("ratfun", "admin", true, true, 1, false)
       } else if (routeId.includes("enter") || routeId.includes("outcomeId")) {
-        s = playSound("ratfun", "outcome", true, true, 1, false)
+        s = await playSound("ratfun", "outcome", true, true, 1, false)
       } else {
-        s = playSound("ratfun", "main", true, true, 1, false)
+        s = await playSound("ratfun", "main", true, true, 1, false)
       }
     }
     return s
   }
 
   const switchSound = newSound => {
-    if (sound && newSound?._src !== sound?._src) {
+    if (sound && newSound?.src !== sound?.src) {
       sound.stop()
       sound = newSound
-      sound?.play()
+      sound?.start()
     } else {
       sound = newSound
-      sound?.play()
+      sound?.start()
+    }
+  }
+
+  const triggerSwitch = async (p: import("@sveltejs/kit").Page) => {
+    const s = await getEnvironmentalSound(p.route.id)
+    if (s) {
+      switchSound(s)
     }
   }
 
   $effect(() => {
-    const s = getEnvironmentalSound(page.route.id)
-    switchSound(s)
+    triggerSwitch(page)
   })
 
   onMount(async () => {
@@ -57,12 +63,23 @@
     document.querySelector(".preloader")?.remove()
 
     // Preload sounds
-    initSound()
+    await initSound()
+    
+    // Enable audio on first user interaction
+    const enableAudio = async () => {
+      await startAudioContext()
+      document.removeEventListener("click", enableAudio)
+      document.removeEventListener("touchstart", enableAudio)
+      document.removeEventListener("keydown", enableAudio)
+    }
+    
+    document.addEventListener("click", enableAudio)
+    document.addEventListener("touchstart", enableAudio)
+    document.addEventListener("keydown", enableAudio)
   })
 
   afterNavigate(() => {
-    const s = getEnvironmentalSound(page.route.id)
-    switchSound(s)
+    triggerSwitch(page)
   })
 </script>
 
