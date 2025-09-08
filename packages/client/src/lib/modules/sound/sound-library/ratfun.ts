@@ -77,6 +77,16 @@ export const ratfun: SoundAssets = {
     author: "AI",
     volume: 1
   },
+  hat: {
+    src: "/sounds/ratfun/hat.mp3",
+    author: "leo",
+    volume: 0.02
+  },
+  send: {
+    src: "/sounds/ratfun/send.mp3",
+    author: "leo",
+    volume: 1
+  },
   // To replace
   // XXX.mp3 is just placeholder
   acceptOrderFail: {

@@ -98,7 +98,9 @@ export function randomPitch(): number {
 
 export const typeHit = () => {
   const sound = playSound("ratfun", "type", false, false, randomPitch())
-  if (sound) {
+  const sound2 = playSound("ratfun", "hat", false, false)
+  if (sound && sound2) {
     sound.play()
+    sound2.play()
   }
 }
