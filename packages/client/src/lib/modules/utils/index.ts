@@ -7,7 +7,6 @@
 
 import { Hex } from "viem"
 import { JSONParseError } from "../error-handling/errors"
-import { pushState } from "$app/navigation"
 
 const BLOCKTIME = 2
 

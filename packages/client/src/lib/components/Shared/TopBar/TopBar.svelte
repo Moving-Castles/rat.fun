@@ -8,7 +8,6 @@
   import WorldEvent from "./WorldEvent.svelte"
   import WorldEventCountdown from "./WorldEventCountdown.svelte"
   import GlobalStats from "./GlobalStats.svelte"
-  // import EntryKit from "$lib/components/Spawn/EntryKit/EntryKit.svelte"
 
   const isAdminView = $derived(page.route?.id?.includes("/(rooms)/admin") ?? false)
 </script>

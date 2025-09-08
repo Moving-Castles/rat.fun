@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { rat } from "$lib/modules/state/stores"
   import { latestEvents } from "$lib/modules/off-chain-sync/stores"
   import { sendChatMessage } from "$lib/modules/off-chain-sync"
   import { websocketConnected } from "$lib/modules/off-chain-sync/stores"

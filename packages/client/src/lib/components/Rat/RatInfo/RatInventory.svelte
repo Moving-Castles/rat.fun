@@ -1,16 +1,14 @@
 <script lang="ts">
-  import { rat } from "$lib/modules/state/stores"
+  import { rat, gameConfig } from "$lib/modules/state/stores"
   import { InteractiveItem } from "$lib/components/Rat"
   import { collapsed } from "$lib/modules/ui/state.svelte"
 
-  const MAX_INVENTORY_SIZE = 6
-
   // Create array with actual items + empty slots to fill 6 slots
-  $: inventorySlots = (() => {
+  const inventorySlots = $derived.by(() => {
     const actualItems = $rat?.inventory ?? []
-    const emptySlots = Array(MAX_INVENTORY_SIZE - actualItems.length).fill(null)
+    const emptySlots = Array($gameConfig.maxInventorySize - actualItems.length).fill(null)
     return [...actualItems, ...emptySlots]
-  })()
+  })
 </script>
 
 <div class="inventory">
@@ -41,27 +39,6 @@
     overflow-y: scroll;
     background-image: url("/images/texture-2.png");
     background-size: 200px;
-  }
-  .header {
-    border-bottom: var(--dashed-border-style);
-    padding: 5px;
-    display: flex;
-    justify-content: space-between;
-    background: var(--background-semi-transparent);
-    font-size: var(--font-size-small);
-
-    .label {
-      font-size: var(--font-size-normal);
-      color: white;
-      position: relative;
-    }
-
-    .counter {
-      font-size: var(--font-size-small);
-      color: var(--color-grey-light);
-      position: relative;
-      top: 3px;
-    }
   }
 
   .inventory-container {

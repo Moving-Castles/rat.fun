@@ -1,11 +1,7 @@
 <script lang="ts">
   import { fade } from "svelte/transition"
   import { frozenRat } from "$lib/components/Room/Trip/state.svelte"
-  import { gsap } from "gsap"
   import { goto } from "$app/navigation"
-
-  // Timeline
-  const timeline = gsap.timeline()
 </script>
 
 <div transition:fade|global class="summary">

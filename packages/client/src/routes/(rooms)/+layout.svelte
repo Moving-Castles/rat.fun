@@ -13,31 +13,33 @@
 
   let { children, data }: LayoutProps = $props()
 
-  let sound = $state()
+  let sound = $state<Howl | undefined>()
 
   const { environment } = data
 
-  const getEnvironmentalSound = routeId => {
-    let s
+  const getEnvironmentalSound = (routeId: string) => {
+    if (!routeId) {
+      return undefined
+    }
+
+    let localSound
 
     if ($UIState === UI.LOADING || $UIState === UI.SPAWNING) {
-      s = playSound("ratfun", "intro", true, true, 1, false)
+      localSound = playSound("ratfun", "intro", true, true, 1, false)
     } else {
-      console.log(page.route.id)
-      console.log(page.url)
       if (routeId.includes("admin")) {
-        s = playSound("ratfun", "admin", true, true, 1, false)
+        localSound = playSound("ratfun", "admin", true, true, 1, false)
       } else if (routeId.includes("enter") || routeId.includes("outcomeId")) {
-        s = playSound("ratfun", "outcome", true, true, 1, false)
+        localSound = playSound("ratfun", "outcome", true, true, 1, false)
       } else {
-        s = playSound("ratfun", "mainAll", true, true, 1, false)
+        localSound = playSound("ratfun", "mainAll", true, true, 1, false)
       }
     }
-    return s
+    return localSound
   }
 
-  const switchSound = newSound => {
-    if (sound && newSound?._src !== sound?._src) {
+  const switchSound = (newSound: Howl | undefined) => {
+    if (sound && newSound?.src !== sound?._src) {
       sound.stop()
       sound = newSound
       sound?.play()
@@ -48,7 +50,7 @@
   }
 
   $effect(() => {
-    const s = getEnvironmentalSound(page.route.id)
+    const s = getEnvironmentalSound(page.route.id ?? "")
     switchSound(s)
   })
 
@@ -61,7 +63,7 @@
   })
 
   afterNavigate(() => {
-    const s = getEnvironmentalSound(page.route.id)
+    const s = getEnvironmentalSound(page.route.id ?? "")
     switchSound(s)
   })
 </script>

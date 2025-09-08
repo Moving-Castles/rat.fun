@@ -24,7 +24,7 @@
     transitionToResultSummary: (result?: EnterRoomReturnValue) => void
   } = $props()
 
-  let timeout: ReturnType<typeof setTimeout> = $state()
+  let timeout: ReturnType<typeof setTimeout> | undefined = $state()
   let destroyed = false
 
   // Get room info from global store based on id
@@ -67,7 +67,6 @@
       .includes("summary") && result)}
     <TripReport
       {result}
-      {staticRoomContent}
       onComplete={() => {
         transitionToResultSummary(result)
       }}
@@ -75,12 +74,12 @@
   {/if}
 
   {#if entryState?.state === TRIP_STATE.SUMMARY}
-    <NormalResultSummary {result} {room} {staticRoomContent} />
+    <NormalResultSummary />
   {/if}
 
   <!-- Result Summary: Rat Dead -->
   {#if entryState?.state === TRIP_STATE.SUMMARY_RAT_DEAD}
-    <RatDeadResultSummary {result} {room} {staticRoomContent} />
+    <RatDeadResultSummary />
   {/if}
 
   <!-- Error -->

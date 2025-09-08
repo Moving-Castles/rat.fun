@@ -4,7 +4,14 @@
   let { onclick } = $props()
 </script>
 
-<div {onclick} class="chat-header" class:collapsed={$collapsed}>
+<div
+  {onclick}
+  onkeydown={e => e.key === "Enter" && onclick?.(e)}
+  class="chat-header"
+  class:collapsed={$collapsed}
+  tabindex="0"
+  role="button"
+>
   <div class="header-content">
     <div class="chat-label">TRIP SITTERS</div>
     <span class="status" class:connected={$websocketConnected}>

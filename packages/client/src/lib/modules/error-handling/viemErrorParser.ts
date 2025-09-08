@@ -1,5 +1,5 @@
 import { BaseError } from "viem"
-import { slice, toFunctionSelector, decodeErrorResult, toHex } from "viem"
+import { slice, decodeErrorResult, toHex } from "viem"
 import {
   TransactionError,
   TransactionRevertedError,
@@ -34,7 +34,7 @@ function decodeRevertData(hexData: string) {
         const argsString = decoded.args ? `(${decoded.args.join(", ")})` : ""
         return `${decoded.errorName}${argsString}`
       }
-    } catch (error) {
+    } catch {
       // Continue to next ABI if this one doesn't match
       continue
     }

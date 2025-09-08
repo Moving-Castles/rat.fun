@@ -13,7 +13,7 @@ export const load: PageLoad = async ({ params }) => {
       roomContent
     }
   } catch (error) {
-    console.log(error.message)
+    console.log(error instanceof Error ? error.message : String(error))
     errorHandler(new CMSError("Could not load data"))
   }
 }

@@ -79,8 +79,4 @@
   .inner {
     text-align: center;
   }
-
-  button[disabled] {
-    background: var(--color-grey-mid);
-  }
 </style>

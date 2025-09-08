@@ -60,14 +60,6 @@
       width: 500px;
       color: var(--background);
 
-      img {
-        height: 50dvh;
-        @media (max-width: 900px) {
-          width: 70dvw;
-          height: auto;
-        }
-      }
-
       .button {
         width: 100%;
         height: 80px;

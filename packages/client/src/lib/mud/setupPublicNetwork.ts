@@ -38,7 +38,7 @@ export async function setupPublicNetwork(environment: ENVIRONMENT) {
   // Add WebSocket transport if WebSocket URL is available
   if (networkConfig.provider.wsRpcUrl) {
     if (import.meta.env.DEV) {
-      console.log("Skipping websockets url")
+      // Skipping websockets url
     } else {
       transports.push(webSocket(networkConfig.provider.wsRpcUrl))
     }
@@ -64,7 +64,6 @@ export async function setupPublicNetwork(environment: ENVIRONMENT) {
     indexerUrl: networkConfig.indexerUrl
   }
 
-  console.log("resolvedConfig", resolvedConfig)
   /*
    * Sync on-chain state into RECS and keeps our client in sync.
    * Uses the MUD indexer if available, otherwise falls back

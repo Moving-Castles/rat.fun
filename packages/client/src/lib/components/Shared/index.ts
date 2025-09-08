@@ -10,7 +10,6 @@ export { default as ChatBox } from "./ChatBox/ChatBox.svelte"
 export { default as Circle } from "./Graphics/Circle.svelte"
 export { default as Cross } from "./Graphics/Cross.svelte"
 export { default as Xed } from "./Graphics/Xed.svelte"
-export { default as ShaderTest } from "./ShaderTest/ShaderTest.svelte"
 export { default as Shader } from "./ShaderRenderer/Shader.svelte"
 export { default as ShaderRenderer } from "./ShaderRenderer/ShaderRenderer.svelte"
 
@@ -38,7 +37,6 @@ export { default as PageTransitions } from "./PageTransitions/PageTransitions.sv
 
 /* Item Components */
 export { default as Item } from "./Item/Item.svelte"
-export { default as DisplayItem } from "./Item/DisplayItem.svelte"
 
 /* Utility Components */
 export { default as SEO } from "./SEO/SEO.svelte"

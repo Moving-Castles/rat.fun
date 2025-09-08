@@ -3,7 +3,6 @@
   import { ready, loadingMessage, loadingPercentage } from "$lib/modules/network"
   import { initPublicNetwork } from "$lib/initPublicNetwork"
   import { initEntities } from "$lib/modules/systems/initEntities"
-  import { EntryKit } from "$lib/components/Spawn"
 
   import { ENVIRONMENT } from "$lib/mud/enums"
   import { gsap } from "gsap"

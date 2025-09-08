@@ -86,7 +86,7 @@
   })
 
   afterNavigate(({ to }) => {
-    if (to.url.searchParams.has("spawn")) {
+    if (to?.url.searchParams.has("spawn")) {
       UIState.set(UI.SPAWNING)
     }
   })
@@ -94,7 +94,7 @@
 
 <svelte:window
   onkeypress={e => {
-    if (e.keyCode == 94) {
+    if (e.key === "^") {
       DEBUG_SHADER = !DEBUG_SHADER
     }
   }}
@@ -189,14 +189,5 @@
     position: fixed;
     inset: 0;
     z-index: var(--z-background);
-
-    &.over {
-      z-index: 100;
-      background: black;
-    }
-  }
-
-  .layer-game {
-    // border: var(--default-border-style);
   }
 </style>

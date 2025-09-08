@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { onMount } from "svelte"
   import { goto } from "$app/navigation"
   import { page } from "$app/state"
   import { PageTransitions, CenterBar } from "$lib/components/Shared"
@@ -11,8 +10,6 @@
 
   $effect(() => {
     if ($player) {
-      console.log("player populated")
-      console.log(page.route.id)
       if (!$player.masterKey) {
         if (page.route.id === "/(rooms)/admin/[roomId]") {
           goto(`/${page.params.roomId}`)

@@ -17,15 +17,15 @@
 
   let roomOutcomes = $derived($staticContent?.outcomes?.filter(o => o.roomId == roomId) || [])
 
-  const callback = (update: Outcome[]) => {
+  const callback = (mutationEvent: any) => {
     if (!roomOutcomes) {
       errorHandler(new CMSError("Room outcomes is undefined"))
       return
     }
-    if (update.length > 0) {
+    if (mutationEvent.result) {
       // Note: roomOutcomes is derived, so we can't assign to it directly
       // This might need a different approach depending on the intended behavior
-      console.log("Received update:", update)
+      console.log("Received update:", mutationEvent.result)
     }
   }
 

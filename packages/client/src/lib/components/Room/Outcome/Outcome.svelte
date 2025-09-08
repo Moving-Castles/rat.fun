@@ -11,11 +11,11 @@
 <div class="outcome">
   <div class="meta">
     {outcome.playerName} created tripreport #{outcome.roomIndex} for {outcome?.ratName}
-    {timeSince(new Date(outcome._createdAt))} ago
+    {timeSince(new Date(outcome._createdAt).getTime())} ago
   </div>
   <div class="outcome-header">
     <div class="rat">
-      <img class="rat-image" alt="Rat" src={addressToRatImage(outcome?.ratId)} />
+      <img class="rat-image" alt="Rat" src={addressToRatImage(outcome?.ratId ?? "")} />
     </div>
     <div class="stats">
       <div class="headline">
@@ -27,7 +27,7 @@
     </div>
   </div>
   <div class="logs">
-    {#each outcome.log as item (item)}
+    {#each outcome.log ?? [] as item (item)}
       <p class="log-entry">
         <span class="timestamp-container">{item.timestamp}</span>
         <span class="log-text">
@@ -39,7 +39,7 @@
 
   <div class="box">
     <div class="left">
-      {#each outcome?.itemChanges as itemChange}
+      {#each outcome?.itemChanges ?? [] as itemChange}
         <OutcomeItem
           type="item"
           negative={itemChange.type === "remove"}
@@ -137,14 +137,6 @@
       // max-width: 60%;
       font-family: var(--special-font-stack);
       font-size: 24px;
-    }
-
-    .outcome-list {
-      margin-left: 10px;
-      display: flex;
-      flex-direction: row;
-      gap: 5px;
-      flex-wrap: wrap;
     }
   }
 </style>

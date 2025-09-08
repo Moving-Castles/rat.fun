@@ -38,15 +38,9 @@ export const upcomingWorldEvent = derived(
 // --- API --------------------------------------------------------------
 
 export async function initStaticContent(worldAddress: string) {
-  console.log("get rooms")
   const rooms = await loadData(queries.rooms, { worldAddress })
-  console.log("got rooms")
-  console.log("get outcomes")
   const outcomes = await loadData(queries.outcomes, { worldAddress })
-  console.log("got outcomes")
-  console.log("get worldEvents")
   const worldEvents = await loadData(queries.worldEvents, { worldAddress })
-  console.log("got worldEvents")
 
   const processedWorldEvents = worldEvents.filter(upcomingWorldEventFilter)
 
@@ -81,8 +75,6 @@ export async function initStaticContent(worldAddress: string) {
     staticContent.update(content => {
       const filteredWorldEvents = content.worldEvents.filter(upcomingWorldEventFilter)
 
-      console.log("filtered events", filteredWorldEvents)
-
       return {
         ...content,
         worldEvents: handleSanityUpdate<SanityWorldEvent>(
@@ -102,7 +94,7 @@ function upcomingWorldEventFilter(e: SanityWorldEvent) {
 
   // Calculate the end timestamp for this one.
   // Duration is defined in block time ±2s per block
-  const startTimeInMillis = new Date(e?.activationDateTime)?.getTime()
+  const startTimeInMillis = new Date(e?.activationDateTime ?? 0)?.getTime()
   const blockTimeInMillis = e.duration * 2000
 
   // More dates needed for comparison

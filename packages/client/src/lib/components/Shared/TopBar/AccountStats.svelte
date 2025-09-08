@@ -14,8 +14,6 @@
   import { player } from "$lib/modules/state/stores"
   import { busy } from "$lib/modules/action-manager/index.svelte"
 
-  let { close } = $props()
-
   onMount(() => {
     playSound("ratfun", "textLineHit")
   })

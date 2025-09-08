@@ -7,10 +7,8 @@
   gsap.registerPlugin(TextPlugin)
 
   const {
-    staticRoomContent,
     onComplete
   }: {
-    staticRoomContent: any
     onComplete: () => void
   } = $props()
 

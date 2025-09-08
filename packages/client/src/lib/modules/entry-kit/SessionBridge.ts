@@ -3,8 +3,14 @@ import { useSessionClient } from "@latticexyz/entrykit/internal"
 import { wagmiConfigStateful, entryKitSession } from "$lib/modules/entry-kit/stores"
 import { useConfig } from "wagmi"
 
-export default function SessionBridge({ onSessionStart, onSessionChange }) {
-  let [initialised, setInitialised] = useState(false)
+export default function SessionBridge({
+  onSessionStart,
+  onSessionChange
+}: {
+  onSessionStart: (data: any) => void
+  onSessionChange: (data: any) => void
+}) {
+  const [initialised, setInitialised] = useState(false)
   const sessionClient = useSessionClient()
 
   const wagmiConfig = useConfig()

@@ -8,6 +8,6 @@ export type PlotPoint = {
         time: number
         roomValue: number
         roomValueChange?: number
-        meta: any // Hack
+        meta: unknown // Hack
       }
 }

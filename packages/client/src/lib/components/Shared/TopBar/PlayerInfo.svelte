@@ -59,7 +59,7 @@
 </div>
 
 {#if showAccountStats}
-  <AccountStats close={() => (showAccountStats = false)} />
+  <AccountStats />
 {/if}
 
 <style lang="scss">

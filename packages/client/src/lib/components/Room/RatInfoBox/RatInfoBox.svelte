@@ -33,10 +33,10 @@
       <!-- HEADER -->
       <div class="header">
         <div class="label">Inventory</div>
-        <div class="counter">{$frozenRat?.inventory.length}/5</div>
+        <div class="counter">{($frozenRat?.inventory ?? []).length}/5</div>
       </div>
       <!-- INVENTORY -->
-      {#each $frozenRat.inventory as item}
+      {#each $frozenRat.inventory ?? [] as item}
         <Item {item} isRoomInfoBox />
       {/each}
     </div>

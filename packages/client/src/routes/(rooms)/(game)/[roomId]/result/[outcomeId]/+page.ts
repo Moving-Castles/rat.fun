@@ -31,7 +31,7 @@ export const load = async ({ params }) => {
       },
       roomId: params.roomId
     }
-  } catch (error) {
+  } catch {
     return redirect(302, `/${params.roomId}`)
   }
 }

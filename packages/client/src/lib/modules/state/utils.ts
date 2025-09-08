@@ -107,7 +107,7 @@ export function waitForPropertyChange<T, K extends keyof T>(
 }
 
 // Stringify an object with BigInts (all crypto things have this)
-export function stringifyWithBigInt(obj: any): string {
+export function stringifyWithBigInt(obj: unknown): string {
   return JSON.stringify(obj, (key, value) => {
     if (typeof value === "bigint") {
       return { __bigint: value.toString() }
@@ -117,7 +117,7 @@ export function stringifyWithBigInt(obj: any): string {
 }
 
 // Parse a JSON string encoded with BigInt objects (see above)
-export function parseWithBigInt(str: string): any {
+export function parseWithBigInt(str: string): unknown {
   return JSON.parse(str, (key, value) => {
     if (value && typeof value === "object" && "__bigint" in value) {
       return BigInt(value.__bigint)
