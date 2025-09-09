@@ -10,14 +10,7 @@
       {$frozenRat?.name} SURVIVED
     </h1>
   </div>
-  <button
-    class="close-button"
-    onclick={() => {
-      goto("/")
-    }}
-  >
-    COME DOWN
-  </button>
+  <a href="/" class="close-button"> COME DOWN </a>
 </div>
 
 <style lang="scss">

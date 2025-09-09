@@ -60,6 +60,8 @@
     entryState.processing = true
 
     try {
+      console.log("performance.now", performance.now(), entryState)
+      console.log("STATE", entryState.state, TRIP_STATE[entryState.state])
       const result = await sendEnterRoom(data.roomId, $player.currentRat)
 
       if (!result) {
