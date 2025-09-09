@@ -25,14 +25,15 @@
     let localSound
 
     if ($UIState === UI.LOADING || $UIState === UI.SPAWNING) {
-      localSound = playSound("ratfun", "intro", true, true, 1, false)
+      // localSound = playSound("ratfun", "intro", true, true, 1, false)
     } else {
       if (routeId.includes("admin")) {
-        localSound = playSound("ratfun", "admin", true, true, 1, false)
-      } else if (routeId.includes("enter") || routeId.includes("outcomeId")) {
-        localSound = playSound("ratfun", "outcome", true, true, 1, false)
+        // localSound = playSound("ratfun", "admin", true, true, 1, false)
+      } else if (routeId.includes("result") || routeId.includes("outcomeId")) {
+        console.log("holding; ")
+        // localSound = playSound("ratfun", "outcome", true, true, 1, false)
       } else {
-        localSound = playSound("ratfun", "mainAll", true, true, 1, false)
+        // localSound = playSound("ratfun", "mainAll", true, true, 1, false)
       }
     }
     return localSound

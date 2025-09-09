@@ -1,8 +1,10 @@
 <script lang="ts">
-  import { onMount } from "svelte"
+  import { onMount, onDestroy } from "svelte"
+  import { playSound } from "$lib/modules/sound"
 
   const { onComplete, result }: { onComplete: () => void; result: null | any } = $props()
 
+  let sound = $state()
   // Timer state
   let timeElapsed = $state(0)
   let timerInterval: ReturnType<typeof setInterval> | undefined
@@ -13,6 +15,7 @@
   })
 
   onMount(() => {
+    playSound("ratfun", "tripProcessing")
     // Start timer
     timerInterval = setInterval(() => {
       timeElapsed += 0.1
@@ -26,6 +29,12 @@
       // TODO: we are now returning after a fixed amount of time
       // We should check that the result is ready
     }, 7000)
+  })
+
+  onDestroy(() => {
+    if (sound) {
+      sound.stop()
+    }
   })
 </script>
 

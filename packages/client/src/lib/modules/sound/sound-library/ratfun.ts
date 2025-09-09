@@ -27,6 +27,21 @@ export const ratfun: SoundAssets = {
     author: "leo",
     volume: 0.01
   },
+  tripSetup: {
+    src: "/sounds/ratfun/trip_setup.mp3",
+    author: "leo",
+    volume: 1
+  },
+  tripProcessing: {
+    src: "/sounds/ratfun/trip_processing_riser.mp3",
+    author: "leo",
+    volume: 1
+  },
+  tripResultGood: {
+    src: "/sounds/ratfun/trip_result_good.mp3",
+    author: "leo",
+    volume: 1
+  },
   mousedown: {
     src: "/sounds/ratfun/FTSTP_LYR1_KICK_3.mp3",
     author: "leo",

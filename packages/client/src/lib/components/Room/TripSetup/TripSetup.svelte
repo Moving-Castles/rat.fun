@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { onMount } from "svelte"
+  import { onMount, onDestroy } from "svelte"
   import { gsap } from "gsap"
   import { TextPlugin } from "gsap/TextPlugin"
-  import { typeHit } from "$lib/modules/sound"
+  import { typeHit, playSound } from "$lib/modules/sound"
 
   gsap.registerPlugin(TextPlugin)
 
@@ -28,6 +28,7 @@
   // Timer state
   let timeElapsed = $state(0)
   let timerInterval: ReturnType<typeof setInterval> | undefined
+  let sound = $state()
 
   // Animation constants
   const CHARACTER_DELAY = 0.02
@@ -45,6 +46,7 @@
   }
 
   onMount(() => {
+    sound = playSound("ratfun", "tripSetup")
     // Start timer
     timerInterval = setInterval(() => {
       timeElapsed += 0.1
@@ -90,6 +92,12 @@
       }
       onComplete()
     }, 5000)
+  })
+
+  onDestroy(() => {
+    if (sound) {
+      sound.stop()
+    }
   })
 </script>
 
