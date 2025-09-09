@@ -1,11 +1,7 @@
 <script lang="ts">
   import type { TempItem } from "$lib/components/Room/Trip/types"
   import { items } from "$lib/modules/state/stores"
-  import {
-    RAT_BOX_STATE,
-    transitionTo,
-    getItemState
-  } from "$lib/components/Rat/RatBox/state.svelte"
+  import { getItemState } from "$lib/components/Rat/RatBox/state.svelte"
 
   let {
     item
@@ -33,12 +29,11 @@
   onmouseleave={() => (isHovered = false)}
   onclick={() => {
     itemState.set(itemId)
-    transitionTo(RAT_BOX_STATE.CONFIRM_RE_ABSORB_ITEM)
   }}
 >
   <div class="inner">
     <!-- NAME -->
-    <div class="name">{!isHovered ? name : "Re-absorb item"}</div>
+    <div class="name">{name}</div>
     <!-- VALUE -->
     <span class="value" class:negative={value < 0}>${value}</span>
   </div>
@@ -56,7 +51,6 @@
     border: none;
     outline: none;
     width: 100%;
-    cursor: pointer;
     text-align: left;
 
     .value {
@@ -66,14 +60,14 @@
       }
     }
 
-    &:hover {
-      background: var(--color-death);
-      color: var(--background);
+    // &:hover {
+    //   background: var(--color-death);
+    //   color: var(--background);
 
-      .value {
-        color: var(--background);
-      }
-    }
+    //   .value {
+    //     color: var(--background);
+    //   }
+    // }
   }
 
   .inner {

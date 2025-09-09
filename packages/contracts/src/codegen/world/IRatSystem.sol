@@ -12,6 +12,4 @@ interface IRatSystem {
   function ratfun__createRat(string calldata _name) external returns (bytes32 ratId);
 
   function ratfun__liquidateRat() external;
-
-  function ratfun__reAbsorbItem(bytes32 _itemId) external;
 }

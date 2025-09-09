@@ -14,7 +14,7 @@ export const load: PageLoad = async ({ url }) => {
     return {
       rooms
     }
-  } catch (error) {
+  } catch {
     errorHandler(new CMSError("Could not load data"))
   }
 }

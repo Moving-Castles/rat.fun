@@ -57,33 +57,4 @@ contract RatSystem is System {
     // Withdraw tokens equal to tax from pool to admin
     LibWorld.gamePool().withdrawTokens(GameConfig.getAdminAddress(), tax * 10 ** LibWorld.erc20().decimals());
   }
-
-  /**
-   * @notice Re-absorb an item into the Rrt. Destroy item and transfer value to rat balance.
-   * @param _itemId The id of the item
-   */
-  function reAbsorbItem(bytes32 _itemId) public {
-    bytes32 playerId = LibUtils.addressToEntityKey(_msgSender());
-    bytes32 ratId = CurrentRat.get(playerId);
-
-    require(ratId != bytes32(0), "no rat");
-
-    // Check that the item is in the rat's inventory
-    require(LibUtils.arrayIncludes(Inventory.get(ratId), _itemId), "item not in inventory");
-
-    // Remove it from the inventory
-    Inventory.set(ratId, LibUtils.removeFromArray(Inventory.get(ratId), _itemId));
-
-    uint256 valueToRat = Value.get(_itemId);
-
-    // Calculate tax
-    uint256 tax = (valueToRat * GameConfig.getTaxationReAbsorbItem()) / 100;
-    valueToRat -= tax;
-
-    // Add value to rat balance
-    Balance.set(ratId, Balance.get(ratId) + valueToRat);
-
-    // Withdraw tokens equal to tax from pool to admin
-    LibWorld.gamePool().withdrawTokens(GameConfig.getAdminAddress(), tax * 10 ** LibWorld.erc20().decimals());
-  }
 }

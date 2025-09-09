@@ -23,7 +23,6 @@ struct GameConfigData {
   uint32 maxInventorySize;
   uint32 maxRoomPromptLength;
   uint32 cooldownCloseRoom;
-  uint32 taxationReAbsorbItem;
   uint32 taxationLiquidateRat;
   uint32 taxationCloseRoom;
 }
@@ -33,12 +32,12 @@ library GameConfig {
   ResourceId constant _tableId = ResourceId.wrap(0x746272617466756e000000000000000047616d65436f6e666967000000000000);
 
   FieldLayout constant _fieldLayout =
-    FieldLayout.wrap(0x006c090014202004040404040400000000000000000000000000000000000000);
+    FieldLayout.wrap(0x0068080014202004040404040000000000000000000000000000000000000000);
 
   // Hex-encoded key schema of ()
   Schema constant _keySchema = Schema.wrap(0x0000000000000000000000000000000000000000000000000000000000000000);
-  // Hex-encoded value schema of (address, bytes32, uint256, uint32, uint32, uint32, uint32, uint32, uint32)
-  Schema constant _valueSchema = Schema.wrap(0x006c0900615f1f03030303030300000000000000000000000000000000000000);
+  // Hex-encoded value schema of (address, bytes32, uint256, uint32, uint32, uint32, uint32, uint32)
+  Schema constant _valueSchema = Schema.wrap(0x00680800615f1f03030303030000000000000000000000000000000000000000);
 
   /**
    * @notice Get the table's key field names.
@@ -53,16 +52,15 @@ library GameConfig {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](9);
+    fieldNames = new string[](8);
     fieldNames[0] = "adminAddress";
     fieldNames[1] = "adminId";
     fieldNames[2] = "ratCreationCost";
     fieldNames[3] = "maxInventorySize";
     fieldNames[4] = "maxRoomPromptLength";
     fieldNames[5] = "cooldownCloseRoom";
-    fieldNames[6] = "taxationReAbsorbItem";
-    fieldNames[7] = "taxationLiquidateRat";
-    fieldNames[8] = "taxationCloseRoom";
+    fieldNames[6] = "taxationLiquidateRat";
+    fieldNames[7] = "taxationCloseRoom";
   }
 
   /**
@@ -308,50 +306,12 @@ library GameConfig {
   }
 
   /**
-   * @notice Get taxationReAbsorbItem.
-   */
-  function getTaxationReAbsorbItem() internal view returns (uint32 taxationReAbsorbItem) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 6, _fieldLayout);
-    return (uint32(bytes4(_blob)));
-  }
-
-  /**
-   * @notice Get taxationReAbsorbItem.
-   */
-  function _getTaxationReAbsorbItem() internal view returns (uint32 taxationReAbsorbItem) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 6, _fieldLayout);
-    return (uint32(bytes4(_blob)));
-  }
-
-  /**
-   * @notice Set taxationReAbsorbItem.
-   */
-  function setTaxationReAbsorbItem(uint32 taxationReAbsorbItem) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 6, abi.encodePacked((taxationReAbsorbItem)), _fieldLayout);
-  }
-
-  /**
-   * @notice Set taxationReAbsorbItem.
-   */
-  function _setTaxationReAbsorbItem(uint32 taxationReAbsorbItem) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    StoreCore.setStaticField(_tableId, _keyTuple, 6, abi.encodePacked((taxationReAbsorbItem)), _fieldLayout);
-  }
-
-  /**
    * @notice Get taxationLiquidateRat.
    */
   function getTaxationLiquidateRat() internal view returns (uint32 taxationLiquidateRat) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 7, _fieldLayout);
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 6, _fieldLayout);
     return (uint32(bytes4(_blob)));
   }
 
@@ -361,7 +321,7 @@ library GameConfig {
   function _getTaxationLiquidateRat() internal view returns (uint32 taxationLiquidateRat) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 7, _fieldLayout);
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 6, _fieldLayout);
     return (uint32(bytes4(_blob)));
   }
 
@@ -371,7 +331,7 @@ library GameConfig {
   function setTaxationLiquidateRat(uint32 taxationLiquidateRat) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 7, abi.encodePacked((taxationLiquidateRat)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 6, abi.encodePacked((taxationLiquidateRat)), _fieldLayout);
   }
 
   /**
@@ -380,7 +340,7 @@ library GameConfig {
   function _setTaxationLiquidateRat(uint32 taxationLiquidateRat) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 7, abi.encodePacked((taxationLiquidateRat)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 6, abi.encodePacked((taxationLiquidateRat)), _fieldLayout);
   }
 
   /**
@@ -389,7 +349,7 @@ library GameConfig {
   function getTaxationCloseRoom() internal view returns (uint32 taxationCloseRoom) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 8, _fieldLayout);
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 7, _fieldLayout);
     return (uint32(bytes4(_blob)));
   }
 
@@ -399,7 +359,7 @@ library GameConfig {
   function _getTaxationCloseRoom() internal view returns (uint32 taxationCloseRoom) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 8, _fieldLayout);
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 7, _fieldLayout);
     return (uint32(bytes4(_blob)));
   }
 
@@ -409,7 +369,7 @@ library GameConfig {
   function setTaxationCloseRoom(uint32 taxationCloseRoom) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 8, abi.encodePacked((taxationCloseRoom)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 7, abi.encodePacked((taxationCloseRoom)), _fieldLayout);
   }
 
   /**
@@ -418,7 +378,7 @@ library GameConfig {
   function _setTaxationCloseRoom(uint32 taxationCloseRoom) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 8, abi.encodePacked((taxationCloseRoom)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 7, abi.encodePacked((taxationCloseRoom)), _fieldLayout);
   }
 
   /**
@@ -459,7 +419,6 @@ library GameConfig {
     uint32 maxInventorySize,
     uint32 maxRoomPromptLength,
     uint32 cooldownCloseRoom,
-    uint32 taxationReAbsorbItem,
     uint32 taxationLiquidateRat,
     uint32 taxationCloseRoom
   ) internal {
@@ -470,7 +429,6 @@ library GameConfig {
       maxInventorySize,
       maxRoomPromptLength,
       cooldownCloseRoom,
-      taxationReAbsorbItem,
       taxationLiquidateRat,
       taxationCloseRoom
     );
@@ -493,7 +451,6 @@ library GameConfig {
     uint32 maxInventorySize,
     uint32 maxRoomPromptLength,
     uint32 cooldownCloseRoom,
-    uint32 taxationReAbsorbItem,
     uint32 taxationLiquidateRat,
     uint32 taxationCloseRoom
   ) internal {
@@ -504,7 +461,6 @@ library GameConfig {
       maxInventorySize,
       maxRoomPromptLength,
       cooldownCloseRoom,
-      taxationReAbsorbItem,
       taxationLiquidateRat,
       taxationCloseRoom
     );
@@ -528,7 +484,6 @@ library GameConfig {
       _table.maxInventorySize,
       _table.maxRoomPromptLength,
       _table.cooldownCloseRoom,
-      _table.taxationReAbsorbItem,
       _table.taxationLiquidateRat,
       _table.taxationCloseRoom
     );
@@ -552,7 +507,6 @@ library GameConfig {
       _table.maxInventorySize,
       _table.maxRoomPromptLength,
       _table.cooldownCloseRoom,
-      _table.taxationReAbsorbItem,
       _table.taxationLiquidateRat,
       _table.taxationCloseRoom
     );
@@ -580,7 +534,6 @@ library GameConfig {
       uint32 maxInventorySize,
       uint32 maxRoomPromptLength,
       uint32 cooldownCloseRoom,
-      uint32 taxationReAbsorbItem,
       uint32 taxationLiquidateRat,
       uint32 taxationCloseRoom
     )
@@ -597,11 +550,9 @@ library GameConfig {
 
     cooldownCloseRoom = (uint32(Bytes.getBytes4(_blob, 92)));
 
-    taxationReAbsorbItem = (uint32(Bytes.getBytes4(_blob, 96)));
+    taxationLiquidateRat = (uint32(Bytes.getBytes4(_blob, 96)));
 
-    taxationLiquidateRat = (uint32(Bytes.getBytes4(_blob, 100)));
-
-    taxationCloseRoom = (uint32(Bytes.getBytes4(_blob, 104)));
+    taxationCloseRoom = (uint32(Bytes.getBytes4(_blob, 100)));
   }
 
   /**
@@ -622,7 +573,6 @@ library GameConfig {
       _table.maxInventorySize,
       _table.maxRoomPromptLength,
       _table.cooldownCloseRoom,
-      _table.taxationReAbsorbItem,
       _table.taxationLiquidateRat,
       _table.taxationCloseRoom
     ) = decodeStatic(_staticData);
@@ -657,7 +607,6 @@ library GameConfig {
     uint32 maxInventorySize,
     uint32 maxRoomPromptLength,
     uint32 cooldownCloseRoom,
-    uint32 taxationReAbsorbItem,
     uint32 taxationLiquidateRat,
     uint32 taxationCloseRoom
   ) internal pure returns (bytes memory) {
@@ -669,7 +618,6 @@ library GameConfig {
         maxInventorySize,
         maxRoomPromptLength,
         cooldownCloseRoom,
-        taxationReAbsorbItem,
         taxationLiquidateRat,
         taxationCloseRoom
       );
@@ -688,7 +636,6 @@ library GameConfig {
     uint32 maxInventorySize,
     uint32 maxRoomPromptLength,
     uint32 cooldownCloseRoom,
-    uint32 taxationReAbsorbItem,
     uint32 taxationLiquidateRat,
     uint32 taxationCloseRoom
   ) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
@@ -699,7 +646,6 @@ library GameConfig {
       maxInventorySize,
       maxRoomPromptLength,
       cooldownCloseRoom,
-      taxationReAbsorbItem,
       taxationLiquidateRat,
       taxationCloseRoom
     );

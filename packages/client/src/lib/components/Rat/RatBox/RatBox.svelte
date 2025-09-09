@@ -7,8 +7,6 @@
     DeployingRat,
     ConfirmLiquidation,
     LiquidatingRat,
-    ConfirmReAbsorbItem,
-    ReAbsorbItem,
     RatDead
   } from "$lib/components/Rat"
 
@@ -36,10 +34,6 @@
     <DeployingRat />
   {:else if ratBoxState.state === RAT_BOX_STATE.HAS_RAT}
     <RatInfo />
-  {:else if ratBoxState.state === RAT_BOX_STATE.CONFIRM_RE_ABSORB_ITEM}
-    <ConfirmReAbsorbItem />
-  {:else if ratBoxState.state === RAT_BOX_STATE.RE_ABSORBING_ITEM}
-    <ReAbsorbItem />
   {:else if ratBoxState.state === RAT_BOX_STATE.CONFIRM_LIQUIDATION}
     <ConfirmLiquidation />
   {:else if ratBoxState.state === RAT_BOX_STATE.LIQUIDATING_RAT}

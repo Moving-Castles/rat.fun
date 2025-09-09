@@ -10,7 +10,6 @@ export enum WorldFunctions {
   Spawn = NAMESPACE + "spawn",
   CreateRat = NAMESPACE + "createRat",
   LiquidateRat = NAMESPACE + "liquidateRat",
-  ReAbsorbItem = NAMESPACE + "reAbsorbItem",
   CloseRoom = NAMESPACE + "closeRoom",
   Approve = "ERC20-approve",
   BuyWithEth = "buyWithEth",
@@ -29,10 +28,6 @@ export async function createRat(name: string) {
 
 export async function liquidateRat() {
   return await executeTransaction(WorldFunctions.LiquidateRat, [])
-}
-
-export async function reAbsorbItem(itemId: string) {
-  return await executeTransaction(WorldFunctions.ReAbsorbItem, [itemId])
 }
 
 export async function closeRoom(roomId: string) {

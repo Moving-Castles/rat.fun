@@ -1,11 +1,7 @@
 <script lang="ts">
   import type { TempItem } from "$lib/components/Room/Trip/types"
   import { items } from "$lib/modules/state/stores"
-  import {
-    RAT_BOX_STATE,
-    transitionTo,
-    getItemState
-  } from "$lib/components/Rat/RatBox/state.svelte"
+  import { getItemState } from "$lib/components/Rat/RatBox/state.svelte"
 
   let {
     item,
@@ -28,17 +24,15 @@
 
 <button
   class="list-item"
-  class:clickable={!isRoomInfoBox}
   class:disabled={busy}
   onmouseenter={() => !isRoomInfoBox && (isHovered = true)}
   onmouseleave={() => !isRoomInfoBox && (isHovered = false)}
   onclick={() => {
     itemState.set(item)
-    transitionTo(RAT_BOX_STATE.CONFIRM_RE_ABSORB_ITEM)
   }}
 >
   <!-- NAME -->
-  <div class="name">{isRoomInfoBox || !isHovered ? name : "Re-absorb item"}</div>
+  <div class="name">{name}</div>
   <!-- VALUE -->
   <span class="value" class:negative={value < 0}>${value}</span>
 </button>
