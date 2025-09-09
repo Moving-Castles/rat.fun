@@ -10,3 +10,4 @@ export { default as InteractiveItem } from "./InteractiveItem/InteractiveItem.sv
 export { default as LiquidatingRat } from "./LiquidatingRat/LiquidatingRat.svelte"
 export { default as RatDead } from "./RatDead/RatDead.svelte"
 export { default as RatDeploy } from "./RatDeploy/RatDeploy.svelte"
+export { default as NoRatWarning } from "./NoRatWarning/NoRatWarning.svelte"

@@ -1,7 +1,3 @@
-<script lang="ts">
-  // ...
-</script>
-
 <div class="no-rat-warning">Deploy a rat to access this trip</div>
 
 <style lang="scss">

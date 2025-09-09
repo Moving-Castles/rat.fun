@@ -2,7 +2,6 @@ export { default as GameRoomPreview } from "./RoomPreview/GameRoomPreview.svelte
 export { default as Log } from "./Log/Log.svelte"
 export { default as LiquidateRoom } from "./RoomPreview/LiquidateRoom.svelte"
 export { default as LogItem } from "./Log/LogItem.svelte"
-export { default as NoRatWarning } from "./RoomPreview/NoRatWarning.svelte"
 export { default as NormalResultSummary } from "./ResultSummary/NormalResultSummary.svelte"
 export { default as Outcome } from "./Outcome/Outcome.svelte"
 export { default as OutcomeItem } from "./OutcomeItem/OutcomeItem.svelte"
