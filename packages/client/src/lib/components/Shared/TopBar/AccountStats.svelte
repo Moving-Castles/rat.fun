@@ -8,7 +8,7 @@
     sendBuyWithEth
   } from "$lib/modules/action-manager/index.svelte"
   import { SmallButton } from "$lib/components/Shared"
-  import { getVolumeState } from "$lib/modules/sound/state.svelte"
+  import { getMixerState } from "$lib/modules/sound/state.svelte"
   import { ENTITY_TYPE } from "contracts/enums"
   import { walletType, environment } from "$lib/modules/network"
   import { player } from "$lib/modules/state/stores"
@@ -16,7 +16,7 @@
 
   let { close } = $props()
 
-  const channelVolume = getVolumeState()
+  const mixer = getMixerState()
 
   onMount(() => {
     // playSound("ratfun", "textLineHit")
@@ -87,23 +87,69 @@
       tippyText="Allow the contract to spend on your behalf"
       onclick={async () => {
         await sendApproveMax()
-        // playSound("ratfun", "coins")
       }}
       text="Approve max allowance"
     ></SmallButton>
   </div>
 
   <div class="tab">
-    <p class="key">Game volume</p>
+    <p class="key">Master volume</p>
     <input
-      min="-20"
+      min="-100"
       max="0"
       type="range"
-      name="volume"
-      id="volume"
-      bind:value={channelVolume.current.main}
+      name="master-volume"
+      id="master-volume"
+      value={mixer.master}
+      oninput={e => mixer.setMasterVolume(Number(e.target.value))}
     />
-    {channelVolume.current.main}
+    {mixer.master}dB
+  </div>
+
+  <div class="tab">
+    <p class="key">Music volume</p>
+    <input
+      min="-100"
+      max="0"
+      type="range"
+      name="music-volume"
+      id="music-volume"
+      value={mixer.channels.music.volume}
+      oninput={e => {
+        mixer.setChannelVolume("music", Number(e.target.value))
+      }}
+    />
+    {mixer.channels.music.volume}dB
+    <label>
+      <input
+        type="checkbox"
+        bind:checked={mixer.channels.music.muted}
+        onchange={e => mixer.setChannelMute("music", e.target.checked)}
+      />
+      Mute
+    </label>
+  </div>
+
+  <div class="tab">
+    <p class="key">UI Volume</p>
+    <input
+      min="-60"
+      max="0"
+      type="range"
+      name="ui-volume"
+      id="ui-volume"
+      bind:value={mixer.channels.ui.volume}
+      oninput={e => mixer.setChannelVolume("ui", Number(e.target.value))}
+    />
+    {mixer.channels.ui.volume}dB
+    <label>
+      <input
+        type="checkbox"
+        bind:checked={mixer.channels.ui.muted}
+        onchange={e => mixer.setChannelMute("music", e.target.checked)}
+      />
+      Mute
+    </label>
   </div>
 </div>
 
@@ -138,9 +184,44 @@
 
     .tab {
       display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
 
       .key {
         width: 140px;
+      }
+
+      input[type="range"] {
+        flex: 1;
+        min-width: 100px;
+      }
+
+      label {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 16px;
+      }
+    }
+
+    .group-controls {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+
+      button {
+        padding: 4px 8px;
+        font-size: 14px;
+        background: var(--color-border);
+        color: var(--white);
+        border: 1px solid var(--color-border);
+        cursor: pointer;
+
+        &:hover {
+          background: var(--white);
+          color: var(--background-semi-transparent);
+        }
       }
     }
   }

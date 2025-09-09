@@ -87,6 +87,7 @@
 
     console.log("init sound called")
     await initSound()
+    console.log("init sound done")
 
     document.removeEventListener("click", enableAudio)
     document.removeEventListener("touchstart", enableAudio)
