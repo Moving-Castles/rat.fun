@@ -19,6 +19,8 @@ export async function playUISound(
 
   const mixer = getMixerState()
 
+  console.log("mixer channels", mixer.channels)
+
   if (mixer?.channels?.ui) {
     const sound = new Tone.Player({
       url: soundLibrary[collection][id].src,

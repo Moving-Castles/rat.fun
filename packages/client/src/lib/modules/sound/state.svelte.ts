@@ -15,10 +15,7 @@ let channelStates = $state<Record<string, ChannelConfig>>({
 })
 let uiChannel = $state<Tone.InputNode>()
 let musicChannel = $state<Tone.InputNode>()
-let channels = $derived({
-  ui: uiChannel,
-  music: musicChannel
-})
+let channels = $state<Record<string, Tone.Channel>>({})
 let players = $state<Record<string, Tone.InputNode>>()
 
 let masterVolume = $state(-10)
@@ -84,12 +81,21 @@ export const getMixerState = () => {
     }
   }
 
+  const registerChannel = (name: string, channel: Tone.ToneAudioNode) => {
+    channels[name] = channel
+    if (!channelStates[name]) {
+      channelStates[name] = { volume: 0, muted: false, solo: false, pan: 0 }
+    }
+    updateChannelVolume(name)
+  }
+
   const updateAllChannelVolumes = () => {
     Object.keys(channelStates).forEach(updateChannelVolume)
   }
 
   return {
     // Channel controls
+    registerChannel,
     setChannelStates,
     setPlayers,
     setChannelVolume,
@@ -98,7 +104,7 @@ export const getMixerState = () => {
     // Master control
     setMasterVolume,
     get channels() {
-      return
+      return channels
     },
     get players() {
       return players
@@ -220,15 +226,20 @@ export async function initSound(): Promise<void> {
 
     // Create and register Music channel
     musicChannel = new Tone.Channel().toDestination()
+    mixer.registerChannel("music", musicChannel)
 
     // Create and register UI channel
     uiChannel = new Tone.Channel().toDestination()
+    mixer.registerChannel("ui", uiChannel)
 
     // Register the music players and apply them to the music channel
     const musicPlayers = registerMusic(musicChannel)
     mixer.setPlayers(musicPlayers)
 
-    // Now. Try to play the correct music based on the current page
+    // @todo: Try to play the correct music based on the current page
+    if (mixer.players) {
+      mixer.players?.mainSound?.volume?.rampTo(0, "1m")
+    }
 
     // We will use the individual players to change play state
   } catch (error) {
