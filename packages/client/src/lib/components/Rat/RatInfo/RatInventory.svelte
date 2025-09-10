@@ -6,7 +6,7 @@
   // Create array with actual items + empty slots to fill 6 slots
   const inventorySlots = $derived.by(() => {
     const actualItems = $rat?.inventory ?? []
-    const emptySlots = Array(6).fill(null)
+    const emptySlots = Array(6 - actualItems.length).fill(null)
     return [...actualItems, ...emptySlots]
   })
 </script>
