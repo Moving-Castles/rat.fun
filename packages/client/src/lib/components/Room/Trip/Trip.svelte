@@ -26,9 +26,6 @@
 
   let timeout: ReturnType<typeof setTimeout> | undefined = $state()
   let destroyed = false
-
-  // Get room info from global store based on id
-  let room = $derived($roomsState?.[roomId ?? ""])
   let result = $derived(entryState?.result)
 
   // Get static room content from cms

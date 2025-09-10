@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { playSound } from "$lib/modules/sound"
+  import { playUISound } from "$lib/modules/sound"
   import { tippy } from "svelte-tippy"
 
   let {
@@ -15,11 +15,11 @@
   } = $props()
 
   const onmousedown = () => {
-    playSound("ratfun", "mousedown")
+    playUISound("ratfun", "mousedown")
   }
 
   const onmouseup = () => {
-    playSound("ratfun", "mouseupdanger")
+    playUISound("ratfun", "mouseupdanger")
     onclick()
   }
 

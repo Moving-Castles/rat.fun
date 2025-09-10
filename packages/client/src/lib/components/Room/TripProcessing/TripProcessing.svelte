@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte"
-  import { playSound } from "$lib/modules/sound"
+  import { playUISound } from "$lib/modules/sound"
 
   const { onComplete, result }: { onComplete: () => void; result: null | any } = $props()
 
@@ -15,7 +15,7 @@
   })
 
   onMount(() => {
-    playSound("ratfun", "tripProcessing")
+    playUISound("ratfun", "tripProcessing")
     // Start timer
     timerInterval = setInterval(() => {
       timeElapsed += 0.1
@@ -31,9 +31,11 @@
     }, 11000)
   })
 
-  onDestroy(() => {
-    if (sound) {
-      sound.stop()
+  onDestroy(async () => {
+    const result = await sound
+    if (result) {
+      console.log("trying to stop sound ", result)
+      result.stop()
     }
   })
 </script>

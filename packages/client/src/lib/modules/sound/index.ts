@@ -1,95 +1,41 @@
-import { Howl } from "howler"
-import { writable } from "svelte/store"
+import * as Tone from "tone"
 import { soundLibrary } from "./sound-library"
-import SamJs from "sam-js"
-
-export const music = writable(new Howl({ src: [""] }))
-export const fx = writable([new Howl({ src: [""] })])
-
-const sam = new SamJs()
+import { getMixerState } from "./state.svelte"
 
 /**
- * Initializes and preloads all sounds from the `tcm` property of the `soundLibrary` object.
- * This ensures that there's minimal delay when the sounds are played for the first time.
- *
- * @example
- * initSound();  // Preloads all the sounds in soundLibrary.tcm
- *
- * @returns {void}
- */
-export function initSound(): void {
-  for (const key in soundLibrary.tcm) {
-    soundLibrary.tcm[key].sound = new Howl({
-      src: [soundLibrary.tcm[key].src],
-      volume: soundLibrary.tcm[key].volume,
-      preload: true
-    })
-  }
-  for (const key in soundLibrary.ratfun) {
-    soundLibrary.ratfun[key].sound = new Howl({
-      src: [soundLibrary.ratfun[key].src],
-      volume: soundLibrary.ratfun[key].volume,
-      preload: true
-    })
-  }
-}
-
-/**
- * Plays a sound based on category and id. Provides options for looping and fade effects.
+ * Plays a sound based on collection and id. Provides options for looping and fade effects.
  *
  * @export
- * @param {string} category - The category of the sound.
- * @param {string} id - The id of the sound within the category.
- * @param {boolean} [loop=false] - Determines if the sound should loop.
- * @param {boolean} [fade=false] - Determines if the sound should have fade in/out effects.
- * @param {number} [pitch=1] - The pitch of the sound.
- * @returns {Howl | undefined} - The Howl object of the sound.
+ * @param {string} collection - The collection of the sound.
+ * @param {string} id - The id of the sound within the collection.
+ * @returns {Promise<Tone.Player | undefined>} - The Tone.js Player object of the sound.
  */
-export function playSound(
-  category: string,
+export async function playUISound(
+  collection: string,
   id: string,
-  loop: boolean = false,
-  fade: boolean = false,
-  pitch: number = 1,
-  play: boolean = true // useful to just fetch the sound
-): Howl | undefined {
-  const sound = soundLibrary[category][id].sound
+  channel?: string
+): Promise<Tone.Player | undefined> {
+  // This check just in case tone context hasn't started
+  await Tone.start()
 
-  if (!sound) return
+  const mixer = getMixerState()
 
-  if (sound._src.includes("XXX.mp3")) {
-    console.warn(
-      "It looks like you might be playing silence. Are you enjoying that? Information: (%o)",
-      {
-        category,
-        id
-      }
-    )
-  }
+  const sound = new Tone.Player({
+    url: soundLibrary[collection][id].src,
+    autostart: true
+  })
 
-  if (loop) {
-    sound.loop(true)
-  }
-
-  if (fade) {
-    // Fade on begin and end
-    const FADE_TIME = 2000
-
-    // Init
-    sound.rate(pitch)
-    if (play) {
-      sound.play()
-      sound.fade(0, soundLibrary[category][id].volume, FADE_TIME)
-    }
+  if (channel && mixer.channels[channel]) {
+    sound.connect(mixer.channels[channel])
+  } else if (mixer?.channels?.ui) {
+    sound.connect(mixer.channels.ui)
   } else {
-    sound.rate(pitch)
-    if (play) {
-      sound.play()
-    }
+    sound.toDestination()
   }
 
   return sound
 }
+
 /**
  * @returns {number} - A random pitch
  */
@@ -99,17 +45,6 @@ export function randomPitch(): number {
   return Math.random() * (max - min) + min
 }
 
-export const typeHit = (letter?: string) => {
-  if (letter) {
-    if (Math.random() > 0.7) {
-      sam.speak(letter)
-    }
-  }
-
-  const sound = playSound("ratfun", "type", false, false, randomPitch())
-  const sound2 = playSound("ratfun", "hat", false, false)
-  if (sound && sound2) {
-    sound.play()
-    sound2.play()
-  }
+export const typeHit = async () => {
+  playUISound("ratfun", "type")
 }

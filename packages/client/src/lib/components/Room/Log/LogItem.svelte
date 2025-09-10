@@ -3,7 +3,7 @@
   import { updateFrozenState } from "$lib/components/Room/Trip/state.svelte"
   import { gsap } from "gsap"
   import { TextPlugin } from "gsap/TextPlugin"
-  import { playSound, typeHit } from "$lib/modules/sound"
+  import { playUISound, typeHit } from "$lib/modules/sound"
   import {
     TIMESTAMP_DURATION,
     CHARACTER_DELAY,
@@ -63,8 +63,7 @@
   const playOutcomeSound = (action: string) => {
     const soundName =
       action === "increase" || action === "add" ? "acceptOrderSuccessOld" : "acceptOrderFail"
-    const sound = playSound("ratfun", soundName)
-    if (sound) sound.play()
+    playUISound("ratfun", soundName)
   }
 
   // Action to register the nodes
@@ -95,8 +94,7 @@
   const main = () => {
     // Timestamp Animation
     timeline.call(() => {
-      const sound = playSound("ratfun", "textLineHit")
-      if (sound) sound.play()
+      playUISound("ratfun", "textLineHit")
     })
     timeline.to(timestampElement, {
       opacity: 1,

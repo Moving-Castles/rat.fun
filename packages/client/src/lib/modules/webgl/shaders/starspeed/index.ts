@@ -1,16 +1,13 @@
 import { Tween } from "svelte/motion"
 import vertexShader from "./vertex.glsl"
 import fragmentShader from "./fragment.glsl"
-import {
-  defineShaderModes,
-  type ShaderConfiguration
-} from "$lib/modules/webgl/shaders/index.svelte"
+import { type ShaderConfiguration } from "$lib/modules/webgl/shaders/index.svelte"
 
 export type ShaderMode = "normal" | "warpspeed" | "hyperwarp"
 
 export const shaderConfig: ShaderConfiguration<ShaderMode> = {
   initialMode: "normal",
-  modes: defineShaderModes({
+  modes: {
     normal: {
       speed: 1.0
     },
@@ -20,7 +17,7 @@ export const shaderConfig: ShaderConfiguration<ShaderMode> = {
     hyperwarp: {
       speed: 2.0
     }
-  }),
+  },
   tweens: {
     speed: new Tween(1, { duration: 5000 })
   }

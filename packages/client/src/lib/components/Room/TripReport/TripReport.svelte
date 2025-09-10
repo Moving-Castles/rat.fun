@@ -1,20 +1,22 @@
 <script lang="ts">
   import { Log } from "$lib/components/Room"
   import { onMount, onDestroy } from "svelte"
-  import { playSound } from "$lib/modules/sound"
+  import { playUISound } from "$lib/modules/sound"
 
   let { onComplete, result } = $props()
   let sound = $state()
 
   onMount(() => {
     console.log("play result good")
-    sound = playSound("ratfun", "tripResultLoop")
-    playSound("ratfun", "tripResultTrigger")
+    sound = playUISound("ratfun", "tripResultLoop")
+    playUISound("ratfun", "tripResultTrigger")
   })
 
-  onDestroy(() => {
-    if (sound) {
-      sound.stop()
+  onDestroy(async () => {
+    const result = await sound
+    if (result) {
+      console.log("trying to stop sound ", result)
+      result.stop()
     }
   })
 </script>

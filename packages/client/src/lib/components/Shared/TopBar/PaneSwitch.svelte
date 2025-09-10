@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from "$app/state"
-  import { playSound } from "$lib/modules/sound"
+  import { playUISound } from "$lib/modules/sound"
   let { isAdminView }: { isAdminView: boolean } = $props()
 </script>
 
@@ -8,7 +8,7 @@
   {#if isAdminView}
     <button
       onclick={() => {
-        playSound("ratfun", "adminExit")
+        playUISound("ratfun", "adminExit")
       }}
       class="pane-switch-item"
     >
@@ -17,7 +17,7 @@
   {:else}
     <button
       onclick={() => {
-        playSound("ratfun", "adminAccess")
+        playUISound("ratfun", "adminAccess")
       }}
       class="pane-switch-item"
     >

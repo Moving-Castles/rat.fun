@@ -3,9 +3,9 @@ import fragmentShader from "./fragment.glsl"
 import { Tween } from "svelte/motion"
 import { cubicInOut, elasticOut, bounceOut } from "svelte/easing"
 import {
-  defineShaderModes,
-  type ShaderConfiguration
-} from "$lib/modules/webgl/shaders/index.svelte"
+  type ShaderConfiguration,
+  type ShaderModeConfig
+} from "$lib/modules/webgl/shaders/ShaderManager.svelte"
 
 // Define shader mode types
 export type ShaderMode = "introduction" | "admin" | "home" | "outcome"
@@ -14,7 +14,7 @@ export type ShaderMode = "introduction" | "admin" | "home" | "outcome"
 export const shaderConfig: ShaderConfiguration<ShaderMode> = {
   initialMode: "introduction",
 
-  modes: defineShaderModes({
+  modes: {
     introduction: {
       spiral: 0,
       invert: 0.3,
@@ -47,7 +47,7 @@ export const shaderConfig: ShaderConfiguration<ShaderMode> = {
       exposure: 1,
       glow: 1.0
     }
-  }),
+  },
 
   tweens: {
     spiral: new Tween(0, {

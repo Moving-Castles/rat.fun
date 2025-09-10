@@ -1,7 +1,7 @@
 <script lang="ts">
   import { slide } from "svelte/transition"
   import { toastManager } from "$lib/modules/ui/toasts.svelte"
-  import { playSound } from "$lib/modules/sound"
+  import { playUISound } from "$lib/modules/sound"
 
   const onToastClick = (id: string) => {
     toastManager.remove(id)
@@ -16,7 +16,7 @@
       <div
         onintrostart={() => {
           if (toast.type === "error") {
-            playSound("ratfun", "mouseupdanger")
+            playUISound("ratfun", "mouseupdanger")
           }
         }}
         transition:slide|global

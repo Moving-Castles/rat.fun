@@ -5,6 +5,7 @@
   import type { LayoutProps } from "./$types"
 
   import { type Outcome as SanityOutcome } from "@sanity-types"
+  import { initSound, getMixerState, snapshotFactory } from "$lib/modules/sound/state.svelte"
   import { initializeSentry } from "$lib/modules/error-handling"
   import { browser } from "$app/environment"
   import { afterNavigate } from "$app/navigation"
@@ -12,7 +13,6 @@
   import { goto } from "$app/navigation"
   import { initStaticContent, staticContent } from "$lib/modules/content"
   import { publicNetwork } from "$lib/modules/network"
-  import { initSound } from "$lib/modules/sound"
   import { UIState, notificationsRead } from "$lib/modules/ui/state.svelte"
   import { UI } from "$lib/modules/ui/enums"
   import { initOffChainSync } from "$lib/modules/off-chain-sync"
@@ -39,16 +39,21 @@
   import { Outcome } from "$lib/components/Room"
   import EntryKit from "$lib/components/Spawn/EntryKit/EntryKit.svelte"
   import Toasts from "$lib/components/Shared/Toasts/Toasts.svelte"
+  // This will persist data across page loads.
+  // Used for user settings
+  export const snapshot = snapshotFactory()
 
   let { children, data }: LayoutProps = $props()
 
+  let mixer = getMixerState()
+
   let DEBUG_SHADER = $state(false)
+  let initingSound = $state(false)
   let outcomeId = $state("")
   let outcome = $state<SanityOutcome | undefined>()
   let debuggingShader = $derived(import.meta.env.DEV && DEBUG_SHADER)
 
   const { environment, walletType } = data
-
   walletTypeStore.set(walletType)
 
   const environmentLoaded = async () => {
@@ -78,11 +83,30 @@
     }
   })
 
+  // Enable audio on first user interaction
+  const enableAudio = async () => {
+    if (initingSound) return false
+
+    initingSound = true
+
+    console.log("init sound called")
+    await initSound()
+    console.log("init sound done")
+
+    document.removeEventListener("click", enableAudio)
+    document.removeEventListener("touchstart", enableAudio)
+    document.removeEventListener("keydown", enableAudio)
+
+    console.log(mixer)
+  }
+
   onMount(async () => {
     // Remove preloader
     document.querySelector(".preloader")?.remove()
-    // Preload sounds
-    initSound()
+
+    document.addEventListener("click", enableAudio)
+    document.addEventListener("touchstart", enableAudio)
+    document.addEventListener("keydown", enableAudio)
   })
 
   afterNavigate(({ to }) => {

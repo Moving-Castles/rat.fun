@@ -67,15 +67,6 @@ function createShaderManager<TMode extends string = string>(config: ShaderConfig
   return new ShaderManager(config)
 }
 
-/**
- * Helper function to create mode configurations
- */
-function defineShaderModes<TMode extends string>(
-  modes: ShaderModeConfig<TMode>
-): ShaderModeConfig<TMode> {
-  return modes
-}
-
 type ShaderModes = {
   Main: MainMode
   Copy: CopyMode
@@ -106,6 +97,5 @@ export {
   // Classes
   ShaderManager,
   // Functions
-  createShaderManager,
-  defineShaderModes
+  createShaderManager
 }

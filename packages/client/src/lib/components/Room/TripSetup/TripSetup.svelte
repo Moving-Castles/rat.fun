@@ -2,7 +2,7 @@
   import { onMount, onDestroy } from "svelte"
   import { gsap } from "gsap"
   import { TextPlugin } from "gsap/TextPlugin"
-  import { typeHit, playSound } from "$lib/modules/sound"
+  import { typeHit, playUISound } from "$lib/modules/sound"
 
   gsap.registerPlugin(TextPlugin)
 
@@ -48,10 +48,10 @@
     }
   }
 
-  onMount(() => {
+  onMount(async () => {
     console.log("play ... SETUP")
-    sound = playSound("ratfun", "tripSetup")
-    playSound("ratfun", "tripSetupTrigger")
+    sound = playUISound("ratfun", "tripSetup")
+    playUISound("ratfun", "tripSetupTrigger")
     // Start timer
     timerInterval = setInterval(() => {
       timeElapsed += 0.1
@@ -99,9 +99,11 @@
     }, 5000)
   })
 
-  onDestroy(() => {
-    if (sound) {
-      sound.stop()
+  onDestroy(async () => {
+    const result = await sound
+    if (result) {
+      console.log("trying to stop sound ", result)
+      result.stop()
     }
   })
 </script>

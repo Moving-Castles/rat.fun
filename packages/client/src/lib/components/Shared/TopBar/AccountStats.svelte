@@ -2,24 +2,27 @@
   import { playerAddress } from "$lib/modules/state/stores"
   import { onMount, onDestroy } from "svelte"
   import { playerERC20Allowance, playerERC20Balance } from "$lib/modules/state/stores"
+  import { playUISound } from "$lib/modules/sound"
   import {
     sendGiveCallerTokens,
     sendApproveMax,
     sendBuyWithEth
   } from "$lib/modules/action-manager/index.svelte"
   import { SmallButton } from "$lib/components/Shared"
-  import { playSound } from "$lib/modules/sound"
+  import { getMixerState } from "$lib/modules/sound/state.svelte"
   import { ENTITY_TYPE } from "contracts/enums"
   import { walletType, environment } from "$lib/modules/network"
   import { player } from "$lib/modules/state/stores"
   import { busy } from "$lib/modules/action-manager/index.svelte"
 
+  const mixer = getMixerState()
+
   onMount(() => {
-    playSound("ratfun", "textLineHit")
+    playUISound("ratfun", "textLineHit")
   })
 
   onDestroy(() => {
-    playSound("ratfun", "textLineHit")
+    playUISound("ratfun", "textLineHit")
   })
 </script>
 
@@ -65,7 +68,7 @@
       extraClass="red"
       onclick={async () => {
         await sendGiveCallerTokens()
-        playSound("ratfun", "coins")
+        playUISound("ratfun", "coins")
       }}
       text="Get 2000 free $SLopamine"
     ></SmallButton>
@@ -74,7 +77,7 @@
       tippyText="Buy some $Slopamine"
       onclick={async () => {
         await sendBuyWithEth()
-        playSound("ratfun", "coins")
+        playUISound("ratfun", "coins")
       }}
       text="Buy 1 $Slopamine for 0.001ETH"
     ></SmallButton>
@@ -83,10 +86,55 @@
       tippyText="Allow the contract to spend on your behalf"
       onclick={async () => {
         await sendApproveMax()
-        playSound("ratfun", "coins")
       }}
       text="Approve max allowance"
     ></SmallButton>
+  </div>
+
+  <div class="tab">
+    <p class="key">Music volume</p>
+    <input
+      min="-100"
+      max="0"
+      type="range"
+      name="music-volume"
+      id="music-volume"
+      value={mixer.channelStates.music.volume}
+      oninput={e => {
+        mixer.setChannelVolume("music", Number(e.target.value))
+      }}
+    />
+    {mixer.channelStates.music.volume}dB
+    <label>
+      <input
+        type="checkbox"
+        bind:checked={mixer.channelStates.music.muted}
+        onchange={e => mixer.setChannelMute("music", e.target.checked)}
+      />
+      Mute
+    </label>
+  </div>
+
+  <div class="tab">
+    <p class="key">UI Volume</p>
+    <input
+      min="-100"
+      max="0"
+      type="range"
+      name="ui-volume"
+      id="ui-volume"
+      bind:value={mixer.channelStates.ui.volume}
+      oninput={e => mixer.setChannelVolume("ui", Number(e.target.value))}
+    />
+    {mixer.channelStates.ui.volume}dB
+    <label>
+      <input
+        type="checkbox"
+        bind:checked={mixer.channelStates.ui.muted}
+        onchange={e => mixer.setChannelMute("ui", e.target.checked)}
+      />
+      Mute
+    </label>
   </div>
 </div>
 
@@ -121,9 +169,44 @@
 
     .tab {
       display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
 
       .key {
         width: 140px;
+      }
+
+      input[type="range"] {
+        flex: 1;
+        min-width: 100px;
+      }
+
+      label {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 16px;
+      }
+    }
+
+    .group-controls {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+
+      button {
+        padding: 4px 8px;
+        font-size: 14px;
+        background: var(--color-border);
+        color: var(--white);
+        border: 1px solid var(--color-border);
+        cursor: pointer;
+
+        &:hover {
+          background: var(--white);
+          color: var(--background-semi-transparent);
+        }
       }
     }
   }

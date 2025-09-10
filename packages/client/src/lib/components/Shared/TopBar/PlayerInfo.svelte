@@ -2,6 +2,7 @@
   import { player, playerERC20Balance } from "$lib/modules/state/stores"
   import { NumberGoing } from "$lib/components/Shared"
   import { tippy } from "svelte-tippy"
+
   import AccountStats from "./AccountStats.svelte"
 
   let { isAdminView }: { isAdminView: boolean } = $props()
