@@ -15,11 +15,19 @@ let channelStates = $state<Record<string, ChannelConfig>>({
 })
 let uiChannel = $state<Tone.InputNode>()
 let musicChannel = $state<Tone.InputNode>()
+let channels = $derived({
+  ui: uiChannel,
+  music: musicChannel
+})
+let players = $state<Record<string, Tone.InputNode>>()
 
 let masterVolume = $state(-10)
-let channels: Record<string, Tone.Channel> = {}
 
 export const getMixerState = () => {
+  const setPlayers = (newPlayersState: Record<string, Tone.Player>) => {
+    players = newPlayersState
+  }
+
   const setChannelStates = states => {
     channelStates = states
   }
@@ -80,37 +88,117 @@ export const getMixerState = () => {
     Object.keys(channelStates).forEach(updateChannelVolume)
   }
 
-  const registerChannel = (name: string, channel: Tone.Channel) => {
-    channels[name] = channel
-    if (!channelStates[name]) {
-      channelStates[name] = { volume: 0, muted: false, solo: false, pan: 0 }
-    }
-    updateChannelVolume(name)
-  }
-
   return {
     // Channel controls
-    setChannelStates, // for setting from page load
+    setChannelStates,
+    setPlayers,
     setChannelVolume,
     setChannelMute,
     setChannelSolo,
     // Master control
     setMasterVolume,
-    // System
-    registerChannel,
     get channels() {
-      return {
-        ui: uiChannel,
-        music: musicChannel
-      }
+      return
+    },
+    get players() {
+      return players
     },
     get channelStates() {
       return channelStates
     },
-    get master() {
+    get masterVolume() {
       return masterVolume
     }
   }
+}
+
+const registerMusic = (channel: Tone.ToneAudioNode): Record<string, Tone.Player> => {
+  console.log("register music: is called")
+  // Looping music ONLY
+  // Main
+  const mainSound = new Tone.Player({
+    url: soundLibrary.ratfun.main.src,
+    volume: -Infinity,
+    loop: true,
+    autostart: true
+  })
+    .connect(channel)
+    .sync()
+
+  console.log("register music: hi")
+
+  // Admin
+  const adminSound = new Tone.Player({
+    url: soundLibrary.ratfun.admin.src,
+    volume: -Infinity,
+    loop: true,
+    autostart: true
+  })
+    .connect(channel)
+    .sync()
+
+  console.log("register music: hi 2")
+
+  console.log("register music: ", soundLibrary.tcm.podBg.src)
+
+  // Spawn
+  const spawnSound = new Tone.Player({
+    url: soundLibrary.tcm.podBg.src,
+    volume: -Infinity,
+    loop: true,
+    autostart: true
+  })
+    .connect(channel)
+    .sync()
+
+  console.log("register music: hi 3")
+
+  // Non-looping music
+
+  // Trip setup
+  const tripSetup = new Tone.Player({
+    url: soundLibrary.ratfun.tripSetup.src,
+    volume: -Infinity,
+    loop: false,
+    autostart: false
+  })
+    .connect(channel)
+    .sync()
+
+  const tripProcessing = new Tone.Player({
+    url: soundLibrary.ratfun.tripProcessing.src,
+    volume: -Infinity,
+    loop: false,
+    autostart: false
+  })
+    .connect(channel)
+    .sync()
+
+  const tripResultGood = new Tone.Player({
+    url: soundLibrary.ratfun.tripResultGood.src,
+    volume: -Infinity,
+    loop: false,
+    autostart: false
+  })
+    .connect(channel)
+    .sync()
+
+  console.log("register music: hi N")
+
+  const result = {
+    mainSound,
+    adminSound,
+    spawnSound,
+    tripSetup,
+    tripProcessing,
+    tripResultGood
+  }
+
+  console.log("register music: Result")
+
+  console.log("register music: returning the music players", result)
+
+  return result
 }
 
 // Initialise the sound
@@ -120,7 +208,7 @@ export async function initSound(): Promise<void> {
     const mixer = getMixerState()
 
     // Set up master volume
-    Tone.getDestination().volume.value = mixer.master
+    Tone.getDestination().volume.value = mixer.masterVolume
 
     Tone.getTransport().loop = true
     Tone.getTransport().loopStart = 0
@@ -132,38 +220,17 @@ export async function initSound(): Promise<void> {
 
     // Create and register Music channel
     musicChannel = new Tone.Channel().toDestination()
-    mixer.registerChannel("music", musicChannel)
 
     // Create and register UI channel
     uiChannel = new Tone.Channel().toDestination()
-    mixer.registerChannel("ui", uiChannel)
 
-    // ** Register audio for the mixer
-    const mainPlayer = new Tone.Player({
-      url: soundLibrary.ratfun.main.src,
-      loop: true,
-      onload: () => {
-        mainPlayer.start(0)
-        mainPlayer.volume.rampTo(0, "1m")
-      }
-    })
-      .connect(musicChannel)
-      .sync()
+    // Register the music players and apply them to the music channel
+    const musicPlayers = registerMusic(musicChannel)
+    mixer.setPlayers(musicPlayers)
 
-    const loopingUp = new Tone.Player({
-      url: soundLibrary.ratfun.upwardspiral.src,
-      loop: false,
-      onend: () => {
-        console.log("we ended")
-      },
-      onload: () => {
-        loopingUp.start("2m")
-      }
-    })
-      .connect(musicChannel)
-      .sync()
+    // Now. Try to play the correct music based on the current page
 
-    console.log("Audio context started during init")
+    // We will use the individual players to change play state
   } catch (error) {
     console.log("Audio context requires user gesture, will start later")
   }

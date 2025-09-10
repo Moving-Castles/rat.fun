@@ -1,6 +1,6 @@
 import { get } from "svelte/store"
 
-import { playSound } from "$lib/modules/sound"
+import { playUISound } from "$lib/modules/sound"
 import {
   gameConfig,
   externalAddressesConfig,
@@ -20,7 +20,7 @@ export async function sendCreateRat(name: string) {
   const _playerERC20Allowance = get(playerERC20Allowance)
 
   if (busy.CreateRat.current !== 0) return
-  playSound("ratfun", "blink")
+  playUISound("ratfun", "blink")
   busy.CreateRat.set(0.99)
   // Approve
   try {

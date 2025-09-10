@@ -45,6 +45,8 @@
 
   let { children, data }: LayoutProps = $props()
 
+  let mixer = getMixerState()
+
   let DEBUG_SHADER = $state(false)
   let initingSound = $state(false)
   let outcomeId = $state("")
@@ -94,7 +96,8 @@
     document.removeEventListener("click", enableAudio)
     document.removeEventListener("touchstart", enableAudio)
     document.removeEventListener("keydown", enableAudio)
-    console.log("event listeners were removed")
+
+    console.log(mixer)
   }
 
   onMount(async () => {

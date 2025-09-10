@@ -3,14 +3,14 @@
   import { onMount } from "svelte"
   import { formatDate } from "$lib/modules/utils"
   import { tippy } from "svelte-tippy"
-  import { playSound } from "$lib/modules/sound"
+  import { playUISound } from "$lib/modules/sound"
 
   let { event, suppressSound = false }: { event: OffChainMessage; suppressSound?: boolean } =
     $props()
 
   onMount(() => {
     if (!suppressSound) {
-      playSound("ratfun", "selectionScroll")
+      playUISound("ratfun", "selectionScroll")
     }
   })
 </script>

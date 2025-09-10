@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { playSound } from "$lib/modules/sound"
+  import { playUISound } from "$lib/modules/sound"
   import { getRandomUint32 } from "$lib/modules/utils"
   import { onDestroy, onMount } from "svelte"
 
@@ -9,7 +9,7 @@
   onMount(() => {
     timer = window.setInterval(() => {
       spinner = getRandomUint32()
-      playSound("ratfun", "TRX_wait_a")
+      playUISound("ratfun", "TRX_wait_a")
     }, 100)
   })
 

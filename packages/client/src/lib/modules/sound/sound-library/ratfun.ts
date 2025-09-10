@@ -16,6 +16,21 @@ export const ratfun: SoundAssets = {
     author: "ian",
     volume: 0.6
   },
+  tripSetup: {
+    src: "/sounds/ratfun/click_16.mp3", // sehr misleading title, this is actually soundscape
+    author: "leo",
+    volume: 1
+  },
+  tripProcessing: {
+    src: "/sounds/ratfun/click_16.mp3", // sehr misleading title, this is actually soundscape
+    author: "leo",
+    volume: 1
+  },
+  tripResultGood: {
+    src: "/sounds/ratfun/click_16.mp3", // sehr misleading title, this is actually soundscape
+    author: "leo",
+    volume: 1
+  },
   // Not used
   mainAll: {
     src: "/sounds/ratfun/bossajazzloop.mp3",

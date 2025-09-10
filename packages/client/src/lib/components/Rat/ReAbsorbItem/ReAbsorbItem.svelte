@@ -2,7 +2,7 @@
   import { onMount } from "svelte"
 
   import { reAbsorbItem } from "$lib/modules/on-chain-transactions"
-  import { playSound } from "$lib/modules/sound"
+  import { playUISound } from "$lib/modules/sound"
   import { VideoLoaderDuration } from "$lib/components/Shared"
   import { transitionTo, RAT_BOX_STATE, getItemState } from "../RatBox/state.svelte"
 
@@ -17,10 +17,10 @@
     if (busy) return
 
     try {
-      playSound("ratfun", "blink")
+      playUISound("ratfun", "blink")
       busy = true
       await reAbsorbItem(item.current)
-      playSound("ratfun", "TRX_no")
+      playUISound("ratfun", "TRX_no")
     } catch (e) {
       console.error(e)
     } finally {

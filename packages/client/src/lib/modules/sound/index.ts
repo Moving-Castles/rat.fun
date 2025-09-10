@@ -10,13 +10,16 @@ import { getMixerState } from "./state.svelte"
  * @param {string} id - The id of the sound within the collection.
  * @returns {Promise<Tone.Player | undefined>} - The Tone.js Player object of the sound.
  */
-export async function playSound(collection: string, id: string): Promise<Tone.Player | undefined> {
+export async function playUISound(
+  collection: string,
+  id: string
+): Promise<Tone.Player | undefined> {
   // This check just in case tone context hasn't started
   await Tone.start()
 
   const mixer = getMixerState()
 
-  if (mixer.channels.ui) {
+  if (mixer?.channels?.ui) {
     const sound = new Tone.Player({
       url: soundLibrary[collection][id].src,
       autostart: true
@@ -36,5 +39,5 @@ export function randomPitch(): number {
 }
 
 export const typeHit = async () => {
-  playSound("ratfun", "type")
+  playUISound("ratfun", "type")
 }

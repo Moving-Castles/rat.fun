@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Tween } from "svelte/motion"
   import { linear as easing } from "svelte/easing"
-  import { playSound } from "$lib/modules/sound"
+  import { playUISound } from "$lib/modules/sound"
 
   let {
     value,
@@ -43,11 +43,11 @@
 
         if (direction < 0) {
           if (!muted) {
-            playSound("ratfun", "ratsUp")
+            playUISound("ratfun", "ratsUp")
           }
         } else {
           if (!muted) {
-            playSound("ratfun", "ratsDown")
+            playUISound("ratfun", "ratsDown")
           }
         }
 
