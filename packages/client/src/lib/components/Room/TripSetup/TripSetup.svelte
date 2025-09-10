@@ -41,12 +41,17 @@
 
   // Type hit helper for text array
   const playTypeHitText = (char: string) => {
-    if (textDisplayElement) textDisplayElement.textContent += char
-    typeHit()
+    console.log("play type hit")
+    if (textDisplayElement) {
+      textDisplayElement.textContent += char
+      typeHit()
+    }
   }
 
   onMount(() => {
+    console.log("play ... SETUP")
     sound = playSound("ratfun", "tripSetup")
+    playSound("ratfun", "tripSetupTrigger")
     // Start timer
     timerInterval = setInterval(() => {
       timeElapsed += 0.1

@@ -53,6 +53,7 @@
         "+=0.5" // Add a delay of 0.5 seconds before calling the callback
       )
       // All timelines added, play the parent timeline
+      console.log("play log timeline")
       logTimeline.play()
     }
   }

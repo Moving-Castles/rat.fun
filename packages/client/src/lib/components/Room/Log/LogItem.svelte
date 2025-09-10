@@ -53,8 +53,10 @@
   // Type hit helper
   const playTypeHit = (char: string) => {
     // Use string type hint
-    if (logTextElement) logTextElement.textContent += char
-    typeHit()
+    if (logTextElement) {
+      logTextElement.textContent += char
+      typeHit()
+    }
   }
 
   // Outcome sound helper

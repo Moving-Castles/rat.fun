@@ -8,7 +8,8 @@
 
   onMount(() => {
     console.log("play result good")
-    sound = playSound("ratfun", "tripResultGood")
+    sound = playSound("ratfun", "tripResultLoop")
+    playSound("ratfun", "tripResultTrigger")
   })
 
   onDestroy(() => {

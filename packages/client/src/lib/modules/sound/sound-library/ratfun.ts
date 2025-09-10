@@ -28,12 +28,27 @@ export const ratfun: SoundAssets = {
     volume: 0.01
   },
   tripSetup: {
-    src: "/sounds/ratfun/trip_setup.mp3",
+    src: "/sounds/ratfun/trip_setup_loop.mp3",
+    author: "leo",
+    volume: 1
+  },
+  tripSetupTrigger: {
+    src: "/sounds/ratfun/trip_setup_oneshot.mp3",
     author: "leo",
     volume: 1
   },
   tripProcessing: {
-    src: "/sounds/ratfun/trip_processing_riser.mp3",
+    src: "/sounds/ratfun/trip_riser.mp3",
+    author: "leo",
+    volume: 1
+  },
+  tripResultLoop: {
+    src: "/sounds/ratfun/trip_result_loop.mp3",
+    author: "leo",
+    volume: 1
+  },
+  tripResultTrigger: {
+    src: "/sounds/ratfun/trip_result_oneshot.mp3",
     author: "leo",
     volume: 1
   },
