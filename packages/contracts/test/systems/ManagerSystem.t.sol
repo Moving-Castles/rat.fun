@@ -8,6 +8,8 @@ import { Item } from "../../src/structs.sol";
 import { RAT_CREATION_COST } from "../../src/constants.sol";
 
 contract ManagerSystemTest is BaseTest {
+  bytes32 aliceId;
+  bytes32 bobId;
   bytes32 ratId;
   bytes32 roomId;
   uint256 initialBalance;
@@ -20,7 +22,7 @@ contract ManagerSystemTest is BaseTest {
     initialBalance = setInitialBalance(alice);
     // As alice
     vm.startPrank(alice);
-    world.ratfun__spawn("alice");
+    aliceId = world.ratfun__spawn("alice");
     approveGamePool(type(uint256).max);
     ratId = world.ratfun__createRat("roger");
     vm.stopPrank();
@@ -28,7 +30,7 @@ contract ManagerSystemTest is BaseTest {
     setInitialBalance(bob);
     // As bob
     vm.startPrank(bob);
-    bytes32 bobId = world.ratfun__spawn("bob");
+    bobId = world.ratfun__spawn("bob");
     approveGamePool(type(uint256).max);
     vm.stopPrank();
 
@@ -58,8 +60,61 @@ contract ManagerSystemTest is BaseTest {
     endGasReport();
     vm.stopPrank();
 
+    assertEq(VisitCount.get(roomId), 1);
     // Check last visit block
     assertEq(LastVisitBlock.get(roomId), block.number);
+  }
+
+  function testRevertNotRat() public {
+    prankAdmin();
+
+    vm.expectRevert("not rat");
+    world.ratfun__applyOutcome(bytes32(0), roomId, 0, new bytes32[](0), new Item[](0));
+
+    vm.stopPrank();
+  }
+
+  function testRevertRatIsDead() public {
+    prankAdmin();
+
+    Dead.set(ratId, true);
+    vm.expectRevert("rat is dead");
+    world.ratfun__applyOutcome(ratId, roomId, 0, new bytes32[](0), new Item[](0));
+
+    vm.stopPrank();
+  }
+
+  function testRevertNotRoom() public {
+    prankAdmin();
+
+    vm.expectRevert("not room");
+    world.ratfun__applyOutcome(ratId, bytes32(0), 0, new bytes32[](0), new Item[](0));
+
+    vm.stopPrank();
+  }
+
+  function testRevertRatValueTooLow() public {
+    prankAdmin();
+
+    // Create a room with minRatValueToEnter higher than the initial rat balance
+    roomId = world.ratfun__createRoom(bobId, bytes32(0), ROOM_INITIAL_BALANCE, 100, RAT_CREATION_COST + 10, "test room");
+
+    vm.expectRevert("rat value too low");
+    world.ratfun__applyOutcome(ratId, roomId, 0, new bytes32[](0), new Item[](0));
+
+    vm.stopPrank();
+  }
+
+  function testRevertNoRoomBalance() public {
+    prankAdmin();
+
+    // Deplete room balance
+    Balance.set(roomId, 0);
+
+    vm.expectRevert("no room balance");
+    world.ratfun__applyOutcome(ratId, roomId, 0, new bytes32[](0), new Item[](0));
+
+    vm.stopPrank();
   }
 
   // * * * *
