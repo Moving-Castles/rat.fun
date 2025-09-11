@@ -33,6 +33,8 @@ contract RoomSystem is System {
     uint256 _minRatValueToEnter,
     string memory _prompt
   ) public onlyAdmin returns (bytes32 newRoomId) {
+    // Disallow rooms with 0 value
+    require(_roomCreationCost > 0, "room value too low");
     // Room id can be 0 (which generates a new id) or an unused entity id
     require(_roomId == bytes32(0) || EntityType.get(_roomId) == ENTITY_TYPE.NONE, "room id already in use");
 

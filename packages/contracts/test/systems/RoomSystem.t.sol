@@ -80,6 +80,20 @@ contract RoomSystemTest is BaseTest {
     vm.stopPrank();
   }
 
+  function testRevertRoomValueTooLow() public {
+    vm.startPrank(alice);
+    bytes32 playerId = world.ratfun__spawn("alice");
+    world.ratfun__giveCallerTokens();
+    approveGamePool(type(uint256).max);
+    vm.stopPrank();
+
+    prankAdmin();
+    LibWorld.gamePool().depositTokens(alice, LibWorld.erc20().balanceOf(alice));
+    vm.expectRevert("room value too low");
+    world.ratfun__createRoom(playerId, bytes32(0), 0, 100, 10, "A test room");
+    vm.stopPrank();
+  }
+
   function testRevertIdAlreadyInUse() public {
     setInitialBalance(alice);
     vm.startPrank(alice);
