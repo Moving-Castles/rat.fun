@@ -8,27 +8,21 @@ import { Item } from "../../src/structs.sol";
 import { RAT_CREATION_COST } from "../../src/constants.sol";
 
 contract ManagerSystemTest is BaseTest {
-  // * * * *
-  // Basic
-  // * * * *
+  bytes32 ratId;
+  bytes32 roomId;
+  uint256 initialBalance;
 
-  function testRevertNotAllowed() public {
-    vm.startPrank(alice);
-    world.ratfun__spawn("alice");
+  function setUp() public override {
+    super.setUp();
 
-    vm.expectRevert("not allowed");
-    world.ratfun__applyOutcome(bytes32(0), bytes32(0), 0, new bytes32[](0), new Item[](0));
+    // Initialize alice, bob and their default rat and room
 
-    vm.stopPrank();
-  }
-
-  function testApplyOutcomeEmpty() public {
-    setInitialBalance(alice);
+    initialBalance = setInitialBalance(alice);
     // As alice
     vm.startPrank(alice);
     world.ratfun__spawn("alice");
     approveGamePool(type(uint256).max);
-    bytes32 ratId = world.ratfun__createRat("roger");
+    ratId = world.ratfun__createRat("roger");
     vm.stopPrank();
 
     setInitialBalance(bob);
@@ -39,9 +33,24 @@ contract ManagerSystemTest is BaseTest {
     vm.stopPrank();
 
     prankAdmin();
-    bytes32 roomId = world.ratfun__createRoom(bobId, bytes32(0), ROOM_INITIAL_BALANCE, 100, 10, "test room");
+    roomId = world.ratfun__createRoom(bobId, bytes32(0), ROOM_INITIAL_BALANCE, 100, 10, "test room");
     vm.stopPrank();
+  }
 
+  // * * * *
+  // Basic
+  // * * * *
+
+  function testRevertNotAllowed() public {
+    vm.startPrank(alice);
+
+    vm.expectRevert("not allowed");
+    world.ratfun__applyOutcome(bytes32(0), bytes32(0), 0, new bytes32[](0), new Item[](0));
+
+    vm.stopPrank();
+  }
+
+  function testApplyOutcomeEmpty() public {
     // As admin
     prankAdmin();
     startGasReport("Apply outcome (empty)");
@@ -58,25 +67,6 @@ contract ManagerSystemTest is BaseTest {
   // * * * *
 
   function testApplyOutcomeAddItem() public {
-    setInitialBalance(alice);
-    // As alice
-    vm.startPrank(alice);
-    world.ratfun__spawn("alice");
-    approveGamePool(type(uint256).max);
-    bytes32 ratId = world.ratfun__createRat("roger");
-    vm.stopPrank();
-
-    setInitialBalance(bob);
-    // As bob
-    vm.startPrank(bob);
-    bytes32 bobId = world.ratfun__spawn("bob");
-    approveGamePool(type(uint256).max);
-    vm.stopPrank();
-
-    prankAdmin();
-    bytes32 roomId = world.ratfun__createRoom(bobId, bytes32(0), ROOM_INITIAL_BALANCE, 100, 10, "test room");
-    vm.stopPrank();
-
     // Item to add
     Item[] memory newItems = new Item[](1);
     newItems[0] = Item("cheese", 40);
@@ -98,25 +88,6 @@ contract ManagerSystemTest is BaseTest {
   }
 
   function testApplyOutcomeAddItemTooExpensive() public {
-    setInitialBalance(alice);
-    // As alice
-    vm.startPrank(alice);
-    world.ratfun__spawn("alice");
-    approveGamePool(type(uint256).max);
-    bytes32 ratId = world.ratfun__createRat("roger");
-    vm.stopPrank();
-
-    setInitialBalance(bob);
-    // As bob
-    vm.startPrank(bob);
-    bytes32 bobId = world.ratfun__spawn("bob");
-    approveGamePool(type(uint256).max);
-    vm.stopPrank();
-
-    prankAdmin();
-    bytes32 roomId = world.ratfun__createRoom(bobId, bytes32(0), ROOM_INITIAL_BALANCE, 100, 10, "test room");
-    vm.stopPrank();
-
     // Item to add
     Item[] memory newItems = new Item[](1);
     newItems[0] = Item("cheese", ROOM_INITIAL_BALANCE + 1);
@@ -135,25 +106,6 @@ contract ManagerSystemTest is BaseTest {
   }
 
   function testApplyOutcomeAddItemInventoryFull() public {
-    setInitialBalance(alice);
-    // As alice
-    vm.startPrank(alice);
-    world.ratfun__spawn("alice");
-    approveGamePool(type(uint256).max);
-    bytes32 ratId = world.ratfun__createRat("roger");
-    vm.stopPrank();
-
-    setInitialBalance(bob);
-    // As bob
-    vm.startPrank(bob);
-    bytes32 bobId = world.ratfun__spawn("bob");
-    approveGamePool(type(uint256).max);
-    vm.stopPrank();
-
-    prankAdmin();
-    bytes32 roomId = world.ratfun__createRoom(bobId, bytes32(0), ROOM_INITIAL_BALANCE, 100, 10, "test room");
-    vm.stopPrank();
-
     uint256 maxInventorySize = GameConfig.getMaxInventorySize();
 
     // Item to add
@@ -185,25 +137,6 @@ contract ManagerSystemTest is BaseTest {
   }
 
   function testApplyOutcomeRemoveItem() public {
-    setInitialBalance(alice);
-    // As alice
-    vm.startPrank(alice);
-    world.ratfun__spawn("alice");
-    approveGamePool(type(uint256).max);
-    bytes32 ratId = world.ratfun__createRat("roger");
-    vm.stopPrank();
-
-    setInitialBalance(bob);
-    // As bob
-    vm.startPrank(bob);
-    bytes32 bobId = world.ratfun__spawn("bob");
-    approveGamePool(type(uint256).max);
-    vm.stopPrank();
-
-    prankAdmin();
-    bytes32 roomId = world.ratfun__createRoom(bobId, bytes32(0), ROOM_INITIAL_BALANCE, 100, 10, "test room");
-    vm.stopPrank();
-
     // Item to add
     Item[] memory newItems = new Item[](1);
     newItems[0] = Item("cheese", 40);
@@ -242,24 +175,8 @@ contract ManagerSystemTest is BaseTest {
   // * * * * * * * * *
 
   function testApplyOutcomeTransferToRat() public {
-    // As alice
-    setInitialBalance(alice);
-    vm.startPrank(alice);
-    world.ratfun__spawn("alice");
-    approveGamePool(type(uint256).max);
-    bytes32 ratId = world.ratfun__createRat("roger");
-    vm.stopPrank();
-
-    // As bob
-    uint256 initialBalance = setInitialBalance(bob);
-    vm.startPrank(bob);
-    bytes32 bobId = world.ratfun__spawn("bob");
-    approveGamePool(type(uint256).max);
-    vm.stopPrank();
-
     // As admin
     prankAdmin();
-    bytes32 roomId = world.ratfun__createRoom(bobId, bytes32(0), ROOM_INITIAL_BALANCE, 100, 10, "test room");
     startGasReport("Apply outcome (transfer to rat)");
     world.ratfun__applyOutcome(ratId, roomId, 20, new bytes32[](0), new Item[](0));
     endGasReport();
@@ -277,24 +194,8 @@ contract ManagerSystemTest is BaseTest {
   }
 
   function testApplyOutcomeTransferToRoom() public {
-    // As alice
-    setInitialBalance(alice);
-    vm.startPrank(alice);
-    world.ratfun__spawn("alice");
-    approveGamePool(type(uint256).max);
-    bytes32 ratId = world.ratfun__createRat("roger");
-    vm.stopPrank();
-
-    // As bob
-    setInitialBalance(bob);
-    vm.startPrank(bob);
-    bytes32 bobId = world.ratfun__spawn("bob");
-    approveGamePool(type(uint256).max);
-    vm.stopPrank();
-
     // As admin
     prankAdmin();
-    bytes32 roomId = world.ratfun__createRoom(bobId, bytes32(0), ROOM_INITIAL_BALANCE, 100, 10, "test room");
     world.ratfun__applyOutcome(ratId, roomId, 50, new bytes32[](0), new Item[](0));
     startGasReport("Apply outcome (transfer to room)");
     world.ratfun__applyOutcome(ratId, roomId, -20, new bytes32[](0), new Item[](0));
@@ -308,24 +209,8 @@ contract ManagerSystemTest is BaseTest {
   }
 
   function testApplyOutcomeOverTransferToRat() public {
-    // As alice
-    setInitialBalance(alice);
-    vm.startPrank(alice);
-    world.ratfun__spawn("alice");
-    approveGamePool(type(uint256).max);
-    bytes32 ratId = world.ratfun__createRat("roger");
-    vm.stopPrank();
-
-    // As bob
-    setInitialBalance(bob);
-    vm.startPrank(bob);
-    bytes32 bobId = world.ratfun__spawn("bob");
-    approveGamePool(type(uint256).max);
-    vm.stopPrank();
-
     // As admin
     prankAdmin();
-    bytes32 roomId = world.ratfun__createRoom(bobId, bytes32(0), ROOM_INITIAL_BALANCE, 100, 10, "test room");
     startGasReport("Apply outcome (over transfer to rat)");
     world.ratfun__applyOutcome(ratId, roomId, int256(ROOM_INITIAL_BALANCE + 100), new bytes32[](0), new Item[](0));
     endGasReport();
@@ -338,24 +223,8 @@ contract ManagerSystemTest is BaseTest {
   }
 
   function testApplyOutcomeOverTransferToRoom() public {
-    // As alice
-    setInitialBalance(alice);
-    vm.startPrank(alice);
-    world.ratfun__spawn("alice");
-    approveGamePool(type(uint256).max);
-    bytes32 ratId = world.ratfun__createRat("roger");
-    vm.stopPrank();
-
-    // As bob
-    setInitialBalance(bob);
-    vm.startPrank(bob);
-    bytes32 bobId = world.ratfun__spawn("bob");
-    approveGamePool(type(uint256).max);
-    vm.stopPrank();
-
     // As admin
     prankAdmin();
-    bytes32 roomId = world.ratfun__createRoom(bobId, bytes32(0), ROOM_INITIAL_BALANCE, 100, 10, "test room");
     world.ratfun__applyOutcome(ratId, roomId, 50, new bytes32[](0), new Item[](0));
     startGasReport("Apply outcome (over transfer to room)");
     world.ratfun__applyOutcome(ratId, roomId, -200, new bytes32[](0), new Item[](0));
@@ -374,21 +243,6 @@ contract ManagerSystemTest is BaseTest {
   // * * * *
 
   function testApplyOutcomeValueTransferOnDeath() public {
-    // As alice
-    setInitialBalance(alice);
-    vm.startPrank(alice);
-    world.ratfun__spawn("alice");
-    approveGamePool(type(uint256).max);
-    bytes32 ratId = world.ratfun__createRat("roger");
-    vm.stopPrank();
-
-    // As bob
-    setInitialBalance(bob);
-    vm.startPrank(bob);
-    bytes32 bobId = world.ratfun__spawn("bob");
-    approveGamePool(type(uint256).max);
-    vm.stopPrank();
-
     // Item to add
     Item[] memory newItems = new Item[](2);
     newItems[0] = Item("cheese", 30);
@@ -397,8 +251,6 @@ contract ManagerSystemTest is BaseTest {
     // As admin
     prankAdmin();
 
-    // Create room
-    bytes32 roomId = world.ratfun__createRoom(bobId, bytes32(0), ROOM_INITIAL_BALANCE, 100, 10, "test room");
     // Add items and transfer balance to rat
     world.ratfun__applyOutcome(ratId, roomId, 20, new bytes32[](0), newItems);
 
