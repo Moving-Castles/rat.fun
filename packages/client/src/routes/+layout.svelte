@@ -5,12 +5,7 @@
   import type { LayoutProps } from "./$types"
 
   import { type Outcome as SanityOutcome } from "@sanity-types"
-  import {
-    initSound,
-    getMixerState,
-    snapshotFactory,
-    switchAudio
-  } from "$lib/modules/sound/state.svelte"
+  import { initSound, snapshotFactory, switchAudio } from "$lib/modules/sound/state.svelte"
   import { initializeSentry } from "$lib/modules/error-handling"
   import { browser } from "$app/environment"
   import { afterNavigate } from "$app/navigation"
@@ -28,6 +23,7 @@
   import { errorHandler } from "$lib/modules/error-handling"
   import { removeHash } from "$lib/modules/utils"
   import { walletType as walletTypeStore } from "$lib/modules/network"
+  import { page } from "$app/state"
 
   // Components
   import Spawn from "$lib/components/Spawn/Spawn.svelte"
@@ -49,8 +45,6 @@
   export const snapshot = snapshotFactory()
 
   let { children, data }: LayoutProps = $props()
-
-  let mixer = getMixerState()
 
   let DEBUG_SHADER = $state(false)
   let initingSound = $state(false)
@@ -95,6 +89,8 @@
     initingSound = true
 
     await initSound()
+
+    switchAudio(page)
 
     document.removeEventListener("click", enableAudio)
     document.removeEventListener("touchstart", enableAudio)

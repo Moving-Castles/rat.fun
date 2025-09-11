@@ -1,6 +1,7 @@
 import type { Snapshot } from "./$types"
 import * as Tone from "tone"
 import { soundLibrary } from "$lib/modules/sound/sound-library"
+import { page } from "$app/state"
 
 export type ChannelConfig = {
   volume: number
@@ -17,8 +18,10 @@ let uiChannel = $state<Tone.InputNode>()
 let musicChannel = $state<Tone.InputNode>()
 let channels = $state<Record<string, Tone.Channel>>({})
 let players = $state<Record<string, Tone.Player>>()
+let currentlyPlaying = $state<string | null>(null)
+let toneLoaded = $state(false)
 
-let masterVolume = $state(-10)
+let masterVolume = $state(0)
 
 export const getMixerState = () => {
   const setPlayers = (newPlayersState: Record<string, Tone.Player>) => {
@@ -101,20 +104,23 @@ export const getMixerState = () => {
         }
       })
     }
+    currentlyPlaying = null
   }
 
   const startMusic = (key: string) => {
-    if (players && players[key]) {
-      if (players[key].state !== "started") {
-        players[key].start()
-      }
+    if (players && players[key] && currentlyPlaying !== key) {
+      stopAllMusic()
+      console.log("start music ", key)
+      players[key].start()
+      currentlyPlaying = key
     }
   }
 
   const stopMusic = (key: string) => {
-    if (players && players[key]) {
-      if (players[key].state !== "stopped") {
-        players[key].stop()
+    if (players && players[key] && players[key].state !== "stopped") {
+      players[key].stop()
+      if (currentlyPlaying === key) {
+        currentlyPlaying = null
       }
     }
   }
@@ -132,6 +138,9 @@ export const getMixerState = () => {
     stopMusic,
     // Master control
     setMasterVolume,
+    get loaded() {
+      return toneLoaded
+    },
     get channels() {
       return channels
     },
@@ -143,6 +152,9 @@ export const getMixerState = () => {
     },
     get masterVolume() {
       return masterVolume
+    },
+    get currentlyPlaying() {
+      return currentlyPlaying
     }
   }
 }
@@ -217,28 +229,45 @@ const registerMusic = (channel: Tone.ToneAudioNode): Record<string, Tone.Player>
     tripResultGood
   }
 
+  Tone.loaded().then(done => {
+    console.log("TONE LOADED")
+    console.log(done)
+    toneLoaded = true
+    switchAudio(page)
+  })
+
   return result
 }
 
+const getMusicForRoute = route => {
+  if (route.route.id.includes("admin")) {
+    return "admin"
+  } else if (route.url.pathname.includes("result")) {
+    return null // Stop all music for results
+  } else if (route.route.id.includes("(game)")) {
+    return "main"
+  }
+
+  return null
+}
+
 export async function switchAudio(
-  to: import("@sveltejs/kit").RouteDefinition,
-  from: import("@sveltejs/kit").RouteDefinition
+  to: Partial<import("@sveltejs/kit").Page>,
+  from?: import("@sveltejs/kit").RouteDefinition
 ) {
   const mixer = getMixerState()
 
-  if (!mixer.players) return
+  if (!mixer.loaded || !mixer.players) return
 
-  if (to.route.id.includes("admin")) {
-    // Check playstate
-    mixer.stopAllMusic()
-    mixer.startMusic("admin")
-  } else if (to.url.pathname.includes("result")) {
-    mixer.stopAllMusic()
-    // Rest of the music is arranged inside the Trip component
-  } else if (to.route.id.includes("(game)")) {
-    mixer.stopAllMusic()
-    console.log("calling start main")
-    mixer.startMusic("main")
+  const targetMusic = getMusicForRoute(to)
+
+  // Only change music if we're switching to something different
+  if (mixer.currentlyPlaying !== targetMusic) {
+    if (targetMusic === null) {
+      mixer.stopAllMusic()
+    } else {
+      mixer.startMusic(targetMusic)
+    }
   }
 }
 
