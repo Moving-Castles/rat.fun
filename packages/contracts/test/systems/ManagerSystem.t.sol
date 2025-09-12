@@ -352,96 +352,69 @@ contract ManagerSystemTest is BaseTest {
   }
 
   // * * * *
-  // Special Room Budget Limits
+  // Room Budget Limits
   // * * * *
 
-  // function testSpecialRoomCannotExceedMaxValuePerWin() public {
-  //   // As alice
-  //   setInitialBalance(alice);
-  //   vm.startPrank(alice);
-  //   world.ratfun__spawn("alice");
-  //   approveGamePool(type(uint256).max);
-  //   bytes32 ratId = world.ratfun__createRat("roger");
-  //   vm.stopPrank();
+  function testRoomCannotExceedMaxValuePerWin() public {
+    // As admin - create a room with limited maxValuePerWin
+    prankAdmin();
+    approveGamePool(type(uint256).max);
 
-  //   // As admin - create a special room with limited maxValuePerWin
-  //   prankAdmin();
-  //   approveGamePool(type(uint256).max);
+    // Give bob enough balance to create the room
+    LibWorld.erc20().transfer(bob, 2000 * 10 ** LibWorld.erc20().decimals());
 
-  //   uint256 roomCreationCost = 2000;
-  //   uint256 maxValuePerWin = 500; // Much smaller than room balance
-  //   bytes32 roomId = world.ratfun__createSpecialRoom(
-  //     LevelList.getItem(0),
-  //     bytes32(0),
-  //     roomCreationCost,
-  //     maxValuePerWin,
-  //     "A special room with limited max value per win"
-  //   );
-  //   vm.stopPrank();
+    uint256 roomCreationCost = 2000;
+    uint256 maxValuePerWin = 500; // Much smaller than room balance
+    roomId = world.ratfun__createRoom(bobId, bytes32(0), roomCreationCost, maxValuePerWin, 10, "test room");
+    vm.stopPrank();
 
-  //   // Verify room setup
-  //   assertEq(IsSpecialRoom.get(roomId), true);
-  //   assertEq(MaxValuePerWin.get(roomId), maxValuePerWin);
-  //   assertEq(Balance.get(roomId), roomCreationCost); // Room has 2000 balance
-  //   assertTrue(Balance.get(roomId) > maxValuePerWin); // Room balance > maxValuePerWin
+    // Verify room setup
+    assertEq(MaxValuePerWin.get(roomId), maxValuePerWin);
+    assertEq(Balance.get(roomId), roomCreationCost); // Room has 2000 balance
+    assertTrue(Balance.get(roomId) > maxValuePerWin); // Room balance > maxValuePerWin
 
-  //   // Try to transfer more than maxValuePerWin to rat
-  //   int256 transferAmount = int256(maxValuePerWin + 100); // Try to transfer 600
+    // Try to transfer more than maxValuePerWin to rat
+    int256 transferAmount = int256(maxValuePerWin + 100); // Try to transfer 600
 
-  //   // As admin
-  //   prankAdmin();
-  //   startGasReport("Apply outcome (special room budget limit)");
-  //   world.ratfun__applyOutcome(ratId, roomId, transferAmount, new bytes32[](0), new Item[](0));
-  //   endGasReport();
-  //   vm.stopPrank();
+    // As admin
+    prankAdmin();
+    startGasReport("Apply outcome (room budget limit)");
+    world.ratfun__applyOutcome(ratId, roomId, transferAmount, new bytes32[](0), new Item[](0));
+    endGasReport();
+    vm.stopPrank();
 
-  //   // Verify that only maxValuePerWin was transferred, not the full amount
-  //   assertEq(Balance.get(ratId), RAT_CREATION_COST + maxValuePerWin);
-  //   assertEq(Balance.get(roomId), roomCreationCost - maxValuePerWin);
-  // }
+    // Verify that only maxValuePerWin was transferred, not the full amount
+    assertEq(Balance.get(ratId), RAT_CREATION_COST + maxValuePerWin);
+    assertEq(Balance.get(roomId), roomCreationCost - maxValuePerWin);
+  }
 
-  // function testSpecialRoomBudgetLimitedByBalance() public {
-  //   // As alice
-  //   setInitialBalance(alice);
-  //   vm.startPrank(alice);
-  //   world.ratfun__spawn("alice");
-  //   approveGamePool(type(uint256).max);
-  //   bytes32 ratId = world.ratfun__createRat("roger");
-  //   vm.stopPrank();
+  function testRoomBudgetLimitedByBalance() public {
+    // As admin - create a special room with high maxValuePerWin but low balance
+    prankAdmin();
+    approveGamePool(type(uint256).max);
 
-  //   // As admin - create a special room with high maxValuePerWin but low balance
-  //   prankAdmin();
-  //   approveGamePool(type(uint256).max);
+    uint256 roomCreationCost = 500; // Low room balance
+    uint256 maxValuePerWin = 1000; // Higher than room balance
+    roomId = world.ratfun__createRoom(bobId, bytes32(0), roomCreationCost, maxValuePerWin, 10, "test room");
+    vm.stopPrank();
 
-  //   uint256 roomCreationCost = 500; // Low room balance
-  //   uint256 maxValuePerWin = 1000; // Higher than room balance
-  //   bytes32 roomId = world.ratfun__createSpecialRoom(
-  //     LevelList.getItem(0),
-  //     bytes32(0),
-  //     roomCreationCost,
-  //     maxValuePerWin,
-  //     "A special room with high max value but low balance"
-  //   );
-  //   vm.stopPrank();
+    // Verify room setup
+    assertEq(MaxValuePerWin.get(roomId), maxValuePerWin);
+    assertEq(Balance.get(roomId), roomCreationCost);
+    assertTrue(Balance.get(roomId) < maxValuePerWin); // Room balance < maxValuePerWin
 
-  //   // Verify room setup
-  //   assertEq(IsSpecialRoom.get(roomId), true);
-  //   assertEq(MaxValuePerWin.get(roomId), maxValuePerWin);
-  //   assertEq(Balance.get(roomId), roomCreationCost);
-  //   assertTrue(Balance.get(roomId) < maxValuePerWin); // Room balance < maxValuePerWin
+    // Try to transfer more than room balance to rat
+    int256 transferAmount = int256(maxValuePerWin); // Try to transfer 1000
 
-  //   // Try to transfer more than room balance to rat
-  //   int256 transferAmount = int256(maxValuePerWin); // Try to transfer 1000
+    // As admin
+    prankAdmin();
+    startGasReport("Apply outcome (room balance limit)");
+    world.ratfun__applyOutcome(ratId, roomId, transferAmount, new bytes32[](0), new Item[](0));
+    endGasReport();
+    vm.stopPrank();
 
-  //   // As admin
-  //   prankAdmin();
-  //   startGasReport("Apply outcome (special room balance limit)");
-  //   world.ratfun__applyOutcome(ratId, roomId, transferAmount, new bytes32[](0), new Item[](0));
-  //   endGasReport();
-  //   vm.stopPrank();
-
-  //   // Verify that only room balance was transferred, not maxValuePerWin
-  //   assertEq(Balance.get(ratId), RAT_CREATION_COST + roomCreationCost);
-  //   assertEq(Balance.get(roomId), 0); // Room balance exhausted
-  // }
+    // Verify that only room balance was transferred, not maxValuePerWin
+    assertEq(Balance.get(ratId), RAT_CREATION_COST + roomCreationCost);
+    assertEq(Balance.get(roomId), 0); // Room balance exhausted
+  }
 }
