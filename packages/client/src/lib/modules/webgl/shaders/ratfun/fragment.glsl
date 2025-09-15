@@ -5,51 +5,9 @@ precision mediump float;
 uniform float u_time;
 uniform vec2 u_resolution;
 uniform float u_speed;
-// To implement:
-
-// Amount of clouds
 uniform float u_clouds_amount;
-// Invert colors
 uniform float u_opacity;
 uniform float u_invert;
-
-// How it works:
-
-// 1. Horizontal segmentation (uv.x*200.): Divides the screen into 200 vertical columns
-// 2. Column offset (sin(uv.x*215.4)): Each column gets a random vertical offset
-// 3. Speed variation (cos(uv.x*33.1)*.3+.7): Each column animates at slightly different speeds (0.7-1.0x)
-// 4. Trail length (mix(95.,35.,s)): Faster columns have shorter trails
-// 5. Vertical animation (fract(uv.y+t*s+o)*trail): Creates moving streaks using fractional coordinates
-// 6. Intensity shaping: Uses smoothstep and sin to create bright heads with fading tails
-// 7. Column width (sin(dx*PI)): Makes streaks thicker in the center of each column
-float vDrop(vec2 uv,float t)
-{
-  // Amount of sections
-  uv.x=uv.x*200.;
-  //
-  float dx=fract((uv.y-u_time+2.)/4.);//
-  uv.x=floor(uv.x);
-  
-  // the smaller the fraction, the longer the stretch
-  uv.y*=.01;// stretch
-  
-  float o=sin(uv.x*215.4+PI);// offset
-  // float o=sin(uv.y*215.4+PI);// offset
-  // float s=cos(uv.x*33.1)*.3+.7;// speed
-  float s=cos(uv.y*100.1)*.3+.7;// trippy
-  
-  // float trail=mix(0.,sin(u_time)*200.,s);// snappy
-  float trail=mix(95.,35.,s);// trail length
-  float yv=fract(uv.y+t*s+o)*trail;
-  // float yv=fract(sin(uv.x)+uv.y*s+o)*trail*20.;// starry sky
-  
-  yv=smoothstep(0.,1.,yv*yv);
-  // yv=smoothstep(0.,1.,yv*yv); // uncomment for insanity
-  
-  yv=sin(yv*PI)*(s*5.);
-  float d2=sin(dx*PI);
-  return yv*(d2*d2);
-}
 
 // Simple hash function for noise
 float hash(vec2 p){
@@ -71,12 +29,12 @@ float smoothNoise(vec2 p){
 }
 
 // Fractal noise for clouds
-float fractalCloudNoise(vec2 p){
+float fractalNoise(vec2 p){
   float value=0.;
   float amplitude=.5;
   float frequency=1.;
   
-  for(int i=0;i<2;i++){
+  for(int i=0;i<4;i++){
     value+=amplitude*smoothNoise(p*frequency);
     amplitude*=.5;
     frequency*=2.;
@@ -85,42 +43,65 @@ float fractalCloudNoise(vec2 p){
   return value;
 }
 
-// Fractal noise for clouds
-float fractalStarNoise(vec2 p){
+// Fractal noise for "dangerous zones"
+float dangerousZones(vec2 p){
   float value=0.;
   float amplitude=.5;
-  float frequency=.1;
+  float frequency=2.;
   
-  for(int i=0;i<4;i++){
-    value+=amplitude*smoothNoise(p*frequency);
-    amplitude*=.9;
-    frequency*=200.;
+  for(int i=0;i<3;i++){
+    value+=amplitude*smoothNoise(p*frequency+u_time*.1);
+    amplitude*=.5;
+    frequency*=2.;
   }
   
   return value;
 }
 
-void main(){
-  // Basic setup
+// Star field generation
+float starField(vec2 p){
+  // Get the danger level at this position
+  float danger=dangerousZones(p*1.);
   
-  // ### Clouds part
-  //
-  //
-  // Sky gradient from light blue to darker blue
-  vec2 uv=gl_FragCoord.xy/u_resolution;
+  // Generate star candidates
+  vec2 cell=floor(p*40.);
+  vec2 cellPos=fract(p*40.);
   
-  vec3 skyColor=mix(vec3(.5,.8,1.),vec3(.2,.6,1.),uv.y);
-  vec3 starBackgroundColor=vec3(.2,0.,0.);
-  vec3 starForegroundColor=vec3(.95,1.,.8);
+  float starChance=hash(cell);
+  float survivalRoll=hash(cell+vec2(10.,500.));
+  
+  // Stars survive if their survival roll is greater than danger level
+  float survives=step(danger*.8,survivalRoll);
+  
+  // Create star brightness with distance from cell center
+  float dist=length(cellPos-.5);
+  float brightness=1.-smoothstep(.02,.1,dist);
+  
+  return starChance*survives*brightness;
+}
+
+// Nebula clouds
+float nebulaClouds(vec2 p){
+  return smoothNoise(p*1.5+u_time*.05)*.5+
+  smoothNoise(p*3.+u_time*.03)*.3+
+  smoothNoise(p*6.+u_time*.02)*.2;
+}
+
+vec3 normalClouds(vec2 uv){
+  vec3 skyColor=mix(
+    vec3(.5,.8,1.),// Light blue at top
+    vec3(.2,.6,1.),// Darker blue at bottom
+    uv.y
+  );
   
   // Create multiple layers of clouds
   vec2 cloudPos1=uv*3.+vec2(u_time*.1,0.);
   vec2 cloudPos2=uv*5.+vec2(u_time*.05,0.);
   vec2 cloudPos3=uv*2.+vec2(u_time*.15,0.);
   
-  float cloud1=fractalCloudNoise(cloudPos1);
-  float cloud2=fractalCloudNoise(cloudPos2);
-  float cloud3=fractalCloudNoise(cloudPos3);
+  float cloud1=fractalNoise(cloudPos1);
+  float cloud2=fractalNoise(cloudPos2);
+  float cloud3=fractalNoise(cloudPos3);
   
   // Combine cloud layers
   float clouds=max(cloud1,max(cloud2*.7,cloud3*.5));
@@ -131,47 +112,53 @@ void main(){
   // Add some variation to cloud density
   clouds*=.8+.2*sin(u_time*.5);
   
-  // ### Stars part
-  //
-  //
+  // Mix sky and clouds
+  vec3 color=mix(skyColor,vec3(1.),clouds*.9);
   
-  // Create multiple layers of stars
-  vec2 starPos1=uv*6.+vec2(u_time*.1,0.);
-  vec2 starPos2=uv*2.+vec2(u_time*.05,0.);
-  vec2 starPos3=uv*1.+vec2(u_time*.15,0.);
+  return color;
+}
+
+void main(){
+  vec2 uv=gl_FragCoord.xy/u_resolution;
   
-  float starField1=fractalStarNoise(starPos1);
+  // Deep space background
+  vec3 spaceColor=vec3(.05,.02,.1);
   
-  float stars=starField1;
+  // Generate star field using noise-based approach
+  vec2 starPos=uv*2.+u_time*.01*u_speed;
+  float stars=starField(starPos);
   
-  stars=smoothstep(.4,.405,stars);
+  // Add some twinkling effect
+  stars*=.8+.2*sin(u_time*3.+hash(floor(starPos*50.))*10.);
   
-  // Coordinate calculation
-  vec2 p=(gl_FragCoord.xy-.5*u_resolution.xy)/u_resolution.y;
-  float d=length(p)+.1;
-  p=vec2(atan(p.x,p.y)/PI,2.5/d);
-  p.y*=u_speed;
+  // Generate nebula clouds
+  vec2 cloudPos=uv*1.5+u_time*.02*u_speed;
+  float clouds=nebulaClouds(cloudPos);
+  clouds=smoothstep(.3,.7,clouds);
   
-  float t=u_time*.4*u_speed;
+  // Color the stars
+  vec3 starColor=mix(spaceColor,vec3(.9,.9,1.),stars);
   
-  // Color intensity based on speed mode
-  float intensity=1.+u_speed*.8;
+  // Color the nebulae with subtle purples and blues
+  vec3 nebulaColor=mix(vec3(.3,.1,.5),vec3(.1,.3,.8),clouds);
   
-  // ### Shaders mixing
-  //
-  //
-  // # Clouds
-  vec3 cloudColor=mix(skyColor,vec3(1.),clouds*.9);
-  // Apply inversion
-  cloudColor=mix(cloudColor,vec3(1.)-cloudColor,u_invert);
+  // No nebula
+  // vec3 nebulaColor=vec3(0.);
   
-  // # Stars
-  vec3 starColor=mix(starBackgroundColor,vec3(1.),stars);
+  nebulaColor*=clouds;
   
-  starColor=mix(starColor,vec3(1.)-starColor,u_invert);
+  // Combine everything
+  vec3 starfieldColor=starColor+nebulaColor;
   
-  // Now, mix them both
-  vec3 finalColor=mix(vec3(0.,0.,0.),mix(starColor,cloudColor,u_clouds_amount),u_opacity);
+  vec3 cloudColor=normalClouds(uv);
+  
+  vec3 finalColor=mix(starfieldColor,cloudColor,u_clouds_amount);
+  
+  // Apply inversion if needed
+  finalColor=mix(finalColor,vec3(1.)-finalColor,u_invert);
+  
+  // Apply opacity
+  finalColor*=u_opacity;
   
   gl_FragColor=vec4(finalColor,1.);
 }
