@@ -45,8 +45,8 @@ float fractalNoise(vec2 p){
 
 // Fractal noise for "dangerous zones"
 float dangerousZones(vec2 p){
-  float value=0.;
-  float amplitude=.5;
+  float value=.2;
+  float amplitude=.8;
   float frequency=2.;
   
   for(int i=0;i<3;i++){
@@ -63,9 +63,16 @@ float starField(vec2 p){
   // Get the danger level at this position
   float danger=dangerousZones(p*1.);
   
-  // Generate star candidates
+  // Generate star candidates with offset grid
   vec2 cell=floor(p*40.);
   vec2 cellPos=fract(p*40.);
+  
+  // Add random offset to each cell to break up grid pattern
+  vec2 offset=vec2(hash(cell),hash(cell+vec2(100.,200.)))-.5;
+  offset*=.8;// Control how much cells can shift
+  
+  // Adjust cell position with offset
+  vec2 starPos=cellPos+offset;
   
   float starChance=hash(cell);
   float survivalRoll=hash(cell+vec2(10.,500.));
@@ -73,11 +80,15 @@ float starField(vec2 p){
   // Stars survive if their survival roll is greater than danger level
   float survives=step(danger*.8,survivalRoll);
   
-  // Create star brightness with distance from cell center
-  float dist=length(cellPos-.5);
-  float brightness=1.-smoothstep(.02,.1,dist);
+  // Create star brightness - now using offset position
+  float dist=length(starPos-.5);
+  float brightness=1.-smoothstep(.01,.08,dist);
   
-  return starChance*survives*brightness;
+  // Only show bright stars to reduce density
+  float threshold=.7+danger*.2;// Higher threshold in dangerous zones
+  float showStar=step(threshold,starChance);
+  
+  return showStar*survives*brightness;
 }
 
 // Nebula clouds
