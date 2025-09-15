@@ -49,15 +49,15 @@ export const shaderConfig: ShaderConfiguration<ShaderMode> = {
       speed: 0.5,
       clouds_amount: 0.1,
       nebula_amount: 0.5,
-      trippy: 0.8
+      trippy: 1.2
     },
     hyperspeed: {
       opacity: 1.0,
-      speed: 2.0,
-      invert: 0.0,
+      speed: 12.0,
+      invert: -0.5,
       clouds_amount: 0.1,
-      nebula_amount: 1.0,
-      trippy: 1.0
+      nebula_amount: 10.0,
+      trippy: 2.0
     }
   },
   tweens: {
@@ -69,11 +69,17 @@ export const shaderConfig: ShaderConfiguration<ShaderMode> = {
     trippy: new Tween(0, { duration: 1000 })
   },
   getMode: (page: import("@sveltejs/kit").Page): string => {
-    if (!page.route.id) return "normal"
+    if (!page.route.id) return "stars"
 
     if (page.route.id.includes("result")) {
       // Start mode is off, the rest of the modes will be set by the component itself
-      return "off"
+      if (page.url.searchParams.has("hyperspeed")) {
+        return "hyperspeed"
+      } else if (page.url.searchParams.has("warpspeed")) {
+        return "warpspeed"
+      } else {
+        return "stars"
+      }
     } else if (page.route.id.includes("(game)")) {
       return "clouds"
     } else if (page.route.id.includes("admin")) {

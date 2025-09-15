@@ -74,7 +74,7 @@
         // entryState.state = TRIP_STATE.RESULTS
         entryState.result = result
         entryState.state = TRIP_STATE.RESULTS
-        await goto(`/${data.roomId}/result/${result.outcomeId}`, {
+        await goto(`/${data.roomId}/result/${result.outcomeId}?warpspeed`, {
           state: {
             entryState: JSON.parse(stringifyWithBigInt(entryState))
           }

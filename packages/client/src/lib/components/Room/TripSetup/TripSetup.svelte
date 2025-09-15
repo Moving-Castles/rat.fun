@@ -3,6 +3,8 @@
   import { gsap } from "gsap"
   import { TextPlugin } from "gsap/TextPlugin"
   import { typeHit, playUISound } from "$lib/modules/sound"
+  import { page } from "$app/state"
+  import { replaceState } from "$app/navigation"
 
   gsap.registerPlugin(TextPlugin)
 

@@ -63,6 +63,7 @@ float dangerousZones(vec2 p){
 vec2 spiralDisplacement(vec2 uv,float intensity){
   if(intensity<=0.)return uv;
   
+  // vec2 center=vec2(.5+sin(u_time*intensity/100.),.5+cos(u_time*intensity/100.));
   vec2 center=vec2(.5,.5);
   vec2 p=uv-center;
   
@@ -77,10 +78,12 @@ vec2 spiralDisplacement(vec2 uv,float intensity){
   float spin=.3*intensity;// Rotation speed
   float arms=12.;// Number of spiral arms
   
+  // Add continuous rotation around the center
+  float rotation=u_time*intensity*.01;// Adjust speed as needed
+  
   // Create spiral effect: rotate angle based on radius and time
   float displacement=k*log(r+.2)-u_time*spin;
-  a+=displacement*intensity;
-  
+  a+=displacement*intensity+rotation;// Add the rotation here
   // Convert back to Cartesian and restore aspect ratio
   vec2 displaced=vec2(cos(a),sin(a))*r;
   displaced.x/=u_resolution.x/u_resolution.y;
