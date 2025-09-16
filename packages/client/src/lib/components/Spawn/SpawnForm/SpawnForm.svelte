@@ -115,7 +115,7 @@
       align-items: center;
       justify-content: center;
       width: 500px;
-      color: var(--background);
+      color: white;
 
       img {
         height: 50dvh;
@@ -135,7 +135,7 @@
           font-size: 18px;
           padding: 10px;
           background: var(--white);
-          color: var(--background);
+          color: black;
           border: none;
           margin-bottom: 0;
           font-family: "Rock Salt", cursive;

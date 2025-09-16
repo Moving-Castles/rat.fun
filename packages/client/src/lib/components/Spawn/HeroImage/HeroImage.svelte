@@ -58,7 +58,7 @@
       align-items: center;
       justify-content: center;
       width: 500px;
-      color: var(--background);
+      color: white;
 
       .button {
         width: 100%;

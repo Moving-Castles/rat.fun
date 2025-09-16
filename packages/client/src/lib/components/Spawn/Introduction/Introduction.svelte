@@ -68,6 +68,7 @@
     height: var(--game-window-height);
     align-items: center;
     justify-content: center;
+    color: white;
 
     .inner-container {
       display: flex;
@@ -75,6 +76,7 @@
       align-items: center;
       justify-content: center;
       position: relative;
+      color: white;
     }
 
     button {

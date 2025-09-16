@@ -106,8 +106,7 @@
   .container {
     width: 100vw;
     height: 100vh;
-    // background: var(--background);
-    color: var(--foreground);
+    color: white;
     font-family: var(--special-font-stack);
     text-transform: none;
     font-size: var(--font-size-large);

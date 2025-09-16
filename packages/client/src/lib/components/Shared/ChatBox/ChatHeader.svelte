@@ -1,7 +1,31 @@
 <script lang="ts">
+  import { onDestroy } from "svelte"
+  import { latestEvents } from "$lib/modules/off-chain-sync/stores"
   import { websocketConnected, clientList } from "$lib/modules/off-chain-sync/stores"
+  import { playUISound } from "$lib/modules/sound"
+  import { player } from "$lib/modules/state/stores"
   import { collapsed } from "$lib/modules/ui/state.svelte"
   let { onclick } = $props()
+
+  const unsubscribe = latestEvents.subscribe(events => {
+    const event = events[events.length - 1]
+    if (event) {
+      const now = Date.now()
+      const timestamp = event.timestamp
+      console.log(
+        event.playerName,
+        event.playerName !== $player.name,
+        now - timestamp < 3000,
+        event.playerName !== $player.name && now - timestamp < 3000
+      )
+      if (event.playerName !== $player.name && now - timestamp < 3000) {
+        console.log("playing sound")
+        playUISound("ratfun", $collapsed ? "ratsUp" : "ratScream")
+      }
+    }
+  })
+
+  onDestroy(() => unsubscribe())
 </script>
 
 <div

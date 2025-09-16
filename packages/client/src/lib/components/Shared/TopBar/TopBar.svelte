@@ -1,7 +1,9 @@
 <script lang="ts">
+  import { onMount } from "svelte"
   import { page } from "$app/state"
   import { player, worldStats, activeWorldEvent } from "$lib/modules/state/stores"
   import { upcomingWorldEvent } from "$lib/modules/content"
+  import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
 
   import PlayerInfo from "./PlayerInfo.svelte"
   import PaneSwitch from "./PaneSwitch.svelte"
@@ -10,6 +12,14 @@
   import GlobalStats from "./GlobalStats.svelte"
 
   const isAdminView = $derived(page.route?.id?.includes("/(rooms)/admin") ?? false)
+
+  onMount(() => {
+    if (page.route.id?.includes("admin")) {
+      shaderManager.setMode("clouds-inverted")
+    } else {
+      shaderManager.setMode("clouds")
+    }
+  })
 </script>
 
 <div class="top-bar">

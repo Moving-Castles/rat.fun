@@ -69,6 +69,7 @@
     height: var(--game-window-height);
     align-items: center;
     justify-content: center;
+    color: white;
 
     .inner-container {
       display: flex;
@@ -76,7 +77,7 @@
       align-items: center;
       justify-content: center;
       width: 500px;
-      color: var(--background);
+      color: white;
 
       img {
         height: 50dvh;
