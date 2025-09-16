@@ -17,160 +17,152 @@ let channelStates = $state<Record<string, ChannelConfig>>({
 let uiChannel = $state<Tone.InputNode>()
 let musicChannel = $state<Tone.InputNode>()
 let channels = $state<Record<string, Tone.Channel>>({})
+let pitchShifters = $state<Record<string, Tone.PitchShift>>({})
 let players = $state<Record<string, Tone.Player>>()
 let currentlyPlaying = $state<string | null>(null)
 let toneLoaded = $state(false)
-
 let masterVolume = $state(0)
+let mixerInstance: ReturnType<typeof createMixerState> | null = $state(null)
 
-export const getMixerState = () => {
-  const setPlayers = (newPlayersState: Record<string, Tone.Player>) => {
-    players = newPlayersState
+const setPlayers = (newPlayersState: Record<string, Tone.Player>) => {
+  players = newPlayersState
+}
+
+const setChannelStates = states => {
+  channelStates = states
+}
+
+const setChannelVolume = (channel: string, volume: number) => {
+  if (channelStates[channel] && channelStates[channel].volume !== volume) {
+    channelStates[channel].volume = volume
+    updateChannelVolume(channel)
   }
+}
 
-  const setChannelStates = states => {
-    channelStates = states
+const setChannelMute = (channel: string, muted: boolean) => {
+  if (channelStates[channel]) {
+    channelStates[channel].muted = muted
+    updateChannelVolume(channel)
   }
+}
 
-  const setChannelVolume = (channel: string, volume: number) => {
-    if (channelStates[channel]) {
-      channelStates[channel].volume = volume
-      updateChannelVolume(channel)
-    }
+const setChannelSolo = (channel: string, solo: boolean) => {
+  if (channelStates[channel]) {
+    channelStates[channel].solo = solo
+    updateAllChannelVolumes()
   }
+}
 
-  const setChannelMute = (channel: string, muted: boolean) => {
-    if (channelStates[channel]) {
-      channelStates[channel].muted = muted
-      updateChannelVolume(channel)
-    }
+const setMasterVolume = (volume: number) => {
+  masterVolume = volume
+  if (Tone.getDestination()) {
+    Tone.getDestination().volume.value = volume
   }
+}
 
-  const setChannelSolo = (channel: string, solo: boolean) => {
-    if (channelStates[channel]) {
-      channelStates[channel].solo = solo
-      updateAllChannelVolumes()
-    }
+/**
+ *
+ * @param channel
+ * @returns
+ */
+const updateChannelVolume = (channel: string) => {
+  const state = channelStates[channel]
+  const toneChannel = channels[channel]
+
+  if (!toneChannel) return
+
+  const anySolo = Object.values(channelStates).some(s => s.solo)
+
+  const isAudible = !anySolo || state.solo
+  const isMuted = state.muted
+
+  if (isMuted || !isAudible) {
+    toneChannel.mute = true
+  } else {
+    toneChannel.mute = false
+    toneChannel.volume.value = state.volume
   }
+}
 
-  const setMasterVolume = (volume: number) => {
-    masterVolume = volume
-    if (Tone.getDestination()) {
-      Tone.getDestination().volume.value = volume
-    }
+const registerChannel = (name: string, channel: Tone.ToneAudioNode) => {
+  channels[name] = channel
+  if (!channelStates[name]) {
+    channelStates[name] = { volume: 0, muted: false, solo: false, pan: 0 }
   }
+  updateChannelVolume(name)
+}
 
-  /**
-   *
-   * @param channel
-   * @returns
-   */
-  const updateChannelVolume = (channel: string) => {
-    const state = channelStates[channel]
-    const toneChannel = channels[channel]
+const updateAllChannelVolumes = () => {
+  // Only update if we have channels to avoid unnecessary work
+  if (Object.keys(channels).length === 0) return
+  Object.keys(channelStates).forEach(updateChannelVolume)
+}
 
-    if (!toneChannel) return
-
-    const anySolo = Object.values(channelStates).some(s => s.solo)
-
-    const isAudible = !anySolo || state.solo
-    const isMuted = state.muted
-
-    if (isMuted || !isAudible) {
-      toneChannel.mute = true
-    } else {
-      toneChannel.mute = false
-      toneChannel.volume.value = state.volume
-    }
-  }
-
-  const registerChannel = (name: string, channel: Tone.ToneAudioNode) => {
-    channels[name] = channel
-    if (!channelStates[name]) {
-      channelStates[name] = { volume: 0, muted: false, solo: false, pan: 0 }
-    }
-    updateChannelVolume(name)
-  }
-
-  const updateAllChannelVolumes = () => {
-    Object.keys(channelStates).forEach(updateChannelVolume)
-  }
-
-  const stopAllMusic = () => {
-    if (players) {
-      Object.values(players).forEach(player => {
-        if (player.state !== "stopped") {
-          player.stop()
-        }
-      })
-    }
-    currentlyPlaying = null
-  }
-
-  const startMusic = (key: string) => {
-    if (players && players[key] && currentlyPlaying !== key) {
-      stopAllMusic()
-      console.log("start music ", key)
-      players[key].start()
-      currentlyPlaying = key
-    }
-  }
-
-  const stopMusic = (key: string) => {
-    if (players && players[key] && players[key].state !== "stopped") {
-      players[key].stop()
-      if (currentlyPlaying === key) {
-        currentlyPlaying = null
+const stopAllMusic = () => {
+  if (players) {
+    Object.values(players).forEach(player => {
+      if (player.state !== "stopped") {
+        player.stop()
       }
+    })
+  }
+  currentlyPlaying = null
+}
+
+const startMusic = (key: string) => {
+  if (players && players[key] && currentlyPlaying !== key) {
+    stopAllMusic()
+    console.log("start music ", key)
+    players[key].start()
+    currentlyPlaying = key
+  }
+}
+
+const stopMusic = (key: string) => {
+  if (players && players[key]) {
+    players[key].stop()
+    if (currentlyPlaying === key) {
+      currentlyPlaying = null
     }
   }
+}
 
-  return {
-    // Channel controls
-    registerChannel,
-    setChannelStates,
-    setPlayers,
-    setChannelVolume,
-    setChannelMute,
-    setChannelSolo,
-    stopAllMusic,
-    startMusic,
-    stopMusic,
-    // Master control
-    setMasterVolume,
-    get loaded() {
-      return toneLoaded
-    },
-    get channels() {
-      return channels
-    },
-    get players() {
-      return players
-    },
-    get channelStates() {
-      return channelStates
-    },
-    get masterVolume() {
-      return masterVolume
-    },
-    get currentlyPlaying() {
-      return currentlyPlaying
-    }
+const setPitchShift = (playerKey: string, semitones: number) => {
+  if (pitchShifters[playerKey]) {
+    pitchShifters[playerKey].pitch = semitones
   }
 }
 
 const registerMusic = (channel: Tone.ToneAudioNode): Record<string, Tone.Player> => {
   // Looping music ONLY
   // Main
+  const mainPitchShift = new Tone.PitchShift()
   const main = new Tone.Player({
     url: soundLibrary.ratfun.main.src,
     loop: true,
     fadeIn: 3,
     fadeOut: 1,
+    volume: -18,
     autostart: false
   })
-    .connect(channel)
+    .chain(mainPitchShift, channel)
     .sync()
+
+  pitchShifters.main = mainPitchShift
+
+  // Main solo
+  const mainSoloPitchShift = new Tone.PitchShift()
+  const mainSolo = new Tone.Player({
+    url: soundLibrary.ratfun.upwardspiral.src,
+    loop: false,
+    fadeOut: 1,
+    volume: -18,
+    autostart: false
+  })
+    .chain(mainSoloPitchShift, channel)
+    .sync()
+
+  pitchShifters.mainSolo = mainSoloPitchShift
 
   // Admin
   const admin = new Tone.Player({
@@ -222,6 +214,7 @@ const registerMusic = (channel: Tone.ToneAudioNode): Record<string, Tone.Player>
 
   const result = {
     main,
+    mainSolo,
     admin,
     spawn,
     tripSetup,
@@ -255,18 +248,17 @@ export async function switchAudio(
   to: Partial<import("@sveltejs/kit").Page>,
   from?: Partial<import("@sveltejs/kit").Page>
 ) {
-  const mixer = getMixerState()
-
-  if (!mixer.loaded || !mixer.players) return
+  if (!toneLoaded || !players) return
 
   const targetMusic = getMusicForRoute(to)
 
   // Only change music if we're switching to something different
-  if (mixer.currentlyPlaying !== targetMusic) {
+  if (currentlyPlaying !== targetMusic) {
     if (targetMusic === null) {
-      mixer.stopAllMusic()
+      stopAllMusic()
     } else {
-      mixer.startMusic(targetMusic)
+      stopAllMusic()
+      startMusic(targetMusic)
     }
   }
 }
@@ -276,27 +268,32 @@ export async function initSound(): Promise<void> {
   try {
     await Tone.start()
 
-    const mixer = getMixerState()
+    Tone.setContext(new Tone.Context({ latencyHint: "playback" })) // for better performance
+
+    // Initialize mixer if not already created
+    if (!mixerInstance) {
+      mixerInstance = createMixerState()
+    }
 
     // Set up master volume
-    Tone.getDestination().volume.value = mixer.masterVolume
+    Tone.getDestination().volume.value = masterVolume
     Tone.getTransport().start()
 
     // Create and register Music channel
     musicChannel = new Tone.Channel().toDestination()
-    mixer.registerChannel("music", musicChannel)
+    registerChannel("music", musicChannel)
 
     // Create and register UI channel
     uiChannel = new Tone.Channel().toDestination()
-    mixer.registerChannel("ui", uiChannel)
+    registerChannel("ui", uiChannel)
 
     // Register the music players and apply them to the music channel
     const musicPlayers = registerMusic(musicChannel)
-    mixer.setPlayers(musicPlayers)
+    setPlayers(musicPlayers)
 
     // @todo: Try to play the correct music based on the current page
-    if (mixer.players) {
-      mixer.players?.main
+    if (players) {
+      // Try to start appropriate music based on current page
     }
 
     // We will use the individual players to change play state
@@ -304,15 +301,57 @@ export async function initSound(): Promise<void> {
 }
 
 export const snapshotFactory = (): Snapshot => {
-  const mixer = getMixerState()
   return {
     capture: () => {
       return {
-        channelStates: mixer.channelStates
+        channelStates
       }
     },
     restore: value => {
-      mixer.setChannelStates(value.channelStates)
+      setChannelStates(value?.channelStates)
     }
   }
+}
+
+const createMixerState = () => {
+  return {
+    // Channel controls
+    registerChannel,
+    setChannelStates,
+    setPlayers,
+    setChannelVolume,
+    setChannelMute,
+    setChannelSolo,
+    stopAllMusic,
+    startMusic,
+    stopMusic,
+    setPitchShift,
+    // Master control
+    setMasterVolume,
+    get loaded() {
+      return toneLoaded
+    },
+    get channels() {
+      return channels
+    },
+    get players() {
+      return players
+    },
+    get channelStates() {
+      return channelStates
+    },
+    get masterVolume() {
+      return masterVolume
+    },
+    get currentlyPlaying() {
+      return currentlyPlaying
+    }
+  }
+}
+
+export const getMixerState = () => {
+  if (!mixerInstance) {
+    mixerInstance = createMixerState()
+  }
+  return mixerInstance
 }

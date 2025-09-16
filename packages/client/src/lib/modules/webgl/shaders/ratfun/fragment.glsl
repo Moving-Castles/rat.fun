@@ -139,9 +139,9 @@ vec3 normalClouds(vec2 uv){
   );
   
   // Create multiple layers of clouds
-  vec2 cloudPos1=uv*3.+vec2(u_time*.1,0.);
-  vec2 cloudPos2=uv*5.+vec2(u_time*.05,0.);
-  vec2 cloudPos3=uv*2.+vec2(u_time*.15,0.);
+  vec2 cloudPos1=uv*3.+vec2(u_time*.1*u_speed,0.);
+  vec2 cloudPos2=uv*5.+vec2(u_time*.05*u_speed,0.);
+  vec2 cloudPos3=uv*2.+vec2(u_time*.15*u_speed,0.);
   
   float cloud1=fractalNoise(cloudPos1);
   float cloud2=fractalNoise(cloudPos2);

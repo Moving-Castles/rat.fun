@@ -14,7 +14,7 @@ export const shaderConfig: ShaderConfiguration<ShaderMode> = {
   modes: {
     off: {
       opacity: 0.2,
-      speed: 0.0,
+      speed: 0.5,
       invert: 0.0,
       clouds_amount: 0.0,
       nebula_amount: 0.0,
@@ -31,7 +31,7 @@ export const shaderConfig: ShaderConfiguration<ShaderMode> = {
     // Have to add
     clouds: {
       opacity: 1.0,
-      speed: 0.2,
+      speed: 0.5,
       invert: 0.0,
       clouds_amount: 1.0,
       nebula_amount: 0.0,
@@ -39,7 +39,7 @@ export const shaderConfig: ShaderConfiguration<ShaderMode> = {
     },
     "clouds-inverted": {
       opacity: 1.0,
-      speed: 0.2,
+      speed: -0.5,
       invert: 1.0,
       clouds_amount: 1.0,
       nebula_amount: 0.0,
@@ -55,8 +55,8 @@ export const shaderConfig: ShaderConfiguration<ShaderMode> = {
     },
     hyperspeed: {
       opacity: 1.0,
-      speed: 12.0,
-      invert: -0.5,
+      speed: 0.5,
+      invert: 1.0,
       clouds_amount: 0.1,
       nebula_amount: 10.0,
       trippy: 2.0
@@ -64,11 +64,11 @@ export const shaderConfig: ShaderConfiguration<ShaderMode> = {
   },
   tweens: {
     opacity: new Tween(1, { duration: 1000 }),
-    speed: new Tween(1, { duration: 5000 }),
+    speed: new Tween(1, { duration: 200 }),
     invert: new Tween(1, { duration: 100 }),
     clouds_amount: new Tween(1, { duration: 1000 }),
     nebula_amount: new Tween(1, { duration: 1000 }),
-    trippy: new Tween(0, { duration: 1000 })
+    trippy: new Tween(0, { duration: 10000 })
   },
   getMode: (page: import("@sveltejs/kit").Page): string => {
     if (!page.route.id) return "stars"

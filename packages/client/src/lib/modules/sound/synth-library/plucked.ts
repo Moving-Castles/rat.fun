@@ -8,19 +8,19 @@ const make = (note: string) => {
 
   const frequency = Tone.Frequency(note).toFrequency()
 
+  // Reverb for spatial effect
+  const reverb = new Tone.Reverb({
+    decay: 2,
+    wet: 1
+  }).connect(mixer.channels.ui)
+
   // Envelope for attack/decay
   const env = new Tone.AmplitudeEnvelope({
     attack: 0.001,
     decay: 1.5,
     sustain: 0,
     release: 0.1
-  }).connect(mixer.channels.ui)
-
-  // Reverb for spatial effect
-  const reverb = new Tone.Reverb({
-    decay: 2,
-    wet: 1
-  }).connect(env)
+  }).connect(reverb)
 
   // Simple plucked string using Karplus-Strong-inspired method - more tinny
   const pluckedString = new Tone.Oscillator({

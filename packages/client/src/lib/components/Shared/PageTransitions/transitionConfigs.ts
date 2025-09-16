@@ -6,24 +6,38 @@ const mainLayoutTransitionConfig: TransitionConfig[] = [
     from: "/(rooms)/(game)",
     to: "/(rooms)/admin",
     in: {
-      transition: "fade",
-      params: {}
+      transition: "flip",
+      params: {
+        direction: "in",
+        duration: 200,
+        delay: 200
+      }
     },
     out: {
-      transition: "none",
-      params: {}
+      transition: "flip",
+      params: {
+        direction: "out",
+        duration: 200
+      }
     }
   },
   {
     from: "/(rooms)/admin",
     to: "/(rooms)/(game)",
     in: {
-      transition: "fade",
-      params: {}
+      transition: "flip",
+      params: {
+        direction: "in",
+        duration: 200,
+        delay: 200
+      }
     },
     out: {
-      transition: "none",
-      params: {}
+      transition: "flip",
+      params: {
+        direction: "out",
+        duration: 200
+      }
     }
   }
 ]

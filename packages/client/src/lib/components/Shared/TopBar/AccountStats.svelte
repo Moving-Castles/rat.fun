@@ -17,6 +17,18 @@
 
   const mixer = getMixerState()
 
+  const solo = () => {
+    if (mixer?.players?.mainSolo) {
+      mixer?.stopMusic("mainSolo")
+      mixer?.players.mainSolo.start()
+    }
+  }
+
+  const playNote = (semitones: number) => {
+    mixer?.setPitchShift("mainSolo", semitones)
+    solo()
+  }
+
   onMount(() => {
     playUISound("ratfun", "textLineHit")
   })
@@ -92,6 +104,20 @@
   </div>
 
   <div class="tab">
+    <div class="piano-keys">
+      <button class="white-key" onclick={() => playNote(-12)}></button>
+      <button class="black-key" onclick={() => playNote(-9)}></button>
+      <button class="white-key" onclick={() => playNote(-6)}></button>
+      <button class="black-key" onclick={() => playNote(-3)}></button>
+      <button class="white-key" onclick={() => playNote(0)}></button>
+      <button class="white-key" onclick={() => playNote(1)}></button>
+      <button class="black-key" onclick={() => playNote(2)}></button>
+      <button class="white-key" onclick={() => playNote(7)}></button>
+      <button class="black-key" onclick={() => playNote(3)}></button>
+      <button class="white-key" onclick={() => playNote(4)}></button>
+      <button class="black-key" onclick={() => playNote(6)}></button>
+      <button class="white-key" onclick={() => playNote(12)}></button>
+    </div>
     <p class="key">Music volume</p>
     <input
       min="-100"
@@ -187,6 +213,61 @@
         align-items: center;
         gap: 4px;
         font-size: 16px;
+      }
+    }
+
+    .piano-keys {
+      width: 300px;
+      height: 60px;
+      position: relative;
+      display: flex;
+      margin-bottom: 8px;
+
+      .white-key {
+        width: calc(300px / 7);
+        height: 60px;
+        background: white;
+        border: none;
+        cursor: pointer;
+        border-style: outset;
+        border-width: 4px;
+        border-color: rgba(0, 0, 0, 0.2);
+
+        &:hover {
+          background: #f0f0f0;
+        }
+      }
+
+      .black-key {
+        width: calc(300px / 14);
+        height: 24px;
+        background: black;
+        border: none;
+        position: absolute;
+        cursor: pointer;
+        border-style: outset;
+        border-width: 4px;
+        border-color: rgba(0, 0, 0, 0.2);
+
+        &:hover {
+          background: #333;
+        }
+
+        &:nth-of-type(2) {
+          left: calc(300px / 7 - 300px / 28);
+        }
+        &:nth-of-type(4) {
+          left: calc(300px / 7 * 2 - 300px / 28);
+        }
+        &:nth-of-type(7) {
+          left: calc(300px / 7 * 4 - 300px / 28);
+        }
+        &:nth-of-type(9) {
+          left: calc(300px / 7 * 5 - 300px / 28);
+        }
+        &:nth-of-type(11) {
+          left: calc(300px / 7 * 6 - 300px / 28);
+        }
       }
     }
 

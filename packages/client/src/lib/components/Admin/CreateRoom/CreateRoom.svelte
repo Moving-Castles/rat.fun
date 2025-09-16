@@ -51,33 +51,6 @@
       $playerERC20Balance < flooredRoomCreationCost
   )
 
-  $effect(() => {
-    console.log("busy", $state.snapshot(busy))
-    console.log("busy", $state.snapshot(busy))
-    console.log("!maxValuePerWin", $state.snapshot(!maxValuePerWin))
-    console.log("!minRatValueToEnter", $state.snapshot(!minRatValueToEnter))
-    console.log(
-      "flooredRoomCreationCost < MIN_ROOM_CREATION_COST",
-      $state.snapshot(flooredRoomCreationCost < MIN_ROOM_CREATION_COST)
-    )
-    console.log(
-      "$playerERC20Balance < flooredRoomCreationCost",
-      $state.snapshot($playerERC20Balance < flooredRoomCreationCost)
-    )
-  })
-
-  $inspect("busy", busy)
-  $inspect("!maxValuePerWin", !maxValuePerWin)
-  $inspect("!minRatValueToEnter", !minRatValueToEnter)
-  $inspect(
-    "flooredRoomCreationCost < MIN_ROOM_CREATION_COST",
-    flooredRoomCreationCost < MIN_ROOM_CREATION_COST
-  )
-  $inspect(
-    "$playerERC20Balance < flooredRoomCreationCost",
-    $playerERC20Balance < flooredRoomCreationCost
-  )
-
   const placeholder =
     "You're creating a trip that can modify items, and tokens of rats that enter. Your trip balance decreases whenever a rat gains something, and increases when your trip takes something. You can withdraw remaining balance from your trip."
 

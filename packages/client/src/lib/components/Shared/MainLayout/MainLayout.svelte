@@ -1,19 +1,35 @@
 <script lang="ts">
   import { ENVIRONMENT } from "$lib/mud/enums"
-  import { TopBar } from "$lib/components/Shared"
+  import { PageTransitions, TopBar } from "$lib/components/Shared"
+  import { mainLayoutTransitionConfig } from "$lib/components/Shared/PageTransitions/transitionConfigs"
 
   let { children }: { children: import("svelte").Snippet; environment: ENVIRONMENT } = $props()
+
+  let tilt = $state({
+    x: 0,
+    y: 0
+  })
+  let tiltTransform = $derived(`rotate3d(${tilt.x}deg, ${tilt.y}deg)`)
+
+  const setTilt = e => {
+    //   console.log(e.clientX / window.innerWidth)
+    //   console.log(e.clientY / window.innerHeight)
+  }
 </script>
 
-<div class="main-area">
-  <TopBar />
+<svelte:window onmousemove={setTilt} />
 
-  <div class="main-content">
-    <div class="main-area-inner">
-      {@render children?.()}
+<PageTransitions config={mainLayoutTransitionConfig}>
+  <div style:transform={tiltTransform} class="main-area">
+    <TopBar />
+
+    <div class="main-content">
+      <div class="main-area-inner">
+        {@render children?.()}
+      </div>
     </div>
   </div>
-</div>
+</PageTransitions>
 
 <div class="dust"></div>
 

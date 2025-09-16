@@ -15,9 +15,6 @@ export async function playUISound(
   id: string,
   channel?: string
 ): Promise<Tone.Player | undefined> {
-  // This check just in case tone context hasn't started
-  await Tone.start()
-
   const mixer = getMixerState()
 
   const sound = new Tone.Player({
@@ -25,10 +22,10 @@ export async function playUISound(
     autostart: true
   })
 
-  if (channel && mixer.channels[channel]) {
-    sound.connect(mixer.channels[channel])
+  if (channel && mixer?.channels[channel]) {
+    sound.connect(mixer?.channels[channel])
   } else if (mixer?.channels?.ui) {
-    sound.connect(mixer.channels.ui)
+    sound.connect(mixer?.channels.ui)
   } else {
     sound.toDestination()
   }

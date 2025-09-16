@@ -1,6 +1,38 @@
 import { fade, fly } from "svelte/transition"
 import { elasticOut, linear } from "svelte/easing"
 
+export const flip = (
+  el: HTMLElement,
+  params: {
+    delay?: number
+    duration?: number
+    direction: "in" | "out"
+    easing?: (t: number) => number
+  } = {
+    delay: 0,
+    direction: "in",
+    duration: 400
+  }
+) => {
+  return {
+    delay: params.delay || 0,
+    duration: params.duration || 400,
+    easing: params.easing || linear,
+    css: (t: number, u: number) => {
+      // When coming in, it goes from -90 to 0, when it's going out it comes from 0 to 90
+      if (params.direction === "in") {
+        return `
+          transform: rotateY(${u * -90}deg);
+        `
+      } else {
+        return `
+          transform: rotateY(${u * 90}deg);
+        `
+      }
+    }
+  }
+}
+
 export const wipe = (
   _: HTMLElement,
   params: {
@@ -231,6 +263,7 @@ export const transitionFunctions = {
   none: () => ({ delay: 0, duration: 0, css: () => "" }),
   fade,
   fly,
+  flip,
   wipe: wipe,
   leftToRight,
   strobeWipe,

@@ -81,6 +81,7 @@ export class ShaderManager<TMode extends string = string> {
   get uniformValues(): Record<string, number | boolean> {
     const values: Record<string, number | boolean> = {}
     this.tweens.forEach((tween, name) => {
+      console.log("u_" + name, tween.current)
       values[name] = tween.current
     })
     Object.entries(this.booleanUniforms).forEach(([name, value]) => {
@@ -176,6 +177,7 @@ export class ShaderManager<TMode extends string = string> {
 
     // Update tween-based uniforms
     this.tweens.forEach((tween, name) => {
+      console.log("u_" + name, tween.current)
       this.renderer!.setUniform(`u_${name}`, tween.current, "float")
     })
 
