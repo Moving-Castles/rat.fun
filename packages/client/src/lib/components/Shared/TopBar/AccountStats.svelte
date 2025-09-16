@@ -17,6 +17,8 @@
 
   const mixer = getMixerState()
 
+  let showJazz = $state(false)
+
   const solo = () => {
     if (mixer?.players?.mainSolo) {
       mixer?.stopMusic("mainSolo")
@@ -104,20 +106,22 @@
   </div>
 
   <div class="tab">
-    <div class="piano-keys">
-      <button class="white-key" onclick={() => playNote(-12)}></button>
-      <button class="black-key" onclick={() => playNote(-9)}></button>
-      <button class="white-key" onclick={() => playNote(-6)}></button>
-      <button class="black-key" onclick={() => playNote(-3)}></button>
-      <button class="white-key" onclick={() => playNote(0)}></button>
-      <button class="white-key" onclick={() => playNote(1)}></button>
-      <button class="black-key" onclick={() => playNote(2)}></button>
-      <button class="white-key" onclick={() => playNote(7)}></button>
-      <button class="black-key" onclick={() => playNote(3)}></button>
-      <button class="white-key" onclick={() => playNote(4)}></button>
-      <button class="black-key" onclick={() => playNote(6)}></button>
-      <button class="white-key" onclick={() => playNote(12)}></button>
-    </div>
+    {#if showJazz}
+      <div class="piano-keys">
+        <button class="white-key" onclick={() => playNote(-12)}></button>
+        <button class="black-key" onclick={() => playNote(-9)}></button>
+        <button class="white-key" onclick={() => playNote(-6)}></button>
+        <button class="black-key" onclick={() => playNote(-3)}></button>
+        <button class="white-key" onclick={() => playNote(0)}></button>
+        <button class="white-key" onclick={() => playNote(1)}></button>
+        <button class="black-key" onclick={() => playNote(2)}></button>
+        <button class="white-key" onclick={() => playNote(7)}></button>
+        <button class="black-key" onclick={() => playNote(3)}></button>
+        <button class="white-key" onclick={() => playNote(4)}></button>
+        <button class="black-key" onclick={() => playNote(6)}></button>
+        <button class="white-key" onclick={() => playNote(12)}></button>
+      </div>
+    {/if}
     <p class="key">Music volume</p>
     <input
       min="-100"
@@ -163,6 +167,8 @@
     </label>
   </div>
 </div>
+
+<svelte:window onkeydown={() => (showJazz = true)} onkeyup={() => (showJazz = false)} />
 
 <style lang="scss">
   .account-stats {
