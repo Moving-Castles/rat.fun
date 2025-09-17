@@ -76,6 +76,43 @@ const gameLayoutTransitionConfig: TransitionConfig[] = [
         easing
       }
     }
+  },
+  // admin
+  {
+    from: "/(rooms)/admin",
+    to: "/(rooms)/admin/[roomId]",
+    in: {
+      transition: "mask",
+      params: {
+        direction: "in",
+        svgPath: "/images/ratschach.svg",
+        duration: 1000,
+        easing
+      }
+    },
+    out: {
+      transition: "fade",
+      params: {
+        delay: 950,
+        duration: 50
+      }
+    }
+  },
+  {
+    from: "/(rooms)/admin/[roomId]",
+    to: "/(rooms)/admin",
+    in: {
+      transition: "none"
+    },
+    out: {
+      transition: "mask",
+      params: {
+        direction: "in",
+        svgPath: "/images/ratschach.svg",
+        duration: 400,
+        easing
+      }
+    }
   }
 ]
 

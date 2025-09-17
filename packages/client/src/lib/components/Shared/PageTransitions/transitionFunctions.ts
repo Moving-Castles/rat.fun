@@ -300,11 +300,82 @@ export const slideFromRight = (
   }
 }
 
+export const mask = (
+  _: HTMLElement,
+  params: {
+    delay?: number
+    duration?: number
+    svgPath: string
+    growthFactor?: number
+    direction?: "in" | "out"
+    easing?: (t: number) => number
+  }
+) => {
+  return {
+    delay: params.delay || 0,
+    duration: params.duration || 400,
+    easing: params.easing || linear,
+    css: (t: number, u: number) => {
+      const progress = params.direction === "out" ? u : t
+      const growth = params.growthFactor || 1.2
+      const scale = 1 + progress * (growth - 1)
+
+      // Quick ramp up to full opacity, then stay at 1
+      const opacity = progress < 0.3 ? progress / 0.3 : 1
+
+      // In the final 10%, transition to no mask (full reveal)
+      if (progress > 0.3) {
+        const floodProgress = (progress - 0.3) / 0.3
+        return `
+          position: absolute;
+          z-index: 1000000000;
+          inset: 0;
+          opacity: ${opacity};
+          -webkit-mask-image:
+            linear-gradient(to bottom,
+              rgba(255,255,255,${1 - floodProgress}) 0%,
+              rgba(255,255,255,1) ${(1 - floodProgress) * 100}%,
+              rgba(255,255,255,1) 100%
+            ),
+            url("${params.svgPath}");
+          mask-image:
+            linear-gradient(to bottom,
+              rgba(255,255,255,${1 - floodProgress}) 0%,
+              rgba(255,255,255,1) ${(1 - floodProgress) * 100}%,
+              rgba(255,255,255,1) 100%
+            ),
+            url("${params.svgPath}");
+          -webkit-mask-composite: source-over;
+          mask-composite: add;
+          -webkit-mask-size: 100% 100%, ${scale * 200}% ${scale * 200}%;
+          mask-size: 100% 100%, ${scale * 200}% ${scale * 200}%;
+          mask-position: 50% 50%;
+          mask-repeat: no-repeat;
+        `
+      }
+
+      return `
+        position: absolute;
+        z-index: 1000000000;
+        inset: 0;
+        opacity: ${opacity};
+        -webkit-mask-image: url("${params.svgPath}");
+        mask-image: url("${params.svgPath}");
+        -webkit-mask-size: ${scale * 200}% ${scale * 200}%;
+        mask-size: ${scale * 200}% ${scale * 200}%;
+        mask-position: 50% 50%;
+        mask-repeat: no-repeat;
+      `
+    }
+  }
+}
+
 export const transitionFunctions = {
   none: () => ({ delay: 0, duration: 0, css: () => "" }),
   fade,
   fly,
   flip,
+  mask,
   wipe: wipe,
   wipeDiagonal,
   leftToRight,

@@ -4,6 +4,8 @@
   import { CenterBar } from "$lib/components/Shared"
   import { AdminContainer } from "$lib/components/Admin"
   import { player } from "$lib/modules/state/stores"
+  import { PageTransitions } from "$lib/components/Shared"
+  import { gameLayoutTransitionConfig } from "$lib/components/Shared/PageTransitions/transitionConfigs"
 
   let { children } = $props()
 
@@ -28,7 +30,9 @@
 {/if}
 
 <div class="right-column">
-  {@render children?.()}
+  <PageTransitions config={gameLayoutTransitionConfig}>
+    {@render children?.()}
+  </PageTransitions>
 </div>
 
 <style lang="scss">
