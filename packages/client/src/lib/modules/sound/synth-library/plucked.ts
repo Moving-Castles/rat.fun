@@ -2,7 +2,7 @@ import * as Tone from "tone"
 import { getMixerState } from "../state.svelte"
 
 const make = (note: string) => {
-  const mixer = getMixerState()
+  let mixer = getMixerState()
 
   if (!mixer.channels.ui) throw new Error("Not ready")
 

@@ -8,7 +8,7 @@
     entriesByKillCount,
     entriesByPopularity
   } from "./sortFunctions"
-  import { typeHit } from "$lib/modules/sound"
+  import { typeHit } from "$lib/modules/sound/state.svelte"
 
   let {
     textFilter,

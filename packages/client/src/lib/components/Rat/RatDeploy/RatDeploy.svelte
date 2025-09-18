@@ -1,18 +1,25 @@
 <script lang="ts">
   import { gameConfig, playerERC20Balance } from "$lib/modules/state/stores"
   import { BigButton } from "$lib/components/Shared"
-  import { transitionTo, RAT_BOX_STATE } from "../RatBox/state.svelte"
   import { player } from "$lib/modules/state/stores"
   import { UIState } from "$lib/modules/ui/state.svelte"
   import { UI } from "$lib/modules/ui/enums"
+  import { playUISound, getMixerState } from "$lib/modules/sound/state.svelte"
   import { goto } from "$app/navigation"
+  import { transitionTo, RAT_BOX_STATE } from "../RatBox/state.svelte"
 
   // Not enough balance
   let disabled = $derived(($playerERC20Balance ?? 0) < Number($gameConfig?.ratCreationCost ?? 0))
 
+  let mixer = getMixerState()
+
   const onClick = async () => {
-    // RAT_BOX_STATE.NO_RAT -> RAT_BOX_STATE.DEPLOYING_RAT
     transitionTo(RAT_BOX_STATE.DEPLOYING_RAT)
+    mixer.rampChannelVolume("music", -12, 0.5)
+    const id = "fill" + Math.ceil(Math.random() * 4)
+    playUISound("ratfun", id, null, () => {
+      mixer.rampChannelVolume("music", 0, 0.5)
+    })
   }
 
   let filter = $derived(`grayscale(100%)`)

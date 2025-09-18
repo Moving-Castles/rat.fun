@@ -1,6 +1,6 @@
 import { get } from "svelte/store"
 
-import { playUISound } from "$lib/modules/sound"
+import { playUISound } from "$lib/modules/sound/state.svelte"
 import {
   gameConfig,
   externalAddressesConfig,

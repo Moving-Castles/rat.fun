@@ -7,7 +7,7 @@
     playerIsNew,
     playerIsBroke
   } from "$lib/modules/state/stores"
-  import { playUISound } from "$lib/modules/sound"
+  import { playUISound } from "$lib/modules/sound/state.svelte"
   import {
     sendGiveCallerTokens,
     sendApproveMax,
@@ -21,7 +21,7 @@
   import { player } from "$lib/modules/state/stores"
   import { busy } from "$lib/modules/action-manager/index.svelte"
 
-  const mixer = getMixerState()
+  let mixer = getMixerState()
 
   let showJazz = $state(false)
 

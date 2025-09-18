@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from "$app/state"
-  import { playUISound } from "$lib/modules/sound"
+  import { playUISound } from "$lib/modules/sound/state.svelte"
   let { isAdminView }: { isAdminView: boolean } = $props()
 </script>
 

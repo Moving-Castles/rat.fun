@@ -1,5 +1,5 @@
 import { goto } from "$app/navigation"
-import { playUISound } from "$lib/modules/sound"
+import { playUISound } from "$lib/modules/sound/state.svelte"
 import { closeRoom } from "$lib/modules/on-chain-transactions"
 import { busy } from "../index.svelte"
 import { LiquidationError } from "$lib/modules/error-handling/errors"

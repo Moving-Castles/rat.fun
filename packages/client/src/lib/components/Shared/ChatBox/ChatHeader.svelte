@@ -2,7 +2,7 @@
   import { onDestroy } from "svelte"
   import { latestEvents } from "$lib/modules/off-chain-sync/stores"
   import { websocketConnected, clientList } from "$lib/modules/off-chain-sync/stores"
-  import { playUISound } from "$lib/modules/sound"
+  import { playUISound } from "$lib/modules/sound/state.svelte"
   import { player } from "$lib/modules/state/stores"
   import { collapsed } from "$lib/modules/ui/state.svelte"
   let { onclick } = $props()

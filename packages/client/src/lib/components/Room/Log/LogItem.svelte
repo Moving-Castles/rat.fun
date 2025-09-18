@@ -3,7 +3,7 @@
   import { updateFrozenState } from "$lib/components/Room/Trip/state.svelte"
   import { gsap } from "gsap"
   import { TextPlugin } from "gsap/TextPlugin"
-  import { playUISound, typeHit } from "$lib/modules/sound"
+  import { playUISound, typeHit } from "$lib/modules/sound/state.svelte"
   import {
     TIMESTAMP_DURATION,
     CHARACTER_DELAY,

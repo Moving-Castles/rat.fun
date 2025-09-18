@@ -2,7 +2,7 @@
   import { onMount, onDestroy } from "svelte"
   import { gsap } from "gsap"
   import { TextPlugin } from "gsap/TextPlugin"
-  import { typeHit, playUISound } from "$lib/modules/sound"
+  import { typeHit, playUISound } from "$lib/modules/sound/state.svelte"
 
   gsap.registerPlugin(TextPlugin)
 

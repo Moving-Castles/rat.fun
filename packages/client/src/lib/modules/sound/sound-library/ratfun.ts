@@ -23,8 +23,13 @@ export const ratfun: SoundAssets = {
     volume: 1
   },
   //
-  main: {
+  mainOld: {
     src: "/sounds/ratfun/baseloop181.mp3",
+    author: "leo",
+    volume: 1
+  },
+  main: {
+    src: "/sounds/ratfun/jazz-loop.mp3",
     author: "leo",
     volume: 1
   },
@@ -130,6 +135,26 @@ export const ratfun: SoundAssets = {
   },
   adminExit: {
     src: "/sounds/ratfun/backdoor_exit.mp3",
+    author: "leo",
+    volume: 1
+  },
+  fill1: {
+    src: "/sounds/ratfun/fill-1.mp3",
+    author: "leo",
+    volume: 1
+  },
+  fill2: {
+    src: "/sounds/ratfun/fill-1.mp3",
+    author: "leo",
+    volume: 1
+  },
+  fill3: {
+    src: "/sounds/ratfun/fill-1.mp3",
+    author: "leo",
+    volume: 1
+  },
+  fill4: {
+    src: "/sounds/ratfun/fill-1.mp3",
     author: "leo",
     volume: 1
   },

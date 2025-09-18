@@ -1,7 +1,9 @@
+import { get } from "svelte/store"
 import type { Snapshot } from "./$types"
 import * as Tone from "tone"
 import { soundLibrary } from "$lib/modules/sound/sound-library"
 import { page } from "$app/state"
+import { player } from "$lib/modules/state/stores"
 
 export type ChannelConfig = {
   volume: number
@@ -57,6 +59,19 @@ const setMasterVolume = (volume: number) => {
   masterVolume = volume
   if (Tone.getDestination()) {
     Tone.getDestination().volume.value = volume
+  }
+}
+
+const rampChannelVolume = (channel: string, targetVolume: number, duration: number = 1) => {
+  const toneChannel = channels[channel]
+  if (!toneChannel) return
+
+  const now = Tone.now()
+  toneChannel.volume.rampTo(targetVolume, duration, now)
+
+  // Update the state to reflect the target volume
+  if (channelStates[channel]) {
+    channelStates[channel].volume = targetVolume
   }
 }
 
@@ -135,8 +150,18 @@ const setPitchShift = (playerKey: string, semitones: number) => {
 
 const registerMusic = (channel: Tone.ToneAudioNode): Record<string, Tone.Player> => {
   // Looping music ONLY
-  // Main
-  const mainPitchShift = new Tone.PitchShift()
+  // Spawn
+  const spawn = new Tone.Player({
+    url: soundLibrary.ratfun.mainOld.src,
+    loop: true,
+    fadeIn: 3,
+    fadeOut: 1,
+    volume: -18,
+    autostart: false
+  })
+    .chain(channel)
+    .sync()
+
   const main = new Tone.Player({
     url: soundLibrary.ratfun.main.src,
     loop: true,
@@ -145,10 +170,8 @@ const registerMusic = (channel: Tone.ToneAudioNode): Record<string, Tone.Player>
     volume: -18,
     autostart: false
   })
-    .chain(mainPitchShift, channel)
+    .chain(channel)
     .sync()
-
-  pitchShifters.main = mainPitchShift
 
   // Main solo
   const mainSoloPitchShift = new Tone.PitchShift()
@@ -167,15 +190,6 @@ const registerMusic = (channel: Tone.ToneAudioNode): Record<string, Tone.Player>
   // Admin
   const admin = new Tone.Player({
     url: soundLibrary.ratfun.admin.src,
-    loop: true,
-    autostart: false
-  })
-    .connect(channel)
-    .sync()
-
-  // Spawn
-  const spawn = new Tone.Player({
-    url: soundLibrary.tcm.podBg.src,
     loop: true,
     autostart: false
   })
@@ -250,7 +264,14 @@ export async function switchAudio(
 ) {
   if (!toneLoaded || !players) return
 
-  const targetMusic = getMusicForRoute(to)
+  let targetMusic = null
+
+  if (!get(player)) {
+    stopAllMusic()
+    targetMusic = "spawn"
+  } else {
+    targetMusic = getMusicForRoute(to)
+  }
 
   // Only change music if we're switching to something different
   if (currentlyPlaying !== targetMusic) {
@@ -261,6 +282,56 @@ export async function switchAudio(
       startMusic(targetMusic)
     }
   }
+}
+
+/**
+ * Plays a sound based on collection and id. Provides options for looping and fade effects.
+ *
+ * @export
+ * @param {string} collection - The collection of the sound.
+ * @param {string} id - The id of the sound within the collection.
+ * @returns {Promise<Tone.Player | undefined>} - The Tone.js Player object of the sound.
+ */
+export async function playUISound(
+  collection: string,
+  id: string,
+  channel?: string,
+  callback?: () => void
+): Promise<Tone.Player | undefined> {
+  if (!soundLibrary[collection][id].src) throw new Error("Sound Not Found")
+  // Do some kind of cache check before playing
+  const sound = new Tone.Player({
+    url: soundLibrary[collection][id].src,
+    autostart: true,
+    onstop: e => {
+      if (callback) {
+        callback()
+      }
+    }
+  })
+
+  if (channel && mixerInstance?.channels[channel]) {
+    sound.connect(mixerInstance?.channels[channel])
+  } else if (mixerInstance?.channels?.ui) {
+    sound.connect(mixerInstance?.channels.ui)
+  } else {
+    sound.toDestination()
+  }
+
+  return sound
+}
+
+/**
+ * @returns {number} - A random pitch
+ */
+export function randomPitch(): number {
+  const max = 2
+  const min = 0.8
+  return Math.random() * (max - min) + min
+}
+
+export const typeHit = async () => {
+  playUISound("ratfun", "type")
 }
 
 // Initialise the sound
@@ -320,6 +391,7 @@ const createMixerState = () => {
     setChannelStates,
     setPlayers,
     setChannelVolume,
+    rampChannelVolume,
     setChannelMute,
     setChannelSolo,
     stopAllMusic,

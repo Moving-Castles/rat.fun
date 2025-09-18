@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte"
-  import { playUISound } from "$lib/modules/sound"
+  import { playUISound } from "$lib/modules/sound/state.svelte"
 
   const { onComplete, result }: { onComplete: () => void; result: null | any } = $props()
 
@@ -34,7 +34,6 @@
   onDestroy(async () => {
     const result = await sound
     if (result) {
-      console.log("trying to stop sound ", result)
       result.stop()
     }
   })

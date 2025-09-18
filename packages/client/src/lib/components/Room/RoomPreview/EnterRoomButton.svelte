@@ -1,14 +1,22 @@
 <script lang="ts">
   import type { Hex } from "viem"
-  import { playUISound } from "$lib/modules/sound"
+  import { playUISound } from "$lib/modules/sound/state.svelte"
+  import { getMixerState } from "$lib/modules/sound/state.svelte"
   import { player } from "$lib/modules/state/stores"
   import { goto } from "$app/navigation"
   import { BigButton } from "$lib/components/Shared"
 
   let { roomId, disabled }: { roomId: Hex; disabled: boolean } = $props()
 
+  let mixer = getMixerState()
+
   const onClick = async () => {
-    playUISound("ratfun", "enteredPod")
+    // Duck
+    mixer.rampChannelVolume("music", -12, 0.5)
+    const id = "fill" + Math.ceil(Math.random() * 4)
+    playUISound("ratfun", id, null, () => {
+      mixer.rampChannelVolume("music", 0, 0.5)
+    })
     await goto(`/${roomId}/result?enter=true&rat=${$player.currentRat}&t=${Date.now()}`)
   }
 </script>

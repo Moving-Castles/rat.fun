@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { playUISound } from "$lib/modules/sound"
+  import { playUISound } from "$lib/modules/sound/state.svelte"
   import { getRandomUint32 } from "$lib/modules/utils"
   import { onDestroy, onMount } from "svelte"
 

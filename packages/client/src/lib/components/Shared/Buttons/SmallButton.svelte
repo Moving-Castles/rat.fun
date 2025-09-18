@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { playUISound } from "$lib/modules/sound"
+  import { playUISound } from "$lib/modules/sound/state.svelte"
   import { tippy } from "svelte-tippy"
 
   let {
