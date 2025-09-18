@@ -30,7 +30,7 @@
   <div class="button-container">
     {#if $player}
       <BigButton
-        text="Insert rat"
+        text="Buy rat"
         cost={Number($gameConfig?.ratCreationCost)}
         {disabled}
         onclick={onClick}
@@ -69,7 +69,7 @@
 
     .button-container {
       position: absolute;
-      bottom: 40px;
+      top: 50%;
       left: 50%;
       transform: translateX(-50%) translateY(0);
       overflow: hidden;

@@ -22,7 +22,7 @@
       <!-- BALANCE -->
       <div class="info-item" class:priority={balanceGoing}>
         <span class="balance">
-          SLOPAMINE:
+          Health:
           <NumberGoing bind:going={balanceGoing} value={$rat.balance} />
         </span>
       </div>

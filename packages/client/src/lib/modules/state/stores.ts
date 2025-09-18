@@ -123,6 +123,18 @@ export const playerRooms = derived(
 export const playerERC20Balance = writable(0 as number)
 export const playerERC20Allowance = writable(0 as number)
 
+// Player does not and have never had a rat
+export const playerIsNew = derived(
+  player,
+  $player => $player?.currentRat === undefined && ($player?.pastRats?.length ?? 0) === 0
+)
+
+// Player has no tokens
+export const playerIsBroke = derived(
+  playerERC20Balance,
+  $playerERC20Balance => $playerERC20Balance === 0
+)
+
 // * * * * * * * * * * * * * * * * *
 // PLAYER RAT
 // * * * * * * * * * * * * * * * * *
