@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: Unlicense
 pragma solidity >=0.8.24;
+import { Strings } from "@openzeppelin/contracts/utils/Strings.sol";
 import { BaseTest } from "../BaseTest.sol";
 import "../../src/codegen/index.sol";
 import "../../src/libraries/Libraries.sol";
@@ -37,6 +38,35 @@ contract ManagerSystemTest is BaseTest {
     prankAdmin();
     roomId = world.ratfun__createRoom(bobId, bytes32(0), ROOM_INITIAL_BALANCE, 100, 10, "test room");
     vm.stopPrank();
+  }
+
+  function _removeFromItemArray(Item[] memory _array, string memory _name) internal pure returns (Item[] memory newArray) {
+    bool found = false;
+    uint256 foundIndex = 0;
+
+    for (uint256 i = 0; i < _array.length; i++) {
+      if (keccak256(bytes(_array[i].name)) == keccak256(bytes(_name))) {
+        found = true;
+        foundIndex = i;
+        break;
+      }
+    }
+
+    if (!found) {
+      return _array;
+    }
+
+    newArray = new Item[](_array.length - 1);
+
+    uint256 j = 0;
+    for (uint256 i = 0; i < _array.length; i++) {
+      if (i != foundIndex) {
+        newArray[j] = _array[i];
+        j++;
+      }
+    }
+
+    return newArray;
   }
 
   // * * * *
@@ -167,7 +197,7 @@ contract ManagerSystemTest is BaseTest {
     Item[] memory newItems = new Item[](maxInventorySize);
 
     for (uint256 i = 0; i < maxInventorySize; i++) {
-      newItems[i] = Item(string(abi.encodePacked("cheese ", i)), 1);
+      newItems[i] = Item(string.concat("cheese ", Strings.toString(i)), 1);
     }
 
     // As admin
@@ -223,6 +253,82 @@ contract ManagerSystemTest is BaseTest {
     // Initial room balance again
     assertEq(Balance.get(roomId), ROOM_INITIAL_BALANCE);
     assertEq(Inventory.length(ratId), 0);
+  }
+
+  function testApplyOutcomeRemoveItemsFromDifferentArrayPositions() public {
+    uint256 maxInventorySize = GameConfig.getMaxInventorySize();
+
+    // Items to add
+    Item[] memory newItems = new Item[](maxInventorySize);
+
+    for (uint256 i = 0; i < maxInventorySize; i++) {
+      newItems[i] = Item(string.concat("cheese ", Strings.toString(i)), 1);
+    }
+
+    // As admin
+    prankAdmin();
+    world.ratfun__applyOutcome(ratId, roomId, 0, new bytes32[](0), newItems);
+    vm.stopPrank();
+
+    // Check initial inventory length and room balance
+    assertEq(Inventory.length(ratId), maxInventorySize);
+    assertEq(Balance.get(roomId), ROOM_INITIAL_BALANCE - maxInventorySize);
+
+    // Remove item from middle
+    bytes32[] memory itemsToRemove = new bytes32[](1);
+    itemsToRemove[0] = Inventory.getItem(ratId, maxInventorySize / 2);
+
+    Item[] memory resultItems = newItems;
+    resultItems = _removeFromItemArray(resultItems, string.concat("cheese ", Strings.toString(maxInventorySize / 2)));
+
+    // As admin
+    prankAdmin();
+    startGasReport("Apply outcome (remove item from middle of full inventory)");
+    world.ratfun__applyOutcome(ratId, roomId, 0, itemsToRemove, new Item[](0));
+    endGasReport();
+    vm.stopPrank();
+
+    // Check balance and items after removal
+    assertEq(Balance.get(roomId), ROOM_INITIAL_BALANCE - (maxInventorySize - 1));
+    assertEq(Inventory.length(ratId), maxInventorySize - 1);
+    for (uint256 i = 0; i < Inventory.length(ratId); i++) {
+      bytes32 itemId = Inventory.getItem(ratId, i);
+      assertEq(Name.get(itemId), resultItems[i].name);
+    }
+
+    // Remove item from end
+    itemsToRemove[0] = Inventory.getItem(ratId, Inventory.length(ratId) - 1);
+    resultItems = _removeFromItemArray(resultItems, string.concat("cheese ", Strings.toString(maxInventorySize - 1)));
+
+    // As admin
+    prankAdmin();
+    world.ratfun__applyOutcome(ratId, roomId, 0, itemsToRemove, new Item[](0));
+    vm.stopPrank();
+
+    // Check balance and items after removal
+    assertEq(Balance.get(roomId), ROOM_INITIAL_BALANCE - (maxInventorySize - 2));
+    assertEq(Inventory.length(ratId), maxInventorySize - 2);
+    for (uint256 i = 0; i < Inventory.length(ratId); i++) {
+      bytes32 itemId = Inventory.getItem(ratId, i);
+      assertEq(Name.get(itemId), resultItems[i].name);
+    }
+
+    // Remove item from start
+    itemsToRemove[0] = Inventory.getItem(ratId, 0);
+    resultItems = _removeFromItemArray(resultItems, string.concat("cheese 0"));
+
+    // As admin
+    prankAdmin();
+    world.ratfun__applyOutcome(ratId, roomId, 0, itemsToRemove, new Item[](0));
+    vm.stopPrank();
+
+    // Check balance and items after removal
+    assertEq(Balance.get(roomId), ROOM_INITIAL_BALANCE - (maxInventorySize - 3));
+    assertEq(Inventory.length(ratId), maxInventorySize - 3);
+    for (uint256 i = 0; i < Inventory.length(ratId); i++) {
+      bytes32 itemId = Inventory.getItem(ratId, i);
+      assertEq(Name.get(itemId), resultItems[i].name);
+    }
   }
 
   // * * * * * * * * *
