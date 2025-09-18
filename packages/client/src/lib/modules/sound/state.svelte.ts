@@ -1,7 +1,9 @@
+import { get } from "svelte/store"
 import type { Snapshot } from "./$types"
 import * as Tone from "tone"
 import { soundLibrary } from "$lib/modules/sound/sound-library"
 import { page } from "$app/state"
+import { player } from "$lib/modules/state/stores"
 
 export type ChannelConfig = {
   volume: number
@@ -135,8 +137,18 @@ const setPitchShift = (playerKey: string, semitones: number) => {
 
 const registerMusic = (channel: Tone.ToneAudioNode): Record<string, Tone.Player> => {
   // Looping music ONLY
-  // Main
-  const mainPitchShift = new Tone.PitchShift()
+  // Spawn
+  const spawn = new Tone.Player({
+    url: soundLibrary.ratfun.mainOld.src,
+    loop: true,
+    fadeIn: 3,
+    fadeOut: 1,
+    volume: -18,
+    autostart: false
+  })
+    .chain(channel)
+    .sync()
+
   const main = new Tone.Player({
     url: soundLibrary.ratfun.main.src,
     loop: true,
@@ -145,10 +157,8 @@ const registerMusic = (channel: Tone.ToneAudioNode): Record<string, Tone.Player>
     volume: -18,
     autostart: false
   })
-    .chain(mainPitchShift, channel)
+    .chain(channel)
     .sync()
-
-  pitchShifters.main = mainPitchShift
 
   // Main solo
   const mainSoloPitchShift = new Tone.PitchShift()
@@ -167,15 +177,6 @@ const registerMusic = (channel: Tone.ToneAudioNode): Record<string, Tone.Player>
   // Admin
   const admin = new Tone.Player({
     url: soundLibrary.ratfun.admin.src,
-    loop: true,
-    autostart: false
-  })
-    .connect(channel)
-    .sync()
-
-  // Spawn
-  const spawn = new Tone.Player({
-    url: soundLibrary.tcm.podBg.src,
     loop: true,
     autostart: false
   })
@@ -250,7 +251,14 @@ export async function switchAudio(
 ) {
   if (!toneLoaded || !players) return
 
-  const targetMusic = getMusicForRoute(to)
+  let targetMusic = null
+
+  if (!get(player)) {
+    stopAllMusic()
+    targetMusic = "spawn"
+  } else {
+    targetMusic = getMusicForRoute(to)
+  }
 
   // Only change music if we're switching to something different
   if (currentlyPlaying !== targetMusic) {

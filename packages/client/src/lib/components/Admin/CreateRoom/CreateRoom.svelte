@@ -8,6 +8,7 @@
   import { CharacterLimitError, InputValidationError } from "$lib/modules/error-handling/errors"
   import { playSample } from "$lib/modules/sound/synth-library/plucked"
   import { waitForPropertyChange } from "$lib/modules/state/utils"
+  import { playUISound } from "$lib/modules/sound"
   import {
     MIN_ROOM_CREATION_COST,
     MIN_RAT_VALUE_TO_ENTER_FACTOR,
@@ -72,6 +73,7 @@
           "room description"
         )
       }
+      playUISound("ratfun", "fill" + Math.floor(Math.random() * 4))
       const result = await sendCreateRoom(roomDescription, flooredRoomCreationCost)
 
       if (result?.roomId) {

@@ -34,7 +34,6 @@
   onDestroy(async () => {
     const result = await sound
     if (result) {
-      console.log("trying to stop sound ", result)
       result.stop()
     }
   })

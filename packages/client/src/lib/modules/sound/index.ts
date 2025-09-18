@@ -13,13 +13,19 @@ import { getMixerState } from "./state.svelte"
 export async function playUISound(
   collection: string,
   id: string,
-  channel?: string
+  channel?: string | null,
+  callback?: () => {}
 ): Promise<Tone.Player | undefined> {
   const mixer = getMixerState()
 
   const sound = new Tone.Player({
     url: soundLibrary[collection][id].src,
-    autostart: true
+    autostart: true,
+    onstop: e => {
+      if (callback) {
+        callback()
+      }
+    }
   })
 
   if (channel && mixer?.channels[channel]) {
