@@ -2,7 +2,7 @@
   import { playerAddress } from "$lib/modules/state/stores"
   import { onMount, onDestroy } from "svelte"
   import { playerERC20Allowance, playerERC20Balance } from "$lib/modules/state/stores"
-  import { playUISound } from "$lib/modules/sound"
+  import { playUISound } from "$lib/modules/sound/state.svelte"
   import {
     sendGiveCallerTokens,
     sendApproveMax,

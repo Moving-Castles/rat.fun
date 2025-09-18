@@ -5,7 +5,7 @@
   import { player } from "$lib/modules/state/stores"
   import { UIState } from "$lib/modules/ui/state.svelte"
   import { UI } from "$lib/modules/ui/enums"
-  import { playUISound } from "$lib/modules/sound"
+  import { playUISound } from "$lib/modules/sound/state.svelte"
   import { goto } from "$app/navigation"
 
   // Not enough balance
@@ -14,7 +14,8 @@
   const onClick = async () => {
     // RAT_BOX_STATE.NO_RAT -> RAT_BOX_STATE.DEPLOYING_RAT
     transitionTo(RAT_BOX_STATE.DEPLOYING_RAT)
-    playUISound("ratfun", "fill" + Math.floor(Math.random() * 4))
+    const id = "fill" + Math.floor(Math.random() * 4)
+    playUISound("ratfun", id)
   }
 
   let filter = $derived(`grayscale(100%)`)

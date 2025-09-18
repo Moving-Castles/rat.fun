@@ -3,12 +3,12 @@
   import { CharacterCounter, VideoLoaderDuration, BigButton } from "$lib/components/Shared"
   import { sendCreateRoom } from "$lib/modules/action-manager/index.svelte"
   import { goto } from "$app/navigation"
-  import { typeHit } from "$lib/modules/sound"
+  import { typeHit } from "$lib/modules/sound/state.svelte"
   import { errorHandler } from "$lib/modules/error-handling"
   import { CharacterLimitError, InputValidationError } from "$lib/modules/error-handling/errors"
   import { playSample } from "$lib/modules/sound/synth-library/plucked"
   import { waitForPropertyChange } from "$lib/modules/state/utils"
-  import { playUISound } from "$lib/modules/sound"
+  import { playUISound } from "$lib/modules/sound/state.svelte"
   import {
     MIN_ROOM_CREATION_COST,
     MIN_RAT_VALUE_TO_ENTER_FACTOR,
@@ -73,7 +73,8 @@
           "room description"
         )
       }
-      playUISound("ratfun", "fill" + Math.floor(Math.random() * 4))
+      const id = "fill" + Math.floor(Math.random() * 4)
+      playUISound("ratfun", id)
       const result = await sendCreateRoom(roomDescription, flooredRoomCreationCost)
 
       if (result?.roomId) {

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { slide } from "svelte/transition"
   import { toastManager } from "$lib/modules/ui/toasts.svelte"
-  import { playUISound } from "$lib/modules/sound"
+  import { playUISound } from "$lib/modules/sound/state.svelte"
 
   const onToastClick = (id: string) => {
     toastManager.remove(id)

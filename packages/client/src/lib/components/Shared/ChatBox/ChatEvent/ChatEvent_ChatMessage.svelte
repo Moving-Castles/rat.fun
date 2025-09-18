@@ -3,7 +3,7 @@
   import { onMount } from "svelte"
   import { formatDate } from "$lib/modules/utils"
   import { tippy } from "svelte-tippy"
-  import { playUISound } from "$lib/modules/sound"
+  import { playUISound } from "$lib/modules/sound/state.svelte"
 
   let { event, suppressSound = false }: { event: OffChainMessage; suppressSound?: boolean } =
     $props()

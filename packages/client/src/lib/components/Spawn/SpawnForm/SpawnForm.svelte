@@ -5,7 +5,7 @@
 
   import { BigButton } from "$lib/components/Shared"
   import { player } from "$lib/modules/state/stores"
-  import { typeHit } from "$lib/modules/sound"
+  import { typeHit } from "$lib/modules/sound/state.svelte"
   import { InputValidationError } from "$lib/modules/error-handling/errors"
   import { waitForPropertyChange } from "$lib/modules/state/utils"
   import SmallSpinner from "$lib/components/Shared/Loaders/SmallSpinner.svelte"

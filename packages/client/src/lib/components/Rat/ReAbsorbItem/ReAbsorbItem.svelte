@@ -2,7 +2,7 @@
   import { onMount } from "svelte"
 
   import { reAbsorbItem } from "$lib/modules/on-chain-transactions"
-  import { playUISound } from "$lib/modules/sound"
+  import { playUISound } from "$lib/modules/sound/state.svelte"
   import { VideoLoaderDuration } from "$lib/components/Shared"
   import { transitionTo, RAT_BOX_STATE, getItemState } from "../RatBox/state.svelte"
 

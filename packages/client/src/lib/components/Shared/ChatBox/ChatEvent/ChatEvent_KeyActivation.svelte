@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte"
-  import { playUISound } from "$lib/modules/sound"
+  import { playUISound } from "$lib/modules/sound/state.svelte"
   import type { OffChainMessage } from "@server/modules/types"
   import ChatEvent_Label from "./ChatEvent_Label.svelte"
 

@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Hex } from "viem"
-  import { playUISound } from "$lib/modules/sound"
+  import { playUISound } from "$lib/modules/sound/state.svelte"
   import { getMixerState } from "$lib/modules/sound/state.svelte"
   import { player } from "$lib/modules/state/stores"
   import { goto } from "$app/navigation"
@@ -13,7 +13,8 @@
   const onClick = async () => {
     // Duck
     mixer.setChannelVolume("music", -12)
-    playUISound("ratfun", "fill" + Math.floor(Math.random() * 4), null, () => {
+    const id = "fill" + Math.floor(Math.random() * 4)
+    playUISound("ratfun", id, null, () => {
       mixer.setChannelVolume("music", 0)
     })
     await goto(`/${roomId}/result?enter=true&rat=${$player.currentRat}&t=${Date.now()}`)
