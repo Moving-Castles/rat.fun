@@ -8,7 +8,7 @@
   import { CharacterLimitError, InputValidationError } from "$lib/modules/error-handling/errors"
   import { playSample } from "$lib/modules/sound/synth-library/plucked"
   import { waitForPropertyChange } from "$lib/modules/state/utils"
-  import { playUISound } from "$lib/modules/sound/state.svelte"
+  import { playUISound, getMixerState } from "$lib/modules/sound/state.svelte"
   import {
     MIN_ROOM_CREATION_COST,
     MIN_RAT_VALUE_TO_ENTER_FACTOR,
@@ -18,6 +18,8 @@
 
   let roomDescription: string = $state("")
   let busy: boolean = $state(false)
+
+  let mixer = getMixerState()
 
   // Prompt has to be between 1 and MAX_ROOM_PROMPT_LENGTH characters
   let invalidRoomDescriptionLength = $derived(
@@ -73,8 +75,13 @@
           "room description"
         )
       }
-      const id = "fill" + Math.floor(Math.random() * 4)
-      playUISound("ratfun", id)
+      // Duck
+      mixer.rampChannelVolume("music", -12, 0.5)
+      const id = "fill" + Math.ceil(Math.random() * 4)
+      console.log(id)
+      playUISound("ratfun", id, null, () => {
+        mixer.rampChannelVolume("music", 0, 0.5)
+      })
       const result = await sendCreateRoom(roomDescription, flooredRoomCreationCost)
 
       if (result?.roomId) {

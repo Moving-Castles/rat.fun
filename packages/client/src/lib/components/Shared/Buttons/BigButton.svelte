@@ -31,14 +31,14 @@
 <button class:disabled {onmouseup} {onmousedown} use:conditionalAction={{ content: tippyText }}>
   <span class="button-text">{text}</span>
   {#if cost}
-    <span class="button-cost">({cost})</span>
+    <span class="button-cost">(${cost})</span>
   {/if}
 </button>
 
 <style lang="scss">
   button {
     width: 100%;
-    height: 100%;
+    height: 100px;
     background: var(--color-alert-priority);
     border: none;
     border-style: outset;
@@ -64,8 +64,6 @@
       border-style: inset;
       transform: translateY(2px);
       position: relative;
-      // border-width: 8px;
-      // top: -2px;
       color: white;
     }
 

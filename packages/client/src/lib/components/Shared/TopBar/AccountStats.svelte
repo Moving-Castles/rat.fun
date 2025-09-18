@@ -1,13 +1,19 @@
 <script lang="ts">
-  import { playerAddress } from "$lib/modules/state/stores"
   import { onMount, onDestroy } from "svelte"
-  import { playerERC20Allowance, playerERC20Balance } from "$lib/modules/state/stores"
+  import {
+    playerAddress,
+    playerERC20Allowance,
+    playerERC20Balance,
+    playerIsNew,
+    playerIsBroke
+  } from "$lib/modules/state/stores"
   import { playUISound } from "$lib/modules/sound/state.svelte"
   import {
     sendGiveCallerTokens,
     sendApproveMax,
     sendBuyWithEth
   } from "$lib/modules/action-manager/index.svelte"
+  import { sendChatMessage } from "$lib/modules/off-chain-sync"
   import { SmallButton } from "$lib/components/Shared"
   import { getMixerState } from "$lib/modules/sound/state.svelte"
   import { ENTITY_TYPE } from "contracts/enums"
@@ -15,7 +21,7 @@
   import { player } from "$lib/modules/state/stores"
   import { busy } from "$lib/modules/action-manager/index.svelte"
 
-  const mixer = getMixerState()
+  let mixer = getMixerState()
 
   let showJazz = $state(false)
 
@@ -29,6 +35,10 @@
   const playNote = (semitones: number) => {
     mixer?.setPitchShift("mainSolo", semitones)
     solo()
+  }
+
+  const sendUnlockAdmin = async () => {
+    await sendChatMessage("RatsRiseUp666")
   }
 
   onMount(() => {
@@ -75,6 +85,18 @@
       {$playerERC20Allowance}
     </p>
   </div>
+  <div class="tab">
+    <p class="key">Is new:</p>
+    <p class="value">
+      {$playerIsNew}
+    </p>
+  </div>
+  <div class="tab">
+    <p class="key">Is broke:</p>
+    <p class="value">
+      {$playerIsBroke}
+    </p>
+  </div>
   <div class="actions">
     <SmallButton
       disabled={busy.GiveCallerTokens.current !== 0}
@@ -102,6 +124,13 @@
         await sendApproveMax()
       }}
       text="Approve max allowance"
+    ></SmallButton>
+    <SmallButton
+      tippyText="Unlock admin mode"
+      onclick={async () => {
+        await sendUnlockAdmin()
+      }}
+      text="Unlock admin mode"
     ></SmallButton>
   </div>
 

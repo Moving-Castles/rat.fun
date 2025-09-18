@@ -8,14 +8,14 @@
 
   let { roomId, disabled }: { roomId: Hex; disabled: boolean } = $props()
 
-  const mixer = getMixerState()
+  let mixer = getMixerState()
 
   const onClick = async () => {
     // Duck
-    mixer.setChannelVolume("music", -12)
-    const id = "fill" + Math.floor(Math.random() * 4)
+    mixer.rampChannelVolume("music", -12, 0.5)
+    const id = "fill" + Math.ceil(Math.random() * 4)
     playUISound("ratfun", id, null, () => {
-      mixer.setChannelVolume("music", 0)
+      mixer.rampChannelVolume("music", 0, 0.5)
     })
     await goto(`/${roomId}/result?enter=true&rat=${$player.currentRat}&t=${Date.now()}`)
   }

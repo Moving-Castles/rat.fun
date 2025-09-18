@@ -30,9 +30,9 @@
     "better-sqlite3": "^12.2.0"
   },
   "devDependencies": {
-    "@types/node": "^24.3.1",
+    "@types/node": "^24.5.2",
     "forge-std": "https://github.com/foundry-rs/forge-std.git#60acb7aaadcce2d68e52986a0a66fe79f07d138f",
-    "solhint": "^6.0.0",
+    "solhint": "^6.0.1",
     "tsx": "4.20.5"
   }
 }

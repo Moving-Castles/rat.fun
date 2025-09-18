@@ -100,5 +100,5 @@ export function generateRatName() {
   const firstName = getRandomElement(firstNameFragments)
   const lastName = getRandomElement(lastNameFragments)
   const number = getRandomNumber(100, 999)
-  return `${firstName}${lastName}${number}`
+  return `${firstName}_${lastName}_${number}`
 }

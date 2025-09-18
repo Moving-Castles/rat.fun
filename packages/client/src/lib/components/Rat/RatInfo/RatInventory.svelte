@@ -35,26 +35,27 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    width: 100%;
     border-right: var(--dashed-border-style);
     overflow-x: hidden;
     overflow-y: scroll;
     background-image: url("/images/texture-2.png");
     background-size: 200px;
+    height: 100%;
   }
 
   .inventory-container {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(2, 85px);
-    gap: 8px;
-    padding: 8px;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 6px;
+    padding: 6px;
     flex-shrink: 0;
     height: 100%;
+    box-sizing: border-box;
 
     &.collapsed {
-      grid-template-columns: repeat(2, 1fr);
-      grid-template-rows: repeat(3, 160px);
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(2, 1fr);
       height: 100%;
     }
   }

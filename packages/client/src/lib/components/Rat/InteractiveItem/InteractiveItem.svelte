@@ -59,15 +59,6 @@
         color: var(--color-death);
       }
     }
-
-    // &:hover {
-    //   background: var(--color-death);
-    //   color: var(--background);
-
-    //   .value {
-    //     color: var(--background);
-    //   }
-    // }
   }
 
   .inner {

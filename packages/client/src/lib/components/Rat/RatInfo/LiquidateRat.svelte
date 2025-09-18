@@ -22,9 +22,10 @@
   .liquidate-rat {
     height: 100%;
     display: flex;
-  }
-
-  .action {
-    width: 100%;
+    background-image: url("/images/texture-5.png");
+    .action {
+      width: 100%;
+      padding: 5px;
+    }
   }
 </style>

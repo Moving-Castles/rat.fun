@@ -62,6 +62,19 @@ const setMasterVolume = (volume: number) => {
   }
 }
 
+const rampChannelVolume = (channel: string, targetVolume: number, duration: number = 1) => {
+  const toneChannel = channels[channel]
+  if (!toneChannel) return
+
+  const now = Tone.now()
+  toneChannel.volume.rampTo(targetVolume, duration, now)
+
+  // Update the state to reflect the target volume
+  if (channelStates[channel]) {
+    channelStates[channel].volume = targetVolume
+  }
+}
+
 /**
  *
  * @param channel
@@ -285,7 +298,7 @@ export async function playUISound(
   channel?: string,
   callback?: () => void
 ): Promise<Tone.Player | undefined> {
-  //
+  if (!soundLibrary[collection][id].src) throw new Error("Sound Not Found")
   // Do some kind of cache check before playing
   const sound = new Tone.Player({
     url: soundLibrary[collection][id].src,
@@ -378,6 +391,7 @@ const createMixerState = () => {
     setChannelStates,
     setPlayers,
     setChannelVolume,
+    rampChannelVolume,
     setChannelMute,
     setChannelSolo,
     stopAllMusic,

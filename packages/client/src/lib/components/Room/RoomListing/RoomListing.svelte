@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Hex } from "viem"
   import { get } from "svelte/store"
-  import { rooms, playerRooms } from "$lib/modules/state/stores"
+  import { rooms, playerRooms, playerIsNew } from "$lib/modules/state/stores"
   import { entriesByPopularity, entriesChronologically } from "./sortFunctions"
   import { filterRooms, filterDepletedRooms } from "./filterFunctions"
   import { blockNumber } from "$lib/modules/network"
@@ -46,79 +46,85 @@
 
 <div class="content" id="room-listing-sanity-check">
   <div class:previewing class:animated={false} class="room-listing">
-    {#if !isOwnRoomListing}
-      <RoomFilters
-        roomsAmount={activeList.length}
-        {textFilter}
-        {sortFunction}
-        {showDepletedRooms}
-        onSort={fn => {
-          sortFunction = fn
-          updateRooms()
-        }}
-        onTextFilterChange={value => {
-          textFilter = value
-        }}
-        onTextFilterClear={() => {
-          textFilter = ""
-        }}
-        onToggleDepleted={() => {
-          showDepletedRooms = !showDepletedRooms
-        }}
-      />
-    {:else}
-      <RoomFilters
-        roomsAmount={activeList.length}
-        {textFilter}
-        {sortFunction}
-        {showDepletedRooms}
-        onSort={fn => {
-          sortFunction = fn
-          updateRooms()
-        }}
-        onTextFilterChange={value => {
-          textFilter = value
-        }}
-        onTextFilterClear={() => {
-          textFilter = ""
-        }}
-        onToggleDepleted={() => {
-          showDepletedRooms = !showDepletedRooms
-        }}
-      />
-    {/if}
-
-    {#if activeList.length > 0}
-      {#if activeList.length < roomList.length}
-        {#key roomList.length}
-          <button
-            onclick={() => {
-              sortFunction = entriesChronologically
-              updateRooms()
-            }}
-            class="new-rooms-button flash-fast-thrice"
-          >
-            {roomList.length - activeList.length} new trips added
-          </button>
-        {/key}
-      {/if}
-      {#each activeList as roomEntry (roomEntry[0])}
-        {#if isOwnRoomListing}
-          <AdminRoomItem roomId={roomEntry[0] as Hex} room={roomEntry[1]} />
-        {:else}
-          <RoomItem roomId={roomEntry[0] as Hex} room={roomEntry[1]} />
-        {/if}
-      {/each}
-    {:else}
-      <div class="empty-listing">
-        <div>
-          {#if isOwnRoomListing}
-            NO TRIPS CREATED YET
-          {:else}
-            NO TRIPS
-          {/if}
-        </div>
+    {#if $playerIsNew}
+      <div class="new-player-message">
+        <div>Buy your first rat to start tripping.</div>
       </div>
+    {:else}
+      {#if !isOwnRoomListing}
+        <RoomFilters
+          roomsAmount={activeList.length}
+          {textFilter}
+          {sortFunction}
+          {showDepletedRooms}
+          onSort={fn => {
+            sortFunction = fn
+            updateRooms()
+          }}
+          onTextFilterChange={value => {
+            textFilter = value
+          }}
+          onTextFilterClear={() => {
+            textFilter = ""
+          }}
+          onToggleDepleted={() => {
+            showDepletedRooms = !showDepletedRooms
+          }}
+        />
+      {:else}
+        <RoomFilters
+          roomsAmount={activeList.length}
+          {textFilter}
+          {sortFunction}
+          {showDepletedRooms}
+          onSort={fn => {
+            sortFunction = fn
+            updateRooms()
+          }}
+          onTextFilterChange={value => {
+            textFilter = value
+          }}
+          onTextFilterClear={() => {
+            textFilter = ""
+          }}
+          onToggleDepleted={() => {
+            showDepletedRooms = !showDepletedRooms
+          }}
+        />
+      {/if}
+
+      {#if activeList.length > 0}
+        {#if activeList.length < roomList.length}
+          {#key roomList.length}
+            <button
+              onclick={() => {
+                sortFunction = entriesChronologically
+                updateRooms()
+              }}
+              class="new-rooms-button flash-fast-thrice"
+            >
+              {roomList.length - activeList.length} new trips added
+            </button>
+          {/key}
+        {/if}
+        {#each activeList as roomEntry (roomEntry[0])}
+          {#if isOwnRoomListing}
+            <AdminRoomItem roomId={roomEntry[0] as Hex} room={roomEntry[1]} />
+          {:else}
+            <RoomItem roomId={roomEntry[0] as Hex} room={roomEntry[1]} />
+          {/if}
+        {/each}
+      {:else}
+        <div class="empty-listing">
+          <div>
+            {#if isOwnRoomListing}
+              NO TRIPS CREATED YET
+            {:else}
+              NO TRIPS
+            {/if}
+          </div>
+        </div>
+      {/if}
     {/if}
   </div>
 </div>
@@ -128,21 +134,38 @@
     position: relative;
     overflow-y: scroll;
     height: calc(var(--game-window-height) - 60px);
-    max-height: 100%;
-  }
-
-  .room-listing {
-    height: 100%;
+    height: var(--game-window-height);
     max-height: 100%;
   }
 
   .new-rooms-button {
     width: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
     background-color: var(--color-alert-priority);
     color: var(--black);
     height: 3rem;
     border: none;
     outline: none;
+  }
+
+  .new-player-message {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    border: none;
+    outline: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--foreground);
+    font-family: var(--display-font-stack);
+    font-size: var(--font-size-extra-large);
+    line-height: 1em;
+    text-align: center;
+
+    div {
+      margin-bottom: 30px;
+    }
   }
 
   .room-listing {
@@ -152,6 +175,10 @@
     height: 100%;
     min-height: 100%;
     inset: 0;
+    height: 100%;
+    max-height: 100%;
+    // background-image: url("/images/texture-3.png");
+    // background-size: 200px;
 
     &.animated {
       transition: transform 0.2s ease 0.1s;

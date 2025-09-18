@@ -3,7 +3,6 @@
   import { addressToRatImage } from "$lib/modules/utils"
   import OutcomeItem from "../OutcomeItem/OutcomeItem.svelte"
   import { timeSince } from "$lib/modules/utils"
-  // import { staticContent } from "$lib/modules/content"
 
   let { outcome }: { outcome: Outcome } = $props()
 </script>

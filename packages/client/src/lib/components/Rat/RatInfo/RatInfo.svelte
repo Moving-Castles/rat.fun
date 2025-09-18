@@ -3,11 +3,9 @@
 </script>
 
 <div class="rat-info">
-  <div class="rat-main">
-    <!-- Info -->
-    <div class="rat-stats">
-      <RatStats />
-    </div>
+  <!-- Stats -->
+  <div class="rat-stats">
+    <RatStats />
   </div>
   <!-- Inventory -->
   <div class="rat-inventory">
@@ -26,28 +24,26 @@
     flex-shrink: 0;
     height: 100%;
     width: 100%;
-  }
-
-  .rat-main {
-    display: flex;
-    flex-direction: row;
-    height: 100%;
-    border-bottom: var(--default-border-style);
-    overflow: hidden;
-
     .rat-stats {
-      flex: 1;
+      display: flex;
+      flex-direction: row;
+      border-bottom: var(--default-border-style);
+      overflow: hidden;
+      flex: 1; /* Take remaining space */
     }
-  }
 
-  .rat-inventory {
-    width: 100%;
-    border-bottom: var(--default-border-style);
-  }
+    .rat-inventory {
+      width: 100%;
+      border-bottom: var(--default-border-style);
+      flex: 1; /* Take remaining space */
+      overflow: hidden;
+    }
 
-  .rat-liquidate {
-    height: var(--liquidate-rat-height);
-    width: 100%;
-    border-bottom: var(--default-border-style);
+    .rat-liquidate {
+      height: var(--liquidate-rat-height);
+      width: 100%;
+      border-bottom: var(--default-border-style);
+      flex-shrink: 0;
+    }
   }
 </style>
