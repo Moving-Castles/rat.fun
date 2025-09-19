@@ -25,17 +25,14 @@
           100
         ).toFixed(2)}%)
       </h1>
-      <!-- Investment minus balance (percentage of investment) -->
     </div>
     <div class="bottom-left">
       <p>Portfolio</p>
       <h2 class={$portfolioClass}>{$balance}</h2>
-      <!-- Complete balance of all active trips -->
     </div>
     <div class="bottom-right">
       <p>Invested</p>
       <h2>{$investment}</h2>
-      <!-- Complete invested  -->
     </div>
   </div>
   <div class="p-l-graph">BigGraph</div>
@@ -48,7 +45,9 @@
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    padding: 2rem;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    padding-left: 2rem;
 
     .down {
       background: red;

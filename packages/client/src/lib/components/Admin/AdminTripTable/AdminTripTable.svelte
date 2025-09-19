@@ -2,6 +2,7 @@
   import type { PlotPoint } from "$lib/components/Room/RoomGraph/types"
   import { SmallButton } from "$lib/components/Shared"
   import { RoomGraph } from "$lib/components/Room"
+  import { goto } from "$app/navigation"
   import { rooms, playerRooms, playerIsNew } from "$lib/modules/state/stores"
   import { entriesChronologically } from "$lib/components/Room/RoomListing/sortFunctions"
   import { blocksToReadableTime, renderSafeString } from "$lib/modules/utils"
@@ -71,7 +72,7 @@
         {@const plotData = plots[roomEntry[0]]}
         <tr
           onclick={() => {
-            sidebar = true
+            goto("/admin/" + roomEntry[0], { noScroll: false })
           }}
           class="simple-row"
         >
@@ -104,7 +105,7 @@
   .admin-trip-table-container {
     width: 100%;
     background: black;
-    height: 200px;
+    height: 400px;
     overflow-y: scroll;
   }
   .admin-trip-table {
@@ -122,6 +123,11 @@
   }
 
   .simple-row {
+    * {
+      border: none;
+      outline: none;
+      border-width: 0;
+    }
     &:hover {
       background: #222;
       cursor: pointer;
@@ -132,6 +138,7 @@
       vertical-align: top;
     }
     .cell-description {
+      padding: 0.6rem 0.5rem;
       // min-width: 500px;
     }
     .cell-balance {
