@@ -23,13 +23,23 @@ export const ratfun: SoundAssets = {
     volume: 1
   },
   //
-  mainOld: {
+  mainOldV2: {
     src: "/sounds/ratfun/baseloop181.mp3",
     author: "leo",
     volume: 1
   },
-  main: {
+  mainOld: {
+    src: "/sounds/ratfun/band_full.mp3",
+    author: "leo",
+    volume: 1
+  },
+  mainV2: {
     src: "/sounds/ratfun/jazz-loop.mp3",
+    author: "leo",
+    volume: 1
+  },
+  main: {
+    src: "/sounds/ratfun/band_sparse.mp3",
     author: "leo",
     volume: 1
   },

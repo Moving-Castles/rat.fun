@@ -2,3 +2,5 @@ export { default as AdminRoomPreview } from "./AdminRoomPreview/AdminRoomPreview
 export { default as CreateRoom } from "./CreateRoom/CreateRoom.svelte"
 export { default as AdminRoomItem } from "./AdminRoomItem/AdminRoomItem.svelte"
 export { default as AdminContainer } from "./AdminContainer.svelte"
+export { default as AdminTripMonitor } from "./AdminTripMonitor/AdminTripMonitor.svelte"
+export { default as AdminTripTable } from "./AdminTripTable/AdminTripTable.svelte"

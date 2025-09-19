@@ -22,21 +22,15 @@
   })
 </script>
 
-{#if $player}
-  <!-- Grid position 1  -->
-  <AdminContainer />
-  <!-- Grid position 2 -->
-  <CenterBar />
-{/if}
-
-<div class="right-column">
+<div class="span-all">
   <PageTransitions config={gameLayoutTransitionConfig}>
     {@render children?.()}
   </PageTransitions>
 </div>
 
 <style lang="scss">
-  .right-column {
+  .span-all {
+    grid-column: 1/4;
     position: relative;
     overflow-x: hidden;
     overflow-y: scroll;

@@ -5,8 +5,8 @@
 </script>
 
 <div class="admin-container" class:collapsed={$collapsed}>
-  <CreateRoom />
-  <ChatBox />
+  <!-- <CreateRoom /> -->
+  <!-- <ChatBox /> -->
 </div>
 
 <style lang="scss">
@@ -15,6 +15,7 @@
     width: 100%;
     display: grid;
     grid-template-rows: 440px minmax(100px, 1fr);
+    grid-column: 1 / 4;
     transition: grid-template-rows 0.1s ease;
 
     &.collapsed {
