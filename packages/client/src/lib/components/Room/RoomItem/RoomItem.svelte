@@ -1,11 +1,9 @@
 <script lang="ts">
   import type { Hex } from "viem"
   import { urlFor } from "$lib/modules/content/sanity"
-  import { getRoomOwnerName } from "$lib/modules/state/utils"
-  import { blocksToReadableTime, renderSafeString } from "$lib/modules/utils"
-  import { blockNumber } from "$lib/modules/network"
+  import { renderSafeString } from "$lib/modules/utils"
   import { staticContent } from "$lib/modules/content"
-  import { NumberGoing, NoImage } from "$lib/components/Shared"
+  import { NoImage } from "$lib/components/Shared"
 
   import type { Room as SanityRoom } from "@sanity-types"
 
@@ -51,16 +49,16 @@
     <!-- SECTION 1 -->
     <div class="section">
       <!-- TOP ROW -->
-      <div class="room-info-row top">
-        <!-- INDEX -->
-        <!-- <span class="index small">Trip #{room.index}</span> -->
-        <!-- DIVIDER -->
-        <!-- <span class="divider">•</span> -->
-        <!-- CREATION TIME  -->
-        <span class="creation-time small">
+      <!-- <div class="room-info-row top"> -->
+      <!-- INDEX -->
+      <!-- <span class="index small">Trip #{room.index}</span> -->
+      <!-- DIVIDER -->
+      <!-- <span class="divider">•</span> -->
+      <!-- CREATION TIME  -->
+      <!-- <span class="creation-time small">
           {blocksToReadableTime(Number($blockNumber) - Number(room.creationBlock))}
-        </span>
-      </div>
+        </span> -->
+      <!-- </div> -->
       <!-- PROMPT -->
       <div class="room-prompt {getPromptLengthClass(room.prompt)}">
         <div class="content">

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { rat } from "$lib/modules/state/stores"
+  import { rat, ratTotalValue } from "$lib/modules/state/stores"
   import { BigButton, ValueBreakdown } from "$lib/components/Shared"
   import { transitionTo, RAT_BOX_STATE } from "../RatBox/state.svelte"
 
@@ -20,8 +20,8 @@
       Are you sure you want to liquidate {$rat?.name}?
     </h1>
     <ValueBreakdown
-      originalValue={Number($rat.balance)}
-      originalLabel="Rat balance"
+      originalValue={Number($ratTotalValue)}
+      originalLabel="Rat value"
       taxRateKey="taxationLiquidateRat"
     />
   </div>

@@ -51,7 +51,7 @@
         <div>Buy your first rat to start tripping.</div>
       </div>
     {:else}
-      {#if !isOwnRoomListing}
+      <!-- {#if !isOwnRoomListing}
         <RoomFilters
           roomsAmount={activeList.length}
           {textFilter}
@@ -91,7 +91,7 @@
             showDepletedRooms = !showDepletedRooms
           }}
         />
-      {/if}
+      {/if} -->
 
       {#if activeList.length > 0}
         {#if activeList.length < roomList.length}
