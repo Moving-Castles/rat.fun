@@ -22,20 +22,18 @@
   const value = $derived(typeof item === "string" ? ($items[item]?.value ?? 0) : item.value)
 </script>
 
-<button
+<div
   class="list-item"
   class:disabled={busy}
+  role="listitem"
   onmouseenter={() => !isRoomInfoBox && (isHovered = true)}
   onmouseleave={() => !isRoomInfoBox && (isHovered = false)}
-  onclick={() => {
-    itemState.set(item)
-  }}
 >
   <!-- NAME -->
   <div class="name">{name}</div>
   <!-- VALUE -->
   <span class="value" class:negative={value < 0}>${value}</span>
-</button>
+</div>
 
 <style lang="scss">
   .list-item {
@@ -61,7 +59,7 @@
     }
 
     &.clickable {
-      cursor: pointer;
+      cursor: default;
       &:hover {
         background: var(--color-death);
         color: var(--background);

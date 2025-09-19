@@ -22,14 +22,13 @@
   const itemId = $derived(typeof item === "string" ? item : item.id)
 </script>
 
-<button
+<div
   class="list-item"
   class:disabled={busy}
+  role="button"
+  tabindex="0"
   onmouseenter={() => (isHovered = true)}
   onmouseleave={() => (isHovered = false)}
-  onclick={() => {
-    itemState.set(itemId)
-  }}
 >
   <div class="inner">
     <!-- NAME -->
@@ -37,7 +36,7 @@
     <!-- VALUE -->
     <span class="value" class:negative={value < 0}>${value}</span>
   </div>
-</button>
+</div>
 
 <style lang="scss">
   .list-item {
