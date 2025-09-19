@@ -5,7 +5,12 @@
   import type { LayoutProps } from "./$types"
 
   import { type Outcome as SanityOutcome } from "@sanity-types"
-  import { initSound, snapshotFactory, switchAudio } from "$lib/modules/sound/state.svelte"
+  import {
+    initSound,
+    snapshotFactory,
+    switchAudio,
+    audienceCoughs
+  } from "$lib/modules/sound/state.svelte"
   import { initializeSentry } from "$lib/modules/error-handling"
   import { browser } from "$app/environment"
   import { afterNavigate } from "$app/navigation"
@@ -89,6 +94,8 @@
     await initSound()
 
     switchAudio(page)
+
+    audienceCoughs()
 
     document.removeEventListener("click", enableAudio)
     document.removeEventListener("touchstart", enableAudio)

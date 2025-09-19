@@ -168,6 +168,71 @@ export const ratfun: SoundAssets = {
     author: "leo",
     volume: 1
   },
+  cough1: {
+    src: "/sounds/ratfun/coughs/1.mp3",
+    author: "leo",
+    volume: -12
+  },
+  cough2: {
+    src: "/sounds/ratfun/coughs/2.mp3",
+    author: "leo",
+    volume: -12
+  },
+  cough3: {
+    src: "/sounds/ratfun/coughs/3.mp3",
+    author: "leo",
+    volume: -12
+  },
+  cough4: {
+    src: "/sounds/ratfun/coughs/4.mp3",
+    author: "leo",
+    volume: -12
+  },
+  cough5: {
+    src: "/sounds/ratfun/coughs/5.mp3",
+    author: "leo",
+    volume: -12
+  },
+  cough6: {
+    src: "/sounds/ratfun/coughs/6.mp3",
+    author: "leo",
+    volume: -12
+  },
+  cough7: {
+    src: "/sounds/ratfun/coughs/7.mp3",
+    author: "leo",
+    volume: -12
+  },
+  cough8: {
+    src: "/sounds/ratfun/coughs/8.mp3",
+    author: "leo",
+    volume: -12
+  },
+  cough9: {
+    src: "/sounds/ratfun/coughs/9.mp3",
+    author: "leo",
+    volume: -12
+  },
+  cough10: {
+    src: "/sounds/ratfun/coughs/10.mp3",
+    author: "leo",
+    volume: -12
+  },
+  cough11: {
+    src: "/sounds/ratfun/coughs/11.mp3",
+    author: "leo",
+    volume: -12
+  },
+  cough12: {
+    src: "/sounds/ratfun/coughs/12.mp3",
+    author: "leo",
+    volume: -12
+  },
+  cough13: {
+    src: "/sounds/ratfun/coughs/13.mp3",
+    author: "leo",
+    volume: -12
+  },
   // To replace
   // XXX.mp3 is just placeholder
   acceptOrderFail: {

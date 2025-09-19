@@ -258,6 +258,21 @@ const getMusicForRoute = (route: Partial<import("@sveltejs/kit").Page>) => {
   return null
 }
 
+export async function audienceCoughs() {
+  const randomCough = () => {
+    // Just not when we're not spawned and also not when we are in the results
+    if (get(player) && !page.route.id?.includes("result")) {
+      console.log("playing a little cough")
+      playUISound("ratfun", "cough" + Math.ceil(Math.random() * 13))
+    }
+
+    // Trigger the next one in 10 seconds
+    setTimeout(randomCough, 10000)
+  }
+  // Set a wait time of 2 seconds
+  setTimeout(randomCough, 2000)
+}
+
 export async function switchAudio(
   to: Partial<import("@sveltejs/kit").Page>,
   from?: Partial<import("@sveltejs/kit").Page>
@@ -302,6 +317,7 @@ export async function playUISound(
   // Do some kind of cache check before playing
   const sound = new Tone.Player({
     url: soundLibrary[collection][id].src,
+    volume: soundLibrary[collection][id].volume,
     autostart: true,
     onstop: e => {
       if (callback) {
