@@ -99,6 +99,7 @@
     }
 
     .room-bottom {
+      height: var(--liquidate-rat-height);
       width: 100%;
       border-top: var(--default-border-style);
       flex-shrink: 0;

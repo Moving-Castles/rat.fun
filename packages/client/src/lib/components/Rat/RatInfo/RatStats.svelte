@@ -21,7 +21,7 @@
 
       <!-- BALANCE -->
       <div class="info-item" class:priority={balanceGoing}>
-        <span class="balance">
+        <span class="health">
           Health:
           <NumberGoing bind:going={balanceGoing} value={$rat.balance} />
         </span>
@@ -64,16 +64,16 @@
       background: var(--color-alert);
       padding-right: 5px;
       color: var(--foreground);
-      font-family: var(--label-font-stack);
-      font-size: 32px;
+      font-size: var(--font-size-normal);
       letter-spacing: -0.2em;
       color: var(--background);
     }
 
-    .balance {
+    .health {
       background: var(--color-value);
       padding: 5px;
       color: var(--background);
+      font-size: var(--font-size-large);
     }
   }
 

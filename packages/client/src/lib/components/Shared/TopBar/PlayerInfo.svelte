@@ -106,7 +106,7 @@
 
             .value {
               position: relative;
-              font-size: var(--font-size-large);
+              font-size: var(--font-size-normal);
               top: 4px;
             }
           }
