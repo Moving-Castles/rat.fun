@@ -7,6 +7,7 @@ import "../../src/libraries/Libraries.sol";
 import { ENTITY_TYPE } from "../../src/codegen/common.sol";
 import { Item } from "../../src/structs.sol";
 import { RAT_CREATION_COST } from "../../src/constants.sol";
+import { console2 as console } from "forge-std/console2.sol";
 
 contract ManagerSystemTest is BaseTest {
   bytes32 aliceId;
@@ -522,5 +523,36 @@ contract ManagerSystemTest is BaseTest {
     // Verify that only room balance was transferred, not maxValuePerWin
     assertEq(Balance.get(ratId), RAT_CREATION_COST + roomCreationCost);
     assertEq(Balance.get(roomId), 0); // Room balance exhausted
+  }
+
+  function testRoomBudgetIncreasedByRatValueAndItemLoss() public {
+    // Add initial item worth 20
+    Item[] memory newItems = new Item[](1);
+    newItems[0] = Item("cheese", 20);
+
+    // As admin
+    prankAdmin();
+    world.ratfun__applyOutcome(ratId, roomId, 0, new bytes32[](0), newItems);
+    vm.stopPrank();
+
+    // Transfer value of 30 from rat to room
+    int256 transferAmount = -30;
+    // Remove the item worth 20 from rat
+    bytes32[] memory itemsToRemove = new bytes32[](1);
+    itemsToRemove[0] = Inventory.getItem(ratId, 0);
+    // But give rat an item worth more than maxValuePerWin by 50 (removed item + rat value loss)
+    newItems = new Item[](1);
+    newItems[0] = Item("cheese 2", 150);
+
+    // As admin
+    prankAdmin();
+    world.ratfun__applyOutcome(ratId, roomId, transferAmount, itemsToRemove, newItems);
+    vm.stopPrank();
+
+    assertEq(Inventory.length(ratId), 1);
+    assertEq(Name.get(Inventory.getItem(ratId, 0)), "cheese 2");
+    assertEq(Value.get(Inventory.getItem(ratId, 0)), 150);
+    assertEq(Balance.get(ratId), RAT_CREATION_COST - 30);
+    assertEq(Balance.get(roomId), ROOM_INITIAL_BALANCE + 30 - 150);
   }
 }
