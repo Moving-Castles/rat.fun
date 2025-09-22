@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { System } from "@latticexyz/world/src/System.sol";
-import { GameConfig, EntityType, Balance, Owner, CreationBlock } from "../codegen/index.sol";
+import { GameConfig, EntityType, Balance, Owner, CreationBlock, Liquidated } from "../codegen/index.sol";
 import { LibRoom, LibUtils, LibWorld } from "../libraries/Libraries.sol";
 import { ENTITY_TYPE } from "../codegen/common.sol";
 
@@ -71,6 +71,9 @@ contract RoomSystem is System {
     valueToPlayer -= tax;
 
     Balance.set(_roomId, 0);
+
+    // Indicate that the room has been closed by owner
+    Liquidated.set(_roomId, true);
 
     // Withdraw tokens equal to room value from pool to player
     // ERC-20 will check that pool has sufficient balance

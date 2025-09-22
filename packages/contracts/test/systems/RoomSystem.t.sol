@@ -157,6 +157,9 @@ contract RoomSystemTest is BaseTest {
 
     // Check room balance
     assertEq(Balance.get(roomId), 0);
+
+    // Check that room has been marked as liquidated
+    assertEq(Liquidated.get(roomId), true);
   }
 
   function testCloseRoomRevertInCooldown() public {

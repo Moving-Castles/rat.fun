@@ -8,6 +8,7 @@ import {
   Dead,
   VisitCount,
   KillCount,
+  TripCount,
   LastVisitBlock,
   RoomCreationCost,
   MasterKey,
@@ -59,6 +60,9 @@ contract ManagerSystem is System {
 
     // Increment visitor count
     VisitCount.set(_roomId, VisitCount.get(_roomId) + 1);
+
+    // Increment trip count
+    TripCount.set(_ratId, TripCount.get(_ratId) + 1);
 
     // * * * * * * * * * * * * *
     // BUDGETING

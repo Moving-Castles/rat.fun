@@ -95,6 +95,7 @@ contract ManagerSystemTest is BaseTest {
     vm.stopPrank();
 
     assertEq(VisitCount.get(roomId), 1);
+    assertEq(TripCount.get(ratId), 1);
     // Check last visit block
     assertEq(LastVisitBlock.get(roomId), block.number);
   }

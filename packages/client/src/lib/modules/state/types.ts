@@ -75,6 +75,8 @@ declare global {
     minRatValueToEnter?: mudComponents["MinRatValueToEnter"]
     visitCount?: mudComponents["VisitCount"]
     killCount?: mudComponents["KillCount"]
+    tripCount?: mudComponents["TripCount"]
+    liquidated?: mudComponents["Liquidated"]
     masterKey?: mudComponents["MasterKey"]
     // Gameconfig related fields
     gameConfig: GameConfigObject

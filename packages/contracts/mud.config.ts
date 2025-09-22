@@ -70,6 +70,7 @@ export default defineWorld({
     Balance: "uint256", // Amount of credits. Set on player, rat and room.
     // = = = = = = = = = =
     Dead: "bool", // Set on rat
+    Liquidated: "bool", // Set on room when it is liquidated by owner
     // = = = = = = = = = =
     Inventory: "bytes32[]", // Items carried by player and rat
     // = = = = = = = = = =
@@ -81,6 +82,7 @@ export default defineWorld({
     Owner: "bytes32", // Set on room and rat
     VisitCount: "uint256", // Set on room
     KillCount: "uint256", // Set on room
+    TripCount: "uint256", // Set on rat
     // = = = = = = = = = =
     Prompt: "string",
     // = = = = = = = = = =
