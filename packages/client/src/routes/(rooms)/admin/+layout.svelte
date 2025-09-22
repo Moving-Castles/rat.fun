@@ -19,6 +19,8 @@
 
   let { modal } = getModalState()
 
+  let focus = $state("")
+
   $effect(() => {
     if ($player) {
       if (!$player.masterKey) {
@@ -42,9 +44,9 @@
       <SEO prependTitle="ADMIN" />
 
       <div class="">
-        <AdminTripMonitor />
+        <AdminTripMonitor {focus} />
         <BigButton text="Create trip" onclick={startCreateRoom} />
-        <AdminTripTable />
+        <AdminTripTable bind:focus />
         <AdminPastTripsMonitor />
       </div>
     </div>

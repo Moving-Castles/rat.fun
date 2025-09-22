@@ -1,6 +1,9 @@
 <script lang="ts">
   import { derived } from "svelte/store"
   import { playerRooms } from "$lib/modules/state/stores"
+  import { MultiTripGraph } from "$lib/components/Room"
+
+  let { focus } = $props()
 
   const investment = derived(playerRooms, $playerRooms =>
     Object.values($playerRooms).reduce((a, b) => a + Number(b.roomCreationCost), 0)
@@ -35,7 +38,10 @@
       <h2>{$investment}</h2>
     </div>
   </div>
-  <div class="p-l-graph">BigGraph</div>
+  <div class="p-l-graph">
+    <MultiTripGraph trips={$playerRooms} />
+    <!-- BigGraph<br /> -->
+  </div>
 </div>
 
 <style lang="scss">

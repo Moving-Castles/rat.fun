@@ -30,14 +30,8 @@ import { starfield, type ShaderMode as StarfieldMode } from "./starfield"
 import { ratfun, type ShaderMode as RatfunMode } from "./ratfun"
 
 const shaders = {
-  //
-  // Main game shader
   main,
-  //
-  // This could be yours
   copy,
-  //
-  // Other ones
   noise,
   gradient,
   waves,

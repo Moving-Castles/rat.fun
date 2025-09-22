@@ -10,6 +10,8 @@
   import { staticContent } from "$lib/modules/content"
   import { Xed } from "$lib/components/Shared"
 
+  let { focus = $bindable() } = $props()
+
   let sidebar = $state(false)
 
   let sortFunction = $state(entriesChronologically)
@@ -71,6 +73,12 @@
         {@const room = roomEntry[1]}
         {@const plotData = plots[roomEntry[0]]}
         <tr
+          onmouseenter={() => {
+            focus = roomEntry[0]
+          }}
+          onmouseleave={() => {
+            focus = ""
+          }}
           onclick={() => {
             goto("/admin/" + roomEntry[0], { noScroll: false })
           }}
