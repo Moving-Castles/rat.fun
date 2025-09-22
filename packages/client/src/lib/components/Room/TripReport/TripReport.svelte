@@ -2,11 +2,13 @@
   import { Log } from "$lib/components/Room"
   import { onMount, onDestroy } from "svelte"
   import { playUISound } from "$lib/modules/sound/state.svelte"
+  import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
 
   let { onComplete, result } = $props()
   let sound = $state()
 
   onMount(() => {
+    shaderManager.setShader("blank")
     sound = playUISound("ratfun", "tripResultLoop")
     playUISound("ratfun", "tripResultTrigger")
   })

@@ -42,8 +42,8 @@
   .list-item {
     font-size: var(--font-size-normal);
     display: flex;
-    background: var(--color-grey-dark);
-    color: var(--foreground);
+    background: var(--color-grey-light);
+    color: var(--background);
     padding: 5px;
     justify-content: center;
     align-items: center;

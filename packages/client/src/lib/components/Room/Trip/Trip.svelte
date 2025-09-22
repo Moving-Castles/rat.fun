@@ -3,15 +3,8 @@
   import { onMount, onDestroy } from "svelte"
   import { rooms as roomsState } from "$lib/modules/state/stores"
   import { TRIP_STATE } from "$lib/components/Room/Trip/state.svelte"
-  import {
-    TripSetup,
-    TripProcessing,
-    TripReport,
-    NormalResultSummary,
-    RatDeadResultSummary
-  } from "$lib/components/Room"
+  import { TripSetup, TripProcessing } from "$lib/components/Room"
   import { staticContent } from "$lib/modules/content"
-  import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
 
   let {
     roomId,

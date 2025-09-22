@@ -27,21 +27,30 @@ void main() {
   
   // Time-based animation parameters
   float t = u_time;
-  float speed = 0.8; // Reduced speed
-  float freq = 3.0;
-  float wave = 2.0;
+  float baseSpeed = 0.2; // Much lower starting speed
+  float baseFreq = 1.0; // Much lower starting frequency
+  float baseWave = 0.5; // Much lower starting wave intensity
   
-  // Create the moving tunnel effect
-  float u = r - t * speed;
+  // Exponential intensity ramp over 8 seconds
+  float rampTime = 8.0; // Peak time in seconds
+  float intensity = 1.0 - exp(-t / (rampTime / 3.0)); // Exponential curve reaching ~0.95 at 8s
+  float speedMultiplier = 0.1 + intensity * 2.9; // Speed increases from 0.1x to 3x
+  float freqMultiplier = 0.2 + intensity * 2.3; // Frequency increases from 0.2x to 2.5x
   
-  // Create seamless pattern by using sin/cos of the angle
-  float pattern = sin(a * freq * 6.28318 + t * speed) * cos(a * freq * 3.0 + t * speed * 0.5);
+  // Create the moving tunnel effect with intensity-based speed
+  float u = r - t * baseSpeed * speedMultiplier;
   
-  // Generate trippy colors using the new seamless pattern
-  vec3 col = palette(pattern + u * wave);
+  // Create seamless pattern by using sin/cos of the angle with intensity-based frequency
+  float pattern = sin(a * baseFreq * freqMultiplier * 6.28318 + t * baseSpeed * speedMultiplier) * cos(a * baseFreq * freqMultiplier * 3.0 + t * baseSpeed * speedMultiplier * 0.5);
   
-  // Add some variation based on radius
-  col *= 0.5 + 0.5 * sin(r * 20.0 - t * 3.0);
+  // Generate trippy colors using the new seamless pattern with intensity-based wave
+  vec3 col = palette(pattern + u * baseWave * (1.0 + intensity));
+  
+  // Add some variation based on radius with intensity-based animation
+  col *= 0.5 + 0.5 * sin(r * 20.0 - t * 3.0 * baseSpeed * speedMultiplier);
+  
+  // Apply overall intensity boost to colors
+  col *= 1.0 + intensity * 0.5;
   
   // Optional inversion
   if (u_invert) {

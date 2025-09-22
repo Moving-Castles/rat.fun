@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte"
   import { playUISound } from "$lib/modules/sound/state.svelte"
+  import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
 
   const { onComplete, result }: { onComplete: () => void; result: null | any } = $props()
 
@@ -15,6 +16,7 @@
   })
 
   onMount(() => {
+    shaderManager.setShader("zoomTunnel")
     playUISound("ratfun", "tripProcessing")
     // Start timer
     timerInterval = setInterval(() => {

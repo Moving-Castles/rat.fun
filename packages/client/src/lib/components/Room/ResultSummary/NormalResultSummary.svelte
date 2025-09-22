@@ -9,7 +9,7 @@
       {$frozenRat?.name} SURVIVED
     </h1>
   </div>
-  <a href="/" class="close-button"> COME DOWN </a>
+  <a href="/" class="close-button">COME DOWN</a>
 </div>
 
 <style lang="scss">

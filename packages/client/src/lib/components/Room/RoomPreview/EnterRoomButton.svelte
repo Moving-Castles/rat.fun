@@ -5,16 +5,19 @@
   import { player } from "$lib/modules/state/stores"
   import { goto } from "$app/navigation"
   import { BigButton } from "$lib/components/Shared"
+  import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
 
   let { roomId, disabled }: { roomId: Hex; disabled: boolean } = $props()
 
   let mixer = getMixerState()
 
   const onClick = async () => {
+    shaderManager.setShader("blank")
+
     // Duck
     mixer.rampChannelVolume("music", -12, 0.5)
     const id = "fill" + Math.ceil(Math.random() * 4)
-    playUISound("ratfun", id, null, () => {
+    playUISound("ratfun", id, undefined, () => {
       mixer.rampChannelVolume("music", 0, 0.5)
     })
     await goto(`/${roomId}/result?enter=true&rat=${$player.currentRat}&t=${Date.now()}`)

@@ -9,10 +9,14 @@
     LiquidatingRat,
     RatDead
   } from "$lib/components/Rat"
+  import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
 
   import { RAT_BOX_STATE, ratBoxState, transitionTo, resetRatBoxState } from "./state.svelte"
 
   onMount(() => {
+    console.log("mounting rat box")
+    shaderManager.setShader("clouds")
+
     // Set state to RAT_BOX_STATE.INIT
     resetRatBoxState()
     if ($rat) {

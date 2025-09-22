@@ -73,6 +73,7 @@
   })
 
   onMount(() => {
+    shaderManager.setMode("clouds")
     if (walletType === WALLET_TYPE.BURNER) {
       connectBurner()
     }

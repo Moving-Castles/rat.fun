@@ -5,7 +5,6 @@
   import type { LayoutProps } from "./$types"
 
   import { type Outcome as SanityOutcome } from "@sanity-types"
-  import { shaderManager, shaders } from "$lib/modules/webgl/shaders/index.svelte"
   import {
     initSound,
     snapshotFactory,
@@ -119,8 +118,6 @@
   // }
 
   onMount(async () => {
-    shaderManager.setShader("clouds")
-
     // Remove preloader
     document.querySelector(".preloader")?.remove()
 
