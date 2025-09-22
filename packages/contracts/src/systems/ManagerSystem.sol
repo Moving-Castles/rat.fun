@@ -20,6 +20,7 @@ import { ENTITY_TYPE } from "../codegen/common.sol";
 import { Item } from "../structs.sol";
 import { LibUtils } from "../libraries/LibUtils.sol";
 import { LibWorld } from "../libraries/LibWorld.sol";
+import { LibRat } from "../libraries/LibRat.sol";
 
 /**
  * @dev Only admin can call these function
@@ -52,7 +53,7 @@ contract ManagerSystem is System {
     require(EntityType.get(_ratId) == ENTITY_TYPE.RAT, "not rat");
     require(Dead.get(_ratId) == false, "rat is dead");
     require(EntityType.get(_roomId) == ENTITY_TYPE.ROOM, "not room");
-    require(Balance.get(_ratId) >= MinRatValueToEnter.get(_roomId), "rat value too low");
+    require(LibRat.getTotalRatValue(_ratId) >= MinRatValueToEnter.get(_roomId), "rat value too low");
 
     // Check that room is not depleted
     uint256 roomBalance = Balance.get(_roomId);

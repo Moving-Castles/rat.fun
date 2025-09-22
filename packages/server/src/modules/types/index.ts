@@ -25,6 +25,7 @@ export type Rat = {
   inventory: Item[]
   dead: boolean
   owner: string
+  totalValue: number
 }
 
 export type Player = {

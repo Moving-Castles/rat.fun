@@ -63,7 +63,8 @@ export async function getEnterRoomData(
       balance: Number(ratBalance),
       inventory: inventoryObjects,
       dead: ratDead,
-      owner: ratOwner
+      owner: ratOwner,
+      totalValue: calculateTotalRatValue(Number(ratBalance), inventoryObjects)
     }
 
     result.rat = rat
@@ -177,4 +178,8 @@ function constructInventoryObject(ratInventory: string[]) {
     })
   }
   return inventoryObject
+}
+
+function calculateTotalRatValue(ratBalance: number, inventoryObjects: Item[]) {
+  return ratBalance + inventoryObjects.reduce((acc, item) => acc + (item.value ?? 0), 0)
 }

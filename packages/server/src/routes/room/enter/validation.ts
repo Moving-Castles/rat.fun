@@ -18,7 +18,7 @@ export function validateInputData(player: Player, rat: Rat, room: Room) {
   }
 
   // Check that the rat has enough value to enter the room
-  if (rat.balance < room.minRatValueToEnter) {
+  if (rat.totalValue < room.minRatValueToEnter) {
     throw new RatValueError()
   }
 

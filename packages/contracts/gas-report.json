@@ -3,73 +3,73 @@
     "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
     "test": "testApplyOutcomeAddItem",
     "name": "Apply outcome (add item)",
-    "gasUsed": 443361
+    "gasUsed": 448413
   },
   {
     "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
     "test": "testApplyOutcomeAddItemTooExpensive",
     "name": "Apply outcome (add item: too expensive)",
-    "gasUsed": 196029
+    "gasUsed": 201081
   },
   {
     "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
     "test": "testApplyOutcomeEmpty",
     "name": "Apply outcome (empty)",
-    "gasUsed": 189455
+    "gasUsed": 196507
   },
   {
     "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
     "test": "testApplyOutcomeOverTransferToRat",
     "name": "Apply outcome (over transfer to rat)",
-    "gasUsed": 229304
+    "gasUsed": 236356
   },
   {
     "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
     "test": "testApplyOutcomeOverTransferToRoom",
     "name": "Apply outcome (over transfer to room)",
-    "gasUsed": 342888
+    "gasUsed": 345941
   },
   {
     "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
     "test": "testApplyOutcomeRemoveItem",
     "name": "Apply outcome (remove item)",
-    "gasUsed": 118460
+    "gasUsed": 127347
   },
   {
     "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
     "test": "testApplyOutcomeRemoveItemsFromDifferentArrayPositions",
     "name": "Apply outcome (remove item from middle of full inventory)",
-    "gasUsed": 125733
+    "gasUsed": 153809
   },
   {
     "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
     "test": "testApplyOutcomeTransferToRat",
     "name": "Apply outcome (transfer to rat)",
-    "gasUsed": 229242
+    "gasUsed": 236294
   },
   {
     "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
     "test": "testApplyOutcomeTransferToRoom",
     "name": "Apply outcome (transfer to room)",
-    "gasUsed": 110900
+    "gasUsed": 115952
   },
   {
     "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
     "test": "testApplyOutcomeValueTransferOnDeath",
     "name": "Apply outcome (value transfer on death)",
-    "gasUsed": 348631
+    "gasUsed": 361357
   },
   {
     "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
     "test": "testRoomBudgetLimitedByBalance",
     "name": "Apply outcome (room balance limit)",
-    "gasUsed": 206442
+    "gasUsed": 213494
   },
   {
     "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
     "test": "testRoomCannotExceedMaxValuePerWin",
     "name": "Apply outcome (room budget limit)",
-    "gasUsed": 206432
+    "gasUsed": 213484
   },
   {
     "file": "test/systems/PlayerSystem.t.sol:PlayerSystemTest",
