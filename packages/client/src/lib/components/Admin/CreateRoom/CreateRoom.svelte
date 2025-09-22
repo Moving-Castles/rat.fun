@@ -76,14 +76,16 @@
           "room description"
         )
       }
-      // Duck
+      // Duck music
       mixer.rampChannelVolume("music", -12, 0.5)
       const id = "fill" + Math.ceil(Math.random() * 4)
-      console.log(id)
       playUISound("ratfun", id, null, () => {
         mixer.rampChannelVolume("music", 0, 0.5)
       })
-      const result = await sendCreateRoom(roomDescription, flooredRoomCreationCost)
+      // Quack
+      console.log("send...")
+      await sendCreateRoom(roomDescription, flooredRoomCreationCost)
+      console.log("...done")
       ondone()
     } catch (error) {
       errorHandler(error)
@@ -95,7 +97,7 @@
 
 <div class="create-room" class:collapsed={$collapsed}>
   {#if busy}
-    <VideoLoaderDuration duration={6000} />
+    <p>Loading...</p>
   {:else}
     <div class="controls">
       <!-- ROOM DESCRIPTION -->

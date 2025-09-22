@@ -147,11 +147,11 @@
   }}
 />
 
-<div class="testing">
+<!-- <div class="testing">
   <button onclick={setRandomShader}> Random shader </button>
   <button onclick={setShaderWithDefaults}>Set shader with defaults </button>
   <button onclick={setShaderWithMode}>Set shader with mode predefined </button>
-</div>
+</div> -->
 
 <div class="bg">
   {#if $UIState === UI.LOADING}

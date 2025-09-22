@@ -15,8 +15,9 @@
     onclick
   }: { room: Room; roomId: string; isOwnRoomListing: boolean; onclick: () => void } = $props()
 
-  let sanityRoomContent = $derived($staticContent.rooms.find(r => r.title == roomId))
   let { modal } = getModalState()
+
+  let sanityRoomContent = $derived($staticContent.rooms.find(r => r.title == roomId))
 
   let confirming = $state(false)
   let liquidationMessage = $state("CONFIRM TRIP LIQUIDATION")

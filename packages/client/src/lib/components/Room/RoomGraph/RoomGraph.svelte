@@ -9,10 +9,11 @@
   import "tippy.js/dist/tippy.css" // optional for styling
 
   let {
+    smallIcons = false,
     plotData,
     isEmpty = false,
     height = 300
-  }: { plotData: PlotPoint[]; isEmpty: boolean; height?: number } = $props()
+  }: { smallIcons?: boolean; plotData: PlotPoint[]; isEmpty: boolean; height?: number } = $props()
 
   // Layout setup
   let width = $state(0) // width will be set by the clientWidth
@@ -148,19 +149,23 @@
                 {#if !point?.meta?.roomValueChange || point?.meta?.roomValueChange === 0}
                   <circle
                     fill="var(--color-value)"
-                    r="6"
+                    r={smallIcons ? 3 : 6}
                     cx={xScale(point.time)}
                     cy={yScale(point.value)}
                   ></circle>
                 {:else if point?.meta?.roomValueChange > 0}
                   <polygon
-                    transform="translate({xScale(point.time)}, {yScale(point.value)}) scale(2, 3)"
+                    transform="translate({xScale(point.time)}, {yScale(
+                      point.value
+                    )}) scale({smallIcons ? 1 : 1}, {smallIcons ? 1.5 : 3})"
                     fill="var(--color-value-up)"
                     points="-5 2.5, 0 -5, 5 2.5"
                   />
                 {:else}
                   <polygon
-                    transform="translate({xScale(point.time)}, {yScale(point.value)}) scale(2, 3)"
+                    transform="translate({xScale(point.time)}, {yScale(
+                      point.value
+                    )}) scale({smallIcons ? 2 : 1}, {smallIcons ? 1.5 : 3})"
                     fill="var(--color-value-down)"
                     points="-5 -2.5, 0 5, 5 -2.5"
                   />

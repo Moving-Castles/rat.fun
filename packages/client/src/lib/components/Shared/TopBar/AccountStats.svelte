@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { mask } from "$lib/components/Shared/PageTransitions/transitionFunctions"
+  import { fade } from "svelte/transition"
   import {
     playerAddress,
     playerERC20Allowance,
@@ -41,150 +43,157 @@
   }
 </script>
 
-<div class="account-stats">
-  <div class="tab">
-    <p class="key">Your address:</p>
-    <p class="value">
-      {$playerAddress}
-    </p>
-  </div>
-  <div class="tab">
-    <p class="key">Environment</p>
-    <p class="value">{$environment}</p>
-  </div>
-  <div class="tab">
-    <p class="key">Wallet Type:</p>
-    <p class="value">
-      {$walletType}
-    </p>
-  </div>
-  <div class="tab">
-    <p class="key">Spawned:</p>
-    <p class="value">
-      {$player?.entityType == ENTITY_TYPE.PLAYER}
-    </p>
-  </div>
-  <div class="tab">
-    <p class="key">Tokens:</p>
-    <p class="value">
-      {$playerERC20Balance}
-    </p>
-  </div>
-  <div class="tab">
-    <p class="key">Allowance:</p>
-    <p class="value">
-      {$playerERC20Allowance}
-    </p>
-  </div>
-  <div class="tab">
-    <p class="key">Is new:</p>
-    <p class="value">
-      {$playerIsNew}
-    </p>
-  </div>
-  <div class="tab">
-    <p class="key">Is broke:</p>
-    <p class="value">
-      {$playerIsBroke}
-    </p>
-  </div>
-  <div class="actions">
-    <SmallButton
-      disabled={busy.GiveCallerTokens.current !== 0}
-      tippyText="Request tokens from the contract"
-      extraClass="red"
-      onclick={async () => {
-        await sendGiveCallerTokens()
-        playUISound("ratfun", "coins")
-      }}
-      text="Get 2000 free $SLopamine"
-    ></SmallButton>
-    <SmallButton
-      disabled={busy.BuyWithEth.current !== 0}
-      tippyText="Buy some $Slopamine"
-      onclick={async () => {
-        await sendBuyWithEth()
-        playUISound("ratfun", "coins")
-      }}
-      text="Buy 1 $Slopamine for 0.001ETH"
-    ></SmallButton>
-    <SmallButton
-      disabled={busy.ApproveMax.current !== 0}
-      tippyText="Allow the contract to spend on your behalf"
-      onclick={async () => {
-        await sendApproveMax()
-      }}
-      text="Approve max allowance"
-    ></SmallButton>
-    <SmallButton
-      tippyText="Unlock admin mode"
-      onclick={async () => {
-        await sendUnlockAdmin()
-      }}
-      text="Unlock admin mode"
-    ></SmallButton>
-  </div>
-
-  <div class="tab">
-    {#if showJazz}
-      <div class="piano-keys">
-        <button class="white-key" onclick={() => playNote(-12)}></button>
-        <button class="black-key" onclick={() => playNote(-9)}></button>
-        <button class="white-key" onclick={() => playNote(-6)}></button>
-        <button class="black-key" onclick={() => playNote(-3)}></button>
-        <button class="white-key" onclick={() => playNote(0)}></button>
-        <button class="white-key" onclick={() => playNote(1)}></button>
-        <button class="black-key" onclick={() => playNote(2)}></button>
-        <button class="white-key" onclick={() => playNote(7)}></button>
-        <button class="black-key" onclick={() => playNote(3)}></button>
-        <button class="white-key" onclick={() => playNote(4)}></button>
-        <button class="black-key" onclick={() => playNote(6)}></button>
-        <button class="white-key" onclick={() => playNote(12)}></button>
+<div in:fade={{ duration: 100 }} out:fade={{ duration: 500, delay: 500 }} class="account-stats">
+  <div class="account-stats-inner">
+    <div
+      transition:mask|global={{ duration: 600, svgPath: "/images/ratschach.svg" }}
+      class="account-stats-inner-content"
+    >
+      <div class="tab">
+        <p class="key">Your address:</p>
+        <p class="value">
+          {$playerAddress}
+        </p>
       </div>
-    {/if}
-    <p class="key">Music volume</p>
-    <input
-      min="-100"
-      max="0"
-      type="range"
-      name="music-volume"
-      id="music-volume"
-      value={mixer.channelStates.music.volume}
-      oninput={e => {
-        mixer.setChannelVolume("music", Number(e.target.value))
-      }}
-    />
-    {mixer.channelStates.music.volume}dB
-    <label>
-      <input
-        type="checkbox"
-        bind:checked={mixer.channelStates.music.muted}
-        onchange={e => mixer.setChannelMute("music", e.target.checked)}
-      />
-      Mute
-    </label>
-  </div>
+      <div class="tab">
+        <p class="key">Environment</p>
+        <p class="value">{$environment}</p>
+      </div>
+      <div class="tab">
+        <p class="key">Wallet Type:</p>
+        <p class="value">
+          {$walletType}
+        </p>
+      </div>
+      <div class="tab">
+        <p class="key">Spawned:</p>
+        <p class="value">
+          {$player?.entityType == ENTITY_TYPE.PLAYER}
+        </p>
+      </div>
+      <div class="tab">
+        <p class="key">Tokens:</p>
+        <p class="value">
+          {$playerERC20Balance}
+        </p>
+      </div>
+      <div class="tab">
+        <p class="key">Allowance:</p>
+        <p class="value">
+          {$playerERC20Allowance}
+        </p>
+      </div>
+      <div class="tab">
+        <p class="key">Is new:</p>
+        <p class="value">
+          {$playerIsNew}
+        </p>
+      </div>
+      <div class="tab">
+        <p class="key">Is broke:</p>
+        <p class="value">
+          {$playerIsBroke}
+        </p>
+      </div>
+      <div class="actions">
+        <SmallButton
+          disabled={busy.GiveCallerTokens.current !== 0}
+          tippyText="Request tokens from the contract"
+          extraClass="red"
+          onclick={async () => {
+            await sendGiveCallerTokens()
+            playUISound("ratfun", "coins")
+          }}
+          text="Get 2000 free $SLopamine"
+        ></SmallButton>
+        <SmallButton
+          disabled={busy.BuyWithEth.current !== 0}
+          tippyText="Buy some $Slopamine"
+          onclick={async () => {
+            await sendBuyWithEth()
+            playUISound("ratfun", "coins")
+          }}
+          text="Buy 1 $Slopamine for 0.001ETH"
+        ></SmallButton>
+        <SmallButton
+          disabled={busy.ApproveMax.current !== 0}
+          tippyText="Allow the contract to spend on your behalf"
+          onclick={async () => {
+            await sendApproveMax()
+          }}
+          text="Approve max allowance"
+        ></SmallButton>
+        <SmallButton
+          tippyText="Unlock admin mode"
+          onclick={async () => {
+            await sendUnlockAdmin()
+          }}
+          text="Unlock admin mode"
+        ></SmallButton>
+      </div>
 
-  <div class="tab">
-    <p class="key">UI Volume</p>
-    <input
-      min="-100"
-      max="0"
-      type="range"
-      name="ui-volume"
-      id="ui-volume"
-      bind:value={mixer.channelStates.ui.volume}
-      oninput={e => mixer.setChannelVolume("ui", Number(e.target.value))}
-    />
-    {mixer.channelStates.ui.volume}dB
-    <label>
-      <input
-        type="checkbox"
-        bind:checked={mixer.channelStates.ui.muted}
-        onchange={e => mixer.setChannelMute("ui", e.target.checked)}
-      />
-      Mute
-    </label>
+      <div class="tab">
+        {#if showJazz}
+          <div class="piano-keys">
+            <button class="white-key" onclick={() => playNote(-12)}></button>
+            <button class="black-key" onclick={() => playNote(-9)}></button>
+            <button class="white-key" onclick={() => playNote(-6)}></button>
+            <button class="black-key" onclick={() => playNote(-3)}></button>
+            <button class="white-key" onclick={() => playNote(0)}></button>
+            <button class="white-key" onclick={() => playNote(1)}></button>
+            <button class="black-key" onclick={() => playNote(2)}></button>
+            <button class="white-key" onclick={() => playNote(7)}></button>
+            <button class="black-key" onclick={() => playNote(3)}></button>
+            <button class="white-key" onclick={() => playNote(4)}></button>
+            <button class="black-key" onclick={() => playNote(6)}></button>
+            <button class="white-key" onclick={() => playNote(12)}></button>
+          </div>
+        {/if}
+        <p class="key">Music volume</p>
+        <input
+          min="-100"
+          max="0"
+          type="range"
+          name="music-volume"
+          id="music-volume"
+          value={mixer.channelStates.music.volume}
+          oninput={e => {
+            mixer.setChannelVolume("music", Number(e.target.value))
+          }}
+        />
+        {mixer.channelStates.music.volume}dB
+        <label>
+          <input
+            type="checkbox"
+            bind:checked={mixer.channelStates.music.muted}
+            onchange={e => mixer.setChannelMute("music", e.target.checked)}
+          />
+          Mute
+        </label>
+      </div>
+
+      <div class="tab">
+        <p class="key">UI Volume</p>
+        <input
+          min="-100"
+          max="0"
+          type="range"
+          name="ui-volume"
+          id="ui-volume"
+          bind:value={mixer.channelStates.ui.volume}
+          oninput={e => mixer.setChannelVolume("ui", Number(e.target.value))}
+        />
+        {mixer.channelStates.ui.volume}dB
+        <label>
+          <input
+            type="checkbox"
+            bind:checked={mixer.channelStates.ui.muted}
+            onchange={e => mixer.setChannelMute("ui", e.target.checked)}
+          />
+          Mute
+        </label>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -195,6 +204,7 @@
     position: fixed;
     top: 68px;
     left: 8px;
+    width: 600px;
     background-color: var(--background-semi-transparent);
     color: var(--white);
     padding: 20px;

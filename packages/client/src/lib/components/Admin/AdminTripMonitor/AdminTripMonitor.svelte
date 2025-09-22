@@ -13,8 +13,8 @@
   )
   const profitLoss = derived([balance, investment], ([$b, $i]) => $b - $i)
   const portfolioClass = derived([profitLoss, balance], ([$profitLoss, $balance]) => {
-    if ($profitLoss === $balance) return "neutral"
-    return $profitLoss > $balance ? "upText" : "downText"
+    if ($profitLoss === 0) return "neutral"
+    return $profitLoss < $balance ? "upText" : "downText"
   })
 </script>
 
@@ -22,12 +22,17 @@
   <div class="p-l-overview">
     <div class="top">
       <p>Unrealized P&L</p>
-      <h1>
-        <span class={$portfolioClass}>{$profitLoss}</span> ({(
-          ($balance / $investment) *
-          100
-        ).toFixed(2)}%)
-      </h1>
+      {#if $balance && $investment}
+        <h1>
+          <span class="main {$portfolioClass}"
+            >{$profitLoss}
+            <span class="small">({(($balance / $investment) * 100).toFixed(2)}%)</span></span
+          >
+          <!-- {$balance / $investment} -->
+        </h1>
+      {:else}
+        <h1>None</h1>
+      {/if}
     </div>
     <div class="bottom-left">
       <p>Portfolio</p>
@@ -39,8 +44,7 @@
     </div>
   </div>
   <div class="p-l-graph">
-    <MultiTripGraph trips={$playerRooms} />
-    <!-- BigGraph<br /> -->
+    <MultiTripGraph {focus} trips={$playerRooms} />
   </div>
 </div>
 
@@ -67,18 +71,31 @@
     }
 
     .upText {
-      color: green;
+      color: #78ee72;
     }
 
     p {
       color: var(--color-grey-light);
-      margin: 2rem;
+      margin: 2rem 1rem;
     }
 
     h1 {
       font-family: var(--special-font-stack);
       font-size: 3.6rem;
       margin: 2rem 1rem;
+
+      .main {
+        background: rgba(0, 0, 0, 0.5);
+        display: inline-block;
+        border-radius: 4px;
+        padding: 2rem 1.8rem 1rem;
+      }
+
+      .small {
+        font-size: 2.6rem;
+        display: inline-block;
+        transform: translateY(-50%);
+      }
     }
     h2 {
       font-family: var(--special-font-stack);
@@ -118,8 +135,10 @@
       width: 100%;
       background: #222;
       text-align: center;
-      font-size: 7rem;
-      line-height: 400px;
+      // font-size: 7rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
   }
 </style>

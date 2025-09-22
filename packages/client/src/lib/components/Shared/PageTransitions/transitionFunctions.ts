@@ -327,7 +327,7 @@ export const mask = (
       if (progress > 0.3) {
         const floodProgress = (progress - 0.3) / 0.3
         return `
-          position: absolute;
+          position: ${params.position};
           z-index: 1000000000;
           inset: 0;
           opacity: ${opacity};
@@ -355,7 +355,7 @@ export const mask = (
       }
 
       return `
-        position: absolute;
+        position: ${params.position};
         z-index: 1000000000;
         inset: 0;
         opacity: ${opacity};

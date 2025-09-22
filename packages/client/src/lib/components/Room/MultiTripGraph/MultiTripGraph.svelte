@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { PlotPoint } from "../RoomGraph/types"
 
+  import { truncateString } from "$lib/modules/utils"
   import { staticContent } from "$lib/modules/content"
   import { scaleTime, scaleLinear } from "d3-scale"
   import { max } from "d3-array"
@@ -9,7 +10,7 @@
 
   import "tippy.js/dist/tippy.css" // optional for styling
 
-  let { trips, height = 400 } = $props()
+  let { trips, focus, height = 400 } = $props()
 
   // Layout setup
   let width = $state(0) // width will be set by the clientWidth
@@ -22,53 +23,62 @@
   let xScale = $derived.by(() => {
     const allPlots = Object.values(plots)
 
-    if (!allPlots) return scaleTime() // idk what this returns
+    if (!allPlots) return scaleLinear() // idk what this returns
 
-    const allData = [...allPlots.map(plot => plot.data)]
+    const allData = allPlots.flatMap(plot => plot.data)
     const domainStart = Number(allPlots[0].data[0].time)
     const domainEnd = Number(max(allData, (d: PlotPoint) => d.time))
     const finalDomainEnd =
       domainEnd !== undefined && domainEnd > domainStart ? domainEnd : domainStart + 1 // Add a minimal duration if only one point or max isn't greater
 
-    return scaleTime().domain([domainStart, finalDomainEnd]).range([0, innerWidth])
+    return scaleLinear().domain([domainStart, finalDomainEnd]).range([0, innerWidth])
   })
   let yScale = $derived.by(() => {
     const allPlots = Object.values(plots)
 
     if (!allPlots) return scaleTime() // idk what this returns
 
-    const allData = [...allPlots.map(plot => plot.data)]
-
+    const allData = allPlots.flatMap(plot => plot.data)
     const maxValue = Number(max(allData, (d: PlotPoint) => +d.value) ?? 0)
 
     return scaleLinear().domain([0, maxValue]).range([innerHeight, 0]) // Use innerHeight
   })
 
+  /** All plots for the rooms */
   let plots: Record<string, { data: PlotPoint[]; line: any }> = $derived.by(() => {
     const result = Object.fromEntries(
       Object.entries(trips).map(([tripId, trip]) => {
         let sanityRoomContent = $staticContent?.rooms?.find(r => r.title == tripId)
 
         const outcomes = $staticContent?.outcomes?.filter(o => o.roomId == tripId) || []
+
         // Sort the outcomes in order of creation
         outcomes.sort((a, b) => {
           return new Date(b._createdAt).getTime() - new Date(a._createdAt).getTime()
         })
         const roomOutcomes = outcomes.reverse()
+
+        const initialTime = new Date(sanityRoomContent?._createdAt).getTime()
+
         const data = [
           {
-            time: 0,
+            time: initialTime,
             roomValue: Number(trip.roomCreationCost),
             meta: sanityRoomContent
           },
           ...roomOutcomes
         ].map((o, i) => {
+          const time = new Date(o?._createdAt).getTime()
+
+          console.log("time ", time, o)
           return {
-            time: i,
+            time: time || o.time,
             value: o?.roomValue || 0,
-            meta: o
+            meta: { ...sanityRoomContent, ...o }
           }
         })
+
+        console.log("data based on time ", data)
 
         const l = line()
           .x(d => xScale(d.time))
@@ -89,19 +99,16 @@
   let isEmpty = $derived(Object.values(plots).every(plot => plot.length === 0))
 
   const generateTooltipContent = (point: PlotPoint) => {
-    let toolTipContent = `<div>Trip balance: <span class="tooltip-value">$${point?.meta?.roomValue}</span>`
+    let toolTipContent = `<div>${truncateString(point.meta.prompt, 32)}<br>balance: <span class="tooltip-value">$${point?.value}</span>`
 
     if (point?.meta?.roomValueChange) {
       const valueChangeClass =
         point.meta.roomValueChange > 0 ? "tooltip-value-positive" : "tooltip-value-negative"
-      toolTipContent += `<br/>Change: <span class="${valueChangeClass}">${point?.meta?.roomValueChange}</span></div>`
+      toolTipContent += `<br/>Change: <span class="${valueChangeClass}">${point.meta.roomValueChange}</span></div>`
     }
 
     return toolTipContent
   }
-
-  $inspect(trips)
-  $inspect(plots)
 </script>
 
 <div class="room-graph">
@@ -119,12 +126,12 @@
   {:else}
     <div class="graph" bind:clientWidth={width}>
       <svg {width} {height}>
-        {#each Object.values(plots) as plot}
+        {#each Object.entries(plots) as [tripId, plot]}
           {#if plot.data && width}
             <g transform="translate({padding.left}, {padding.top})">
               <path
                 d={plot.line(plot.data)}
-                stroke="var(--color-value)"
+                stroke={focus === tripId ? "white" : "var(--color-grey-light)"}
                 stroke-width={2}
                 stroke-dasharray={4}
                 fill="none"
@@ -134,7 +141,7 @@
                 <g data-tippy-content={generateTooltipContent(point)}>
                   {#if !point?.meta?.roomValueChange || point?.meta?.roomValueChange === 0}
                     <circle
-                      fill="var(--color-value)"
+                      fill={focus === tripId ? "white" : "var(--color-grey-light)"}
                       r="6"
                       cx={xScale(point.time)}
                       cy={yScale(point.value)}
