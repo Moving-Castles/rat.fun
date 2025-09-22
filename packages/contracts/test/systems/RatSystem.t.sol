@@ -126,38 +126,20 @@ contract RatSystemTest is BaseTest {
     world.ratfun__spawn("alice");
     approveGamePool(type(uint256).max);
 
-    world.ratfun__createRat("roger");
-
-    world.ratfun__liquidateRat();
-
-    vm.expectRevert("rat is dead");
-    world.ratfun__liquidateRat();
-
-    vm.stopPrank();
-  }
-
-  function testRevertLiquidateDeadRat() public {
-    setInitialBalance(alice);
-    vm.startPrank(alice);
-    world.ratfun__spawn("alice");
-    approveGamePool(type(uint256).max);
-
     bytes32 ratId = world.ratfun__createRat("roger");
-    vm.stopPrank();
 
-    prankAdmin();
-    Dead.set(ratId, true);
-    vm.stopPrank();
+    assertFalse(Dead.get(ratId));
+    world.ratfun__liquidateRat();
+    assertTrue(Dead.get(ratId));
 
-    vm.startPrank(alice);
     // Dead rat cannot be liquidated
     vm.expectRevert("rat is dead");
     world.ratfun__liquidateRat();
 
     // But a new rat can be created
     bytes32 newRatId = world.ratfun__createRat("roger");
-    vm.stopPrank();
-
     assertNotEq(ratId, newRatId);
+
+    vm.stopPrank();
   }
 }

@@ -55,7 +55,7 @@ contract ManagerSystem is System {
 
     // Check that room is not depleted
     uint256 roomBalance = Balance.get(_roomId);
-    require(roomBalance >= 0, "no room balance");
+    require(roomBalance > 0, "no room balance");
 
     // Increment visitor count
     VisitCount.set(_roomId, VisitCount.get(_roomId) + 1);
