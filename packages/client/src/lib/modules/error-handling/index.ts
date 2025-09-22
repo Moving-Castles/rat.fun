@@ -27,8 +27,6 @@ export function captureMessage(
 export function errorHandler(error: ExpectedError | unknown, message = "") {
   let processedError: ExpectedError | unknown = error
 
-  console.log("processedError", processedError)
-
   // Auto-detect and parse viem errors
   if (error && typeof error === "object" && "name" in error) {
     // Check if it's a viem BaseError by checking for viem-specific properties
@@ -109,6 +107,4 @@ export function initializeSentry(): void {
     tracesSampleRate,
     profilesSampleRate
   })
-
-  console.log(`Sentry initialized for environment: ${environment}`)
 }

@@ -6,6 +6,7 @@
   import { PageTransitions } from "$lib/components/Shared"
   import { gameLayoutTransitionConfig } from "$lib/components/Shared/PageTransitions/transitionConfigs"
   import SEO from "$lib/components/Shared/SEO/SEO.svelte"
+
   import {
     AdminTripMonitor,
     AdminPastTripsMonitor,

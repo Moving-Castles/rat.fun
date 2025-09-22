@@ -57,7 +57,6 @@ export function getNetworkConfig(environment: ENVIRONMENT, url?: URL) {
   let indexerUrl = (chain as MUDChain).indexerUrl
   if (searchParams?.has("disableIndexer")) {
     indexerUrl = undefined
-    console.log("Indexer disabled")
   }
 
   // Only call getBurnerPrivateKey if we're in a browser environment

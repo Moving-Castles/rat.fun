@@ -53,7 +53,6 @@ export function initOffChainSync(environment: ENVIRONMENT, playerId: string) {
   socket = new WebSocket(url)
 
   socket.onopen = () => {
-    console.log("WebSocket connected")
     websocketConnected.set(true)
     reconnectAttempts = 0 // Reset attempts on successful connection
   }
@@ -85,8 +84,6 @@ export function initOffChainSync(environment: ENVIRONMENT, playerId: string) {
   }
 
   socket.onclose = (message: CloseEvent) => {
-    console.log("WebSocket closed:", message)
-    console.log("Reconnecting...")
     attemptReconnect(environment, playerId)
   }
 
@@ -105,7 +102,6 @@ function attemptReconnect(environment: ENVIRONMENT, playerId: string) {
   reconnectAttempts++
 
   reconnectTimeout = setTimeout(() => {
-    console.log(`Attempting to reconnect (attempt ${reconnectAttempts})...`)
     initOffChainSync(environment, playerId)
   }, delay)
 }

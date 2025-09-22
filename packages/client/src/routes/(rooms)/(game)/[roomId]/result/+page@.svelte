@@ -42,7 +42,6 @@
       return JSON.parse(stringifyWithBigInt(captureData))
     },
     restore: value => {
-      console.log("Restoring while entering")
       if (value?.valid && Date.now() - value.timestamp < 300000) {
         const parsed = parseWithBigInt(stringifyWithBigInt(value)) as any
         entryState.valid = true
@@ -59,8 +58,6 @@
     entryState.processing = true
 
     try {
-      console.log("performance.now", performance.now(), entryState)
-      console.log("STATE", entryState.state, TRIP_STATE[entryState.state])
       const result = await sendEnterRoom(data.roomId, $player.currentRat)
 
       if (!result) {
@@ -103,13 +100,11 @@
   }
 
   onMount(async () => {
-    console.log("on mount, and we have data", data.roomId)
     const shouldEnter = page.url.searchParams.get("enter") === "true"
     const ratId = page.url.searchParams.get("rat")
     const timestamp = parseInt(page.url.searchParams.get("t") || "0")
 
     if (shouldEnter && ratId === $player.currentRat && Date.now() - timestamp < 30000) {
-      console.log("We can start getting the result")
       entryState.valid = true
       replaceState(`/${data.roomId}/result`, {})
       const { frozenRat, frozenRoom } = freezeObjects(
@@ -121,9 +116,7 @@
       entryState.frozenRat = frozenRat
       entryState.frozenRoom = frozenRoom
       await processRoomEntry()
-      console.log("done processing room")
     } else if (!entryState.valid) {
-      console.log("We mounted and we cannot enter")
       await goto("/")
     }
   })

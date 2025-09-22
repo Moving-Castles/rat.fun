@@ -83,7 +83,6 @@
             {blocksToReadableTime(Number($blockNumber) - Number(room.creationBlock))}
           </td>
           <td class="cell-graph">
-            {console.log(plotData)}
             {#if plotData}
               <div class="mini-graph">
                 <RoomGraph {plotData} isEmpty={plotData.length === 0} />

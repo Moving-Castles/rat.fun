@@ -37,8 +37,8 @@
       />
     </div>
     <div class="button-container">
-      <BigButton text="Confirm" onclick={onClickConfirm} />
       <BigButton text="Abort" onclick={onAbort} />
+      <BigButton text="Confirm" onclick={onClickConfirm} />
     </div>
   {/if}
 </div>

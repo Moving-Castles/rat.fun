@@ -29,17 +29,20 @@
   import { walletType as walletTypeStore } from "$lib/modules/network"
   import { page } from "$app/state"
 
+  import { initializeShader } from "$lib/modules/webgl-old/state.svelte"
+
   // Components
   import Spawn from "$lib/components/Spawn/Spawn.svelte"
   import Loading from "$lib/components/Loading/Loading.svelte"
   import {
-    ShaderRenderer,
-    Shader,
+    // ShaderRenderer,
+    // Shader,
     Modal,
     ModalTarget,
     WorldEventPopup
     // WalletInfo
   } from "$lib/components/Shared"
+
   import { Outcome } from "$lib/components/Room"
   import EntryKit from "$lib/components/Spawn/EntryKit/EntryKit.svelte"
   import Toasts from "$lib/components/Shared/Toasts/Toasts.svelte"
@@ -103,6 +106,7 @@
   }
 
   onMount(async () => {
+    initializeShader()
     // Remove preloader
     document.querySelector(".preloader")?.remove()
 
@@ -156,11 +160,11 @@
 
   {#if $UIState !== UI.LOADING}
     {#if browser}
-      {#if debuggingShader}
+      <!-- {#if debuggingShader}
         <ShaderRenderer />
       {:else}
         <Shader />
-      {/if}
+      {/if} -->
     {/if}
   {/if}
 </div>

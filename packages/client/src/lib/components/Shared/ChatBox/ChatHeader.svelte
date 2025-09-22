@@ -12,14 +12,7 @@
     if (event) {
       const now = Date.now()
       const timestamp = event.timestamp
-      console.log(
-        event.playerName,
-        event.playerName !== $player.name,
-        now - timestamp < 3000,
-        event.playerName !== $player.name && now - timestamp < 3000
-      )
       if (event.playerName !== $player.name && now - timestamp < 3000) {
-        console.log("playing sound")
         playUISound("ratfun", $collapsed ? "ratsUp" : "ratScream")
       }
     }

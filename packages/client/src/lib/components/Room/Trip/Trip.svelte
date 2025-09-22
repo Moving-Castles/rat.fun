@@ -1,23 +1,14 @@
 <script lang="ts">
   import type { EnterRoomReturnValue } from "@server/modules/types"
-  import { onMount, onDestroy } from "svelte"
-  import { rooms as roomsState } from "$lib/modules/state/stores"
+  import { onDestroy } from "svelte"
   import { TRIP_STATE } from "$lib/components/Room/Trip/state.svelte"
-  import {
-    TripSetup,
-    TripProcessing,
-    TripReport,
-    NormalResultSummary,
-    RatDeadResultSummary
-  } from "$lib/components/Room"
+  import { TripSetup, TripProcessing } from "$lib/components/Room"
   import { staticContent } from "$lib/modules/content"
-  import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
 
   let {
     roomId,
     entryState,
-    transitionTo,
-    transitionToResultSummary
+    transitionTo
   }: {
     roomId: string
     entryState: App.PageState["entryState"]
@@ -45,7 +36,6 @@
       {staticRoomContent}
       onComplete={() => {
         if (destroyed) return
-        shaderManager.setMode("warpspeed")
         transitionTo(TRIP_STATE.PROCESSING)
       }}
     />

@@ -17,9 +17,6 @@ function decodeRevertData(hexData: string) {
   const selector = slice(hexData as `0x${string}`, 0, 4)
   const parametersHex = slice(hexData as `0x${string}`, 4)
 
-  console.log("selector", toHex(selector))
-  console.log("parameters hex", toHex(parametersHex))
-
   // Try to decode using each ABI
   for (const abi of ABIS) {
     try {
@@ -27,8 +24,6 @@ function decodeRevertData(hexData: string) {
         abi,
         data: hexData as `0x${string}`
       })
-
-      console.log("Decoded error:", decoded)
 
       if (decoded) {
         const argsString = decoded.args ? `(${decoded.args.join(", ")})` : ""
@@ -52,7 +47,6 @@ function extractRevertData(errorMessage: string): string | null {
   const reasonPattern = /with reason:\s*(0x[a-fA-F0-9]+)/
   const reasonMatch = errorMessage.match(reasonPattern)
   if (reasonMatch) {
-    console.log("REASON MATCH ", reasonMatch[1])
     return reasonMatch[1]
   }
 

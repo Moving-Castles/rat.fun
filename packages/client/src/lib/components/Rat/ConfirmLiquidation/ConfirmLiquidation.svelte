@@ -26,8 +26,8 @@
     />
   </div>
   <div class="button-container">
-    <BigButton text="Confirm" onclick={onClickConfirm} />
     <BigButton text="Abort" onclick={onClickAbort} />
+    <BigButton text="Confirm" onclick={onClickConfirm} />
   </div>
 </div>
 

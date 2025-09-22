@@ -47,7 +47,6 @@ export const createTripTransitions = (entryState: App.PageState["entryState"]) =
   }
 
   const transitionToResultSummary = (result?: EnterRoomReturnValue) => {
-    console.log("Transition called")
     if (result) {
       transitionTo(determineResultSummaryState(result))
     } else {

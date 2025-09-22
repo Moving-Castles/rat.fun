@@ -1,5 +1,11 @@
 <script lang="ts">
   import { RatBox } from "$lib/components/Rat"
+  import { setActiveShader } from "$lib/modules/webgl-old/state.svelte"
+  import { onMount } from "svelte"
+
+  onMount(() => {
+    setActiveShader("clouds")
+  })
 </script>
 
 <div class="rat-container">

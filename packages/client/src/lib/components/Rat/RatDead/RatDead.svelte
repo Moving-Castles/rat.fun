@@ -34,9 +34,16 @@
     background-size: 200px;
     color: black;
 
+    .rat-dead-text {
+      width: 80%;
+      padding-bottom: 10px;
+      color: var(--background);
+      text-align: center;
+    }
+
     .rat-dead-image {
-      width: 100px;
-      height: 100px;
+      width: 300px;
+      height: 300px;
 
       img {
         width: 100%;

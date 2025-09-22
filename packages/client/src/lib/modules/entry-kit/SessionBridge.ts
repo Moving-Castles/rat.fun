@@ -19,7 +19,6 @@ export default function SessionBridge({
   useEffect(() => {
     entryKitSession.set(sessionClient.data)
     if (initialised) {
-      console.log("We have synced entrykit's session state", entryKitSession)
       onSessionChange(sessionClient.data)
     } else {
       onSessionStart(sessionClient.data)

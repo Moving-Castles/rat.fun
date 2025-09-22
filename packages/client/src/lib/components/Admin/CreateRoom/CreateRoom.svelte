@@ -79,7 +79,6 @@
       // Duck
       mixer.rampChannelVolume("music", -12, 0.5)
       const id = "fill" + Math.ceil(Math.random() * 4)
-      console.log(id)
       playUISound("ratfun", id, null, () => {
         mixer.rampChannelVolume("music", 0, 0.5)
       })

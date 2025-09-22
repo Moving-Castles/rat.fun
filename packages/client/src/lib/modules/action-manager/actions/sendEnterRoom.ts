@@ -22,7 +22,6 @@ export async function sendEnterRoom(roomId: string, ratId: string) {
   const environment = getEnvironment()
 
   if (busy.EnterRoom.current !== 0) {
-    console.log("will return null")
     return null
   }
 
@@ -70,7 +69,6 @@ export async function sendEnterRoom(roomId: string, ratId: string) {
     console.log(`Operation took ${(endTime - startTime).toFixed(3)} milliseconds`)
 
     busy.EnterRoom.set(0, { duration: 0 })
-    console.log("will return outcome")
     return outcome
   } catch (err) {
     errorHandler(err)
@@ -78,7 +76,6 @@ export async function sendEnterRoom(roomId: string, ratId: string) {
     if (!(err instanceof APIError)) {
       throw new RoomError(`Failed to enter trip ${roomId}`, roomId)
     }
-    console.log("error. will return null")
     return null
   }
 }

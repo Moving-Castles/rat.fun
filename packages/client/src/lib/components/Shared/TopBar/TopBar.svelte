@@ -3,7 +3,6 @@
   import { page } from "$app/state"
   import { player, worldStats, activeWorldEvent } from "$lib/modules/state/stores"
   import { upcomingWorldEvent } from "$lib/modules/content"
-  import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
   import { switchAudio } from "$lib/modules/sound/state.svelte"
 
   import PlayerInfo from "./PlayerInfo.svelte"
@@ -16,12 +15,6 @@
 
   onMount(() => {
     switchAudio(page)
-
-    if (page.route.id?.includes("admin")) {
-      shaderManager.setMode("clouds-inverted")
-    } else {
-      shaderManager.setMode("clouds")
-    }
   })
 </script>
 

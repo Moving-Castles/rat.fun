@@ -18,8 +18,8 @@ let channelStates = $state<Record<string, ChannelConfig>>({
 })
 let uiChannel = $state<Tone.InputNode>()
 let musicChannel = $state<Tone.InputNode>()
-let channels = $state<Record<string, Tone.Channel>>({})
-let pitchShifters = $state<Record<string, Tone.PitchShift>>({})
+const channels = $state<Record<string, Tone.Channel>>({})
+const pitchShifters = $state<Record<string, Tone.PitchShift>>({})
 let players = $state<Record<string, Tone.Player>>()
 let currentlyPlaying = $state<string | null>(null)
 let toneLoaded = $state(false)
@@ -127,7 +127,6 @@ const stopAllMusic = () => {
 const startMusic = (key: string) => {
   if (players && players[key] && currentlyPlaying !== key) {
     stopAllMusic()
-    console.log("start music ", key)
     players[key].start()
     currentlyPlaying = key
   }
@@ -237,8 +236,6 @@ const registerMusic = (channel: Tone.ToneAudioNode): Record<string, Tone.Player>
   }
 
   Tone.loaded().then(done => {
-    console.log("TONE LOADED")
-    console.log(done)
     toneLoaded = true
     switchAudio(page)
   })
@@ -262,7 +259,6 @@ export async function ratCoughs() {
   const randomCough = () => {
     // Just not when we're not with rat and also not when we are in the results
     if (get(player)?.currentRat && !page.route.id?.includes("result")) {
-      console.log("playing a little cough")
       playUISound("ratfun", "cough" + Math.ceil(Math.random() * 13))
     }
 

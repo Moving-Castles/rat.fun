@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { onMount } from "svelte"
+  import { setActiveShader } from "$lib/modules/webgl-old/state.svelte"
   import { derived } from "svelte/store"
   import { playerRooms } from "$lib/modules/state/stores"
 
@@ -12,6 +14,10 @@
   const portfolioClass = derived([profitLoss, balance], ([$profitLoss, $balance]) => {
     if ($profitLoss === $balance) return "neutral"
     return $profitLoss > $balance ? "upText" : "downText"
+  })
+
+  onMount(() => {
+    setActiveShader(null)
   })
 </script>
 

@@ -103,7 +103,6 @@ export class ShaderManager<TMode extends string = string> {
    * Set new mode and transition uniforms
    */
   setMode(newMode: TMode, tweenDuration?: number) {
-    console.log("setting mode to ", newMode)
     if (!this.modes[newMode]) {
       console.warn(`Mode '${newMode}' not found in configuration`)
       return

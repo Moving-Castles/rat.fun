@@ -25,8 +25,6 @@ import mudConfig from "contracts/mud.config"
 export type SetupPublicNetworkResult = Awaited<ReturnType<typeof setupPublicNetwork>>
 
 export async function setupPublicNetwork(environment: ENVIRONMENT) {
-  console.log("setting up public network for ", environment)
-
   const networkConfig = getNetworkConfig(environment)
 
   /*

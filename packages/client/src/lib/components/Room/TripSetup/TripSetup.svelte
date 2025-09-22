@@ -48,7 +48,6 @@
   }
 
   onMount(async () => {
-    console.log("play ... SETUP")
     sound = playUISound("ratfun", "tripSetup")
     playUISound("ratfun", "tripSetupTrigger")
     // Start timer
@@ -101,7 +100,6 @@
   onDestroy(async () => {
     const result = await sound
     if (result) {
-      console.log("trying to stop sound ", result)
       result.stop()
     }
   })
