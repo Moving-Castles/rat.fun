@@ -85,7 +85,7 @@ contract ManagerSystem is System {
     // * * * * * * * * * * * * *
 
     // As items always have positive value, this will always increase the room balance
-    LibManager.removeItemsFromRat(_ratId, _roomId, _itemsToRemoveFromRat);
+    roomBudget = LibManager.removeItemsFromRat(roomBudget, _ratId, _roomId, _itemsToRemoveFromRat);
     // As items always have positive value, this will always decrease the room balance
     roomBudget = LibManager.addItemsToRat(roomBudget, _ratId, _roomId, _itemsToAddToRat);
 

@@ -53,6 +53,9 @@ library LibManager {
 
       // Increase room balance
       Balance.set(_roomId, oldRoomBalance + valueChangeAmount);
+
+      // Increase the available budget
+      _roomBudget = _roomBudget + valueChangeAmount;
     } else {
       // __ From room balance to rat balance
 
@@ -75,9 +78,9 @@ library LibManager {
   /**
    * @notice Add items to rat inventory
    * @dev Used by the Manager system to apply changes to a rat after room events
+   * @param _roomBudget The budget of the room
    * @param _ratId Id of the rat
    * @param _roomId Id of the room
-   * @param _roomBudget The budget of the room
    * @param _itemsToAddToRat Information of items to add to rat
    */
   function addItemsToRat(
@@ -126,11 +129,17 @@ library LibManager {
   /**
    * @notice Remove items from rat's inventory
    * @dev Used by the Manager system to apply changes to a rat after room events
+   * @param _roomBudget The budget of the room
    * @param _ratId Id of the rat
    * @param _roomId Id of the room
    * @param _itemsToRemoveFromRat Ids of items to remove from rat
    */
-  function removeItemsFromRat(bytes32 _ratId, bytes32 _roomId, bytes32[] calldata _itemsToRemoveFromRat) internal {
+  function removeItemsFromRat(
+    uint256 _roomBudget,
+    bytes32 _ratId,
+    bytes32 _roomId,
+    bytes32[] calldata _itemsToRemoveFromRat
+  ) internal returns (uint256) {
     // - - - - - - - - -
     // Function removes items from rat
     // - - - - - - - - -
@@ -140,7 +149,7 @@ library LibManager {
 
     // If list is empty, exit early
     if (_itemsToRemoveFromRat.length == 0) {
-      return;
+      return _roomBudget;
     }
 
     for (uint i = 0; i < _itemsToRemoveFromRat.length; i++) {
@@ -148,8 +157,12 @@ library LibManager {
       uint256 itemValueAmount = Value.get(itemId);
       // Add value to room balance
       Balance.set(_roomId, Balance.get(_roomId) + itemValueAmount);
+      // Increase the available budget
+      _roomBudget = _roomBudget + itemValueAmount;
       // Remove item from rat
       Inventory.set(_ratId, LibUtils.removeFromArray(Inventory.get(_ratId), itemId));
     }
+
+    return _roomBudget;
   }
 }
