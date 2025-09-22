@@ -123,14 +123,14 @@
     height: 100vh;
     width: 100vw;
     color: var(--foreground);
-    font-size: 64px;
+    font-size: var(--font-size-normal);
     background: rgba(0, 0, 0, 0.1);
 
     .timer {
       position: fixed;
       top: 20px;
       right: 20px;
-      font-size: 32px;
+      font-size: var(--font-size-normal);
       font-family: monospace;
       background: var(--color-alert);
       color: var(--background);
@@ -143,7 +143,7 @@
 
     .inner {
       display: flex;
-      font-size: 44px;
+      font-size: var(--font-size-normal);
       .text-display {
         text-align: left;
         white-space: pre-line;

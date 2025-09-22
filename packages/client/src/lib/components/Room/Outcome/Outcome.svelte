@@ -58,7 +58,7 @@
     width: 600px;
 
     .meta {
-      font-size: 10px;
+      font-size: var(--font-size-normal);
       color: var(--color-grey-light);
       text-align: center;
       margin-bottom: 20px;
@@ -86,7 +86,7 @@
           background: var(--color-alert);
           padding: 5px;
           color: var(--background);
-          font-size: 30px;
+          font-size: var(--font-size-normal);
           display: inline-block;
           margin-bottom: 8px;
         }
@@ -135,7 +135,7 @@
       color: var(--background);
       // max-width: 60%;
       font-family: var(--special-font-stack);
-      font-size: 24px;
+      font-size: var(--font-size-normal);
     }
   }
 </style>

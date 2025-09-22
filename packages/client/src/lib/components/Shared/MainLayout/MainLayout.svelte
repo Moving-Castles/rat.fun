@@ -1,7 +1,6 @@
 <script lang="ts">
   import { ENVIRONMENT } from "$lib/mud/enums"
-  import { PageTransitions, TopBar } from "$lib/components/Shared"
-  import { mainLayoutTransitionConfig } from "$lib/components/Shared/PageTransitions/transitionConfigs"
+  import { TopBar } from "$lib/components/Shared"
 
   let { children }: { children: import("svelte").Snippet; environment: ENVIRONMENT } = $props()
 
@@ -17,19 +16,15 @@
   }
 </script>
 
-<!-- <svelte:window onmousemove={setTilt} /> -->
+<div style:transform={tiltTransform} class="main-area">
+  <TopBar />
 
-<PageTransitions config={mainLayoutTransitionConfig}>
-  <div style:transform={tiltTransform} class="main-area">
-    <TopBar />
-
-    <div class="main-content">
-      <div class="main-area-inner">
-        {@render children?.()}
-      </div>
+  <div class="main-content">
+    <div class="main-area-inner">
+      {@render children?.()}
     </div>
   </div>
-</PageTransitions>
+</div>
 
 <div class="dust"></div>
 

@@ -5,7 +5,6 @@
   // Health 26-50 => 2
   // Health 51-75 => 3
   // Health 76-> => 4
-
   let healthLevel = $derived(Math.floor(value / 25))
 
   $inspect(healthLevel)
@@ -16,10 +15,10 @@
     <div
       class="health-bar-inner-fill"
       style:width={`${value}%`}
-      class:health-level-1={healthLevel == 1}
-      class:health-level-2={healthLevel == 2}
-      class:health-level-3={healthLevel == 3}
-      class:health-level-4={healthLevel == 4}
+      class:health-level-1={healthLevel == 0}
+      class:health-level-2={healthLevel == 1}
+      class:health-level-3={healthLevel == 2}
+      class:health-level-4={healthLevel > 2}
     ></div>
   </div>
 </div>

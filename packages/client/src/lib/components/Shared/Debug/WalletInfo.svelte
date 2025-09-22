@@ -42,7 +42,7 @@
     background-color: rgb(11, 255, 84);
     color: var(--background);
     padding: 5px;
-    font-size: 16px;
+    font-size: var(--font-size-normal);
     font-family: var(--special-font-stack);
     border-radius: 4px;
     transition: all 0.2s ease;
@@ -68,7 +68,7 @@
     background: none;
     border: none;
     color: var(--background);
-    font-size: 12px;
+    font-size: var(--font-size-normal);
     cursor: pointer;
     padding: 2px;
     border-radius: 2px;

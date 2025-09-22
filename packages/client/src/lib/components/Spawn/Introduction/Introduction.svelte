@@ -94,7 +94,7 @@
     }
 
     .small-print {
-      font-size: 10px;
+      font-size: var(--font-size-normal);
       text-align: center;
       margin-top: -20px;
       width: 600px;

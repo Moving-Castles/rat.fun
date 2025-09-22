@@ -217,7 +217,7 @@
     display: flex;
     margin-bottom: 0.5em;
     line-height: 1.2em;
-    font-size: 44px;
+    font-size: var(--font-size-large);
 
     .timestamp-container {
       margin-right: 10px;
@@ -227,7 +227,7 @@
         background: var(--color-alert-priority);
         padding: 5px;
         color: var(--background);
-        font-size: 14px;
+        font-size: var(--font-size-normal);
       }
     }
 

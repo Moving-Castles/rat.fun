@@ -166,19 +166,19 @@
           max-height: 160px;
 
           &.short {
-            font-size: 26px;
+            font-size: var(--font-size-normal);
           }
 
           &.medium {
-            font-size: 24px;
+            font-size: var(--font-size-normal);
           }
 
           &.long {
-            font-size: 20px;
+            font-size: var(--font-size-normal);
           }
 
           &.extra-long {
-            font-size: 16px;
+            font-size: var(--font-size-normal);
           }
 
           .content {

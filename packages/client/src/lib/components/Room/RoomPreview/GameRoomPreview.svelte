@@ -118,7 +118,7 @@
     padding: 0 12px;
     height: 60px;
     font-family: var(--special-font-stack);
-    font-size: 20px;
+    font-size: var(--font-size-normal);
     text-transform: uppercase;
     background: var(--background-semi-transparent);
     flex-shrink: 0;

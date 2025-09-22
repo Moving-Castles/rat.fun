@@ -59,7 +59,7 @@
     justify-content: center;
     align-items: center;
     color: var(--foreground);
-    font-size: 64px;
+    font-size: var(--font-size-normal);
 
     .inner {
       display: flex;
@@ -70,12 +70,12 @@
       width: 500px;
       max-width: calc(var(--game-window-width) * 0.9);
       .processing-title {
-        font-size: 64px;
+        font-size: var(--font-size-normal);
         font-weight: bold;
       }
 
       .timer {
-        font-size: 32px;
+        font-size: var(--font-size-normal);
         font-family: monospace;
         background: var(--color-alert);
         color: var(--background);

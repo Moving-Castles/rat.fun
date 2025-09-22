@@ -14,7 +14,7 @@
     isOwnRoomListing: boolean
   } = $props()
 
-  let sortFunction = $state(entriesByPopularity)
+  let sortFunction = $state(entriesChronologically)
   let showDepletedRooms = $state(isOwnRoomListing ? true : false)
   let textFilter = $state("")
   let lastChecked = $state<number>(Number(get(blockNumber)))

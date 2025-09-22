@@ -132,7 +132,7 @@
           height: 100%;
           width: 300px;
           margin-right: 10px;
-          font-size: 18px;
+          font-size: var(--font-size-normal);
           padding: 10px;
           background: var(--white);
           color: black;

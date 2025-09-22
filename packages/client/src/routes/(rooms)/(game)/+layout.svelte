@@ -12,9 +12,7 @@
 <CenterBar />
 
 <div class="right-column">
-  <!-- <PageTransitions config={gameLayoutTransitionConfig}> -->
   {@render children?.()}
-  <!-- </PageTransitions> -->
 </div>
 
 <style lang="scss">

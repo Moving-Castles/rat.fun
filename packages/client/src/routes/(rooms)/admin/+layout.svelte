@@ -41,23 +41,21 @@
 {/snippet}
 
 <div class="span-all">
-  <PageTransitions config={gameLayoutTransitionConfig}>
-    <div class="">
-      <SEO prependTitle="ADMIN" />
+  <div class="">
+    <SEO prependTitle="ADMIN" />
 
-      <div class="">
-        <AdminTripMonitor {focus} />
-        <BigButton
-          text="Create trip"
-          onclick={() => {
-            modal.set(createTrip)
-          }}
-        />
-        <AdminTripTable bind:focus />
-        <AdminPastTripsMonitor />
-      </div>
+    <div class="">
+      <AdminTripMonitor {focus} />
+      <BigButton
+        text="Create trip"
+        onclick={() => {
+          modal.set(createTrip)
+        }}
+      />
+      <AdminTripTable bind:focus />
+      <AdminPastTripsMonitor />
     </div>
-  </PageTransitions>
+  </div>
 </div>
 
 {#if children}

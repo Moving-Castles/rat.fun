@@ -73,7 +73,7 @@
     &::before {
       content: "EMPTY";
       color: rgba(255, 255, 255, 0.6);
-      font-size: 14px;
+      font-size: var(--font-size-normal);
       font-weight: bold;
       opacity: 0;
       transition: opacity 0.2s ease;

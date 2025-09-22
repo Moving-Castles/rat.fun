@@ -34,7 +34,7 @@
 
     .world-event-title {
       font-family: var(--special-font-stack);
-      font-size: 40px;
+      font-size: var(--font-size-normal);
       font-weight: normal;
       z-index: 40;
       position: absolute;

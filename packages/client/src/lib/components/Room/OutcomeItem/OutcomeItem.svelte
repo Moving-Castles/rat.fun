@@ -19,7 +19,7 @@
     align-items: center;
     justify-content: center;
     padding-inline: 10px;
-    font-size: 24px;
+    font-size: var(--font-size-normal);
     position: relative;
     display: inline-block;
     &.balance {

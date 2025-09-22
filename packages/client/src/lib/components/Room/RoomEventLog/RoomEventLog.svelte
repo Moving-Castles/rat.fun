@@ -62,7 +62,7 @@
     border-left: 1px solid var(--color-grey-mid);
     border-right: 1px solid var(--color-grey-mid);
     border-bottom: 1px solid var(--color-grey-mid);
-    font-size: 10px;
+    font-size: var(--font-size-normal);
     background-image: url("/images/texture-5.png");
     background-size: 100px;
   }
@@ -83,7 +83,7 @@
     align-items: center;
 
     span {
-      font-size: 14px;
+      font-size: var(--font-size-normal);
       background: var(--color-death);
       padding: 2px;
       color: var(--background);
@@ -93,7 +93,7 @@
   .header {
     border-bottom: 1px dashed var(--color-grey-mid);
     padding: 12px;
-    font-size: 11px;
+    font-size: var(--font-size-normal);
     display: flex;
     justify-content: space-between;
     position: sticky;
