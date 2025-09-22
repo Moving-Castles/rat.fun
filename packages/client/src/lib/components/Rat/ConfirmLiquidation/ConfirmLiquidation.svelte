@@ -26,8 +26,8 @@
     />
   </div>
   <div class="button-container">
-    <BigButton text="Confirm" onclick={onClickConfirm} />
     <BigButton text="Abort" onclick={onClickAbort} />
+    <BigButton text="Confirm" onclick={onClickConfirm} />
   </div>
 </div>
 
@@ -46,7 +46,7 @@
     .confirm-liquidation-text {
       width: 80%;
       padding-bottom: 10px;
-      color: var(--background);
+      color: var(--foreground);
     }
 
     .button-container {

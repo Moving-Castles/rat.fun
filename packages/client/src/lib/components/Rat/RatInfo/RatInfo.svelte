@@ -29,7 +29,7 @@
       flex-direction: row;
       border-bottom: var(--default-border-style);
       overflow: hidden;
-      height: 300px;
+      height: 260px;
     }
 
     .rat-inventory {

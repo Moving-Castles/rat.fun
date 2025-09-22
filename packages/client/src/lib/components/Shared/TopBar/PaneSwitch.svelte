@@ -46,6 +46,7 @@
       color: var(--background);
       width: 100px;
       z-index: 100;
+      background: var(--color-grey-light);
 
       a {
         border: none;
@@ -54,7 +55,6 @@
         background: transparent;
         font-family: var(--label-font-stack);
         font-size: 40px;
-        letter-spacing: -0.2em;
         text-decoration: none;
         transition:
           transform 0.2s ease-in-out,

@@ -42,8 +42,7 @@
     background: var(--color-death);
 
     .button-text {
-      letter-spacing: -0.2em;
-      font-size: var(--font-size-extra-large);
+      font-size: var(--font-size-normal);
       font-family: var(--label-font-stack);
     }
 

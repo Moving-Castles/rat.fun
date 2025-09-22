@@ -58,7 +58,6 @@
     }
 
     .button-text {
-      letter-spacing: -0.2em;
       font-size: var(--font-size-large);
       font-family: var(--label-font-stack);
     }

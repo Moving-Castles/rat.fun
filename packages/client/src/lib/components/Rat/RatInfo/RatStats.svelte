@@ -2,13 +2,18 @@
   import { rat } from "$lib/modules/state/stores"
   import { NumberGoing } from "$lib/components/Shared"
   import { ratImageUrl } from "$lib/modules/state/stores"
+
+  $inspect($rat)
+
+  import HealthBar from "./HealthBar.svelte"
+
   let balanceGoing = $state(false)
 </script>
 
 <div class="rat-info-box">
   {#if $rat}
     <!-- INFO -->
-    <div class=" info">
+    <div class="info-container">
       <!-- INDEX -->
       <div class="info-item">
         <span class="index">RAT #{$rat.index}</span>
@@ -19,12 +24,17 @@
         <span class="name">{$rat.name}</span>
       </div>
 
-      <!-- BALANCE -->
+      <!-- HEALTH -->
       <div class="info-item" class:priority={balanceGoing}>
         <span class="health">
           Health:
           <NumberGoing bind:going={balanceGoing} value={$rat.balance} />
         </span>
+      </div>
+
+      <!-- HEALTHBAR -->
+      <div class="info-item">
+        <HealthBar value={Number($rat.balance)} />
       </div>
     </div>
 
@@ -45,50 +55,51 @@
     background-image: url("/images/texture-5.png");
     background-size: 100px;
     justify-content: space-between;
-  }
 
-  .info-item {
-    display: flex;
-    margin: 5px;
-    margin-inline: 10px;
-    gap: 5px;
+    .info-container {
+      width: calc(100% - 260px);
+      overflow: hidden;
 
-    .index {
-      background: var(--color-grey-light);
-      padding: 5px;
-      color: var(--background);
-      font-size: var(--font-size-small);
+      .info-item {
+        width: 100%;
+        height: 40px;
+        border-bottom: var(--default-border-style);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .index {
+          padding-inline: 10px;
+          color: var(--foreground);
+          font-size: var(--font-size-small);
+        }
+
+        .name {
+          padding-inline: 10px;
+          color: var(--foreground);
+          font-size: var(--font-size-normal);
+          color: var(--foreground);
+        }
+
+        .health {
+          padding-inline: 10px;
+          color: var(--foreground);
+          font-size: var(--font-size-normal);
+        }
+      }
     }
-
-    .name {
-      background: var(--color-alert);
-      padding-right: 5px;
-      color: var(--foreground);
-      font-size: var(--font-size-normal);
-      letter-spacing: -0.2em;
-      color: var(--background);
-    }
-
-    .health {
-      background: var(--color-value);
-      padding: 5px;
-      color: var(--background);
-      font-size: var(--font-size-large);
-    }
-  }
-
-  .image-container {
-    width: 140px;
-    height: 140px;
-    // border: var(--default-border-style);
-    margin: 10px;
-    border-radius: 50%;
-
-    img {
-      width: 100%;
+    .image-container {
+      width: 260px;
       height: 100%;
-      object-fit: cover;
-      border-radius: 50%;
+      border: var(--default-border-style);
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: grayscale(1);
+        mix-blend-mode: screen;
+      }
     }
   }
 </style>

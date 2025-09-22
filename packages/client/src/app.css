@@ -74,10 +74,10 @@
   --dashed-border-style: 1px dashed var(--color-border);
 
   /* Typography */
-  --typewriter-font-stack: "OCRA", monospace;
-  --special-font-stack: "Special Elite", monospace;
-  --display-font-stack: "Rock Salt", cursive;
-  --label-font-stack: "Impact Label Reversed", monospace;
+  --typewriter-font-stack: monospace;
+  --special-font-stack: monospace;
+  --display-font-stack: monospace;
+  --label-font-stack: monospace;
   --font-size-very-small: 9px;
   --font-size-small: 11px;
   --font-size-normal: 14px;

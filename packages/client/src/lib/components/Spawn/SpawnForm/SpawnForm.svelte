@@ -138,7 +138,7 @@
           color: black;
           border: none;
           margin-bottom: 0;
-          font-family: "Rock Salt", cursive;
+          font-family: monospace;
           text-transform: uppercase;
           border-bottom: var(--default-border-style);
           outline: none;

@@ -159,7 +159,7 @@
       {#if debuggingShader}
         <ShaderRenderer />
       {:else}
-        <Shader />
+        <!-- <Shader /> -->
       {/if}
     {/if}
   {/if}

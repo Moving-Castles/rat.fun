@@ -32,7 +32,7 @@
     width: 100%;
     background-image: url("/images/texture-2.png");
     background-size: 200px;
-    color: black;
+    color: var(--foreground);
 
     .rat-dead-image {
       width: 100px;
