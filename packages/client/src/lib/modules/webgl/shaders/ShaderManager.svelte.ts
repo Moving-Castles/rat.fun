@@ -1,5 +1,6 @@
 import { Tween } from "svelte/motion"
 import { WebGLGeneralRenderer } from "$lib/modules/webgl"
+import { shaders } from "$lib/modules/webgl/shaders/index.svelte"
 
 export type UniformType = "float" | "vec2" | "vec3" | "vec4" | "int" | "bool" | "number"
 
@@ -24,6 +25,7 @@ export interface ShaderConfiguration<TMode extends string = string> {
 
 export class ShaderManager<TMode extends string = string> {
   private renderer: WebGLGeneralRenderer | null = null
+  private canvas: HTMLCanvasElement | null = null
   private resizeTimeout: ReturnType<typeof setTimeout> | null = null
   private currentMode = $state<TMode>()
   private modes: ShaderModeConfig<TMode>
@@ -131,10 +133,71 @@ export class ShaderManager<TMode extends string = string> {
   }
 
   /**
+   * Set new shader programmatically
+   */
+  setShader(shaderKey: string, mode?: string) {
+    const shaderSource = shaders?.[shaderKey as keyof typeof shaders]
+
+    if (!shaderSource) throw new Error("ShaderNotExistError")
+
+    const newConfig = shaderSource.config
+
+    // Destroy current renderer
+    if (this.renderer) {
+      this.renderer.destroy()
+      this.renderer = null
+    }
+
+    // Update configuration
+    this.modes = newConfig.modes
+    this.currentMode = newConfig.initialMode
+    this.tweenConfigs = newConfig.tweens
+
+    // Clear existing tweens
+    this.tweens.clear()
+
+    // Create new tweens
+    Object.entries(newConfig.tweens).forEach(([name, tween]) => {
+      this.tweens.set(name, new Tween(tween.value, { duration: tween.duration }))
+    })
+
+    // Reinitialize boolean uniforms
+    const tweenNames = new Set(Object.keys(newConfig.tweens))
+    const booleanUniformNames = new Set<string>()
+
+    Object.values(this.modes).forEach(mode => {
+      Object.entries(mode).forEach(([uniformName, value]) => {
+        if (!tweenNames.has(uniformName) && typeof value === "boolean") {
+          booleanUniformNames.add(uniformName)
+        }
+      })
+    })
+
+    // Reset boolean uniforms
+    this.booleanUniforms = {}
+    const initialModeConfig = this.modes[newConfig.initialMode]
+    booleanUniformNames.forEach(uniformName => {
+      const initialValue = initialModeConfig[uniformName] as boolean
+      this.booleanUniforms[uniformName] = initialValue !== undefined ? initialValue : false
+    })
+
+    // If we have a canvas, reinitialize the renderer
+    if (this.canvas) {
+      this.initializeRenderer(this.canvas, shaderSource)
+
+      if (mode) {
+        this.setMode(mode)
+      }
+    }
+  }
+
+  /**
    * Initialize WebGL renderer
    */
   initializeRenderer(canvas: HTMLCanvasElement, shaderSource: any) {
     if (!canvas) return
+
+    this.canvas = canvas
 
     // Convert tweens and boolean uniforms to initial uniform values
     const initialUniforms: Record<

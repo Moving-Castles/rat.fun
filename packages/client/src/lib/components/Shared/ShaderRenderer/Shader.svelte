@@ -8,8 +8,20 @@
 
   let canvas = $state<HTMLCanvasElement>()
   let currentShader = $state("ratfun")
-  let currentMode = $derived(shaders.ratfun.config?.getMode?.(page))
+  let currentMode = $derived(
+    shaders[currentShader as keyof typeof shaders]?.config?.getMode?.(page)
+  )
   let uniformValues = $derived(shaderManager.uniformValues)
+
+  // Export setShader function for external use
+  export function setShader(shaderKey: string) {
+    currentShader = shaderKey
+
+    const newConfig = shaders[shaderKey as keyof typeof shaders]?.config
+    if (newConfig) {
+      shaderManager.setShader(shaderKey, shaders[shaderKey as keyof typeof shaders], newConfig)
+    }
+  }
 
   $effect(() => {
     if (shaderManager) {
@@ -33,13 +45,9 @@
   })
 
   afterNavigate(() => {
-    currentMode = shaders.ratfun.config?.getMode?.(page)
-    console.log("we are setting the mode here", currentMode)
-    if (currentMode === "stars") {
-      shaderManager.setMode(currentMode, 100)
-    } else if (currentMode) {
-      shaderManager.setMode(currentMode)
-    }
+    const newMode = shaders[currentShader as keyof typeof shaders]?.config?.getMode?.(page)
+    console.log("we are setting the mode here", newMode)
+    shaderManager.setMode(newMode)
   })
 </script>
 

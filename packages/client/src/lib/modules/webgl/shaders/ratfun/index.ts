@@ -66,7 +66,7 @@ export const shaderConfig: ShaderConfiguration<ShaderMode> = {
     opacity: { value: 1, duration: 1000 },
     speed: { value: 1, duration: 200 },
     invert: { value: 1, duration: 100 },
-    clouds_amount: { value: 1, duration: 1000 },
+    clouds_amount: { value: 1, duration: 200 },
     nebula_amount: { value: 1, duration: 1000 },
     trippy: { value: 0, duration: 4000 }
   },
@@ -85,7 +85,7 @@ export const shaderConfig: ShaderConfiguration<ShaderMode> = {
         return "clouds"
       }
     } else if (page.route.id.includes("admin")) {
-      return "clouds-inverted"
+      return "off"
     }
 
     return "stars"

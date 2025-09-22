@@ -5,6 +5,7 @@
   import type { LayoutProps } from "./$types"
 
   import { type Outcome as SanityOutcome } from "@sanity-types"
+  import { shaderManager, shaders } from "$lib/modules/webgl/shaders/index.svelte"
   import {
     initSound,
     snapshotFactory,
@@ -102,6 +103,21 @@
     document.removeEventListener("keydown", enableAudio)
   }
 
+  const setRandomShader = () => {
+    const keys = Object.keys(shaders)
+    const shaderKey = keys[Math.floor(Math.random() * keys.length)]
+    console.log(shaderKey)
+    shaderManager.setShader(shaderKey)
+  }
+
+  const setShaderWithDefaults = () => {
+    shaderManager.setShader("ratfun")
+  }
+
+  const setShaderWithMode = () => {
+    shaderManager.setShader("ratfun", "stars")
+  }
+
   onMount(async () => {
     // Remove preloader
     document.querySelector(".preloader")?.remove()
@@ -130,6 +146,12 @@
     outcome = $staticContent.outcomes.find(o => o._id === outcomeId)
   }}
 />
+
+<div class="testing">
+  <button onclick={setRandomShader}> Random shader </button>
+  <button onclick={setShaderWithDefaults}>Set shader with defaults </button>
+  <button onclick={setShaderWithMode}>Set shader with mode predefined </button>
+</div>
 
 <div class="bg">
   {#if $UIState === UI.LOADING}
@@ -216,5 +238,12 @@
     position: fixed;
     inset: 0;
     z-index: var(--z-background);
+  }
+
+  .testing {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 999;
   }
 </style>

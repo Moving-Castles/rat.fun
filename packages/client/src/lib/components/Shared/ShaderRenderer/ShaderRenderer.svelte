@@ -14,8 +14,6 @@
   }
   let shaderManager = $state(createShaderManager(currentConfig))
 
-  $inspect("currentMode", currentMode)
-
   function getMode(page: import("@sveltejs/kit").Page, shader: string = "ratfun"): string {
     console.log("GET MODE CALLED ", page)
     // Use provided mode getter if it's available
@@ -86,6 +84,22 @@
       }
     }
   }
+
+  // Programmatic shader setting
+  function setShader(shaderKey: string) {
+    const newShader = shaderKey
+    currentShader = newShader
+
+    // Create new shader manager with new config
+    const newConfig = shaders[newShader as keyof typeof shaders]?.config
+    if (newConfig) {
+      // Use the new setShader method
+      shaderManager.setShader(newShader, shaders[newShader as keyof typeof shaders], newConfig)
+    }
+  }
+
+  // Export the setShader function for external use
+  export { setShader }
 
   // Effect: Update mode when URL changes
   $effect(() => {
