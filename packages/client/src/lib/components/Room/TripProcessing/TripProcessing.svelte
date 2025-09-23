@@ -30,7 +30,7 @@
       timerDone = true
       // TODO: we are now returning after a fixed amount of time
       // We should check that the result is ready
-    }, 11000)
+    }, 8000)
   })
 
   onDestroy(async () => {
@@ -42,10 +42,8 @@
 </script>
 
 <div class="splash-screen">
-  <div class="inner">
-    <div class="processing-title">VISUALIZER</div>
-    <div class="timer">{timeElapsed.toFixed(1)}s</div>
-  </div>
+  <div class="timer">{timeElapsed.toFixed(1)}s</div>
+  <div class="inner"></div>
 </div>
 
 <style lang="scss">
@@ -69,21 +67,20 @@
       gap: 1rem;
       width: 500px;
       max-width: calc(var(--game-window-width) * 0.9);
-      .processing-title {
-        font-size: var(--font-size-normal);
-        font-weight: bold;
-      }
+    }
 
-      .timer {
-        font-size: var(--font-size-normal);
-        font-family: monospace;
-        background: var(--color-alert);
-        color: var(--background);
-        padding: 10px 20px;
-        border-radius: 8px;
-        min-width: 120px;
-        text-align: center;
-      }
+    .timer {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      font-size: var(--font-size-normal);
+      font-family: monospace;
+      background: var(--color-alert);
+      color: var(--background);
+      padding: 10px 20px;
+      border-radius: 8px;
+      min-width: 120px;
+      text-align: center;
     }
   }
 </style>

@@ -1,13 +1,15 @@
 <script lang="ts">
   import { onMount } from "svelte"
-  import { rat } from "$lib/modules/state/stores"
+  import { rat, playerIsBroke, tokenAllowanceApproved } from "$lib/modules/state/stores"
   import {
     RatInfo,
     RatDeploy,
     DeployingRat,
     ConfirmLiquidation,
     LiquidatingRat,
-    RatDead
+    RatDead,
+    NoTokens,
+    NoAllowance
   } from "$lib/components/Rat"
   import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
 
@@ -21,15 +23,18 @@
 
     if ($rat) {
       if ($rat.dead) {
-        // TODO: Here we should check if rat just died in the room
-        // or if the page was reloaded...
-        // If the later we should got to Deploy Rat
-        transitionTo(RAT_BOX_STATE.DEAD_RAT)
+        transitionTo(RAT_BOX_STATE.NO_RAT)
       } else {
         transitionTo(RAT_BOX_STATE.HAS_RAT)
       }
     } else {
-      transitionTo(RAT_BOX_STATE.NO_RAT)
+      if ($playerIsBroke) {
+        transitionTo(RAT_BOX_STATE.NO_TOKENS)
+      } else if ($tokenAllowanceApproved === false) {
+        transitionTo(RAT_BOX_STATE.NO_ALLOWANCE)
+      } else {
+        transitionTo(RAT_BOX_STATE.NO_RAT)
+      }
     }
   })
 </script>
@@ -47,6 +52,10 @@
     <LiquidatingRat />
   {:else if ratBoxState.state === RAT_BOX_STATE.DEAD_RAT}
     <RatDead />
+  {:else if ratBoxState.state === RAT_BOX_STATE.NO_TOKENS}
+    <NoTokens />
+  {:else if ratBoxState.state === RAT_BOX_STATE.NO_ALLOWANCE}
+    <NoAllowance />
   {:else if ratBoxState.state === RAT_BOX_STATE.ERROR}
     error
   {/if}

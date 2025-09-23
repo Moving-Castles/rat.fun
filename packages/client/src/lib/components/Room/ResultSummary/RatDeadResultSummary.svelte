@@ -23,15 +23,16 @@
 
 <style lang="scss">
   .summary {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    flex-direction: column;
     position: relative;
     bottom: 0;
-    height: 100px;
+    height: 200px;
     width: var(--game-window-width);
-    background: var(--background-semi-transparent);
+    width: 50vw;
 
     .event {
+      width: 100%;
       background: var(--color-death);
       margin: 0;
       padding: 0;

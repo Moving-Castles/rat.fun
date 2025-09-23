@@ -17,7 +17,7 @@
   {#if $rat}
     <div class="inventory-container" class:collapsed={$collapsed}>
       <!-- INVENTORY GRID -->
-      {#each inventorySlots as item, index}
+      {#each inventorySlots as item}
         {#if item}
           <InteractiveItem {item} />
         {:else}

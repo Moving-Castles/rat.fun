@@ -55,7 +55,7 @@
     {#if walletType === WALLET_TYPE.ENTRYKIT}
       <div bind:this={$entryKitButton}></div>
     {:else}
-      <div bind:this={buttonElement}>
+      <div class="button-container" bind:this={buttonElement}>
         <BigButton id="connect" text="Connect Burner" onclick={onComplete} />
       </div>
     {/if}
@@ -84,6 +84,11 @@
           width: 70dvw;
           height: auto;
         }
+      }
+
+      .button-container {
+        width: 100%;
+        height: 80px;
       }
     }
   }

@@ -70,7 +70,6 @@
       // Determine what to do based on the result
       if (result) {
         // Already has an ID
-        // entryState.state = TRIP_STATE.RESULTS
         entryState.result = result
         entryState.state = TRIP_STATE.RESULTS
         await goto(`/${data.roomId}/result/${result.outcomeId}?warpspeed`, {

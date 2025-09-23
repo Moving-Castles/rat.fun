@@ -13,13 +13,12 @@
 
   const onClick = async () => {
     shaderManager.setShader("blank")
-
     // Duck
-    mixer.rampChannelVolume("music", -12, 0.5)
-    const id = "fill" + Math.ceil(Math.random() * 4)
-    playUISound("ratfun", id, undefined, () => {
-      mixer.rampChannelVolume("music", 0, 0.5)
-    })
+    // mixer.rampChannelVolume("music", -12, 0.5)
+    // const id = "fill" + Math.ceil(Math.random() * 4)
+    // playUISound("ratfun", id, undefined, () => {
+    //   mixer.rampChannelVolume("music", 0, 0.5)
+    // })
     await goto(`/${roomId}/result?enter=true&rat=${$player.currentRat}&t=${Date.now()}`)
   }
 </script>

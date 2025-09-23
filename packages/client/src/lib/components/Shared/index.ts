@@ -35,9 +35,6 @@ export { default as NoImage } from "./NoImage/NoImage.svelte"
 export { default as NumberGoing } from "./NumberGoing/NumberGoing.svelte"
 export { default as PageTransitions } from "./PageTransitions/PageTransitions.svelte"
 
-/* Item Components */
-export { default as Item } from "./Item/Item.svelte"
-
 /* Utility Components */
 export { default as SEO } from "./SEO/SEO.svelte"
 export { default as ValueBreakdown } from "./ValueBreakdown/ValueBreakdown.svelte"

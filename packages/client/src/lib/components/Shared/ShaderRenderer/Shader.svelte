@@ -7,7 +7,7 @@
   import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
 
   let canvas = $state<HTMLCanvasElement>()
-  let currentShader = $state("ratfun")
+  let currentShader = $state("clouds")
   let currentMode = $derived(
     shaders[currentShader as keyof typeof shaders]?.config?.getMode?.(page)
   )

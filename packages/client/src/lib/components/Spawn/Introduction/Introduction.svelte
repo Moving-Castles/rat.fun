@@ -41,7 +41,7 @@
     <div class="logo">
       <img src="/images/logo8.png" alt="RAT.FUN" />
     </div>
-    <div class="small-print">
+    <!-- <div class="small-print">
       RAT.FUN is a skill based game. The thesis that “chance” is a cipher for ignorance rather than
       an ontological power has shaped global reflection for at least thirty‑five centuries. From
       Mesopotamian omen literature to cosmic‑ray observatories, thinkers and experimenters have
@@ -57,7 +57,7 @@
       and the deterministic structure of ultra‑high‑energy cosmic‑ray showers. The cumulative
       argument is unambiguous: robust intelligibility—not stochastic caprice—best accounts for the
       apparent disorder of the world.
-    </div>
+    </div> -->
   </button>
 </div>
 

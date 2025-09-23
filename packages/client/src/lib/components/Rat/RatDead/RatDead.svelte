@@ -35,14 +35,14 @@
     color: var(--background);
 
     .rat-dead-image {
-      width: 250px;
-      height: 260px;
-
+      width: 350px;
+      height: 350px;
       img {
         width: 100%;
         height: 100%;
         object-fit: contain;
         mix-blend-mode: screen;
+        filter: grayscale(1);
       }
     }
 

@@ -162,10 +162,6 @@
     font-size: var(--font-size-extra-large);
     line-height: 1em;
     text-align: center;
-
-    div {
-      margin-bottom: 30px;
-    }
   }
 
   .room-listing {

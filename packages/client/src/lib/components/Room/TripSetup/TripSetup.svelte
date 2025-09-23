@@ -1,116 +1,62 @@
 <script lang="ts">
-  import { onMount, onDestroy } from "svelte"
+  import { onMount } from "svelte"
   import { gsap } from "gsap"
   import { TextPlugin } from "gsap/TextPlugin"
-  import { typeHit, playUISound } from "$lib/modules/sound/state.svelte"
+  import type { Room as SanityRoom } from "@sanity-types"
+
+  import LogoBox from "./Boxes/LogoBox.svelte"
+  import TextLogBox from "./Boxes/TextLogBox.svelte"
+  import TripPromptBox from "./Boxes/TripPromptBox.svelte"
+  import VideoFeedBox from "./Boxes/VideoFeedBox.svelte"
+  import DataFeedBox from "./Boxes/DataFeedBox.svelte"
+  import BrainScanBox from "./Boxes/BrainScanBox.svelte"
 
   gsap.registerPlugin(TextPlugin)
 
   const {
-    onComplete
+    onComplete,
+    staticRoomContent
   }: {
     onComplete: () => void
+    staticRoomContent: SanityRoom | undefined
   } = $props()
 
-  // Elements
-  let roomInnerElement = $state<HTMLDivElement>()
-  let textDisplayElement = $state<HTMLDivElement>()
-
-  const text = [
-    "= Rat placed in trip chamber",
-    "= RAT-o-FUN harness secured",
-    "= Intercranial probes attached",
-    "= PETA approved Diaper attached",
-    "= Rat dosed with 44mg of Slopamine",
-    "= Trip initiated....."
-  ]
-
-  // Timer state
-  let timeElapsed = $state(0)
-  let timerInterval: ReturnType<typeof setInterval> | undefined
-  let sound = $state()
-
-  // Animation constants
-  const CHARACTER_DELAY = 0.02
-  const LINE_DELAY = 0.05
-
-  // Create parent timeline
-  const splashScreenTimeline = gsap.timeline({
-    defaults: { duration: 0.75, ease: "power2.out" }
-  })
-
-  // Type hit helper for text array
-  const playTypeHitText = (char: string) => {
-    if (textDisplayElement) {
-      textDisplayElement.textContent += char
-      typeHit()
-    }
-  }
+  const SETUP_DURATION = 5000
 
   onMount(async () => {
-    console.log("play ... SETUP")
-    sound = playUISound("ratfun", "tripSetup")
-    playUISound("ratfun", "tripSetupTrigger")
-    // Start timer
-    timerInterval = setInterval(() => {
-      timeElapsed += 0.1
-    }, 100)
-
-    // Prepare animation
-    if (textDisplayElement) {
-      gsap.set([textDisplayElement], { opacity: 0 })
-      textDisplayElement.textContent = ""
-
-      // Animate text array line by line
-      splashScreenTimeline.set(textDisplayElement!, { opacity: 1 }, "+=0.1")
-
-      text.forEach((line, lineIndex) => {
-        // Add line break if not first line
-        if (lineIndex > 0) {
-          splashScreenTimeline.call(
-            () => {
-              if (textDisplayElement) textDisplayElement.textContent += "\n"
-            },
-            [],
-            "+=0.1"
-          )
-        }
-
-        // Type each character in the line
-        const lineChars = line.split("")
-        for (let i = 0; i < lineChars.length; i++) {
-          splashScreenTimeline.call(playTypeHitText, [lineChars[i]], `+=${CHARACTER_DELAY}`)
-        }
-
-        // Add delay after each line (except the last one)
-        if (lineIndex < text.length - 1) {
-          splashScreenTimeline.to({}, { duration: LINE_DELAY })
-        }
-      })
-    }
-
     setTimeout(() => {
-      // Clear timer
-      if (timerInterval) {
-        clearInterval(timerInterval)
-      }
       onComplete()
-    }, 5000)
-  })
-
-  onDestroy(async () => {
-    const result = await sound
-    if (result) {
-      console.log("trying to stop sound ", result)
-      result.stop()
-    }
+    }, SETUP_DURATION)
   })
 </script>
 
 <div class="splash-screen">
-  <div class="timer">{timeElapsed.toFixed(1)}s</div>
-  <div class="inner" bind:this={roomInnerElement}>
-    <div class="text-display" bind:this={textDisplayElement}></div>
+  <div class="inner">
+    <!-- GROUP 1 -->
+    <div class="box-group-1">
+      <div class="box-group-1-slot-1">
+        <LogoBox />
+      </div>
+      <div class="box-group-1-slot-2">
+        <TextLogBox />
+      </div>
+    </div>
+    <!-- GROUP 2 -->
+    <div class="box-group-2">
+      <VideoFeedBox />
+    </div>
+    <!-- GROUP 3 -->
+    <div class="box-group-3">
+      <div class="box-group-3-slot-1">
+        <TripPromptBox {staticRoomContent} />
+      </div>
+      <div class="box-group-3-slot-2">
+        <BrainScanBox />
+      </div>
+      <div class="box-group-3-slot-3">
+        <DataFeedBox />
+      </div>
+    </div>
   </div>
 </div>
 
@@ -126,30 +72,62 @@
     font-size: var(--font-size-normal);
     background: rgba(0, 0, 0, 0.1);
 
-    .timer {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      font-size: var(--font-size-normal);
-      font-family: monospace;
-      background: var(--color-alert);
-      color: var(--background);
-      padding: 10px 20px;
-      border-radius: 8px;
-      min-width: 120px;
-      text-align: center;
-      z-index: 1000;
-    }
-
     .inner {
       display: flex;
+      flex-wrap: wrap;
       font-size: var(--font-size-normal);
-      .text-display {
-        text-align: left;
-        white-space: pre-line;
-        margin-top: 2rem;
-        line-height: 1.5;
+      width: calc(100% - 30px);
+      height: calc(100% - 40px);
+      border: 5px double #444444;
+
+      .box-group-1 {
+        display: flex;
+        flex-direction: column;
+        width: 50%;
+        height: 50%;
+
+        .box-group-1-slot-1 {
+          width: 100%;
+          height: 100px;
+          border-bottom: 5px double #444444;
+        }
+
+        .box-group-1-slot-2 {
+          width: 100%;
+          height: calc(100% - 100px);
+          border-bottom: 5px double #444444;
+        }
+      }
+
+      .box-group-2 {
+        display: flex;
+        flex-direction: column;
+        width: 50%;
+        height: 50%;
+        border-bottom: 5px double #444444;
+        border-left: 5px double #444444;
+      }
+
+      .box-group-3 {
+        display: flex;
+        flex-direction: row;
         width: 100%;
+        height: 50%;
+
+        .box-group-3-slot-1 {
+          width: 33.33%;
+          height: 100%;
+          border-right: 5px double #444444;
+        }
+        .box-group-3-slot-2 {
+          width: 33.33%;
+          height: 100%;
+          border-right: 5px double #444444;
+        }
+        .box-group-3-slot-3 {
+          width: 33.33%;
+          height: 100%;
+        }
       }
     }
   }

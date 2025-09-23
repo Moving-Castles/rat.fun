@@ -2,7 +2,6 @@
   import type { Hex } from "viem"
   import { WagmiProvider } from "wagmi"
   import { get } from "svelte/store"
-  import { goto } from "$app/navigation"
 
   import { getNetworkConfig } from "$lib/mud/getNetworkConfig"
   import { getEnvironment } from "$lib/modules/network"

@@ -5,7 +5,8 @@
     playerERC20Allowance,
     playerERC20Balance,
     playerIsNew,
-    playerIsBroke
+    playerIsBroke,
+    tokenAllowanceApproved
   } from "$lib/modules/state/stores"
   import { playUISound } from "$lib/modules/sound/state.svelte"
   import {
@@ -94,7 +95,7 @@
       text="Buy 1 $Slopamine for 0.001ETH"
     ></SmallButton>
     <SmallButton
-      disabled={busy.ApproveMax.current !== 0 || $playerERC20Allowance > 0}
+      disabled={busy.ApproveMax.current !== 0 || $tokenAllowanceApproved}
       tippyText="Allow the contract to spend on your behalf"
       onclick={async () => {
         await sendApproveMax()

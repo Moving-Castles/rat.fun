@@ -43,10 +43,16 @@ void main() {
   
   // Sky gradient from light blue to darker blue
   vec3 skyColor = mix(
-    vec3(0.5, 0.8, 1.0),  // Light blue at top
-    vec3(0.2, 0.6, 1.0),  // Darker blue at bottom
+    vec3(1.0, 0.2, 0.5),  // Darker blue at bottom
+    vec3(0.0, 0.0, 0.0),  // Light blue at top
     uv.y
   );
+
+  // vec3 skyColor = mix(
+  //   vec3(0.5, 0.8, 1.0),  // Light blue at top
+  //   vec3(0.2, 0.6, 1.0),  // Darker blue at bottom
+  //   uv.y
+  // );
   
   // Create multiple layers of clouds
   vec2 cloudPos1 = uv * 3.0 + vec2(u_time * 0.2, 0.0);

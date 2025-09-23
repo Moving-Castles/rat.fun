@@ -4,8 +4,8 @@
   let { onShaderChange, onModeChange, onUniformChange } = $props()
 
   // Props
-  let selectedShader = $state("ratfun")
-  let selectedMode = $state("stars") // Default mode for main shader
+  let selectedShader = $state("clouds")
+  let selectedMode = $state("") // Default mode for main shader
 
   // Get shader names and format them for display
   const shaderNames = Object.keys(shaders)

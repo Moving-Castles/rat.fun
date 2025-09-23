@@ -95,7 +95,9 @@
           oninput={typeHit}
           onkeydown={e => e.key === "Enter" && submitForm()}
         />
-        <BigButton text="SIGN" onclick={submitForm} disabled={!name} />
+        <div class="button-container">
+          <BigButton text="SIGN" onclick={submitForm} disabled={!name} />
+        </div>
       </div>
     {/if}
   </div>
@@ -146,6 +148,11 @@
           &::placeholder {
             color: var(--color-grey-dark);
           }
+        }
+
+        .button-container {
+          width: 100%;
+          height: 80px;
         }
       }
     }

@@ -6,9 +6,9 @@
 
   let { onComplete }: { onComplete: () => void } = $props()
 
-  let imageElement: HTMLImageElement | null = $state(null)
-  let buttonElement: HTMLDivElement | null = $state(null)
-  let textElement: HTMLParagraphElement | null = $state(null)
+  let imageElement = $state<HTMLImageElement | null>(null)
+  let buttonElement = $state<HTMLDivElement | null>(null)
+  let textElement = $state<HTMLParagraphElement | null>(null)
   const timeline = gsap.timeline()
 
   onMount(() => {

@@ -35,26 +35,18 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: var(--font-size-normal);
       color: white;
       display: flex;
       flex-direction: column;
-
-      .label {
-        font-size: var(--font-size-small);
-        color: white;
-        width: 100%;
-        border-bottom: var(--default-border-style);
-        height: 2em;
-      }
 
       .value {
         padding: 5px;
         display: flex;
         justify-content: center;
         align-items: center;
-        font-size: var(--font-size-normal);
-        color: white;
+        font-size: 3vw;
+        color: #ffffff;
+        font-weight: 900;
       }
     }
 

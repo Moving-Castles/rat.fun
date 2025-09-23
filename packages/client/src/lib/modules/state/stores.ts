@@ -144,10 +144,16 @@ export const playerIsNew = derived(
   $player => $player?.currentRat === undefined && ($player?.pastRats?.length ?? 0) === 0
 )
 
-// Player has no tokens
+// Player has few tokens
 export const playerIsBroke = derived(
   playerERC20Balance,
-  $playerERC20Balance => $playerERC20Balance === 0
+  $playerERC20Balance => $playerERC20Balance < 100
+)
+
+// export const playerHasNotGivenTokenAllowance
+export const tokenAllowanceApproved = derived(
+  playerERC20Allowance,
+  $playerERC20Allowance => $playerERC20Allowance > 0
 )
 
 // * * * * * * * * * * * * * * * * *
