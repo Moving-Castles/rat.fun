@@ -3,22 +3,10 @@
   import { TopBar } from "$lib/components/Shared"
 
   let { children }: { children: import("svelte").Snippet; environment: ENVIRONMENT } = $props()
-
-  let tilt = $state({
-    x: 0,
-    y: 0
-  })
-  let tiltTransform = $derived(`rotateY(${tilt.x}deg) rotateX(${tilt.y}deg)`)
-
-  const setTilt = e => {
-    tilt.x = (e.clientX / window.innerWidth) * 20
-    tilt.y = (e.clientY / window.innerHeight) * 20
-  }
 </script>
 
-<div style:transform={tiltTransform} class="main-area">
+<div class="main-area">
   <TopBar />
-
   <div class="main-content">
     <div class="main-area-inner">
       {@render children?.()}
@@ -37,7 +25,6 @@
     grid-template-columns: calc(var(--game-window-width) * 0.46) 1fr calc(
         var(--game-window-width) * 0.46
       );
-
     border: var(--default-border-style);
 
     .main-content {

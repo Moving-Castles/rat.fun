@@ -38,8 +38,7 @@
     border-style: outset;
     border-width: 10px;
     border-color: rgba(0, 0, 0, 0.5);
-
-    background: var(--color-death);
+    background: var(--color-alert-priority);
 
     .button-text {
       font-size: var(--font-size-normal);
