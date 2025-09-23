@@ -21,9 +21,9 @@
 </script>
 
 <div class="no-tokens">
-  <div class="image-container">
+  <!-- <div class="image-container">
     <img style:filter src="/images/mascot1.png" alt="Rat" />
-  </div>
+  </div> -->
   <div class="button-container">
     <BigButton text="Get 2000 $Slopamine (free)" disabled={busy} onclick={onClick} />
   </div>

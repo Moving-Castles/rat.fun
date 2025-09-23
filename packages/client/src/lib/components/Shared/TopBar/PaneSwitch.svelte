@@ -11,7 +11,7 @@
     <button
       onclick={() => {
         playUISound("ratfun", "adminExit")
-        shaderManager.setShader("clouds")
+        shaderManager.setShader("clouds", "inverted")
       }}
       class="pane-switch-item"
     >

@@ -16,7 +16,7 @@
   import { RAT_BOX_STATE, ratBoxState, transitionTo, resetRatBoxState } from "./state.svelte"
 
   onMount(() => {
-    shaderManager.setShader("clouds")
+    shaderManager.setShader("clouds", "inverted")
 
     // Set state to RAT_BOX_STATE.INIT
     resetRatBoxState()

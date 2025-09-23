@@ -21,9 +21,9 @@
 </script>
 
 <div class="no-allowance">
-  <div class="image-container">
+  <!-- <div class="image-container">
     <img style:filter src="/images/mascot1.png" alt="Rat" />
-  </div>
+  </div> -->
   <div class="button-container">
     <BigButton text="Approve max allowance" disabled={busy} onclick={onClick} />
   </div>

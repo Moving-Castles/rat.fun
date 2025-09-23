@@ -73,7 +73,7 @@
   })
 
   onMount(() => {
-    shaderManager.setMode("clouds")
+    shaderManager.setMode("clouds", "inverted")
     if (walletType === WALLET_TYPE.BURNER) {
       connectBurner()
     }

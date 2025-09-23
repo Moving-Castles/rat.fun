@@ -5,7 +5,7 @@
 
   // Props
   let selectedShader = $state("clouds")
-  let selectedMode = $state("") // Default mode for main shader
+  let selectedMode = $state("inverted") // Default mode for main shader
 
   // Get shader names and format them for display
   const shaderNames = Object.keys(shaders)
