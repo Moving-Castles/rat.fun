@@ -5,14 +5,11 @@
   import { goto } from "$app/navigation"
   import { playerRooms } from "$lib/modules/state/stores"
   import { entriesChronologically } from "$lib/components/Room/RoomListing/sortFunctions"
-  import { blocksToReadableTime, renderSafeString } from "$lib/modules/utils"
+  import { blocksToReadableTime } from "$lib/modules/utils"
   import { blockNumber } from "$lib/modules/network"
   import { staticContent } from "$lib/modules/content"
-  import { Xed } from "$lib/components/Shared"
 
   let { focus = $bindable() } = $props()
-
-  let sidebar = $state(false)
 
   let sortFunction = $state(entriesChronologically)
 
