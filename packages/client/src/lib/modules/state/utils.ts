@@ -34,6 +34,24 @@ export function filterByPlayer(rooms: Rooms, playerId: Hex): Rooms {
 }
 
 /**
+ * Filters rooms by active status
+ * @param rooms The rooms to filter
+ * @returns The filtered rooms
+ */
+export function filterActive(rooms: Rooms): Rooms {
+  return Object.fromEntries(Object.entries(rooms).filter(([, room]) => !room.liquidated))
+}
+
+/**
+ * Filters rooms by liquidation status
+ * @param rooms The rooms to filter
+ * @returns The filtered rooms
+ */
+export function filterLiquidated(rooms: Rooms): Rooms {
+  return Object.fromEntries(Object.entries(rooms).filter(([, room]) => room.liquidated))
+}
+
+/**
  * Filters rooms by other player
  * @param rooms The rooms to filter
  * @param playerId The player id to filter by

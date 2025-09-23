@@ -9,7 +9,7 @@ import { writable, derived } from "svelte/store"
 import { addressToId } from "$lib/modules/utils"
 import { blockNumber } from "$lib/modules/network"
 import { ENTITY_TYPE } from "contracts/enums"
-import { filterByEntitytype, filterByPlayer, filterByOthers } from "./utils"
+import { filterByEntitytype, filterByPlayer, filterByOthers, filterLiquidated } from "./utils"
 import { staticContent } from "$lib/modules/content"
 import { WORLD_OBJECT_ID } from "./constants"
 

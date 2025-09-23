@@ -216,7 +216,7 @@
                     {#if !point?.meta?.roomValueChange || point?.meta?.roomValueChange === 0}
                       <circle
                         fill={focus === tripId ? "white" : "var(--color-grey-light)"}
-                        r="6"
+                        r="5"
                         cx={xScale(point.time)}
                         cy={yScale(point.value)}
                       ></circle>
@@ -257,7 +257,7 @@
             {#each profitLossOverTime as point (point.time)}
               <circle
                 fill="var(--color-grey-light)"
-                r="3"
+                r="5"
                 cx={xScale(point.time)}
                 cy={yScale(point.value)}
                 data-tippy-content={`Total Profit/Loss: $${point.value.toFixed(2)}`}
@@ -317,7 +317,7 @@
   .switch {
     position: absolute;
     bottom: 0;
-    left: 0;
+    right: 0;
     z-index: 999;
     display: flex;
     gap: 8px;
