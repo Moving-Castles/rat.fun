@@ -76,12 +76,6 @@
           color: var(--foreground);
           font-size: var(--font-size-normal);
         }
-
-        .health {
-          padding-inline: 10px;
-          color: var(--foreground);
-          font-size: var(--font-size-normal);
-        }
       }
     }
     .image-container {

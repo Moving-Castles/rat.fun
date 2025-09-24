@@ -9,6 +9,7 @@ export { default as RatDeadResultSummary } from "./ResultSummary/RatDeadResultSu
 export { default as RoomConfirmLiquidation } from "./RoomConfirmLiquidation/RoomConfirmLiquidation.svelte"
 export { default as RoomEventLog } from "./RoomEventLog/RoomEventLog.svelte"
 export { default as EnterRoomButton } from "./RoomPreview/EnterRoomButton.svelte"
+export { default as NoRatWarning } from "./RoomPreview/NoRatWarning.svelte"
 export { default as RoomFilters } from "./RoomListing/RoomFilters.svelte"
 export { default as RoomGraph } from "./RoomGraph/RoomGraph.svelte"
 export { default as RoomItem } from "./RoomItem/RoomItem.svelte"

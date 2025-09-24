@@ -1,6 +1,6 @@
 <script lang="ts">
   import { CenterBar } from "$lib/components/Shared"
-  import RatContainer from "$lib/components/Rat/RatContainer.svelte"
+  import RatBox from "$lib/components/Rat/RatBox.svelte"
 
   let { children } = $props()
 
@@ -8,7 +8,7 @@
 </script>
 
 <!-- Grid position 1  -->
-<RatContainer />
+<RatBox />
 <!-- Grid position 2 -->
 <CenterBar />
 <!-- Grid position 3 -->

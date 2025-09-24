@@ -2,7 +2,7 @@
   import { rat } from "$lib/modules/state/stores"
   import { ratImageUrl } from "$lib/modules/state/stores"
   import { BigButton } from "$lib/components/Shared"
-  import { transitionTo, RAT_BOX_STATE } from "../RatBox/state.svelte"
+  import { transitionTo, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
 
   const onClick = () => {
     // RAT_BOX_STATE.DEAD_RAT -> RAT_BOX_STATE.NO_RAT

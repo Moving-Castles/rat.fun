@@ -8,8 +8,12 @@
   import { rat, ratTotalValue } from "$lib/modules/state/stores"
   import { busy } from "$lib/modules/action-manager/index.svelte"
 
-  import { NoRatWarning } from "$lib/components/Rat"
-  import { RoomPreviewHeader, RoomPreviewPrompt, EnterRoomButton } from "$lib/components/Room"
+  import {
+    RoomPreviewHeader,
+    RoomPreviewPrompt,
+    EnterRoomButton,
+    NoRatWarning
+  } from "$lib/components/Room"
 
   let {
     roomId,

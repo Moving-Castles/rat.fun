@@ -13,7 +13,12 @@
   } from "$lib/components/Rat"
   import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
 
-  import { RAT_BOX_STATE, ratBoxState, transitionTo, resetRatBoxState } from "./state.svelte"
+  import {
+    RAT_BOX_STATE,
+    ratBoxState,
+    transitionTo,
+    resetRatBoxState
+  } from "$lib/components/Rat/state.svelte"
 
   onMount(() => {
     shaderManager.setShader("clouds", "inverted")
@@ -64,7 +69,7 @@
 <style lang="scss">
   .rat-box {
     display: flex;
-    height: 100%;
+    height: calc(var(--game-window-height) - 60px);
     width: 100%;
     overflow: hidden;
   }

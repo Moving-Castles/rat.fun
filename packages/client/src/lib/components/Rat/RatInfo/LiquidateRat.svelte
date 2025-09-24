@@ -1,7 +1,7 @@
 <script lang="ts">
   import { DangerButton } from "$lib/components/Shared"
   import { ratTotalValue } from "$lib/modules/state/stores"
-  import { transitionTo, RAT_BOX_STATE } from "../RatBox/state.svelte"
+  import { transitionTo, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
 
   const onClick = async () => {
     // RAT_BOX_STATE.HAS_RAT -> RAT_BOX_STATE.CONFIRM_LIQUIDATION

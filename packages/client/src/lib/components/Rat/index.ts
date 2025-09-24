@@ -1,5 +1,4 @@
-export { default as RatContainer } from "./RatContainer.svelte"
-export { default as RatBox } from "./RatBox/RatBox.svelte"
+export { default as RatBox } from "./RatBox.svelte"
 export { default as RatStats } from "./RatInfo/RatStats.svelte"
 export { default as LiquidateRat } from "./RatInfo/LiquidateRat.svelte"
 export { default as RatInventory } from "./RatInfo/RatInventory.svelte"
@@ -10,6 +9,5 @@ export { default as InteractiveItem } from "./InteractiveItem/InteractiveItem.sv
 export { default as LiquidatingRat } from "./LiquidatingRat/LiquidatingRat.svelte"
 export { default as RatDead } from "./RatDead/RatDead.svelte"
 export { default as RatDeploy } from "./RatDeploy/RatDeploy.svelte"
-export { default as NoRatWarning } from "./NoRatWarning/NoRatWarning.svelte"
 export { default as NoTokens } from "./NoTokens/NoTokens.svelte"
 export { default as NoAllowance } from "./NoAllowance/NoAllowance.svelte"

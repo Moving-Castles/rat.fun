@@ -5,7 +5,7 @@
   import { sendLiquidateRat } from "$lib/modules/action-manager/index.svelte"
   import { sendLiquidateRatMessage } from "$lib/modules/off-chain-sync"
   import { VideoLoaderDuration } from "$lib/components/Shared"
-  import { transitionTo, RAT_BOX_STATE } from "../RatBox/state.svelte"
+  import { transitionTo, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
 
   onMount(async () => {
     await sendLiquidateRat()

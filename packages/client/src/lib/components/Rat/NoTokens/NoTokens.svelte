@@ -1,7 +1,7 @@
 <script lang="ts">
   import { tokenAllowanceApproved } from "$lib/modules/state/stores"
   import { BigButton } from "$lib/components/Shared"
-  import { transitionTo, RAT_BOX_STATE } from "../RatBox/state.svelte"
+  import { transitionTo, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
   import { sendGiveCallerTokens } from "$lib/modules/action-manager/index.svelte"
 
   let busy = $state(false)
@@ -16,8 +16,6 @@
       transitionTo(RAT_BOX_STATE.NO_ALLOWANCE)
     }
   }
-
-  let filter = $derived(`grayscale(100%)`)
 </script>
 
 <div class="no-tokens">

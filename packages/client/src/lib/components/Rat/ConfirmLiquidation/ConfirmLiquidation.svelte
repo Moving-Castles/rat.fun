@@ -1,7 +1,7 @@
 <script lang="ts">
   import { rat, ratTotalValue } from "$lib/modules/state/stores"
   import { BigButton, ValueBreakdown } from "$lib/components/Shared"
-  import { transitionTo, RAT_BOX_STATE } from "../RatBox/state.svelte"
+  import { transitionTo, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
 
   const onClickConfirm = () => {
     // RAT_BOX_STATE.CONFIRM_LIQUIDATION -> RAT_BOX_STATE.LIQUIDATING_RAT

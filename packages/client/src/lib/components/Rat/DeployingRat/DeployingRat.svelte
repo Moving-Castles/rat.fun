@@ -6,7 +6,7 @@
   import { generateRatName } from "./ratNameGenerator"
   import { sendDeployRatMessage } from "$lib/modules/off-chain-sync"
   import { VideoLoaderDuration } from "$lib/components/Shared"
-  import { transitionTo, RAT_BOX_STATE } from "../RatBox/state.svelte"
+  import { transitionTo, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
   import { PropertyChangeTimeoutError, RatError } from "$lib/modules/error-handling/errors"
   import { errorHandler } from "$lib/modules/error-handling"
 
