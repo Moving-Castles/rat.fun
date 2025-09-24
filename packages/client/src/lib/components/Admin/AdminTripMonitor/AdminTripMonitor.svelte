@@ -5,6 +5,8 @@
 
   let { focus } = $props()
 
+  let clientHeight = $state(0)
+
   const investment = derived(playerActiveRooms, $playerActiveRooms =>
     Object.values($playerActiveRooms).reduce((a, b) => a + Number(b.roomCreationCost), 0)
   )
@@ -18,8 +20,9 @@
   })
 </script>
 
-<div class="admin-trip-monitor">
+<div bind:clientHeight class="admin-trip-monitor">
   <div class="p-l-overview">
+    <h3>Active Trips</h3>
     <div class="top">
       <p>Unrealized P&L</p>
       {#if $balance && $investment}
@@ -44,20 +47,17 @@
     </div>
   </div>
   <div class="p-l-graph">
-    <MultiTripGraph {focus} trips={$playerActiveRooms} />
+    <MultiTripGraph height={clientHeight} {focus} trips={$playerActiveRooms} />
   </div>
 </div>
 
 <style lang="scss">
   .admin-trip-monitor {
     width: 100%;
-    height: 400px;
+    // height: 400px;
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    padding-top: 2rem;
-    padding-bottom: 2rem;
-    padding-left: 2rem;
 
     .down {
       background: red;
@@ -104,10 +104,12 @@
     }
 
     .p-l-overview {
-      // background: #000;
+      padding-left: 2rem;
+      padding-top: 2rem;
+      padding-bottom: 2rem;
+      padding-right: 1rem;
       min-width: 500px;
       width: 500px;
-      padding-right: 1rem;
       display: grid;
       grid-template-columns: repeat(1fr, 2);
       grid-template-rows: repeat(1fr, 2);

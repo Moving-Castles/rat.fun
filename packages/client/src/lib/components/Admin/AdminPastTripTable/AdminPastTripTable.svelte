@@ -125,7 +125,7 @@
   .admin-trip-table {
     width: 100%;
     background: black;
-    // table-layout: fixed;
+    table-layout: fixed;
     /* justify-content: center; */
     /* align-items: center; */
   }

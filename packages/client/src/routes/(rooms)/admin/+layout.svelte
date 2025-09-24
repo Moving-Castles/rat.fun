@@ -42,10 +42,10 @@
   </div>
 {/snippet}
 
+<SEO prependTitle="ADMIN" />
+
 <div class="span-all">
   <div class="">
-    <SEO prependTitle="ADMIN" />
-
     <div class="">
       <AdminTripMonitor {focus} />
       <div class="create-room-button">
