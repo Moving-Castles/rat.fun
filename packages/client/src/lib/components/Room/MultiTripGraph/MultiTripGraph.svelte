@@ -106,32 +106,43 @@
     // Calculate cumulative profit/loss over time: balance - investment
     const profitLossData = []
 
-    allData.forEach(point => {
-      // Find the current balance for each trip at this point in time
-      const currentBalance = Object.entries(plots).reduce((totalBalance, [tripId, plot]) => {
-        const relevantPoints = plot.data.filter(p => p.time <= point.time)
-        const latestPoint = relevantPoints[relevantPoints.length - 1]
-        return totalBalance + (latestPoint?.value || 0)
-      }, 0)
+    allData.forEach((point, index) => {
+      // Calculate cumulative balance up to this point in time
+      let currentBalance = 0
+      let currentInvestment = 0
 
-      return currentBalance
+      // Go through all data points up to and including the current point
+      for (let i = 0; i <= index; i++) {
+        const dataPoint = allData[i]
 
-      // Current investment at this point in time
-      const currentInvestment = Object.entries(plots).reduce((totalInvestment, [tripId, plot]) => {
-        const hasStarted = plot.data.some(p => p.time <= point.time)
-        if (hasStarted) {
-          const tripData = Object.values(trips).find(t => Object.keys(trips).indexOf(tripId) >= 0)
-          return totalInvestment + Number(tripData?.roomCreationCost || 0)
+        // If this is a room creation (sanityRoomContent), add to investment
+        if (dataPoint.title && !dataPoint.roomId) {
+          // This is room content, find the corresponding trip to get investment cost
+          const tripKey = dataPoint.title
+          const trip = trips[tripKey]
+          if (trip) {
+            currentInvestment += Number(trip.roomCreationCost || 0)
+          }
         }
-        return totalInvestment
-      }, 0)
+
+        // If this is an outcome, it affects the balance
+        if (dataPoint.roomId) {
+          // This is an outcome, use its value for balance calculation
+          currentBalance += Number(dataPoint.value || 0)
+        }
+      }
 
       const profitLoss = currentBalance - currentInvestment
 
       profitLossData.push({
-        time: point.time,
+        time: new Date(point._createdAt).getTime(),
         value: profitLoss,
-        meta: { ...point.meta, balance: currentBalance, investment: currentInvestment }
+        meta: {
+          ...point,
+          balance: currentBalance,
+          investment: currentInvestment,
+          prompt: point.title || point.prompt || 'Event'
+        }
       })
     })
 
