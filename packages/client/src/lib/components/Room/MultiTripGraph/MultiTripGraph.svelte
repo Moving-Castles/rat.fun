@@ -7,143 +7,93 @@
   import { max, min } from "d3-array"
   import { line } from "d3-shape"
   import tippy from "tippy.js"
-  import { onMount } from "svelte"
+  import { onMount, onDestroy } from "svelte"
 
   import "tippy.js/dist/tippy.css" // optional for styling
 
-  let { trips, focus, height = 400 } = $props()
+  let { trips, focus, height = 400 }: { trips: Room[]; focus: string; height: number } = $props()
 
-  // Add reactive timestamp for real-time updates
+  // State
+  let graph = $state<"trips" | "profitloss">("profitloss")
+  let interval = $state<ReturnType<typeof setTimeout>>()
+  let timeWindow = $state<"1m" | "1h" | "1d" | "1w" | "all_time" | "event_based">("event_based")
   let currentTime = $state(Date.now())
 
-  // Layout setup
-  let width = $state(0) // width will be set by the clientWidth
-  let graph = $state<"trips" | "profitloss">("profitloss")
-  let timeWindow = $state<"1m" | "1h" | "1d" | "1w" | "all_time">("all_time")
-
+  // Layout
   const padding = { top: 6, right: 12, bottom: 6, left: 6 }
-
+  let width = $state(0) // width will be set by the clientWidth
   let innerWidth = $derived(width - padding.left - padding.right)
   let innerHeight = $derived(height - padding.top - padding.bottom)
 
-  let xScale = $derived.by(() => {
-    const allPlots = Object.values(plots)
+  let xDomainStart = $derived.by(() => {
+    if (!allData.length) return 0
 
-    if (!allPlots.length || !innerWidth) return scaleTime()
-
-    const allData = allPlots.flatMap(plot => plot.data)
-
-    if (!allData.length) return scaleTime()
-
-    const getRelevantDomainStart = () => {
-      switch (timeWindow) {
-        case "1m":
-          return currentTime - 1000 * 60
-        case "1h":
-          return currentTime - 1000 * 60 * 60
-        case "1d":
-          return currentTime - 1000 * 60 * 60 * 24
-        case "1w":
-          return currentTime - 1000 * 60 * 60 * 24 * 7
-        default:
-          return Number(min(allData, (d: PlotPoint) => d.time))
-      }
+    switch (timeWindow) {
+      case "1m":
+        return new Date(currentTime - 1000 * 60)
+      case "1h":
+        return new Date(currentTime - 1000 * 60 * 60)
+      case "1d":
+        return new Date(currentTime - 1000 * 60 * 60 * 24)
+      case "1w":
+        return new Date(currentTime - 1000 * 60 * 60 * 24 * 7)
+      case "all_time":
+        return new Date(Number(min(allData, (d: PlotPoint) => d.time)))
+      default:
+        return 0
     }
-
-    const domainStart = new Date(getRelevantDomainStart())
-    const domainEnd = new Date(currentTime) // Always go to current time
-
-    return scaleTime().domain([domainStart, domainEnd]).range([0, innerWidth])
   })
+  let xDomainEnd = $derived.by(() => {
+    if (!allData.length) return 0
+
+    return timeWindow === "event_based" ? allData.length : new Date(currentTime)
+  })
+
+  let allData = $derived.by(() => {
+    return Object.keys(trips)
+      .map(key => {
+        const sanityRoomContent = $staticContent?.rooms?.find(r => r.title == key)
+        const outcomes = $staticContent?.outcomes?.filter(o => o.roomId == key) || []
+        return [sanityRoomContent, ...outcomes]
+      })
+      .flat()
+      .sort((a, b) => new Date(a?._createdAt).getTime() - new Date(b?._createdAt).getTime())
+      .map((data, i) => ({
+        ...data,
+        index: i
+      }))
+  })
+  let timestamps = $derived(allData.map(datum => new Date(datum._createdAt).getTime()))
+
+  $inspect(allData)
+  $inspect(timestamps)
+
+  /*             */
+  /*   X SCALE   */
+  /*             */
+  let xScale = $derived.by(() => {
+    console.log("making scales ", xDomainStart, xDomainEnd)
+    return scaleLinear().domain([xDomainStart, xDomainEnd]).range([0, innerWidth])
+  })
+
+  /*           */
+  /*  Y SCALE  */
+  /*           */
   let yScale = $derived.by(() => {
-    const allPlots = Object.values(plots)
-
-    if (!allPlots.length || !innerHeight) return scaleLinear()
-
-    let allData, maxValue, minValue
-
-    if (graph === "profitloss") {
-      allData = [...profitLossOverTime]
-
-      // Include focused trip data if available
-      if (focus && plots[focus]) {
-        const focusedPlot = plots[focus]
-        const initialCost = focusedPlot.data[0]?.value || 0
-        const focusedProfitLoss = focusedPlot.data.map(point => ({
-          time: point.time,
-          value: point.value - initialCost,
-          meta: point.meta
-        }))
-        allData.push(...focusedProfitLoss)
-      }
-
-      maxValue = Number(max(allData, (d: PlotPoint) => +d.value) ?? 0)
-      minValue = Number(min(allData, (d: PlotPoint) => +d.value) ?? 0)
-
-      // Ensure 0 is included and create symmetric range around 0
-      const maxAbsValue = Math.max(Math.abs(maxValue), Math.abs(minValue))
-      maxValue = Math.max(maxAbsValue, 1) // Minimum range of 1
-      minValue = -maxValue // Symmetric range
-    } else {
-      allData = allPlots.flatMap(plot => plot.data)
-      maxValue = Number(max(allData, (d: PlotPoint) => +d.value) ?? 0)
-      minValue = 0
-    }
+    const maxValue = Number(max(allData, (d: PlotPoint) => +d.value) ?? 0)
+    const minValue = 0
 
     return scaleLinear().domain([minValue, maxValue]).range([innerHeight, 0])
   })
 
-  /** All plots for the rooms */
-  let plots: Record<string, { data: PlotPoint[]; line: any }> = $derived.by(() => {
-    const result = Object.fromEntries(
-      Object.entries(trips).map(([tripId, trip]) => {
-        let sanityRoomContent = $staticContent?.rooms?.find(r => r.title == tripId)
-
-        const outcomes = $staticContent?.outcomes?.filter(o => o.roomId == tripId) || []
-
-        // Sort the outcomes in order of creation
-        outcomes.sort((a, b) => {
-          return new Date(b._createdAt).getTime() - new Date(a._createdAt).getTime()
-        })
-        const roomOutcomes = outcomes.reverse()
-        const initialTime = new Date(sanityRoomContent?._createdAt).getTime()
-        const data = [
-          {
-            time: initialTime,
-            roomValue: Number(trip.roomCreationCost),
-            meta: sanityRoomContent
-          },
-          ...roomOutcomes
-        ].map((o, i) => {
-          const time = new Date(o?._createdAt).getTime()
-          return {
-            time: time || o.time,
-            value: o?.roomValue || 0,
-            meta: { ...sanityRoomContent, ...o }
-          }
-        })
-
-        const l = line()
-          .x(d => xScale(d.time))
-          .y(d => yScale(+d.value))
-
-        // Map the values
-        return [
-          tripId,
-          {
-            data,
-            line: l
-          }
-        ]
-      })
-    )
-    return result
-  })
-  let isEmpty = $derived(Object.values(plots).every(plot => plot.length === 0))
+  let isEmpty = $derived(allData.length === 0)
 
   // Calculate total investment and current balance
   let totalInvestment = $derived(
-    Object.values(trips).reduce((sum, trip) => sum + Number(trip.roomCreationCost || 0), 0)
+    Object.values(trips).reduce(
+      (sum: number, trip: Room) => sum + Number(trip.roomCreationCost || 0),
+      0
+    )
   )
 
   let totalBalance = $derived(
@@ -153,22 +103,6 @@
   let currentProfitLoss = $derived(totalBalance - totalInvestment)
 
   let profitLossOverTime = $derived.by(() => {
-    const allPlots = Object.values(plots)
-
-    if (!allPlots.length) return []
-
-    // Combine all data points from all trips and sort by time
-    const allData = allPlots.flatMap((plot, plotIndex) =>
-      plot.data.map(point => ({
-        ...point,
-        tripId: Object.keys(plots)[plotIndex],
-        roomCreationCost: Object.values(trips)[plotIndex]?.roomCreationCost || 0
-      }))
-    )
-
-    // Sort by time
-    allData.sort((a, b) => a.time - b.time)
-
     // Calculate cumulative profit/loss over time: balance - investment
     const profitLossData = []
 
@@ -179,6 +113,8 @@
         const latestPoint = relevantPoints[relevantPoints.length - 1]
         return totalBalance + (latestPoint?.value || 0)
       }, 0)
+
+      return currentBalance
 
       // Current investment at this point in time
       const currentInvestment = Object.entries(plots).reduce((totalInvestment, [tripId, plot]) => {
@@ -233,11 +169,16 @@
 
   // Setup real-time updates
   onMount(() => {
-    const interval = setInterval(() => {
+    interval = setInterval(() => {
       currentTime = Date.now()
     }, 1000)
 
-    return () => clearInterval(interval)
+    tippy("[data-tippy-content]", {
+      allowHTML: true
+    })
+  })
+  onDestroy(() => {
+    clearInterval(interval)
   })
 </script>
 
@@ -257,13 +198,13 @@
     <div class="graph" bind:clientWidth={width}>
       <div class="legend y">
         <!-- <button onclick={() => (graph = "trips")} class:active={graph === "trips"}>Trips </button> -->
-        <button onclick={() => (graph = "profitloss")} class:active={graph === "profitloss"}
+        <!-- <button onclick={() => (graph = "profitloss")} class:active={graph === "profitloss"}
           >Profit/Loss
-        </button>
+        </button> -->
       </div>
       <div class="legend x">
         <!-- Time window options -->
-        <button
+        <!-- <button
           class="time-option"
           onclick={() => (timeWindow = "1m")}
           class:active={timeWindow === "1m"}
@@ -292,55 +233,22 @@
           onclick={() => (timeWindow = "all_time")}
           class:active={timeWindow === "all_time"}
           >All-time
+        </button> -->
+        <button
+          class="time-option"
+          onclick={() => (timeWindow = "event_based")}
+          class:active={timeWindow === "event_based"}
+          >All events
+        </button>
+
+        <button inert class="axis-range">
+          {xDomainStart}-{xDomainEnd}
         </button>
       </div>
-      <svg {width} {height}>
-        {#if graph === "trips"}
-          {#each Object.entries(plots) as [tripId, plot]}
-            {#if plot.data && width}
-              <g transform="translate({padding.left}, {padding.top})">
-                <path
-                  d={plot.line(plot.data)}
-                  stroke={focus === tripId ? "white" : "var(--color-grey-light)"}
-                  stroke-width={2}
-                  stroke-dasharray={4}
-                  fill="none"
-                />
 
-                {#each plot.data as point (point.time)}
-                  <g data-tippy-content={generateTooltipContent(point)}>
-                    {#if !point?.meta?.roomValueChange || point?.meta?.roomValueChange === 0}
-                      <circle
-                        fill={focus === tripId ? "white" : "var(--color-grey-light)"}
-                        r="5"
-                        cx={xScale(point.time)}
-                        cy={yScale(point.value)}
-                      ></circle>
-                    {:else if point?.meta?.roomValueChange > 0}
-                      <polygon
-                        transform="translate({xScale(point.time)}, {yScale(
-                          point.value
-                        )}) scale(2, 3)"
-                        fill="var(--color-value-up)"
-                        points="-5 2.5, 0 -5, 5 2.5"
-                      />
-                    {:else}
-                      <polygon
-                        transform="translate({xScale(point.time)}, {yScale(
-                          point.value
-                        )}) scale(2, 3)"
-                        fill="var(--color-value-down)"
-                        points="-5 -2.5, 0 5, 5 -2.5"
-                      />
-                    {/if}
-                  </g>
-                {/each}
-              </g>
-            {/if}
-          {/each}
-        {:else if graph === "profitloss" && profitLossOverTime.length > 0}
+      <!-- <svg {width} {height}>
+        {#if graph === "profitloss" && profitLossOverTime.length > 0}
           <g transform="translate({padding.left}, {padding.top})">
-            <!-- Zero line for reference -->
             <line
               x1="0"
               y1={yScale(0)}
@@ -351,7 +259,6 @@
               stroke-dasharray="2,2"
             />
 
-            <!-- Cumulative profit/loss line -->
             <path
               d={line()
                 .x(d => xScale(d.time))
@@ -361,7 +268,7 @@
               fill="none"
             />
 
-            {#each profitLossOverTime as point (point.time)}
+            {#each profitLossOverTime as point, i (i)}
               <circle
                 fill="var(--color-grey-light)"
                 r="5"
@@ -370,39 +277,9 @@
                 data-tippy-content={`Total Profit/Loss: $${point.value.toFixed(2)}`}
               ></circle>
             {/each}
-
-            <!-- Focused trip profit/loss line -->
-            {#if focus && plots[focus]}
-              {@const focusedPlot = plots[focus]}
-              {@const initialCost = focusedPlot.data[0]?.value || 0}
-              {@const focusedProfitLoss = focusedPlot.data.map(point => ({
-                time: point.time,
-                value: point.value - initialCost,
-                meta: point.meta
-              }))}
-
-              <path
-                d={line()
-                  .x(d => xScale(d.time))
-                  .y(d => yScale(d.value))(focusedProfitLoss)}
-                stroke="white"
-                stroke-width={3}
-                fill="none"
-              />
-
-              {#each focusedProfitLoss as point (point.time)}
-                <circle
-                  fill={point.value >= 0 ? "var(--color-value-up)" : "var(--color-value-down)"}
-                  r="5"
-                  cx={xScale(point.time)}
-                  cy={yScale(point.value)}
-                  data-tippy-content={`${focus} Profit/Loss: $${point.value.toFixed(2)}`}
-                ></circle>
-              {/each}
-            {/if}
           </g>
         {/if}
-      </svg>
+      </svg> -->
     </div>
   {/if}
 </div>

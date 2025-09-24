@@ -52,7 +52,7 @@
       {result}
       onComplete={async () => {
         transitionTo(TRIP_STATE.RESULTS)
-        await goto(`/${page.data.roomId}/result/${result.outcomeId}?warpspeed`, {
+        await goto(`/${page.data.roomId}/result/${result.outcomeId}`, {
           state: {
             entryState: JSON.parse(stringifyWithBigInt(entryState))
           }

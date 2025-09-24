@@ -2,6 +2,7 @@
   import { derived } from "svelte/store"
   import { playerActiveRooms } from "$lib/modules/state/stores"
   import { MultiTripGraph } from "$lib/components/Room"
+  import { stringifyWithBigInt } from "$lib/modules/state/utils"
 
   let { focus } = $props()
 
@@ -16,7 +17,7 @@
   const profitLoss = derived([balance, investment], ([$b, $i]) => $b - $i)
   const portfolioClass = derived([profitLoss, balance], ([$profitLoss, $balance]) => {
     if ($profitLoss === 0) return "neutral"
-    return $profitLoss < $balance ? "upText" : "downText"
+    return $profitLoss > $balance ? "upText" : "downText"
   })
 </script>
 
