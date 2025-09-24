@@ -33,12 +33,10 @@
       return roomList
     }
   })
-
-  let previewing = $state(false)
 </script>
 
 <div class="content">
-  <div class:previewing class:animated={false} class="room-listing">
+  <div class:animated={false} class="room-listing">
     {#if $playerIsNew}
       <div class="new-player-message">
         <div>Buy your first rat to start tripping.</div>
@@ -118,10 +116,6 @@
     &.animated {
       transition: transform 0.2s ease 0.1s;
     }
-  }
-
-  .previewing {
-    transform: translateX(-100%);
   }
 
   .empty-listing {
