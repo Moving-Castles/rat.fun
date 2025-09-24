@@ -35,6 +35,9 @@
       WALLET_TYPE.BURNER
     )
 
+    console.log("### connectBurner ###")
+    console.log(page.route.id)
+
     // Check if player is already spawned
     if (
       isSpawned ||

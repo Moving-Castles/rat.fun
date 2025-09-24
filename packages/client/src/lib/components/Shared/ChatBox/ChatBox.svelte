@@ -30,6 +30,7 @@
     }, 2000)
   })
 
+  // Scroll down on new messages
   $effect(() => {
     if ($latestEvents && scrollElement) {
       scrollElement.scrollTop = scrollElement?.scrollHeight ?? 0

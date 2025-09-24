@@ -22,6 +22,7 @@
   let totalItems: number | undefined = $state(undefined)
   let receivedTimelines = 0
 
+  // Wait for result, then merge log events with corresponding outcomes
   $effect(() => {
     if (result && !mergedLog) {
       mergedLog = mergeLog(result)
@@ -58,7 +59,7 @@
   }
 </script>
 
-<div transition:fade|global class="log" bind:this={logElement}>
+<div class="log" bind:this={logElement}>
   {#if mergedLog && mergedLog.length > 0}
     {#each mergedLog as logEntry, i (i)}
       <LogItem {logEntry} onTimeline={addToTimeline} delay={0} />

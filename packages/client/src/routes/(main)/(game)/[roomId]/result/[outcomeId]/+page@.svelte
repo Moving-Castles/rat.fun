@@ -21,7 +21,7 @@
       : data?.entryState || {}
   )
   let result = $derived(entryState?.result)
-  let { transitionTo, transitionToResultSummary } = $derived(createTripTransitions(entryState))
+  let { transitionToResultSummary } = $derived(createTripTransitions(entryState))
 
   onMount(() => {
     if (page.state?.entryState) {

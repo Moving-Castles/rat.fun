@@ -79,7 +79,7 @@
       <div>Issuing member card</div>
       <SmallSpinner />
     {:else}
-      <img class="image" src="/images/mascot2.png" alt="RAT.FUN" bind:this={imageElement} />
+      <!-- <img class="image" src="/images/mascot2.png" alt="RAT.FUN" bind:this={imageElement} /> -->
       <!-- INTRO TEXT -->
       <div class="text" bind:this={textElement}>
         <p>{$player?.name}ID checks out. You can enter. But we need your name to proceed.</p>

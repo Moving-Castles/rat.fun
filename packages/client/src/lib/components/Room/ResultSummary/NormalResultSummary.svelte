@@ -1,12 +1,11 @@
 <script lang="ts">
-  import { fade } from "svelte/transition"
   import { frozenRat } from "$lib/components/Room/Trip/state.svelte"
   import { goto } from "$app/navigation"
 
   import { BigButton } from "$lib/components/Shared"
 </script>
 
-<div transition:fade|global class="summary">
+<div class="summary">
   <div class="event">
     <h1>
       {$frozenRat?.name} SURVIVED

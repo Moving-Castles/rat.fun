@@ -83,6 +83,7 @@
     ]
   })
 
+  // ???
   $effect(() => {
     if (plotData && width && xScale && yScale && lineGenerator) {
       setTimeout(() => {

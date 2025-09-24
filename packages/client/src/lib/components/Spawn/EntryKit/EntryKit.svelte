@@ -39,6 +39,7 @@
     }
   }
 
+  // ???
   $effect(() => {
     const root = createRoot(rootEl)
     const config = wagmiConfig()

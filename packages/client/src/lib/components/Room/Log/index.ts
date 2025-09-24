@@ -10,8 +10,6 @@ export function mergeLog(result: EnterRoomReturnValue): MergedLogEntry[] {
 
   for (let i = 0; i < mergedLog.length; i++) {
     // Balance transfers
-
-    // Balance transfers
     const balanceTransfersOnLogStep = result.balanceTransfers.filter(
       bT => bT.logStep === i && bT.amount !== 0
     )

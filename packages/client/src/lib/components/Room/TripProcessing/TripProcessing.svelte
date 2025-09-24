@@ -5,12 +5,17 @@
 
   const { onComplete, result }: { onComplete: () => void; result: null | any } = $props()
 
+  const MINIMUM_DURATION = 8000
+
   let sound = $state()
+
   // Timer state
   let timeElapsed = $state(0)
   let timerInterval: ReturnType<typeof setInterval> | undefined
   let timerDone = $state(false)
 
+  // Wait until timer is done AND result is available
+  // We do this so that the visualized will run at least MINIMUM_DURATION
   $effect(() => {
     if (timerDone && result) onComplete()
   })
@@ -28,7 +33,7 @@
         clearInterval(timerInterval)
       }
       timerDone = true
-    }, 8000)
+    }, MINIMUM_DURATION)
   })
 
   onDestroy(async () => {

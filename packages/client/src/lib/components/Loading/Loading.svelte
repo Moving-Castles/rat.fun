@@ -14,6 +14,7 @@
 
   let innerElement: HTMLDivElement
 
+  // Wait for chain sync to complete
   $effect(() => {
     if ($ready) {
       // Done here because currently we are not filtering on by playerAddress

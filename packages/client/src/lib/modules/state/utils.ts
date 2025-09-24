@@ -30,7 +30,7 @@ export function filterByEntitytype(entities: Entities, entityType: ENTITY_TYPE):
  * @returns The filtered rooms
  */
 export function filterByPlayer(rooms: Rooms, playerId: Hex): Rooms {
-  return Object.fromEntries(Object.entries(main).filter(([, room]) => room.owner === playerId))
+  return Object.fromEntries(Object.entries(rooms).filter(([, room]) => room.owner === playerId))
 }
 
 /**
@@ -39,7 +39,7 @@ export function filterByPlayer(rooms: Rooms, playerId: Hex): Rooms {
  * @returns The filtered rooms
  */
 export function filterActive(rooms: Rooms): Rooms {
-  return Object.fromEntries(Object.entries(main).filter(([, room]) => !room.liquidated))
+  return Object.fromEntries(Object.entries(rooms).filter(([, room]) => !room.liquidated))
 }
 
 /**
@@ -48,7 +48,7 @@ export function filterActive(rooms: Rooms): Rooms {
  * @returns The filtered rooms
  */
 export function filterLiquidated(rooms: Rooms): Rooms {
-  return Object.fromEntries(Object.entries(main).filter(([, room]) => room.liquidated))
+  return Object.fromEntries(Object.entries(rooms).filter(([, room]) => room.liquidated))
 }
 
 /**
@@ -58,7 +58,7 @@ export function filterLiquidated(rooms: Rooms): Rooms {
  * @returns The filtered rooms
  */
 export function filterByOthers(rooms: Rooms, playerId: Hex): Rooms {
-  return Object.fromEntries(Object.entries(main).filter(([, room]) => room.owner !== playerId))
+  return Object.fromEntries(Object.entries(rooms).filter(([, room]) => room.owner !== playerId))
 }
 
 /**

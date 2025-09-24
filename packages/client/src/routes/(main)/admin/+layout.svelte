@@ -3,9 +3,6 @@
   import { fly } from "svelte/transition"
   import { page } from "$app/state"
   import { player } from "$lib/modules/state/stores"
-  import { blockNumber } from "$lib/modules/network"
-  import { PageTransitions } from "$lib/components/Shared"
-  import { gameLayoutTransitionConfig } from "$lib/components/Shared/PageTransitions/transitionConfigs"
   import SEO from "$lib/components/Shared/SEO/SEO.svelte"
   import {
     AdminTripMonitor,
@@ -23,6 +20,9 @@
 
   let focus = $state("")
 
+  console.log("### routes/(main)/admin/+layout.svelte ###")
+
+  // Redirect to game route if player is not authorized to view admin page
   $effect(() => {
     if ($player) {
       if (!$player.masterKey) {

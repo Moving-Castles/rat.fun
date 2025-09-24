@@ -10,6 +10,8 @@
   let prompt = $derived($rooms?.[page.params.roomId as Hex]?.prompt || "")
   let truncatedTitle = $derived(prompt?.length > 32 ? `${prompt?.slice(0, 32)}...` : prompt)
   let room = $derived($rooms?.[page.params.roomId as Hex])
+
+  console.log("### routes/(main)/admin/[roomId]/+page.svelte ###")
 </script>
 
 <SEO prependTitle={truncatedTitle} />

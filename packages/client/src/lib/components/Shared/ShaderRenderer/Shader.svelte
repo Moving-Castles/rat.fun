@@ -23,10 +23,10 @@
     }
   }
 
+  // ???
   $effect(() => {
     if (shaderManager) {
       uniformValues
-
       shaderManager.updateUniforms()
     }
   })

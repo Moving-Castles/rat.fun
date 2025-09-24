@@ -12,9 +12,9 @@
   } from "$lib/modules/sound/state.svelte"
   import { initializeSentry } from "$lib/modules/error-handling"
   import { browser } from "$app/environment"
-  import { afterNavigate } from "$app/navigation"
+  import { afterNavigate, goto } from "$app/navigation"
+  import { page } from "$app/state"
   import { onMount } from "svelte"
-  import { goto } from "$app/navigation"
   import { initStaticContent, staticContent } from "$lib/modules/content"
   import { publicNetwork } from "$lib/modules/network"
   import { UIState, notificationsRead } from "$lib/modules/ui/state.svelte"
@@ -26,7 +26,6 @@
   import { errorHandler } from "$lib/modules/error-handling"
   import { removeHash } from "$lib/modules/utils"
   import { walletType as walletTypeStore } from "$lib/modules/network"
-  import { page } from "$app/state"
 
   // Components
   import Spawn from "$lib/components/Spawn/Spawn.svelte"
