@@ -38,7 +38,6 @@
   }
 
   onMount(async () => {
-    console.log("### Loading.svelte ###")
     // This sets up the public network and listens to the SyncProgress component
     // When sync is complete, the ready store is set to true
     // We listen to for this in the $effect above

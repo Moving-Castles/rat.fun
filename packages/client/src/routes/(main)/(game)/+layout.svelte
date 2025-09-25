@@ -3,8 +3,6 @@
   import RatBox from "$lib/components/Rat/RatBox.svelte"
 
   let { children } = $props()
-
-  console.log("### routes/(main)/(game)/+layout.svelte ###")
 </script>
 
 <!-- Grid position 1  -->

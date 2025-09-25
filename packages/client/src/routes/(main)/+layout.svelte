@@ -7,8 +7,6 @@
   let { children, data }: LayoutProps = $props()
 
   const { environment } = data
-
-  console.log("### routes/(main)/+layout.svelte ###")
 </script>
 
 <MainLayout {environment}>

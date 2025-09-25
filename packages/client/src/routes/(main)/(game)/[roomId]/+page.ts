@@ -5,7 +5,6 @@ import { redirect } from "@sveltejs/kit"
 import { errorHandler, CMSError } from "$lib/modules/error-handling"
 
 export const load: PageLoad = async ({ params }) => {
-  console.log("### routes/(main)/(game)/[roomId]/+page.ts ###")
   try {
     const roomContent = await loadData(queries.singleRoom, { id: params.roomId })
 

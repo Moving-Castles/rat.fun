@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { player } from "$lib/modules/state/stores"
-  import { BigButton } from "$lib/components/Shared"
-  import gsap from "gsap"
   import { onMount } from "svelte"
+  import { player } from "$lib/modules/state/stores"
+  import gsap from "gsap"
+  import { BigButton } from "$lib/components/Shared"
 
   let { onComplete }: { onComplete: () => void } = $props()
 

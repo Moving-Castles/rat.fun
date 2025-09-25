@@ -74,10 +74,10 @@
     }
   })
 
-  console.log("### Spawn.svelte ###")
-
   onMount(() => {
     shaderManager.setShader("clouds", "inverted")
+
+    // ???
     if (walletType === WALLET_TYPE.BURNER) {
       connectBurner()
     }

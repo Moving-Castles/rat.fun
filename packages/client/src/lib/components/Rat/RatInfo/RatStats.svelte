@@ -1,5 +1,6 @@
 <script lang="ts">
   import { rat, ratImageUrl } from "$lib/modules/state/stores"
+  import { transitionTo, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
   import HealthBar from "./HealthBar.svelte"
 </script>
 
@@ -23,7 +24,13 @@
       </div>
 
       <!-- TRIP COUNT -->
-      <div class="info-item">
+      <!-- svelte-ignore a11y_click_events_have_key_events -->
+      <div
+        class="info-item"
+        role="button"
+        tabindex="0"
+        onclick={() => transitionTo(RAT_BOX_STATE.PAST_TRIP_LIST)}
+      >
         <span class="trip-count">Trip Count: {$rat.tripCount ?? 0}</span>
       </div>
     </div>
@@ -75,6 +82,7 @@
           padding-inline: 10px;
           color: var(--foreground);
           font-size: var(--font-size-normal);
+          cursor: pointer;
         }
       }
     }

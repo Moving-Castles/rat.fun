@@ -2,9 +2,9 @@
   import { WALLET_TYPE } from "$lib/mud/enums"
   import { onMount } from "svelte"
   import gsap from "gsap"
+  import { entryKitButton } from "$lib/modules/entry-kit/stores"
 
   import BigButton from "$lib/components/Shared/Buttons/BigButton.svelte"
-  import { entryKitButton } from "$lib/modules/entry-kit/stores"
 
   const { walletType, onComplete = () => {} } = $props<{
     walletType: WALLET_TYPE

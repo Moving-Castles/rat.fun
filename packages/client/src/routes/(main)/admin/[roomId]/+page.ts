@@ -4,8 +4,6 @@ import { queries } from "$lib/modules/content/sanity/groq"
 import { errorHandler, CMSError } from "$lib/modules/error-handling"
 
 export const load: PageLoad = async ({ params }) => {
-  console.log("### routes/(main)/admin/[roomId]/+page.ts ###")
-
   try {
     const roomContent = await loadData(queries.singleRoom, { id: params.roomId })
 

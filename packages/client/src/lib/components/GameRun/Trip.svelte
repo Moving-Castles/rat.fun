@@ -1,20 +1,23 @@
 <script lang="ts">
   import type { Hex } from "viem"
   import type { EnterRoomReturnValue } from "@server/modules/types"
-
   import { onMount } from "svelte"
-  import { TRIP_STATE } from "$lib/components/GameRun/state.svelte"
   import { staticContent } from "$lib/modules/content"
-  import { roomResultState } from "$lib/components/GameRun/state.svelte"
-  import { transitionTo } from "$lib/components/GameRun/state.svelte"
+  import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
   import { sendEnterRoom } from "$lib/modules/action-manager/actions/sendEnterRoom"
   import { NetworkError, APIError } from "$lib/modules/error-handling/errors"
   import { RoomError } from "$lib/modules/error-handling/errors"
   import { player } from "$lib/modules/state/stores"
-  import { TripSetup, TripProcessing, TripReport } from "$lib/components/GameRun"
   import { replaceState } from "$app/navigation"
-  import { freezeObjects } from "$lib/components/GameRun/state.svelte"
+  import {
+    TRIP_STATE,
+    transitionTo,
+    freezeObjects,
+    roomResultState,
+    resetTripState
+  } from "$lib/components/GameRun/state.svelte"
   import { rat, rooms } from "$lib/modules/state/stores"
+  import { TripSetup, TripProcessing, TripReport } from "$lib/components/GameRun"
 
   let {
     roomId
@@ -52,15 +55,13 @@
   }
 
   onMount(() => {
-    console.log("### onMount ###")
-    console.log("### roomResultState ###", roomResultState)
+    shaderManager.setShader("blank")
+    resetTripState()
+
     // Clean the URL
     replaceState(`/${roomId}/tripping`, {})
 
-    console.log("### roomId ###", roomId)
-
     const room = $rooms[roomId]
-    console.log("### room ###", room)
 
     // Freeze the rat and room to be able to gradually update their values without reactivity
     // from on-chain changes.

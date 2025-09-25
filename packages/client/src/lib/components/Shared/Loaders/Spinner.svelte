@@ -1,7 +1,7 @@
 <script lang="ts">
+  import { onDestroy, onMount } from "svelte"
   import { playUISound } from "$lib/modules/sound/state.svelte"
   import { getRandomUint32 } from "$lib/modules/utils"
-  import { onDestroy, onMount } from "svelte"
 
   let spinner: number = getRandomUint32()
   let timer: number

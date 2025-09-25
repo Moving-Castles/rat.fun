@@ -3,8 +3,6 @@
   import { TopBar } from "$lib/components/Shared"
 
   let { children }: { children: import("svelte").Snippet; environment: ENVIRONMENT } = $props()
-
-  console.log("### MainLayout.svelte ###")
 </script>
 
 <div class="main-area">

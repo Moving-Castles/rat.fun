@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte"
   import { rat, playerIsBroke, tokenAllowanceApproved } from "$lib/modules/state/stores"
+  import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
   import {
     RatInfo,
     RatDeploy,
@@ -9,10 +10,10 @@
     LiquidatingRat,
     RatDead,
     NoTokens,
-    NoAllowance
+    NoAllowance,
+    PastTripList,
+    PastTripEntry
   } from "$lib/components/Rat"
-  import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
-
   import {
     RAT_BOX_STATE,
     ratBoxState,
@@ -61,6 +62,10 @@
     <NoTokens />
   {:else if ratBoxState.state === RAT_BOX_STATE.NO_ALLOWANCE}
     <NoAllowance />
+  {:else if ratBoxState.state === RAT_BOX_STATE.PAST_TRIP_LIST}
+    <PastTripList />
+  {:else if ratBoxState.state === RAT_BOX_STATE.PAST_TRIP_ENTRY}
+    <PastTripEntry />
   {:else if ratBoxState.state === RAT_BOX_STATE.ERROR}
     error
   {/if}

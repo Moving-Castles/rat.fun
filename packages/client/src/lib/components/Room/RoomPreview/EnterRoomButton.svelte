@@ -3,12 +3,10 @@
   import { player, ratTotalValue } from "$lib/modules/state/stores"
   import { goto } from "$app/navigation"
   import { BigButton } from "$lib/components/Shared"
-  import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
 
   let { roomId, room, disabled }: { roomId: Hex; room: Room; disabled: boolean } = $props()
 
   const onClick = async () => {
-    shaderManager.setShader("blank")
     await goto(`/${roomId}/tripping?enter=true&rat=${$player.currentRat}&t=${Date.now()}`)
   }
 </script>

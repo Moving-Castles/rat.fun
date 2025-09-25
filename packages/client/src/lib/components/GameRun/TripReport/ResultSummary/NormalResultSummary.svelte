@@ -1,7 +1,6 @@
 <script lang="ts">
   import { frozenRat } from "$lib/components/GameRun/state.svelte"
   import { goto } from "$app/navigation"
-
   import { BigButton } from "$lib/components/Shared"
 </script>
 

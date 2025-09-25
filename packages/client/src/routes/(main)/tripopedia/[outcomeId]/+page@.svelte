@@ -5,10 +5,6 @@
 
   let { data }: { data: { room: RoomSanityDoc; result: OutcomeSanityDoc } } = $props()
   let { room, result } = data
-
-  console.log("### routes/(main)/tripopedia/[outcomeId]/+page@.svelte ###")
-  console.log("### room ###", room)
-  console.log("### result ###", result)
 </script>
 
 <TripopediaEntry {room} {result} />

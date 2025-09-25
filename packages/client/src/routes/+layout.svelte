@@ -44,8 +44,6 @@
 
   walletTypeStore.set(walletType)
 
-  console.log("### routes/+layout.svelte ###")
-
   // Called when loading is complete
   const loaded = async () => {
     try {
