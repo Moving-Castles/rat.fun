@@ -7,8 +7,6 @@
   let { data } = $props()
 
   let room = $derived($rooms[data.roomId])
-
-  console.log("### routes/(main)/(game)/[roomId]/+page.svelte ###")
 </script>
 
 <RoomSEO room={data.roomContent} />

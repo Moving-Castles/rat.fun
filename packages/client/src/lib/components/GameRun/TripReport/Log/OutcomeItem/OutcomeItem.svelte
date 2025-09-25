@@ -3,9 +3,6 @@
 </script>
 
 <div class="outcome {type}" class:negative>
-  {#if type === "balance"}
-    <span class="title">Balance</span>
-  {/if}
   <span class="value">{value}</span>
 </div>
 

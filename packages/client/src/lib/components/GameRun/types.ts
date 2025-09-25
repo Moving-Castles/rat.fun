@@ -27,14 +27,3 @@ export type OutcomeDataStringMap = {
   name?: string
   id?: string
 }
-
-// export type RoomEntryState = {
-//   state: TRIP_STATE
-//   valid: boolean
-//   processing: boolean
-//   result: EnterRoomReturnValue | null
-//   error: boolean
-//   errorMessage?: string
-//   frozenRat: FrozenRat | null
-//   frozenRoom: FrozenRoom | null
-// }

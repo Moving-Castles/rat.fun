@@ -17,7 +17,6 @@
 
 import { writable } from "svelte/store"
 import type { FrozenRat, FrozenRoom, OutcomeDataStringMap } from "./types"
-import type { EnterRoomReturnValue } from "@server/modules/types"
 import type { Hex } from "viem"
 import { addressToRatImage } from "$lib/modules/utils"
 import { errorHandler, InvalidStateTransitionError } from "$lib/modules/error-handling"
@@ -40,9 +39,17 @@ export enum TRIP_STATE {
   SETUP = "SETUP",
   PROCESSING = "PROCESSING",
   RESULTS = "RESULTS",
-  SUMMARY = "SUMMARY",
-  SUMMARY_RAT_DEAD = "SUMMARY_RAT_DEAD",
   ERROR = "ERROR"
+}
+
+/**
+ * The result summary state
+ * Used by the TripReport component to determine which result summary to show
+ */
+export enum RESULT_SUMMARY {
+  UNKNOWN = "UNKNOWN",
+  NORMAL = "NORMAL",
+  RAT_DEAD = "RAT_DEAD"
 }
 
 /** Current state of the room result flow */
@@ -58,28 +65,8 @@ export const roomResultState: { state: TRIP_STATE; errorMessage: string | null }
 const VALID_TRANSITIONS: Record<TRIP_STATE, TRIP_STATE[]> = {
   [TRIP_STATE.SETUP]: [TRIP_STATE.PROCESSING, TRIP_STATE.ERROR],
   [TRIP_STATE.PROCESSING]: [TRIP_STATE.RESULTS, TRIP_STATE.ERROR],
-  [TRIP_STATE.RESULTS]: [TRIP_STATE.SUMMARY, TRIP_STATE.SUMMARY_RAT_DEAD, TRIP_STATE.ERROR],
-  [TRIP_STATE.SUMMARY]: [TRIP_STATE.ERROR],
-  [TRIP_STATE.SUMMARY_RAT_DEAD]: [TRIP_STATE.ERROR],
+  [TRIP_STATE.RESULTS]: [TRIP_STATE.ERROR],
   [TRIP_STATE.ERROR]: []
-}
-
-/** States where info boxes should be shown (all except splash screen and error) */
-export const SHOW_INFO_BOXES = [TRIP_STATE.RESULTS, TRIP_STATE.SUMMARY, TRIP_STATE.SUMMARY_RAT_DEAD]
-
-/** States where the log should be shown */
-export const SHOW_LOG = [TRIP_STATE.RESULTS, TRIP_STATE.SUMMARY, TRIP_STATE.SUMMARY_RAT_DEAD]
-
-/**
- * Transitions to the appropriate result summary state based on the room result
- * @param result The result returned from entering a room
- */
-export const transitionToResultSummary = (result?: EnterRoomReturnValue) => {
-  if (result) {
-    transitionTo(determineResultSummaryState(result))
-  } else {
-    transitionTo(TRIP_STATE.SUMMARY)
-  }
 }
 
 /**
@@ -99,18 +86,6 @@ export const transitionTo = (newState: TRIP_STATE) => {
     return
   }
   roomResultState.state = newState
-}
-
-/**
- * Determines which result summary state to transition to based on the room result
- * @param result The result returned from entering a room
- * @returns The appropriate result summary state
- */
-const determineResultSummaryState = (result: EnterRoomReturnValue): TRIP_STATE => {
-  if (result?.ratDead) {
-    return TRIP_STATE.SUMMARY_RAT_DEAD
-  }
-  return TRIP_STATE.SUMMARY
 }
 
 /** Resets the room result state back to the initial splash screen */

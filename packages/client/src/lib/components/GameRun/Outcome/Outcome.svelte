@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Outcome } from "@sanity-types"
   import { addressToRatImage } from "$lib/modules/utils"
-  import OutcomeItem from "$lib/components/GameRun/Log/OutcomeItem/OutcomeItem.svelte"
+  import OutcomeItem from "$lib/components/GameRun/TripReport/Log/OutcomeItem/OutcomeItem.svelte"
   import { timeSince } from "$lib/modules/utils"
 
   let { outcome }: { outcome: Outcome } = $props()
