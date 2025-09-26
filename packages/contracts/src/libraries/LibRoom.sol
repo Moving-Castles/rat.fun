@@ -6,10 +6,10 @@ import {
   Prompt,
   Owner,
   Index,
+  GamePercentagesConfig,
   WorldStats,
   Balance,
   RoomCreationCost,
-  MaxValuePerWin,
   MinRatValueToEnter,
   VisitCount,
   CreationBlock
@@ -28,7 +28,6 @@ library LibRoom {
     bytes32 _roomOwner,
     bytes32 _roomId,
     uint256 _roomCreationCost,
-    uint256 _maxValuePerWin,
     uint256 _minRatValueToEnter,
     string memory _prompt
   ) internal returns (bytes32 newRoomId) {
@@ -49,12 +48,15 @@ library LibRoom {
     Index.set(newRoomId, newRoomIndex);
     CreationBlock.set(newRoomId, block.number);
 
-    MaxValuePerWin.set(newRoomId, _maxValuePerWin);
     MinRatValueToEnter.set(newRoomId, _minRatValueToEnter);
 
     VisitCount.set(newRoomId, 0);
 
     Balance.set(newRoomId, _roomCreationCost);
     RoomCreationCost.set(newRoomId, _roomCreationCost);
+  }
+
+  function getMaxValuePerWin(bytes32 _roomId) internal view returns (uint256) {
+    return (GamePercentagesConfig.getMaxValuePerWin() * RoomCreationCost.get(_roomId)) / 100;
   }
 }

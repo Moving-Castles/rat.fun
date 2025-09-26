@@ -29,6 +29,15 @@ export default defineWorld({
         dataStruct: true
       }
     },
+    GamePercentagesConfig: {
+      key: [],
+      schema: {
+        maxValuePerWin: "uint32" // Limits how much a rat can extract from room in one run
+      },
+      codegen: {
+        dataStruct: true
+      }
+    },
     WorldStats: {
       key: [],
       schema: {
@@ -89,7 +98,6 @@ export default defineWorld({
     Prompt: "string",
     // = = = = = = = = = =
     RoomCreationCost: "uint256", // Initial balance of room.
-    MaxValuePerWin: "uint256", // Limits how much a rat can extract from room in one run.
     MinRatValueToEnter: "uint256" // Minimum total value of rat to enter room.
   },
   systems: {

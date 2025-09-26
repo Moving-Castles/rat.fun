@@ -3,6 +3,7 @@ pragma solidity >=0.8.24;
 import { System } from "@latticexyz/world/src/System.sol";
 import {
   GameConfig,
+  GamePercentagesConfig,
   EntityType,
   Balance,
   Dead,
@@ -12,10 +13,9 @@ import {
   LastVisitBlock,
   RoomCreationCost,
   MasterKey,
-  MaxValuePerWin,
   MinRatValueToEnter
 } from "../codegen/index.sol";
-import { LibManager, LibRat } from "../libraries/Libraries.sol";
+import { LibManager, LibRat, LibRoom } from "../libraries/Libraries.sol";
 import { ENTITY_TYPE } from "../codegen/common.sol";
 import { Item } from "../structs.sol";
 import { LibUtils } from "../libraries/LibUtils.sol";
@@ -69,7 +69,7 @@ contract ManagerSystem is System {
     // BUDGETING
     // * * * * * * * * * * * * *
 
-    uint256 roomBudget = LibUtils.min(MaxValuePerWin.get(_roomId), roomBalance);
+    uint256 roomBudget = LibUtils.min(LibRoom.getMaxValuePerWin(_roomId), roomBalance);
 
     // * * * * * * * * * * * * *
     // BALANCE

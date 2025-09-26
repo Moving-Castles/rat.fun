@@ -1,5 +1,6 @@
 <script lang="ts">
   import { gameConfig, playerERC20Balance } from "$lib/modules/state/stores"
+  import { getRoomMaxValuePerWin } from "$lib/modules/state/utils"
   import { CharacterCounter, BigButton } from "$lib/components/Shared"
   import { sendCreateRoom } from "$lib/modules/action-manager/index.svelte"
   import { typeHit } from "$lib/modules/sound/state.svelte"
@@ -9,8 +10,7 @@
   import { playUISound, getMixerState } from "$lib/modules/sound/state.svelte"
   import {
     MIN_ROOM_CREATION_COST,
-    MIN_RAT_VALUE_TO_ENTER_FACTOR,
-    MAX_VALUE_PER_WIN_FACTOR
+    MIN_RAT_VALUE_TO_ENTER_FACTOR
   } from "@server/config"
   import { collapsed } from "$lib/modules/ui/state.svelte"
 
@@ -35,8 +35,8 @@
   let minRatValueToEnter = $derived(
     Math.floor(flooredRoomCreationCost * MIN_RAT_VALUE_TO_ENTER_FACTOR)
   )
-  // 25% of room creation cost
-  let maxValuePerWin = $derived(Math.floor(flooredRoomCreationCost * MAX_VALUE_PER_WIN_FACTOR))
+  // Portion of room creation cost
+  let maxValuePerWin = $derived(getRoomMaxValuePerWin(flooredRoomCreationCost))
 
   // Disabled if:
   // - Room description is invalid
@@ -165,7 +165,7 @@
         </div>
         <div class="value-box">
           <div class="value-label">MAX VALUE PER WIN</div>
-          <div class="value-amount">${maxValuePerWin}</div>
+          <div class="value-amount">${$maxValuePerWin}</div>
         </div>
       </div>
     </div>

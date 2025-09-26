@@ -42,7 +42,6 @@ library RoomSystemLib {
     bytes32 _playerId,
     bytes32 _roomId,
     uint256 _roomCreationCost,
-    uint256 _maxValuePerWin,
     uint256 _minRatValueToEnter,
     string memory _prompt
   ) internal returns (bytes32 newRoomId) {
@@ -51,7 +50,6 @@ library RoomSystemLib {
         _playerId,
         _roomId,
         _roomCreationCost,
-        _maxValuePerWin,
         _minRatValueToEnter,
         _prompt
       );
@@ -66,7 +64,6 @@ library RoomSystemLib {
     bytes32 _playerId,
     bytes32 _roomId,
     uint256 _roomCreationCost,
-    uint256 _maxValuePerWin,
     uint256 _minRatValueToEnter,
     string memory _prompt
   ) internal returns (bytes32 newRoomId) {
@@ -74,8 +71,8 @@ library RoomSystemLib {
     if (address(_world()) == address(this)) revert RoomSystemLib_CallingFromRootSystem();
 
     bytes memory systemCall = abi.encodeCall(
-      _createRoom_bytes32_bytes32_uint256_uint256_uint256_string.createRoom,
-      (_playerId, _roomId, _roomCreationCost, _maxValuePerWin, _minRatValueToEnter, _prompt)
+      _createRoom_bytes32_bytes32_uint256_uint256_string.createRoom,
+      (_playerId, _roomId, _roomCreationCost, _minRatValueToEnter, _prompt)
     );
 
     bytes memory result = self.from == address(0)
@@ -102,13 +99,12 @@ library RoomSystemLib {
     bytes32 _playerId,
     bytes32 _roomId,
     uint256 _roomCreationCost,
-    uint256 _maxValuePerWin,
     uint256 _minRatValueToEnter,
     string memory _prompt
   ) internal returns (bytes32 newRoomId) {
     bytes memory systemCall = abi.encodeCall(
-      _createRoom_bytes32_bytes32_uint256_uint256_uint256_string.createRoom,
-      (_playerId, _roomId, _roomCreationCost, _maxValuePerWin, _minRatValueToEnter, _prompt)
+      _createRoom_bytes32_bytes32_uint256_uint256_string.createRoom,
+      (_playerId, _roomId, _roomCreationCost, _minRatValueToEnter, _prompt)
     );
 
     bytes memory result = SystemCall.callWithHooksOrRevert(self.from, self.systemId, systemCall, msg.value);
@@ -161,12 +157,11 @@ library RoomSystemLib {
  * Each interface is uniquely named based on the function name and parameters to prevent collisions.
  */
 
-interface _createRoom_bytes32_bytes32_uint256_uint256_uint256_string {
+interface _createRoom_bytes32_bytes32_uint256_uint256_string {
   function createRoom(
     bytes32 _playerId,
     bytes32 _roomId,
     uint256 _roomCreationCost,
-    uint256 _maxValuePerWin,
     uint256 _minRatValueToEnter,
     string memory _prompt
   ) external;

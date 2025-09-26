@@ -1,10 +1,14 @@
-import { Rat, Room } from "@modules/types"
+import { GamePercentagesConfig, Rat, Room } from "@modules/types"
 
 export function getRoomValue(room: Room, newRoom: Room | undefined) {
   return {
     newRoomValue: newRoom?.balance ?? 0,
     roomValueChange: newRoom?.balance ? newRoom.balance - room.balance : 0
   }
+}
+
+export function getRoomMaxValuePerWin(roomCreationCost: number, gamePercentagesConfig: GamePercentagesConfig): number {
+  return Math.floor(roomCreationCost * gamePercentagesConfig.maxValuePerWin / 100)
 }
 
 export function getRatValue(rat: Rat, newRat: Rat) {

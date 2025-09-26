@@ -2,12 +2,16 @@
   import type { Hex } from "viem"
   import { urlFor } from "$lib/modules/content/sanity"
   import { renderSafeString } from "$lib/modules/utils"
+  import { getRoomMaxValuePerWin } from "$lib/modules/state/utils"
   import { staticContent } from "$lib/modules/content"
   import { NoImage } from "$lib/components/Shared"
 
   import type { Room as SanityRoom } from "@sanity-types"
 
   let { roomId, room }: { roomId: Hex; room: Room } = $props()
+
+  // Portion of room creation cost
+  let maxValuePerWin = getRoomMaxValuePerWin(room.roomCreationCost)
 
   let sanityRoomContent: SanityRoom | undefined = $derived(
     $staticContent?.rooms?.find(r => r._id.trim() == roomId.trim()) ?? undefined
@@ -53,7 +57,7 @@
     </div>
     <!-- MAX WIN -->
     <div class="room-info-max-win">
-      <span class="max-win">Max Win: ${room.maxValuePerWin}</span>
+      <span class="max-win">Max Win: ${maxValuePerWin}</span>
     </div>
   </div>
 </a>

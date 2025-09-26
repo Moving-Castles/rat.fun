@@ -1,4 +1,4 @@
-import type { EnterRoomData, Item, GameConfig, WorldEvent } from "@modules/types"
+import type { EnterRoomData, Item, GameConfig, GamePercentagesConfig, WorldEvent } from "@modules/types"
 import { getComponentValue, Entity } from "@latticexyz/recs"
 import { components, network } from "@modules/mud/initMud"
 import { GAME_CONFIG_ID } from "@config"
@@ -30,6 +30,7 @@ export async function getEnterRoomData(
       Inventory,
       Index,
       GameConfig,
+      GamePercentagesConfig,
       RoomCreationCost,
       MaxValuePerWin,
       MinRatValueToEnter
@@ -89,8 +90,6 @@ export async function getEnterRoomData(
       const roomBalance = (getComponentValue(Balance, roomEntity)?.value ?? 0) as number
       const roomCreationCost = (getComponentValue(RoomCreationCost, roomEntity)?.value ??
         0) as number
-      const roomMaxValuePerWin = (getComponentValue(MaxValuePerWin, roomEntity)?.value ??
-        0) as number
       const roomMinRatValueToEnter = (getComponentValue(MinRatValueToEnter, roomEntity)?.value ??
         0) as number
 
@@ -100,7 +99,6 @@ export async function getEnterRoomData(
         balance: Number(roomBalance),
         roomCreationCost: roomCreationCost,
         index: roomIndex,
-        maxValuePerWin: roomMaxValuePerWin,
         minRatValueToEnter: roomMinRatValueToEnter
       }
 
@@ -137,14 +135,16 @@ export async function getEnterRoomData(
     const gameConfigEntity = (await network).world.registerEntity({ id: GAME_CONFIG_ID })
 
     const gameConfig = getComponentValue(GameConfig, gameConfigEntity) as GameConfig
+    const gamePercentagesConfig = getComponentValue(GamePercentagesConfig, gameConfigEntity) as GamePercentagesConfig
     const worldEvent = getComponentValue(WorldEvent, gameConfigEntity) as WorldEvent
 
     // Check if game config exists
-    if (!gameConfig) {
+    if (!gameConfig || !gamePercentagesConfig) {
       throw new GameConfigNotFoundError(gameConfigEntity)
     }
 
     result.gameConfig = gameConfig
+    result.gamePercentagesConfig = gamePercentagesConfig
     result.worldEvent = worldEvent
 
     /////////////////

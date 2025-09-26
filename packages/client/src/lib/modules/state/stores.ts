@@ -41,6 +41,9 @@ export const worldObject = derived(
 // GAME CONFIG
 export const gameConfig = derived(worldObject, $worldObject => $worldObject.gameConfig)
 
+// GAME PERCENTAGES CONFIG
+export const gamePercentagesConfig = derived(worldObject, $worldObject => $worldObject.gamePercentagesConfig)
+
 // WORLD STATS
 export const worldStats = derived(worldObject, $worldObject => $worldObject.worldStats)
 
