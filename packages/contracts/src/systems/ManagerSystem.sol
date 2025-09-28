@@ -139,4 +139,28 @@ contract ManagerSystem is System {
   function removeWorldEvent() public onlyAdmin {
     LibWorld.removeWorldEvent();
   }
+
+  function _checkPercentageValue(uint32 _value) internal pure {
+    require(_value <= 100, "percentage value too high");
+  }
+
+  function setMaxValuePerWin(uint32 _maxValuePerWin) public onlyAdmin {
+    _checkPercentageValue(_maxValuePerWin);
+    GamePercentagesConfig.setMaxValuePerWin(_maxValuePerWin);
+  }
+
+  function setMinRatValueToEnter(uint32 _minRatValueToEnter) public onlyAdmin {
+    _checkPercentageValue(_minRatValueToEnter);
+    GamePercentagesConfig.setMinRatValueToEnter(_minRatValueToEnter);
+  }
+
+  function setTaxationLiquidateRat(uint32 _taxationLiquidateRat) public onlyAdmin {
+    _checkPercentageValue(_taxationLiquidateRat);
+    GamePercentagesConfig.setTaxationLiquidateRat(_taxationLiquidateRat);
+  }
+
+  function setTaxationCloseRoom(uint32 _taxationCloseRoom) public onlyAdmin {
+    _checkPercentageValue(_taxationCloseRoom);
+    GamePercentagesConfig.setTaxationCloseRoom(_taxationCloseRoom);
+  }
 }

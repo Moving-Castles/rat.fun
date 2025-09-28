@@ -74,6 +74,22 @@ library ManagerSystemLib {
     return CallWrapper(self.toResourceId(), address(0)).removeWorldEvent();
   }
 
+  function setMaxValuePerWin(ManagerSystemType self, uint32 _maxValuePerWin) internal {
+    return CallWrapper(self.toResourceId(), address(0)).setMaxValuePerWin(_maxValuePerWin);
+  }
+
+  function setMinRatValueToEnter(ManagerSystemType self, uint32 _minRatValueToEnter) internal {
+    return CallWrapper(self.toResourceId(), address(0)).setMinRatValueToEnter(_minRatValueToEnter);
+  }
+
+  function setTaxationLiquidateRat(ManagerSystemType self, uint32 _taxationLiquidateRat) internal {
+    return CallWrapper(self.toResourceId(), address(0)).setTaxationLiquidateRat(_taxationLiquidateRat);
+  }
+
+  function setTaxationCloseRoom(ManagerSystemType self, uint32 _taxationCloseRoom) internal {
+    return CallWrapper(self.toResourceId(), address(0)).setTaxationCloseRoom(_taxationCloseRoom);
+  }
+
   function applyOutcome(
     CallWrapper memory self,
     bytes32 _ratId,
@@ -133,6 +149,52 @@ library ManagerSystemLib {
       : _world().callFrom(self.from, self.systemId, systemCall);
   }
 
+  function setMaxValuePerWin(CallWrapper memory self, uint32 _maxValuePerWin) internal {
+    // if the contract calling this function is a root system, it should use `callAsRoot`
+    if (address(_world()) == address(this)) revert ManagerSystemLib_CallingFromRootSystem();
+
+    bytes memory systemCall = abi.encodeCall(_setMaxValuePerWin_uint32.setMaxValuePerWin, (_maxValuePerWin));
+    self.from == address(0)
+      ? _world().call(self.systemId, systemCall)
+      : _world().callFrom(self.from, self.systemId, systemCall);
+  }
+
+  function setMinRatValueToEnter(CallWrapper memory self, uint32 _minRatValueToEnter) internal {
+    // if the contract calling this function is a root system, it should use `callAsRoot`
+    if (address(_world()) == address(this)) revert ManagerSystemLib_CallingFromRootSystem();
+
+    bytes memory systemCall = abi.encodeCall(
+      _setMinRatValueToEnter_uint32.setMinRatValueToEnter,
+      (_minRatValueToEnter)
+    );
+    self.from == address(0)
+      ? _world().call(self.systemId, systemCall)
+      : _world().callFrom(self.from, self.systemId, systemCall);
+  }
+
+  function setTaxationLiquidateRat(CallWrapper memory self, uint32 _taxationLiquidateRat) internal {
+    // if the contract calling this function is a root system, it should use `callAsRoot`
+    if (address(_world()) == address(this)) revert ManagerSystemLib_CallingFromRootSystem();
+
+    bytes memory systemCall = abi.encodeCall(
+      _setTaxationLiquidateRat_uint32.setTaxationLiquidateRat,
+      (_taxationLiquidateRat)
+    );
+    self.from == address(0)
+      ? _world().call(self.systemId, systemCall)
+      : _world().callFrom(self.from, self.systemId, systemCall);
+  }
+
+  function setTaxationCloseRoom(CallWrapper memory self, uint32 _taxationCloseRoom) internal {
+    // if the contract calling this function is a root system, it should use `callAsRoot`
+    if (address(_world()) == address(this)) revert ManagerSystemLib_CallingFromRootSystem();
+
+    bytes memory systemCall = abi.encodeCall(_setTaxationCloseRoom_uint32.setTaxationCloseRoom, (_taxationCloseRoom));
+    self.from == address(0)
+      ? _world().call(self.systemId, systemCall)
+      : _world().callFrom(self.from, self.systemId, systemCall);
+  }
+
   function applyOutcome(
     RootCallWrapper memory self,
     bytes32 _ratId,
@@ -169,6 +231,32 @@ library ManagerSystemLib {
 
   function removeWorldEvent(RootCallWrapper memory self) internal {
     bytes memory systemCall = abi.encodeCall(_removeWorldEvent.removeWorldEvent, ());
+    SystemCall.callWithHooksOrRevert(self.from, self.systemId, systemCall, msg.value);
+  }
+
+  function setMaxValuePerWin(RootCallWrapper memory self, uint32 _maxValuePerWin) internal {
+    bytes memory systemCall = abi.encodeCall(_setMaxValuePerWin_uint32.setMaxValuePerWin, (_maxValuePerWin));
+    SystemCall.callWithHooksOrRevert(self.from, self.systemId, systemCall, msg.value);
+  }
+
+  function setMinRatValueToEnter(RootCallWrapper memory self, uint32 _minRatValueToEnter) internal {
+    bytes memory systemCall = abi.encodeCall(
+      _setMinRatValueToEnter_uint32.setMinRatValueToEnter,
+      (_minRatValueToEnter)
+    );
+    SystemCall.callWithHooksOrRevert(self.from, self.systemId, systemCall, msg.value);
+  }
+
+  function setTaxationLiquidateRat(RootCallWrapper memory self, uint32 _taxationLiquidateRat) internal {
+    bytes memory systemCall = abi.encodeCall(
+      _setTaxationLiquidateRat_uint32.setTaxationLiquidateRat,
+      (_taxationLiquidateRat)
+    );
+    SystemCall.callWithHooksOrRevert(self.from, self.systemId, systemCall, msg.value);
+  }
+
+  function setTaxationCloseRoom(RootCallWrapper memory self, uint32 _taxationCloseRoom) internal {
+    bytes memory systemCall = abi.encodeCall(_setTaxationCloseRoom_uint32.setTaxationCloseRoom, (_taxationCloseRoom));
     SystemCall.callWithHooksOrRevert(self.from, self.systemId, systemCall, msg.value);
   }
 
@@ -235,6 +323,22 @@ interface _setWorldEvent_string_string_string_uint256 {
 
 interface _removeWorldEvent {
   function removeWorldEvent() external;
+}
+
+interface _setMaxValuePerWin_uint32 {
+  function setMaxValuePerWin(uint32 _maxValuePerWin) external;
+}
+
+interface _setMinRatValueToEnter_uint32 {
+  function setMinRatValueToEnter(uint32 _minRatValueToEnter) external;
+}
+
+interface _setTaxationLiquidateRat_uint32 {
+  function setTaxationLiquidateRat(uint32 _taxationLiquidateRat) external;
+}
+
+interface _setTaxationCloseRoom_uint32 {
+  function setTaxationCloseRoom(uint32 _taxationCloseRoom) external;
 }
 
 using ManagerSystemLib for ManagerSystemType global;

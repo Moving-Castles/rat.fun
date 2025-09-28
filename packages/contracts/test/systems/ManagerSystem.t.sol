@@ -83,6 +83,27 @@ contract ManagerSystemTest is BaseTest {
     vm.expectRevert("not allowed");
     world.ratfun__applyOutcome(bytes32(0), bytes32(0), 0, new bytes32[](0), new Item[](0));
 
+    vm.expectRevert("not allowed");
+    world.ratfun__giveMasterKey(aliceId);
+
+    vm.expectRevert("not allowed");
+    world.ratfun__setWorldEvent("", "", "", 1);
+
+    vm.expectRevert("not allowed");
+    world.ratfun__removeWorldEvent();
+
+    vm.expectRevert("not allowed");
+    world.ratfun__setMaxValuePerWin(10);
+
+    vm.expectRevert("not allowed");
+    world.ratfun__setMinRatValueToEnter(10);
+
+    vm.expectRevert("not allowed");
+    world.ratfun__setTaxationLiquidateRat(10);
+
+    vm.expectRevert("not allowed");
+    world.ratfun__setTaxationCloseRoom(10);
+
     vm.stopPrank();
   }
 
