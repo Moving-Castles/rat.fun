@@ -30,10 +30,12 @@
 
   const onmouseup = () => {
     if (id === "send_rat" || id === "buy_rat") {
-      playUISound("ratfun", "chicken1")
+      playUISound("ratfun", "releaseConnect")
+      // playUISound("ratfun", "chicken1")
     } else if (id === "skillz") {
+      playUISound("ratfun", "releaseConnect")
       // enjoy skillfully
-      playUISound("ratfun", "chicken2")
+      // playUISound("ratfun", "chicken2")
     } else if (id === "connect") {
       playUISound("ratfun", "releaseConnect")
     } else if (id === "abort") {

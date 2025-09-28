@@ -1,8 +1,12 @@
 <script lang="ts">
+  import { fade } from "svelte/transition"
+
   let {
-    item
+    item,
+    index
   }: {
     item: Item
+    index: number
   } = $props()
 
   let busy = $state(false)
@@ -12,6 +16,7 @@
 <div
   class="list-item"
   class:disabled={busy}
+  in:fade|global={{ duration: 100, delay: index * 50 }}
   role="button"
   tabindex="0"
   onmouseenter={() => (isHovered = true)}

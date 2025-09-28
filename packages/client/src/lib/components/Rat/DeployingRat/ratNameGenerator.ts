@@ -1,6 +1,6 @@
 import { getRandomElement, getRandomNumber } from "$lib/modules/utils"
 
-const firstNameFragments = [
+export const firstNameFragments = [
   "Lil",
   "Tommy",
   "Bong",
@@ -46,7 +46,7 @@ const firstNameFragments = [
   "Nekro"
 ]
 
-const lastNameFragments = [
+export const lastNameFragments = [
   "Fetus",
   "Phetus",
   "HoldEm",
@@ -100,5 +100,5 @@ export function generateRatName() {
   const firstName = getRandomElement(firstNameFragments)
   const lastName = getRandomElement(lastNameFragments)
   const number = getRandomNumber(100, 999)
-  return `${firstName}_${lastName}_${number}`
+  return { firstName, lastName, number }
 }
