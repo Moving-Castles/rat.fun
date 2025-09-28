@@ -8,7 +8,10 @@
 
 export const queries = {
   rooms: '*[_type == "room" && worldAddress == $worldAddress]',
-  outcomes: '*[_type == "outcome" && worldAddress == $worldAddress]',
+  outcomes: `*[_type == "outcome" && worldAddress == $worldAddress] {
+    ...,
+    "room": *[_type == "room" && _id == ^.roomId][0]
+  }`,
   worldEvents:
     '*[_type == "worldEvent" && worldAddress == $worldAddress] | order(activationDateTime asc)', // filter by activationDateTime upcoming, sort by activationDate soonest first
   outcomesForRoom: '*[_type == "outcome" && roomId == $roomId && worldAddress == $worldAddress]',
