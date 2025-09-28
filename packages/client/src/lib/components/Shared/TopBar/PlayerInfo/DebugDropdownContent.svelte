@@ -28,7 +28,7 @@
   }
 </script>
 
-<div class="account-stats">
+<div class="debug-dropdown-content">
   <div class="tab">
     <p class="key">Address:</p>
     <p class="value">
@@ -136,25 +136,7 @@
 </div>
 
 <style lang="scss">
-  .account-stats {
-    position: fixed;
-    top: 68px;
-    left: 8px;
-    width: 600px;
-    background-color: var(--background-semi-transparent);
-    color: var(--white);
-    padding: 20px;
-    transition: all 0.2s ease;
-    line-height: 1.3em;
-    z-index: 1;
-    display: flex;
-    flex-flow: column nowrap;
-    gap: 8px;
-    font-size: var(--font-size-normal);
-    font-family: var(--special-font-stack);
-    z-index: 99;
-    border: 1px solid var(--color-border);
-
+  .debug-dropdown-content {
     .actions {
       display: flex;
       flex-flow: column nowrap;
@@ -169,7 +151,7 @@
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      gap: 8px;
+      margin-bottom: 8px;
 
       .key {
         width: 140px;

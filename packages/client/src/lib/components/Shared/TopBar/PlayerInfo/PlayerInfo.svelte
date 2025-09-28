@@ -4,12 +4,10 @@
   import { playUISound } from "$lib/modules/sound/state.svelte"
   import { tippy } from "svelte-tippy"
 
-  import AccountStats from "./AccountStats.svelte"
-
-  let { isAdminView }: { isAdminView: boolean } = $props()
+  import AccountDropdown from "./AccountDropdown.svelte"
 
   let balanceGoing = $state(false)
-  let showAccountStats = $state(false)
+  let showAccountDropdown = $state(false)
 
   function onmousedown() {
     playUISound("ratfun", "clickDownLight")
@@ -17,7 +15,7 @@
 
   function toggleAccountStats() {
     playUISound("ratfun", "releaseMini")
-    showAccountStats = !showAccountStats
+    showAccountDropdown = !showAccountDropdown
   }
 </script>
 
@@ -47,30 +45,21 @@
           content: `This is available tokens in your wallet`,
           placement: "bottom"
         }}
-        class="stat-item"
+        class="stat-item balance"
       >
-        <div class:priority={balanceGoing} class="inner-wrapper balance">
+        <div class:priority={balanceGoing} class="inner-wrapper">
           <div class="value">
             <NumberGoing bind:going={balanceGoing} muted={true} value={$playerERC20Balance ?? 0} />
-            <span class="unit">$SLOPAMINE</span>
+            <span class="unit">$slop</span>
           </div>
         </div>
       </div>
-      <!-- RATS KILLED -->
-      {#if isAdminView && $player?.pastRats?.length > 0}
-        <div class="stat-item rats-killed">
-          <div class="inner-wrapper">
-            <div class="label">Rats killed:</div>
-            <div class="value">{$player.pastRats.length}</div>
-          </div>
-        </div>
-      {/if}
     </div>
   {/if}
 </div>
 
-{#if showAccountStats}
-  <AccountStats />
+{#if showAccountDropdown}
+  <AccountDropdown />
 {/if}
 
 <style lang="scss">
@@ -90,27 +79,19 @@
         border-right: var(--default-border-style);
         color: var(--foreground);
 
-        &.rats-killed {
-          font-size: var(--font-size-small);
-          color: var(--color-death);
-        }
-
-        .label {
-          margin-right: 0.5em;
+        &.balance {
+          background: var(--color-value);
+          color: var(--black);
         }
 
         .inner-wrapper {
           display: inline-flex;
           padding-inline: 10px;
           align-items: center;
+          width: 100%;
 
-          &.balance {
-            background: var(--color-value);
-            color: var(--black);
-
-            .value {
-              font-size: var(--font-size-normal);
-            }
+          .value {
+            font-size: var(--font-size-small);
           }
 
           &.player {
@@ -121,11 +102,11 @@
     }
 
     .avatar {
-      width: 40px;
-      height: 40px;
+      width: 30px;
+      height: 30px;
       background: var(--color-value);
       border-radius: 50%;
-      margin-right: 10px;
+      margin-right: 5px;
     }
   }
 
