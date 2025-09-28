@@ -140,6 +140,18 @@ contract ManagerSystem is System {
     LibWorld.removeWorldEvent();
   }
 
+  // * * * * * * * * * * * * *
+  // CONFIG SETTERS
+  // * * * * * * * * * * * * *
+
+  function setCooldownCloseRoom(uint32 _cooldownCloseRoom) public onlyAdmin {
+    GameConfig.setCooldownCloseRoom(_cooldownCloseRoom);
+  }
+
+  // * * * * * * * * * * * * *
+  // PERCENTAGE CONFIG SETTERS
+  // * * * * * * * * * * * * *
+
   function _checkPercentageValue(uint32 _value) internal pure {
     require(_value <= 100, "percentage value too high");
   }

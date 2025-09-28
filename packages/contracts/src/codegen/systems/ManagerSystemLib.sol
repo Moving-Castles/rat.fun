@@ -74,6 +74,10 @@ library ManagerSystemLib {
     return CallWrapper(self.toResourceId(), address(0)).removeWorldEvent();
   }
 
+  function setCooldownCloseRoom(ManagerSystemType self, uint32 _cooldownCloseRoom) internal {
+    return CallWrapper(self.toResourceId(), address(0)).setCooldownCloseRoom(_cooldownCloseRoom);
+  }
+
   function setMaxValuePerWin(ManagerSystemType self, uint32 _maxValuePerWin) internal {
     return CallWrapper(self.toResourceId(), address(0)).setMaxValuePerWin(_maxValuePerWin);
   }
@@ -144,6 +148,16 @@ library ManagerSystemLib {
     if (address(_world()) == address(this)) revert ManagerSystemLib_CallingFromRootSystem();
 
     bytes memory systemCall = abi.encodeCall(_removeWorldEvent.removeWorldEvent, ());
+    self.from == address(0)
+      ? _world().call(self.systemId, systemCall)
+      : _world().callFrom(self.from, self.systemId, systemCall);
+  }
+
+  function setCooldownCloseRoom(CallWrapper memory self, uint32 _cooldownCloseRoom) internal {
+    // if the contract calling this function is a root system, it should use `callAsRoot`
+    if (address(_world()) == address(this)) revert ManagerSystemLib_CallingFromRootSystem();
+
+    bytes memory systemCall = abi.encodeCall(_setCooldownCloseRoom_uint32.setCooldownCloseRoom, (_cooldownCloseRoom));
     self.from == address(0)
       ? _world().call(self.systemId, systemCall)
       : _world().callFrom(self.from, self.systemId, systemCall);
@@ -231,6 +245,11 @@ library ManagerSystemLib {
 
   function removeWorldEvent(RootCallWrapper memory self) internal {
     bytes memory systemCall = abi.encodeCall(_removeWorldEvent.removeWorldEvent, ());
+    SystemCall.callWithHooksOrRevert(self.from, self.systemId, systemCall, msg.value);
+  }
+
+  function setCooldownCloseRoom(RootCallWrapper memory self, uint32 _cooldownCloseRoom) internal {
+    bytes memory systemCall = abi.encodeCall(_setCooldownCloseRoom_uint32.setCooldownCloseRoom, (_cooldownCloseRoom));
     SystemCall.callWithHooksOrRevert(self.from, self.systemId, systemCall, msg.value);
   }
 
@@ -323,6 +342,10 @@ interface _setWorldEvent_string_string_string_uint256 {
 
 interface _removeWorldEvent {
   function removeWorldEvent() external;
+}
+
+interface _setCooldownCloseRoom_uint32 {
+  function setCooldownCloseRoom(uint32 _cooldownCloseRoom) external;
 }
 
 interface _setMaxValuePerWin_uint32 {

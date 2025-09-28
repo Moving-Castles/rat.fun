@@ -93,6 +93,9 @@ contract ManagerSystemTest is BaseTest {
     world.ratfun__removeWorldEvent();
 
     vm.expectRevert("not allowed");
+    world.ratfun__setCooldownCloseRoom(10);
+
+    vm.expectRevert("not allowed");
     world.ratfun__setMaxValuePerWin(10);
 
     vm.expectRevert("not allowed");

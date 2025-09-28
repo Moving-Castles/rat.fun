@@ -30,6 +30,8 @@ interface IManagerSystem {
 
   function ratfun__removeWorldEvent() external;
 
+  function ratfun__setCooldownCloseRoom(uint32 _cooldownCloseRoom) external;
+
   function ratfun__setMaxValuePerWin(uint32 _maxValuePerWin) external;
 
   function ratfun__setMinRatValueToEnter(uint32 _minRatValueToEnter) external;
