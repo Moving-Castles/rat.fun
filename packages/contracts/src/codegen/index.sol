@@ -29,4 +29,3 @@ import { KillCount } from "./tables/KillCount.sol";
 import { TripCount } from "./tables/TripCount.sol";
 import { Prompt } from "./tables/Prompt.sol";
 import { RoomCreationCost } from "./tables/RoomCreationCost.sol";
-import { MinRatValueToEnter } from "./tables/MinRatValueToEnter.sol";

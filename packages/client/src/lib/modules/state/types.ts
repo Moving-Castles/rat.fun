@@ -74,7 +74,6 @@ declare global {
     prompt?: mudComponents["Prompt"]
     index?: mudComponents["Index"]
     roomCreationCost?: mudComponents["RoomCreationCost"]
-    minRatValueToEnter?: mudComponents["MinRatValueToEnter"]
     visitCount?: mudComponents["VisitCount"]
     killCount?: mudComponents["KillCount"]
     tripCount?: mudComponents["TripCount"]
@@ -126,7 +125,6 @@ declare global {
     creationBlock: mudComponents["CreationBlock"]
     lastVisitBlock: mudComponents["LastVisitBlock"]
     roomCreationCost: mudComponents["RoomCreationCost"]
-    minRatValueToEnter: mudComponents["MinRatValueToEnter"]
   }
 
   type Item = {

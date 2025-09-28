@@ -12,8 +12,7 @@ import {
   TripCount,
   LastVisitBlock,
   RoomCreationCost,
-  MasterKey,
-  MinRatValueToEnter
+  MasterKey
 } from "../codegen/index.sol";
 import { LibManager, LibRat, LibRoom } from "../libraries/Libraries.sol";
 import { ENTITY_TYPE } from "../codegen/common.sol";
@@ -53,7 +52,7 @@ contract ManagerSystem is System {
     require(EntityType.get(_ratId) == ENTITY_TYPE.RAT, "not rat");
     require(Dead.get(_ratId) == false, "rat is dead");
     require(EntityType.get(_roomId) == ENTITY_TYPE.ROOM, "not room");
-    require(LibRat.getTotalRatValue(_ratId) >= MinRatValueToEnter.get(_roomId), "rat value too low");
+    require(LibRat.getTotalRatValue(_ratId) >= LibRoom.getMinRatValueToEnter(_roomId), "rat value too low");
 
     // Check that room is not depleted
     uint256 roomBalance = Balance.get(_roomId);

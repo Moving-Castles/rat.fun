@@ -11,6 +11,10 @@ export function getRoomMaxValuePerWin(roomCreationCost: number, gamePercentagesC
   return Math.floor(roomCreationCost * gamePercentagesConfig.maxValuePerWin / 100)
 }
 
+export function getRoomMinRatValueToEnter(roomCreationCost: number, gamePercentagesConfig: GamePercentagesConfig): number {
+  return Math.floor(roomCreationCost * gamePercentagesConfig.maxValuePerWin / 100)
+}
+
 export function getRatValue(rat: Rat, newRat: Rat) {
   const newRatValue = calculateTotalRatValue(newRat)
   const oldRatValue = calculateTotalRatValue(rat)

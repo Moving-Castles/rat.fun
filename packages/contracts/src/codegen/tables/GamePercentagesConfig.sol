@@ -18,6 +18,7 @@ import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 
 struct GamePercentagesConfigData {
   uint32 maxValuePerWin;
+  uint32 minRatValueToEnter;
 }
 
 library GamePercentagesConfig {
@@ -25,12 +26,12 @@ library GamePercentagesConfig {
   ResourceId constant _tableId = ResourceId.wrap(0x746272617466756e000000000000000047616d6550657263656e746167657343);
 
   FieldLayout constant _fieldLayout =
-    FieldLayout.wrap(0x0004010004000000000000000000000000000000000000000000000000000000);
+    FieldLayout.wrap(0x0008020004040000000000000000000000000000000000000000000000000000);
 
   // Hex-encoded key schema of ()
   Schema constant _keySchema = Schema.wrap(0x0000000000000000000000000000000000000000000000000000000000000000);
-  // Hex-encoded value schema of (uint32)
-  Schema constant _valueSchema = Schema.wrap(0x0004010003000000000000000000000000000000000000000000000000000000);
+  // Hex-encoded value schema of (uint32, uint32)
+  Schema constant _valueSchema = Schema.wrap(0x0008020003030000000000000000000000000000000000000000000000000000);
 
   /**
    * @notice Get the table's key field names.
@@ -45,8 +46,9 @@ library GamePercentagesConfig {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](1);
+    fieldNames = new string[](2);
     fieldNames[0] = "maxValuePerWin";
+    fieldNames[1] = "minRatValueToEnter";
   }
 
   /**
@@ -102,6 +104,44 @@ library GamePercentagesConfig {
   }
 
   /**
+   * @notice Get minRatValueToEnter.
+   */
+  function getMinRatValueToEnter() internal view returns (uint32 minRatValueToEnter) {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
+    return (uint32(bytes4(_blob)));
+  }
+
+  /**
+   * @notice Get minRatValueToEnter.
+   */
+  function _getMinRatValueToEnter() internal view returns (uint32 minRatValueToEnter) {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
+    return (uint32(bytes4(_blob)));
+  }
+
+  /**
+   * @notice Set minRatValueToEnter.
+   */
+  function setMinRatValueToEnter(uint32 minRatValueToEnter) internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((minRatValueToEnter)), _fieldLayout);
+  }
+
+  /**
+   * @notice Set minRatValueToEnter.
+   */
+  function _setMinRatValueToEnter(uint32 minRatValueToEnter) internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    StoreCore.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((minRatValueToEnter)), _fieldLayout);
+  }
+
+  /**
    * @notice Get the full data.
    */
   function get() internal view returns (GamePercentagesConfigData memory _table) {
@@ -132,8 +172,8 @@ library GamePercentagesConfig {
   /**
    * @notice Set the full data using individual values.
    */
-  function set(uint32 maxValuePerWin) internal {
-    bytes memory _staticData = encodeStatic(maxValuePerWin);
+  function set(uint32 maxValuePerWin, uint32 minRatValueToEnter) internal {
+    bytes memory _staticData = encodeStatic(maxValuePerWin, minRatValueToEnter);
 
     EncodedLengths _encodedLengths;
     bytes memory _dynamicData;
@@ -146,8 +186,8 @@ library GamePercentagesConfig {
   /**
    * @notice Set the full data using individual values.
    */
-  function _set(uint32 maxValuePerWin) internal {
-    bytes memory _staticData = encodeStatic(maxValuePerWin);
+  function _set(uint32 maxValuePerWin, uint32 minRatValueToEnter) internal {
+    bytes memory _staticData = encodeStatic(maxValuePerWin, minRatValueToEnter);
 
     EncodedLengths _encodedLengths;
     bytes memory _dynamicData;
@@ -161,7 +201,7 @@ library GamePercentagesConfig {
    * @notice Set the full data using the data struct.
    */
   function set(GamePercentagesConfigData memory _table) internal {
-    bytes memory _staticData = encodeStatic(_table.maxValuePerWin);
+    bytes memory _staticData = encodeStatic(_table.maxValuePerWin, _table.minRatValueToEnter);
 
     EncodedLengths _encodedLengths;
     bytes memory _dynamicData;
@@ -175,7 +215,7 @@ library GamePercentagesConfig {
    * @notice Set the full data using the data struct.
    */
   function _set(GamePercentagesConfigData memory _table) internal {
-    bytes memory _staticData = encodeStatic(_table.maxValuePerWin);
+    bytes memory _staticData = encodeStatic(_table.maxValuePerWin, _table.minRatValueToEnter);
 
     EncodedLengths _encodedLengths;
     bytes memory _dynamicData;
@@ -188,8 +228,10 @@ library GamePercentagesConfig {
   /**
    * @notice Decode the tightly packed blob of static data using this table's field layout.
    */
-  function decodeStatic(bytes memory _blob) internal pure returns (uint32 maxValuePerWin) {
+  function decodeStatic(bytes memory _blob) internal pure returns (uint32 maxValuePerWin, uint32 minRatValueToEnter) {
     maxValuePerWin = (uint32(Bytes.getBytes4(_blob, 0)));
+
+    minRatValueToEnter = (uint32(Bytes.getBytes4(_blob, 4)));
   }
 
   /**
@@ -203,7 +245,7 @@ library GamePercentagesConfig {
     EncodedLengths,
     bytes memory
   ) internal pure returns (GamePercentagesConfigData memory _table) {
-    (_table.maxValuePerWin) = decodeStatic(_staticData);
+    (_table.maxValuePerWin, _table.minRatValueToEnter) = decodeStatic(_staticData);
   }
 
   /**
@@ -228,8 +270,8 @@ library GamePercentagesConfig {
    * @notice Tightly pack static (fixed length) data using this table's schema.
    * @return The static data, encoded into a sequence of bytes.
    */
-  function encodeStatic(uint32 maxValuePerWin) internal pure returns (bytes memory) {
-    return abi.encodePacked(maxValuePerWin);
+  function encodeStatic(uint32 maxValuePerWin, uint32 minRatValueToEnter) internal pure returns (bytes memory) {
+    return abi.encodePacked(maxValuePerWin, minRatValueToEnter);
   }
 
   /**
@@ -238,8 +280,11 @@ library GamePercentagesConfig {
    * @return The lengths of the dynamic fields (packed into a single bytes32 value).
    * @return The dynamic (variable length) data, encoded into a sequence of bytes.
    */
-  function encode(uint32 maxValuePerWin) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
-    bytes memory _staticData = encodeStatic(maxValuePerWin);
+  function encode(
+    uint32 maxValuePerWin,
+    uint32 minRatValueToEnter
+  ) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
+    bytes memory _staticData = encodeStatic(maxValuePerWin, minRatValueToEnter);
 
     EncodedLengths _encodedLengths;
     bytes memory _dynamicData;

@@ -1,12 +1,13 @@
-import { Rat, Room, Player } from "@modules/types"
+import { Rat, Room, Player, GamePercentagesConfig } from "@modules/types"
 import {
   RatOwnershipError,
   RatDeadError,
   RoomBalanceError,
   RatValueError
 } from "@modules/error-handling/errors"
+import { getRoomMinRatValueToEnter } from "@modules/mud/value"
 
-export function validateInputData(player: Player, rat: Rat, room: Room) {
+export function validateInputData(player: Player, rat: Rat, room: Room, gamePercentagesConfig: GamePercentagesConfig) {
   // Check that sender owns the rat
   if (rat.owner !== player.id) {
     throw new RatOwnershipError()
@@ -18,7 +19,7 @@ export function validateInputData(player: Player, rat: Rat, room: Room) {
   }
 
   // Check that the rat has enough value to enter the room
-  if (rat.totalValue < room.minRatValueToEnter) {
+  if (rat.totalValue < getRoomMinRatValueToEnter(room.roomCreationCost, gamePercentagesConfig)) {
     throw new RatValueError()
   }
 

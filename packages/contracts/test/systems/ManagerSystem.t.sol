@@ -37,7 +37,7 @@ contract ManagerSystemTest is BaseTest {
     vm.stopPrank();
 
     prankAdmin();
-    roomId = world.ratfun__createRoom(bobId, bytes32(0), ROOM_INITIAL_BALANCE, 10, "test room");
+    roomId = world.ratfun__createRoom(bobId, bytes32(0), ROOM_INITIAL_BALANCE, "test room");
     vm.stopPrank();
   }
 
@@ -131,14 +131,8 @@ contract ManagerSystemTest is BaseTest {
   function testRevertRatValueTooLow() public {
     prankAdmin();
 
-    // Create a room with minRatValueToEnter higher than the initial rat balance
-    roomId = world.ratfun__createRoom(
-      bobId,
-      bytes32(0),
-      ROOM_INITIAL_BALANCE,
-      RAT_CREATION_COST + 10,
-      "test room"
-    );
+    // Set rat balance to just below the minimum required to enter the room
+    Balance.set(ratId, LibRoom.getMinRatValueToEnter(roomId) - 1);
 
     vm.expectRevert("rat value too low");
     world.ratfun__applyOutcome(ratId, roomId, 0, new bytes32[](0), new Item[](0));

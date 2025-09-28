@@ -89,6 +89,12 @@ export function getRoomMaxValuePerWin(roomCreationCost: number | bigint): Readab
   })
 }
 
+export function getRoomMinRatValueToEnter(roomCreationCost: number | bigint): Readable<number> {
+  return derived(gamePercentagesConfig, ($gamePercentagesConfig) => {
+    return Math.floor(Number(roomCreationCost) * $gamePercentagesConfig.minRatValueToEnter / 100)
+  })
+}
+
 // * * * * * * * * * * * * * * * * *
 // STORE UTILITY FUNCTIONS
 // * * * * * * * * * * * * * * * * *

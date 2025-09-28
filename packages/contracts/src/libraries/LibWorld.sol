@@ -18,6 +18,7 @@ import {
   MAX_INVENTORY_SIZE,
   COOLDOWN_CLOSE_ROOM,
   MAX_VALUE_PER_WIN_PERCENTAGE,
+  MIN_RAT_VALUE_TO_ENTER_PERCENTAGE,
   TAXATION_LIQUIDATE_RAT,
   TAXATION_CLOSE_ROOM
 } from "../constants.sol";
@@ -61,7 +62,8 @@ library LibWorld {
 
     GamePercentagesConfig.set(
       GamePercentagesConfigData({
-        maxValuePerWin: MAX_VALUE_PER_WIN_PERCENTAGE
+        maxValuePerWin: MAX_VALUE_PER_WIN_PERCENTAGE,
+        minRatValueToEnter: MIN_RAT_VALUE_TO_ENTER_PERCENTAGE
       })
     );
 

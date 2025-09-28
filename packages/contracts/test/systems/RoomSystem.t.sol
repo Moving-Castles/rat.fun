@@ -18,7 +18,7 @@ contract RoomSystemTest is BaseTest {
     // As admin
     prankAdmin();
     startGasReport("Create room");
-    bytes32 roomId = world.ratfun__createRoom(playerId, bytes32(0), ROOM_INITIAL_BALANCE, 10, "A test room");
+    bytes32 roomId = world.ratfun__createRoom(playerId, bytes32(0), ROOM_INITIAL_BALANCE, "A test room");
     endGasReport();
     vm.stopPrank();
 
@@ -51,7 +51,6 @@ contract RoomSystemTest is BaseTest {
       playerId,
       bytes32(0),
       ROOM_INITIAL_BALANCE,
-      10,
       "The room has two doors. One doors lead to death, the other to freedom. If a rat does not make a choice within 10 minutes it is killed and the body removed. Each door has a guardian mouse that needs to be defeated to pass."
     );
     endGasReport();
@@ -75,7 +74,7 @@ contract RoomSystemTest is BaseTest {
         ROOM_INITIAL_BALANCE * 10 ** LibWorld.erc20().decimals()
       )
     );
-    world.ratfun__createRoom(playerId, bytes32(0), ROOM_INITIAL_BALANCE, 10, "A test room");
+    world.ratfun__createRoom(playerId, bytes32(0), ROOM_INITIAL_BALANCE, "A test room");
     vm.stopPrank();
   }
 
@@ -89,7 +88,7 @@ contract RoomSystemTest is BaseTest {
     prankAdmin();
     LibWorld.gamePool().depositTokens(alice, LibWorld.erc20().balanceOf(alice));
     vm.expectRevert("room value too low");
-    world.ratfun__createRoom(playerId, bytes32(0), 0, 10, "A test room");
+    world.ratfun__createRoom(playerId, bytes32(0), 0, "A test room");
     vm.stopPrank();
   }
 
@@ -101,9 +100,9 @@ contract RoomSystemTest is BaseTest {
     vm.stopPrank();
 
     prankAdmin();
-    world.ratfun__createRoom(playerId, bytes32(uint256(666)), ROOM_INITIAL_BALANCE, 10, "A test room");
+    world.ratfun__createRoom(playerId, bytes32(uint256(666)), ROOM_INITIAL_BALANCE, "A test room");
     vm.expectRevert("room id already in use");
-    world.ratfun__createRoom(playerId, bytes32(uint256(666)), ROOM_INITIAL_BALANCE, 10, "Another test room");
+    world.ratfun__createRoom(playerId, bytes32(uint256(666)), ROOM_INITIAL_BALANCE, "Another test room");
     vm.stopPrank();
   }
 
@@ -117,7 +116,7 @@ contract RoomSystemTest is BaseTest {
 
     // As admin
     prankAdmin();
-    bytes32 roomId = world.ratfun__createRoom(playerId, bytes32(0), ROOM_INITIAL_BALANCE, 10, "A test room");
+    bytes32 roomId = world.ratfun__createRoom(playerId, bytes32(0), ROOM_INITIAL_BALANCE, "A test room");
     vm.stopPrank();
 
     // Check player balance
@@ -175,7 +174,7 @@ contract RoomSystemTest is BaseTest {
 
     // As admin
     prankAdmin();
-    bytes32 roomId = world.ratfun__createRoom(playerId, bytes32(0), ROOM_INITIAL_BALANCE, 10, "A test room");
+    bytes32 roomId = world.ratfun__createRoom(playerId, bytes32(0), ROOM_INITIAL_BALANCE, "A test room");
     vm.stopPrank();
 
     // Advance blocks but not enough to pass cooldown
@@ -203,7 +202,7 @@ contract RoomSystemTest is BaseTest {
 
     // As admin
     prankAdmin();
-    bytes32 roomId = world.ratfun__createRoom(aliceId, bytes32(0), ROOM_INITIAL_BALANCE, 10, "A test room");
+    bytes32 roomId = world.ratfun__createRoom(aliceId, bytes32(0), ROOM_INITIAL_BALANCE, "A test room");
     vm.stopPrank();
 
     // Check room balance

@@ -7,6 +7,7 @@
   import { staticContent } from "$lib/modules/content"
   import { rat, ratTotalValue } from "$lib/modules/state/stores"
   import { busy } from "$lib/modules/action-manager/index.svelte"
+  import { getRoomMinRatValueToEnter } from "$lib/modules/state/utils"
 
   import {
     RoomPreviewHeader,
@@ -20,6 +21,8 @@
     room,
     sanityRoomContent
   }: { roomId: Hex; room: Room; sanityRoomContent: SanityRoom } = $props()
+
+  let minRatValueToEnter = getRoomMinRatValueToEnter(room.roomCreationCost)
 
   let roomOutcomes = $state<Outcome[]>()
 
@@ -68,7 +71,7 @@
     {#if showEnterButton}
       <EnterRoomButton
         {room}
-        disabled={busy.LiquidateRat.current != 0 || ($ratTotalValue || 0) < room.minRatValueToEnter}
+        disabled={busy.LiquidateRat.current != 0 || ($ratTotalValue || 0) < $minRatValueToEnter}
         {roomId}
       />
     {/if}

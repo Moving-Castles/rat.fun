@@ -32,8 +32,6 @@ export async function getEnterRoomData(
       GameConfig,
       GamePercentagesConfig,
       RoomCreationCost,
-      MaxValuePerWin,
-      MinRatValueToEnter
     } = components
 
     const result = {} as EnterRoomData
@@ -90,16 +88,13 @@ export async function getEnterRoomData(
       const roomBalance = (getComponentValue(Balance, roomEntity)?.value ?? 0) as number
       const roomCreationCost = (getComponentValue(RoomCreationCost, roomEntity)?.value ??
         0) as number
-      const roomMinRatValueToEnter = (getComponentValue(MinRatValueToEnter, roomEntity)?.value ??
-        0) as number
 
       const room = {
         id: roomId,
         prompt: roomPrompt,
         balance: Number(roomBalance),
         roomCreationCost: roomCreationCost,
-        index: roomIndex,
-        minRatValueToEnter: roomMinRatValueToEnter
+        index: roomIndex
       }
 
       result.room = room

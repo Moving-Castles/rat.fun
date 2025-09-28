@@ -10,7 +10,6 @@ import {
   WorldStats,
   Balance,
   RoomCreationCost,
-  MinRatValueToEnter,
   VisitCount,
   CreationBlock
 } from "../codegen/index.sol";
@@ -28,7 +27,6 @@ library LibRoom {
     bytes32 _roomOwner,
     bytes32 _roomId,
     uint256 _roomCreationCost,
-    uint256 _minRatValueToEnter,
     string memory _prompt
   ) internal returns (bytes32 newRoomId) {
     // If _roomId is not provided, generate a new unique id
@@ -48,8 +46,6 @@ library LibRoom {
     Index.set(newRoomId, newRoomIndex);
     CreationBlock.set(newRoomId, block.number);
 
-    MinRatValueToEnter.set(newRoomId, _minRatValueToEnter);
-
     VisitCount.set(newRoomId, 0);
 
     Balance.set(newRoomId, _roomCreationCost);
@@ -58,5 +54,9 @@ library LibRoom {
 
   function getMaxValuePerWin(bytes32 _roomId) internal view returns (uint256) {
     return (GamePercentagesConfig.getMaxValuePerWin() * RoomCreationCost.get(_roomId)) / 100;
+  }
+
+  function getMinRatValueToEnter(bytes32 _roomId) internal view returns (uint256) {
+    return (GamePercentagesConfig.getMinRatValueToEnter() * RoomCreationCost.get(_roomId)) / 100;
   }
 }

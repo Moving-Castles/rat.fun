@@ -14,7 +14,6 @@ export type Room = {
   prompt: string
   balance: number
   roomCreationCost: number
-  minRatValueToEnter: number
 }
 
 export type Rat = {

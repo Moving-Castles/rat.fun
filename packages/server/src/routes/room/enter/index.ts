@@ -68,7 +68,7 @@ async function routes(fastify: FastifyInstance) {
         console.timeEnd("–– Get on chain data")
 
         // Validate input data
-        validateInputData(player, rat, room)
+        validateInputData(player, rat, room, gamePercentagesConfig)
 
         // Get system prompts from CMS
         console.time("–– CMS")
