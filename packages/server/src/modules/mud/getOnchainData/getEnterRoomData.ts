@@ -51,8 +51,8 @@ export async function getEnterRoomData(
     }
 
     // Get rat data
-    const ratDead = (getComponentValue(Dead, ratEntity)?.value ?? false) as boolean
-    const ratBalance = (getComponentValue(Balance, ratEntity)?.value ?? 0) as number
+    const ratDead = Boolean(getComponentValue(Dead, ratEntity)?.value ?? false)
+    const ratBalance = Number(getComponentValue(Balance, ratEntity)?.value ?? 0)
     const ratInventory = (getComponentValue(Inventory, ratEntity)?.value ?? [""]) as string[]
     const inventoryObjects = constructInventoryObject(ratInventory)
 
@@ -84,15 +84,14 @@ export async function getEnterRoomData(
         throw new RoomNotFoundError(roomId)
       }
 
-      const roomIndex = (getComponentValue(Index, roomEntity)?.value ?? 0) as number
-      const roomBalance = (getComponentValue(Balance, roomEntity)?.value ?? 0) as number
-      const roomCreationCost = (getComponentValue(RoomCreationCost, roomEntity)?.value ??
-        0) as number
+      const roomIndex = Number(getComponentValue(Index, roomEntity)?.value ?? 0)
+      const roomBalance = Number(getComponentValue(Balance, roomEntity)?.value ?? 0)
+      const roomCreationCost = Number(getComponentValue(RoomCreationCost, roomEntity)?.value ?? 0)
 
       const room = {
         id: roomId,
         prompt: roomPrompt,
-        balance: Number(roomBalance),
+        balance: roomBalance,
         roomCreationCost: roomCreationCost,
         index: roomIndex
       }
@@ -169,7 +168,7 @@ function constructInventoryObject(ratInventory: string[]) {
     inventoryObject.push({
       id: ratInventory[i],
       name: (getComponentValue(Name, ratInventory[i] as Entity)?.value ?? "") as string,
-      value: Number(getComponentValue(Value, ratInventory[i] as Entity)?.value ?? 0) as number
+      value: Number(getComponentValue(Value, ratInventory[i] as Entity)?.value ?? 0)
     })
   }
   return inventoryObject

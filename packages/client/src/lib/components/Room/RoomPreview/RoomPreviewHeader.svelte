@@ -64,7 +64,7 @@
     {#if $maxValuePerWin > 0}
       <div class="row max-value-per-win">
         <div class="label">MAX VALUE PER WIN</div>
-        <div class="value">${room?.maxValuePerWin}</div>
+        <div class="value">${$maxValuePerWin}</div>
       </div>
     {/if}
     <!-- BALANCE -->

@@ -57,7 +57,7 @@
     </div>
     <!-- MAX WIN -->
     <div class="room-info-max-win">
-      <span class="max-win">Max Win: ${maxValuePerWin}</span>
+      <span class="max-win">Max Win: ${$maxValuePerWin}</span>
     </div>
   </div>
 </a>
