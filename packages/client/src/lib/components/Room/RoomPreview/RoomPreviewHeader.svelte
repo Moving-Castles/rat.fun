@@ -7,7 +7,7 @@
 
   let { room, sanityRoomContent }: { room: Room; sanityRoomContent: any } = $props()
 
-  let maxValuePerWin = getRoomMaxValuePerWin(room.roomCreationCost)
+  let maxValuePerWin = getRoomMaxValuePerWin(room.roomCreationCost, room.balance)
 
   let { modal } = getModalState()
   let showImageModal = $state(false)

@@ -525,7 +525,8 @@ contract ManagerSystemTest is BaseTest {
     // Verify room setup
     uint256 maxValuePerWin = LibRoom.getMaxValuePerWin(roomId);
     assertEq(Balance.get(roomId), alteredRoomBalance);
-    assertTrue(Balance.get(roomId) < maxValuePerWin); // Room balance < maxValuePerWin
+    // Room balance should be equal to maxValuePerWin (which is based on creation cost here, and capped by the balance)
+    assertEq(Balance.get(roomId), maxValuePerWin);
 
     // Try to transfer more than room balance to rat
     int256 transferAmount = int256(maxValuePerWin);

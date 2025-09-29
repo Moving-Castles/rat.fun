@@ -7,8 +7,13 @@ export function getRoomValue(room: Room, newRoom: Room | undefined) {
   }
 }
 
-export function getRoomMaxValuePerWin(roomCreationCost: number, gamePercentagesConfig: GamePercentagesConfig): number {
-  return Math.floor(roomCreationCost * gamePercentagesConfig.maxValuePerWin / 100)
+export function getRoomMaxValuePerWin(roomCreationCost: number, roomBalance: number, gamePercentagesConfig: GamePercentagesConfig): number {
+  // Use balance or creation cost, whichever is higher
+  const costBalanceMax = Math.max(roomCreationCost, roomBalance)
+  // Multiply by the configured percentage
+  const result = Math.floor(gamePercentagesConfig.maxValuePerWin * costBalanceMax / 100)
+  // Cap to balance
+  return Math.min(result, roomBalance)
 }
 
 export function getRoomMinRatValueToEnter(roomCreationCost: number, gamePercentagesConfig: GamePercentagesConfig): number {

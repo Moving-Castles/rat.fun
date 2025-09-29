@@ -13,6 +13,7 @@ import {
   VisitCount,
   CreationBlock
 } from "../codegen/index.sol";
+import { LibUtils } from "./LibUtils.sol";
 import { ENTITY_TYPE } from "../codegen/common.sol";
 
 library LibRoom {
@@ -53,7 +54,13 @@ library LibRoom {
   }
 
   function getMaxValuePerWin(bytes32 _roomId) internal view returns (uint256) {
-    return (GamePercentagesConfig.getMaxValuePerWin() * RoomCreationCost.get(_roomId)) / 100;
+    uint256 balance = Balance.get(_roomId);
+    // Use balance or creation cost, whichever is higher
+    uint256 costBalanceMax = LibUtils.max(RoomCreationCost.get(_roomId), balance);
+    // Multiply by the configured percentage
+    uint256 result = (GamePercentagesConfig.getMaxValuePerWin() * costBalanceMax) / 100;
+    // Cap to balance
+    return LibUtils.min(result, balance);
   }
 
   function getMinRatValueToEnter(bytes32 _roomId) internal view returns (uint256) {

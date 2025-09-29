@@ -57,6 +57,38 @@ contract RoomSystemTest is BaseTest {
     vm.stopPrank();
   }
 
+  function testMaxValuePerWin() public {
+    setInitialBalance(alice);
+    // As alice
+    vm.startPrank(alice);
+    bytes32 playerId = world.ratfun__spawn("alice");
+    approveGamePool(type(uint256).max);
+    vm.stopPrank();
+
+    // As admin - create room with initial balance of 1000
+    prankAdmin();
+    bytes32 roomId = world.ratfun__createRoom(playerId, bytes32(0), 1000, "A test room");
+
+    // Creation cost is always 1000
+    // max 25%, balance 1000 -> 250
+    GamePercentagesConfig.setMaxValuePerWin(25);
+    assertEq(LibRoom.getMaxValuePerWin(roomId), 250);
+    // max 125%, balance 1000 -> 1000
+    GamePercentagesConfig.setMaxValuePerWin(125);
+    assertEq(LibRoom.getMaxValuePerWin(roomId), 1000);
+    // max 125%, balance 2000 -> 2000
+    Balance.set(roomId, 2000);
+    assertEq(LibRoom.getMaxValuePerWin(roomId), 2000);
+    // max 25%, balance 2000 -> 500
+    GamePercentagesConfig.setMaxValuePerWin(25);
+    assertEq(LibRoom.getMaxValuePerWin(roomId), 500);
+    // max 25%, balance 100 -> 100
+    Balance.set(roomId, 100);
+    assertEq(LibRoom.getMaxValuePerWin(roomId), 100);
+
+    vm.stopPrank();
+  }
+
   function testRevertBalanceTooLow() public {
     vm.startPrank(alice);
     bytes32 playerId = world.ratfun__spawn("alice");

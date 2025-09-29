@@ -21,9 +21,7 @@ export async function constructEventMessages(
   messages.push({ role: "user", content: `TripDescription: ${room.prompt}` })
 
   // Max value per win
-  const valueLimit = getRoomMaxValuePerWin(room.roomCreationCost, gamePercentagesConfig)
-  // Max value per win is capped at the room balance.
-  const maxValuePerWin = Math.min(valueLimit, room.balance)
+  const maxValuePerWin = getRoomMaxValuePerWin(room.roomCreationCost, room.balance, gamePercentagesConfig)
   messages.push({
     role: "user",
     content: `TripMaxValuePerWin: ${maxValuePerWin}`

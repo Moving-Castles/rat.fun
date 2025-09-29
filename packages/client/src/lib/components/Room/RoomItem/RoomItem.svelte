@@ -11,7 +11,7 @@
   let { roomId, room }: { roomId: Hex; room: Room } = $props()
 
   // Portion of room creation cost
-  let maxValuePerWin = getRoomMaxValuePerWin(room.roomCreationCost)
+  let maxValuePerWin = getRoomMaxValuePerWin(room.roomCreationCost, room.balance)
 
   let sanityRoomContent: SanityRoom | undefined = $derived(
     $staticContent?.rooms?.find(r => r._id.trim() == roomId.trim()) ?? undefined
