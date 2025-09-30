@@ -14,8 +14,6 @@ export type Room = {
   prompt: string
   balance: number
   roomCreationCost: number
-  maxValuePerWin: number
-  minRatValueToEnter: number
 }
 
 export type Rat = {
@@ -41,8 +39,14 @@ export type Item = {
   value: number
 }
 
-export type GameConfig = TableRecord<typeof mudConfig.tables.ratfun__GameConfig>["fields"]
-export type WorldEvent = TableRecord<typeof mudConfig.tables.ratfun__WorldEvent>["fields"]
+type mudSchemas = {
+  [table in keyof typeof mudConfig.namespaces.ratfun.tables]: TableRecord<
+    (typeof mudConfig.namespaces.ratfun.tables)[table]
+  >["fields"]
+}
+export type GameConfig = mudSchemas["GameConfig"]
+export type GamePercentagesConfig = mudSchemas["GamePercentagesConfig"]
+export type WorldEvent = mudSchemas["WorldEvent"]
 
 /*
  * ─────────────────────────────────────────────
@@ -53,6 +57,7 @@ export type WorldEvent = TableRecord<typeof mudConfig.tables.ratfun__WorldEvent>
 
 export type EnterRoomData = {
   gameConfig: GameConfig
+  gamePercentagesConfig: GamePercentagesConfig
   rat: Rat
   worldEvent: WorldEvent | undefined
   player?: Player

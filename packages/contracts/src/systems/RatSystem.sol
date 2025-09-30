@@ -6,6 +6,7 @@ import {
   Dead,
   Inventory,
   GameConfig,
+  GamePercentagesConfig,
   Value,
   Balance,
   Liquidated,
@@ -54,7 +55,7 @@ contract RatSystem is System {
 
     uint256 valueToPlayer = LibRat.killRat(ratId);
     // Calculate tax
-    uint256 tax = (valueToPlayer * GameConfig.getTaxationLiquidateRat()) / 100;
+    uint256 tax = (valueToPlayer * GamePercentagesConfig.getTaxationLiquidateRat()) / 100;
     valueToPlayer -= tax;
 
     // Update rat

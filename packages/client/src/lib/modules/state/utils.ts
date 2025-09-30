@@ -7,8 +7,8 @@
 
 import { Hex } from "viem"
 import { ENTITY_TYPE } from "contracts/enums"
-import { players, gameConfig } from "$lib/modules/state/stores"
-import { get } from "svelte/store"
+import { players, gameConfig, gamePercentagesConfig } from "$lib/modules/state/stores"
+import { derived, get, Readable } from "svelte/store"
 import { PropertyChangeTimeoutError, StoreTimeoutError } from "$lib/modules/error-handling/errors"
 
 /**
@@ -81,6 +81,23 @@ export function getRoomOwnerName(room: Room) {
     return "ratking"
   }
   return get(players)[room.owner]?.name ?? "unknown"
+}
+
+export function getRoomMaxValuePerWin(roomCreationCost: number | bigint, roomBalance: number | bigint): Readable<number> {
+  return derived(gamePercentagesConfig, ($gamePercentagesConfig) => {
+    // Use balance or creation cost, whichever is higher
+    const costBalanceMax = Math.max(Number(roomCreationCost), Number(roomBalance))
+    // Multiply by the configured percentage
+    const result = Math.floor($gamePercentagesConfig.maxValuePerWin * costBalanceMax / 100)
+    // Cap to balance
+    return Math.min(result, Number(roomBalance))
+  })
+}
+
+export function getRoomMinRatValueToEnter(roomCreationCost: number | bigint): Readable<number> {
+  return derived(gamePercentagesConfig, ($gamePercentagesConfig) => {
+    return Math.floor(Number(roomCreationCost) * $gamePercentagesConfig.minRatValueToEnter / 100)
+  })
 }
 
 // * * * * * * * * * * * * * * * * *

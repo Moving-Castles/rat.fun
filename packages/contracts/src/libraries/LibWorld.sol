@@ -2,6 +2,8 @@
 pragma solidity >=0.8.24;
 import {
   GameConfig,
+  GamePercentagesConfig,
+  GamePercentagesConfigData,
   GameConfigData,
   ExternalAddressesConfig,
   ExternalAddressesConfigData,
@@ -15,8 +17,10 @@ import {
   MIN_ROOM_PROMPT_LENGTH,
   MAX_INVENTORY_SIZE,
   COOLDOWN_CLOSE_ROOM,
-  TAXATION_LIQUIDATE_RAT,
-  TAXATION_CLOSE_ROOM
+  MAX_VALUE_PER_WIN_PERCENTAGE,
+  MIN_RAT_VALUE_TO_ENTER_PERCENTAGE,
+  TAXATION_LIQUIDATE_RAT_PERCENTAGE,
+  TAXATION_CLOSE_ROOM_PERCENTAGE
 } from "../constants.sol";
 import { LibUtils } from "./LibUtils.sol";
 import { SlopERC20 } from "../external/SlopERC20.sol";
@@ -50,9 +54,16 @@ library LibWorld {
         ratCreationCost: RAT_CREATION_COST,
         maxInventorySize: MAX_INVENTORY_SIZE,
         maxRoomPromptLength: MAX_ROOM_PROMPT_LENGTH,
-        cooldownCloseRoom: COOLDOWN_CLOSE_ROOM,
-        taxationLiquidateRat: TAXATION_LIQUIDATE_RAT,
-        taxationCloseRoom: TAXATION_CLOSE_ROOM
+        cooldownCloseRoom: COOLDOWN_CLOSE_ROOM
+      })
+    );
+
+    GamePercentagesConfig.set(
+      GamePercentagesConfigData({
+        maxValuePerWin: MAX_VALUE_PER_WIN_PERCENTAGE,
+        minRatValueToEnter: MIN_RAT_VALUE_TO_ENTER_PERCENTAGE,
+        taxationLiquidateRat: TAXATION_LIQUIDATE_RAT_PERCENTAGE,
+        taxationCloseRoom: TAXATION_CLOSE_ROOM_PERCENTAGE
       })
     );
 

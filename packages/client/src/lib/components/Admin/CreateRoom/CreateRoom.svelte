@@ -1,5 +1,6 @@
 <script lang="ts">
   import { gameConfig, playerERC20Balance } from "$lib/modules/state/stores"
+  import { getRoomMaxValuePerWin, getRoomMinRatValueToEnter } from "$lib/modules/state/utils"
   import { CharacterCounter, BigButton } from "$lib/components/Shared"
   import { sendCreateRoom } from "$lib/modules/action-manager/index.svelte"
   import { typeHit } from "$lib/modules/sound/state.svelte"
@@ -7,11 +8,7 @@
   import { CharacterLimitError, InputValidationError } from "$lib/modules/error-handling/errors"
   import { playSample } from "$lib/modules/sound/synth-library/plucked"
   import { playUISound, getMixerState } from "$lib/modules/sound/state.svelte"
-  import {
-    MIN_ROOM_CREATION_COST,
-    MIN_RAT_VALUE_TO_ENTER_FACTOR,
-    MAX_VALUE_PER_WIN_FACTOR
-  } from "@server/config"
+  import { MIN_ROOM_CREATION_COST } from "@server/config"
   import { collapsed } from "$lib/modules/ui/state.svelte"
 
   let { ondone } = $props()
@@ -32,11 +29,9 @@
   let flooredRoomCreationCost = $derived(Math.floor(roomCreationCost))
 
   // 10% of room creation cost
-  let minRatValueToEnter = $derived(
-    Math.floor(flooredRoomCreationCost * MIN_RAT_VALUE_TO_ENTER_FACTOR)
-  )
-  // 25% of room creation cost
-  let maxValuePerWin = $derived(Math.floor(flooredRoomCreationCost * MAX_VALUE_PER_WIN_FACTOR))
+  let minRatValueToEnter = $derived(getRoomMinRatValueToEnter(flooredRoomCreationCost))
+  // Portion of room creation cost
+  let maxValuePerWin = $derived(getRoomMaxValuePerWin(flooredRoomCreationCost, flooredRoomCreationCost))
 
   // Disabled if:
   // - Room description is invalid
@@ -48,8 +43,8 @@
   const disabled = $derived(
     invalidRoomDescriptionLength ||
       busy ||
-      !maxValuePerWin ||
-      !minRatValueToEnter ||
+      !$maxValuePerWin ||
+      !$minRatValueToEnter ||
       flooredRoomCreationCost < MIN_ROOM_CREATION_COST ||
       $playerERC20Balance < flooredRoomCreationCost
   )
@@ -161,11 +156,11 @@
           <div class="value-label">
             MIN RAT VALUE TO TRIP {#if import.meta.env.DEV}BALLS{/if}
           </div>
-          <div class="value-amount">${minRatValueToEnter}</div>
+          <div class="value-amount">${$minRatValueToEnter}</div>
         </div>
         <div class="value-box">
           <div class="value-label">MAX VALUE PER WIN</div>
-          <div class="value-amount">${maxValuePerWin}</div>
+          <div class="value-amount">${$maxValuePerWin}</div>
         </div>
       </div>
     </div>

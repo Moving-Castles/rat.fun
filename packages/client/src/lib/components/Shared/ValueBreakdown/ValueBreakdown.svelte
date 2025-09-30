@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { gameConfig } from "$lib/modules/state/stores"
+  import { gamePercentagesConfig } from "$lib/modules/state/stores"
 
   let {
     originalValue,
@@ -16,8 +16,8 @@
   } = $props()
 
   // Calculate tax and payout amounts
-  const taxAmount = Math.floor((originalValue * $gameConfig[taxRateKey]) / 100)
-  const payoutAmount = Math.floor((originalValue * (100 - $gameConfig[taxRateKey])) / 100)
+  const taxAmount = Math.floor((originalValue * $gamePercentagesConfig[taxRateKey]) / 100)
+  const payoutAmount = Math.floor((originalValue * (100 - $gamePercentagesConfig[taxRateKey])) / 100)
 </script>
 
 <div class="value-breakdown">
@@ -25,7 +25,7 @@
     {originalLabel}: <span class="value">{originalValue} SLOPAMINE</span>
   </div>
   <div class="value-line">
-    {taxLabel} ({$gameConfig[taxRateKey]}%):
+    {taxLabel} ({$gamePercentagesConfig[taxRateKey]}%):
     <span class="value negative">-{taxAmount} SLOPAMINE</span>
   </div>
   <div class="value-line">

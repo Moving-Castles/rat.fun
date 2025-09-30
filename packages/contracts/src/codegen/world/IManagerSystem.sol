@@ -29,4 +29,14 @@ interface IManagerSystem {
   ) external;
 
   function ratfun__removeWorldEvent() external;
+
+  function ratfun__setCooldownCloseRoom(uint32 _cooldownCloseRoom) external;
+
+  function ratfun__setMaxValuePerWin(uint32 _maxValuePerWin) external;
+
+  function ratfun__setMinRatValueToEnter(uint32 _minRatValueToEnter) external;
+
+  function ratfun__setTaxationLiquidateRat(uint32 _taxationLiquidateRat) external;
+
+  function ratfun__setTaxationCloseRoom(uint32 _taxationCloseRoom) external;
 }

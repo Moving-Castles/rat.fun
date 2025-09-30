@@ -23,8 +23,6 @@ struct GameConfigData {
   uint32 maxInventorySize;
   uint32 maxRoomPromptLength;
   uint32 cooldownCloseRoom;
-  uint32 taxationLiquidateRat;
-  uint32 taxationCloseRoom;
 }
 
 library GameConfig {
@@ -32,12 +30,12 @@ library GameConfig {
   ResourceId constant _tableId = ResourceId.wrap(0x746272617466756e000000000000000047616d65436f6e666967000000000000);
 
   FieldLayout constant _fieldLayout =
-    FieldLayout.wrap(0x0068080014202004040404040000000000000000000000000000000000000000);
+    FieldLayout.wrap(0x0060060014202004040400000000000000000000000000000000000000000000);
 
   // Hex-encoded key schema of ()
   Schema constant _keySchema = Schema.wrap(0x0000000000000000000000000000000000000000000000000000000000000000);
-  // Hex-encoded value schema of (address, bytes32, uint256, uint32, uint32, uint32, uint32, uint32)
-  Schema constant _valueSchema = Schema.wrap(0x00680800615f1f03030303030000000000000000000000000000000000000000);
+  // Hex-encoded value schema of (address, bytes32, uint256, uint32, uint32, uint32)
+  Schema constant _valueSchema = Schema.wrap(0x00600600615f1f03030300000000000000000000000000000000000000000000);
 
   /**
    * @notice Get the table's key field names.
@@ -52,15 +50,13 @@ library GameConfig {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](8);
+    fieldNames = new string[](6);
     fieldNames[0] = "adminAddress";
     fieldNames[1] = "adminId";
     fieldNames[2] = "ratCreationCost";
     fieldNames[3] = "maxInventorySize";
     fieldNames[4] = "maxRoomPromptLength";
     fieldNames[5] = "cooldownCloseRoom";
-    fieldNames[6] = "taxationLiquidateRat";
-    fieldNames[7] = "taxationCloseRoom";
   }
 
   /**
@@ -306,82 +302,6 @@ library GameConfig {
   }
 
   /**
-   * @notice Get taxationLiquidateRat.
-   */
-  function getTaxationLiquidateRat() internal view returns (uint32 taxationLiquidateRat) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 6, _fieldLayout);
-    return (uint32(bytes4(_blob)));
-  }
-
-  /**
-   * @notice Get taxationLiquidateRat.
-   */
-  function _getTaxationLiquidateRat() internal view returns (uint32 taxationLiquidateRat) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 6, _fieldLayout);
-    return (uint32(bytes4(_blob)));
-  }
-
-  /**
-   * @notice Set taxationLiquidateRat.
-   */
-  function setTaxationLiquidateRat(uint32 taxationLiquidateRat) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 6, abi.encodePacked((taxationLiquidateRat)), _fieldLayout);
-  }
-
-  /**
-   * @notice Set taxationLiquidateRat.
-   */
-  function _setTaxationLiquidateRat(uint32 taxationLiquidateRat) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    StoreCore.setStaticField(_tableId, _keyTuple, 6, abi.encodePacked((taxationLiquidateRat)), _fieldLayout);
-  }
-
-  /**
-   * @notice Get taxationCloseRoom.
-   */
-  function getTaxationCloseRoom() internal view returns (uint32 taxationCloseRoom) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 7, _fieldLayout);
-    return (uint32(bytes4(_blob)));
-  }
-
-  /**
-   * @notice Get taxationCloseRoom.
-   */
-  function _getTaxationCloseRoom() internal view returns (uint32 taxationCloseRoom) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 7, _fieldLayout);
-    return (uint32(bytes4(_blob)));
-  }
-
-  /**
-   * @notice Set taxationCloseRoom.
-   */
-  function setTaxationCloseRoom(uint32 taxationCloseRoom) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 7, abi.encodePacked((taxationCloseRoom)), _fieldLayout);
-  }
-
-  /**
-   * @notice Set taxationCloseRoom.
-   */
-  function _setTaxationCloseRoom(uint32 taxationCloseRoom) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    StoreCore.setStaticField(_tableId, _keyTuple, 7, abi.encodePacked((taxationCloseRoom)), _fieldLayout);
-  }
-
-  /**
    * @notice Get the full data.
    */
   function get() internal view returns (GameConfigData memory _table) {
@@ -418,9 +338,7 @@ library GameConfig {
     uint256 ratCreationCost,
     uint32 maxInventorySize,
     uint32 maxRoomPromptLength,
-    uint32 cooldownCloseRoom,
-    uint32 taxationLiquidateRat,
-    uint32 taxationCloseRoom
+    uint32 cooldownCloseRoom
   ) internal {
     bytes memory _staticData = encodeStatic(
       adminAddress,
@@ -428,9 +346,7 @@ library GameConfig {
       ratCreationCost,
       maxInventorySize,
       maxRoomPromptLength,
-      cooldownCloseRoom,
-      taxationLiquidateRat,
-      taxationCloseRoom
+      cooldownCloseRoom
     );
 
     EncodedLengths _encodedLengths;
@@ -450,9 +366,7 @@ library GameConfig {
     uint256 ratCreationCost,
     uint32 maxInventorySize,
     uint32 maxRoomPromptLength,
-    uint32 cooldownCloseRoom,
-    uint32 taxationLiquidateRat,
-    uint32 taxationCloseRoom
+    uint32 cooldownCloseRoom
   ) internal {
     bytes memory _staticData = encodeStatic(
       adminAddress,
@@ -460,9 +374,7 @@ library GameConfig {
       ratCreationCost,
       maxInventorySize,
       maxRoomPromptLength,
-      cooldownCloseRoom,
-      taxationLiquidateRat,
-      taxationCloseRoom
+      cooldownCloseRoom
     );
 
     EncodedLengths _encodedLengths;
@@ -483,9 +395,7 @@ library GameConfig {
       _table.ratCreationCost,
       _table.maxInventorySize,
       _table.maxRoomPromptLength,
-      _table.cooldownCloseRoom,
-      _table.taxationLiquidateRat,
-      _table.taxationCloseRoom
+      _table.cooldownCloseRoom
     );
 
     EncodedLengths _encodedLengths;
@@ -506,9 +416,7 @@ library GameConfig {
       _table.ratCreationCost,
       _table.maxInventorySize,
       _table.maxRoomPromptLength,
-      _table.cooldownCloseRoom,
-      _table.taxationLiquidateRat,
-      _table.taxationCloseRoom
+      _table.cooldownCloseRoom
     );
 
     EncodedLengths _encodedLengths;
@@ -533,9 +441,7 @@ library GameConfig {
       uint256 ratCreationCost,
       uint32 maxInventorySize,
       uint32 maxRoomPromptLength,
-      uint32 cooldownCloseRoom,
-      uint32 taxationLiquidateRat,
-      uint32 taxationCloseRoom
+      uint32 cooldownCloseRoom
     )
   {
     adminAddress = (address(Bytes.getBytes20(_blob, 0)));
@@ -549,10 +455,6 @@ library GameConfig {
     maxRoomPromptLength = (uint32(Bytes.getBytes4(_blob, 88)));
 
     cooldownCloseRoom = (uint32(Bytes.getBytes4(_blob, 92)));
-
-    taxationLiquidateRat = (uint32(Bytes.getBytes4(_blob, 96)));
-
-    taxationCloseRoom = (uint32(Bytes.getBytes4(_blob, 100)));
   }
 
   /**
@@ -572,9 +474,7 @@ library GameConfig {
       _table.ratCreationCost,
       _table.maxInventorySize,
       _table.maxRoomPromptLength,
-      _table.cooldownCloseRoom,
-      _table.taxationLiquidateRat,
-      _table.taxationCloseRoom
+      _table.cooldownCloseRoom
     ) = decodeStatic(_staticData);
   }
 
@@ -606,9 +506,7 @@ library GameConfig {
     uint256 ratCreationCost,
     uint32 maxInventorySize,
     uint32 maxRoomPromptLength,
-    uint32 cooldownCloseRoom,
-    uint32 taxationLiquidateRat,
-    uint32 taxationCloseRoom
+    uint32 cooldownCloseRoom
   ) internal pure returns (bytes memory) {
     return
       abi.encodePacked(
@@ -617,9 +515,7 @@ library GameConfig {
         ratCreationCost,
         maxInventorySize,
         maxRoomPromptLength,
-        cooldownCloseRoom,
-        taxationLiquidateRat,
-        taxationCloseRoom
+        cooldownCloseRoom
       );
   }
 
@@ -635,9 +531,7 @@ library GameConfig {
     uint256 ratCreationCost,
     uint32 maxInventorySize,
     uint32 maxRoomPromptLength,
-    uint32 cooldownCloseRoom,
-    uint32 taxationLiquidateRat,
-    uint32 taxationCloseRoom
+    uint32 cooldownCloseRoom
   ) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
     bytes memory _staticData = encodeStatic(
       adminAddress,
@@ -645,9 +539,7 @@ library GameConfig {
       ratCreationCost,
       maxInventorySize,
       maxRoomPromptLength,
-      cooldownCloseRoom,
-      taxationLiquidateRat,
-      taxationCloseRoom
+      cooldownCloseRoom
     );
 
     EncodedLengths _encodedLengths;

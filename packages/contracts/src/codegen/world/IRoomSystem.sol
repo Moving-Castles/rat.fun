@@ -13,8 +13,6 @@ interface IRoomSystem {
     bytes32 _playerId,
     bytes32 _roomId,
     uint256 _roomCreationCost,
-    uint256 _maxValuePerWin,
-    uint256 _minRatValueToEnter,
     string memory _prompt
   ) external returns (bytes32 newRoomId);
 

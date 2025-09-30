@@ -1,11 +1,13 @@
 <script lang="ts">
-  import { getRoomOwnerName } from "$lib/modules/state/utils"
+  import { getRoomMaxValuePerWin, getRoomOwnerName } from "$lib/modules/state/utils"
   import { lastUpdated } from "$lib/modules/content"
   import { urlFor } from "$lib/modules/content/sanity"
   import { getModalState } from "$lib/components/Shared/Modal/state.svelte"
   import { NoImage, ModalTarget } from "$lib/components/Shared"
 
   let { room, sanityRoomContent }: { room: Room; sanityRoomContent: any } = $props()
+
+  let maxValuePerWin = getRoomMaxValuePerWin(room.roomCreationCost, room.balance)
 
   let { modal } = getModalState()
   let showImageModal = $state(false)
@@ -59,10 +61,10 @@
         <div class="value">${room?.minRatValueToEnter}</div>
       </div>
     {/if} -->
-    {#if room?.maxValuePerWin > 0}
+    {#if $maxValuePerWin > 0}
       <div class="row max-value-per-win">
         <div class="label">MAX VALUE PER WIN</div>
-        <div class="value">${room?.maxValuePerWin}</div>
+        <div class="value">${$maxValuePerWin}</div>
       </div>
     {/if}
     <!-- BALANCE -->

@@ -3,6 +3,7 @@ pragma solidity >=0.8.24;
 import { System } from "@latticexyz/world/src/System.sol";
 import {
   GameConfig,
+  GamePercentagesConfig,
   EntityType,
   Balance,
   Dead,
@@ -11,11 +12,9 @@ import {
   TripCount,
   LastVisitBlock,
   RoomCreationCost,
-  MasterKey,
-  MaxValuePerWin,
-  MinRatValueToEnter
+  MasterKey
 } from "../codegen/index.sol";
-import { LibManager, LibRat } from "../libraries/Libraries.sol";
+import { LibManager, LibRat, LibRoom } from "../libraries/Libraries.sol";
 import { ENTITY_TYPE } from "../codegen/common.sol";
 import { Item } from "../structs.sol";
 import { LibUtils } from "../libraries/LibUtils.sol";
@@ -53,7 +52,7 @@ contract ManagerSystem is System {
     require(EntityType.get(_ratId) == ENTITY_TYPE.RAT, "not rat");
     require(Dead.get(_ratId) == false, "rat is dead");
     require(EntityType.get(_roomId) == ENTITY_TYPE.ROOM, "not room");
-    require(LibRat.getTotalRatValue(_ratId) >= MinRatValueToEnter.get(_roomId), "rat value too low");
+    require(LibRat.getTotalRatValue(_ratId) >= LibRoom.getMinRatValueToEnter(_roomId), "rat value too low");
 
     // Check that room is not depleted
     uint256 roomBalance = Balance.get(_roomId);
@@ -69,7 +68,7 @@ contract ManagerSystem is System {
     // BUDGETING
     // * * * * * * * * * * * * *
 
-    uint256 roomBudget = LibUtils.min(MaxValuePerWin.get(_roomId), roomBalance);
+    uint256 roomBudget = LibUtils.min(LibRoom.getMaxValuePerWin(_roomId), roomBalance);
 
     // * * * * * * * * * * * * *
     // BALANCE
@@ -139,5 +138,41 @@ contract ManagerSystem is System {
    */
   function removeWorldEvent() public onlyAdmin {
     LibWorld.removeWorldEvent();
+  }
+
+  // * * * * * * * * * * * * *
+  // CONFIG SETTERS
+  // * * * * * * * * * * * * *
+
+  function setCooldownCloseRoom(uint32 _cooldownCloseRoom) public onlyAdmin {
+    GameConfig.setCooldownCloseRoom(_cooldownCloseRoom);
+  }
+
+  // * * * * * * * * * * * * *
+  // PERCENTAGE CONFIG SETTERS
+  // * * * * * * * * * * * * *
+
+  function _checkPercentageValue(uint32 _value) internal pure {
+    require(_value <= 100, "percentage value too high");
+  }
+
+  function setMaxValuePerWin(uint32 _maxValuePerWin) public onlyAdmin {
+    _checkPercentageValue(_maxValuePerWin);
+    GamePercentagesConfig.setMaxValuePerWin(_maxValuePerWin);
+  }
+
+  function setMinRatValueToEnter(uint32 _minRatValueToEnter) public onlyAdmin {
+    _checkPercentageValue(_minRatValueToEnter);
+    GamePercentagesConfig.setMinRatValueToEnter(_minRatValueToEnter);
+  }
+
+  function setTaxationLiquidateRat(uint32 _taxationLiquidateRat) public onlyAdmin {
+    _checkPercentageValue(_taxationLiquidateRat);
+    GamePercentagesConfig.setTaxationLiquidateRat(_taxationLiquidateRat);
+  }
+
+  function setTaxationCloseRoom(uint32 _taxationCloseRoom) public onlyAdmin {
+    _checkPercentageValue(_taxationCloseRoom);
+    GamePercentagesConfig.setTaxationCloseRoom(_taxationCloseRoom);
   }
 }

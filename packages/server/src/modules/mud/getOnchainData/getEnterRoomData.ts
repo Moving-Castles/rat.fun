@@ -1,4 +1,4 @@
-import type { EnterRoomData, Item, GameConfig, WorldEvent } from "@modules/types"
+import type { EnterRoomData, Item, GameConfig, GamePercentagesConfig, WorldEvent } from "@modules/types"
 import { getComponentValue, Entity } from "@latticexyz/recs"
 import { components, network } from "@modules/mud/initMud"
 import { GAME_CONFIG_ID } from "@config"
@@ -30,9 +30,8 @@ export async function getEnterRoomData(
       Inventory,
       Index,
       GameConfig,
+      GamePercentagesConfig,
       RoomCreationCost,
-      MaxValuePerWin,
-      MinRatValueToEnter
     } = components
 
     const result = {} as EnterRoomData
@@ -52,8 +51,8 @@ export async function getEnterRoomData(
     }
 
     // Get rat data
-    const ratDead = (getComponentValue(Dead, ratEntity)?.value ?? false) as boolean
-    const ratBalance = (getComponentValue(Balance, ratEntity)?.value ?? 0) as number
+    const ratDead = Boolean(getComponentValue(Dead, ratEntity)?.value ?? false)
+    const ratBalance = Number(getComponentValue(Balance, ratEntity)?.value ?? 0)
     const ratInventory = (getComponentValue(Inventory, ratEntity)?.value ?? [""]) as string[]
     const inventoryObjects = constructInventoryObject(ratInventory)
 
@@ -85,23 +84,16 @@ export async function getEnterRoomData(
         throw new RoomNotFoundError(roomId)
       }
 
-      const roomIndex = (getComponentValue(Index, roomEntity)?.value ?? 0) as number
-      const roomBalance = (getComponentValue(Balance, roomEntity)?.value ?? 0) as number
-      const roomCreationCost = (getComponentValue(RoomCreationCost, roomEntity)?.value ??
-        0) as number
-      const roomMaxValuePerWin = (getComponentValue(MaxValuePerWin, roomEntity)?.value ??
-        0) as number
-      const roomMinRatValueToEnter = (getComponentValue(MinRatValueToEnter, roomEntity)?.value ??
-        0) as number
+      const roomIndex = Number(getComponentValue(Index, roomEntity)?.value ?? 0)
+      const roomBalance = Number(getComponentValue(Balance, roomEntity)?.value ?? 0)
+      const roomCreationCost = Number(getComponentValue(RoomCreationCost, roomEntity)?.value ?? 0)
 
       const room = {
         id: roomId,
         prompt: roomPrompt,
-        balance: Number(roomBalance),
+        balance: roomBalance,
         roomCreationCost: roomCreationCost,
-        index: roomIndex,
-        maxValuePerWin: roomMaxValuePerWin,
-        minRatValueToEnter: roomMinRatValueToEnter
+        index: roomIndex
       }
 
       result.room = room
@@ -137,14 +129,16 @@ export async function getEnterRoomData(
     const gameConfigEntity = (await network).world.registerEntity({ id: GAME_CONFIG_ID })
 
     const gameConfig = getComponentValue(GameConfig, gameConfigEntity) as GameConfig
+    const gamePercentagesConfig = getComponentValue(GamePercentagesConfig, gameConfigEntity) as GamePercentagesConfig
     const worldEvent = getComponentValue(WorldEvent, gameConfigEntity) as WorldEvent
 
     // Check if game config exists
-    if (!gameConfig) {
+    if (!gameConfig || !gamePercentagesConfig) {
       throw new GameConfigNotFoundError(gameConfigEntity)
     }
 
     result.gameConfig = gameConfig
+    result.gamePercentagesConfig = gamePercentagesConfig
     result.worldEvent = worldEvent
 
     /////////////////
@@ -174,7 +168,7 @@ function constructInventoryObject(ratInventory: string[]) {
     inventoryObject.push({
       id: ratInventory[i],
       name: (getComponentValue(Name, ratInventory[i] as Entity)?.value ?? "") as string,
-      value: Number(getComponentValue(Value, ratInventory[i] as Entity)?.value ?? 0) as number
+      value: Number(getComponentValue(Value, ratInventory[i] as Entity)?.value ?? 0)
     })
   }
   return inventoryObject

@@ -1,10 +1,13 @@
 <script lang="ts">
   import type { Hex } from "viem"
   import { player, ratTotalValue } from "$lib/modules/state/stores"
+  import { getRoomMinRatValueToEnter } from "$lib/modules/state/utils"
   import { goto } from "$app/navigation"
   import { BigButton } from "$lib/components/Shared"
 
   let { roomId, room, disabled }: { roomId: Hex; room: Room; disabled: boolean } = $props()
+
+  let minRatValueToEnter = getRoomMinRatValueToEnter(room.roomCreationCost)
 
   const onClick = async () => {
     await goto(`/${roomId}/tripping?enter=true&rat=${$player.currentRat}&t=${Date.now()}`)
@@ -12,10 +15,10 @@
 </script>
 
 <div class="room-enter">
-  {#if Number(room.minRatValueToEnter) > Number($ratTotalValue)}
+  {#if Number($minRatValueToEnter) > Number($ratTotalValue)}
     <BigButton
       disabled={true}
-      text={`Rat value too low (at least ${Number(room.minRatValueToEnter)})`}
+      text={`Rat value too low (at least ${Number($minRatValueToEnter)})`}
       onclick={onClick}
     />
   {/if}

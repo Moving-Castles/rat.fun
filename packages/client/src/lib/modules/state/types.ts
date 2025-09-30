@@ -24,12 +24,14 @@ type mudComponents = {
 
 declare global {
   type GameConfigObject = mudSchemas["GameConfig"]
+  type GamePercentagesConfigObject = mudSchemas["GamePercentagesConfig"]
   type WorldEventObject = mudSchemas["WorldEvent"]
   type WorldStatsObject = mudSchemas["WorldStats"]
   type ExternalAddressesConfigObject = mudSchemas["ExternalAddressesConfig"]
 
   type WorldObject = {
     gameConfig: GameConfigObject
+    gamePercentagesConfig: GamePercentagesConfigObject
     worldStats: WorldStatsObject
     externalAddressesConfig: ExternalAddressesConfigObject
     worldEvent: WorldEventObject
@@ -53,7 +55,8 @@ declare global {
       | boolean
       | string
       | GameConfigObject
-      | mudSchemas["ExternalAddressesConfig"]
+      | GamePercentagesConfigObject
+      | ExternalAddressesConfigObject
       | WorldEventObject
       | WorldStatsObject
       | undefined
@@ -71,8 +74,6 @@ declare global {
     prompt?: mudComponents["Prompt"]
     index?: mudComponents["Index"]
     roomCreationCost?: mudComponents["RoomCreationCost"]
-    maxValuePerWin?: mudComponents["MaxValuePerWin"]
-    minRatValueToEnter?: mudComponents["MinRatValueToEnter"]
     visitCount?: mudComponents["VisitCount"]
     killCount?: mudComponents["KillCount"]
     tripCount?: mudComponents["TripCount"]
@@ -82,7 +83,8 @@ declare global {
     masterKey?: mudComponents["MasterKey"]
     // Gameconfig related fields
     gameConfig: GameConfigObject
-    externalAddressesConfig: mudSchemas["ExternalAddressesConfig"]
+    gamePercentagesConfig: GamePercentagesConfigObject
+    externalAddressesConfig: ExternalAddressesConfigObject
     worldEvent: WorldEventObject
     worldStats: WorldStatsObject
   }
@@ -123,8 +125,6 @@ declare global {
     creationBlock: mudComponents["CreationBlock"]
     lastVisitBlock: mudComponents["LastVisitBlock"]
     roomCreationCost: mudComponents["RoomCreationCost"]
-    maxValuePerWin: mudComponents["MaxValuePerWin"]
-    minRatValueToEnter: mudComponents["MinRatValueToEnter"]
   }
 
   type Item = {

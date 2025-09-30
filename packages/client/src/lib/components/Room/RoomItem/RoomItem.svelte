@@ -3,6 +3,7 @@
   import { fade } from "svelte/transition"
   import { urlFor } from "$lib/modules/content/sanity"
   import { renderSafeString } from "$lib/modules/utils"
+  import { getRoomMaxValuePerWin } from "$lib/modules/state/utils"
   import { staticContent } from "$lib/modules/content"
   import { NoImage } from "$lib/components/Shared"
 
@@ -11,6 +12,9 @@
   let { roomId, room, index }: { roomId: Hex; room: Room; index: number } = $props()
 
   console.log("index", index)
+
+  // Portion of room creation cost
+  let maxValuePerWin = getRoomMaxValuePerWin(room.roomCreationCost, room.balance)
 
   let sanityRoomContent: SanityRoom | undefined = $derived(
     $staticContent?.rooms?.find(r => r._id.trim() == roomId.trim()) ?? undefined
@@ -56,7 +60,7 @@
     </div>
     <!-- MAX WIN -->
     <div class="room-info-max-win">
-      <span class="max-win">Max Win: ${room.maxValuePerWin}</span>
+      <span class="max-win">Max Win: ${$maxValuePerWin}</span>
     </div>
   </div>
 </a>

@@ -21,12 +21,19 @@ export default defineWorld({
         ratCreationCost: "uint256",
         maxInventorySize: "uint32",
         maxRoomPromptLength: "uint32",
-        cooldownCloseRoom: "uint32",
-        taxationLiquidateRat: "uint32",
-        taxationCloseRoom: "uint32"
+        cooldownCloseRoom: "uint32"
       },
       codegen: {
         dataStruct: true
+      }
+    },
+    GamePercentagesConfig: {
+      key: [],
+      schema: {
+        maxValuePerWin: "uint32", // Limits how much a rat can extract from room in one run
+        minRatValueToEnter: "uint32", // Minimum total value of rat to enter room.
+        taxationLiquidateRat: "uint32",
+        taxationCloseRoom: "uint32"
       }
     },
     WorldStats: {
@@ -88,9 +95,7 @@ export default defineWorld({
     // = = = = = = = = = =
     Prompt: "string",
     // = = = = = = = = = =
-    RoomCreationCost: "uint256", // Initial balance of room.
-    MaxValuePerWin: "uint256", // Limits how much a rat can extract from room in one run.
-    MinRatValueToEnter: "uint256" // Minimum total value of rat to enter room.
+    RoomCreationCost: "uint256" // Initial balance of room.
   },
   systems: {
     // DevSystem is conditionally deployed for local/test chains in PostDeploy
