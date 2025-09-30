@@ -9,6 +9,9 @@
   import { PropertyChangeTimeoutError, RatError } from "$lib/modules/error-handling/errors"
   import { errorHandler } from "$lib/modules/error-handling"
   import { getRandomNumber, getRandomElement } from "$lib/modules/utils"
+  import { erc20BalanceListenerActive } from "$lib/modules/erc20Listener/stores"
+  import { refetchBalance } from "$lib/modules/erc20Listener"
+
   import { SmallButton } from "$lib/components/Shared"
 
   // Pre-generate the final name
@@ -103,19 +106,30 @@
 
   function checkTransition() {
     if (deploymentDone) {
-      transitionTo(RAT_BOX_STATE.HAS_RAT)
+      done()
     } else {
       // User finished slot machine before deployment, wait for deployment
       const checkInterval = setInterval(() => {
         if (deploymentDone) {
           clearInterval(checkInterval)
-          transitionTo(RAT_BOX_STATE.HAS_RAT)
+          done()
         }
       }, 100)
     }
   }
 
+  async function done() {
+    // Update balance after deployment
+    await refetchBalance()
+    // Resume erc20 balance listener
+    erc20BalanceListenerActive.set(true)
+    // Transition to has rat state
+    transitionTo(RAT_BOX_STATE.HAS_RAT)
+  }
+
   onMount(async () => {
+    // Pause erc20 balance listener so we can control the update
+    erc20BalanceListenerActive.set(false)
     startSlotMachine()
     await startDeployment()
   })

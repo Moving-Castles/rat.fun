@@ -1,6 +1,5 @@
 <script lang="ts">
   import { player, playerERC20Balance, playerAddress } from "$lib/modules/state/stores"
-  import { NumberGoing } from "$lib/components/Shared"
   import { playUISound } from "$lib/modules/sound/state.svelte"
   import { tippy } from "svelte-tippy"
 
@@ -82,7 +81,7 @@
       >
         <div class:priority={balanceGoing} class="inner-wrapper">
           <div class="value">
-            <NumberGoing bind:going={balanceGoing} muted={true} value={$playerERC20Balance ?? 0} />
+            <span>{$playerERC20Balance ?? 0}</span>
             <span class="unit">$slop</span>
           </div>
         </div>

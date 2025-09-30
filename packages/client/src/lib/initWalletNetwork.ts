@@ -4,7 +4,7 @@ import { ENTITY_TYPE } from "contracts/enums"
 import { get } from "svelte/store"
 import { walletNetwork, walletType } from "$lib/modules/network"
 import { player, playerAddress } from "$lib/modules/state/stores"
-import { initErc20Listener } from "$lib/modules/state/erc20Listener"
+import { initErc20Listener } from "$lib/modules/erc20Listener"
 import { WALLET_TYPE } from "./mud/enums"
 
 export function initWalletNetwork(

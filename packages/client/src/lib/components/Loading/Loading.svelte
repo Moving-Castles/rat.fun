@@ -17,7 +17,6 @@
   // Wait for chain sync to complete
   $effect(() => {
     if ($ready) {
-      // Done here because currently we are not filtering on by playerAddress
       // ??? Explain what this does
       initEntities()
       // We are loaded. Animate the component out...
