@@ -21,12 +21,7 @@ cp ./netlify.toml ./build
 # Change directory to the location of the built frontend
 cd ./build
 
-echo "deploying to base sepolia with burner settings $BASE_SEPOLIA_CLIENT_ID"
+echo "deploying to base sepolia $BASE_SEPOLIA_CLIENT_ID"
 # Deploy for Base Sepolia (burner wallet)
 netlify deploy --dir=. --prod --auth=$NETLIFY_AUTH_TOKEN --no-build --site $BASE_SEPOLIA_CLIENT_ID
-echo "done"
-
-echo "deploying to base sepolia with entrykit settings $BASE_SEPOLIA_ENTRYKIT_CLIENT_ID"
-# Deploy for Base Sepolia (entry kit)
-netlify deploy --dir=. --prod --auth=$NETLIFY_AUTH_TOKEN --no-build --site $BASE_SEPOLIA_ENTRYKIT_CLIENT_ID
 echo "done"
