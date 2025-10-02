@@ -5,6 +5,7 @@
   import { tippy } from "svelte-tippy"
 
   import AccountDropdown from "./AccountDropdown.svelte"
+  import CurrencySymbol from "$lib/components/Shared/CurrencySymbol/CurrencySymbol.svelte"
 
   let balanceGoing = $state(false)
   let showAccountDropdown = $state(false)
@@ -61,7 +62,7 @@
       onmouseup={toggleAccountStats}
     >
       <!-- NAME -->
-      <div class="stat-item">
+      <div class="stat-item name">
         <!-- AVATAR -->
         <div
           use:tippy={{
@@ -84,8 +85,7 @@
       >
         <div class:priority={balanceGoing} class="inner-wrapper">
           <div class="value">
-            <span>{$playerERC20Balance ?? 0}</span>
-            <span class="unit">$slop</span>
+            <span><CurrencySymbol />{$playerERC20Balance ?? 0}</span>
           </div>
         </div>
       </div>
@@ -116,9 +116,14 @@
         border-right: var(--default-border-style);
         color: var(--foreground);
 
+        &.name {
+          font-size: var(--font-size-small);
+        }
+
         &.balance {
           background: var(--color-value);
           color: var(--black);
+          font-size: var(--font-size-normal);
         }
 
         .inner-wrapper {
@@ -126,10 +131,6 @@
           padding-inline: 10px;
           align-items: center;
           width: 100%;
-
-          .value {
-            font-size: var(--font-size-small);
-          }
 
           &.player {
             color: var(--foreground);
