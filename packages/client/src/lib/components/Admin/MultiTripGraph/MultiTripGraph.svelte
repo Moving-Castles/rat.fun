@@ -25,9 +25,10 @@
   // Layout setup
   let width = $state(0) // width will be set by the clientWidth
   let graph = $state<"trips" | "profitloss">("profitloss")
+  let limit = $state(2)
   let timeWindow = $state<"1m" | "1h" | "1d" | "1w" | "all_time" | "events">("events")
 
-  const padding = { top: 6, right: 12, bottom: 6, left: 6 }
+  const padding = { top: 0, right: 0, bottom: 0, left: 0 }
 
   let innerWidth = $derived(width - padding.left - padding.right)
   let innerHeight = $derived(height - padding.top - padding.bottom)
@@ -60,7 +61,8 @@
 
     const domainStart =
       timeWindow === "events" ? getRelevantDomainStart() : new Date(getRelevantDomainStart())
-    const domainEnd = timeWindow === "events" ? allData.length - 1 : new Date(currentTime) // Always go to current time
+    const domainEnd =
+      timeWindow === "events" ? Math.min(limit - 1, allData.length - 1) : new Date(currentTime) // Always go to current time
 
     if (timeWindow === "events") {
       return scaleLinear().domain([domainStart, domainEnd]).range([0, innerWidth])
@@ -99,6 +101,7 @@
       minValue = -maxValue // Symmetric range
     } else {
       allData = allPlots.flatMap(plot => plot.data)
+      allData = [...allData].slice(-limit, allData.length)
       maxValue = Number(max(allData, (d: PlotPoint) => +d.value) ?? 0)
       minValue = 0
     }
@@ -118,9 +121,9 @@
         outcomes.sort((a, b) => {
           return new Date(b._createdAt).getTime() - new Date(a._createdAt).getTime()
         })
+
         const roomOutcomes = outcomes.reverse()
-        const initialTime =
-          timeWindow === "events" ? 0 : new Date(sanityRoomContent?._createdAt).getTime()
+        const initialTime = new Date(sanityRoomContent?._createdAt).getTime()
         const data = [
           {
             time: initialTime,
@@ -129,7 +132,7 @@
           },
           ...roomOutcomes
         ].map((o, i) => {
-          const time = timeWindow === "events" ? i : new Date(o?._createdAt).getTime()
+          const time = new Date(o?._createdAt).getTime()
           return {
             time: time || o.time,
             value: o?.roomValue || 0,
@@ -172,7 +175,7 @@
     if (!allPlots.length) return []
 
     // Combine all data points from all trips and sort by time
-    const allData = allPlots.flatMap((plot, plotIndex) =>
+    let allData = allPlots.flatMap((plot, plotIndex) =>
       plot.data.map(point => ({
         ...point,
         tripId: Object.keys(plots)[plotIndex],
@@ -182,24 +185,28 @@
 
     // Sort by time
     allData.sort((a, b) => a.time - b.time)
+    allData = [...allData].slice(-limit, allData.length)
 
     // Calculate cumulative profit/loss over time: balance - investment
     const profitLossData = []
+    const tripIds = Object.keys(plots)
 
-    allData.forEach(point => {
+    allData.forEach((point, i) => {
       // Find the current balance for each trip at this point in time
-      const currentBalance = Object.entries(plots).reduce((totalBalance, [tripId, plot]) => {
+      const currentBalance = tripIds.reduce((totalBalance, tripId) => {
+        const plot = plots[tripId]
         const relevantPoints = plot.data.filter(p => p.time <= point.time)
         const latestPoint = relevantPoints[relevantPoints.length - 1]
         return totalBalance + (latestPoint?.value || 0)
       }, 0)
 
       // Current investment at this point in time
-      const currentInvestment = Object.entries(plots).reduce((totalInvestment, [tripId, plot]) => {
+      const currentInvestment = tripIds.reduce((totalInvestment, tripId) => {
+        const plot = plots[tripId]
         const hasStarted = plot.data.some(p => p.time <= point.time)
         if (hasStarted) {
-          const tripData = Object.values(trips).find(t => Object.keys(trips).indexOf(tripId) >= 0)
-          return totalInvestment + Number(tripData?.roomCreationCost || 0)
+          const trip = trips[tripId]
+          return totalInvestment + Number(trip?.roomCreationCost || 0)
         }
         return totalInvestment
       }, 0)
@@ -207,20 +214,11 @@
       const profitLoss = currentBalance - currentInvestment
 
       profitLossData.push({
-        time: point.time,
+        time: i,
         value: profitLoss,
         meta: { ...point.meta, balance: currentBalance, investment: currentInvestment }
       })
     })
-
-    // Add current point if we have trips
-    if (profitLossData.length > 0) {
-      profitLossData.push({
-        time: currentTime,
-        value: currentProfitLoss,
-        meta: { balance: totalBalance, investment: totalInvestment }
-      })
-    }
 
     return profitLossData
   })
@@ -262,7 +260,7 @@
   })
 </script>
 
-<div class="room-graph">
+<div class="profit-loss-graph">
   <div class="y-axis">
     <!-- <small class="label">Value</small> -->
   </div>
@@ -394,7 +392,7 @@
                 r="5"
                 cx={xScale(point.time)}
                 cy={yScale(point.value)}
-                data-tippy-content={`Total Profit/Loss: ${CURRENCY_SYMBOL}${point.value.toFixed(2)}`}
+                data-tippy-content={generateTooltipContent(point)}
               ></circle>
             {/each}
 
@@ -450,10 +448,11 @@
 
   .legend {
     position: absolute;
-    z-index: 999;
+    // z-index: 999;
     display: flex;
     gap: 8px;
     padding: 8px;
+    pointer-events: none;
 
     &.y {
       top: 0;
@@ -481,7 +480,7 @@
     }
   }
 
-  .room-graph {
+  .profit-loss-graph {
     width: 100%;
     height: 100%;
     position: relative;

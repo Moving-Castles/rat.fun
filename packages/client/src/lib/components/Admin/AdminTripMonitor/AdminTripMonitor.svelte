@@ -3,6 +3,7 @@
   import { playerActiveRooms } from "$lib/modules/state/stores"
   import { MultiTripGraph } from "$lib/components/Admin"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
+  import tippy from "tippy.js"
 
   let { focus } = $props()
 
@@ -26,6 +27,12 @@
   const plSymbolExplicit = derived(portfolioClass, $pc =>
     $pc === "neutral" ? "" : $pc === "upText" ? "+" : "-"
   )
+
+  $effect(() => {
+    tippy("[data-tippy-content]", {
+      allowHTML: true
+    })
+  })
 </script>
 
 <div bind:clientHeight class="admin-trip-monitor">
@@ -34,12 +41,14 @@
       <h3>Active trips</h3>
       {#if $balance && $investment}
         <div class="main">
-          <span class="unit">{CURRENCY_SYMBOL}</span>
+          <span class="unit {$portfolioClass}">{CURRENCY_SYMBOL}</span>
           <div class="content {$portfolioClass} glow">
-            <h1 class="">{$plSymbol}{$profitLoss}</h1>
-            <div class="calculations">
-              <span class="percentage">({(($balance / $investment) * 100).toFixed(2)}%)</span>
-            </div>
+            <h1 data-tippy-content="Unrealised P&L" class="">
+              {$plSymbolExplicit}{CURRENCY_SYMBOL}{Math.abs($profitLoss)}
+            </h1>
+            <span class="percentage"
+              >({$plSymbolExplicit}{(($balance / $investment) * 100).toFixed(2)}%)</span
+            >
           </div>
         </div>
         <!-- {$balance / $investment} -->
@@ -49,11 +58,11 @@
     </div>
     <div class="bottom-left">
       <p>Portfolio</p>
-      <h2 class="{$portfolioClass} glow">{$plSymbolExplicit}{$balance}</h2>
+      <h2 class="{$portfolioClass} glow">{$plSymbolExplicit}{CURRENCY_SYMBOL}{$balance}</h2>
     </div>
     <div class="bottom-right">
       <p>Invested</p>
-      <h2>{$investment}</h2>
+      <h2>{CURRENCY_SYMBOL}{$investment}</h2>
     </div>
   </div>
   <div class="p-l-graph">
@@ -114,8 +123,15 @@
         font-size: 240px;
         padding: 5px;
         z-index: 0;
-        color: rgba(230, 30, 0, 1);
-        // color: rgba(100, 255, 200, 1);
+
+        &.upText {
+          color: rgba(100, 255, 200, 1);
+        }
+
+        &.downText {
+          color: rgba(230, 30, 0, 1);
+        }
+
         vertical-align: sub;
         display: inline-block;
         transform: translate(-100%, -50%) rotate(-5deg) scale(2, 2);
@@ -139,12 +155,12 @@
       margin: 2rem 1rem;
       width: 100%;
       text-align: center;
-
-      .percentage {
-        font-size: 2rem;
-        display: inline-block;
-        transform: translate(-100%, 0);
-      }
+    }
+    .percentage {
+      position: absolute;
+      top: 0;
+      right: 0;
+      display: inline-block;
     }
     h2 {
       font-family: var(--special-font-stack);
