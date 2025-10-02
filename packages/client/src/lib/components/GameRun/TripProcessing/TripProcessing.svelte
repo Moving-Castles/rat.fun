@@ -22,7 +22,7 @@
 
   onMount(() => {
     shaderManager.setShader("vortex")
-    backgroundMusic = playSound("ratfun", "tripProcessing", true)
+    backgroundMusic = playSound("ratfun", "tripProcessingv2", true)
 
     // Start timer
     timerInterval = setInterval(() => {

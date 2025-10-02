@@ -53,6 +53,11 @@ export const ratfun: SoundAssets = {
     author: "leo",
     volume: 1
   },
+  tripSetupv2: {
+    src: "/sounds/ratfun/trip_setup_v2.mp3",
+    author: "leo",
+    volume: 1
+  },
   tripSetupTrigger: {
     src: "/sounds/ratfun/trip_setup_oneshot.mp3",
     author: "leo",
@@ -63,8 +68,18 @@ export const ratfun: SoundAssets = {
     author: "leo",
     volume: 1
   },
+  tripProcessingv2: {
+    src: "/sounds/ratfun/trip_riser_v2.mp3",
+    author: "leo",
+    volume: 1
+  },
   tripResultLoop: {
     src: "/sounds/ratfun/trip_result_loop.mp3",
+    author: "leo",
+    volume: 1
+  },
+  tripResultLoopv2: {
+    src: "/sounds/ratfun/trip_result_loop_v2.mp3",
     author: "leo",
     volume: 1
   },
