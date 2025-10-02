@@ -5,6 +5,7 @@
 
   import { playSound } from "$lib/modules/sound-classic"
 
+  import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import { truncateString } from "$lib/modules/utils"
   import { staticContent } from "$lib/modules/content"
   import { scaleTime, scaleLinear } from "d3-scale"
@@ -220,9 +221,9 @@
     if (graph === "profitloss") {
       const balance = point.meta?.balance || 0
       const investment = point.meta?.investment || 0
-      return `<div>Balance: <span class="tooltip-value">$${balance.toFixed(2)}</span><br/>Investment: <span class="tooltip-value">$${investment.toFixed(2)}</span><br/>P/L: <span class="tooltip-value ${point.value >= 0 ? "tooltip-value-positive" : "tooltip-value-negative"}">$${point.value.toFixed(2)}</span></div>`
+      return `<div>Balance: <span class="tooltip-value">${CURRENCY_SYMBOL}${balance.toFixed(2)}</span><br/>Investment: <span class="tooltip-value">${CURRENCY_SYMBOL}${investment.toFixed(2)}</span><br/>P/L: <span class="tooltip-value ${point.value >= 0 ? "tooltip-value-positive" : "tooltip-value-negative"}">${CURRENCY_SYMBOL}${point.value.toFixed(2)}</span></div>`
     } else {
-      let toolTipContent = `<div>${truncateString(point.meta.prompt, 32)}<br>balance: <span class="tooltip-value">$${point?.value}</span>`
+      let toolTipContent = `<div>${truncateString(point.meta.prompt, 32)}<br>balance: <span class="tooltip-value">${CURRENCY_SYMBOL}${point?.value}</span>`
 
       if (point?.meta?.roomValueChange) {
         const valueChangeClass =
@@ -379,7 +380,7 @@
                 r="5"
                 cx={xScale(point.time)}
                 cy={yScale(point.value)}
-                data-tippy-content={`Total Profit/Loss: $${point.value.toFixed(2)}`}
+                data-tippy-content={`Total Profit/Loss: ${CURRENCY_SYMBOL}${point.value.toFixed(2)}`}
               ></circle>
             {/each}
 
@@ -408,7 +409,7 @@
                   r="5"
                   cx={xScale(point.time)}
                   cy={yScale(point.value)}
-                  data-tippy-content={`${focus} Profit/Loss: $${point.value.toFixed(2)}`}
+                  data-tippy-content={`${focus} Profit/Loss: ${CURRENCY_SYMBOL}${point.value.toFixed(2)}`}
                 ></circle>
               {/each}
             {/if}

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import {
     player,
     playerAddress,
@@ -85,17 +86,17 @@
         // playUISound("ratfun", "coins")
         playSound("ratfun", "coins")
       }}
-      text="Get 2000 free $slopamine"
+      text="Get 2000 free slopamine ({CURRENCY_SYMBOL})"
     ></SmallButton>
     <SmallButton
       disabled={busy.BuyWithEth.current !== 0}
-      tippyText="Buy some $Slopamine"
+      tippyText="Buy some slopamine ({CURRENCY_SYMBOL})"
       onclick={async () => {
         await sendBuyWithEth()
         // playUISound("ratfun", "coins")
         playSound("ratfun", "coins")
       }}
-      text="Buy 1 $Slopamine for 0.001ETH"
+      text="Buy 1 Slopamine ({CURRENCY_SYMBOL}) for 0.001ETH"
     ></SmallButton>
     <SmallButton
       disabled={busy.ApproveMax.current !== 0 || $tokenAllowanceApproved}

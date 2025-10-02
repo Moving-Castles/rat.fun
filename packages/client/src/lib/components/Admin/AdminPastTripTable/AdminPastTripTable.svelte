@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { PlotPoint } from "$lib/components/Room/RoomGraph/types"
+  import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import { SmallButton } from "$lib/components/Shared"
   import { RoomGraph } from "$lib/components/Room"
   import { goto } from "$app/navigation"
@@ -61,7 +62,7 @@
       <thead>
         <tr>
           <td><!-- Trip --></td>
-          <td>$SLOP</td>
+          <td>Slopamine ({CURRENCY_SYMBOL})</td>
           <td>P&L</td>
           <td>Age</td>
           <td>Spark</td>

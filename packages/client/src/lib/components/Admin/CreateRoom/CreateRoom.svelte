@@ -7,7 +7,7 @@
   import { errorHandler } from "$lib/modules/error-handling"
   import { CharacterLimitError, InputValidationError } from "$lib/modules/error-handling/errors"
   import { playSample } from "$lib/modules/sound/synth-library/plucked"
-  // import { playUISound, getMixerState } from "$lib/modules/sound/state.svelte"
+  import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import { MIN_ROOM_CREATION_COST } from "@server/config"
   import { collapsed } from "$lib/modules/ui/state.svelte"
 
@@ -146,8 +146,10 @@
             bind:value={roomCreationCost}
           />
           <div class="slider-labels">
-            <span class="slider-min">${Math.min($playerERC20Balance, MIN_ROOM_CREATION_COST)}</span>
-            <span class="slider-max">${$playerERC20Balance}</span>
+            <span class="slider-min"
+              >{CURRENCY_SYMBOL}{Math.min($playerERC20Balance, MIN_ROOM_CREATION_COST)}</span
+            >
+            <span class="slider-max">{CURRENCY_SYMBOL}{$playerERC20Balance}</span>
           </div>
         </div>
       </div>
@@ -158,11 +160,11 @@
           <div class="value-label">
             MIN RAT VALUE TO TRIP {#if import.meta.env.DEV}BALLS{/if}
           </div>
-          <div class="value-amount">${$minRatValueToEnter}</div>
+          <div class="value-amount">{CURRENCY_SYMBOL}{$minRatValueToEnter}</div>
         </div>
         <div class="value-box">
           <div class="value-label">MAX VALUE PER WIN</div>
-          <div class="value-amount">${$maxValuePerWin}</div>
+          <div class="value-amount">{CURRENCY_SYMBOL}{$maxValuePerWin}</div>
         </div>
       </div>
     </div>

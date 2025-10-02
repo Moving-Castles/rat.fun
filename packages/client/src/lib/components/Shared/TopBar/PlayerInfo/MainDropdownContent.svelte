@@ -1,6 +1,7 @@
 <script lang="ts">
   import { playerAddress, playerERC20Balance } from "$lib/modules/state/stores"
   // import { playUISound } from "$lib/modules/sound/state.svelte"
+  import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import { playSound } from "$lib/modules/sound-classic"
   import { sendBuyWithEth } from "$lib/modules/action-manager/index.svelte"
   import { BigButton } from "$lib/components/Shared"
@@ -18,19 +19,19 @@
   <div class="tab">
     <p class="key">Balance:</p>
     <p class="value">
-      {$playerERC20Balance} $slop
+      {CURRENCY_SYMBOL}{$playerERC20Balance}
     </p>
   </div>
   <div class="buy-button-container">
     <BigButton
       disabled={busy.BuyWithEth.current !== 0}
-      tippyText="Buy some $Slopamine"
+      tippyText="Buy some Slopamine ({CURRENCY_SYMBOL})"
       onclick={async () => {
         await sendBuyWithEth()
         // playUISound("ratfun", "coins")
         playSound("ratfun", "coins")
       }}
-      text="Buy $Slopamine"
+      text="Buy Slopamine ({CURRENCY_SYMBOL})"
     ></BigButton>
   </div>
 </div>

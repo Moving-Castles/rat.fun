@@ -4,6 +4,7 @@
   import { gsap } from "gsap"
   import { TextPlugin } from "gsap/TextPlugin"
   import { playUISound, typeHit } from "$lib/modules/sound/state.svelte"
+  import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import {
     TIMESTAMP_DURATION,
     CHARACTER_DELAY,
@@ -185,7 +186,7 @@
         <OutcomeItem
           type="balance"
           negative={logEntry.balanceTransfer.amount < 0}
-          value={`$${logEntry.balanceTransfer.amount}`}
+          value={`${CURRENCY_SYMBOL}${logEntry.balanceTransfer.amount}`}
         />
       </div>
     {/if}
@@ -204,7 +205,7 @@
           <OutcomeItem
             type="item"
             negative={itemChange.type === "remove"}
-            value={`${itemChange.name} ($${itemChange.value})`}
+            value={`${itemChange.name} (${CURRENCY_SYMBOL}${itemChange.value})`}
           />
         </div>
       {/each}

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import { tokenAllowanceApproved } from "$lib/modules/state/stores"
   import { BigButton } from "$lib/components/Shared"
   import { transitionTo, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
@@ -23,7 +24,11 @@
     <img style:filter src="/images/mascot1.png" alt="Rat" />
   </div> -->
   <div class="button-container">
-    <BigButton text="Get 2000 $Slopamine (free)" disabled={busy} onclick={onClick} />
+    <BigButton
+      text="Get 2000 Slopamine ({CURRENCY_SYMBOL}) (free)"
+      disabled={busy}
+      onclick={onClick}
+    />
   </div>
 </div>
 

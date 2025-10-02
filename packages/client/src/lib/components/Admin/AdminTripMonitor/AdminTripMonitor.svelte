@@ -2,6 +2,7 @@
   import { derived } from "svelte/store"
   import { playerActiveRooms } from "$lib/modules/state/stores"
   import { MultiTripGraph } from "$lib/components/Admin"
+  import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
 
   let { focus } = $props()
 
@@ -34,7 +35,7 @@
           <div class="calculations">
             <span class="percentage">({(($balance / $investment) * 100).toFixed(2)}%)</span>
             <span>
-              <span class="unit">$slop</span>
+              <span class="unit">({CURRENCY_SYMBOL})</span>
             </span>
           </div>
         </div>

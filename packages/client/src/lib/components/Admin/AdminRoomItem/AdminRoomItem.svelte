@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { Hex } from "viem"
   import type { PlotPoint } from "$lib/components/Shared/RoomGraph/types"
+  import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import { blocksToReadableTime, renderSafeString } from "$lib/modules/utils"
   import { blockNumber } from "$lib/modules/network"
   import { staticContent } from "$lib/modules/content"
@@ -58,13 +59,13 @@
           {#if Number(room.balance) == 0}
             Depleted
           {:else}
-            ${profit}
+            {CURRENCY_SYMBOL}{profit}
           {/if}
         </span>
       </div>
       <!-- BALANCE -->
       <span class="balance" class:depleted={Number(room.balance) == 0}>
-        Balance: ${room.balance}
+        Balance: {CURRENCY_SYMBOL}{room.balance}
       </span>
       <!-- DIVIDER -->
       <span class="divider">•</span>

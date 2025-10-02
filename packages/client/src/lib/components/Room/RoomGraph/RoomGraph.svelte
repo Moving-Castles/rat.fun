@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { PlotPoint } from "./types"
 
+  import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import { scaleTime, scaleLinear } from "d3-scale"
   import { max } from "d3-array"
   import { line } from "d3-shape"
@@ -95,7 +96,7 @@
   })
 
   const generateTooltipContent = (point: PlotPoint) => {
-    let toolTipContent = `<div>Trip balance: <span class="tooltip-value">$${point?.meta?.roomValue}</span>`
+    let toolTipContent = `<div>Trip balance: <span class="tooltip-value">${CURRENCY_SYMBOL}${point?.meta?.roomValue}</span>`
 
     if (point?.meta?.roomValueChange) {
       const valueChangeClass =

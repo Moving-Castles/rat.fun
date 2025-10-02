@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { Outcome } from "@sanity-types"
   import { timeSince, addressToRatImage } from "$lib/modules/utils"
+  import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import OutcomeItem from "$lib/components/GameRun/TripReport/Log/OutcomeItem/OutcomeItem.svelte"
 
   let { outcome }: { outcome: Outcome } = $props()
@@ -41,7 +42,7 @@
         <OutcomeItem
           type="item"
           negative={itemChange.type === "remove"}
-          value={`${itemChange.name} ($${itemChange.value})`}
+          value={`${itemChange.name} (${CURRENCY_SYMBOL}${itemChange.value})`}
         />
       {/each}
     </div>
