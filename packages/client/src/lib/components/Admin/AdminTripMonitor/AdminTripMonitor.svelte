@@ -1,6 +1,6 @@
 <script lang="ts">
   import { derived } from "svelte/store"
-  import { playerActiveRooms } from "$lib/modules/state/stores"
+  import { playerRooms } from "$lib/modules/state/stores"
   import { MultiTripGraph } from "$lib/components/Admin"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import tippy from "tippy.js"
@@ -9,11 +9,11 @@
 
   let clientHeight = $state(0)
 
-  const investment = derived(playerActiveRooms, $playerActiveRooms =>
-    Object.values($playerActiveRooms).reduce((a, b) => a + Number(b.roomCreationCost), 0)
+  const investment = derived(playerRooms, $playerRooms =>
+    Object.values($playerRooms).reduce((a, b) => a + Number(b.roomCreationCost), 0)
   )
-  const balance = derived(playerActiveRooms, $playerActiveRooms =>
-    Object.values($playerActiveRooms).reduce((a, b) => a + Number(b.balance), 0)
+  const balance = derived(playerRooms, $playerRooms =>
+    Object.values($playerRooms).reduce((a, b) => a + Number(b.balance), 0)
   )
   const profitLoss = derived([balance, investment], ([$b, $i]) => $b - $i)
   const portfolioClass = derived([profitLoss, balance], ([$profitLoss, $balance]) => {
@@ -47,7 +47,7 @@
               {$plSymbolExplicit}{CURRENCY_SYMBOL}{Math.abs($profitLoss)}
             </h1>
             <span class="percentage"
-              >({$plSymbolExplicit}{(($balance / $investment) * 100).toFixed(2)}%)</span
+              >({$plSymbolExplicit}{(100 - ($balance / $investment) * 100).toFixed(2)}%)</span
             >
           </div>
         </div>
@@ -58,7 +58,7 @@
     </div>
     <div class="bottom-left">
       <p>Portfolio</p>
-      <h2 class="{$portfolioClass} glow">{$plSymbolExplicit}{CURRENCY_SYMBOL}{$balance}</h2>
+      <h2 class="{$portfolioClass} glow">{CURRENCY_SYMBOL}{$balance}</h2>
     </div>
     <div class="bottom-right">
       <p>Invested</p>
@@ -66,7 +66,7 @@
     </div>
   </div>
   <div class="p-l-graph">
-    <MultiTripGraph height={clientHeight} {focus} trips={$playerActiveRooms} />
+    <MultiTripGraph height={clientHeight} {focus} trips={$playerRooms} />
   </div>
 </div>
 

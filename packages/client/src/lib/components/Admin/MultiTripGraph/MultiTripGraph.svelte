@@ -25,7 +25,7 @@
   // Layout setup
   let width = $state(0) // width will be set by the clientWidth
   let graph = $state<"trips" | "profitloss">("profitloss")
-  let limit = $state(2)
+  let limit = $state(50)
   let timeWindow = $state<"1m" | "1h" | "1d" | "1w" | "all_time" | "events">("events")
 
   const padding = { top: 0, right: 0, bottom: 0, left: 0 }
@@ -34,13 +34,7 @@
   let innerHeight = $derived(height - padding.top - padding.bottom)
 
   let xScale = $derived.by(() => {
-    const allPlots = Object.values(plots)
-
-    if (!allPlots.length || !innerWidth) return scaleTime()
-
-    const allData = allPlots.flatMap(plot => plot.data)
-
-    if (!allData.length) return scaleTime()
+    if (!allData.length || !innerWidth) return scaleTime()
 
     const getRelevantDomainStart = () => {
       switch (timeWindow) {
@@ -70,15 +64,14 @@
       return scaleTime().domain([domainStart, domainEnd]).range([0, innerWidth])
     }
   })
+
   let yScale = $derived.by(() => {
-    const allPlots = Object.values(plots)
+    if (!allData.length || !innerHeight) return scaleLinear()
 
-    if (!allPlots.length || !innerHeight) return scaleLinear()
-
-    let allData, maxValue, minValue
+    let yScaleData, maxValue, minValue
 
     if (graph === "profitloss") {
-      allData = [...profitLossOverTime]
+      yScaleData = [...profitLossOverTime]
 
       // Include focused trip data if available
       if (focus && plots[focus]) {
@@ -89,20 +82,19 @@
           value: point.value - initialCost,
           meta: point.meta
         }))
-        allData.push(...focusedProfitLoss)
+        yScaleData.push(...focusedProfitLoss)
       }
 
-      maxValue = Number(max(allData, (d: PlotPoint) => +d.value) ?? 0)
-      minValue = Number(min(allData, (d: PlotPoint) => +d.value) ?? 0)
+      maxValue = Number(max(yScaleData, (d: PlotPoint) => +d.value) ?? 0)
+      minValue = Number(min(yScaleData, (d: PlotPoint) => +d.value) ?? 0)
 
       // Ensure 0 is included and create symmetric range around 0
       const maxAbsValue = Math.max(Math.abs(maxValue), Math.abs(minValue))
       maxValue = Math.max(maxAbsValue, 1) // Minimum range of 1
       minValue = -maxValue // Symmetric range
     } else {
-      allData = allPlots.flatMap(plot => plot.data)
-      allData = [...allData].slice(-limit, allData.length)
-      maxValue = Number(max(allData, (d: PlotPoint) => +d.value) ?? 0)
+      yScaleData = limitedData
+      maxValue = Number(max(yScaleData, (d: PlotPoint) => +d.value) ?? 0)
       minValue = 0
     }
 
@@ -169,13 +161,12 @@
 
   let currentProfitLoss = $derived(totalBalance - totalInvestment)
 
-  let profitLossOverTime = $derived.by(() => {
+  // Combine all data points from all trips and sort by time (used across multiple derived values)
+  let allData = $derived.by(() => {
     const allPlots = Object.values(plots)
-
     if (!allPlots.length) return []
 
-    // Combine all data points from all trips and sort by time
-    let allData = allPlots.flatMap((plot, plotIndex) =>
+    const data = allPlots.flatMap((plot, plotIndex) =>
       plot.data.map(point => ({
         ...point,
         tripId: Object.keys(plots)[plotIndex],
@@ -184,14 +175,21 @@
     )
 
     // Sort by time
-    allData.sort((a, b) => a.time - b.time)
-    allData = [...allData].slice(-limit, allData.length)
+    data.sort((a, b) => a.time - b.time)
+    return data
+  })
+
+  // Limited version of allData for display
+  let limitedData = $derived([...allData].slice(-limit, allData.length))
+
+  let profitLossOverTime = $derived.by(() => {
+    if (!limitedData.length) return []
 
     // Calculate cumulative profit/loss over time: balance - investment
     const profitLossData = []
     const tripIds = Object.keys(plots)
 
-    allData.forEach((point, i) => {
+    limitedData.forEach((point, i) => {
       // Find the current balance for each trip at this point in time
       const currentBalance = tripIds.reduce((totalBalance, tripId) => {
         const plot = plots[tripId]
