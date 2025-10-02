@@ -6,6 +6,7 @@ export { default as EnterRoomButton } from "./RoomPreview/EnterRoomButton.svelte
 export { default as NoRatWarning } from "./RoomPreview/NoRatWarning.svelte"
 export { default as RoomFilters } from "./RoomListing/RoomFilters.svelte"
 export { default as RoomGraph } from "./RoomGraph/RoomGraph.svelte"
+export { default as ProfitLossGraph } from "./ProfitLossGraph/ProfitLossGraph.svelte"
 export { default as RoomItem } from "./RoomItem/RoomItem.svelte"
 export { default as RoomListing } from "./RoomListing/RoomListing.svelte"
 export { default as RoomPreviewEventLog } from "./RoomPreview/RoomPreviewEventLog.svelte"

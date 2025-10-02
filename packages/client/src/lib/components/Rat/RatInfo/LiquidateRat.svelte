@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import { DangerButton } from "$lib/components/Shared"
   import { ratTotalValue } from "$lib/modules/state/stores"
   import { transitionTo, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
@@ -13,7 +14,7 @@
   <div class="total-value">
     <!-- <div class="label">Total Value</div> -->
     <div class="value">
-      <div>${$ratTotalValue}</div>
+      <div>{CURRENCY_SYMBOL}{$ratTotalValue}</div>
     </div>
   </div>
   <div class="action">

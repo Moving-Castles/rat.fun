@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Hex } from "viem"
-  import { fade } from "svelte/transition"
+  import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import { urlFor } from "$lib/modules/content/sanity"
   import { renderSafeString } from "$lib/modules/utils"
   import { getRoomMaxValuePerWin } from "$lib/modules/state/utils"
@@ -60,7 +60,7 @@
     </div>
     <!-- MAX WIN -->
     <div class="room-info-max-win">
-      <span class="max-win">Max Win: ${$maxValuePerWin}</span>
+      <span class="max-win">Max Win: {CURRENCY_SYMBOL}{$maxValuePerWin}</span>
     </div>
   </div>
 </a>

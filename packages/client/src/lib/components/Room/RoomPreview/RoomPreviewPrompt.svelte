@@ -27,7 +27,6 @@
     background: var(--color-alert);
     min-height: 200px;
     background: url("/images/texture-2.png");
-    height: 100%;
 
     .content {
       max-width: 55ch;

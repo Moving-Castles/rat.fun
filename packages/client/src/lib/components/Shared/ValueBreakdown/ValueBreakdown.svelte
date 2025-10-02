@@ -1,5 +1,6 @@
 <script lang="ts">
   import { gamePercentagesConfig } from "$lib/modules/state/stores"
+  import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
 
   let {
     originalValue,
@@ -24,14 +25,14 @@
 
 <div class="value-breakdown">
   <div class="value-line">
-    {originalLabel}: <span class="value">{originalValue} SLOPAMINE</span>
+    {originalLabel}: <span class="value">{CURRENCY_SYMBOL}{originalValue}</span>
   </div>
   <div class="value-line">
     {taxLabel} ({$gamePercentagesConfig[taxRateKey]}%):
-    <span class="value negative">-{taxAmount} SLOPAMINE</span>
+    <span class="value negative">-{CURRENCY_SYMBOL}{taxAmount}</span>
   </div>
   <div class="value-line">
-    {payoutLabel}: <span class="value payout">{payoutAmount} SLOPAMINE</span>
+    {payoutLabel}: <span class="value payout">{CURRENCY_SYMBOL}{payoutAmount}</span>
   </div>
 </div>
 

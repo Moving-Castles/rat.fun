@@ -2,6 +2,7 @@
   // import { playUISound } frosm "$lib/modules/sound/state.svelte"
   import { playSound } from "$lib/modules/sound-classic"
   import { tippy } from "svelte-tippy"
+  import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
 
   let {
     text,
@@ -50,7 +51,7 @@
 <button class:disabled {onmouseup} {onmousedown} use:conditionalAction={{ content: tippyText }}>
   <span class="button-text">{text}</span>
   {#if cost}
-    <span class="button-cost">(${cost})</span>
+    <span class="button-cost">({CURRENCY_SYMBOL}{cost})</span>
   {/if}
 </button>
 

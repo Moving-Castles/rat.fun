@@ -2,7 +2,7 @@
   import type { PlotPoint } from "$lib/components/Room/RoomGraph/types"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import { SmallButton } from "$lib/components/Shared"
-  import { RoomGraph } from "$lib/components/Room"
+  import { ProfitLossGraph } from "$lib/components/Room"
   import { goto } from "$app/navigation"
   import { playerActiveRooms } from "$lib/modules/state/stores"
   import { entriesChronologically } from "$lib/components/Room/RoomListing/sortFunctions"
@@ -92,7 +92,13 @@
             <td class="cell-graph">
               {#if plotData}
                 <div class="mini-graph">
-                  <RoomGraph smallIcons height={80} {plotData} isEmpty={plotData.length === 0} />
+                  <ProfitLossGraph
+                    smallIcons
+                    height={100}
+                    {plotData}
+                    isEmpty={plotData.length === 0}
+                  />
+                  <!-- <RoomGraph smallIcons height={98} {plotData} isEmpty={plotData.length === 0} /> -->
                 </div>
               {:else}
                 <div class="mini-graph" />
@@ -149,7 +155,7 @@
 
   .mini-graph {
     width: 200px;
-    height: 80px;
+    height: 100px;
     background: #222;
   }
 
@@ -188,6 +194,7 @@
     }
     .cell-actions {
       max-width: 200px;
+      height: 102px;
     }
   }
 </style>
