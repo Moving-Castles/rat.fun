@@ -62,7 +62,7 @@
           <td><!-- Trip --></td>
           <td>Slopamine ({CURRENCY_SYMBOL})</td>
           <td>P&L</td>
-          <td>Age</td>
+          <td>Lifespan</td>
           <td>Spark</td>
           <td><!-- Action --></td>
         </tr>
@@ -85,9 +85,12 @@
           >
             <td class="cell-description">{room.prompt}</td>
             <td class="cell-balance">{room.balance}</td>
-            <td class="cell-profit-loss">{room.balance - room.roomCreationCost}</td>
+            <td class="cell-profit-loss">
+              {(room?.liquidationValue || 0) - room.roomCreationCost}
+              <!-- {room?.liquidationValue - room.roomCreationCost} -->
+            </td>
             <td class="cell-age">
-              {blocksToReadableTime(Number($blockNumber) - Number(room.creationBlock))}
+              {blocksToReadableTime(Number(room.liquidationBlock) - Number(room.creationBlock))}
             </td>
             <td class="cell-graph">
               {#if plotData}

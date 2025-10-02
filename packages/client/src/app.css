@@ -40,6 +40,9 @@
   --game-window-width: calc(min(100vw, 1920px) - 30px);
   --game-window-height: calc(100vh - 30px);
 
+  --graph-color-up: rgba(100, 255, 200, 1);
+  --graph-color-down: rgba(230, 30, 0, 1);
+
   /* * * * * * * * * * * * * *
   * Layout
   * * * * * * * * * * * * * */

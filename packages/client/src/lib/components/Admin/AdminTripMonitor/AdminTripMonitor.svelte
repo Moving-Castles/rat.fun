@@ -1,6 +1,6 @@
 <script lang="ts">
   import { derived } from "svelte/store"
-  import { playerRooms } from "$lib/modules/state/stores"
+  import { playerActiveRooms, playerRooms } from "$lib/modules/state/stores"
   import { MultiTripGraph } from "$lib/components/Admin"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import tippy from "tippy.js"
@@ -8,13 +8,13 @@
   let { focus } = $props()
 
   let clientHeight = $state(0)
-  let allData = $state([])
+  let graphData = $state([])
 
-  const investment = derived(playerRooms, $playerRooms =>
-    Object.values($playerRooms).reduce((a, b) => a + Number(b.roomCreationCost), 0)
+  const investment = derived(playerActiveRooms, $playerActiveRooms =>
+    Object.values($playerActiveRooms).reduce((a, b) => a + Number(b.roomCreationCost), 0)
   )
-  const balance = derived(playerRooms, $playerRooms =>
-    Object.values($playerRooms).reduce((a, b) => a + Number(b.balance), 0)
+  const balance = derived(playerActiveRooms, $playerActiveRooms =>
+    Object.values($playerActiveRooms).reduce((a, b) => a + Number(b.balance), 0)
   )
   const profitLoss = derived([balance, investment], ([$b, $i]) => $b - $i)
   const portfolioClass = derived([profitLoss, balance], ([$profitLoss, $balance]) => {
@@ -67,7 +67,7 @@
     </div>
   </div>
   <div class="p-l-graph">
-    <MultiTripGraph bind:allData height={clientHeight} {focus} trips={$playerRooms} />
+    <MultiTripGraph bind:graphData height={clientHeight} {focus} trips={$playerRooms} />
   </div>
 </div>
 
@@ -126,11 +126,11 @@
         z-index: 0;
 
         &.upText {
-          color: rgba(100, 255, 200, 1);
+          color: var(--graph-color-up);
         }
 
         &.downText {
-          color: rgba(230, 30, 0, 1);
+          color: var(--graph-color-down);
         }
 
         vertical-align: sub;

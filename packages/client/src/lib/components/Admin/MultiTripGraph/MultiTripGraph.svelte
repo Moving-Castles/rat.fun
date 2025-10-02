@@ -15,7 +15,7 @@
 
   import "tippy.js/dist/tippy.css" // optional for styling
 
-  let { trips, focus, height = 400 } = $props()
+  let { trips, focus, height = 400, graphData = $bindable() } = $props()
 
   // Add reactive timestamp for real-time updates
   let currentTime = $state(Date.now())
@@ -278,37 +278,6 @@
         </button>
       </div>
       <div class="legend x">
-        <!-- Time window options -->
-        <!-- <button
-          class="time-option"
-          onclick={() => (timeWindow = "1m")}
-          class:active={timeWindow === "1m"}
-          >minute
-        </button>
-        <button
-          class="time-option"
-          onclick={() => (timeWindow = "1h")}
-          class:active={timeWindow === "1h"}
-          >hour
-        </button>
-        <button
-          class="time-option"
-          onclick={() => (timeWindow = "1d")}
-          class:active={timeWindow === "1d"}
-          >day
-        </button>
-        <button
-          class="time-option"
-          onclick={() => (timeWindow = "1w")}
-          class:active={timeWindow === "1w"}
-          >week
-        </button>
-        <button
-          class="time-option"
-          onclick={() => (timeWindow = "all_time")}
-          class:active={timeWindow === "all_time"}
-          >All-time
-        </button> -->
         <button
           class="time-option"
           onclick={() => (timeWindow = "events")}
@@ -383,14 +352,33 @@
               fill="none"
             />
 
-            {#each profitLossOverTime as point (point.time)}
-              <circle
-                fill="var(--color-grey-light)"
-                r="5"
-                cx={xScale(point.time)}
-                cy={yScale(point.value)}
-                data-tippy-content={generateTooltipContent(point)}
-              ></circle>
+            {#each profitLossOverTime as point, i (point.time)}
+              {@const lastPoint = profitLossOverTime?.[i - 1]}
+              <g data-tippy-content={generateTooltipContent(point)}>
+                <circle
+                  fill="var(--color-grey-light)"
+                  r="5"
+                  cx={xScale(point.time)}
+                  cy={yScale(point.value)}
+                ></circle>
+                {#if lastPoint}
+                  {@const candleHeight = Math.abs(yScale(point.value) - yScale(lastPoint.value))}
+                  {@const candleWidth = innerWidth / 50}
+                  <!-- Draw "candle" -->
+                  <rect
+                    x={xScale(point.time) - candleWidth / 2}
+                    y={point.value < lastPoint.value
+                      ? yScale(lastPoint.value)
+                      : yScale(lastPoint.value) - candleHeight}
+                    width={candleWidth}
+                    height={candleHeight}
+                    fill={point.value < lastPoint.value
+                      ? "var(--graph-color-down)"
+                      : "var(--graph-color-up)"}
+                  >
+                  </rect>
+                {/if}
+              </g>
             {/each}
 
             <!-- Focused trip profit/loss line -->
