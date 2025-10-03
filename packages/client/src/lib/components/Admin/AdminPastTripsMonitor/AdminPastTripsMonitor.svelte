@@ -8,30 +8,31 @@
   const investment = derived(playerLiquidatedRooms, $playerLiquidatedRooms =>
     Object.values($playerLiquidatedRooms).reduce((a, b) => a + Number(b.roomCreationCost), 0)
   )
-  const balance = derived(playerLiquidatedRooms, $playerLiquidatedRooms =>
-    Object.values($playerLiquidatedRooms).reduce((a, b) => a + Number(b.balance), 0)
+  const liquidationValue = derived(playerLiquidatedRooms, $playerLiquidatedRooms =>
+    Object.values($playerLiquidatedRooms).reduce((a, b) => a + Number(b.liquidationValue || 0), 0)
   )
-  const profitLoss = derived([balance, investment], ([$b, $i]) => $b - $i)
+  const profitLoss = derived([liquidationValue, investment], ([$lv, $i]) => $lv - $i)
   const portfolioClass = derived([profitLoss], ([$profitLoss]) => {
     if ($profitLoss === 0) return "neutral"
     return $profitLoss > 0 ? "upText" : "downText"
   })
 
-  // $inspect($playerLiquidatedRooms)
-  // $inspect($playerRooms)
+  $inspect("liquidated", $playerLiquidatedRooms)
+  $inspect("rooms", $playerRooms)
 </script>
 
 <div class="admin-trip-monitor">
   <div class="p-l-overview">
     <div class="top">
       <p>Realized P&L</p>
-      {#if $balance && $investment}
+      {#if $liquidationValue && $investment}
         <h1>
           <span class="main {$portfolioClass}"
             >{$profitLoss}
-            <span class="small">({(($balance / $investment) * 100).toFixed(2)}%)</span></span
+            <span class="small">({(($liquidationValue / $investment) * 100).toFixed(2)}%)</span
+            ></span
           >
-          <!-- {$balance / $investment} -->
+          <!-- {$liquidationValue / $investment} -->
         </h1>
       {:else}
         <h1>None</h1>

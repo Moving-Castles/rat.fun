@@ -233,6 +233,21 @@ export function blocksToReadableTime(blocks: number): string {
 }
 
 /**
+ * Converts a historical block number to an approximate timestamp
+ * Works backwards from the current block number and current time
+ * Assumes BLOCKTIME = 2 seconds per block
+ * @param blockNumber The historical block number to convert
+ * @param currentBlockNumber The current block number
+ * @returns The approximate timestamp in milliseconds (Unix epoch)
+ */
+export function blockNumberToTimestamp(blockNumber: number, currentBlockNumber: number): number {
+  const currentTime = Date.now()
+  const blocksDiff = currentBlockNumber - blockNumber
+  const millisecondsDiff = blocksToSeconds(blocksDiff) * 1000
+  return currentTime - millisecondsDiff
+}
+
+/**
  * Sleeps for a given number of milliseconds
  * @param ms The number of milliseconds to sleep
  * @returns A promise that resolves after the given number of milliseconds

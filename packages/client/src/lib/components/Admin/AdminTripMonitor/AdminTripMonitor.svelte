@@ -1,19 +1,24 @@
 <script lang="ts">
   import { derived } from "svelte/store"
-  import { playerRooms } from "$lib/modules/state/stores"
+  import { playerActiveRooms, playerRooms } from "$lib/modules/state/stores"
+  import { CreateRoom } from "$lib/components/Admin"
+  import { BigButton } from "$lib/components/Shared"
   import { MultiTripGraph } from "$lib/components/Admin"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
+  import { getModalState } from "$lib/components/Shared/Modal/state.svelte"
   import tippy from "tippy.js"
+  let { modal } = getModalState()
 
   let { focus } = $props()
 
   let clientHeight = $state(0)
+  let graphData = $state([])
 
-  const investment = derived(playerRooms, $playerRooms =>
-    Object.values($playerRooms).reduce((a, b) => a + Number(b.roomCreationCost), 0)
+  const investment = derived(playerActiveRooms, $playerActiveRooms =>
+    Object.values($playerActiveRooms).reduce((a, b) => a + Number(b.roomCreationCost), 0)
   )
-  const balance = derived(playerRooms, $playerRooms =>
-    Object.values($playerRooms).reduce((a, b) => a + Number(b.balance), 0)
+  const balance = derived(playerActiveRooms, $playerActiveRooms =>
+    Object.values($playerActiveRooms).reduce((a, b) => a + Number(b.balance), 0)
   )
   const profitLoss = derived([balance, investment], ([$b, $i]) => $b - $i)
   const portfolioClass = derived([profitLoss, balance], ([$profitLoss, $balance]) => {
@@ -35,10 +40,15 @@
   })
 </script>
 
+{#snippet createTrip()}
+  <div class="create-room-wrapper">
+    <CreateRoom ondone={modal.close} />
+  </div>
+{/snippet}
+
 <div bind:clientHeight class="admin-trip-monitor">
   <div class="p-l-overview">
     <div class="top">
-      <h3>Active trips</h3>
       {#if $balance && $investment}
         <div class="main">
           <span class="unit {$portfolioClass}">{CURRENCY_SYMBOL}</span>
@@ -64,9 +74,18 @@
       <p>Invested</p>
       <h2>{CURRENCY_SYMBOL}{$investment}</h2>
     </div>
+
+    <div class="full-width-bottom">
+      <BigButton
+        text="Create trip"
+        onclick={() => {
+          modal.set(createTrip)
+        }}
+      />
+    </div>
   </div>
   <div class="p-l-graph">
-    <MultiTripGraph height={clientHeight} {focus} trips={$playerRooms} />
+    <MultiTripGraph bind:graphData height={clientHeight} {focus} trips={$playerRooms} />
   </div>
 </div>
 
@@ -125,11 +144,11 @@
         z-index: 0;
 
         &.upText {
-          color: rgba(100, 255, 200, 1);
+          color: var(--graph-color-up);
         }
 
         &.downText {
-          color: rgba(230, 30, 0, 1);
+          color: var(--graph-color-down);
         }
 
         vertical-align: sub;
@@ -169,13 +188,11 @@
     }
 
     .p-l-overview {
-      padding-left: 2rem;
-      padding-top: 2rem;
-      padding-bottom: 2rem;
-      padding-right: 1rem;
       min-width: 500px;
       width: 500px;
+      height: 400px;
       display: grid;
+      padding: 0 1rem;
       position: relative;
       grid-template-columns: repeat(1fr, 2);
       grid-template-rows: repeat(1fr, 2);
@@ -184,6 +201,12 @@
       .top {
         grid-column: 1/3;
         padding: 0.2rem;
+        margin-top: 1rem;
+      }
+
+      .full-width-bottom {
+        grid-column: 1/3;
+        margin: 0 -1rem;
       }
       .bottom-left,
       .bottom-right {

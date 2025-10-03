@@ -6,8 +6,9 @@
   import { playSound } from "$lib/modules/sound"
 
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
-  import { truncateString } from "$lib/modules/utils"
+  import { truncateString, blockNumberToTimestamp } from "$lib/modules/utils"
   import { staticContent } from "$lib/modules/content"
+  import { blockNumber } from "$lib/modules/network"
   import { scaleTime, scaleLinear } from "d3-scale"
   import { max, min } from "d3-array"
   import { line } from "d3-shape"
@@ -15,7 +16,7 @@
 
   import "tippy.js/dist/tippy.css" // optional for styling
 
-  let { trips, focus, height = 400 } = $props()
+  let { trips, focus, height = 400, graphData = $bindable() } = $props()
 
   // Add reactive timestamp for real-time updates
   let currentTime = $state(Date.now())
@@ -24,7 +25,6 @@
 
   // Layout setup
   let width = $state(0) // width will be set by the clientWidth
-  let graph = $state<"trips" | "profitloss">("profitloss")
   let limit = $state(50)
   let timeWindow = $state<"1m" | "1h" | "1d" | "1w" | "all_time" | "events">("events")
 
@@ -70,35 +70,16 @@
 
     let yScaleData, maxValue, minValue
 
-    if (graph === "profitloss") {
-      yScaleData = [...profitLossOverTime]
+    yScaleData = [...profitLossOverTime]
 
-      // Include focused trip data if available
-      if (focus && plots[focus]) {
-        const focusedPlot = plots[focus]
-        const initialCost = focusedPlot.data[0]?.value || 0
-        const focusedProfitLoss = focusedPlot.data.map(point => ({
-          time: point.time,
-          value: point.value - initialCost,
-          meta: point.meta
-        }))
-        yScaleData.push(...focusedProfitLoss)
-      }
+    maxValue = Number(max(yScaleData, (d: PlotPoint) => +d.value) ?? 0)
+    minValue = Number(min(yScaleData, (d: PlotPoint) => +d.value) ?? 0)
 
-      maxValue = Number(max(yScaleData, (d: PlotPoint) => +d.value) ?? 0)
-      minValue = Number(min(yScaleData, (d: PlotPoint) => +d.value) ?? 0)
+    const fraction = (maxValue - minValue) / 12
 
-      // Ensure 0 is included and create symmetric range around 0
-      const maxAbsValue = Math.max(Math.abs(maxValue), Math.abs(minValue))
-      maxValue = Math.max(maxAbsValue, 1) // Minimum range of 1
-      minValue = -maxValue // Symmetric range
-    } else {
-      yScaleData = limitedData
-      maxValue = Number(max(yScaleData, (d: PlotPoint) => +d.value) ?? 0)
-      minValue = 0
-    }
-
-    return scaleLinear().domain([minValue, maxValue]).range([innerHeight, 0])
+    return scaleLinear()
+      .domain([minValue - fraction, maxValue + fraction])
+      .range([innerHeight, 0])
   })
 
   /** All plots for the rooms */
@@ -116,18 +97,48 @@
 
         const roomOutcomes = outcomes.reverse()
         const initialTime = new Date(sanityRoomContent?._createdAt).getTime()
-        const data = [
+
+        // Build the data array with initial point and outcomes
+        const dataPoints = [
           {
             time: initialTime,
             roomValue: Number(trip.roomCreationCost),
-            meta: sanityRoomContent
+            meta: sanityRoomContent,
+            _createdAt: sanityRoomContent?._createdAt,
+            eventType: "trip_created"
           },
-          ...roomOutcomes
-        ].map((o, i) => {
+          ...roomOutcomes.map(outcome => ({
+            ...outcome,
+            eventType: outcome?.ratValue == 0 ? "trip_death" : "trip_visit"
+          }))
+        ]
+
+        // Add liquidation event if it exists
+        if (trip.liquidationBlock && trip.liquidationValue !== undefined && $blockNumber) {
+          const liquidationTime = blockNumberToTimestamp(
+            Number(trip.liquidationBlock),
+            Number($blockNumber)
+          )
+
+          // Get the last value before liquidation to calculate the change
+          const lastValue = dataPoints[dataPoints.length - 1]?.roomValue || 0
+
+          dataPoints.push({
+            _createdAt: new Date(liquidationTime).toISOString(),
+            roomValue: Number(trip.liquidationValue),
+            roomValueChange: Number(trip.liquidationValue) - lastValue,
+            liquidationBlock: trip.liquidationBlock,
+            prompt: "Liquidation",
+            eventType: "trip_liquidated"
+          })
+        }
+
+        const data = dataPoints.map((o, i) => {
           const time = new Date(o?._createdAt).getTime()
           return {
             time: time || o.time,
             value: o?.roomValue || 0,
+            eventType: o.eventType,
             meta: { ...sanityRoomContent, ...o }
           }
         })
@@ -158,8 +169,6 @@
   let totalBalance = $derived(
     Object.values(trips).reduce((sum, trip) => sum + Number(trip.balance || 0), 0)
   )
-
-  let currentProfitLoss = $derived(totalBalance - totalInvestment)
 
   // Combine all data points from all trips and sort by time (used across multiple derived values)
   let allData = $derived.by(() => {
@@ -214,6 +223,8 @@
       profitLossData.push({
         time: i,
         value: profitLoss,
+        tripId: point.tripId,
+        eventType: point.eventType,
         meta: { ...point.meta, balance: currentBalance, investment: currentInvestment }
       })
     })
@@ -222,21 +233,28 @@
   })
 
   const generateTooltipContent = (point: PlotPoint) => {
-    if (graph === "profitloss") {
-      const balance = point.meta?.balance || 0
-      const investment = point.meta?.investment || 0
-      return `<div>Balance: <span class="tooltip-value">${CURRENCY_SYMBOL}${balance.toFixed(2)}</span><br/>Investment: <span class="tooltip-value">${CURRENCY_SYMBOL}${investment.toFixed(2)}</span><br/>P/L: <span class="tooltip-value ${point.value >= 0 ? "tooltip-value-positive" : "tooltip-value-negative"}">${CURRENCY_SYMBOL}${point.value.toFixed(2)}</span></div>`
-    } else {
-      let toolTipContent = `<div>${truncateString(point.meta.prompt, 32)}<br>balance: <span class="tooltip-value">${CURRENCY_SYMBOL}${point?.value}</span>`
-
-      if (point?.meta?.roomValueChange) {
-        const valueChangeClass =
-          point.meta.roomValueChange > 0 ? "tooltip-value-positive" : "tooltip-value-negative"
-        toolTipContent += `<br/>Change: <span class="${valueChangeClass}">${point.meta.roomValueChange}</span></div>`
-      }
-
-      return toolTipContent
+    const mapping = {
+      trip_created: "Created trip",
+      trip_liquidated: "Liquidated trip",
+      trip_death: "Rat died",
+      trip_visit: "Rat visited",
+      unknown: ""
     }
+    const eventType = point.meta?.eventType || "unknown"
+    const eventTypeLabel = mapping[eventType]
+
+    let toolTipContent = `<div><strong>${eventTypeLabel}</strong><br/>`
+
+    const valueChangeClass = point.meta?.roomValueChange
+      ? point.meta?.roomValueChange > 0
+        ? "tooltip-value-positive"
+        : "tooltip-value-negative"
+      : "tooltip-value"
+    let explicitSymbol =
+      valueChangeClass === "tooltip-value" ? "" : valueChangeClass.includes("positive") ? "+" : "-"
+    toolTipContent += `P/L: <span class="${valueChangeClass}">${explicitSymbol}${CURRENCY_SYMBOL}${Math.abs(point.meta?.roomValueChange || 0)}</span></div>`
+
+    return toolTipContent
   }
 
   // Setup real-time updates
@@ -273,95 +291,18 @@
   {:else}
     <div class="graph" bind:clientWidth={width}>
       <div class="legend y">
-        <!-- <button onclick={() => (graph = "trips")} class:active={graph === "trips"}>Trips </button> -->
-        <button onclick={() => (graph = "profitloss")} class:active={graph === "profitloss"}
-          >Profit/Loss
-        </button>
+        <button class="active">Profit/Loss {focus}</button>
       </div>
       <div class="legend x">
-        <!-- Time window options -->
-        <button
-          class="time-option"
-          onclick={() => (timeWindow = "1m")}
-          class:active={timeWindow === "1m"}
-          >minute
-        </button>
-        <button
-          class="time-option"
-          onclick={() => (timeWindow = "1h")}
-          class:active={timeWindow === "1h"}
-          >hour
-        </button>
-        <button
-          class="time-option"
-          onclick={() => (timeWindow = "1d")}
-          class:active={timeWindow === "1d"}
-          >day
-        </button>
-        <button
-          class="time-option"
-          onclick={() => (timeWindow = "1w")}
-          class:active={timeWindow === "1w"}
-          >week
-        </button>
-        <button
-          class="time-option"
-          onclick={() => (timeWindow = "all_time")}
-          class:active={timeWindow === "all_time"}
-          >All-time
-        </button>
         <button
           class="time-option"
           onclick={() => (timeWindow = "events")}
           class:active={timeWindow === "events"}
-          >Recent events
+          >Recent events ({allData.length})
         </button>
       </div>
       <svg {width} {height}>
-        {#if graph === "trips"}
-          {#each Object.entries(plots) as [tripId, plot]}
-            {#if plot.data && width}
-              <g transform="translate({padding.left}, {padding.top})">
-                <path
-                  d={plot.line(plot.data)}
-                  stroke={focus === tripId ? "white" : "var(--color-grey-light)"}
-                  stroke-width={2}
-                  stroke-dasharray={4}
-                  fill="none"
-                />
-
-                {#each plot.data as point (point.time)}
-                  <g data-tippy-content={generateTooltipContent(point)}>
-                    {#if !point?.meta?.roomValueChange || point?.meta?.roomValueChange === 0}
-                      <circle
-                        fill={focus === tripId ? "white" : "var(--color-grey-light)"}
-                        r="5"
-                        cx={xScale(point.time)}
-                        cy={yScale(point.value)}
-                      ></circle>
-                    {:else if point?.meta?.roomValueChange > 0}
-                      <polygon
-                        transform="translate({xScale(point.time)}, {yScale(
-                          point.value
-                        )}) scale(2, 3)"
-                        fill="var(--color-value-up)"
-                        points="-5 2.5, 0 -5, 5 2.5"
-                      />
-                    {:else}
-                      <polygon
-                        transform="translate({xScale(point.time)}, {yScale(
-                          point.value
-                        )}) scale(2, 3)"
-                        fill="var(--color-value-down)"
-                        points="-5 -2.5, 0 5, 5 -2.5"
-                      />
-                    {/if}
-                  </g>
-                {/each}
-              </g>
-            {/if}
-          {/each}
-        {:else if graph === "profitloss" && profitLossOverTime.length > 0}
+        {#if profitLossOverTime.length > 0}
           <g transform="translate({padding.left}, {padding.top})">
             <!-- Zero line for reference -->
             <line
@@ -384,45 +325,62 @@
               fill="none"
             />
 
-            {#each profitLossOverTime as point (point.time)}
-              <circle
-                fill="var(--color-grey-light)"
-                r="5"
-                cx={xScale(point.time)}
-                cy={yScale(point.value)}
-                data-tippy-content={generateTooltipContent(point)}
-              ></circle>
+            {#each profitLossOverTime as point, i (point.time)}
+              {@const lastPoint = profitLossOverTime?.[i - 1]}
+              <g data-tippy-content={generateTooltipContent(point)}>
+                {#if point.eventType === "trip_death"}
+                  <circle
+                    fill="var(--color-grey-light)"
+                    stroke={focus === point.tripId ? "white" : ""}
+                    r="5"
+                    cx={xScale(point.time)}
+                    cy={yScale(point.value)}
+                  ></circle>
+                {:else if point.eventType === "trip_liquidated"}
+                  <circle
+                    fill="var(--color-grey-light)"
+                    stroke={focus === point.tripId ? "white" : ""}
+                    r="5"
+                    cx={xScale(point.time)}
+                    cy={yScale(point.value)}
+                  ></circle>
+                {:else if point.eventType === "trip_created"}
+                  <circle
+                    fill="var(--color-grey-light)"
+                    stroke={focus === point.tripId ? "white" : ""}
+                    r="5"
+                    cx={xScale(point.time)}
+                    cy={yScale(point.value)}
+                  ></circle>
+                {:else}
+                  <circle
+                    fill="var(--color-grey-light)"
+                    stroke={focus === point.tripId ? "white" : ""}
+                    r="5"
+                    cx={xScale(point.time)}
+                    cy={yScale(point.value)}
+                  ></circle>
+                {/if}
+                {#if lastPoint}
+                  {@const candleHeight = Math.abs(yScale(point.value) - yScale(lastPoint.value))}
+                  {@const candleWidth = innerWidth / 80}
+                  <!-- Draw "candle" -->
+                  <rect
+                    x={xScale(point.time) - candleWidth / 2}
+                    y={point.value < lastPoint.value
+                      ? yScale(lastPoint.value)
+                      : yScale(lastPoint.value) - candleHeight}
+                    width={candleWidth}
+                    height={candleHeight}
+                    stroke={focus === point.tripId ? "white" : ""}
+                    fill={point.value < lastPoint.value
+                      ? "var(--graph-color-down)"
+                      : "var(--graph-color-up)"}
+                  >
+                  </rect>
+                {/if}
+              </g>
             {/each}
-
-            <!-- Focused trip profit/loss line -->
-            {#if focus && plots[focus]}
-              {@const focusedPlot = plots[focus]}
-              {@const initialCost = focusedPlot.data[0]?.value || 0}
-              {@const focusedProfitLoss = focusedPlot.data.map(point => ({
-                time: point.time,
-                value: point.value - initialCost,
-                meta: point.meta
-              }))}
-
-              <path
-                d={line()
-                  .x(d => xScale(d.time))
-                  .y(d => yScale(d.value))(focusedProfitLoss)}
-                stroke="white"
-                stroke-width={3}
-                fill="none"
-              />
-
-              {#each focusedProfitLoss as point (point.time)}
-                <circle
-                  fill={point.value >= 0 ? "var(--color-value-up)" : "var(--color-value-down)"}
-                  r="5"
-                  cx={xScale(point.time)}
-                  cy={yScale(point.value)}
-                  data-tippy-content={`${focus} Profit/Loss: ${CURRENCY_SYMBOL}${point.value.toFixed(2)}`}
-                ></circle>
-              {/each}
-            {/if}
           </g>
         {/if}
       </svg>
@@ -465,9 +423,9 @@
       border: none;
 
       &.time-option {
-        &:not(.active) {
+        &.active {
           background: black;
-          text: white;
+          color: white;
         }
       }
 

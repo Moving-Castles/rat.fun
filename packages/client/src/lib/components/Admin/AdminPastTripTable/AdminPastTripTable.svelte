@@ -1,8 +1,8 @@
 <script lang="ts">
-  import type { PlotPoint } from "$lib/components/Room/RoomGraph/types"
+  import type { PlotPoint } from "$lib/components/Room/ProfitLossGraph/types"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import { SmallButton } from "$lib/components/Shared"
-  import { RoomGraph } from "$lib/components/Room"
+  import { ProfitLossGraph } from "$lib/components/Room"
   import { goto } from "$app/navigation"
   import { playerLiquidatedRooms } from "$lib/modules/state/stores"
   import { entriesChronologically } from "$lib/components/Room/RoomListing/sortFunctions"
@@ -50,8 +50,6 @@
   let roomList = $derived.by(() => {
     let entries = Object.entries($playerLiquidatedRooms)
 
-    console.log(entries)
-
     return entries.sort(sortFunction)
   })
 </script>
@@ -64,7 +62,7 @@
           <td><!-- Trip --></td>
           <td>Slopamine ({CURRENCY_SYMBOL})</td>
           <td>P&L</td>
-          <td>Age</td>
+          <td>Lifespan</td>
           <td>Spark</td>
           <td><!-- Action --></td>
         </tr>
@@ -87,22 +85,29 @@
           >
             <td class="cell-description">{room.prompt}</td>
             <td class="cell-balance">{room.balance}</td>
-            <td class="cell-profit-loss">{room.roomCreationCost - room.balance}</td>
+            <td class="cell-profit-loss">
+              {(room?.liquidationValue || 0) - room.roomCreationCost}
+              <!-- {room?.liquidationValue - room.roomCreationCost} -->
+            </td>
             <td class="cell-age">
-              {blocksToReadableTime(Number($blockNumber) - Number(room.creationBlock))}
+              {blocksToReadableTime(Number(room.liquidationBlock) - Number(room.creationBlock))}
             </td>
             <td class="cell-graph">
-              {console.log(plotData)}
               {#if plotData}
                 <div class="mini-graph">
-                  <RoomGraph smallIcons height={80} {plotData} isEmpty={plotData.length === 0} />
+                  <ProfitLossGraph
+                    smallIcons
+                    height={80}
+                    {plotData}
+                    isEmpty={plotData.length === 0}
+                  />
                 </div>
               {:else}
                 <div class="mini-graph" />
               {/if}
             </td>
             <td class="cell-actions">
-              <SmallButton text="Liquidate" onclick={() => {}}></SmallButton>
+              <SmallButton text="View history" onclick={() => {}}></SmallButton>
             </td>
           </tr>
         {/each}

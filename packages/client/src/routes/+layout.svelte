@@ -91,11 +91,11 @@
     </div>
   {/if}
 
-  {#if $UIState !== UI.LOADING}
-    {#if browser}
-      <Shader />
-    {/if}
+  {#if browser}
+    <Shader />
   {/if}
+  <!-- {#if $UIState !== UI.LOADING}
+  {/if} -->
 </div>
 
 {#if $activeWorldEvent && !notificationsRead.current.includes($activeWorldEvent.cmsId)}

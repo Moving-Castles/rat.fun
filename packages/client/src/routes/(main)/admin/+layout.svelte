@@ -8,15 +8,10 @@
     AdminTripMonitor,
     AdminPastTripsMonitor,
     AdminTripTable,
-    AdminPastTripTable,
-    CreateRoom
+    AdminPastTripTable
   } from "$lib/components/Admin"
-  import { BigButton } from "$lib/components/Shared"
-  import { getModalState } from "$lib/components/Shared/Modal/state.svelte"
 
   let { children }: { children?: any } = $props()
-
-  let { modal } = getModalState()
 
   let focus = $state("")
 
@@ -34,29 +29,15 @@
   })
 </script>
 
-{#snippet createTrip()}
-  <div class="create-room-wrapper">
-    <CreateRoom ondone={modal.close} />
-  </div>
-{/snippet}
-
 <SEO prependTitle="ADMIN" />
 
 <div class="span-all">
   <div class="">
     <div class="">
       <AdminTripMonitor {focus} />
-      <div class="create-room-button">
-        <BigButton
-          text="Create trip"
-          onclick={() => {
-            modal.set(createTrip)
-          }}
-        />
-      </div>
       <AdminTripTable bind:focus />
       <AdminPastTripsMonitor />
-      <AdminPastTripTable bind:focus />
+      <AdminPastTripTable />
     </div>
   </div>
 </div>

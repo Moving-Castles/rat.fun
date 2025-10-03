@@ -3,7 +3,7 @@
 
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import { scaleTime, scaleLinear } from "d3-scale"
-  import { max } from "d3-array"
+  import { max, min } from "d3-array"
   import { line } from "d3-shape"
   import tippy from "tippy.js"
 
@@ -16,6 +16,8 @@
     height = 300
   }: { smallIcons?: boolean; plotData: PlotPoint[]; isEmpty: boolean; height?: number } = $props()
 
+  $inspect("plotData for single trip", plotData)
+
   // Layout setup
   let width = $state(0) // width will be set by the clientWidth
 
@@ -24,6 +26,22 @@
   // Calculate inner dimensions based on padding
   let innerWidth = $derived(width - padding.left - padding.right)
   let innerHeight = $derived(height - padding.top - padding.bottom)
+
+  // Calculate profit/loss data (balance - initial investment)
+  let profitLossData = $derived.by(() => {
+    if (!plotData || plotData.length === 0) return []
+
+    const initialCost = plotData[0].value
+    return plotData.map(point => ({
+      time: point.time,
+      value: point.value - initialCost,
+      meta: {
+        ...point.meta,
+        balance: point.value,
+        investment: initialCost
+      }
+    }))
+  })
 
   // Computed values
   let xScale = $derived.by(() => {
@@ -41,13 +59,15 @@
   })
 
   let yScale = $derived.by(() => {
-    if (!plotData || plotData.length === 0 || !innerHeight) return null // Use innerHeight here
+    if (!profitLossData || profitLossData.length === 0 || !innerHeight) return null
 
-    // Ensure the domain includes 0 and accommodates the highest value + buffer
-    const maxValue = max(plotData, (d: PlotPoint) => +d.value) ?? 0
+    const maxValue = Number(max(profitLossData, d => +d.value) ?? 0)
+    const minValue = Number(min(profitLossData, d => +d.value) ?? 0)
+    const fraction = (maxValue - minValue) / 12
+
     return scaleLinear()
-      .domain([0, Math.max(plotData[0].value * 2, maxValue)])
-      .range([innerHeight, 0]) // Use innerHeight
+      .domain([minValue - fraction, maxValue + fraction])
+      .range([innerHeight, 0])
   })
 
   // Line function from D3 to create the d attribute for a path element
@@ -57,32 +77,8 @@
       ? line<PlotPoint>()
           .x((d: PlotPoint) => xScale(d.time))
           .y((d: PlotPoint) => yScale(+d.value))
-      : // .curve(curveBasis)
-        null
+      : null
   )
-
-  // Generate points specifically for the full-width baseline
-  let baselinePoints = $derived.by(() => {
-    if (!xScale || !yScale || !plotData || plotData.length === 0) return null
-
-    const domain = xScale.domain() // Get the full domain [start, end]
-    const firstValue = plotData[0].value // Value of the first data point
-
-    // Create two points spanning the full domain width at the first data point's y-level
-    // These points need 'time' and 'value' structure to work with lineGenerator
-    return [
-      {
-        time: domain[0].getTime(),
-        value: firstValue,
-        meta: { time: domain[0].getTime(), roomValue: firstValue, meta: {} }
-      }, // Point at the start of the domain
-      {
-        time: domain[1].getTime(),
-        value: firstValue,
-        meta: { time: domain[1].getTime(), roomValue: firstValue, meta: {} }
-      } // Point at the end of the domain
-    ]
-  })
 
   // ???
   $effect(() => {
@@ -96,15 +92,9 @@
   })
 
   const generateTooltipContent = (point: PlotPoint) => {
-    let toolTipContent = `<div>Trip balance: <span class="tooltip-value">${CURRENCY_SYMBOL}${point?.meta?.roomValue}</span>`
-
-    if (point?.meta?.roomValueChange) {
-      const valueChangeClass =
-        point.meta.roomValueChange > 0 ? "tooltip-value-positive" : "tooltip-value-negative"
-      toolTipContent += `<br/>Change: <span class="${valueChangeClass}">${point?.meta?.roomValueChange}</span></div>`
-    }
-
-    return toolTipContent
+    const balance = point.meta?.balance || 0
+    const investment = point.meta?.investment || 0
+    return `<div>Balance: <span class="tooltip-value">${CURRENCY_SYMBOL}${balance.toFixed(2)}</span><br/>Investment: <span class="tooltip-value">${CURRENCY_SYMBOL}${investment.toFixed(2)}</span><br/>P/L: <span class="tooltip-value ${point.value >= 0 ? "tooltip-value-positive" : "tooltip-value-negative"}">${CURRENCY_SYMBOL}${point.value.toFixed(2)}</span></div>`
   }
 </script>
 
@@ -122,57 +112,36 @@
     </div>
   {:else}
     <div class="graph" bind:clientWidth={width}>
-      {#if plotData && width && xScale && yScale && lineGenerator}
+      {#if profitLossData && width && xScale && yScale && lineGenerator}
         <svg {width} {height}>
-          <rect class="fake-background" width={padding.right} {height} x={width - padding.right}
-          ></rect>
-
           <g transform="translate({padding.left}, {padding.top})">
+            <!-- Zero line for reference -->
+            <line
+              x1="0"
+              y1={yScale(0)}
+              x2={innerWidth}
+              y2={yScale(0)}
+              stroke="var(--color-grey-mid)"
+              stroke-width="1"
+              stroke-dasharray="2,2"
+            />
+
+            <!-- Profit/loss line -->
             <path
-              d={lineGenerator(plotData)}
-              stroke="var(--color-value)"
+              d={lineGenerator(profitLossData)}
+              stroke="var(--color-grey-light)"
               stroke-width={2}
-              stroke-dasharray={4}
               fill="none"
             />
 
-            {#if baselinePoints}
-              <path
-                d={lineGenerator(baselinePoints)}
-                stroke="#eee"
-                stroke-width={1}
-                stroke-dasharray="4 4"
-                fill="none"
-              />
-            {/if}
-
-            {#each plotData as point (point.time)}
-              <g data-tippy-content={generateTooltipContent(point)}>
-                {#if !point?.meta?.roomValueChange || point?.meta?.roomValueChange === 0}
-                  <circle
-                    fill="var(--color-value)"
-                    r={smallIcons ? 3 : 6}
-                    cx={xScale(point.time)}
-                    cy={yScale(point.value)}
-                  ></circle>
-                {:else if point?.meta?.roomValueChange > 0}
-                  <polygon
-                    transform="translate({xScale(point.time)}, {yScale(
-                      point.value
-                    )}) scale({smallIcons ? 1 : 1}, {smallIcons ? 1.5 : 3})"
-                    fill="var(--color-value-up)"
-                    points="-5 2.5, 0 -5, 5 2.5"
-                  />
-                {:else}
-                  <polygon
-                    transform="translate({xScale(point.time)}, {yScale(
-                      point.value
-                    )}) scale({smallIcons ? 2 : 1}, {smallIcons ? 1.5 : 3})"
-                    fill="var(--color-value-down)"
-                    points="-5 -2.5, 0 5, 5 -2.5"
-                  />
-                {/if}
-              </g>
+            {#each profitLossData as point (point.time)}
+              <circle
+                fill={point.value >= 0 ? "var(--color-value-up)" : "var(--color-value-down)"}
+                r={smallIcons ? 3 : 5}
+                cx={xScale(point.time)}
+                cy={yScale(point.value)}
+                data-tippy-content={generateTooltipContent(point)}
+              ></circle>
             {/each}
           </g>
         </svg>

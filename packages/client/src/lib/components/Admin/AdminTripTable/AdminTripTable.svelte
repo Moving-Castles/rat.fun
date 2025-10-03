@@ -85,7 +85,7 @@
           >
             <td class="cell-description">{room.prompt}</td>
             <td class="cell-balance">{room.balance}</td>
-            <td class="cell-profit-loss">{room.roomCreationCost - room.balance}</td>
+            <td class="cell-profit-loss">{room.balance - room.roomCreationCost}</td>
             <td class="cell-age">
               {blocksToReadableTime(Number($blockNumber) - Number(room.creationBlock))}
             </td>
@@ -98,7 +98,6 @@
                     {plotData}
                     isEmpty={plotData.length === 0}
                   />
-                  <!-- <RoomGraph smallIcons height={98} {plotData} isEmpty={plotData.length === 0} /> -->
                 </div>
               {:else}
                 <div class="mini-graph" />
