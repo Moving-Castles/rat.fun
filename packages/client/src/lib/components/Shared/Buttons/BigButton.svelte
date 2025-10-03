@@ -1,6 +1,5 @@
 <script lang="ts">
-  // import { playUISound } frosm "$lib/modules/sound/state.svelte"
-  import { playSound } from "$lib/modules/sound-classic"
+  import { playSound } from "$lib/modules/sound"
   import { tippy } from "svelte-tippy"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
 
@@ -21,29 +20,13 @@
   } = $props()
 
   const onmousedown = () => {
-    if (id === "connect") {
-      playSound("ratfun", "clickDownLight")
-    } else {
-      playSound("ratfun", "clickDownHeavy")
-    }
+    playSound("ratfunUI", "bigButtonDown")
   }
 
   let conditionalAction = $derived(tippyText ? tippy : () => {})
 
   const onmouseup = () => {
-    if (id === "send_rat" || id === "buy_rat") {
-      playSound("ratfun", "releaseConnect")
-    } else if (id === "skillz") {
-      playSound("ratfun", "releaseConnect")
-    } else if (id === "connect") {
-      playSound("ratfun", "releaseConnect")
-    } else if (id === "abort") {
-      playSound("ratfun", "releaseError1")
-    } else if (id === "liquidate") {
-      playSound("ratfun", "releaseSlopCharge")
-    } else {
-      playSound("ratfun", "releaseMini")
-    }
+    playSound("ratfunUI", "bigButtonUp")
     onclick()
   }
 </script>

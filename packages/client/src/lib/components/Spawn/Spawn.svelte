@@ -6,7 +6,10 @@
   import { WALLET_TYPE } from "$lib/mud/enums"
   import { SPAWN_STATE } from "$lib/modules/ui/enums"
 
-  import { playSound } from "$lib/modules/sound-classic"
+  import { playSound } from "$lib/modules/sound"
+
+  import { UIState } from "$lib/modules/ui/state.svelte"
+  import { UI } from "$lib/modules/ui/enums"
 
   import { publicNetwork } from "$lib/modules/network"
   import { setupWalletNetwork } from "$lib/mud/setupWalletNetwork"
@@ -84,10 +87,16 @@
       connectBurner()
     }
 
-    // Start background music
-    backgroundMusic = playSound("ratfun", "mainOld")
+    // HACK
+    // When already spawn we are passing through here quickly
+    // And music might be started but onDestroy is not called
+    // Only start music if the UI state has not already changed from SPAWNING
+    if ($UIState === UI.SPAWNING) {
+      backgroundMusic = playSound("ratfunMusic", "spawn")
+    }
 
     // HACK
+    // Wait a bit some whatever is needed for the shader to start is loaded...
     await new Promise(resolve => setTimeout(resolve, 1000))
     shaderManager.setShader("clouds")
   })

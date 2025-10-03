@@ -1,8 +1,7 @@
 <script lang="ts">
   import { playerAddress, playerERC20Balance } from "$lib/modules/state/stores"
-  // import { playUISound } from "$lib/modules/sound/state.svelte"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
-  import { playSound } from "$lib/modules/sound-classic"
+  // import { playSound } from "$lib/modules/sound"
   import { sendBuyWithEth } from "$lib/modules/action-manager/index.svelte"
   import { BigButton } from "$lib/components/Shared"
   import { busy } from "$lib/modules/action-manager/index.svelte"
@@ -28,8 +27,7 @@
       tippyText="Buy some Slopamine ({CURRENCY_SYMBOL})"
       onclick={async () => {
         await sendBuyWithEth()
-        // playUISound("ratfun", "coins")
-        playSound("ratfun", "coins")
+        // playSound("ratfunUI", "coins")
       }}
       text="Buy Slopamine ({CURRENCY_SYMBOL})"
     ></BigButton>

@@ -1,33 +1,32 @@
 <script lang="ts">
   import { page } from "$app/state"
-  // import { playUISound } from "$lib/modules/sound/state.svelte"
-  import { playSound } from "$lib/modules/sound-classic"
+  import { playSound } from "$lib/modules/sound"
   import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
 
   let { isAdminView }: { isAdminView: boolean } = $props()
+
+  const onmousedown = () => {
+    playSound("ratfunUI", "smallButtonDown")
+  }
+
+  const enterAdmin = () => {
+    playSound("ratfunTransitions", "adminEnter")
+    shaderManager.setShader("blank")
+  }
+
+  const exitAdmin = () => {
+    playSound("ratfunTransitions", "adminExit")
+    shaderManager.setShader("clouds", "inverted")
+  }
 </script>
 
 <div class="pane-switch">
   {#if isAdminView}
-    <button
-      onclick={() => {
-        // playUISound("ratfun", "adminExit")
-        playSound("ratfun", "adminExit")
-        shaderManager.setShader("clouds", "inverted")
-      }}
-      class="pane-switch-item"
-    >
+    <button onclick={exitAdmin} class="pane-switch-item">
       <a href="/{page.route.id?.includes('roomId') ? page.params.roomId : ''}">X</a>
     </button>
   {:else}
-    <button
-      onclick={() => {
-        shaderManager.setShader("blank")
-        // playUISound("ratfun", "adminAccess")
-        playSound("ratfun", "adminAccess")
-      }}
-      class="pane-switch-item"
-    >
+    <button onclick={enterAdmin} {onmousedown} class="pane-switch-item">
       <a href="/admin">⚙</a>
     </button>
   {/if}

@@ -3,7 +3,7 @@
   import { sendChatMessage } from "$lib/modules/off-chain-sync"
   import { websocketConnected } from "$lib/modules/off-chain-sync/stores"
   import { onMount } from "svelte"
-  import { typeHit } from "$lib/modules/sound/state.svelte"
+  import { typeHit } from "$lib/modules/sound"
   import { CharacterLimitError, ChatValidationError } from "$lib/modules/error-handling/errors"
 
   import ChatHeader from "./ChatHeader.svelte"

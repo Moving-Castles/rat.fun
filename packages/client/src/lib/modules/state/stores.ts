@@ -137,7 +137,6 @@ export const playerActiveRooms = derived([playerRooms], ([$playerRooms]) => {
 })
 
 export const playerLiquidatedRooms = derived([playerRooms], ([$playerRooms]) => {
-  // console.log("player rooms", $playerRooms)
   return filterLiquidated($playerRooms) as Rooms
 })
 

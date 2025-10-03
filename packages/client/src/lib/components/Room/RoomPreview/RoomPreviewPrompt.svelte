@@ -25,7 +25,7 @@
     width: 100%;
     font-family: var(--special-font-stack);
     background: var(--color-alert);
-    min-height: 200px;
+    height: 100%;
     background: url("/images/texture-2.png");
 
     .content {

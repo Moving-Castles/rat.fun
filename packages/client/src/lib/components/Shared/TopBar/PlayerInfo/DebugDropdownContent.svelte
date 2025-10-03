@@ -9,8 +9,7 @@
     playerIsBroke,
     tokenAllowanceApproved
   } from "$lib/modules/state/stores"
-  // import { playUISound } from "$lib/modules/sound/state.svelte"
-  import { playSound } from "$lib/modules/sound-classic"
+  // import { playSound } from "$lib/modules/sound"
   import {
     sendGiveCallerTokens,
     sendApproveMax,
@@ -18,12 +17,9 @@
   } from "$lib/modules/action-manager/index.svelte"
   import { sendChatMessage } from "$lib/modules/off-chain-sync"
   import { SmallButton } from "$lib/components/Shared"
-  // import { getMixerState } from "$lib/modules/sound/state.svelte"
   import { ENTITY_TYPE } from "contracts/enums"
   import { walletType, environment } from "$lib/modules/network"
   import { busy } from "$lib/modules/action-manager/index.svelte"
-
-  // let mixer = getMixerState()
 
   const sendUnlockAdmin = async () => {
     await sendChatMessage("RatsRiseUp666")
@@ -83,8 +79,7 @@
       tippyText="Request tokens from the contract"
       onclick={async () => {
         await sendGiveCallerTokens()
-        // playUISound("ratfun", "coins")
-        playSound("ratfun", "coins")
+        // playSound("ratfunUI", "coins")
       }}
       text="Get 2000 free slopamine ({CURRENCY_SYMBOL})"
     ></SmallButton>
@@ -93,8 +88,7 @@
       tippyText="Buy some slopamine ({CURRENCY_SYMBOL})"
       onclick={async () => {
         await sendBuyWithEth()
-        // playUISound("ratfun", "coins")
-        playSound("ratfun", "coins")
+        // playSound("ratfunUI", "coins")
       }}
       text="Buy 1 Slopamine ({CURRENCY_SYMBOL}) for 0.001ETH"
     ></SmallButton>

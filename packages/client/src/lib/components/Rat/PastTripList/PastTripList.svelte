@@ -15,7 +15,7 @@
       })
   )
 
-  $inspect(pastTrips)
+  // $inspect(pastTrips)
 </script>
 
 <div class="past-trip-list">

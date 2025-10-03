@@ -3,17 +3,10 @@
   import "tippy.js/dist/tippy.css"
 
   import type { LayoutProps } from "./$types"
-  import {
-    // initSound,
-    snapshotFactory
-    // switchAudio
-    // ratCoughs
-  } from "$lib/modules/sound/state.svelte"
-  import { initSound } from "$lib/modules/sound-classic"
+  import { initSound } from "$lib/modules/sound"
   import { initializeSentry } from "$lib/modules/error-handling"
   import { browser } from "$app/environment"
-  import { afterNavigate, goto } from "$app/navigation"
-  import { page } from "$app/state"
+  import { goto } from "$app/navigation"
   import { onMount } from "svelte"
   import { initStaticContent } from "$lib/modules/content"
   import { publicNetwork } from "$lib/modules/network"
@@ -33,13 +26,7 @@
   import EntryKit from "$lib/components/Spawn/EntryKit/EntryKit.svelte"
   import Toasts from "$lib/components/Shared/Toasts/Toasts.svelte"
 
-  // This will persist data across page loads.
-  // Used for user settings
-  export const snapshot = snapshotFactory()
-
   let { children, data }: LayoutProps = $props()
-
-  // let initingSound = $state(false)
 
   const { environment, walletType } = data
 
@@ -75,41 +62,12 @@
     }
   })
 
-  // Enable audio on first user interaction
-  // const enableAudio = async () => {
-  //   if (initingSound) return false
-
-  //   initingSound = true
-
-  // await initSound()
-  // initSound()
-
-  // switchAudio(page)
-
-  // ratCoughs()
-
-  // document.removeEventListener("click", enableAudio)
-  // document.removeEventListener("touchstart", enableAudio)
-  // document.removeEventListener("keydown", enableAudio)
-  // }
-
   onMount(async () => {
     // Remove preloader
     document.querySelector(".preloader")?.remove()
 
     initSound()
-
-    // document.addEventListener("click", enableAudio)
-    // document.addEventListener("touchstart", enableAudio)
-    // document.addEventListener("keydown", enableAudio)
   })
-
-  // afterNavigate(({ to, from }) => {
-  //   switchAudio(to, from)
-  //   if (to?.url.searchParams.has("spawn")) {
-  //     UIState.set(UI.SPAWNING)
-  //   }
-  // })
 </script>
 
 <svelte:window />

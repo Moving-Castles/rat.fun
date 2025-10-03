@@ -3,10 +3,9 @@
   import { getRoomMaxValuePerWin, getRoomMinRatValueToEnter } from "$lib/modules/state/utils"
   import { CharacterCounter, BigButton } from "$lib/components/Shared"
   import { sendCreateRoom } from "$lib/modules/action-manager/index.svelte"
-  import { typeHit } from "$lib/modules/sound/state.svelte"
+  import { typeHit } from "$lib/modules/sound"
   import { errorHandler } from "$lib/modules/error-handling"
   import { CharacterLimitError, InputValidationError } from "$lib/modules/error-handling/errors"
-  import { playSample } from "$lib/modules/sound/synth-library/plucked"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import { MIN_ROOM_CREATION_COST } from "@server/config"
   import { collapsed } from "$lib/modules/ui/state.svelte"
@@ -72,13 +71,6 @@
           "room description"
         )
       }
-      // Duck music
-      // mixer.rampChannelVolume("music", -12, 0.5)
-      // const id = "fill" + Math.ceil(Math.random() * 4)
-      // playUISound("ratfun", id, undefined, () => {
-      //   mixer.rampChannelVolume("music", 0, 0.5)
-      // })
-      // Quack
       await sendCreateRoom(roomDescription, flooredRoomCreationCost)
       ondone()
     } catch (error) {
@@ -141,7 +133,7 @@
             min={Math.min($playerERC20Balance, MIN_ROOM_CREATION_COST)}
             max={$playerERC20Balance}
             oninput={e => {
-              playSample(Number(e.target.value) / Number($playerERC20Balance))
+              // playSample(Number(e.target.value) / Number($playerERC20Balance))
             }}
             bind:value={roomCreationCost}
           />

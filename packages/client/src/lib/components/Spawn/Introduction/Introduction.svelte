@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte"
   import gsap from "gsap"
-  import { playSound } from "$lib/modules/sound-classic"
+  // import { playSound } from "$lib/modules/sound"
 
   let { onComplete }: { onComplete: () => void } = $props()
 
@@ -22,7 +22,7 @@
   })
 
   const onClick = () => {
-    playSound("ratfun", "releaseConnect")
+    // playSound("ratfunUI", "releaseConnect")
 
     exitTimeline.play()
 
@@ -42,7 +42,7 @@
   }
 
   const onmousedown = () => {
-    playSound("ratfun", "clickDownHeavy")
+    // playSound("ratfunUI", "clickDownHeavy")
   }
 </script>
 

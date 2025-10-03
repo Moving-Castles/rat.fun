@@ -6,12 +6,11 @@
   import { getRoomMaxValuePerWin } from "$lib/modules/state/utils"
   import { staticContent } from "$lib/modules/content"
   import { NoImage } from "$lib/components/Shared"
+  import { playSound } from "$lib/modules/sound"
 
   import type { Room as SanityRoom } from "@sanity-types"
 
-  let { roomId, room, index }: { roomId: Hex; room: Room; index: number } = $props()
-
-  console.log("index", index)
+  let { roomId, room }: { roomId: Hex; room: Room } = $props()
 
   // Portion of room creation cost
   let maxValuePerWin = getRoomMaxValuePerWin(room.roomCreationCost, room.balance)
@@ -37,9 +36,28 @@
     if (length > 50) return "medium"
     return "short"
   }
+
+  const onmousedown = () => {
+    playSound("ratfunUI", "smallButtonDown")
+  }
+
+  const onmouseup = () => {
+    playSound("ratfunUI", "smallButtonUp")
+  }
+
+  const onmouseenter = () => {
+    playSound("ratfunUI", "hover")
+  }
 </script>
 
-<a href="/{roomId}" class="room-listing-item" class:disabled={Number(room.balance) == 0}>
+<a
+  href="/{roomId}"
+  class="room-listing-item"
+  class:disabled={Number(room.balance) == 0}
+  {onmouseup}
+  {onmousedown}
+  {onmouseenter}
+>
   <!-- COLUMN LEFT -->
   <div class="column left">
     <div class="room-image">

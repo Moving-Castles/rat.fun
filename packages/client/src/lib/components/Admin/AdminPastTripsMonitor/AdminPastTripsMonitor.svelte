@@ -17,8 +17,8 @@
     return $profitLoss > 0 ? "upText" : "downText"
   })
 
-  $inspect($playerLiquidatedRooms)
-  $inspect($playerRooms)
+  // $inspect($playerLiquidatedRooms)
+  // $inspect($playerRooms)
 </script>
 
 <div class="admin-trip-monitor">

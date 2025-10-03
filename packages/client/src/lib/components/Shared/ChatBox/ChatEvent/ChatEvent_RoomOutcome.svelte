@@ -1,7 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte"
-  // import { playUISound } from "$lib/modules/sound/state.svelte"
-  import { playSound } from "$lib/modules/sound-classic"
+  // import { playSound } from "$lib/modules/sound"
   import type { OffChainMessage } from "@server/modules/types"
   import ChatEvent_Label from "./ChatEvent_Label.svelte"
 
@@ -10,8 +9,7 @@
 
   onMount(() => {
     if (!suppressSound) {
-      // playUISound("ratfun", "selectionScroll")
-      playSound("ratfun", "selectionScroll")
+      // playSound("ratfunUI", "selectionScroll")
     }
   })
 </script>

@@ -3,7 +3,7 @@
 
   import { onMount, onDestroy } from "svelte"
 
-  import { playSound } from "$lib/modules/sound-classic"
+  import { playSound } from "$lib/modules/sound"
 
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import { truncateString } from "$lib/modules/utils"
@@ -241,7 +241,7 @@
 
   // Setup real-time updates
   onMount(() => {
-    backgroundMusic = playSound("ratfun", "admin", true)
+    backgroundMusic = playSound("ratfunMusic", "admin", true)
     const interval = setInterval(() => {
       currentTime = Date.now()
     }, 1000)
