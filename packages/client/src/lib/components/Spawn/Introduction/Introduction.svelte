@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte"
   import gsap from "gsap"
-  // import { playSound } from "$lib/modules/sound"
+  import { playSound } from "$lib/modules/sound"
 
   let { onComplete }: { onComplete: () => void } = $props()
 
@@ -15,14 +15,14 @@
     })
 
     gsap.to(".logo img", {
-      opacity: 1,
+      opacity: 0.8,
       duration: 0.3,
       ease: "power2.inOut"
     })
   })
 
   const onClick = () => {
-    // playSound("ratfunUI", "releaseConnect")
+    playSound("ratfunUI", "bigButtonUp")
 
     exitTimeline.play()
 
@@ -42,7 +42,7 @@
   }
 
   const onmousedown = () => {
-    // playSound("ratfunUI", "clickDownHeavy")
+    playSound("ratfunUI", "bigButtonDown")
   }
 </script>
 
@@ -78,15 +78,13 @@
       padding: 0;
       cursor: pointer;
       outline: none;
-
-      &:active {
-        transform: scale(0.9);
-      }
+      mix-blend-mode: screen;
 
       img {
         width: 600px;
         height: 100%;
         object-fit: contain;
+        opacity: 0.8;
       }
     }
   }

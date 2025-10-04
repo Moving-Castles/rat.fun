@@ -92,8 +92,12 @@
           type="text"
           placeholder="YOUR NAME"
           bind:value={name}
-          oninput={typeHit}
-          onkeydown={e => e.key === "Enter" && submitForm()}
+          onkeydown={e => {
+            typeHit()
+            if (e.key === "Enter") {
+              submitForm()
+            }
+          }}
         />
         <div class="button-container">
           <BigButton text="SIGN" onclick={submitForm} disabled={!name} />

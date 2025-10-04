@@ -116,6 +116,7 @@
 
 <style lang="scss">
   .context-main {
+    // display: none;
     width: var(--game-window-width);
     height: var(--game-window-height);
     overflow: hidden;
