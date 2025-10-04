@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte"
   import { Log, NormalResultSummary, RatDeadResultSummary } from "$lib/components/GameRun"
-  import { playSound } from "$lib/modules/sound-classic"
+  import { playSound } from "$lib/modules/sound"
   import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
   import type { EnterRoomReturnValue } from "@server/modules/types"
   import { RESULT_SUMMARY } from "$lib/components/GameRun/state.svelte"
@@ -22,8 +22,9 @@
   }
 
   onMount(() => {
+    playSound("ratfunTransitions", "tripReportEnter")
     shaderManager.setShader("blank")
-    backgroundMusic = playSound("ratfun", "tripResultLoop", true)
+    backgroundMusic = playSound("ratfunMusic", "tripReport", true)
   })
 
   onDestroy(async () => {

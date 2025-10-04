@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
   import { getMixerState } from "$lib/modules/sound/state.svelte"
 
   let mixer = getMixerState()
@@ -138,4 +138,4 @@
       }
     }
   }
-</style>
+</style> -->

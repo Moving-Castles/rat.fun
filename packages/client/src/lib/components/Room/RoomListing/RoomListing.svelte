@@ -20,7 +20,6 @@
   // Here we add once there are a couple of updates
   let roomList = $derived.by(() => {
     let entries = Object.entries($rooms)
-
     entries = filterDepletedRooms(entries, showDepletedRooms)
     entries = filterRooms(entries, textFilter)
     return entries.sort(sortFunction)
@@ -56,8 +55,8 @@
           </button>
         {/key}
       {/if}
-      {#each activeList as roomEntry, index (roomEntry[0])}
-        <RoomItem roomId={roomEntry[0] as Hex} room={roomEntry[1]} {index} />
+      {#each activeList as roomEntry (roomEntry[0])}
+        <RoomItem roomId={roomEntry[0] as Hex} room={roomEntry[1]} />
       {/each}
     {:else}
       <div class="empty-listing">

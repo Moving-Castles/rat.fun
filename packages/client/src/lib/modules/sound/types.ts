@@ -1,9 +1,9 @@
-import type { Player } from "tone"
+import type { Howl } from "howler"
 
 export type Sound = {
   src: string
   volume: number
-  sound?: Player
+  sound?: Howl
   author?: string
 }
 
@@ -13,10 +13,4 @@ export type SoundAssets = {
 
 export type SoundLibrary = {
   [index: string]: SoundAssets
-}
-
-export type TimingOptions = {
-  when?: number | string
-  duration?: number | string
-  fadeTime?: number
 }

@@ -3,7 +3,7 @@
   import { updateFrozenState } from "$lib/components/GameRun/state.svelte"
   import { gsap } from "gsap"
   import { TextPlugin } from "gsap/TextPlugin"
-  import { playUISound, typeHit } from "$lib/modules/sound/state.svelte"
+  import { typeHit, playSound } from "$lib/modules/sound"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import {
     TIMESTAMP_DURATION,
@@ -64,7 +64,7 @@
   const playOutcomeSound = (action: string) => {
     const soundName =
       action === "increase" || action === "add" ? "acceptOrderSuccessOld" : "acceptOrderFail"
-    playUISound("ratfun", soundName)
+    // playSound("ratfunUI", soundName)
   }
 
   // Action to register the nodes
@@ -95,7 +95,7 @@
   const main = () => {
     // Timestamp Animation
     timeline.call(() => {
-      playUISound("ratfun", "textLineHit")
+      // playSound("ratfunUI", "textLineHit")
     })
     timeline.to(timestampElement, {
       opacity: 1,

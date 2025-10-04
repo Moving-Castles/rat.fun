@@ -45,6 +45,10 @@
     return $realProfitLoss > 0 ? "upText" : "downText"
   })
 
+  const realPlSymbolExplicit = derived(realPortfolioClass, $pc =>
+    $pc === "neutral" ? "" : $pc === "upText" ? "+" : "-"
+  )
+
   const toggle = () => {
     show = show === "realised" ? "unrealised" : "realised"
   }
@@ -86,12 +90,14 @@
         <div onclick={toggle} class="main">
           <p>Realised P&L</p>
           <span class="percentage {$realPortfolioClass} glow"
-            >({$plSymbolExplicit}{(100 - ($realBalance / $realInvestment) * 100).toFixed(2)}%)</span
+            >({$realPlSymbolExplicit}{(100 - ($realBalance / $realInvestment) * 100).toFixed(
+              2
+            )}%)</span
           >
           <span class="unit {$realPortfolioClass}">{CURRENCY_SYMBOL}</span>
           <div class="content {$realPortfolioClass} glow">
             <h1 data-tippy-content="Realised P&L" class="">
-              {$plSymbolExplicit}{CURRENCY_SYMBOL}{Math.abs($realProfitLoss)}
+              {$realPlSymbolExplicit}{CURRENCY_SYMBOL}{Math.abs($realProfitLoss)}
             </h1>
           </div>
         </div>

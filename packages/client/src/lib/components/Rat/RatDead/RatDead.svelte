@@ -46,6 +46,12 @@
       }
     }
 
+    .rat-dead-text {
+      font-size: var(--font-size-large);
+      font-family: var(--label-font-stack);
+      color: var(--foreground);
+    }
+
     .button-container {
       overflow: hidden;
       width: 80%;

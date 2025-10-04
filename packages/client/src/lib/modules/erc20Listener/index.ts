@@ -51,7 +51,6 @@ async function updateBalance(
   playerAddr: Hex,
   erc20Address: Hex
 ) {
-  console.log("!!!! updateBalance called")
   try {
     const balance = await readPlayerERC20Balance(network, playerAddr, erc20Address)
     if (balance !== get(playerERC20Balance)) {
@@ -90,7 +89,7 @@ async function updateAllowance(
  * Initialize the ERC20 listener
  */
 export function initErc20Listener() {
-  console.log("### initErc20Listener called")
+  // console.log("### initErc20Listener called")
 
   // TODO: now initErc20Listener is called once from InitWalletNetwork
   // Does that work consistently?

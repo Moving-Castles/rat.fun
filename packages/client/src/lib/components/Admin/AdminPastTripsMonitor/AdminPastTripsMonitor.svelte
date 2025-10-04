@@ -17,17 +17,25 @@
   })
 </script>
 
-<p>Realized P&L</p>
-{#if $liquidationValue && $investment}
-  <h1>
-    <span class="main {$portfolioClass}"
-      >{$profitLoss}
-      <span class="small">({(($liquidationValue / $investment) * 100).toFixed(2)}%)</span></span
-    >
-  </h1>
-{:else}
-  <h1>None</h1>
-{/if}
+<div class="admin-trip-monitor">
+  <div class="p-l-overview">
+    <div class="top">
+      <p>Realized P&L</p>
+      {#if $liquidationValue && $investment}
+        <h1>
+          <span class="main {$portfolioClass}"
+            >{$profitLoss}
+            <span class="small">({(($liquidationValue / $investment) * 100).toFixed(2)}%)</span
+            ></span
+          >
+          <!-- {$liquidationValue / $investment} -->
+        </h1>
+      {:else}
+        <h1>None</h1>
+      {/if}
+    </div>
+  </div>
+</div>
 
 <style lang="scss">
   .admin-trip-monitor {

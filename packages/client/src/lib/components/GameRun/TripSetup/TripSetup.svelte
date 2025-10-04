@@ -6,7 +6,7 @@
   import type { Room as SanityRoom } from "@sanity-types"
   import { terminalTyper } from "$lib/modules/terminal-typer/index"
   import { generateTripSetupOutput } from "./tripSetupOutput"
-  import { playSound } from "$lib/modules/sound-classic"
+  import { playSound } from "$lib/modules/sound"
 
   gsap.registerPlugin(TextPlugin)
 
@@ -24,7 +24,7 @@
   const SETUP_DURATION = 5000
 
   onMount(async () => {
-    backgroundMusic = playSound("ratfun", "tripSetup", true)
+    backgroundMusic = playSound("ratfunMusic", "tripSetup", true)
 
     setTimeout(() => {
       onComplete()

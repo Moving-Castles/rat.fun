@@ -11,6 +11,7 @@
   import { getRandomNumber, getRandomElement } from "$lib/modules/utils"
   import { erc20BalanceListenerActive } from "$lib/modules/erc20Listener/stores"
   import { refetchBalance } from "$lib/modules/erc20Listener"
+  import { playSound } from "$lib/modules/sound"
 
   import { SmallButton } from "$lib/components/Shared"
 
@@ -30,27 +31,56 @@
   let lastNameDisplay = $state("")
   let numberDisplay = $state("")
 
+  // Track previous selections to avoid consecutive duplicates
+  let previousFirstName = $state("")
+  let previousLastName = $state("")
+  let previousNumber = $state("")
+
   let firstNameInterval: ReturnType<typeof setInterval> | null = null
   let lastNameInterval: ReturnType<typeof setInterval> | null = null
   let numberInterval: ReturnType<typeof setInterval> | null = null
+
+  // Helper function to get random element that's different from previous
+  function getRandomElementAvoidingPrevious<T>(array: T[], previous: T): T {
+    if (array.length === 1) return array[0]
+
+    const filteredArray = array.filter(item => item !== previous)
+    return getRandomElement(filteredArray)
+  }
+
+  // Helper function to get random number that's different from previous
+  function getRandomNumberAvoidingPrevious(min: number, max: number, previous: string): string {
+    let newNumber: number
+    do {
+      newNumber = getRandomNumber(min, max)
+    } while (newNumber.toString() === previous)
+    return newNumber.toString()
+  }
 
   function startSlotMachine() {
     // Start flickering for all slots
     firstNameInterval = setInterval(() => {
       if (!slot0Stopped) {
-        firstNameDisplay = getRandomElement(firstNameFragments)
+        const newFirstName = getRandomElementAvoidingPrevious(firstNameFragments, previousFirstName)
+        firstNameDisplay = newFirstName
+        previousFirstName = newFirstName
       }
     }, 100)
 
     lastNameInterval = setInterval(() => {
       if (!slot1Stopped) {
-        lastNameDisplay = getRandomElement(lastNameFragments)
+        const newLastName = getRandomElementAvoidingPrevious(lastNameFragments, previousLastName)
+        lastNameDisplay = newLastName
+        previousLastName = newLastName
       }
     }, 100)
 
     numberInterval = setInterval(() => {
       if (!slot2Stopped) {
-        numberDisplay = getRandomNumber(100, 999).toString()
+        const newNumber = getRandomNumberAvoidingPrevious(100, 999, previousNumber)
+        numberDisplay = newNumber
+        previousNumber = newNumber
+        playSound("ratfunUI", "tick")
       }
     }, 100)
   }

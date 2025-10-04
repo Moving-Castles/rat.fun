@@ -3,7 +3,7 @@
   import { rat, playerIsBroke, tokenAllowanceApproved } from "$lib/modules/state/stores"
   import { Howl } from "howler"
   import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
-  import { playSound } from "$lib/modules/sound-classic"
+  import { playSound } from "$lib/modules/sound"
   import {
     RatInfo,
     RatDeploy,
@@ -26,7 +26,7 @@
   let backgroundMusic: Howl | undefined = $state()
 
   onMount(() => {
-    backgroundMusic = playSound("ratfun", "main", true)
+    backgroundMusic = playSound("ratfunMusic", "main", true)
     shaderManager.setShader("clouds", "inverted")
 
     // Set state to RAT_BOX_STATE.INIT

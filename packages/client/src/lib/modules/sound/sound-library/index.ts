@@ -1,9 +1,11 @@
 import type { SoundLibrary } from "../types"
 
-import { tcm } from "./tcm"
-import { ratfun } from "./ratfun"
+import { ratfunUI } from "./ratfun-ui"
+import { ratfunMusic } from "./ratfun-music"
+import { ratfunTransitions } from "./ratfun-transitions"
 
 export const soundLibrary: SoundLibrary = {
-  tcm,
-  ratfun
+  ratfunUI,
+  ratfunMusic,
+  ratfunTransitions
 }
