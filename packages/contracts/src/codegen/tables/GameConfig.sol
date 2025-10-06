@@ -23,6 +23,7 @@ struct GameConfigData {
   uint32 maxInventorySize;
   uint32 maxRoomPromptLength;
   uint32 cooldownCloseRoom;
+  uint32 ratsKilledForAdminAccess;
 }
 
 library GameConfig {
@@ -30,12 +31,12 @@ library GameConfig {
   ResourceId constant _tableId = ResourceId.wrap(0x746272617466756e000000000000000047616d65436f6e666967000000000000);
 
   FieldLayout constant _fieldLayout =
-    FieldLayout.wrap(0x0060060014202004040400000000000000000000000000000000000000000000);
+    FieldLayout.wrap(0x0064070014202004040404000000000000000000000000000000000000000000);
 
   // Hex-encoded key schema of ()
   Schema constant _keySchema = Schema.wrap(0x0000000000000000000000000000000000000000000000000000000000000000);
-  // Hex-encoded value schema of (address, bytes32, uint256, uint32, uint32, uint32)
-  Schema constant _valueSchema = Schema.wrap(0x00600600615f1f03030300000000000000000000000000000000000000000000);
+  // Hex-encoded value schema of (address, bytes32, uint256, uint32, uint32, uint32, uint32)
+  Schema constant _valueSchema = Schema.wrap(0x00640700615f1f03030303000000000000000000000000000000000000000000);
 
   /**
    * @notice Get the table's key field names.
@@ -50,13 +51,14 @@ library GameConfig {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](6);
+    fieldNames = new string[](7);
     fieldNames[0] = "adminAddress";
     fieldNames[1] = "adminId";
     fieldNames[2] = "ratCreationCost";
     fieldNames[3] = "maxInventorySize";
     fieldNames[4] = "maxRoomPromptLength";
     fieldNames[5] = "cooldownCloseRoom";
+    fieldNames[6] = "ratsKilledForAdminAccess";
   }
 
   /**
@@ -302,6 +304,44 @@ library GameConfig {
   }
 
   /**
+   * @notice Get ratsKilledForAdminAccess.
+   */
+  function getRatsKilledForAdminAccess() internal view returns (uint32 ratsKilledForAdminAccess) {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 6, _fieldLayout);
+    return (uint32(bytes4(_blob)));
+  }
+
+  /**
+   * @notice Get ratsKilledForAdminAccess.
+   */
+  function _getRatsKilledForAdminAccess() internal view returns (uint32 ratsKilledForAdminAccess) {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 6, _fieldLayout);
+    return (uint32(bytes4(_blob)));
+  }
+
+  /**
+   * @notice Set ratsKilledForAdminAccess.
+   */
+  function setRatsKilledForAdminAccess(uint32 ratsKilledForAdminAccess) internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 6, abi.encodePacked((ratsKilledForAdminAccess)), _fieldLayout);
+  }
+
+  /**
+   * @notice Set ratsKilledForAdminAccess.
+   */
+  function _setRatsKilledForAdminAccess(uint32 ratsKilledForAdminAccess) internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    StoreCore.setStaticField(_tableId, _keyTuple, 6, abi.encodePacked((ratsKilledForAdminAccess)), _fieldLayout);
+  }
+
+  /**
    * @notice Get the full data.
    */
   function get() internal view returns (GameConfigData memory _table) {
@@ -338,7 +378,8 @@ library GameConfig {
     uint256 ratCreationCost,
     uint32 maxInventorySize,
     uint32 maxRoomPromptLength,
-    uint32 cooldownCloseRoom
+    uint32 cooldownCloseRoom,
+    uint32 ratsKilledForAdminAccess
   ) internal {
     bytes memory _staticData = encodeStatic(
       adminAddress,
@@ -346,7 +387,8 @@ library GameConfig {
       ratCreationCost,
       maxInventorySize,
       maxRoomPromptLength,
-      cooldownCloseRoom
+      cooldownCloseRoom,
+      ratsKilledForAdminAccess
     );
 
     EncodedLengths _encodedLengths;
@@ -366,7 +408,8 @@ library GameConfig {
     uint256 ratCreationCost,
     uint32 maxInventorySize,
     uint32 maxRoomPromptLength,
-    uint32 cooldownCloseRoom
+    uint32 cooldownCloseRoom,
+    uint32 ratsKilledForAdminAccess
   ) internal {
     bytes memory _staticData = encodeStatic(
       adminAddress,
@@ -374,7 +417,8 @@ library GameConfig {
       ratCreationCost,
       maxInventorySize,
       maxRoomPromptLength,
-      cooldownCloseRoom
+      cooldownCloseRoom,
+      ratsKilledForAdminAccess
     );
 
     EncodedLengths _encodedLengths;
@@ -395,7 +439,8 @@ library GameConfig {
       _table.ratCreationCost,
       _table.maxInventorySize,
       _table.maxRoomPromptLength,
-      _table.cooldownCloseRoom
+      _table.cooldownCloseRoom,
+      _table.ratsKilledForAdminAccess
     );
 
     EncodedLengths _encodedLengths;
@@ -416,7 +461,8 @@ library GameConfig {
       _table.ratCreationCost,
       _table.maxInventorySize,
       _table.maxRoomPromptLength,
-      _table.cooldownCloseRoom
+      _table.cooldownCloseRoom,
+      _table.ratsKilledForAdminAccess
     );
 
     EncodedLengths _encodedLengths;
@@ -441,7 +487,8 @@ library GameConfig {
       uint256 ratCreationCost,
       uint32 maxInventorySize,
       uint32 maxRoomPromptLength,
-      uint32 cooldownCloseRoom
+      uint32 cooldownCloseRoom,
+      uint32 ratsKilledForAdminAccess
     )
   {
     adminAddress = (address(Bytes.getBytes20(_blob, 0)));
@@ -455,6 +502,8 @@ library GameConfig {
     maxRoomPromptLength = (uint32(Bytes.getBytes4(_blob, 88)));
 
     cooldownCloseRoom = (uint32(Bytes.getBytes4(_blob, 92)));
+
+    ratsKilledForAdminAccess = (uint32(Bytes.getBytes4(_blob, 96)));
   }
 
   /**
@@ -474,7 +523,8 @@ library GameConfig {
       _table.ratCreationCost,
       _table.maxInventorySize,
       _table.maxRoomPromptLength,
-      _table.cooldownCloseRoom
+      _table.cooldownCloseRoom,
+      _table.ratsKilledForAdminAccess
     ) = decodeStatic(_staticData);
   }
 
@@ -506,7 +556,8 @@ library GameConfig {
     uint256 ratCreationCost,
     uint32 maxInventorySize,
     uint32 maxRoomPromptLength,
-    uint32 cooldownCloseRoom
+    uint32 cooldownCloseRoom,
+    uint32 ratsKilledForAdminAccess
   ) internal pure returns (bytes memory) {
     return
       abi.encodePacked(
@@ -515,7 +566,8 @@ library GameConfig {
         ratCreationCost,
         maxInventorySize,
         maxRoomPromptLength,
-        cooldownCloseRoom
+        cooldownCloseRoom,
+        ratsKilledForAdminAccess
       );
   }
 
@@ -531,7 +583,8 @@ library GameConfig {
     uint256 ratCreationCost,
     uint32 maxInventorySize,
     uint32 maxRoomPromptLength,
-    uint32 cooldownCloseRoom
+    uint32 cooldownCloseRoom,
+    uint32 ratsKilledForAdminAccess
   ) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
     bytes memory _staticData = encodeStatic(
       adminAddress,
@@ -539,7 +592,8 @@ library GameConfig {
       ratCreationCost,
       maxInventorySize,
       maxRoomPromptLength,
-      cooldownCloseRoom
+      cooldownCloseRoom,
+      ratsKilledForAdminAccess
     );
 
     EncodedLengths _encodedLengths;

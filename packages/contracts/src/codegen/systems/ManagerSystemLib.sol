@@ -78,6 +78,10 @@ library ManagerSystemLib {
     return CallWrapper(self.toResourceId(), address(0)).setCooldownCloseRoom(_cooldownCloseRoom);
   }
 
+  function setRatsKilledForAdminAccess(ManagerSystemType self, uint32 _ratsKilledForAdminAccess) internal {
+    return CallWrapper(self.toResourceId(), address(0)).setRatsKilledForAdminAccess(_ratsKilledForAdminAccess);
+  }
+
   function setMaxValuePerWin(ManagerSystemType self, uint32 _maxValuePerWin) internal {
     return CallWrapper(self.toResourceId(), address(0)).setMaxValuePerWin(_maxValuePerWin);
   }
@@ -158,6 +162,19 @@ library ManagerSystemLib {
     if (address(_world()) == address(this)) revert ManagerSystemLib_CallingFromRootSystem();
 
     bytes memory systemCall = abi.encodeCall(_setCooldownCloseRoom_uint32.setCooldownCloseRoom, (_cooldownCloseRoom));
+    self.from == address(0)
+      ? _world().call(self.systemId, systemCall)
+      : _world().callFrom(self.from, self.systemId, systemCall);
+  }
+
+  function setRatsKilledForAdminAccess(CallWrapper memory self, uint32 _ratsKilledForAdminAccess) internal {
+    // if the contract calling this function is a root system, it should use `callAsRoot`
+    if (address(_world()) == address(this)) revert ManagerSystemLib_CallingFromRootSystem();
+
+    bytes memory systemCall = abi.encodeCall(
+      _setRatsKilledForAdminAccess_uint32.setRatsKilledForAdminAccess,
+      (_ratsKilledForAdminAccess)
+    );
     self.from == address(0)
       ? _world().call(self.systemId, systemCall)
       : _world().callFrom(self.from, self.systemId, systemCall);
@@ -250,6 +267,14 @@ library ManagerSystemLib {
 
   function setCooldownCloseRoom(RootCallWrapper memory self, uint32 _cooldownCloseRoom) internal {
     bytes memory systemCall = abi.encodeCall(_setCooldownCloseRoom_uint32.setCooldownCloseRoom, (_cooldownCloseRoom));
+    SystemCall.callWithHooksOrRevert(self.from, self.systemId, systemCall, msg.value);
+  }
+
+  function setRatsKilledForAdminAccess(RootCallWrapper memory self, uint32 _ratsKilledForAdminAccess) internal {
+    bytes memory systemCall = abi.encodeCall(
+      _setRatsKilledForAdminAccess_uint32.setRatsKilledForAdminAccess,
+      (_ratsKilledForAdminAccess)
+    );
     SystemCall.callWithHooksOrRevert(self.from, self.systemId, systemCall, msg.value);
   }
 
@@ -346,6 +371,10 @@ interface _removeWorldEvent {
 
 interface _setCooldownCloseRoom_uint32 {
   function setCooldownCloseRoom(uint32 _cooldownCloseRoom) external;
+}
+
+interface _setRatsKilledForAdminAccess_uint32 {
+  function setRatsKilledForAdminAccess(uint32 _ratsKilledForAdminAccess) external;
 }
 
 interface _setMaxValuePerWin_uint32 {

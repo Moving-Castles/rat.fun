@@ -148,6 +148,10 @@ contract ManagerSystem is System {
     GameConfig.setCooldownCloseRoom(_cooldownCloseRoom);
   }
 
+  function setRatsKilledForAdminAccess(uint32 _ratsKilledForAdminAccess) public onlyAdmin {
+    GameConfig.setRatsKilledForAdminAccess(_ratsKilledForAdminAccess);
+  }
+
   // * * * * * * * * * * * * *
   // PERCENTAGE CONFIG SETTERS
   // * * * * * * * * * * * * *

@@ -21,7 +21,8 @@ export default defineWorld({
         ratCreationCost: "uint256",
         maxInventorySize: "uint32",
         maxRoomPromptLength: "uint32",
-        cooldownCloseRoom: "uint32"
+        cooldownCloseRoom: "uint32",
+        ratsKilledForAdminAccess: "uint32"
       },
       codegen: {
         dataStruct: true

@@ -20,7 +20,8 @@ import {
   MAX_VALUE_PER_WIN_PERCENTAGE,
   MIN_RAT_VALUE_TO_ENTER_PERCENTAGE,
   TAXATION_LIQUIDATE_RAT_PERCENTAGE,
-  TAXATION_CLOSE_ROOM_PERCENTAGE
+  TAXATION_CLOSE_ROOM_PERCENTAGE,
+  RATS_KILLED_FOR_ADMIN_ACCESS
 } from "../constants.sol";
 import { LibUtils } from "./LibUtils.sol";
 import { SlopERC20 } from "../external/SlopERC20.sol";
@@ -54,7 +55,8 @@ library LibWorld {
         ratCreationCost: RAT_CREATION_COST,
         maxInventorySize: MAX_INVENTORY_SIZE,
         maxRoomPromptLength: MAX_ROOM_PROMPT_LENGTH,
-        cooldownCloseRoom: COOLDOWN_CLOSE_ROOM
+        cooldownCloseRoom: COOLDOWN_CLOSE_ROOM,
+        ratsKilledForAdminAccess: RATS_KILLED_FOR_ADMIN_ACCESS
       })
     );
 
