@@ -3,13 +3,11 @@
   import {
     player,
     playerAddress,
-    playerERC20Allowance,
-    playerERC20Balance,
     playerIsNew,
     playerIsBroke,
     tokenAllowanceApproved
   } from "$lib/modules/state/stores"
-  // import { playSound } from "$lib/modules/sound"
+  import { playerERC20Allowance, playerERC20Balance } from "$lib/modules/erc20Listener/stores"
   import {
     sendGiveCallerTokens,
     sendApproveMax,
@@ -111,28 +109,6 @@
       text="Unlock admin mode"
     ></SmallButton>
   </div>
-
-  <!-- <div class="tab">
-    <p class="key">UI Volume</p>
-    <input
-      min="-100"
-      max="0"
-      type="range"
-      name="ui-volume"
-      id="ui-volume"
-      bind:value={mixer.channelStates.ui.volume}
-      oninput={e => mixer.setChannelVolume("ui", Number(e.target.value))}
-    />
-    {mixer.channelStates.ui.volume}dB
-    <label>
-      <input
-        type="checkbox"
-        bind:checked={mixer.channelStates.ui.muted}
-        onchange={e => mixer.setChannelMute("ui", e.target.checked)}
-      />
-      Mute
-    </label>
-  </div> -->
 </div>
 
 <style lang="scss">
@@ -155,18 +131,6 @@
 
       .key {
         width: 140px;
-      }
-
-      input[type="range"] {
-        flex: 1;
-        min-width: 100px;
-      }
-
-      label {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        font-size: var(--font-size-normal);
       }
     }
   }

@@ -1,6 +1,7 @@
 import { get } from "svelte/store"
 import { gameConfig } from "$lib/modules/state/stores"
-import { externalAddressesConfig, playerERC20Allowance } from "$lib/modules/state/stores"
+import { externalAddressesConfig } from "$lib/modules/state/stores"
+import { playerERC20Allowance } from "$lib/modules/erc20Listener/stores"
 import { createRat, approve } from "$lib/modules/on-chain-transactions"
 import { busy } from "../index.svelte"
 import { RatError } from "$lib/modules/error-handling/errors"

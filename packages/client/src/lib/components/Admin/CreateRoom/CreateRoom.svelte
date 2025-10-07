@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { gameConfig, playerERC20Balance } from "$lib/modules/state/stores"
+  import { gameConfig } from "$lib/modules/state/stores"
+  import { playerERC20Balance } from "$lib/modules/erc20Listener/stores"
   import { getRoomMaxValuePerWin, getRoomMinRatValueToEnter } from "$lib/modules/state/utils"
   import { CharacterCounter, BigButton } from "$lib/components/Shared"
   import { sendCreateRoom } from "$lib/modules/action-manager/index.svelte"

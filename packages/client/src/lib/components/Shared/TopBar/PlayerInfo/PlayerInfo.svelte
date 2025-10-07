@@ -1,12 +1,11 @@
 <script lang="ts">
-  import { player, playerERC20Balance, playerAddress } from "$lib/modules/state/stores"
+  import { player, playerAddress } from "$lib/modules/state/stores"
   import { playSound } from "$lib/modules/sound"
   import { tippy } from "svelte-tippy"
 
   import AccountDropdown from "./AccountDropdown.svelte"
-  import CurrencySymbol from "$lib/components/Shared/CurrencySymbol/CurrencySymbol.svelte"
+  import BalanceBox from "./BalanceBox.svelte"
 
-  let balanceGoing = $state(false)
   let showAccountDropdown = $state(false)
   let dropdownElement = $state<HTMLElement | undefined>(undefined)
   let playerStatsElement = $state<HTMLElement | undefined>(undefined)
@@ -76,19 +75,7 @@
         </div>
       </div>
       <!-- BALANCE -->
-      <div
-        use:tippy={{
-          content: `This is available tokens in your wallet`,
-          placement: "bottom"
-        }}
-        class="stat-item balance"
-      >
-        <div class:priority={balanceGoing} class="inner-wrapper">
-          <div class="value">
-            <span><CurrencySymbol />{$playerERC20Balance ?? 0}</span>
-          </div>
-        </div>
-      </div>
+      <BalanceBox />
     </div>
   {/if}
 </div>
@@ -120,12 +107,6 @@
           font-size: var(--font-size-small);
         }
 
-        &.balance {
-          background: var(--color-value);
-          color: var(--black);
-          font-size: var(--font-size-normal);
-        }
-
         .inner-wrapper {
           display: inline-flex;
           padding-inline: 10px;
@@ -146,12 +127,5 @@
       border-radius: 50%;
       margin-right: 5px;
     }
-  }
-
-  .unit {
-    font-size: var(--font-size-small);
-    background: black;
-    padding: 5px;
-    color: white;
   }
 </style>
