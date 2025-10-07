@@ -8,7 +8,7 @@
 <div class="past-trip-item">
   <!-- TIME SINCE -->
   <div class="time-since">
-    <span>{timeSince(new Date(trip._createdAt).getTime())} ago</span>
+    <span>{timeSince(new Date(trip._createdAt).getTime())}</span>
   </div>
   <!-- VALUE CHANGE -->
   <div class="value-change">

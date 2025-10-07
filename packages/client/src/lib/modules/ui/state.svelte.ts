@@ -9,3 +9,5 @@ export const notificationsRead = new LocalStorage("rat.fun.notifications", [])
 
 // For UI
 export const collapsed = writable(true)
+
+export const adminUnlockedAt = writable(-1)

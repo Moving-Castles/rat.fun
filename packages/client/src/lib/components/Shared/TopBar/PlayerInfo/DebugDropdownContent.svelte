@@ -20,9 +20,11 @@
   import { ENTITY_TYPE } from "contracts/enums"
   import { walletType, environment } from "$lib/modules/network"
   import { busy } from "$lib/modules/action-manager/index.svelte"
+  import { adminUnlockedAt } from "$lib/modules/ui/state.svelte"
 
   const sendUnlockAdmin = async () => {
     await sendChatMessage("RatsRiseUp666")
+    $adminUnlockedAt = Date.now()
   }
 </script>
 

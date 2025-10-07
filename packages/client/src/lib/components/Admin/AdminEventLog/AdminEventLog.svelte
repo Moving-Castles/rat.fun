@@ -1,6 +1,7 @@
 <script lang="ts">
   import { Icon } from "$lib/components/Shared"
   import { timeSince, addressToRatImage } from "$lib/modules/utils"
+  import { adminUnlockedAt } from "$lib/modules/ui/state.svelte"
   import tippy from "tippy.js"
 
   let { eventData, focus = $bindable() } = $props()
@@ -48,9 +49,14 @@
       {:else if point.eventType === "trip_death"}
         {@render ratDied(point)}
       {/if}
-      <span class="meta">{timeSince(new Date(point.time).getTime())} ago</span>
+      <span class="meta">{timeSince(new Date(point.time).getTime())}</span>
     </p>
   {/each}
+  <p class="event">
+    You unlocked the panel <span class="meta"
+      >{timeSince(new Date($adminUnlockedAt).getTime())}</span
+    >
+  </p>
 </div>
 
 <style lang="scss">

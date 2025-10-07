@@ -84,7 +84,9 @@
             </div>
           </div>
         {:else}
-          <h1>None</h1>
+          <div class="main">
+            <h1>None</h1>
+          </div>
         {/if}
       {:else if $realBalance && $realInvestment}
         <div onclick={toggle} class="main">
@@ -183,6 +185,9 @@
       position: relative;
       overflow: hidden;
       height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
 
       p {
         position: absolute;
@@ -229,8 +234,6 @@
       font-family: var(--special-font-stack);
       font-size: 60px;
       margin: 0;
-      height: 100%;
-      line-height: 100%;
       vertical-align: middle;
       width: 100%;
       text-align: center;

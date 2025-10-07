@@ -2,7 +2,7 @@
   import "../app.css"
   import "tippy.js/dist/tippy.css"
 
-  import type { LayoutProps } from "./$types"
+  import type { LayoutProps, Snapshot } from "./$types"
   import { initSound } from "$lib/modules/sound"
   import { initializeSentry } from "$lib/modules/error-handling"
   import { browser } from "$app/environment"
@@ -10,7 +10,7 @@
   import { onMount } from "svelte"
   import { initStaticContent } from "$lib/modules/content"
   import { publicNetwork } from "$lib/modules/network"
-  import { UIState, notificationsRead } from "$lib/modules/ui/state.svelte"
+  import { UIState, notificationsRead, adminUnlockedAt } from "$lib/modules/ui/state.svelte"
   import { UI } from "$lib/modules/ui/enums"
   import { initOffChainSync } from "$lib/modules/off-chain-sync"
   import { playerId, activeWorldEvent } from "$lib/modules/state/stores"
@@ -25,6 +25,17 @@
   import { Shader, Modal, ModalTarget, WorldEventPopup } from "$lib/components/Shared"
   import EntryKit from "$lib/components/Spawn/EntryKit/EntryKit.svelte"
   import Toasts from "$lib/components/Shared/Toasts/Toasts.svelte"
+
+  // Managed state
+  export const snapshot: Snapshot<string> = {
+    capture: () =>
+      JSON.stringify({
+        adminUnlockedAt: String($adminUnlockedAt)
+      }),
+    restore: value => {
+      $adminUnlockedAt = Number(JSON.parse(value).adminUnlockedAt)
+    }
+  }
 
   let { children, data }: LayoutProps = $props()
 

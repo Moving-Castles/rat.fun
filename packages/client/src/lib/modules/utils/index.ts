@@ -272,11 +272,11 @@ export function timeSince(timestamp: number): string {
 
   // Return the time in the largest appropriate unit
   if (days > 0) {
-    return `${days} day${days !== 1 ? "s" : ""}`
+    return `${days} day${days !== 1 ? "s" : ""} ago`
   } else if (hours > 0) {
-    return `${hours} hour${hours !== 1 ? "s" : ""}`
+    return `${hours} hour${hours !== 1 ? "s" : ""} ago`
   } else if (minutes > 0) {
-    return `${minutes} minute${minutes !== 1 ? "s" : ""}`
+    return `${minutes} minute${minutes !== 1 ? "s" : ""} ago`
   } else {
     return "now"
   }

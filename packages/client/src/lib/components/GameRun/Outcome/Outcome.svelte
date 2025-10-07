@@ -10,7 +10,7 @@
 <div class="outcome">
   <div class="meta">
     {outcome.playerName} created tripreport #{outcome.roomIndex} for {outcome?.ratName}
-    {timeSince(new Date(outcome._createdAt).getTime())} ago
+    {timeSince(new Date(outcome._createdAt).getTime())}
   </div>
   <div class="outcome-header">
     <div class="rat">
