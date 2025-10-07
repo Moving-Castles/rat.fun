@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { PlotPoint } from "$lib/components/Room/RoomGraph/types"
+  import { gamePercentagesConfig } from "$lib/modules/state/stores"
 
   import { onMount, onDestroy } from "svelte"
 
@@ -103,6 +104,7 @@
           {
             time: initialTime,
             roomValue: Number(trip.roomCreationCost),
+            roomValueChange: 0,
             meta: sanityRoomContent,
             _createdAt: sanityRoomContent?._createdAt,
             eventType: "trip_created"
@@ -120,24 +122,37 @@
             Number($blockNumber)
           )
 
-          // Get the last value before liquidation to calculate the change
-          const lastValue = dataPoints[dataPoints.length - 1]?.roomValue || 0
+          // Get the last absolute room value before liquidation
+          const lastRoomValue = dataPoints[dataPoints.length - 1]?.roomValue || 0
 
+          const taxed = Number(trip.liquidationValue)
+          const tax = $gamePercentagesConfig.taxationCloseRoom
+          const untaxed = Math.floor(
+            (Number(trip.liquidationValue) * 100) /
+              (100 - Number($gamePercentagesConfig.taxationCloseRoom))
+          )
+          const liquidationValueChange = Number(trip.roomCreationCost) - untaxed
+
+          // Liquidation: you get back the room value (before tax) and close the position
+          // The change is +roomValue to cancel out the accumulated room value
           dataPoints.push({
             _createdAt: new Date(liquidationTime).toISOString(),
-            roomValue: Number(trip.liquidationValue),
-            roomValueChange: Number(trip.liquidationValue) - lastValue,
+            roomValue: lastRoomValue,
+            roomValueChange: liquidationValueChange, // Add back the room value (closing position)
             liquidationBlock: trip.liquidationBlock,
             prompt: "Liquidation",
             eventType: "trip_liquidated"
           })
         }
 
+        // Map data points to store value changes (not accumulated yet)
         const data = dataPoints.map((o, i) => {
           const time = new Date(o?._createdAt).getTime()
+          const valueChange = o?.roomValueChange || 0
+
           return {
             time: time || o.time,
-            value: o?.roomValue || 0,
+            valueChange: valueChange, // Store the change, not accumulated value
             eventType: o.eventType,
             meta: { ...sanityRoomContent, ...o }
           }
@@ -161,21 +176,12 @@
   })
   let isEmpty = $derived(Object.values(plots).every(plot => plot.length === 0))
 
-  // Calculate total investment and current balance
-  let totalInvestment = $derived(
-    Object.values(trips).reduce((sum, trip) => sum + Number(trip.roomCreationCost || 0), 0)
-  )
-
-  let totalBalance = $derived(
-    Object.values(trips).reduce((sum, trip) => sum + Number(trip.balance || 0), 0)
-  )
-
   // Combine all data points from all trips and sort by time (used across multiple derived values)
   let allData = $derived.by(() => {
     const allPlots = Object.values(plots)
     if (!allPlots.length) return []
 
-    const data = allPlots.flatMap((plot, plotIndex) =>
+    const combinedData = allPlots.flatMap((plot, plotIndex) =>
       plot.data.map(point => ({
         ...point,
         tripId: Object.keys(plots)[plotIndex],
@@ -184,8 +190,32 @@
     )
 
     // Sort by time
-    data.sort((a, b) => a.time - b.time)
-    return data
+    combinedData.sort((a, b) => a.time - b.time)
+
+    // Find the earliest time
+    const earliestTime = combinedData.length > 0 ? combinedData[0].time : Date.now()
+
+    // Add initial 0 point at the start
+    const dataWithBaseline = [
+      {
+        time: earliestTime - 1000, // 1 second before first event
+        value: 0,
+        valueChange: 0,
+        eventType: "baseline",
+        meta: {}
+      },
+      ...combinedData
+    ]
+
+    // Now accumulate the value changes globally
+    let runningBalance = 0
+    return dataWithBaseline.map(point => {
+      runningBalance += point.valueChange || 0
+      return {
+        ...point,
+        value: runningBalance
+      }
+    })
   })
 
   $effect(() => {
@@ -198,42 +228,14 @@
   let profitLossOverTime = $derived.by(() => {
     if (!limitedData.length) return []
 
-    // Calculate cumulative profit/loss over time: balance - investment
-    const profitLossData = []
-    const tripIds = Object.keys(plots)
-
-    limitedData.forEach((point, i) => {
-      // Find the current balance for each trip at this point in time
-      const currentBalance = tripIds.reduce((totalBalance, tripId) => {
-        const plot = plots[tripId]
-        const relevantPoints = plot.data.filter(p => p.time <= point.time)
-        const latestPoint = relevantPoints[relevantPoints.length - 1]
-        return totalBalance + (latestPoint?.value || 0)
-      }, 0)
-
-      // Current investment at this point in time
-      const currentInvestment = tripIds.reduce((totalInvestment, tripId) => {
-        const plot = plots[tripId]
-        const hasStarted = plot.data.some(p => p.time <= point.time)
-        if (hasStarted) {
-          const trip = trips[tripId]
-          return totalInvestment + Number(trip?.roomCreationCost || 0)
-        }
-        return totalInvestment
-      }, 0)
-
-      const profitLoss = currentBalance - currentInvestment
-
-      profitLossData.push({
-        time: i,
-        value: profitLoss,
-        tripId: point.tripId,
-        eventType: point.eventType,
-        meta: { ...point.meta, balance: currentBalance, investment: currentInvestment }
-      })
-    })
-
-    return profitLossData
+    // The P/L is already calculated in allData.value from accumulating valueChanges
+    return limitedData.map((point, i) => ({
+      time: i,
+      value: point.value, // Use the already accumulated value
+      tripId: point.tripId,
+      eventType: point.eventType,
+      meta: point.meta
+    }))
   })
 
   const generateTooltipContent = (point: PlotPoint) => {

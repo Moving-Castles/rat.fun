@@ -70,67 +70,61 @@
 {/snippet}
 
 <div class="admin-trip-table-container">
-  {#if roomList?.length > 0}
-    <table class="admin-trip-table">
-      <thead>
-        <tr>
-          <th><!-- Trip --></th>
-          <th>Visits</th>
-          <th>Profit</th>
-          <th>Age</th>
-          <th>Spark</th>
-          <th>Actions</th>
+  <table class="admin-trip-table">
+    <thead>
+      <tr>
+        <th><!-- Trip --></th>
+        <th>Visits</th>
+        <th>Profit</th>
+        <th>Age</th>
+        <th>Spark</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Loading row for pending room creation -->
+      {#if busy.CreateRoom.current !== 0 && pendingRoom && !roomList
+          .map(r => r[1].prompt)
+          .includes(pendingRoom.prompt)}
+        <tr class="simple-row loading-row">
+          <td class="cell-description">
+            <p class="single-line">{pendingRoom.prompt}</p>
+          </td>
+          <td class="cell-balance">0</td>
+          <td class="cell-profit-loss">0</td>
+          <td class="cell-age">0</td>
+          <td class="cell-graph">
+            <div class="mini-graph loading-graph"></div>
+          </td>
+          <td class="cell-actions"> </td>
         </tr>
-      </thead>
-      <tbody>
-        <!-- Loading row for pending room creation -->
-        {#if busy.CreateRoom.current !== 0 && pendingRoom && !roomList
-            .map(r => r[1].prompt)
-            .includes(pendingRoom.prompt)}
-          <tr class="simple-row loading-row">
-            <td class="cell-description">
-              <p class="single-line">{pendingRoom.prompt}</p>
-            </td>
-            <td class="cell-balance">0</td>
-            <td class="cell-profit-loss">0</td>
-            <td class="cell-age">0</td>
-            <td class="cell-graph">
-              <div class="mini-graph loading-graph"></div>
-            </td>
-            <td class="cell-actions"> </td>
-          </tr>
-        {/if}
-        <!-- --- -->
-        {#each roomList as roomEntry (roomEntry[0])}
-          <AdminTripTableRow
-            id={roomEntry[0]}
-            data={plots[roomEntry[0]]}
-            room={roomEntry[1]}
-            onpointerenter={() => {
-              focus = roomEntry[0]
-            }}
-            onpointerleave={() => {
-              focus = ""
+      {/if}
+      <!-- --- -->
+      {#each roomList as roomEntry (roomEntry[0])}
+        <AdminTripTableRow
+          id={roomEntry[0]}
+          data={plots[roomEntry[0]]}
+          room={roomEntry[1]}
+          onpointerenter={() => {
+            focus = roomEntry[0]
+          }}
+          onpointerleave={() => {
+            focus = ""
+          }}
+        />
+      {/each}
+      <tr>
+        <td class="button-row" colspan="6">
+          <SmallButton
+            text="Create Room"
+            onclick={() => {
+              modal.set(createRoomModal)
             }}
           />
-        {/each}
-        <tr>
-          <td class="button-row" colspan="6">
-            <SmallButton
-              text="Create Room"
-              onclick={() => {
-                modal.set(createRoomModal)
-              }}
-            />
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  {:else}
-    <div class="no-data">
-      <span>NO DATA</span>
-    </div>
-  {/if}
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 
 <style lang="scss">
