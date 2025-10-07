@@ -85,5 +85,15 @@ export const ratfunUI: SoundAssets = {
     src: "/sounds/ratfun/ui/chirp-1.mp3",
     author: "leo",
     volume: 1
+  },
+  ratHello: {
+    src: "/sounds/ratfun/ui/rat-hello.mp3",
+    author: "leo",
+    volume: 0.5
+  },
+  ratDeath: {
+    src: "/sounds/ratfun/ui/rat-death.mp3",
+    author: "leo",
+    volume: 1
   }
 }

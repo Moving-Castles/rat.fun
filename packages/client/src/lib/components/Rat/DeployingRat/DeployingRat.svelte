@@ -153,6 +153,7 @@
     await refetchBalance()
     // Resume erc20 balance listener
     erc20BalanceListenerActive.set(true)
+    playSound("ratfunUI", "ratHello")
     // Transition to has rat state
     transitionTo(RAT_BOX_STATE.HAS_RAT)
   }

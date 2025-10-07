@@ -17,6 +17,7 @@ import {
   filterLiquidated
 } from "./utils"
 import { staticContent } from "$lib/modules/content"
+import { playerERC20Balance, playerERC20Allowance } from "$lib/modules/erc20Listener/stores"
 import { WORLD_OBJECT_ID } from "./constants"
 
 // * * * * * * * * * * * * * * * * *
@@ -139,9 +140,6 @@ export const playerActiveRooms = derived([playerRooms], ([$playerRooms]) => {
 export const playerLiquidatedRooms = derived([playerRooms], ([$playerRooms]) => {
   return filterLiquidated($playerRooms) as Rooms
 })
-
-export const playerERC20Balance = writable(0 as number)
-export const playerERC20Allowance = writable(0 as number)
 
 // Player does not and have never had a rat
 export const playerIsNew = derived(

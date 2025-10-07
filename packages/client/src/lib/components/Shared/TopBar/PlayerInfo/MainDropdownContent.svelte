@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { playerAddress, playerERC20Balance } from "$lib/modules/state/stores"
+  import { playerAddress } from "$lib/modules/state/stores"
+  import { playerERC20Balance } from "$lib/modules/erc20Listener/stores"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   // import { playSound } from "$lib/modules/sound"
   import { sendBuyWithEth } from "$lib/modules/action-manager/index.svelte"

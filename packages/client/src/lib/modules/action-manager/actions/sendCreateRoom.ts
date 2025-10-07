@@ -1,5 +1,6 @@
 import { get } from "svelte/store"
-import { externalAddressesConfig, playerERC20Allowance } from "$lib/modules/state/stores"
+import { externalAddressesConfig } from "$lib/modules/state/stores"
+import { playerERC20Allowance } from "$lib/modules/erc20Listener/stores"
 import { approve } from "$lib/modules/on-chain-transactions"
 import { busy } from "../index.svelte"
 import type { CreateRoomRequestBody, CreateRoomReturnValue } from "@server/modules/types"

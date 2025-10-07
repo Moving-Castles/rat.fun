@@ -1,6 +1,7 @@
 <script lang="ts">
   import { goto } from "$app/navigation"
-  import { gameConfig, playerERC20Balance } from "$lib/modules/state/stores"
+  import { gameConfig } from "$lib/modules/state/stores"
+  import { playerERC20Balance } from "$lib/modules/erc20Listener/stores"
   import { BigButton } from "$lib/components/Shared"
   import { player } from "$lib/modules/state/stores"
   import { UIState } from "$lib/modules/ui/state.svelte"
