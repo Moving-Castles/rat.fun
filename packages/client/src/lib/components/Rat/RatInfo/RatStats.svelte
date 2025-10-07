@@ -41,9 +41,13 @@
 
     <!-- IMAGE -->
     <div class="image-container">
+      <!-- svelte-ignore a11y_no_noninteractive_element_to_interactive_role -->
+      <!-- svelte-ignore a11y_click_events_have_key_events -->
       <img
-        onclick={() => playSound("ratfunUI", "boing")}
+        role="button"
+        onclick={() => playSound("ratfunUI", "chirp")}
         src={$ratImageUrl}
+        draggable={false}
         alt={$rat.name}
         in:fade|global={{ duration: 400, delay: 300 }}
       />
@@ -106,6 +110,13 @@
         object-fit: cover;
         filter: grayscale(1);
         mix-blend-mode: screen;
+        cursor: grab;
+        transition: transform 0.2s ease;
+
+        &:active {
+          transform: scale(0.9);
+          transition: transform 0.2s ease;
+        }
       }
     }
   }

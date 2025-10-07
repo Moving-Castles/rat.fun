@@ -64,11 +64,26 @@ export const ratfunUI: SoundAssets = {
   ratRelief: {
     src: "/sounds/ratfun/ui/rat-relief.mp3",
     author: "leo",
-    volume: 1
+    volume: 0.6
   },
   boing: {
     src: "/sounds/ratfun/ui/boing.mp3",
     author: "leo",
-    volume: 5
+    volume: 1
+  },
+  chirp: {
+    src: "/sounds/ratfun/ui/chirp-4.mp3",
+    author: "leo",
+    volume: 0.6
+  },
+  positive: {
+    src: "/sounds/ratfun/ui/positive.mp3",
+    author: "leo",
+    volume: 1
+  },
+  negative: {
+    src: "/sounds/ratfun/ui/chirp-1.mp3",
+    author: "leo",
+    volume: 1
   }
 }

@@ -1,8 +1,6 @@
 <script lang="ts">
   import type { MergedLogEntry } from "$lib/components/GameRun/types"
   import { gsap } from "gsap"
-  import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
-  import { OUTCOME_START_DELAY, OUTCOME_DELAY } from "$lib/components/GameRun/TripReport/Log/config"
   import LogOutcomeItem from "./LogOutcomeItem.svelte"
   import LogOutcomeHealth from "./LogOutcomeHealth.svelte"
 
@@ -20,62 +18,56 @@
   // Store outcome timelines for sequencing
   let outcomeTimelines: ReturnType<typeof gsap.timeline>[] = []
 
+  // Calculate expected number of outcomes
+  const expectedOutcomes = (logEntry.balanceTransfer ? 1 : 0) + (logEntry?.itemChanges?.length || 0)
+  let receivedOutcomes = 0
+
   // Handle individual outcome timeline
   const addOutcomeTimeline = (outcomeTimeline: ReturnType<typeof gsap.timeline>) => {
     outcomeTimelines.push(outcomeTimeline)
+    receivedOutcomes++
+
+    // Check if we've received all expected outcomes
+    if (receivedOutcomes === expectedOutcomes) {
+      buildTimeline()
+    }
   }
 
-  // Stage 2: Main animation
-  const main = () => {
-    // Add a label to mark the start of outcome animations
-    timeline.addLabel("outcomesStart", `+=${OUTCOME_START_DELAY}`)
-
+  // Build the timeline when all outcomes are received
+  const buildTimeline = () => {
     // Add each outcome timeline sequentially
-    outcomeTimelines.forEach((outcomeTimeline, index) => {
-      const outcomeStartTime = `outcomesStart+=${index * OUTCOME_DELAY}`
-      timeline.add(outcomeTimeline, outcomeStartTime)
+    outcomeTimelines.forEach(outcomeTimeline => {
+      timeline.add(outcomeTimeline)
     })
 
-    timeline.addLabel("outcomesFinish", "+=2")
-  }
-
-  // Timeline is constructed
-  // Pass it to the parent component
-  const done = () => {
-    if (timeline && onTimeline) {
+    // Pass the timeline to the parent component
+    if (onTimeline) {
       onTimeline(timeline)
     }
   }
 
-  // Run once
-  const run = () => {
-    main() // Build the timeline synchronously
-    done() // Call done immediately after building
+  // Handle case where there are no outcomes
+  if (expectedOutcomes === 0) {
+    // No outcomes expected, immediately pass empty timeline
+    if (onTimeline) {
+      onTimeline(timeline)
+    }
   }
-
-  // Ensure timeline is built regardless of whether there are outcomes
-  $effect(() => {
-    // Always run - even if no outcomes, we need to export an empty timeline
-    run()
-  })
 </script>
 
 <div class="outcome-list">
   {#if logEntry.balanceTransfer}
     <div class="outcome-wrapper">
-      <LogOutcomeHealth
-        negative={logEntry.balanceTransfer.amount < 0}
-        value={`${CURRENCY_SYMBOL}${logEntry.balanceTransfer.amount}`}
-        onTimeline={addOutcomeTimeline}
-      />
+      <LogOutcomeHealth value={logEntry.balanceTransfer.amount} onTimeline={addOutcomeTimeline} />
     </div>
   {/if}
   {#if logEntry?.itemChanges}
     {#each logEntry?.itemChanges as itemChange}
       <div class="outcome-wrapper">
         <LogOutcomeItem
-          negative={itemChange.type === "remove"}
-          value={`${itemChange.name} (${CURRENCY_SYMBOL}${itemChange.value})`}
+          name={itemChange.name}
+          value={itemChange.value}
+          action={itemChange.type}
           onTimeline={addOutcomeTimeline}
         />
       </div>

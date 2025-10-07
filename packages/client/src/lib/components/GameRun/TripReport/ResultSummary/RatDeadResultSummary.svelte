@@ -1,37 +1,46 @@
 <script lang="ts">
   import { frozenRat } from "$lib/components/GameRun/state.svelte"
   import { goto } from "$app/navigation"
+  import { ratImageUrl } from "$lib/modules/state/stores"
   import { BigButton } from "$lib/components/Shared"
 </script>
 
-<div class="summary">
-  <div class="event">
-    <h1>
-      {$frozenRat?.name} DIED
-    </h1>
-  </div>
-  <div class="button-container">
-    <BigButton
-      text="COME DOWN"
-      onclick={() => {
-        goto("/")
-      }}
-    />
+<div class="summary-container">
+  <div class="summary">
+    <div class="event">
+      <div class="image">
+        <img src={$ratImageUrl} alt={$frozenRat?.name} />
+      </div>
+      <div class="event-text">
+        {$frozenRat?.name} DIED
+      </div>
+    </div>
+    <div class="button-container">
+      <BigButton
+        text="COME DOWN"
+        onclick={() => {
+          goto("/")
+        }}
+      />
+    </div>
   </div>
 </div>
 
 <style lang="scss">
-  .summary {
+  .summary-container {
     display: flex;
     flex-direction: column;
     position: relative;
     bottom: 0;
-    height: 200px;
-    width: var(--game-window-width);
-    width: 50vw;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-image: url("/images/texture-2.png");
 
     .event {
-      width: 100%;
       background: var(--color-death);
       margin: 0;
       padding: 0;
@@ -39,6 +48,16 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      height: 80px;
+    }
+
+    .image {
+      width: 200px;
+      height: 200px;
+      img {
+        width: 100%;
+        height: 100%;
+      }
     }
 
     .button-container {
