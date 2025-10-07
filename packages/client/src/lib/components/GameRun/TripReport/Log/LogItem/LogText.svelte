@@ -1,11 +1,8 @@
 <script lang="ts">
   import type { MergedLogEntry } from "$lib/components/GameRun/types"
   import { gsap } from "gsap"
-  import { TextPlugin } from "gsap/TextPlugin"
   import { typeHit } from "$lib/modules/sound"
   import { CHARACTER_DELAY } from "$lib/components/GameRun/TripReport/Log/config"
-
-  gsap.registerPlugin(TextPlugin)
 
   let {
     logEntry,
@@ -36,7 +33,9 @@
       opacity: 0
     })
     // Clear potential previous text content if element re-renders
-    if (logTextElement) logTextElement.textContent = ""
+    if (logTextElement) {
+      logTextElement.textContent = ""
+    }
   }
 
   // Stage 2: Main animation
