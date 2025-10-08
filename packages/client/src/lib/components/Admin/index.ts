@@ -7,3 +7,4 @@ export { default as AdminTripTable } from "./AdminTripTable/AdminTripTable.svelt
 export { default as AdminPastTripTable } from "./AdminPastTripTable/AdminPastTripTable.svelte"
 export { default as AdminEventLog } from "./AdminEventLog/AdminEventLog.svelte"
 export { default as ProfitLossHistoryGraph } from "./ProfitLossHistoryGraph/ProfitLossHistoryGraph.svelte"
+export { default as SingleRoomProfitLossGraph } from "./SingleRoomProfitLossGraph/SingleRoomProfitLossGraph.svelte"

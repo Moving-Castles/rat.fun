@@ -41,8 +41,8 @@
   --game-window-height: calc(100vh - 30px);
   --game-window-main-height: calc(var(--game-window-height) - 60px);
 
-  --graph-color-up: rgba(100, 255, 200, 1);
-  --graph-color-down: rgba(230, 30, 0, 1);
+  --graph-color-up: #78ee72;
+  --graph-color-down: red;
 
   /* * * * * * * * * * * * * *
   * Layout

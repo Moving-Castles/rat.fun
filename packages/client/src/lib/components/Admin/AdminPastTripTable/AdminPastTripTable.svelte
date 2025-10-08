@@ -69,9 +69,9 @@
           <th><!-- Trip --></th>
           <th>Visits</th>
           <th>Profit</th>
-          <th>Age</th>
+          <th>Tax</th>
           <th>Spark</th>
-          <th>Actions</th>
+          <th>Age</th>
         </tr>
       </thead>
       <tbody>
@@ -112,7 +112,7 @@
   }
   .admin-trip-table {
     width: 100%;
-    background: black;
+    // background: black;
     table-layout: fixed;
     /* justify-content: center; */
     /* align-items: center; */
@@ -143,18 +143,13 @@
     background: #222;
   }
 
-  .simple-row {
-    * {
-      border: none;
-      outline: none;
-      border-width: 0;
-      border-bottom: 1px solid #555;
-    }
+  :global(.simple-row) {
     &:hover {
-      background: #222;
+      background-color: var(--color-death);
       cursor: pointer;
     }
     td {
+      outline: none;
       overflow: hidden;
       margin: 0;
       vertical-align: top;
@@ -190,6 +185,6 @@
   }
 
   .upText {
-    color: #78ee72;
+    color: var(--graph-color-up);
   }
 </style>

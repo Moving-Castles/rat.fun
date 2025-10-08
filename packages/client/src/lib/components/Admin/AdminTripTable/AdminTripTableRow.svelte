@@ -1,9 +1,12 @@
 <script lang="ts">
   import { SmallButton } from "$lib/components/Shared"
+  import { RoomConfirmLiquidation } from "$lib/components/Room"
   import { ProfitLossGraph } from "$lib/components/Room"
   import { goto } from "$app/navigation"
   import { blocksToReadableTime } from "$lib/modules/utils"
   import { blockNumber } from "$lib/modules/network"
+  import { gamePercentagesConfig } from "$lib/modules/state/stores"
+  import { getModalState } from "$lib/components/Shared/Modal/state.svelte"
 
   let { room, data, id, onpointerenter, onpointerleave } = $props()
 
@@ -12,13 +15,14 @@
       ? room.liquidationValue - room.roomCreationCost
       : room.balance - room.roomCreationCost
   )
+  let liquidated = $derived(room.liquidationBlock)
   let profitLossClass = $derived(profitLoss == 0 ? "" : profitLoss > 0 ? "up" : "down")
 </script>
 
 <tr
   {onpointerenter}
   {onpointerleave}
-  onclick={() => {
+  onmouseup={() => {
     goto("/admin/" + id, { noScroll: false })
   }}
   class="simple-row"
@@ -29,8 +33,8 @@
   <td class="cell-balance">{room.visitCount}</td>
   <td class="cell-profit-loss {profitLossClass}">{profitLoss}</td>
   <td class="cell-age">
-    {#if room.liquidationBlock}
-      {blocksToReadableTime(Number(room.liquidationBlock) - Number(room.creationBlock))}
+    {#if liquidated}
+      {$gamePercentagesConfig.taxationCloseRoom}
     {:else}
       {blocksToReadableTime(Number($blockNumber) - Number(room.creationBlock))}
     {/if}
@@ -45,7 +49,17 @@
     {/if}
   </td>
   <td class="cell-actions">
-    <SmallButton text="Liquidate" onclick={() => {}}></SmallButton>
+    {#if liquidated}
+      {blocksToReadableTime(Number(room.liquidationBlock) - Number(room.creationBlock))}
+    {:else}
+      <SmallButton
+        text="Liquidate"
+        onmouseup={e => {
+          e.stopPropagation()
+          goto("/admin/" + id + "?liquidate", { noScroll: false })
+        }}
+      ></SmallButton>
+    {/if}
   </td>
 </tr>
 
@@ -75,7 +89,7 @@
       border-width: 0;
     }
     &:hover {
-      background: #222;
+      // background: #222;
       cursor: pointer;
     }
     td {
