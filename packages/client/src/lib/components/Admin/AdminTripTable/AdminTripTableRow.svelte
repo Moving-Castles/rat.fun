@@ -7,7 +7,11 @@
 
   let { room, data, id, onpointerenter, onpointerleave } = $props()
 
-  let profitLoss = $derived(room.balance - room.roomCreationCost)
+  let profitLoss = $derived(
+    room.liquidationBlock
+      ? room.liquidationValue - room.roomCreationCost
+      : room.balance - room.roomCreationCost
+  )
   let profitLossClass = $derived(profitLoss == 0 ? "" : profitLoss > 0 ? "up" : "down")
 </script>
 
@@ -22,10 +26,14 @@
   <td class="cell-description">
     <p class="single-line">{room.prompt}</p>
   </td>
-  <td class="cell-balance">0</td>
+  <td class="cell-balance">{room.visitCount}</td>
   <td class="cell-profit-loss {profitLossClass}">{profitLoss}</td>
   <td class="cell-age">
-    {blocksToReadableTime(Number($blockNumber) - Number(room.creationBlock))}
+    {#if room.liquidationBlock}
+      {blocksToReadableTime(Number(room.liquidationBlock) - Number(room.creationBlock))}
+    {:else}
+      {blocksToReadableTime(Number($blockNumber) - Number(room.creationBlock))}
+    {/if}
   </td>
   <td class="cell-graph">
     {#if data}

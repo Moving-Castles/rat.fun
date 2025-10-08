@@ -43,6 +43,7 @@
 <a class="back-button" href="/admin">Back</a>
 {#if !liquidating}
   <div class="room-inner-container" class:depleted={!showLiquidateButton}>
+    <RoomPreviewGraph {room} {roomOutcomes} {sanityRoomContent} />
     <RoomPreviewHeader {room} {sanityRoomContent} />
     <RoomPreviewPrompt {room} />
 
@@ -50,7 +51,6 @@
       <LiquidateRoom onclick={() => (liquidating = true)} {roomId} {room} isOwnRoomListing={true} />
     {/if}
 
-    <RoomPreviewGraph {room} {roomOutcomes} {sanityRoomContent} />
     <RoomPreviewEventLog {roomId} {roomOutcomes} />
   </div>
 {:else}

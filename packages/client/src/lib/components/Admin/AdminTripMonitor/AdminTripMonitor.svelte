@@ -13,11 +13,10 @@
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import tippy from "tippy.js"
 
-  let { focus, focusEvent, graphData = $bindable(), onCreateRoomClick } = $props()
+  let { focus, graphData = $bindable(), onCreateRoomClick } = $props()
 
   let clientHeight = $state(0)
 
-  // Also shows -
   const plSymbolExplicit = derived(portfolioClass, $pc =>
     $pc === "neutral" ? "" : $pc === "upText" ? "+" : "-"
   )
@@ -74,13 +73,7 @@
     </div>
   </div>
   <div class="p-l-graph">
-    <ProfitLossHistoryGraph
-      bind:graphData
-      trips={$playerRooms}
-      height={clientHeight}
-      {focus}
-      {focusEvent}
-    />
+    <ProfitLossHistoryGraph bind:graphData trips={$playerRooms} height={clientHeight} {focus} />
   </div>
 </div>
 

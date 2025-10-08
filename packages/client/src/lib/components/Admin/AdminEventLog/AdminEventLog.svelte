@@ -1,10 +1,10 @@
 <script lang="ts">
   import { Icon } from "$lib/components/Shared"
-  import { timeSince, addressToRatImage } from "$lib/modules/utils"
-  import { adminUnlockedAt } from "$lib/modules/ui/state.svelte"
+  import { timeSince } from "$lib/modules/utils"
+  import { adminUnlockedAt, focusEvent } from "$lib/modules/ui/state.svelte"
   import tippy from "tippy.js"
 
-  let { eventData, focus = $bindable(), focusEvent = $bindable() } = $props()
+  let { eventData, focus = $bindable() } = $props()
 
   $effect(() => {
     tippy("[data-tippy-content]", {
@@ -36,9 +36,10 @@
   {#each eventData.toReversed().filter(p => p.eventType !== "baseline") as point}
     <p
       data-tippy-content={point.meta.index}
-      onpointerenter={() => (focusEvent = point.index)}
-      onpointerleave={() => (focusEvent = "")}
+      onpointerenter={() => ($focusEvent = point.index)}
+      onpointerleave={() => ($focusEvent = -1)}
       class="event"
+      class:focus={$focusEvent === point.index}
     >
       {#if point.eventType === "trip_visit"}
         {@render ratVisitEvent(point)}
@@ -75,7 +76,7 @@
       margin: 0;
 
       cursor: pointer;
-      &:hover {
+      &.focus {
         background: black;
       }
     }

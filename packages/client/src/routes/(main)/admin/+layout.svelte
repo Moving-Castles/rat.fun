@@ -20,7 +20,6 @@
   let { modal } = getModalState()
 
   let focus = $state("")
-  let focusEvent = $state(-1)
   let graphData = $state([])
   let pendingTrip = $state<PendingTrip>(null)
 
@@ -61,14 +60,13 @@
     <AdminTripMonitor
       bind:graphData
       {focus}
-      {focusEvent}
       onCreateRoomClick={() => {
         modal.set(createRoomModal)
       }}
     />
   </div>
   <div class="r-2">
-    <AdminEventLog bind:focus bind:focusEvent eventData={graphData} />
+    <AdminEventLog bind:focus eventData={graphData} />
   </div>
   <div class="l-3 border-warning">
     <AdminTripTable bind:focus {pendingTrip} />
@@ -79,7 +77,7 @@
 </div>
 
 {#if children}
-  <div transition:fly|global={{ x: 600, opacity: 1 }} class="sidebar open">
+  <div transition:fly|global={{ x: 800, opacity: 1 }} class="sidebar open">
     {@render children?.()}
   </div>
 {/if}
@@ -140,7 +138,7 @@
   .sidebar {
     position: fixed;
     height: 100dvh;
-    width: 600px;
+    width: 800px;
     overflow-x: hidden;
     z-index: 999;
     top: 0;
