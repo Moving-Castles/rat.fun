@@ -18,7 +18,7 @@ import { IWorldAbi } from "contracts/worldAbi"
 import worldsJson from "contracts/worlds.json" with { type: "json" }
 import { chain, rpcHttpUrl } from "./constants"
 
-dotenv.config()
+dotenv.config({ path: "../../packages/server/.env" })
 
 const PRIVATE_KEY = process.env.PRIVATE_KEY as Hex
 
