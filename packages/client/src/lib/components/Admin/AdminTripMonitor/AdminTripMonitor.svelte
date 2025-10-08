@@ -1,16 +1,15 @@
 <script lang="ts">
   import { derived } from "svelte/store"
   import { playerActiveRooms, playerLiquidatedRooms, playerRooms } from "$lib/modules/state/stores"
-  import { BigButton } from "$lib/components/Shared"
-  import { MultiTripGraph } from "$lib/components/Admin"
+  import { BigButton, SmallButton } from "$lib/components/Shared"
+  import { ProfitLossHistoryGraph } from "$lib/components/Admin"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import { getModalState } from "$lib/components/Shared/Modal/state.svelte"
   import tippy from "tippy.js"
+
+  let { focus, focusEvent, graphData = $bindable(), onCreateRoomClick } = $props()
   let { modal } = getModalState()
 
-  let { focus, graphData = $bindable() } = $props()
-
-  let show = $state<"realised" | "unrealised">("unrealised")
   let clientHeight = $state(0)
 
   // Unrealised
@@ -48,10 +47,6 @@
     $pc === "neutral" ? "" : $pc === "upText" ? "+" : "-"
   )
 
-  const toggle = () => {
-    show = show === "realised" ? "unrealised" : "realised"
-  }
-
   $effect(() => {
     tippy("[data-tippy-content]", {
       allowHTML: true
@@ -62,70 +57,46 @@
 <div bind:clientHeight class="admin-trip-monitor">
   <div class="p-l-overview">
     <div class="top">
-      {#if show === "unrealised"}
-        {#if $balance && $investment}
-          <!-- Unrealised -->
-          <div class="main">
-            <p>Unrealised Profit</p>
-            <span class="percentage {$portfolioClass} glow"
-              >({$plSymbolExplicit}{(100 - ($balance / $investment) * 100).toFixed(2)}%)</span
-            >
-            <span class="unit {$portfolioClass}">{CURRENCY_SYMBOL}</span>
-            <div class="content {$portfolioClass} glow">
-              <h1 data-tippy-content="Unrealised P&L" class="">
-                {$plSymbolExplicit}{CURRENCY_SYMBOL}{Math.abs($profitLoss)}
-              </h1>
-            </div>
+      {#if $balance && $investment}
+        <!-- Unrealised -->
+        <div class="main">
+          <p>Active Profit</p>
+          <span class="percentage {$portfolioClass} glow"
+            >({$plSymbolExplicit}{(100 - ($balance / $investment) * 100).toFixed(2)}%)</span
+          >
+          <span class="unit {$portfolioClass}">{CURRENCY_SYMBOL}</span>
+          <div class="content {$portfolioClass} glow">
+            <h1 data-tippy-content="Unrealised P&L" class="">
+              {$plSymbolExplicit}{CURRENCY_SYMBOL}{Math.abs($profitLoss)}
+            </h1>
           </div>
-        {:else}
-          <div class="main">
-            <h1>None</h1>
-          </div>
-        {/if}
-        {#if $realBalance && $realInvestment}
-          <!-- Realised -->
-          <div class="main">
-            <p>Realised Profit</p>
-            <span class="percentage {$realPortfolioClass} glow"
-              >({$realPlSymbolExplicit}{(100 - ($realBalance / $realInvestment) * 100).toFixed(
-                2
-              )}%)</span
-            >
-            <span class="unit offset {$realPortfolioClass}">{CURRENCY_SYMBOL}</span>
-            <div class="content {$realPortfolioClass} glow">
-              <h1 data-tippy-content="Realised P&L" class="">
-                {$realPlSymbolExplicit}{CURRENCY_SYMBOL}{Math.abs($realProfitLoss)}
-              </h1>
-            </div>
-          </div>
-        {:else}
-          <div class="main">
-            <h1>None</h1>
-          </div>
-        {/if}
+        </div>
+      {:else}
+        <div class="main">
+          <h1>{$plSymbolExplicit}{CURRENCY_SYMBOL}0</h1>
+        </div>
       {/if}
     </div>
     <div class="bottom-left">
-      {#if show === "unrealised"}
-        <p>Portfolio</p>
-        <h2 class="{$portfolioClass} glow">{CURRENCY_SYMBOL}{$balance}</h2>
-      {:else}
-        <p>Portfolio</p>
-        <h2 class="{$realPortfolioClass} glow">{CURRENCY_SYMBOL}{$realBalance}</h2>
-      {/if}
+      <p>Portfolio</p>
+      <h2 class="{$portfolioClass} glow">{CURRENCY_SYMBOL}{$balance}</h2>
     </div>
     <div class="bottom-right">
-      {#if show === "unrealised"}
-        <p>Invested</p>
-        <h2>{CURRENCY_SYMBOL}{$investment}</h2>
-      {:else}
-        <p>Invested</p>
-        <h2>{CURRENCY_SYMBOL}{$realInvestment}</h2>
-      {/if}
+      <p>Invested</p>
+      <h2>{CURRENCY_SYMBOL}{$investment}</h2>
+    </div>
+    <div class="full-width-bottom">
+      <BigButton text="Create Room" onclick={onCreateRoomClick} />
     </div>
   </div>
   <div class="p-l-graph">
-    <MultiTripGraph bind:graphData height={clientHeight} {focus} trips={$playerRooms} />
+    <ProfitLossHistoryGraph
+      trips={$playerRooms}
+      bind:graphData
+      height={clientHeight}
+      {focus}
+      {focusEvent}
+    />
   </div>
 </div>
 
@@ -278,6 +249,7 @@
 
       .full-width-bottom {
         grid-column: 1/3;
+        height: 100px;
       }
       .bottom-left,
       .bottom-right {

@@ -4,16 +4,11 @@
   import { playerActiveRooms } from "$lib/modules/state/stores"
   import { entriesChronologically } from "$lib/components/Room/RoomListing/sortFunctions"
   import { staticContent } from "$lib/modules/content"
-  import { SmallButton } from "$lib/components/Shared"
-  import CreateRoom from "$lib/components/Admin/CreateRoom/CreateRoom.svelte"
   import { busy } from "$lib/modules/action-manager/index.svelte"
 
   import AdminTripTableRow from "./AdminTripTableRow.svelte"
 
-  let { focus = $bindable() } = $props()
-
-  let { modal } = getModalState()
-  let pendingRoom = $state<{ prompt: string; cost: number } | null>(null)
+  let { focus = $bindable(), pendingTrip } = $props()
 
   let sortFunction = $state(entriesChronologically)
 
@@ -57,18 +52,6 @@
   })
 </script>
 
-{#snippet createRoomModal()}
-  <CreateRoom
-    onsubmit={(data: { prompt: string; cost: number }) => {
-      modal.hide()
-      pendingRoom = data
-    }}
-    ondone={() => {
-      pendingRoom = null
-    }}
-  />
-{/snippet}
-
 <div class="admin-trip-table-container">
   <table class="admin-trip-table">
     <thead>
@@ -83,12 +66,10 @@
     </thead>
     <tbody>
       <!-- Loading row for pending room creation -->
-      {#if busy.CreateRoom.current !== 0 && pendingRoom && !roomList
-          .map(r => r[1].prompt)
-          .includes(pendingRoom.prompt)}
+      {#if pendingTrip && !roomList.map(r => r[1].prompt).includes(pendingTrip.prompt)}
         <tr class="simple-row loading-row">
           <td class="cell-description">
-            <p class="single-line">{pendingRoom.prompt}</p>
+            <p class="single-line">{pendingTrip.prompt}</p>
           </td>
           <td class="cell-balance">0</td>
           <td class="cell-profit-loss">0</td>
@@ -113,16 +94,6 @@
           }}
         />
       {/each}
-      <tr>
-        <td class="button-row" colspan="6">
-          <SmallButton
-            text="Create Room"
-            onclick={() => {
-              modal.set(createRoomModal)
-            }}
-          />
-        </td>
-      </tr>
     </tbody>
   </table>
 </div>

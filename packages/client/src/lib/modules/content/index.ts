@@ -20,7 +20,7 @@ export type StaticContent = {
 
 // --- STORES -----------------------------------------------------------
 
-export const staticContent = writable({} as StaticContent)
+export const staticContent = writable<StaticContent>({ rooms: [], outcomes: [], worldEvents: [] })
 export const lastUpdated = writable(performance.now())
 export const upcomingWorldEvent = derived(
   [staticContent, blockNumber],

@@ -4,7 +4,7 @@
   import { adminUnlockedAt } from "$lib/modules/ui/state.svelte"
   import tippy from "tippy.js"
 
-  let { eventData, focus = $bindable() } = $props()
+  let { eventData, focus = $bindable(), focusEvent = $bindable() } = $props()
 
   $effect(() => {
     tippy("[data-tippy-content]", {
@@ -33,11 +33,11 @@
 {/snippet}
 
 <div class="admin-event-log">
-  {#each eventData.toReversed() as point}
+  {#each eventData.toReversed().filter(p => p.eventType !== "baseline") as point}
     <p
-      data-tippy-content={"createNote(point)"}
-      onpointerenter={() => (focus = point.tripId)}
-      onpointerleave={() => (focus = "")}
+      data-tippy-content={point.meta.index}
+      onpointerenter={() => (focusEvent = point.index)}
+      onpointerleave={() => (focusEvent = "")}
       class="event"
     >
       {#if point.eventType === "trip_visit"}

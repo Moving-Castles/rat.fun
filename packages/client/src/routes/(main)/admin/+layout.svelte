@@ -3,21 +3,26 @@
   import { fly } from "svelte/transition"
   import { page } from "$app/state"
   import { player } from "$lib/modules/state/stores"
+  import { getModalState } from "$lib/components/Shared/Modal/state.svelte"
   import SEO from "$lib/components/Shared/SEO/SEO.svelte"
   import {
     AdminEventLog,
     AdminTripMonitor,
-    AdminPastTripsMonitor,
+    CreateRoom,
     AdminTripTable,
     AdminPastTripTable
   } from "$lib/components/Admin"
 
+  type PendingTrip = { prompt: string; cost: number } | null
+
   let { children }: { children?: any } = $props()
 
-  let focus = $state("")
-  let graphData = $state([])
+  let { modal } = getModalState()
 
-  $inspect(graphData)
+  let focus = $state("")
+  let focusEvent = $state(-1)
+  let graphData = $state([])
+  let pendingTrip = $state<PendingTrip>(null)
 
   // Redirect to game route if player is not authorized to view admin page
   $effect(() => {
@@ -35,15 +40,38 @@
 
 <SEO prependTitle="ADMIN" />
 
+{#snippet createRoomModal()}
+  <CreateRoom
+    onsubmit={(data: PendingTrip) => {
+      modal.hide()
+      // Set pending state
+      pendingTrip = data
+    }}
+    ondone={() => {
+      // Clear pending state with some delay, so it can be replaced in the list with style
+      setTimeout(() => {
+        pendingTrip = null
+      }, 2000)
+    }}
+  />
+{/snippet}
+
 <div class="span-all">
   <div class="l-4">
-    <AdminTripMonitor bind:graphData {focus} />
+    <AdminTripMonitor
+      bind:graphData
+      {focus}
+      {focusEvent}
+      onCreateRoomClick={() => {
+        modal.set(createRoomModal)
+      }}
+    />
   </div>
   <div class="r-2">
-    <AdminEventLog bind:focus eventData={graphData} />
+    <AdminEventLog bind:focus bind:focusEvent eventData={graphData} />
   </div>
   <div class="l-3 border-warning">
-    <AdminTripTable bind:focus />
+    <AdminTripTable bind:focus {pendingTrip} />
   </div>
   <div class="r-3">
     <AdminPastTripTable bind:focus />
