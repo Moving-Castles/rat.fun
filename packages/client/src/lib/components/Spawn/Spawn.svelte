@@ -139,7 +139,7 @@
     color: white;
     font-family: var(--special-font-stack);
     text-transform: none;
-    font-size: var(--font-size-large);
+    font-size: var(--font-size-normal);
     position: relative;
   }
 

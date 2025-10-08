@@ -87,7 +87,7 @@
   }
 
   .toast-close {
-    font-size: var(--font-size-medium);
+    font-size: var(--font-size-normal);
     line-height: 1;
     opacity: 0.6;
     user-select: none;

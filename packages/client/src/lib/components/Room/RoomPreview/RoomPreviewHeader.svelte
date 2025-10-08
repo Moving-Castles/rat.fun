@@ -146,7 +146,7 @@
 
         .value {
           font-family: var(--special-font-stack);
-          font-size: var(--font-size-large);
+          font-size: var(--font-size-normal);
         }
 
         // &.balance {
@@ -166,7 +166,7 @@
         //   }
 
         //   .value {
-        //     font-size: var(--font-size-extra-large);
+        //     font-size: var(--font-size-normal);
         //   }
         // }
 

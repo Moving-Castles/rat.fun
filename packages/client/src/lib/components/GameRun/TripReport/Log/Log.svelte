@@ -7,12 +7,10 @@
 
   let {
     result,
-    onComplete,
-    onReplay
+    onTimeline
   }: {
     result: EnterRoomReturnValue | null
-    onComplete: () => void
-    onReplay?: () => void
+    onTimeline?: (timeline: ReturnType<typeof gsap.timeline>) => void
   } = $props()
 
   // Element
@@ -35,7 +33,7 @@
   // Log has a parent gsap timeline
   // Each log item has a child gsap timeline
   // Child timelines are added to the parent timeline
-  // When all child timelines are added, the parent timeline plays
+  // When all child timelines are added, pass timeline to parent
 
   // Create parent timeline
   const logTimeline = gsap.timeline({
@@ -47,28 +45,18 @@
     receivedTimelines++
 
     if (receivedTimelines === totalItems) {
-      logTimeline.call(
-        () => {
-          onComplete()
-        },
-        [],
-        "+=0.5" // Add a delay of 0.5 seconds before calling the callback
-      )
-      // All timelines added, play the parent timeline
-      logTimeline.play()
+      // All timelines added, pass to parent
+      done()
     }
   }
 
-  function replayTimeline() {
-    // Call the replay callback if provided
-    if (onReplay) {
-      onReplay()
+  // Timeline is constructed
+  // Pass it to the parent component
+  const done = () => {
+    if (logTimeline && onTimeline) {
+      onTimeline(logTimeline)
     }
-    logTimeline.restart()
   }
-
-  // Expose replay function to parent component
-  export { replayTimeline }
 </script>
 
 <div class="log-container" bind:this={logElement}>
@@ -83,6 +71,7 @@
 <style lang="scss">
   .log-container {
     margin-bottom: 0;
+    width: 100%;
     padding: 10px;
     border-top: none;
     position: relative;

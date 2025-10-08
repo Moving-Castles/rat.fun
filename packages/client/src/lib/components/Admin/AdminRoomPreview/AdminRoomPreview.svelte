@@ -92,7 +92,7 @@
     top: 0;
     line-height: 60px;
     font-family: var(--special-font-stack);
-    font-size: var(--font-size-large);
+    font-size: var(--font-size-normal);
     text-transform: uppercase;
     background: var(--background-semi-transparent);
     z-index: 10;

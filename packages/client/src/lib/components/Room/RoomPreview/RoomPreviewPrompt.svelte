@@ -35,19 +35,19 @@
       padding-inline: 10px;
 
       &.short {
-        font-size: var(--font-size-extra-large);
+        font-size: var(--font-size-normal);
       }
 
       &.medium {
-        font-size: var(--font-size-large);
+        font-size: var(--font-size-normal);
       }
 
       &.long {
-        font-size: var(--font-size-large);
+        font-size: var(--font-size-normal);
       }
 
       &.extra-long {
-        font-size: var(--font-size-medium);
+        font-size: var(--font-size-normal);
       }
     }
   }

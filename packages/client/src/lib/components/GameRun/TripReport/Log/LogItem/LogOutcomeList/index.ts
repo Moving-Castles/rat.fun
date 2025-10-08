@@ -6,8 +6,6 @@ export function calculateDuration(value: number) {
 
   let timePerUnit = 0.01
 
-  console.log("value", value)
-
   if (value >= 1 && value <= 5) {
     timePerUnit = 0.2
   } else if (value >= 6 && value <= 10) {
@@ -18,11 +16,7 @@ export function calculateDuration(value: number) {
     timePerUnit = 0.02
   }
 
-  console.log("timePerUnit", timePerUnit)
-
   const duration = timePerUnit * Math.abs(value)
-
-  console.log("duration", duration)
 
   return duration
 }
