@@ -1,3 +1,4 @@
+import { Hex } from "viem"
 import { OutcomeReturnValue, ItemChange } from "@modules/types"
 import { Rat, Room } from "@modules/types"
 
@@ -24,10 +25,12 @@ export function createOutcomeCallArgs(rat: Rat, room: Room, outcome: OutcomeRetu
       .map(c => {
         // Limit name length
         // Value is always positive
-        return { name: c.name.slice(0, 48), value: Math.abs(c.value) }
+        return { name: c.name.slice(0, 48), value: BigInt(Math.abs(c.value)) }
       }) ?? []
 
-  return [rat.id, room.id, balanceTransfersSum, itemsToRemoveFromRat, itemsToAddToRat]
+  return [rat.id, room.id, BigInt(balanceTransfersSum), itemsToRemoveFromRat, itemsToAddToRat] as [
+    Hex, Hex, bigint, Hex[], { name: string; value: bigint }[]
+  ]
 }
 
 /**

@@ -17,7 +17,7 @@ import { ChainNotFoundError, WorldAddressNotFoundError } from "@modules/error-ha
 
 import { supportedChains } from "./supportedChains"
 
-export async function getNetworkConfig(privateKey: string, chainId: number) {
+export async function getNetworkConfig(chainId: number) {
   /*
    * Find the chain (unless it isn't in the list of supported chains).
    */
@@ -52,7 +52,6 @@ export async function getNetworkConfig(privateKey: string, chainId: number) {
     : ((world as any)?.blockNumber ?? 0n)
 
   return {
-    privateKey,
     chainId,
     chain,
     worldAddress,

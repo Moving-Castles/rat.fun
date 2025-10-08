@@ -1,7 +1,8 @@
+import { Hex } from "viem"
 import type { CreateRoomData, GameConfig } from "@modules/types"
 import { getComponentValue } from "@latticexyz/recs"
-import { components, network } from "@modules/mud/initMud"
-import { GAME_CONFIG_ID } from "@config"
+import { network } from "@modules/mud/initMud"
+import { singletonEntity } from "@latticexyz/store-sync/recs"
 import {
   OnchainDataError,
   PlayerNotFoundError,
@@ -14,7 +15,7 @@ export async function getCreateRoomData(playerId: string): Promise<CreateRoomDat
       throw new OnchainDataError("PLAYER_ID_REQUIRED", "Validation failed", "Player ID is required")
     }
 
-    const { Name, RoomCreationCost, GameConfig, Prompt, MasterKey } = components
+    const { Name, RoomCreationCost, GameConfig, Prompt, MasterKey } = network.components
 
     const result = {} as CreateRoomData
 
@@ -22,7 +23,7 @@ export async function getCreateRoomData(playerId: string): Promise<CreateRoomDat
     // PLAYER
     /////////////////
 
-    const playerEntity = (await network).world.registerEntity({ id: playerId })
+    const playerEntity = network.world.registerEntity({ id: playerId })
     const playerName = getComponentValue(Name, playerEntity)?.value as string
     const playerMasterKey = getComponentValue(MasterKey, playerEntity)?.value as boolean
 
@@ -30,7 +31,7 @@ export async function getCreateRoomData(playerId: string): Promise<CreateRoomDat
       address: network.worldContract.address,
       abi: network.worldContract.abi,
       functionName: "ratfun__balanceOf",
-      args: [playerId]
+      args: [playerId as Hex]
     })) as bigint
 
     // Check if player exists
@@ -49,12 +50,11 @@ export async function getCreateRoomData(playerId: string): Promise<CreateRoomDat
     // GAME CONFIG
     /////////////////
 
-    const gameConfigEntity = (await network).world.registerEntity({ id: GAME_CONFIG_ID })
-    const gameConfig = getComponentValue(GameConfig, gameConfigEntity) as GameConfig
+    const gameConfig = getComponentValue(GameConfig, singletonEntity) as GameConfig
 
     // Check if game config exists
     if (!gameConfig) {
-      throw new GameConfigNotFoundError(gameConfigEntity)
+      throw new GameConfigNotFoundError(singletonEntity)
     }
 
     result.gameConfig = gameConfig

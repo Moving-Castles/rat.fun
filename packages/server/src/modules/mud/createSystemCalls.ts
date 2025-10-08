@@ -3,6 +3,7 @@
  * for changes in the World state (using the System contracts).
  */
 
+import { Hex } from "viem"
 import { OutcomeReturnValue } from "@modules/types"
 import { SetupNetworkResult } from "./setupNetwork"
 import { Rat, Room } from "@modules/types"
@@ -22,7 +23,7 @@ export function createSystemCalls(network: SetupNetworkResult) {
     try {
       const args = createOutcomeCallArgs(rat, room, outcome)
 
-      const tx = await (network as any).worldContract.write.ratfun__applyOutcome(args)
+      const tx = await network.worldContract.write.ratfun__applyOutcome(args)
       await network.waitForTransaction(tx)
 
       // Suggested outcomes were sent to the chain
@@ -74,16 +75,16 @@ export function createSystemCalls(network: SetupNetworkResult) {
   }
 
   const createRoom = async (
-    playerId: string,
-    roomID: string,
+    playerId: Hex,
+    roomID: Hex,
     roomCreationCost: number,
     roomPrompt: string
   ) => {
     try {
-      const tx = await (network as any).worldContract.write.ratfun__createRoom([
+      const tx = await network.worldContract.write.ratfun__createRoom([
         playerId,
         roomID,
-        roomCreationCost,
+        BigInt(roomCreationCost),
         roomPrompt
       ])
 
@@ -104,9 +105,9 @@ export function createSystemCalls(network: SetupNetworkResult) {
     }
   }
 
-  const giveMasterKey = async (playerId: string) => {
+  const giveMasterKey = async (playerId: Hex) => {
     try {
-      const tx = await (network as any).worldContract.write.ratfun__giveMasterKey([playerId])
+      const tx = await network.worldContract.write.ratfun__giveMasterKey([playerId])
       await network.waitForTransaction(tx)
       return true
     } catch (error) {

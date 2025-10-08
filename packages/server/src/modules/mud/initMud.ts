@@ -7,6 +7,6 @@ const PRIVATE_KEY = process.env.PRIVATE_KEY as string
 const CHAIN_ID = Number(process.env.CHAIN_ID) as number
 
 // Initialize MUD
-const { components, systemCalls, network } = await setup(PRIVATE_KEY, CHAIN_ID)
+const { systemCalls, network } = await setup(PRIVATE_KEY, CHAIN_ID)
 
-export { components, systemCalls, network }
+export { systemCalls, network }
