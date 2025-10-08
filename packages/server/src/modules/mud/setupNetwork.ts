@@ -116,10 +116,7 @@ export async function setupNetwork(
   return {
     world,
     components,
-    playerEntity: encodeEntity(
-      { address: "address" },
-      { address: walletClient.account.address }
-    ),
+    playerEntity: encodeEntity({ address: "address" }, { address: walletClient.account.address }),
     publicClient,
     walletClient,
     latestBlock$,
@@ -130,12 +127,12 @@ export async function setupNetwork(
 }
 
 function chainTransport(rpcUrls: Chain["rpcUrls"][string]): Transport {
-  const webSocketUrl = rpcUrls?.webSocket?.[0];
-  const httpUrl = rpcUrls?.http[0];
+  const webSocketUrl = rpcUrls?.webSocket?.[0]
+  const httpUrl = rpcUrls?.http[0]
 
   if (webSocketUrl) {
-    return httpUrl ? fallback([webSocket(webSocketUrl), http(httpUrl)]) : webSocket(webSocketUrl);
+    return httpUrl ? fallback([webSocket(webSocketUrl), http(httpUrl)]) : webSocket(webSocketUrl)
   }
 
-  return http(httpUrl);
+  return http(httpUrl)
 }

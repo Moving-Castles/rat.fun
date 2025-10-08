@@ -1,4 +1,4 @@
-import { defineConfig } from "tsup";
+import { defineConfig } from "tsup"
 
 export default defineConfig(() => ({
   target: "esnext",
@@ -6,8 +6,5 @@ export default defineConfig(() => ({
   sourcemap: true,
   dts: true,
   clean: true,
-  entry: [
-    "src/index.ts",
-    "src/internal.ts",
-  ],
-}));
+  entry: ["src/index.ts", "src/internal.ts"]
+}))

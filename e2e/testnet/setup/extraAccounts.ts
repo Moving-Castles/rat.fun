@@ -1,9 +1,9 @@
-import fs from "node:fs/promises";
+import fs from "node:fs/promises"
 import { Account, etherUnits, Hex, nonceManager } from "viem"
 import { generatePrivateKey, privateKeyToAccount } from "viem/accounts"
 import { setupSimpleNetwork, SetupSimpleNetworkReturnType } from "./setupSimpleNetwork"
-import { extraAccountsFilePath, extraAccountsNumber } from "./constants";
-import { approveMax } from "../utils/approveMax";
+import { extraAccountsFilePath, extraAccountsNumber } from "./constants"
+import { approveMax } from "../utils/approveMax"
 
 export async function initExtraAccount(network: SetupSimpleNetworkReturnType, playerName: string) {
   const privateKey = generatePrivateKey()
@@ -24,23 +24,26 @@ export async function initExtraAccount(network: SetupSimpleNetworkReturnType, pl
     // Approve max erc20
     approveMax(network, account),
     // Spawn player
-    network.worldContract.write.ratfun__spawn([playerName], { account }),
+    network.worldContract.write.ratfun__spawn([playerName], { account })
   ])
-  
+
   return { privateKey, account, txPromises }
 }
 
 export async function setupExtraAccounts() {
   const network = setupSimpleNetwork()
 
-  const extraAccounts: { privateKey: Hex, address: Hex }[] = []
+  const extraAccounts: { privateKey: Hex; address: Hex }[] = []
   const promises: Promise<Hex[]>[] = []
   try {
     for (let i = 0; i < extraAccountsNumber; i++) {
-      const { privateKey, account, txPromises } = await initExtraAccount(network, `extraAccount_${i}`)
+      const { privateKey, account, txPromises } = await initExtraAccount(
+        network,
+        `extraAccount_${i}`
+      )
       extraAccounts.push({
         privateKey,
-        address: account.address,
+        address: account.address
       })
       promises.push(txPromises)
     }
@@ -58,20 +61,27 @@ export async function setupExtraAccounts() {
 
 async function readExtraAccountsFile() {
   try {
-    return await fs.readFile(extraAccountsFilePath, 'utf-8')
+    return await fs.readFile(extraAccountsFilePath, "utf-8")
   } catch (e: any) {
-    if (e?.code === 'ENOENT') {
-      throw new Error(`File ${extraAccountsFilePath} not found, run 'pnpm run setup:extra-accounts'`)
+    if (e?.code === "ENOENT") {
+      throw new Error(
+        `File ${extraAccountsFilePath} not found, run 'pnpm run setup:extra-accounts'`
+      )
     } else {
-      throw e;
+      throw e
     }
   }
 }
 
 export async function getExtraAccounts() {
-  const result = JSON.parse(await readExtraAccountsFile()) as { privateKey: Hex, account: Account }[]
+  const result = JSON.parse(await readExtraAccountsFile()) as {
+    privateKey: Hex
+    account: Account
+  }[]
   if (!result || result.length === 0) {
-    throw new Error(`No extra accounts found in ${extraAccountsFilePath}, run 'pnpm run setup:extra-accounts'`)
+    throw new Error(
+      `No extra accounts found in ${extraAccountsFilePath}, run 'pnpm run setup:extra-accounts'`
+    )
   }
   return result.map(({ privateKey }) => privateKeyToAccount(privateKey, { nonceManager }))
 }

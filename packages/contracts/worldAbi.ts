@@ -4,5 +4,5 @@ import ISlopERC20Abi from "./out/SlopERC20.sol/SlopERC20.abi.json" with { type: 
 // add erc20 abi for better reporting of its events/errors
 export const IWorldAbi = [
   ..._IWorldAbi,
-  ...ISlopERC20Abi.filter(({type}) => type !== "function")
-] as typeof _IWorldAbi;
+  ...ISlopERC20Abi.filter(({ type }) => type !== "function")
+] as typeof _IWorldAbi

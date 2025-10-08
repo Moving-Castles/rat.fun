@@ -29,7 +29,11 @@ export function createOutcomeCallArgs(rat: Rat, room: Room, outcome: OutcomeRetu
       }) ?? []
 
   return [rat.id, room.id, BigInt(balanceTransfersSum), itemsToRemoveFromRat, itemsToAddToRat] as [
-    Hex, Hex, bigint, Hex[], { name: string; value: bigint }[]
+    Hex,
+    Hex,
+    bigint,
+    Hex[],
+    { name: string; value: bigint }[]
   ]
 }
 

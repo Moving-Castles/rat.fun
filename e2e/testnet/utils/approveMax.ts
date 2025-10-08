@@ -8,7 +8,7 @@ export async function approveMax(network: SetupSimpleNetworkReturnType, account:
     client: network.publicClient,
     worldAddress: network.worldContract.address,
     table: mudTables.ratfun__ExternalAddressesConfig,
-    key: [],
+    key: []
   })
 
   return await network.walletClient.writeContract({
@@ -16,6 +16,6 @@ export async function approveMax(network: SetupSimpleNetworkReturnType, account:
     address: config.erc20Address as Hex,
     abi: erc20Abi,
     functionName: "approve",
-    args: [config.gamePoolAddress as Hex, maxUint256],
+    args: [config.gamePoolAddress as Hex, maxUint256]
   })
 }

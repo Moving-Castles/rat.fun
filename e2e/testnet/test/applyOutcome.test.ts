@@ -7,11 +7,22 @@ import { initMud } from "../setup/initMud"
 import { spawnOrGetRoom } from "../utils/spawnOrGetRoom"
 import { spawnOrGetRat } from "../utils/spawnOrGetRat"
 
-async function applyOutcome(network: SetupNetworkReturnType, roomId: Hex, ratId: Hex, balanceTransfer: bigint) {
-  const tx = await network.worldContract.write.ratfun__applyOutcome([ratId, roomId, balanceTransfer, [], []])
+async function applyOutcome(
+  network: SetupNetworkReturnType,
+  roomId: Hex,
+  ratId: Hex,
+  balanceTransfer: bigint
+) {
+  const tx = await network.worldContract.write.ratfun__applyOutcome([
+    ratId,
+    roomId,
+    balanceTransfer,
+    [],
+    []
+  ])
   return {
     ratId,
-    receipt: await network.waitForTransaction(tx),
+    receipt: await network.waitForTransaction(tx)
   }
 }
 
@@ -35,7 +46,9 @@ describe("testnet network", () => {
     extraAccounts = await getExtraAccounts()
 
     roomId = await spawnOrGetRoom(network)
-    rats = await Promise.all(extraAccounts.map(extraAccount => spawnOrGetRat(network, extraAccount)))
+    rats = await Promise.all(
+      extraAccounts.map(extraAccount => spawnOrGetRat(network, extraAccount))
+    )
   })
 
   afterAll(async () => {
@@ -80,7 +93,9 @@ describe("testnet network", () => {
     }
 
     const ratBalancesEnd = rats.map(ratId => getBalance(network, ratId))
-    expect(getVisitCount(network, roomId)).toEqual(visitCountStart + 2n * BigInt(extraAccounts.length))
+    expect(getVisitCount(network, roomId)).toEqual(
+      visitCountStart + 2n * BigInt(extraAccounts.length)
+    )
     expect(ratBalancesEnd).toEqual(ratBalancesStart)
   })
 })

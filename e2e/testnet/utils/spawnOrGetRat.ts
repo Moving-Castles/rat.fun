@@ -10,7 +10,9 @@ export async function spawnOrGetRat(network: SetupNetworkReturnType, account: Ac
   if (!ratId) {
     const ratName = "rat"
 
-    await network.waitForTransaction(await network.worldContract.write.ratfun__createRat([ratName], { account }))
+    await network.waitForTransaction(
+      await network.worldContract.write.ratfun__createRat([ratName], { account })
+    )
     ratId = getComponentValueStrict(network.components.CurrentRat, accountEntity).value
   }
 

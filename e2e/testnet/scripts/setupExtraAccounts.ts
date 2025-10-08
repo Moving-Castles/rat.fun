@@ -1,3 +1,3 @@
-import { setupExtraAccounts } from "../setup/extraAccounts";
+import { setupExtraAccounts } from "../setup/extraAccounts"
 
 await setupExtraAccounts()
