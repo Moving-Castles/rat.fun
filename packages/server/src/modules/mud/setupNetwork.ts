@@ -29,7 +29,7 @@ import { transportObserver } from "@latticexyz/common"
 import { transactionQueue } from "@latticexyz/common/actions"
 
 import { getNetworkConfig } from "./getNetworkConfig"
-import { IWorldAbi } from "../../../../contracts/worldAbi"
+import { IWorldAbi } from "contracts/worldAbi"
 
 /*
  * Import our MUD config, which includes strong types for
@@ -39,7 +39,7 @@ import { IWorldAbi } from "../../../../contracts/worldAbi"
  * See https://mud.dev/templates/typescript/contracts#mudconfigts
  * for the source of this information.
  */
-import mudConfig from "../../../../contracts/mud.config"
+import mudConfig from "contracts/mud.config"
 
 export type SetupNetworkResult = Awaited<ReturnType<typeof setupNetwork>>
 

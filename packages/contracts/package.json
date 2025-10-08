@@ -2,8 +2,16 @@
   "name": "contracts",
   "version": "0.2.0",
   "license": "MIT",
+  "type": "module",
+  "exports": {
+    "./mud.config": "./dist/mud.config.js",
+    "./enums": "./dist/enums.js",
+    "./worldAbi": "./dist/worldAbi.js",
+    "./out/*": "./out/*",
+    "./worlds.json": "./worlds.json"
+  },
   "scripts": {
-    "build": "tsx ./script/generate-external-tables.ts && mud build",
+    "build": "tsx ./script/generate-external-tables.ts && mud build && tsup",
     "clean": "forge clean && shx rm -rf src/**/codegen",
     "deploy:base-sepolia": "mud deploy --profile=base-sepolia --forgeScriptOptions='--slow'",
     "deploy:base-mainnet": "mud deploy --profile=base-mainnet --forgeScriptOptions='--slow'",
@@ -33,6 +41,7 @@
     "@types/node": "^24.7.0",
     "forge-std": "https://github.com/foundry-rs/forge-std.git#60acb7aaadcce2d68e52986a0a66fe79f07d138f",
     "solhint": "^6.0.1",
+    "tsup": "^8.5.0",
     "tsx": "4.20.6"
   }
 }
