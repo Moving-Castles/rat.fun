@@ -191,9 +191,11 @@ contract TripSystemTest is BaseTest {
     // Check that trip has been marked as liquidated
     assertEq(Liquidated.get(tripId), true);
 
-    uint256 liquidationValue = TRIP_INITIAL_BALANCE -
-      (TRIP_INITIAL_BALANCE * GamePercentagesConfig.getTaxationCloseTrip()) / 100;
-    assertEq(LiquidationValue.get(tripId), liquidationValue);
+    // Liquidation value is gross value, before taxation
+    assertEq(LiquidationValue.get(tripId), TRIP_INITIAL_BALANCE);
+
+    assertEq(LiquidationTaxPercentage.get(tripId), GamePercentagesConfig.getTaxationCloseTrip());
+
     assertEq(LiquidationBlock.get(tripId), block.number);
   }
 

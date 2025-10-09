@@ -86,8 +86,8 @@ contract RatSystemTest is BaseTest {
     endGasReport();
 
     // Calculate tax based on rat value
-    uint256 ratValue = RAT_CREATION_COST;
-    uint256 tax = (ratValue * GamePercentagesConfig.getTaxationLiquidateRat()) / 100;
+    uint256 initialRatValue = RAT_CREATION_COST;
+    uint256 tax = (initialRatValue * GamePercentagesConfig.getTaxationLiquidateRat()) / 100;
 
     // Check that tax was transferred to admin
     assertEq(
@@ -104,8 +104,10 @@ contract RatSystemTest is BaseTest {
     assertEq(Liquidated.get(ratId), true);
     assertEq(LiquidationBlock.get(ratId), block.number);
 
-    uint256 liquidationValue = ratValue - (ratValue * GamePercentagesConfig.getTaxationLiquidateRat()) / 100;
-    assertEq(LiquidationValue.get(ratId), liquidationValue);
+    // Liquidation value is gross value, before taxation
+    assertEq(LiquidationValue.get(ratId), initialRatValue);
+
+    assertEq(LiquidationTaxPercentage.get(ratId), GamePercentagesConfig.getTaxationLiquidateRat());
 
     // Global stats set
     assertEq(WorldStats.getGlobalRatKillCount(), 1);

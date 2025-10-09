@@ -10,7 +10,8 @@ import {
   CreationBlock,
   Liquidated,
   LiquidationValue,
-  LiquidationBlock
+  LiquidationBlock,
+  LiquidationTaxPercentage
 } from "../codegen/index.sol";
 import { LibTrip, LibUtils, LibWorld } from "../libraries/Libraries.sol";
 import { ENTITY_TYPE } from "../codegen/common.sol";
@@ -65,15 +66,22 @@ contract TripSystem is System {
 
     uint256 valueToPlayer = Balance.get(_tripId);
 
+    // Set Gross liquidation value, before taxation, on trip
+    LiquidationValue.set(_tripId, valueToPlayer);
+
+    uint256 currentTaxPercentage = GamePercentagesConfig.getTaxationCloseTrip();
+
+    // Set taxation percentage on trip
+    LiquidationTaxPercentage.set(_tripId, currentTaxPercentage);
+
     // Calculate tax
-    uint256 tax = (valueToPlayer * GamePercentagesConfig.getTaxationCloseTrip()) / 100;
+    uint256 tax = (valueToPlayer * currentTaxPercentage) / 100;
     valueToPlayer -= tax;
 
     Balance.set(_tripId, 0);
 
     // Indicate that the trip has been closed by owner
     Liquidated.set(_tripId, true);
-    LiquidationValue.set(_tripId, valueToPlayer);
     LiquidationBlock.set(_tripId, block.number);
 
     // Withdraw tokens equal to trip value from pool to player

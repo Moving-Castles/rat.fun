@@ -14,7 +14,6 @@ import {
   Owner,
   CreationBlock,
   PastRats,
-  LiquidationValue,
   LiquidationBlock,
   MasterKey
 } from "../codegen/index.sol";

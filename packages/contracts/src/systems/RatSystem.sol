@@ -4,13 +4,12 @@ import {
   Owner,
   CurrentRat,
   Dead,
-  Inventory,
   GameConfig,
   GamePercentagesConfig,
-  Value,
   Balance,
   Liquidated,
-  LiquidationValue
+  LiquidationValue,
+  LiquidationTaxPercentage
 } from "../codegen/index.sol";
 import { System } from "@latticexyz/world/src/System.sol";
 import { LibUtils, LibRat, LibWorld } from "../libraries/Libraries.sol";
@@ -54,14 +53,24 @@ contract RatSystem is System {
     require(!Dead.get(ratId), "rat is dead");
 
     uint256 valueToPlayer = LibRat.killRat(ratId);
+
+    // Set Gross liquidation value, before taxation, on rat
+    LiquidationValue.set(ratId, valueToPlayer);
+
+    uint256 currentTaxPercentage = GamePercentagesConfig.getTaxationLiquidateRat();
+
+    // Set taxation percentage on rat
+    LiquidationTaxPercentage.set(ratId, currentTaxPercentage);
+
     // Calculate tax
-    uint256 tax = (valueToPlayer * GamePercentagesConfig.getTaxationLiquidateRat()) / 100;
+    uint256 tax = (valueToPlayer * currentTaxPercentage) / 100;
+
+    // Deduct tax
     valueToPlayer -= tax;
 
     // Update rat
     Balance.set(ratId, 0);
     Liquidated.set(ratId, true);
-    LiquidationValue.set(ratId, valueToPlayer);
 
     // Withdraw tokens equal to rat value minus tax from pool to player
     // ERC-20 will check that pool has sufficient balance

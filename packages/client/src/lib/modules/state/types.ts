@@ -79,6 +79,7 @@ declare global {
     tripCount?: mudComponents["TripCount"]
     liquidated?: mudComponents["Liquidated"]
     liquidationValue?: mudComponents["LiquidationValue"]
+    liquidationTaxPercentage?: mudComponents["LiquidationTaxPercentage"]
     liquidationBlock?: mudComponents["LiquidationBlock"]
     masterKey?: mudComponents["MasterKey"]
     // Gameconfig related fields

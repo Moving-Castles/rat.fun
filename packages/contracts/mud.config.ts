@@ -79,7 +79,8 @@ export default defineWorld({
     // = = = = = = = = = =
     Dead: "bool", // Set on rat
     Liquidated: "bool", // Set on rat and trip when it is liquidated by owner
-    LiquidationValue: "uint256", // Set on rat and trip when it is liquidated
+    LiquidationValue: "uint256", // Set on rat and trip when it is liquidated, gross value (before taxation)
+    LiquidationTaxPercentage: "uint256", // Set on rat and trip when it is liquidated
     LiquidationBlock: "uint256", // Set on rat and trip when it is liquidated
     // = = = = = = = = = =
     Inventory: "bytes32[]", // Items carried by player and rat

@@ -16,6 +16,7 @@ import { Balance } from "./tables/Balance.sol";
 import { Dead } from "./tables/Dead.sol";
 import { Liquidated } from "./tables/Liquidated.sol";
 import { LiquidationValue } from "./tables/LiquidationValue.sol";
+import { LiquidationTaxPercentage } from "./tables/LiquidationTaxPercentage.sol";
 import { LiquidationBlock } from "./tables/LiquidationBlock.sol";
 import { Inventory } from "./tables/Inventory.sol";
 import { MasterKey } from "./tables/MasterKey.sol";
