@@ -25,8 +25,8 @@
   }: {
     trip: Room
     tripId: string
-    height: number
-    graphData: PlotPoint[]
+    height?: number
+    graphData?: PlotPoint[]
   } = $props()
 
   // Add reactive timestamp for real-time updates
@@ -95,9 +95,9 @@
 
   /** Plot data for the single room */
   let plotData = $derived.by(() => {
-    let sanityRoomContent = staticContent?.rooms?.find(r => r.title == tripId)
+    let sanityRoomContent = $staticContent?.rooms?.find(r => r.title == tripId)
 
-    const outcomes = staticContent?.outcomes?.filter(o => o.roomId == tripId) || []
+    const outcomes = $staticContent?.outcomes?.filter(o => o.roomId == tripId) || []
 
     // Sort the outcomes in order of creation
     outcomes.sort((a, b) => {
@@ -264,7 +264,7 @@
   })
 </script>
 
-<div class="profit-loss-graph">
+<div class="profit-loss-graph" style:height="{height}px">
   <div class="y-axis">
     <!-- <small class="label">Value</small> -->
   </div>
@@ -277,7 +277,7 @@
       <span>NO DATA</span>
     </div>
   {:else}
-    <div class="graph" bind:clientWidth={width}>
+    <div class="graph" style:height="{height}px" bind:clientWidth={width}>
       <div class="legend y">
         <button class="active">Profit/Loss</button>
       </div>
@@ -459,7 +459,6 @@
 
   .graph {
     width: 100%;
-    height: 100%;
     right: 0;
     top: 0;
     position: absolute;

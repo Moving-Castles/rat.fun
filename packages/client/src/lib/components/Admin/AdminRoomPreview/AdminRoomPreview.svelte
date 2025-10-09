@@ -3,6 +3,8 @@
   import type { Outcome } from "@sanity-types"
   import type { Room as SanityRoom } from "@sanity-types"
 
+  import { gameConfig } from "$lib/modules/state/stores"
+  import { blockNumber } from "$lib/modules/network"
   import { onMount } from "svelte"
   import { staticContent } from "$lib/modules/content"
   import { page } from "$app/state"
@@ -16,6 +18,7 @@
     RoomConfirmLiquidation,
     LiquidateRoom
   } from "$lib/components/Room"
+  import { SingleRoomProfitLossGraph } from "$lib/components/Admin"
 
   let {
     roomId,
@@ -30,9 +33,12 @@
   let showLiquidateButton = $derived(room.balance > 0)
 
   let liquidating = $state(false)
+  let blockUntilUnlock = $derived(
+    Number(room.creationBlock) + $gameConfig.cooldownCloseRoom - Number($blockNumber)
+  )
 
   onMount(() => {
-    liquidating = page.url.searchParams.has("liquidate")
+    liquidating = page.url.searchParams.has("liquidate") && blockUntilUnlock <= 0
     const outcomes = $staticContent?.outcomes?.filter(o => o.roomId == roomId) || []
 
     // Sort the outcomes in order of creation
@@ -45,7 +51,8 @@
 <a class="back-button" href="/admin">Back</a>
 {#if !liquidating}
   <div class="room-inner-container" class:depleted={!showLiquidateButton}>
-    <RoomPreviewGraph {room} {roomOutcomes} {sanityRoomContent} />
+    <SingleRoomProfitLossGraph height={400} trip={room} tripId={roomId} />
+    <!-- <RoomPreviewGraph {room} {roomOutcomes} {sanityRoomContent} /> -->
     <RoomPreviewPrompt {room} />
 
     {#if showLiquidateButton}
