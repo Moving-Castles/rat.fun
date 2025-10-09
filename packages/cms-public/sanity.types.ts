@@ -102,6 +102,7 @@ export type Outcome = {
   tripValueChange?: number
   ratValue?: number
   ratValueChange?: number
+  debuggingInfo?: string
   slug?: Slug
 }
 

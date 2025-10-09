@@ -154,6 +154,12 @@ export default {
       validation: (Rule: any) => Rule.required()
     },
     {
+      title: "Debugging info",
+      name: "debuggingInfo",
+      type: "text",
+      readOnly: true
+    },
+    {
       title: "Slug",
       name: "slug",
       type: "slug",

@@ -1,6 +1,6 @@
 import type { Outcome as OutcomeDoc, Trip as TripDoc } from "@sanity-public-cms-types"
 import type { ResolvedTemplateImages } from "@modules/types"
-import type { Rat, Trip, Player } from "@modules/types"
+import type { Rat, Trip, Player, DebuggingInfo } from "@modules/types"
 import type { CorrectionReturnValue, OutcomeReturnValue } from "@modules/types"
 import { loadDataPublicSanity } from "@modules/cms/public/sanity"
 import { queries } from "@modules/cms/public/groq"
@@ -151,10 +151,13 @@ export async function writeOutcomeToCMS(
   newRatValue: number,
   ratValueChange: number,
   events: CorrectionReturnValue,
-  outcome: OutcomeReturnValue
+  outcome: OutcomeReturnValue,
+  debuggingInfo: DebuggingInfo
 ): Promise<OutcomeDoc> {
   try {
     const outcomeID = uuidv4()
+
+    const debuggingInfoString = JSON.stringify(debuggingInfo)
 
     const newOutcomeDoc: NewOutcomeDoc = {
       _type: "outcome",
@@ -172,6 +175,7 @@ export async function writeOutcomeToCMS(
       ratValue: newRatValue,
       ratValueChange: ratValueChange,
       playerName: player.name,
+      debuggingInfo: debuggingInfoString,
       slug: {
         _type: "slug",
         current: outcomeID

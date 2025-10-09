@@ -95,8 +95,6 @@ async function routes(fastify: FastifyInstance) {
         )) as EventsReturnValue
         console.timeEnd("–– Event LLM")
 
-        console.log(eventResults)
-
         // Apply the outcome suggested by the LLM to the onchain state and get back the actual outcome.
         console.time("–– Chain")
         const {
@@ -108,8 +106,6 @@ async function routes(fastify: FastifyInstance) {
           ratValueChange
         } = await systemCalls.applyOutcome(rat, trip, eventResults.outcome)
         console.timeEnd("–– Chain")
-
-        // console.log('Validated outcome:', validatedOutcome);
 
         // The event log might now not reflect the actual outcome.
         // Run it through the LLM again to get the corrected event log.
@@ -150,7 +146,8 @@ async function routes(fastify: FastifyInstance) {
           newRatValue,
           ratValueChange,
           correctedEvents,
-          validatedOutcome
+          validatedOutcome,
+          eventResults.outcome?.debuggingInfo
         )
 
         console.timeEnd("–– CMS write")

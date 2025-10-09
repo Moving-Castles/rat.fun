@@ -89,6 +89,7 @@ export type OutcomeReturnValue = {
   outcomeId: string
   itemChanges: ItemChange[]
   balanceTransfers: BalanceTransfer[]
+  debuggingInfo: DebuggingInfo
 }
 
 export type ItemChange = {
@@ -107,6 +108,12 @@ export type BalanceTransfer = {
 export type LogEntry = {
   timestamp: string
   event: string
+}
+
+export type DebuggingInfo = {
+  internalText: string
+  randomSeed: number
+  batchId: number
 }
 
 /*
