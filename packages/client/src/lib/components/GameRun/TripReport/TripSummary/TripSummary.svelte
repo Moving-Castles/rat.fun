@@ -1,71 +1,108 @@
 <script lang="ts">
-  import { frozenRat } from "$lib/components/GameRun/state.svelte"
-  import { goto } from "$app/navigation"
-  import { ratImageUrl } from "$lib/modules/state/stores"
-  import { BigButton } from "$lib/components/Shared"
+  import type { EnterTripReturnValue } from "@server/modules/types"
+  import { playSound } from "$lib/modules/sound"
   import { gsap } from "gsap"
-  import { onMount } from "svelte"
+  import HealthBox from "./HealthBox.svelte"
+  import ItemBox from "./ItemBox.svelte"
+  import TotalValueBox from "./TotalValueBox.svelte"
+  import ActionBox from "./ActionBox.svelte"
 
   let {
     result,
     onTimeline
   }: {
-    result: any
+    result: EnterTripReturnValue
     onTimeline?: (timeline: ReturnType<typeof gsap.timeline>) => void
   } = $props()
 
-  // Figure out if rat died or survived
-  const ratDied = result?.ratDead
-  const statusText = ratDied ? "DIED" : "SURVIVED"
-
-  // Elements
+  // Element
   let summaryContainer = $state<HTMLDivElement | null>(null)
 
-  // Create timeline
-  const timeline = gsap.timeline()
+  // Track child timelines
+  let receivedTimelines = 0
+  const totalItems = 4 // HealthBox, ItemBox, TotalValueBox, ActionBox
 
-  onMount(() => {
-    if (summaryContainer) {
-      // Animate the summary container (fade in + slide up)
-      timeline.fromTo(
-        summaryContainer,
-        { opacity: 0, y: 50 },
-        { opacity: 1, y: 0, duration: 0.6, ease: "power4.out" }
-      )
+  // Create parent timeline
+  const summaryTimeline = gsap.timeline()
 
-      // Pass timeline to parent
+  const prepare = () => {
+    // Set initial state for container
+    gsap.set(summaryContainer, {
+      opacity: 0,
+      y: 100
+    })
+  }
+
+  const main = () => {
+    // NOTE: All animations start at 0 seconds
+
+    // Play sound
+    summaryTimeline.call(
+      () => {
+        playSound("ratfunUI", "panelIn")
+      },
+      [],
+      0
+    )
+
+    // Animate the summary container (fade in + slide up)
+    summaryTimeline.to(
+      summaryContainer,
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        ease: "power4.out"
+      },
+      0
+    )
+  }
+
+  function addToTimeline(timeline: ReturnType<typeof gsap.timeline>) {
+    // Add child timelines at position 0 to start with the container animation
+    summaryTimeline.add(timeline, 0)
+    receivedTimelines++
+
+    if (receivedTimelines === totalItems) {
+      // All timelines added, pass to parent
       done()
     }
-  })
+  }
 
   // Timeline is constructed
   // Pass it to the parent component
   const done = () => {
-    if (timeline && onTimeline) {
-      onTimeline(timeline)
+    if (summaryTimeline && onTimeline) {
+      onTimeline(summaryTimeline)
     }
   }
+
+  const run = () => {
+    prepare()
+    main()
+  }
+
+  // Ensure container is mounted
+  $effect(() => {
+    if (summaryContainer) {
+      run()
+    }
+  })
 </script>
 
 <div class="summary-container" bind:this={summaryContainer}>
-  <div class="summary">
-    <div class="event">
-      <div class="image">
-        <img src={$ratImageUrl} alt={$frozenRat?.name} />
-      </div>
-      <div class="event-text">
-        {$frozenRat?.name}
-        {statusText}
-      </div>
+  <!-- COLUMN 1 -->
+  <div class="results">
+    <div class="result-text">
+      <HealthBox onTimeline={addToTimeline} />
+      <ItemBox {result} onTimeline={addToTimeline} />
+      <TotalValueBox {result} onTimeline={addToTimeline} />
     </div>
-    <div class="button-container">
-      <BigButton
-        text="COME DOWN"
-        onclick={() => {
-          goto("/")
-        }}
-      />
-    </div>
+  </div>
+
+  <!-- COLUMN 2 -->
+  <div class="actions">
+    <ActionBox {result} onTimeline={addToTimeline} />
   </div>
 </div>
 
@@ -78,9 +115,6 @@
     width: 100%;
     height: 50vh;
 
-    // Initial state (hidden, will be animated in by timeline)
-    opacity: 0;
-
     // Layout
     display: flex;
     flex-direction: column;
@@ -88,29 +122,25 @@
     align-items: center;
     background-image: url("/images/texture-2.png");
 
-    .event {
-      background: var(--color-secondary);
-      margin: 0;
-      padding: 0;
-      text-align: center;
+    display: flex;
+    flex-direction: row;
+
+    .results {
+      width: 50%;
+      height: 100%;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-      height: 80px;
     }
 
-    .image {
-      width: 200px;
-      height: 200px;
-      img {
-        width: 100%;
-        height: 100%;
-      }
-    }
-
-    .button-container {
-      width: 100%;
-      height: 80px;
+    .actions {
+      width: 50%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
   }
 </style>

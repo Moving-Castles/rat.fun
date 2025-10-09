@@ -17,6 +17,8 @@
 
 import { writable } from "svelte/store"
 import type { FrozenRat, FrozenTrip, OutcomeDataStringMap } from "./types"
+import { ratTotalValue } from "$lib/modules/state/stores"
+import { get } from "svelte/store"
 import type { Hex } from "viem"
 import { addressToRatImage } from "$lib/modules/utils"
 import { errorHandler, InvalidStateTransitionError } from "$lib/modules/error-handling"
@@ -108,6 +110,8 @@ export function freezeObjects(rat: Rat, trip: Trip, tripId: Hex, ratId: Hex) {
   const preppedRat = structuredClone(rat) as FrozenRat
   if (!preppedRat.inventory) preppedRat.inventory = []
   preppedRat.image = addressToRatImage(ratId)
+  preppedRat.initialBalance = Number(rat.balance) // Used to calculate the rat value change in summary
+  preppedRat.initialTotalValue = Number(get(ratTotalValue)) // Used to calculate the rat value change in summary
   frozenRat.set(preppedRat)
 
   const preppedTrip = structuredClone(trip) as FrozenTrip
@@ -128,6 +132,8 @@ export function freezeObjects(rat: Rat, trip: Trip, tripId: Hex, ratId: Hex) {
  */
 export const updateFrozenState = (dataset: OutcomeDataStringMap) => {
   const { type, action, value, name, id } = dataset
+
+  console.log("updateFrozenState", dataset)
 
   if (!type || !action || value === undefined) {
     return
@@ -156,9 +162,11 @@ export const updateFrozenState = (dataset: OutcomeDataStringMap) => {
  * @param balanceChange The amount to change the balance by
  */
 function changeBalance(balanceChange: number) {
+  console.log("balanceChange", balanceChange)
   frozenRat.update(rat => {
     if (!rat) return null
     rat.balance = BigInt(rat?.balance || 0) + BigInt(balanceChange)
+    console.log("rat.balance", rat.balance)
     return rat
   })
 

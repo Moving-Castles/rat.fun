@@ -102,7 +102,15 @@ declare global {
   }
 
   type Rat = {
-    [key: string]: number | bigint | string | ENTITY_TYPE | Hex | readonly Hex[] | boolean
+    [key: string]:
+      | number
+      | bigint
+      | string
+      | ENTITY_TYPE
+      | Hex
+      | readonly Hex[]
+      | boolean
+      | undefined
     entityType: ENTITY_TYPE.RAT
     name: mudComponents["Name"]
     index: mudComponents["Index"]
@@ -111,10 +119,14 @@ declare global {
     dead: mudComponents["Dead"]
     inventory: mudComponents["Inventory"]
     creationBlock: mudComponents["CreationBlock"]
+    liquidated?: mudComponents["Liquidated"]
+    liquidationValue?: mudComponents["LiquidationValue"]
+    liquidationBlock?: mudComponents["LiquidationBlock"]
+    liquidationTaxPercentage?: mudComponents["LiquidationTaxPercentage"]
   }
 
   type Trip = {
-    [key: string]: number | bigint | ENTITY_TYPE | string | boolean
+    [key: string]: number | bigint | ENTITY_TYPE | string | boolean | undefined
     entityType: ENTITY_TYPE.TRIP
     owner: mudComponents["Owner"]
     index: mudComponents["Index"]
@@ -126,6 +138,10 @@ declare global {
     creationBlock: mudComponents["CreationBlock"]
     lastVisitBlock: mudComponents["LastVisitBlock"]
     tripCreationCost: mudComponents["TripCreationCost"]
+    liquidated?: mudComponents["Liquidated"]
+    liquidationValue?: mudComponents["LiquidationValue"]
+    liquidationBlock?: mudComponents["LiquidationBlock"]
+    liquidationTaxPercentage?: mudComponents["LiquidationTaxPercentage"]
   }
 
   type Item = {

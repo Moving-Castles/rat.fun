@@ -177,7 +177,7 @@ export const ratImageUrl = derived([player], ([$player]) => {
 })
 
 /**
- * Calculated by adding up the balance andinventory value
+ * Calculated by adding up the balance and inventory value
  */
 export const ratTotalValue = derived([rat, ratInventory], ([$rat, $ratInventory]) => {
   const totalValue = !$rat

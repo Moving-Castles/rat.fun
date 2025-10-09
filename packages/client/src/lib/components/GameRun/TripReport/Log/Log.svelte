@@ -9,7 +9,7 @@
     result,
     onTimeline
   }: {
-    result: EnterTripReturnValue | null
+    result: EnterTripReturnValue
     onTimeline?: (timeline: ReturnType<typeof gsap.timeline>) => void
   } = $props()
 
@@ -36,9 +36,7 @@
   // When all child timelines are added, pass timeline to parent
 
   // Create parent timeline
-  const logTimeline = gsap.timeline({
-    defaults: { duration: 0.5, ease: "power2.out" }
-  })
+  const logTimeline = gsap.timeline()
 
   function addToTimeline(timeline: ReturnType<typeof gsap.timeline>) {
     logTimeline.add(timeline)

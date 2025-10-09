@@ -94,7 +94,7 @@
   {/if}
 
   <!-- ### 3. TRIP RESULTS ### -->
-  {#if tripResultState.state === TRIP_STATE.RESULTS}
+  {#if tripResultState.state === TRIP_STATE.RESULTS && result}
     <TripReport {result} />
   {/if}
 </div>

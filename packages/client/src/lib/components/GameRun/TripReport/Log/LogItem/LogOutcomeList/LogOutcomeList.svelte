@@ -65,6 +65,7 @@
     {#each logEntry?.itemChanges as itemChange}
       <div class="outcome-wrapper">
         <LogOutcomeItem
+          id={itemChange.id}
           name={itemChange.name}
           value={itemChange.value}
           action={itemChange.type}

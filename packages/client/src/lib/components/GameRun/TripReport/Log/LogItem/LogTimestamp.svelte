@@ -28,10 +28,10 @@
 
   // Stage 2: Main animation
   const main = () => {
-    // Timestamp Animation
     timeline.call(() => {
       playSound("ratfunUI", "type2")
     })
+
     timeline.to(timestampElement, {
       opacity: 1,
       duration: TIMESTAMP_DURATION,

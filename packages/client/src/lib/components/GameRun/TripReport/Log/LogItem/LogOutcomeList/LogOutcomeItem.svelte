@@ -3,14 +3,15 @@
   import { updateFrozenState } from "$lib/components/GameRun/state.svelte"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import { playSound } from "$lib/modules/sound"
-  import { calculateDuration } from "./index"
 
   let {
+    id,
     name,
     value,
     action,
     onTimeline
   }: {
+    id: string | undefined
     name: string
     value: number
     action: "add" | "remove"
@@ -25,10 +26,19 @@
   // Timeline
   const timeline = gsap.timeline()
 
-  let negative = $derived(action === "remove")
+  let negative = action === "remove"
 
   // Calculate final text for width measurement
-  const finalText = `${name} (${CURRENCY_SYMBOL}${value})`
+  const finalText = `${name} (${CURRENCY_SYMBOL}${negative ? "-" : ""}${value})`
+
+  // Count update helper
+  const updateCountValue = (num: number) => {
+    if (valueElement) {
+      const displayValue = negative ? -num : num
+      valueElement.textContent = String(displayValue)
+      playSound("ratfunUI", "tick", false, false, 1 + num * (negative ? -0.02 : 0.02))
+    }
+  }
 
   // Stage 1: Prepare the animation
   const prepare = () => {
@@ -53,10 +63,10 @@
     timeline.call(updateFrozenState, [
       {
         type: "item",
-        action: negative ? "remove" : "add",
-        id: "", // Will be filled by parent if needed
-        value: 0, // Will be filled by parent if needed
-        name: "Item"
+        action,
+        id,
+        value,
+        name
       }
     ])
 
@@ -67,22 +77,13 @@
       ease: "power2.out"
     })
 
-    timeline.call(() => {
-      playSound("ratfunUI", negative ? "countDown" : "countUp")
-    })
+    const stepDelay = 0.03
 
-    const duration = calculateDuration(value)
-
-    // Count up/down value
-    timeline.to(
-      valueElement,
-      {
-        textContent: Number(value) - 1,
-        duration: duration,
-        snap: { textContent: 1 }
-      },
-      "<"
-    )
+    // Count up/down value manually
+    for (let i = 1; i < value; i++) {
+      const position = i === 1 ? "<" : `+=${stepDelay}`
+      timeline.call(updateCountValue, [i], position)
+    }
 
     // Change color
     timeline.to(outcomeElement, {
@@ -95,7 +96,7 @@
     timeline.to(
       valueElement,
       {
-        textContent: `${name} (${CURRENCY_SYMBOL}${value})`,
+        textContent: `${name} (${CURRENCY_SYMBOL}${negative ? "-" : ""}${value})`,
         duration: 0,
         ease: "power2.out"
       },

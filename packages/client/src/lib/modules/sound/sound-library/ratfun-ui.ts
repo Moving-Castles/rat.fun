@@ -19,7 +19,7 @@ export const ratfunUI: SoundAssets = {
   tick: {
     src: "/sounds/ratfun/ui/tick.wav",
     author: "leo",
-    volume: 0.6
+    volume: 1.0
   },
   hover: {
     src: "/sounds/ratfun/ui/hover/hover-1.mp3",
@@ -138,6 +138,21 @@ export const ratfunUI: SoundAssets = {
   },
   itemNegative: {
     src: "/sounds/ratfun/ui/item-negative.mp3",
+    author: "leo",
+    volume: 1
+  },
+  tokenPositive: {
+    src: "/sounds/ratfun/ui/token-positive.mp3",
+    author: "leo",
+    volume: 1
+  },
+  tokenNegative: {
+    src: "/sounds/ratfun/ui/token-negative.mp3",
+    author: "leo",
+    volume: 1
+  },
+  panelIn: {
+    src: "/sounds/ratfun/ui/panel-in.mp3",
     author: "leo",
     volume: 1
   }

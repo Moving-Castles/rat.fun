@@ -3,7 +3,6 @@
   import { updateFrozenState } from "$lib/components/GameRun/state.svelte"
   import { playSound } from "$lib/modules/sound"
   import { frozenRat } from "$lib/components/GameRun/state.svelte"
-  import { calculateDuration } from "./index"
 
   let {
     value,
@@ -23,6 +22,14 @@
 
   // Timeline
   const timeline = gsap.timeline()
+
+  // Count update helper
+  const updateCountValue = (num: number) => {
+    if (valueElement) {
+      valueElement.textContent = String(num)
+      playSound("ratfunUI", "tick", false, false, 1 + num * 0.02)
+    }
+  }
 
   // Stage 1: Prepare the animation
   const prepare = () => {
@@ -47,7 +54,7 @@
       {
         type: "balance",
         action: negative ? "reduce" : "increase",
-        value: 0, // Will be filled by parent if needed
+        value,
         name: "Balance"
       }
     ])
@@ -59,23 +66,15 @@
       ease: "power2.out"
     })
 
-    timeline.call(() => {
-      playSound("ratfunUI", negative ? "countDown" : "countUp")
-    })
+    const stepDelay = 0.03
 
-    const duration = calculateDuration(value)
-
-    // Count up/down value
-    timeline.to(
-      valueElement,
-      {
-        textContent: Number(value),
-        duration: duration,
-        snap: { textContent: 1 },
-        ease: "power2.out"
-      },
-      "<"
-    )
+    // Count up/down value manually
+    const absValue = Math.abs(value)
+    for (let i = 1; i <= absValue; i++) {
+      const displayValue = negative ? -i : i
+      const position = i === 1 ? "<" : `+=${stepDelay}`
+      timeline.call(updateCountValue, [displayValue], position)
+    }
 
     timeline.to(
       outcomeElement,
