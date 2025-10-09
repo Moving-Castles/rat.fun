@@ -162,11 +162,16 @@
           const time = new Date(o?._createdAt).getTime()
           const valueChange = o?.roomValueChange || 0
 
+          console.log(o)
+
           return {
             time: time || o.time,
             valueChange: valueChange, // Store the change, not accumulated value
             eventType: o.eventType,
-            meta: { ...sanityRoomContent, ...o }
+            meta: {
+              ...sanityRoomContent,
+              ...o
+            }
           }
         })
 
@@ -338,8 +343,8 @@
               x2={innerWidth}
               y2={yScale(0)}
               stroke="var(--color-grey-mid)"
-              stroke-width="1"
-              stroke-dasharray="2,2"
+              stroke-width="2"
+              stroke-dasharray="4,4"
             />
 
             <!-- Cumulative profit/loss line -->
@@ -362,7 +367,7 @@
                   y2={height}
                   stroke="var(--color-grey-mid)"
                   stroke-width="2"
-                  stroke-dasharray="2,2"
+                  stroke-dasharray="4,4"
                 />
               {/if}
 
@@ -378,6 +383,7 @@
                   <circle
                     fill="var(--color-grey-light)"
                     stroke={focus === point.tripId || $focusEvent === point.index ? "white" : ""}
+                    stroke-width="2"
                     r="5"
                     cx={xScale(point.time)}
                     cy={yScale(point.value)}
@@ -386,6 +392,7 @@
                   <circle
                     fill="var(--color-grey-light)"
                     stroke={focus === point.tripId || $focusEvent === point.index ? "white" : ""}
+                    stroke-width="2"
                     r="5"
                     cx={xScale(point.time)}
                     cy={yScale(point.value)}
@@ -394,6 +401,7 @@
                   <circle
                     fill="var(--color-grey-light)"
                     stroke={focus === point.tripId || $focusEvent === point.index ? "white" : ""}
+                    stroke-width="2"
                     r="5"
                     cx={xScale(point.time)}
                     cy={yScale(point.value)}
@@ -402,6 +410,7 @@
                   <circle
                     fill="var(--color-grey-light)"
                     stroke={focus === point.tripId || $focusEvent === point.index ? "white" : ""}
+                    stroke-width="2"
                     r="5"
                     cx={xScale(point.time)}
                     cy={yScale(point.value)}
@@ -420,6 +429,7 @@
                       width={candleWidth}
                       height={candleHeight}
                       stroke={focus === point.tripId || $focusEvent === point.index ? "white" : ""}
+                      stroke-width="2"
                       fill={point.value < lastPoint.value
                         ? "var(--graph-color-down)"
                         : "var(--graph-color-up)"}

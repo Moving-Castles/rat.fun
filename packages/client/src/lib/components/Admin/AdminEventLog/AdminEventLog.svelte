@@ -17,7 +17,8 @@
 </script>
 
 {#snippet ratVisitEvent(p)}
-  <Icon name="Paw" width={10} /> {p.meta.ownerName} sent {p.meta.ratName} to trip #{p.meta.index}
+  <Icon name="Paw" address={p.meta.owner} width={10} />
+  {p.meta.playerName} sent {p.meta.ratName} to trip #{p.meta.index}
 {/snippet}
 
 {#snippet tripLiquidated(p)}
@@ -35,10 +36,10 @@
 <div class="admin-event-log">
   {#each eventData.toReversed().filter(p => p.eventType !== "baseline") as point}
     <p
+      class="event"
       data-tippy-content={point.meta.index}
       onpointerenter={() => ($focusEvent = point.index)}
       onpointerleave={() => ($focusEvent = -1)}
-      class="event"
       class:focus={$focusEvent === point.index}
     >
       {#if point.eventType === "trip_visit"}
