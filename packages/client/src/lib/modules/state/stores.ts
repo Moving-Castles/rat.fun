@@ -212,14 +212,3 @@ export const realisedProfitLoss = derived(
   [realisedBalance, realisedInvestment],
   ([$rb, $i]) => $rb - $i
 )
-
-export const untaxedRealisedInvestment = derived(playerLiquidatedTrips, $playerLiquidatedTrips =>
-  Object.values($playerLiquidatedTrips).reduce((a, b) => a + Number(b.tripCreationCost), 0)
-)
-export const untaxedRealisedBalance = derived(playerLiquidatedTrips, $playerLiquidatedTrips =>
-  Object.values($playerLiquidatedTrips).reduce((a, b) => a + untaxed(Number(b.liquidationValue)), 0)
-)
-export const untaxedRealisedProfitLoss = derived(
-  [untaxedRealisedBalance, untaxedRealisedInvestment],
-  ([$rb, $i]) => $rb - $i
-)

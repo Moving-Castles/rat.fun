@@ -8,10 +8,9 @@
     realisedProfitLoss,
     playerTrips
   } from "$lib/modules/state/stores"
-  import { BigButton } from "$lib/components/Shared"
+  import { BigButton, Tooltip } from "$lib/components/Shared"
   import { ProfitLossHistoryGraph } from "$lib/components/Admin"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
-  import tippy from "tippy.js"
 
   let { focus, graphData = $bindable(), onCreateTripClick } = $props()
 
@@ -29,12 +28,6 @@
   const realPlSymbolExplicit = derived(realPortfolioClass, $pc =>
     $pc === "neutral" ? "" : $pc === "upText" ? "+" : "-"
   )
-
-  $effect(() => {
-    tippy("[data-tippy-content]", {
-      allowHTML: true
-    })
-  })
 </script>
 
 <div bind:clientHeight class="admin-trip-monitor">
@@ -49,9 +42,11 @@
           >
           <span class="unit {$portfolioClass}">{CURRENCY_SYMBOL}</span>
           <div class="content {$portfolioClass} glow">
-            <h1 data-tippy-content="Unrealised P&L" class="">
-              {$plSymbolExplicit}{CURRENCY_SYMBOL}{Math.abs($profitLoss)}
-            </h1>
+            <Tooltip content="Unrealised P&L">
+              <h1 class="">
+                {$plSymbolExplicit}{CURRENCY_SYMBOL}{Math.abs($profitLoss)}
+              </h1>
+            </Tooltip>
           </div>
         </div>
       {:else}
@@ -142,11 +137,11 @@
         z-index: 0;
 
         &.upText {
-          color: var(--graph-color-up);
+          color: var(--color-up);
         }
 
         &.downText {
-          color: var(--graph-color-down);
+          color: var(--color-down);
         }
 
         vertical-align: sub;

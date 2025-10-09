@@ -82,11 +82,15 @@
 </script>
 
 <div class="admin-trip-table-container">
-  <p class="table-summary">
-    Active trips <span class={$portfolioClass}
-      >({#if $profitLoss < 0}-{/if}{CURRENCY_SYMBOL}{Math.abs($profitLoss)})</span
-    >
-  </p>
+  <div class="table-summary">
+    <div class="left">Active trips</div>
+    <div class="right">
+      Profit:
+      <span class={$portfolioClass}
+        >{#if $profitLoss < 0}-{/if}{CURRENCY_SYMBOL}{Math.abs($profitLoss)}</span
+      >
+    </div>
+  </div>
   <table class="admin-trip-table">
     <thead>
       <tr>
@@ -153,7 +157,9 @@
   }
 
   .table-summary {
-    padding: 0 10px;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
   }
 
   .no-data {

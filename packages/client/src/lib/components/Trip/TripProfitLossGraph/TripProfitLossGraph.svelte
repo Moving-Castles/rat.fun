@@ -2,20 +2,16 @@
   import type { PlotPoint } from "$lib/components/Trip/TripGraph/types"
   import { gamePercentagesConfig } from "$lib/modules/state/stores"
 
-  import { onMount, onDestroy } from "svelte"
+  import { onMount } from "svelte"
 
-  import { playSound } from "$lib/modules/sound"
-
+  import { Tooltip } from "$lib/components/Shared"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
-  import { focusEvent } from "$lib/modules/ui/state.svelte"
   import { blockNumberToTimestamp } from "$lib/modules/utils"
   import { staticContent } from "$lib/modules/content"
   import { blockNumber } from "$lib/modules/network"
   import { scaleTime, scaleLinear } from "d3-scale"
   import { max, min } from "d3-array"
   import { line } from "d3-shape"
-
-  import "tippy.js/dist/tippy.css" // optional for styling
 
   let {
     trip,
@@ -31,8 +27,7 @@
 
   // Add reactive timestamp for real-time updates
   let currentTime = $state(Date.now())
-
-  let backgroundMusic: Howl | undefined = $state()
+  let focusEvent = $state(-1)
 
   // Layout setup
   let width = $state(0) // width will be set by the clientWidth
@@ -86,7 +81,7 @@
     maxValue = Number(max(yScaleData, (d: PlotPoint) => +d.value) ?? 0)
     minValue = Number(min(yScaleData, (d: PlotPoint) => +d.value) ?? 0)
 
-    const fraction = (maxValue - minValue) / 12
+    const fraction = (maxValue - minValue) / 9
 
     return scaleLinear()
       .domain([minValue - fraction, maxValue + fraction])
@@ -95,9 +90,9 @@
 
   /** Plot data for the single trip */
   let plotData = $derived.by(() => {
-    let sanityTripContent = staticContent?.trips?.find(r => r.title == tripId)
+    let sanityTripContent = $staticContent?.trips?.find(r => r.title == tripId)
 
-    const outcomes = staticContent?.outcomes?.filter(o => o.tripId == tripId) || []
+    const outcomes = $staticContent?.outcomes?.filter(o => o.tripId == tripId) || []
 
     // Sort the outcomes in order of creation
     outcomes.sort((a, b) => {
@@ -247,20 +242,11 @@
 
   // Setup real-time updates
   onMount(() => {
-    backgroundMusic = playSound("ratfunMusic", "admin", true)
     const interval = setInterval(() => {
       currentTime = Date.now()
     }, 1000)
 
     return () => clearInterval(interval)
-  })
-
-  onDestroy(() => {
-    // Stop background music
-    if (backgroundMusic) {
-      backgroundMusic.stop()
-      backgroundMusic = undefined
-    }
   })
 </script>
 
@@ -313,67 +299,72 @@
 
             {#each profitLossOverTime as point, i (point.time)}
               {@const lastPoint = profitLossOverTime?.[i - 1]}
-              <g
-                onpointerenter={() => {
-                  $focusEvent = point.index
-                }}
-                onpointerleave={() => ($focusEvent = -1)}
-                data-tippy-content={generateTooltipContent(point)}
+              <Tooltip
+                content={generateTooltipContent(point)}
+                svg={true}
+                props={{ allowHTML: true }}
               >
-                {#if point.eventType === "trip_death"}
-                  <circle
-                    fill="var(--color-grey-light)"
-                    stroke={$focusEvent === point.index ? "white" : ""}
-                    r="5"
-                    cx={xScale(point.time)}
-                    cy={yScale(point.value)}
-                  ></circle>
-                {:else if point.eventType === "trip_liquidated"}
-                  <circle
-                    fill="var(--color-grey-light)"
-                    stroke={$focusEvent === point.index ? "white" : ""}
-                    r="5"
-                    cx={xScale(point.time)}
-                    cy={yScale(point.value)}
-                  ></circle>
-                {:else if point.eventType === "trip_created"}
-                  <circle
-                    fill="var(--color-grey-light)"
-                    stroke={$focusEvent === point.index ? "white" : ""}
-                    r="5"
-                    cx={xScale(point.time)}
-                    cy={yScale(point.value)}
-                  ></circle>
-                {:else}
-                  <circle
-                    fill="var(--color-grey-light)"
-                    stroke={$focusEvent === point.index ? "white" : ""}
-                    r="5"
-                    cx={xScale(point.time)}
-                    cy={yScale(point.value)}
-                  ></circle>
-                {/if}
-                {#if lastPoint}
-                  {@const candleHeight = Math.abs(yScale(point.value) - yScale(lastPoint.value))}
-                  {@const candleWidth = innerWidth / 80}
-                  <!-- Draw "candle" -->
-                  {#if point.eventType === "trip_death" || point.eventType === "trip_visit"}
-                    <rect
-                      x={xScale(point.time) - candleWidth / 2}
-                      y={point.value < lastPoint.value
-                        ? yScale(lastPoint.value)
-                        : yScale(lastPoint.value) - candleHeight}
-                      width={candleWidth}
-                      height={candleHeight}
-                      stroke={$focusEvent === point.index ? "white" : ""}
-                      fill={point.value < lastPoint.value
-                        ? "var(--graph-color-down)"
-                        : "var(--graph-color-up)"}
-                    >
-                    </rect>
+                <g
+                  onpointerenter={() => {
+                    focusEvent = point.index
+                  }}
+                  onpointerleave={() => (focusEvent = -1)}
+                >
+                  {#if point.eventType === "trip_death"}
+                    <circle
+                      fill="var(--color-grey-light)"
+                      stroke={focusEvent === point.index ? "white" : ""}
+                      r="5"
+                      cx={xScale(point.time)}
+                      cy={yScale(point.value)}
+                    ></circle>
+                  {:else if point.eventType === "trip_liquidated"}
+                    <circle
+                      fill="var(--color-grey-light)"
+                      stroke={focusEvent === point.index ? "white" : ""}
+                      r="5"
+                      cx={xScale(point.time)}
+                      cy={yScale(point.value)}
+                    ></circle>
+                  {:else if point.eventType === "trip_created"}
+                    <circle
+                      fill="var(--color-grey-light)"
+                      stroke={focusEvent === point.index ? "white" : ""}
+                      r="5"
+                      cx={xScale(point.time)}
+                      cy={yScale(point.value)}
+                    ></circle>
+                  {:else}
+                    <circle
+                      fill="var(--color-grey-light)"
+                      stroke={focusEvent === point.index ? "white" : ""}
+                      r="5"
+                      cx={xScale(point.time)}
+                      cy={yScale(point.value)}
+                    ></circle>
                   {/if}
-                {/if}
-              </g>
+                  {#if lastPoint}
+                    {@const candleHeight = Math.abs(yScale(point.value) - yScale(lastPoint.value))}
+                    {@const candleWidth = innerWidth / 80}
+                    <!-- Draw "candle" -->
+                    {#if point.eventType === "trip_death" || point.eventType === "trip_visit"}
+                      <rect
+                        x={xScale(point.time) - candleWidth / 2}
+                        y={point.value < lastPoint.value
+                          ? yScale(lastPoint.value)
+                          : yScale(lastPoint.value) - candleHeight}
+                        width={candleWidth}
+                        height={candleHeight}
+                        stroke={focusEvent === point.index ? "white" : ""}
+                        fill={point.value < lastPoint.value
+                          ? "var(--color-down)"
+                          : "var(--color-up)"}
+                      >
+                      </rect>
+                    {/if}
+                  {/if}
+                </g>
+              </Tooltip>
             {/each}
           </g>
         {/if}

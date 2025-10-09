@@ -54,7 +54,7 @@
     text-align: center;
     background-image: url("/images/texture-2.png");
     background-size: 200px;
-    height: calc(var(--game-window-height) - 120px);
+    height: var(--game-window-main-height);
 
     .button-container {
       overflow: hidden;

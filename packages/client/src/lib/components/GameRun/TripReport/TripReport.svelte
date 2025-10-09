@@ -6,10 +6,9 @@
   import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
   import { Howl } from "howler"
   import { gsap } from "gsap"
+  import { backgroundMusic } from "$lib/modules/sound/stores"
 
   let { result }: { result: EnterTripReturnValue } = $props()
-
-  let backgroundMusic: Howl | undefined = $state()
 
   // ** Root Timeline Management **
   const rootTimeline = gsap.timeline()
@@ -89,14 +88,15 @@
   const setupTripReport = () => {
     playSound("ratfunTransitions", "tripReportEnter")
     shaderManager.setShader("blank")
-    backgroundMusic = playSound("ratfunMusic", "tripReport", true)
+    $backgroundMusic = playSound("ratfunMusic", "tripReport", true)
   }
 
   const teardownTripReport = () => {
     // Stop background music
     if (backgroundMusic) {
-      backgroundMusic.stop()
-      backgroundMusic = undefined
+      console.log(3)
+      $backgroundMusic.stop()
+      $backgroundMusic = undefined
     }
 
     // Stop animation

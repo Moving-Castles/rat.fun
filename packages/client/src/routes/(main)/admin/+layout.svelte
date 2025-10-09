@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from "svelte"
   import { goto } from "$app/navigation"
   import { fly } from "svelte/transition"
   import { page } from "$app/state"
@@ -12,6 +13,8 @@
     AdminTripTable,
     AdminPastTripTable
   } from "$lib/components/Admin"
+  import { backgroundMusic } from "$lib/modules/sound/stores"
+  import { playSound } from "$lib/modules/sound"
 
   type PendingTrip = { prompt: string; cost: number } | null
 
@@ -33,6 +36,14 @@
           goto("/")
         }
       }
+    }
+  })
+
+  onMount(() => {
+    if ($backgroundMusic?._src !== "/sounds/ratfun/music/admin.mp3") {
+      $backgroundMusic?.stop()
+      $backgroundMusic = undefined
+      $backgroundMusic = playSound("ratfunMusic", "admin", true)
     }
   })
 </script>
@@ -77,7 +88,7 @@
 </div>
 
 {#if children}
-  <div transition:fly|global={{ x: 800, opacity: 1 }} class="sidebar open">
+  <div transition:fly|global={{ x: 1000, opacity: 1, duration: 100 }} class="sidebar open">
     {@render children?.()}
   </div>
 {/if}
@@ -138,7 +149,7 @@
   .sidebar {
     position: fixed;
     height: 100dvh;
-    width: 800px;
+    width: 1000px;
     overflow-x: hidden;
     z-index: 999;
     top: 0;

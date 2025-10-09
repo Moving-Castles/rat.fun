@@ -1,9 +1,8 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte"
   import { playSound } from "$lib/modules/sound"
+  import { backgroundMusic } from "$lib/modules/sound/stores"
   import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
-
-  let backgroundMusic: Howl | undefined = $state()
 
   const { onComplete, result }: { onComplete: () => void; result: null | any } = $props()
 
@@ -23,7 +22,8 @@
   onMount(() => {
     playSound("ratfunTransitions", "tripProcessingEnter")
     shaderManager.setShader("vortex")
-    backgroundMusic = playSound("ratfunMusic", "tripProcessing", true)
+
+    $backgroundMusic = playSound("ratfunMusic", "tripProcessing", true)
 
     // Start timer
     timerInterval = setInterval(() => {
@@ -37,9 +37,10 @@
 
   onDestroy(async () => {
     // Stop background music
-    if (backgroundMusic) {
-      backgroundMusic.stop()
-      backgroundMusic = undefined
+    if ($backgroundMusic) {
+      console.log(2)
+      $backgroundMusic.stop()
+      $backgroundMusic = undefined
     }
   })
 </script>

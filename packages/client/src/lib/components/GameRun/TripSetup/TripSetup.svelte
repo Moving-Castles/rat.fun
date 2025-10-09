@@ -7,11 +7,11 @@
   import { terminalTyper } from "$lib/modules/terminal-typer/index"
   import { generateTripSetupOutput } from "./tripSetupOutput"
   import { playSound } from "$lib/modules/sound"
+  import { backgroundMusic } from "$lib/modules/sound/stores"
 
   gsap.registerPlugin(TextPlugin)
 
   let terminalBoxElement = $state<HTMLDivElement>()
-  let backgroundMusic: Howl | undefined = $state()
 
   const {
     onComplete,
@@ -24,7 +24,7 @@
   const SETUP_DURATION = 5000
 
   onMount(async () => {
-    backgroundMusic = playSound("ratfunMusic", "tripSetup", true)
+    $backgroundMusic = playSound("ratfunMusic", "tripSetup", true)
 
     setTimeout(() => {
       onComplete()
@@ -37,9 +37,10 @@
 
   onDestroy(() => {
     // Stop background music
-    if (backgroundMusic) {
-      backgroundMusic.stop()
-      backgroundMusic = undefined
+    if ($backgroundMusic) {
+      console.log(4)
+      $backgroundMusic.stop()
+      $backgroundMusic = undefined
     }
   })
 </script>

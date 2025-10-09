@@ -5,9 +5,6 @@
   import { scaleTime, scaleLinear } from "d3-scale"
   import { max, min } from "d3-array"
   import { line } from "d3-shape"
-  import tippy from "tippy.js"
-
-  import "tippy.js/dist/tippy.css" // optional for styling
 
   let {
     smallIcons = false,
@@ -77,17 +74,6 @@
           .y((d: PlotPoint) => yScale(+d.value))
       : null
   )
-
-  // ???
-  $effect(() => {
-    if (plotData && width && xScale && yScale && lineGenerator) {
-      setTimeout(() => {
-        tippy("[data-tippy-content]", {
-          allowHTML: true
-        })
-      })
-    }
-  })
 
   const generateTooltipContent = (point: PlotPoint) => {
     const balance = point.meta?.balance || 0

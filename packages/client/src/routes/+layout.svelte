@@ -1,6 +1,8 @@
 <script lang="ts">
   import "../app.css"
   import "tippy.js/dist/tippy.css"
+  import "tippy.js/dist/backdrop.css"
+  import "tippy.js/animations/shift-away.css"
 
   import type { LayoutProps, Snapshot } from "./$types"
   import { initSound } from "$lib/modules/sound"

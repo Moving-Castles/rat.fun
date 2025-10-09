@@ -1,6 +1,6 @@
 <script lang="ts">
   import { playSound } from "$lib/modules/sound"
-  import { tippy } from "svelte-tippy"
+  import { Tooltip } from "$lib/components/Shared"
 
   let {
     text,
@@ -22,13 +22,13 @@
     playSound("ratfunUI", "bigButtonUp")
     onclick()
   }
-
-  let conditionalAction = $derived(tippyText ? tippy : () => {})
 </script>
 
-<button class:disabled {onmouseup} {onmousedown} use:conditionalAction={{ content: tippyText }}>
-  <span class="button-text">{text}</span>
-</button>
+<Tooltip content={tippyText}>
+  <button class:disabled {onmouseup} {onmousedown}>
+    <span class="button-text">{text}</span>
+  </button>
+</Tooltip>
 
 <style lang="scss">
   button {

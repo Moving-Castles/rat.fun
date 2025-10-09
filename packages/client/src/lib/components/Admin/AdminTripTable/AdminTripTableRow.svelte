@@ -1,19 +1,13 @@
 <script lang="ts">
   import { SmallButton } from "$lib/components/Shared"
-  import { ProfitLossGraph } from "$lib/components/Trip"
+  import { TripProfitLossSpark } from "$lib/components/Trip"
   import { goto } from "$app/navigation"
-  import { blocksToReadableTime } from "$lib/modules/utils"
-  import { blockNumber } from "$lib/modules/network"
-  import { gamePercentagesConfig } from "$lib/modules/state/stores"
 
   let { trip, data, id, onpointerenter, onpointerleave } = $props()
 
-  const untaxed = (value: number) =>
-    Math.floor((Number(value) * 100) / (100 - Number($gamePercentagesConfig.taxationCloseTrip)))
-
   let profitLoss = $derived(
     trip.liquidationBlock
-      ? untaxed(Number(trip.liquidationValue)) - Number(trip.tripCreationCost)
+      ? Number(trip.liquidationValue) - Number(trip.tripCreationCost)
       : Number(trip.balance) - Number(trip.tripCreationCost)
   )
   let liquidated = $derived(trip.liquidationBlock)
@@ -33,7 +27,7 @@
   </td>
   <td class="cell-visits">{trip.visitCount}</td>
   <td class="cell-profit">
-    {#if liquidated}<span> {untaxed(trip.liquidationValue)}</span><span class="grey"
+    {#if liquidated}<span> {trip.liquidationValue}</span><span class="grey"
         >/{trip.tripCreationCost}
       </span>
     {:else}
@@ -46,7 +40,7 @@
   <td class="cell-graph">
     {#if data}
       <div class="mini-graph">
-        <ProfitLossGraph smallIcons height={24} plotData={data} isEmpty={data.length === 0} />
+        <TripProfitLossSpark smallIcons height={24} plotData={data} isEmpty={data.length === 0} />
       </div>
     {:else}
       <div class="mini-graph" />
@@ -126,11 +120,11 @@
     }
 
     .up {
-      color: var(--graph-color-up);
+      color: var(--color-up);
     }
 
     .down {
-      color: var(--graph-color-down);
+      color: var(--color-down);
     }
 
     .grey {

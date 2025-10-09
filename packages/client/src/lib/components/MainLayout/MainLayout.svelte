@@ -1,8 +1,7 @@
 <script lang="ts">
-  import { ENVIRONMENT } from "$lib/mud/enums"
   import { TopBar } from "$lib/components/Shared"
 
-  let { children }: { children: import("svelte").Snippet; environment: ENVIRONMENT } = $props()
+  let { children }: { children: import("svelte").Snippet } = $props()
 </script>
 
 <div class="main-area">

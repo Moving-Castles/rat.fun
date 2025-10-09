@@ -1,14 +1,10 @@
 <script lang="ts">
-  import "../../app.css"
-  import "tippy.js/dist/tippy.css"
   import type { LayoutProps } from "./$types"
   import MainLayout from "$lib/components/MainLayout/MainLayout.svelte"
 
-  let { children, data }: LayoutProps = $props()
-
-  const { environment } = data
+  let { children }: LayoutProps = $props()
 </script>
 
-<MainLayout {environment}>
+<MainLayout>
   {@render children?.()}
 </MainLayout>

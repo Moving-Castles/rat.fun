@@ -9,15 +9,15 @@
   import { staticContent } from "$lib/modules/content"
   import { page } from "$app/state"
   import { goto } from "$app/navigation"
-
   import {
-    TripPreviewHeader,
     TripPreviewPrompt,
-    TripPreviewGraph,
-    TripPreviewEventLog,
+    TripProfitLossGraph,
     TripConfirmLiquidation,
     LiquidateTrip
   } from "$lib/components/Trip"
+  import { AdminTripPreviewHeader } from "$lib/components/Admin"
+  import { AdminEventLog } from "$lib/components/Admin"
+  import { playSound } from "$lib/modules/sound"
 
   let {
     tripId,
@@ -26,6 +26,7 @@
   }: { tripId: Hex; trip: Trip; sanityTripContent: SanityTrip } = $props()
 
   let tripOutcomes = $state<Outcome[]>()
+  let graphData = $state([])
 
   // Show liquidate button if:
   //  * - Trip is not depleted
@@ -47,17 +48,30 @@
   })
 </script>
 
-<a class="back-button" href="/admin">Back</a>
+<a class="back-button" href="/admin" onclick={() => playSound("ratfunUI", "boing")}>
+  <div>Back</div>
+</a>
 {#if !liquidating}
   <div class="trip-inner-container" class:depleted={!showLiquidateButton}>
-    <TripPreviewGraph {trip} {tripOutcomes} {sanityTripContent} />
-    <TripPreviewPrompt {trip} />
-
+    <div class="left">
+      <TripProfitLossGraph {trip} {tripId} bind:graphData />
+    </div>
+    <div class="right">
+      <AdminEventLog eventData={graphData} />
+    </div>
     {#if showLiquidateButton}
-      <LiquidateTrip onclick={() => (liquidating = true)} {tripId} {trip} isOwnTripListing={true} />
+      <div class="full">
+        <LiquidateTrip
+          onclick={() => (liquidating = true)}
+          {tripId}
+          {trip}
+          isOwnTripListing={true}
+        />
+      </div>
     {/if}
-
-    <TripPreviewEventLog {tripId} {tripOutcomes} />
+    <div class="full">
+      <AdminTripPreviewHeader {sanityTripContent} {trip} />
+    </div>
   </div>
 {:else}
   <TripConfirmLiquidation
@@ -82,6 +96,27 @@
     max-height: 100%;
     padding-bottom: calc(var(--pane-switch-height) + var(--world-prompt-box-height) + 20px);
     overflow-x: hidden;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: 400px auto;
+    grid-auto-rows: 1fr;
+
+    .left {
+      grid-column: 1 / 9;
+    }
+    .right {
+      grid-column: 9 / 13;
+    }
+    .left-smol {
+      grid-column: 1 / 5;
+    }
+    .right-big {
+      grid-column: 5 / 13;
+    }
+
+    .full {
+      grid-column: 1 / 13;
+    }
 
     &.depleted {
       filter: grayscale(0.8) contrast(0.7);
@@ -102,6 +137,7 @@
     text-transform: uppercase;
     background: var(--background-semi-transparent);
     z-index: 10;
+    text-align: center;
 
     &:hover {
       color: var(--white);

@@ -17,6 +17,7 @@
   import { initWalletNetwork } from "$lib/initWalletNetwork"
   import { entryKitSession } from "$lib/modules/entry-kit/stores"
   import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
+  import { backgroundMusic } from "$lib/modules/sound/stores"
 
   import Introduction from "$lib/components/Spawn/Introduction/Introduction.svelte"
   import ConnectWalletForm from "$lib/components/Spawn/ConnectWalletForm/ConnectWalletForm.svelte"
@@ -29,8 +30,6 @@
   }>()
 
   let currentState = $state<SPAWN_STATE>(SPAWN_STATE.INTRODUCTION)
-
-  let backgroundMusic: Howl | undefined = $state()
 
   const onIntroductionComplete = () => (currentState = SPAWN_STATE.CONNECT_WALLET)
 
@@ -92,7 +91,7 @@
     // And music might be started but onDestroy is not called
     // Only start music if the UI state has not already changed from SPAWNING
     if ($UIState === UI.SPAWNING) {
-      backgroundMusic = playSound("ratfunMusic", "spawn")
+      $backgroundMusic = playSound("ratfunMusic", "spawn")
     }
 
     // HACK
@@ -103,9 +102,10 @@
 
   onDestroy(() => {
     // Stop background music
-    if (backgroundMusic) {
-      backgroundMusic.stop()
-      backgroundMusic = undefined
+    if ($backgroundMusic) {
+      console.log(6)
+      $backgroundMusic.stop()
+      $backgroundMusic = undefined
     }
   })
 </script>

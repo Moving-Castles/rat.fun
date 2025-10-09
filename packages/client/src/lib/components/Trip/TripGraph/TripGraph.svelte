@@ -5,9 +5,7 @@
   import { scaleTime, scaleLinear } from "d3-scale"
   import { max } from "d3-array"
   import { line } from "d3-shape"
-  import tippy from "tippy.js"
-
-  import "tippy.js/dist/tippy.css" // optional for styling
+  import { Tooltip } from "$lib/components/Shared"
 
   let {
     smallIcons = false,
@@ -84,17 +82,6 @@
     ]
   })
 
-  // ???
-  $effect(() => {
-    if (plotData && width && xScale && yScale && lineGenerator) {
-      setTimeout(() => {
-        tippy("[data-tippy-content]", {
-          allowHTML: true
-        })
-      })
-    }
-  })
-
   const generateTooltipContent = (point: PlotPoint) => {
     let toolTipContent = `<div>Trip balance: <span class="tooltip-value">${CURRENCY_SYMBOL}${point?.meta?.tripValue}</span>`
 
@@ -147,32 +134,34 @@
             {/if}
 
             {#each plotData as point (point.time)}
-              <g data-tippy-content={generateTooltipContent(point)}>
-                {#if !point?.meta?.tripValueChange || point?.meta?.tripValueChange === 0}
-                  <circle
-                    fill="var(--color-value)"
-                    r={smallIcons ? 3 : 6}
-                    cx={xScale(point.time)}
-                    cy={yScale(point.value)}
-                  ></circle>
-                {:else if point?.meta?.tripValueChange > 0}
-                  <polygon
-                    transform="translate({xScale(point.time)}, {yScale(
-                      point.value
-                    )}) scale({smallIcons ? 1 : 1}, {smallIcons ? 1.5 : 3})"
-                    fill="var(--color-value-up)"
-                    points="-5 2.5, 0 -5, 5 2.5"
-                  />
-                {:else}
-                  <polygon
-                    transform="translate({xScale(point.time)}, {yScale(
-                      point.value
-                    )}) scale({smallIcons ? 2 : 1}, {smallIcons ? 1.5 : 3})"
-                    fill="var(--color-value-down)"
-                    points="-5 -2.5, 0 5, 5 -2.5"
-                  />
-                {/if}
-              </g>
+              <Tooltip content={generateTooltipContent(point)} svg={true} props={{ allowHTML: true }}>
+                <g>
+                  {#if !point?.meta?.tripValueChange || point?.meta?.tripValueChange === 0}
+                    <circle
+                      fill="var(--color-value)"
+                      r={smallIcons ? 3 : 6}
+                      cx={xScale(point.time)}
+                      cy={yScale(point.value)}
+                    ></circle>
+                  {:else if point?.meta?.tripValueChange > 0}
+                    <polygon
+                      transform="translate({xScale(point.time)}, {yScale(
+                        point.value
+                      )}) scale({smallIcons ? 1 : 1}, {smallIcons ? 1.5 : 3})"
+                      fill="var(--color-value-up)"
+                      points="-5 2.5, 0 -5, 5 2.5"
+                    />
+                  {:else}
+                    <polygon
+                      transform="translate({xScale(point.time)}, {yScale(
+                        point.value
+                      )}) scale({smallIcons ? 2 : 1}, {smallIcons ? 1.5 : 3})"
+                      fill="var(--color-value-down)"
+                      points="-5 -2.5, 0 5, 5 -2.5"
+                    />
+                  {/if}
+                </g>
+              </Tooltip>
             {/each}
           </g>
         </svg>

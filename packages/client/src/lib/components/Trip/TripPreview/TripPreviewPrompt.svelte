@@ -26,7 +26,6 @@
     font-family: var(--special-font-stack);
     background: var(--color-alert);
     height: 100%;
-    max-height: 300px;
     background: url("/images/texture-2.png");
 
     .content {

@@ -1,11 +1,6 @@
 <script lang="ts">
   import type { PlotPoint } from "$lib/components/Trip/TripGraph/types"
-  import {
-    playerLiquidatedTrips,
-    profitLoss,
-    realisedProfitLoss,
-    untaxedRealisedProfitLoss
-  } from "$lib/modules/state/stores"
+  import { playerLiquidatedTrips, profitLoss, realisedProfitLoss } from "$lib/modules/state/stores"
   import { derived } from "svelte/store"
   import {
     entriesChronologically,
@@ -18,7 +13,6 @@
   import { gamePercentagesConfig } from "$lib/modules/state/stores"
   import { staticContent } from "$lib/modules/content"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
-  import tippy from "tippy.js"
 
   import AdminTripTableRow from "../AdminTripTable/AdminTripTableRow.svelte"
 
@@ -42,6 +36,8 @@
     sortFunction = sortDirection === "asc" ? entriesChronologically : entriesChronologicallyDesc
     sortDirection = sortDirection === "asc" ? "desc" : "asc"
   }
+
+  const sign = (num: number) => (num === 0 ? "" : num > 0 ? "+" : "-")
 
   let plots: Record<string, PlotPoint[]> = $derived.by(() => {
     const result = Object.fromEntries(
@@ -84,44 +80,51 @@
     )
   )
 
-  const untaxed = (value: number) =>
-    Math.floor((Number(value) * 100) / (100 - Number($gamePercentagesConfig.taxationCloseTrip)))
-
   let tripList = $derived.by(() => {
     let entries = Object.entries($playerLiquidatedTrips)
 
     return entries.sort(sortFunction)
   })
 
-  let fees = $derived($realisedProfitLoss - $untaxedRealisedProfitLoss)
+  let taxes = $derived(
+    Math.ceil(
+      Object.values($playerLiquidatedTrips).reduce(
+        (total, trip) =>
+          total + (Number(trip.liquidationValue) * Number(trip.liquidationTaxPercentage)) / 100,
+        0
+      )
+    )
+  )
 
-  const portfolioClass = derived([untaxedRealisedProfitLoss], ([$untaxedRealisedProfitLoss]) => {
-    if ($untaxedRealisedProfitLoss === 0) return "neutral"
-    return $untaxedRealisedProfitLoss > 0 ? "upText" : "downText"
-  })
-
-  const feeClass = derived([realisedProfitLoss], ([$realisedProfitLoss]) => {
+  const portfolioClass = derived([realisedProfitLoss], ([$realisedProfitLoss]) => {
     if ($realisedProfitLoss === 0) return "neutral"
     return $realisedProfitLoss > 0 ? "upText" : "downText"
   })
 
-  $effect(() => {
-    tippy("[data-tippy-content]", {
-      followCursor: true,
-      allowHTML: true
-    })
+  const taxClass = derived([realisedProfitLoss], ([$realisedProfitLoss]) => {
+    if ($realisedProfitLoss === 0) return "neutral"
+    return $realisedProfitLoss > 0 ? "upText" : "downText"
   })
 </script>
 
 <div class="admin-trip-table-container">
-  <p class="table-summary">
-    Liquidated trips <span class={$portfolioClass}
-      >({#if $untaxedRealisedProfitLoss < 0}-{/if}{CURRENCY_SYMBOL}{Math.abs(
-        $untaxedRealisedProfitLoss
-      )})</span
-    >
-    <span>Fee: <span class={$feeClass}>{CURRENCY_SYMBOL}{Math.abs(fees)}</span></span>
-  </p>
+  <div class="table-summary">
+    <div>Liquidated trips</div>
+
+    <div>
+      <span
+        >Profit: {CURRENCY_SYMBOL}{sign($realisedProfitLoss - taxes)}{Math.abs(
+          $realisedProfitLoss - taxes
+        )}</span
+      >
+      <span class="grey">
+        (<span class={$portfolioClass}
+          >{#if $realisedProfitLoss < 0}-{/if}{CURRENCY_SYMBOL}{Math.abs($realisedProfitLoss)}</span
+        >
+        <span>- taxes <span class={$taxClass}>{CURRENCY_SYMBOL}{Math.abs(taxes)}</span></span>)
+      </span>
+    </div>
+  </div>
   {#if tripList?.length > 0}
     <table class="admin-trip-table">
       <thead>
@@ -240,7 +243,9 @@
   }
 
   .table-summary {
-    padding: 0 10px;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
   }
 
   .downText {
@@ -248,6 +253,10 @@
   }
 
   .upText {
-    color: var(--graph-color-up);
+    color: var(--color-up);
+  }
+
+  .grey {
+    opacity: 0.4;
   }
 </style>

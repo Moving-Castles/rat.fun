@@ -1,4 +1,5 @@
 export { default as AdminTripPreview } from "./AdminTripPreview/AdminTripPreview.svelte"
+export { default as AdminTripPreviewHeader } from "./AdminTripPreview/AdminTripPreviewHeader.svelte"
 export { default as CreateTrip } from "./CreateTrip/CreateTrip.svelte"
 export { default as AdminTripItem } from "./AdminTripItem/AdminTripItem.svelte"
 export { default as AdminTripMonitor } from "./AdminTripMonitor/AdminTripMonitor.svelte"

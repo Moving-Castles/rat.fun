@@ -22,12 +22,15 @@
     transitionTo,
     resetRatBoxState
   } from "$lib/components/Rat/state.svelte"
-
-  let backgroundMusic: Howl | undefined = $state()
+  import { backgroundMusic } from "$lib/modules/sound/stores"
 
   onMount(() => {
-    backgroundMusic = playSound("ratfunMusic", "main", true)
     shaderManager.setShader("clouds", "inverted")
+    if ($backgroundMusic?._src !== "/sounds/ratfun/music/main.mp3") {
+      $backgroundMusic?.stop()
+      $backgroundMusic = undefined
+      $backgroundMusic = playSound("ratfunMusic", "main", true)
+    }
 
     // Set state to RAT_BOX_STATE.INIT
     resetRatBoxState()
@@ -51,9 +54,10 @@
 
   onDestroy(() => {
     // Stop background music
-    if (backgroundMusic) {
-      backgroundMusic.stop()
-      backgroundMusic = undefined
+    if ($backgroundMusic) {
+      console.log(5)
+      $backgroundMusic.stop()
+      $backgroundMusic = undefined
     }
   })
 </script>
