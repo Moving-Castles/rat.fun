@@ -162,8 +162,6 @@
           const time = new Date(o?._createdAt).getTime()
           const valueChange = o?.roomValueChange || 0
 
-          console.log(o)
-
           return {
             time: time || o.time,
             valueChange: valueChange, // Store the change, not accumulated value

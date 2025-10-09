@@ -1,11 +1,7 @@
 <script lang="ts">
-  import { onMount } from "svelte"
+  import { onMount, onDestroy } from "svelte"
   import { gsap } from "gsap"
-  import {
-    playerERC20Balance,
-    previousPlayerERC20Balance,
-    isFirstBalanceLoad
-  } from "$lib/modules/erc20Listener/stores"
+  import { playerERC20Balance } from "$lib/modules/erc20Listener/stores"
   import { tippy } from "svelte-tippy"
   import { get } from "svelte/store"
   import { playSound } from "$lib/modules/sound"
@@ -15,6 +11,8 @@
   // Element references
   let balanceElement = $state<HTMLSpanElement | null>(null)
   let containerElement = $state<HTMLDivElement | null>(null)
+  let previousValue = $state<null | number>(null)
+  let updates = $state(0)
 
   // Calculate animation duration based on value change
   function calculateDuration(value: number) {
@@ -25,12 +23,16 @@
 
   // Animate balance change
   function animateBalanceChange(newBalance: number, difference: number) {
+    console.log("3. Animate to", newBalance, difference)
     if (!balanceElement || !containerElement) {
+      console.log("Elements not ready", { balanceElement, containerElement })
       return
     }
 
     const isPositive = difference > 0
     const duration = calculateDuration(difference)
+
+    console.log("duration", duration)
 
     // Create timeline for the animation
     const timeline = gsap.timeline()
@@ -45,7 +47,7 @@
       duration: 0
     })
 
-    // Animate the count up/down
+    // Animate the count up/down - use element reference instead of selector
     timeline.to(
       balanceElement,
       {
@@ -70,31 +72,24 @@
   }
 
   onMount(() => {
-    // Listen to changes to the balance
-    playerERC20Balance.subscribe(newBalance => {
-      console.log("!!!! playerERC20Balance.subscribe triggered")
-      const previousBalance = get(previousPlayerERC20Balance)
-      const firstBalanceLoad = get(isFirstBalanceLoad)
-      console.log("0. firstBalanceLoad", firstBalanceLoad)
-      console.log("1. newBalance", newBalance)
-      console.log("2. previousBalance", previousBalance)
+    const unsubscribe = playerERC20Balance.subscribe(updatedValue => {
+      if (previousValue === null || updatedValue === previousValue || updates < 2) {
+        previousValue = updatedValue
 
-      // Only animate if the balance has changed
-      if (previousBalance !== newBalance) {
-        // Skip animation on first load
-        if (firstBalanceLoad) {
-          // Set directly without animation
-          if (balanceElement) {
-            balanceElement.textContent = newBalance.toString()
-          }
-          isFirstBalanceLoad.set(false)
-        } else {
-          // Animate subsequent changes
-          animateBalanceChange(newBalance, newBalance - previousBalance)
+        if (balanceElement) {
+          balanceElement.innerHTML = updatedValue
         }
-        previousPlayerERC20Balance.set(newBalance)
+      } else {
+        animateBalanceChange(updatedValue, updatedValue - previousValue)
+        previousValue = updatedValue
       }
+      updates++
     })
+
+    return () => {
+      console.log("BalanceBox destroyed")
+      unsubscribe()
+    }
   })
 </script>
 
@@ -112,7 +107,7 @@
       <span>
         <CurrencySymbol />
         <span bind:this={balanceElement}>
-          {$previousPlayerERC20Balance}
+          <!-- {$playerERC20Balance} -->
         </span>
       </span>
     </div>
