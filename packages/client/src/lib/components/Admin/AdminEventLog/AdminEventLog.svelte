@@ -2,6 +2,7 @@
   import { Icon } from "$lib/components/Shared"
   import { timeSince } from "$lib/modules/utils"
   import { adminUnlockedAt, focusEvent } from "$lib/modules/ui/state.svelte"
+  import { goto } from "$app/navigation"
   import tippy from "tippy.js"
 
   let { eventData, focus = $bindable() } = $props()
@@ -12,8 +13,6 @@
       allowHTML: true
     })
   })
-
-  $inspect(eventData)
 </script>
 
 {#snippet ratVisitEvent(p)}
@@ -35,7 +34,12 @@
 
 <div class="admin-event-log">
   {#each eventData.toReversed().filter(p => p.eventType !== "baseline") as point}
-    <p
+    <a
+      onpointerup={e => {
+        if (point.eventType === "trip_visit" || point.eventType === "trip_death") {
+          goto(`/admin/${point.meta.tripId}`)
+        }
+      }}
       class="event"
       data-tippy-content={point.meta.index}
       onpointerenter={() => ($focusEvent = point.index)}
@@ -52,7 +56,7 @@
         {@render ratDied(point)}
       {/if}
       <span class="meta">{timeSince(new Date(point.time).getTime())}</span>
-    </p>
+    </a>
   {/each}
   <p class="event">
     You unlocked the panel <span class="meta"

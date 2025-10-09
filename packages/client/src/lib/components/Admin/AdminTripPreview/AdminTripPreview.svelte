@@ -3,6 +3,8 @@
   import type { Outcome } from "@sanity-types"
   import type { Trip as SanityTrip } from "@sanity-types"
 
+  import { gameConfig } from "$lib/modules/state/stores"
+  import { blockNumber } from "$lib/modules/network"
   import { onMount } from "svelte"
   import { staticContent } from "$lib/modules/content"
   import { page } from "$app/state"
@@ -30,9 +32,12 @@
   let showLiquidateButton = $derived(trip.balance > 0)
 
   let liquidating = $state(false)
+  let blockUntilUnlock = $derived(
+    Number(trip.creationBlock) + $gameConfig.cooldownCloseTrip - Number($blockNumber)
+  )
 
   onMount(() => {
-    liquidating = page.url.searchParams.has("liquidate")
+    liquidating = page.url.searchParams.has("liquidate") && blockUntilUnlock <= 0
     const outcomes = $staticContent?.outcomes?.filter(o => o.tripId == tripId) || []
 
     // Sort the outcomes in order of creation
