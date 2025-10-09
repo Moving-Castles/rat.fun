@@ -19,7 +19,6 @@
 
   let negative = $state(value < 0)
 
-  console.log("$frozenRat?.balance", $frozenRat?.balance)
   const isDead = $frozenRat && Number($frozenRat.balance) + value === 0
 
   // Timeline
@@ -58,6 +57,10 @@
       opacity: 1,
       duration: 0.3,
       ease: "power2.out"
+    })
+
+    timeline.call(() => {
+      playSound("ratfunUI", negative ? "countDown" : "countUp")
     })
 
     const duration = calculateDuration(value)

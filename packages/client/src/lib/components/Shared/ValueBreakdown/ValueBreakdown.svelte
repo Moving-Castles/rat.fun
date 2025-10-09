@@ -11,7 +11,7 @@
   }: {
     originalValue: number
     originalLabel?: string
-    taxRateKey: "taxationLiquidateRat" | "taxationCloseRoom"
+    taxRateKey: "taxationLiquidateRat" | "taxationCloseTrip"
     taxLabel?: string
     payoutLabel?: string
   } = $props()

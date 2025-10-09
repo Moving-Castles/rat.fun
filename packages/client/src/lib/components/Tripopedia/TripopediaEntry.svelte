@@ -1,13 +1,13 @@
 <script lang="ts">
-  import type { Room as RoomSanityDoc, Outcome as OutcomeSanityDoc } from "@sanity-types"
+  import type { Trip as TripSanityDoc, Outcome as OutcomeSanityDoc } from "@sanity-types"
 
-  let { room, result }: { room: RoomSanityDoc | undefined; result: OutcomeSanityDoc | undefined } =
+  let { trip, result }: { trip: TripSanityDoc | undefined; result: OutcomeSanityDoc | undefined } =
     $props()
 </script>
 
 <div class="tripopedia-entry">
-  {#if room && result}
-    <h1>ROOM PROMPT: {room.prompt}</h1>
+  {#if trip && result}
+    <h1>TRIP PROMPT: {trip.prompt}</h1>
     <p>RAT ID: {result.ratId}</p>
     <p>PLAYER ID: {result.playerId}</p>
     <div class="tripopedia-entry-content">

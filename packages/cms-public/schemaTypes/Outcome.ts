@@ -32,15 +32,15 @@ export default {
       validation: (Rule: any) => Rule.required()
     },
     {
-      title: "Room ID",
-      name: "roomId",
+      title: "Trip ID",
+      name: "tripId",
       type: "string",
       readOnly: true,
       validation: (Rule: any) => Rule.required()
     },
     {
-      title: "Room Index",
-      name: "roomIndex",
+      title: "Trip Index",
+      name: "tripIndex",
       type: "number",
       readOnly: true,
       validation: (Rule: any) => Rule.required()
@@ -126,15 +126,15 @@ export default {
       ]
     },
     {
-      title: "Room value",
-      name: "roomValue",
+      title: "Trip value",
+      name: "tripValue",
       type: "number",
       readOnly: true,
       validation: (Rule: any) => Rule.required()
     },
     {
-      title: "Room value change",
-      name: "roomValueChange",
+      title: "Trip value change",
+      name: "tripValueChange",
       type: "number",
       readOnly: true,
       validation: (Rule: any) => Rule.required()

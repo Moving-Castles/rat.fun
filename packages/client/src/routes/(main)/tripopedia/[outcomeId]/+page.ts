@@ -5,11 +5,11 @@ export const prerender = false
 
 export const load = async ({ params }) => {
   const result = await loadData(queries.singleOutcome, { id: params.outcomeId })
-  const room = await loadData(queries.singleRoom, { id: result.roomId })
+  const trip = await loadData(queries.singleTrip, { id: result.tripId })
 
   try {
-    return { room, result }
+    return { trip, result }
   } catch {
-    return redirect(302, `/${params.roomId}`)
+    return redirect(302, `/${params.tripId}`)
   }
 }

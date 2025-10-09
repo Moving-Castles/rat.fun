@@ -22,9 +22,9 @@ export function getEntityName(id: string) {
   return (getComponentValue(Name, id as Entity)?.value ?? "unknown entity") as string
 }
 
-export function getRoomIndex(roomId: string) {
+export function getTripIndex(tripId: string) {
   const { Index } = network.components
-  return (getComponentValue(Index, roomId as Entity)?.value ?? 0) as number
+  return (getComponentValue(Index, tripId as Entity)?.value ?? 0) as number
 }
 
 export async function getLatestBlockNumber() {

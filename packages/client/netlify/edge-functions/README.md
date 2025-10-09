@@ -2,15 +2,15 @@
 
 This directory contains Netlify edge functions for rat.fun.
 
-## room-seo.ts
+## trip-seo.ts
 
-This edge function intercepts crawler requests for room pages and renders basic HTML with meta tags for SEO purposes.
+This edge function intercepts crawler requests for trip pages and renders basic HTML with meta tags for SEO purposes.
 
 ### How it works
 
 1. **Crawler Detection**: Detects common crawler user agents (Googlebot, Bingbot, Facebook, Twitter, etc.)
-2. **Path Matching**: Intercepts requests to `/(main)/(game)/[roomId]` routes
-3. **Data Fetching**: Fetches room data from Sanity CMS
+2. **Path Matching**: Intercepts requests to `/(main)/(game)/[tripId]` routes
+3. **Data Fetching**: Fetches trip data from Sanity CMS
 4. **HTML Generation**: Renders basic HTML with proper meta tags for social sharing and SEO
 
 ### Environment Variables
@@ -35,4 +35,4 @@ pnpm install
 netlify dev
 ```
 
-Then visit a room URL with a crawler user agent to see the generated HTML.
+Then visit a trip URL with a crawler user agent to see the generated HTML.

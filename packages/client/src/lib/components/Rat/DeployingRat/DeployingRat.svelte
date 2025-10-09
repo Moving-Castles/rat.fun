@@ -13,7 +13,7 @@
   import { refetchBalance } from "$lib/modules/erc20Listener"
   import { playSound } from "$lib/modules/sound"
 
-  import { SmallButton } from "$lib/components/Shared"
+  import { LockButton } from "$lib/components/Shared"
 
   // Pre-generate the final name
   const { firstName, lastName, number } = generateRatName()
@@ -80,7 +80,7 @@
         const newNumber = getRandomNumberAvoidingPrevious(100, 999, previousNumber)
         numberDisplay = newNumber
         previousNumber = newNumber
-        playSound("ratfunUI", "tick")
+        playSound("ratfunUI", "wheelTick")
       }
     }, 100)
   }
@@ -171,21 +171,21 @@
     <div class="slot-box">
       <div class="slot-display" class:locked={slot0Stopped}>{firstNameDisplay}</div>
       {#if !slotMachineDone}
-        <SmallButton disabled={currentSlot !== 0} onclick={() => stopSlot(0)} text="Stop" />
+        <LockButton disabled={currentSlot !== 0} onclick={() => stopSlot(0)} text="Stop" />
       {/if}
     </div>
 
     <div class="slot-box">
       <div class="slot-display" class:locked={slot1Stopped}>{lastNameDisplay}</div>
       {#if !slotMachineDone}
-        <SmallButton disabled={currentSlot !== 1} onclick={() => stopSlot(1)} text="Stop" />
+        <LockButton disabled={currentSlot !== 1} onclick={() => stopSlot(1)} text="Stop" />
       {/if}
     </div>
 
     <div class="slot-box">
       <div class="slot-display" class:locked={slot2Stopped}>{numberDisplay}</div>
       {#if !slotMachineDone}
-        <SmallButton disabled={currentSlot !== 2} onclick={() => stopSlot(2)} text="Stop" />
+        <LockButton disabled={currentSlot !== 2} onclick={() => stopSlot(2)} text="Stop" />
       {/if}
     </div>
   </div>

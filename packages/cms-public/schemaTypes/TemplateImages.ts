@@ -11,8 +11,8 @@ export default {
       validation: (Rule: any) => Rule.required()
     },
     {
-      title: "Room images",
-      name: "roomImages",
+      title: "Trip images",
+      name: "tripImages",
       type: "array",
       of: [{ type: "image" }],
       validation: (Rule: any) => Rule.required().min(1)

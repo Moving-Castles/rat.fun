@@ -1,94 +1,116 @@
 <script lang="ts">
-  import type { PlotPoint } from "$lib/components/Room/RoomGraph/types"
-  import { getModalState } from "$lib/components/Shared/Modal/state.svelte"
-  import { playerActiveRooms } from "$lib/modules/state/stores"
-  import { entriesChronologically } from "$lib/components/Room/RoomListing/sortFunctions"
+  import type { PlotPoint } from "$lib/components/Trip/TripGraph/types"
+  import { derived } from "svelte/store"
+  import { playerActiveTrips, profitLoss } from "$lib/modules/state/stores"
+  import {
+    entriesChronologically,
+    entriesChronologicallyDesc,
+    entriesByProfit,
+    entriesByProfitDesc,
+    entriesByVisit,
+    entriesByVisitDesc
+  } from "$lib/components/Trip/TripListing/sortFunctions"
   import { staticContent } from "$lib/modules/content"
-  import { SmallButton } from "$lib/components/Shared"
-  import CreateRoom from "$lib/components/Admin/CreateRoom/CreateRoom.svelte"
-  import { busy } from "$lib/modules/action-manager/index.svelte"
+  import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
 
   import AdminTripTableRow from "./AdminTripTableRow.svelte"
 
-  let { focus = $bindable() } = $props()
+  let { focus = $bindable(), pendingTrip } = $props()
 
-  let { modal } = getModalState()
-  let pendingRoom = $state<{ prompt: string; cost: number } | null>(null)
-
-  let sortFunction = $state(entriesChronologically)
+  let sortDirection = $state<"asc" | "desc">("asc")
+  let sortFunction = $state(
+    sortDirection === "asc" ? entriesChronologically : entriesChronologicallyDesc
+  )
+  let sortFunctionName = $derived(sortFunction.name)
 
   let plots: Record<string, PlotPoint[]> = $derived.by(() => {
     const result = Object.fromEntries(
-      roomList.map(([roomId, room]) => {
-        let sanityRoomContent = $staticContent?.rooms?.find(r => r.title == roomId)
+      tripList.map(([tripId, trip]) => {
+        let sanityTripContent = $staticContent?.trips?.find(r => r.title == tripId)
 
-        const outcomes = $staticContent?.outcomes?.filter(o => o.roomId == roomId) || []
+        const outcomes = $staticContent?.outcomes?.filter(o => o.tripId == tripId) || []
         // Sort the outcomes in order of creation
         outcomes.sort((a, b) => {
           return new Date(b._createdAt).getTime() - new Date(a._createdAt).getTime()
         })
-        const roomOutcomes = outcomes.reverse()
+        const tripOutcomes = outcomes.reverse()
         const value = [
           {
             time: 0,
-            roomValue: Number(room.roomCreationCost),
-            meta: sanityRoomContent
+            tripValue: Number(trip.tripCreationCost),
+            meta: sanityTripContent
           },
-          ...roomOutcomes
+          ...tripOutcomes
         ].map((o, i) => {
           return {
             time: i,
-            value: o?.roomValue || 0,
+            value: o?.tripValue || 0,
             meta: o
           }
         })
 
         // Map the values
-        return [roomId, value]
+        return [tripId, value]
       })
     )
     return result
   })
 
-  let roomList = $derived.by(() => {
-    let entries = Object.entries($playerActiveRooms)
+  let tripList = $derived.by(() => {
+    let entries = Object.entries($playerActiveTrips)
 
     return entries.sort(sortFunction)
   })
+
+  const portfolioClass = derived([profitLoss], ([$profitLoss]) => {
+    if ($profitLoss === 0) return "neutral"
+    return $profitLoss > 0 ? "upText" : "downText"
+  })
+
+  const sortByVisit = () => {
+    sortFunction = sortDirection === "asc" ? entriesByVisit : entriesByVisitDesc
+    sortDirection = sortDirection === "asc" ? "desc" : "asc"
+  }
+  const sortByProfit = () => {
+    sortFunction = sortDirection === "asc" ? entriesByProfit : entriesByProfitDesc
+    sortDirection = sortDirection === "asc" ? "desc" : "asc"
+  }
+  const sortByAge = () => {
+    sortFunction = sortDirection === "asc" ? entriesChronologically : entriesChronologicallyDesc
+    sortDirection = sortDirection === "asc" ? "desc" : "asc"
+  }
 </script>
 
-{#snippet createRoomModal()}
-  <CreateRoom
-    onsubmit={(data: { prompt: string; cost: number }) => {
-      modal.hide()
-      pendingRoom = data
-    }}
-    ondone={() => {
-      pendingRoom = null
-    }}
-  />
-{/snippet}
-
 <div class="admin-trip-table-container">
+  <p class="table-summary">
+    Active trips <span class={$portfolioClass}
+      >({#if $profitLoss < 0}-{/if}{CURRENCY_SYMBOL}{Math.abs($profitLoss)})</span
+    >
+  </p>
   <table class="admin-trip-table">
     <thead>
       <tr>
         <th><!-- Trip --></th>
-        <th>Visits</th>
-        <th>Profit</th>
-        <th>Age</th>
+        <th onclick={sortByVisit}
+          >Visits&nbsp;{#if sortFunctionName === "entriesByVisit"}▼{:else if sortFunctionName === "entriesByVisitDesc"}▲{:else}&nbsp;{/if}</th
+        >
+        <th>Balance</th>
+        <th onclick={sortByProfit}
+          >Profit&nbsp;{#if sortFunctionName === "entriesByProfit"}▼{:else if sortFunctionName === "entriesByProfitDesc"}▲{:else}&nbsp;{/if}</th
+        >
+        <!-- <th onclick={sortByAge}
+          >Age&nbsp;{#if sortFunctionName === "entriesChronologically"}▼{:else if sortFunctionName === "entriesChronologicallyDesc"}▲{:else}&nbsp;{/if}</th
+        > -->
         <th>Spark</th>
         <th>Actions</th>
       </tr>
     </thead>
     <tbody>
-      <!-- Loading row for pending room creation -->
-      {#if busy.CreateRoom.current !== 0 && pendingRoom && !roomList
-          .map(r => r[1].prompt)
-          .includes(pendingRoom.prompt)}
+      <!-- Loading row for pending trip creation -->
+      {#if pendingTrip && !tripList.map(r => r[1].prompt).includes(pendingTrip.prompt)}
         <tr class="simple-row loading-row">
           <td class="cell-description">
-            <p class="single-line">{pendingRoom.prompt}</p>
+            <p class="single-line">{pendingTrip.prompt}</p>
           </td>
           <td class="cell-balance">0</td>
           <td class="cell-profit-loss">0</td>
@@ -100,29 +122,19 @@
         </tr>
       {/if}
       <!-- --- -->
-      {#each roomList as roomEntry (roomEntry[0])}
+      {#each tripList as tripEntry (tripEntry[0])}
         <AdminTripTableRow
-          id={roomEntry[0]}
-          data={plots[roomEntry[0]]}
-          room={roomEntry[1]}
+          id={tripEntry[0]}
+          data={plots[tripEntry[0]]}
+          trip={tripEntry[1]}
           onpointerenter={() => {
-            focus = roomEntry[0]
+            focus = tripEntry[0]
           }}
           onpointerleave={() => {
             focus = ""
           }}
         />
       {/each}
-      <tr>
-        <td class="button-row" colspan="6">
-          <SmallButton
-            text="Create Room"
-            onclick={() => {
-              modal.set(createRoomModal)
-            }}
-          />
-        </td>
-      </tr>
     </tbody>
   </table>
 </div>
@@ -137,10 +149,11 @@
   }
   .admin-trip-table {
     width: 100%;
-    background: black;
     table-layout: fixed;
-    /* justify-content: center; */
-    /* align-items: center; */
+  }
+
+  .table-summary {
+    padding: 0 10px;
   }
 
   .no-data {
@@ -208,5 +221,13 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  .downText {
+    color: red;
+  }
+
+  .upText {
+    color: #78ee72;
   }
 </style>

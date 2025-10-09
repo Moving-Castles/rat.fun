@@ -358,12 +358,12 @@ export class GameError extends AppError {
   }
 }
 
-export class RoomError extends GameError {
+export class TripError extends GameError {
   constructor(
     message: string,
-    public roomId?: string
+    public tripId?: string
   ) {
-    super("ROOM_ERROR", "Room operation error", message)
+    super("TRIP_ERROR", "Trip operation error", message)
   }
 }
 
@@ -432,7 +432,7 @@ export type ExpectedError =
   | ChatValidationError
   | CharacterLimitError
   | GameError
-  | RoomError
+  | TripError
   | RatError
   | SpawnError
   | LiquidationError

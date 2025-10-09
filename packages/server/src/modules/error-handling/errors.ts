@@ -116,9 +116,9 @@ export class RatNotFoundError extends OnchainDataError {
   }
 }
 
-export class RoomNotFoundError extends OnchainDataError {
-  constructor(roomId: string) {
-    super("ROOM_NOT_FOUND", "Resource not found", `Room with ID ${roomId} not found`)
+export class TripNotFoundError extends OnchainDataError {
+  constructor(tripId: string) {
+    super("TRIP_NOT_FOUND", "Resource not found", `Trip with ID ${tripId} not found`)
   }
 }
 
@@ -202,9 +202,9 @@ export class InvalidPromptError extends ValidationError {
   }
 }
 
-export class InvalidRoomCreationCostError extends ValidationError {
-  constructor(message: string = "Invalid room creation cost.") {
-    super("INVALID_ROOM_CREATION_COST_ERROR", "Invalid room creation cost", message)
+export class InvalidTripCreationCostError extends ValidationError {
+  constructor(message: string = "Invalid trip creation cost.") {
+    super("INVALID_TRIP_CREATION_COST_ERROR", "Invalid trip creation cost", message)
   }
 }
 
@@ -221,14 +221,14 @@ export class RatDeadError extends ValidationError {
 }
 
 export class RatValueError extends ValidationError {
-  constructor(message: string = "The rat has not enough value to enter the room.") {
+  constructor(message: string = "The rat has not enough value to enter the trip.") {
     super("RAT_VALUE_ERROR", "Rat value error", message)
   }
 }
 
-export class RoomBalanceError extends ValidationError {
-  constructor(message: string = "The room balance is negative.") {
-    super("ROOM_BALANCE_ERROR", "Room balance error", message)
+export class TripBalanceError extends ValidationError {
+  constructor(message: string = "The trip balance is negative.") {
+    super("TRIP_BALANCE_ERROR", "Trip balance error", message)
   }
 }
 

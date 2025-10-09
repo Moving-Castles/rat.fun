@@ -7,7 +7,7 @@ import {
   InvalidPromptError,
   RatOwnershipError,
   RatDeadError,
-  RoomBalanceError,
+  TripBalanceError,
   StaleRequestError,
   NonceUsedError,
   DelegationNotFoundError,
@@ -16,7 +16,7 @@ import {
   ReplicateError,
   OnchainDataError,
   RatNotFoundError,
-  RoomNotFoundError,
+  TripNotFoundError,
   PlayerNotFoundError,
   GameConfigNotFoundError,
   SystemCallError,
@@ -94,12 +94,12 @@ export function errorHandler(error: FastifyError, request: FastifyRequest, reply
     error instanceof AuthorizationError ||
     error instanceof InsufficientBalanceError ||
     error instanceof RatNotFoundError ||
-    error instanceof RoomNotFoundError ||
+    error instanceof TripNotFoundError ||
     error instanceof PlayerNotFoundError ||
     error instanceof GameConfigNotFoundError ||
     error instanceof RatOwnershipError ||
     error instanceof RatDeadError ||
-    error instanceof RoomBalanceError ||
+    error instanceof TripBalanceError ||
     error instanceof InvalidPromptError ||
     error instanceof StaleRequestError ||
     error instanceof NonceUsedError ||

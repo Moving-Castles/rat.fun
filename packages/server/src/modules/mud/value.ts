@@ -1,30 +1,30 @@
-import { GamePercentagesConfig, Rat, Room } from "@modules/types"
+import { GamePercentagesConfig, Rat, Trip } from "@modules/types"
 
-export function getRoomValue(room: Room, newRoom: Room | undefined) {
+export function getTripValue(trip: Trip, newTrip: Trip | undefined) {
   return {
-    newRoomValue: newRoom?.balance ?? 0,
-    roomValueChange: newRoom?.balance ? newRoom.balance - room.balance : 0
+    newTripValue: newTrip?.balance ?? 0,
+    tripValueChange: newTrip?.balance ? newTrip.balance - trip.balance : 0
   }
 }
 
-export function getRoomMaxValuePerWin(
-  roomCreationCost: number,
-  roomBalance: number,
+export function getTripMaxValuePerWin(
+  tripCreationCost: number,
+  tripBalance: number,
   gamePercentagesConfig: GamePercentagesConfig
 ): number {
   // Use balance or creation cost, whichever is higher
-  const costBalanceMax = Math.max(roomCreationCost, roomBalance)
+  const costBalanceMax = Math.max(tripCreationCost, tripBalance)
   // Multiply by the configured percentage
   const result = Math.floor((gamePercentagesConfig.maxValuePerWin * costBalanceMax) / 100)
   // Cap to balance
-  return Math.min(result, roomBalance)
+  return Math.min(result, tripBalance)
 }
 
-export function getRoomMinRatValueToEnter(
-  roomCreationCost: number,
+export function getTripMinRatValueToEnter(
+  tripCreationCost: number,
   gamePercentagesConfig: GamePercentagesConfig
 ): number {
-  return Math.floor((roomCreationCost * gamePercentagesConfig.minRatValueToEnter) / 100)
+  return Math.floor((tripCreationCost * gamePercentagesConfig.minRatValueToEnter) / 100)
 }
 
 export function getRatValue(rat: Rat, newRat: Rat) {

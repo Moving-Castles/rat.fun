@@ -11,7 +11,7 @@
   import { SmallSpinner } from "$lib/components/Shared"
 
   onMount(async () => {
-    playSound("ratfunUI", "ratDeath")
+    // playSound("ratfunUI", "ratDeath")
 
     // Pause erc20 balance listener so we can control the update
     erc20BalanceListenerActive.set(false)

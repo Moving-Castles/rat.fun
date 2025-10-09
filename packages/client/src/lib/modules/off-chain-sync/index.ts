@@ -154,9 +154,9 @@ export async function sendLiquidateRatMessage(ratId: string) {
 }
 
 /****************
- * ROOM LIQUIDATION
+ * TRIP LIQUIDATION
  *****************/
 
-export async function sendLiquidateRoomMessage(roomId: string) {
-  sendMessageRequest("room__liquidation", { roomId })
+export async function sendLiquidateTripMessage(tripId: string) {
+  sendMessageRequest("trip__liquidation", { tripId })
 }

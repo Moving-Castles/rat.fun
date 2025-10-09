@@ -110,6 +110,6 @@
     display: flex;
     margin-bottom: 0.5em;
     line-height: 1.2em;
-    font-size: var(--font-size-large);
+    font-size: var(--font-size-normal);
   }
 </style>

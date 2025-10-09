@@ -7,8 +7,14 @@
   let {
     name,
     width = 24,
-    fill = "white"
-  }: { name: "Asterisk" | "Cross" | "Paw" | "Handshake"; width?: number; fill?: string } = $props()
+    fill = "white",
+    address = "0x0"
+  }: {
+    name: "Asterisk" | "Cross" | "Paw" | "Handshake"
+    width?: number
+    fill?: string
+    address?: string
+  } = $props()
 
   let components = {
     Asterisk,
@@ -20,4 +26,4 @@
   let Component = $derived(components[name])
 </script>
 
-<Component {width} {fill} />
+<Component {width} {fill} {address} />

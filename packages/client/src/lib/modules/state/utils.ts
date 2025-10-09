@@ -24,82 +24,82 @@ export function filterByEntitytype(entities: Entities, entityType: ENTITY_TYPE):
 }
 
 /**
- * Filters rooms by player
- * @param rooms The rooms to filter
+ * Filters trips by player
+ * @param trips The trips to filter
  * @param playerId The player id to filter by
- * @returns The filtered rooms
+ * @returns The filtered trips
  */
-export function filterByPlayer(rooms: Rooms, playerId: Hex): Rooms {
-  return Object.fromEntries(Object.entries(rooms).filter(([, room]) => room.owner === playerId))
+export function filterByPlayer(trips: Trips, playerId: Hex): Trips {
+  return Object.fromEntries(Object.entries(trips).filter(([, trip]) => trip.owner === playerId))
 }
 
 /**
- * Filters rooms by active status
- * @param rooms The rooms to filter
- * @returns The filtered rooms
+ * Filters trips by active status
+ * @param trips The trips to filter
+ * @returns The filtered trips
  */
-export function filterActive(rooms: Rooms): Rooms {
-  return Object.fromEntries(Object.entries(rooms).filter(([, room]) => !room.liquidated))
+export function filterActive(trips: Trips): Trips {
+  return Object.fromEntries(Object.entries(trips).filter(([, trip]) => !trip.liquidated))
 }
 
 /**
- * Filters rooms by liquidation status
- * @param rooms The rooms to filter
- * @returns The filtered rooms
+ * Filters trips by liquidation status
+ * @param trips The trips to filter
+ * @returns The filtered trips
  */
-export function filterLiquidated(rooms: Rooms): Rooms {
-  return Object.fromEntries(Object.entries(rooms).filter(([, room]) => room.liquidated))
+export function filterLiquidated(trips: Trips): Trips {
+  return Object.fromEntries(Object.entries(trips).filter(([, trip]) => trip.liquidated))
 }
 
 /**
- * Filters rooms by other player
- * @param rooms The rooms to filter
+ * Filters trips by other player
+ * @param trips The trips to filter
  * @param playerId The player id to filter by
- * @returns The filtered rooms
+ * @returns The filtered trips
  */
-export function filterByOthers(rooms: Rooms, playerId: Hex): Rooms {
-  return Object.fromEntries(Object.entries(rooms).filter(([, room]) => room.owner !== playerId))
+export function filterByOthers(trips: Trips, playerId: Hex): Trips {
+  return Object.fromEntries(Object.entries(trips).filter(([, trip]) => trip.owner !== playerId))
 }
 
 /**
- * Checks if a room is owned by a player
- * @param room The room to check
+ * Checks if a trip is owned by a player
+ * @param trip The trip to check
  * @param playerId The player id to check
- * @returns True if the room is owned by the player, false otherwise
+ * @returns True if the trip is owned by the player, false otherwise
  */
-export function isPlayerRoom(room: Room, playerId: Hex) {
-  return room.owner === playerId
+export function isPlayerTrip(trip: Trip, playerId: Hex) {
+  return trip.owner === playerId
 }
 
 /**
- * Gets the name of the owner of a room
- * @param room The room to get the owner name of
- * @returns The name of the owner of the room
+ * Gets the name of the owner of a trip
+ * @param trip The trip to get the owner name of
+ * @returns The name of the owner of the trip
  */
-export function getRoomOwnerName(room: Room) {
-  if (room.owner === get(gameConfig)?.adminId) {
+export function getTripOwnerName(trip: Trip) {
+  if (trip.owner === get(gameConfig)?.adminId) {
     return "ratking"
   }
-  return get(players)[room.owner]?.name ?? "unknown"
+  return get(players)[trip.owner]?.name ?? "unknown"
 }
 
-export function getRoomMaxValuePerWin(
-  roomCreationCost: number | bigint,
-  roomBalance: number | bigint
+export function getTripMaxValuePerWin(
+  tripCreationCost: number | bigint,
+  tripBalance: number | bigint
 ): Readable<number> {
   return derived(gamePercentagesConfig, $gamePercentagesConfig => {
     // Use balance or creation cost, whichever is higher
-    const costBalanceMax = Math.max(Number(roomCreationCost), Number(roomBalance))
+    const costBalanceMax = Math.max(Number(tripCreationCost), Number(tripBalance))
     // Multiply by the configured percentage
     const result = Math.floor(($gamePercentagesConfig.maxValuePerWin * costBalanceMax) / 100)
     // Cap to balance
-    return Math.min(result, Number(roomBalance))
+    return Math.min(result, Number(tripBalance))
   })
 }
 
-export function getRoomMinRatValueToEnter(roomCreationCost: number | bigint): Readable<number> {
+export function getTripMinRatValueToEnter(tripCreationCost: number | bigint): Readable<number> {
   return derived(gamePercentagesConfig, $gamePercentagesConfig => {
-    return Math.floor((Number(roomCreationCost) * $gamePercentagesConfig.minRatValueToEnter) / 100)
+    return Math.floor((Number(tripCreationCost) * $gamePercentagesConfig.minRatValueToEnter) / 100)
   })
 }
 

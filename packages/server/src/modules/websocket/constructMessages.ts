@@ -1,4 +1,4 @@
-import type { Rat, Room, Player } from "@modules/types"
+import type { Rat, Trip, Player } from "@modules/types"
 import { getEntityIndex } from "@modules/mud/getOnchainData"
 import type { OffChainMessage, OutcomeReturnValue } from "@modules/types"
 import { v4 as uuidv4 } from "uuid"
@@ -7,16 +7,16 @@ export function createOutcomeMessage(
   player: Player,
   rat: Rat,
   newRatBalance: number,
-  room: Room,
+  trip: Trip,
   validatedOutcome: OutcomeReturnValue
 ): OffChainMessage {
   const outcomeMessage: OffChainMessage = {
     id: uuidv4(),
-    topic: newRatBalance == 0 ? "rat__death" : "room__outcome",
+    topic: newRatBalance == 0 ? "rat__death" : "trip__outcome",
     outcome: validatedOutcome,
     playerName: player.name,
-    roomId: room.id,
-    roomIndex: Number(room.index),
+    tripId: trip.id,
+    tripIndex: Number(trip.index),
     ratName: rat.name,
     timestamp: Date.now()
   }
@@ -24,13 +24,13 @@ export function createOutcomeMessage(
   return outcomeMessage
 }
 
-export function createRoomCreationMessage(roomId: string, player: Player): OffChainMessage {
+export function createTripCreationMessage(tripId: string, player: Player): OffChainMessage {
   return {
     id: uuidv4(),
-    topic: "room__creation",
+    topic: "trip__creation",
     playerName: player.name,
-    roomId: roomId,
-    roomIndex: Number(getEntityIndex(roomId)),
+    tripId: tripId,
+    tripIndex: Number(getEntityIndex(tripId)),
     timestamp: Date.now()
   }
 }

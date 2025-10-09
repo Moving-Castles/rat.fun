@@ -23,7 +23,7 @@
 <div class="pane-switch">
   {#if isAdminView}
     <button onclick={exitAdmin} class="pane-switch-item">
-      <a href="/{page.route.id?.includes('roomId') ? page.params.roomId : ''}">X</a>
+      <a href="/{page.route.id?.includes('tripId') ? page.params.tripId : ''}">X</a>
     </button>
   {:else}
     <button onclick={enterAdmin} {onmousedown} class="pane-switch-item">

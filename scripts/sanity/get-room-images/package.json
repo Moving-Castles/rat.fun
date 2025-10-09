@@ -1,5 +1,5 @@
 {
-  "name": "get-room-images",
+  "name": "get-trip-images",
   "version": "1.0.0",
   "dependencies": {
     "@sanity/client": "^6.12.0",

@@ -20,8 +20,8 @@ export default defineWorld({
         adminId: "bytes32",
         ratCreationCost: "uint256",
         maxInventorySize: "uint32",
-        maxRoomPromptLength: "uint32",
-        cooldownCloseRoom: "uint32",
+        maxTripPromptLength: "uint32",
+        cooldownCloseTrip: "uint32",
         ratsKilledForAdminAccess: "uint32"
       },
       codegen: {
@@ -31,16 +31,16 @@ export default defineWorld({
     GamePercentagesConfig: {
       key: [],
       schema: {
-        maxValuePerWin: "uint32", // Limits how much a rat can extract from room in one run
-        minRatValueToEnter: "uint32", // Minimum total value of rat to enter room.
+        maxValuePerWin: "uint32", // Limits how much a rat can extract from trip in one run
+        minRatValueToEnter: "uint32", // Minimum total value of rat to enter trip.
         taxationLiquidateRat: "uint32",
-        taxationCloseRoom: "uint32"
+        taxationCloseTrip: "uint32"
       }
     },
     WorldStats: {
       key: [],
       schema: {
-        globalRoomIndex: "uint256",
+        globalTripIndex: "uint256",
         globalRatIndex: "uint256",
         globalRatKillCount: "uint256",
         lastKilledRatBlock: "uint256"
@@ -70,33 +70,34 @@ export default defineWorld({
       }
     },
     // = = = = = = = = = =
-    Name: "string", // Set on player, rat and room
+    Name: "string", // Set on player, rat and trip
     EntityType: "ENTITY_TYPE",
-    CreationBlock: "uint256", // Set on player, rat and room
-    LastVisitBlock: "uint256", // Set on room
+    CreationBlock: "uint256", // Set on player, rat and trip
+    LastVisitBlock: "uint256", // Set on trip
     // = = = = = = = = = =
-    Balance: "uint256", // Amount of credits. Set on player, rat and room.
+    Balance: "uint256", // Amount of credits. Set on player, rat and trip.
     // = = = = = = = = = =
     Dead: "bool", // Set on rat
-    Liquidated: "bool", // Set on rat and room when it is liquidated by owner
-    LiquidationValue: "uint256", // Set on rat and room when it is liquidated
-    LiquidationBlock: "uint256", // Set on rat and room when it is liquidated
+    Liquidated: "bool", // Set on rat and trip when it is liquidated by owner
+    LiquidationValue: "uint256", // Set on rat and trip when it is liquidated, gross value (before taxation)
+    LiquidationTaxPercentage: "uint256", // Set on rat and trip when it is liquidated
+    LiquidationBlock: "uint256", // Set on rat and trip when it is liquidated
     // = = = = = = = = = =
     Inventory: "bytes32[]", // Items carried by player and rat
     // = = = = = = = = = =
     MasterKey: "bool", // Set on player. Gives access to in-game admin area.
-    Index: "uint256", // Set on rat and room
+    Index: "uint256", // Set on rat and trip
     Value: "uint256", // Set on items
     CurrentRat: "bytes32", // Set on player
     PastRats: "bytes32[]", // Set on player. List of rats the player has owned.
-    Owner: "bytes32", // Set on room and rat
-    VisitCount: "uint256", // Set on room
-    KillCount: "uint256", // Set on room
+    Owner: "bytes32", // Set on trip and rat
+    VisitCount: "uint256", // Set on trip
+    KillCount: "uint256", // Set on trip
     TripCount: "uint256", // Set on rat
     // = = = = = = = = = =
     Prompt: "string",
     // = = = = = = = = = =
-    RoomCreationCost: "uint256" // Initial balance of room.
+    TripCreationCost: "uint256" // Initial balance of trip.
   },
   systems: {
     // DevSystem is conditionally deployed for local/test chains in PostDeploy

@@ -3,7 +3,7 @@ import { writable, derived } from "svelte/store"
 import { client, loadData } from "./sanity"
 import { blockNumber } from "$lib/modules/network"
 import type {
-  Room as SanityRoom,
+  Trip as SanityTrip,
   Outcome as SanityOutcome,
   WorldEvent as SanityWorldEvent
 } from "@sanity-types"
@@ -13,14 +13,14 @@ import type { MutationEvent } from "@sanity/client"
 // --- TYPES ------------------------------------------------------------
 
 export type StaticContent = {
-  rooms: SanityRoom[]
+  trips: SanityTrip[]
   outcomes: SanityOutcome[]
   worldEvents: SanityWorldEvent[]
 }
 
 // --- STORES -----------------------------------------------------------
 
-export const staticContent = writable({} as StaticContent)
+export const staticContent = writable<StaticContent>({ trips: [], outcomes: [], worldEvents: [] })
 export const lastUpdated = writable(performance.now())
 export const upcomingWorldEvent = derived(
   [staticContent, blockNumber],
@@ -38,23 +38,23 @@ export const upcomingWorldEvent = derived(
 // --- API --------------------------------------------------------------
 
 export async function initStaticContent(worldAddress: string) {
-  const rooms = await loadData(queries.rooms, { worldAddress })
+  const trips = await loadData(queries.trips, { worldAddress })
   const outcomes = await loadData(queries.outcomes, { worldAddress })
   const worldEvents = await loadData(queries.worldEvents, { worldAddress })
 
   const processedWorldEvents = worldEvents.filter(upcomingWorldEventFilter)
 
   staticContent.set({
-    rooms,
+    trips,
     outcomes,
     worldEvents: processedWorldEvents
   })
 
-  // Subscribe to changes to rooms in sanity DB
-  client.listen(queries.rooms, { worldAddress }).subscribe(update => {
+  // Subscribe to changes to trips in sanity DB
+  client.listen(queries.trips, { worldAddress }).subscribe(update => {
     staticContent.update(content => ({
       ...content,
-      rooms: handleSanityUpdate<SanityRoom>(update, content.rooms, (item, id) => item._id === id)
+      trips: handleSanityUpdate<SanityTrip>(update, content.trips, (item, id) => item._id === id)
     }))
   })
 

@@ -4,5 +4,5 @@
  */
 
 export const queries = {
-  templateImages: '*[_id == "template-images"]{..., "roomImages": roomImages[].asset->url}[0]'
+  templateImages: '*[_id == "template-images"]{..., "tripImages": tripImages[].asset->url}[0]'
 }

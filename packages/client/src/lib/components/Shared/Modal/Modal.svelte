@@ -40,7 +40,7 @@
     width: 100dvw;
     height: 100dvh;
 
-    &#roomresult {
+    &#tripresult {
       position: absolute;
     }
 

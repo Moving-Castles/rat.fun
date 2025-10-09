@@ -9,6 +9,7 @@
     tippyText,
     disabled = false,
     extraClass = "",
+    onmouseup,
     onclick
   }: {
     text: string
@@ -16,7 +17,8 @@
     tippyText?: string
     disabled?: boolean
     extraClass?: string
-    onclick: () => void
+    onmouseup?: (e: MouseEvent) => void
+    onclick?: (e: MouseEvent) => void
   } = $props()
 
   const onmousedown = () => {
@@ -25,16 +27,17 @@
 
   let conditionalAction = $derived(tippyText ? tippy : () => {})
 
-  const onmouseup = () => {
+  const onmouseupHandler = (e: MouseEvent) => {
     playSound("ratfunUI", "smallButtonUp")
-    onclick()
+    onmouseup?.(e)
+    onclick?.(e)
   }
 </script>
 
 <button
   class={extraClass}
   class:disabled
-  {onmouseup}
+  onmouseup={onmouseupHandler}
   {onmousedown}
   use:conditionalAction={{ content: tippyText }}
 >
@@ -59,7 +62,7 @@
     }
 
     .button-text {
-      font-size: var(--font-size-large);
+      font-size: var(--font-size-normal);
       font-family: var(--label-font-stack);
     }
 

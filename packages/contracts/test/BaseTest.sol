@@ -22,8 +22,8 @@ contract BaseTest is MudTest, GasReporter {
   address payable bob;
   address payable eve;
 
-  // Base room creation cost / initial balance of room
-  uint256 constant ROOM_INITIAL_BALANCE = 250;
+  // Base trip creation cost / initial balance of trip
+  uint256 constant TRIP_INITIAL_BALANCE = 250;
 
   function setUp() public virtual override {
     super.setUp();

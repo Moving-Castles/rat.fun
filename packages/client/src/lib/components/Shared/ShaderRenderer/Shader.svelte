@@ -1,16 +1,11 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte"
-  import { afterNavigate } from "$app/navigation"
   import { fade } from "svelte/transition"
-  import { page } from "$app/state"
   import { shaders } from "$lib/modules/webgl/shaders/index.svelte"
   import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
 
   let canvas = $state<HTMLCanvasElement>()
   let currentShader = $state("blank")
-  let currentMode = $derived(
-    shaders[currentShader as keyof typeof shaders]?.config?.getMode?.(page)
-  )
   let uniformValues = $derived(shaderManager.uniformValues)
 
   // Export setShader function for external use
@@ -41,12 +36,6 @@
   onDestroy(() => {
     shaderManager.destroy()
   })
-
-  // afterNavigate(() => {
-  //   const newMode = shaders[currentShader as keyof typeof shaders]?.config?.getMode?.(page)
-  //   console.log("we are setting the mode here", newMode)
-  //   shaderManager.setMode(newMode)
-  // })
 </script>
 
 <div class="shader-container" in:fade={{ duration: 300 }}>

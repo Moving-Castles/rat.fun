@@ -2,30 +2,30 @@
  * ========================================
  *  Trip/state.svelte.ts
  * ========================================
- * This module keeps track of the state of the room result flow.
+ * This module keeps track of the state of the trip result flow.
  * There are two main parts:
  *
- * 1. Room result flow state
+ * 1. Trip result flow state
  * - Stores current state
  * - Handles state transitions
  *
- * 2. The frozen rat and room
- * - Freeze the state of the rat and room
+ * 2. The frozen rat and trip
+ * - Freeze the state of the rat and trip
  * - Updates frozen state based on outcome
  * - Handles DOM interactions
  */
 
 import { writable } from "svelte/store"
-import type { FrozenRat, FrozenRoom, OutcomeDataStringMap } from "./types"
+import type { FrozenRat, FrozenTrip, OutcomeDataStringMap } from "./types"
 import type { Hex } from "viem"
 import { addressToRatImage } from "$lib/modules/utils"
 import { errorHandler, InvalidStateTransitionError } from "$lib/modules/error-handling"
 
 /*
  * ─────────────────────────────────────────────
- * Room Result Flow State
+ * Trip Result Flow State
  * ─────────────────────────────────────────────
- * The room result flow is modeled as a state machine.
+ * The trip result flow is modeled as a state machine.
  */
 
 /**
@@ -42,24 +42,14 @@ export enum TRIP_STATE {
   ERROR = "ERROR"
 }
 
-/**
- * The result summary state
- * Used by the TripReport component to determine which result summary to show
- */
-export enum RESULT_SUMMARY {
-  UNKNOWN = "UNKNOWN",
-  NORMAL = "NORMAL",
-  RAT_DEAD = "RAT_DEAD"
-}
-
-/** Current state of the room result flow */
-export const roomResultState: { state: TRIP_STATE; errorMessage: string | null } = $state({
+/** Current state of the trip result flow */
+export const tripResultState: { state: TRIP_STATE; errorMessage: string | null } = $state({
   state: TRIP_STATE.SETUP,
   errorMessage: null
 })
 
 /**
- * Defines valid state transitions between room result states
+ * Defines valid state transitions between trip result states
  * Maps each state to an array of valid states it can transition to
  */
 const VALID_TRANSITIONS: Record<TRIP_STATE, TRIP_STATE[]> = {
@@ -74,66 +64,66 @@ const VALID_TRANSITIONS: Record<TRIP_STATE, TRIP_STATE[]> = {
  * @param newState The state to transition to
  */
 export const transitionTo = (newState: TRIP_STATE) => {
-  const validTransitions = VALID_TRANSITIONS[roomResultState.state]
+  const validTransitions = VALID_TRANSITIONS[tripResultState.state]
   if (!validTransitions.includes(newState)) {
     errorHandler(
       new InvalidStateTransitionError(
         "INVALID_STATE_TRANSITION_ERROR",
         "State management error",
-        `Invalid state transition from ${roomResultState.state} to ${newState}`
+        `Invalid state transition from ${tripResultState.state} to ${newState}`
       )
     )
     return
   }
-  roomResultState.state = newState
+  tripResultState.state = newState
 }
 
-/** Resets the room result state back to the initial splash screen */
+/** Resets the trip result state back to the initial splash screen */
 export const resetTripState = () => {
-  roomResultState.state = TRIP_STATE.SETUP
-  roomResultState.errorMessage = null
+  tripResultState.state = TRIP_STATE.SETUP
+  tripResultState.errorMessage = null
 }
 
 /*
  * ─────────────────────────────────────────────
- * Frozen Rat and Room
+ * Frozen Rat and Trip
  * ─────────────────────────────────────────────
- * We freeze the rat and room objects before entering a room
+ * We freeze the rat and trip objects before entering a trip
  * to be able to gradually update their values without reactivity
  * from on-chain changes.
  */
 
-/** Room information frozen before entering a room */
-export const frozenRoom = writable<Partial<FrozenRoom> | null>(null)
-/** Rat information frozen before entering a room */
+/** Trip information frozen before entering a trip */
+export const frozenTrip = writable<Partial<FrozenTrip> | null>(null)
+/** Rat information frozen before entering a trip */
 export const frozenRat = writable<Partial<FrozenRat> | null>(null)
 
 /**
- * Freezes the rat and room objects before entering a room
+ * Freezes the rat and trip objects before entering a trip
  * @param rat The rat object
- * @param room The room object
- * @param roomId The room ID
+ * @param trip The trip object
+ * @param tripId The trip ID
  */
-export function freezeObjects(rat: Rat, room: Room, roomId: Hex, ratId: Hex) {
+export function freezeObjects(rat: Rat, trip: Trip, tripId: Hex, ratId: Hex) {
   const preppedRat = structuredClone(rat) as FrozenRat
   if (!preppedRat.inventory) preppedRat.inventory = []
   preppedRat.image = addressToRatImage(ratId)
   frozenRat.set(preppedRat)
 
-  const preppedRoom = structuredClone(room) as FrozenRoom
-  preppedRoom.id = roomId
-  frozenRoom.set(preppedRoom)
+  const preppedTrip = structuredClone(trip) as FrozenTrip
+  preppedTrip.id = tripId
+  frozenTrip.set(preppedTrip)
 
   return {
     frozenRat: preppedRat,
-    frozenRoom: preppedRoom
+    frozenTrip: preppedTrip
   }
 }
 
 // ======= Route updates to frozen state =======
 
 /**
- * Updates the frozen state of the rat and room based on the outcome
+ * Updates the frozen state of the rat and trip based on the outcome
  * @param dataset The dataset of the outcome
  */
 export const updateFrozenState = (dataset: OutcomeDataStringMap) => {
@@ -162,7 +152,7 @@ export const updateFrozenState = (dataset: OutcomeDataStringMap) => {
 // ======= Balance =======
 
 /**
- * Changes the balance of the rat and change the room balance by the inverse amount
+ * Changes the balance of the rat and change the trip balance by the inverse amount
  * @param balanceChange The amount to change the balance by
  */
 function changeBalance(balanceChange: number) {
@@ -172,18 +162,18 @@ function changeBalance(balanceChange: number) {
     return rat
   })
 
-  // Inverse rat balance change to get room balance change
-  frozenRoom.update(room => {
-    if (!room) return null
-    room.balance = BigInt(room?.balance || 0) - BigInt(balanceChange)
-    return room
+  // Inverse rat balance change to get trip balance change
+  frozenTrip.update(trip => {
+    if (!trip) return null
+    trip.balance = BigInt(trip?.balance || 0) - BigInt(balanceChange)
+    return trip
   })
 }
 
 // ======= Inventory =======
 
 /**
- * Adds an item to the rat and reduce the room balance by the item value
+ * Adds an item to the rat and reduce the trip balance by the item value
  * @param itemName The name of the item
  * @param itemValue The value of the item
  */
@@ -199,17 +189,17 @@ function addItem(itemName: string, itemValue: number) {
     return rat
   })
 
-  // Change room balance
+  // Change trip balance
   // Items always have positive value
-  frozenRoom.update(room => {
-    if (!room) return null
-    room.balance = BigInt(room?.balance || 0) - BigInt(itemValue)
-    return room
+  frozenTrip.update(trip => {
+    if (!trip) return null
+    trip.balance = BigInt(trip?.balance || 0) - BigInt(itemValue)
+    return trip
   })
 }
 
 /**
- * Removes an item from the rat and increase the room balance by the item value
+ * Removes an item from the rat and increase the trip balance by the item value
  * @param id The ID of the item
  * @param itemValue The value of the item
  */
@@ -220,11 +210,11 @@ function removeItem(id: string, itemValue: number) {
     return rat
   })
 
-  // Change room balance
+  // Change trip balance
   // Items always have positive value
-  frozenRoom.update(room => {
-    if (!room) return null
-    room.balance = BigInt(room?.balance || 0) + BigInt(itemValue)
-    return room
+  frozenTrip.update(trip => {
+    if (!trip) return null
+    trip.balance = BigInt(trip?.balance || 0) + BigInt(itemValue)
+    return trip
   })
 }

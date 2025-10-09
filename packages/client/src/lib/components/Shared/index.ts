@@ -1,6 +1,7 @@
 /* Buttons */
 export { default as BigButton } from "./Buttons/BigButton.svelte"
 export { default as SmallButton } from "./Buttons/SmallButton.svelte"
+export { default as LockButton } from "./Buttons/LockButton.svelte"
 export { default as DangerButton } from "./Buttons/DangerButton.svelte"
 
 /* ChatBox */

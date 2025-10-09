@@ -24,8 +24,8 @@ export async function handleMessage(
     case "rat__liquidate":
       await handleRatLiquidate(request)
       break
-    case "room__liquidation":
-      await handleRoomLiquidation(request)
+    case "trip__liquidation":
+      await handleTripLiquidation(request)
       break
     default:
       console.log("Unknown message topic:", request.data.topic)
@@ -122,22 +122,22 @@ async function handleRatLiquidate(request: SignedRequest<OffChainMessage>): Prom
 }
 
 /****************
- * ROOM LIQUIDATION
+ * TRIP LIQUIDATION
  *****************/
 
-async function handleRoomLiquidation(request: SignedRequest<OffChainMessage>): Promise<void> {
+async function handleTripLiquidation(request: SignedRequest<OffChainMessage>): Promise<void> {
   const senderId = await verifyRequest(request)
 
   if (!senderId) {
-    console.error("Missing senderId in room liquidation message")
+    console.error("Missing senderId in trip liquidation message")
     return
   }
 
   const newMessage: OffChainMessage = {
     id: uuidv4(),
-    topic: "room__liquidation",
-    roomIndex: request.data.roomIndex,
-    roomId: request.data.roomId,
+    topic: "trip__liquidation",
+    tripIndex: request.data.tripIndex,
+    tripId: request.data.tripId,
     playerName: getEntityName(senderId),
     timestamp: Date.now()
   }

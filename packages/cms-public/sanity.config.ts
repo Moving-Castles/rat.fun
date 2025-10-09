@@ -6,7 +6,7 @@ import deskStructure from "./deskStructure"
 
 export default defineConfig({
   name: "default",
-  title: "rat-room-public",
+  title: "rat.fun public",
 
   projectId: "saljmqwt",
   dataset: "production",
@@ -16,7 +16,7 @@ export default defineConfig({
   document: {
     newDocumentOptions: (prev, { creationContext }) => {
       const { type } = creationContext
-      const DISABLED_TYPES = ["room", "outcome", "worldEvent", "templateImages"]
+      const DISABLED_TYPES = ["trip", "outcome", "worldEvent", "templateImages"]
       if (type === "global") {
         return prev.filter(template => !DISABLED_TYPES.includes(template.templateId))
       }

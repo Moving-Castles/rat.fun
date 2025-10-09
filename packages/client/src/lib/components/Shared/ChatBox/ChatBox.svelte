@@ -7,9 +7,9 @@
   import { CharacterLimitError, ChatValidationError } from "$lib/modules/error-handling/errors"
 
   import ChatHeader from "./ChatHeader.svelte"
-  import ChatEvent_RoomCreation from "./ChatEvent/ChatEvent_RoomCreation.svelte"
-  import ChatEvent_RoomLiquidation from "./ChatEvent/ChatEvent_RoomLiquidation.svelte"
-  import ChatEvent_RoomOutcome from "./ChatEvent/ChatEvent_RoomOutcome.svelte"
+  import ChatEvent_TripCreation from "./ChatEvent/ChatEvent_TripCreation.svelte"
+  import ChatEvent_TripLiquidation from "./ChatEvent/ChatEvent_TripLiquidation.svelte"
+  import ChatEvent_TripOutcome from "./ChatEvent/ChatEvent_TripOutcome.svelte"
   import ChatEvent_RatDeath from "./ChatEvent/ChatEvent_RatDeath.svelte"
   import ChatEvent_RatDeploy from "./ChatEvent/ChatEvent_RatDeploy.svelte"
   import ChatEvent_RatLiquidate from "./ChatEvent/ChatEvent_RatLiquidate.svelte"
@@ -71,12 +71,12 @@
 
   <div bind:this={scrollElement} class="chat-scroll">
     {#each $latestEvents as event (event.id)}
-      {#if event.topic == "room__creation"}
-        <ChatEvent_RoomCreation {event} {suppressSound} />
-      {:else if event.topic == "room__liquidation"}
-        <ChatEvent_RoomLiquidation {event} {suppressSound} />
-      {:else if event.topic == "room__outcome"}
-        <ChatEvent_RoomOutcome {event} {suppressSound} />
+      {#if event.topic == "trip__creation"}
+        <ChatEvent_TripCreation {event} {suppressSound} />
+      {:else if event.topic == "trip__liquidation"}
+        <ChatEvent_TripLiquidation {event} {suppressSound} />
+      {:else if event.topic == "trip__outcome"}
+        <ChatEvent_TripOutcome {event} {suppressSound} />
       {:else if event.topic == "rat__death"}
         <ChatEvent_RatDeath {event} {suppressSound} />
       {:else if event.topic == "rat__deploy"}

@@ -20,7 +20,7 @@ struct GamePercentagesConfigData {
   uint32 maxValuePerWin;
   uint32 minRatValueToEnter;
   uint32 taxationLiquidateRat;
-  uint32 taxationCloseRoom;
+  uint32 taxationCloseTrip;
 }
 
 library GamePercentagesConfig {
@@ -52,7 +52,7 @@ library GamePercentagesConfig {
     fieldNames[0] = "maxValuePerWin";
     fieldNames[1] = "minRatValueToEnter";
     fieldNames[2] = "taxationLiquidateRat";
-    fieldNames[3] = "taxationCloseRoom";
+    fieldNames[3] = "taxationCloseTrip";
   }
 
   /**
@@ -184,9 +184,9 @@ library GamePercentagesConfig {
   }
 
   /**
-   * @notice Get taxationCloseRoom.
+   * @notice Get taxationCloseTrip.
    */
-  function getTaxationCloseRoom() internal view returns (uint32 taxationCloseRoom) {
+  function getTaxationCloseTrip() internal view returns (uint32 taxationCloseTrip) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 3, _fieldLayout);
@@ -194,9 +194,9 @@ library GamePercentagesConfig {
   }
 
   /**
-   * @notice Get taxationCloseRoom.
+   * @notice Get taxationCloseTrip.
    */
-  function _getTaxationCloseRoom() internal view returns (uint32 taxationCloseRoom) {
+  function _getTaxationCloseTrip() internal view returns (uint32 taxationCloseTrip) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 3, _fieldLayout);
@@ -204,21 +204,21 @@ library GamePercentagesConfig {
   }
 
   /**
-   * @notice Set taxationCloseRoom.
+   * @notice Set taxationCloseTrip.
    */
-  function setTaxationCloseRoom(uint32 taxationCloseRoom) internal {
+  function setTaxationCloseTrip(uint32 taxationCloseTrip) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 3, abi.encodePacked((taxationCloseRoom)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 3, abi.encodePacked((taxationCloseTrip)), _fieldLayout);
   }
 
   /**
-   * @notice Set taxationCloseRoom.
+   * @notice Set taxationCloseTrip.
    */
-  function _setTaxationCloseRoom(uint32 taxationCloseRoom) internal {
+  function _setTaxationCloseTrip(uint32 taxationCloseTrip) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 3, abi.encodePacked((taxationCloseRoom)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 3, abi.encodePacked((taxationCloseTrip)), _fieldLayout);
   }
 
   /**
@@ -256,13 +256,13 @@ library GamePercentagesConfig {
     uint32 maxValuePerWin,
     uint32 minRatValueToEnter,
     uint32 taxationLiquidateRat,
-    uint32 taxationCloseRoom
+    uint32 taxationCloseTrip
   ) internal {
     bytes memory _staticData = encodeStatic(
       maxValuePerWin,
       minRatValueToEnter,
       taxationLiquidateRat,
-      taxationCloseRoom
+      taxationCloseTrip
     );
 
     EncodedLengths _encodedLengths;
@@ -280,13 +280,13 @@ library GamePercentagesConfig {
     uint32 maxValuePerWin,
     uint32 minRatValueToEnter,
     uint32 taxationLiquidateRat,
-    uint32 taxationCloseRoom
+    uint32 taxationCloseTrip
   ) internal {
     bytes memory _staticData = encodeStatic(
       maxValuePerWin,
       minRatValueToEnter,
       taxationLiquidateRat,
-      taxationCloseRoom
+      taxationCloseTrip
     );
 
     EncodedLengths _encodedLengths;
@@ -305,7 +305,7 @@ library GamePercentagesConfig {
       _table.maxValuePerWin,
       _table.minRatValueToEnter,
       _table.taxationLiquidateRat,
-      _table.taxationCloseRoom
+      _table.taxationCloseTrip
     );
 
     EncodedLengths _encodedLengths;
@@ -324,7 +324,7 @@ library GamePercentagesConfig {
       _table.maxValuePerWin,
       _table.minRatValueToEnter,
       _table.taxationLiquidateRat,
-      _table.taxationCloseRoom
+      _table.taxationCloseTrip
     );
 
     EncodedLengths _encodedLengths;
@@ -343,7 +343,7 @@ library GamePercentagesConfig {
   )
     internal
     pure
-    returns (uint32 maxValuePerWin, uint32 minRatValueToEnter, uint32 taxationLiquidateRat, uint32 taxationCloseRoom)
+    returns (uint32 maxValuePerWin, uint32 minRatValueToEnter, uint32 taxationLiquidateRat, uint32 taxationCloseTrip)
   {
     maxValuePerWin = (uint32(Bytes.getBytes4(_blob, 0)));
 
@@ -351,7 +351,7 @@ library GamePercentagesConfig {
 
     taxationLiquidateRat = (uint32(Bytes.getBytes4(_blob, 8)));
 
-    taxationCloseRoom = (uint32(Bytes.getBytes4(_blob, 12)));
+    taxationCloseTrip = (uint32(Bytes.getBytes4(_blob, 12)));
   }
 
   /**
@@ -369,7 +369,7 @@ library GamePercentagesConfig {
       _table.maxValuePerWin,
       _table.minRatValueToEnter,
       _table.taxationLiquidateRat,
-      _table.taxationCloseRoom
+      _table.taxationCloseTrip
     ) = decodeStatic(_staticData);
   }
 
@@ -399,9 +399,9 @@ library GamePercentagesConfig {
     uint32 maxValuePerWin,
     uint32 minRatValueToEnter,
     uint32 taxationLiquidateRat,
-    uint32 taxationCloseRoom
+    uint32 taxationCloseTrip
   ) internal pure returns (bytes memory) {
-    return abi.encodePacked(maxValuePerWin, minRatValueToEnter, taxationLiquidateRat, taxationCloseRoom);
+    return abi.encodePacked(maxValuePerWin, minRatValueToEnter, taxationLiquidateRat, taxationCloseTrip);
   }
 
   /**
@@ -414,13 +414,13 @@ library GamePercentagesConfig {
     uint32 maxValuePerWin,
     uint32 minRatValueToEnter,
     uint32 taxationLiquidateRat,
-    uint32 taxationCloseRoom
+    uint32 taxationCloseTrip
   ) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
     bytes memory _staticData = encodeStatic(
       maxValuePerWin,
       minRatValueToEnter,
       taxationLiquidateRat,
-      taxationCloseRoom
+      taxationCloseTrip
     );
 
     EncodedLengths _encodedLengths;

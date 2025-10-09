@@ -14,7 +14,6 @@ import {
   Owner,
   CreationBlock,
   PastRats,
-  LiquidationValue,
   LiquidationBlock,
   MasterKey
 } from "../codegen/index.sol";
@@ -44,7 +43,7 @@ library LibRat {
   /**
    * @notice Process a rat's death, getting the total value left behind
    * @param _ratId The id of the rat
-   * @return balanceToTransfer The total value of the rat to be transferred to room or player
+   * @return balanceToTransfer The total value of the rat to be transferred to trip or player
    */
   function killRat(bytes32 _ratId) internal returns (uint256 balanceToTransfer) {
     Dead.set(_ratId, true);

@@ -6,22 +6,22 @@ export { sendSpawn } from "./actions/sendSpawn"
 export { sendApproveMax } from "./actions/sendApproveMax"
 export { sendGiveCallerTokens } from "./actions/sendGiveCallerTokens"
 export { sendCreateRat } from "./actions/sendCreateRat"
-export { sendEnterRoom } from "./actions/sendEnterRoom"
-export { sendCreateRoom } from "./actions/sendCreateRoom"
+export { sendEnterTrip } from "./actions/sendEnterTrip"
+export { sendCreateTrip } from "./actions/sendCreateTrip"
 export { sendLiquidateRat } from "./actions/sendLiquidateRat"
-export { sendLiquidateRoom } from "./actions/sendLiquidateRoom"
+export { sendLiquidateTrip } from "./actions/sendLiquidateTrip"
 export { sendBuyWithEth } from "./actions/sendBuyWithEth"
 
 const DEFAULT_TIMINGS = {
   Spawn: 4000,
   ApproveMax: 4000,
   GiveCallerTokens: 4000,
-  CreateRoom: 4000,
-  EnterRoom: 4000,
-  CloseRoom: 4000,
+  CreateTrip: 4000,
+  EnterTrip: 4000,
+  CloseTrip: 4000,
   CreateRat: 4000,
   LiquidateRat: 4000,
-  LiquidateRoom: 4000,
+  LiquidateTrip: 4000,
   BuyWithEth: 60000
 }
 
@@ -29,11 +29,11 @@ export const busy = $state({
   Spawn: new Tween(0, { duration: DEFAULT_TIMINGS.Spawn, easing }),
   ApproveMax: new Tween(0, { duration: DEFAULT_TIMINGS.ApproveMax, easing }),
   GiveCallerTokens: new Tween(0, { duration: DEFAULT_TIMINGS.GiveCallerTokens, easing }),
-  CreateRoom: new Tween(0, { duration: DEFAULT_TIMINGS.CreateRoom, easing }),
-  EnterRoom: new Tween(0, { duration: DEFAULT_TIMINGS.EnterRoom, easing }),
-  CloseRoom: new Tween(0, { duration: DEFAULT_TIMINGS.CloseRoom, easing }),
+  CreateTrip: new Tween(0, { duration: DEFAULT_TIMINGS.CreateTrip, easing }),
+  EnterTrip: new Tween(0, { duration: DEFAULT_TIMINGS.EnterTrip, easing }),
+  CloseTrip: new Tween(0, { duration: DEFAULT_TIMINGS.CloseTrip, easing }),
   CreateRat: new Tween(0, { duration: DEFAULT_TIMINGS.CreateRat, easing }),
   LiquidateRat: new Tween(0, { duration: DEFAULT_TIMINGS.LiquidateRat, easing }),
-  LiquidateRoom: new Tween(0, { duration: DEFAULT_TIMINGS.LiquidateRoom, easing }),
+  LiquidateTrip: new Tween(0, { duration: DEFAULT_TIMINGS.LiquidateTrip, easing }),
   BuyWithEth: new Tween(0, { duration: DEFAULT_TIMINGS.BuyWithEth, easing })
 })

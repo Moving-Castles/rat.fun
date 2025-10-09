@@ -17,12 +17,12 @@
     gsap.to(".logo img", {
       opacity: 0.8,
       duration: 0.3,
-      ease: "power2.inOut"
+      ease: "power2.out"
     })
   })
 
   const onClick = () => {
-    playSound("ratfunUI", "bigButtonUp")
+    playSound("ratfunUI", "logoClick")
 
     exitTimeline.play()
 
@@ -35,14 +35,14 @@
       opacity: 0,
       scale: 0,
       duration: 0.5,
-      ease: "power2.inOut"
+      ease: "power2.out"
     })
 
     exitTimeline.call(onComplete)
   }
 
   const onmousedown = () => {
-    playSound("ratfunUI", "bigButtonDown")
+    playSound("ratfunUI", "smallButtonDown")
   }
 </script>
 

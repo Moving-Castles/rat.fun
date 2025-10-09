@@ -14,7 +14,6 @@
   let isHovered = $state(false)
 
   const onMouseEnter = () => {
-    console.log("onMouseEnter triggered")
     playSound("ratfunUI", "hover")
     isHovered = true
   }

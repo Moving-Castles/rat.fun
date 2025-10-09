@@ -12,7 +12,7 @@ Mud based.
 
 ### server
 
-- creating and entering rooms is done through the server
+- creating and entering trips is done through the server
 - the server executes the LLM calls
 - chain calls are done from admin account on behalf of the player
 - server maintains websocket connections to the players for alerts
@@ -26,8 +26,8 @@ Mud based.
 ### cms-public
 
 - using [sanity.io](https://www.sanity.io/)
-- stores room images
-- stores room and outcome statistics
+- stores trip images
+- stores trip and outcome statistics
 - publicly accessible
 
 ### scripts
@@ -52,7 +52,7 @@ Copy `.env.example` to `.env` and fill in the values.
 
 #### client
 
-- `PUBLIC_SANITY_CMS_ID` (required): Public CMS ID for Sanity. Needed to fetch room images and other metadata.
+- `PUBLIC_SANITY_CMS_ID` (required): Public CMS ID for Sanity. Needed to fetch trip images and other metadata.
 - `PUBLIC_DEVELOPMENT_SERVER_HOST` (required): Host of the development server.
 - `PUBLIC_BASE_SEPOLIA_SERVER_HOST` (not required): Host of the base sepolia server.
 - `NETLIFY_AUTH_TOKEN` (not required): Netlify authentication token. Needed to deploy clients to Netlify.
@@ -71,7 +71,7 @@ Copy `.env.example` to `.env` and fill in the values.
 - `PRIVATE_SANITY_CMS_TOKEN` (required): Private CMS token for Sanity. Needed to retrieve the system prompts.
 - `PUBLIC_SANITY_CMS_ID` (required): Public CMS ID for Sanity. Used to store in-game statistics and metadata.
 - `PUBLIC_SANITY_CMS_TOKEN` (required): Public CMS token for Sanity. Used to store in-game statistics and metadata.
-- `REPLICATE_API_TOKEN` (required): API token for Replicate. Needed to generate room images.
+- `REPLICATE_API_TOKEN` (required): API token for Replicate. Needed to generate trip images.
 
 #### scripts
 

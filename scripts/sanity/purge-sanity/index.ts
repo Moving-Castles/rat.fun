@@ -10,7 +10,7 @@ const { Command } = require("commander")
 const LOCALHOST_WORLD_ADDRESS = "0x6439113f0e1f64018c3167DA2aC21e2689818086"
 
 // Define document types
-interface RoomDocument {
+interface TripDocument {
   _id: string
   title: string
   worldAddress: string
@@ -36,7 +36,7 @@ const program = new Command()
 program
   .option("-w, --world-address <address>", "World address to purge")
   .option("-d, --dry-run", "Dry run - only show what would be deleted")
-  .option("-r, --rooms-only", "Only delete room documents")
+  .option("-r, --trips-only", "Only delete trip documents")
   .option("-o, --outcomes-only", "Only delete outcome documents")
   .option("-l, --localhost", "Use localhost world address")
   .option("-a, --all", "Delete all documents regardless of world address")
@@ -45,7 +45,7 @@ program
 const options = program.opts()
 const worldAddress = options.localhost ? LOCALHOST_WORLD_ADDRESS : options.worldAddress
 const isDryRun = options.dryRun || false
-const roomsOnly = options.roomsOnly || false
+const tripsOnly = options.tripsOnly || false
 const outcomesOnly = options.outcomesOnly || false
 const deleteAll = options.all || false
 
@@ -79,23 +79,23 @@ async function purgeWorld() {
     )
     console.log(`Mode: ${isDryRun ? "DRY RUN" : "LIVE"}`)
     console.log(
-      `Document types: ${roomsOnly ? "rooms only" : outcomesOnly ? "outcomes only" : "both rooms and outcomes"}`
+      `Document types: ${tripsOnly ? "trips only" : outcomesOnly ? "outcomes only" : "both trips and outcomes"}`
     )
 
-    let rooms: RoomDocument[] = []
+    let trips: TripDocument[] = []
     let outcomes: OutcomeDocument[] = []
 
-    // Find room documents if needed
+    // Find trip documents if needed
     if (!outcomesOnly) {
-      const roomQuery = deleteAll
-        ? `*[_type == "room"]`
-        : `*[_type == "room" && worldAddress == $worldAddress]`
-      rooms = await client.fetch(roomQuery, deleteAll ? {} : { worldAddress })
-      console.log(`Found ${rooms.length} room documents`)
+      const tripQuery = deleteAll
+        ? `*[_type == "trip"]`
+        : `*[_type == "trip" && worldAddress == $worldAddress]`
+      trips = await client.fetch(tripQuery, deleteAll ? {} : { worldAddress })
+      console.log(`Found ${trips.length} trip documents`)
     }
 
     // Find outcome documents if needed
-    if (!roomsOnly) {
+    if (!tripsOnly) {
       const outcomeQuery = deleteAll
         ? `*[_type == "outcome"]`
         : `*[_type == "outcome" && worldAddress == $worldAddress]`
@@ -103,7 +103,7 @@ async function purgeWorld() {
       console.log(`Found ${outcomes.length} outcome documents`)
     }
 
-    const totalDocuments = rooms.length + outcomes.length
+    const totalDocuments = trips.length + outcomes.length
     console.log(`Total documents to delete: ${totalDocuments}`)
 
     if (totalDocuments === 0) {
@@ -112,10 +112,10 @@ async function purgeWorld() {
     }
 
     if (isDryRun) {
-      if (rooms.length > 0) {
-        console.log("\n--- ROOM DOCUMENTS ---")
-        rooms.forEach((room: RoomDocument) => {
-          console.log(`ID: ${room._id}, Title: ${room.title}`)
+      if (trips.length > 0) {
+        console.log("\n--- TRIP DOCUMENTS ---")
+        trips.forEach((trip: TripDocument) => {
+          console.log(`ID: ${trip._id}, Title: ${trip.title}`)
         })
       }
 
@@ -137,12 +137,12 @@ async function purgeWorld() {
       return
     }
 
-    // Delete room documents
-    if (rooms.length > 0) {
-      console.log("\nDeleting room documents...")
-      for (const room of rooms) {
-        await client.delete(room._id)
-        console.log(`Deleted room: ${room.title} (${room._id})`)
+    // Delete trip documents
+    if (trips.length > 0) {
+      console.log("\nDeleting trip documents...")
+      for (const trip of trips) {
+        await client.delete(trip._id)
+        console.log(`Deleted trip: ${trip.title} (${trip._id})`)
       }
     }
 

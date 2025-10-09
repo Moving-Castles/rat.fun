@@ -6,10 +6,10 @@
 import { Hex } from "viem"
 import { OutcomeReturnValue } from "@modules/types"
 import { SetupNetworkResult } from "./setupNetwork"
-import { Rat, Room } from "@modules/types"
-import { getEnterRoomData } from "@modules/mud/getOnchainData/getEnterRoomData"
+import { Rat, Trip } from "@modules/types"
+import { getEnterTripData } from "@modules/mud/getOnchainData/getEnterTripData"
 import { createOutcomeCallArgs, updateOutcome } from "./outcome"
-import { getRoomValue, getRatValue } from "./value"
+import { getTripValue, getRatValue } from "./value"
 import {
   SystemCallError,
   ContractCallError,
@@ -19,9 +19,9 @@ import {
 export type SystemCalls = ReturnType<typeof createSystemCalls>
 
 export function createSystemCalls(network: SetupNetworkResult) {
-  const applyOutcome = async (rat: Rat, room: Room, outcome: OutcomeReturnValue) => {
+  const applyOutcome = async (rat: Rat, trip: Trip, outcome: OutcomeReturnValue) => {
     try {
-      const args = createOutcomeCallArgs(rat, room, outcome)
+      const args = createOutcomeCallArgs(rat, trip, outcome)
 
       const tx = await network.worldContract.write.ratfun__applyOutcome(args)
       await network.waitForTransaction(tx)
@@ -30,11 +30,11 @@ export function createSystemCalls(network: SetupNetworkResult) {
       // We get the new onchain state
       // and update the outcome with the actual changes
       try {
-        const newOnChainData = await getEnterRoomData(rat.id, room.id)
+        const newOnChainData = await getEnterTripData(rat.id, trip.id)
 
         const validatedOutcome = updateOutcome(outcome, rat, newOnChainData.rat)
 
-        const { newRoomValue, roomValueChange } = getRoomValue(room, newOnChainData.room)
+        const { newTripValue, tripValueChange } = getTripValue(trip, newOnChainData.trip)
 
         const newRatBalance = newOnChainData.rat?.balance ?? 0
 
@@ -42,8 +42,8 @@ export function createSystemCalls(network: SetupNetworkResult) {
 
         return {
           validatedOutcome,
-          newRoomValue,
-          roomValueChange,
+          newTripValue,
+          tripValueChange,
           newRatBalance,
           newRatValue,
           ratValueChange
@@ -74,18 +74,18 @@ export function createSystemCalls(network: SetupNetworkResult) {
     }
   }
 
-  const createRoom = async (
+  const createTrip = async (
     playerId: Hex,
-    roomID: Hex,
-    roomCreationCost: number,
-    roomPrompt: string
+    tripID: Hex,
+    tripCreationCost: number,
+    tripPrompt: string
   ) => {
     try {
-      const tx = await network.worldContract.write.ratfun__createRoom([
+      const tx = await network.worldContract.write.ratfun__createTrip([
         playerId,
-        roomID,
-        BigInt(roomCreationCost),
-        roomPrompt
+        tripID,
+        BigInt(tripCreationCost),
+        tripPrompt
       ])
 
       await network.waitForTransaction(tx)
@@ -99,7 +99,7 @@ export function createSystemCalls(network: SetupNetworkResult) {
 
       // Otherwise, wrap it in our custom error
       throw new ContractCallError(
-        `Error creating room: ${error instanceof Error ? error.message : String(error)}`,
+        `Error creating trip: ${error instanceof Error ? error.message : String(error)}`,
         error
       )
     }
@@ -126,7 +126,7 @@ export function createSystemCalls(network: SetupNetworkResult) {
 
   return {
     applyOutcome,
-    createRoom,
+    createTrip,
     giveMasterKey
   }
 }

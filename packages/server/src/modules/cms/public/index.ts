@@ -1,6 +1,6 @@
-import type { Outcome as OutcomeDoc, Room as RoomDoc } from "@sanity-public-cms-types"
+import type { Outcome as OutcomeDoc, Trip as TripDoc } from "@sanity-public-cms-types"
 import type { ResolvedTemplateImages } from "@modules/types"
-import type { Rat, Room, Player } from "@modules/types"
+import type { Rat, Trip, Player } from "@modules/types"
 import type { CorrectionReturnValue, OutcomeReturnValue } from "@modules/types"
 import { loadDataPublicSanity } from "@modules/cms/public/sanity"
 import { queries } from "@modules/cms/public/groq"
@@ -11,10 +11,10 @@ import { CMSError, CMSAPIError, CMSDataError } from "@modules/error-handling/err
 
 // Define a type for new outcome documents that omits Sanity-specific fields
 type NewOutcomeDoc = Omit<OutcomeDoc, "_createdAt" | "_updatedAt" | "_rev">
-type NewRoomDoc = Omit<RoomDoc, "_createdAt" | "_updatedAt" | "_rev">
+type NewTripDoc = Omit<TripDoc, "_createdAt" | "_updatedAt" | "_rev">
 
 /**
- * Template images are used as base for the room image generation
+ * Template images are used as base for the trip image generation
  * @returns The template images document
  */
 export const getTemplateImages = async () => {
@@ -44,43 +44,43 @@ export const getTemplateImages = async () => {
 }
 
 /**
- * Write room text metadata to offchain CMS.
- * Called immediately after room creation onchain.
- * @param worldAddress - The world address of the room
- * @param roomIndex - The index of the room
- * @param roomID - The ID of the room
- * @param prompt - The prompt for the room
- * @param player - The player who created the room
- * @returns The room document
+ * Write trip text metadata to offchain CMS.
+ * Called immediately after trip creation onchain.
+ * @param worldAddress - The world address of the trip
+ * @param tripIndex - The index of the trip
+ * @param tripID - The ID of the trip
+ * @param prompt - The prompt for the trip
+ * @param player - The player who created the trip
+ * @returns The trip document
  */
-export async function writeRoomToCMS(
+export async function writeTripToCMS(
   worldAddress: string,
-  roomIndex: number,
-  roomID: string,
+  tripIndex: number,
+  tripID: string,
   prompt: string,
   player: Player
-): Promise<RoomDoc> {
+): Promise<TripDoc> {
   try {
-    // Create the room document without image reference
-    const newRoomDoc: NewRoomDoc = {
-      _type: "room",
-      title: roomID,
-      _id: roomID,
+    // Create the trip document without image reference
+    const newTripDoc: NewTripDoc = {
+      _type: "trip",
+      title: tripID,
+      _id: tripID,
       worldAddress: worldAddress,
-      index: roomIndex,
+      index: tripIndex,
       owner: player.id,
       ownerName: player.name,
       prompt,
       slug: {
         _type: "slug",
-        current: roomID
+        current: tripID
       }
     }
 
-    // Create the room document in Sanity
-    const room = (await publicSanityClient.create(newRoomDoc)) as RoomDoc
+    // Create the trip document in Sanity
+    const trip = (await publicSanityClient.create(newTripDoc)) as TripDoc
 
-    return room
+    return trip
   } catch (error) {
     // If it's already one of our custom errors, rethrow it
     if (error instanceof CMSError) {
@@ -89,28 +89,28 @@ export async function writeRoomToCMS(
 
     // Otherwise, wrap it in our custom error
     throw new CMSAPIError(
-      `Error writing room text to CMS: ${error instanceof Error ? error.message : String(error)}`,
+      `Error writing trip text to CMS: ${error instanceof Error ? error.message : String(error)}`,
       error
     )
   }
 }
 
 /**
- * Update room document with image.
+ * Update trip document with image.
  * Called after image generation is complete.
- * @param roomID - The ID of the room
- * @param imageBuffer - The generated room image
- * @returns The updated room document
+ * @param tripID - The ID of the trip
+ * @param imageBuffer - The generated trip image
+ * @returns The updated trip document
  */
-export async function updateRoomWithImage(roomID: string, imageBuffer: Buffer): Promise<RoomDoc> {
+export async function updateTripWithImage(tripID: string, imageBuffer: Buffer): Promise<TripDoc> {
   try {
     const imageAsset = await publicSanityClient.assets.upload("image", imageBuffer, {
-      filename: `room-${roomID}.webp`
+      filename: `trip-${tripID}.webp`
     })
 
-    // Update the room document with the image reference
-    const room = (await publicSanityClient
-      .patch(roomID)
+    // Update the trip document with the image reference
+    const trip = (await publicSanityClient
+      .patch(tripID)
       .set({
         image: {
           _type: "image",
@@ -120,9 +120,9 @@ export async function updateRoomWithImage(roomID: string, imageBuffer: Buffer): 
           }
         }
       })
-      .commit()) as RoomDoc
+      .commit()) as TripDoc
 
-    return room
+    return trip
   } catch (error) {
     // If it's already one of our custom errors, rethrow it
     if (error instanceof CMSError) {
@@ -131,7 +131,7 @@ export async function updateRoomWithImage(roomID: string, imageBuffer: Buffer): 
 
     // Otherwise, wrap it in our custom error
     throw new CMSAPIError(
-      `Error updating room with image: ${error instanceof Error ? error.message : String(error)}`,
+      `Error updating trip with image: ${error instanceof Error ? error.message : String(error)}`,
       error
     )
   }
@@ -144,10 +144,10 @@ export async function updateRoomWithImage(roomID: string, imageBuffer: Buffer): 
 export async function writeOutcomeToCMS(
   worldAddress: string,
   player: Player,
-  room: Room,
+  trip: Trip,
   rat: Rat,
-  newRoomValue: number,
-  roomValueChange: number,
+  newTripValue: number,
+  tripValueChange: number,
   newRatValue: number,
   ratValueChange: number,
   events: CorrectionReturnValue,
@@ -162,13 +162,13 @@ export async function writeOutcomeToCMS(
       _id: outcomeID,
       worldAddress: worldAddress,
       playerId: player.id,
-      roomId: room.id,
-      roomIndex: Number(room.index),
+      tripId: trip.id,
+      tripIndex: Number(trip.index),
       log: createOutcomeEvents(events),
       ratId: rat.id,
       ratName: rat.name,
-      roomValue: newRoomValue,
-      roomValueChange: roomValueChange,
+      tripValue: newTripValue,
+      tripValueChange: tripValueChange,
       ratValue: newRatValue,
       ratValueChange: ratValueChange,
       playerName: player.name,

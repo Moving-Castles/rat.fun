@@ -17,7 +17,7 @@ import { EncodedLengths, EncodedLengthsLib } from "@latticexyz/store/src/Encoded
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 
 struct WorldStatsData {
-  uint256 globalRoomIndex;
+  uint256 globalTripIndex;
   uint256 globalRatIndex;
   uint256 globalRatKillCount;
   uint256 lastKilledRatBlock;
@@ -49,7 +49,7 @@ library WorldStats {
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
     fieldNames = new string[](4);
-    fieldNames[0] = "globalRoomIndex";
+    fieldNames[0] = "globalTripIndex";
     fieldNames[1] = "globalRatIndex";
     fieldNames[2] = "globalRatKillCount";
     fieldNames[3] = "lastKilledRatBlock";
@@ -70,9 +70,9 @@ library WorldStats {
   }
 
   /**
-   * @notice Get globalRoomIndex.
+   * @notice Get globalTripIndex.
    */
-  function getGlobalRoomIndex() internal view returns (uint256 globalRoomIndex) {
+  function getGlobalTripIndex() internal view returns (uint256 globalTripIndex) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
@@ -80,9 +80,9 @@ library WorldStats {
   }
 
   /**
-   * @notice Get globalRoomIndex.
+   * @notice Get globalTripIndex.
    */
-  function _getGlobalRoomIndex() internal view returns (uint256 globalRoomIndex) {
+  function _getGlobalTripIndex() internal view returns (uint256 globalTripIndex) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
@@ -90,21 +90,21 @@ library WorldStats {
   }
 
   /**
-   * @notice Set globalRoomIndex.
+   * @notice Set globalTripIndex.
    */
-  function setGlobalRoomIndex(uint256 globalRoomIndex) internal {
+  function setGlobalTripIndex(uint256 globalTripIndex) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((globalRoomIndex)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((globalTripIndex)), _fieldLayout);
   }
 
   /**
-   * @notice Set globalRoomIndex.
+   * @notice Set globalTripIndex.
    */
-  function _setGlobalRoomIndex(uint256 globalRoomIndex) internal {
+  function _setGlobalTripIndex(uint256 globalTripIndex) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((globalRoomIndex)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((globalTripIndex)), _fieldLayout);
   }
 
   /**
@@ -253,12 +253,12 @@ library WorldStats {
    * @notice Set the full data using individual values.
    */
   function set(
-    uint256 globalRoomIndex,
+    uint256 globalTripIndex,
     uint256 globalRatIndex,
     uint256 globalRatKillCount,
     uint256 lastKilledRatBlock
   ) internal {
-    bytes memory _staticData = encodeStatic(globalRoomIndex, globalRatIndex, globalRatKillCount, lastKilledRatBlock);
+    bytes memory _staticData = encodeStatic(globalTripIndex, globalRatIndex, globalRatKillCount, lastKilledRatBlock);
 
     EncodedLengths _encodedLengths;
     bytes memory _dynamicData;
@@ -272,12 +272,12 @@ library WorldStats {
    * @notice Set the full data using individual values.
    */
   function _set(
-    uint256 globalRoomIndex,
+    uint256 globalTripIndex,
     uint256 globalRatIndex,
     uint256 globalRatKillCount,
     uint256 lastKilledRatBlock
   ) internal {
-    bytes memory _staticData = encodeStatic(globalRoomIndex, globalRatIndex, globalRatKillCount, lastKilledRatBlock);
+    bytes memory _staticData = encodeStatic(globalTripIndex, globalRatIndex, globalRatKillCount, lastKilledRatBlock);
 
     EncodedLengths _encodedLengths;
     bytes memory _dynamicData;
@@ -292,7 +292,7 @@ library WorldStats {
    */
   function set(WorldStatsData memory _table) internal {
     bytes memory _staticData = encodeStatic(
-      _table.globalRoomIndex,
+      _table.globalTripIndex,
       _table.globalRatIndex,
       _table.globalRatKillCount,
       _table.lastKilledRatBlock
@@ -311,7 +311,7 @@ library WorldStats {
    */
   function _set(WorldStatsData memory _table) internal {
     bytes memory _staticData = encodeStatic(
-      _table.globalRoomIndex,
+      _table.globalTripIndex,
       _table.globalRatIndex,
       _table.globalRatKillCount,
       _table.lastKilledRatBlock
@@ -333,9 +333,9 @@ library WorldStats {
   )
     internal
     pure
-    returns (uint256 globalRoomIndex, uint256 globalRatIndex, uint256 globalRatKillCount, uint256 lastKilledRatBlock)
+    returns (uint256 globalTripIndex, uint256 globalRatIndex, uint256 globalRatKillCount, uint256 lastKilledRatBlock)
   {
-    globalRoomIndex = (uint256(Bytes.getBytes32(_blob, 0)));
+    globalTripIndex = (uint256(Bytes.getBytes32(_blob, 0)));
 
     globalRatIndex = (uint256(Bytes.getBytes32(_blob, 32)));
 
@@ -356,7 +356,7 @@ library WorldStats {
     bytes memory
   ) internal pure returns (WorldStatsData memory _table) {
     (
-      _table.globalRoomIndex,
+      _table.globalTripIndex,
       _table.globalRatIndex,
       _table.globalRatKillCount,
       _table.lastKilledRatBlock
@@ -386,12 +386,12 @@ library WorldStats {
    * @return The static data, encoded into a sequence of bytes.
    */
   function encodeStatic(
-    uint256 globalRoomIndex,
+    uint256 globalTripIndex,
     uint256 globalRatIndex,
     uint256 globalRatKillCount,
     uint256 lastKilledRatBlock
   ) internal pure returns (bytes memory) {
-    return abi.encodePacked(globalRoomIndex, globalRatIndex, globalRatKillCount, lastKilledRatBlock);
+    return abi.encodePacked(globalTripIndex, globalRatIndex, globalRatKillCount, lastKilledRatBlock);
   }
 
   /**
@@ -401,12 +401,12 @@ library WorldStats {
    * @return The dynamic (variable length) data, encoded into a sequence of bytes.
    */
   function encode(
-    uint256 globalRoomIndex,
+    uint256 globalTripIndex,
     uint256 globalRatIndex,
     uint256 globalRatKillCount,
     uint256 lastKilledRatBlock
   ) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
-    bytes memory _staticData = encodeStatic(globalRoomIndex, globalRatIndex, globalRatKillCount, lastKilledRatBlock);
+    bytes memory _staticData = encodeStatic(globalTripIndex, globalRatIndex, globalRatKillCount, lastKilledRatBlock);
 
     EncodedLengths _encodedLengths;
     bytes memory _dynamicData;

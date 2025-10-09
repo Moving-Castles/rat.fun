@@ -1,8 +1,9 @@
 import { Chain, http } from "viem"
 import { Config, createConfig, CreateConnectorFn } from "wagmi"
-import { injected, coinbaseWallet, safe } from "wagmi/connectors"
+import { coinbaseWallet, safe, metaMask, walletConnect } from "wagmi/connectors"
 import { getDefaultConfig } from "connectkit"
 import { extendedBaseSepolia, extendedMudFoundry } from "$lib/mud/extendedChainConfigs"
+import { PUBLIC_WALLET_CONNECT_PROJECT_ID } from "$env/static/public"
 
 export const chains = [extendedMudFoundry, extendedBaseSepolia] as const satisfies Chain[]
 
@@ -11,11 +12,8 @@ export const transports = {
   [extendedMudFoundry.id]: http()
 } as const
 
-// Based on entrykit's createWagmiConfig but with a different connector order
 export function wagmiConfig(): Config<typeof chains, typeof transports> {
   const appName = document.title
-  // TODO: remove connectors and use ConnectKit's default once https://github.com/wevm/wagmi/pull/4691 lands
-  // (this is a TODO from entrykit's createWagmiConfig and is mostly here for context)
   const connectors: CreateConnectorFn[] = []
 
   connectors.push(
@@ -23,7 +21,8 @@ export function wagmiConfig(): Config<typeof chains, typeof transports> {
       appName,
       overrideIsMetaMask: false
     }),
-    injected({ target: "metaMask" })
+    metaMask(),
+    walletConnect({ projectId: PUBLIC_WALLET_CONNECT_PROJECT_ID })
   )
 
   // If we're in an iframe, include the SafeConnector
@@ -43,7 +42,7 @@ export function wagmiConfig(): Config<typeof chains, typeof transports> {
       [extendedBaseSepolia.id]: 2000
     },
     appName: document.title,
-    walletConnectProjectId: "",
+    walletConnectProjectId: PUBLIC_WALLET_CONNECT_PROJECT_ID,
     enableFamily: false,
     connectors
   })

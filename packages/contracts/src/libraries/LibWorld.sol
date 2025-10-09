@@ -13,14 +13,14 @@ import {
 } from "../codegen/index.sol";
 import {
   RAT_CREATION_COST,
-  MAX_ROOM_PROMPT_LENGTH,
-  MIN_ROOM_PROMPT_LENGTH,
+  MAX_TRIP_PROMPT_LENGTH,
+  MIN_TRIP_PROMPT_LENGTH,
   MAX_INVENTORY_SIZE,
-  COOLDOWN_CLOSE_ROOM,
+  COOLDOWN_CLOSE_TRIP,
   MAX_VALUE_PER_WIN_PERCENTAGE,
   MIN_RAT_VALUE_TO_ENTER_PERCENTAGE,
   TAXATION_LIQUIDATE_RAT_PERCENTAGE,
-  TAXATION_CLOSE_ROOM_PERCENTAGE,
+  TAXATION_CLOSE_TRIP_PERCENTAGE,
   RATS_KILLED_FOR_ADMIN_ACCESS
 } from "../constants.sol";
 import { LibUtils } from "./LibUtils.sol";
@@ -54,8 +54,8 @@ library LibWorld {
         adminId: adminId,
         ratCreationCost: RAT_CREATION_COST,
         maxInventorySize: MAX_INVENTORY_SIZE,
-        maxRoomPromptLength: MAX_ROOM_PROMPT_LENGTH,
-        cooldownCloseRoom: COOLDOWN_CLOSE_ROOM,
+        maxTripPromptLength: MAX_TRIP_PROMPT_LENGTH,
+        cooldownCloseTrip: COOLDOWN_CLOSE_TRIP,
         ratsKilledForAdminAccess: RATS_KILLED_FOR_ADMIN_ACCESS
       })
     );
@@ -65,7 +65,7 @@ library LibWorld {
         maxValuePerWin: MAX_VALUE_PER_WIN_PERCENTAGE,
         minRatValueToEnter: MIN_RAT_VALUE_TO_ENTER_PERCENTAGE,
         taxationLiquidateRat: TAXATION_LIQUIDATE_RAT_PERCENTAGE,
-        taxationCloseRoom: TAXATION_CLOSE_ROOM_PERCENTAGE
+        taxationCloseTrip: TAXATION_CLOSE_TRIP_PERCENTAGE
       })
     );
 

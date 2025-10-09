@@ -13,7 +13,7 @@ import { Item } from "../../structs.sol";
 interface IManagerSystem {
   function ratfun__applyOutcome(
     bytes32 _ratId,
-    bytes32 _roomId,
+    bytes32 _tripId,
     int256 _balanceTransferToOrFromRat,
     bytes32[] calldata _itemsToRemoveFromRat,
     Item[] calldata _itemsToAddToRat
@@ -30,7 +30,7 @@ interface IManagerSystem {
 
   function ratfun__removeWorldEvent() external;
 
-  function ratfun__setCooldownCloseRoom(uint32 _cooldownCloseRoom) external;
+  function ratfun__setCooldownCloseTrip(uint32 _cooldownCloseTrip) external;
 
   function ratfun__setRatsKilledForAdminAccess(uint32 _ratsKilledForAdminAccess) external;
 
@@ -40,5 +40,5 @@ interface IManagerSystem {
 
   function ratfun__setTaxationLiquidateRat(uint32 _taxationLiquidateRat) external;
 
-  function ratfun__setTaxationCloseRoom(uint32 _taxationCloseRoom) external;
+  function ratfun__setTaxationCloseTrip(uint32 _taxationCloseTrip) external;
 }

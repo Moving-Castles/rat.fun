@@ -8,7 +8,7 @@ import deskStructure from "./deskStructure"
 
 export default defineConfig({
   name: "default",
-  title: "rat-room-prompts",
+  title: "rat.fun private",
 
   projectId: "lviejo4k",
   dataset: "production",

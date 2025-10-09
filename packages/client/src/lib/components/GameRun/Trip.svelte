@@ -1,54 +1,54 @@
 <script lang="ts">
   import type { Hex } from "viem"
-  import type { EnterRoomReturnValue } from "@server/modules/types"
+  import type { EnterTripReturnValue } from "@server/modules/types"
   import { onMount } from "svelte"
   import { staticContent } from "$lib/modules/content"
   import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
-  import { sendEnterRoom } from "$lib/modules/action-manager/actions/sendEnterRoom"
+  import { sendEnterTrip } from "$lib/modules/action-manager/actions/sendEnterTrip"
   import { NetworkError, APIError } from "$lib/modules/error-handling/errors"
-  import { RoomError } from "$lib/modules/error-handling/errors"
+  import { TripError } from "$lib/modules/error-handling/errors"
   import { player } from "$lib/modules/state/stores"
   import { replaceState } from "$app/navigation"
   import {
     TRIP_STATE,
     transitionTo,
     freezeObjects,
-    roomResultState,
+    tripResultState,
     resetTripState
   } from "$lib/components/GameRun/state.svelte"
-  import { rat, rooms } from "$lib/modules/state/stores"
+  import { rat, trips } from "$lib/modules/state/stores"
   import { TripSetup, TripProcessing, TripReport } from "$lib/components/GameRun"
 
   let {
-    roomId
+    tripId
   }: {
-    roomId: Hex
+    tripId: Hex
   } = $props()
 
-  let result = $state<EnterRoomReturnValue | null>(null)
+  let result = $state<EnterTripReturnValue | null>(null)
 
-  // Get static room content from cms
-  let staticRoomContent = $derived($staticContent.rooms.find(r => r._id == (roomId ?? "")))
+  // Get static trip content from cms
+  let staticTripContent = $derived($staticContent.trips.find(r => r._id == (tripId ?? "")))
 
-  // Process the room
-  const processRoomEntry = async () => {
+  // Process the trip
+  const processTripEntry = async () => {
     try {
-      result = await sendEnterRoom(roomId, $player.currentRat)
+      result = await sendEnterTrip(tripId, $player.currentRat)
       if (!result) {
-        throw new RoomError("No result returned from trip entry", roomId)
+        throw new TripError("No result returned from trip entry", tripId)
       }
     } catch (err) {
       if (err instanceof Error) {
         if (err.message.includes("network") || err.message.includes("fetch")) {
           throw new NetworkError(
-            "ROOM_ENTRY_NETWORK_ERROR",
-            "Network error during room entry",
+            "TRIP_ENTRY_NETWORK_ERROR",
+            "Network error during trip entry",
             err.message
           )
         } else if (err.message.includes("api") || err.message.includes("server")) {
           throw new APIError("Trip entry API error: " + err.message, err)
         } else {
-          throw new RoomError("Trip entry failed: " + err.message, roomId)
+          throw new TripError("Trip entry failed: " + err.message, tripId)
         }
       }
     }
@@ -59,24 +59,24 @@
     resetTripState()
 
     // Clean the URL
-    replaceState(`/${roomId}/tripping`, {})
+    replaceState(`/${tripId}/tripping`, {})
 
-    const room = $rooms[roomId]
+    const trip = $trips[tripId]
 
-    // Freeze the rat and room to be able to gradually update their values without reactivity
+    // Freeze the rat and trip to be able to gradually update their values without reactivity
     // from on-chain changes.
-    freezeObjects($rat, room, roomId, $player.currentRat)
+    freezeObjects($rat, trip, tripId, $player.currentRat)
 
-    // Process the room entry
-    processRoomEntry()
+    // Process the trip entry
+    processTripEntry()
   })
 </script>
 
 <div class="trip">
   <!-- ### 1. TRIP SETUP ### -->
-  {#if roomResultState.state === TRIP_STATE.SETUP}
+  {#if tripResultState.state === TRIP_STATE.SETUP}
     <TripSetup
-      {staticRoomContent}
+      {staticTripContent}
       onComplete={() => {
         transitionTo(TRIP_STATE.PROCESSING)
       }}
@@ -84,7 +84,7 @@
   {/if}
 
   <!-- ### 2. TRIP PROCESSING ### -->
-  {#if roomResultState.state === TRIP_STATE.PROCESSING}
+  {#if tripResultState.state === TRIP_STATE.PROCESSING}
     <TripProcessing
       {result}
       onComplete={async () => {
@@ -94,7 +94,7 @@
   {/if}
 
   <!-- ### 3. TRIP RESULTS ### -->
-  {#if roomResultState.state === TRIP_STATE.RESULTS}
+  {#if tripResultState.state === TRIP_STATE.RESULTS}
     <TripReport {result} />
   {/if}
 </div>

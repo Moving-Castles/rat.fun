@@ -1,0 +1,25 @@
+{
+  "trips": [
+    {
+      "tripPrompt": "Hungry angry cat. Only way out is by killing cat."
+    },
+    {
+      "tripPrompt": "Trip is very cold. -89.2°C. After two minutes, high voltage current activates in floor. If rat survives, gets full trip balance."
+    },
+    {
+      "tripPrompt": "Marc Andreesen and the a16z crypto team will listen to a startup pitch by your rat. If the pitch does not strongly fit ALL investment criteria, Marc Andreessen will physically torment the rat to death while talking about techno-optimism. If success, {random:100-250} tokens pre-seed investment."
+    },
+    {
+      "tripPrompt": "Evil Vending Machine gives one random item worth between 30-60 tokens. Cost is 50 tokens. If the rat does not have 50 tokens, the machine will take the debt by draining 50 health."
+    },
+    {
+      "tripPrompt": "Rat merchant. Rat swaps one item for another item worth 5 tokens less. Likes to give opposite items."
+    },
+    {
+      "tripPrompt": "Trip is microwave."
+    },
+    {
+      "tripPrompt": "Euthanasia chamber through gas. Balance is on secure hard-wallet within safe in trip."
+    }
+  ]
+}

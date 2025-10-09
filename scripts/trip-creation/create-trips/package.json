@@ -1,0 +1,19 @@
+{
+  "name": "create-trips",
+  "version": "1.0.0",
+  "description": "Script for creating trips",
+  "type": "module",
+  "scripts": {
+    "start": "ts-node create-trips.ts"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.0",
+    "ethers": "^6.14.1",
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.29",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  }
+}

@@ -1,38 +1,45 @@
 <script lang="ts">
-  import { onMount } from "svelte"
+  import { onMount, onDestroy } from "svelte"
   import { gsap } from "gsap"
-  import {
-    playerERC20Balance,
-    previousPlayerERC20Balance,
-    isFirstBalanceLoad
-  } from "$lib/modules/erc20Listener/stores"
+  import { playerERC20Balance } from "$lib/modules/erc20Listener/stores"
   import { tippy } from "svelte-tippy"
   import { get } from "svelte/store"
+  import { playSound } from "$lib/modules/sound"
 
   import CurrencySymbol from "$lib/components/Shared/CurrencySymbol/CurrencySymbol.svelte"
 
   // Element references
   let balanceElement = $state<HTMLSpanElement | null>(null)
   let containerElement = $state<HTMLDivElement | null>(null)
+  let previousValue = $state<null | number>(null)
+  let updates = $state(0)
 
   // Calculate animation duration based on value change
   function calculateDuration(value: number) {
     // let absValue = Math.abs(value)
-    let duration = 2
+    let duration = 1
     return duration
   }
 
   // Animate balance change
   function animateBalanceChange(newBalance: number, difference: number) {
+    console.log("3. Animate to", newBalance, difference)
     if (!balanceElement || !containerElement) {
+      console.log("Elements not ready", { balanceElement, containerElement })
       return
     }
 
     const isPositive = difference > 0
     const duration = calculateDuration(difference)
 
+    console.log("duration", duration)
+
     // Create timeline for the animation
     const timeline = gsap.timeline()
+
+    timeline.call(() => {
+      playSound("ratfunUI", isPositive ? "countUp" : "countDown")
+    })
 
     // Add visual feedback for positive/negative changes
     timeline.to(containerElement, {
@@ -40,14 +47,14 @@
       duration: 0
     })
 
-    // Animate the count up/down
+    // Animate the count up/down - use element reference instead of selector
     timeline.to(
       balanceElement,
       {
         textContent: newBalance,
         duration: duration,
         snap: { textContent: 1 },
-        ease: "power2.out"
+        ease: "power4.out"
       },
       "<"
     )
@@ -58,36 +65,31 @@
       {
         backgroundColor: "var(--color-value)",
         duration: 0.3,
-        ease: "power2.out"
+        ease: "power4.out"
       },
       ">+0.2"
     )
   }
 
   onMount(() => {
-    // Listen to changes to the balance
-    playerERC20Balance.subscribe(newBalance => {
-      const previousBalance = get(previousPlayerERC20Balance)
-      const firstBalanceLoad = get(isFirstBalanceLoad)
-      console.log("0. firstBalanceLoad", firstBalanceLoad)
-      console.log("1. newBalance", newBalance)
-      console.log("2. previousBalance", previousBalance)
-      // Only animate if the balance has changed
-      if (previousBalance !== newBalance) {
-        // Skip animation on first load
-        if (firstBalanceLoad) {
-          // Set directly without animation
-          if (balanceElement) {
-            balanceElement.textContent = newBalance.toString()
-          }
-          isFirstBalanceLoad.set(false)
-        } else {
-          // Animate subsequent changes
-          animateBalanceChange(newBalance, newBalance - previousBalance)
+    const unsubscribe = playerERC20Balance.subscribe(updatedValue => {
+      if (previousValue === null || updatedValue === previousValue || updates < 2) {
+        previousValue = updatedValue
+
+        if (balanceElement) {
+          balanceElement.innerHTML = updatedValue
         }
-        previousPlayerERC20Balance.set(newBalance)
+      } else {
+        animateBalanceChange(updatedValue, updatedValue - previousValue)
+        previousValue = updatedValue
       }
+      updates++
     })
+
+    return () => {
+      console.log("BalanceBox destroyed")
+      unsubscribe()
+    }
   })
 </script>
 
@@ -105,7 +107,7 @@
       <span>
         <CurrencySymbol />
         <span bind:this={balanceElement}>
-          {$previousPlayerERC20Balance}
+          <!-- {$playerERC20Balance} -->
         </span>
       </span>
     </div>

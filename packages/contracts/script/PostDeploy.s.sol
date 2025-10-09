@@ -15,7 +15,7 @@ import { worldRegistrationSystem } from "@latticexyz/world/src/codegen/experimen
 import { GameConfig } from "../src/codegen/index.sol";
 import { devSystem, DevSystem } from "../src/codegen/systems/DevSystemLib.sol";
 
-import { LibWorld, LibRoom } from "../src/libraries/Libraries.sol";
+import { LibWorld, LibTrip } from "../src/libraries/Libraries.sol";
 
 import { SlopERC20 } from "../src/external/SlopERC20.sol";
 import { GamePool } from "../src/external/GamePool.sol";

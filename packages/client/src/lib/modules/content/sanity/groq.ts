@@ -7,15 +7,16 @@
  */
 
 export const queries = {
-  rooms: '*[_type == "room" && worldAddress == $worldAddress]',
+  trips: '*[_type == "trip" && worldAddress == $worldAddress]',
   outcomes: `*[_type == "outcome" && worldAddress == $worldAddress] {
     ...,
-    "room": *[_type == "room" && _id == ^.roomId][0]
+    "trip": *[_type == "trip" && _id == ^.tripId][0],
+    "readableLog": array::join(log[]{event}.event, ", ")
   }`,
   worldEvents:
     '*[_type == "worldEvent" && worldAddress == $worldAddress] | order(activationDateTime asc)', // filter by activationDateTime upcoming, sort by activationDate soonest first
-  outcomesForRoom: '*[_type == "outcome" && roomId == $roomId && worldAddress == $worldAddress]',
+  outcomesForTrip: '*[_type == "outcome" && tripId == $tripId && worldAddress == $worldAddress]',
   outcomesForRat: '*[_type == "outcome" && ratId == $ratId && worldAddress == $worldAddress]',
-  singleRoom: `*[_type == "room" && _id == $id][0]`,
+  singleTrip: `*[_type == "trip" && _id == $id][0]`,
   singleOutcome: `*[_type == "outcome" && _id == $id][0]`
 }

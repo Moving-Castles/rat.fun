@@ -1,23 +1,35 @@
 <script lang="ts">
   import { Icon } from "$lib/components/Shared"
-  import { timeSince, addressToRatImage } from "$lib/modules/utils"
-  import { adminUnlockedAt } from "$lib/modules/ui/state.svelte"
-  import tippy from "tippy.js"
+  import { timeSince } from "$lib/modules/utils"
+  import { adminUnlockedAt, focusEvent } from "$lib/modules/ui/state.svelte"
+  import { goto } from "$app/navigation"
+  import tippy, { followCursor } from "tippy.js"
+  // For the follow cursor effect
+  import "tippy.js/dist/backdrop.css"
+  import "tippy.js/animations/shift-away.css"
 
   let { eventData, focus = $bindable() } = $props()
+
+  const tooltipContent = p => {
+    if (p.eventType === "trip_visit" || p.eventType === "trip_death") {
+      return p.meta.readableLog.split(",").join("\n<br>")
+    } else {
+      return p.ownerName
+    }
+  }
 
   $effect(() => {
     tippy("[data-tippy-content]", {
       followCursor: true,
+      plugins: [followCursor],
       allowHTML: true
     })
   })
-
-  $inspect(eventData)
 </script>
 
 {#snippet ratVisitEvent(p)}
-  <Icon name="Paw" width={10} /> {p.meta.ratName} visited trip #{p.meta.index}
+  <Icon name="Paw" address={p.meta.owner} width={10} />
+  {p.meta.playerName} sent {p.meta.ratName} to trip #{p.meta.index}
 {/snippet}
 
 {#snippet tripLiquidated(p)}
@@ -33,12 +45,19 @@
 {/snippet}
 
 <div class="admin-event-log">
-  {#each eventData.toReversed() as point}
-    <p
-      data-tippy-content={"createNote(point)"}
-      onpointerenter={() => (focus = point.tripId)}
-      onpointerleave={() => (focus = "")}
+  {#each eventData.toReversed().filter(p => p.eventType !== "baseline") as point}
+    <!-- svelte-ignore a11y_missing_attribute -->
+    <a
+      onpointerup={e => {
+        if (point.eventType === "trip_visit" || point.eventType === "trip_death") {
+          goto(`/admin/${point.meta.tripId}`)
+        }
+      }}
       class="event"
+      data-tippy-content={tooltipContent(point)}
+      onpointerenter={() => ($focusEvent = point.index)}
+      onpointerleave={() => ($focusEvent = -1)}
+      class:focus={$focusEvent === point.index}
     >
       {#if point.eventType === "trip_visit"}
         {@render ratVisitEvent(point)}
@@ -50,7 +69,7 @@
         {@render ratDied(point)}
       {/if}
       <span class="meta">{timeSince(new Date(point.time).getTime())}</span>
-    </p>
+    </a>
   {/each}
   <p class="event">
     You unlocked the panel <span class="meta"
@@ -75,7 +94,7 @@
       margin: 0;
 
       cursor: pointer;
-      &:hover {
+      &.focus {
         background: black;
       }
     }

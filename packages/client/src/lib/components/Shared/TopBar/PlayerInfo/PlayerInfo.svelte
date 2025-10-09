@@ -51,33 +51,30 @@
 
 <div class="player-info">
   <!-- PLAYER STATS -->
-  <!-- svelte-ignore a11y_no_static_element_interactions -->
-  {#if $player}
-    <!-- svelte-ignore a11y_click_events_have_key_events -->
-    <div
-      class="player-stats"
-      bind:this={playerStatsElement}
-      {onmousedown}
-      onmouseup={toggleAccountStats}
-    >
-      <!-- NAME -->
-      <div class="stat-item name">
-        <!-- AVATAR -->
-        <div
-          use:tippy={{
-            content: `This is you: ${$playerAddress}`,
-            placement: "bottom"
-          }}
-          class="inner-wrapper player"
-        >
-          <div class="avatar"></div>
-          <div class="value">{$player.name}</div>
-        </div>
+  <!-- svelte-ignore a11y_click_events_have_key_events -->
+  <div
+    class="player-stats"
+    bind:this={playerStatsElement}
+    {onmousedown}
+    onmouseup={toggleAccountStats}
+  >
+    <!-- NAME -->
+    <div class="stat-item name">
+      <!-- AVATAR -->
+      <div
+        use:tippy={{
+          content: `This is you: ${$playerAddress}`,
+          placement: "bottom"
+        }}
+        class="inner-wrapper player"
+      >
+        <div class="avatar"></div>
+        <div class="value">{$player.name}</div>
       </div>
-      <!-- BALANCE -->
-      <BalanceBox />
     </div>
-  {/if}
+    <!-- BALANCE -->
+    <BalanceBox />
+  </div>
 </div>
 
 {#if showAccountDropdown}

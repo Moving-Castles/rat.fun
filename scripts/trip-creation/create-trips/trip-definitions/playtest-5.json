@@ -1,0 +1,60 @@
+{
+  "trips": [
+    {
+      "levelId": "0x0000000000000000000000000000000000000000000000000000000000000001",
+      "tripPrompt": "Impenetrable cube of ice with half of trip balance in center. If rat doesnt get out tokens within 3 minutes, rat is executed."
+    },
+    {
+      "levelId": "0x0000000000000000000000000000000000000000000000000000000000000001",
+      "tripPrompt": "Rat plays Russian Roulette with coinflip (exactly 1/2) chance of death. Survival is rewarded with random item worth 30-60 tokens."
+    },
+    {
+      "levelId": "0x0000000000000000000000000000000000000000000000000000000000000001",
+      "tripPrompt": "Rat trader, will exchange any item for opposite item with 5 less token value. Will tell a story about the history of the facility, type it out in event log."
+    },
+    {
+      "levelId": "0x0000000000000000000000000000000000000000000000000000000000000001",
+      "tripPrompt": "Rat is stripped of all items and needs to survive temperature of trip without. If it survives it gets 50 tokens and its items back."
+    },
+    {
+      "levelId": "0x0000000000000000000000000000000000000000000000000000000000000002",
+      "tripPrompt": "Therapist, will give the rat a random trait based on Lacanian analysis."
+    },
+    {
+      "levelId": "0x0000000000000000000000000000000000000000000000000000000000000002",
+      "tripPrompt": "5 rats (5 coinflip) will fight the rat to death. The rats are equivalent to your rat in strength and intelligence. Items and traits have reduced effect due to the adaptive qualities of the other rats. If rat survives, gets max amount of tokens."
+    },
+    {
+      "levelId": "0x0000000000000000000000000000000000000000000000000000000000000002",
+      "tripPrompt": "Random item is frozen in impenetrable ice. If rat doesnt get it out in 1min rat is executed."
+    },
+    {
+      "levelId": "0x0000000000000000000000000000000000000000000000000000000000000003",
+      "tripPrompt": "Maze with electric floor, trap door and poison gas. If rat reaches end, gets 100 tokens."
+    },
+    {
+      "levelId": "0x0000000000000000000000000000000000000000000000000000000000000003",
+      "tripPrompt": "Trip is a prison cell for human that escaped from sector 29b. The human will eat the rat."
+    },
+    {
+      "levelId": "0x0000000000000000000000000000000000000000000000000000000000000003",
+      "tripPrompt": "Rat crawls into Jesse Pollocks mouth and tries to make it out the other end. Jesse fights the rat with all he has. If rat makes it out gets 100 tokens from Coinbase treasury."
+    },
+    {
+      "levelId": "0x0000000000000000000000000000000000000000000000000000000000000004",
+      "tripPrompt": "Rat inflates after helium is inserted into anus. Rat floats around trip bumping into things before hitting sharp object."
+    },
+    {
+      "levelId": "0x0000000000000000000000000000000000000000000000000000000000000004",
+      "tripPrompt": "The rat is drenched in gasoline and put on fire. If it survives it gets random item."
+    },
+    {
+      "levelId": "0x0000000000000000000000000000000000000000000000000000000000000004",
+      "tripPrompt": "Rat is drowned in tank of water."
+    },
+    {
+      "levelId": "0x0000000000000000000000000000000000000000000000000000000000000005",
+      "tripPrompt": "Rat eats DMT."
+    }
+  ]
+}

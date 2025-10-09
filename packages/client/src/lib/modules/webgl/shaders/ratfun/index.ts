@@ -73,9 +73,9 @@ export const shaderConfig: ShaderConfiguration<ShaderMode> = {
   getMode: (page: import("@sveltejs/kit").Page): string => {
     if (!page.route.id) return "stars"
 
-    if (page.route.id === "/(main)/(game)/[roomId]/tripping/[outcomeId]") {
+    if (page.route.id === "/(main)/(game)/[tripId]/tripping/[outcomeId]") {
       return "stars"
-    } else if (page.route.id === "/(main)/(game)/[roomId]/tripping") {
+    } else if (page.route.id === "/(main)/(game)/[tripId]/tripping") {
       return "off"
     } else if (page.route.id.includes("(game)")) {
       // not spawned

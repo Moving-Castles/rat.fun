@@ -23,7 +23,7 @@
     "solhint": "solhint --config ./.solhint.json 'src/**/*.sol'",
     "test": "forge clean && tsc --noEmit && mud test",
     "test-verbose": "forge clean && tsc --noEmit && mud test --forgeOptions=' -vvv'",
-    "test-single": "forge clean && tsc --noEmit && mud test --forgeOptions='--match-test testCreateRoom'",
+    "test-single": "forge clean && tsc --noEmit && mud test --forgeOptions='--match-test testCreateTrip'",
     "entrykit-deploy": "pnpm entrykit-deploy"
   },
   "dependencies": {

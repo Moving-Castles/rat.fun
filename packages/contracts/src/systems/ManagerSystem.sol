@@ -11,10 +11,10 @@ import {
   KillCount,
   TripCount,
   LastVisitBlock,
-  RoomCreationCost,
+  TripCreationCost,
   MasterKey
 } from "../codegen/index.sol";
-import { LibManager, LibRat, LibRoom } from "../libraries/Libraries.sol";
+import { LibManager, LibRat, LibTrip } from "../libraries/Libraries.sol";
 import { ENTITY_TYPE } from "../codegen/common.sol";
 import { Item } from "../structs.sol";
 import { LibUtils } from "../libraries/LibUtils.sol";
@@ -34,32 +34,32 @@ contract ManagerSystem is System {
   }
 
   /**
-   * @notice Apply outcome of a room interaction
+   * @notice Apply outcome of a trip interaction
    * @dev Only admin can call this function
    * @param _ratId Id of the rat
-   * @param _roomId Id of the room
+   * @param _tripId Id of the trip
    * @param _balanceTransferToOrFromRat Credits to transfer to or from rat
    * @param _itemsToRemoveFromRat Items to remove from rat (IDs)
    * @param _itemsToAddToRat Items to add to rat
    */
   function applyOutcome(
     bytes32 _ratId,
-    bytes32 _roomId,
+    bytes32 _tripId,
     int256 _balanceTransferToOrFromRat,
     bytes32[] calldata _itemsToRemoveFromRat,
     Item[] calldata _itemsToAddToRat
   ) public onlyAdmin {
     require(EntityType.get(_ratId) == ENTITY_TYPE.RAT, "not rat");
     require(Dead.get(_ratId) == false, "rat is dead");
-    require(EntityType.get(_roomId) == ENTITY_TYPE.ROOM, "not room");
-    require(LibRat.getTotalRatValue(_ratId) >= LibRoom.getMinRatValueToEnter(_roomId), "rat value too low");
+    require(EntityType.get(_tripId) == ENTITY_TYPE.TRIP, "not trip");
+    require(LibRat.getTotalRatValue(_ratId) >= LibTrip.getMinRatValueToEnter(_tripId), "rat value too low");
 
-    // Check that room is not depleted
-    uint256 roomBalance = Balance.get(_roomId);
-    require(roomBalance > 0, "no room balance");
+    // Check that trip is not depleted
+    uint256 tripBalance = Balance.get(_tripId);
+    require(tripBalance > 0, "no trip balance");
 
     // Increment visitor count
-    VisitCount.set(_roomId, VisitCount.get(_roomId) + 1);
+    VisitCount.set(_tripId, VisitCount.get(_tripId) + 1);
 
     // Increment trip count
     TripCount.set(_ratId, TripCount.get(_ratId) + 1);
@@ -68,19 +68,19 @@ contract ManagerSystem is System {
     // BUDGETING
     // * * * * * * * * * * * * *
 
-    uint256 roomBudget = LibUtils.min(LibRoom.getMaxValuePerWin(_roomId), roomBalance);
+    uint256 tripBudget = LibUtils.min(LibTrip.getMaxValuePerWin(_tripId), tripBalance);
 
     // * * * * * * * * * * * * *
     // BALANCE
     // * * * * * * * * * * * * *
 
-    // Balance transfer can have positive or negative value: effect on room balance unknown
-    roomBudget = LibManager.updateBalance(roomBudget, _ratId, _roomId, _balanceTransferToOrFromRat);
+    // Balance transfer can have positive or negative value: effect on trip balance unknown
+    tripBudget = LibManager.updateBalance(tripBudget, _ratId, _tripId, _balanceTransferToOrFromRat);
 
     // A rat is dead if balance is 0
     // If so, kill the rat and abort
     if (Balance.get(_ratId) == 0) {
-      _killRat(_ratId, _roomId);
+      _killRat(_ratId, _tripId);
       return;
     }
 
@@ -88,24 +88,24 @@ contract ManagerSystem is System {
     // ITEMS
     // * * * * * * * * * * * * *
 
-    // As items always have positive value, this will always increase the room balance
-    roomBudget = LibManager.removeItemsFromRat(roomBudget, _ratId, _roomId, _itemsToRemoveFromRat);
-    // As items always have positive value, this will always decrease the room balance
-    roomBudget = LibManager.addItemsToRat(roomBudget, _ratId, _roomId, _itemsToAddToRat);
+    // As items always have positive value, this will always increase the trip balance
+    tripBudget = LibManager.removeItemsFromRat(tripBudget, _ratId, _tripId, _itemsToRemoveFromRat);
+    // As items always have positive value, this will always decrease the trip balance
+    tripBudget = LibManager.addItemsToRat(tripBudget, _ratId, _tripId, _itemsToAddToRat);
 
     // Update last visit block
-    LastVisitBlock.set(_roomId, block.number);
+    LastVisitBlock.set(_tripId, block.number);
   }
 
   /**
    * @notice Kill a rat
    * @param _ratId The id of the rat
-   * @param _roomId The id of the room
+   * @param _tripId The id of the trip
    */
-  function _killRat(bytes32 _ratId, bytes32 _roomId) internal {
+  function _killRat(bytes32 _ratId, bytes32 _tripId) internal {
     uint256 balanceToTransfer = LibRat.killRat(_ratId);
-    Balance.set(_roomId, Balance.get(_roomId) + balanceToTransfer);
-    KillCount.set(_roomId, KillCount.get(_roomId) + 1);
+    Balance.set(_tripId, Balance.get(_tripId) + balanceToTransfer);
+    KillCount.set(_tripId, KillCount.get(_tripId) + 1);
   }
 
   /**
@@ -144,8 +144,8 @@ contract ManagerSystem is System {
   // CONFIG SETTERS
   // * * * * * * * * * * * * *
 
-  function setCooldownCloseRoom(uint32 _cooldownCloseRoom) public onlyAdmin {
-    GameConfig.setCooldownCloseRoom(_cooldownCloseRoom);
+  function setCooldownCloseTrip(uint32 _cooldownCloseTrip) public onlyAdmin {
+    GameConfig.setCooldownCloseTrip(_cooldownCloseTrip);
   }
 
   function setRatsKilledForAdminAccess(uint32 _ratsKilledForAdminAccess) public onlyAdmin {
@@ -175,8 +175,8 @@ contract ManagerSystem is System {
     GamePercentagesConfig.setTaxationLiquidateRat(_taxationLiquidateRat);
   }
 
-  function setTaxationCloseRoom(uint32 _taxationCloseRoom) public onlyAdmin {
-    _checkPercentageValue(_taxationCloseRoom);
-    GamePercentagesConfig.setTaxationCloseRoom(_taxationCloseRoom);
+  function setTaxationCloseTrip(uint32 _taxationCloseTrip) public onlyAdmin {
+    _checkPercentageValue(_taxationCloseTrip);
+    GamePercentagesConfig.setTaxationCloseTrip(_taxationCloseTrip);
   }
 }

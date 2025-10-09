@@ -8,12 +8,12 @@ import mudConfig from "contracts/mud.config"
  * ─────────────────────────────────────────────
  */
 
-export type Room = {
+export type Trip = {
   id: string
   index: number
   prompt: string
   balance: number
-  roomCreationCost: number
+  tripCreationCost: number
 }
 
 export type Rat = {
@@ -55,16 +55,16 @@ export type WorldEvent = mudSchemas["WorldEvent"]
  * Returned from the MUD get data functions
  */
 
-export type EnterRoomData = {
+export type EnterTripData = {
   gameConfig: GameConfig
   gamePercentagesConfig: GamePercentagesConfig
   rat: Rat
   worldEvent: WorldEvent | undefined
   player?: Player
-  room?: Room
+  trip?: Trip
 }
 
-export type CreateRoomData = {
+export type CreateTripData = {
   gameConfig: GameConfig
   player: Player
 }
@@ -115,15 +115,15 @@ export type LogEntry = {
  * ─────────────────────────────────────────────
  */
 
-export type EnterRoomReturnValue = OutcomeReturnValue & {
+export type EnterTripReturnValue = OutcomeReturnValue & {
   ratDead: boolean
-  roomDepleted: boolean
+  tripDepleted: boolean
   log: LogEntry[]
 }
 
-export type CreateRoomReturnValue = {
+export type CreateTripReturnValue = {
   success: boolean
-  roomId: string
+  tripId: string
 }
 
 /*
@@ -132,14 +132,14 @@ export type CreateRoomReturnValue = {
  * ─────────────────────────────────────────────
  */
 
-export type EnterRoomRequestBody = {
-  roomId: string
+export type EnterTripRequestBody = {
+  tripId: string
   ratId: string
 }
 
-export type CreateRoomRequestBody = {
-  roomPrompt: string
-  roomCreationCost: number
+export type CreateTripRequestBody = {
+  tripPrompt: string
+  tripCreationCost: number
 }
 
 /*
@@ -190,17 +190,17 @@ export type OffChainMessage = {
     | "clients__update"
     | "chat__message"
     | "key__activation"
-    | "room__creation"
-    | "room__outcome"
-    | "room__liquidation"
+    | "trip__creation"
+    | "trip__outcome"
+    | "trip__liquidation"
     | "rat__deploy"
     | "rat__death"
     | "rat__liquidate"
   playerName?: string
   ratName?: string
   ratId?: string
-  roomIndex?: number
-  roomId?: string
+  tripIndex?: number
+  tripId?: string
   message?: string | string[]
   outcome?: OutcomeReturnValue
   timestamp: number
@@ -228,6 +228,6 @@ export interface WebSocketInterface {
 
 import type { TemplateImages } from "@sanity-public-cms-types"
 
-export type ResolvedTemplateImages = Omit<TemplateImages, "roomImages"> & {
-  roomImages?: string[]
+export type ResolvedTemplateImages = Omit<TemplateImages, "tripImages"> & {
+  tripImages?: string[]
 }

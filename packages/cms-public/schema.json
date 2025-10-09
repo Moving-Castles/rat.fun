@@ -196,7 +196,7 @@
         },
         "optional": true
       },
-      "roomImages": {
+      "tripImages": {
         "type": "objectAttribute",
         "value": {
           "type": "array",
@@ -344,14 +344,14 @@
         },
         "optional": true
       },
-      "roomId": {
+      "tripId": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
         },
         "optional": true
       },
-      "roomIndex": {
+      "tripIndex": {
         "type": "objectAttribute",
         "value": {
           "type": "number"
@@ -527,14 +527,14 @@
         },
         "optional": true
       },
-      "roomValue": {
+      "tripValue": {
         "type": "objectAttribute",
         "value": {
           "type": "number"
         },
         "optional": true
       },
-      "roomValueChange": {
+      "tripValueChange": {
         "type": "objectAttribute",
         "value": {
           "type": "number"
@@ -566,7 +566,7 @@
     }
   },
   {
-    "name": "room",
+    "name": "trip",
     "type": "document",
     "attributes": {
       "_id": {
@@ -579,7 +579,7 @@
         "type": "objectAttribute",
         "value": {
           "type": "string",
-          "value": "room"
+          "value": "trip"
         }
       },
       "_createdAt": {

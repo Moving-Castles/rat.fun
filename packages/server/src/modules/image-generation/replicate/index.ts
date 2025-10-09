@@ -29,8 +29,8 @@ const makePrompt = (prompt: string) => {
  * @returns The generated image
  */
 export const generateImage = async (prompt: string, templateImages: ResolvedTemplateImages) => {
-  // Pick a random image from roomImages
-  const image = templateImages?.roomImages ? pickRandom(templateImages.roomImages) : undefined
+  // Pick a random image from tripImages
+  const image = templateImages?.tripImages ? pickRandom(templateImages.tripImages) : undefined
 
   const INPUT = {
     SD: {

@@ -25,8 +25,8 @@
   },
   {
     "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
-    "test": "testApplyOutcomeOverTransferToRoom",
-    "name": "Apply outcome (over transfer to room)",
+    "test": "testApplyOutcomeOverTransferToTrip",
+    "name": "Apply outcome (over transfer to trip)",
     "gasUsed": 391077
   },
   {
@@ -49,8 +49,8 @@
   },
   {
     "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
-    "test": "testApplyOutcomeTransferToRoom",
-    "name": "Apply outcome (transfer to room)",
+    "test": "testApplyOutcomeTransferToTrip",
+    "name": "Apply outcome (transfer to trip)",
     "gasUsed": 125756
   },
   {
@@ -61,14 +61,14 @@
   },
   {
     "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
-    "test": "testRoomBudgetLimitedByBalance",
-    "name": "Apply outcome (room balance limit)",
+    "test": "testTripBudgetLimitedByBalance",
+    "name": "Apply outcome (trip balance limit)",
     "gasUsed": 233318
   },
   {
     "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
-    "test": "testRoomCannotExceedMaxValuePerWin",
-    "name": "Apply outcome (room budget limit)",
+    "test": "testTripCannotExceedMaxValuePerWin",
+    "name": "Apply outcome (trip budget limit)",
     "gasUsed": 238098
   },
   {
@@ -81,30 +81,30 @@
     "file": "test/systems/RatSystem.t.sol:RatSystemTest",
     "test": "testCreateRat",
     "name": "Create rat",
-    "gasUsed": 451966
+    "gasUsed": 451965
   },
   {
     "file": "test/systems/RatSystem.t.sol:RatSystemTest",
     "test": "testLiquidateRat",
     "name": "Liquidate rat",
-    "gasUsed": 359524
+    "gasUsed": 394648
   },
   {
-    "file": "test/systems/RoomSystem.t.sol:RoomSystemTest",
-    "test": "testCloseRoom",
-    "name": "Close room",
-    "gasUsed": 182288
+    "file": "test/systems/TripSystem.t.sol:TripSystemTest",
+    "test": "testCloseTrip",
+    "name": "Close trip",
+    "gasUsed": 217433
   },
   {
-    "file": "test/systems/RoomSystem.t.sol:RoomSystemTest",
-    "test": "testCreateRoom",
-    "name": "Create room",
-    "gasUsed": 448587
+    "file": "test/systems/TripSystem.t.sol:TripSystemTest",
+    "test": "testCreateTrip",
+    "name": "Create trip",
+    "gasUsed": 448608
   },
   {
-    "file": "test/systems/RoomSystem.t.sol:RoomSystemTest",
-    "test": "testLongRoomPrompt",
-    "name": "Create room: long prompt",
-    "gasUsed": 585100
+    "file": "test/systems/TripSystem.t.sol:TripSystemTest",
+    "test": "testLongTripPrompt",
+    "name": "Create trip: long prompt",
+    "gasUsed": 585121
   }
 ]

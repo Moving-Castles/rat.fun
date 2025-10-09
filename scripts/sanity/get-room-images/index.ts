@@ -14,7 +14,7 @@ const client = createClient({
   useCdn: false
 })
 
-interface Room {
+interface Trip {
   _id: string
   title: string
   image: string
@@ -51,29 +51,29 @@ async function main() {
       fs.mkdirSync(outputDir)
     }
 
-    // Fetch all rooms from Sanity
-    const rooms = await client.fetch<
-      Room[]
-    >(`*[_type == "room" && defined(image) && worldAddress == "${TARGET_WORLD_ADDRESS}"  ]{
+    // Fetch all trips from Sanity
+    const trips = await client.fetch<
+      Trip[]
+    >(`*[_type == "trip" && defined(image) && worldAddress == "${TARGET_WORLD_ADDRESS}"  ]{
       _id,
       title,
       "image": image.asset->url
     }`)
 
-    console.log(`Found ${rooms.length} rooms with images`)
+    console.log(`Found ${trips.length} trips with images`)
 
     // Download each image
-    for (const room of rooms) {
-      if (!room.image) {
-        console.log(`No image URL for room: ${room.title}`)
+    for (const trip of trips) {
+      if (!trip.image) {
+        console.log(`No image URL for trip: ${trip.title}`)
         continue
       }
 
-      const filename = `${room.title.toLowerCase().replace(/[^a-z0-9]/g, "-")}.jpg`
+      const filename = `${trip.title.toLowerCase().replace(/[^a-z0-9]/g, "-")}.jpg`
       const filepath = path.join(outputDir, filename)
 
-      console.log(`Downloading image for room: ${room.title}`)
-      await downloadImage(room.image, filepath)
+      console.log(`Downloading image for trip: ${trip.title}`)
+      await downloadImage(trip.image, filepath)
       console.log(`Downloaded: ${filename}`)
     }
 

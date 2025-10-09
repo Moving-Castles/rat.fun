@@ -1,10 +1,10 @@
 <script lang="ts">
-  import type { Room as RoomSanityDoc, Outcome as OutcomeSanityDoc } from "@sanity-types"
+  import type { Trip as TripSanityDoc, Outcome as OutcomeSanityDoc } from "@sanity-types"
 
   import { TripopediaEntry } from "$lib/components/Tripopedia"
 
-  let { data }: { data: { room: RoomSanityDoc; result: OutcomeSanityDoc } } = $props()
-  let { room, result } = data
+  let { data }: { data: { trip: TripSanityDoc; result: OutcomeSanityDoc } } = $props()
+  let { trip, result } = data
 </script>
 
-<TripopediaEntry {room} {result} />
+<TripopediaEntry {trip} {result} />

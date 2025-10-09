@@ -1,15 +1,15 @@
 import { Hex } from "viem"
 import { OutcomeReturnValue, ItemChange } from "@modules/types"
-import { Rat, Room } from "@modules/types"
+import { Rat, Trip } from "@modules/types"
 
 /**
  * Parse the LLM outcome into the arguments for the onchain calculation
  * @param rat
- * @param room
+ * @param trip
  * @param outcome
  * @returns The arguments for the onchain calculation
  */
-export function createOutcomeCallArgs(rat: Rat, room: Room, outcome: OutcomeReturnValue) {
+export function createOutcomeCallArgs(rat: Rat, trip: Trip, outcome: OutcomeReturnValue) {
   // The onchain calculation deals with a single balance transfer value
   const balanceTransfersSum =
     (outcome?.balanceTransfers ?? []).reduce((acc, curr) => acc + curr.amount, 0) ?? 0
@@ -28,7 +28,7 @@ export function createOutcomeCallArgs(rat: Rat, room: Room, outcome: OutcomeRetu
         return { name: c.name.slice(0, 48), value: BigInt(Math.abs(c.value)) }
       }) ?? []
 
-  return [rat.id, room.id, BigInt(balanceTransfersSum), itemsToRemoveFromRat, itemsToAddToRat] as [
+  return [rat.id, trip.id, BigInt(balanceTransfersSum), itemsToRemoveFromRat, itemsToAddToRat] as [
     Hex,
     Hex,
     bigint,

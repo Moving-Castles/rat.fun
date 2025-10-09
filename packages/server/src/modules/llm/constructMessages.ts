@@ -1,12 +1,12 @@
 import { MessageParam } from "@anthropic-ai/sdk/resources"
-import { GamePercentagesConfig, Rat, Room, WorldEvent } from "@modules/types"
+import { GamePercentagesConfig, Rat, Trip, WorldEvent } from "@modules/types"
 import { LogEntry, OutcomeReturnValue } from "@modules/types"
 import { getLatestBlockNumber } from "@modules/mud/getOnchainData"
-import { getRoomMaxValuePerWin } from "@modules/mud/value"
+import { getTripMaxValuePerWin } from "@modules/mud/value"
 
 export async function constructEventMessages(
   rat: Rat,
-  room: Room,
+  trip: Trip,
   gamePercentagesConfig: GamePercentagesConfig,
   worldEvent: WorldEvent | undefined
 ): Promise<MessageParam[]> {
@@ -17,13 +17,13 @@ export async function constructEventMessages(
     messages.push({ role: "user", content: `WorldEvent: ${worldEvent.prompt}` })
   }
 
-  // Room
-  messages.push({ role: "user", content: `TripDescription: ${room.prompt}` })
+  // Trip
+  messages.push({ role: "user", content: `TripDescription: ${trip.prompt}` })
 
   // Max value per win
-  const maxValuePerWin = getRoomMaxValuePerWin(
-    room.roomCreationCost,
-    room.balance,
+  const maxValuePerWin = getTripMaxValuePerWin(
+    trip.tripCreationCost,
+    trip.balance,
     gamePercentagesConfig
   )
   messages.push({

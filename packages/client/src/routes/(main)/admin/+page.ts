@@ -10,9 +10,9 @@ export const load: PageLoad = async ({ url }) => {
   const networkConfig = getNetworkConfig(environment, url)
 
   try {
-    const rooms = await loadData(queries.rooms, { worldAddress: networkConfig.worldAddress })
+    const trips = await loadData(queries.trips, { worldAddress: networkConfig.worldAddress })
     return {
-      rooms
+      trips
     }
   } catch {
     errorHandler(new CMSError("Could not load data"))

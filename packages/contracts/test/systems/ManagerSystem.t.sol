@@ -4,7 +4,6 @@ import { Strings } from "@openzeppelin/contracts/utils/Strings.sol";
 import { BaseTest } from "../BaseTest.sol";
 import "../../src/codegen/index.sol";
 import "../../src/libraries/Libraries.sol";
-import { ENTITY_TYPE } from "../../src/codegen/common.sol";
 import { Item } from "../../src/structs.sol";
 import { RAT_CREATION_COST } from "../../src/constants.sol";
 import { console2 as console } from "forge-std/console2.sol";
@@ -13,13 +12,13 @@ contract ManagerSystemTest is BaseTest {
   bytes32 aliceId;
   bytes32 bobId;
   bytes32 ratId;
-  bytes32 roomId;
+  bytes32 tripId;
   uint256 initialBalance;
 
   function setUp() public override {
     super.setUp();
 
-    // Initialize alice, bob and their default rat and room
+    // Initialize alice, bob and their default rat and trip
 
     initialBalance = setInitialBalance(alice);
     // As alice
@@ -37,7 +36,7 @@ contract ManagerSystemTest is BaseTest {
     vm.stopPrank();
 
     prankAdmin();
-    roomId = world.ratfun__createRoom(bobId, bytes32(0), ROOM_INITIAL_BALANCE, "test room");
+    tripId = world.ratfun__createTrip(bobId, bytes32(0), TRIP_INITIAL_BALANCE, "test trip");
     vm.stopPrank();
   }
 
@@ -93,7 +92,7 @@ contract ManagerSystemTest is BaseTest {
     world.ratfun__removeWorldEvent();
 
     vm.expectRevert("not allowed");
-    world.ratfun__setCooldownCloseRoom(10);
+    world.ratfun__setCooldownCloseTrip(10);
 
     vm.expectRevert("not allowed");
     world.ratfun__setMaxValuePerWin(10);
@@ -105,7 +104,7 @@ contract ManagerSystemTest is BaseTest {
     world.ratfun__setTaxationLiquidateRat(10);
 
     vm.expectRevert("not allowed");
-    world.ratfun__setTaxationCloseRoom(10);
+    world.ratfun__setTaxationCloseTrip(10);
 
     vm.stopPrank();
   }
@@ -114,21 +113,21 @@ contract ManagerSystemTest is BaseTest {
     // As admin
     prankAdmin();
     startGasReport("Apply outcome (empty)");
-    world.ratfun__applyOutcome(ratId, roomId, 0, new bytes32[](0), new Item[](0));
+    world.ratfun__applyOutcome(ratId, tripId, 0, new bytes32[](0), new Item[](0));
     endGasReport();
     vm.stopPrank();
 
-    assertEq(VisitCount.get(roomId), 1);
+    assertEq(VisitCount.get(tripId), 1);
     assertEq(TripCount.get(ratId), 1);
     // Check last visit block
-    assertEq(LastVisitBlock.get(roomId), block.number);
+    assertEq(LastVisitBlock.get(tripId), block.number);
   }
 
   function testRevertNotRat() public {
     prankAdmin();
 
     vm.expectRevert("not rat");
-    world.ratfun__applyOutcome(bytes32(0), roomId, 0, new bytes32[](0), new Item[](0));
+    world.ratfun__applyOutcome(bytes32(0), tripId, 0, new bytes32[](0), new Item[](0));
 
     vm.stopPrank();
   }
@@ -138,15 +137,15 @@ contract ManagerSystemTest is BaseTest {
 
     Dead.set(ratId, true);
     vm.expectRevert("rat is dead");
-    world.ratfun__applyOutcome(ratId, roomId, 0, new bytes32[](0), new Item[](0));
+    world.ratfun__applyOutcome(ratId, tripId, 0, new bytes32[](0), new Item[](0));
 
     vm.stopPrank();
   }
 
-  function testRevertNotRoom() public {
+  function testRevertNotTrip() public {
     prankAdmin();
 
-    vm.expectRevert("not room");
+    vm.expectRevert("not trip");
     world.ratfun__applyOutcome(ratId, bytes32(0), 0, new bytes32[](0), new Item[](0));
 
     vm.stopPrank();
@@ -155,23 +154,23 @@ contract ManagerSystemTest is BaseTest {
   function testRevertRatValueTooLow() public {
     prankAdmin();
 
-    // Set rat balance to just below the minimum required to enter the room
-    Balance.set(ratId, LibRoom.getMinRatValueToEnter(roomId) - 1);
+    // Set rat balance to just below the minimum required to enter the trip
+    Balance.set(ratId, LibTrip.getMinRatValueToEnter(tripId) - 1);
 
     vm.expectRevert("rat value too low");
-    world.ratfun__applyOutcome(ratId, roomId, 0, new bytes32[](0), new Item[](0));
+    world.ratfun__applyOutcome(ratId, tripId, 0, new bytes32[](0), new Item[](0));
 
     vm.stopPrank();
   }
 
-  function testRevertNoRoomBalance() public {
+  function testRevertNoTripBalance() public {
     prankAdmin();
 
-    // Deplete room balance
-    Balance.set(roomId, 0);
+    // Deplete trip balance
+    Balance.set(tripId, 0);
 
-    vm.expectRevert("no room balance");
-    world.ratfun__applyOutcome(ratId, roomId, 0, new bytes32[](0), new Item[](0));
+    vm.expectRevert("no trip balance");
+    world.ratfun__applyOutcome(ratId, tripId, 0, new bytes32[](0), new Item[](0));
 
     vm.stopPrank();
   }
@@ -188,7 +187,7 @@ contract ManagerSystemTest is BaseTest {
     // As admin
     prankAdmin();
     startGasReport("Apply outcome (add item)");
-    world.ratfun__applyOutcome(ratId, roomId, 0, new bytes32[](0), newItems);
+    world.ratfun__applyOutcome(ratId, tripId, 0, new bytes32[](0), newItems);
     endGasReport();
     vm.stopPrank();
 
@@ -198,25 +197,25 @@ contract ManagerSystemTest is BaseTest {
     assertEq(Name.get(Inventory.getItem(ratId, 0)), "cheese");
 
     // pre-change balance - 40
-    assertEq(Balance.get(roomId), ROOM_INITIAL_BALANCE - 40);
+    assertEq(Balance.get(tripId), TRIP_INITIAL_BALANCE - 40);
   }
 
   function testApplyOutcomeAddItemTooExpensive() public {
     // Item to add
     Item[] memory newItems = new Item[](1);
-    newItems[0] = Item("cheese", ROOM_INITIAL_BALANCE + 1);
+    newItems[0] = Item("cheese", TRIP_INITIAL_BALANCE + 1);
 
     // As admin
     prankAdmin();
     startGasReport("Apply outcome (add item: too expensive)");
-    world.ratfun__applyOutcome(ratId, roomId, 0, new bytes32[](0), newItems);
+    world.ratfun__applyOutcome(ratId, tripId, 0, new bytes32[](0), newItems);
     endGasReport();
     vm.stopPrank();
 
-    // Not enough room balance
+    // Not enough trip balance
     assertEq(Inventory.length(ratId), 0);
-    // Initial room balance
-    assertEq(Balance.get(roomId), ROOM_INITIAL_BALANCE);
+    // Initial trip balance
+    assertEq(Balance.get(tripId), TRIP_INITIAL_BALANCE);
   }
 
   function testApplyOutcomeAddItemInventoryFull() public {
@@ -231,7 +230,7 @@ contract ManagerSystemTest is BaseTest {
 
     // As admin
     prankAdmin();
-    world.ratfun__applyOutcome(ratId, roomId, 0, new bytes32[](0), newItems);
+    world.ratfun__applyOutcome(ratId, tripId, 0, new bytes32[](0), newItems);
     vm.stopPrank();
 
     // Check inventory length
@@ -243,7 +242,7 @@ contract ManagerSystemTest is BaseTest {
     extraItems[2] = Item("extra cheese 3", 1);
 
     prankAdmin();
-    world.ratfun__applyOutcome(ratId, roomId, 0, new bytes32[](0), extraItems);
+    world.ratfun__applyOutcome(ratId, tripId, 0, new bytes32[](0), extraItems);
     vm.stopPrank();
 
     // Inventory length should still be maxInventorySize
@@ -257,7 +256,7 @@ contract ManagerSystemTest is BaseTest {
 
     // As admin
     prankAdmin();
-    world.ratfun__applyOutcome(ratId, roomId, 0, new bytes32[](0), newItems);
+    world.ratfun__applyOutcome(ratId, tripId, 0, new bytes32[](0), newItems);
     vm.stopPrank();
 
     // Check added item
@@ -266,8 +265,8 @@ contract ManagerSystemTest is BaseTest {
     assertEq(Value.get(itemId), 40);
     assertEq(Name.get(itemId), "cheese");
 
-    // Initial room balance - 40
-    assertEq(Balance.get(roomId), ROOM_INITIAL_BALANCE - 40);
+    // Initial trip balance - 40
+    assertEq(Balance.get(tripId), TRIP_INITIAL_BALANCE - 40);
 
     bytes32[] memory itemsToRemove = new bytes32[](1);
     itemsToRemove[0] = itemId;
@@ -275,12 +274,12 @@ contract ManagerSystemTest is BaseTest {
     // As admin
     prankAdmin();
     startGasReport("Apply outcome (remove item)");
-    world.ratfun__applyOutcome(ratId, roomId, 0, itemsToRemove, new Item[](0));
+    world.ratfun__applyOutcome(ratId, tripId, 0, itemsToRemove, new Item[](0));
     endGasReport();
     vm.stopPrank();
 
-    // Initial room balance again
-    assertEq(Balance.get(roomId), ROOM_INITIAL_BALANCE);
+    // Initial trip balance again
+    assertEq(Balance.get(tripId), TRIP_INITIAL_BALANCE);
     assertEq(Inventory.length(ratId), 0);
   }
 
@@ -296,12 +295,12 @@ contract ManagerSystemTest is BaseTest {
 
     // As admin
     prankAdmin();
-    world.ratfun__applyOutcome(ratId, roomId, 0, new bytes32[](0), newItems);
+    world.ratfun__applyOutcome(ratId, tripId, 0, new bytes32[](0), newItems);
     vm.stopPrank();
 
-    // Check initial inventory length and room balance
+    // Check initial inventory length and trip balance
     assertEq(Inventory.length(ratId), maxInventorySize);
-    assertEq(Balance.get(roomId), ROOM_INITIAL_BALANCE - maxInventorySize);
+    assertEq(Balance.get(tripId), TRIP_INITIAL_BALANCE - maxInventorySize);
 
     // Remove item from middle
     bytes32[] memory itemsToRemove = new bytes32[](1);
@@ -313,12 +312,12 @@ contract ManagerSystemTest is BaseTest {
     // As admin
     prankAdmin();
     startGasReport("Apply outcome (remove item from middle of full inventory)");
-    world.ratfun__applyOutcome(ratId, roomId, 0, itemsToRemove, new Item[](0));
+    world.ratfun__applyOutcome(ratId, tripId, 0, itemsToRemove, new Item[](0));
     endGasReport();
     vm.stopPrank();
 
     // Check balance and items after removal
-    assertEq(Balance.get(roomId), ROOM_INITIAL_BALANCE - (maxInventorySize - 1));
+    assertEq(Balance.get(tripId), TRIP_INITIAL_BALANCE - (maxInventorySize - 1));
     assertEq(Inventory.length(ratId), maxInventorySize - 1);
     for (uint256 i = 0; i < Inventory.length(ratId); i++) {
       bytes32 itemId = Inventory.getItem(ratId, i);
@@ -331,11 +330,11 @@ contract ManagerSystemTest is BaseTest {
 
     // As admin
     prankAdmin();
-    world.ratfun__applyOutcome(ratId, roomId, 0, itemsToRemove, new Item[](0));
+    world.ratfun__applyOutcome(ratId, tripId, 0, itemsToRemove, new Item[](0));
     vm.stopPrank();
 
     // Check balance and items after removal
-    assertEq(Balance.get(roomId), ROOM_INITIAL_BALANCE - (maxInventorySize - 2));
+    assertEq(Balance.get(tripId), TRIP_INITIAL_BALANCE - (maxInventorySize - 2));
     assertEq(Inventory.length(ratId), maxInventorySize - 2);
     for (uint256 i = 0; i < Inventory.length(ratId); i++) {
       bytes32 itemId = Inventory.getItem(ratId, i);
@@ -348,11 +347,11 @@ contract ManagerSystemTest is BaseTest {
 
     // As admin
     prankAdmin();
-    world.ratfun__applyOutcome(ratId, roomId, 0, itemsToRemove, new Item[](0));
+    world.ratfun__applyOutcome(ratId, tripId, 0, itemsToRemove, new Item[](0));
     vm.stopPrank();
 
     // Check balance and items after removal
-    assertEq(Balance.get(roomId), ROOM_INITIAL_BALANCE - (maxInventorySize - 3));
+    assertEq(Balance.get(tripId), TRIP_INITIAL_BALANCE - (maxInventorySize - 3));
     assertEq(Inventory.length(ratId), maxInventorySize - 3);
     for (uint256 i = 0; i < Inventory.length(ratId); i++) {
       bytes32 itemId = Inventory.getItem(ratId, i);
@@ -368,66 +367,66 @@ contract ManagerSystemTest is BaseTest {
     // As admin
     prankAdmin();
     startGasReport("Apply outcome (transfer to rat)");
-    world.ratfun__applyOutcome(ratId, roomId, 20, new bytes32[](0), new Item[](0));
+    world.ratfun__applyOutcome(ratId, tripId, 20, new bytes32[](0), new Item[](0));
     endGasReport();
     vm.stopPrank();
 
     // Initial balance + 20
     assertEq(Balance.get(ratId), RAT_CREATION_COST + 20);
-    // Initial room balance - 20
-    assertEq(Balance.get(roomId), ROOM_INITIAL_BALANCE - 20);
-    // Initial bob balance - ROOM_CREATION_COST
+    // Initial trip balance - 20
+    assertEq(Balance.get(tripId), TRIP_INITIAL_BALANCE - 20);
+    // Initial bob balance - TRIP_CREATION_COST
     assertEq(
       LibWorld.erc20().balanceOf(bob),
-      initialBalance - ROOM_INITIAL_BALANCE * 10 ** LibWorld.erc20().decimals()
+      initialBalance - TRIP_INITIAL_BALANCE * 10 ** LibWorld.erc20().decimals()
     );
   }
 
-  function testApplyOutcomeTransferToRoom() public {
+  function testApplyOutcomeTransferToTrip() public {
     // As admin
     prankAdmin();
-    world.ratfun__applyOutcome(ratId, roomId, 50, new bytes32[](0), new Item[](0));
-    startGasReport("Apply outcome (transfer to room)");
-    world.ratfun__applyOutcome(ratId, roomId, -20, new bytes32[](0), new Item[](0));
+    world.ratfun__applyOutcome(ratId, tripId, 50, new bytes32[](0), new Item[](0));
+    startGasReport("Apply outcome (transfer to trip)");
+    world.ratfun__applyOutcome(ratId, tripId, -20, new bytes32[](0), new Item[](0));
     endGasReport();
     vm.stopPrank();
 
     // Initial balance + 50 - 20
     assertEq(Balance.get(ratId), RAT_CREATION_COST + 30);
-    // Initial room balance - 50 (transfer to rat) + 20 (transfer back to room)
-    assertEq(Balance.get(roomId), ROOM_INITIAL_BALANCE - 50 + 20);
+    // Initial trip balance - 50 (transfer to rat) + 20 (transfer back to trip)
+    assertEq(Balance.get(tripId), TRIP_INITIAL_BALANCE - 50 + 20);
   }
 
   function testApplyOutcomeOverTransferToRat() public {
-    // As admin - try to transfer more than room balance to rat
+    // As admin - try to transfer more than trip balance to rat
     prankAdmin();
-    // Set maxValuePerWin to 1000% so only room balance can possibly limit the transfer
+    // Set maxValuePerWin to 1000% so only trip balance can possibly limit the transfer
     GamePercentagesConfig.setMaxValuePerWin(1000);
 
     startGasReport("Apply outcome (over transfer to rat)");
-    world.ratfun__applyOutcome(ratId, roomId, int256(ROOM_INITIAL_BALANCE + 100), new bytes32[](0), new Item[](0));
+    world.ratfun__applyOutcome(ratId, tripId, int256(TRIP_INITIAL_BALANCE + 100), new bytes32[](0), new Item[](0));
     endGasReport();
     vm.stopPrank();
 
-    // Balance transfer can not exceed room balance
-    assertEq(Balance.get(ratId), RAT_CREATION_COST + ROOM_INITIAL_BALANCE);
-    assertEq(Balance.get(roomId), 0);
+    // Balance transfer can not exceed trip balance
+    assertEq(Balance.get(ratId), RAT_CREATION_COST + TRIP_INITIAL_BALANCE);
+    assertEq(Balance.get(tripId), 0);
   }
 
-  function testApplyOutcomeOverTransferToRoom() public {
+  function testApplyOutcomeOverTransferToTrip() public {
     // As admin
     prankAdmin();
-    world.ratfun__applyOutcome(ratId, roomId, 50, new bytes32[](0), new Item[](0));
-    startGasReport("Apply outcome (over transfer to room)");
-    world.ratfun__applyOutcome(ratId, roomId, -200, new bytes32[](0), new Item[](0));
+    world.ratfun__applyOutcome(ratId, tripId, 50, new bytes32[](0), new Item[](0));
+    startGasReport("Apply outcome (over transfer to trip)");
+    world.ratfun__applyOutcome(ratId, tripId, -200, new bytes32[](0), new Item[](0));
     endGasReport();
     vm.stopPrank();
 
     // Rat should have 0 balance and be dead
     assertEq(Balance.get(ratId), 0);
     assertTrue(Dead.get(ratId));
-    // Initial room balance + RAT_CREATION_COST
-    assertEq(Balance.get(roomId), ROOM_INITIAL_BALANCE + RAT_CREATION_COST);
+    // Initial trip balance + RAT_CREATION_COST
+    assertEq(Balance.get(tripId), TRIP_INITIAL_BALANCE + RAT_CREATION_COST);
   }
 
   // * * * *
@@ -444,12 +443,12 @@ contract ManagerSystemTest is BaseTest {
     prankAdmin();
 
     // Add items and transfer balance to rat
-    world.ratfun__applyOutcome(ratId, roomId, 20, new bytes32[](0), newItems);
+    world.ratfun__applyOutcome(ratId, tripId, 20, new bytes32[](0), newItems);
 
-    // Room balance:
-    // initial room balance - 20 (balance transfer) - 30 (items)
-    uint256 intermediateRoomBalance = ROOM_INITIAL_BALANCE - 20 - 30;
-    assertEq(Balance.get(roomId), intermediateRoomBalance);
+    // Trip balance:
+    // initial trip balance - 20 (balance transfer) - 30 (items)
+    uint256 intermediateTripBalance = TRIP_INITIAL_BALANCE - 20 - 30;
+    assertEq(Balance.get(tripId), intermediateTripBalance);
 
     // Check rat balance
     // Initial balance + 20 (balance transfer)
@@ -465,17 +464,17 @@ contract ManagerSystemTest is BaseTest {
     assertEq(Value.get(items[1]), 20);
 
     startGasReport("Apply outcome (value transfer on death)");
-    world.ratfun__applyOutcome(ratId, roomId, -int256(intermediateRatBalance), new bytes32[](0), new Item[](0));
+    world.ratfun__applyOutcome(ratId, tripId, -int256(intermediateRatBalance), new bytes32[](0), new Item[](0));
     endGasReport();
 
     vm.stopPrank();
 
-    // Room kill count incremented
-    assertEq(KillCount.get(roomId), 1);
+    // Trip kill count incremented
+    assertEq(KillCount.get(tripId), 1);
 
-    // Room balance:
-    // intermediate room balance + intermediate rat balance + 30 (items)
-    assertEq(Balance.get(roomId), intermediateRoomBalance + intermediateRatBalance + 30);
+    // Trip balance:
+    // intermediate trip balance + intermediate rat balance + 30 (items)
+    assertEq(Balance.get(tripId), intermediateTripBalance + intermediateRatBalance + 30);
 
     // Rat is dead
     assertTrue(Dead.get(ratId));
@@ -489,62 +488,62 @@ contract ManagerSystemTest is BaseTest {
   }
 
   // * * * *
-  // Room Budget Limits
+  // Trip Budget Limits
   // * * * *
 
-  function testRoomCannotExceedMaxValuePerWin() public {
-    uint256 maxValuePerWin = LibRoom.getMaxValuePerWin(roomId);
+  function testTripCannotExceedMaxValuePerWin() public {
+    uint256 maxValuePerWin = LibTrip.getMaxValuePerWin(tripId);
 
-    // Verify room setup
-    assertEq(Balance.get(roomId), ROOM_INITIAL_BALANCE); // Room has 200 balance
-    assertTrue(Balance.get(roomId) > maxValuePerWin); // Room balance > maxValuePerWin
+    // Verify trip setup
+    assertEq(Balance.get(tripId), TRIP_INITIAL_BALANCE); // Trip has 200 balance
+    assertTrue(Balance.get(tripId) > maxValuePerWin); // Trip balance > maxValuePerWin
 
     // Try to transfer more than maxValuePerWin to rat
     int256 transferAmount = int256(maxValuePerWin + 1);
 
     // As admin
     prankAdmin();
-    startGasReport("Apply outcome (room budget limit)");
-    world.ratfun__applyOutcome(ratId, roomId, transferAmount, new bytes32[](0), new Item[](0));
+    startGasReport("Apply outcome (trip budget limit)");
+    world.ratfun__applyOutcome(ratId, tripId, transferAmount, new bytes32[](0), new Item[](0));
     endGasReport();
     vm.stopPrank();
 
     // Verify that only maxValuePerWin was transferred, not the full amount
     assertEq(Balance.get(ratId), RAT_CREATION_COST + maxValuePerWin);
-    assertEq(Balance.get(roomId), ROOM_INITIAL_BALANCE - maxValuePerWin);
+    assertEq(Balance.get(tripId), TRIP_INITIAL_BALANCE - maxValuePerWin);
   }
 
-  function testRoomBudgetLimitedByBalance() public {
-    // As admin - set maxValuePerWin to 50% and reduce room balance to be a bit below that
+  function testTripBudgetLimitedByBalance() public {
+    // As admin - set maxValuePerWin to 50% and reduce trip balance to be a bit below that
     prankAdmin();
     GamePercentagesConfig.setMaxValuePerWin(50);
-    uint256 alteredRoomBalance = ROOM_INITIAL_BALANCE / 2 - 1;
-    Balance.set(roomId, alteredRoomBalance);
+    uint256 alteredTripBalance = TRIP_INITIAL_BALANCE / 2 - 1;
+    Balance.set(tripId, alteredTripBalance);
     vm.stopPrank();
 
-    // Verify room setup
-    uint256 maxValuePerWin = LibRoom.getMaxValuePerWin(roomId);
-    assertEq(Balance.get(roomId), alteredRoomBalance);
-    // Room balance should be equal to maxValuePerWin (which is based on creation cost here, and capped by the balance)
-    assertEq(Balance.get(roomId), maxValuePerWin);
+    // Verify trip setup
+    uint256 maxValuePerWin = LibTrip.getMaxValuePerWin(tripId);
+    assertEq(Balance.get(tripId), alteredTripBalance);
+    // Trip balance should be equal to maxValuePerWin (which is based on creation cost here, and capped by the balance)
+    assertEq(Balance.get(tripId), maxValuePerWin);
 
-    // Try to transfer more than room balance to rat
+    // Try to transfer more than trip balance to rat
     int256 transferAmount = int256(maxValuePerWin);
 
     // As admin
     prankAdmin();
-    startGasReport("Apply outcome (room balance limit)");
-    world.ratfun__applyOutcome(ratId, roomId, transferAmount, new bytes32[](0), new Item[](0));
+    startGasReport("Apply outcome (trip balance limit)");
+    world.ratfun__applyOutcome(ratId, tripId, transferAmount, new bytes32[](0), new Item[](0));
     endGasReport();
     vm.stopPrank();
 
-    // Verify that only room balance was transferred, not maxValuePerWin
-    assertEq(Balance.get(ratId), RAT_CREATION_COST + alteredRoomBalance);
-    assertEq(Balance.get(roomId), 0); // Room balance exhausted
+    // Verify that only trip balance was transferred, not maxValuePerWin
+    assertEq(Balance.get(ratId), RAT_CREATION_COST + alteredTripBalance);
+    assertEq(Balance.get(tripId), 0); // Trip balance exhausted
   }
 
-  function testRoomBudgetIncreasedByRatValueAndItemLoss() public {
-    uint256 maxValuePerWin = LibRoom.getMaxValuePerWin(roomId);
+  function testTripBudgetIncreasedByRatValueAndItemLoss() public {
+    uint256 maxValuePerWin = LibTrip.getMaxValuePerWin(tripId);
     assertGt(maxValuePerWin, 0);
 
     // Add initial item worth 20
@@ -553,10 +552,10 @@ contract ManagerSystemTest is BaseTest {
 
     // As admin
     prankAdmin();
-    world.ratfun__applyOutcome(ratId, roomId, 0, new bytes32[](0), newItems);
+    world.ratfun__applyOutcome(ratId, tripId, 0, new bytes32[](0), newItems);
     vm.stopPrank();
 
-    // Transfer value of 30 from rat to room
+    // Transfer value of 30 from rat to trip
     int256 transferAmount = -30;
     // Remove the item worth 20 from rat
     bytes32[] memory itemsToRemove = new bytes32[](1);
@@ -567,13 +566,13 @@ contract ManagerSystemTest is BaseTest {
 
     // As admin
     prankAdmin();
-    world.ratfun__applyOutcome(ratId, roomId, transferAmount, itemsToRemove, newItems);
+    world.ratfun__applyOutcome(ratId, tripId, transferAmount, itemsToRemove, newItems);
     vm.stopPrank();
 
     assertEq(Inventory.length(ratId), 1);
     assertEq(Name.get(Inventory.getItem(ratId, 0)), "cheese 2");
     assertEq(Value.get(Inventory.getItem(ratId, 0)), maxValuePerWin + 50);
     assertEq(Balance.get(ratId), RAT_CREATION_COST - 30);
-    assertEq(Balance.get(roomId), ROOM_INITIAL_BALANCE + 30 - maxValuePerWin - 50);
+    assertEq(Balance.get(tripId), TRIP_INITIAL_BALANCE + 30 - maxValuePerWin - 50);
   }
 }

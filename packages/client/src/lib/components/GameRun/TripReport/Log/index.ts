@@ -1,10 +1,10 @@
-import type { EnterRoomReturnValue } from "@server/modules/types"
+import type { EnterTripReturnValue } from "@server/modules/types"
 import type { MergedLogEntry } from "$lib/components/GameRun/types"
 
 /***
  * Merges log text and outcomes into a single array
  */
-export function mergeLog(result: EnterRoomReturnValue): MergedLogEntry[] {
+export function mergeLog(result: EnterTripReturnValue): MergedLogEntry[] {
   // Deep clone the log
   const mergedLog: MergedLogEntry[] = JSON.parse(JSON.stringify(result.log))
 

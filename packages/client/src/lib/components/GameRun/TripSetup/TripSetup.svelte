@@ -3,7 +3,7 @@
   import { gsap } from "gsap"
   import { TextPlugin } from "gsap/TextPlugin"
   import { Howl } from "howler"
-  import type { Room as SanityRoom } from "@sanity-types"
+  import type { Trip as SanityTrip } from "@sanity-types"
   import { terminalTyper } from "$lib/modules/terminal-typer/index"
   import { generateTripSetupOutput } from "./tripSetupOutput"
   import { playSound } from "$lib/modules/sound"
@@ -15,10 +15,10 @@
 
   const {
     onComplete,
-    staticRoomContent
+    staticTripContent
   }: {
     onComplete: () => void
-    staticRoomContent: SanityRoom | undefined
+    staticTripContent: SanityTrip | undefined
   } = $props()
 
   const SETUP_DURATION = 5000

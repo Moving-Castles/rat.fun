@@ -41,7 +41,7 @@ library ManagerSystemLib {
   function applyOutcome(
     ManagerSystemType self,
     bytes32 _ratId,
-    bytes32 _roomId,
+    bytes32 _tripId,
     int256 _balanceTransferToOrFromRat,
     bytes32[] memory _itemsToRemoveFromRat,
     Item[] memory _itemsToAddToRat
@@ -49,7 +49,7 @@ library ManagerSystemLib {
     return
       CallWrapper(self.toResourceId(), address(0)).applyOutcome(
         _ratId,
-        _roomId,
+        _tripId,
         _balanceTransferToOrFromRat,
         _itemsToRemoveFromRat,
         _itemsToAddToRat
@@ -74,8 +74,8 @@ library ManagerSystemLib {
     return CallWrapper(self.toResourceId(), address(0)).removeWorldEvent();
   }
 
-  function setCooldownCloseRoom(ManagerSystemType self, uint32 _cooldownCloseRoom) internal {
-    return CallWrapper(self.toResourceId(), address(0)).setCooldownCloseRoom(_cooldownCloseRoom);
+  function setCooldownCloseTrip(ManagerSystemType self, uint32 _cooldownCloseTrip) internal {
+    return CallWrapper(self.toResourceId(), address(0)).setCooldownCloseTrip(_cooldownCloseTrip);
   }
 
   function setRatsKilledForAdminAccess(ManagerSystemType self, uint32 _ratsKilledForAdminAccess) internal {
@@ -94,14 +94,14 @@ library ManagerSystemLib {
     return CallWrapper(self.toResourceId(), address(0)).setTaxationLiquidateRat(_taxationLiquidateRat);
   }
 
-  function setTaxationCloseRoom(ManagerSystemType self, uint32 _taxationCloseRoom) internal {
-    return CallWrapper(self.toResourceId(), address(0)).setTaxationCloseRoom(_taxationCloseRoom);
+  function setTaxationCloseTrip(ManagerSystemType self, uint32 _taxationCloseTrip) internal {
+    return CallWrapper(self.toResourceId(), address(0)).setTaxationCloseTrip(_taxationCloseTrip);
   }
 
   function applyOutcome(
     CallWrapper memory self,
     bytes32 _ratId,
-    bytes32 _roomId,
+    bytes32 _tripId,
     int256 _balanceTransferToOrFromRat,
     bytes32[] memory _itemsToRemoveFromRat,
     Item[] memory _itemsToAddToRat
@@ -111,7 +111,7 @@ library ManagerSystemLib {
 
     bytes memory systemCall = abi.encodeCall(
       _applyOutcome_bytes32_bytes32_int256_bytes32Array_ItemArray.applyOutcome,
-      (_ratId, _roomId, _balanceTransferToOrFromRat, _itemsToRemoveFromRat, _itemsToAddToRat)
+      (_ratId, _tripId, _balanceTransferToOrFromRat, _itemsToRemoveFromRat, _itemsToAddToRat)
     );
     self.from == address(0)
       ? _world().call(self.systemId, systemCall)
@@ -157,11 +157,11 @@ library ManagerSystemLib {
       : _world().callFrom(self.from, self.systemId, systemCall);
   }
 
-  function setCooldownCloseRoom(CallWrapper memory self, uint32 _cooldownCloseRoom) internal {
+  function setCooldownCloseTrip(CallWrapper memory self, uint32 _cooldownCloseTrip) internal {
     // if the contract calling this function is a root system, it should use `callAsRoot`
     if (address(_world()) == address(this)) revert ManagerSystemLib_CallingFromRootSystem();
 
-    bytes memory systemCall = abi.encodeCall(_setCooldownCloseRoom_uint32.setCooldownCloseRoom, (_cooldownCloseRoom));
+    bytes memory systemCall = abi.encodeCall(_setCooldownCloseTrip_uint32.setCooldownCloseTrip, (_cooldownCloseTrip));
     self.from == address(0)
       ? _world().call(self.systemId, systemCall)
       : _world().callFrom(self.from, self.systemId, systemCall);
@@ -216,11 +216,11 @@ library ManagerSystemLib {
       : _world().callFrom(self.from, self.systemId, systemCall);
   }
 
-  function setTaxationCloseRoom(CallWrapper memory self, uint32 _taxationCloseRoom) internal {
+  function setTaxationCloseTrip(CallWrapper memory self, uint32 _taxationCloseTrip) internal {
     // if the contract calling this function is a root system, it should use `callAsRoot`
     if (address(_world()) == address(this)) revert ManagerSystemLib_CallingFromRootSystem();
 
-    bytes memory systemCall = abi.encodeCall(_setTaxationCloseRoom_uint32.setTaxationCloseRoom, (_taxationCloseRoom));
+    bytes memory systemCall = abi.encodeCall(_setTaxationCloseTrip_uint32.setTaxationCloseTrip, (_taxationCloseTrip));
     self.from == address(0)
       ? _world().call(self.systemId, systemCall)
       : _world().callFrom(self.from, self.systemId, systemCall);
@@ -229,14 +229,14 @@ library ManagerSystemLib {
   function applyOutcome(
     RootCallWrapper memory self,
     bytes32 _ratId,
-    bytes32 _roomId,
+    bytes32 _tripId,
     int256 _balanceTransferToOrFromRat,
     bytes32[] memory _itemsToRemoveFromRat,
     Item[] memory _itemsToAddToRat
   ) internal {
     bytes memory systemCall = abi.encodeCall(
       _applyOutcome_bytes32_bytes32_int256_bytes32Array_ItemArray.applyOutcome,
-      (_ratId, _roomId, _balanceTransferToOrFromRat, _itemsToRemoveFromRat, _itemsToAddToRat)
+      (_ratId, _tripId, _balanceTransferToOrFromRat, _itemsToRemoveFromRat, _itemsToAddToRat)
     );
     SystemCall.callWithHooksOrRevert(self.from, self.systemId, systemCall, msg.value);
   }
@@ -265,8 +265,8 @@ library ManagerSystemLib {
     SystemCall.callWithHooksOrRevert(self.from, self.systemId, systemCall, msg.value);
   }
 
-  function setCooldownCloseRoom(RootCallWrapper memory self, uint32 _cooldownCloseRoom) internal {
-    bytes memory systemCall = abi.encodeCall(_setCooldownCloseRoom_uint32.setCooldownCloseRoom, (_cooldownCloseRoom));
+  function setCooldownCloseTrip(RootCallWrapper memory self, uint32 _cooldownCloseTrip) internal {
+    bytes memory systemCall = abi.encodeCall(_setCooldownCloseTrip_uint32.setCooldownCloseTrip, (_cooldownCloseTrip));
     SystemCall.callWithHooksOrRevert(self.from, self.systemId, systemCall, msg.value);
   }
 
@@ -299,8 +299,8 @@ library ManagerSystemLib {
     SystemCall.callWithHooksOrRevert(self.from, self.systemId, systemCall, msg.value);
   }
 
-  function setTaxationCloseRoom(RootCallWrapper memory self, uint32 _taxationCloseRoom) internal {
-    bytes memory systemCall = abi.encodeCall(_setTaxationCloseRoom_uint32.setTaxationCloseRoom, (_taxationCloseRoom));
+  function setTaxationCloseTrip(RootCallWrapper memory self, uint32 _taxationCloseTrip) internal {
+    bytes memory systemCall = abi.encodeCall(_setTaxationCloseTrip_uint32.setTaxationCloseTrip, (_taxationCloseTrip));
     SystemCall.callWithHooksOrRevert(self.from, self.systemId, systemCall, msg.value);
   }
 
@@ -345,7 +345,7 @@ library ManagerSystemLib {
 interface _applyOutcome_bytes32_bytes32_int256_bytes32Array_ItemArray {
   function applyOutcome(
     bytes32 _ratId,
-    bytes32 _roomId,
+    bytes32 _tripId,
     int256 _balanceTransferToOrFromRat,
     bytes32[] memory _itemsToRemoveFromRat,
     Item[] memory _itemsToAddToRat
@@ -369,8 +369,8 @@ interface _removeWorldEvent {
   function removeWorldEvent() external;
 }
 
-interface _setCooldownCloseRoom_uint32 {
-  function setCooldownCloseRoom(uint32 _cooldownCloseRoom) external;
+interface _setCooldownCloseTrip_uint32 {
+  function setCooldownCloseTrip(uint32 _cooldownCloseTrip) external;
 }
 
 interface _setRatsKilledForAdminAccess_uint32 {
@@ -389,8 +389,8 @@ interface _setTaxationLiquidateRat_uint32 {
   function setTaxationLiquidateRat(uint32 _taxationLiquidateRat) external;
 }
 
-interface _setTaxationCloseRoom_uint32 {
-  function setTaxationCloseRoom(uint32 _taxationCloseRoom) external;
+interface _setTaxationCloseTrip_uint32 {
+  function setTaxationCloseTrip(uint32 _taxationCloseTrip) external;
 }
 
 using ManagerSystemLib for ManagerSystemType global;

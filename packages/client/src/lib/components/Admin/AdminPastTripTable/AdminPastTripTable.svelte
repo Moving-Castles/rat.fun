@@ -1,72 +1,140 @@
 <script lang="ts">
-  import type { PlotPoint } from "$lib/components/Room/ProfitLossGraph/types"
-  import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
-  import { SmallButton } from "$lib/components/Shared"
-  import { ProfitLossGraph } from "$lib/components/Room"
-  import { goto } from "$app/navigation"
-  import { playerLiquidatedRooms } from "$lib/modules/state/stores"
-  import { entriesChronologically } from "$lib/components/Room/RoomListing/sortFunctions"
-  import { blocksToReadableTime } from "$lib/modules/utils"
-  import { blockNumber } from "$lib/modules/network"
+  import type { PlotPoint } from "$lib/components/Trip/TripGraph/types"
+  import {
+    playerLiquidatedTrips,
+    profitLoss,
+    realisedProfitLoss,
+    untaxedRealisedProfitLoss
+  } from "$lib/modules/state/stores"
+  import { derived } from "svelte/store"
+  import {
+    entriesChronologically,
+    entriesChronologicallyDesc,
+    entriesByRealisedProfit,
+    entriesByRealisedProfitDesc,
+    entriesByVisit,
+    entriesByVisitDesc
+  } from "$lib/components/Trip/TripListing/sortFunctions"
+  import { gamePercentagesConfig } from "$lib/modules/state/stores"
   import { staticContent } from "$lib/modules/content"
+  import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
+  import tippy from "tippy.js"
+
   import AdminTripTableRow from "../AdminTripTable/AdminTripTableRow.svelte"
 
   let { focus = $bindable() } = $props()
 
-  let sortFunction = $state(entriesChronologically)
+  let sortDirection = $state<"asc" | "desc">("asc")
+  let sortFunction = $state(
+    sortDirection === "asc" ? entriesChronologically : entriesChronologicallyDesc
+  )
+  let sortFunctionName = $derived(sortFunction.name)
+
+  const sortByVisit = () => {
+    sortFunction = sortDirection === "asc" ? entriesByVisit : entriesByVisitDesc
+    sortDirection = sortDirection === "asc" ? "desc" : "asc"
+  }
+  const sortByProfit = () => {
+    sortFunction = sortDirection === "asc" ? entriesByRealisedProfit : entriesByRealisedProfitDesc
+    sortDirection = sortDirection === "asc" ? "desc" : "asc"
+  }
+  const sortByAge = () => {
+    sortFunction = sortDirection === "asc" ? entriesChronologically : entriesChronologicallyDesc
+    sortDirection = sortDirection === "asc" ? "desc" : "asc"
+  }
 
   let plots: Record<string, PlotPoint[]> = $derived.by(() => {
     const result = Object.fromEntries(
-      roomList.map(([roomId, room]) => {
-        let sanityRoomContent = $staticContent?.rooms?.find(r => r.title == roomId)
+      tripList.map(([tripId, trip]) => {
+        let sanityTripContent = $staticContent?.trips?.find(r => r.title == tripId)
 
-        const outcomes = $staticContent?.outcomes?.filter(o => o.roomId == roomId) || []
+        const outcomes = $staticContent?.outcomes?.filter(o => o.tripId == tripId) || []
         // Sort the outcomes in order of creation
         outcomes.sort((a, b) => {
           return new Date(b._createdAt).getTime() - new Date(a._createdAt).getTime()
         })
-        const roomOutcomes = outcomes.reverse()
+        const tripOutcomes = outcomes.reverse()
         const value = [
           {
             time: 0,
-            roomValue: Number(room.roomCreationCost),
-            meta: sanityRoomContent
+            tripValue: Number(trip.tripCreationCost),
+            meta: sanityTripContent
           },
-          ...roomOutcomes
+          ...tripOutcomes
         ].map((o, i) => {
           return {
             time: i,
-            value: o?.roomValue || 0,
+            value: o?.tripValue || 0,
             meta: o
           }
         })
 
         // Map the values
-        return [roomId, value]
+        return [tripId, value]
       })
     )
 
     return result
   })
 
-  let roomList = $derived.by(() => {
-    let entries = Object.entries($playerLiquidatedRooms)
+  let totalLiquidatedBalance = $derived(
+    Object.values($playerLiquidatedTrips).reduce(
+      (prev, current) => (prev += Number(current.liquidationValue)),
+      0
+    )
+  )
+
+  const untaxed = (value: number) =>
+    Math.floor((Number(value) * 100) / (100 - Number($gamePercentagesConfig.taxationCloseTrip)))
+
+  let tripList = $derived.by(() => {
+    let entries = Object.entries($playerLiquidatedTrips)
 
     return entries.sort(sortFunction)
+  })
+
+  let fees = $derived($realisedProfitLoss - $untaxedRealisedProfitLoss)
+
+  const portfolioClass = derived([untaxedRealisedProfitLoss], ([$untaxedRealisedProfitLoss]) => {
+    if ($untaxedRealisedProfitLoss === 0) return "neutral"
+    return $untaxedRealisedProfitLoss > 0 ? "upText" : "downText"
+  })
+
+  const feeClass = derived([realisedProfitLoss], ([$realisedProfitLoss]) => {
+    if ($realisedProfitLoss === 0) return "neutral"
+    return $realisedProfitLoss > 0 ? "upText" : "downText"
+  })
+
+  $effect(() => {
+    tippy("[data-tippy-content]", {
+      followCursor: true,
+      allowHTML: true
+    })
   })
 </script>
 
 <div class="admin-trip-table-container">
-  {#if roomList?.length > 0}
+  <p class="table-summary">
+    Liquidated trips <span class={$portfolioClass}
+      >({#if $untaxedRealisedProfitLoss < 0}-{/if}{CURRENCY_SYMBOL}{Math.abs(
+        $untaxedRealisedProfitLoss
+      )})</span
+    >
+    <span>Fee: <span class={$feeClass}>{CURRENCY_SYMBOL}{Math.abs(fees)}</span></span>
+  </p>
+  {#if tripList?.length > 0}
     <table class="admin-trip-table">
       <thead>
         <tr>
           <th><!-- Trip --></th>
-          <th>Visits</th>
-          <th>Profit</th>
-          <th>Age</th>
+          <th onclick={sortByVisit}
+            >Visits&nbsp;{#if sortFunctionName === "entriesByVisit"}▼{:else if sortFunctionName === "entriesByVisitDesc"}▲{:else}&nbsp;{/if}</th
+          >
+          <th>Liquidation</th>
+          <th onclick={sortByProfit}
+            >Profit{#if sortFunctionName === "entriesByRealisedProfit"}▼{:else if sortFunctionName === "entriesByRealisedProfitDesc"}▲{:else}&nbsp;{/if}</th
+          >
           <th>Spark</th>
-          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -75,13 +143,13 @@
           <td colspan="5"></td>
         </tr>
         <!-- --- -->
-        {#each roomList as roomEntry (roomEntry[0])}
+        {#each tripList as tripEntry (tripEntry[0])}
           <AdminTripTableRow
-            id={roomEntry[0]}
-            data={plots[roomEntry[0]]}
-            room={roomEntry[1]}
+            id={tripEntry[0]}
+            data={plots[tripEntry[0]]}
+            trip={tripEntry[1]}
             onpointerenter={() => {
-              focus = roomEntry[0]
+              focus = tripEntry[0]
             }}
             onpointerleave={() => {
               focus = ""
@@ -107,7 +175,7 @@
   }
   .admin-trip-table {
     width: 100%;
-    background: black;
+    // background: black;
     table-layout: fixed;
     /* justify-content: center; */
     /* align-items: center; */
@@ -138,18 +206,13 @@
     background: #222;
   }
 
-  .simple-row {
-    * {
-      border: none;
-      outline: none;
-      border-width: 0;
-      border-bottom: 1px solid #555;
-    }
+  :global(.simple-row) {
     &:hover {
-      background: #222;
+      background-color: var(--color-death);
       cursor: pointer;
     }
     td {
+      outline: none;
       overflow: hidden;
       margin: 0;
       vertical-align: top;
@@ -174,5 +237,17 @@
     .cell-actions {
       max-width: 200px;
     }
+  }
+
+  .table-summary {
+    padding: 0 10px;
+  }
+
+  .downText {
+    color: red;
+  }
+
+  .upText {
+    color: var(--graph-color-up);
   }
 </style>

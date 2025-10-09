@@ -41,8 +41,8 @@
   --game-window-height: calc(100vh - 30px);
   --game-window-main-height: calc(var(--game-window-height) - 60px);
 
-  --graph-color-up: rgba(100, 255, 200, 1);
-  --graph-color-down: rgba(230, 30, 0, 1);
+  --graph-color-up: #78ee72;
+  --graph-color-down: red;
 
   /* * * * * * * * * * * * * *
   * Layout
@@ -55,17 +55,17 @@
   /* Layout: Top Bar */
   --top-bar-height: 60px;
 
-  /* Layout: Your Rooms */
+  /* Layout: Your Trips */
   --world-prompt-box-height: 80px;
   --pane-switch-height: 60px;
-  --create-room-button-height: 80px;
+  --create-trip-button-height: 80px;
 
-  /* Layout: Room Item */
-  --room-item-height: 260px;
-  --room-item-padding: 10px;
-  --room-item-image-height: 240px;
+  /* Layout: Trip Item */
+  --trip-item-height: 260px;
+  --trip-item-padding: 10px;
+  --trip-item-image-height: 240px;
 
-  /* Layout: Room Result */
+  /* Layout: Trip Result */
   --info-box-height: 260px;
 
   /* Sizing */
@@ -85,9 +85,9 @@
   --font-size-very-small: 9px;
   --font-size-small: 11px;
   --font-size-normal: 14px;
-  --font-size-medium: 14px; /* 20px */
-  --font-size-large: 14px; /* 26px */
-  --font-size-extra-large: 14px; /* 48px */
+  --font-size-medium: 20px;
+  --font-size-large: 26px;
+  --font-size-extra-large: 48px;
 
   /** Layers */
   --z-background: 0;

@@ -2,7 +2,7 @@ enum ENTITY_TYPE {
   NONE,
   PLAYER,
   RAT,
-  ROOM,
+  TRIP,
   ITEM
 }
 

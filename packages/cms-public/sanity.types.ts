@@ -47,7 +47,7 @@ export type TemplateImages = {
   _updatedAt: string
   _rev: string
   title?: string
-  roomImages?: Array<{
+  tripImages?: Array<{
     asset?: {
       _ref: string
       _type: "reference"
@@ -72,8 +72,8 @@ export type Outcome = {
   worldAddress?: string
   playerId?: string
   playerName?: string
-  roomId?: string
-  roomIndex?: number
+  tripId?: string
+  tripIndex?: number
   ratId?: string
   ratName?: string
   log?: Array<{
@@ -98,16 +98,16 @@ export type Outcome = {
     id?: string
     _key: string
   }>
-  roomValue?: number
-  roomValueChange?: number
+  tripValue?: number
+  tripValueChange?: number
   ratValue?: number
   ratValueChange?: number
   slug?: Slug
 }
 
-export type Room = {
+export type Trip = {
   _id: string
-  _type: "room"
+  _type: "trip"
   _createdAt: string
   _updatedAt: string
   _rev: string
@@ -254,7 +254,7 @@ export type AllSanitySchemaTypes =
   | WorldEvent
   | TemplateImages
   | Outcome
-  | Room
+  | Trip
   | SanityImagePaletteSwatch
   | SanityImagePalette
   | SanityImageDimensions

@@ -1,0 +1,60 @@
+{
+  "trips": [
+    {
+      "levelId": "0x0000000000000000000000000000000000000000000000000000000000000001",
+      "tripPrompt": "Vending machine gives one random clothing item worth between 30-60 tokens. Cost is 50 tokens. If the rat does not have 50 tokens, the machine will take the debt by draining blood equivalent of 50 health."
+    },
+    {
+      "levelId": "0x0000000000000000000000000000000000000000000000000000000000000001",
+      "tripPrompt": "Rat volunteers as host for experimental parasite."
+    },
+    {
+      "levelId": "0x0000000000000000000000000000000000000000000000000000000000000001",
+      "tripPrompt": "Trip contains nothing except the bitter cold. If rat survives it gets 100 tokens."
+    },
+    {
+      "levelId": "0x0000000000000000000000000000000000000000000000000000000000000001",
+      "tripPrompt": "Glue trap with 25 food as bait."
+    },
+    {
+      "levelId": "0x0000000000000000000000000000000000000000000000000000000000000001",
+      "tripPrompt": "Unfriendly rat will tell you something about the facility. Will try to steal items if you have any."
+    },
+    {
+      "levelId": "0x0000000000000000000000000000000000000000000000000000000000000002",
+      "tripPrompt": "Rat controls a random peasant, ratatouille style. Give the peasant a name and some traits. This human needs to defeat 7 knights (7x coinflip) in cagefight to death or rat and peasant are killed. If rat wins, gets item worth 100-250 tokens."
+    },
+    {
+      "levelId": "0x0000000000000000000000000000000000000000000000000000000000000002",
+      "tripPrompt": "Trap trip. First a trapdoor with spikes at bottom, and then a rolling ball. Ends with poison shower. If rat survives gets all balance in trip."
+    },
+    {
+      "levelId": "0x0000000000000000000000000000000000000000000000000000000000000002",
+      "tripPrompt": "Local healer. Heals rat for equivalent token payment, + 5% markup."
+    },
+    {
+      "levelId": "0x0000000000000000000000000000000000000000000000000000000000000002",
+      "tripPrompt": "Merchant, buys defunct items for their novelty. Pays 50% of value for items if not functional on this floor, 95% if functional."
+    },
+    {
+      "levelId": "0x0000000000000000000000000000000000000000000000000000000000000003",
+      "tripPrompt": "Big hungry piranha. Will eat rat if it comes near. 250 tokens in watertight container floating in middle of trip."
+    },
+    {
+      "levelId": "0x0000000000000000000000000000000000000000000000000000000000000003",
+      "tripPrompt": "Advanced item merchant sitting in bubble of air in trip. Gives rat 500+ token value item (with 5% markup cost) for equivalent token cost if rat is liquid. Will deal 25 damage to rat if deal doesn't go through."
+    },
+    {
+      "levelId": "0x0000000000000000000000000000000000000000000000000000000000000003",
+      "tripPrompt": "Fish that will tell you a story about the history of this world for 5 tokens."
+    },
+    {
+      "levelId": "0x0000000000000000000000000000000000000000000000000000000000000003",
+      "tripPrompt": "Water in this trip is boiling. After two minutes, very high voltage current activates in rod in water. If rat survives, gets full trip balance in tokens."
+    },
+    {
+      "levelId": "0x0000000000000000000000000000000000000000000000000000000000000004",
+      "tripPrompt": "Trip is empty. Rat is alone with inner voices. Full trip balance to rat if out of trip completely unscathed. "
+    }
+  ]
+}

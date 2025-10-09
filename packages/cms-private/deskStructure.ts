@@ -3,7 +3,7 @@ import { MdList, MdChecklist, MdScience } from "react-icons/md"
 
 export default (S: any) =>
   S.list()
-    .title("Rat Room Private")
+    .title("rat.fun Private")
     .items([
       S.listItem()
         .title("Active prompts")

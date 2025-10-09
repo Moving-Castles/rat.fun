@@ -1,0 +1,97 @@
+{
+  "trips": [
+    {
+      "tripPrompt": "Fight another rat to the death. Winner takes all."
+    },
+    {
+      "tripPrompt": "100 tokens are hidden inside a Vaultex MX safe located on a shelf within the trip. If Rat is unable to retrieve the tokens, or is discovered by the two security cameras, the trip will take all items and tokens from the rat."
+    },
+    {
+      "tripPrompt": "Marc Andreesen and the a16z crypto team will listen to a startup pitch by your rat. If the pitch does not strongly fit ALL investment criteria, Marc Andreessen will physically torment the rat to death while talking about techno-optimism. If the rat succeeds it gets {random:100-250} tokens pre-seed investment."
+    },
+    {
+      "tripPrompt": "Rat clothing store. Gives rat random piece of rat-sized clothing in exchange for token value +10%."
+    },
+    {
+      "tripPrompt": "Evil Vending Machine gives one random item worth {random:30-60} tokens. Cost is 50 tokens. If the rat does not have 60 tokens, the machine will take the debt by draining 50 health."
+    },
+    {
+      "tripPrompt": "Rat purchases random item at market value + 10% fee."
+    },
+    {
+      "tripPrompt": "Fight a stronger than average rat to the death. Winner takes all."
+    },
+    {
+      "tripPrompt": "Bayer AG randomised controlled trial (RCT) drug experiment on rat. Produces one {choose:positive,negative,ambigious} trait outcome. Risks {random:0-50} rat health."
+    },
+    {
+      "tripPrompt": "Rat puts in 10 tokens in IGT's Ghostbusters 4D Video Slot Machine, {chance:10%:success|failure} to win {random:50-150} tokens."
+    },
+    {
+      "tripPrompt": "Black market vendor buys items from rats. Pays 10 less than token value for any object."
+    },
+    {
+      "tripPrompt": "Ted Kaszynisky training camp. Rat radicalises in anarcho-primitivism and changes name of rat to a concept from his writings. If rat does not have an object for ted as payment for his training, he will maim the rat."
+    },
+    {
+      "tripPrompt": "Game trip. Trip gives full balance to rat, but only if there are over 500 token balance in trip."
+    },
+    {
+      "tripPrompt": "Rat meets God. God kills the rat."
+    },
+    {
+      "tripPrompt": "Trip is a prison cell for human that escaped from sector 29b. The human will eat the rat."
+    },
+    {
+      "tripPrompt": "Euthanasia through injection. Balance is on secure hardwallet within safe in trip."
+    },
+    {
+      "tripPrompt": "Rat must watch 12 hours of unreleased Disney content while sensors monitor its emotional responses. Genuine emotional reactions reward {random:5-10} tokens per significant response. Negative emotional reactions trigger electric shocks draining {random:5-10} health."
+    },
+    {
+      "tripPrompt": "Rat is placed in a miniature war trip as the military leader of a major power during global conflict. Each strategic decision impacts token gain/loss. Achieving peace awards {random:10-50} tokens and 'Diplomatic' trait. Causing global destruction costs {random:50-100} health and gives 'Warmonger' trait."
+    },
+    {
+      "tripPrompt": "Rat must volunteer as host for experimental parasite."
+    },
+    {
+      "tripPrompt": "MLM Scheme. Costs 50 tokens to buy starter kit. Rat gets between 0-200 tokens based on how early they are on MLM scheme."
+    },
+    {
+      "tripPrompt": "European bureaucrat training. No cost, subsidised by European Government. Gets negative trait of due to bureacratic inefficiency equivalent to any positive trait value."
+    },
+    {
+      "tripPrompt": "Very small table for eating. Rat consumes any item that is food available to heal equivalent health."
+    },
+    {
+      "tripPrompt": "Game trip. Gives any balance over 250 in trip to rat."
+    },
+    {
+      "tripPrompt": "Pizza store. Buy a pizza, for token price of normal pizza profit margin on top of object value. Pizza salesman has baseball bat under counter to protect against robberies and doesnt deliver."
+    },
+    {
+      "tripPrompt": "LAMBDA test, if rat fails then killed and replaced with smarter rat."
+    },
+    {
+      "tripPrompt": "Rat must operate a miniature sewing machine for 18 hours straight producing tiny clothes. Each successful hour yields {random:5-10} tokens but costs {random:3-8} health."
+    },
+    {
+      "tripPrompt": "Rat is spun at **15,000 RPM.**"
+    },
+    {
+      "tripPrompt": "Trip has cheese but its poisoned."
+    },
+    {
+      "tripPrompt": "Trip is very cold. -89.2C."
+    },
+    {
+      "tripPrompt": "Rat inflates after helium is inserted into anus. Rat floats around trip bumping into things before hitting sharp object."
+    },
+    {
+      "tripPrompt": "The rat is drenched in gasoline and put on fire. If it survives it gets random item."
+    },
+    {
+      "tripPrompt": "Healing. Costs tokens equivalent to amount healed +5."
+    }
+  ]
+}

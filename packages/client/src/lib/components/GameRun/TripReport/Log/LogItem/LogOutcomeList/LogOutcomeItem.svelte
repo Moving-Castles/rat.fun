@@ -67,6 +67,10 @@
       ease: "power2.out"
     })
 
+    timeline.call(() => {
+      playSound("ratfunUI", negative ? "countDown" : "countUp")
+    })
+
     const duration = calculateDuration(value)
 
     // Count up/down value
@@ -75,8 +79,7 @@
       {
         textContent: Number(value),
         duration: duration,
-        snap: { textContent: 1 },
-        ease: "linear"
+        snap: { textContent: 1 }
       },
       "<"
     )

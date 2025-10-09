@@ -11,7 +11,7 @@ export type FrozenRat = Rat & {
   image: string
 }
 
-export type FrozenRoom = Room & {
+export type FrozenTrip = Trip & {
   id: Hex
 }
 
