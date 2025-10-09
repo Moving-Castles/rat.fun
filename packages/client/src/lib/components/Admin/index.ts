@@ -8,3 +8,4 @@ export { default as AdminPastTripTable } from "./AdminPastTripTable/AdminPastTri
 export { default as AdminEventLog } from "./AdminEventLog/AdminEventLog.svelte"
 export { default as ProfitLossHistoryGraph } from "./ProfitLossHistoryGraph/ProfitLossHistoryGraph.svelte"
 export { default as SingleTripProfitLossGraph } from "./SingleTripProfitLossGraph/SingleTripProfitLossGraph.svelte"
+export { default as Outcome } from "./Outcome/Outcome.svelte"

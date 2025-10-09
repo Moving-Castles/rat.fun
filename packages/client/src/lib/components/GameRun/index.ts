@@ -9,7 +9,6 @@ export { default as LogTimestamp } from "./TripReport/Log/LogItem/LogTimestamp.s
 export { default as LogText } from "./TripReport/Log/LogItem/LogText.svelte"
 export { default as TripSummary } from "./TripReport/TripSummary/TripSummary.svelte"
 export { default as OutcomeItem } from "./TripReport/Log/LogItem/LogOutcomeList/LogOutcomeItem.svelte"
-export { default as Outcome } from "./Outcome/Outcome.svelte"
 export { default as Trip } from "./Trip.svelte"
 export { default as TripSetup } from "./TripSetup/TripSetup.svelte"
 export { default as TripProcessing } from "./TripProcessing/TripProcessing.svelte"
