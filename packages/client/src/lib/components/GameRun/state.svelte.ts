@@ -42,16 +42,6 @@ export enum TRIP_STATE {
   ERROR = "ERROR"
 }
 
-/**
- * The result summary state
- * Used by the TripReport component to determine which result summary to show
- */
-export enum RESULT_SUMMARY {
-  UNKNOWN = "UNKNOWN",
-  NORMAL = "NORMAL",
-  RAT_DEAD = "RAT_DEAD"
-}
-
 /** Current state of the room result flow */
 export const roomResultState: { state: TRIP_STATE; errorMessage: string | null } = $state({
   state: TRIP_STATE.SETUP,

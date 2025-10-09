@@ -5,7 +5,7 @@
  * Central store for all entities in the game.
  */
 
-import { writable, derived } from "svelte/store"
+import { writable, derived, get } from "svelte/store"
 import { addressToId } from "$lib/modules/utils"
 import { blockNumber } from "$lib/modules/network"
 import { ENTITY_TYPE } from "contracts/enums"
@@ -186,3 +186,40 @@ export const ratTotalValue = derived([rat, ratInventory], ([$rat, $ratInventory]
       $ratInventory.reduce((acc, item) => acc + (item?.value ? Number(item.value) : 0), 0) // Inventory
   return totalValue
 })
+
+export const investment = derived(playerActiveRooms, $playerActiveRooms =>
+  Object.values($playerActiveRooms).reduce((a, b) => a + Number(b.roomCreationCost), 0)
+)
+export const balance = derived(playerActiveRooms, $playerActiveRooms =>
+  Object.values($playerActiveRooms).reduce((a, b) => a + Number(b.balance), 0)
+)
+export const profitLoss = derived([balance, investment], ([$b, $i]) => $b - $i)
+export const portfolioClass = derived([profitLoss, balance], ([$profitLoss, $balance]) => {
+  if ($profitLoss === 0) return "neutral"
+  return $profitLoss < 0 ? "downText" : "upText"
+})
+
+const untaxed = (value: number) =>
+  Math.floor((Number(value) * 100) / (100 - Number(get(gamePercentagesConfig).taxationCloseRoom)))
+
+export const realisedInvestment = derived(playerLiquidatedRooms, $playerLiquidatedRooms =>
+  Object.values($playerLiquidatedRooms).reduce((a, b) => a + Number(b.roomCreationCost), 0)
+)
+export const realisedBalance = derived(playerLiquidatedRooms, $playerLiquidatedRooms =>
+  Object.values($playerLiquidatedRooms).reduce((a, b) => a + Number(b.liquidationValue), 0)
+)
+export const realisedProfitLoss = derived(
+  [realisedBalance, realisedInvestment],
+  ([$rb, $i]) => $rb - $i
+)
+
+export const untaxedRealisedInvestment = derived(playerLiquidatedRooms, $playerLiquidatedRooms =>
+  Object.values($playerLiquidatedRooms).reduce((a, b) => a + Number(b.roomCreationCost), 0)
+)
+export const untaxedRealisedBalance = derived(playerLiquidatedRooms, $playerLiquidatedRooms =>
+  Object.values($playerLiquidatedRooms).reduce((a, b) => a + untaxed(Number(b.liquidationValue)), 0)
+)
+export const untaxedRealisedProfitLoss = derived(
+  [untaxedRealisedBalance, untaxedRealisedInvestment],
+  ([$rb, $i]) => $rb - $i
+)

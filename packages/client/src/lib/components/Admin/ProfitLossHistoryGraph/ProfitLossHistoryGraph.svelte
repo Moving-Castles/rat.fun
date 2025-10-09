@@ -7,17 +7,27 @@
   import { playSound } from "$lib/modules/sound"
 
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
-  import { truncateString, blockNumberToTimestamp } from "$lib/modules/utils"
+  import { focusEvent } from "$lib/modules/ui/state.svelte"
+  import { blockNumberToTimestamp } from "$lib/modules/utils"
   import { staticContent } from "$lib/modules/content"
   import { blockNumber } from "$lib/modules/network"
   import { scaleTime, scaleLinear } from "d3-scale"
   import { max, min } from "d3-array"
   import { line } from "d3-shape"
-  import tippy from "tippy.js"
 
   import "tippy.js/dist/tippy.css" // optional for styling
 
-  let { trips, focus, height = 400, graphData = $bindable() } = $props()
+  let {
+    trips,
+    focus = $bindable(),
+    height = 400,
+    graphData = $bindable<PlotPoint[]>()
+  }: {
+    trips: Room[]
+    focus: string
+    height: number
+    graphData: PlotPoint[]
+  } = $props()
 
   // Add reactive timestamp for real-time updates
   let currentTime = $state(Date.now())
@@ -89,6 +99,8 @@
       Object.entries(trips).map(([tripId, trip]) => {
         let sanityRoomContent = $staticContent?.rooms?.find(r => r.title == tripId)
 
+        console.log("Start with sanity content: ", sanityRoomContent)
+
         const outcomes = $staticContent?.outcomes?.filter(o => o.roomId == tripId) || []
 
         // Sort the outcomes in order of creation
@@ -99,16 +111,18 @@
         const roomOutcomes = outcomes.reverse()
         const initialTime = new Date(sanityRoomContent?._createdAt).getTime()
 
+        const initialPoint = {
+          time: initialTime,
+          roomValue: Number(trip.roomCreationCost),
+          roomValueChange: 0,
+          meta: sanityRoomContent,
+          _createdAt: sanityRoomContent?._createdAt,
+          eventType: "trip_created"
+        }
+
         // Build the data array with initial point and outcomes
         const dataPoints = [
-          {
-            time: initialTime,
-            roomValue: Number(trip.roomCreationCost),
-            roomValueChange: 0,
-            meta: sanityRoomContent,
-            _createdAt: sanityRoomContent?._createdAt,
-            eventType: "trip_created"
-          },
+          initialPoint,
           ...roomOutcomes.map(outcome => ({
             ...outcome,
             eventType: outcome?.ratValue == 0 ? "trip_death" : "trip_visit"
@@ -150,6 +164,8 @@
           const time = new Date(o?._createdAt).getTime()
           const valueChange = o?.roomValueChange || 0
 
+          console.log("Data construction: ", sanityRoomContent)
+
           return {
             time: time || o.time,
             valueChange: valueChange, // Store the change, not accumulated value
@@ -174,7 +190,7 @@
     )
     return result
   })
-  let isEmpty = $derived(Object.values(plots).every(plot => plot.length === 0))
+  let isEmpty = $derived(Object.values(plots).every(plot => plot.data.length === 0))
 
   // Combine all data points from all trips and sort by time (used across multiple derived values)
   let allData = $derived.by(() => {
@@ -182,7 +198,7 @@
     if (!allPlots.length) return []
 
     const combinedData = allPlots.flatMap((plot, plotIndex) =>
-      plot.data.map(point => ({
+      plot.data.map((point, index) => ({
         ...point,
         tripId: Object.keys(plots)[plotIndex],
         roomCreationCost: Object.values(trips)[plotIndex]?.roomCreationCost || 0
@@ -207,12 +223,13 @@
       ...combinedData
     ]
 
-    // Now accumulate the value changes globally
+    // Now accumulate the value changes globally and add index
     let runningBalance = 0
-    return dataWithBaseline.map(point => {
+    return dataWithBaseline.map((point, index) => {
       runningBalance += point.valueChange || 0
       return {
         ...point,
+        index,
         value: runningBalance
       }
     })
@@ -231,6 +248,7 @@
     // The P/L is already calculated in allData.value from accumulating valueChanges
     return limitedData.map((point, i) => ({
       time: i,
+      index: point.index,
       value: point.value, // Use the already accumulated value
       tripId: point.tripId,
       eventType: point.eventType,
@@ -246,19 +264,19 @@
       trip_visit: "Rat visited",
       unknown: ""
     }
-    const eventType = point.meta?.eventType || "unknown"
+    const eventType = point.eventType || "unknown"
     const eventTypeLabel = mapping[eventType]
 
     let toolTipContent = `<div><strong>${eventTypeLabel}</strong><br/>`
 
-    const valueChangeClass = point.meta?.roomValueChange
-      ? point.meta?.roomValueChange > 0
+    const valueChangeClass = point.value
+      ? point.value > 0
         ? "tooltip-value-positive"
         : "tooltip-value-negative"
       : "tooltip-value"
     let explicitSymbol =
       valueChangeClass === "tooltip-value" ? "" : valueChangeClass.includes("positive") ? "+" : "-"
-    toolTipContent += `P/L: <span class="${valueChangeClass}">${explicitSymbol}${CURRENCY_SYMBOL}${Math.abs(point.meta?.roomValueChange || 0)}</span></div>`
+    toolTipContent += `P/L: <span class="${valueChangeClass}">${explicitSymbol}${CURRENCY_SYMBOL}${Math.abs(point.value || 0)}</span></div>`
 
     return toolTipContent
   }
@@ -341,11 +359,18 @@
 
             {#each profitLossOverTime as point, i (point.time)}
               {@const lastPoint = profitLossOverTime?.[i - 1]}
-              <g data-tippy-content={generateTooltipContent(point)}>
+              <g
+                onpointerenter={() => {
+                  $focusEvent = point.index
+                  console.log("pointer enter", $focusEvent)
+                }}
+                onpointerleave={() => ($focusEvent = -1)}
+                data-tippy-content={generateTooltipContent(point)}
+              >
                 {#if point.eventType === "trip_death"}
                   <circle
                     fill="var(--color-grey-light)"
-                    stroke={focus === point.tripId ? "white" : ""}
+                    stroke={focus === point.tripId || $focusEvent === point.index ? "white" : ""}
                     r="5"
                     cx={xScale(point.time)}
                     cy={yScale(point.value)}
@@ -353,7 +378,7 @@
                 {:else if point.eventType === "trip_liquidated"}
                   <circle
                     fill="var(--color-grey-light)"
-                    stroke={focus === point.tripId ? "white" : ""}
+                    stroke={focus === point.tripId || $focusEvent === point.index ? "white" : ""}
                     r="5"
                     cx={xScale(point.time)}
                     cy={yScale(point.value)}
@@ -361,7 +386,7 @@
                 {:else if point.eventType === "trip_created"}
                   <circle
                     fill="var(--color-grey-light)"
-                    stroke={focus === point.tripId ? "white" : ""}
+                    stroke={focus === point.tripId || $focusEvent === point.index ? "white" : ""}
                     r="5"
                     cx={xScale(point.time)}
                     cy={yScale(point.value)}
@@ -369,7 +394,7 @@
                 {:else}
                   <circle
                     fill="var(--color-grey-light)"
-                    stroke={focus === point.tripId ? "white" : ""}
+                    stroke={focus === point.tripId || $focusEvent === point.index ? "white" : ""}
                     r="5"
                     cx={xScale(point.time)}
                     cy={yScale(point.value)}
@@ -379,19 +404,21 @@
                   {@const candleHeight = Math.abs(yScale(point.value) - yScale(lastPoint.value))}
                   {@const candleWidth = innerWidth / 80}
                   <!-- Draw "candle" -->
-                  <rect
-                    x={xScale(point.time) - candleWidth / 2}
-                    y={point.value < lastPoint.value
-                      ? yScale(lastPoint.value)
-                      : yScale(lastPoint.value) - candleHeight}
-                    width={candleWidth}
-                    height={candleHeight}
-                    stroke={focus === point.tripId ? "white" : ""}
-                    fill={point.value < lastPoint.value
-                      ? "var(--graph-color-down)"
-                      : "var(--graph-color-up)"}
-                  >
-                  </rect>
+                  {#if point.eventType === "trip_death" || point.eventType === "trip_visit"}
+                    <rect
+                      x={xScale(point.time) - candleWidth / 2}
+                      y={point.value < lastPoint.value
+                        ? yScale(lastPoint.value)
+                        : yScale(lastPoint.value) - candleHeight}
+                      width={candleWidth}
+                      height={candleHeight}
+                      stroke={focus === point.tripId || $focusEvent === point.index ? "white" : ""}
+                      fill={point.value < lastPoint.value
+                        ? "var(--graph-color-down)"
+                        : "var(--graph-color-up)"}
+                    >
+                    </rect>
+                  {/if}
                 {/if}
               </g>
             {/each}

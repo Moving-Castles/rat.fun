@@ -103,7 +103,11 @@
     </div>
   {:else}
     <div class="graph" bind:clientWidth={width}>
-      {#if profitLossData && width && xScale && yScale && lineGenerator}
+      {#if profitLossData?.length === 1}
+        <div style:height="{height}px" class="no-data">
+          <span>NO DATA</span>
+        </div>
+      {:else if profitLossData && width && xScale && yScale && lineGenerator}
         <svg {width} {height}>
           <g transform="translate({padding.left}, {padding.top})">
             <!-- Profit/loss line -->
@@ -128,17 +132,17 @@
     width: 100%;
 
     span {
-      background: var(--color-death);
+      background: var(--black);
       padding: 2px;
-      color: var(--background);
+      color: var(--color-death);
     }
   }
 
   .room-graph {
     width: 100%;
-    height: 100%;
+    height: 24px;
     position: relative;
-    background-size: 20px 20px;
+    background-size: 11px 11px;
     background-image:
       linear-gradient(to right, var(--color-grey-dark) 1px, transparent 1px),
       linear-gradient(to bottom, var(--color-grey-dark) 1px, transparent 1px);

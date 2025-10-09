@@ -5,6 +5,7 @@
 
   import { onMount } from "svelte"
   import { staticContent } from "$lib/modules/content"
+  import { page } from "$app/state"
   import { goto } from "$app/navigation"
 
   import {
@@ -31,6 +32,7 @@
   let liquidating = $state(false)
 
   onMount(() => {
+    liquidating = page.url.searchParams.has("liquidate")
     const outcomes = $staticContent?.outcomes?.filter(o => o.roomId == roomId) || []
 
     // Sort the outcomes in order of creation
@@ -43,14 +45,13 @@
 <a class="back-button" href="/admin">Back</a>
 {#if !liquidating}
   <div class="room-inner-container" class:depleted={!showLiquidateButton}>
-    <RoomPreviewHeader {room} {sanityRoomContent} />
+    <RoomPreviewGraph {room} {roomOutcomes} {sanityRoomContent} />
     <RoomPreviewPrompt {room} />
 
     {#if showLiquidateButton}
       <LiquidateRoom onclick={() => (liquidating = true)} {roomId} {room} isOwnRoomListing={true} />
     {/if}
 
-    <RoomPreviewGraph {room} {roomOutcomes} {sanityRoomContent} />
     <RoomPreviewEventLog {roomId} {roomOutcomes} />
   </div>
 {:else}
@@ -92,7 +93,7 @@
     top: 0;
     line-height: 60px;
     font-family: var(--special-font-stack);
-    font-size: var(--font-size-large);
+    font-size: var(--font-size-normal);
     text-transform: uppercase;
     background: var(--background-semi-transparent);
     z-index: 10;

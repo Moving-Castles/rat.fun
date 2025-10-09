@@ -95,5 +95,30 @@ export const ratfunUI: SoundAssets = {
     src: "/sounds/ratfun/ui/rat-death.mp3",
     author: "leo",
     volume: 1
+  },
+  wheelTick: {
+    src: "/sounds/ratfun/ui/wheel-tick.wav",
+    author: "leo",
+    volume: 1
+  },
+  wheelLock: {
+    src: "/sounds/ratfun/ui/wheel-lock.wav",
+    author: "leo",
+    volume: 1
+  },
+  logoClick: {
+    src: "/sounds/ratfun/ui/logo-click.mp3",
+    author: "leo",
+    volume: 0.5
+  },
+  countUp: {
+    src: "/sounds/ratfun/ui/count-up.mp3",
+    author: "leo",
+    volume: 1
+  },
+  countDown: {
+    src: "/sounds/ratfun/ui/count-down.mp3",
+    author: "leo",
+    volume: 1
   }
 }

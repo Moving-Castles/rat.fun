@@ -84,5 +84,6 @@
     color: var(--background);
     max-width: 60%;
     font-family: var(--special-font-stack);
+    font-size: var(--font-size-normal);
   }
 </style>

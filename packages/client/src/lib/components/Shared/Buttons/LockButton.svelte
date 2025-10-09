@@ -28,7 +28,7 @@
   let conditionalAction = $derived(tippyText ? tippy : () => {})
 
   const onmouseupHandler = (e: MouseEvent) => {
-    playSound("ratfunUI", "smallButtonUp")
+    playSound("ratfunUI", "wheelLock")
     onmouseup?.(e)
     onclick?.(e)
   }

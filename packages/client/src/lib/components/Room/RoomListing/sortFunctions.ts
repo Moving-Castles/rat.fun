@@ -5,10 +5,44 @@ export const entriesChronologically = (a: [string, Room], b: [string, Room]) => 
   return Number(b[1]?.index || 0) - Number(a[1].index || 0)
 }
 
+export const entriesChronologicallyDesc = (a: [string, Room], b: [string, Room]) => {
+  return Number(a[1]?.index || 0) - Number(b[1].index || 0)
+}
+
 export const entriesByVisit = (a: [string, Room], b: [string, Room]) => {
   const aVisitCount = Number(a[1]?.visitCount || 0)
   const bVisitCount = Number(b[1]?.visitCount || 0)
   return bVisitCount - aVisitCount
+}
+
+export const entriesByVisitDesc = (a: [string, Room], b: [string, Room]) => {
+  const aVisitCount = Number(a[1]?.visitCount || 0)
+  const bVisitCount = Number(b[1]?.visitCount || 0)
+  return aVisitCount - bVisitCount
+}
+
+export const entriesByProfit = (a: [string, Room], b: [string, Room]) => {
+  const aProfit = Number(a[1].balance) - Number(a[1].roomCreationCost)
+  const bProfit = Number(b[1].balance) - Number(b[1].roomCreationCost)
+  return bProfit - aProfit
+}
+
+export const entriesByProfitDesc = (a: [string, Room], b: [string, Room]) => {
+  const aProfit = Number(a[1].balance) - Number(a[1].roomCreationCost)
+  const bProfit = Number(b[1].balance) - Number(b[1].roomCreationCost)
+  return aProfit - bProfit
+}
+
+export const entriesByRealisedProfit = (a: [string, Room], b: [string, Room]) => {
+  const aProfit = Number(a[1].liquidationValue) - Number(a[1].roomCreationCost)
+  const bProfit = Number(b[1].liquidationValue) - Number(b[1].roomCreationCost)
+  return bProfit - aProfit
+}
+
+export const entriesByRealisedProfitDesc = (a: [string, Room], b: [string, Room]) => {
+  const aProfit = Number(a[1].liquidationValue) - Number(a[1].roomCreationCost)
+  const bProfit = Number(b[1].liquidationValue) - Number(b[1].roomCreationCost)
+  return aProfit - bProfit
 }
 
 export const entriesByBalance = (a: [string, Room], b: [string, Room]) => {

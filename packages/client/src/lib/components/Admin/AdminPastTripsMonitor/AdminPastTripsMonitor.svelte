@@ -47,13 +47,6 @@
     padding-bottom: 2rem;
     padding-left: 2rem;
 
-    .down {
-      background: red;
-    }
-
-    .up {
-      background: green;
-    }
     .downText {
       color: red;
     }

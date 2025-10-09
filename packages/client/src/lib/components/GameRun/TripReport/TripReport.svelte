@@ -1,38 +1,63 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte"
-  import { Log, NormalResultSummary, RatDeadResultSummary } from "$lib/components/GameRun"
+  import { Log, TripSummary } from "$lib/components/GameRun"
   import { playSound } from "$lib/modules/sound"
   import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
   import type { EnterRoomReturnValue } from "@server/modules/types"
-  import { RESULT_SUMMARY } from "$lib/components/GameRun/state.svelte"
   import { Howl } from "howler"
+  import { gsap } from "gsap"
 
   let { result }: { result: EnterRoomReturnValue | null } = $props()
 
-  let resultSummary = $state<RESULT_SUMMARY>(RESULT_SUMMARY.UNKNOWN)
   let backgroundMusic: Howl | undefined = $state()
-  let logComponent: any = $state()
 
-  // Called after log output is complete
-  const onComplete = () => {
-    if (result?.ratDead) {
-      resultSummary = RESULT_SUMMARY.RAT_DEAD
-    } else {
-      resultSummary = RESULT_SUMMARY.NORMAL
+  // ** Root Timeline Management **
+  const rootTimeline = gsap.timeline()
+  let logTimeline: ReturnType<typeof gsap.timeline> | null = null
+  let summaryTimeline: ReturnType<typeof gsap.timeline> | null = null
+  let receivedTimelines = 0
+  const expectedTimelines = 2 // Log and TripSummary
+
+  // Handle Log timeline
+  const addLogTimeline = (timeline: ReturnType<typeof gsap.timeline>) => {
+    logTimeline = timeline
+    receivedTimelines++
+    checkAndBuildTimeline()
+  }
+
+  // Handle TripSummary timeline
+  const addSummaryTimeline = (timeline: ReturnType<typeof gsap.timeline>) => {
+    summaryTimeline = timeline
+    receivedTimelines++
+    checkAndBuildTimeline()
+  }
+
+  // Build the root timeline when all child timelines are ready
+  const checkAndBuildTimeline = () => {
+    if (receivedTimelines === expectedTimelines) {
+      // Add log timeline first
+      if (logTimeline) {
+        rootTimeline.add(logTimeline)
+      }
+
+      // Add summary timeline after log completes (with a delay)
+      if (summaryTimeline) {
+        rootTimeline.add(summaryTimeline, "+=0.3")
+      }
+
+      // Play the root timeline
+      rootTimeline.play()
     }
   }
 
   const replay = () => {
     teardownTripReport()
     setupTripReport()
-    // Replay timeline in LOG from here
-    if (logComponent && logComponent.replayTimeline) {
-      logComponent.replayTimeline()
-    }
+    // Restart the root timeline
+    rootTimeline.restart()
   }
 
   const setupTripReport = () => {
-    resultSummary = RESULT_SUMMARY.UNKNOWN
     playSound("ratfunTransitions", "tripReportEnter")
     shaderManager.setShader("blank")
     backgroundMusic = playSound("ratfunMusic", "tripReport", true)
@@ -62,17 +87,11 @@
 <div class="trip-report-container">
   <!-- LOG -->
   <div class="log-container">
-    <Log {result} {onComplete} bind:this={logComponent} />
+    <Log {result} onTimeline={addLogTimeline} />
   </div>
 
   <!-- RESULT SUMMARY -->
-  <div class="result-summary-container">
-    {#if resultSummary === RESULT_SUMMARY.NORMAL}
-      <NormalResultSummary />
-    {:else if resultSummary === RESULT_SUMMARY.RAT_DEAD}
-      <RatDeadResultSummary />
-    {/if}
-  </div>
+  <TripSummary {result} onTimeline={addSummaryTimeline} />
 </div>
 
 <style lang="scss">
@@ -84,18 +103,11 @@
   }
 
   .trip-report-container {
-    display: flex;
-    flex-direction: row;
     height: 100%;
     width: 100%;
 
     .log-container {
-      width: 50%;
-      height: 100%;
-    }
-
-    .result-summary-container {
-      width: 50%;
+      width: 100%;
       height: 100%;
     }
   }

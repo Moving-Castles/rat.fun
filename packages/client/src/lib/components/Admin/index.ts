@@ -6,4 +6,5 @@ export { default as AdminPastTripsMonitor } from "./AdminPastTripsMonitor/AdminP
 export { default as AdminTripTable } from "./AdminTripTable/AdminTripTable.svelte"
 export { default as AdminPastTripTable } from "./AdminPastTripTable/AdminPastTripTable.svelte"
 export { default as AdminEventLog } from "./AdminEventLog/AdminEventLog.svelte"
-export { default as MultiTripGraph } from "./MultiTripGraph/MultiTripGraph.svelte"
+export { default as ProfitLossHistoryGraph } from "./ProfitLossHistoryGraph/ProfitLossHistoryGraph.svelte"
+export { default as SingleRoomProfitLossGraph } from "./SingleRoomProfitLossGraph/SingleRoomProfitLossGraph.svelte"

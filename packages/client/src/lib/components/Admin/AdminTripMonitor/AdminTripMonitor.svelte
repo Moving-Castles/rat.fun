@@ -1,56 +1,34 @@
 <script lang="ts">
   import { derived } from "svelte/store"
-  import { playerActiveRooms, playerLiquidatedRooms, playerRooms } from "$lib/modules/state/stores"
+  import {
+    balance,
+    investment,
+    profitLoss,
+    portfolioClass,
+    realisedProfitLoss,
+    playerRooms
+  } from "$lib/modules/state/stores"
   import { BigButton } from "$lib/components/Shared"
-  import { MultiTripGraph } from "$lib/components/Admin"
+  import { ProfitLossHistoryGraph } from "$lib/components/Admin"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
-  import { getModalState } from "$lib/components/Shared/Modal/state.svelte"
   import tippy from "tippy.js"
-  let { modal } = getModalState()
 
-  let { focus, graphData = $bindable() } = $props()
+  let { focus, graphData = $bindable(), onCreateRoomClick } = $props()
 
-  let show = $state<"realised" | "unrealised">("unrealised")
   let clientHeight = $state(0)
 
-  // Unrealised
-  const investment = derived(playerActiveRooms, $playerActiveRooms =>
-    Object.values($playerActiveRooms).reduce((a, b) => a + Number(b.roomCreationCost), 0)
-  )
-  const balance = derived(playerActiveRooms, $playerActiveRooms =>
-    Object.values($playerActiveRooms).reduce((a, b) => a + Number(b.balance), 0)
-  )
-  const profitLoss = derived([balance, investment], ([$b, $i]) => $b - $i)
-  const portfolioClass = derived([profitLoss, balance], ([$profitLoss, $balance]) => {
-    if ($profitLoss === 0) return "neutral"
-    return $profitLoss < 0 ? "downText" : "upText"
-  })
-
-  // Also shows -
   const plSymbolExplicit = derived(portfolioClass, $pc =>
     $pc === "neutral" ? "" : $pc === "upText" ? "+" : "-"
   )
 
-  // Realised
-  const realInvestment = derived(playerLiquidatedRooms, $playerLiquidatedRooms =>
-    Object.values($playerLiquidatedRooms).reduce((a, b) => a + Number(b.roomCreationCost), 0)
-  )
-  const realBalance = derived(playerLiquidatedRooms, $playerActiveRooms =>
-    Object.values($playerLiquidatedRooms).reduce((a, b) => a + Number(b.liquidationValue), 0)
-  )
-  const realProfitLoss = derived([realBalance, realInvestment], ([$rb, $i]) => $rb - $i)
-  const realPortfolioClass = derived([realProfitLoss], ([$realProfitLoss]) => {
-    if ($realProfitLoss === 0) return "neutral"
-    return $realProfitLoss > 0 ? "upText" : "downText"
+  const realPortfolioClass = derived([realisedProfitLoss], ([$realisedProfitLoss]) => {
+    if ($realisedProfitLoss === 0) return "neutral"
+    return $realisedProfitLoss > 0 ? "upText" : "downText"
   })
 
   const realPlSymbolExplicit = derived(realPortfolioClass, $pc =>
     $pc === "neutral" ? "" : $pc === "upText" ? "+" : "-"
   )
-
-  const toggle = () => {
-    show = show === "realised" ? "unrealised" : "realised"
-  }
 
   $effect(() => {
     tippy("[data-tippy-content]", {
@@ -62,70 +40,40 @@
 <div bind:clientHeight class="admin-trip-monitor">
   <div class="p-l-overview">
     <div class="top">
-      {#if show === "unrealised"}
-        {#if $balance && $investment}
-          <!-- Unrealised -->
-          <div class="main">
-            <p>Unrealised Profit</p>
-            <span class="percentage {$portfolioClass} glow"
-              >({$plSymbolExplicit}{(100 - ($balance / $investment) * 100).toFixed(2)}%)</span
-            >
-            <span class="unit {$portfolioClass}">{CURRENCY_SYMBOL}</span>
-            <div class="content {$portfolioClass} glow">
-              <h1 data-tippy-content="Unrealised P&L" class="">
-                {$plSymbolExplicit}{CURRENCY_SYMBOL}{Math.abs($profitLoss)}
-              </h1>
-            </div>
+      {#if $balance && $investment}
+        <!-- Unrealised -->
+        <div class="main">
+          <p>Active Profit</p>
+          <span class="percentage {$portfolioClass} glow"
+            >({$plSymbolExplicit}{(100 - ($balance / $investment) * 100).toFixed(2)}%)</span
+          >
+          <span class="unit {$portfolioClass}">{CURRENCY_SYMBOL}</span>
+          <div class="content {$portfolioClass} glow">
+            <h1 data-tippy-content="Unrealised P&L" class="">
+              {$plSymbolExplicit}{CURRENCY_SYMBOL}{Math.abs($profitLoss)}
+            </h1>
           </div>
-        {:else}
-          <div class="main">
-            <h1>None</h1>
-          </div>
-        {/if}
-        {#if $realBalance && $realInvestment}
-          <!-- Realised -->
-          <div class="main">
-            <p>Realised Profit</p>
-            <span class="percentage {$realPortfolioClass} glow"
-              >({$realPlSymbolExplicit}{(100 - ($realBalance / $realInvestment) * 100).toFixed(
-                2
-              )}%)</span
-            >
-            <span class="unit offset {$realPortfolioClass}">{CURRENCY_SYMBOL}</span>
-            <div class="content {$realPortfolioClass} glow">
-              <h1 data-tippy-content="Realised P&L" class="">
-                {$realPlSymbolExplicit}{CURRENCY_SYMBOL}{Math.abs($realProfitLoss)}
-              </h1>
-            </div>
-          </div>
-        {:else}
-          <div class="main">
-            <h1>None</h1>
-          </div>
-        {/if}
+        </div>
+      {:else}
+        <div class="main">
+          <h1>{$plSymbolExplicit}{CURRENCY_SYMBOL}0</h1>
+        </div>
       {/if}
     </div>
     <div class="bottom-left">
-      {#if show === "unrealised"}
-        <p>Portfolio</p>
-        <h2 class="{$portfolioClass} glow">{CURRENCY_SYMBOL}{$balance}</h2>
-      {:else}
-        <p>Portfolio</p>
-        <h2 class="{$realPortfolioClass} glow">{CURRENCY_SYMBOL}{$realBalance}</h2>
-      {/if}
+      <p>Portfolio</p>
+      <h2 class="{$portfolioClass} glow">{CURRENCY_SYMBOL}{$balance}</h2>
     </div>
     <div class="bottom-right">
-      {#if show === "unrealised"}
-        <p>Invested</p>
-        <h2>{CURRENCY_SYMBOL}{$investment}</h2>
-      {:else}
-        <p>Invested</p>
-        <h2>{CURRENCY_SYMBOL}{$realInvestment}</h2>
-      {/if}
+      <p>Invested</p>
+      <h2>{CURRENCY_SYMBOL}{$investment}</h2>
+    </div>
+    <div class="full-width-bottom">
+      <BigButton text="Create Room" onclick={onCreateRoomClick} />
     </div>
   </div>
   <div class="p-l-graph">
-    <MultiTripGraph bind:graphData height={clientHeight} {focus} trips={$playerRooms} />
+    <ProfitLossHistoryGraph bind:graphData trips={$playerRooms} height={clientHeight} {focus} />
   </div>
 </div>
 
@@ -181,7 +129,7 @@
       padding: 1rem;
       position: relative;
       overflow: hidden;
-      height: 120px;
+      height: 154px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -278,6 +226,7 @@
 
       .full-width-bottom {
         grid-column: 1/3;
+        height: 100px;
       }
       .bottom-left,
       .bottom-right {

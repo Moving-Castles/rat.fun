@@ -8,6 +8,7 @@
   } from "$lib/modules/erc20Listener/stores"
   import { tippy } from "svelte-tippy"
   import { get } from "svelte/store"
+  import { playSound } from "$lib/modules/sound"
 
   import CurrencySymbol from "$lib/components/Shared/CurrencySymbol/CurrencySymbol.svelte"
 
@@ -18,7 +19,7 @@
   // Calculate animation duration based on value change
   function calculateDuration(value: number) {
     // let absValue = Math.abs(value)
-    let duration = 2
+    let duration = 1
     return duration
   }
 
@@ -34,6 +35,10 @@
     // Create timeline for the animation
     const timeline = gsap.timeline()
 
+    timeline.call(() => {
+      playSound("ratfunUI", isPositive ? "countUp" : "countDown")
+    })
+
     // Add visual feedback for positive/negative changes
     timeline.to(containerElement, {
       backgroundColor: isPositive ? "green" : "red",
@@ -47,7 +52,7 @@
         textContent: newBalance,
         duration: duration,
         snap: { textContent: 1 },
-        ease: "power2.out"
+        ease: "power4.out"
       },
       "<"
     )
@@ -58,7 +63,7 @@
       {
         backgroundColor: "var(--color-value)",
         duration: 0.3,
-        ease: "power2.out"
+        ease: "power4.out"
       },
       ">+0.2"
     )
@@ -67,11 +72,13 @@
   onMount(() => {
     // Listen to changes to the balance
     playerERC20Balance.subscribe(newBalance => {
+      console.log("!!!! playerERC20Balance.subscribe triggered")
       const previousBalance = get(previousPlayerERC20Balance)
       const firstBalanceLoad = get(isFirstBalanceLoad)
       console.log("0. firstBalanceLoad", firstBalanceLoad)
       console.log("1. newBalance", newBalance)
       console.log("2. previousBalance", previousBalance)
+
       // Only animate if the balance has changed
       if (previousBalance !== newBalance) {
         // Skip animation on first load
