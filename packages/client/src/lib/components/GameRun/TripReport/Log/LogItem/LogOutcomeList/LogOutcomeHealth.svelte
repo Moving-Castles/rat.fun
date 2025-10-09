@@ -99,18 +99,18 @@
     } else {
       timeline.call(() => {
         if (negative) {
-          playSound("ratfunUI", "negative")
+          playSound("ratfunUI", "healthNegative")
         } else {
-          playSound("ratfunUI", "positive")
+          playSound("ratfunUI", "healthPositive")
         }
       })
     }
 
-    // Wait 500ms at the end
+    // Wait
     timeline.to(
       {},
       {
-        duration: 0.5
+        duration: 0.3
       }
     )
   }

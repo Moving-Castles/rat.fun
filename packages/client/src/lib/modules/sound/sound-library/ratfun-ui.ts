@@ -120,5 +120,25 @@ export const ratfunUI: SoundAssets = {
     src: "/sounds/ratfun/ui/count-down.mp3",
     author: "leo",
     volume: 1
+  },
+  healthPositive: {
+    src: "/sounds/ratfun/ui/health-positive.mp3",
+    author: "leo",
+    volume: 1
+  },
+  healthNegative: {
+    src: "/sounds/ratfun/ui/health-negative.mp3",
+    author: "leo",
+    volume: 1
+  },
+  itemPositive: {
+    src: "/sounds/ratfun/ui/item-positive.mp3",
+    author: "leo",
+    volume: 1
+  },
+  itemNegative: {
+    src: "/sounds/ratfun/ui/item-negative.mp3",
+    author: "leo",
+    volume: 1
   }
 }

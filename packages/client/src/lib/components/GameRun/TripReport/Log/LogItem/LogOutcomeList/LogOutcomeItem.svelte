@@ -77,7 +77,7 @@
     timeline.to(
       valueElement,
       {
-        textContent: Number(value),
+        textContent: Number(value) - 1,
         duration: duration,
         snap: { textContent: 1 }
       },
@@ -91,27 +91,31 @@
       ease: "power2.out"
     })
 
+    // Set final text
+    timeline.to(
+      valueElement,
+      {
+        textContent: `${name} (${CURRENCY_SYMBOL}${value})`,
+        duration: 0,
+        ease: "power2.out"
+      },
+      "<"
+    )
+
     // Sound
     timeline.call(() => {
       if (negative) {
-        playSound("ratfunUI", "negative")
+        playSound("ratfunUI", "itemNegative")
       } else {
-        playSound("ratfunUI", "positive")
+        playSound("ratfunUI", "itemPositive")
       }
     })
 
-    // Set final text
-    timeline.to(valueElement, {
-      textContent: `${name} (${CURRENCY_SYMBOL}${value})`,
-      duration: 0,
-      ease: "power2.out"
-    })
-
-    // Wait 500ms at the end
+    // Wait
     timeline.to(
       {},
       {
-        duration: 0.5
+        duration: 0.3
       }
     )
   }
