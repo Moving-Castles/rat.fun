@@ -263,15 +263,6 @@
     }
     // TOggle the data source used
   }
-
-  // Setup real-time updates
-  // onMount(() => {
-  //   const interval = setInterval(() => {
-  //     currentTime = Date.now()
-  //   }, 1000)
-
-  //   return () => clearInterval(interval)
-  // })
 </script>
 
 <div class="profit-loss-graph">

@@ -148,16 +148,16 @@
 
   .sidebar {
     position: fixed;
-    height: 100dvh;
+    height: var(--game-window-main-height);
     width: 1000px;
     overflow-x: hidden;
     z-index: 999;
-    top: 0;
+    top: 60px;
     right: 0;
     background: black;
     transform: translate(100%, 0);
     transition: transform 0.2s ease;
-    border-left: 1px solid var(--color-grey-mid);
+    border: 1px solid var(--color-grey-mid);
     &.open {
       transform: translate(0, 0);
     }

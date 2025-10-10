@@ -110,7 +110,7 @@
 
     .image {
       aspect-ratio: 1/1;
-      width: 20%;
+      width: 300px;
       line-height: 0;
       cursor: pointer;
 
@@ -141,7 +141,7 @@
     .info {
       display: flex;
       flex-direction: column;
-      width: 50%;
+      width: 300px;
 
       .row {
         width: 100%;

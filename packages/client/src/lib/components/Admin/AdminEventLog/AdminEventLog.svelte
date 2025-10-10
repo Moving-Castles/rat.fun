@@ -5,7 +5,15 @@
   import { goto } from "$app/navigation"
   import { followCursor } from "tippy.js"
 
-  let { eventData, focus = $bindable() } = $props()
+  let { eventData, focus = $bindable(), localFocusEvent = $bindable(), nosync = false } = $props()
+
+  $inspect(nosync)
+
+  $effect(() => {
+    if (!nosync) {
+      $focusEvent = localFocusEvent
+    }
+  })
 
   let data = $derived(eventData.toReversed().filter(p => p.eventType !== "baseline"))
   let tooltipContent = $derived.by(() => {
@@ -22,10 +30,6 @@
 {#snippet ratVisitEvent(p)}
   <Icon name="Paw" address={p.meta.owner} width={10} />
   {p.meta.playerName} sent {p.meta.ratName} to trip #{p.meta.index}
-
-  <div class="log">
-    {p?.meta?.readableLog?.split(",").join("\n<br>")}
-  </div>
 {/snippet}
 
 {#snippet tripLiquidated(p)}
@@ -52,9 +56,11 @@
         href={point.eventType === "trip_visit" || point.eventType === "trip_death"
           ? `/admin/${point.meta.tripId}`
           : `/admin/${point.meta._id}`}
-        onpointerenter={() => ($focusEvent = point.index)}
-        onpointerleave={() => ($focusEvent = -1)}
-        class:focus={$focusEvent === point.index}
+        onpointerenter={() => {
+          localFocusEvent = point.index
+        }}
+        onpointerleave={() => (localFocusEvent = -1)}
+        class:focus={localFocusEvent === point.index}
       >
         {#if point.eventType === "trip_visit"}
           {@render ratVisitEvent(point)}

@@ -76,6 +76,7 @@ export async function executeTransaction(
       if (receipt.status == "success") {
         return receipt
       } else {
+        console.log(receipt)
         throw new TransactionError(`Transaction failed: ${receipt.transactionHash}`)
       }
     }
