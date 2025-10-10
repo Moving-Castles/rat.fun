@@ -1,6 +1,6 @@
 import { Chain, http } from "viem"
 import { Config, createConfig, CreateConnectorFn } from "wagmi"
-import { coinbaseWallet, safe, metaMask, walletConnect } from "wagmi/connectors"
+import { coinbaseWallet, injected, safe, metaMask, walletConnect } from "wagmi/connectors"
 import { getDefaultConfig } from "connectkit"
 import { extendedBaseSepolia, extendedMudFoundry } from "$lib/mud/extendedChainConfigs"
 import { PUBLIC_WALLET_CONNECT_PROJECT_ID } from "$env/static/public"
@@ -22,7 +22,8 @@ export function wagmiConfig(): Config<typeof chains, typeof transports> {
       overrideIsMetaMask: false
     }),
     metaMask(),
-    walletConnect({ projectId: PUBLIC_WALLET_CONNECT_PROJECT_ID })
+    walletConnect({ projectId: PUBLIC_WALLET_CONNECT_PROJECT_ID }),
+    injected()
   )
 
   // If we're in an iframe, include the SafeConnector
