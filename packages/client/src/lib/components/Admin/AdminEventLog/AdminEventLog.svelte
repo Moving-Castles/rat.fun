@@ -5,9 +5,13 @@
   import { goto } from "$app/navigation"
   import { followCursor } from "tippy.js"
 
-  let { eventData, focus = $bindable(), localFocusEvent = $bindable(), nosync = false } = $props()
-
-  $inspect(nosync)
+  let {
+    eventData,
+    focus = $bindable(),
+    localFocusEvent = $bindable(),
+    nosync = false,
+    behavior = "hover"
+  } = $props()
 
   $effect(() => {
     if (!nosync) {
@@ -54,12 +58,24 @@
       <a
         class="event"
         href={point.eventType === "trip_visit" || point.eventType === "trip_death"
-          ? `/admin/${point.meta.tripId}`
+          ? `/admin/${point.meta.tripId}?focusId=${point.meta._id}`
           : `/admin/${point.meta._id}`}
-        onpointerenter={() => {
-          localFocusEvent = point.index
+        onpointerdown={() => {}}
+        onpointerup={() => {
+          if (behavior === "click") {
+            localFocusEvent = point.index
+          }
         }}
-        onpointerleave={() => (localFocusEvent = -1)}
+        onpointerenter={() => {
+          if (behavior === "hover") {
+            localFocusEvent = point.index
+          }
+        }}
+        onpointerleave={() => {
+          if (behavior === "hover") {
+            localFocusEvent = -1
+          }
+        }}
         class:focus={localFocusEvent === point.index}
       >
         {#if point.eventType === "trip_visit"}

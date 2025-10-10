@@ -71,14 +71,14 @@
       duration: 0.1,
       ease: "power2.out"
     })
-    timeline.to(".separator", {
-      opacity: 1,
-      duration: 0.2,
-      ease: "power2.out"
-    })
     timeline.to(".header2", {
       opacity: 1,
       duration: 0.1,
+      ease: "power2.out"
+    })
+    timeline.to(".separator", {
+      opacity: 1,
+      duration: 0.2,
       ease: "power2.out"
     })
 
@@ -93,7 +93,7 @@
             duration: 0.1,
             ease: "power2.out"
           },
-          i * 0.1
+          0.2 + i * 0.1
         )
       }
     })

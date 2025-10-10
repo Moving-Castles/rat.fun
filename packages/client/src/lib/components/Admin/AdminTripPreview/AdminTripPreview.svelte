@@ -41,8 +41,16 @@
   let event = $derived(graphData[focusEvent])
 
   onMount(() => {
+    const getEventIndexFromId = id => {
+      const index = graphData.findIndex(p => p?.meta?._id === id)
+      return index
+    }
     liquidating = page.url.searchParams.has("liquidate") && blockUntilUnlock <= 0
     focusEvent = Number(page.url.searchParams.get("focusEvent")) || -1
+    if (page.url.searchParams.has("focusId")) {
+      focusEvent = getEventIndexFromId(page.url.searchParams.get("focusId"))
+    }
+
     const outcomes = $staticContent?.outcomes?.filter(o => o.tripId == tripId) || []
 
     // Sort the outcomes in order of creation
@@ -61,12 +69,19 @@
       <TripProfitLossGraph {trip} {tripId} bind:graphData bind:focusEvent />
     </div>
     <div class="right">
-      <AdminEventLog bind:localFocusEvent={focusEvent} nosync eventData={graphData} />
+      <AdminEventLog
+        behavior="click"
+        bind:localFocusEvent={focusEvent}
+        nosync
+        eventData={graphData}
+      />
     </div>
     <div class="full">
       <p class="section-header">Event Introspection</p>
       <div class="min-height">
-        <AdminTripEventIntrospection {event} />
+        {#key event?.meta?._id}
+          <AdminTripEventIntrospection {event} />
+        {/key}
       </div>
     </div>
     <div class="full">
