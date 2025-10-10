@@ -18,13 +18,15 @@
     tripId,
     height = 400,
     graphData = $bindable<PlotPoint[]>(),
-    focusEvent = $bindable(-1)
+    focusEvent = $bindable(-1),
+    behavior = "hover"
   }: {
     trip: Trip
     tripId: string
     height?: number
     graphData?: PlotPoint[]
     focusEvent: number
+    behavior?: "hover" | "click"
   } = $props()
 
   // Add reactive timestamp for real-time updates
@@ -319,10 +321,22 @@
                 props={{ allowHTML: true }}
               >
                 <g
-                  onpointerenter={() => {
-                    focusEvent = point.index
+                  onpointerdown={() => {}}
+                  onpointerup={() => {
+                    if (behavior === "click") {
+                      focusEvent = point.index
+                    }
                   }}
-                  onpointerleave={() => (focusEvent = -1)}
+                  onpointerenter={() => {
+                    if (behavior === "hover") {
+                      focusEvent = point.index
+                    }
+                  }}
+                  onpointerleave={() => {
+                    if (behavior === "hover") {
+                      focusEvent = -1
+                    }
+                  }}
                 >
                   {#if point.eventType === "trip_death"}
                     <circle

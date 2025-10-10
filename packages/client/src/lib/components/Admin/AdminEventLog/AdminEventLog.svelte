@@ -51,45 +51,45 @@
 <div class="admin-event-log">
   {#each data as point, i (point.index)}
     <!-- svelte-ignore a11y_missing_attribute -->
-    <Tooltip
+    <!-- <Tooltip
       content={tooltipContent[i]}
       props={{ followCursor: true, plugins: [followCursor], allowHTML: true }}
+    > -->
+    <a
+      class="event"
+      href={point.eventType === "trip_visit" || point.eventType === "trip_death"
+        ? `/admin/${point.meta.tripId}?focusId=${point.meta._id}`
+        : `/admin/${point.meta._id}`}
+      onpointerdown={() => {}}
+      onpointerup={() => {
+        if (behavior === "click") {
+          localFocusEvent = point.index
+        }
+      }}
+      onpointerenter={() => {
+        if (behavior === "hover") {
+          localFocusEvent = point.index
+        }
+      }}
+      onpointerleave={() => {
+        if (behavior === "hover") {
+          localFocusEvent = -1
+        }
+      }}
+      class:focus={localFocusEvent === point.index}
     >
-      <a
-        class="event"
-        href={point.eventType === "trip_visit" || point.eventType === "trip_death"
-          ? `/admin/${point.meta.tripId}?focusId=${point.meta._id}`
-          : `/admin/${point.meta._id}`}
-        onpointerdown={() => {}}
-        onpointerup={() => {
-          if (behavior === "click") {
-            localFocusEvent = point.index
-          }
-        }}
-        onpointerenter={() => {
-          if (behavior === "hover") {
-            localFocusEvent = point.index
-          }
-        }}
-        onpointerleave={() => {
-          if (behavior === "hover") {
-            localFocusEvent = -1
-          }
-        }}
-        class:focus={localFocusEvent === point.index}
-      >
-        {#if point.eventType === "trip_visit"}
-          {@render ratVisitEvent(point)}
-        {:else if point.eventType === "trip_liquidated"}
-          {@render tripLiquidated(point)}
-        {:else if point.eventType === "trip_created"}
-          {@render tripCreated(point)}
-        {:else if point.eventType === "trip_death"}
-          {@render ratDied(point)}
-        {/if}
-        <span class="meta">{timeSince(new Date(point.time).getTime())}</span>
-      </a>
-    </Tooltip>
+      {#if point.eventType === "trip_visit"}
+        {@render ratVisitEvent(point)}
+      {:else if point.eventType === "trip_liquidated"}
+        {@render tripLiquidated(point)}
+      {:else if point.eventType === "trip_created"}
+        {@render tripCreated(point)}
+      {:else if point.eventType === "trip_death"}
+        {@render ratDied(point)}
+      {/if}
+      <span class="meta">{timeSince(new Date(point.time).getTime())}</span>
+    </a>
+    <!-- </Tooltip> -->
   {/each}
   <p class="event">
     You unlocked the panel <span class="meta"

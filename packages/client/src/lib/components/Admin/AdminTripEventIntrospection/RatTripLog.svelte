@@ -1,6 +1,7 @@
 <script lang="ts">
   import { gsap } from "gsap"
   import { onMount } from "svelte"
+  import { typeHit } from "$lib/modules/sound"
 
   let { result }: { result: any } = $props()
 
@@ -61,21 +62,25 @@
     gsap.set(".header2", { opacity: 0 })
     gsap.set(".separator", { opacity: 0 })
     gsap.set(".summary-grid", { opacity: 0 })
+    timeline.call(typeHit)
     timeline.to(".header1", {
       opacity: 1,
       duration: 0.1,
       ease: "power2.out"
     })
+    timeline.call(typeHit)
     timeline.to(".summary-grid", {
       opacity: 1,
       duration: 0.1,
       ease: "power2.out"
     })
+    timeline.call(typeHit)
     timeline.to(".header2", {
       opacity: 1,
       duration: 0.1,
       ease: "power2.out"
     })
+    timeline.call(typeHit)
     timeline.to(".separator", {
       opacity: 1,
       duration: 0.2,
@@ -85,15 +90,16 @@
     logEntryElements.forEach((el, i) => {
       if (el) {
         gsap.set(el, { opacity: 0, y: 10 })
+        timeline.call(typeHit, null, 0.2 + i * 0.05)
         timeline.to(
           el,
           {
             opacity: 1,
             y: 0,
-            duration: 0.1,
+            duration: 0.05,
             ease: "power2.out"
           },
-          0.2 + i * 0.1
+          0.2 + i * 0.05
         )
       }
     })

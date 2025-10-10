@@ -66,7 +66,7 @@
 {#if !liquidating}
   <div class="trip-inner-container" class:depleted={!showLiquidateButton}>
     <div class="left">
-      <TripProfitLossGraph {trip} {tripId} bind:graphData bind:focusEvent />
+      <TripProfitLossGraph behavior="click" {trip} {tripId} bind:graphData bind:focusEvent />
     </div>
     <div class="right">
       <AdminEventLog
@@ -77,7 +77,7 @@
       />
     </div>
     <div class="full">
-      <p class="section-header">Event Introspection</p>
+      <p class="section-header">Tripopedia</p>
       <div class="min-height">
         {#key event?.meta?._id}
           <AdminTripEventIntrospection {event} />
