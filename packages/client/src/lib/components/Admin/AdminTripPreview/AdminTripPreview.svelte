@@ -77,7 +77,7 @@
       />
     </div>
     <div class="full">
-      <p class="section-header">Tripopedia</p>
+      <p class="section-header">Flashbacks</p>
       <div class="min-height">
         {#key event?.meta?._id}
           <AdminTripEventIntrospection {event} />

@@ -55,6 +55,7 @@
   let logEntryElements: HTMLDivElement[] = []
 
   onMount(() => {
+    console.log(result)
     // Animate log entries in sequence
     const timeline = gsap.timeline()
 
