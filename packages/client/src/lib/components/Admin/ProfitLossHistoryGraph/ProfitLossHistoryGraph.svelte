@@ -1,10 +1,7 @@
 <script lang="ts">
   import type { PlotPoint } from "$lib/components/Trip/TripGraph/types"
-  import { gamePercentagesConfig } from "$lib/modules/state/stores"
 
-  import { onMount, onDestroy } from "svelte"
-
-  import { playSound } from "$lib/modules/sound"
+  import { onMount } from "svelte"
 
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import { focusEvent } from "$lib/modules/ui/state.svelte"
@@ -266,15 +263,6 @@
     }
     // TOggle the data source used
   }
-
-  // Setup real-time updates
-  onMount(() => {
-    const interval = setInterval(() => {
-      currentTime = Date.now()
-    }, 1000)
-
-    return () => clearInterval(interval)
-  })
 </script>
 
 <div class="profit-loss-graph">
@@ -339,79 +327,76 @@
               {/if}
 
               {@const lastPoint = profitLossOverTime?.[i - 1]}
-              <Tooltip
+              <!-- <Tooltip
                 content={generateTooltipContent(point)}
                 svg={true}
                 props={{ allowHTML: true }}
+              > -->
+              <g
+                onpointerenter={() => {
+                  console.log("focusing")
+                  $focusEvent = point.index
+                }}
+                onpointerleave={() => ($focusEvent = -1)}
               >
-                <g
-                  onpointerenter={() => {
-                    $focusEvent = point.index
-                  }}
-                  onpointerleave={() => ($focusEvent = -1)}
-                >
-                  {#if point.eventType === "trip_death"}
-                    <circle
-                      fill="var(--color-grey-light)"
+                {#if point.eventType === "trip_death"}
+                  <circle
+                    fill="var(--color-grey-light)"
+                    stroke={focus === point.tripId || $focusEvent === point.index ? "white" : ""}
+                    stroke-width="2"
+                    r="5"
+                    cx={xScale(point.time)}
+                    cy={yScale(point.value)}
+                  ></circle>
+                {:else if point.eventType === "trip_liquidated"}
+                  <circle
+                    fill="var(--color-grey-light)"
+                    stroke={focus === point.tripId || $focusEvent === point.index ? "white" : ""}
+                    stroke-width="2"
+                    r="5"
+                    cx={xScale(point.time)}
+                    cy={yScale(point.value)}
+                  ></circle>
+                {:else if point.eventType === "trip_created"}
+                  <circle
+                    fill="var(--color-grey-light)"
+                    stroke={focus === point.tripId || $focusEvent === point.index ? "white" : ""}
+                    stroke-width="2"
+                    r="5"
+                    cx={xScale(point.time)}
+                    cy={yScale(point.value)}
+                  ></circle>
+                {:else}
+                  <circle
+                    fill="var(--color-grey-light)"
+                    stroke={focus === point.tripId || $focusEvent === point.index ? "white" : ""}
+                    stroke-width="2"
+                    r="5"
+                    cx={xScale(point.time)}
+                    cy={yScale(point.value)}
+                  ></circle>
+                {/if}
+                {#if lastPoint}
+                  {@const candleHeight = Math.abs(yScale(point.value) - yScale(lastPoint.value))}
+                  {@const candleWidth = innerWidth / 80}
+                  <!-- Draw "candle" -->
+                  {#if point.eventType === "trip_death" || point.eventType === "trip_visit"}
+                    <rect
+                      x={xScale(point.time) - candleWidth / 2}
+                      y={point.value < lastPoint.value
+                        ? yScale(lastPoint.value)
+                        : yScale(lastPoint.value) - candleHeight}
+                      width={candleWidth}
+                      height={candleHeight}
                       stroke={focus === point.tripId || $focusEvent === point.index ? "white" : ""}
                       stroke-width="2"
-                      r="5"
-                      cx={xScale(point.time)}
-                      cy={yScale(point.value)}
-                    ></circle>
-                  {:else if point.eventType === "trip_liquidated"}
-                    <circle
-                      fill="var(--color-grey-light)"
-                      stroke={focus === point.tripId || $focusEvent === point.index ? "white" : ""}
-                      stroke-width="2"
-                      r="5"
-                      cx={xScale(point.time)}
-                      cy={yScale(point.value)}
-                    ></circle>
-                  {:else if point.eventType === "trip_created"}
-                    <circle
-                      fill="var(--color-grey-light)"
-                      stroke={focus === point.tripId || $focusEvent === point.index ? "white" : ""}
-                      stroke-width="2"
-                      r="5"
-                      cx={xScale(point.time)}
-                      cy={yScale(point.value)}
-                    ></circle>
-                  {:else}
-                    <circle
-                      fill="var(--color-grey-light)"
-                      stroke={focus === point.tripId || $focusEvent === point.index ? "white" : ""}
-                      stroke-width="2"
-                      r="5"
-                      cx={xScale(point.time)}
-                      cy={yScale(point.value)}
-                    ></circle>
+                      fill={point.value < lastPoint.value ? "var(--color-down)" : "var(--color-up)"}
+                    >
+                    </rect>
                   {/if}
-                  {#if lastPoint}
-                    {@const candleHeight = Math.abs(yScale(point.value) - yScale(lastPoint.value))}
-                    {@const candleWidth = innerWidth / 80}
-                    <!-- Draw "candle" -->
-                    {#if point.eventType === "trip_death" || point.eventType === "trip_visit"}
-                      <rect
-                        x={xScale(point.time) - candleWidth / 2}
-                        y={point.value < lastPoint.value
-                          ? yScale(lastPoint.value)
-                          : yScale(lastPoint.value) - candleHeight}
-                        width={candleWidth}
-                        height={candleHeight}
-                        stroke={focus === point.tripId || $focusEvent === point.index
-                          ? "white"
-                          : ""}
-                        stroke-width="2"
-                        fill={point.value < lastPoint.value
-                          ? "var(--color-down)"
-                          : "var(--color-up)"}
-                      >
-                      </rect>
-                    {/if}
-                  {/if}
-                </g>
-              </Tooltip>
+                {/if}
+              </g>
+              <!-- </Tooltip> -->
             {/each}
           </g>
         {/if}

@@ -53,8 +53,14 @@
 
   .shader-canvas {
     display: block;
+    object-fit: cover;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+
+    &.low-performance {
+      width: 25%;
+      height: 25%;
+      transform: translate(200%, 200%) scale(5, 5);
+    }
   }
 </style>

@@ -32,10 +32,10 @@
   export const snapshot: Snapshot<string> = {
     capture: () =>
       JSON.stringify({
-        adminUnlockedAt: String($adminUnlockedAt)
+        adminUnlockedAt: $adminUnlockedAt
       }),
     restore: value => {
-      $adminUnlockedAt = Number(JSON.parse(value).adminUnlockedAt)
+      $adminUnlockedAt = JSON.parse(value).adminUnlockedAt
     }
   }
 

@@ -188,12 +188,15 @@ export const ratTotalValue = derived([rat, ratInventory], ([$rat, $ratInventory]
 })
 
 export const investment = derived(playerActiveTrips, $playerActiveTrips =>
-  Object.values($playerActiveTrips).reduce((a, b) => a + Number(b.tripCreationCost), 0)
+  Object.values($playerActiveTrips).reduce((a, b) => a + Number(b.tripCreationCost ?? 0), 0)
 )
 export const balance = derived(playerActiveTrips, $playerActiveTrips =>
-  Object.values($playerActiveTrips).reduce((a, b) => a + Number(b.balance), 0)
+  Object.values($playerActiveTrips).reduce((a, b) => a + Number(b.balance ?? 0), 0)
 )
-export const profitLoss = derived([balance, investment], ([$b, $i]) => $b - $i)
+export const profitLoss = derived([balance, investment], ([$b, $i]) => {
+  console.log("P L calculation", $b, $i)
+  return $b - $i
+})
 export const portfolioClass = derived([profitLoss, balance], ([$profitLoss, $balance]) => {
   if ($profitLoss === 0) return "neutral"
   return $profitLoss < 0 ? "downText" : "upText"

@@ -4,7 +4,7 @@
   import { urlFor } from "$lib/modules/content/sanity"
   import { getModalState } from "$lib/components/Shared/Modal/state.svelte"
   import { NoImage, ModalTarget } from "$lib/components/Shared"
-  import { TripPreviewPrompt } from "$lib/components/Trip"
+  import AdminTripPreviewPrompt from "./AdminTripPreviewPrompt.svelte"
 
   let { trip, sanityTripContent }: { trip: Trip; sanityTripContent: any } = $props()
   let { modal } = getModalState()
@@ -17,20 +17,19 @@
   <!-- IMAGE -->
   <!-- svelte-ignore a11y_click_events_have_key_events -->
   <!-- svelte-ignore a11y_no_static_element_interactions -->
-  <div class="image" onclick={() => (showImageModal = true)}>
-    {#key $lastUpdated}
-      {#if sanityTripContent?.image?.asset}
-        <img
-          src={urlFor(sanityTripContent?.image)?.width?.(600)?.height(600)?.url() ?? ""}
-          alt={`trip #${trip.index}`}
-        />
-      {:else}
-        <div class="image-placeholder">
-          <NoImage />
-        </div>
-      {/if}
-    {/key}
-  </div>
+  {#key $lastUpdated}
+    {#if sanityTripContent?.image?.asset}
+      <img
+        class="background-image"
+        src={urlFor(sanityTripContent?.image)?.width?.(200)?.height(200)?.url() ?? ""}
+        alt={`trip #${trip.index}`}
+      />
+    {:else}
+      <div class="image-placeholder">
+        <NoImage />
+      </div>
+    {/if}
+  {/key}
   <!-- INFO -->
   <div class="info">
     <!-- INDEX -->
@@ -58,25 +57,25 @@
     {#if trip?.minRatValueToEnter > 0}
       <div class="row min-rat-value-to-enter">
         <div class="label">MIN RAT VALUE TO ENTER</div>
-        <div class="value">${trip?.minRatValueToEnter}</div>
+        <div class="value">{trip?.minRatValueToEnter}</div>
       </div>
     {/if}
     {#if $maxValuePerWin > 0}
       <div class="row max-value-per-win">
         <div class="label">MAX VALUE PER WIN</div>
-        <div class="value">${$maxValuePerWin}</div>
+        <div class="value">{$maxValuePerWin}</div>
       </div>
     {/if}
     <!-- BALANCE -->
     {#if !trip.liquidationBlock}
       <div class="row balance" class:depleted={Number(trip.balance) == 0}>
         <div class="label">BALANCE</div>
-        <div class="value">${trip.balance}</div>
+        <div class="value">{trip.balance}</div>
       </div>
     {/if}
   </div>
   <div class="prompt">
-    <TripPreviewPrompt {trip} />
+    <AdminTripPreviewPrompt {trip} />
   </div>
 </div>
 
@@ -103,24 +102,30 @@
 
 <style lang="scss">
   .trip-preview-header {
-    border-bottom: var(--default-border-style);
+    position: relative;
     display: flex;
     flex-direction: row;
-    background: var(--background);
+
+    .background-image {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 400px;
+      aspect-ratio: 1/1;
+      object-fit: contain;
+      filter: grayscale(100%) contrast(20) opacity(0.2);
+      mix-blend-mode: screen;
+      transition: filter 5s ease;
+      z-index: -1;
+      mask-image: radial-gradient(circle at top right, black 50%, transparent 70%);
+      -webkit-mask-image: radial-gradient(circle at top right, black 50%, transparent 70%);
+    }
 
     .image {
       aspect-ratio: 1/1;
-      width: 50%;
+      width: 300px;
       line-height: 0;
       cursor: pointer;
-
-      img {
-        width: 100%;
-        aspect-ratio: 1/1;
-        object-fit: contain;
-        filter: grayscale(100%);
-        mix-blend-mode: screen;
-      }
 
       .image-placeholder {
         width: 100%;
@@ -141,7 +146,7 @@
     .info {
       display: flex;
       flex-direction: column;
-      width: 50%;
+      width: 300px;
 
       .row {
         width: 100%;

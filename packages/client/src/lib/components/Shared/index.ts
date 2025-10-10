@@ -40,3 +40,4 @@ export { default as NumberGoing } from "./NumberGoing/NumberGoing.svelte"
 /* Utility Components */
 export { default as SEO } from "./SEO/SEO.svelte"
 export { default as ValueBreakdown } from "./ValueBreakdown/ValueBreakdown.svelte"
+export { default as SignedNumber } from "./SignedNumber/SignedNumber.svelte"

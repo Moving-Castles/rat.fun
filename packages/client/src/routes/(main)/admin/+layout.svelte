@@ -5,6 +5,8 @@
   import { page } from "$app/state"
   import { player } from "$lib/modules/state/stores"
   import { getModalState } from "$lib/components/Shared/Modal/state.svelte"
+  import { focusEvent } from "$lib/modules/ui/state.svelte"
+
   import SEO from "$lib/components/Shared/SEO/SEO.svelte"
   import {
     AdminEventLog,
@@ -77,7 +79,7 @@
     />
   </div>
   <div class="r-2">
-    <AdminEventLog bind:focus eventData={graphData} />
+    <AdminEventLog bind:focus={$focusEvent} eventData={graphData} />
   </div>
   <div class="l-3 border-warning">
     <AdminTripTable bind:focus {pendingTrip} />
@@ -148,16 +150,16 @@
 
   .sidebar {
     position: fixed;
-    height: 100dvh;
+    height: var(--game-window-main-height);
     width: 1000px;
     overflow-x: hidden;
     z-index: 999;
-    top: 0;
+    top: 60px;
     right: 0;
     background: black;
     transform: translate(100%, 0);
     transition: transform 0.2s ease;
-    border-left: 1px solid var(--color-grey-mid);
+    border: 1px solid var(--color-grey-mid);
     &.open {
       transform: translate(0, 0);
     }

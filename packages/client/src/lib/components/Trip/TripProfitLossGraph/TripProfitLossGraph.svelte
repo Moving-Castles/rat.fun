@@ -17,17 +17,20 @@
     trip,
     tripId,
     height = 400,
-    graphData = $bindable<PlotPoint[]>()
+    graphData = $bindable<PlotPoint[]>(),
+    focusEvent = $bindable(-1),
+    behavior = "hover"
   }: {
     trip: Trip
     tripId: string
     height?: number
     graphData?: PlotPoint[]
+    focusEvent: number
+    behavior?: "hover" | "click"
   } = $props()
 
   // Add reactive timestamp for real-time updates
   let currentTime = $state(Date.now())
-  let focusEvent = $state(-1)
 
   // Layout setup
   let width = $state(0) // width will be set by the clientWidth
@@ -299,16 +302,41 @@
 
             {#each profitLossOverTime as point, i (point.time)}
               {@const lastPoint = profitLossOverTime?.[i - 1]}
+
+              {#if focusEvent === point.index}
+                <line
+                  x1={xScale(point.time)}
+                  y1={0}
+                  x2={xScale(point.time)}
+                  y2={height}
+                  stroke="var(--color-grey-mid)"
+                  stroke-width="2"
+                  stroke-dasharray="4,4"
+                />
+              {/if}
+
               <Tooltip
                 content={generateTooltipContent(point)}
                 svg={true}
                 props={{ allowHTML: true }}
               >
                 <g
-                  onpointerenter={() => {
-                    focusEvent = point.index
+                  onpointerdown={() => {}}
+                  onpointerup={() => {
+                    if (behavior === "click") {
+                      focusEvent = point.index
+                    }
                   }}
-                  onpointerleave={() => (focusEvent = -1)}
+                  onpointerenter={() => {
+                    if (behavior === "hover") {
+                      focusEvent = point.index
+                    }
+                  }}
+                  onpointerleave={() => {
+                    if (behavior === "hover") {
+                      focusEvent = -1
+                    }
+                  }}
                 >
                   {#if point.eventType === "trip_death"}
                     <circle
@@ -433,14 +461,14 @@
   .y-axis {
     writing-mode: vertical-rl;
     transform: rotate(180deg);
-    border-right: 1px solid var(--color-grey-mid);
+    // border-right: 1px solid var(--color-grey-mid);
     width: 30px;
     height: 100%;
     position: absolute;
   }
 
   .x-axis {
-    border-bottom: 1px solid var(--color-grey-mid);
+    // border-bottom: 1px solid var(--color-grey-mid);
     width: 100%;
     height: 30px;
     position: absolute;
