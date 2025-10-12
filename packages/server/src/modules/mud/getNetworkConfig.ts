@@ -8,7 +8,7 @@
  * from packages/contracts/worlds.json. When the contracts package
  * deploys a new `World`, it updates this file.
  */
-import worlds from "../../../../contracts/worlds.json" with { type: "json" }
+import worlds from "contracts/worlds.json" with { type: "json" }
 import { ChainNotFoundError, WorldAddressNotFoundError } from "@modules/error-handling/errors"
 
 /*
@@ -17,7 +17,7 @@ import { ChainNotFoundError, WorldAddressNotFoundError } from "@modules/error-ha
 
 import { supportedChains } from "./supportedChains"
 
-export async function getNetworkConfig(privateKey: string, chainId: number) {
+export async function getNetworkConfig(chainId: number) {
   /*
    * Find the chain (unless it isn't in the list of supported chains).
    */
@@ -52,7 +52,6 @@ export async function getNetworkConfig(privateKey: string, chainId: number) {
     : ((world as any)?.blockNumber ?? 0n)
 
   return {
-    privateKey,
     chainId,
     chain,
     worldAddress,

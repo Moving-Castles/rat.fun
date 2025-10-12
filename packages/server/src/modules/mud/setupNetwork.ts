@@ -11,15 +11,25 @@ import {
   createWalletClient,
   Hex,
   ClientConfig,
-  getContract
+  getContract,
+  Chain,
+  Transport,
+  Account,
+  WalletClient,
+  PublicClient,
+  GetContractReturnType,
+  Address,
+  PrivateKeyAccount,
+  nonceManager
 } from "viem"
-import { encodeEntity, syncToRecs } from "@latticexyz/store-sync/recs"
+import { privateKeyToAccount } from "viem/accounts"
+import { createWorld, World } from "@latticexyz/recs"
+import { encodeEntity, syncToRecs, SyncToRecsResult } from "@latticexyz/store-sync/recs"
+import { transportObserver } from "@latticexyz/common"
+import { transactionQueue } from "@latticexyz/common/actions"
 
 import { getNetworkConfig } from "./getNetworkConfig"
-import { world } from "./world"
-import IWorldAbi from "../../../../contracts/out/IWorld.sol/IWorld.abi.json" with { type: "json" }
-import { createBurnerAccount, transportObserver } from "@latticexyz/common"
-import { transactionQueue } from "@latticexyz/common/actions"
+import { IWorldAbi } from "contracts/worldAbi"
 
 /*
  * Import our MUD config, which includes strong types for
@@ -29,62 +39,55 @@ import { transactionQueue } from "@latticexyz/common/actions"
  * See https://mud.dev/templates/typescript/contracts#mudconfigts
  * for the source of this information.
  */
-import mudConfigImport from "../../../../contracts/mud.config"
-const mudConfig = (mudConfigImport as any).default || mudConfigImport
+import mudConfig from "contracts/mud.config"
 
 export type SetupNetworkResult = Awaited<ReturnType<typeof setupNetwork>>
 
+type recsSyncResult = SyncToRecsResult<typeof mudConfig, {}>
+
 export type SetupNetworkReturnType = {
-  world: typeof world
-  components: any
+  world: World
+  components: recsSyncResult["components"]
   playerEntity: ReturnType<typeof encodeEntity>
-  publicClient: ReturnType<typeof createPublicClient>
-  walletClient: ReturnType<typeof createWalletClient>
+  publicClient: PublicClient<Transport, Chain>
+  walletClient: WalletClient<Transport, Chain, PrivateKeyAccount>
   latestBlock$: any
   storedBlockLogs$: any
-  waitForTransaction: any
-  worldContract: ReturnType<typeof getContract>
+  waitForTransaction: recsSyncResult["waitForTransaction"]
+  worldContract: GetContractReturnType<
+    typeof IWorldAbi,
+    { public: PublicClient<Transport, Chain>; wallet: WalletClient<Transport, Chain, Account> },
+    Address
+  >
 }
 
 export async function setupNetwork(
   privateKey: string,
-  chainId: number
+  chainId: number,
+  transport?: Transport
 ): Promise<SetupNetworkReturnType> {
-  const networkConfig = await getNetworkConfig(privateKey, chainId)
+  const networkConfig = await getNetworkConfig(chainId)
+  const world = createWorld()
 
   /*
    * Create a viem public (read only) client
    * (https://viem.sh/docs/clients/public.html)
    */
-  const transports = []
-
-  // Add WebSocket transport if WebSocket URL is available
-  if (
-    "webSocket" in networkConfig.chain.rpcUrls.default &&
-    networkConfig.chain.rpcUrls.default.webSocket?.[0]
-  ) {
-    transports.push(webSocket(networkConfig.chain.rpcUrls.default.webSocket[0]))
-  }
-
-  // Always add HTTP transport as fallback
-  transports.push(http(networkConfig.chain.rpcUrls.default.http[0]))
-
   const clientOptions = {
     chain: networkConfig.chain,
-    transport: transportObserver(fallback(transports)),
-    pollingInterval: 1000
+    transport: transportObserver(transport ?? chainTransport(networkConfig.chain.rpcUrls.default)),
+    pollingInterval: 10000
   } as const satisfies ClientConfig
 
   const publicClient = createPublicClient(clientOptions)
 
   /*
-   * Create a temporary wallet and a viem client for it
+   * Create a viem client for the account derived from the private key
    * (see https://viem.sh/docs/clients/wallet.html).
    */
-  const burnerAccount = createBurnerAccount(networkConfig.privateKey as Hex)
-  const burnerWalletClient = createWalletClient({
+  const walletClient = createWalletClient({
     ...clientOptions,
-    account: burnerAccount
+    account: privateKeyToAccount(privateKey as Hex, { nonceManager })
   }).extend(transactionQueue())
 
   /*
@@ -93,7 +96,7 @@ export async function setupNetwork(
   const worldContract = getContract({
     address: networkConfig.worldAddress as Hex,
     abi: IWorldAbi,
-    client: { public: publicClient, wallet: burnerWalletClient }
+    client: { public: publicClient, wallet: walletClient }
   })
 
   /*
@@ -113,15 +116,23 @@ export async function setupNetwork(
   return {
     world,
     components,
-    playerEntity: encodeEntity(
-      { address: "address" },
-      { address: burnerWalletClient.account.address }
-    ),
+    playerEntity: encodeEntity({ address: "address" }, { address: walletClient.account.address }),
     publicClient,
-    walletClient: burnerWalletClient,
+    walletClient,
     latestBlock$,
     storedBlockLogs$,
     waitForTransaction,
     worldContract
   }
+}
+
+function chainTransport(rpcUrls: Chain["rpcUrls"][string]): Transport {
+  const webSocketUrl = rpcUrls?.webSocket?.[0]
+  const httpUrl = rpcUrls?.http[0]
+
+  if (webSocketUrl) {
+    return httpUrl ? fallback([webSocket(webSocketUrl), http(httpUrl)]) : webSocket(webSocketUrl)
+  }
+
+  return http(httpUrl)
 }

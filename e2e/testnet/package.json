@@ -1,0 +1,23 @@
+{
+  "name": "e2e_testnet",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "setup:extra-accounts": "tsx ./scripts/setupExtraAccounts.ts",
+    "test": "vitest --run"
+  },
+  "devDependencies": {
+    "@latticexyz/config": "^2.2.23",
+    "@latticexyz/protocol-parser": "^2.2.23",
+    "@latticexyz/recs": "2.2.23-94cac741be24bb5743f2f36235cc3bb40012417a",
+    "@latticexyz/store-sync": "2.2.23-94cac741be24bb5743f2f36235cc3bb40012417a",
+    "contracts": "workspace:*",
+    "dotenv": "^17.2.2",
+    "server": "link:../../packages/server",
+    "tsx": "^4.20.3",
+    "viem": "2.30.6",
+    "vitest": "^3.2.4"
+  }
+}

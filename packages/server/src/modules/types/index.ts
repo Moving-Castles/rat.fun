@@ -1,6 +1,6 @@
 import type { Hex } from "viem"
 import { TableRecord } from "@latticexyz/store-sync"
-import mudConfig from "../../../../contracts/mud.config"
+import mudConfig from "contracts/mud.config"
 
 /*
  * ─────────────────────────────────────────────

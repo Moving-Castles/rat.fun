@@ -6,8 +6,8 @@ import type {
   WorldEvent
 } from "@modules/types"
 import { getComponentValue, Entity } from "@latticexyz/recs"
-import { components, network } from "@modules/mud/initMud"
-import { GAME_CONFIG_ID } from "@config"
+import { network } from "@modules/mud/initMud"
+import { singletonEntity } from "@latticexyz/store-sync/recs"
 import {
   OnchainDataError,
   RatNotFoundError,
@@ -38,7 +38,7 @@ export async function getEnterTripData(
       GameConfig,
       GamePercentagesConfig,
       TripCreationCost
-    } = components
+    } = network.components
 
     const result = {} as EnterTripData
 
@@ -46,7 +46,7 @@ export async function getEnterTripData(
     // RAT
     /////////////////
 
-    const ratEntity = (await network).world.registerEntity({ id: ratId })
+    const ratEntity = network.world.registerEntity({ id: ratId })
 
     const ratOwner = getComponentValue(Owner, ratEntity)?.value as string
     const ratName = getComponentValue(Name, ratEntity)?.value as string
@@ -81,7 +81,7 @@ export async function getEnterTripData(
     // Only get trip data if tripId is provided
     if (tripId) {
       // Get trip data
-      const tripEntity = (await network).world.registerEntity({ id: tripId })
+      const tripEntity = network.world.registerEntity({ id: tripId })
 
       const tripPrompt = getComponentValue(Prompt, tripEntity)?.value as string
 
@@ -111,7 +111,7 @@ export async function getEnterTripData(
 
     // Only get player data if playerId is provided
     if (playerId) {
-      const playerEntity = (await network).world.registerEntity({ id: playerId })
+      const playerEntity = network.world.registerEntity({ id: playerId })
 
       const playerName = getComponentValue(Name, playerEntity)?.value as string
       const playerBalance = Number(getComponentValue(Balance, playerEntity)?.value ?? 0)
@@ -132,18 +132,16 @@ export async function getEnterTripData(
     // GAME CONFIG
     /////////////////
 
-    const gameConfigEntity = (await network).world.registerEntity({ id: GAME_CONFIG_ID })
-
-    const gameConfig = getComponentValue(GameConfig, gameConfigEntity) as GameConfig
+    const gameConfig = getComponentValue(GameConfig, singletonEntity) as GameConfig
     const gamePercentagesConfig = getComponentValue(
       GamePercentagesConfig,
-      gameConfigEntity
+      singletonEntity
     ) as GamePercentagesConfig
-    const worldEvent = getComponentValue(WorldEvent, gameConfigEntity) as WorldEvent
+    const worldEvent = getComponentValue(WorldEvent, singletonEntity) as WorldEvent
 
     // Check if game config exists
     if (!gameConfig || !gamePercentagesConfig) {
-      throw new GameConfigNotFoundError(gameConfigEntity)
+      throw new GameConfigNotFoundError(singletonEntity)
     }
 
     result.gameConfig = gameConfig
@@ -170,7 +168,7 @@ export async function getEnterTripData(
 }
 
 function constructInventoryObject(ratInventory: string[]) {
-  const { Name, Value } = components
+  const { Name, Value } = network.components
   const inventoryObject: Item[] = []
   for (let i = 0; i < ratInventory.length; i++) {
     if (!ratInventory[i]) continue

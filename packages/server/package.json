@@ -1,14 +1,16 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "main": "dist/index.js",
   "scripts": {
     "start": "node dist/index.js",
-    "build": "tsup src/index.ts --format esm --dts --target esnext",
+    "build": "tsup",
     "dev": "tsx src/index.ts"
   },
+  "exports": {
+    ".": "./dist/index.js",
+    "./internal": "./dist/internal.js"
+  },
   "dependencies": {
-    "contracts": "workspace:*",
     "@anthropic-ai/sdk": "^0.65.0",
     "@fastify/compress": "^8.1.0",
     "@fastify/cors": "^11.1.0",
@@ -24,6 +26,7 @@
     "@latticexyz/world": "2.2.23-94cac741be24bb5743f2f36235cc3bb40012417a",
     "@sanity/client": "^7.12.0",
     "@sentry/node": "^10.19.0",
+    "contracts": "workspace:*",
     "dotenv": "^17.2.3",
     "fastify": "^5.6.1",
     "redis": "^5.8.3",
