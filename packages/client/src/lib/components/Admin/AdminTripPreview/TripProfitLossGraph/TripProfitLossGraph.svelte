@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { PlotPoint } from "$lib/components/Trip/TripGraph/types"
+  import type { PlotPoint } from "$lib/components/Admin/types"
   import { gamePercentagesConfig } from "$lib/modules/state/stores"
 
   import { onMount } from "svelte"

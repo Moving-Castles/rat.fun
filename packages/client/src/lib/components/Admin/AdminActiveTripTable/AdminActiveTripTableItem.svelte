@@ -1,11 +1,22 @@
 <script lang="ts">
+  import type { PlotPoint } from "$lib/components/Admin/types"
   import { SmallButton, SignedNumber } from "$lib/components/Shared"
-  import { TripProfitLossSpark } from "$lib/components/Trip"
+  import { TripProfitLossSpark } from "$lib/components/Admin"
   import { goto } from "$app/navigation"
 
-  let { trip, data, id, onpointerenter, onpointerleave } = $props()
-
-  console.log(trip)
+  let {
+    trip,
+    data,
+    id,
+    onpointerenter,
+    onpointerleave
+  }: {
+    trip: Trip
+    data: PlotPoint[]
+    id: string
+    onpointerenter: () => void
+    onpointerleave: () => void
+  } = $props()
 
   let profitLoss = $derived(Number(trip.balance) - Number(trip.tripCreationCost))
 

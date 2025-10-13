@@ -1,5 +1,7 @@
 import type { Outcome } from "@sanity-types"
 
+export type PendingTrip = { prompt: string; cost: number } | null
+
 export type PlotPoint = {
   time: number
   value: number

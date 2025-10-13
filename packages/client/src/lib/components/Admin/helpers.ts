@@ -1,4 +1,4 @@
-import type { PlotPoint } from "$lib/components/Trip/TripGraph/types"
+import type { PlotPoint } from "$lib/components/Admin/types"
 import type { StaticContent } from "$lib/modules/content"
 import type { Trip as SanityTrip, Outcome as SanityOutcome } from "@sanity-types"
 

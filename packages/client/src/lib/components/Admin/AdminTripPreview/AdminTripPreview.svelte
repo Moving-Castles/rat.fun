@@ -9,8 +9,13 @@
   import { staticContent } from "$lib/modules/content"
   import { page } from "$app/state"
   import { goto } from "$app/navigation"
-  import { TripProfitLossGraph, TripConfirmLiquidation, LiquidateTrip } from "$lib/components/Trip"
-  import { AdminTripPreviewHeader, AdminTripEventIntrospection } from "$lib/components/Admin"
+  import {
+    AdminTripPreviewHeader,
+    AdminTripEventIntrospection,
+    TripProfitLossGraph,
+    TripConfirmLiquidation,
+    LiquidateTrip
+  } from "$lib/components/Admin"
   import { AdminEventLog } from "$lib/components/Admin"
   import { playSound } from "$lib/modules/sound"
 
@@ -125,12 +130,6 @@
     }
     .right {
       grid-column: 9 / 13;
-    }
-    .left-smol {
-      grid-column: 1 / 5;
-    }
-    .right-big {
-      grid-column: 5 / 13;
     }
 
     .full {

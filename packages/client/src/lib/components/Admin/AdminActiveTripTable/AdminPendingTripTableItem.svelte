@@ -1,19 +1,20 @@
 <script lang="ts">
+  import type { PendingTrip } from "$lib/components/Admin/types"
+
   let {
     pendingTrip
   }: {
-    pendingTrip: Trip
+    pendingTrip: PendingTrip
   } = $props()
 </script>
 
 <tr class="active-trip-table-item loading-row">
   <td class="cell-index">-</td>
   <td class="cell-description">
-    <p class="single-line">{pendingTrip.prompt}</p>
+    <p class="single-line">{pendingTrip?.prompt ?? ""}</p>
   </td>
   <td class="cell-balance">0</td>
   <td class="cell-profit">0</td>
-  <td class="cell-age">0</td>
   <td class="cell-graph">
     <div class="mini-graph loading-graph"></div>
   </td>

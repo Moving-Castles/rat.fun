@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { PlotPoint } from "$lib/components/Trip/TripGraph/types"
+  import type { PlotPoint, PendingTrip } from "$lib/components/Admin/types"
   import { derived } from "svelte/store"
   import { playerActiveTrips, profitLoss } from "$lib/modules/state/stores"
   import {
@@ -18,7 +18,7 @@
 
   import { createPlotsFromTripList } from "../helpers"
 
-  let { focus = $bindable(), pendingTrip } = $props()
+  let { focus = $bindable(), pendingTrip }: { focus: string; pendingTrip: PendingTrip } = $props()
 
   let sortDirection = $state<"asc" | "desc">("asc")
 

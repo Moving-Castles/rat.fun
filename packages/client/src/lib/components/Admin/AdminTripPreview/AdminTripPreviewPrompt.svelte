@@ -24,9 +24,7 @@
     overflow-wrap: anywhere; /* Break anywhere if necessary to prevent overflow */
     width: 100%;
     font-family: var(--special-font-stack);
-    // background: var(--color-alert);
     height: 100%;
-    // background: url("/images/texture-2.png");
 
     .content {
       max-width: 55ch;

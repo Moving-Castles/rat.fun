@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { PlotPoint } from "$lib/components/Trip/TripGraph/types"
+  import type { PlotPoint } from "$lib/components/Admin/types"
   import { focusEvent } from "$lib/modules/ui/state.svelte"
   import { scaleTime, scaleLinear } from "d3-scale"
   import { max, min } from "d3-array"

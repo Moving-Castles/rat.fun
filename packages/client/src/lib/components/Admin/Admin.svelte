@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte"
-  import type { PlotPoint } from "$lib/components/Trip/TripGraph/types"
+  import type { PlotPoint, PendingTrip } from "$lib/components/Admin/types"
   import { playerTrips } from "$lib/modules/state/stores"
   import { focusEvent } from "$lib/modules/ui/state.svelte"
   import { getModalState } from "$lib/components/Shared/Modal/state.svelte"
@@ -18,8 +18,6 @@
     ProfitLossHistoryGraph,
     ProfitLossOverview
   } from "$lib/components/Admin"
-
-  type PendingTrip = { prompt: string; cost: number } | null
 
   let { modal } = getModalState()
 

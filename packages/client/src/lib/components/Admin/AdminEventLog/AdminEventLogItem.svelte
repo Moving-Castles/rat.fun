@@ -1,7 +1,7 @@
 <script lang="ts">
+  import type { PlotPoint } from "$lib/components/Admin/types"
   import { Icon } from "$lib/components/Shared"
   import { timeSince } from "$lib/modules/utils"
-  import type { PlotPoint } from "$lib/components/Trip/TripGraph/types"
 
   let {
     point,

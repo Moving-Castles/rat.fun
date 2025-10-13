@@ -1,6 +1,6 @@
 <script lang="ts">
+  import type { PlotPoint } from "$lib/components/Admin/types"
   import { timeSince } from "$lib/modules/utils"
-  import type { PlotPoint } from "$lib/components/Trip/TripGraph/types"
   import { adminUnlockedAt, focusEvent } from "$lib/modules/ui/state.svelte"
 
   import AdminEventLogItem from "./AdminEventLogItem.svelte"

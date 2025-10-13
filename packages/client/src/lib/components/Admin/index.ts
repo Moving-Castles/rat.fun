@@ -2,6 +2,11 @@
 export { default as AdminTripPreview } from "./AdminTripPreview/AdminTripPreview.svelte"
 export { default as AdminTripPreviewHeader } from "./AdminTripPreview/AdminTripPreviewHeader.svelte"
 export { default as AdminTripEventIntrospection } from "./AdminTripEventIntrospection/AdminTripEventIntrospection.svelte"
+export { default as TripProfitLossGraph } from "./AdminTripPreview/TripProfitLossGraph/TripProfitLossGraph.svelte"
+export { default as TripConfirmLiquidation } from "./AdminTripPreview/TripConfirmLiquidation/TripConfirmLiquidation.svelte"
+export { default as LiquidateTrip } from "./AdminTripPreview/LiquidateTrip.svelte"
+export { default as TripEventLog } from "./AdminTripPreview/TripEventLog/TripEventLog.svelte"
+export { default as TripGraph } from "./AdminTripPreview/TripGraph/TripGraph.svelte"
 
 // Admin create trip
 export { default as CreateTrip } from "./CreateTrip/CreateTrip.svelte"
@@ -9,6 +14,9 @@ export { default as CreateTrip } from "./CreateTrip/CreateTrip.svelte"
 // Admin active trip table
 export { default as AdminActiveTripTable } from "./AdminActiveTripTable/AdminActiveTripTable.svelte"
 export { default as AdminActiveTripTableItem } from "./AdminActiveTripTable/AdminActiveTripTableItem.svelte"
+
+// Profit loss spark
+export { default as TripProfitLossSpark } from "./TripProfitLossSpark/TripProfitLossSpark.svelte"
 
 // Admin past trip table
 export { default as AdminPastTripTable } from "./AdminPastTripTable/AdminPastTripTable.svelte"

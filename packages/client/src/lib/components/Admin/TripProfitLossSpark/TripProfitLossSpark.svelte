@@ -1,6 +1,5 @@
 <script lang="ts">
-  import type { PlotPoint } from "./types"
-
+  import type { PlotPoint } from "$lib/components/Admin/types"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import { scaleTime, scaleLinear } from "d3-scale"
   import { max, min } from "d3-array"

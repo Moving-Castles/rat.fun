@@ -1,6 +1,7 @@
 <script lang="ts">
+  import type { PlotPoint } from "$lib/components/Admin/types"
   import RatTripLog from "./RatTripLog.svelte"
-  let { event } = $props()
+  let { event }: { event: PlotPoint } = $props()
 
   let randomVoids = ["Nothing", "Patience", "Void", "Nothing to see here", "...", ":eye:"]
 
