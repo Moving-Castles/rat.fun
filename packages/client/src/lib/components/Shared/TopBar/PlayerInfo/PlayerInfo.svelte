@@ -1,7 +1,7 @@
 <script lang="ts">
   import { player, playerAddress } from "$lib/modules/state/stores"
   import { playSound } from "$lib/modules/sound"
-  import { tippy } from "svelte-tippy"
+  import { Tooltip } from "$lib/components/Shared"
 
   import AccountDropdown from "./AccountDropdown.svelte"
   import BalanceBox from "./BalanceBox.svelte"
@@ -60,16 +60,12 @@
     <!-- NAME -->
     <div class="stat-item name">
       <!-- AVATAR -->
-      <div
-        use:tippy={{
-          content: `This is you: ${$playerAddress}`,
-          placement: "bottom"
-        }}
-        class="inner-wrapper player"
-      >
-        <div class="avatar"></div>
-        <div class="value">{$player?.name ?? ""}</div>
-      </div>
+      <Tooltip content={`This is you: ${$playerAddress}`}>
+        <div class="inner-wrapper player">
+          <div class="avatar"></div>
+          <div class="value">{$player?.name ?? ""}</div>
+        </div>
+      </Tooltip>
     </div>
     <!-- BALANCE -->
     <BalanceBox />

@@ -2,8 +2,8 @@
   import { onMount } from "svelte"
   import { gsap } from "gsap"
   import { playerERC20Balance } from "$lib/modules/erc20Listener/stores"
-  import { tippy } from "svelte-tippy"
   import { playSound } from "$lib/modules/sound"
+  import { Tooltip } from "$lib/components/Shared"
 
   import CurrencySymbol from "$lib/components/Shared/CurrencySymbol/CurrencySymbol.svelte"
 
@@ -67,7 +67,7 @@
         previousValue = updatedValue
 
         if (balanceElement) {
-          balanceElement.innerHTML = updatedValue
+          balanceElement.innerHTML = String(updatedValue)
         }
       } else {
         animateBalanceChange(updatedValue, updatedValue - previousValue)
@@ -84,25 +84,20 @@
 </script>
 
 <!-- BALANCE -->
-<div
-  use:tippy={{
-    content: `This is available tokens in your wallet`,
-    placement: "bottom"
-  }}
-  class="stat-item balance"
-  bind:this={containerElement}
->
-  <div class="inner-wrapper">
-    <div class="value">
-      <span>
-        <CurrencySymbol />
-        <span bind:this={balanceElement}>
-          <!-- {$playerERC20Balance} -->
+<Tooltip content="This is available tokens in your wallet">
+  <div class="stat-item balance" bind:this={containerElement}>
+    <div class="inner-wrapper">
+      <div class="value">
+        <span>
+          <CurrencySymbol />
+          <span bind:this={balanceElement}>
+            <!-- {$playerERC20Balance} -->
+          </span>
         </span>
-      </span>
+      </div>
     </div>
   </div>
-</div>
+</Tooltip>
 
 <style lang="scss">
   .stat-item {

@@ -9,7 +9,8 @@
   --background: var(--black);
   --foreground: var(--white);
 
-  --background-semi-transparent: rgba(0, 0, 0, 0.5);
+  --background-semi-transparent: rgba(0, 0, 0, 0.6);
+  --background-dark-transparent: rgba(0, 0, 0, 0.8);
 
   --color-grey-light: #999;
   --color-grey-mid: #666;

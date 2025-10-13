@@ -94,7 +94,7 @@ export const ratfunUI: SoundAssets = {
   ratDeath: {
     src: "/sounds/ratfun/ui/rat-death.mp3",
     author: "leo",
-    volume: 1
+    volume: 0.5
   },
   wheelTick: {
     src: "/sounds/ratfun/ui/wheel-tick.wav",

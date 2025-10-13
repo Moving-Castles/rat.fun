@@ -27,7 +27,7 @@
     top: 60px;
     left: 0;
     width: 600px;
-    background-color: var(--background-semi-transparent);
+    background-color: var(--background-dark-transparent);
     color: var(--white);
     padding: 20px;
     transition: all 0.2s ease;

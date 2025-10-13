@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { playerAddress } from "$lib/modules/state/stores"
+  import { playerAddress, player } from "$lib/modules/state/stores"
   import { playerERC20Balance } from "$lib/modules/erc20Listener/stores"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   // import { playSound } from "$lib/modules/sound"
@@ -10,18 +10,36 @@
 </script>
 
 <div class="main-dropdown-content">
+  <!-- Name -->
+  <div class="tab">
+    <p class="key">Name:</p>
+    <p class="value">
+      {$player?.name}
+    </p>
+  </div>
+  <!-- Wallet -->
   <div class="tab">
     <p class="key">Connected wallet:</p>
     <p class="value">
       {shortenAddress($playerAddress)}
     </p>
   </div>
+  <!-- Balance -->
   <div class="tab">
     <p class="key">Balance:</p>
     <p class="value">
       {CURRENCY_SYMBOL}{$playerERC20Balance}
     </p>
   </div>
+  <!-- Rats killed -->
+  {#if $player?.pastRats.length > 0}
+    <div class="tab">
+      <p class="key">Rats killed:</p>
+      <p class="value">
+        {$player?.pastRats.length}
+      </p>
+    </div>
+  {/if}
   <div class="buy-button-container">
     <BigButton
       disabled={busy.BuyWithEth.current !== 0}

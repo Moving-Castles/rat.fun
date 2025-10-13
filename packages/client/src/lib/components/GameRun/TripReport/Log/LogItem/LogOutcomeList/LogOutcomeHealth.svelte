@@ -90,8 +90,9 @@
     )
 
     if (isDead) {
+      console.log("Rat is dead")
       timeline.call(() => {
-        playSound("ratfunUI", "bigButtonDown")
+        playSound("ratfunUI", "ratDeath")
       })
       timeline.to(valueElement, {
         textContent: "DEAD",

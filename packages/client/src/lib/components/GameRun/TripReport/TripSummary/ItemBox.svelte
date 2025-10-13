@@ -95,6 +95,7 @@
     .item {
       padding: 10px;
       color: black;
+      margin-right: 10px;
 
       &.add {
         background: green;

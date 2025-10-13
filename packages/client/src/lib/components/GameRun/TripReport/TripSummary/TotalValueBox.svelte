@@ -3,6 +3,8 @@
   import { gsap } from "gsap"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
 
+  import { Tooltip } from "$lib/components/Shared"
+
   let {
     result,
     initialTotalValue,
@@ -114,7 +116,9 @@
     <span>{CURRENCY_SYMBOL}<span bind:this={valueElement}>{initialTotalValue}</span></span>
   </div>
   <div class="change" bind:this={changeElement}>
-    <span>{displayValueChange}</span>
+    <Tooltip content={displayValueChange}>
+      <span>{displayValueChange}</span>
+    </Tooltip>
   </div>
 </div>
 
