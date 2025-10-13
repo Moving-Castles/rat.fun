@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { EnterTripReturnValue } from "@server/modules/types"
+  import { HEALTH_SYMBOL } from "$lib/modules/ui/constants"
   import { gsap } from "gsap"
 
   let {
@@ -11,6 +12,9 @@
     initialBalance: number
     onTimeline?: (timeline: ReturnType<typeof gsap.timeline>, offset: number | string) => void
   } = $props()
+
+  // Is rat dead?
+  const ratDead = $derived(result?.ratDead)
 
   // Elements
   let healthElement = $state<HTMLDivElement | null>(null)
@@ -26,19 +30,19 @@
     )
   }
 
-  const getDisplayHealthChange = (initialBalance: number, newBalance: number) => {
-    const healthChange = newBalance - initialBalance
+  const getDisplayHealthChange = (healthChange: number) => {
     if (healthChange === 0) {
       return "0"
     } else if (healthChange > 0) {
-      return "+" + healthChange
+      return HEALTH_SYMBOL + "+" + healthChange
     } else {
-      return healthChange.toString()
+      return HEALTH_SYMBOL + healthChange.toString()
     }
   }
 
   const newBalance = calculateNewBalance(initialBalance, result)
-  const displayHealthChange = getDisplayHealthChange(initialBalance, newBalance)
+  const healthChange = newBalance - initialBalance
+  const displayHealthChange = getDisplayHealthChange(healthChange)
 
   // Create timeline
   const timeline = gsap.timeline()
@@ -61,6 +65,7 @@
     // After count animation, quickly fade in the health change
     timeline.to(changeElement, {
       opacity: 1,
+      backgroundColor: healthChange === 0 ? "" : healthChange > 0 ? "green" : "red",
       duration: 0.2,
       ease: "power2.out"
     })

@@ -95,7 +95,7 @@
     justify-content: center;
     align-items: center;
     color: var(--foreground);
-    font-family: var(--display-font-stack);
+    font-family: var(--typewriter-font-stack);
     font-size: var(--font-size-normal);
     line-height: 1em;
     text-align: center;

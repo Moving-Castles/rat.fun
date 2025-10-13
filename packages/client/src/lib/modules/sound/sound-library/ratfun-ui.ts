@@ -155,5 +155,15 @@ export const ratfunUI: SoundAssets = {
     src: "/sounds/ratfun/ui/panel-in.mp3",
     author: "leo",
     volume: 1
+  },
+  counterTick: {
+    src: "/sounds/ratfun/ui/counter-tick.mp3",
+    author: "leo",
+    volume: 3
+  },
+  counterEnd: {
+    src: "/sounds/ratfun/ui/counter-end.mp3",
+    author: "leo",
+    volume: 3
   }
 }

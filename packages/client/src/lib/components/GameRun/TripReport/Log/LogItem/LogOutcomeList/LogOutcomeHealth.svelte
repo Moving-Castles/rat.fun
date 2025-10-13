@@ -3,6 +3,7 @@
   import { updateProcessingState } from "$lib/components/GameRun/state.svelte"
   import { playSound } from "$lib/modules/sound"
   import { processingRat } from "$lib/components/GameRun/state.svelte"
+  import { HEALTH_SYMBOL } from "$lib/modules/ui/constants"
 
   let {
     value,
@@ -27,7 +28,9 @@
   const updateCountValue = (num: number) => {
     if (valueElement) {
       valueElement.textContent = String(num)
-      playSound("ratfunUI", "tick", false, false, 1 + num * 0.02)
+      // Cap pitch between -0.5 and 2
+      const pitch = Math.max(0.01, Math.min(2, 1 + num * 0.01))
+      playSound("ratfunUI", "counterTick", false, false, pitch)
     }
   }
 
@@ -138,7 +141,7 @@
 </script>
 
 <div class="outcome" class:negative bind:this={outcomeElement}>
-  <span class="heart">♥</span>
+  <span class="heart">{HEALTH_SYMBOL}</span>
   <span class="value" bind:this={valueElement}>0</span>
 </div>
 

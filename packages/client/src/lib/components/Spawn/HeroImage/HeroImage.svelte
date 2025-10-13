@@ -6,24 +6,19 @@
 
   let { onComplete }: { onComplete: () => void } = $props()
 
-  let imageElement = $state<HTMLImageElement | null>(null)
   let buttonElement = $state<HTMLDivElement | null>(null)
   let textElement = $state<HTMLParagraphElement | null>(null)
   const timeline = gsap.timeline()
 
   onMount(() => {
-    if (!imageElement || !buttonElement || !textElement) return
+    if (!buttonElement || !textElement) {
+      return
+    }
 
     // Set initial opacity to 0
-    imageElement.style.opacity = "0"
     buttonElement.style.opacity = "0"
     textElement.style.opacity = "0"
 
-    timeline.to(imageElement, {
-      opacity: 1,
-      duration: 0.4,
-      delay: 0.4
-    })
     timeline.to(textElement, {
       opacity: 1,
       duration: 0.4
@@ -62,7 +57,14 @@
 
       .button {
         width: 100%;
-        height: 80px;
+        height: 200px;
+      }
+
+      p {
+        font-size: var(--font-size-large);
+        background: var(--background);
+        color: var(--foreground);
+        padding: 10px;
       }
     }
   }

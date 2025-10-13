@@ -9,7 +9,7 @@
   --background: var(--black);
   --foreground: var(--white);
 
-  --background-semi-transparent: rgba(0, 0, 0, 0.8);
+  --background-semi-transparent: rgba(0, 0, 0, 0.5);
 
   --color-grey-light: #999;
   --color-grey-mid: #666;
@@ -80,7 +80,6 @@
   /* Typography */
   --typewriter-font-stack: "Workbench", monospace;
   --special-font-stack: "Xanh Mono", monospace;
-  --display-font-stack: "Syne Mono", monospace;
   --label-font-stack: "Xanh Mono", monospace;
   --font-size-very-small: 9px;
   --font-size-small: 11px;
@@ -113,7 +112,6 @@
 
 body {
   letter-spacing: 0px;
-  font-display: block;
 }
 
 body,

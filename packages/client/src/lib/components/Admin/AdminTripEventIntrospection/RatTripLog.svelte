@@ -2,6 +2,7 @@
   import { gsap } from "gsap"
   import { onMount } from "svelte"
   import { typeHit } from "$lib/modules/sound"
+  import { HEALTH_SYMBOL } from "$lib/modules/ui/constants"
 
   let { result }: { result: any } = $props()
 
@@ -191,7 +192,7 @@
                     class="outcome balance-outcome"
                     class:negative={entry.balanceTransfer.amount < 0}
                   >
-                    <span class="heart">♥</span>
+                    <span class="heart">{HEALTH_SYMBOL}</span>
                     <span class="value"
                       >{entry.balanceTransfer.amount > 0 ? "+" : ""}{entry.balanceTransfer
                         .amount}</span

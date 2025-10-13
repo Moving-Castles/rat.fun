@@ -63,7 +63,7 @@
 </script>
 
 <div class="timestamp" bind:this={timestampElement}>
-  {logEntry.timestamp}
+  <span>{logEntry.timestamp}</span>
 </div>
 
 <style lang="scss">
@@ -74,5 +74,10 @@
     color: var(--background);
     font-size: var(--font-size-normal);
     margin-right: 10px;
+
+    span {
+      position: relative;
+      top: -4px;
+    }
   }
 </style>

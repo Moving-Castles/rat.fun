@@ -109,7 +109,7 @@ export function getTripMinRatValueToEnter(tripCreationCost: number | bigint): Re
  * @param rat The rat to get the inventory of
  * @returns The inventory of the rat
  */
-export function getRatInventory(rat: Rat) {
+export function getRatInventory(rat: Rat | null) {
   if (!rat) {
     return [] as Item[]
   }

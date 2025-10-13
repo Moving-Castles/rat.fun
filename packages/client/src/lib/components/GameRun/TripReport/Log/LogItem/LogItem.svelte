@@ -94,9 +94,6 @@
       onTimeline(timeline)
     }
   }
-
-  // Timeline construction is now handled by checkAndBuildTimeline()
-  // when all child timelines are collected
 </script>
 
 <div class="log-item" bind:this={logItemElement}>
@@ -109,6 +106,7 @@
   .log-item {
     display: flex;
     margin-bottom: 0.5em;
-    line-height: 1.2em;
+    line-height: 40px;
+    height: 40px;
   }
 </style>

@@ -1,5 +1,7 @@
 <script lang="ts">
   import type { EnterTripReturnValue } from "@server/modules/types"
+  import { frozenRat } from "$lib/components/GameRun/state.svelte"
+  import { getRatInventory } from "$lib/modules/state/utils"
   import { gsap } from "gsap"
 
   let {
@@ -12,7 +14,21 @@
 
   let itemsElement = $state<HTMLDivElement | null>(null)
 
-  const empty = $derived(result.itemChanges?.length === 0)
+  const ratDead = $derived(result.ratDead)
+
+  // If krat is dead we show all items as removed, so we are not empty
+  const empty = $derived(!ratDead && result.itemChanges?.length === 0)
+
+  // No items are added if the rat is dead
+  const addedItems = $derived(
+    ratDead ? [] : result.itemChanges?.filter(item => item.type === "add")
+  )
+  // All items are removed if the rat is dead
+  const removedItems = $derived(
+    ratDead
+      ? (getRatInventory(frozenRat) ?? [])
+      : result.itemChanges?.filter(item => item.type === "remove")
+  )
 
   // Create timeline
   const timeline = gsap.timeline()
@@ -50,8 +66,15 @@
 
 <!-- ITEMS -->
 <div class="items" bind:this={itemsElement} class:empty>
-  {#each result.itemChanges as itemChange}
-    {itemChange.type}:{itemChange.name}:{itemChange.type === "add" ? "+" : "-"}{itemChange.value}
+  {#each addedItems as itemChange}
+    <div class="item add">
+      {itemChange.name} (+{itemChange.value})
+    </div>
+  {/each}
+  {#each removedItems as itemChange}
+    <div class="item remove">
+      {itemChange.name} (-{itemChange.value})
+    </div>
   {/each}
 </div>
 
@@ -67,6 +90,18 @@
 
     &.empty {
       display: none;
+    }
+
+    .item {
+      padding: 10px;
+      color: black;
+
+      &.add {
+        background: green;
+      }
+      &.remove {
+        background: red;
+      }
     }
   }
 </style>

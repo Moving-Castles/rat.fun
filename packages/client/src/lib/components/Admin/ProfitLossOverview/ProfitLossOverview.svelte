@@ -55,11 +55,11 @@
     const unsubscribe = profitLoss.subscribe(newValue => {
       if (typeof previousProfitLoss === "number") {
         if (newValue > previousProfitLoss) {
-          playSound("ratfunUI", "countUp")
+          // playSound("ratfunUI", "countUp")
           tweenedProfitLoss.set(newValue, { duration: 3000 })
         } else {
           if (newValue !== 0) {
-            playSound("ratfunUI", "countDown")
+            // playSound("ratfunUI", "countDown")
           }
           tweenedProfitLoss.set(newValue, { duration: 2000 })
         }

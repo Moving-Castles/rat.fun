@@ -22,8 +22,6 @@
   let tripDescription: string = $state("")
   let busy: boolean = $state(false)
 
-  // let mixer = getMixerState()
-
   // Prompt has to be between 1 and MAX_TRIP_PROMPT_LENGTH characters
   let invalidTripDescriptionLength = $derived(
     tripDescription.length < 1 || tripDescription.length > $gameConfig.maxTripPromptLength
@@ -156,9 +154,7 @@
       <!-- CALCULATED VALUES -->
       <div class="calculated-values">
         <div class="value-box">
-          <div class="value-label">
-            MIN RAT VALUE TO TRIP {#if import.meta.env.DEV}BALLS{/if}
-          </div>
+          <div class="value-label">MIN RAT VALUE TO TRIP</div>
           <div class="value-amount">{CURRENCY_SYMBOL}{$minRatValueToEnter}</div>
         </div>
         <div class="value-box">
@@ -184,6 +180,7 @@
   }
 
   input[type="number"] {
+    appearance: textfield;
     -moz-appearance: textfield; /* Firefox */
   }
 

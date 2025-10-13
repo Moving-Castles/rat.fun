@@ -17,7 +17,6 @@
   let name = $state("")
   let busy = $state(false)
 
-  let imageElement: HTMLImageElement | null = $state(null)
   let buttonElement: HTMLDivElement | null = $state(null)
   let textElement: HTMLDivElement | null = $state(null)
   const timeline = gsap.timeline()
@@ -50,18 +49,14 @@
   }
 
   onMount(() => {
-    if (!buttonElement || !textElement || !imageElement) return
+    if (!buttonElement || !textElement) {
+      return
+    }
 
     // Set initial opacity to 0
-    imageElement.style.opacity = "0"
     buttonElement.style.opacity = "0"
     textElement.style.opacity = "0"
 
-    timeline.to(imageElement, {
-      opacity: 1,
-      duration: 0.4,
-      delay: 0.4
-    })
     timeline.to(textElement, {
       opacity: 1,
       duration: 0.4
@@ -76,8 +71,7 @@
 <div class="outer-container">
   <div class="inner-container">
     {#if busy}
-      <div>Issuing member card</div>
-      <SmallSpinner />
+      <div class="loader">Issuing member card <SmallSpinner /></div>
     {:else}
       <!-- <img class="image" src="/images/mascot2.png" alt="RAT.FUN" bind:this={imageElement} /> -->
       <!-- INTRO TEXT -->
@@ -121,14 +115,13 @@
       flex-flow: column nowrap;
       align-items: center;
       justify-content: center;
-      width: 500px;
+      width: 800px;
 
-      img {
-        height: 50dvh;
-        @media (max-width: 900px) {
-          width: 70dvw;
-          height: auto;
-        }
+      p {
+        font-size: var(--font-size-large);
+        background: var(--background);
+        color: var(--foreground);
+        padding: 10px;
       }
 
       .form {
@@ -138,26 +131,34 @@
           height: 100%;
           width: 300px;
           margin-right: 10px;
-          font-size: var(--font-size-normal);
+          font-size: var(--font-size-large);
           padding: 10px;
           background: var(--white);
           color: black;
           border: none;
           margin-bottom: 0;
-          font-family: monospace;
+          font-family: var(--special-font-stack);
           text-transform: uppercase;
           border-bottom: var(--default-border-style);
           outline: none;
 
           &::placeholder {
-            color: var(--color-grey-dark);
+            color: var(--color-grey-light);
           }
         }
 
         .button-container {
           width: 100%;
-          height: 80px;
+          height: 100px;
         }
+      }
+
+      .loader {
+        font-size: var(--font-size-large);
+        font-family: var(--special-font-stack);
+        background: var(--background);
+        color: var(--foreground);
+        padding: 10px;
       }
     }
   }

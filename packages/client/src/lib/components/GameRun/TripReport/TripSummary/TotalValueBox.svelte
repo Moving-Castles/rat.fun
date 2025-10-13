@@ -13,6 +13,9 @@
     onTimeline?: (timeline: ReturnType<typeof gsap.timeline>, offset: number | string) => void
   } = $props()
 
+  // Is rat dead?
+  const ratDead = result?.ratDead
+
   // Elements
   let totalValueElement = $state<HTMLDivElement | null>(null)
   let valueElement = $state<HTMLSpanElement | null>(null)
@@ -42,20 +45,19 @@
     return initialTotalValue + itemChangesValue + balanceTransfersValue
   }
 
-  const getDisplayValueChange = (initialTotalValue: number, newTotalValue: number) => {
-    const valueChange = newTotalValue - initialTotalValue
+  const getDisplayValueChange = (valueChange: number) => {
     if (valueChange === 0) {
       return CURRENCY_SYMBOL + "0"
     } else if (valueChange > 0) {
-      return "+" + CURRENCY_SYMBOL + valueChange
+      return CURRENCY_SYMBOL + "+" + valueChange
     } else {
-      return "-" + CURRENCY_SYMBOL + valueChange
+      return CURRENCY_SYMBOL + valueChange
     }
   }
 
-  const newTotalValue = calculateTotalRatValue(initialTotalValue, result)
-
-  const displayValueChange = getDisplayValueChange(initialTotalValue, newTotalValue)
+  const newTotalValue = ratDead ? 0 : calculateTotalRatValue(initialTotalValue, result)
+  const valueChange = ratDead ? -initialTotalValue : newTotalValue - initialTotalValue
+  const displayValueChange = getDisplayValueChange(valueChange)
 
   // Create timeline
   const timeline = gsap.timeline()
@@ -78,6 +80,7 @@
     // After count animation, quickly fade in the value change
     timeline.to(changeElement, {
       opacity: 1,
+      backgroundColor: valueChange === 0 ? "" : valueChange > 0 ? "green" : "red",
       duration: 0.2,
       ease: "power2.out"
     })
@@ -138,6 +141,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      font-size: var(--font-size-extra-large);
     }
     .change {
       width: 20%;

@@ -15,8 +15,8 @@
   } = $props()
 
   // Figure out if rat died or survived
-  const ratDied = $derived(result?.ratDead)
-  const statusText = $derived(ratDied ? "DIED" : "SURVIVED")
+  const ratDead = $derived(result?.ratDead)
+  const statusText = $derived(ratDead ? "DIED" : "SURVIVED")
 
   // Elements
   let eventElement = $state<HTMLDivElement | null>(null)
@@ -69,7 +69,7 @@
   <div class="image">
     <img src={$ratImageUrl} alt={frozenRat?.name} />
   </div>
-  <div class="event-text">
+  <div class="event-text" class:dead={ratDead}>
     {frozenRat?.name}
     {statusText}
   </div>
@@ -102,11 +102,16 @@
       font-size: var(--font-size-large);
       font-family: var(--special-font-stack);
       margin-bottom: 20px;
+
+      &.dead {
+        color: black;
+        background: red;
+      }
     }
 
     .button-container {
       width: 100%;
-      height: 80px;
+      height: 120px;
     }
   }
 </style>

@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { HEALTH_SYMBOL } from "$lib/modules/ui/constants"
+
   let { value }: { value: number } = $props()
 
   // Health 0-25 => 1
@@ -10,7 +12,7 @@
 
 <div class="health-bar">
   <div class="health-bar-inner">
-    <span class="health-bar-inner-value">Health: {value}</span>
+    <span class="health-bar-inner-value">{HEALTH_SYMBOL} {value}</span>
     <div
       class="health-bar-inner-fill"
       style:width={`${value}%`}

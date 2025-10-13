@@ -36,7 +36,9 @@
     if (valueElement) {
       const displayValue = negative ? -num : num
       valueElement.textContent = String(displayValue)
-      playSound("ratfunUI", "tick", false, false, 1 + num * (negative ? -0.02 : 0.02))
+      // Cap pitch between -1 and 2
+      const pitch = Math.max(-1, Math.min(2, 1 + num * (negative ? -0.02 : 0.02)))
+      playSound("ratfunUI", "counterTick", false, false, pitch)
     }
   }
 

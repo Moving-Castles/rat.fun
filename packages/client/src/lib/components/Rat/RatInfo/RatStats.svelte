@@ -36,7 +36,7 @@
         onclick={() => transitionTo(RAT_BOX_STATE.PAST_TRIP_LIST)}
       >
         <span>
-          Trip Count: {displayRat.tripCount ?? 0}
+          Trips: {displayRat.tripCount ?? 0}
         </span>
       </div>
     </div>

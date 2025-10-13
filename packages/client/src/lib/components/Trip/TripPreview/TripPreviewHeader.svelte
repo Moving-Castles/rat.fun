@@ -2,22 +2,18 @@
   import { getTripMaxValuePerWin, getTripOwnerName } from "$lib/modules/state/utils"
   import { lastUpdated } from "$lib/modules/content"
   import { urlFor } from "$lib/modules/content/sanity"
-  import { getModalState } from "$lib/components/Shared/Modal/state.svelte"
-  import { NoImage, ModalTarget } from "$lib/components/Shared"
+  import { NoImage } from "$lib/components/Shared"
 
   let { trip, sanityTripContent }: { trip: Trip; sanityTripContent: any } = $props()
 
-  let maxValuePerWin = getTripMaxValuePerWin(trip.tripCreationCost, trip.balance)
-
-  let { modal } = getModalState()
-  let showImageModal = $state(false)
+  const maxValuePerWin = getTripMaxValuePerWin(trip.tripCreationCost, trip.balance)
 </script>
 
 <div class="trip-preview-header">
   <!-- IMAGE -->
   <!-- svelte-ignore a11y_click_events_have_key_events -->
   <!-- svelte-ignore a11y_no_static_element_interactions -->
-  <div class="image" onclick={() => (showImageModal = true)}>
+  <div class="image">
     {#key $lastUpdated}
       {#if sanityTripContent?.image?.asset}
         <img
@@ -75,62 +71,40 @@
   </div>
 </div>
 
-{#snippet tripImageModal()}
-  <!-- svelte-ignore a11y_click_events_have_key_events -->
-  <!-- svelte-ignore a11y_no_static_element_interactions -->
-  <div class="image-modal" onclick={() => modal.close()}>
-    {#if sanityTripContent?.image?.asset}
-      <img
-        src={urlFor(sanityTripContent?.image).width(1200).auto("format").url()}
-        alt="trip #{trip.index}"
-      />
-    {/if}
-  </div>
-{/snippet}
-
-{#if showImageModal && sanityTripContent}
-  <ModalTarget
-    fullscreen={true}
-    onclose={() => (showImageModal = false)}
-    content={tripImageModal}
-  />
-{/if}
-
 <style lang="scss">
   .trip-preview-header {
     border-bottom: var(--default-border-style);
     display: flex;
     flex-direction: row;
     background: var(--background);
+    height: 200px;
 
     .image {
-      aspect-ratio: 1/1;
-      width: 50%;
       line-height: 0;
       cursor: pointer;
+      height: 100%;
+      flex-shrink: 0;
 
       img {
-        width: 100%;
-        aspect-ratio: 1/1;
+        height: 100%;
+        width: auto;
         object-fit: contain;
-        filter: grayscale(100%);
         mix-blend-mode: screen;
       }
 
       .image-placeholder {
-        width: 100%;
+        height: 100%;
         aspect-ratio: 1/1;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-bottom: 15px;
       }
     }
 
     .info {
       display: flex;
       flex-direction: column;
-      width: 50%;
+      flex: 1;
 
       .row {
         width: 100%;
@@ -153,23 +127,6 @@
           color: var(--color-grey-mid);
         }
       }
-    }
-  }
-
-  .image-modal {
-    width: var(--game-window-width);
-    height: var(--game-window-height);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-
-    img {
-      max-width: 90%;
-      max-height: 90%;
-      object-fit: contain;
-      border: var(--default-border-style);
-      transition: opacity 0.2s ease;
     }
   }
 </style>

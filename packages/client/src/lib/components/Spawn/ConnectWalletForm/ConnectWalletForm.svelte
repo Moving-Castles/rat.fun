@@ -17,40 +17,37 @@
       : "Connect your wallet to proceed."
   )
 
-  let imageElement: HTMLImageElement | null = $state(null)
   let messageElement: HTMLParagraphElement | null = $state(null)
   let buttonElement: HTMLDivElement | null = $state(null)
 
   const timeline = gsap.timeline()
 
   onMount(() => {
-    if (!imageElement || !messageElement || !buttonElement) return
+    if (!messageElement) {
+      return
+    }
 
     // Set initial opacity to 0
-    imageElement.style.opacity = "0"
     messageElement.style.opacity = "0"
-    buttonElement.style.opacity = "0"
+    if (buttonElement) buttonElement.style.opacity = "0"
 
     // Animate opacity to 1
-    timeline.to(imageElement, {
+    timeline.to(messageElement, {
       opacity: 1,
       duration: 0.4,
       delay: 0.4
     })
-    timeline.to(messageElement, {
-      opacity: 1,
-      duration: 0.4
-    })
-    timeline.to(buttonElement, {
-      opacity: 1,
-      duration: 0.4
-    })
+    if (buttonElement) {
+      timeline.to(buttonElement, {
+        opacity: 1,
+        duration: 0.4
+      })
+    }
   })
 </script>
 
 <div class="outer-container">
   <div class="inner-container">
-    <!-- <img src="/images/mascot1.png" alt="Mascot" bind:this={imageElement} /> -->
     <p bind:this={messageElement}>{message}</p>
     {#if walletType === WALLET_TYPE.ENTRYKIT}
       <div bind:this={$entryKitButton}></div>
@@ -78,17 +75,16 @@
       justify-content: center;
       width: 500px;
 
-      img {
-        height: 50dvh;
-        @media (max-width: 900px) {
-          width: 70dvw;
-          height: auto;
-        }
+      p {
+        font-size: var(--font-size-large);
+        background: var(--background);
+        color: var(--foreground);
+        padding: 10px;
       }
 
       .button-container {
         width: 100%;
-        height: 80px;
+        height: 200px;
       }
     }
   }

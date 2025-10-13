@@ -13,13 +13,6 @@
   let previousValue = $state<null | number>(null)
   let updates = $state(0)
 
-  // Calculate animation duration based on value change
-  function calculateDuration(value: number) {
-    // let absValue = Math.abs(value)
-    let duration = 1
-    return duration
-  }
-
   // Animate balance change
   function animateBalanceChange(newBalance: number, difference: number) {
     console.log("3. Animate to", newBalance, difference)
@@ -29,9 +22,7 @@
     }
 
     const isPositive = difference > 0
-    const duration = 1 // Always 1 second
-
-    console.log("duration", duration)
+    const duration = 0.7 // Always 0.7 seconds
 
     // Create timeline for the animation
     const timeline = gsap.timeline()

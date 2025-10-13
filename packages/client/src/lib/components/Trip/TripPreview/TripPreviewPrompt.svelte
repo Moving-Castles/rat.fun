@@ -19,7 +19,6 @@
 
 <style lang="scss">
   .trip-preview-prompt {
-    border-bottom: 1px solid var(--color-grey-mid);
     word-break: break-word; /* Break long words if needed */
     overflow-wrap: anywhere; /* Break anywhere if necessary to prevent overflow */
     width: 100%;

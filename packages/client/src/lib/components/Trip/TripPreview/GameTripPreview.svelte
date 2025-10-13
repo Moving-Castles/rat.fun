@@ -124,8 +124,8 @@
     border-bottom: 1px solid var(--color-grey-mid);
     padding: 0 12px;
     height: 60px;
-    font-family: var(--special-font-stack);
-    font-size: var(--font-size-normal);
+    font-family: var(--typewriter-font-stack);
+    font-size: var(--font-size-large);
     text-transform: uppercase;
     background: var(--background-semi-transparent);
     flex-shrink: 0;
