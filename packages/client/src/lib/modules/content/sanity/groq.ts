@@ -6,15 +6,27 @@
  *  https://www.sanity.io/docs/groq
  */
 
+const ratImages = '*[_id == "rat-images"][0]'
+const trips = '*[_type == "trip" && worldAddress == $worldAddress]'
+const outcomes = `*[_type == "outcome" && worldAddress == $worldAddress] {
+  ...,
+  "trip": *[_type == "trip" && _id == ^.tripId][0],
+  "readableLog": array::join(log[]{"entry": timestamp + " => " + event}.entry, ", ")
+}`
+const worldEvents =
+  '*[_type == "worldEvent" && worldAddress == $worldAddress] | order(activationDateTime asc)'
+
 export const queries = {
-  trips: '*[_type == "trip" && worldAddress == $worldAddress]',
-  outcomes: `*[_type == "outcome" && worldAddress == $worldAddress] {
-    ...,
-    "trip": *[_type == "trip" && _id == ^.tripId][0],
-    "readableLog": array::join(log[]{"entry": timestamp + " => " + event}.entry, ", ")
+  ratImages,
+  trips,
+  outcomes,
+  worldEvents,
+  staticContent: `{
+    "ratImages": ${ratImages},
+    "trips": ${trips},
+    "outcomes": ${outcomes},
+    "worldEvents": ${worldEvents}
   }`,
-  worldEvents:
-    '*[_type == "worldEvent" && worldAddress == $worldAddress] | order(activationDateTime asc)', // filter by activationDateTime upcoming, sort by activationDate soonest first
   outcomesForTrip: `*[_type == "outcome" && tripId == $tripId && worldAddress == $worldAddress] {
     ...,
     "readableLog": array::join(log[]{"entry": timestamp + " => " + event}.entry, ", ")

@@ -14,7 +14,7 @@
   <div class="tab">
     <p class="key">Name:</p>
     <p class="value">
-      {$player?.name}
+      {$player?.name ?? ""}
     </p>
   </div>
   <!-- Wallet -->
@@ -32,7 +32,7 @@
     </p>
   </div>
   <!-- Rats killed -->
-  {#if $player?.pastRats.length > 0}
+  {#if ($player?.pastRats ?? []).length > 0}
     <div class="tab">
       <p class="key">Rats killed:</p>
       <p class="value">

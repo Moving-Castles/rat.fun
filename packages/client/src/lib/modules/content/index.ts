@@ -5,7 +5,8 @@ import { blockNumber } from "$lib/modules/network"
 import type {
   Trip as SanityTrip,
   Outcome as SanityOutcome,
-  WorldEvent as SanityWorldEvent
+  WorldEvent as SanityWorldEvent,
+  RatImages as SanityRatImages
 } from "@sanity-types"
 import { queries } from "./sanity/groq"
 import type { MutationEvent } from "@sanity/client"
@@ -13,6 +14,7 @@ import type { MutationEvent } from "@sanity/client"
 // --- TYPES ------------------------------------------------------------
 
 export type StaticContent = {
+  ratImages: SanityRatImages
   trips: SanityTrip[]
   outcomes: SanityOutcome[]
   worldEvents: SanityWorldEvent[]
@@ -20,8 +22,15 @@ export type StaticContent = {
 
 // --- STORES -----------------------------------------------------------
 
-export const staticContent = writable<StaticContent>({ trips: [], outcomes: [], worldEvents: [] })
+export const staticContent = writable<StaticContent>({
+  trips: [] as SanityTrip[],
+  outcomes: [] as SanityOutcome[],
+  worldEvents: [] as SanityWorldEvent[],
+  ratImages: {} as SanityRatImages
+})
+
 export const lastUpdated = writable(performance.now())
+
 export const upcomingWorldEvent = derived(
   [staticContent, blockNumber],
   ([$staticContent]: [StaticContent, bigint]) => {
@@ -38,15 +47,14 @@ export const upcomingWorldEvent = derived(
 // --- API --------------------------------------------------------------
 
 export async function initStaticContent(worldAddress: string) {
-  const trips = await loadData(queries.trips, { worldAddress })
-  const outcomes = await loadData(queries.outcomes, { worldAddress })
-  const worldEvents = await loadData(queries.worldEvents, { worldAddress })
+  const data = (await loadData(queries.staticContent, { worldAddress })) as StaticContent
 
-  const processedWorldEvents = worldEvents.filter(upcomingWorldEventFilter)
+  const processedWorldEvents = data.worldEvents.filter(upcomingWorldEventFilter)
 
   staticContent.set({
-    trips,
-    outcomes,
+    ratImages: data.ratImages,
+    trips: data.trips,
+    outcomes: data.outcomes,
     worldEvents: processedWorldEvents
   })
 
@@ -88,6 +96,7 @@ export async function initStaticContent(worldAddress: string) {
 }
 
 // --- HELPER FUNCTIONS -------------------------------------------------
+
 function upcomingWorldEventFilter(e: SanityWorldEvent) {
   // If no duration is specified, filter out
   if (!e.duration) return false

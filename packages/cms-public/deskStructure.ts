@@ -1,5 +1,5 @@
 // ICONS
-import { MdAirlines, MdStar, MdImage, MdEvent } from "react-icons/md"
+import { MdAirlines, MdStar, MdImage, MdEvent, MdChat } from "react-icons/md"
 
 export default (S: any) =>
   S.list()
@@ -35,5 +35,10 @@ export default (S: any) =>
             .id("template-images")
             .schemaType("templateImages")
             .documentId("template-images")
-        )
+        ),
+      S.divider(),
+      S.listItem()
+        .title("Rat images")
+        .icon(MdChat)
+        .child(S.editor().id("rat-images").schemaType("ratImages").documentId("rat-images"))
     ])

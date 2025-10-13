@@ -16,8 +16,9 @@ import {
   filterActive,
   filterLiquidated
 } from "./utils"
-import { addressToRatImage } from "$lib/modules/utils"
+import { addressToNumber } from "$lib/modules/utils"
 import { staticContent } from "$lib/modules/content"
+import { urlFor } from "$lib/modules/content/sanity"
 import { playerERC20Balance, playerERC20Allowance } from "$lib/modules/erc20Listener/stores"
 import { WORLD_OBJECT_ID } from "./constants"
 
@@ -171,9 +172,19 @@ export const ratInventory = derived(
   ([$rat, $items]) => $rat?.inventory?.map(item => $items[item]) ?? ([] as Item[])
 )
 
-export const ratImageUrl = derived([player], ([$player]) => {
-  if (!$player?.currentRat) return "/images/rat.png"
-  return addressToRatImage($player.currentRat)
+export const ratImageUrl = derived([player, staticContent], ([$player, $staticContent]) => {
+  if (!$player?.currentRat || !$staticContent?.ratImages?.ratImages?.length) {
+    return ""
+  }
+  const index = addressToNumber($player.currentRat, $staticContent.ratImages.ratImages.length - 1)
+
+  const url = urlFor($staticContent.ratImages.ratImages[index])
+    ?.width(400)
+    ?.quality(100)
+    ?.auto("format")
+    ?.url() as string
+
+  return url ?? ""
 })
 
 /**
@@ -187,17 +198,24 @@ export const ratTotalValue = derived([rat, ratInventory], ([$rat, $ratInventory]
   return totalValue
 })
 
+// * * * * * * * * * * * * * * * * *
+// ADMIN STORES
+// * * * * * * * * * * * * * * * * *
+
 export const investment = derived(playerActiveTrips, $playerActiveTrips =>
   Object.values($playerActiveTrips).reduce((a, b) => a + Number(b.tripCreationCost ?? 0), 0)
 )
+
 export const balance = derived(playerActiveTrips, $playerActiveTrips =>
   Object.values($playerActiveTrips).reduce((a, b) => a + Number(b.balance ?? 0), 0)
 )
+
 export const profitLoss = derived([balance, investment], ([$b, $i]) => {
   console.log("P L calculation", $b, $i)
   return $b - $i
 })
-export const portfolioClass = derived([profitLoss, balance], ([$profitLoss, $balance]) => {
+
+export const portfolioClass = derived([profitLoss], ([$profitLoss]) => {
   if ($profitLoss === 0) return "neutral"
   return $profitLoss < 0 ? "downText" : "upText"
 })
@@ -208,9 +226,11 @@ const untaxed = (value: number) =>
 export const realisedInvestment = derived(playerLiquidatedTrips, $playerLiquidatedTrips =>
   Object.values($playerLiquidatedTrips).reduce((a, b) => a + Number(b.tripCreationCost), 0)
 )
+
 export const realisedBalance = derived(playerLiquidatedTrips, $playerLiquidatedTrips =>
   Object.values($playerLiquidatedTrips).reduce((a, b) => a + Number(b.liquidationValue), 0)
 )
+
 export const realisedProfitLoss = derived(
   [realisedBalance, realisedInvestment],
   ([$rb, $i]) => $rb - $i

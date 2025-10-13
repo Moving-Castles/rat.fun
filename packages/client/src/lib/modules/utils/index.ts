@@ -563,10 +563,3 @@ export function addressToRatImage(address: string, maxRats: number = 6): string 
   const ratNumber = addressToNumber(address, maxRats - 1) // -1 because we want 0-based indexing
   return `/images/rats/rat_${ratNumber}.png`
 }
-
-/**
- * Remove hash from the current URL
- */
-export function removeHash() {
-  // pushState("", document.title, window.location.pathname + window.location.search)
-}

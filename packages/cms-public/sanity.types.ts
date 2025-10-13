@@ -13,6 +13,28 @@
  */
 
 // Source: schema.json
+export type RatImages = {
+  _id: string
+  _type: "ratImages"
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  ratImages?: Array<{
+    asset?: {
+      _ref: string
+      _type: "reference"
+      _weak?: boolean
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset"
+    }
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: "image"
+    _key: string
+  }>
+}
+
 export type WorldEvent = {
   _id: string
   _type: "worldEvent"
@@ -252,6 +274,7 @@ export type SanityAssetSourceData = {
 }
 
 export type AllSanitySchemaTypes =
+  | RatImages
   | WorldEvent
   | TemplateImages
   | Outcome

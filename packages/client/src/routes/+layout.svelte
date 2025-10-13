@@ -10,7 +10,7 @@
   import { browser } from "$app/environment"
   import { goto } from "$app/navigation"
   import { onMount } from "svelte"
-  import { initStaticContent } from "$lib/modules/content"
+  import { initStaticContent, staticContent } from "$lib/modules/content"
   import { publicNetwork } from "$lib/modules/network"
   import { UIState, notificationsRead, adminUnlockedAt } from "$lib/modules/ui/state.svelte"
   import { UI } from "$lib/modules/ui/enums"
@@ -44,6 +44,8 @@
   const { environment, walletType } = data
 
   walletTypeStore.set(walletType)
+
+  $inspect($staticContent)
 
   // Called when loading is complete
   const loaded = async () => {
