@@ -4,6 +4,7 @@
   import { ratImageUrl } from "$lib/modules/state/stores"
   import { transitionTo, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
   import HealthBar from "./HealthBar.svelte"
+  import { NoImage } from "$lib/components/Shared"
 
   let { displayRat }: { displayRat: Rat | null } = $props()
 
@@ -51,17 +52,21 @@
 
     <!-- IMAGE -->
     <div class="image-container">
-      <!-- svelte-ignore a11y_no_noninteractive_element_to_interactive_role -->
-      <!-- svelte-ignore a11y_click_events_have_key_events -->
-      <img
-        role="button"
-        {onmousedown}
-        {onmouseup}
-        src={$ratImageUrl}
-        draggable={false}
-        alt={displayRat.name}
-        in:fade|global={{ duration: 400, delay: 300 }}
-      />
+      {#if $ratImageUrl}
+        <!-- svelte-ignore a11y_no_noninteractive_element_to_interactive_role -->
+        <!-- svelte-ignore a11y_click_events_have_key_events -->
+        <img
+          role="button"
+          {onmousedown}
+          {onmouseup}
+          src={$ratImageUrl}
+          draggable={false}
+          alt={displayRat.name}
+          in:fade|global={{ duration: 400, delay: 300 }}
+        />
+      {:else}
+        <NoImage />
+      {/if}
     </div>
   {/if}
 </div>

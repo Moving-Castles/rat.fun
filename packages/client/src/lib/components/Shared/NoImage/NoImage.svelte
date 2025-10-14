@@ -19,7 +19,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: var(--background);
     color: var(--foreground);
     font-size: var(--font-size-small);
 
