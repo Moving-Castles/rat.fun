@@ -91,12 +91,11 @@
     // Only start music if the UI state has not already changed from SPAWNING
     if ($UIState === UI.SPAWNING) {
       $backgroundMusic = playSound("ratfunMusic", "spawn", true)
+      // HACK
+      // Wait a bit for whatever is needed for the shader to start is loaded...
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      shaderManager.setShader("clouds")
     }
-
-    // HACK
-    // Wait a bit for whatever is needed for the shader to start is loaded...
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    shaderManager.setShader("clouds")
   })
 
   onDestroy(() => {
