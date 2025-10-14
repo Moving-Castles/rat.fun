@@ -49,7 +49,8 @@
   const loaded = async () => {
     try {
       // Get content from CMS
-      await initStaticContent($publicNetwork.worldAddress)
+      // We do not wait, for faster loading time...
+      initStaticContent($publicNetwork.worldAddress)
       // Loading done. Set the UI state to spawning
       UIState.set(UI.SPAWNING)
     } catch (error) {
