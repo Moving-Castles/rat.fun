@@ -79,10 +79,7 @@
 </script>
 
 <div class="loading" bind:this={loadingElement}>
-  <!-- <div class="inner" bind:this={innerElement}> -->
-  <!-- <img src="/images/logo.png" alt="logo" /> -->
   <div class="terminal-box" bind:this={terminalBoxElement}></div>
-  <!-- </div> -->
 </div>
 
 <style lang="scss">
@@ -94,6 +91,7 @@
     font-size: var(--font-size-normal);
     width: 100vw;
     height: 100vh;
+    z-index: var(--z-top);
 
     .terminal-box {
       font-size: var(--font-size-normal);
@@ -102,6 +100,7 @@
       max-width: 800px;
       text-align: left;
       word-break: break-all;
+      padding: 20px;
     }
   }
 </style>

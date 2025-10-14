@@ -10,7 +10,7 @@
   import { browser } from "$app/environment"
   import { goto } from "$app/navigation"
   import { onMount } from "svelte"
-  import { initStaticContent, staticContent } from "$lib/modules/content"
+  import { initStaticContent } from "$lib/modules/content"
   import { publicNetwork } from "$lib/modules/network"
   import { UIState, notificationsRead, adminUnlockedAt } from "$lib/modules/ui/state.svelte"
   import { UI } from "$lib/modules/ui/enums"
@@ -88,11 +88,7 @@
 
 <div class="bg">
   {#if $UIState === UI.LOADING}
-    <div class="context-main">
-      <main>
-        <Loading {environment} {loaded} />
-      </main>
-    </div>
+    <Loading {environment} {loaded} />
   {:else if $UIState === UI.SPAWNING}
     <div class="context-main">
       <main>
@@ -108,8 +104,6 @@
   {#if browser}
     <ShaderGlobal />
   {/if}
-  <!-- {#if $UIState !== UI.LOADING}
-  {/if} -->
 </div>
 
 {#if $activeWorldEvent && !notificationsRead.current.includes($activeWorldEvent.cmsId)}
