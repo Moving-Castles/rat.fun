@@ -15,9 +15,9 @@
 
   // Animate balance change
   function animateBalanceChange(newBalance: number, difference: number) {
-    console.log("3. Animate to", newBalance, difference)
+    // console.log("3. Animate to", newBalance, difference)
     if (!balanceElement || !containerElement) {
-      console.log("Elements not ready", { balanceElement, containerElement })
+      // console.log("Elements not ready", { balanceElement, containerElement })
       return
     }
 
@@ -77,7 +77,7 @@
     })
 
     return () => {
-      console.log("BalanceBox destroyed")
+      // console.log("BalanceBox destroyed")
       unsubscribe()
     }
   })

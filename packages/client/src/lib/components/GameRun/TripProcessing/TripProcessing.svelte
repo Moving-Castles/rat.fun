@@ -38,7 +38,6 @@
   onDestroy(async () => {
     // Stop background music
     if ($backgroundMusic) {
-      console.log(2)
       $backgroundMusic.stop()
       $backgroundMusic = undefined
     }

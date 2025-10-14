@@ -174,8 +174,6 @@ export function resetFrozenState() {
 export const updateProcessingState = (dataset: OutcomeDataStringMap) => {
   const { type, action, value, name, id } = dataset
 
-  console.log("updateProcessingState", dataset)
-
   if (!type || !action || value === undefined) {
     return
   }
@@ -203,11 +201,9 @@ export const updateProcessingState = (dataset: OutcomeDataStringMap) => {
  * @param balanceChange The amount to change the balance by
  */
 function changeBalance(balanceChange: number) {
-  console.log("balanceChange", balanceChange)
   processingRat.update(rat => {
     if (!rat) return null
     rat.balance = BigInt(rat?.balance || 0) + BigInt(balanceChange)
-    console.log("rat.balance", rat.balance)
     return rat
   })
 

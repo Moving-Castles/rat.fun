@@ -20,7 +20,7 @@
   } = $props()
 
   const setLocalFocusEvent = (index: number) => {
-    console.log("setLocalFocusEvent", index)
+    // console.log("setLocalFocusEvent", index)
     localFocusEvent = index
     // ???
     if (!nosync) {
