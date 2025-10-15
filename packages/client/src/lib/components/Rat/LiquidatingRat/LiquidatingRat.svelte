@@ -34,7 +34,7 @@
 </script>
 
 <div class="liquidating-rat">
-  <div>KILLING IN PROGRESS <SmallSpinner /></div>
+  <div class="loading">KILLING IN PROGRESS <SmallSpinner /></div>
 </div>
 
 <style lang="scss">
@@ -45,5 +45,10 @@
     background-image: url("/images/texture-2.png");
     height: 100%;
     width: 100%;
+
+    .loading {
+      background: orangered;
+      padding: 10px;
+    }
   }
 </style>

@@ -45,13 +45,13 @@
     for (let i = 0; i < 5; i++) {
       tl.to(loadingElement, {
         background: "white",
-        duration: 0.05, // Half cycle for on
-        delay: 0
+        duration: 0,
+        delay: 0.05 // Half cycle for on
       })
       tl.to(loadingElement, {
         background: "transparent",
-        duration: 0.05, // Half cycle for off
-        delay: 0
+        duration: 0,
+        delay: 0.05 // Half cycle for off
       })
     }
 
