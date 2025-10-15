@@ -43,10 +43,6 @@
   "pnpm": {
     "onlyBuiltDependencies": [
       "esbuild"
-    ],
-    "overrides": {
-      "wagmi": "2.15.6",
-      "@tanstack/react-query": "5.81.5"
-    }
+    ]
   }
 }
