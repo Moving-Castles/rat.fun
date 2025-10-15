@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte"
-  import { fade } from "svelte/transition"
   import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
 
   let canvas = $state<HTMLCanvasElement>()
@@ -19,7 +18,7 @@
   })
 </script>
 
-<div class="shader-container" in:fade={{ duration: 300 }}>
+<div class="shader-container">
   <canvas bind:this={canvas} class="shader-canvas"></canvas>
 </div>
 

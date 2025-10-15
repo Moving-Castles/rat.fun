@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { PendingTrip } from "$lib/components/Admin/types"
+  import { SmallSpinner } from "$lib/components/Shared"
 
   let {
     pendingTrip
@@ -9,16 +10,16 @@
 </script>
 
 <tr class="pending-trip-table-item loading-row">
-  <td class="cell-index">-</td>
+  <td class="cell-index"><SmallSpinner /></td>
   <td class="cell-prompt">
     <p class="single-line">{pendingTrip?.prompt ?? ""}</p>
   </td>
-  <td class="cell-balance">0</td>
-  <td class="cell-profit">0</td>
+  <td class="cell-balance"><SmallSpinner /></td>
+  <td class="cell-profit"><SmallSpinner /></td>
   <td class="cell-spark">
     <div class="mini-graph loading-graph"></div>
   </td>
-  <td class="cell-actions"> </td>
+  <td class="cell-actions"><SmallSpinner /></td>
 </tr>
 
 <style lang="scss">
@@ -42,6 +43,8 @@
     td {
       vertical-align: middle;
       line-height: 24px;
+      border-bottom: 1px solid rgb(59, 59, 59);
+      border-right: 1px dashed rgb(59, 59, 59);
     }
 
     .single-line {

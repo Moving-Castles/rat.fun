@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte"
+  import { fade } from "svelte/transition"
   import gsap from "gsap"
   import { playSound } from "$lib/modules/sound"
 
@@ -48,7 +49,7 @@
 
 <div class="outer-container" bind:this={containerElement}>
   <button class="inner-container" onclick={onClick} {onmousedown}>
-    <div class="logo">
+    <div class="logo" in:fade|global={{ duration: 500 }}>
       <img src="/images/logo8.png" draggable={false} alt="RAT.FUN" />
     </div>
   </button>

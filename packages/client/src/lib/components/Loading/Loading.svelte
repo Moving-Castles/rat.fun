@@ -19,9 +19,12 @@
     minimumDuration?: number
   } = $props()
 
+  let minimumDurationComplete = $state(false)
+
+  // Elements
   let loadingElement: HTMLDivElement
   let terminalBoxElement: HTMLDivElement
-  let minimumDurationComplete = $state(false)
+  let logoElement: HTMLDivElement
 
   // Wait for both chain sync and minimum duration to complete
   $effect(() => {
@@ -33,6 +36,8 @@
     }
   })
 
+  const strobeColors = ["#ff0000", "#00ff00", "#0000ff"]
+
   const animateOut = async () => {
     const tl = gsap.timeline()
 
@@ -41,19 +46,31 @@
       duration: 0
     })
 
-    // Create strobe effect: 5 cycles of 0.05s each
-    for (let i = 0; i < 5; i++) {
+    // Create strobe effect: 16 cycles of 1/60s (1 frame each at 60fps)
+    for (let i = 0; i < 16; i++) {
       tl.to(loadingElement, {
-        background: "white",
+        background: strobeColors[i % strobeColors.length], // Cycle through strobe colors
         duration: 0,
-        delay: 0.05 // Half cycle for on
+        delay: 1 / 60 // Half cycle for on
       })
       tl.to(loadingElement, {
         background: "transparent",
         duration: 0,
-        delay: 0.05 // Half cycle for off
+        delay: 1 / 60 // Half cycle for off
       })
     }
+
+    tl.to(logoElement, {
+      opacity: 1,
+      duration: 0,
+      delay: 0
+    })
+
+    tl.to(loadingElement, {
+      background: "black",
+      duration: 0,
+      delay: 5 / 60
+    })
 
     tl.call(() => {
       loaded()
@@ -79,6 +96,9 @@
 </script>
 
 <div class="loading" bind:this={loadingElement}>
+  <div class="mc-logo" bind:this={logoElement}>
+    <img src="/images/logo.png" alt="Moving Castles GmbH" />
+  </div>
   <div class="terminal-box" bind:this={terminalBoxElement}></div>
 </div>
 
@@ -101,6 +121,21 @@
       text-align: left;
       // word-break: break-all;
       padding: 20px;
+    }
+
+    .mc-logo {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100px;
+      opacity: 0;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
     }
   }
 </style>

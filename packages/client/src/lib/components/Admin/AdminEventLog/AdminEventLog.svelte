@@ -56,8 +56,8 @@
     flex-flow: column nowrap;
     align-items: start;
     justify-content: flex-start;
-    gap: 4px;
-    padding: 4px;
+    gap: 8px;
+    padding: 6px;
 
     .event {
       padding: 0;

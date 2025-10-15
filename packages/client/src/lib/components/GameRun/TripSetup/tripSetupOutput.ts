@@ -4,74 +4,84 @@ export function generateTripSetupOutput() {
   const tripSetupOutput: TerminalOutputUnit[] = [
     {
       type: "text",
-      content: "RAT.FUN SCIENTIFIC INSTRUMENTS LLC",
+      content: "*** RAT.FUN SCIENTIFIC INSTRUMENTS LLC PRESENTS ***",
       color: "white",
       backgroundColor: "black",
       duration: 0,
       delayAfter: 50
     },
     {
+      type: "loader",
+      content: "",
+      duration: 500,
+      color: "black",
+      backgroundColor: "yellow",
+      loaderCharacters: "!",
+      delayAfter: 50
+    },
+    {
       type: "text",
-      content: "(c) 2034 Sexc-hell island, Kowloon, Hong Kong",
-      color: "white",
-      backgroundColor: "black",
+      content: "WARNING WARNING WARNING WARNING WARNING WARNING WARNING",
+      color: "black",
+      backgroundColor: "yellow",
       duration: 0,
       delayAfter: 50
     },
     {
       type: "text",
-      content: "All Rights Reserved in accordance with Maritime Law",
-      color: "white",
-      backgroundColor: "black",
+      content: "THIS IS AN EXPERIMENTAL EXPERIENCE AND MAY BE LETHAL",
+      color: "black",
+      backgroundColor: "yellow",
       duration: 0,
       delayAfter: 50
     },
     {
       type: "text",
-      content: "Patent pending in all non-aligned territories",
-      color: "white",
-      backgroundColor: "black",
-      duration: 0,
-      delayAfter: 50
-    },
-    {
-      type: "text",
-      content: "FUN and RAT are registered trademarks of RAT.FUN SCIENTIFIC INSTRUMENTS LLC",
-      color: "white",
-      backgroundColor: "black",
+      content: "ABSOLUTELY NO LIABITITY FOR ANY PSYCHOLOGICAL OR BIOLOGICAL DAMAGE OR MUTILATION",
+      color: "black",
+      backgroundColor: "yellow",
       duration: 0,
       delayAfter: 50
     },
     {
       type: "text",
       content:
-        "FUN HEREBY SHOULD BE INFERNALLY INTERPRETED AS THE SKILL FULL APPLICATION OF KNOWLEDGE AND NON-STOCHASTIC",
-      color: "white",
-      backgroundColor: "black",
+        "WARRANTY VOIDED. EXTENDS TO THE PLAYER, RAT SUBJECT AND EVERY OTHER ENTITY IN THE WORLD.",
+      color: "black",
+      backgroundColor: "yellow",
       duration: 0,
       delayAfter: 50
     },
     {
       type: "text",
-      content: 'PROCESSES (ie. "GOD MODE incarnate")',
-      color: "white",
-      backgroundColor: "black",
+      content: "BY NOT DESTROYING THIS MACHINE YOU ACCEPT FULL RESPONSIBILITY",
+      color: "black",
+      backgroundColor: "yellow",
       duration: 0,
       delayAfter: 50
     },
     {
       type: "text",
-      content: "Setting up trip...",
-      color: "white",
-      backgroundColor: "red",
-      delayAfter: 100
+      content: "EVERYTHING IS YOUR FAULT",
+      color: "black",
+      backgroundColor: "yellow",
+      duration: 0,
+      delayAfter: 50
+    },
+    {
+      type: "text",
+      content: "ALL EVENTS REPORTED ARE SUBJECTIVE TO THE RAT",
+      color: "black",
+      backgroundColor: "yellow",
+      duration: 0,
+      delayAfter: 50
     },
     {
       type: "loader",
-      content: "Loading...",
-      color: "white",
+      content: "Setting up trip: ",
       duration: 500,
-      backgroundColor: "red",
+      color: "white",
+      backgroundColor: "green",
       loaderCharacters: "#",
       delayAfter: 100
     },
@@ -112,7 +122,7 @@ export function generateTripSetupOutput() {
     },
     {
       type: "text",
-      content: "= Trip initiated.....",
+      content: "= Trip initiated: ",
       color: "white",
       backgroundColor: "black",
       delayAfter: 100

@@ -6,8 +6,9 @@
     TripEventCreation
   } from "$lib/components/Admin/types"
   import { TRIP_EVENT_TYPE } from "$lib/components/Admin/enums"
-  import { Icon } from "$lib/components/Shared"
   import { timeSince } from "$lib/modules/utils"
+
+  import { Tooltip } from "$lib/components/Shared"
 
   let {
     point,
@@ -22,6 +23,8 @@
   } = $props()
 
   const focus = $derived(localFocusEvent === point.index)
+
+  const timeStamp = timeSince(new Date(point.time).getTime())
 
   const href = $derived.by(() => {
     // For visit and death events, meta is SanityOutcome
@@ -60,34 +63,47 @@
 </script>
 
 {#snippet ratVisitEvent(p: TripEventVisit | TripEventDeath)}
-  <Icon name="Paw" address={p.meta?.playerName} width={10} />
-  {p.meta?.playerName} sent {p.meta?.ratName} to trip #{p.meta?.tripIndex}
+  <span class="event-icon">*</span>
+  <span class="event-message">
+    {p.meta?.playerName} sent {p.meta?.ratName} to trip #{p.meta?.tripIndex}
+  </span>
 {/snippet}
 
 {#snippet ratDied(p: TripEventDeath)}
-  <Icon width={10} name="Cross" fill="white" />
-  {p.meta?.ratName} died tripping #{p.meta?.tripIndex}
+  <span class="event-icon">*</span>
+  <span class="event-message">
+    {p.meta?.ratName} died tripping #{p.meta?.tripIndex}
+  </span>
 {/snippet}
 
 {#snippet tripLiquidated(p: TripEventLiquidation)}
-  <Icon width={10} name="Handshake" fill="white" /> You liquidated trip #{p.meta?.index}
+  <span class="event-icon">*</span>
+  <span class="event-message">
+    You liquidated trip #{p.meta?.index}
+  </span>
 {/snippet}
 
 {#snippet tripCreated(p: TripEventCreation)}
-  <Icon width={10} name="Asterisk" fill="white" /> You created trip #{p.meta?.index}
+  <span class="event-icon">*</span>
+  <span class="event-message">
+    You created trip #{p.meta?.index}
+  </span>
 {/snippet}
 
 <a class="event" {href} {onpointerdown} {onpointerup} {onpointerenter} {onpointerleave} class:focus>
-  {#if point.eventType === "trip_visit"}
-    {@render ratVisitEvent(point)}
-  {:else if point.eventType === "trip_liquidated"}
-    {@render tripLiquidated(point)}
-  {:else if point.eventType === "trip_created"}
-    {@render tripCreated(point)}
-  {:else if point.eventType === "trip_death"}
-    {@render ratDied(point)}
-  {/if}
-  <span class="meta">{timeSince(new Date(point.time).getTime())}</span>
+  <Tooltip content={timeStamp}>
+    <div class="event-content">
+      {#if point.eventType === "trip_visit"}
+        {@render ratVisitEvent(point)}
+      {:else if point.eventType === "trip_liquidated"}
+        {@render tripLiquidated(point)}
+      {:else if point.eventType === "trip_created"}
+        {@render tripCreated(point)}
+      {:else if point.eventType === "trip_death"}
+        {@render ratDied(point)}
+      {/if}
+    </div>
+  </Tooltip>
 </a>
 
 <style lang="scss">
@@ -99,12 +115,10 @@
     margin-bottom: 4px;
     cursor: pointer;
     font-size: var(--font-size-small);
+    width: 100%;
 
-    .meta {
-      font-size: var(--font-size-small);
-      color: var(--color-grey-light);
-      text-align: center;
-      margin-bottom: 20px;
+    .event-content {
+      width: 100%;
     }
 
     &.focus {
