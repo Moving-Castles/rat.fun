@@ -1,0 +1,29 @@
+{
+  "accountAssociation": {
+    "header": "",
+    "payload": "",
+    "signature": ""
+  },
+  "baseBuilder": {
+    "allowedAddresses": [""]
+  },
+  "miniapp": {
+    "version": "1",
+    "name": "rat.fun",
+    "homeUrl": "https://base-sepolia.rat.fun",
+    "iconUrl": "https://base-sepolia.rat.fun/images/favicon.png",
+    "splashImageUrl": "https://base-sepolia.rat.fun/images/logo.png",
+    "splashBackgroundColor": "#000000",
+    "subtitle": "TODO short desc max 30 chars",
+    "description": "TODO long description. Promo text for app page. Max 170 chars.",
+    "screenshotUrls": [],
+    "primaryCategory": "games",
+    "tags": ["rat", "game"],
+    "heroImageUrl": "https://base-sepolia.rat.fun/images/slides/into.jpg",
+    "tagline": "TODO Max 30 chars.",
+    "ogTitle": "rat.fun",
+    "ogDescription": "TODO Open Graph description. Max 100 chars.",
+    "ogImageUrl": "https://base-sepolia.rat.fun/images/logo.png",
+    "noindex": true
+  }
+}

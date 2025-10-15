@@ -4,6 +4,8 @@
   import "tippy.js/dist/backdrop.css"
   import "tippy.js/animations/shift-away.css"
 
+  import { sdk } from "@farcaster/miniapp-sdk"
+
   import type { LayoutProps, Snapshot } from "./$types"
   import { initSound } from "$lib/modules/sound"
   import { initializeSentry } from "$lib/modules/error-handling"
@@ -53,6 +55,8 @@
       initStaticContent($publicNetwork.worldAddress)
       // Loading done. Set the UI state to spawning
       UIState.set(UI.SPAWNING)
+      // Signal readiness to base (farcaster) mini app framework
+      sdk.actions.ready()
     } catch (error) {
       errorHandler(error) // CMS error
       goto("/")
