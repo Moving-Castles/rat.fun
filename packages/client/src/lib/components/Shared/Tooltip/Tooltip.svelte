@@ -14,7 +14,10 @@
     children: Snippet
   } = $props()
 
-  let conditionalAction = $derived(content ? tippy : () => {})
+  // Disabled tooltips on mobile
+  const tooltipsEnabled = $derived(window.innerWidth >= 700)
+
+  let conditionalAction = $derived(content && tooltipsEnabled ? tippy : () => {})
   let tippyOptions = $derived({ content, ...props })
 </script>
 

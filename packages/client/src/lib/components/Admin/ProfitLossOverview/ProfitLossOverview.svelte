@@ -138,9 +138,6 @@
     }
   }
 
-  h3 {
-    margin-bottom: 20px;
-  }
   p {
     color: var(--color-grey-light);
     margin: 2rem 1rem;

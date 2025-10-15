@@ -99,7 +99,7 @@
       height: 100%;
       max-width: 800px;
       text-align: left;
-      word-break: break-all;
+      // word-break: break-all;
       padding: 20px;
     }
   }

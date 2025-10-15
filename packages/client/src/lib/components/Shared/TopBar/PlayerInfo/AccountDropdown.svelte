@@ -26,7 +26,6 @@
     position: fixed;
     top: 60px;
     left: 0;
-    width: 600px;
     background-color: var(--background-dark-transparent);
     color: var(--white);
     padding: 20px;
@@ -40,6 +39,10 @@
     font-family: var(--special-font-stack);
     z-index: 99;
     border: 1px solid var(--color-border);
+    width: 600px;
+    @media (max-width: 700px) {
+      width: 100%;
+    }
 
     .debug-button {
       position: absolute;

@@ -17,12 +17,12 @@
   }
 </script>
 
-<div class="rat-info-box">
+<div class="rat-stats">
   {#if displayRat}
     <!-- INFO -->
     <div class="info-container">
       <!-- INDEX -->
-      <div class="info-item">
+      <div class="info-item index-container">
         <span class="index">RAT #{displayRat.index}</span>
       </div>
 
@@ -72,7 +72,7 @@
 </div>
 
 <style lang="scss">
-  .rat-info-box {
+  .rat-stats {
     width: 100%;
     height: 100%;
     border-right: none;
@@ -85,6 +85,10 @@
     .info-container {
       width: calc(100% - 260px);
       overflow: hidden;
+      @media (max-width: 700px) {
+        width: auto;
+        flex: 1;
+      }
 
       .info-item {
         width: 100%;
@@ -94,10 +98,15 @@
         align-items: center;
         justify-content: space-between;
 
-        .index {
-          padding-inline: 10px;
-          color: var(--foreground);
-          font-size: var(--font-size-small);
+        &.index-container {
+          @media (max-width: 700px) {
+            display: none;
+          }
+          .index {
+            padding-inline: 10px;
+            color: var(--foreground);
+            font-size: var(--font-size-small);
+          }
         }
 
         .name {
@@ -112,6 +121,10 @@
           color: var(--foreground);
           font-size: var(--font-size-normal);
           cursor: pointer;
+
+          @media (max-width: 700px) {
+            display: none;
+          }
         }
       }
     }
@@ -119,6 +132,10 @@
       width: 260px;
       height: 100%;
       border-left: var(--default-border-style);
+
+      @media (max-width: 700px) {
+        width: auto;
+      }
 
       img {
         width: 100%;

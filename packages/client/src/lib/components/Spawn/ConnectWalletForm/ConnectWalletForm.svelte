@@ -53,7 +53,7 @@
       <div bind:this={$entryKitButton}></div>
     {:else}
       <div class="button-container" bind:this={buttonElement}>
-        <BigButton id="connect" text="Connect Burner" onclick={onComplete} />
+        <BigButton text="Connect Burner" onclick={onComplete} />
       </div>
     {/if}
   </div>
@@ -74,6 +74,7 @@
       align-items: center;
       justify-content: center;
       width: 500px;
+      max-width: 90dvw;
 
       p {
         font-size: var(--font-size-large);

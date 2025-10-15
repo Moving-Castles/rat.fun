@@ -34,7 +34,7 @@
   <div class="inner-container">
     <p bind:this={textElement}>{$player?.name}, you are set!</p>
     <div class="button" bind:this={buttonElement}>
-      <BigButton id="skillz" text="ENJOY SKILLFULLY" onclick={onComplete} />
+      <BigButton text="ENJOY SKILLFULLY" onclick={onComplete} />
     </div>
   </div>
 </div>
@@ -54,6 +54,7 @@
       align-items: center;
       justify-content: center;
       width: 500px;
+      max-width: 90dvw;
 
       .button {
         width: 100%;

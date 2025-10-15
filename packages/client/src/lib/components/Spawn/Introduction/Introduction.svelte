@@ -82,6 +82,7 @@
 
       img {
         width: 600px;
+        max-width: 100dvw;
         height: 100%;
         object-fit: contain;
         opacity: 0.8;

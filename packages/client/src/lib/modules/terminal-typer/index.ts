@@ -48,7 +48,7 @@ async function typeText(
   duration?: number
 ) {
   // Start new line
-  addLine(targetElement)
+  addLine(targetElement, "text")
 
   // If duration is 0, output everything at once
   if (duration === 0) {
@@ -74,7 +74,7 @@ async function typeLoader(
   loaderCharacters: string
 ) {
   // Start new line
-  addLine(targetElement)
+  addLine(targetElement, "loader")
 
   // First, output the content
   for (const char of content) {
@@ -112,9 +112,9 @@ async function typeLoader(
   }
 }
 
-function addLine(targetElement: HTMLElement) {
+function addLine(targetElement: HTMLElement, type: "text" | "loader") {
   const line = document.createElement("div")
-  line.className = "terminal-line"
+  line.className = `terminal-line terminal-line--${type}`
   targetElement.appendChild(line)
 }
 

@@ -115,6 +115,7 @@
       align-items: center;
       justify-content: center;
       width: 800px;
+      max-width: 90dvw;
 
       p {
         font-size: var(--font-size-large);
@@ -126,6 +127,11 @@
       .form {
         display: flex;
         width: 100%;
+
+        @media (max-width: 700px) {
+          flex-wrap: wrap;
+        }
+
         input {
           height: 100%;
           width: 300px;
@@ -140,6 +146,12 @@
           text-transform: uppercase;
           border-bottom: var(--default-border-style);
           outline: none;
+
+          @media (max-width: 700px) {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 20px;
+          }
 
           &::placeholder {
             color: var(--color-grey-light);

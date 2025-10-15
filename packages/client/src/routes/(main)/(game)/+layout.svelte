@@ -18,8 +18,13 @@
   .right-column {
     position: relative;
     overflow-x: hidden;
-    height: var(--game-window-main-height);
+    height: 100%;
     background-image: url("/images/texture-5.png");
     background-size: 200px;
+    width: var(--game-column-width);
+
+    @media (max-width: 700px) {
+      width: 100%;
+    }
   }
 </style>

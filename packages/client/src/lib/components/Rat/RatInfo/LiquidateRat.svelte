@@ -51,8 +51,12 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        font-size: 4vw;
+        font-size: 72px;
         color: rgba(255, 255, 255, 0.7);
+
+        @media (max-width: 700px) {
+          font-size: 48px;
+        }
       }
     }
 

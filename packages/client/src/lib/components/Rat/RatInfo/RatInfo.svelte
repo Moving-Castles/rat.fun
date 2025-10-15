@@ -53,6 +53,10 @@
       border-bottom: var(--default-border-style);
       overflow: hidden;
       height: 260px;
+
+      @media (max-width: 700px) {
+        height: 160px;
+      }
     }
 
     .rat-inventory {

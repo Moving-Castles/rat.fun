@@ -49,6 +49,11 @@
   * Layout
   * * * * * * * * * * * * * */
 
+  /* Layout: Game window */
+  --game-center-bar-width: 60px;
+  --game-center-bar-phone-height: 60px;
+  --game-column-width: calc(50% - var(--game-center-bar-width) / 2);
+
   /* Layout: Your Rat */
   --liquidate-rat-height: 100px;
   --rat-main-info-height: 160px;
@@ -109,6 +114,8 @@
   scrollbar-width: none; /* Firefox */
   overscroll-behavior-y: none;
   user-select: none;
+  -webkit-tap-highlight-color: transparent; /* Remove touch overlay */
+  -webkit-touch-callout: none; /* Disable callout on iOS */
 }
 
 body {
@@ -221,4 +228,8 @@ a {
   20% {
     opacity: 0;
   }
+}
+
+.terminal-line--loader {
+  word-break: break-all;
 }

@@ -19,16 +19,11 @@
   .main-area {
     width: 100%;
     height: var(--game-window-height);
-    display: grid;
-    grid-template-rows: 60px var(--game-window-main-height);
-    grid-template-columns: calc(var(--game-window-width) * 0.46) 1fr calc(
-        var(--game-window-width) * 0.46
-      );
+    display: flex;
+    flex-direction: column;
     border: var(--default-border-style);
 
     .main-content {
-      grid-row: 2 / 3;
-      grid-column: 1 / 4;
       position: relative;
       height: var(--game-window-main-height);
     }
@@ -36,13 +31,11 @@
     .main-area-inner {
       width: 100%;
       height: 100%;
-      display: grid;
+      display: flex;
       position: relative;
-      grid-row: 2 / 3;
-      grid-column: 1 / 4;
-      grid-template-columns: calc(var(--game-window-width) * 0.46) 1fr calc(
-          var(--game-window-width) * 0.46
-        );
+      @media (max-width: 700px) {
+        flex-direction: column;
+      }
     }
   }
   .dust {

@@ -87,7 +87,11 @@
   .rat-box {
     display: flex;
     height: var(--game-window-main-height);
-    width: 100%;
+    width: var(--game-column-width);
     overflow: hidden;
+
+    @media (max-width: 700px) {
+      width: 100%;
+    }
   }
 </style>

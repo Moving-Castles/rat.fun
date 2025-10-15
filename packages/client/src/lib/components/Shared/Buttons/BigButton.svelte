@@ -68,6 +68,7 @@
       .button-text {
         font-size: var(--font-size-extra-large);
         font-family: var(--label-font-stack);
+        line-height: 1em;
       }
 
       .button-cost {

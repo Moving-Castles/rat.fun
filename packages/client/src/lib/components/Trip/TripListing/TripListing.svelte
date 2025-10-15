@@ -102,16 +102,13 @@
   }
 
   .trip-listing {
-    width: 100%;
     flex-basis: 100%;
     flex-shrink: 0;
     height: 100%;
     min-height: 100%;
-    inset: 0;
-    height: 100%;
     max-height: 100%;
-    // background-image: url("/images/texture-3.png");
-    // background-size: 200px;
+    inset: 0;
+    width: 100%;
 
     &.animated {
       transition: transform 0.2s ease 0.1s;

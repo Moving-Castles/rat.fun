@@ -6,7 +6,7 @@
 
 <style lang="scss">
   .center-bar {
-    width: 100%;
+    width: var(--game-center-bar-width);
     height: 100%;
     position: relative;
     border-right: var(--dashed-border-style);
@@ -19,5 +19,10 @@
       var(--color-grey-dark) 20px,
       var(--color-grey-dark) 40px
     );
+
+    @media (max-width: 700px) {
+      width: 100%;
+      height: var(--game-center-bar-phone-height);
+    }
   }
 </style>
