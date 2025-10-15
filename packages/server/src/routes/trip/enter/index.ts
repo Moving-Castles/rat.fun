@@ -19,12 +19,13 @@ import { broadcast } from "@modules/websocket"
 import { createOutcomeMessage } from "@modules/websocket/constructMessages"
 
 // LLM
-import { constructEventMessages, constructCorrectionMessages } from "@modules/llm/constructMessages"
-
-// Anthropic
-import { getLLMClient } from "@modules/llm/anthropic"
-import { callModel } from "@modules/llm/anthropic/callModel"
-const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY as string
+import {
+  getLLMClient,
+  callModel,
+  constructEventMessages,
+  constructCorrectionMessages
+} from "@modules/llm/nous-research"
+const NOUS_RESEARCH_API_KEY = process.env.NOUS_RESEARCH_API_KEY as string
 
 // MUD
 import { getEnterTripData } from "@modules/mud/getOnchainData/getEnterTripData"
@@ -42,8 +43,8 @@ import { validateInputData } from "./validation"
 
 import { Hex } from "viem"
 
-// Initialize LLM: Anthropic
-const llmClient = getLLMClient(ANTHROPIC_API_KEY)
+// Initialize LLM: Nous Research
+const llmClient = getLLMClient(NOUS_RESEARCH_API_KEY)
 
 const opts = { schema }
 
@@ -57,6 +58,9 @@ async function routes(fastify: FastifyInstance) {
 
         // Recover player address from signature and convert to MUD bytes32 format
         const playerId = await verifyRequest(request.body)
+
+        console.log("Event Model", process.env.NOUS_RESEARCH_EVENT_MODEL)
+        console.log("Correction Model", process.env.NOUS_RESEARCH_CORRECTION_MODEL)
 
         // Get onchain data
         console.time("–– Get on chain data")
@@ -90,7 +94,7 @@ async function routes(fastify: FastifyInstance) {
           llmClient,
           eventMessages,
           combinedSystemPrompt,
-          process.env.EVENT_MODEL ?? "claude-sonnet-4-20250514",
+          process.env.NOUS_RESEARCH_EVENT_MODEL ?? "",
           Number(process.env.EVENT_TEMPERATURE)
         )) as EventsReturnValue
         console.timeEnd("–– Event LLM")
@@ -119,7 +123,7 @@ async function routes(fastify: FastifyInstance) {
           llmClient,
           correctionMessages,
           correctionSystemPrompt,
-          process.env.CORRECTION_MODEL ?? "claude-sonnet-4-20250514",
+          process.env.NOUS_RESEARCH_CORRECTION_MODEL ?? "",
           Number(process.env.CORRECTION_TEMPERATURE)
         )) as CorrectionReturnValue
         console.timeEnd("–– Correction LLM")
