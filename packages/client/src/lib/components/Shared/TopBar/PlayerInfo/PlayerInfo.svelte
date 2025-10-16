@@ -62,7 +62,9 @@
       <!-- AVATAR -->
       <Tooltip content={`This is you: ${$playerAddress}`}>
         <div class="inner-wrapper player">
-          <div class="avatar"></div>
+          <div class="avatar">
+            <img src="/images/pfp.png" alt="you" draggable={false} />
+          </div>
           <div class="value">{$player?.name ?? ""}</div>
         </div>
       </Tooltip>
@@ -104,7 +106,7 @@
 
         .inner-wrapper {
           display: inline-flex;
-          padding-inline: 10px;
+          padding-right: 10px;
           align-items: center;
           width: 100%;
 
@@ -116,11 +118,17 @@
     }
 
     .avatar {
-      width: 30px;
-      height: 30px;
-      background: var(--color-value);
+      width: 40px;
+      height: 40px;
+      border: 1px solid var(--color-value);
       border-radius: 50%;
-      margin-right: 5px;
+      margin-right: 10px;
+      overflow: hidden;
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
     }
   }
 </style>
