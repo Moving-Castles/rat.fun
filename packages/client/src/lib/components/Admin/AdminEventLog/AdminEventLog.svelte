@@ -11,12 +11,14 @@
     focus = $bindable(),
     localFocusEvent = $bindable(),
     nosync = false,
+    hideUnlockEvent = false,
     behavior = "hover"
   }: {
     graphData: TripEvent[]
     focus?: number
     localFocusEvent?: number
     nosync?: boolean
+    hideUnlockEvent?: boolean
     behavior?: "hover" | "click"
   } = $props()
 
@@ -39,12 +41,14 @@
   {#each data as point (point.index)}
     <AdminEventLogItem {point} {behavior} {localFocusEvent} {setLocalFocusEvent} />
   {/each}
-  <p class="event">
-    You unlocked the panel
-    <span class="meta">
-      {timeSince(new Date($adminUnlockedAt).getTime())}
-    </span>
-  </p>
+  {#if !hideUnlockEvent}
+    <p class="event">
+      You unlocked the panel
+      <span class="meta">
+        {timeSince(new Date($adminUnlockedAt).getTime())}
+      </span>
+    </p>
+  {/if}
 </div>
 
 <style lang="scss">

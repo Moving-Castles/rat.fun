@@ -72,7 +72,13 @@
       <TripProfitLossGraph behavior="click" {trip} {tripId} bind:graphData bind:focusEvent />
     </div>
     <div class="right">
-      <AdminEventLog {graphData} behavior="click" bind:localFocusEvent={focusEvent} nosync />
+      <AdminEventLog
+        {graphData}
+        behavior="click"
+        bind:localFocusEvent={focusEvent}
+        nosync
+        hideUnlockEvent
+      />
     </div>
     <div class="full">
       <p class="section-header">Flashbacks</p>

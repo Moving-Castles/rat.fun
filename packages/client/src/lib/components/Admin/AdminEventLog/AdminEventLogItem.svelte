@@ -6,6 +6,7 @@
     TripEventCreation
   } from "$lib/components/Admin/types"
   import { TRIP_EVENT_TYPE } from "$lib/components/Admin/enums"
+  import { SignedNumber } from "$lib/components/Shared"
   import { timeSince } from "$lib/modules/utils"
 
   import { Tooltip } from "$lib/components/Shared"
@@ -39,10 +40,6 @@
     }
   })
 
-  const onpointerdown = () => {
-    // ...
-  }
-
   const onpointerup = () => {
     if (behavior === "click") {
       setLocalFocusEvent(point.index)
@@ -63,31 +60,43 @@
 </script>
 
 {#snippet ratVisitEvent(p: TripEventVisit | TripEventDeath)}
-  <span class="event-icon">*</span>
   <span class="event-message">
+    <span class="event-icon">*</span>
     {p.meta?.playerName} sent {p.meta?.ratName} to trip #{p.meta?.tripIndex}
   </span>
+  <div class="event-valuechange">
+    <SignedNumber hideZero value={p.valueChange} />
+  </div>
 {/snippet}
 
 {#snippet ratDied(p: TripEventDeath)}
-  <span class="event-icon">*</span>
   <span class="event-message">
+    <span class="event-icon">*</span>
     {p.meta?.ratName} died tripping #{p.meta?.tripIndex}
   </span>
+  <div class="event-valuechange">
+    <SignedNumber hideZero value={p.valueChange} />
+  </div>
 {/snippet}
 
 {#snippet tripLiquidated(p: TripEventLiquidation)}
-  <span class="event-icon">*</span>
   <span class="event-message">
+    <span class="event-icon">*</span>
     You liquidated trip #{p.meta?.index}
   </span>
+  <div class="event-valuechange">
+    <SignedNumber hideZero value={p.valueChange} />
+  </div>
 {/snippet}
 
 {#snippet tripCreated(p: TripEventCreation)}
-  <span class="event-icon">*</span>
   <span class="event-message">
+    <span class="event-icon">*</span>
     You created trip #{p.meta?.index}
   </span>
+  <div class="event-valuechange">
+    <SignedNumber hideZero value={p.valueChange} />
+  </div>
 {/snippet}
 
 <a class="event" {href} {onpointerdown} {onpointerup} {onpointerenter} {onpointerleave} class:focus>
@@ -108,17 +117,20 @@
 
 <style lang="scss">
   .event {
+    display: block;
     padding: 0;
     margin: 0;
     color: white;
-    display: block;
     margin-bottom: 4px;
     cursor: pointer;
     font-size: var(--font-size-small);
     width: 100%;
 
     .event-content {
+      display: flex;
+      justify-content: space-between;
       width: 100%;
+      height: 10px;
     }
 
     &.focus {

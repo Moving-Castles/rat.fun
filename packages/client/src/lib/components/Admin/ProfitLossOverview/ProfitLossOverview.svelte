@@ -59,7 +59,7 @@
   <div class="portfolio-container">
     <div class="portfolio-box">
       <p>Portfolio</p>
-      <div class="portfolio-amount {$portfolioClass}">
+      <div class="portfolio-amount">
         {CURRENCY_SYMBOL}{$balance}
       </div>
     </div>

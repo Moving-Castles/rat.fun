@@ -1,17 +1,13 @@
 <script lang="ts">
   import type { TripEvent } from "$lib/components/Admin/types"
-  import { gamePercentagesConfig } from "$lib/modules/state/stores"
-
   import { onMount } from "svelte"
-
   import { Tooltip } from "$lib/components/Shared"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
-  import { blockNumberToTimestamp } from "$lib/modules/utils"
   import { staticContent } from "$lib/modules/content"
-  import { blockNumber } from "$lib/modules/network"
   import { scaleTime, scaleLinear } from "d3-scale"
   import { max, min } from "d3-array"
   import { line } from "d3-shape"
+  import { calculateProfitLossForTrip } from "../../helpers"
 
   let {
     trip,
@@ -35,7 +31,6 @@
   // Layout setup
   let width = $state(0) // width will be set by the clientWidth
   let limit = $state(50)
-  let timeWindow = $state<"1m" | "1h" | "1d" | "1w" | "all_time" | "events">("events")
 
   const padding = { top: 0, right: 12, bottom: 0, left: 12 }
 
@@ -45,33 +40,10 @@
   let xScale = $derived.by(() => {
     if (!allData.length || !innerWidth) return scaleTime()
 
-    const getRelevantDomainStart = () => {
-      switch (timeWindow) {
-        case "1m":
-          return currentTime - 1000 * 60
-        case "1h":
-          return currentTime - 1000 * 60 * 60
-        case "1d":
-          return currentTime - 1000 * 60 * 60 * 24
-        case "1w":
-          return currentTime - 1000 * 60 * 60 * 24 * 7
-        case "all_time":
-          return Number(min(allData, (d: TripEvent) => d.time))
-        default:
-          return 0
-      }
-    }
+    const domainStart = 0
+    const domainEnd = Math.min(limit - 1, allData.length - 1)
 
-    const domainStart =
-      timeWindow === "events" ? getRelevantDomainStart() : new Date(getRelevantDomainStart())
-    const domainEnd =
-      timeWindow === "events" ? Math.min(limit - 1, allData.length - 1) : new Date(currentTime) // Always go to current time
-
-    if (timeWindow === "events") {
-      return scaleLinear().domain([domainStart, domainEnd]).range([0, innerWidth])
-    } else {
-      return scaleTime().domain([domainStart, domainEnd]).range([0, innerWidth])
-    }
+    return scaleLinear().domain([domainStart, domainEnd]).range([0, innerWidth])
   })
 
   let yScale = $derived.by(() => {
@@ -84,6 +56,10 @@
     maxValue = Number(max(yScaleData, (d: TripEvent) => +d.value) ?? 0)
     minValue = Number(min(yScaleData, (d: TripEvent) => +d.value) ?? 0)
 
+    // Ensure 0 is always included in the domain
+    maxValue = Math.max(maxValue, 0)
+    minValue = Math.min(minValue, 0)
+
     const fraction = (maxValue - minValue) / 9
 
     return scaleLinear()
@@ -93,77 +69,11 @@
 
   /** Plotting data for the single trip */
   let tripEventData = $derived.by(() => {
-    let sanityTripContent = $staticContent?.trips?.find(r => r._id == tripId)
+    const sanityTripContent = $staticContent?.trips?.find(r => r._id == tripId)
 
     const outcomes = $staticContent?.outcomes?.filter(o => o.tripId == tripId) || []
 
-    // Sort the outcomes in order of creation
-    outcomes.sort((a, b) => {
-      return new Date(b._createdAt).getTime() - new Date(a._createdAt).getTime()
-    })
-
-    const tripOutcomes = outcomes.reverse()
-    const initialTime = new Date(sanityTripContent?._createdAt).getTime()
-
-    const initialPoint = {
-      time: initialTime,
-      value: Number(trip.tripCreationCost),
-      valueChange: -Number(trip.tripCreationCost), // Initial investment is negative
-      meta: sanityTripContent,
-      _createdAt: sanityTripContent?._createdAt,
-      eventType: "trip_created"
-    }
-
-    // Build the data array with initial point and outcomes
-    const dataPoints = [
-      initialPoint,
-      ...tripOutcomes.map(outcome => ({
-        ...outcome,
-        eventType: outcome?.ratValue == 0 ? "trip_death" : "trip_visit"
-      }))
-    ]
-
-    // Add liquidation event if it exists
-    if (trip.liquidationBlock && trip.liquidationValue !== undefined && $blockNumber) {
-      const liquidationTime = blockNumberToTimestamp(Number(trip.liquidationBlock))
-
-      // Get the last absolute trip value before liquidation
-      const lastValue = dataPoints[dataPoints.length - 1]?.value || 0
-
-      const taxed = Number(trip.liquidationValue)
-      const tax = $gamePercentagesConfig.taxationCloseTrip
-      const untaxed = Math.floor(
-        (Number(trip.liquidationValue) * 100) /
-          (100 - Number($gamePercentagesConfig.taxationCloseTrip))
-      )
-      const liquidationValueChange = Number(trip.tripCreationCost) - untaxed
-
-      // Liquidation: you get back the trip value (before tax) and close the position
-      // The change is +value to cancel out the accumulated trip value
-      dataPoints.push({
-        _createdAt: new Date(liquidationTime).toISOString(),
-        value: lastValue,
-        valueChange: liquidationValueChange, // Add back the trip value (closing position)
-        // liquidationBlock: trip.liquidationBlock,
-        eventType: "trip_liquidated",
-        meta: {
-          prompt: "Liquidation"
-        }
-      })
-    }
-
-    // Map data points to store value changes (not accumulated yet)
-    return dataPoints.map((o, i) => {
-      const time = new Date(o?._createdAt).getTime()
-      const valueChange = o?.valueChange || 0
-
-      return {
-        time: time || o.time,
-        valueChange: valueChange, // Store the change, not accumulated value
-        eventType: o.eventType,
-        meta: { ...sanityTripContent, ...o }
-      }
-    })
+    return calculateProfitLossForTrip(trip, tripId, sanityTripContent, outcomes)
   })
 
   let isEmpty = $derived(tripEventData.length === 0)
@@ -267,10 +177,10 @@
   {:else}
     <div class="graph" style:height="{height}px" bind:clientWidth={width}>
       <div class="legend y">
-        <button class="active">Profit/Loss</button>
+        <button class="active">Profit</button>
       </div>
       <div class="legend x">
-        <button onclick={toggleSource} class="time-option" class:active={timeWindow === "events"}
+        <button onclick={toggleSource} class="time-option active"
           >{#if limitedData.length === allData.length}All&nbsp;
           {/if}events ({#if limitedData.length < allData.length}{limitedData.length}/{allData.length}{:else}{limitedData.length}{/if})
         </button>
@@ -280,12 +190,13 @@
           <g transform="translate({padding.left}, {padding.top})">
             <!-- Zero line for reference -->
             <line
+              id="zero"
               x1="0"
               y1={yScale(0)}
               x2={innerWidth}
               y2={yScale(0)}
               stroke="var(--color-grey-mid)"
-              stroke-width="1"
+              stroke-width={2}
               stroke-dasharray="2,2"
             />
 

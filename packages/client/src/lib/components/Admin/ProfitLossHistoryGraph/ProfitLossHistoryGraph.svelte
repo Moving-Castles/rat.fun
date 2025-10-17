@@ -80,30 +80,7 @@
     }))
   })
 
-  // const generateTooltipContent = (point: TripEvent) => {
-  //   const mapping = {
-  //     trip_created: "Created trip",
-  //     trip_liquidated: "Liquidated trip",
-  //     trip_death: "Rat died",
-  //     trip_visit: "Rat visited",
-  //     unknown: ""
-  //   }
-  //   const eventType = point.eventType || "unknown"
-  //   const eventTypeLabel = mapping[eventType]
-
-  //   let toolTipContent = `<div><strong>${eventTypeLabel}</strong><br/>`
-
-  //   const valueChangeClass = point.value
-  //     ? point.value > 0
-  //       ? "tooltip-value-positive"
-  //       : "tooltip-value-negative"
-  //     : "tooltip-value"
-  //   let explicitSymbol =
-  //     valueChangeClass === "tooltip-value" ? "" : valueChangeClass.includes("positive") ? "+" : "-"
-  //   toolTipContent += `P/L: <span class="${valueChangeClass}">${explicitSymbol}${CURRENCY_SYMBOL}${Math.abs(point.value || 0)}</span></div>`
-
-  //   return toolTipContent
-  // }
+  $inspect(profitLossOverTime)
 
   // Toggle the data source used
   const toggleSource = () => {
@@ -130,7 +107,7 @@
   {:else}
     <div class="graph" bind:clientWidth={width}>
       <div class="legend y">
-        <button class="active">Profit/Loss</button>
+        <button class="active">Profit</button>
       </div>
       <div class="legend x">
         <button onclick={toggleSource} class="time-option" class:active={timeWindow === "events"}
