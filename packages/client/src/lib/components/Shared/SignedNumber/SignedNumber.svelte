@@ -1,12 +1,18 @@
 <script lang="ts">
-  let { value, className = "" }: { value: number; className?: string } = $props()
+  let {
+    value,
+    className = "",
+    hideZero = false
+  }: { value: number; className?: string; hideZero?: boolean } = $props()
 
   let sign = $derived(value == 0 ? "" : value > 0 ? "+" : "-")
   let colorClass = $derived(value == 0 ? "" : value > 0 ? "up" : "down")
 </script>
 
 <span class="signed-number {colorClass} {className}">
-  {sign}{Math.abs(value)}
+  {#if (hideZero && value !== 0) || !hideZero}
+    {sign}{Math.abs(value)}
+  {/if}
 </span>
 
 <style lang="scss">

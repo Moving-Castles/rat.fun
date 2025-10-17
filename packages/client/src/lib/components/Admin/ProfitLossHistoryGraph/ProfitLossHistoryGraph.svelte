@@ -107,7 +107,7 @@
   {:else}
     <div class="graph" bind:clientWidth={width}>
       <div class="legend y">
-        <button class="active">Profit/Loss</button>
+        <button class="active">Profit</button>
       </div>
       <div class="legend x">
         <button onclick={toggleSource} class="time-option" class:active={timeWindow === "events"}

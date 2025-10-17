@@ -3,13 +3,13 @@
   import type { TripEventBaseline, TripEvent, PendingTrip } from "$lib/components/Admin/types"
   import { TRIP_EVENT_TYPE } from "$lib/components/Admin/enums"
 
-  import { playerTrips } from "$lib/modules/state/stores"
+  import { playerTrips, playerActiveTrips, player } from "$lib/modules/state/stores"
   import { focusEvent } from "$lib/modules/ui/state.svelte"
   import { getModalState } from "$lib/components/Shared/Modal/state.svelte"
   import { backgroundMusic } from "$lib/modules/sound/stores"
   import { playSound } from "$lib/modules/sound"
   import { staticContent } from "$lib/modules/content"
-  import { calculateProfitLossForTrip } from "./helpers"
+  import { calculateProfitLossForTrip, createPlotsFromTripList } from "./helpers"
 
   import AdminEventLog from "$lib/components/Admin/AdminEventLog/AdminEventLog.svelte"
   import CreateTrip from "$lib/components/Admin/CreateTrip/CreateTrip.svelte"
@@ -39,7 +39,6 @@
       if (!sanityTripContent) return
 
       const outcomes = $staticContent?.outcomes?.filter(o => o.tripId == tripId) || []
-
       const profitLoss = calculateProfitLossForTrip(trip, tripId, sanityTripContent, outcomes)
 
       combinedData.push(...profitLoss)
