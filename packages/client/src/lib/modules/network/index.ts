@@ -56,7 +56,9 @@ export const getWalletTypeFromUrl = (url: URL) => {
     hostname.includes("entrykit") ||
     url.searchParams.has("entrykit") ||
     hostname.includes("sepolia") || // wallet is always entrykit if we do sepolia
-    url.searchParams.has("sepolia")
+    url.searchParams.has("sepolia") ||
+    hostname === "rat.fun" ||
+    url.searchParams.has("mainnet")
   ) {
     return WALLET_TYPE.ENTRYKIT
   }
