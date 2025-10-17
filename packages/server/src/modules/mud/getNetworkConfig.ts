@@ -8,7 +8,8 @@
  * from packages/contracts/worlds.json. When the contracts package
  * deploys a new `World`, it updates this file.
  */
-import worlds from "contracts/worlds.json" with { type: "json" }
+// import worlds from "contracts/worlds.json" with { type: "json" }
+import worlds from "../../../../contracts/worlds.json" with { type: "json" }
 import { ChainNotFoundError, WorldAddressNotFoundError } from "@modules/error-handling/errors"
 
 /*
