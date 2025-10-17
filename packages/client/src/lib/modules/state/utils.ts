@@ -53,6 +53,24 @@ export function filterLiquidated(trips: Trips): Trips {
 }
 
 /**
+ * Filters trips by depletion status
+ * @param trips The trips to filter
+ * @returns The filtered trips
+ */
+export function filterDepleted(trips: Trips): Trips {
+  return Object.fromEntries(Object.entries(trips).filter(([, trip]) => Number(trip.balance) === 0))
+}
+
+/**
+ * Filters trips by depletion status
+ * @param trips The trips to filter
+ * @returns The filtered trips
+ */
+export function filterNonDepleted(trips: Trips): Trips {
+  return Object.fromEntries(Object.entries(trips).filter(([, trip]) => Number(trip.balance) > 0))
+}
+
+/**
  * Filters trips by other player
  * @param trips The trips to filter
  * @param playerId The player id to filter by

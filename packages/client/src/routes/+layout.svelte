@@ -69,7 +69,7 @@
   }
 
   // Initialize Sentry
-  if (browser) {
+  if (browser && !import.meta.env.DEV) {
     initializeSentry()
   }
 

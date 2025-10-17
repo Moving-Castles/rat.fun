@@ -22,10 +22,6 @@
         src={urlFor(sanityTripContent?.image)?.width?.(200)?.height(200)?.url() ?? ""}
         alt={`trip #${trip.index}`}
       />
-    {:else}
-      <div class="image-placeholder">
-        <NoImage />
-      </div>
     {/if}
   {/key}
   <!-- INFO -->

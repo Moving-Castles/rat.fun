@@ -14,7 +14,9 @@ import {
   filterByPlayer,
   filterByOthers,
   filterActive,
-  filterLiquidated
+  filterLiquidated,
+  filterDepleted,
+  filterNonDepleted
 } from "./utils"
 import { addressToNumber } from "$lib/modules/utils"
 import { staticContent } from "$lib/modules/content"
@@ -141,6 +143,14 @@ export const playerActiveTrips = derived([playerTrips], ([$playerTrips]) => {
 
 export const playerLiquidatedTrips = derived([playerTrips], ([$playerTrips]) => {
   return filterLiquidated($playerTrips) as Trips
+})
+
+export const playerDepletedTrips = derived([playerTrips], ([$playerTrips]) => {
+  return filterDepleted($playerTrips) as Trips
+})
+
+export const playerNonDepletedTrips = derived([playerTrips], ([$playerTrips]) => {
+  return filterNonDepleted($playerTrips) as Trips
 })
 
 // Player does not and have never had a rat

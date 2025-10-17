@@ -5,8 +5,8 @@
 
   import {
     playerTrips,
-    playerActiveTrips,
-    playerLiquidatedTrips,
+    playerNonDepletedTrips,
+    playerDepletedTrips,
     player
   } from "$lib/modules/state/stores"
   import { focusEvent } from "$lib/modules/ui/state.svelte"
@@ -66,13 +66,13 @@
 
   // Sorted active trips
   let activeTripsList = $derived.by(() => {
-    let entries = Object.entries($playerActiveTrips)
+    let entries = Object.entries($playerNonDepletedTrips)
     return entries.sort(activeTripsSortFunction)
   })
 
   // Sorted past trips
   let pastTripsList = $derived.by(() => {
-    let entries = Object.entries($playerLiquidatedTrips)
+    let entries = Object.entries($playerDepletedTrips)
     return entries.sort(pastTripsSortFunction)
   })
 

@@ -29,8 +29,8 @@
 
 {#if page.route.id !== "/(main)/admin"}
   <div
-    in:fly|global={{ x: 500, opacity: 1, duration: 300 }}
-    out:fade|global={{ duration: 200 }}
+    in:fly|global={{ x: -800, opacity: 1, duration: 200 }}
+    out:fly|global={{ x: -800, opacity: 1, duration: 200 }}
     class="sidebar open"
   >
     {@render children?.()}
@@ -45,10 +45,10 @@
     min-width: 600px;
     overflow-x: hidden;
     z-index: 999;
-    top: 59px; // To overlap the topbar border
-    right: 0;
+    top: 58px; // To overlap the topbar border
+    left: 0;
     background: black;
-    transform: translate(100%, 0);
+    transform: translate(-100%, 0);
     transition: transform 0.2s ease;
     border: 1px solid var(--color-grey-mid);
     &.open {

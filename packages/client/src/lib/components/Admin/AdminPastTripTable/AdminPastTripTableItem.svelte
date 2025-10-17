@@ -19,7 +19,11 @@
     onpointerleave: () => void
   } = $props()
 
-  let profitLoss = $derived(Number(trip.liquidationValue) - Number(trip.tripCreationCost))
+  let profitLoss = $derived(
+    trip.liquidated
+      ? Number(trip.liquidationValue) - Number(trip.tripCreationCost)
+      : Number(-trip.tripCreationCost)
+  )
 
   const onmousedown = () => {
     playSound("ratfunUI", "panelIn")
@@ -38,7 +42,11 @@
   <td class="cell-visits">{trip.visitCount}</td>
   <!-- Liquidation -->
   <td class="cell-balance">
-    <span>{trip.liquidationValue}</span><span class="grey">/{trip.tripCreationCost} </span>
+    {#if trip.liquidated}
+      <span>{trip.liquidationValue}</span><span class="grey">/{trip.tripCreationCost} </span>
+    {:else}
+      <span>{trip.balance}</span><span class="grey">/{trip.tripCreationCost} </span>
+    {/if}
   </td>
   <!-- Profit -->
   <td class="cell-profit">
