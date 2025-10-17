@@ -1,42 +1,30 @@
 <script lang="ts">
   import type { TripEvent, PendingTrip } from "$lib/components/Admin/types"
   import { derived } from "svelte/store"
-  import { playerActiveTrips, profitLoss } from "$lib/modules/state/stores"
-  import {
-    entriesChronologically,
-    entriesChronologicallyDesc,
-    entriesByProfit,
-    entriesByProfitDesc,
-    entriesByVisit,
-    entriesByVisitDesc
-  } from "$lib/components/Trip/TripListing/sortFunctions"
-  import { staticContent } from "$lib/modules/content"
+  import { profitLoss } from "$lib/modules/state/stores"
+  import * as sortFunctions from "$lib/components/Trip/TripListing/sortFunctions"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
 
   import AdminActiveTripTableItem from "./AdminActiveTripTableItem.svelte"
   import AdminPendingTripTableItem from "./AdminPendingTripTableItem.svelte"
 
-  import { createPlotsFromTripList } from "../helpers"
-
-  let { focus = $bindable(), pendingTrip }: { focus: string; pendingTrip: PendingTrip } = $props()
-
-  let sortDirection = $state<"asc" | "desc">("asc")
-
-  let sortFunction = $state(
-    sortDirection === "asc" ? entriesChronologically : entriesChronologicallyDesc
-  )
+  let {
+    focus = $bindable(),
+    pendingTrip,
+    tripList,
+    plots,
+    sortFunction = $bindable(),
+    sortDirection = $bindable()
+  }: {
+    focus: string
+    pendingTrip: PendingTrip
+    tripList: [string, Trip][]
+    plots: Record<string, TripEvent[]>
+    sortFunction: (a: [string, Trip], b: [string, Trip]) => number
+    sortDirection: "asc" | "desc"
+  } = $props()
 
   let sortFunctionName = $derived(sortFunction.name)
-
-  let plots: Record<string, TripEvent[]> = $derived.by(() => {
-    return createPlotsFromTripList(tripList, $staticContent)
-  })
-
-  // Why is the table not using the TripEvent[] data created in Admin.svelte?
-  let tripList = $derived.by(() => {
-    let entries = Object.entries($playerActiveTrips)
-    return entries.sort(sortFunction)
-  })
 
   const portfolioClass = derived([profitLoss], ([$profitLoss]) => {
     if ($profitLoss === 0) return "neutral"
@@ -44,12 +32,12 @@
   })
 
   const sortByVisit = () => {
-    sortFunction = sortDirection === "asc" ? entriesByVisit : entriesByVisitDesc
+    sortFunction = sortDirection === "asc" ? sortFunctions.entriesByVisit : sortFunctions.entriesByVisitDesc
     sortDirection = sortDirection === "asc" ? "desc" : "asc"
   }
 
   const sortByProfit = () => {
-    sortFunction = sortDirection === "asc" ? entriesByProfit : entriesByProfitDesc
+    sortFunction = sortDirection === "asc" ? sortFunctions.entriesByProfit : sortFunctions.entriesByProfitDesc
     sortDirection = sortDirection === "asc" ? "desc" : "asc"
   }
 </script>

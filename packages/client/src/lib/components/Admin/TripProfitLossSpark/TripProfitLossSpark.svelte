@@ -6,7 +6,7 @@
     TripEventVisit
   } from "$lib/components/Admin/types"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
-  import { scaleTime, scaleLinear } from "d3-scale"
+  import { scaleLinear } from "d3-scale"
   import { max, min } from "d3-array"
   import { line } from "d3-shape"
 
@@ -31,46 +31,23 @@
   let innerWidth = $derived(width - padding.left - padding.right)
   let innerHeight = $derived(height - padding.top - padding.bottom)
 
-  // Calculate profit/loss data (balance - initial investment)
-  // !!! Should be retyped?
-  let profitLossData = $derived.by(() => {
-    if (!plotData || plotData.length === 0) return []
-
-    const initialCost = plotData[0].value
-    return plotData.map(point => ({
-      time: point.time,
-      value: point.value - initialCost,
-      meta: {
-        ...point.meta,
-        balance: point.value,
-        investment: initialCost
-      }
-    }))
-  })
-
   // Computed values
   let xScale = $derived.by(() => {
     // Ensure data exists, has items, and innerWidth is calculated
     if (!plotData || plotData.length === 0 || !innerWidth) return null
 
-    // Use the first point's time as the domain start, max time as the end
-    // Handle the case where there's only one data point
-    const domainStart = plotData[0].time
-    const domainEnd = max(
-      plotData,
-      (d: TripEventCreation | TripEventLiquidation | TripEventDeath | TripEventVisit) => d.time
-    )
-    const finalDomainEnd =
-      domainEnd !== undefined && domainEnd > domainStart ? domainEnd : domainStart + 1 // Add a minimal duration if only one point or max isn't greater
+    // Evenly space events by index
+    const domainStart = 0
+    const domainEnd = plotData.length - 1
 
-    return scaleTime().domain([domainStart, finalDomainEnd]).range([0, innerWidth])
+    return scaleLinear().domain([domainStart, domainEnd]).range([0, innerWidth])
   })
 
   let yScale = $derived.by(() => {
-    if (!profitLossData || profitLossData.length === 0 || !innerHeight) return null
+    if (!plotData || plotData.length === 0 || !innerHeight) return null
 
-    const maxValue = Number(max(profitLossData, d => +d.value) ?? 0)
-    const minValue = Number(min(profitLossData, d => +d.value) ?? 0)
+    const maxValue = Number(max(plotData, d => +d.value) ?? 0)
+    const minValue = Number(min(plotData, d => +d.value) ?? 0)
     const fraction = (maxValue - minValue) / 12
 
     return scaleLinear()
@@ -83,8 +60,8 @@
   let lineGenerator = $derived(
     xScale && yScale
       ? line<TripEventCreation | TripEventLiquidation | TripEventDeath | TripEventVisit>()
-          .x((d: TripEventCreation | TripEventLiquidation | TripEventDeath | TripEventVisit) =>
-            xScale(d.time)
+          .x((d: TripEventCreation | TripEventLiquidation | TripEventDeath | TripEventVisit, i: number) =>
+            xScale(i)
           )
           .y((d: TripEventCreation | TripEventLiquidation | TripEventDeath | TripEventVisit) =>
             yScale(+d.value)
@@ -100,16 +77,16 @@
     </div>
   {:else}
     <div class="graph" bind:clientWidth={width}>
-      {#if profitLossData?.length === 1}
+      {#if plotData?.length === 1}
         <div style:height="{height}px" class="no-data">
           <span>NO DATA</span>
         </div>
-      {:else if profitLossData && width && xScale && yScale && lineGenerator}
+      {:else if plotData && width && xScale && yScale && lineGenerator}
         <svg {width} {height}>
           <g transform="translate({padding.left}, {padding.top})">
             <!-- Profit/loss line -->
             <path
-              d={lineGenerator(profitLossData)}
+              d={lineGenerator(plotData)}
               stroke="var(--color-grey-light)"
               stroke-width={2}
               fill="none"

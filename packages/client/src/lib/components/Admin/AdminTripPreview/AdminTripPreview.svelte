@@ -21,8 +21,9 @@
   let {
     tripId,
     trip,
+    liquidating,
     sanityTripContent
-  }: { tripId: Hex; trip: Trip; sanityTripContent: SanityTrip } = $props()
+  }: { tripId: Hex; trip: Trip; liquidating?: boolean; sanityTripContent: SanityTrip } = $props()
 
   let tripOutcomes = $state<Outcome[]>()
   /// !!! Where is this set?
@@ -32,8 +33,6 @@
   // Show liquidate button if:
   //  * - Trip is not depleted
   let showLiquidateButton = $derived(trip.balance > 0)
-
-  let liquidating = $state(false)
   let blockUntilUnlock = $derived(
     Number(trip.creationBlock) + $gameConfig.cooldownCloseTrip - Number($blockNumber)
   )
@@ -45,7 +44,6 @@
       const index = graphData.findIndex(p => p?.meta?._id === id)
       return index
     }
-    liquidating = page.url.searchParams.has("liquidate") && blockUntilUnlock <= 0
     focusEvent = Number(page.url.searchParams.get("focusEvent")) || -1
     if (page.url.searchParams.has("focusId")) {
       focusEvent = getEventIndexFromId(page.url.searchParams.get("focusId")!)

@@ -1,71 +1,42 @@
 <script lang="ts">
   import type { TripEvent } from "$lib/components/Admin/types"
-  import { playerLiquidatedTrips, realisedProfitLoss } from "$lib/modules/state/stores"
+  import { realisedProfitLoss } from "$lib/modules/state/stores"
   import { derived } from "svelte/store"
-  import {
-    entriesChronologically,
-    // entriesChronologicallyDesc,
-    entriesByRealisedProfit,
-    entriesByRealisedProfitDesc,
-    entriesByVisit,
-    entriesByVisitDesc
-  } from "$lib/components/Trip/TripListing/sortFunctions"
-  import { staticContent } from "$lib/modules/content"
+  import * as sortFunctions from "$lib/components/Trip/TripListing/sortFunctions"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
 
   import AdminPastTripTableItem from "../AdminPastTripTable/AdminPastTripTableItem.svelte"
-  import { createPlotsFromTripList } from "../helpers"
 
-  let { focus = $bindable() }: { focus: string } = $props()
+  let {
+    focus = $bindable(),
+    tripList,
+    plots,
+    sortFunction = $bindable(),
+    sortDirection = $bindable()
+  }: {
+    focus: string
+    tripList: [string, Trip][]
+    plots: Record<string, TripEvent[]>
+    sortFunction: (a: [string, Trip], b: [string, Trip]) => number
+    sortDirection: "asc" | "desc"
+  } = $props()
 
-  let sortDirection = $state<"asc" | "desc">("asc")
-  let sortFunction = $state(entriesChronologically)
   let sortFunctionName = $derived(sortFunction.name)
 
   const sortByVisit = () => {
-    sortFunction = sortDirection === "asc" ? entriesByVisit : entriesByVisitDesc
+    sortFunction = sortDirection === "asc" ? sortFunctions.entriesByVisit : sortFunctions.entriesByVisitDesc
     sortDirection = sortDirection === "asc" ? "desc" : "asc"
   }
 
   const sortByProfit = () => {
-    sortFunction = sortDirection === "asc" ? entriesByRealisedProfit : entriesByRealisedProfitDesc
+    sortFunction = sortDirection === "asc" ? sortFunctions.entriesByRealisedProfit : sortFunctions.entriesByRealisedProfitDesc
     sortDirection = sortDirection === "asc" ? "desc" : "asc"
   }
-
-  // const sortByAge = () => {
-  //   sortFunction = sortDirection === "asc" ? entriesChronologically : entriesChronologicallyDesc
-  //   sortDirection = sortDirection === "asc" ? "desc" : "asc"
-  // }
-
-  // Why is the table not using the TripEvent[] data created in Admin.svelte?
-  let tripList = $derived.by(() => {
-    let entries = Object.entries($playerLiquidatedTrips)
-    return entries.sort(sortFunction)
-  })
-
-  let plots: Record<string, TripEvent[]> = $derived.by(() => {
-    return createPlotsFromTripList(tripList, $staticContent)
-  })
-
-  // let taxes = $derived(
-  //   Math.ceil(
-  //     Object.values($playerLiquidatedTrips).reduce(
-  //       (total, trip) =>
-  //         total + (Number(trip.liquidationValue) * Number(trip.liquidationTaxPercentage)) / 100,
-  //       0
-  //     )
-  //   )
-  // )
 
   const portfolioClass = derived([realisedProfitLoss], ([$realisedProfitLoss]) => {
     if ($realisedProfitLoss === 0) return "neutral"
     return $realisedProfitLoss > 0 ? "upText" : "downText"
   })
-
-  // const taxClass = derived([realisedProfitLoss], ([$realisedProfitLoss]) => {
-  //   if ($realisedProfitLoss === 0) return "neutral"
-  //   return $realisedProfitLoss > 0 ? "upText" : "downText"
-  // })
 </script>
 
 <div class="admin-trip-table-container">

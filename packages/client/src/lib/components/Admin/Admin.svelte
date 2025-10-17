@@ -3,13 +3,19 @@
   import type { TripEventBaseline, TripEvent, PendingTrip } from "$lib/components/Admin/types"
   import { TRIP_EVENT_TYPE } from "$lib/components/Admin/enums"
 
-  import { playerTrips, playerActiveTrips, player } from "$lib/modules/state/stores"
+  import {
+    playerTrips,
+    playerActiveTrips,
+    playerLiquidatedTrips,
+    player
+  } from "$lib/modules/state/stores"
   import { focusEvent } from "$lib/modules/ui/state.svelte"
   import { getModalState } from "$lib/components/Shared/Modal/state.svelte"
   import { backgroundMusic } from "$lib/modules/sound/stores"
   import { playSound } from "$lib/modules/sound"
   import { staticContent } from "$lib/modules/content"
-  import { calculateProfitLossForTrip, createPlotsFromTripList } from "./helpers"
+  import { calculateProfitLossForTrip } from "./helpers"
+  import * as sortFunctions from "$lib/components/Trip/TripListing/sortFunctions"
 
   import AdminEventLog from "$lib/components/Admin/AdminEventLog/AdminEventLog.svelte"
   import CreateTrip from "$lib/components/Admin/CreateTrip/CreateTrip.svelte"
@@ -23,6 +29,52 @@
   let focus = $state("")
   let pendingTrip = $state<PendingTrip>(null)
   let clientHeight = $state(0)
+
+  // Sorting state for active trips
+  let activeTripsSortDirection = $state<"asc" | "desc">("asc")
+  let activeTripsSortFunction = $state(sortFunctions.entriesChronologically)
+
+  // Sorting state for past trips
+  let pastTripsSortDirection = $state<"asc" | "desc">("asc")
+  let pastTripsSortFunction = $state(sortFunctions.entriesChronologically)
+
+  // Calculate plot data for all trips
+  let allSparkPlots = $derived.by(() => {
+    const plots: Record<string, TripEvent[]> = {}
+
+    Object.entries($playerTrips).forEach(([tripId, trip]) => {
+      const sanityTripContent = $staticContent?.trips?.find(r => r._id == tripId)
+      if (!sanityTripContent) return
+
+      const outcomes = $staticContent?.outcomes?.filter(o => o.tripId == tripId) || []
+      const profitLoss = calculateProfitLossForTrip(trip, tripId, sanityTripContent, outcomes, true)
+
+      // Accumulate the value changes and add index
+      let runningBalance = 0
+      plots[tripId] = profitLoss.map((point, index) => {
+        runningBalance += point.valueChange || 0
+        return {
+          ...point,
+          index,
+          value: runningBalance
+        }
+      })
+    })
+
+    return plots
+  })
+
+  // Sorted active trips
+  let activeTripsList = $derived.by(() => {
+    let entries = Object.entries($playerActiveTrips)
+    return entries.sort(activeTripsSortFunction)
+  })
+
+  // Sorted past trips
+  let pastTripsList = $derived.by(() => {
+    let entries = Object.entries($playerLiquidatedTrips)
+    return entries.sort(pastTripsSortFunction)
+  })
 
   // Data processing logic moved from ProfitLossHistoryGraph
   let graphData = $derived.by(() => {
@@ -122,13 +174,26 @@
   <div class="admin-row bottom">
     <!-- Active trips -->
     <div class="active-trip-table-container">
-      <AdminActiveTripTable bind:focus {pendingTrip} />
+      <AdminActiveTripTable
+        bind:focus
+        {pendingTrip}
+        tripList={activeTripsList}
+        plots={allSparkPlots}
+        bind:sortFunction={activeTripsSortFunction}
+        bind:sortDirection={activeTripsSortDirection}
+      />
     </div>
     <!-- Divider -->
     <div class="admin-divider warning-mute"></div>
     <!-- Past trips -->
     <div class="past-trip-table-container">
-      <AdminPastTripTable bind:focus />
+      <AdminPastTripTable
+        bind:focus
+        tripList={pastTripsList}
+        plots={allSparkPlots}
+        bind:sortFunction={pastTripsSortFunction}
+        bind:sortDirection={pastTripsSortDirection}
+      />
     </div>
   </div>
 </div>

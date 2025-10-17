@@ -25,7 +25,7 @@
 
   const focus = $derived(localFocusEvent === point.index)
 
-  const timeStamp = timeSince(new Date(point.time).getTime())
+  let timeStamp = $derived(timeSince(new Date(point.time).getTime()))
 
   const href = $derived.by(() => {
     // For visit and death events, meta is SanityOutcome
