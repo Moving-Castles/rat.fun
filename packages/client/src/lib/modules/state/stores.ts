@@ -212,12 +212,12 @@ export const ratTotalValue = derived([rat, ratInventory], ([$rat, $ratInventory]
 // ADMIN STORES
 // * * * * * * * * * * * * * * * * *
 
-export const investment = derived(playerActiveTrips, $playerActiveTrips =>
-  Object.values($playerActiveTrips).reduce((a, b) => a + Number(b.tripCreationCost ?? 0), 0)
+export const investment = derived(playerNonDepletedTrips, $playerNonDepletedTrips =>
+  Object.values($playerNonDepletedTrips).reduce((a, b) => a + Number(b.tripCreationCost ?? 0), 0)
 )
 
-export const balance = derived(playerActiveTrips, $playerActiveTrips =>
-  Object.values($playerActiveTrips).reduce((a, b) => a + Number(b.balance ?? 0), 0)
+export const balance = derived(playerNonDepletedTrips, $playerNonDepletedTrips =>
+  Object.values($playerNonDepletedTrips).reduce((a, b) => a + Number(b.balance ?? 0), 0)
 )
 
 export const profitLoss = derived([balance, investment], ([$b, $i]) => {

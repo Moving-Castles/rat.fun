@@ -54,12 +54,12 @@ export function calculateProfitLossForTrip(
    * ADD VISIT/DEATH EVENTS
    **************************/
   tripOutcomes.forEach((outcome, i) => {
-    const previousTrip = tripOutcomes[i - 1]
+    const previousOutcome = tripOutcomes[i - 1]
 
     const outcomeTime = new Date(outcome._createdAt).getTime()
-    const previousTripValue = previousTrip?.tripValue || Number(trip.tripCreationCost) // Value from the previous trip, and if it's the first outcome, creation cost of the trip
+    const previousOutcomeValue = previousOutcome?.tripValue || Number(trip.tripCreationCost) // Value from the previous trip, and if it's the first outcome, creation cost of the trip
     const currentTripValue = outcome.tripValue || 0
-    const valueChange = currentTripValue - previousTripValue
+    const valueChange = currentTripValue - previousOutcomeValue
 
     let eventData = {} as TripEventDeath | TripEventVisit
 
@@ -95,14 +95,22 @@ export function calculateProfitLossForTrip(
   /***************************
    * ADD LIQUIDATION EVENT
    **************************/
-  if (trip.liquidationBlock && trip.liquidationValue !== undefined && !excludeLiquidation) {
-    const liquidationTime = blockNumberToTimestamp(Number(trip.liquidationBlock))
+  if (
+    (trip.liquidationBlock && trip.liquidationValue !== undefined) ||
+    (Number(trip.balance) === 0 && !excludeLiquidation)
+  ) {
+    let liquidationTime = 0
+    let liquidationValueChange = 0
 
-    // Get the last trip value before liquidation
-    const lastOutcome = tripOutcomes[tripOutcomes.length - 1]
-    const finalTripValue = lastOutcome?.tripValue || 0
-
-    const liquidationValueChange = Number(trip.tripCreationCost) - Number(trip.liquidationValue)
+    if (trip.liquidated) {
+      liquidationTime = blockNumberToTimestamp(Number(trip.liquidationBlock))
+      liquidationValueChange = Number(trip.tripCreationCost) - Number(trip.liquidationValue)
+    } else {
+      // get previous outcome
+      const lastOutcome = outcomes?.[outcomes.length - 1]
+      liquidationTime = new Date(lastOutcome?._createdAt)?.getTime() + 1 || 1
+      liquidationValueChange = Number(trip.tripCreationCost)
+    }
 
     // Liquidation: you get back the trip value (before tax) and close the position
     tripData.push({
