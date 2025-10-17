@@ -23,13 +23,17 @@
   } from "$lib/components/Rat/state.svelte"
   import { backgroundMusic } from "$lib/modules/sound/stores"
 
-  onMount(() => {
+  onMount(async () => {
     shaderManager.setShader("clouds", true)
     $backgroundMusic?.stop()
     $backgroundMusic = playSound("ratfunMusic", "main", true)
 
     // Set state to RAT_BOX_STATE.INIT
     resetRatBoxState()
+
+    // HACK: wait a little to allow to token balance to be updated
+    // to avoid having $playerIsBroke be true when it shouldn't
+    await new Promise(resolve => setTimeout(resolve, 100))
 
     if ($rat) {
       if ($rat.dead) {
