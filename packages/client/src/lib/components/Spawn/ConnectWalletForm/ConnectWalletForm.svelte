@@ -11,13 +11,6 @@
     onComplete: () => void
   }>()
 
-  let message = $derived(
-    walletType === WALLET_TYPE.ENTRYKIT
-      ? "Connect your wallet to proceed."
-      : "Connect your wallet to proceed."
-  )
-
-  let messageElement: HTMLParagraphElement | null = $state(null)
   let buttonElement: HTMLDivElement | null = $state(null)
 
   const timeline = gsap.timeline()
@@ -72,20 +65,14 @@
   }
 
   onMount(() => {
-    if (!messageElement) {
+    if (!buttonElement) {
       return
     }
 
     // Set initial opacity to 0
-    messageElement.style.opacity = "0"
-    if (buttonElement) buttonElement.style.opacity = "0"
+    buttonElement.style.opacity = "0"
 
     // Animate opacity to 1
-    timeline.to(messageElement, {
-      opacity: 1,
-      duration: 0.4,
-      delay: 0.4
-    })
     if (buttonElement) {
       timeline.to(buttonElement, {
         opacity: 1,
@@ -97,10 +84,9 @@
 
 <div class="outer-container">
   <div class="inner-container">
-    <p bind:this={messageElement}>{message}</p>
     {#if walletType === WALLET_TYPE.ENTRYKIT}
       <div class="button-container" bind:this={buttonElement}>
-        <BigButton text="Connect EntryKit" onclick={onEntrykitButtonClick} />
+        <BigButton text="Connect wallet" onclick={onEntrykitButtonClick} />
       </div>
       <div class="entrykit-button-container">
         <div bind:this={$entryKitButton}></div>
@@ -129,13 +115,6 @@
       justify-content: center;
       width: 500px;
       max-width: 90dvw;
-
-      p {
-        font-size: var(--font-size-large);
-        background: var(--background);
-        color: var(--foreground);
-        padding: 10px;
-      }
 
       .button-container {
         width: 100%;
