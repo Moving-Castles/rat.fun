@@ -29,13 +29,11 @@ export const getEnvironmentFromUrl = (url: URL) => {
 
   if (hostname.includes("sepolia") || url.searchParams.has("sepolia")) {
     return ENVIRONMENT.BASE_SEPOLIA
-  }
-
-  if (hostname.includes("base") || url.searchParams.has("base")) {
+  } else if (hostname === "rat.fun" || url.searchParams.has("mainnet")) {
     return ENVIRONMENT.BASE
+  } else {
+    return ENVIRONMENT.DEVELOPMENT
   }
-
-  return ENVIRONMENT.DEVELOPMENT
 }
 
 export const getEnvironment = (): ENVIRONMENT => {
