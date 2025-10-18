@@ -1,12 +1,16 @@
 import { ResolvedTemplateImages } from "@modules/types"
-import { pickRandomMultiple, pickRandom } from "@modules/utils"
-import { PROMPTS } from "./prompts"
+import { pickRandom } from "@modules/utils"
 import Replicate from "replicate"
 import type { FileOutput } from "replicate"
 import sharp from "sharp"
 import { ReplicateError } from "@modules/error-handling/errors"
+import * as path from "path"
+import { fileURLToPath } from "url"
 
 import dotenv from "dotenv"
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 dotenv.config()
 
 const client = new Replicate({
@@ -14,12 +18,13 @@ const client = new Replicate({
 })
 
 const MODEL = {
-  SD: "stability-ai/stable-diffusion-3.5-large"
+  SD: "stability-ai/stable-diffusion-3.5-medium"
 }
 
 const makePrompt = (prompt: string) => {
-  const randomPrompts = pickRandomMultiple(PROMPTS, 4).join(" ")
-  return `STYLE: ${randomPrompts}. SCENE:${prompt}`
+  // const randomPrompts = pickRandomMultiple(PROMPTS, 2).join(" ")
+  const postFix = "rat-faced, 4K, highly detailed, high contrast,  extreme fisheye distortion"
+  return `SCENE: ${prompt}. STYLE: ${postFix}`
 }
 
 /**
@@ -36,12 +41,12 @@ export const generateImage = async (prompt: string, templateImages: ResolvedTemp
     SD: {
       image,
       prompt: makePrompt(prompt),
-      cfg: 2,
+      cfg: 1.3,
       aspect_ratio: "1:1",
       output_format: "webp",
-      output_quality: 80,
-      prompt_strength: 0.8,
-      steps: 28
+      output_quality: 100,
+      prompt_strength: 1.0,
+      steps: 1
     }
   }
 
@@ -123,8 +128,25 @@ export const generateImage = async (prompt: string, templateImages: ResolvedTemp
 
     // Process image with sharp
     const processedBuffer = await sharp(buffer)
+      // Merge with noise texture first
+      .composite([
+        {
+          input: await sharp(path.join(__dirname, "noise.png"))
+            .modulate({ brightness: 0.3 })
+            .toBuffer(),
+          blend: "overlay"
+        }
+      ])
+      // Add coarse grain before sharp modulation
+      // .convolve({
+      //   width: 3,
+      //   height: 3,
+      //   kernel: [-1, -1, -1, -1, 9, -1, -1, -1, -1]
+      // })
+      // .linear(1.5, 20) // Contrast: 1.5x multiplier, Brightness: +20 offset
       .modulate({
-        saturation: 3
+        saturation: 2,
+        hue: Math.floor(Math.random() * 360)
       })
       .toBuffer()
 
