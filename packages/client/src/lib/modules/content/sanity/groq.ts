@@ -35,7 +35,7 @@ export const queries = {
     ...,
     "readableLog": array::join(log[]{"entry": timestamp + " => " + event}.entry, ", ")
   }`,
-  singleTrip: `*[_type == "trip" && _id == $id][0]`,
+  singleTrip: `*[_type == "trip" && _id == $id && worldAddress == $worldAddress][0]`,
   singleOutcome: `*[_type == "outcome" && _id == $id][0] {
     ...,
     "readableLog": array::join(log[]{"entry": timestamp + " => " + event}.entry, ", ")

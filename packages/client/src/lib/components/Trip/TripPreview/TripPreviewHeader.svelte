@@ -1,31 +1,46 @@
 <script lang="ts">
+  import type { Hex } from "viem"
   import { getTripMaxValuePerWin, getTripOwnerName } from "$lib/modules/state/utils"
-  import { lastUpdated } from "$lib/modules/content"
+  import { lastUpdated, staticContent } from "$lib/modules/content"
   import { urlFor } from "$lib/modules/content/sanity"
   import { NoImage } from "$lib/components/Shared"
 
-  let { trip, sanityTripContent }: { trip: Trip; sanityTripContent: any } = $props()
+  let { trip, sanityTripContent, tripId }: { trip: Trip; sanityTripContent: any; tripId?: Hex } =
+    $props()
 
   const maxValuePerWin = getTripMaxValuePerWin(trip.tripCreationCost, trip.balance)
+
+  // Get trip content from staticContent store instead of props
+  let tripContentFromStore = $derived(
+    $staticContent?.trips?.find(r => r._id.trim() == tripId?.trim()) ?? undefined
+  )
+
+  let tripImageUrl = $derived.by(() => {
+    const image = tripContentFromStore?.image
+    if (image) {
+      // Only call urlFor if image is defined
+      const urlBuilder = urlFor(image)
+      return (urlBuilder as any)?.width(600)?.auto("format")?.url()
+    } else {
+      return false
+    }
+  })
 </script>
 
 <div class="trip-preview-header">
   <!-- IMAGE -->
   <!-- svelte-ignore a11y_click_events_have_key_events -->
   <!-- svelte-ignore a11y_no_static_element_interactions -->
-  <div class="image">
-    {#key $lastUpdated}
-      {#if sanityTripContent?.image?.asset}
-        <img
-          src={urlFor(sanityTripContent?.image)?.width?.(600)?.height(600)?.url() ?? ""}
-          alt={`trip #${trip.index}`}
-        />
-      {:else}
-        <div class="image-placeholder">
+  <div class="column left">
+    <div class="trip-image">
+      {#key $lastUpdated}
+        {#if tripImageUrl}
+          <img src={tripImageUrl} alt={`trip #${trip.index}`} />
+        {:else}
           <NoImage />
-        </div>
-      {/if}
-    {/key}
+        {/if}
+      {/key}
+    </div>
   </div>
   <!-- INFO -->
   <div class="info">
@@ -77,27 +92,35 @@
     display: flex;
     flex-direction: row;
     background: var(--background);
-    height: 200px;
+    height: 300px;
 
-    .image {
-      line-height: 0;
-      cursor: pointer;
-      height: 100%;
-      flex-shrink: 0;
-
-      img {
+    .column {
+      &.left {
         height: 100%;
-        width: auto;
-        object-fit: contain;
-        mix-blend-mode: screen;
-      }
-
-      .image-placeholder {
-        height: 100%;
-        aspect-ratio: 1/1;
+        width: 280px;
+        margin-right: 10px;
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
+        z-index: var(--z-base);
+
+        .trip-image {
+          line-height: 0;
+          width: 280px;
+          mix-blend-mode: screen;
+          border-radius: 50%;
+          border: 5px solid rgba(255, 255, 255, 0.2);
+          overflow: hidden;
+
+          img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            aspect-ratio: 1/1;
+            object-fit: cover;
+          }
+        }
       }
     }
 

@@ -3,6 +3,8 @@
   import { playSound } from "$lib/modules/sound"
   import { backgroundMusic } from "$lib/modules/sound/stores"
   import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
+  import { environment } from "$lib/modules/network"
+  import { ENVIRONMENT } from "$lib/mud/enums"
 
   const { onComplete, result }: { onComplete: () => void; result: null | any } = $props()
 
@@ -45,7 +47,9 @@
 </script>
 
 <div class="splash-screen">
-  <div class="timer" class:critical={timerDone}>{timeElapsed.toFixed(1)}s</div>
+  {#if $environment !== ENVIRONMENT.BASE}
+    <div class="timer" class:critical={timerDone}>{timeElapsed.toFixed(1)}s</div>
+  {/if}
   <div class="inner"></div>
 </div>
 

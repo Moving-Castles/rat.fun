@@ -12,7 +12,7 @@ export const client = createClient({
   projectId: PUBLIC_SANITY_CMS_ID,
   dataset: "production",
   apiVersion: "2025-06-01",
-  useCdn: true
+  useCdn: false
 })
 
 const builder = imageUrlBuilder(client)

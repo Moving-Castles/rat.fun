@@ -104,6 +104,10 @@
 
     &:hover {
       background-color: var(--background);
+
+      // .trip-image img {
+      //   transform: scale(1.5);
+      // }
     }
 
     .column {
@@ -118,7 +122,10 @@
         .trip-image {
           line-height: 0;
           width: 100%;
-          mix-blend-mode: multiply;
+          mix-blend-mode: screen;
+          border-radius: 50%;
+          border: 5px solid rgba(255, 255, 255, 0.2);
+          overflow: hidden;
 
           img {
             display: block;

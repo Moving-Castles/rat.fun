@@ -61,7 +61,7 @@
 
   <!-- Header -->
   <div class="trip-header">
-    <TripPreviewHeader {trip} {sanityTripContent} />
+    <TripPreviewHeader {trip} {sanityTripContent} {tripId} />
   </div>
 
   <!-- Prompt -->
@@ -100,7 +100,7 @@
       border-bottom: var(--default-border-style);
       flex-shrink: 0;
       overflow: hidden;
-      height: 200px;
+      height: 300px;
     }
 
     .trip-prompt {
