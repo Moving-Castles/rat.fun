@@ -1,6 +1,6 @@
 <script lang="ts">
   import { goto } from "$app/navigation"
-  import { fly, fade } from "svelte/transition"
+  import { fly } from "svelte/transition"
   import { page } from "$app/state"
   import { player } from "$lib/modules/state/stores"
 
@@ -13,7 +13,7 @@
   $effect(() => {
     if ($player) {
       if (!$player.masterKey) {
-        if (page.route.id === "/(main)/admin/[tripId]") {
+        if (page.route.id === "/(main)/cashboard/[tripId]") {
           goto(`/${page.params.tripId}`)
         } else {
           goto("/")
@@ -27,7 +27,7 @@
 
 <Admin />
 
-{#if page.route.id !== "/(main)/admin"}
+{#if page.route.id !== "/(main)/cashboard"}
   <div
     in:fly|global={{ x: -800, opacity: 1, duration: 200 }}
     out:fly|global={{ x: -800, opacity: 1, duration: 200 }}

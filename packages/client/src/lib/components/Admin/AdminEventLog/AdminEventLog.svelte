@@ -43,7 +43,7 @@
   {/each}
   {#if !hideUnlockEvent}
     <p class="event">
-      You unlocked the panel
+      You unlocked the cashboard
       <span class="meta">
         {timeSince(new Date($adminUnlockedAt).getTime())}
       </span>

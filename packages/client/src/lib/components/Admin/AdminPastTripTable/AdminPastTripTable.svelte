@@ -102,6 +102,7 @@
   .admin-trip-table {
     width: 100%;
     table-layout: fixed;
+    border-collapse: collapse;
   }
 
   .table-summary {
@@ -142,6 +143,7 @@
 
   .cell-prompt {
     padding: 0 6px;
+    text-align: left;
   }
 
   .cell-visits {

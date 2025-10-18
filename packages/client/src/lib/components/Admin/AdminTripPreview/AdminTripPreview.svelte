@@ -44,7 +44,7 @@
   let event = $derived(graphData[focusEvent])
 
   const onBackButtonClick = () => {
-    goto("/admin")
+    goto("/cashboard")
   }
 
   onMount(() => {
@@ -110,7 +110,7 @@
     {trip}
     tripContent={sanityTripContent}
     onDone={async () => {
-      await goto("/admin")
+      await goto("/cashboard")
       liquidating = false
     }}
     onAbort={() => {

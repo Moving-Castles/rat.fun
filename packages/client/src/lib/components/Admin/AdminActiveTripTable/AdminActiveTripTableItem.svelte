@@ -24,13 +24,13 @@
   // Go to trip preview
   const rowOnMouseDown = () => {
     playSound("ratfunUI", "panelIn")
-    goto("/admin/" + id, { noScroll: false })
+    goto("/cashboard/" + id, { noScroll: false })
   }
 
   // Start liquidation
   const liquidateButtonOnMouseUp = (e: MouseEvent) => {
     e.stopPropagation()
-    goto("/admin/" + id + "?liquidate", { noScroll: false })
+    goto("/cashboard/" + id + "?liquidate", { noScroll: false })
   }
 </script>
 

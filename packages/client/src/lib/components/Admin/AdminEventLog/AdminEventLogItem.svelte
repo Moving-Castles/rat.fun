@@ -38,13 +38,13 @@
   const href = $derived.by(() => {
     // For visit and death events, meta is SanityOutcome
     if (point.eventType === TRIP_EVENT_TYPE.VISIT || point.eventType === TRIP_EVENT_TYPE.DEATH) {
-      return `/admin/${point.meta?.tripId}?focusId=${point.meta._id}`
+      return `/cashboard/${point.meta?.tripId}?focusId=${point.meta._id}`
     } else if (
       point.eventType === TRIP_EVENT_TYPE.LIQUIDATION ||
       point.eventType === TRIP_EVENT_TYPE.CREATION
     ) {
       // For liquidation and creation events, meta is SanityTrip
-      return `/admin/${point.meta._id}`
+      return `/cashboard/${point.meta._id}`
     }
   })
 

@@ -8,7 +8,7 @@
   import WorldEvent from "./WorldEvent.svelte"
   import WorldEventCountdown from "./WorldEventCountdown.svelte"
 
-  const isAdminView = $derived(page.route?.id?.includes("/(main)/admin") ?? false)
+  const isAdminView = $derived(page.route?.id?.includes("/(main)/cashboard") ?? false)
 </script>
 
 <div class="top-bar">

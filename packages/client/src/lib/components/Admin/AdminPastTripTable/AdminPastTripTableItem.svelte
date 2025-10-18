@@ -23,11 +23,11 @@
 
   const onmousedown = () => {
     playSound("ratfunUI", "panelIn")
-    goto("/admin/" + id, { noScroll: false })
+    goto("/cashboard/" + id, { noScroll: false })
   }
 </script>
 
-<tr {onmousedown} {onpointerenter} {onpointerleave} class="active-trip-table-item">
+<tr {onmousedown} {onpointerenter} {onpointerleave} class="past-trip-table-item">
   <!-- Index -->
   <td class="cell-index">{Number(trip.index)}</td>
   <!-- Prompt -->
@@ -51,13 +51,14 @@
 </tr>
 
 <style lang="scss">
-  .active-trip-table-item {
+  .past-trip-table-item {
     height: 24px;
     font-size: var(--font-size-small);
     font-family: var(--admin-font-stack);
 
     td {
       vertical-align: middle;
+      height: 24px;
       line-height: 24px;
       border-bottom: 1px solid rgb(59, 59, 59);
       border-right: 1px dashed rgb(59, 59, 59);

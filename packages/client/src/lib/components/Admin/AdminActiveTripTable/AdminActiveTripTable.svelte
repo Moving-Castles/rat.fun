@@ -112,6 +112,7 @@
   .admin-trip-table {
     width: 100%;
     table-layout: fixed;
+    border-collapse: collapse;
   }
 
   .table-summary {
@@ -133,12 +134,6 @@
     width: 100%;
     justify-self: center;
     align-self: center;
-
-    span {
-      background: var(--color-death);
-      padding: 2px;
-      color: var(--background);
-    }
   }
 
   th {
@@ -158,6 +153,7 @@
 
   .cell-prompt {
     padding: 0 6px;
+    text-align: left;
   }
 
   .cell-visits {

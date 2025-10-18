@@ -11,7 +11,7 @@
   const enterAdmin = () => {
     playSound("ratfunTransitions", "adminEnter")
     shaderManager.unsetShader()
-    goto("/admin")
+    goto("/cashboard")
   }
 
   const exitAdmin = () => {

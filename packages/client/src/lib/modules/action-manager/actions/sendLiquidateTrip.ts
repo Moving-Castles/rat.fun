@@ -20,6 +20,6 @@ export async function sendLiquidateTrip(tripId: string) {
     throw new LiquidationError(`Failed to liquidate trip ${tripId}`, tripId, e)
   } finally {
     busy.CloseTrip.set(0, { duration: 0 })
-    goto("/admin")
+    goto("/cashboard")
   }
 }
