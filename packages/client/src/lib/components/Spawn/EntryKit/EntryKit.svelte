@@ -40,12 +40,18 @@
     }
   }
 
+  // TODO remove temporary error handler
+  function _errorHandler(error: unknown) {
+    console.error("EntryKit error:", error)
+    errorHandler(error)
+  }
+
   // ???
   $effect(() => {
     const root = createRoot(rootEl, {
-      onCaughtError: error => errorHandler(error),
-      onRecoverableError: error => errorHandler(error),
-      onUncaughtError: error => errorHandler(error)
+      onCaughtError: error => _errorHandler(error),
+      onRecoverableError: error => _errorHandler(error),
+      onUncaughtError: error => _errorHandler(error)
     })
     const config = wagmiConfig()
 
