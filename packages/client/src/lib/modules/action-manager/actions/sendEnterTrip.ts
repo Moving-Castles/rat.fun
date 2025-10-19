@@ -49,14 +49,21 @@ export async function sendEnterTrip(tripId: string, ratId: string) {
 
   const signedRequest = await signRequest(requestBody)
 
+  // Set up timeout with AbortController (45 seconds to allow for server processing time)
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), 45000)
+
   try {
     const response = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(signedRequest)
+      body: JSON.stringify(signedRequest),
+      signal: controller.signal
     })
+
+    clearTimeout(timeoutId)
 
     if (!response.ok) {
       const error = await response.json()
@@ -71,6 +78,22 @@ export async function sendEnterTrip(tripId: string, ratId: string) {
     busy.EnterTrip.set(0, { duration: 0 })
     return outcome
   } catch (err) {
+    clearTimeout(timeoutId)
+
+    // Better error handling to distinguish between timeout and other errors
+    if (err instanceof Error) {
+      if (err.name === "AbortError") {
+        console.error("Request timed out after 45 seconds")
+        throw new TripError(`Request timed out - trip entry took too long`, tripId)
+      } else if (err.message.includes("Failed to fetch") || err.message.includes("NetworkError")) {
+        console.error("Network error occurred:", err.message)
+        throw new TripError(`Network error - please check your connection`, tripId)
+      } else if (err.message.includes("Unexpected end of JSON input")) {
+        console.error("Incomplete response received:", err.message)
+        throw new TripError(`Incomplete response - server may have disconnected`, tripId)
+      }
+    }
+
     errorHandler(err)
     busy.EnterTrip.set(0, { duration: 0 })
     if (!(err instanceof APIError)) {
