@@ -13,3 +13,4 @@ export const collapsed = writable(true)
 export const adminUnlockedAt = writable(-1)
 
 export const focusEvent = writable(-1)
+export const focusTrip = writable("")

@@ -10,6 +10,9 @@ import {
  * A general-purpose WebGL renderer that can render shaders to a canvas.
  * Supports automatic rendering, uniform management, and performance monitoring.
  */
+// Track active renderers for debugging
+let activeRendererCount = 0
+
 export class WebGLGeneralRenderer implements WebGLRenderer {
   canvas: HTMLCanvasElement
   gl!: WebGLRenderingContext | WebGL2RenderingContext
@@ -28,6 +31,8 @@ export class WebGLGeneralRenderer implements WebGLRenderer {
   private lastFrameTime: number = 0
   private fps: number = 0
   private frameInterval: number = 1000 / 60
+  private shaderSource: ShaderSource
+  private contextLost: boolean = false
 
   /**
    * Creates a new WebGL renderer instance.
@@ -40,7 +45,11 @@ export class WebGLGeneralRenderer implements WebGLRenderer {
     this.uniforms = options.uniforms || {}
     this.autoRender = options.autoRender ?? true
     this.frameInterval = 1000 / 60
+    this.shaderSource = options.shader
     this.initWebGL(options.shader)
+    this.setupContextLossHandlers()
+
+    activeRendererCount++
   }
 
   /**
@@ -148,6 +157,46 @@ export class WebGLGeneralRenderer implements WebGLRenderer {
   }
 
   /**
+   * Sets up WebGL context loss and restore event handlers.
+   */
+  private setupContextLossHandlers(): void {
+    this.canvas.addEventListener("webglcontextlost", this.handleContextLost, false)
+    this.canvas.addEventListener("webglcontextrestored", this.handleContextRestored, false)
+  }
+
+  /**
+   * Handles WebGL context loss event.
+   */
+  private handleContextLost = (event: Event): void => {
+    event.preventDefault()
+    this.contextLost = true
+
+    if (this.animationId) {
+      cancelAnimationFrame(this.animationId)
+      this.animationId = undefined
+    }
+
+    console.warn("WebGL context lost")
+  }
+
+  /**
+   * Handles WebGL context restore event.
+   */
+  private handleContextRestored = (): void => {
+    console.log("WebGL context restored, reinitializing...")
+    this.contextLost = false
+
+    try {
+      this.initWebGL(this.shaderSource)
+      if (this.autoRender) {
+        this.render()
+      }
+    } catch (error) {
+      console.error("Failed to restore WebGL context:", error)
+    }
+  }
+
+  /**
    * Updates all uniforms in the shader program.
    * Sets uniform values based on their type (float, vec2, vec3, vec4, int, bool).
    */
@@ -244,11 +293,16 @@ export class WebGLGeneralRenderer implements WebGLRenderer {
    * If autoRender is enabled, schedules the next frame.
    */
   render(): void {
-    if (!this.gl || !this.program) return
+    if (!this.gl || !this.program || this.contextLost) {
+      if (this.autoRender) {
+        this.animationId = requestAnimationFrame(() => this.render())
+      }
+      return
+    }
 
     const currentTime = performance.now()
 
-    // Frame rate limiting
+    // Frame rate limiting - only schedule next frame after we render
     if (currentTime - this.lastFrameTime < this.frameInterval) {
       if (this.autoRender) {
         this.animationId = requestAnimationFrame(() => this.render())
@@ -311,6 +365,10 @@ export class WebGLGeneralRenderer implements WebGLRenderer {
    * Cancels any pending animation frames and frees WebGL resources.
    */
   destroy(): void {
+    // Remove context loss handlers
+    this.canvas.removeEventListener("webglcontextlost", this.handleContextLost)
+    this.canvas.removeEventListener("webglcontextrestored", this.handleContextRestored)
+
     if (this.animationId) {
       cancelAnimationFrame(this.animationId)
       this.animationId = undefined
@@ -339,6 +397,8 @@ export class WebGLGeneralRenderer implements WebGLRenderer {
         this.positionBuffer = null as any
       }
     }
+
+    activeRendererCount--
   }
 }
 

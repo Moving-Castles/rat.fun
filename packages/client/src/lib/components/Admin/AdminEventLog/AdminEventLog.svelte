@@ -1,35 +1,20 @@
 <script lang="ts">
   import type { TripEvent } from "$lib/components/Admin/types"
   import { timeSince } from "$lib/modules/utils"
-  import { adminUnlockedAt, focusEvent } from "$lib/modules/ui/state.svelte"
+  import { adminUnlockedAt } from "$lib/modules/ui/state.svelte"
   import { TRIP_EVENT_TYPE } from "$lib/components/Admin/enums"
 
   import AdminEventLogItem from "./AdminEventLogItem.svelte"
 
   let {
     graphData,
-    focus = $bindable(),
-    localFocusEvent = $bindable(),
-    nosync = false,
     hideUnlockEvent = false,
     behavior = "hover"
   }: {
     graphData: TripEvent[]
-    focus?: number
-    localFocusEvent?: number
-    nosync?: boolean
     hideUnlockEvent?: boolean
     behavior?: "hover" | "click"
   } = $props()
-
-  const setLocalFocusEvent = (index: number) => {
-    // console.log("setLocalFocusEvent", index)
-    localFocusEvent = index
-    // ???
-    if (!nosync) {
-      $focusEvent = index
-    }
-  }
 
   // Filter out baseline event
   let data = $derived(
@@ -39,7 +24,7 @@
 
 <div class="admin-event-log">
   {#each data as point (point.index)}
-    <AdminEventLogItem {point} {behavior} {localFocusEvent} {setLocalFocusEvent} />
+    <AdminEventLogItem {point} {behavior} />
   {/each}
   {#if !hideUnlockEvent}
     <p class="event">

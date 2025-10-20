@@ -4,6 +4,7 @@
   import { TripProfitLossSpark } from "$lib/components/Admin"
   import { goto } from "$app/navigation"
   import { playSound } from "$lib/modules/sound"
+  import { focusTrip } from "$lib/modules/ui/state.svelte"
 
   let {
     trip,
@@ -34,7 +35,13 @@
   }
 </script>
 
-<tr onmousedown={rowOnMouseDown} {onpointerenter} {onpointerleave} class="active-trip-table-item">
+<tr
+  onmousedown={rowOnMouseDown}
+  {onpointerenter}
+  {onpointerleave}
+  class:focus={$focusTrip === id}
+  class="active-trip-table-item"
+>
   <!-- Index -->
   <td class="cell-index">{Number(trip.index)}</td>
   <!-- Prompt -->
@@ -99,7 +106,7 @@
       border-width: 0;
     }
 
-    &:hover {
+    &.focus {
       cursor: pointer;
       background-color: rgb(59, 59, 59);
     }

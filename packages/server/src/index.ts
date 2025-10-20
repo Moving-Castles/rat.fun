@@ -23,7 +23,7 @@ const fastify = Fastify({
     }
   },
   // Increase timeout for long-running requests like trip/enter
-  requestTimeout: 40000, // 40 seconds
+  requestTimeout: 60000, // 60 seconds (must be longer than client timeout of 45s)
   keepAliveTimeout: 5000, // 5 seconds
   bodyLimit: 1048576 // 1MB
 })

@@ -162,10 +162,8 @@ async function routes(fastify: FastifyInstance) {
         }
 
         console.log("Sending response to client...")
-        reply.send(response)
-        console.log("Response sent successfully")
 
-        // Create and broadcast outcome message AFTER response is sent
+        // Create and broadcast outcome message in background (fire-and-forget)
         console.log("Creating outcome message for broadcast...")
         const outcomeMessage = createOutcomeMessage(
           player,
@@ -175,13 +173,14 @@ async function routes(fastify: FastifyInstance) {
           validatedOutcome
         )
         console.log("Outcome message created, attempting broadcast...")
-        try {
-          await broadcast(outcomeMessage)
-          console.log("Broadcast completed successfully")
-        } catch (error) {
-          console.error("Failed to broadcast outcome message:", error)
-          // Don't fail the request if broadcast fails
-        }
+
+        // Fire-and-forget: don't await the broadcast
+        broadcast(outcomeMessage)
+          .then(() => console.log("Broadcast completed successfully"))
+          .catch((error) => console.error("Failed to broadcast outcome message:", error))
+
+        // Send response and return immediately to close connection properly
+        return reply.send(response)
       } catch (error) {
         throw error
       }

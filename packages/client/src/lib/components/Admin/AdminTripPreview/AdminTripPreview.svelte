@@ -10,6 +10,7 @@
   import { staticContent } from "$lib/modules/content"
   import { page } from "$app/state"
   import { goto } from "$app/navigation"
+  import { focusEvent } from "$lib/modules/ui/state.svelte"
 
   import AdminTripPreviewHeader from "$lib/components/Admin/AdminTripPreview/AdminTripPreviewHeader.svelte"
   import AdminTripEventIntrospection from "$lib/components/Admin/AdminTripEventIntrospection/AdminTripEventIntrospection.svelte"
@@ -19,6 +20,7 @@
   import AdminEventLog from "$lib/components/Admin/AdminEventLog/AdminEventLog.svelte"
 
   import { BackButton } from "$lib/components/Shared"
+  import { proveWithdrawal } from "viem/op-stack"
 
   let {
     tripId,
@@ -29,9 +31,8 @@
 
   let tripOutcomes = $state<Outcome[]>()
 
-  /// !!! Where is this set?
+  /// graphData is set inside ProfitLossGraph
   let graphData = $state<TripEvent[]>([])
-  let focusEvent = $state(-1)
 
   // Show liquidate button if:
   //  * - Trip is not depleted
@@ -41,7 +42,7 @@
     Number(trip.creationBlock) + $gameConfig.cooldownCloseTrip - Number($blockNumber)
   )
 
-  let event = $derived(graphData[focusEvent])
+  let event = $derived(graphData[$focusEvent])
 
   const onBackButtonClick = () => {
     goto("/cashboard")
@@ -52,9 +53,9 @@
       const index = graphData.findIndex(p => p?.meta?._id === id)
       return index
     }
-    focusEvent = Number(page.url.searchParams.get("focusEvent")) || -1
+    $focusEvent = Number(page.url.searchParams.get("focusEvent")) || -1
     if (page.url.searchParams.has("focusId")) {
-      focusEvent = getEventIndexFromId(page.url.searchParams.get("focusId")!)
+      $focusEvent = getEventIndexFromId(page.url.searchParams.get("focusId")!)
     }
 
     const outcomes = $staticContent?.outcomes?.filter(o => o.tripId == tripId) || []
@@ -75,16 +76,10 @@
       <AdminTripPreviewHeader {sanityTripContent} {trip} />
     </div>
     <div class="left">
-      <TripProfitLossGraph behavior="click" {trip} {tripId} bind:graphData bind:focusEvent />
+      <TripProfitLossGraph behavior="click" {trip} {tripId} bind:graphData />
     </div>
     <div class="right">
-      <AdminEventLog
-        {graphData}
-        behavior="click"
-        bind:localFocusEvent={focusEvent}
-        nosync
-        hideUnlockEvent
-      />
+      <AdminEventLog {graphData} behavior="click" hideUnlockEvent />
     </div>
     <div class="full">
       <p class="section-header">Flashbacks</p>

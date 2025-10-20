@@ -48,6 +48,7 @@
         } else if (err.message.includes("api") || err.message.includes("server")) {
           throw new APIError("Trip entry API error: " + err.message, err)
         } else {
+          console.log(err)
           throw new TripError("Trip entry failed: " + err.message, tripId)
         }
       }

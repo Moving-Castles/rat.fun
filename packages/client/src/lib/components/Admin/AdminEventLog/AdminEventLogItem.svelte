@@ -8,19 +8,16 @@
   import { TRIP_EVENT_TYPE, VALUE_CHANGE_DIRECTION } from "$lib/components/Admin/enums"
   import { SignedNumber } from "$lib/components/Shared"
   import { timeSince } from "$lib/modules/utils"
+  import { focusEvent, focusTrip } from "$lib/modules/ui/state.svelte"
 
   import { Tooltip } from "$lib/components/Shared"
 
   let {
     point,
-    behavior = "click",
-    localFocusEvent,
-    setLocalFocusEvent
+    behavior = "click"
   }: {
     point: TripEventVisit | TripEventDeath | TripEventLiquidation | TripEventCreation
     behavior?: "hover" | "click"
-    localFocusEvent?: number
-    setLocalFocusEvent: (index: number) => void
   } = $props()
 
   let valueChangeDirection = $derived(
@@ -31,8 +28,9 @@
         : VALUE_CHANGE_DIRECTION.NEUTRAL
   )
 
-  const focus = $derived(localFocusEvent === point.index)
-
+  let focus = $derived(
+    $focusEvent === point.index || (point.tripId === $focusTrip && $focusEvent === -1)
+  )
   let timeStamp = $derived(timeSince(new Date(point.time).getTime()))
 
   const href = $derived.by(() => {
@@ -50,19 +48,22 @@
 
   const onpointerup = () => {
     if (behavior === "click") {
-      setLocalFocusEvent(point.index)
+      $focusEvent = point.index
+      $focusTrip = point.tripId
     }
   }
 
   const onpointerenter = () => {
     if (behavior === "hover") {
-      setLocalFocusEvent(point.index)
+      $focusEvent = point.index
+      $focusTrip = point.tripId
     }
   }
 
   const onpointerleave = () => {
     if (behavior === "hover") {
-      setLocalFocusEvent(-1)
+      $focusEvent = -1
+      $focusTrip = ""
     }
   }
 

@@ -161,12 +161,12 @@
         />
       </div>
       <div class="p-l-graph">
-        <ProfitLossHistoryGraph {graphData} height={clientHeight} {focus} />
+        <ProfitLossHistoryGraph {graphData} height={clientHeight} />
       </div>
     </div>
     <!-- Event log -->
     <div class="event-log-container">
-      <AdminEventLog {graphData} bind:focus={$focusEvent} />
+      <AdminEventLog {graphData} />
     </div>
   </div>
   <!-- Bottom row -->
@@ -174,7 +174,6 @@
     <!-- Active trips -->
     <div class="active-trip-table-container">
       <AdminActiveTripTable
-        bind:focus
         {pendingTrip}
         tripList={activeTripsList}
         plots={allSparkPlots}
@@ -187,7 +186,6 @@
     <!-- Past trips -->
     <div class="past-trip-table-container">
       <AdminPastTripTable
-        bind:focus
         tripList={pastTripsList}
         bind:sortFunction={pastTripsSortFunction}
         bind:sortDirection={pastTripsSortDirection}

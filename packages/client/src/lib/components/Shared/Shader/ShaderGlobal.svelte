@@ -15,7 +15,6 @@
   onDestroy(() => {
     // Don't destroy the global shader manager here as it's shared across the app
     // The global shader manager should persist for the lifetime of the app
-    // console.log("ShaderGlobal component destroyed, but keeping global shader manager alive")
   })
 </script>
 

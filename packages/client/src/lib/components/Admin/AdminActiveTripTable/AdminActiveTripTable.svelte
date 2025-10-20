@@ -1,22 +1,21 @@
 <script lang="ts">
+  import * as sortFunctions from "$lib/components/Trip/TripListing/sortFunctions"
   import type { TripEvent, PendingTrip } from "$lib/components/Admin/types"
   import { derived } from "svelte/store"
   import { profitLoss } from "$lib/modules/state/stores"
-  import * as sortFunctions from "$lib/components/Trip/TripListing/sortFunctions"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
+  import { focusEvent, focusTrip } from "$lib/modules/ui/state.svelte"
 
   import AdminActiveTripTableItem from "./AdminActiveTripTableItem.svelte"
   import AdminPendingTripTableItem from "./AdminPendingTripTableItem.svelte"
 
   let {
-    focus = $bindable(),
     pendingTrip,
     tripList,
     plots,
     sortFunction = $bindable(),
     sortDirection = $bindable()
   }: {
-    focus: string
     pendingTrip: PendingTrip
     tripList: [string, Trip][]
     plots: Record<string, TripEvent[]>
@@ -91,10 +90,12 @@
           data={plots[tripEntry[0]]}
           trip={tripEntry[1]}
           onpointerenter={() => {
-            focus = tripEntry[0]
+            $focusEvent = -1
+            $focusTrip = tripEntry[0]
           }}
           onpointerleave={() => {
-            focus = ""
+            $focusEvent = -1
+            $focusTrip = ""
           }}
         />
       {/each}

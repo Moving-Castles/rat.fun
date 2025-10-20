@@ -12,8 +12,7 @@
 
   onMount(() => {
     if (canvasElement) {
-      const currentShaderObj = shaders[shaderKey]
-      localShaderManager.initializeRenderer(canvasElement, currentShaderObj)
+      localShaderManager.canvas = canvasElement
       localShaderManager.setShader(shaderKey)
     }
   })

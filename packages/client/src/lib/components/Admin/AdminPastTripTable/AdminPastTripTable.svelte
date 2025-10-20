@@ -1,5 +1,6 @@
 <script lang="ts">
   import { realisedProfitLoss } from "$lib/modules/state/stores"
+  import { focusTrip, focusEvent } from "$lib/modules/ui/state.svelte"
   import { derived } from "svelte/store"
   import * as sortFunctions from "$lib/components/Trip/TripListing/sortFunctions"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
@@ -7,12 +8,10 @@
   import AdminPastTripTableItem from "../AdminPastTripTable/AdminPastTripTableItem.svelte"
 
   let {
-    focus = $bindable(),
     tripList,
     sortFunction = $bindable(),
     sortDirection = $bindable()
   }: {
-    focus: string
     tripList: [string, Trip][]
     sortFunction: (a: [string, Trip], b: [string, Trip]) => number
     sortDirection: "asc" | "desc"
@@ -40,11 +39,13 @@
   })
 
   const onpointerenter = (id: string) => {
-    focus = id
+    $focusTrip = id
+    $focusEvent = -1
   }
 
   const onpointerleave = () => {
-    focus = ""
+    $focusTrip = ""
+    $focusEvent = -1
   }
 </script>
 

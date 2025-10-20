@@ -60,10 +60,16 @@ export const schema = {
             type: "object",
             properties: {
               logStep: { type: "number" },
-              from: { type: "string" },
-              to: { type: "string" },
               amount: { type: "number" }
             }
+          }
+        },
+        debuggingInfo: {
+          type: "object",
+          properties: {
+            internalText: { type: "string" },
+            randomSeed: { type: "number" },
+            batchId: { type: "number" }
           }
         },
         ratDead: { type: "boolean" },
