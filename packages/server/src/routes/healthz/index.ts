@@ -2,6 +2,7 @@ import { FastifyInstance } from "fastify"
 import { createStore } from "@modules/redis"
 import { getLatestBlockNumber } from "@modules/mud/getOnchainData"
 import { network } from "@modules/mud/initMud"
+import { getNetworkConfig } from "@modules/mud/getNetworkConfig"
 
 async function routes(fastify: FastifyInstance, options: object) {
   fastify.get("/healthz", async (request, reply) => {
@@ -16,6 +17,7 @@ async function routes(fastify: FastifyInstance, options: object) {
           status: "unknown" as string,
           world_address: network?.worldContract?.address ?? "unknown",
           latestBlock: null as number | null,
+          rpc_url: null as string | null,
           error: null as string | null
         }
       }
@@ -34,6 +36,19 @@ async function routes(fastify: FastifyInstance, options: object) {
     } catch (error) {
       health.services.redis.status = "unhealthy"
       health.services.redis.error = error instanceof Error ? error.message : String(error)
+    }
+
+    // Get RPC URL for blockchain service
+    try {
+      const chainId = Number(process.env.CHAIN_ID)
+      if (chainId) {
+        const networkConfig = await getNetworkConfig(chainId)
+        const rpcUrl = networkConfig.chain.rpcUrls.default.http[0]
+        health.services.blockchain.rpc_url = rpcUrl
+      }
+    } catch (error) {
+      // If we can't get the RPC URL, we'll leave it as null
+      // This shouldn't affect the overall health status
     }
 
     // Check blockchain connection
