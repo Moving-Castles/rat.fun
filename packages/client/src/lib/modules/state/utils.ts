@@ -127,12 +127,13 @@ export function getTripMinRatValueToEnter(tripCreationCost: number | bigint): Re
  * @param rat The rat to get the inventory of
  * @returns The inventory of the rat
  */
-export function getRatInventory(rat: Rat | null) {
+export function getRatInventory(rat: Rat | null, delay?: number) {
   if (!rat) {
     return [] as Item[]
   }
   const itemsStore = get(items)
-  return rat.inventory?.map(item => itemsStore[item]) ?? ([] as Item[])
+  const result = rat.inventory?.map(item => itemsStore[item]) ?? ([] as Item[])
+  return result as Item[]
 }
 
 /**

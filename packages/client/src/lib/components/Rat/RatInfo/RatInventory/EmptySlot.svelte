@@ -23,7 +23,6 @@
   tabindex="0"
   onmouseenter={onMouseEnter}
   onmouseleave={onMouseLeave}
-  in:fade|global={{ duration: 100, delay: index * 50 }}
 ></div>
 
 <style lang="scss">

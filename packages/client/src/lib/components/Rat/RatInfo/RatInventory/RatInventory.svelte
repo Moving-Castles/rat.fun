@@ -1,20 +1,28 @@
 <script lang="ts">
   import { getRatInventory } from "$lib/modules/state/utils"
+  import { untrack } from "svelte"
 
   import InteractiveItem from "$lib/components/Rat/RatInfo/RatInventory/InteractiveItem.svelte"
   import EmptySlot from "$lib/components/Rat/RatInfo/RatInventory/EmptySlot.svelte"
 
   let { displayRat }: { displayRat: Rat | null } = $props()
 
-  let inventory = $derived(displayRat ? getRatInventory(displayRat) : [])
+  let inventory = $derived<Item[]>(displayRat ? getRatInventory(displayRat) : [])
 
   const MAX_INVENTORY_SIZE = 6
+  const emptySlots = Array(MAX_INVENTORY_SIZE - (inventory?.length || 0)).fill(null)
 
-  // Create array with actual items + empty slots to fill MAX_INVENTORY_SIZE slots
-  const inventorySlots: (Item | null)[] = $derived.by(() => {
-    const actualItems = inventory ?? []
-    const emptySlots = Array(MAX_INVENTORY_SIZE - actualItems.length).fill(null)
-    return [...actualItems, ...emptySlots]
+  let inventorySlots = $state([...inventory, ...emptySlots])
+
+  $effect(() => {
+    // Fill the inventory slots after 2s
+    setTimeout(() => {
+      console.log("after 2s")
+      inventorySlots = [
+        ...inventory,
+        ...Array(MAX_INVENTORY_SIZE - (inventory?.length || 0)).fill(null)
+      ]
+    }, 2000)
   })
 </script>
 
@@ -22,7 +30,7 @@
   {#if displayRat}
     <div class="inventory-container">
       <!-- INVENTORY GRID -->
-      {#each inventorySlots as item, index}
+      {#each inventorySlots as item, index (index)}
         {#if item}
           <InteractiveItem {item} {index} />
         {:else}

@@ -12,7 +12,7 @@
     <p>PLAYER ID: {result.playerId}</p>
     <div class="flashback-entry-content">
       {#each result.log ?? [] as item}
-        <p>{item.event}</p>
+        <p><span>{item.timestamp}</span>{item.event}</p>
       {/each}
     </div>
   {/if}

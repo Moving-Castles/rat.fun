@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { fade } from "svelte/transition"
+  import { fade, fly } from "svelte/transition"
   import { playSound } from "$lib/modules/sound"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
 
@@ -28,9 +28,9 @@
 </script>
 
 <div
+  in:fly={{ duration: 100, y: -30 }}
   class="inventory-item {getRarityClass(item.value)}"
   class:disabled={busy}
-  in:fade|global={{ duration: 100, delay: index * 50 }}
   role="button"
   tabindex="0"
   onmouseenter={onMouseEnter}

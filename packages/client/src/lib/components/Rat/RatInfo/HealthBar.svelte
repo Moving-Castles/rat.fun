@@ -1,5 +1,6 @@
 <script lang="ts">
   import { HEALTH_SYMBOL } from "$lib/modules/ui/constants"
+  import { Tween } from "svelte/motion"
 
   let { value }: { value: number } = $props()
 
@@ -8,6 +9,12 @@
   // Health 51-75 => 3
   // Health 76-> => 4
   let healthLevel = $derived(Math.floor(value / 25))
+
+  const tweenedValue = new Tween(value)
+
+  $effect(() => {
+    tweenedValue.set(value)
+  })
 </script>
 
 <div class="health-bar">
@@ -15,7 +22,7 @@
     <span class="health-bar-inner-value">{HEALTH_SYMBOL} {value}</span>
     <div
       class="health-bar-inner-fill"
-      style:width={`${value}%`}
+      style:width={`${Math.floor(tweenedValue.current)}%`}
       class:health-level-1={healthLevel == 0}
       class:health-level-2={healthLevel == 1}
       class:health-level-3={healthLevel == 2}
@@ -28,6 +35,7 @@
   .health-bar {
     width: 100%;
     height: 100%;
+    transition: background-color 0.2s ease;
 
     .health-bar-inner {
       position: relative;
@@ -54,19 +62,19 @@
     }
 
     .health-level-1 {
-      background: rgb(255, 66, 66);
+      background-color: rgb(255, 66, 66);
     }
 
     .health-level-2 {
-      background: rgb(255, 126, 21);
+      background-color: rgb(255, 126, 21);
     }
 
     .health-level-3 {
-      background: rgb(129, 255, 255);
+      background-color: rgb(129, 255, 255);
     }
 
     .health-level-4 {
-      background: rgb(135, 255, 135);
+      background-color: rgb(135, 255, 135);
     }
   }
 </style>
