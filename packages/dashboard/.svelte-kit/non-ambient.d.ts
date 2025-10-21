@@ -36,6 +36,6 @@ declare module "$app/types" {
 		};
 		Pathname(): "/";
 		ResolvedPathname(): `${"" | `/${string}`}${ReturnType<AppTypes['Pathname']>}`;
-		Asset(): string & {};
+		Asset(): "/logo/logo-layer-1.png" | "/logo/logo-layer-2.png" | "/logo/logo-layer-3.png" | "/logo/logo-layer-4.png" | string & {};
 	}
 }

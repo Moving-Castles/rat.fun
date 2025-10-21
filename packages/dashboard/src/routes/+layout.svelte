@@ -26,7 +26,7 @@
   import Loading from "$lib/components/Loading/Loading.svelte"
   import Toasts from "$lib/components/Shared/Toasts/Toasts.svelte"
 
-  let height = new Tween(window.innerHeight, { duration: 200 })
+  let height = new Tween(20, { duration: 200 })
 
   let { children }: LayoutProps = $props()
 
@@ -141,9 +141,9 @@
   }
 
   .menu {
-    position: sticky;
-    top: 0;
-    left: 0;
+    // position: sticky;
+    // top: 0;
+    // left: 0;
     font-weight: bold;
   }
 </style>

@@ -28,7 +28,7 @@
   const tripKeys = [
     // "entityType",
     "owner",
-    "index",
+    // "index",
     "balance",
     // "name",
     "prompt",
@@ -42,14 +42,34 @@
     "liquidationBlock",
     "liquidationTaxPercentage"
   ]
-  const itemKeys = ["entityType", "name", "value"]
+  const itemKeys = [
+    // "entityType",
+    "name",
+    "value"
+  ]
 </script>
 
 <EntityTable
   title="{Object.values($players).length} players"
   entities={$players}
   keys={playerKeys}
+  entityType="PLAYER"
 />
-<EntityTable title="{Object.values($rats).length} rats" entities={$rats} keys={ratKeys} />
-<EntityTable title="{Object.values($trips).length} trips" entities={$trips} keys={tripKeys} />
-<EntityTable title="{Object.values($items).length} items" entities={$items} keys={itemKeys} />
+<EntityTable
+  title="{Object.values($rats).length} rats"
+  entities={$rats}
+  keys={ratKeys}
+  entityType="RAT"
+/>
+<EntityTable
+  title="{Object.values($trips).length} trips"
+  entities={$trips}
+  keys={tripKeys}
+  entityType="TRIP"
+/>
+<EntityTable
+  title="{Object.values($items).length} items"
+  entities={$items}
+  keys={itemKeys}
+  entityType="ITEM"
+/>
