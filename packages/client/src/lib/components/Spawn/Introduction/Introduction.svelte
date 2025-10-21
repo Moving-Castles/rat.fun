@@ -12,6 +12,7 @@
   let layer3Element: HTMLDivElement | null = $state(null)
   let layer2Element: HTMLDivElement | null = $state(null)
   let layer1Element: HTMLDivElement | null = $state(null)
+  let layer5Element: HTMLDivElement | null = $state(null)
 
   let isAnimating = $state(false)
 
@@ -98,6 +99,24 @@
     }
   })
 
+  const onmousedown = () => {
+    if (isAnimating) return
+
+    playSound("ratfunUI", "smallButtonDown")
+
+    gsap.to(logoElement, {
+      scale: 1.2,
+      duration: 0.2,
+      ease: "power2.out"
+    })
+
+    gsap.to(layer5Element, {
+      opacity: 1,
+      duration: 0.2,
+      ease: "power2.out"
+    })
+  }
+
   const onmouseup = () => {
     if (isAnimating) return
 
@@ -106,7 +125,7 @@
 
     // Fade out text and mascot layers
     exitTimeline.to(
-      [layer2Element, layer4Element, layer3Element],
+      [layer2Element, layer4Element, layer3Element, layer5Element],
       {
         opacity: 0,
         duration: 0.1,
@@ -128,18 +147,6 @@
     )
 
     exitTimeline.call(onComplete)
-  }
-
-  const onmousedown = () => {
-    if (isAnimating) return
-
-    playSound("ratfunUI", "smallButtonDown")
-
-    gsap.to(logoElement, {
-      scale: 1.2,
-      duration: 0.2,
-      ease: "power2.out"
-    })
   }
 
   const onmouseenter = () => {
@@ -188,6 +195,10 @@
 <div class="outer-container">
   <button {onmouseenter} {onmouseleave} {onmouseup} {onmousedown} class:animating={isAnimating}>
     <div class="logo" bind:this={logoElement}>
+      <!-- LAYER 5-->
+      <div class="layer layer-5" bind:this={layer5Element}>
+        <img src="/images/logo/logo-layer-5.png" draggable={false} alt="RAT.FUN" />
+      </div>
       <!-- LAYER 4-->
       <div class="layer layer-4" bind:this={layer4Element}>
         <img src="/images/logo/logo-layer-4.png" draggable={false} alt="RAT.FUN" />
@@ -258,7 +269,10 @@
           &.layer-4 {
             z-index: 4;
           }
-
+          &.layer-5 {
+            z-index: 5;
+            opacity: 0;
+          }
           img {
             width: 100%;
             height: 100%;
