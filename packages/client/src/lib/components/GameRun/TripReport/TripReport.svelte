@@ -118,6 +118,7 @@
   .trip-report-container {
     height: 100%;
     width: 100%;
+    user-select: none;
 
     .log-container {
       width: 100%;

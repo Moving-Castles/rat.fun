@@ -47,6 +47,7 @@
     justify-content: flex-start;
     gap: 8px;
     padding: 6px;
+    user-select: none;
 
     .event {
       padding: 0;

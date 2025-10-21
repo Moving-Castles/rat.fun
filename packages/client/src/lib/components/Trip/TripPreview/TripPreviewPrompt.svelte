@@ -32,6 +32,7 @@
       padding-top: 20px;
       padding-bottom: 10px;
       padding-inline: 10px;
+      line-height: 0.9em;
 
       &.short {
         font-size: var(--font-size-extra-large);
@@ -42,11 +43,11 @@
       }
 
       &.long {
-        font-size: var(--font-size-large);
+        font-size: var(--font-size-normal);
       }
 
       &.extra-long {
-        font-size: var(--font-size-large);
+        font-size: var(--font-size-normal);
       }
     }
   }

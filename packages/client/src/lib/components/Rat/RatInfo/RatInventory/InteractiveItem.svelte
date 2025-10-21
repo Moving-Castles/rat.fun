@@ -60,6 +60,7 @@
     border: 10px inset rgba(0, 0, 0, 0.5);
     transition: transform 0.2s ease;
     border-radius: 10px;
+    user-select: none;
 
     &.disabled {
       opacity: 0.5;

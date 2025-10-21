@@ -85,6 +85,7 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    user-select: none;
 
     .profit-container {
       flex: 1;

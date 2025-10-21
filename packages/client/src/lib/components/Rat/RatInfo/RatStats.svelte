@@ -142,7 +142,7 @@
         height: 100%;
         object-fit: cover;
         // filter: grayscale(1);
-        mix-blend-mode: screen;
+        // mix-blend-mode: screen;
         cursor: grab;
         transition: transform 0.2s ease;
 

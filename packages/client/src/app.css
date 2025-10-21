@@ -114,7 +114,7 @@
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
   overscroll-behavior-y: none;
-  user-select: none;
+  /* user-select: none; */
   -webkit-tap-highlight-color: transparent; /* Remove touch overlay */
   -webkit-touch-callout: none; /* Disable callout on iOS */
 }

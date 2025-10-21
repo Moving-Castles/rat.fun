@@ -47,6 +47,8 @@
     flex-shrink: 0;
     height: 100%;
     width: 100%;
+    user-select: none;
+
     .rat-stats {
       display: flex;
       flex-direction: row;

@@ -130,6 +130,7 @@
     width: 100vw;
     height: 100vh;
     z-index: var(--z-top);
+    user-select: none;
 
     .terminal-box {
       font-size: var(--font-size-normal);

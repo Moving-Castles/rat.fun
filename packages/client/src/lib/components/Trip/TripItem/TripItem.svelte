@@ -5,8 +5,9 @@
   import { renderSafeString } from "$lib/modules/utils"
   import { getTripMaxValuePerWin } from "$lib/modules/state/utils"
   import { staticContent } from "$lib/modules/content"
-  import { NoImage } from "$lib/components/Shared"
   import { playSound } from "$lib/modules/sound"
+
+  import { Tooltip, NoImage } from "$lib/components/Shared"
 
   import type { Trip as SanityTrip } from "@sanity-types"
 
@@ -77,9 +78,21 @@
       </div>
     </div>
     <!-- MAX WIN -->
-    <div class="trip-info-max-win">
-      <div class="max-win">Max Win: {CURRENCY_SYMBOL}{$maxValuePerWin}</div>
-      <div class="trip-factor">Trip Factor: {sanityTripContent?.tripFactor ?? "N/A"}</div>
+    <div class="meta-data">
+      <div class="meta-data-item max-win">
+        <div class="inner">
+          <Tooltip content="Max Win">
+            {CURRENCY_SYMBOL}{$maxValuePerWin}
+          </Tooltip>
+        </div>
+      </div>
+      <div class="meta-data-item trip-factor">
+        <div class="inner">
+          <Tooltip content="Trip Factor">
+            {sanityTripContent?.tripFactor?.toFixed(2) ?? "??"}
+          </Tooltip>
+        </div>
+      </div>
     </div>
   </div>
 </a>
@@ -96,7 +109,7 @@
     width: 100%;
     color: var(--foreground);
     text-align: left;
-    overflow: hidden;
+    // overflow: hidden;
     background: var(--background-semi-transparent);
 
     &.disabled {
@@ -106,9 +119,9 @@
     &:hover {
       background-color: var(--background);
 
-      // .trip-image img {
-      //   transform: scale(1.5);
-      // }
+      .trip-image {
+        transform: scale(1.05);
+      }
     }
 
     .column {
@@ -124,7 +137,7 @@
           line-height: 0;
           width: 100%;
           mix-blend-mode: screen;
-          border-radius: 50%;
+          border-radius: 20px;
           border: 5px solid rgba(255, 255, 255, 0.2);
           overflow: hidden;
 
@@ -148,8 +161,6 @@
         .trip-prompt {
           width: calc(100% - 100px);
           padding-top: 5px;
-          margin-top: 5px;
-          margin-bottom: 5px;
           padding: 5px;
           word-break: break-word;
           overflow-wrap: anywhere;
@@ -157,14 +168,14 @@
           text-overflow: ellipsis;
           overflow: hidden;
           white-space: normal;
-          max-height: 160px;
+          line-height: 0.9em;
 
           &.short {
-            font-size: var(--font-size-normal);
+            font-size: var(--font-size-large);
           }
 
           &.medium {
-            font-size: var(--font-size-normal);
+            font-size: var(--font-size-large);
           }
 
           &.long {
@@ -180,10 +191,21 @@
           }
         }
 
-        .trip-info-max-win {
+        .meta-data {
           border-left: var(--default-border-style);
           padding-left: 10px;
           width: 100px;
+
+          .meta-data-item {
+            background: rgba(255, 255, 255, 0.4);
+            color: var(--background);
+            margin-bottom: 5px;
+            border-radius: 4px;
+
+            .inner {
+              padding: 10px;
+            }
+          }
         }
 
         .small {

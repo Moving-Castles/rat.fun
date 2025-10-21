@@ -4,15 +4,10 @@ precision mediump float;
 // CONFIGURATION VARIABLES
 // ============================================================================
 
-// Movement parameters
-#define MOVEMENT_SPEED_X 0.3       // Speed of horizontal movement
-#define MOVEMENT_SPEED_Y 0.2       // Speed of vertical movement
-#define MOVEMENT_AMPLITUDE 0.1     // Amplitude of movement oscillation
 
 // Swirl effect parameters
 #define SWIRL_BASE_STRENGTH 2.0    // Base strength of swirl effect
 #define SWIRL_SPEED 0.1            // Speed of swirl animation
-#define SWIRL_VARIATION 0.5        // Variation in swirl strength
 
 // Noise generation parameters
 #define NOISE_SCALE 3.0            // Scale factor for noise coordinates
@@ -23,10 +18,10 @@ precision mediump float;
 #define NOISE_LACUNARITY 2.0       // Noise frequency increase per octave
 
 // Color parameters
-#define DARK_GREY_R 0.45           // Dark grey color - Red component
-#define DARK_GREY_G 0.35           // Dark grey color - Green component
-#define DARK_GREY_B 0.45           // Dark grey color - Blue component
-#define NOISE_POWER 1.5            // Power curve for noise variation
+#define DARK_GREY_R 0.65           // Dark grey color - Red component
+#define DARK_GREY_G 0.25           // Dark grey color - Green component
+#define DARK_GREY_B 0.65           // Dark grey color - Blue component
+#define NOISE_POWER 2.0            // Power curve for noise variation
 #define NOISE_OPACITY 0.8          // Opacity multiplier for noise
 
 // Hash function constants
@@ -89,9 +84,9 @@ float fractalNoise(vec2 p) {
   return value;
 }
 
-// Create swirl effect using rotation matrix
-vec2 swirl(vec2 p, float strength) {
-  float angle = length(p) * strength;
+// Create swirl effect using rotation matrix with continuous inwards movement
+vec2 swirl(vec2 p, float strength, float time) {
+  float angle = length(p) * strength + time;
   float c = cos(angle);
   float s = sin(angle);
   mat2 rotation = mat2(c, -s, s, c);
@@ -109,12 +104,8 @@ void main() {
   // Center coordinates and scale to [-1,1] range
   vec2 p = (uv - HALF) * TWO;
   
-  // Add gentle time-based movement for organic feel
-  p += vec2(sin(u_time * MOVEMENT_SPEED_X) * MOVEMENT_AMPLITUDE, 
-            cos(u_time * MOVEMENT_SPEED_Y) * MOVEMENT_AMPLITUDE);
-  
-  // Create gentle swirl effect with animated strength
-  p = swirl(p, SWIRL_BASE_STRENGTH + sin(u_time * SWIRL_SPEED) * SWIRL_VARIATION);
+  // Create gentle swirl effect with continuous inwards movement
+  p = swirl(p, SWIRL_BASE_STRENGTH, u_time * SWIRL_SPEED);
   
   // Scale coordinates for noise generation
   p *= NOISE_SCALE;

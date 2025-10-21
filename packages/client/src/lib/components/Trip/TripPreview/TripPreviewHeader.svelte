@@ -55,10 +55,10 @@
       <div class="value">{getTripOwnerName(trip)}</div>
     </div>
     <!-- VISIT COUNT -->
-    <!-- <div class="row visit-count">
+    <div class="row visit-count">
       <div class="label">VISITS</div>
       <div class="value">{trip.visitCount}</div>
-    </div> -->
+    </div>
     <!-- KILL COUNT -->
     <!-- {#if trip?.killCount > 0}
       <div class="row kill-count">
@@ -98,7 +98,7 @@
       &.left {
         height: 100%;
         width: 280px;
-        margin-right: 10px;
+        margin: 0 10px;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -109,7 +109,7 @@
           line-height: 0;
           width: 280px;
           mix-blend-mode: screen;
-          border-radius: 50%;
+          border-radius: 20px;
           border: 5px solid rgba(255, 255, 255, 0.2);
           overflow: hidden;
 

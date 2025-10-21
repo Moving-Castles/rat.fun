@@ -109,6 +109,7 @@
     height: 100%;
     overflow-y: scroll;
     position: relative;
+    user-select: none;
   }
 
   .admin-trip-table {

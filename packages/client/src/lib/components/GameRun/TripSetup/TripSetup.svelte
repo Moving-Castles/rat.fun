@@ -58,6 +58,7 @@
     color: var(--foreground);
     font-size: var(--font-size-normal);
     background: rgba(0, 0, 0, 0.1);
+    user-select: none;
 
     .terminal-box {
       font-size: var(--font-size-normal);
