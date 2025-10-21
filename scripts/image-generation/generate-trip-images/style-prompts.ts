@@ -1,4 +1,4 @@
-export const PROMPTS = [
+export const STYLE_PROMPTS = [
   "trypophobia",
   "staring",
   "laughing",
