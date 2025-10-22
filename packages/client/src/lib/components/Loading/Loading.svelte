@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from "svelte"
+  import { onMount, onDestroy } from "svelte"
   import { page } from "$app/state"
   import { initPublicNetwork } from "$lib/initPublicNetwork"
   import { initEntities } from "$lib/modules/systems/initEntities"
@@ -39,6 +39,7 @@
       if (typer?.stop) {
         typer.stop()
       }
+
       // We are loaded. Animate the component out...
       animateOut()
     }
@@ -103,6 +104,13 @@
     // Run the terminal typer
     if (terminalBoxElement) {
       typer = terminalTyper(terminalBoxElement, generateLoadingOutput())
+    }
+  })
+
+  onDestroy(() => {
+    // Stop the terminal typer
+    if (typer?.stop) {
+      typer.stop()
     }
   })
 </script>

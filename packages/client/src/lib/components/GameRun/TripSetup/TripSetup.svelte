@@ -11,6 +11,7 @@
   gsap.registerPlugin(TextPlugin)
 
   let terminalBoxElement = $state<HTMLDivElement>()
+  let typer = $state<{ stop: () => void }>()
 
   const {
     onComplete,
@@ -26,15 +27,24 @@
     $backgroundMusic = playSound("ratfunMusic", "tripSetup", true)
 
     setTimeout(() => {
+      // Stop the terminal typer
+      if (typer?.stop) {
+        typer.stop()
+      }
       onComplete()
     }, SETUP_DURATION)
 
     if (terminalBoxElement) {
-      await terminalTyper(terminalBoxElement, generateTripSetupOutput())
+      typer = await terminalTyper(terminalBoxElement, generateTripSetupOutput())
     }
   })
 
   onDestroy(() => {
+    // Stop the terminal typer
+    if (typer?.stop) {
+      typer.stop()
+    }
+
     // Stop background music
     if ($backgroundMusic) {
       $backgroundMusic.stop()
