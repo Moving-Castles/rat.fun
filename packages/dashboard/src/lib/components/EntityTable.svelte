@@ -2,6 +2,7 @@
   import type { EntityMap, ColumnConfig } from "./types"
   import { entities as allEntities } from "$lib/modules/state/stores"
   import { ENTITY_TYPE } from "contracts/enums"
+  import Tooltip from "./Shared/Tooltip/Tooltip.svelte"
 
   const {
     entities,
@@ -201,6 +202,10 @@
                         {getEntityName(entity[column.key])}
                       </button>
                     {/if}
+                  {:else if column.key === "prompt"}
+                    <Tooltip content={entity[column.key] ?? ""}>
+                      {entity[column.key] ?? ""}
+                    </Tooltip>
                   {:else}
                     {entity[column.key] ?? ""}
                   {/if}
