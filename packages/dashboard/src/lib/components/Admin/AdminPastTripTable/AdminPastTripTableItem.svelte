@@ -70,6 +70,7 @@
       margin: 0;
       padding: 0;
       border: none;
+      width: 100%;
       max-width: 100%;
       display: inline-block;
       white-space: nowrap;

@@ -71,6 +71,7 @@
     .single-line {
       margin: 0;
       padding: 0;
+      width: 100%;
       border: none;
       max-width: 100%;
       display: inline-block;

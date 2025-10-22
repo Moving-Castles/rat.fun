@@ -52,6 +52,7 @@
 
     .single-line {
       margin: 0;
+      width: 100%;
       padding: 0;
       border: none;
       max-width: 100%;

@@ -33,6 +33,7 @@
 
     // HACK: wait a little to allow the token balance to update
     // to avoid having $playerIsBroke be true when it shouldn't
+    // PROBLEM: this also delays the loading of the RatBox on all remount navigations...
     await new Promise(resolve => setTimeout(resolve, 500))
 
     if ($rat) {
