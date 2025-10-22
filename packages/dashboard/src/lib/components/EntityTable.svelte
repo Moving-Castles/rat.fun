@@ -6,14 +6,67 @@
   const {
     entities,
     columns,
-    entityType
+    entityType,
+    defaultSortKey,
+    defaultSortDirection = "desc"
   }: {
     entities: EntityMap
     columns: ColumnConfig[]
     entityType?: string
+    defaultSortKey?: string
+    defaultSortDirection?: "asc" | "desc"
   } = $props()
 
+  // Sorting state
+  let sortColumn = $state<string | null>(defaultSortKey ?? null)
+  let sortDirection = $state<"asc" | "desc">(defaultSortDirection)
+
   const entriesArray = $derived(Object.entries(entities))
+
+  // Sort the entries based on current sort settings
+  const sortedEntries = $derived(() => {
+    if (!sortColumn) return entriesArray
+
+    return [...entriesArray].sort(([, a], [, b]) => {
+      const aValue = a[sortColumn!]
+      const bValue = b[sortColumn!]
+
+      // Handle null/undefined values
+      if (aValue == null && bValue == null) return 0
+      if (aValue == null) return sortDirection === "asc" ? -1 : 1
+      if (bValue == null) return sortDirection === "asc" ? 1 : -1
+
+      // Handle different data types
+      let comparison = 0
+
+      if (typeof aValue === "number" && typeof bValue === "number") {
+        comparison = aValue - bValue
+      } else if (typeof aValue === "string" && typeof bValue === "string") {
+        // Check if both strings are numeric
+        const aNum = parseFloat(aValue)
+        const bNum = parseFloat(bValue)
+        if (!isNaN(aNum) && !isNaN(bNum)) {
+          comparison = aNum - bNum
+        } else {
+          comparison = aValue.localeCompare(bValue)
+        }
+      } else if (typeof aValue === "boolean" && typeof bValue === "boolean") {
+        comparison = aValue === bValue ? 0 : aValue ? 1 : -1
+      } else {
+        // Try to convert both to numbers first
+        const aNum = parseFloat(String(aValue))
+        const bNum = parseFloat(String(bValue))
+        if (!isNaN(aNum) && !isNaN(bNum)) {
+          comparison = aNum - bNum
+        } else {
+          // Convert to string for comparison
+          comparison = String(aValue).localeCompare(String(bValue))
+        }
+      }
+
+      return sortDirection === "asc" ? comparison : -comparison
+    })
+  })
 
   // Fields that reference other entities by ID
   const ENTITY_REFERENCE_FIELDS = ["currentRat", "owner", "pastRats", "inventory"]
@@ -48,6 +101,28 @@
   }
 
   /**
+   * Handle column header click for sorting
+   */
+  function handleSort(columnKey: string) {
+    if (sortColumn === columnKey) {
+      // Toggle direction if same column
+      sortDirection = sortDirection === "asc" ? "desc" : "asc"
+    } else {
+      // New column, start with ascending
+      sortColumn = columnKey
+      sortDirection = "asc"
+    }
+  }
+
+  /**
+   * Get sort indicator for a column
+   */
+  function getSortIndicator(columnKey: string): string {
+    if (sortColumn !== columnKey) return ""
+    return sortDirection === "asc" ? "▲" : "▼"
+  }
+
+  /**
    * Create a scroll link to another entity table
    */
   function scrollToEntity(entityId: string) {
@@ -59,7 +134,6 @@
     })
 
     const element1 = document.querySelector(`[data-entity-address="${entityId}"]`)
-    console.log("element", element1)
 
     if (element1) {
       element1.classList.add("active")
@@ -75,7 +149,6 @@
 
       const entityType = ENTITY_TYPE[entity.entityType]
       const element2 = document.querySelector(`[data-entity-type="${entityType}"]`)
-      console.log(element2, entityType)
       if (element2) {
         element2.scrollIntoView({ behavior: "smooth", block: "start" })
       }
@@ -90,12 +163,23 @@
         <thead>
           <tr>
             {#each columns as column}
-              <th class:priority={isPriorityColumn(column)}>{getDisplayName(column)}</th>
+              <th
+                class:priority={isPriorityColumn(column)}
+                class:sortable={true}
+                class:active={sortColumn === column.key}
+                onclick={() => handleSort(column.key)}
+                role="button"
+                tabindex="0"
+                onkeydown={e => e.key === "Enter" && handleSort(column.key)}
+              >
+                {getDisplayName(column)}
+                <span class="sort-indicator">{getSortIndicator(column.key)}</span>
+              </th>
             {/each}
           </tr>
         </thead>
         <tbody>
-          {#each entriesArray as [id, entity], index (id)}
+          {#each sortedEntries() as [id, entity], index (id)}
             <tr class:even={index % 2 === 0} data-entity-address={id}>
               {#each columns as column}
                 <td class:priority={isPriorityColumn(column)}>
@@ -106,8 +190,7 @@
                           <button class="entity-link" onclick={() => scrollToEntity(entityId)}>
                             {getEntityName(entityId)}
                           </button>
-                          {#if idx < entity[column.key].length - 1},
-                          {/if}
+                          {#if idx < entity[column.key].length - 1}&nbsp; / &nbsp;{/if}
                         {/each}
                       </div>
                     {:else}
@@ -167,6 +250,10 @@
     max-width: 0;
   }
 
+  th {
+    font-size: 14px;
+  }
+
   /* Priority columns get more space */
   th.priority,
   td.priority {
@@ -178,6 +265,37 @@
   th {
     font-weight: bold;
     background-color: #f5f5f5;
+  }
+
+  /* Sortable header styles */
+  th.sortable {
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+  }
+
+  th.sortable:hover {
+    background-color: #e8e8e8;
+  }
+
+  th.sortable.active {
+    background-color: darkgrey;
+  }
+
+  .sort-indicator {
+    margin-left: 0.5rem;
+    font-weight: bold;
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    text-align: center;
+    line-height: 1em;
+    visibility: hidden;
+  }
+
+  th.sortable.active .sort-indicator {
+    visibility: visible;
+    color: black;
   }
 
   tr.even {

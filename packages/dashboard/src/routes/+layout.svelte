@@ -44,9 +44,7 @@
   <div class="context-main">
     <header class="menu">
       <div>
-        <h1>
-          <a href="/">RAT.FUN DASHBOARD: {$environmentStore}</a>
-        </h1>
+        <h1>RAT.FUN DASHBOARD: {$environmentStore}</h1>
         <hr />
       </div>
     </header>

@@ -4,21 +4,21 @@
   import EntityTable from "$lib/components/EntityTable.svelte"
 
   const playerColumns: ColumnConfig[] = [
+    { key: "creationBlock", displayName: "Created" },
     { key: "name", displayName: "Name" },
     { key: "balance", displayName: "Balance" },
     { key: "currentRat", displayName: "Current Rat" },
     { key: "pastRatsCount", displayName: "Past Rats #" },
-    { key: "masterKey", displayName: "Cashboard unlocked" },
-    { key: "creationBlock", displayName: "Created" }
+    { key: "masterKey", displayName: "Cashboard unlocked" }
   ]
 
   const ratColumns: ColumnConfig[] = [
+    { key: "creationBlock", displayName: "Created" },
     { key: "name", displayName: "Name", priority: true },
     { key: "balance", displayName: "Balance" },
     { key: "owner", displayName: "Owner" },
     { key: "dead", displayName: "Dead" },
     { key: "inventory", displayName: "Inventory", priority: true },
-    { key: "creationBlock", displayName: "Created @" },
     { key: "liquidated", displayName: "Liq." },
     { key: "liquidationValue", displayName: "Liq. Val." },
     { key: "liquidationBlock", displayName: "Liq. @" }
@@ -26,18 +26,18 @@
   ]
 
   const tripColumns: ColumnConfig[] = [
+    { key: "creationBlock", displayName: "Created" },
     { key: "owner", displayName: "Owner" },
     { key: "balance", displayName: "Balance" },
     { key: "prompt", displayName: "Prompt", priority: true },
     { key: "visitCount", displayName: "Visits" },
     { key: "killCount", displayName: "Kills" },
-    { key: "creationBlock", displayName: "Created @" },
     { key: "lastVisitBlock", displayName: "Last Visit" },
     { key: "tripCreationCost", displayName: "Cost" },
     { key: "liquidated", displayName: "Liq." },
     { key: "liquidationValue", displayName: "Liq. Val." },
-    { key: "liquidationBlock", displayName: "Liq. @" },
-    { key: "liquidationTaxPercentage", displayName: "Tax %" }
+    { key: "liquidationBlock", displayName: "Liq. @" }
+    // { key: "liquidationTaxPercentage", displayName: "Tax %" }
   ]
 
   const itemColumns: ColumnConfig[] = [
@@ -124,7 +124,12 @@
   <div class="section-header">
     <h2>PLAYERS ({Object.values(processedPlayers).length})</h2>
   </div>
-  <EntityTable entities={processedPlayers} columns={playerColumns} entityType="PLAYER" />
+  <EntityTable
+    entities={processedPlayers}
+    columns={playerColumns}
+    entityType="PLAYER"
+    defaultSortKey="creationBlock"
+  />
 </div>
 
 <!-- RATS -->
@@ -132,7 +137,12 @@
   <div class="section-header">
     <h2>RATS ({Object.values(processedRats).length})</h2>
   </div>
-  <EntityTable entities={processedRats} columns={ratColumns} entityType="RAT" />
+  <EntityTable
+    entities={processedRats}
+    columns={ratColumns}
+    entityType="RAT"
+    defaultSortKey="creationBlock"
+  />
 </div>
 
 <!-- TRIPS -->
@@ -140,7 +150,12 @@
   <div class="section-header">
     <h2>TRIPS ({Object.values(processedTrips).length})</h2>
   </div>
-  <EntityTable entities={processedTrips} columns={tripColumns} entityType="TRIP" />
+  <EntityTable
+    entities={processedTrips}
+    columns={tripColumns}
+    entityType="TRIP"
+    defaultSortKey="creationBlock"
+  />
 </div>
 
 <!-- DEDUPED ITEMS -->
@@ -148,7 +163,12 @@
   <div class="section-header">
     <h2>DEDUPED ITEMS ({Object.values(dedupedItems).length})</h2>
   </div>
-  <EntityTable entities={dedupedItems} columns={dedupedItemColumns} entityType="ITEM" />
+  <EntityTable
+    entities={dedupedItems}
+    columns={dedupedItemColumns}
+    entityType="ITEM"
+    defaultSortKey="count"
+  />
 </div>
 
 <!-- ALLITEMS -->
