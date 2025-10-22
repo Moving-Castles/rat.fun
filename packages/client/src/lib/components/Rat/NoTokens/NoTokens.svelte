@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { tokenAllowanceApproved } from "$lib/modules/state/stores"
+  import { tokenAllowanceApproved, playerIsBroke } from "$lib/modules/state/stores"
   import { BigButton } from "$lib/components/Shared"
   import { transitionTo, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
   import { sendGiveCallerTokens } from "$lib/modules/action-manager/index.svelte"
@@ -8,6 +8,14 @@
   import { ENVIRONMENT } from "$lib/mud/enums"
 
   let busy = $state(false)
+
+  $effect(() => {
+    if (!$playerIsBroke) {
+      // HACK: for some reason we might end up here without actually being broke
+      // Move on if player got tokens
+      transitionTo(RAT_BOX_STATE.NO_RAT)
+    }
+  })
 
   const onClick = async () => {
     busy = true

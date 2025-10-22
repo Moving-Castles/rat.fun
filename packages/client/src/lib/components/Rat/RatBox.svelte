@@ -33,7 +33,7 @@
 
     // HACK: wait a little to allow the token balance to update
     // to avoid having $playerIsBroke be true when it shouldn't
-    await new Promise(resolve => setTimeout(resolve, 100))
+    await new Promise(resolve => setTimeout(resolve, 500))
 
     if ($rat) {
       if ($rat.dead) {
