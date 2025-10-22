@@ -30,6 +30,9 @@
     {#if isAdminView}
       <div class="button-icon">
         <X />
+        <X />
+        <X />
+        <X />
       </div>
     {:else}
       <span class="button-text">CASHBOARD</span>
@@ -65,6 +68,11 @@
       width: 100%;
       height: 60%;
       color: rgb(54, 54, 54);
+      display: flex;
+      flex-flow: row nowrap;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
     }
 
     &:hover {
