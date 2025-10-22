@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { SignedNumber } from "$lib/components/Shared"
+  import { SignedNumber, Tooltip } from "$lib/components/Shared"
   import { goto } from "$app/navigation"
   import { playSound } from "$lib/modules/sound"
 
@@ -27,30 +27,32 @@
   }
 </script>
 
-<tr {onmousedown} {onpointerenter} {onpointerleave} class="past-trip-table-item">
-  <!-- Index -->
-  <td class="cell-index">{Number(trip.index)}</td>
-  <!-- Prompt -->
-  <td class="cell-prompt">
-    <p class="single-line">{trip.prompt}</p>
-  </td>
-  <!-- Visits -->
-  <td class="cell-visits">{Number(trip.visitCount ?? 0)}</td>
-  <!-- Kills -->
-  <td class="cell-kills">{Number(trip.killCount ?? 0)}</td>
-  <!-- Liquidation -->
-  <td class="cell-balance">
-    {#if trip.liquidated}
-      <span>{trip.liquidationValue}</span><span class="grey">/{trip.tripCreationCost} </span>
-    {:else}
-      <span>{trip.balance}</span><span class="grey">/{trip.tripCreationCost} </span>
-    {/if}
-  </td>
-  <!-- Profit -->
-  <td class="cell-profit">
-    <SignedNumber value={profitLoss} />
-  </td>
-</tr>
+<Tooltip content={trip.prompt}>
+  <tr {onmousedown} {onpointerenter} {onpointerleave} class="past-trip-table-item">
+    <!-- Index -->
+    <td class="cell-index">{Number(trip.index)}</td>
+    <!-- Prompt -->
+    <td class="cell-prompt">
+      <p class="single-line">{trip.prompt}</p>
+    </td>
+    <!-- Visits -->
+    <td class="cell-visits">{Number(trip.visitCount ?? 0)}</td>
+    <!-- Kills -->
+    <td class="cell-kills">{Number(trip.killCount ?? 0)}</td>
+    <!-- Liquidation -->
+    <td class="cell-balance">
+      {#if trip.liquidated}
+        <span>{trip.liquidationValue}</span><span class="grey">/{trip.tripCreationCost} </span>
+      {:else}
+        <span>{trip.balance}</span><span class="grey">/{trip.tripCreationCost} </span>
+      {/if}
+    </td>
+    <!-- Profit -->
+    <td class="cell-profit">
+      <SignedNumber value={profitLoss} />
+    </td>
+  </tr>
+</Tooltip>
 
 <style lang="scss">
   .past-trip-table-item {
