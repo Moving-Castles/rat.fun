@@ -70,7 +70,7 @@
       element1.scrollIntoView({ behavior: "smooth" })
     } else {
       const entity = $allEntities[entityId]
-      if (!entity) return
+      if (!entity || !entity.entityType) return
 
       const entityType = ENTITY_TYPE[entity.entityType]
       const element2 = document.querySelector(`[data-entity-type="${entityType}"]`)
@@ -91,49 +91,54 @@
   </summary>
 
   <div class="table-wrapper">
-    <div class="table" style:grid-template-columns="repeat({keys.length}, auto)">
+    <table>
       {#if entriesArray.length > 0}
-        {#each entriesArray as [id, entity], index (id)}
-          <!-- <div class="full-row">
-            {id}
-          </div> -->
-          {#if index === 0}
+        <thead>
+          <tr>
             {#each keys as key}
-              <div class="cell header">
-                {key}
-              </div>
+              <th>{key}</th>
             {/each}
-          {/if}
-          {#each keys as key}
-            <div class="cell" data-entity-address={id}>
-              {#if isEntityReferenceField(key) && entity[key]}
-                {#if Array.isArray(entity[key])}
-                  <div class="entity-links">
-                    {#each entity[key] as entityId, idx}
-                      <button class="entity-link" onclick={() => scrollToEntity(entityId)}>
-                        {getEntityName(entityId)}
+          </tr>
+        </thead>
+        <tbody>
+          {#each entriesArray as [id, entity], index (id)}
+            <tr class:even={index % 2 === 0} data-entity-address={id}>
+              {#each keys as key}
+                <td>
+                  {#if isEntityReferenceField(key) && entity[key]}
+                    {#if Array.isArray(entity[key])}
+                      <div class="entity-links">
+                        {#each entity[key] as entityId, idx}
+                          <button class="entity-link" onclick={() => scrollToEntity(entityId)}>
+                            {getEntityName(entityId)}
+                          </button>
+                          {#if idx < entity[key].length - 1},
+                          {/if}
+                        {/each}
+                      </div>
+                    {:else}
+                      <button class="entity-link" onclick={() => scrollToEntity(entity[key])}>
+                        {getEntityName(entity[key])}
                       </button>
-                      {#if idx < entity[key].length - 1},
-                      {/if}
-                    {/each}
-                  </div>
-                {:else}
-                  <button class="entity-link" onclick={() => scrollToEntity(entity[key])}>
-                    {getEntityName(entity[key])}
-                  </button>
-                {/if}
-              {:else}
-                {entity[key] ?? ""}
-              {/if}
-            </div>
+                    {/if}
+                  {:else}
+                    {entity[key] ?? ""}
+                  {/if}
+                </td>
+              {/each}
+            </tr>
           {/each}
-        {/each}
+        </tbody>
       {:else}
-        <div class="no-data">
-          <span>NO DATA</span>
-        </div>
+        <tbody>
+          <tr>
+            <td colspan={keys.length} class="no-data">
+              <span>NO DATA</span>
+            </td>
+          </tr>
+        </tbody>
       {/if}
-    </div>
+    </table>
   </div>
 </details>
 
@@ -149,13 +154,6 @@
     border-bottom: 1px solid white;
   }
 
-  .full-row {
-    grid-column: 1 / -1;
-  }
-
-  .active {
-    background: red;
-  }
   .table-title {
     display: flex;
     justify-content: space-between;
@@ -173,35 +171,47 @@
   }
 
   .table-wrapper {
+    width: 100%;
     max-width: 100vw;
     overflow-x: auto;
     margin-bottom: 2rem;
   }
 
-  .table {
-    display: grid;
-    gap: 1rem;
-    width: fit-content;
+  table {
+    width: 100%;
+    max-width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    table-layout: fixed;
   }
 
-  .cell {
+  th,
+  td {
+    padding: 0.25rem;
+    text-align: left;
+    border: 1px solid #ccc;
     overflow: hidden;
     text-overflow: ellipsis;
     word-break: break-word;
-    padding: 0.25rem;
-    min-width: 0;
     white-space: nowrap;
+    max-width: 0;
   }
 
-  .cell.header {
+  th {
     font-weight: bold;
+    background-color: #f5f5f5;
+  }
+
+  tr.even {
+    background-color: white;
+  }
+
+  tr:not(.even) {
+    background-color: #f9f9f9;
   }
 
   .no-data {
-    grid-column: 1 / -1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    text-align: center;
     padding: 2rem;
   }
 
