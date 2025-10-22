@@ -18,9 +18,9 @@
     { key: "balance", displayName: "Balance" },
     { key: "owner", displayName: "Owner" },
     { key: "tripCount", displayName: "Trips" },
-    { key: "dead", displayName: "Dead" },
+    { key: "alive", displayName: "Alive" },
     { key: "inventory", displayName: "Inventory", priority: true },
-    { key: "liquidated", displayName: "Liq." },
+    { key: "causeOfDeath", displayName: "CoD" },
     { key: "liquidationBlock", displayName: "Liq. @" },
     { key: "liquidationValue", displayName: "Liq. Val." }
     // { key: "liquidationTaxPercentage", displayName: "Tax %" }
@@ -35,7 +35,7 @@
     { key: "killCount", displayName: "Kills" },
     { key: "lastVisitBlock", displayName: "Last Visit" },
     { key: "tripCreationCost", displayName: "Cost" },
-    { key: "liquidated", displayName: "Liq." },
+    { key: "causeOfDeath", displayName: "CoD" },
     { key: "liquidationBlock", displayName: "Liq. @" },
     { key: "liquidationValue", displayName: "Liq. Val." }
     // { key: "liquidationTaxPercentage", displayName: "Tax %" }
@@ -64,11 +64,42 @@
   })
 
   let processedRats = $derived.by(() => {
-    return $rats
+    const tempRats = $rats
+
+    // Add new properties to each rat
+    Object.values(tempRats).forEach(rat => {
+      // alive: !dead
+      rat.alive = !rat.dead
+
+      // causeOfDeath logic
+      if (rat.alive) {
+        rat.causeOfDeath = "alive"
+      } else if (rat.liquidated) {
+        rat.causeOfDeath = "liq."
+      } else {
+        rat.causeOfDeath = "trip"
+      }
+    })
+
+    return tempRats
   })
 
   let processedTrips = $derived.by(() => {
-    return $trips
+    const tempTrips = $trips
+
+    // Add causeOfDeath property to each trip
+    Object.values(tempTrips).forEach(trip => {
+      // causeOfDeath logic
+      if (trip.balance > 0) {
+        trip.causeOfDeath = "active"
+      } else if (Number(trip.balance) === 0 && !trip.liquidated) {
+        trip.causeOfDeath = "depl."
+      } else if (trip.liquidated) {
+        trip.causeOfDeath = "liq."
+      }
+    })
+
+    return tempTrips
   })
 
   let processedItems = $derived.by(() => {
