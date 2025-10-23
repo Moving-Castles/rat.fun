@@ -566,3 +566,74 @@ export function addressToRatImage(address: string, maxRats: number = 6): string 
   const ratNumber = addressToNumber(address, maxRats - 1) // -1 because we want 0-based indexing
   return `/images/rats/rat_${ratNumber}.png`
 }
+
+/**
+ * Generates a deterministic rat image path for an Ethereum address
+ * @param address The Ethereum address to map to a rat image
+ * @param maxRats The maximum number of rat images available (default: 50)
+ * @returns A path string in the format "/images/rats/[number].png"
+ */
+export function addressToRatParts(
+  playerAddress: string,
+  ratAddress: string,
+  maxParts: number = 50
+): [number, number, number, number] {
+  console.log(playerAddress, ratAddress)
+  // Remove 0x prefix
+  const cleanPlayer = playerAddress.startsWith("0x") ? playerAddress.slice(2) : playerAddress
+  const cleanRat = ratAddress.startsWith("0x") ? ratAddress.slice(2) : ratAddress
+
+  // Use the last 8 characters of rat address to spread entropy
+  const lastBytes = cleanRat.slice(-8)
+
+  // Body: Take every 4th character starting at 0 from rat, mix with player
+  let bodySeed = ""
+  for (let i = 0; i < cleanRat.length; i += 4) {
+    bodySeed += cleanRat[i]
+  }
+  for (let i = 0; i < cleanPlayer.length; i += 3) {
+    bodySeed += cleanPlayer[i]
+  }
+  bodySeed += lastBytes
+
+  // Arms: 4th char starting at 1
+  let armsSeed = ""
+  for (let i = 1; i < cleanRat.length; i += 4) {
+    armsSeed += cleanRat[i]
+  }
+  for (let i = 1; i < cleanPlayer.length; i += 3) {
+    armsSeed += cleanPlayer[i]
+  }
+  armsSeed += lastBytes
+
+  // Head: 4th char starting at 2
+  let headSeed = ""
+  for (let i = 2; i < cleanRat.length; i += 4) {
+    headSeed += cleanRat[i]
+  }
+  for (let i = 2; i < cleanPlayer.length; i += 3) {
+    headSeed += cleanPlayer[i]
+  }
+  headSeed += lastBytes
+
+  // Ears: 4th char starting at 3
+  let earsSeed = ""
+  for (let i = 3; i < cleanRat.length; i += 4) {
+    earsSeed += cleanRat[i]
+  }
+  for (let i = 0; i < cleanPlayer.length; i += 2) {
+    earsSeed += cleanPlayer[i]
+  }
+  earsSeed += lastBytes
+
+  const [body, arms, head, ears] = [
+    addressToNumber("0x" + bodySeed, maxParts),
+    addressToNumber("0x" + armsSeed, maxParts),
+    addressToNumber("0x" + headSeed, maxParts),
+    addressToNumber("0x" + earsSeed, maxParts)
+  ]
+
+  console.log(body, arms, head, ears)
+
+  return [body, arms, head, ears]
+}
