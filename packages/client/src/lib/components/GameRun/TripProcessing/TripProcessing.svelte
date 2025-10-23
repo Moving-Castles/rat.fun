@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte"
+  import * as transitions from "svelte/transition"
   import { playSound } from "$lib/modules/sound"
   import { backgroundMusic } from "$lib/modules/sound/stores"
   import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
@@ -44,6 +45,41 @@
   })
 </script>
 
+{#if timeElapsed > 10 && timeElapsed < 18}
+  <div
+    in:transitions.scale|global={{ duration: 3000, opacity: 1 }}
+    out:transitions.fade={{ duration: 1500 }}
+    class="popup"
+  >
+    <div class="mask">
+      <span> RAT STILL IN HALLUCINATORY STATE.<br />PLEASE STAND BY... </span>
+    </div>
+  </div>
+{:else if timeElapsed > 20 && timeElapsed < 28}
+  <div
+    in:transitions.scale|global={{ duration: 3000, opacity: 1 }}
+    out:transitions.fade={{ duration: 1500 }}
+    class="popup"
+  >
+    <div class="mask">
+      <span>
+        RAT BEING REVIVED FROM DEEP DRUG INDUCED COMA.<br />EVERYTHING IS NORMAL.<br />PLEASE STAND
+        BY...
+      </span>
+    </div>
+  </div>
+{:else if timeElapsed > 30}
+  <div
+    in:transitions.scale|global={{ duration: 3000, opacity: 1 }}
+    out:transitions.fade={{ duration: 1500 }}
+    class="popup"
+  >
+    <div class="mask">
+      <span> ALL IS FINE.<br /> JUST ONE MOMENT.<br /> WE VALUE YOUR PATIENCE. </span>
+    </div>
+  </div>
+{/if}
+
 <div class="splash-screen">
   <!-- {#if $environment !== ENVIRONMENT.BASE} -->
   <div class="timer" class:critical={timerDone}>{timeElapsed.toFixed(1)}s</div>
@@ -52,6 +88,47 @@
 </div>
 
 <style lang="scss">
+  .popup {
+    position: fixed;
+    top: 50vh;
+    left: 50vw;
+    width: 600px;
+    height: 600px;
+    transform: translate(-50%, -50%);
+    color: white;
+
+    .mask {
+      z-index: 99;
+      background: black;
+      display: flex;
+      flex-flow: column nowrap;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      width: 600px;
+      height: 600px;
+      mask-image: radial-gradient(circle at center, black 40%, transparent 70%);
+      -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 70%);
+      animation: slowly-grow 20s linear forwards;
+
+      span {
+        display: block;
+        width: 300px;
+        font-family: var(--special-font-stack);
+        font-size: var(--font-size-large);
+      }
+    }
+  }
+
+  @keyframes slowly-grow {
+    from {
+      transform: scale(1);
+    }
+    to {
+      transform: scale(1.6);
+    }
+  }
+
   .splash-screen {
     padding: 0;
     position: absolute;
