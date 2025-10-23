@@ -188,13 +188,17 @@ export const ratImageUrl = derived([player, staticContent], ([$player, $staticCo
   }
   const index = addressToNumber($player.currentRat, $staticContent.ratImages.ratImages.length - 1)
 
-  const url = urlFor($staticContent.ratImages.ratImages[index])
-    ?.width(400)
-    ?.quality(100)
-    ?.auto("format")
-    ?.url() as string
-
-  return url ?? ""
+  const image = $staticContent.ratImages.ratImages[index]
+  if (image) {
+    const result = urlFor(image)
+    if (result == "") {
+      return false
+    } else {
+      return result.width(400).quality(100).auto("format").url()
+    }
+  } else {
+    return ""
+  }
 })
 
 /**

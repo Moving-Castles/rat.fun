@@ -25,7 +25,7 @@ export async function signRequest<T>(data: T): Promise<SignedRequest<T>> {
   // It's unknown whether the client is a SessionClient (entrykit is, burner isn't)
   // And SessionClient's signMessage method does not work as expected, requiring the use of its internal_signer
   if ("internal_signer" in client) {
-    signature = await (client as SessionClient).internal_signer.signMessage({
+    signature = await (client as unknown as SessionClient).internal_signer.signMessage({
       message: stringifyRequestForSignature({ data, info })
     })
   } else {

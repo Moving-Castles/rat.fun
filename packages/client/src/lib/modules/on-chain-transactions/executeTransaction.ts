@@ -34,15 +34,18 @@ export async function executeTransaction(
 
     let tx
     if (systemId === WorldFunctions.Approve) {
-      tx = await client.writeContract({
-        address: get(externalAddressesConfig).erc20Address,
-        abi: erc20Abi,
-        functionName: "approve",
-        args: params,
-        gas: 5000000n // TODO: Added to fix gas estimation. Change this.
-      })
+      if (params.length === 2) {
+        tx = await client.writeContract({
+          address: get(externalAddressesConfig).erc20Address,
+          abi: erc20Abi,
+          functionName: "approve",
+          args: params as [`0x${string}`, bigint],
+          gas: 5000000n // TODO: Added to fix gas estimation. Change this.
+        })
+      } else {
+        throw new TransactionError(`Invalid arguments: ${params.join(":")}`)
+      }
     } else {
-      // @ts-expect-error - MUD world contract ABI causes excessive type instantiation
       tx = await client.writeContract({
         address: get(walletNetwork).worldContract.address,
         abi: get(walletNetwork).worldContract.abi,

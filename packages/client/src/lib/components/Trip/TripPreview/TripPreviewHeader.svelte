@@ -18,11 +18,14 @@
   let tripImageUrl = $derived.by(() => {
     const image = tripContentFromStore?.image
     if (image) {
-      // Only call urlFor if image is defined
-      const urlBuilder = urlFor(image)
-      return (urlBuilder as any)?.width(600)?.auto("format")?.url()
+      const result = urlFor(image)
+      if (result === "") {
+        return result
+      } else {
+        return result.width(600).auto("format").url()
+      }
     } else {
-      return false
+      return ""
     }
   })
 </script>

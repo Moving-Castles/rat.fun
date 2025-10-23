@@ -1,18 +1,22 @@
 <script lang="ts">
   import { activeWorldEvent, activeWorldEventContent } from "$lib/modules/state/stores"
   import { urlFor } from "$lib/modules/content/sanity"
+
+  let imageUrl = $derived.by(() => {
+    const result = urlFor($activeWorldEventContent?.image)
+    if (result == "") {
+      return result
+    } else {
+      return result.width(500).url()
+    }
+  })
 </script>
 
 {#if $activeWorldEventContent}
   <div class="world-event">
     <div class="image-container">
       <h1 class="world-event-title">{$activeWorldEventContent?.title}</h1>
-      <img
-        src={urlFor($activeWorldEventContent?.image ?? "")
-          ?.width(500)
-          ?.url() ?? ""}
-        alt={$activeWorldEventContent?.title}
-      />
+      <img src={imageUrl} alt={$activeWorldEventContent?.title} />
     </div>
     <p class="world-event-prompt">
       {$activeWorldEvent?.prompt}

@@ -9,6 +9,19 @@
   let { trip, sanityTripContent }: { trip: Trip; sanityTripContent: SanityTrip } = $props()
 
   let maxValuePerWin = getTripMaxValuePerWin(trip.tripCreationCost, trip.balance)
+
+  let backgroundImageUrl = $derived.by(() => {
+    if (sanityTripContent?.image) {
+      const result = urlFor(sanityTripContent?.image)
+      if (result == "") {
+        return ""
+      } else {
+        return result.width(200).height(200).auto("format").url()
+      }
+    } else {
+      return ""
+    }
+  })
 </script>
 
 <div class="trip-preview-header">
@@ -17,11 +30,7 @@
   <!-- svelte-ignore a11y_no_static_element_interactions -->
   {#key $lastUpdated}
     {#if sanityTripContent?.image?.asset}
-      <img
-        class="background-image"
-        src={urlFor(sanityTripContent?.image)?.width?.(200)?.height(200)?.url() ?? ""}
-        alt={`trip #${trip.index}`}
-      />
+      <img class="background-image" src={backgroundImageUrl} alt={`trip #${trip.index}`} />
     {/if}
   {/key}
   <!-- INFO -->

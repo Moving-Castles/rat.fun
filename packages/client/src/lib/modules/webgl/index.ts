@@ -50,6 +50,7 @@ export class WebGLGeneralRenderer implements WebGLRenderer {
     this.setupContextLossHandlers()
 
     activeRendererCount++
+    console.log(activeRendererCount + " WebGL contexts active")
   }
 
   /**
@@ -399,6 +400,7 @@ export class WebGLGeneralRenderer implements WebGLRenderer {
     }
 
     activeRendererCount--
+    console.log(activeRendererCount + " WebGL contexts active")
   }
 }
 

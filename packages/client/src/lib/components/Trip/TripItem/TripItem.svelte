@@ -23,8 +23,12 @@
   let tripImageUrl = $derived.by(() => {
     const image = sanityTripContent?.image
     if (image) {
-      // Only call urlFor if image is defined
-      return urlFor(image)?.width(400)?.auto("format")?.url()
+      const result = urlFor(image)
+      if (result == "") {
+        return false
+      } else {
+        return result.width(400).auto("format").url()
+      }
     } else {
       return false
     }
