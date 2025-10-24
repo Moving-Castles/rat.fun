@@ -15,6 +15,7 @@
   } = $props()
 
   let rect = $state<DOMRect>()
+  let isDragging = $state(false)
 
   const fields = ["ratBodies", "ratEars", "ratArms", "ratHeads"]
 
@@ -49,47 +50,57 @@
       }
     })
   )
-  let [bodyScale, headTweenX, headTweenY, headScale, headTilt, earsTilt, armsScale, armsTilt] = [
-    new Spring(1, { stiffness: 0.9 }),
+  let [
+    bodyScale,
+    headTweenX,
+    headTweenY,
+    headScale,
+    headTilt,
+    earsTilt,
+    armsScale,
+    armsTilt,
+    armsTranslate
+  ] = [
+    new Spring(1, { stiffness: 0.2 }),
     new Spring(0, { stiffness: 0.2 }),
     new Spring(0, { stiffness: 0.2 }),
     new Spring(1, { stiffness: 0.1 }),
     new Spring(1, { stiffness: 0.1 }),
+    new Spring(1, { stiffness: 0.2 }),
     new Spring(1, { stiffness: 0.5 }),
-    new Spring(1, { stiffness: 0.5 }),
-    new Spring(1, { stiffness: 0.4 })
+    new Spring(1, { stiffness: 0.4 }),
+    new Spring(0, { stiffness: 0.4 })
   ]
   let transforms = $derived([
     `scale(${bodyScale.current}) rotate(${headTilt.current}deg)`,
     `translateX(${headTweenX.current}px) translateY(${headTweenY.current}px) scale(${headScale.current}) rotate(${earsTilt.current}deg)`,
-    `scale(${armsScale.current}) rotate(${armsTilt.current}deg)`,
+    `scale(${armsScale.current}) rotate(${armsTilt.current}deg) translateY(${armsTranslate.current}px)`,
     `translateX(${headTweenX.current}px) translateY(${headTweenY.current}px) scale(${headScale.current}) rotate(${headTilt.current}deg)`
   ])
 
-  const ondragstart = e => {
+  const onmousedown = e => {
+    isDragging = true
     rect = e.currentTarget.getBoundingClientRect()
-    e.dataTransfer.setDragImage(emptyImage, 1, 1)
     bodyScale.set(0.8)
     armsScale.set(0.9)
     headScale.set(1.5)
-
-    return false
+    armsTranslate.set(30)
   }
 
-  const ondragover = e => {
-    if (rect?.left) {
-      const movementX = e.pageX - rect.left - rect.width / 2
-      const movementY = e.pageY - rect.top - rect.height / 2
-      headTweenX.set(Math.min(movementX / 2, 30))
-      headTweenY.set(Math.min(movementY / 2, 30))
-      headTilt.set(movementX / 20)
-      armsTilt.set(movementX / 10)
-      earsTilt.set(movementX / 10)
-    }
+  const onmousemove = e => {
+    if (!isDragging || !rect?.left) return
 
-    return false
+    const movementX = e.pageX - rect.left - rect.width / 2
+    const movementY = e.pageY - rect.top - rect.height / 2
+    headTweenX.set(Math.min(movementX / 2, 30))
+    headTweenY.set(Math.min(movementY / 2, 30))
+    headTilt.set(movementX / 20)
+    armsTilt.set(movementX / 10)
+    earsTilt.set(movementX / 10)
   }
-  const ondragend = e => {
+
+  const onmouseup = e => {
+    isDragging = false
     headScale.set(1)
     headTweenX.set(0)
     headTweenY.set(0)
@@ -98,17 +109,18 @@
     armsTilt.set(1)
     bodyScale.set(1)
     headScale.set(1)
-
-    return false
+    armsTranslate.set(0)
   }
 </script>
 
-<div draggable="true" {ondragstart} {ondragover} {ondragend} class="rat-container">
+<div {onmousedown} {onmousemove} {onmouseup} class="rat-container">
   {#if !images.some(image => false)}
     {#each images as src, i}
       <div class="layer {fields[i]} {animation}">
-        <div class="interactions" style:transform={transforms[i]}>
-          <img draggable="false" class="inner" {src} alt="" />
+        <div>
+          <div class="interactions" style:transform={transforms[i]}>
+            <img draggable="false" class="inner" {src} alt="" />
+          </div>
         </div>
       </div>
     {/each}
@@ -155,12 +167,20 @@
 
     &.ratEars,
     &.ratHeads {
-      transform-origin: 50% 150%;
+      // transform-origin: 50% 150%;
+
+      .interactions {
+        transform-origin: 50% 0%;
+      }
 
       &.survived {
         animation: bobbleHead 1s ease infinite;
       }
     }
+  }
+
+  img {
+    pointer-events: none;
   }
 
   @keyframes bobbleHead {
