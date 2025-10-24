@@ -72,7 +72,7 @@
     new Spring(0, { stiffness: 0.4 })
   ]
   let transforms = $derived([
-    `scale(${bodyScale.current}) rotate(${headTilt.current}deg)`,
+    `scale(${bodyScale.current}) rotate(${headTilt.current / 2}deg)`,
     `translateX(${headTweenX.current}px) translateY(${headTweenY.current}px) scale(${headScale.current}) rotate(${earsTilt.current}deg)`,
     `scale(${armsScale.current}) rotate(${armsTilt.current}deg) translateY(${armsTranslate.current}px)`,
     `translateX(${headTweenX.current}px) translateY(${headTweenY.current}px) scale(${headScale.current}) rotate(${headTilt.current}deg)`
@@ -82,9 +82,9 @@
     isDragging = true
     rect = e.currentTarget.getBoundingClientRect()
     bodyScale.set(0.8)
-    armsScale.set(0.9)
+    armsScale.set(1.1)
     headScale.set(1.5)
-    armsTranslate.set(30)
+    armsTranslate.set(45)
   }
 
   const onmousemove = e => {
@@ -107,6 +107,7 @@
     headTilt.set(0)
     armsScale.set(1)
     armsTilt.set(1)
+    earsTilt.set(1)
     bodyScale.set(1)
     headScale.set(1)
     armsTranslate.set(0)
@@ -117,10 +118,8 @@
   {#if !images.some(image => false)}
     {#each images as src, i}
       <div class="layer {fields[i]} {animation}">
-        <div>
-          <div class="interactions" style:transform={transforms[i]}>
-            <img draggable="false" class="inner" {src} alt="" />
-          </div>
+        <div class="interactions" style:transform={transforms[i]}>
+          <img draggable="false" class="inner" {src} alt="" />
         </div>
       </div>
     {/each}
