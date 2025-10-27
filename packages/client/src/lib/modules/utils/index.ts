@@ -637,3 +637,33 @@ export function addressToRatParts(
 
   return [body, arms, head, ears]
 }
+
+/**
+ * Tries to detect if the current browser supports extensions (ie. crypto wallets)
+ * @returns true if the browser seems to support extensions (desktop browsers), false otherwise (mobile browsers)
+ */
+export function hasExtensionSupport(): boolean {
+  // Check if we're in a browser environment
+  if (typeof window === "undefined") {
+    return false
+  }
+
+  // Mobile detection - if it's a mobile device, extensions are typically not supported
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    navigator.userAgent
+  )
+
+  // Touch device detection - mobile devices typically have touch support
+  const isTouchDevice = "ontouchstart" in window || navigator.maxTouchPoints > 0
+
+  // Screen size heuristic - mobile devices typically have smaller screens
+  const isSmallScreen = window.innerWidth < 768 || window.innerHeight < 768
+
+  // If it's mobile, touch device, or small screen, assume no extension support
+  if (isMobile || (isTouchDevice && isSmallScreen)) {
+    return false
+  }
+
+  // Desktop browsers typically support extensions
+  return true
+}
