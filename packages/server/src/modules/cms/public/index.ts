@@ -259,17 +259,15 @@ export async function updateStatistics(
       console.log("updated statistics")
     } else {
       // This means a fresh start.
-      // Make sure to check all the initial outcomes!
-      const initialRatValue =
-        (await publicSanityClient.fetch(
-          `math::sum(*[_type == "outcome" && worldAddress == $worldAddress]->ratValueChange)`,
-          { worldAddress }
-        )) || 0
       const initialTripValue =
         (await publicSanityClient.fetch(
           `math::sum(*[_type == "outcome" && worldAddress == $worldAddress]->tripValueChange)`,
           { worldAddress }
         )) || 0
+
+      // In the previous calculations, rat value change was wrongly calculated.
+      // Therefore we correct the initial value to be the inverse of the sum of tripValueChange
+      const initialRatValue = -initialTripValue
 
       const document = (await publicSanityClient.create({
         _type: "statistics",
