@@ -22,8 +22,6 @@
 
   const fields = ["ratBodies", "ratArms", "ratHeads", "ratEars"]
 
-  const emptyImage = new Image(1, 1)
-
   let numbers = $derived(addressToRatParts($playerAddress, $player?.currentRat))
   let images = $derived(
     numbers.map((num, i) => {
@@ -40,7 +38,10 @@
       )
         return false
 
-      const image = ratImagesDocument[key].find((_, i) => i == num)?.asset
+      const imageArray = ratImagesDocument[key as keyof typeof ratImagesDocument]
+      const image = Array.isArray(imageArray)
+        ? imageArray.find((_: any, i: number) => i == num)?.asset
+        : undefined
       if (image) {
         const result = urlFor(image)
         if (!result) return false
@@ -81,18 +82,18 @@
     `translateX(${headTweenX.current}px) translateY(${headTweenY.current}px) scale(${headScale.current}) rotate(${earsTilt.current}deg)`
   ])
 
-  const onmousedown = e => {
+  const onmousedown = (e: MouseEvent) => {
     if (inert) return false
     playSound("ratfunUI", "bigButtonDown")
     isDragging = true
-    rect = e.currentTarget.getBoundingClientRect()
+    rect = e.currentTarget ? (e.currentTarget as HTMLElement).getBoundingClientRect() : undefined
     bodyScale.set(0.8)
     armsScale.set(1.1)
     headScale.set(1.5)
     armsTranslate.set(45)
   }
 
-  const onmousemove = e => {
+  const onmousemove = (e: MouseEvent) => {
     if (!isDragging || !rect?.left || inert) return
 
     const movementX = e.pageX - rect.left - rect.width / 2
@@ -104,9 +105,9 @@
     earsTilt.set(movementX / 10)
   }
 
-  const onmouseup = e => {
+  const onmouseup = (e: MouseEvent) => {
     if (inert) return false
-    playSound("ratfunUI", "ratRelief")
+    // playSound("ratfunUI", "ratRelief")
     isDragging = false
     headScale.set(1)
     headTweenX.set(0)
@@ -123,12 +124,12 @@
 
 <svelte:body {onmousemove} {onmouseup} />
 
-<div {onmousedown} class="rat-container">
+<div {onmousedown} class="rat-container" role="button" tabindex="0">
   {#if !images.some(image => false)}
     {#each images as src, i}
       <div class="layer {fields[i]} {animation}">
         <div class="interactions" style:transform={transforms[i]}>
-          <img draggable="false" class="inner" {src} alt="" />
+          <img draggable="false" class="inner" src={src || ""} alt="" />
         </div>
       </div>
     {/each}
@@ -145,11 +146,6 @@
     // background: red;
     position: relative;
     cursor: grab;
-    -webkit-user-drag: none;
-    -khtml-user-drag: none;
-    -moz-user-drag: none;
-    -o-user-drag: none;
-    user-drag: none;
     user-select: none;
   }
 
