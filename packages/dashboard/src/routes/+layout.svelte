@@ -59,9 +59,29 @@
               withTween
               value={$staticContent?.statistics?.tripTotalBalance || 0}
             /><small>trips</small>
+            <SignedNumber noColor value={$staticContent?.statistics?.totalThroughput || 0} /><small
+              >throughput</small
+            >
           </span>
           <span class="bottom">
-            <!-- balance as a percentage of throughput -->
+            {#if $staticContent.statistics.ratTotalBalance !== 0 && $staticContent.statistics.tripTotalBalance !== 0}
+              {#if Math.abs($staticContent.statistics.ratTotalBalance) > Math.abs($staticContent.statistics.tripTotalBalance)}
+                {Math.abs(
+                  ($staticContent.statistics.ratTotalBalance /
+                    $staticContent.statistics.tripTotalBalance -
+                    1) *
+                    100
+                )}% <small>rats</small>
+              {:else}
+                {Math.abs(
+                  ($staticContent.statistics.tripTotalBalance /
+                    $staticContent.statistics.ratTotalBalance -
+                    1) *
+                    100
+                )}% <small>trips</small>
+              {/if}
+            {/if}
+
             {#if $staticContent?.statistics?.totalThroughput && $staticContent?.statistics?.totalThroughput > 0}
               {(
                 Math.abs(
