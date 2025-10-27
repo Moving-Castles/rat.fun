@@ -31,29 +31,6 @@
       goto("/")
     }
   }
-
-  // let ratTotalDistributedValue = $derived.by(() => {
-  //   if ($staticContent.outcomes) {
-  //     console.log("START")
-  //     return $staticContent.outcomes.reduce((a, current) => {
-  //       console.log("Rat value change : ", current?.ratValueChange, a)
-  //       if (current)
-  //       return a + current?.ratValueChange || 0
-  //     }, 0)
-  //   } else {
-  //     return 0
-  //   }
-  // })
-
-  // let tripTotalDistributedValue = $derived.by(() => {
-  //   if ($staticContent.outcomes) {
-  //     return $staticContent.outcomes.reduce((a, current) => {
-  //       return a + current?.tripValueChange || 0
-  //     }, 0)
-  //   } else {
-  //     return 0
-  //   }
-  // })
 </script>
 
 {#if $UIState === UI.LOADING}
@@ -71,7 +48,10 @@
         <hr />
       </div>
       <div>
-        <!-- <h1>RATS: {ratTotalDistributedValue} / TRIPS: {tripTotalDistributedValue}</h1> -->
+        <h1>
+          RATS: {$staticContent?.statistics?.ratTotalBalance || "NO DATA"}
+          / TRIPS: {$staticContent?.statistics?.tripTotalBalance || "NO DATA"}
+        </h1>
         <hr />
       </div>
     </header>

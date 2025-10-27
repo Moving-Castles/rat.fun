@@ -17,17 +17,20 @@ const outcomes = `*[_type == "outcome" && worldAddress == $worldAddress] {
 }`
 const worldEvents =
   '*[_type == "worldEvent" && worldAddress == $worldAddress] | order(activationDateTime asc)'
+const statistics = '*[_type == "statistics" && worldAddress == $worldAddress][0]'
 
 export const queries = {
   ratImages,
   trips,
   outcomes,
   worldEvents,
+  statistics,
   staticContent: `{
     "ratImages": ${ratImages},
     "trips": ${trips},
     "outcomes": ${outcomes},
-    "worldEvents": ${worldEvents}
+    "worldEvents": ${worldEvents},
+    "statistics": ${statistics}
   }`,
   outcomesForTrip: `*[_type == "outcome" && tripId == $tripId && worldAddress == $worldAddress] {
     ...,

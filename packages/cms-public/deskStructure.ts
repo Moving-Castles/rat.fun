@@ -1,5 +1,5 @@
 // ICONS
-import { MdAirlines, MdStar, MdImage, MdEvent, MdChat } from "react-icons/md"
+import { MdAirlines, MdStar, MdAutoGraph, MdEvent, MdChat } from "react-icons/md"
 
 export default (S: any) =>
   S.list()
@@ -30,5 +30,15 @@ export default (S: any) =>
       S.listItem()
         .title("Rat images")
         .icon(MdChat)
-        .child(S.editor().id("rat-images").schemaType("ratImages").documentId("rat-images"))
+        .child(S.editor().id("rat-images").schemaType("ratImages").documentId("rat-images")),
+      S.divider(),
+      S.listItem()
+        .title("Statistics")
+        .icon(MdAutoGraph)
+        .child(
+          S.documentList()
+            .title("Statistics")
+            .filter('_type == "statistics"')
+            .schemaType("statistics")
+        )
     ])
