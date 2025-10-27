@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte"
-  import { playSound } from "$lib/modules/sound"
 
   let { soundOn = false }: { soundOn?: boolean } = $props()
 
@@ -11,9 +10,6 @@
   onMount(() => {
     interval = setInterval(() => {
       currentIndex = (currentIndex + 1) % spinnerChars.length
-      if (soundOn) {
-        playSound("ratfunUI", "tick")
-      }
     }, 100)
   })
 

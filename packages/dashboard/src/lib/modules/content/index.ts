@@ -101,6 +101,12 @@ export async function initStaticContent(worldAddress: string) {
   // Subscribe to changes to our statistics document
   client.listen(queries.statistics, { worldAddress }).subscribe(update => {
     console.log("statistics update", update)
+    staticContent.update(content => {
+      return {
+        ...content,
+        statistics: update.result as SanityStatistics
+      }
+    })
   })
 }
 

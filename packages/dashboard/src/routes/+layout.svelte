@@ -13,6 +13,7 @@
   import { errorHandler } from "$lib/modules/error-handling"
   import { environment as environmentStore } from "$lib/modules/network"
 
+  import SignedNumber from "$lib/components/Shared/SignedNumber/SignedNumber.svelte"
   import Loading from "$lib/components/Loading/Loading.svelte"
   import Toasts from "$lib/components/Shared/Toasts/Toasts.svelte"
 
@@ -49,8 +50,9 @@
       </div>
       <div>
         <h1>
-          RATS: {$staticContent?.statistics?.ratTotalBalance || "NO DATA"}
-          / TRIPS: {$staticContent?.statistics?.tripTotalBalance || "NO DATA"}
+          <SignedNumber value={$staticContent?.statistics?.ratTotalBalance || 0} /> (RATS) <SignedNumber
+            value={$staticContent?.statistics?.tripTotalBalance || 0}
+          /> (TRIPS)
         </h1>
         <hr />
       </div>

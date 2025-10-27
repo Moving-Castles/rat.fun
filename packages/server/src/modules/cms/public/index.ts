@@ -252,16 +252,19 @@ export async function updateStatistics(
     // Handle the document
     if (statisticsDocument) {
       // Update the values
-      await publicSanityClient.patch(statisticsDocument._id).set({
-        ratTotalBalance: statisticsDocument.ratTotalBalance + ratValueChange,
-        tripTotalBalance: statisticsDocument.tripTotalBalance + tripValueChange
-      })
+      await publicSanityClient
+        .patch(statisticsDocument._id)
+        .set({
+          ratTotalBalance: statisticsDocument.ratTotalBalance + ratValueChange,
+          tripTotalBalance: statisticsDocument.tripTotalBalance + tripValueChange
+        })
+        .commit()
       console.log("updated statistics")
     } else {
       // This means a fresh start.
       const initialTripValue =
         (await publicSanityClient.fetch(
-          `math::sum(*[_type == "outcome" && worldAddress == $worldAddress]->tripValueChange)`,
+          `math::sum(*[_type == "outcome" && worldAddress == $worldAddress].tripValueChange)`,
           { worldAddress }
         )) || 0
 
