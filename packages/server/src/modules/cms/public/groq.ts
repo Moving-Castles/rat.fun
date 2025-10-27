@@ -4,5 +4,6 @@
  */
 
 export const queries = {
-  trip: "*[_id == $tripId][0]"
+  trip: "*[_id == $tripId][0]",
+  statistics: `*[_type == "statistics" && worldAddress == $worldAddress][0]`
 }

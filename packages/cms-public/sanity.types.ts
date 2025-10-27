@@ -13,6 +13,18 @@
  */
 
 // Source: schema.json
+export type Statistics = {
+  _id: string
+  _type: "statistics"
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  worldAddress?: string
+  ratTotalBalance?: number
+  tripTotalBalance?: number
+}
+
 export type RatImages = {
   _id: string
   _type: "ratImages"
@@ -33,7 +45,7 @@ export type RatImages = {
     _type: "image"
     _key: string
   }>
-  ratArms?: Array<{
+  ratBodies?: Array<{
     asset?: {
       _ref: string
       _type: "reference"
@@ -46,7 +58,7 @@ export type RatImages = {
     _type: "image"
     _key: string
   }>
-  ratBodies?: Array<{
+  ratArms?: Array<{
     asset?: {
       _ref: string
       _type: "reference"
@@ -302,6 +314,7 @@ export type SanityAssetSourceData = {
 }
 
 export type AllSanitySchemaTypes =
+  | Statistics
   | RatImages
   | WorldEvent
   | Outcome

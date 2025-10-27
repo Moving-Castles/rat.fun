@@ -29,22 +29,22 @@ export default {
       type: "number",
       readOnly: true,
       validation: (Rule: any) => Rule.required()
-    },
-    {
-      title: "Rat total spend",
-      name: "ratTotalSpend",
-      type: "number",
-      description: "Total amount spent on rats",
-      readOnly: true,
-      validation: (Rule: any) => Rule.required()
-    },
-    {
-      title: "Trip total spend",
-      name: "tripTotalSpend",
-      type: "number",
-      description: "Total amount spent on rats",
-      readOnly: true,
-      validation: (Rule: any) => Rule.required()
     }
+    // {
+    //   title: "Rat total spend",
+    //   name: "ratTotalSpend",
+    //   type: "number",
+    //   description: "Total amount spent on rats",
+    //   readOnly: true,
+    //   validation: (Rule: any) => Rule.required()
+    // },
+    // {
+    //   title: "Trip total spend",
+    //   name: "tripTotalSpend",
+    //   type: "number",
+    //   description: "Total amount spent on rats",
+    //   readOnly: true,
+    //   validation: (Rule: any) => Rule.required()
+    // }
   ]
 }

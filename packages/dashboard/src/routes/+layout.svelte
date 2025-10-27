@@ -31,28 +31,6 @@
       goto("/")
     }
   }
-
-  let totalDistributedValue = $derived.by(() => {
-    if ($staticContent.outcomes) {
-      console.log("START for rats")
-      return $staticContent.outcomes.reduce(
-        (a, current) => {
-          const ratValue = current?.ratValueChange ?? 0
-          const newRatValue = a.rat + ratValue
-          const tripValue = current?.tripValueChange || 0
-          const newTripValue = a.trip + tripValue
-
-          return {
-            rat: newRatValue,
-            trip: newTripValue
-          }
-        },
-        { rat: 0, trip: 0 }
-      )
-    } else {
-      return { rat: 0, trip: 0 }
-    }
-  })
 </script>
 
 {#if $UIState === UI.LOADING}
@@ -70,7 +48,10 @@
         <hr />
       </div>
       <div>
-        <h1>RATS: {totalDistributedValue.rat} / TRIPS: {totalDistributedValue.trip}</h1>
+        <h1>
+          RATS: {$staticContent?.statistics?.ratTotalBalance || "NO DATA"}
+          / TRIPS: {$staticContent?.statistics?.tripTotalBalance || "NO DATA"}
+        </h1>
         <hr />
       </div>
     </header>

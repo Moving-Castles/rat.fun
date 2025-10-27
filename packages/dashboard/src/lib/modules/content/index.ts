@@ -6,7 +6,8 @@ import type {
   Trip as SanityTrip,
   Outcome as SanityOutcome,
   WorldEvent as SanityWorldEvent,
-  RatImages as SanityRatImages
+  RatImages as SanityRatImages,
+  Statistics as SanityStatistics
 } from "@sanity-types"
 import { queries } from "./sanity/groq"
 import type { MutationEvent } from "@sanity/client"
@@ -18,6 +19,7 @@ export type StaticContent = {
   trips: SanityTrip[]
   outcomes: SanityOutcome[]
   worldEvents: SanityWorldEvent[]
+  statistics: SanityStatistics
 }
 
 // --- STORES -----------------------------------------------------------
@@ -26,7 +28,8 @@ export const staticContent = writable<StaticContent>({
   trips: [] as SanityTrip[],
   outcomes: [] as SanityOutcome[],
   worldEvents: [] as SanityWorldEvent[],
-  ratImages: {} as SanityRatImages
+  ratImages: {} as SanityRatImages,
+  statistics: {} as SanityStatistics
 })
 
 export const lastUpdated = writable(performance.now())
@@ -55,7 +58,8 @@ export async function initStaticContent(worldAddress: string) {
     ratImages: data.ratImages,
     trips: data.trips,
     outcomes: data.outcomes,
-    worldEvents: processedWorldEvents
+    worldEvents: processedWorldEvents,
+    statistics: data.statistics
   })
 
   // Subscribe to changes to trips in sanity DB
@@ -92,6 +96,11 @@ export async function initStaticContent(worldAddress: string) {
         )
       }
     })
+  })
+
+  // Subscribe to changes to our statistics document
+  client.listen(queries.statistics, { worldAddress }).subscribe(update => {
+    console.log("statistics update", update)
   })
 }
 

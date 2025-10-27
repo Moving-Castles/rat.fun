@@ -1,4 +1,8 @@
-import type { Outcome as OutcomeDoc, Trip as TripDoc } from "@sanity-public-cms-types"
+import type {
+  Outcome as OutcomeDoc,
+  Trip as TripDoc,
+  Statistics as StatisticsDoc
+} from "@sanity-public-cms-types"
 import type { Rat, Trip, Player, DebuggingInfo } from "@modules/types"
 import type { CorrectionReturnValue, OutcomeReturnValue } from "@modules/types"
 import { loadDataPublicSanity } from "@modules/cms/public/sanity"
@@ -218,6 +222,9 @@ export async function writeOutcomeToCMS(
     // Create the outcome document in Sanity
     const outcomeDoc = (await publicSanityClient.create(newOutcomeDoc)) as OutcomeDoc
 
+    // Update statistics
+    updateStatistics(worldAddress, ratValueChange, tripValueChange)
+
     return outcomeDoc
   } catch (error) {
     // If it's already one of our custom errors, rethrow it
@@ -228,6 +235,61 @@ export async function writeOutcomeToCMS(
     // Otherwise, wrap it in our custom error
     throw new CMSAPIError(
       `Error writing outcome to CMS: ${error instanceof Error ? error.message : String(error)}`,
+      error
+    )
+  }
+}
+
+export async function updateStatistics(
+  worldAddress: string,
+  ratValueChange: number,
+  tripValueChange: number
+) {
+  try {
+    // Get the document
+    const statisticsDocument = await publicSanityClient.fetch(queries.statistics, { worldAddress })
+
+    // Handle the document
+    if (statisticsDocument) {
+      // Update the values
+      await publicSanityClient.patch(statisticsDocument._id).set({
+        ratTotalBalance: statisticsDocument.ratTotalBalance + ratValueChange,
+        tripTotalBalance: statisticsDocument.tripTotalBalance + tripValueChange
+      })
+      console.log("updated statistics")
+    } else {
+      // This means a fresh start.
+      // Make sure to check all the initial outcomes!
+      const initialRatValue =
+        (await publicSanityClient.fetch(
+          `math::sum(*[_type == "outcome" && worldAddress == $worldAddress]->ratValueChange)`,
+          { worldAddress }
+        )) || 0
+      const initialTripValue =
+        (await publicSanityClient.fetch(
+          `math::sum(*[_type == "outcome" && worldAddress == $worldAddress]->tripValueChange)`,
+          { worldAddress }
+        )) || 0
+
+      const document = (await publicSanityClient.create({
+        _type: "statistics",
+        worldAddress,
+        title: worldAddress,
+        ratTotalBalance: initialRatValue + ratValueChange,
+        tripTotalBalance: initialTripValue + tripValueChange
+      })) as StatisticsDoc
+
+      console.warn(
+        "New statistics document created with initial values for rats: ",
+        document.ratTotalBalance,
+        " and trips: ",
+        document.tripTotalBalance
+      )
+    }
+  } catch (error) {
+    // Otherwise, wrap it in our custom error
+    throw new CMSAPIError(
+      `Error writing statistics to CMS: ${error instanceof Error ? error.message : String(error)}`,
       error
     )
   }
