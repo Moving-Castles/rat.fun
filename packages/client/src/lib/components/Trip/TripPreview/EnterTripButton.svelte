@@ -10,6 +10,7 @@
   let minRatValueToEnter = getTripMinRatValueToEnter(trip.tripCreationCost)
 
   const onClick = async () => {
+    console.log("onClick", $player.currentRat)
     await goto(`/${tripId}/tripping?enter=true&rat=${$player.currentRat}&t=${Date.now()}`)
   }
 </script>

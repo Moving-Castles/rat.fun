@@ -15,14 +15,14 @@
   let inventorySlots = $state([...inventory, ...emptySlots])
 
   $effect(() => {
-    // Fill the inventory slots after 2s
+    // Fill the inventory slots after 1s
     setTimeout(() => {
-      console.log("after 2s")
+      // console.log("after 2s")
       inventorySlots = [
         ...inventory,
         ...Array(MAX_INVENTORY_SIZE - (inventory?.length || 0)).fill(null)
       ]
-    }, 2000)
+    }, 1000)
   })
 </script>
 

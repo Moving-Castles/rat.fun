@@ -30,7 +30,6 @@ export const saleStatus = writable<SALE_STATUS>(SALE_STATUS.UNKNOWN)
 export const getEnvironmentFromUrl = (url: URL) => {
   const hostname = url.hostname
   const networkParam = url.searchParams.get("network")
-  console.log("getEnvironmentFromUrl", hostname, networkParam)
 
   if (hostname === "rat.fun" || networkParam === "base") {
     return ENVIRONMENT.BASE
@@ -50,7 +49,6 @@ export const getEnvironmentFromUrl = (url: URL) => {
 export const getWalletTypeFromUrl = (url: URL) => {
   const hostname = url.hostname
   const walletTypeParam = url.searchParams.get("walletType")
-  console.log("getWalletTypeFromUrl", hostname, walletTypeParam)
 
   if (
     hostname === "rat.fun" ||

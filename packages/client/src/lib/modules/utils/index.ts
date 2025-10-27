@@ -578,7 +578,7 @@ export function addressToRatParts(
   ratAddress: string,
   maxParts: number = 50
 ): [number, number, number, number] {
-  console.log(playerAddress, ratAddress)
+  // console.log(playerAddress, ratAddress)
   // Remove 0x prefix
   const cleanPlayer = playerAddress.startsWith("0x") ? playerAddress.slice(2) : playerAddress
   const cleanRat = ratAddress.startsWith("0x") ? ratAddress.slice(2) : ratAddress
@@ -633,7 +633,7 @@ export function addressToRatParts(
     addressToNumber("0x" + earsSeed, maxParts)
   ]
 
-  console.log(body, arms, head, ears)
+  // console.log(body, arms, head, ears)
 
   return [body, arms, head, ears]
 }

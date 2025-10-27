@@ -79,7 +79,7 @@
   let graphData = $derived.by(() => {
     const trips = Object.values($playerTrips)
     if (!trips.length) {
-      console.log("no trips", performance.now())
+      // console.log("no trips", performance.now())
       return []
     }
 
@@ -120,7 +120,7 @@
     let runningBalance = 0
 
     // Return data now
-    console.log("trips", dataWithBaseline.length, performance.now())
+    // console.log("trips", dataWithBaseline.length, performance.now())
 
     return dataWithBaseline.map((point, index) => {
       runningBalance += point.valueChange || 0
