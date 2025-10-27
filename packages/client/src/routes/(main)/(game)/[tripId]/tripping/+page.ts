@@ -15,7 +15,7 @@ export const load = ({ params, url }: { params: { tripId: string }; url: URL }) 
   // 2. The rat ID matches the current rat
   // 3. The timestamp is within the last 10 seconds
   // Otherwise, redirect to the home page
-  if (!(enterFlag && ratId === get(player).currentRat && Date.now() - timestamp < 10000)) {
+  if (!(enterFlag && ratId === get(player)?.currentRat && Date.now() - timestamp < 10000)) {
     throw redirect(302, "/")
   }
 

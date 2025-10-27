@@ -32,6 +32,14 @@
 
   // Process the trip
   const processTripEntry = async () => {
+    if (!$player?.currentRat) {
+      throw new TripError("No rat selected", tripId)
+    }
+
+    if (!tripId) {
+      throw new TripError("No trip ID", tripId)
+    }
+
     try {
       result = await sendEnterTrip(tripId, $player.currentRat)
       if (!result) {

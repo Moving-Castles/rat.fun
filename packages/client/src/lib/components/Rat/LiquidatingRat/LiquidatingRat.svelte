@@ -20,7 +20,7 @@
     await sendLiquidateRat()
 
     // Send off-chain liquidation message
-    sendLiquidateRatMessage($player.currentRat)
+    sendLiquidateRatMessage($player?.currentRat ?? "")
 
     // Update balance after liquidation
     await refetchBalance()
