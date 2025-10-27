@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from "svelte"
+  import { onMount, onDestroy } from "svelte"
   import { fade } from "svelte/transition"
   import { player } from "$lib/modules/state/stores"
   import { waitForPropertyChange } from "$lib/modules/state/utils"
@@ -42,6 +42,8 @@
   let firstNameInterval: ReturnType<typeof setInterval> | null = null
   let lastNameInterval: ReturnType<typeof setInterval> | null = null
   let numberInterval: ReturnType<typeof setInterval> | null = null
+  let slotMachineTimeout: ReturnType<typeof setTimeout> | null = null
+  let checkInterval: ReturnType<typeof setInterval> | null = null
 
   // Helper function to get random element that's different from previous
   function getRandomElementAvoidingPrevious<T>(array: T[], previous: T): T {
@@ -114,7 +116,7 @@
       slotMachineDone = true
 
       // Wait a moment to show the final name, then check if we can transition
-      setTimeout(() => {
+      slotMachineTimeout = setTimeout(() => {
         checkTransition()
       }, 1000)
     }
@@ -143,9 +145,10 @@
     } else {
       waitingForDeployment = true
       // User finished slot machine before deployment, wait for deployment
-      const checkInterval = setInterval(() => {
+      checkInterval = setInterval(() => {
         if (deploymentDone) {
-          clearInterval(checkInterval)
+          clearInterval(checkInterval!)
+          checkInterval = null
           done()
         }
       }, 100)
@@ -167,6 +170,30 @@
     erc20BalanceListenerActive.set(false)
     startSlotMachine()
     await startDeployment()
+  })
+
+  onDestroy(() => {
+    // Clean up all timeouts and intervals when component is unmounted
+    if (firstNameInterval) {
+      clearInterval(firstNameInterval)
+      firstNameInterval = null
+    }
+    if (lastNameInterval) {
+      clearInterval(lastNameInterval)
+      lastNameInterval = null
+    }
+    if (numberInterval) {
+      clearInterval(numberInterval)
+      numberInterval = null
+    }
+    if (slotMachineTimeout) {
+      clearTimeout(slotMachineTimeout)
+      slotMachineTimeout = null
+    }
+    if (checkInterval) {
+      clearInterval(checkInterval)
+      checkInterval = null
+    }
   })
 </script>
 

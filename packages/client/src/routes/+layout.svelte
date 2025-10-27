@@ -25,7 +25,7 @@
     environment as environmentStore,
     walletType as walletTypeStore
   } from "$lib/modules/network"
-  import { entryKitSession } from "$lib/modules/entry-kit/stores"
+  import { player } from "$lib/modules/state/stores"
 
   // Components
   import Spawn from "$lib/components/Spawn/Spawn.svelte"
@@ -64,7 +64,7 @@
     }
   }
 
-  $inspect($entryKitSession)
+  $inspect($player?.currentRat ?? "NO CURRENT RAT")
 
   // Called when spawning is complete
   const spawned = () => {
