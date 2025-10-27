@@ -32,28 +32,27 @@
     }
   }
 
-  // let ratTotalDistributedValue = $derived.by(() => {
-  //   if ($staticContent.outcomes) {
-  //     console.log("START")
-  //     return $staticContent.outcomes.reduce((a, current) => {
-  //       console.log("Rat value change : ", current?.ratValueChange, a)
-  //       if (current)
-  //       return a + current?.ratValueChange || 0
-  //     }, 0)
-  //   } else {
-  //     return 0
-  //   }
-  // })
+  let totalDistributedValue = $derived.by(() => {
+    if ($staticContent.outcomes) {
+      console.log("START for rats")
+      return $staticContent.outcomes.reduce(
+        (a, current) => {
+          const ratValue = current?.ratValueChange ?? 0
+          const newRatValue = a.rat + ratValue
+          const tripValue = current?.tripValueChange || 0
+          const newTripValue = a.trip + tripValue
 
-  // let tripTotalDistributedValue = $derived.by(() => {
-  //   if ($staticContent.outcomes) {
-  //     return $staticContent.outcomes.reduce((a, current) => {
-  //       return a + current?.tripValueChange || 0
-  //     }, 0)
-  //   } else {
-  //     return 0
-  //   }
-  // })
+          return {
+            rat: newRatValue,
+            trip: newTripValue
+          }
+        },
+        { rat: 0, trip: 0 }
+      )
+    } else {
+      return { rat: 0, trip: 0 }
+    }
+  })
 </script>
 
 {#if $UIState === UI.LOADING}
@@ -71,7 +70,7 @@
         <hr />
       </div>
       <div>
-        <!-- <h1>RATS: {ratTotalDistributedValue} / TRIPS: {tripTotalDistributedValue}</h1> -->
+        <h1>RATS: {totalDistributedValue.rat} / TRIPS: {totalDistributedValue.trip}</h1>
         <hr />
       </div>
     </header>

@@ -24,7 +24,7 @@ interface OutcomeDocument {
 
 // Initialize Sanity client
 const client = createClient({
-  projectId: "kupagww3",
+  projectId: process.env.PUBLIC_SANITY_CMS_ID,
   dataset: "production",
   apiVersion: "2025-04-01",
   token: process.env.PUBLIC_SANITY_CMS_TOKEN, // Make sure to set this environment variable
