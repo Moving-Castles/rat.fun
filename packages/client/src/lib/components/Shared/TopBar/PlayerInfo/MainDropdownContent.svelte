@@ -7,6 +7,8 @@
   // import { BigButton } from "$lib/components/Shared"
   // import { busy } from "$lib/modules/action-manager/index.svelte"
   import { shortenAddress } from "$lib/modules/utils"
+  import { SmallButton } from "$lib/components/Shared"
+  import { disconnectWallet } from "$lib/modules/entry-kit/connector"
 </script>
 
 <div class="main-dropdown-content">
@@ -40,6 +42,13 @@
       </p>
     </div>
   {/if}
+  <SmallButton
+    tippyText="Disconnect wallet"
+    onclick={async () => {
+      await disconnectWallet()
+    }}
+    text="Disconnect wallet"
+  ></SmallButton>
   <!-- <div class="buy-button-container">
     <BigButton
       disabled={busy.BuyWithEth.current !== 0}

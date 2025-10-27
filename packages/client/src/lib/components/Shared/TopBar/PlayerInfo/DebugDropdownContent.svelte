@@ -20,7 +20,6 @@
   import { busy } from "$lib/modules/action-manager/index.svelte"
   import { adminUnlockedAt } from "$lib/modules/ui/state.svelte"
   import { ENVIRONMENT } from "$lib/mud/enums"
-  import { disconnectWallet } from "$lib/modules/entry-kit/connector"
 
   const sendUnlockAdmin = async () => {
     await sendChatMessage("RatsRiseUp666")
@@ -110,13 +109,6 @@
         await sendApproveMax()
       }}
       text="Approve max allowance"
-    ></SmallButton>
-    <SmallButton
-      tippyText="Disconnect wallet"
-      onclick={async () => {
-        await disconnectWallet()
-      }}
-      text="Disconnect wallet"
     ></SmallButton>
   </div>
 </div>
