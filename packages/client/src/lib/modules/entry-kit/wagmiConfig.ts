@@ -8,6 +8,7 @@ import {
   extendedMudFoundry
 } from "$lib/mud/extendedChainConfigs"
 import { PUBLIC_WALLET_CONNECT_PROJECT_ID } from "$env/static/public"
+import { hasExtensionSupport } from "$lib/modules/utils"
 
 export const chains = [
   extendedBase,
@@ -22,18 +23,22 @@ export const transports = {
 } as const
 
 export function wagmiConfig(): Config<typeof chains, typeof transports> {
-  const appName = document.title
-  const connectors: CreateConnectorFn[] = []
+  const appName = "RAT.FUN"
 
-  connectors.push(
-    coinbaseWallet({
-      appName,
-      overrideIsMetaMask: false
-    }),
-    metaMask(),
-    walletConnect({ projectId: PUBLIC_WALLET_CONNECT_PROJECT_ID }),
-    injected()
-  )
+  // If browser supports extensions, leave connectors empty to allow auto-detection
+  const connectors: CreateConnectorFn[] = []
+  // If browser does not seem to support extensions (mobile), add specific connectors
+  if (!hasExtensionSupport()) {
+    connectors.push(
+      coinbaseWallet({
+        appName,
+        overrideIsMetaMask: false
+      }),
+      metaMask(),
+      walletConnect({ projectId: PUBLIC_WALLET_CONNECT_PROJECT_ID }),
+      injected()
+    )
+  }
 
   // If we're in an iframe, include the SafeConnector
   const shouldUseSafeConnector = !(typeof window === "undefined") && window?.parent !== window
@@ -46,12 +51,12 @@ export function wagmiConfig(): Config<typeof chains, typeof transports> {
   }
 
   const configParams = getDefaultConfig({
+    appName,
     chains,
     transports,
     pollingInterval: {
       [extendedBaseSepolia.id]: 2000
     },
-    appName: document.title,
     walletConnectProjectId: PUBLIC_WALLET_CONNECT_PROJECT_ID,
     enableFamily: false,
     connectors
