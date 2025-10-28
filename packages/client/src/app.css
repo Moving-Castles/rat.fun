@@ -45,6 +45,11 @@
   --color-up: #78ee72;
   --color-down: red;
 
+  --color-item-add: #a800f0;
+  --color-item-remove: #f0b000;
+  --color-balance-add: rgb(135, 255, 135);
+  --color-balance-remove: #cc002c;
+
   /* * * * * * * * * * * * * *
   * Layout
   * * * * * * * * * * * * * */

@@ -2,6 +2,7 @@ export default {
   title: "Trip",
   name: "trip",
   type: "document",
+  groups: ["statistics"],
   fields: [
     {
       title: "Title",
@@ -57,6 +58,42 @@ export default {
       name: "tripFactor",
       type: "number",
       readOnly: true,
+      validation: (Rule: any) => Rule.required()
+    },
+    {
+      title: "Archetype | Gives Items",
+      name: "archetypeItemAdd",
+      type: "number",
+      validation: (Rule: any) => Rule.required()
+    },
+    {
+      title: "Archetype | Takes Items",
+      name: "archetypeItemRemove",
+      type: "number",
+      validation: (Rule: any) => Rule.required()
+    },
+    {
+      title: "Archetype | Gives Health",
+      name: "archetypeBalanceAdd",
+      type: "number",
+      validation: (Rule: any) => Rule.required()
+    },
+    {
+      title: "Archetype | Takes Health",
+      name: "archetypeBalanceRemove",
+      type: "number",
+      validation: (Rule: any) => Rule.required()
+    },
+    {
+      title: "Kills",
+      name: "kills",
+      type: "number",
+      validation: (Rule: any) => Rule.required()
+    },
+    {
+      title: "Visits",
+      name: "visits",
+      type: "number",
       validation: (Rule: any) => Rule.required()
     },
     {

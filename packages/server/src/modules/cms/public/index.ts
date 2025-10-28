@@ -41,6 +41,97 @@ export const getTripFactor = async (tripId: string) => {
 }
 
 /**
+ * Get the trip archetype data from the CMS
+ * @param tripId - The ID of the trip
+ * @returns The trip factor
+ */
+export const getArchetypeData = async (tripId: string) => {
+  try {
+    const trip = (await loadDataPublicSanity(queries.trip, { tripId })) as TripDoc
+
+    return {
+      archetypeItemAdd: trip?.archetypeItemAdd ?? 0,
+      archetypeItemRemove: trip?.archetypeItemRemove ?? 0,
+      archetypeBalanceAdd: trip?.archetypeBalanceAdd ?? 0,
+      archetypeBalanceRemove: trip?.archetypeBalanceRemove ?? 0,
+      kills: trip?.kills ?? 0,
+      visits: trip?.visits ?? 0
+    }
+  } catch (error) {
+    // If it's already one of our custom errors, rethrow it
+    if (error instanceof CMSError) {
+      throw error
+    }
+
+    // Otherwise, wrap it in our custom error
+    throw new CMSAPIError(
+      `Error trip document: ${error instanceof Error ? error.message : String(error)}`,
+      error
+    )
+  }
+}
+
+export async function updateArchetypeData(
+  tripID: string,
+  value: {
+    archetypeItemAdd: number
+    archetypeItemRemove: number
+    archetypeBalanceAdd: number
+    archetypeBalanceRemove: number
+    kills: number
+    visits: number
+  }
+): Promise<TripDoc> {
+  try {
+    const {
+      archetypeItemAdd,
+      archetypeItemRemove,
+      archetypeBalanceAdd,
+      archetypeBalanceRemove,
+      kills,
+      visits
+    } = value
+
+    console.log("The amount of kills passed is ", kills)
+
+    // Update the trip document with the trip factor
+    const trip = (await publicSanityClient
+      .patch(tripID)
+      .setIfMissing({
+        archetypeItemAdd: 0,
+        archetypeItemRemove: 0,
+        archetypeBalanceAdd: 0,
+        archetypeBalanceRemove: 0,
+        kills: 0,
+        visits: 0
+      })
+      .inc({
+        // increment, all positive values
+        archetypeItemAdd,
+        archetypeItemRemove,
+        archetypeBalanceAdd,
+        archetypeBalanceRemove,
+        kills,
+        visits
+      })
+      .commit()) as TripDoc
+
+    return trip
+  } catch (error) {
+    // If it's already one of our custom errors, rethrow it
+    if (error instanceof CMSError) {
+      throw error
+    }
+
+    // Otherwise, wrap it in our custom error
+    throw new CMSAPIError(
+      `Error writing trip factor to CMS: ${error instanceof Error ? error.message : String(error)}`,
+      error
+    )
+  }
+}
+
+/**
  * Write trip text metadata to offchain CMS.
  * Called immediately after trip creation onchain.
  * @param worldAddress - The world address of the trip

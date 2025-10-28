@@ -8,6 +8,9 @@ export { default as BackButton } from "./Buttons/BackButton.svelte"
 /* ChatBox */
 export { default as ChatBox } from "./ChatBox/ChatBox.svelte"
 
+/* ArchetypeBar */
+export { default as ArchetypeBar } from "./ArchetypeBar/ArchetypeBar.svelte"
+
 /* Graphics */
 export { default as X } from "./Graphics/X.svelte"
 
