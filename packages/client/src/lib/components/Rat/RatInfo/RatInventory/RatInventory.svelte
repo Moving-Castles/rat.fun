@@ -1,6 +1,5 @@
 <script lang="ts">
   import { getRatInventory } from "$lib/modules/state/utils"
-  import { untrack } from "svelte"
 
   import InteractiveItem from "$lib/components/Rat/RatInfo/RatInventory/InteractiveItem.svelte"
   import EmptySlot from "$lib/components/Rat/RatInfo/RatInventory/EmptySlot.svelte"

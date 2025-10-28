@@ -17,6 +17,9 @@ export { default as Mascot } from "./Mascot/Mascot.svelte"
 /* Logo */
 export { default as Logo } from "./Logo/Logo.svelte"
 
+/* Rat Avatar */
+export { default as RatAvatar } from "./RatAvatar/RatAvatar.svelte"
+
 /* Marquee */
 export { default as Marquee } from "./Marquee/Marquee.svelte"
 

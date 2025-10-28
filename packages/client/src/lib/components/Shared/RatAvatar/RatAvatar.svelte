@@ -125,7 +125,7 @@
 <svelte:body {onmousemove} {onmouseup} />
 
 <div {onmousedown} class="rat-container" role="button" tabindex="0">
-  {#if !images.some(image => false)}
+  {#if images.every(image => image !== false)}
     {#each images as src, i}
       <div class="layer {fields[i]} {animation}">
         <div class="interactions" style:transform={transforms[i]}>
