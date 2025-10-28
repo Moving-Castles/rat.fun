@@ -13,7 +13,7 @@
     animation = "idle",
     inert = false
   }: {
-    animation: RatAnimation
+    animation?: RatAnimation
     inert?: boolean
   } = $props()
 
