@@ -84,7 +84,7 @@
 
   const onmousedown = (e: MouseEvent) => {
     if (inert) return false
-    playSound("ratfunUI", "bigButtonDown")
+    playSound("ratfunUI", "glassTap")
     isDragging = true
     rect = e.currentTarget ? (e.currentTarget as HTMLElement).getBoundingClientRect() : undefined
     bodyScale.set(0.8)
@@ -107,7 +107,7 @@
 
   const onmouseup = (e: MouseEvent) => {
     if (inert) return false
-    // playSound("ratfunUI", "ratRelief")
+    playSound("ratfunUI", "chirp")
     isDragging = false
     headScale.set(1)
     headTweenX.set(0)
