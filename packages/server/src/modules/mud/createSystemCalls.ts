@@ -23,7 +23,14 @@ export function createSystemCalls(network: SetupNetworkResult) {
     try {
       const args = createOutcomeCallArgs(rat, trip, outcome)
 
-      const tx = await network.worldContract.write.ratfun__applyOutcome(args)
+      // Get current gas prices for speed optimization
+      const feeData = await network.publicClient.estimateFeesPerGas()
+
+      const tx = await network.worldContract.write.ratfun__applyOutcome(args, {
+        maxFeePerGas: (feeData.maxFeePerGas * 150n) / 100n, // 50% higher than estimated
+        maxPriorityFeePerGas: (feeData.maxPriorityFeePerGas * 200n) / 100n, // 100% higher priority
+        gas: 2000000n // Set generous gas limit
+      })
       await network.waitForTransaction(tx)
 
       // Suggested outcomes were sent to the chain

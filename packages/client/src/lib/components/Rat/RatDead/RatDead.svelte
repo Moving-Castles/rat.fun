@@ -1,7 +1,6 @@
 <script lang="ts">
   import { rat } from "$lib/modules/state/stores"
-  import { Rat } from "$lib/components/Rat"
-  import { BigButton } from "$lib/components/Shared"
+  import { BigButton, RatAvatar } from "$lib/components/Shared"
   import { transitionTo, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
 
   const onClick = () => {
@@ -12,7 +11,7 @@
 
 <div class="rat-dead">
   <div class="rat-dead-image">
-    <Rat inert />
+    <RatAvatar inert />
   </div>
   <div class="rat-dead-text">
     <h1>{$rat?.name} is dead</h1>

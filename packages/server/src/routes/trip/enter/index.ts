@@ -119,8 +119,6 @@ async function routes(fastify: FastifyInstance) {
         )) as EventsReturnValue
         console.timeEnd("–– Event LLM")
 
-        console.log("eventResults", eventResults)
-
         // * * * * * * * * * * * * * * * * * *
         // Apply outcome onchain
         // * * * * * * * * * * * * * * * * * *
@@ -173,15 +171,15 @@ async function routes(fastify: FastifyInstance) {
             // * * * * * * * * * * * * * * * * * *
 
             const oldTripFactor = (await getTripFactor(tripId)) ?? 0.5
-            console.log("oldTripFactor", oldTripFactor)
+            // console.log("oldTripFactor", oldTripFactor)
             const newTripFactor = calculateTripFactor(
               oldTripFactor,
               tripValueChange,
               newRatBalance == 0
             )
-            console.log("newTripFactor", newTripFactor)
+            // console.log("newTripFactor", newTripFactor)
             updateTripFactor(tripId, newTripFactor)
-            console.log("Trip factor written to CMS")
+            // console.log("Trip factor written to CMS")
 
             // * * * * * * * * * * * * * * * * * *
             // Write outcome to CMS
@@ -206,7 +204,7 @@ async function routes(fastify: FastifyInstance) {
             // Create outcome message and broadcast
             // * * * * * * * * * * * * * * * * * *
 
-            console.log("Creating outcome message for broadcast...")
+            // console.log("Creating outcome message for broadcast...")
             const outcomeMessage = createOutcomeMessage(
               player,
               rat,
@@ -214,12 +212,12 @@ async function routes(fastify: FastifyInstance) {
               trip,
               validatedOutcome
             )
-            console.log("Outcome message created, attempting broadcast...")
+            // console.log("Outcome message created, attempting broadcast...")
 
             // Fire-and-forget: don't await the broadcast
-            broadcast(outcomeMessage)
-              .then(() => console.log("Broadcast completed successfully"))
-              .catch(error => console.error("Failed to broadcast outcome message:", error))
+            broadcast(outcomeMessage).catch(error =>
+              console.error("Failed to broadcast outcome message:", error)
+            )
           } catch (error) {
             handleBackgroundError(error, "Trip Entry - CMS & WebSocket")
           } finally {
@@ -248,7 +246,7 @@ async function routes(fastify: FastifyInstance) {
           tripDepleted: newTripValue == 0
         }
 
-        console.log("Sending response to client...")
+        // console.log("Sending response to client...")
         // Send response and return immediately to close connection properly
         return reply.send(response)
       } catch (error) {

@@ -128,13 +128,13 @@ export const generateImage = async (prompt: string, skipSharpProcessing: boolean
     // Handle different output formats (matching server module)
     if (Array.isArray(output) && output[0]) {
       // Legacy format: array of FileOutput objects
-      console.log("Handling array format with FileOutput objects")
+      // console.log("Handling array format with FileOutput objects")
       const fileOutput = output[0] as FileOutput
 
       let blob
       try {
         blob = await fileOutput.blob()
-        console.log("Blob obtained successfully:", blob)
+        // console.log("Blob obtained successfully:", blob)
       } catch (blobError) {
         console.error("Error getting blob:", blobError)
         throw new Error(`Failed to get blob from output: ${blobError}`)
@@ -144,7 +144,7 @@ export const generateImage = async (prompt: string, skipSharpProcessing: boolean
       buffer = Buffer.from(arrayBuffer)
     } else if (typeof output === "string") {
       // New format: direct URL string
-      console.log("Handling string format (URL):", output)
+      // console.log("Handling string format (URL):", output)
 
       try {
         const response = await fetch(output)
@@ -153,14 +153,14 @@ export const generateImage = async (prompt: string, skipSharpProcessing: boolean
         }
         const arrayBuffer = await response.arrayBuffer()
         buffer = Buffer.from(arrayBuffer)
-        console.log("Image fetched from URL, buffer size:", buffer.length)
+        // console.log("Image fetched from URL, buffer size:", buffer.length)
       } catch (fetchError) {
         console.error("Error fetching image from URL:", fetchError)
         throw new Error(`Failed to fetch image from URL: ${fetchError}`)
       }
     } else if (output && typeof output === "object" && "getReader" in output) {
       // Newest format: ReadableStream
-      console.log("Handling ReadableStream format")
+      // console.log("Handling ReadableStream format")
 
       try {
         const reader = (output as ReadableStream<Uint8Array>).getReader()
@@ -183,7 +183,7 @@ export const generateImage = async (prompt: string, skipSharpProcessing: boolean
         }
 
         buffer = Buffer.from(combinedBuffer)
-        console.log("ReadableStream processed, buffer size:", buffer.length)
+        // console.log("ReadableStream processed, buffer size:", buffer.length)
       } catch (streamError) {
         console.error("Error processing ReadableStream:", streamError)
         throw new Error(`Failed to process ReadableStream: ${streamError}`)

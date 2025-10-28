@@ -1,11 +1,11 @@
 <script lang="ts">
   import { fade } from "svelte/transition"
   import { playSound } from "$lib/modules/sound"
-  import { ratImageUrl } from "$lib/modules/state/stores"
+  import { ratImageUrl, player } from "$lib/modules/state/stores"
   import { transitionTo, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
-  import { NoImage } from "$lib/components/Shared"
+  import { NoImage, Tooltip } from "$lib/components/Shared"
   import HealthBar from "./HealthBar.svelte"
-  import Rat from "../Rat/Rat.svelte"
+  import { RatAvatar } from "$lib/components/Shared"
 
   let { displayRat }: { displayRat: Rat | null } = $props()
 
@@ -29,7 +29,9 @@
 
       <!-- NAME -->
       <div class="info-item">
-        <span class="name">{displayRat.name}</span>
+        <Tooltip content={$player.currentRat}>
+          <span class="name">{displayRat.name}</span>
+        </Tooltip>
       </div>
 
       <!-- HEALTHBAR -->
@@ -53,7 +55,7 @@
 
     <!-- IMAGE -->
     <div class="image-container">
-      <Rat />
+      <RatAvatar />
       {#if $ratImageUrl}
         <!-- svelte-ignore a11y_no_noninteractive_element_to_interactive_role -->
         <!-- svelte-ignore a11y_click_events_have_key_events -->

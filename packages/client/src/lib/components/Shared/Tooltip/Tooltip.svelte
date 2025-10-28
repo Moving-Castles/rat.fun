@@ -1,6 +1,7 @@
 <script lang="ts">
   import { tippy } from "svelte-tippy"
   import type { Props } from "tippy.js"
+  import type { Snippet } from "svelte"
 
   let {
     content,

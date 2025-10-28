@@ -1,7 +1,6 @@
 export { default as RatBox } from "./RatBox.svelte"
 export { default as RatStats } from "./RatInfo/RatStats.svelte"
 export { default as LiquidateRat } from "./RatInfo/LiquidateRat.svelte"
-export { default as Rat } from "./Rat/Rat.svelte"
 export { default as RatInventory } from "./RatInfo/RatInventory/RatInventory.svelte"
 export { default as RatInfo } from "./RatInfo/RatInfo.svelte"
 export { default as ConfirmLiquidation } from "./ConfirmLiquidation/ConfirmLiquidation.svelte"

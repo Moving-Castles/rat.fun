@@ -8,6 +8,7 @@ import type {
 import { getComponentValue, Entity } from "@latticexyz/recs"
 import { network } from "@modules/mud/initMud"
 import { singletonEntity } from "@latticexyz/store-sync/recs"
+import { retryUntilResult } from "@modules/utils"
 import {
   OnchainDataError,
   RatNotFoundError,
@@ -48,15 +49,29 @@ export async function getEnterTripData(
 
     const ratEntity = network.world.registerEntity({ id: ratId })
 
-    const ratOwner = getComponentValue(Owner, ratEntity)?.value as string
-    const ratName = getComponentValue(Name, ratEntity)?.value as string
+    console.log("ratId", ratId)
+    console.log("ratEntity", ratEntity)
+
+    // Retry until the rat owner is found or the timeout is reached
+    // If a rat is sent in quickly after creation, the owner may not be set yet
+    // We assume if the owner is set the other values are also set
+    const ratOwnerResult = await retryUntilResult(
+      () => getComponentValue(Owner, ratEntity),
+      8000,
+      100,
+      result => result !== undefined && result !== null
+    )
+    const ratOwner = ratOwnerResult?.value as string
+
+    console.log("ratOwner", ratOwner)
 
     // Check if rat exists
-    if (!ratOwner && !ratName) {
+    if (!ratOwner) {
       throw new RatNotFoundError(ratId)
     }
 
     // Get rat data
+    const ratName = getComponentValue(Name, ratEntity)?.value as string
     const ratDead = Boolean(getComponentValue(Dead, ratEntity)?.value ?? false)
     const ratBalance = Number(getComponentValue(Balance, ratEntity)?.value ?? 0)
     const ratInventory = (getComponentValue(Inventory, ratEntity)?.value ?? [""]) as string[]
