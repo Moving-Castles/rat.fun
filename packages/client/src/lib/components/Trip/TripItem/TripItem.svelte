@@ -6,8 +6,7 @@
   import { getTripMaxValuePerWin } from "$lib/modules/state/utils"
   import { staticContent } from "$lib/modules/content"
   import { playSound } from "$lib/modules/sound"
-
-  import { Tooltip, NoImage } from "$lib/components/Shared"
+  import { Tooltip, NoImage, ArchetypeBar } from "$lib/components/Shared"
 
   import type { Trip as SanityTrip } from "@sanity-types"
 
@@ -91,13 +90,14 @@
         </div>
       </div>
       <div class="meta-data-item trip-factor">
+        {#if sanityTripContent}
+          <ArchetypeBar content={sanityTripContent} />
+        {/if}
+      </div>
+      <div class="meta-data-item max-win">
         <div class="inner">
-          <Tooltip content="Trip Factor">
-            I+: {sanityTripContent?.archetypeItemAdd ?? 0}
-            I-: {sanityTripContent?.archetypeItemRemove ?? 0}
-            H+: {sanityTripContent?.archetypeBalanceAdd ?? 0}
-            H-: {sanityTripContent?.archetypeBalanceRemove ?? 0}
-            {sanityTripContent?.kills ?? 0}/{sanityTripContent?.visits ?? 0}
+          <Tooltip content="Kill / Visit">
+            {sanityTripContent?.kills ?? 0} / {sanityTripContent?.visits ?? 0}
           </Tooltip>
         </div>
       </div>
@@ -203,6 +203,7 @@
           border-left: var(--default-border-style);
           padding-left: 10px;
           width: 100px;
+          height: 200px;
 
           .meta-data-item {
             background: rgba(255, 255, 255, 0.4);
