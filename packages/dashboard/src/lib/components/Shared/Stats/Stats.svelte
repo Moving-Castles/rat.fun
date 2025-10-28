@@ -13,7 +13,7 @@
       </h1>
       <h1 class="top">
         <SignedNumber withTween value={$staticContent?.statistics?.ratTotalBalance || 0} />
-        {#if $staticContent?.statistics?.tripTotalBalance !== 0 && $staticContent?.statistics?.ratTotalBalance !== 0}
+        <!-- {#if $staticContent?.statistics?.tripTotalBalance !== 0 && $staticContent?.statistics?.ratTotalBalance !== 0}
           <span>
             (<SignedNumber
               noColor
@@ -24,7 +24,13 @@
                 100}
             />%)
           </span>
-        {/if}
+        {/if} -->
+      </h1>
+    </div>
+    <div class="balance throughput">
+      <h2 class="title">Throughput</h2>
+      <h1>
+        <SignedNumber value={$staticContent?.statistics?.totalThroughput} noColor hideSign />
       </h1>
     </div>
     <div class="balance trips">
@@ -34,7 +40,7 @@
       </h1>
       <h1 class="top">
         <SignedNumber withTween value={$staticContent?.statistics?.tripTotalBalance || 0} />
-        {#if $staticContent?.statistics?.tripTotalBalance !== 0 && $staticContent?.statistics?.ratTotalBalance !== 0}
+        <!-- {#if $staticContent?.statistics?.tripTotalBalance !== 0 && $staticContent?.statistics?.ratTotalBalance !== 0}
           <span>
             (<SignedNumber
               noColor
@@ -45,7 +51,7 @@
                 -100}
             />%)
           </span>
-        {/if}
+        {/if} -->
       </h1>
     </div>
   </div>
@@ -85,10 +91,30 @@
 
       .balance {
         width: 300px;
-        padding: 32px 8px;
+        padding: 40px 8px;
         background: white;
         text-align: center;
         position: relative;
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: center;
+
+        h1 {
+          line-height: 0.9;
+        }
+
+        h2 {
+          color: #aaa;
+        }
+
+        &.throughput {
+          h2.title {
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translate(-50%, 0);
+          }
+        }
 
         &.rats {
           h2.title {
