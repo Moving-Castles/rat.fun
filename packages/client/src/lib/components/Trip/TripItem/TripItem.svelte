@@ -93,7 +93,11 @@
       <div class="meta-data-item trip-factor">
         <div class="inner">
           <Tooltip content="Trip Factor">
-            {sanityTripContent?.tripFactor?.toFixed(2) ?? "??"}
+            I+: {sanityTripContent?.archetypeItemAdd ?? 0}
+            I-: {sanityTripContent?.archetypeItemRemove ?? 0}
+            H+: {sanityTripContent?.archetypeBalanceAdd ?? 0}
+            H-: {sanityTripContent?.archetypeBalanceRemove ?? 0}
+            {sanityTripContent?.kills ?? 0}/{sanityTripContent?.visits ?? 0}
           </Tooltip>
         </div>
       </div>

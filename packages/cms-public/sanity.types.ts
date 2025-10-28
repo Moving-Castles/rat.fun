@@ -23,6 +23,8 @@ export type Statistics = {
   worldAddress?: string
   ratTotalBalance?: number
   tripTotalBalance?: number
+  totalBalance?: number
+  totalThroughput?: number
 }
 
 export type RatImages = {
@@ -192,6 +194,12 @@ export type Trip = {
     _type: "image"
   }
   tripFactor?: number
+  archetypeItemAdd?: number
+  archetypeItemRemove?: number
+  archetypeBalanceAdd?: number
+  archetypeBalanceRemove?: number
+  kills?: number
+  visits?: number
   slug?: Slug
 }
 

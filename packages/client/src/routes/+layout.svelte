@@ -21,6 +21,7 @@
   import { websocketConnected } from "$lib/modules/off-chain-sync/stores"
   import { EMPTY_ID } from "$lib/modules/state/constants"
   import { errorHandler } from "$lib/modules/error-handling"
+  import { WALLET_TYPE } from "$lib/mud/enums"
   import {
     environment as environmentStore,
     walletType as walletTypeStore

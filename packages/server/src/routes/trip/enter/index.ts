@@ -36,7 +36,7 @@ import { verifyRequest } from "@modules/signature"
 
 // CMS
 import { getSystemPrompts } from "@modules/cms/private"
-import { writeOutcomeToCMS, updateTripFactor, getTripFactor } from "@modules/cms/public"
+import { writeOutcomeToCMS, updateArchetypeData } from "@modules/cms/public"
 
 // Validation
 import { validateInputData } from "./validation"
@@ -44,8 +44,8 @@ import { validateInputData } from "./validation"
 // Error handling
 import { handleBackgroundError } from "@modules/error-handling"
 
-// Trip factor
-import { calculateTripFactor } from "@modules/trip-factor/calculateTripFactor"
+// Archetype
+import { calculateArchetypeData } from "@modules/archetypes/calculateArchetypeData"
 
 // Initialize LLM: Anthropic
 const llmClient = getLLMClient(ANTHROPIC_API_KEY)
@@ -167,19 +167,9 @@ async function routes(fastify: FastifyInstance) {
           console.time("–– Background actions")
           try {
             // * * * * * * * * * * * * * * * * * *
-            // Calculate trip factor
+            // Calculate trip archetypes
             // * * * * * * * * * * * * * * * * * *
-
-            const oldTripFactor = (await getTripFactor(tripId)) ?? 0.5
-            // console.log("oldTripFactor", oldTripFactor)
-            const newTripFactor = calculateTripFactor(
-              oldTripFactor,
-              tripValueChange,
-              newRatBalance == 0
-            )
-            // console.log("newTripFactor", newTripFactor)
-            updateTripFactor(tripId, newTripFactor)
-            // console.log("Trip factor written to CMS")
+            updateArchetypeData(tripId, calculateArchetypeData(validatedOutcome, newRatValue))
 
             // * * * * * * * * * * * * * * * * * *
             // Write outcome to CMS
