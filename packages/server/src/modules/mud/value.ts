@@ -3,7 +3,7 @@ import { GamePercentagesConfig, Rat, Trip } from "@modules/types"
 export function getTripValue(trip: Trip, newTrip: Trip | undefined) {
   return {
     newTripValue: newTrip?.balance ?? 0,
-    tripValueChange: newTrip?.balance ? newTrip.balance - trip.balance : 0
+    tripValueChange: (newTrip?.balance ?? 0) - trip.balance
   }
 }
 
@@ -40,15 +40,10 @@ function calculateTotalRatValue(rat: Rat) {
   if (!rat) return 0
 
   const balanceValue = Number(rat.balance ?? 0)
-  let inventoryValue = 0
-
-  // Rat is not dead, count the inventory
-  if (balanceValue !== 0) {
-    inventoryValue = (rat.inventory ?? []).reduce(
-      (acc, item) => acc + (Number(item?.value) ?? 0),
-      0
-    )
-  }
+  const inventoryValue = (rat.inventory ?? []).reduce(
+    (acc, item) => acc + (Number(item?.value) ?? 0),
+    0
+  )
 
   return balanceValue + inventoryValue
 }
