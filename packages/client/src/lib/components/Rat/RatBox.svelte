@@ -36,6 +36,8 @@
     // PROBLEM: this also delays the loading of the RatBox on all remount navigations...
     await new Promise(resolve => setTimeout(resolve, 500))
 
+    console.log("$rat", $rat)
+
     if ($rat) {
       if ($rat.dead) {
         transitionTo(RAT_BOX_STATE.NO_RAT)

@@ -21,12 +21,10 @@
   import { websocketConnected } from "$lib/modules/off-chain-sync/stores"
   import { EMPTY_ID } from "$lib/modules/state/constants"
   import { errorHandler } from "$lib/modules/error-handling"
-  import { WALLET_TYPE } from "$lib/mud/enums"
   import {
     environment as environmentStore,
     walletType as walletTypeStore
   } from "$lib/modules/network"
-  import { player } from "$lib/modules/state/stores"
 
   // Components
   import Spawn from "$lib/components/Spawn/Spawn.svelte"
@@ -66,8 +64,6 @@
       goto("/")
     }
   }
-
-  $inspect($player?.currentRat ?? "NO CURRENT RAT")
 
   // Called when spawning is complete
   const spawned = () => {

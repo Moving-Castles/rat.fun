@@ -6,7 +6,6 @@
   import { transitionTo, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
   import { erc20BalanceListenerActive } from "$lib/modules/erc20Listener/stores"
   import { refetchBalance } from "$lib/modules/erc20Listener"
-  import { playSound } from "$lib/modules/sound"
 
   import { SmallSpinner } from "$lib/components/Shared"
 

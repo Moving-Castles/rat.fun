@@ -60,6 +60,8 @@ function extractRevertData(errorMessage: string): string | null {
  * Parses viem errors and converts them to structured AppError instances
  */
 export function parseViemError(error: BaseError): ExpectedError {
+  console.log("parseViemError", error)
+
   // User rejected transaction
   if (error.name === "UserRejectedRequestError") {
     return new UserRejectedTransactionError(

@@ -23,6 +23,7 @@ export async function spawn(name: string) {
 }
 
 export async function createRat(name: string) {
+  console.log("createRat", name)
   return await executeTransaction(WorldFunctions.CreateRat, [name])
 }
 

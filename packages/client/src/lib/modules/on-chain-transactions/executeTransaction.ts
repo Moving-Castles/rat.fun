@@ -1,4 +1,4 @@
-import type { Hex } from "viem"
+import type { Hex, TransactionReceipt } from "viem"
 import { get } from "svelte/store"
 
 import { publicNetwork, walletNetwork } from "$lib/modules/network"
@@ -19,14 +19,17 @@ import { TransactionError } from "../error-handling/errors"
 export async function executeTransaction(
   systemId: string,
   params: (string | Hex | number | bigint)[] = [],
-  useConnectorClient: boolean = false,
-  value?: bigint
-) {
+  useConnectorClient: boolean = false
+): Promise<TransactionReceipt | false> {
+  console.log("executeTransaction", systemId, params, useConnectorClient)
+
   try {
     // Prepare the action's client
     const client = useConnectorClient
       ? await prepareConnectorClientForTransaction()
       : get(walletNetwork).walletClient
+
+    console.log("client", client)
 
     let tx
     if (systemId === WorldFunctions.Approve) {
@@ -69,7 +72,9 @@ export async function executeTransaction(
         throw new TransactionError(`Transaction failed: ${receipt.transactionHash}`)
       }
     }
+    return false
   } catch (e: unknown) {
     errorHandler(e)
+    return false
   }
 }

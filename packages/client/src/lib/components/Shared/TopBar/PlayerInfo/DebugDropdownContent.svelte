@@ -11,7 +11,8 @@
   import {
     sendGiveCallerTokens,
     sendApproveMax,
-    sendBuyWithEth
+    sendBuyWithEth,
+    sendLiquidateRat
   } from "$lib/modules/action-manager/index.svelte"
   import { sendChatMessage } from "$lib/modules/off-chain-sync"
   import { SmallButton } from "$lib/components/Shared"
@@ -92,7 +93,6 @@
         }}
         text="Buy 1 Slopamine ({CURRENCY_SYMBOL}) for 0.001ETH"
       ></SmallButton>
-
       <SmallButton
         tippyText="Unlock cashboard"
         onclick={async () => {
@@ -109,6 +109,13 @@
         await sendApproveMax()
       }}
       text="Approve max allowance"
+    ></SmallButton>
+    <SmallButton
+      tippyText="Force liquidate rat"
+      onclick={async () => {
+        await sendLiquidateRat()
+      }}
+      text="Force liquidate rat"
     ></SmallButton>
   </div>
 </div>
