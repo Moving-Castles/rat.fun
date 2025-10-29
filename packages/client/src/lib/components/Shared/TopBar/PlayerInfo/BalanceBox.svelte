@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from "svelte"
+  import { onMount, onDestroy } from "svelte"
   import { gsap } from "gsap"
   import { playerERC20Balance } from "$lib/modules/erc20Listener/stores"
   import { playSound } from "$lib/modules/sound"
@@ -12,6 +12,7 @@
   let containerElement = $state<HTMLDivElement | null>(null)
   let previousValue = $state<null | number>(null)
   let updates = $state(0)
+  let unsubscribe = $state<() => void | null>()
 
   // Animate balance change
   function animateBalanceChange(newBalance: number, difference: number) {
@@ -62,7 +63,7 @@
   }
 
   onMount(() => {
-    const unsubscribe = playerERC20Balance.subscribe(updatedValue => {
+    unsubscribe = playerERC20Balance.subscribe(updatedValue => {
       if (previousValue === null || updatedValue === previousValue || updates < 2) {
         previousValue = updatedValue
 
@@ -75,11 +76,10 @@
       }
       updates++
     })
+  })
 
-    return () => {
-      // console.log("BalanceBox destroyed")
-      unsubscribe()
-    }
+  onDestroy(() => {
+    unsubscribe?.()
   })
 </script>
 
@@ -89,7 +89,7 @@
     <Tooltip content="This is available tokens in your wallet">
       <div class="value">
         <CurrencySymbol />
-        <span bind:this={balanceElement} />
+        <span bind:this={balanceElement}></span>
       </div>
     </Tooltip>
   </div>

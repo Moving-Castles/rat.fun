@@ -6,6 +6,11 @@ import { externalAddressesConfig, playerAddress } from "$lib/modules/state/store
 import { playerERC20Allowance, playerERC20Balance } from "$lib/modules/erc20Listener/stores"
 import { erc20BalanceListenerActive } from "$lib/modules/erc20Listener/stores"
 
+let balanceInterval: NodeJS.Timeout | null = null
+const BALANCE_INTERVAL = 10_000 // 10 seconds
+let allowanceInterval: NodeJS.Timeout | null = null
+const ALLOWANCE_INTERVAL = 60_000 // 1 minute
+
 /**
  * Manually refetch the ERC20 allowance
  */
@@ -85,11 +90,8 @@ async function updateAllowance(
  * Initialize the ERC20 listener
  */
 export function initErc20Listener() {
-  // console.log("### initErc20Listener called")
-
-  // TODO: now initErc20Listener is called once from InitWalletNetwork
-  // Does that work consistently?
-  // Might need to be re-called if user change networks, wallet etc...
+  // Clear old intervals (on network change, wallet change, etc...)
+  stopErc20Listener()
 
   const currentNetwork = get(publicNetwork) as SetupPublicNetworkResult
   const currentPlayerAddress = get(playerAddress) as Hex
@@ -103,7 +105,8 @@ export function initErc20Listener() {
 
   // Initial fetch and set up balance interval
   updateBalance(currentNetwork, currentPlayerAddress, erc20Address)
-  setInterval(() => {
+  // Balance is updated explicitly after user actions, we just have this to listen for external changes
+  balanceInterval = setInterval(() => {
     // For certain parts of the gameplay we want to pause automatic balance updates
     // to be able to manually update with specific timing
     if (!get(erc20BalanceListenerActive)) {
@@ -113,15 +116,30 @@ export function initErc20Listener() {
     if (currentNetwork && currentPlayerAddress && erc20Address) {
       updateBalance(currentNetwork, currentPlayerAddress, erc20Address)
     }
-  }, 2_000) // Refetch every 2 seconds
+  }, BALANCE_INTERVAL)
 
   // Initial fetch and set up allowance interval
   updateAllowance(currentNetwork, currentPlayerAddress, currentExternalAddresses)
-  setInterval(() => {
+  // Allowance is updated explicitly after user actions, we just have this to listen for external changes
+  allowanceInterval = setInterval(() => {
     if (currentNetwork && currentPlayerAddress && currentExternalAddresses) {
       updateAllowance(currentNetwork, currentPlayerAddress, currentExternalAddresses)
     }
-  }, 60_000) // Refetch every minute
+  }, ALLOWANCE_INTERVAL)
+}
+
+/**
+ * Clear all ERC20 listener intervals
+ */
+export function stopErc20Listener() {
+  if (balanceInterval) {
+    clearInterval(balanceInterval)
+    balanceInterval = null
+  }
+  if (allowanceInterval) {
+    clearInterval(allowanceInterval)
+    allowanceInterval = null
+  }
 }
 
 /**
