@@ -38,6 +38,7 @@
       height: 260px;
       transform: rotate(90deg);
       filter: grayscale(1);
+      overflow: visible;
 
       @media (max-width: 700px) {
         width: 160px;

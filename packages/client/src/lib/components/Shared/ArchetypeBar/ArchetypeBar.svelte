@@ -53,13 +53,6 @@
   {/if}
 </div>
 
-<!--  -->
-<!-- I+: {content?.archetypeItemAdd ?? 0}
-I-: {content?.archetypeItemRemove ?? 0}
-H+: {content?.archetypeBalanceAdd ?? 0}
-H-: {content?.archetypeBalanceRemove ?? 0}
-{content?.kills ?? 0}/{content?.visits ?? 0} -->
-
 <style lang="scss">
   .archetype-bar {
     width: 100%;

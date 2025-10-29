@@ -78,7 +78,6 @@
     width: 100%;
     height: 100%;
     border-right: none;
-    overflow: hidden;
     display: flex;
     background-image: url("/images/texture-5.png");
     background-size: 100px;
@@ -134,6 +133,7 @@
       width: 260px;
       height: 100%;
       border-left: var(--default-border-style);
+      overflow: visible;
 
       @media (max-width: 700px) {
         width: auto;

@@ -91,6 +91,7 @@
       margin-bottom: 10px;
       position: absolute;
       transform: translate(0, -100%);
+      overflow: visible;
       img {
         width: 100%;
         height: 100%;
