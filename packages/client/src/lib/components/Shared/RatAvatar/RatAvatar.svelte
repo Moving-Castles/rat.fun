@@ -1,9 +1,8 @@
 <script lang="ts">
-  import { player, playerAddress } from "$lib/modules/state/stores"
+  import { player } from "$lib/modules/state/stores"
   import { addressToRatParts } from "$lib/modules/utils"
   import { staticContent } from "$lib/modules/content"
   import { playSound } from "$lib/modules/sound"
-  import { urlFor } from "$lib/modules/content/sanity"
   import { NoImage } from "$lib/components/Shared"
   import { Spring } from "svelte/motion"
 
@@ -22,38 +21,8 @@
 
   const fields = ["ratBodies", "ratArms", "ratHeads", "ratEars"]
 
-  let numbers = $derived(addressToRatParts($playerAddress, $player?.currentRat))
-  let images = $derived(
-    numbers.map((num, i) => {
-      const key = fields[i]
-      // console.log(key, num, $staticContent.ratImages)
-      const ratImagesDocument = $staticContent.ratImages
+  let images = $derived(addressToRatParts($player?.currentRat, $staticContent?.ratImages))
 
-      if (
-        !ratImagesDocument ||
-        !ratImagesDocument.ratBodies ||
-        !ratImagesDocument.ratEars ||
-        !ratImagesDocument.ratArms ||
-        !ratImagesDocument.ratHeads
-      )
-        return false
-
-      const imageArray = ratImagesDocument[key as keyof typeof ratImagesDocument]
-      const image = Array.isArray(imageArray)
-        ? imageArray.find((_: any, i: number) => i == num)?.asset
-        : undefined
-      if (image) {
-        const result = urlFor(image)
-        if (!result) return false
-        const src = result.width(260).url()
-        // console.log("source", src)
-        return src
-      } else {
-        console.warn("error: no asset for ", key)
-        return false
-      }
-    })
-  )
   let [
     bodyScale,
     headTweenX,
@@ -75,6 +44,7 @@
     new Spring(1, { stiffness: 0.4 }),
     new Spring(0, { stiffness: 0.4 })
   ]
+
   let transforms = $derived([
     `scale(${bodyScale.current}) rotate(${headTilt.current / 2}deg)`,
     `scale(${armsScale.current}) rotate(${armsTilt.current}deg) translateY(${armsTranslate.current}px)`,
@@ -107,7 +77,9 @@
 
   const onmouseup = (e: MouseEvent) => {
     if (inert) return false
+
     playSound("ratfunUI", "chirp")
+
     isDragging = false
     headScale.set(1)
     headTweenX.set(0)
@@ -125,7 +97,7 @@
 <svelte:body {onmousemove} {onmouseup} />
 
 <div {onmousedown} class="rat-container" role="button" tabindex="0">
-  {#if images.every(image => image !== false)}
+  {#if (images ?? []).every(image => image.length > 0)}
     {#each images as src, i}
       <div class="layer {fields[i]} {animation}">
         <div class="interactions" style:transform={transforms[i]}>
