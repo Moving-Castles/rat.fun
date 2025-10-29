@@ -31,7 +31,7 @@
 
   let tripOutcomes = $state<Outcome[]>()
 
-  /// graphData is set inside ProfitLossGraph
+  // graphData is bound to the data prop of TripProfitLossGraph
   let graphData = $state<TripEvent[]>([])
 
   // Show liquidate button if:
@@ -76,7 +76,7 @@
       <AdminTripPreviewHeader {sanityTripContent} {trip} />
     </div>
     <div class="left">
-      <TripProfitLossGraph behavior="click" {trip} {tripId} />
+      <TripProfitLossGraph behavior="click" {trip} {tripId} bind:data={graphData} />
     </div>
     <div class="right">
       <AdminEventLog {graphData} behavior="click" hideUnlockEvent />
@@ -84,7 +84,6 @@
     <div class="full">
       <p class="section-header">Flashbacks</p>
       <div class="min-height">
-        {$focusEvent}{graphData.length}
         {#key event?.meta?._id}
           <AdminTripEventIntrospection {event} />
         {/key}

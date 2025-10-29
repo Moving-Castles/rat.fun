@@ -116,15 +116,29 @@
 
       <div class="summary-grid">
         <div class="summary-row">
-          <span class="label">Status</span>
+          <span class="label">Rat status</span>
           <span class="value">
             {#if result.ratValue === 0}
-              <span class="status-dead">Dead</span>
-            {:else if result.tripValue === 0}
-              <span class="status-depleted">Depleted</span>
+              <span class="status-dead">Died</span>
             {:else}
-              <span>Active</span>
+              <span class="status-depleted">Survived</span>
             {/if}
+          </span>
+        </div>
+
+        <div class="summary-row">
+          <span class="label">Rat Value</span>
+          <span class="value" class:negative={result.ratValueChange ?? 0 < 0}>
+            {result.ratValue} ({(result.ratValueChange ?? 0 >= 0)
+              ? "+"
+              : ""}{result.ratValueChange})
+          </span>
+        </div>
+
+        <div class="summary-row">
+          <span class="label">Trip Value</span>
+          <span class="value" class:positive={result.ratValueChange ?? 0 > 0}>
+            {result.ratValue} (+{result.ratValueChange})
           </span>
         </div>
 
@@ -152,22 +166,6 @@
           <span class="label">Items Removed</span>
           <span class="value">
             {(result.itemChanges || []).filter(ic => ic.type === "remove").length}
-          </span>
-        </div>
-
-        <div class="summary-row">
-          <span class="label">Rat Value</span>
-          <span class="value" class:negative={result.ratValueChange ?? 0 < 0}>
-            {result.ratValue} ({(result.ratValueChange ?? 0 >= 0)
-              ? "+"
-              : ""}{result.ratValueChange})
-          </span>
-        </div>
-
-        <div class="summary-row">
-          <span class="label">Trip Value</span>
-          <span class="value" class:positive={result.ratValueChange ?? 0 > 0}>
-            {result.ratValue} (+{result.ratValueChange})
           </span>
         </div>
       </div>
@@ -227,7 +225,7 @@
 
   // Left Panel: Summary
   .summary-panel {
-    width: 100%;
+    flex: 1;
     flex-shrink: 0;
     display: flex;
     flex-direction: column;

@@ -14,12 +14,14 @@
     trip,
     tripId,
     height = 400,
-    behavior = "hover"
+    behavior = "hover",
+    data = $bindable([])
   }: {
     trip: Trip
     tripId: string
     height?: number
     behavior?: "hover" | "click"
+    data?: TripEvent[]
   } = $props()
 
   // Add reactive timestamp for real-time updates
@@ -91,6 +93,11 @@
         value: runningBalance
       }
     })
+  })
+
+  // Sync allData with bindable prop
+  $effect(() => {
+    data = allData
   })
 
   // Limited version of allData for display
