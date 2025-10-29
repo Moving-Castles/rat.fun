@@ -21,10 +21,11 @@
     lightboxState
   } from "$lib/modules/ui/state.svelte"
   import { UI } from "$lib/modules/ui/enums"
-  import { initOffChainSync } from "$lib/modules/off-chain-sync"
-  import { playerId, activeWorldEvent } from "$lib/modules/state/stores"
-  import { websocketConnected } from "$lib/modules/off-chain-sync/stores"
-  import { EMPTY_ID } from "$lib/modules/state/constants"
+  import { activeWorldEvent } from "$lib/modules/state/stores"
+  // import { initOffChainSync } from "$lib/modules/off-chain-sync"
+  // import { playerId } from "$lib/modules/state/stores"
+  // import { websocketConnected } from "$lib/modules/off-chain-sync/stores"
+  // import { EMPTY_ID } from "$lib/modules/state/constants"
   import { errorHandler } from "$lib/modules/error-handling"
   import {
     environment as environmentStore,
@@ -92,11 +93,11 @@
   }
 
   // Init of chain sync when player is ready
-  $effect(() => {
-    if ($playerId && $playerId !== EMPTY_ID && !$websocketConnected) {
-      initOffChainSync($environmentStore, $playerId)
-    }
-  })
+  // $effect(() => {
+  //   if ($playerId && $playerId !== EMPTY_ID && !$websocketConnected) {
+  //     initOffChainSync($environmentStore, $playerId)
+  //   }
+  // })
 
   onMount(async () => {
     // Remove preloader
