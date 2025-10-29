@@ -28,7 +28,7 @@ import { broadcast } from "@modules/websocket"
 import { createTripCreationMessage } from "@modules/websocket/constructMessages"
 
 // Utils
-import { generateRandomBytes32 } from "@modules/utils"
+import { generateRandomBytes32, withTimeout } from "@modules/utils"
 
 // Error handling
 import { handleBackgroundError } from "@modules/error-handling"
@@ -94,8 +94,12 @@ async function routes(fastify: FastifyInstance) {
             // Broadcast trip creation message
             broadcast(createTripCreationMessage(tripId, player))
 
-            // Get the image data
-            const imageBuffer = await generateImage(tripPrompt)
+            // Get the image data with timeout (30 seconds)
+            const imageBuffer = await withTimeout(
+              generateImage(tripPrompt),
+              30000,
+              "Image generation timed out"
+            )
 
             // Update the trip document with the image
             await updateTripWithImage(tripId, imageBuffer)
@@ -118,8 +122,10 @@ async function routes(fastify: FastifyInstance) {
           }
         }
 
-        // Start the background process without awaiting
-        backgroundActions()
+        // Start the background process without awaiting (with overall timeout of 60 seconds)
+        withTimeout(backgroundActions(), 60000, "Background task timed out").catch(error => {
+          console.error("Background task failed or timed out:", error)
+        })
 
         // * * * * * * * * * * * * * * * * * *
         // Send response to client

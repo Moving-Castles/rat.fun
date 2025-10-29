@@ -51,3 +51,24 @@ export async function retryUntilResult<T>(
   console.log(Date.now(), "!!! NO RESULT FOUND !!!")
   return null
 }
+
+/**
+ * Wraps a promise with a timeout
+ * @param promise The promise to wrap
+ * @param timeoutMs Timeout in milliseconds
+ * @param errorMessage Custom error message for timeout
+ * @returns The promise result or throws timeout error
+ */
+export async function withTimeout<T>(
+  promise: Promise<T>,
+  timeoutMs: number,
+  errorMessage: string = "Operation timed out"
+): Promise<T> {
+  const timeoutPromise = new Promise<never>((_, reject) => {
+    setTimeout(() => {
+      reject(new Error(`${errorMessage} (after ${timeoutMs}ms)`))
+    }, timeoutMs)
+  })
+
+  return Promise.race([promise, timeoutPromise])
+}

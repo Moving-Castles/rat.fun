@@ -44,6 +44,9 @@ import { handleBackgroundError } from "@modules/error-handling"
 // Archetype
 import { calculateArchetypeData } from "@modules/archetypes/calculateArchetypeData"
 
+// Utils
+import { withTimeout } from "@modules/utils"
+
 // Initialize LLM: Anthropic
 const llmClient = getLLMClient(ANTHROPIC_API_KEY)
 
@@ -212,8 +215,10 @@ async function routes(fastify: FastifyInstance) {
           }
         }
 
-        // Start the background process without awaiting
-        backgroundActions()
+        // Start the background process without awaiting (with overall timeout of 30 seconds)
+        withTimeout(backgroundActions(), 30000, "Background task timed out").catch(error => {
+          console.error("Background task failed or timed out:", error)
+        })
 
         // * * * * * * * * * * * * * * * * * *
         // Construct and send response to client
