@@ -6,13 +6,15 @@ import { plasmaOptimized } from "./plasma-optimized"
 import { clouds } from "./clouds"
 import { vortex } from "./vortex"
 import { swirlyNoise } from "./swirly-noise"
+import { black } from "./black"
 
 const shaders = {
   plasma,
   plasmaOptimized,
   clouds,
   vortex,
-  swirlyNoise
+  swirlyNoise,
+  black
 }
 
 /**

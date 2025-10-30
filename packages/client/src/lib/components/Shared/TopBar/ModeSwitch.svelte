@@ -10,7 +10,7 @@
 
   const enterAdmin = () => {
     playSound("ratfunTransitions", "adminEnter")
-    shaderManager.unsetShader()
+    shaderManager.setShader("black")
     goto("/cashboard")
   }
 

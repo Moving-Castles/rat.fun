@@ -64,7 +64,7 @@
   }
 
   onMount(() => {
-    shaderManager.unsetShader()
+    shaderManager.setShader("black")
     resetTripState()
 
     // Clean the URL

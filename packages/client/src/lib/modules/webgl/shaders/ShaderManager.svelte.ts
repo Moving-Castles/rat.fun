@@ -14,6 +14,7 @@ export class ShaderManager {
   private _canvas: HTMLCanvasElement | null = null
   private resizeTimeout: ReturnType<typeof setTimeout> | null = null
   private invert = $state<boolean>(false)
+  private currentShaderKey: string | null = null
 
   constructor() {
     // No initialization needed
@@ -93,8 +94,22 @@ export class ShaderManager {
 
     if (!shaderSource) throw new Error("ShaderNotExistError")
 
+    // Check if we're already showing this shader
+    if (this.currentShaderKey === shaderKey && this._renderer) {
+      // Just update invert state if different
+      if (this.invert !== inverted) {
+        this.setInvert(inverted)
+      }
+      console.log(
+        `%c[ShaderManager] Shader "${shaderKey}" already active, skipping recreate`,
+        "color: #FF9800"
+      )
+      return
+    }
+
     // Set invert state
     this.invert = inverted
+    this.currentShaderKey = shaderKey
 
     // Destroy current renderer
     if (this._renderer) {
@@ -105,27 +120,6 @@ export class ShaderManager {
     // If we have a canvas, reinitialize the renderer
     if (this._canvas) {
       this.initializeRenderer(this._canvas, shaderSource)
-    }
-  }
-
-  /**
-   * Completely unset/disable the shader - destroys renderer and clears canvas
-   */
-  unsetShader() {
-    // Use destroy to clean up renderer and resources
-    this.destroy()
-
-    // Clear the WebGL canvas if it exists
-    if (this._canvas) {
-      const gl = this._canvas.getContext("webgl") || this._canvas.getContext("webgl2")
-      if (gl) {
-        // Set clear color to black and clear the canvas
-        gl.clearColor(0.0, 0.0, 0.0, 1.0)
-        gl.clear(gl.COLOR_BUFFER_BIT)
-
-        // Also clear the depth buffer if it exists
-        gl.clear(gl.DEPTH_BUFFER_BIT)
-      }
     }
   }
 
@@ -198,6 +192,8 @@ export class ShaderManager {
    * Clean up resources
    */
   destroy() {
+    this.currentShaderKey = null
+
     if (this._renderer) {
       this._renderer.destroy()
       this._renderer = null

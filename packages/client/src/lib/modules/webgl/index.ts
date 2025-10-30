@@ -10,8 +10,13 @@ import {
  * A general-purpose WebGL renderer that can render shaders to a canvas.
  * Supports automatic rendering, uniform management, and performance monitoring.
  */
-// Track active renderers for debugging
-let activeRendererCount = 0
+// Track active contexts globally for debugging
+const activeContexts = new WeakMap<
+  HTMLCanvasElement,
+  WebGLRenderingContext | WebGL2RenderingContext
+>()
+let activeContextCount = 0
+let totalContextsCreated = 0
 
 export class WebGLGeneralRenderer implements WebGLRenderer {
   canvas: HTMLCanvasElement
@@ -49,8 +54,25 @@ export class WebGLGeneralRenderer implements WebGLRenderer {
     this.initWebGL(options.shader)
     this.setupContextLossHandlers()
 
-    activeRendererCount++
-    console.log(activeRendererCount + " WebGL contexts active")
+    // Track context creation/reuse
+    const existingContext = activeContexts.get(canvas)
+    if (!existingContext || existingContext !== this.gl) {
+      // New context created (or canvas was reused with different context)
+      if (!existingContext) {
+        totalContextsCreated++
+        activeContextCount++
+      }
+      activeContexts.set(canvas, this.gl)
+      console.log(
+        `%c[WebGL] Context ${existingContext ? "reused" : "created"}: ${activeContextCount} active (${totalContextsCreated} total created)`,
+        "color: #4CAF50; font-weight: bold"
+      )
+    } else {
+      console.log(
+        `%c[WebGL] Context reused from same canvas: ${activeContextCount} active`,
+        "color: #9C27B0; font-weight: bold"
+      )
+    }
   }
 
   /**
@@ -108,8 +130,14 @@ export class WebGLGeneralRenderer implements WebGLRenderer {
    * @throws Error if WebGL is not supported or initialization fails
    */
   private initWebGL(shader: ShaderSource): void {
+    // Check if canvas already has a context (reusing same canvas)
     const gl = this.canvas.getContext("webgl")
-    if (!gl) throw new WebGLContextError("WebGL not supported")
+
+    // If context is null or lost, try to get a fresh one
+    if (!gl || gl.isContextLost()) {
+      throw new WebGLContextError("WebGL not supported or context lost")
+    }
+
     this.gl = gl
 
     // Create shaders
@@ -364,6 +392,10 @@ export class WebGLGeneralRenderer implements WebGLRenderer {
   /**
    * Destroys the renderer and cleans up resources.
    * Cancels any pending animation frames and frees WebGL resources.
+   *
+   * Note: We don't call loseContext() because it makes the canvas unusable
+   * for future WebGL contexts. Instead, we let the browser's garbage collector
+   * handle context cleanup when there are no more references.
    */
   destroy(): void {
     // Remove context loss handlers
@@ -384,13 +416,27 @@ export class WebGLGeneralRenderer implements WebGLRenderer {
           this.gl.deleteShader(this.fragmentShader)
           this.gl.deleteProgram(this.program)
           this.gl.deleteBuffer(this.positionBuffer)
+
+          // Note: We intentionally don't call loseContext() here
+          // Calling loseContext() makes the canvas permanently unusable
+          // The browser will GC the context when there are no more references
+        }
+
+        // Track context destruction
+        if (activeContexts.has(this.canvas)) {
+          activeContexts.delete(this.canvas)
+          activeContextCount--
+          console.log(
+            `%c[WebGL] Context destroyed: ${activeContextCount} active (${totalContextsCreated} total created)`,
+            "color: #F44336; font-weight: bold"
+          )
         }
       } catch (error) {
         // WebGL context may be lost or invalid, ignore cleanup errors
         console.warn("WebGL cleanup failed (context may be lost):", error)
       } finally {
         this.uniformLocations.clear()
-        // Clear references to prevent further operations
+        // Clear references to allow garbage collection
         this.gl = null as any
         this.program = null as any
         this.vertexShader = null as any
@@ -398,9 +444,6 @@ export class WebGLGeneralRenderer implements WebGLRenderer {
         this.positionBuffer = null as any
       }
     }
-
-    activeRendererCount--
-    console.log(activeRendererCount + " WebGL contexts active")
   }
 }
 
