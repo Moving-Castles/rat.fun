@@ -5,6 +5,7 @@
   import { processingRat } from "$lib/components/GameRun/state.svelte"
   import { HEALTH_SYMBOL } from "$lib/modules/ui/constants"
   import { backgroundMusic } from "$lib/modules/sound/stores"
+  import { addEasedCountAnimation } from "$lib/modules/utils/animations"
 
   let {
     value,
@@ -24,16 +25,6 @@
 
   // Timeline
   const timeline = gsap.timeline()
-
-  // Count update helper
-  const updateCountValue = (num: number) => {
-    if (valueElement) {
-      valueElement.textContent = String(num)
-      // Cap pitch between -0.5 and 2
-      const pitch = Math.max(0.01, Math.min(2, 1 + num * 0.01))
-      playSound("ratfunUI", "counterTick", false, false, pitch)
-    }
-  }
 
   // Stage 1: Prepare the animation
   const prepare = () => {
@@ -70,15 +61,12 @@
       ease: "power2.out"
     })
 
-    const stepDelay = 0.03
-
-    // Count up/down value manually
-    const absValue = Math.abs(value)
-    for (let i = 1; i <= absValue; i++) {
-      const displayValue = negative ? -i : i
-      const position = i === 1 ? ">-0.05" : `+=${stepDelay}`
-      timeline.call(updateCountValue, [displayValue], position)
-    }
+    // Count up/down value with animation
+    addEasedCountAnimation({
+      timeline,
+      valueElement,
+      value
+    })
 
     timeline.to(
       outcomeElement,

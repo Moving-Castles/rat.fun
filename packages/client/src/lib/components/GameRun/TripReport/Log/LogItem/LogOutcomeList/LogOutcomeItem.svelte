@@ -3,6 +3,7 @@
   import { updateProcessingState } from "$lib/components/GameRun/state.svelte"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import { playSound } from "$lib/modules/sound"
+  import { addEasedCountAnimation } from "$lib/modules/utils/animations"
 
   let {
     id,
@@ -31,17 +32,6 @@
   // Calculate final text for width measurement
   const finalText = `${name} (${CURRENCY_SYMBOL}${negative ? "-" : ""}${value})`
 
-  // Count update helper
-  const updateCountValue = (num: number) => {
-    if (valueElement) {
-      const displayValue = negative ? -num : num
-      valueElement.textContent = String(displayValue)
-      // Cap pitch between -1 and 2
-      const pitch = Math.max(-1, Math.min(2, 1 + num * (negative ? -0.02 : 0.02)))
-      playSound("ratfunUI", "counterTick", false, false, pitch)
-    }
-  }
-
   // Stage 1: Prepare the animation
   const prepare = () => {
     // Calculate width from hidden element and set it
@@ -61,6 +51,10 @@
 
   // Stage 2: Main animation
   const main = () => {
+    if (!valueElement) {
+      return
+    }
+
     // State update
     timeline.call(updateProcessingState, [
       {
@@ -79,12 +73,13 @@
       ease: "power2.out"
     })
 
-    const stepDelay = 0.03
-
-    // Count up/down value manually
-    for (let i = 1; i < value; i++) {
-      const position = i === 1 ? ">-0.05" : `+=${stepDelay}`
-      timeline.call(updateCountValue, [i], position)
+    // Count up/down value with animation (count to value-1, then show final formatted text)
+    if (value > 1) {
+      addEasedCountAnimation({
+        timeline,
+        valueElement,
+        value: negative ? -(value - 1) : value - 1
+      })
     }
 
     // Change color
