@@ -66,6 +66,8 @@ export function errorHandler(error: ExpectedError | unknown, message = "") {
     // Critical system errors remain as errors
     else if (
       processedError.code.includes("WEBGL_CONTEXT") ||
+      processedError.code.includes("SHADER") ||
+      processedError.code.includes("GRAPHICS") ||
       processedError.code.includes("WORLD_ADDRESS")
     ) {
       severity = "error"

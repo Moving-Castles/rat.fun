@@ -208,6 +208,25 @@ export class UniformLocationError extends GraphicsError {
   }
 }
 
+export class WebGLContextLimitError extends GraphicsError {
+  constructor(
+    message: string = "Too many active WebGL contexts",
+    public activeContexts?: number
+  ) {
+    super("WEBGL_CONTEXT_LIMIT_ERROR", "WebGL context limit reached", message)
+  }
+}
+
+export class ShaderInitializationError extends GraphicsError {
+  constructor(
+    message: string,
+    public shaderKey?: string,
+    public originalError?: unknown
+  ) {
+    super("SHADER_INITIALIZATION_ERROR", "Shader initialization failed", message)
+  }
+}
+
 // ============================================================================
 // State Management Errors
 // ============================================================================

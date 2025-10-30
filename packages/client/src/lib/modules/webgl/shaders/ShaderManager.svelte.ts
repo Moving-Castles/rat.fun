@@ -1,5 +1,7 @@
 import { WebGLGeneralRenderer } from "$lib/modules/webgl"
 import { shaders } from "$lib/modules/webgl/shaders/index.svelte"
+import { ShaderInitializationError } from "$lib/modules/error-handling/errors"
+import { errorHandler } from "$lib/modules/error-handling"
 
 export type UniformType = "float" | "vec2" | "vec3" | "vec4" | "int" | "bool"
 
@@ -134,7 +136,23 @@ export class ShaderManager {
 
     // If we have a canvas, reinitialize the renderer
     if (this._canvas) {
-      this.initializeRenderer(this._canvas, shaderSource)
+      try {
+        this.initializeRenderer(this._canvas, shaderSource)
+      } catch {
+        // Error already logged to Sentry in initializeRenderer
+        // Set a fallback black shader to prevent blank screen
+        console.warn(`Failed to initialize shader "${shaderKey}", falling back to black shader`)
+        if (shaderKey !== "black") {
+          try {
+            const blackShaderSource = shaders?.["black"]
+            if (blackShaderSource) {
+              this.initializeRenderer(this._canvas, blackShaderSource)
+            }
+          } catch (fallbackError) {
+            console.error("Failed to initialize fallback shader:", fallbackError)
+          }
+        }
+      }
     }
   }
 
@@ -180,6 +198,17 @@ export class ShaderManager {
     } catch (error) {
       console.error("Failed to initialize WebGL renderer:", error)
       this._renderer = null
+
+      // Report to Sentry
+      const shaderError = new ShaderInitializationError(
+        `Failed to initialize shader renderer: ${error instanceof Error ? error.message : String(error)}`,
+        this.currentShaderKey || "unknown",
+        error
+      )
+      errorHandler(shaderError, "Shader initialization failed: ")
+
+      // Re-throw to let caller handle it
+      throw shaderError
     }
   }
 

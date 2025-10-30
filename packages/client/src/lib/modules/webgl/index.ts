@@ -1,10 +1,12 @@
 import type { WebGLRenderer, ShaderSource, WebGLUniforms, WebGLRendererOptions } from "./types"
 import {
   WebGLContextError,
+  WebGLContextLimitError,
   ShaderError,
   WebGLError,
   UniformLocationError
 } from "$lib/modules/error-handling/errors"
+import { errorHandler } from "$lib/modules/error-handling"
 
 /**
  * A general-purpose WebGL renderer that can render shaders to a canvas.
@@ -51,6 +53,7 @@ export class WebGLGeneralRenderer implements WebGLRenderer {
     this.autoRender = options.autoRender ?? true
     this.frameInterval = 1000 / 60
     this.shaderSource = options.shader
+
     this.initWebGL(options.shader)
     this.setupContextLossHandlers()
 
@@ -84,18 +87,21 @@ export class WebGLGeneralRenderer implements WebGLRenderer {
    */
   private createShader(type: number, source: string): WebGLShader {
     const shader = this.gl.createShader(type)
-    if (!shader) throw new WebGLError("Failed to create shader")
+    if (!shader) {
+      const error = new WebGLError("Failed to create shader")
+      errorHandler(error, "WebGL shader creation failed: ")
+      throw error
+    }
 
     this.gl.shaderSource(shader, source)
     this.gl.compileShader(shader)
 
     if (!this.gl.getShaderParameter(shader, this.gl.COMPILE_STATUS)) {
       const shaderType = type === this.gl.VERTEX_SHADER ? "vertex" : "fragment"
-      throw new ShaderError(
-        "Shader compilation error: " + this.gl.getShaderInfoLog(shader),
-        shaderType,
-        source
-      )
+      const errorLog = this.gl.getShaderInfoLog(shader)
+      const error = new ShaderError("Shader compilation error: " + errorLog, shaderType, source)
+      errorHandler(error, "Shader compilation failed: ")
+      throw error
     }
 
     return shader
@@ -110,14 +116,21 @@ export class WebGLGeneralRenderer implements WebGLRenderer {
    */
   private createProgram(vertexShader: WebGLShader, fragmentShader: WebGLShader): WebGLProgram {
     const program = this.gl.createProgram()
-    if (!program) throw new WebGLError("Failed to create program")
+    if (!program) {
+      const error = new WebGLError("Failed to create program")
+      errorHandler(error, "WebGL program creation failed: ")
+      throw error
+    }
 
     this.gl.attachShader(program, vertexShader)
     this.gl.attachShader(program, fragmentShader)
     this.gl.linkProgram(program)
 
     if (!this.gl.getProgramParameter(program, this.gl.LINK_STATUS)) {
-      throw new WebGLError("Program linking error: " + this.gl.getProgramInfoLog(program))
+      const errorLog = this.gl.getProgramInfoLog(program)
+      const error = new WebGLError("Program linking error: " + errorLog)
+      errorHandler(error, "WebGL program linking failed: ")
+      throw error
     }
 
     return program
@@ -135,7 +148,22 @@ export class WebGLGeneralRenderer implements WebGLRenderer {
 
     // If context is null or lost, try to get a fresh one
     if (!gl || gl.isContextLost()) {
-      throw new WebGLContextError("WebGL not supported or context lost")
+      // Check if we've hit the context limit
+      const errorMessage =
+        gl === null
+          ? "Failed to create WebGL context. This could be due to too many active WebGL contexts or WebGL not being supported."
+          : "WebGL context lost"
+
+      const error =
+        activeContextCount >= 16
+          ? new WebGLContextLimitError(
+              `${errorMessage} (${activeContextCount} active contexts)`,
+              activeContextCount
+            )
+          : new WebGLContextError(errorMessage)
+
+      errorHandler(error, "Failed to initialize WebGL: ")
+      throw error
     }
 
     this.gl = gl
@@ -222,6 +250,7 @@ export class WebGLGeneralRenderer implements WebGLRenderer {
       }
     } catch (error) {
       console.error("Failed to restore WebGL context:", error)
+      // Error already reported to Sentry in initWebGL
     }
   }
 
@@ -437,11 +466,11 @@ export class WebGLGeneralRenderer implements WebGLRenderer {
       } finally {
         this.uniformLocations.clear()
         // Clear references to allow garbage collection
-        this.gl = null as any
-        this.program = null as any
-        this.vertexShader = null as any
-        this.fragmentShader = null as any
-        this.positionBuffer = null as any
+        this.gl = null as unknown as WebGLRenderingContext | WebGL2RenderingContext
+        this.program = null as unknown as WebGLProgram
+        this.vertexShader = null as unknown as WebGLShader
+        this.fragmentShader = null as unknown as WebGLShader
+        this.positionBuffer = null as unknown as WebGLBuffer
       }
     }
   }
