@@ -1,6 +1,7 @@
 <script lang="ts">
   import { rat } from "$lib/modules/state/stores"
   import { frozenRat, resetFrozenState } from "$lib/components/GameRun/state.svelte"
+  import { onMount } from "svelte"
   import { RatStats, RatInventory, LiquidateRat } from "$lib/components/Rat"
 
   // Sync display rat to on-chain rat
@@ -22,7 +23,7 @@
     }
   }
 
-  updateDisplayRat()
+  onMount(updateDisplayRat)
 </script>
 
 <div class="rat-info">
