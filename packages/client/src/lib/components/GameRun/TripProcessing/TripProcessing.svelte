@@ -24,7 +24,7 @@
     playSound("ratfunTransitions", "tripProcessingEnter")
     shaderManager.setShader("vortex")
 
-    $backgroundMusic = playSound("ratfunMusic", "tripProcessing", true)
+    $backgroundMusic = playSound("ratfunMusic", "tripProcessing")
 
     // Start timer
     timerInterval = setInterval(() => {
