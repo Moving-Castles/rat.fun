@@ -1,7 +1,6 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte"
   import { rat, playerIsBroke, tokenAllowanceApproved } from "$lib/modules/state/stores"
-  import { getRatInventory } from "$lib/modules/state/utils"
   import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
   import { playSound } from "$lib/modules/sound"
   import {
@@ -24,26 +23,17 @@
     $backgroundMusic = playSound("ratfunMusic", "main", true)
 
     if (!$rat) {
-      console.log("no rat")
       if ($playerIsBroke) {
-        console.log("player broke")
         ratState.state.transitionTo(RAT_BOX_STATE.NO_TOKENS)
       } else if ($tokenAllowanceApproved === false) {
-        console.log("no allowance")
         ratState.state.transitionTo(RAT_BOX_STATE.NO_ALLOWANCE)
       } else {
-        console.log("no rat")
         ratState.state.transitionTo(RAT_BOX_STATE.NO_RAT)
       }
     } else {
-      console.log("rat")
       if ($rat.dead) {
-        console.log("rat dead")
-        // If ratBox is remounted we want to go directly to "buy rat" screen
         ratState.state.transitionTo(RAT_BOX_STATE.NO_RAT)
       } else {
-        console.log("rat alive")
-        // Alive rat found
         ratState.state.transitionTo(RAT_BOX_STATE.HAS_RAT)
       }
     }

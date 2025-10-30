@@ -1,7 +1,10 @@
+import type { Snapshot } from "./$types"
+import { get } from "svelte/store"
 import { errorHandler } from "$lib/modules/error-handling"
 import { InvalidStateTransitionError } from "$lib/modules/error-handling/errors"
+import { page } from "$app/state"
 import { rat, ratInventory } from "$lib/modules/state/stores"
-import { get } from "svelte/store"
+import { adminUnlockedAt } from "$lib/modules/ui/state.svelte"
 
 /**
  * ========================================
@@ -139,3 +142,49 @@ export const ratState = {
 
 // Keep for backwards compatibility if needed
 export const getRatState = () => ratState
+
+// Managed state
+export const capture = () => {
+  const _rat = get(rat)
+  const _ratInventory = get(ratInventory)
+  const currentState = {
+    adminUnlockedAt: get(adminUnlockedAt),
+    ratBoxState: ratState.state.current,
+    ratBoxBalance: Number(_rat?.balance ?? ratState.balance.current ?? 0),
+    ratBoxInventory: _ratInventory || ratState.inventory.current || []
+  }
+
+  if (page?.route?.id?.includes("tripping")) {
+    return undefined
+  } else {
+    return JSON.stringify(currentState)
+  }
+}
+
+export const restore = value => {
+  if (!value) return
+
+  console.log("restore!", value)
+  const parsedValue = JSON.parse(value)
+
+  // Restore admin state
+  adminUnlockedAt.set(parsedValue.adminUnlockedAt)
+
+  // Restore rat state - must happen before components mount
+  if (parsedValue.ratBoxState) {
+    ratState.state.set(parsedValue.ratBoxState)
+  }
+
+  // Always set balance, even if 0
+  const balanceValue = Number(parsedValue.ratBoxBalance ?? 0)
+  if (!isNaN(balanceValue)) {
+    ratState.balance.set(balanceValue)
+    console.log("restored balance", balanceValue)
+  }
+
+  // Restore inventory
+  if (Array.isArray(parsedValue.ratBoxInventory)) {
+    ratState.inventory.set(parsedValue.ratBoxInventory)
+    console.log("restored inventory", parsedValue.ratBoxInventory.length, "items")
+  }
+}

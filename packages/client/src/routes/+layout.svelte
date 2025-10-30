@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type { LayoutProps } from "./$types"
   import "../app.css"
   import "tippy.js/dist/tippy.css"
   import "tippy.js/dist/backdrop.css"
@@ -6,7 +7,6 @@
 
   import { sdk } from "@farcaster/miniapp-sdk"
 
-  import type { LayoutProps, Snapshot } from "./$types"
   import { initSound } from "$lib/modules/sound"
   import { initializeSentry } from "$lib/modules/error-handling"
   import { browser } from "$app/environment"
@@ -14,20 +14,14 @@
   import { onMount, onDestroy } from "svelte"
   import { initStaticContent } from "$lib/modules/content"
   import { publicNetwork } from "$lib/modules/network"
-  import {
-    UIState,
-    notificationsRead,
-    adminUnlockedAt,
-    lightboxState
-  } from "$lib/modules/ui/state.svelte"
+  import { UIState, notificationsRead, lightboxState } from "$lib/modules/ui/state.svelte"
   import { UI } from "$lib/modules/ui/enums"
-  import { activeWorldEvent, rat, ratInventory } from "$lib/modules/state/stores"
+  import { activeWorldEvent } from "$lib/modules/state/stores"
   import { errorHandler } from "$lib/modules/error-handling"
   import {
     environment as environmentStore,
     walletType as walletTypeStore
   } from "$lib/modules/network"
-  import { ratState } from "$lib/components/Rat/state.svelte"
 
   // Components
   import Spawn from "$lib/components/Spawn/Spawn.svelte"
@@ -43,53 +37,9 @@
   import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
   import EntryKit from "$lib/components/Spawn/EntryKit/EntryKit.svelte"
   import Toasts from "$lib/components/Shared/Toasts/Toasts.svelte"
+  import { capture, restore } from "$lib/components/Rat/state.svelte"
 
-  // Managed state
-  export const snapshot: Snapshot<string> = {
-    capture: () => {
-      console.log("capture")
-      const currentState = {
-        adminUnlockedAt: $adminUnlockedAt,
-        ratBoxState: ratState.state.current,
-        ratBoxBalance: Number($rat?.balance ?? ratState.balance.current ?? 0),
-        ratBoxInventory: $ratInventory || ratState.inventory.current || []
-      }
-      console.log(performance.now(), page.route.id, currentState)
-
-      if (page?.route?.id?.includes("tripping")) {
-        return undefined
-      } else {
-        return JSON.stringify(currentState)
-      }
-    },
-    restore: value => {
-      if (!value) return
-
-      console.log("restore!", value)
-      const parsedValue = JSON.parse(value)
-
-      // Restore admin state
-      $adminUnlockedAt = parsedValue.adminUnlockedAt
-
-      // Restore rat state - must happen before components mount
-      if (parsedValue.ratBoxState) {
-        ratState.state.set(parsedValue.ratBoxState)
-      }
-
-      // Always set balance, even if 0
-      const balanceValue = Number(parsedValue.ratBoxBalance ?? 0)
-      if (!isNaN(balanceValue)) {
-        ratState.balance.set(balanceValue)
-        console.log("restored balance", balanceValue)
-      }
-
-      // Restore inventory
-      if (Array.isArray(parsedValue.ratBoxInventory)) {
-        ratState.inventory.set(parsedValue.ratBoxInventory)
-        console.log("restored inventory", parsedValue.ratBoxInventory.length, "items")
-      }
-    }
-  }
+  export const snapshot: Snapshot<string> = { capture, restore }
 
   let { children }: LayoutProps = $props()
 

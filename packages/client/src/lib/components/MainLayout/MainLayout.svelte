@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { TopBar, Lightbox } from "$lib/components/Shared"
+  import { TopBar } from "$lib/components/Shared"
 
   let { children }: { children: import("svelte").Snippet } = $props()
 </script>
