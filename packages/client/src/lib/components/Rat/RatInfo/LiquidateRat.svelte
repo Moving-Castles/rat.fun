@@ -16,7 +16,10 @@
 
   $effect(() => {
     if (target != current) {
-      tweenedValue.set(target, { delay: 4000, duration: 2000 })
+      tweenedValue.set(target, {
+        delay: 2000 + ratState.inventory.current.length * 1000,
+        duration: 2000
+      })
     }
   })
 

@@ -28,7 +28,14 @@
 </script>
 
 <div
-  in:fly={{ duration: 100, y: -30 }}
+  in:fly={{ duration: 100, y: -30, delay: index * 100 }}
+  out:fly={{ duration: 100, y: 30 }}
+  onintroend={() => {
+    playSound("ratfunUI", "hover3")
+  }}
+  onoutrostart={() => {
+    playSound("ratfunUI", "negative")
+  }}
   class="inventory-item {getRarityClass(item.value)}"
   class:disabled={busy}
   role="button"

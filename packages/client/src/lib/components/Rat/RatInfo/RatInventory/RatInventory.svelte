@@ -6,6 +6,8 @@
   import InteractiveItem from "$lib/components/Rat/RatInfo/RatInventory/InteractiveItem.svelte"
   import EmptySlot from "$lib/components/Rat/RatInfo/RatInventory/EmptySlot.svelte"
 
+  console.log($state.snapshot(ratState.inventory.current))
+
   const MAX_INVENTORY_SIZE = 6
   let emptySlots = $state(
     Array(MAX_INVENTORY_SIZE - (ratState.inventory.current?.length || 0)).fill(null)

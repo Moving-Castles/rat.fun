@@ -166,8 +166,6 @@ export const capture = () => {
 }
 
 export const restore = value => {
-  if (!value) return
-
   console.log("restore!", value)
   const parsedValue = JSON.parse(value)
   const currentEnv = get(environment)
