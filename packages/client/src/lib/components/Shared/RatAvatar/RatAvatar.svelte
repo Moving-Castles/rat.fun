@@ -78,7 +78,9 @@
   const onmouseup = (e: MouseEvent) => {
     if (inert) return false
 
-    playSound("ratfunUI", "chirp")
+    if (isDragging) {
+      playSound("ratfunUI", "chirp")
+    }
 
     isDragging = false
     headScale.set(1)
