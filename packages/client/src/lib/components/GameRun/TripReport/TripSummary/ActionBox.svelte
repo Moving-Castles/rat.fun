@@ -57,7 +57,7 @@
   const comeDown = () => {
     resetProcessingState()
     // Return to game
-    goto("/")
+    goto("/", { invalidateAll: true })
   }
 </script>
 

@@ -146,9 +146,11 @@ export const getRatState = () => ratState
 
 // Managed state
 export const capture = () => {
+  console.log("capture")
   const _rat = get(rat)
   const _ratInventory = get(ratInventory)
   const currentEnv = get(environment)
+  console.log("capture", _rat, _ratInventory)
 
   const currentState = {
     environment: currentEnv,
@@ -159,7 +161,6 @@ export const capture = () => {
   }
 
   if (page?.route?.id?.includes("tripping")) {
-    return undefined
   } else {
     return JSON.stringify(currentState)
   }
@@ -183,6 +184,7 @@ export const restore = value => {
 
   // Restore rat state - must happen before components mount
   if (parsedValue.ratBoxState) {
+    console.log("restored state", parsedValue.ratBoxState)
     ratState.state.set(parsedValue.ratBoxState)
   }
 

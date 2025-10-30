@@ -4,7 +4,7 @@
   import { staticContent } from "$lib/modules/content"
   import { playSound } from "$lib/modules/sound"
   import { NoImage } from "$lib/components/Shared"
-  import { Spring } from "svelte/motion"
+  import { Tween } from "svelte/motion"
 
   type RatAnimation = "idle" | "appearance" | "survived" | "died" | "dead"
 
@@ -34,15 +34,15 @@
     armsTilt,
     armsTranslate
   ] = [
-    new Spring(1, { stiffness: 0.2 }),
-    new Spring(0, { stiffness: 0.2 }),
-    new Spring(0, { stiffness: 0.2 }),
-    new Spring(1, { stiffness: 0.1 }),
-    new Spring(1, { stiffness: 0.1 }),
-    new Spring(1, { stiffness: 0.2 }),
-    new Spring(1, { stiffness: 0.5 }),
-    new Spring(1, { stiffness: 0.4 }),
-    new Spring(0, { stiffness: 0.4 })
+    new Tween(1, { duration: 150 }),
+    new Tween(0, { duration: 150 }),
+    new Tween(0, { duration: 150 }),
+    new Tween(1, { duration: 150 }),
+    new Tween(1, { duration: 150 }),
+    new Tween(1, { duration: 150 }),
+    new Tween(1, { duration: 150 }),
+    new Tween(1, { duration: 150 }),
+    new Tween(0, { duration: 150 })
   ]
 
   let transforms = $derived([
@@ -59,40 +59,29 @@
     rect = e.currentTarget ? (e.currentTarget as HTMLElement).getBoundingClientRect() : undefined
     bodyScale.set(0.8)
     armsScale.set(1.1)
-    headScale.set(1.5)
+    headScale.set(2)
     armsTranslate.set(45)
-  }
-
-  const onmousemove = (e: MouseEvent) => {
-    if (!isDragging || !rect?.left || inert) return
 
     const movementX = e.pageX - rect.left - rect.width / 2
     const movementY = e.pageY - rect.top - rect.height / 2
-    headTweenX.set(movementX / 2)
-    headTweenY.set(movementY / 2)
+    headTweenX.set(movementX)
+    headTweenY.set(movementY)
     headTilt.set(movementX / 20)
     armsTilt.set(movementX / 10)
     earsTilt.set(movementX / 10)
-  }
 
-  const onmouseup = (e: MouseEvent) => {
-    if (inert) return false
-
-    if (isDragging) {
-      playSound("ratfunUI", "chirp")
-    }
-
-    isDragging = false
-    headScale.set(1)
-    headTweenX.set(0)
-    headTweenY.set(0)
-    headTilt.set(0)
-    armsScale.set(1)
-    armsTilt.set(1)
-    earsTilt.set(1)
-    bodyScale.set(1)
-    headScale.set(1)
-    armsTranslate.set(0)
+    setTimeout(() => {
+      headScale.set(1)
+      headTweenX.set(0)
+      headTweenY.set(0)
+      headTilt.set(0)
+      armsScale.set(1)
+      armsTilt.set(1)
+      earsTilt.set(1)
+      bodyScale.set(1)
+      headScale.set(1)
+      armsTranslate.set(0)
+    }, 200)
   }
 </script>
 
