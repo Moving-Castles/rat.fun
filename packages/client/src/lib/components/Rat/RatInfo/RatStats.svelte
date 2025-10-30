@@ -41,9 +41,14 @@
       <!-- svelte-ignore a11y_click_events_have_key_events -->
       <div
         class="info-item trip-count"
+        class:disabled={!displayRat?.tripCount}
         role="button"
         tabindex="0"
-        onclick={() => transitionTo(RAT_BOX_STATE.PAST_TRIP_LIST)}
+        onclick={() => {
+          if (displayRat.tripCount > 0) {
+            transitionTo(RAT_BOX_STATE.PAST_TRIP_LIST)
+          }
+        }}
       >
         <span>
           Trips: {displayRat.tripCount ?? 0}
@@ -122,6 +127,11 @@
           color: var(--foreground);
           font-size: var(--font-size-normal);
           cursor: pointer;
+
+          &:hover:not(.disabled) {
+            background: white;
+            color: black;
+          }
 
           @media (max-width: 700px) {
             display: none;
