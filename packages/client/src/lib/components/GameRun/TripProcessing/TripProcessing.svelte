@@ -1,11 +1,25 @@
 <script lang="ts">
+  import type { Hex } from "viem"
+  import type { EnterTripReturnValue } from "@server/modules/types"
   import { onMount, onDestroy } from "svelte"
   import * as transitions from "svelte/transition"
   import { playSound } from "$lib/modules/sound"
   import { backgroundMusic } from "$lib/modules/sound/stores"
   import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
 
-  const { onComplete, result }: { onComplete: () => void; result: null | any } = $props()
+  const {
+    onComplete,
+    result,
+    tripId,
+    seed1,
+    seed2
+  }: {
+    onComplete: () => void
+    result: EnterTripReturnValue | null
+    tripId: Hex
+    seed1: number
+    seed2: number
+  } = $props()
 
   const MINIMUM_DURATION = 8000
 
@@ -22,9 +36,13 @@
 
   onMount(() => {
     playSound("ratfunTransitions", "tripProcessingEnter")
-    shaderManager.setShader("vortex")
-
     $backgroundMusic = playSound("ratfunMusic", "tripProcessing")
+
+    // Set the trip processing shader with custom uniforms
+    shaderManager.setShader("tripProcessing", false, {
+      u_seed1: { type: "float", value: seed1 },
+      u_seed2: { type: "float", value: seed2 }
+    })
 
     // Start timer
     timerInterval = setInterval(() => {
@@ -47,8 +65,8 @@
 
 {#if timeElapsed > 10 && timeElapsed < 18}
   <div
-    in:transitions.scale|global={{ duration: 3000, opacity: 1 }}
-    out:transitions.fade={{ duration: 1500 }}
+    in:transitions.scale|global={{ duration: 500, opacity: 1 }}
+    out:transitions.fade={{ duration: 300 }}
     class="popup"
   >
     <div class="mask">
@@ -57,8 +75,8 @@
   </div>
 {:else if timeElapsed > 20 && timeElapsed < 28}
   <div
-    in:transitions.scale|global={{ duration: 3000, opacity: 1 }}
-    out:transitions.fade={{ duration: 1500 }}
+    in:transitions.scale|global={{ duration: 500, opacity: 1 }}
+    out:transitions.fade={{ duration: 300 }}
     class="popup"
   >
     <div class="mask">
@@ -70,8 +88,8 @@
   </div>
 {:else if timeElapsed > 30}
   <div
-    in:transitions.scale|global={{ duration: 3000, opacity: 1 }}
-    out:transitions.fade={{ duration: 1500 }}
+    in:transitions.scale|global={{ duration: 500, opacity: 1 }}
+    out:transitions.fade={{ duration: 300 }}
     class="popup"
   >
     <div class="mask">
@@ -93,7 +111,7 @@
     top: 50vh;
     left: 50vw;
     width: 600px;
-    height: 600px;
+    height: 300px;
     transform: translate(-50%, -50%);
     color: white;
 
@@ -106,10 +124,7 @@
       align-items: center;
       text-align: center;
       width: 600px;
-      height: 600px;
-      mask-image: radial-gradient(circle at center, black 40%, transparent 70%);
-      -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 70%);
-      animation: slowly-grow 20s linear forwards;
+      height: 300px;
 
       span {
         display: block;
@@ -117,15 +132,6 @@
         font-family: var(--special-font-stack);
         font-size: var(--font-size-large);
       }
-    }
-  }
-
-  @keyframes slowly-grow {
-    from {
-      transform: scale(1);
-    }
-    to {
-      transform: scale(1.6);
     }
   }
 

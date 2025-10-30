@@ -215,11 +215,12 @@ export function addEasedCountAnimation(config: EasedCountAnimationConfig): void 
     timeline,
     valueElement,
     value,
-    startDelay = 0.04,
-    endDelay = 0.005,
-    easing = (t: number) => t * t, // Default to quadIn
+    startDelay = 0.03,
+    endDelay = 0.0005,
+    // easing = (t: number) => t * t, // Default to quadIn
+    easing = (t: number) => t, // Default to linear
     startPitch = 0.8,
-    endPitch = 1.5,
+    endPitch = 2.0,
     playTickSound = true
   } = config
 

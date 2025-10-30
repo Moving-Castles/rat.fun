@@ -9,7 +9,15 @@
   import { environment } from "$lib/modules/network"
   import { ENVIRONMENT } from "$lib/mud/enums"
 
-  let { result }: { result: EnterTripReturnValue } = $props()
+  let {
+    result,
+    seed1,
+    seed2
+  }: {
+    result: EnterTripReturnValue
+    seed1: number
+    seed2: number
+  } = $props()
 
   // ** Root Timeline Management **
   const rootTimeline = gsap.timeline()
@@ -62,9 +70,33 @@
     rootTimeline.restart()
   }
 
+  // Calculate palette color from seeds (matching tripProcessing shader logic)
+  const getPaletteColor = (seed: number): [number, number, number] => {
+    const hue = seed * Math.PI * 2
+    let r = Math.sin(hue)
+    let g = Math.sin(hue + 2.09)
+    let b = Math.sin(hue + 4.18)
+
+    // Make all positive
+    r = Math.abs(r)
+    g = Math.abs(g)
+    b = Math.abs(b)
+
+    // Normalize to brightest component
+    const maxComponent = Math.max(r, g, b)
+    return [r / maxComponent, g / maxComponent, b / maxComponent]
+  }
+
   const setupTripReport = () => {
     playSound("ratfunTransitions", "tripReportEnter")
-    shaderManager.setShader("swirlyNoise")
+
+    // Use the first palette color from seed1
+    const [r, g, b] = getPaletteColor(seed1)
+
+    shaderManager.setShader("swirlyNoise", false, {
+      u_color: { type: "vec3", value: [r, g, b] }
+    })
+
     $backgroundMusic = playSound("ratfunMusic", "tripReport", true)
   }
 
