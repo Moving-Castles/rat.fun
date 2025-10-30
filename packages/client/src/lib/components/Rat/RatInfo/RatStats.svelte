@@ -1,21 +1,8 @@
 <script lang="ts">
-  import { fade } from "svelte/transition"
-  import { playSound } from "$lib/modules/sound"
-  import { rat, ratImageUrl } from "$lib/modules/state/stores"
+  import { rat } from "$lib/modules/state/stores"
   import { ratState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
-  import { NoImage } from "$lib/components/Shared"
   import HealthBar from "./HealthBar.svelte"
   import { RatAvatar } from "$lib/components/Shared"
-
-  
-
-  const onmousedown = () => {
-    playSound("ratfunUI", "glassTap")
-  }
-
-  const onmouseup = () => {
-    playSound("ratfunUI", "chirp")
-  }
 </script>
 
 <div class="rat-stats">
@@ -59,21 +46,6 @@
     <!-- IMAGE -->
     <div class="image-container">
       <RatAvatar />
-      {#if $ratImageUrl}
-        <!-- svelte-ignore a11y_no_noninteractive_element_to_interactive_role -->
-        <!-- svelte-ignore a11y_click_events_have_key_events -->
-        <img
-          role="button"
-          {onmousedown}
-          {onmouseup}
-          src={$ratImageUrl}
-          draggable={false}
-          alt={$rat?.name}
-          in:fade|global={{ duration: 400, delay: 300 }}
-        />
-      {:else}
-        <NoImage />
-      {/if}
     </div>
   {/if}
 </div>
@@ -144,24 +116,11 @@
       height: 100%;
       border-left: var(--default-border-style);
       overflow: visible;
+      position: relative;
+      z-index: 10;
 
       @media (max-width: 700px) {
         width: auto;
-      }
-
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        // filter: grayscale(1);
-        // mix-blend-mode: screen;
-        cursor: grab;
-        transition: transform 0.2s ease;
-
-        &:active {
-          transform: scale(1.9);
-          transition: transform 0.2s ease;
-        }
       }
     }
   }

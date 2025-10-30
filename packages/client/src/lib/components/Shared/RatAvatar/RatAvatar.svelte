@@ -5,6 +5,7 @@
   import { playSound } from "$lib/modules/sound"
   import { NoImage } from "$lib/components/Shared"
   import { Tween } from "svelte/motion"
+  import { bounceOut } from "svelte/easing"
 
   type RatAnimation = "idle" | "appearance" | "survived" | "died" | "dead"
 
@@ -37,7 +38,7 @@
     new Tween(1, { duration: 150 }),
     new Tween(0, { duration: 150 }),
     new Tween(0, { duration: 150 }),
-    new Tween(1, { duration: 150 }),
+    new Tween(1, { duration: 1000, easing: bounceOut }),
     new Tween(1, { duration: 150 }),
     new Tween(1, { duration: 150 }),
     new Tween(1, { duration: 150 }),
@@ -59,7 +60,7 @@
     rect = e.currentTarget ? (e.currentTarget as HTMLElement).getBoundingClientRect() : undefined
     bodyScale.set(0.8)
     armsScale.set(1.1)
-    headScale.set(2)
+    headScale.set(5)
     armsTranslate.set(45)
 
     const movementX = e.pageX - rect.left - rect.width / 2

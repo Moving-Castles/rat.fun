@@ -30,7 +30,7 @@
       display: flex;
       flex-direction: row;
       border-bottom: var(--default-border-style);
-      overflow: hidden;
+      overflow: visible;
       height: 260px;
 
       @media (max-width: 700px) {
