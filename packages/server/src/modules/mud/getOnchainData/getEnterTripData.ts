@@ -47,7 +47,8 @@ export async function getEnterTripData(
     // RAT
     /////////////////
 
-    const ratEntity = network.world.registerEntity({ id: ratId })
+    // Use entity ID directly - no need to register entity (prevents memory leak)
+    const ratEntity = ratId as Entity
 
     console.log("ratId", ratId)
     console.log("ratEntity", ratEntity)
@@ -95,8 +96,8 @@ export async function getEnterTripData(
 
     // Only get trip data if tripId is provided
     if (tripId) {
-      // Get trip data
-      const tripEntity = network.world.registerEntity({ id: tripId })
+      // Get trip data - use entity ID directly (prevents memory leak)
+      const tripEntity = tripId as Entity
 
       const tripPrompt = getComponentValue(Prompt, tripEntity)?.value as string
 
@@ -126,7 +127,8 @@ export async function getEnterTripData(
 
     // Only get player data if playerId is provided
     if (playerId) {
-      const playerEntity = network.world.registerEntity({ id: playerId })
+      // Use entity ID directly (prevents memory leak)
+      const playerEntity = playerId as Entity
 
       const playerName = getComponentValue(Name, playerEntity)?.value as string
       const playerBalance = Number(getComponentValue(Balance, playerEntity)?.value ?? 0)

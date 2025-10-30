@@ -1,6 +1,6 @@
 import { Hex } from "viem"
 import type { CreateTripData, GameConfig } from "@modules/types"
-import { getComponentValue } from "@latticexyz/recs"
+import { getComponentValue, type Entity } from "@latticexyz/recs"
 import { network } from "@modules/mud/initMud"
 import { singletonEntity } from "@latticexyz/store-sync/recs"
 import {
@@ -15,7 +15,7 @@ export async function getCreateTripData(playerId: string): Promise<CreateTripDat
       throw new OnchainDataError("PLAYER_ID_REQUIRED", "Validation failed", "Player ID is required")
     }
 
-    const { Name, TripCreationCost, GameConfig, Prompt, MasterKey } = network.components
+    const { Name, GameConfig, MasterKey } = network.components
 
     const result = {} as CreateTripData
 
@@ -23,7 +23,8 @@ export async function getCreateTripData(playerId: string): Promise<CreateTripDat
     // PLAYER
     /////////////////
 
-    const playerEntity = network.world.registerEntity({ id: playerId })
+    // Use entity ID directly - no need to register entity (prevents memory leak)
+    const playerEntity = playerId as Entity
     const playerName = getComponentValue(Name, playerEntity)?.value as string
     const playerMasterKey = getComponentValue(MasterKey, playerEntity)?.value as boolean
 
