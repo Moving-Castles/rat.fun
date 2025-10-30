@@ -10,13 +10,11 @@
   const {
     onComplete,
     result,
-    tripId,
     seed1,
     seed2
   }: {
     onComplete: () => void
     result: EnterTripReturnValue | null
-    tripId: Hex
     seed1: number
     seed2: number
   } = $props()

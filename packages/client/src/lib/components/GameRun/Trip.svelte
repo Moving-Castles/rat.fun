@@ -103,8 +103,9 @@
   <!-- ### 2. TRIP PROCESSING ### -->
   {#if tripResultState.state === TRIP_STATE.PROCESSING}
     <TripProcessing
-      {tripId}
       {result}
+      {seed1}
+      {seed2}
       onComplete={() => {
         transitionTo(TRIP_STATE.RESULTS)
       }}
