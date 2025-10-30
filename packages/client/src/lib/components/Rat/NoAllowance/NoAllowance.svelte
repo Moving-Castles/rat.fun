@@ -1,20 +1,22 @@
 <script lang="ts">
   import { rat } from "$lib/modules/state/stores"
   import { BigButton } from "$lib/components/Shared"
-  import { transitionTo, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
+  import { getRatState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
   import { sendApproveMax } from "$lib/modules/action-manager/index.svelte"
   import { SmallSpinner } from "$lib/components/Shared"
 
   let busy = $state(false)
+
+  let ratState = getRatState()
 
   const onClick = async () => {
     busy = true
     await sendApproveMax()
 
     if ($rat) {
-      transitionTo(RAT_BOX_STATE.HAS_RAT)
+      ratState.state.transitionTo(RAT_BOX_STATE.HAS_RAT)
     } else {
-      transitionTo(RAT_BOX_STATE.NO_RAT)
+      ratState.state.transitionTo(RAT_BOX_STATE.NO_RAT)
     }
   }
 </script>

@@ -2,17 +2,19 @@
   import { rat, ratTotalValue } from "$lib/modules/state/stores"
   import { playSound } from "$lib/modules/sound"
   import { BigButton, ValueBreakdown } from "$lib/components/Shared"
-  import { transitionTo, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
+  import { getRatState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
+
+  let ratState = getRatState()
 
   const onClickConfirm = () => {
     // RAT_BOX_STATE.CONFIRM_LIQUIDATION -> RAT_BOX_STATE.LIQUIDATING_RAT
-    transitionTo(RAT_BOX_STATE.LIQUIDATING_RAT)
+    ratState.state.transitionTo(RAT_BOX_STATE.LIQUIDATING_RAT)
   }
 
   const onClickAbort = () => {
     // RAT_BOX_STATE.CONFIRM_LIQUIDATION -> RAT_BOX_STATE.HAS_RAT
     playSound("ratfunUI", "ratRelief")
-    transitionTo(RAT_BOX_STATE.HAS_RAT)
+    ratState.state.transitionTo(RAT_BOX_STATE.HAS_RAT)
   }
 </script>
 

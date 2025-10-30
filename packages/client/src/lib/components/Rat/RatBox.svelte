@@ -14,39 +14,38 @@
     NoAllowance,
     PastTripList
   } from "$lib/components/Rat"
-  import {
-    RAT_BOX_STATE,
-    resetRatBoxState,
-    ratBoxState,
-    transitionTo
-  } from "$lib/components/Rat/state.svelte"
+  import { RAT_BOX_STATE, getRatState } from "$lib/components/Rat/state.svelte"
   import { backgroundMusic } from "$lib/modules/sound/stores"
 
-  $inspect("ratBoxState.state", ratBoxState.state)
+  let ratState = getRatState()
 
-  onMount(async () => {
+  onMount(() => {
     shaderManager.setShader("clouds", true)
     $backgroundMusic?.stop()
     $backgroundMusic = playSound("ratfunMusic", "main", true)
 
-    // Set state to RAT_BOX_STATE.INIT
-    resetRatBoxState()
-
     if (!$rat) {
+      console.log("no rat")
       if ($playerIsBroke) {
-        transitionTo(RAT_BOX_STATE.NO_TOKENS)
+        console.log("player broke")
+        ratState.state.transitionTo(RAT_BOX_STATE.NO_TOKENS)
       } else if ($tokenAllowanceApproved === false) {
-        transitionTo(RAT_BOX_STATE.NO_ALLOWANCE)
+        console.log("no allowance")
+        ratState.state.transitionTo(RAT_BOX_STATE.NO_ALLOWANCE)
       } else {
-        transitionTo(RAT_BOX_STATE.NO_RAT)
+        console.log("no rat")
+        ratState.state.transitionTo(RAT_BOX_STATE.NO_RAT)
       }
     } else {
+      console.log("rat")
       if ($rat.dead) {
+        console.log("rat dead")
         // If ratBox is remounted we want to go directly to "buy rat" screen
-        transitionTo(RAT_BOX_STATE.NO_RAT)
+        ratState.state.transitionTo(RAT_BOX_STATE.NO_RAT)
       } else {
+        console.log("rat alive")
         // Alive rat found
-        transitionTo(RAT_BOX_STATE.HAS_RAT)
+        ratState.state.transitionTo(RAT_BOX_STATE.HAS_RAT)
       }
     }
   })
@@ -61,26 +60,26 @@
 </script>
 
 <div class="rat-box">
-  {#if ratBoxState.state === RAT_BOX_STATE.NO_RAT}
+  {#if ratState.state.current === RAT_BOX_STATE.NO_RAT}
     <RatDeploy />
-  {:else if ratBoxState.state === RAT_BOX_STATE.DEPLOYING_RAT}
+  {:else if ratState.state.current === RAT_BOX_STATE.DEPLOYING_RAT}
     <DeployingRat />
-  {:else if ratBoxState.state === RAT_BOX_STATE.HAS_RAT}
+  {:else if ratState.state.current === RAT_BOX_STATE.HAS_RAT}
     <RatInfo />
-  {:else if ratBoxState.state === RAT_BOX_STATE.CONFIRM_LIQUIDATION}
+  {:else if ratState.state.current === RAT_BOX_STATE.CONFIRM_LIQUIDATION}
     <ConfirmLiquidation />
-  {:else if ratBoxState.state === RAT_BOX_STATE.LIQUIDATING_RAT}
+  {:else if ratState.state.current === RAT_BOX_STATE.LIQUIDATING_RAT}
     <LiquidatingRat />
-  {:else if ratBoxState.state === RAT_BOX_STATE.DEAD_RAT}
+  {:else if ratState.state.current === RAT_BOX_STATE.DEAD_RAT}
     <RatDead />
-  {:else if ratBoxState.state === RAT_BOX_STATE.NO_TOKENS}
+  {:else if ratState.state.current === RAT_BOX_STATE.NO_TOKENS}
     <NoTokens />
-  {:else if ratBoxState.state === RAT_BOX_STATE.NO_ALLOWANCE}
+  {:else if ratState.state.current === RAT_BOX_STATE.NO_ALLOWANCE}
     <NoAllowance />
-  {:else if ratBoxState.state === RAT_BOX_STATE.PAST_TRIP_LIST}
+  {:else if ratState.state.current === RAT_BOX_STATE.PAST_TRIP_LIST}
     <PastTripList />
   {:else}
-    error
+    error: {ratState.state.current}
   {/if}
 </div>
 

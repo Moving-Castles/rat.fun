@@ -1,22 +1,23 @@
 <script lang="ts">
   import { tokenAllowanceApproved } from "$lib/modules/state/stores"
   import { BigButton } from "$lib/components/Shared"
-  import { transitionTo, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
+  import { getRatState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
   import { sendGiveCallerTokens } from "$lib/modules/action-manager/index.svelte"
   import { SmallSpinner } from "$lib/components/Shared"
   import { environment } from "$lib/modules/network"
   import { ENVIRONMENT } from "$lib/mud/enums"
 
   let busy = $state(false)
+  let ratState = getRatState()
 
   const onClick = async () => {
     busy = true
     await sendGiveCallerTokens()
 
     if ($tokenAllowanceApproved) {
-      transitionTo(RAT_BOX_STATE.NO_RAT)
+      ratState.state.transitionTo(RAT_BOX_STATE.NO_RAT)
     } else {
-      transitionTo(RAT_BOX_STATE.NO_ALLOWANCE)
+      ratState.state.transitionTo(RAT_BOX_STATE.NO_ALLOWANCE)
     }
   }
 </script>

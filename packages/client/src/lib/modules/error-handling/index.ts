@@ -31,7 +31,7 @@ export function errorHandler(error: ExpectedError | unknown, message = "") {
   // Auto-detect and parse viem errors
   if (error && typeof error === "object" && "name" in error) {
     // Check if it's a viem BaseError by checking for viem-specific properties
-    if ("shortMessage" in error || "code" in error || error.constructor.name.includes("Error")) {
+    if ("shortMessage" in error) {
       try {
         // Try to parse as viem error
         processedError = parseViemError(error as any)

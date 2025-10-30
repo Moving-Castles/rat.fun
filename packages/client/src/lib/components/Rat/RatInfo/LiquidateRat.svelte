@@ -2,12 +2,14 @@
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import { DangerButton } from "$lib/components/Shared"
   import { rat } from "$lib/modules/state/stores"
-  import { transitionTo, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
+  import { getRatState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
   import { getRatTotalValue } from "$lib/modules/state/utils"
   import { Tween } from "svelte/motion"
 
   let totalValue = $derived($rat ? getRatTotalValue($rat) : 0)
   const tweenedValue = new Tween(totalValue)
+
+  let ratState = getRatState()
 
   $effect(() => {
     if (totalValue !== tweenedValue.current) {
@@ -17,7 +19,7 @@
 
   const onClick = async () => {
     // RAT_BOX_STATE.HAS_RAT -> RAT_BOX_STATE.CONFIRM_LIQUIDATION
-    transitionTo(RAT_BOX_STATE.CONFIRM_LIQUIDATION)
+    ratState.state.transitionTo(RAT_BOX_STATE.CONFIRM_LIQUIDATION)
   }
 </script>
 

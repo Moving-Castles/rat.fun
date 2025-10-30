@@ -6,14 +6,16 @@
   import { player } from "$lib/modules/state/stores"
   import { UIState } from "$lib/modules/ui/state.svelte"
   import { UI } from "$lib/modules/ui/enums"
-  import { transitionTo, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
+  import { getRatState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
   import { Mascot } from "$lib/components/Shared"
+
+  let ratState = getRatState()
 
   // Not enough balance
   let disabled = $derived(($playerERC20Balance ?? 0) < Number($gameConfig?.ratCreationCost ?? 0))
 
   const onClick = async () => {
-    transitionTo(RAT_BOX_STATE.DEPLOYING_RAT)
+    ratState.state.transitionTo(RAT_BOX_STATE.DEPLOYING_RAT)
   }
 
   const onSpawnClick = async () => {

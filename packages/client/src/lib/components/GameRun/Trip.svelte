@@ -96,7 +96,7 @@
   {#if tripResultState.state === TRIP_STATE.PROCESSING}
     <TripProcessing
       {result}
-      onComplete={async () => {
+      onComplete={() => {
         transitionTo(TRIP_STATE.RESULTS)
       }}
     />

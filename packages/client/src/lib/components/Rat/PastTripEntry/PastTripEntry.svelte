@@ -1,9 +1,11 @@
 <script lang="ts">
   import { staticContent } from "$lib/modules/content"
-  import { transitionTo, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
+  import { getRatState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
 
   import { BackButton } from "$lib/components/Shared"
   import { FlashbackEntry } from "$lib/components/Flashback"
+
+  let ratState = getRatState()
 
   let { outcomeId }: { outcomeId: string } = $props()
 
@@ -11,7 +13,7 @@
   let trip = $derived($staticContent.trips.find(r => r._id == result?.tripId))
 
   const onBackButtonClick = () => {
-    transitionTo(RAT_BOX_STATE.PAST_TRIP_LIST)
+    ratState.state.transitionTo(RAT_BOX_STATE.PAST_TRIP_LIST)
   }
 </script>
 

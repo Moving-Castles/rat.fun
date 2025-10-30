@@ -1,11 +1,13 @@
 <script lang="ts">
   import { rat } from "$lib/modules/state/stores"
   import { BigButton, RatAvatar } from "$lib/components/Shared"
-  import { transitionTo, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
+  import { getRatState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
+
+  let ratState = getRatState()
 
   const onClick = () => {
     // RAT_BOX_STATE.DEAD_RAT -> RAT_BOX_STATE.NO_RAT
-    transitionTo(RAT_BOX_STATE.NO_RAT)
+    ratState.state.transitionTo(RAT_BOX_STATE.NO_RAT)
   }
 </script>
 

@@ -1,10 +1,12 @@
 <script lang="ts">
-  import { transitionTo, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
+  import { getRatState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
   import { staticContent } from "$lib/modules/content"
   import { player, playerId, rat } from "$lib/modules/state/stores"
 
   import PastTripListItem from "./PastTripListItem.svelte"
   import { BackButton } from "$lib/components/Shared"
+
+  let ratState = getRatState()
 
   let pastTrips = $derived(
     $staticContent.outcomes
@@ -17,7 +19,7 @@
   )
 
   const onBackButtonClick = () => {
-    transitionTo(RAT_BOX_STATE.HAS_RAT)
+    ratState.state.transitionTo(RAT_BOX_STATE.HAS_RAT)
   }
 </script>
 

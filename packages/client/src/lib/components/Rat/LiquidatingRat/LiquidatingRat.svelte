@@ -3,11 +3,13 @@
   import { player } from "$lib/modules/state/stores"
   import { sendLiquidateRat } from "$lib/modules/action-manager/index.svelte"
   import { sendLiquidateRatMessage } from "$lib/modules/off-chain-sync"
-  import { transitionTo, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
+  import { getRatState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
   import { erc20BalanceListenerActive } from "$lib/modules/erc20Listener/stores"
   import { refetchBalance } from "$lib/modules/erc20Listener"
 
   import { SmallSpinner } from "$lib/components/Shared"
+
+  let ratState = getRatState()
 
   onMount(async () => {
     // playSound("ratfunUI", "ratDeath")
@@ -28,7 +30,7 @@
     erc20BalanceListenerActive.set(true)
 
     // RAT_BOX_STATE.LIQUIDATING_RAT -> RAT_BOX_STATE.DEAD_RAT
-    transitionTo(RAT_BOX_STATE.DEAD_RAT)
+    ratState.state.transitionTo(RAT_BOX_STATE.DEAD_RAT)
   })
 </script>
 

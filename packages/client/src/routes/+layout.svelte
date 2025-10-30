@@ -21,17 +21,14 @@
     lightboxState
   } from "$lib/modules/ui/state.svelte"
   import { UI } from "$lib/modules/ui/enums"
-  import { activeWorldEvent } from "$lib/modules/state/stores"
-  // import { initOffChainSync } from "$lib/modules/off-chain-sync"
-  // import { playerId } from "$lib/modules/state/stores"
-  // import { websocketConnected } from "$lib/modules/off-chain-sync/stores"
-  // import { EMPTY_ID } from "$lib/modules/state/constants"
+  import { activeWorldEvent, rat } from "$lib/modules/state/stores"
   import { errorHandler } from "$lib/modules/error-handling"
   import {
     environment as environmentStore,
     walletType as walletTypeStore
   } from "$lib/modules/network"
-  // import { getRatBoxState, setRatBoxState } from "$lib/components/Rat/state.svelte"
+  import { getRatState } from "$lib/components/Rat/state.svelte"
+  import { getRatInventory } from "$lib/modules/state/utils"
 
   // Components
   import Spawn from "$lib/components/Spawn/Spawn.svelte"
@@ -43,24 +40,40 @@
     WorldEventPopup,
     Lightbox
   } from "$lib/components/Shared"
+  import { page } from "$app/state"
   import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
   import EntryKit from "$lib/components/Spawn/EntryKit/EntryKit.svelte"
   import Toasts from "$lib/components/Shared/Toasts/Toasts.svelte"
 
-  // let ratBoxState = getRatBoxState()
+  let ratState = getRatState()
 
   // Managed state
   export const snapshot: Snapshot<string> = {
     capture: () => {
-      return JSON.stringify({
-        adminUnlockedAt: $adminUnlockedAt
-        // ratBoxStateState: ratBoxState.state
-      })
+      const currentState = {
+        adminUnlockedAt: $adminUnlockedAt,
+        ratBoxState: ratState.state.current,
+        ratBoxBalance: Number($rat?.balance) ?? 100,
+        ratBoxInventorySize: getRatInventory($rat)?.length ?? 0
+      }
+      console.log(performance.now(), page.route.id, currentState)
+
+      if (page.route.id.includes("tripping")) {
+        // Do nothing
+      } else {
+        return JSON.stringify(currentState)
+      }
     },
     restore: value => {
       const parsedValue = JSON.parse(value)
       $adminUnlockedAt = parsedValue.adminUnlockedAt
-      // setRatBoxState(parsedValue.ratBoxStateState)
+      ratState.state.transitionTo(parsedValue.ratBoxState)
+      if (parsedValue?.ratBoxBalance) {
+        ratState.balance.set(BigInt(parsedValue.ratBoxBalance))
+      }
+      if (parsedValue?.ratBoxInventorySize) {
+        ratState.inventorySize.set(parsedValue?.ratBoxInventorySize ?? 0)
+      }
     }
   }
 

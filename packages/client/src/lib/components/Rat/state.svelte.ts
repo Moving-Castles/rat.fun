@@ -1,7 +1,5 @@
 import { errorHandler } from "$lib/modules/error-handling"
 import { InvalidStateTransitionError } from "$lib/modules/error-handling/errors"
-import { items } from "$lib/modules/state/stores"
-import { get } from "svelte/store"
 
 /**
  * ========================================
@@ -38,11 +36,10 @@ export enum RAT_BOX_STATE {
   ERROR = "ERROR"
 }
 
-/** Current state of the rat box flow */
-export const ratBoxState: { state: RAT_BOX_STATE; errorMessage: string | null } = $state({
-  state: RAT_BOX_STATE.INIT,
-  errorMessage: null
-})
+// Local state
+let ratBoxState = $state<RAT_BOX_STATE>(RAT_BOX_STATE.INIT)
+let ratBoxBalance = $state<number | BigInt>(100)
+let ratBoxInventorySize = $state<number>(0)
 
 /**
  * Defines valid state transitions between rat box states
@@ -87,54 +84,54 @@ const VALID_TRANSITIONS: Record<RAT_BOX_STATE, RAT_BOX_STATE[]> = {
   [RAT_BOX_STATE.ERROR]: []
 }
 
-/**
- * Transitions to a new state if the transition is valid
- * @param newState The state to transition to
- */
-export const transitionTo = (newState: RAT_BOX_STATE) => {
-  const validTransitions = VALID_TRANSITIONS[ratBoxState.state]
-  if (!validTransitions.includes(newState)) {
-    const err = new InvalidStateTransitionError(
-      undefined,
-      undefined,
-      `Invalid state transition from ${ratBoxState.state} to ${newState}`
-    )
-    errorHandler(err)
-    return
+export const getRatState = () => {
+  const setRatBoxBalance = (balance: number | BigInt) => {
+    ratBoxBalance = balance
   }
-  ratBoxState.state = newState
-}
 
-/**
- * Resets the rat box state to the initial state
- */
-export const resetRatBoxState = () => {
-  ratBoxState.state = RAT_BOX_STATE.INIT
-  ratBoxState.errorMessage = null
-}
+  const setRatBoxState = (state: RAT_BOX_STATE) => {
+    console.log("Setting rbs", state)
+    ratBoxState = state
+  }
 
-export const setRatBoxState = (state: RAT_BOX_STATE) => {
-  ratBoxState.state = state
-}
+  const transitionTo = (newState: RAT_BOX_STATE) => {
+    if (newState === ratBoxState) return
+    const validTransitions = VALID_TRANSITIONS[ratBoxState]
+    if (!validTransitions.includes(newState)) {
+      const err = new InvalidStateTransitionError(
+        undefined,
+        undefined,
+        `Invalid state transition from ${ratBoxState} to ${newState}`
+      )
+      errorHandler(err)
+      return
+    }
+    setRatBoxState(newState)
+  }
 
-let itemState = $state("")
-const itemDerived = $derived.by(() => {
-  const values = get(items)
-  return values?.[itemState] || false
-})
+  const setRatBoxInventorySize = (inventory: number) => {
+    ratBoxInventorySize = inventory
+  }
 
-export const getItemState = () => {
   return {
-    item: {
-      set: (newState: string) => (itemState = newState),
-      get entity() {
-        return itemDerived
-      },
+    state: {
+      set: setRatBoxState,
+      transitionTo,
       get current() {
-        return itemState
+        return ratBoxState
+      }
+    },
+    balance: {
+      set: setRatBoxBalance,
+      get current() {
+        return ratBoxBalance
+      }
+    },
+    inventorySize: {
+      set: setRatBoxInventorySize,
+      get current() {
+        return ratBoxInventorySize
       }
     }
   }
 }
-
-export const getRatBoxState = () => ratBoxState

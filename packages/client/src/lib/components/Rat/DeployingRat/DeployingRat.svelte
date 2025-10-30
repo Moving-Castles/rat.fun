@@ -6,7 +6,7 @@
   import { sendCreateRat } from "$lib/modules/action-manager/index.svelte"
   import { generateRatName, lastNameFragments, firstNameFragments } from "./ratNameGenerator"
   import { sendDeployRatMessage } from "$lib/modules/off-chain-sync"
-  import { transitionTo, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
+  import { getRatState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
   import { PropertyChangeTimeoutError, RatError } from "$lib/modules/error-handling/errors"
   import { errorHandler } from "$lib/modules/error-handling"
   import { getRandomNumber, getRandomElement } from "$lib/modules/utils"
@@ -15,6 +15,8 @@
   import { playSound } from "$lib/modules/sound"
 
   import { LockButton, SmallSpinner } from "$lib/components/Shared"
+
+  let ratState = getRatState()
 
   // Pre-generate the final name
   const initialName = generateRatName()
@@ -174,9 +176,9 @@
     if ($rat.name !== finalName) {
       await waitForPropertyChange(rat, "name", finalName, 10000)
     }
-    await new Promise(res => setTimeout(res, 1000))
+    await new Promise(res => setTimeout(res, 4000))
     // Transition to has rat state
-    transitionTo(RAT_BOX_STATE.HAS_RAT)
+    ratState.state.transitionTo(RAT_BOX_STATE.HAS_RAT)
   }
 
   onMount(async () => {
