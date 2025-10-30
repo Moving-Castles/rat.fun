@@ -9,9 +9,9 @@
   import { rat, ratTotalValue } from "$lib/modules/state/stores"
   import { busy } from "$lib/modules/action-manager/index.svelte"
   import { getTripMinRatValueToEnter } from "$lib/modules/state/utils"
-  import { getRatState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
+  import { ratState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
 
-  let ratState = getRatState()
+  
 
   import {
     TripPreviewHeader,

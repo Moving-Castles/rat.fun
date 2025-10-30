@@ -2,13 +2,11 @@
   import { HEALTH_SYMBOL } from "$lib/modules/ui/constants"
   import { Tween } from "svelte/motion"
   import { rat } from "$lib/modules/state/stores"
-  import { getRatState } from "$lib/components/Rat/state.svelte"
-
-  let ratState = getRatState()
+  import { ratState } from "$lib/components/Rat/state.svelte"
 
   // Define the comparison
   let current = $derived(ratState?.balance?.current ?? 0)
-  let target = $derived(Number($rat.balance))
+  let target = $derived(Number($rat?.balance ?? 0))
 
   const tweenedValue = new Tween(current, { duration: 0 })
 

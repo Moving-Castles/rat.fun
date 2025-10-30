@@ -1,11 +1,11 @@
 <script lang="ts">
   import { staticContent } from "$lib/modules/content"
-  import { getRatState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
+  import { ratState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
 
   import { BackButton } from "$lib/components/Shared"
   import { FlashbackEntry } from "$lib/components/Flashback"
 
-  let ratState = getRatState()
+  
 
   let { outcomeId }: { outcomeId: string } = $props()
 

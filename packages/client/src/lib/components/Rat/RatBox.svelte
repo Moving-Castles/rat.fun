@@ -15,10 +15,8 @@
     NoAllowance,
     PastTripList
   } from "$lib/components/Rat"
-  import { RAT_BOX_STATE, getRatState } from "$lib/components/Rat/state.svelte"
+  import { RAT_BOX_STATE, ratState } from "$lib/components/Rat/state.svelte"
   import { backgroundMusic } from "$lib/modules/sound/stores"
-
-  let ratState = getRatState()
 
   onMount(() => {
     shaderManager.setShader("clouds", true)

@@ -6,7 +6,7 @@
   import { sendCreateRat } from "$lib/modules/action-manager/index.svelte"
   import { generateRatName, lastNameFragments, firstNameFragments } from "./ratNameGenerator"
   import { sendDeployRatMessage } from "$lib/modules/off-chain-sync"
-  import { getRatState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
+  import { ratState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
   import { PropertyChangeTimeoutError, RatError } from "$lib/modules/error-handling/errors"
   import { errorHandler } from "$lib/modules/error-handling"
   import { getRandomNumber, getRandomElement } from "$lib/modules/utils"
@@ -16,7 +16,7 @@
 
   import { LockButton, SmallSpinner } from "$lib/components/Shared"
 
-  let ratState = getRatState()
+  
 
   // Pre-generate the final name
   const initialName = generateRatName()

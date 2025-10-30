@@ -3,10 +3,8 @@
   import { DangerButton } from "$lib/components/Shared"
   import { rat, ratTotalValue } from "$lib/modules/state/stores"
   import { getRatTotalValue } from "$lib/modules/state/utils"
-  import { getRatState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
+  import { ratState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
   import { Tween } from "svelte/motion"
-
-  let ratState = getRatState()
 
   const initialValue = getRatTotalValue(ratState.balance.current, ratState.inventory.current)
 

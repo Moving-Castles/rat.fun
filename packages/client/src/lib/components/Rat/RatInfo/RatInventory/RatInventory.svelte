@@ -1,13 +1,10 @@
 <script lang="ts">
   import { onMount } from "svelte"
   import { rat, ratInventory } from "$lib/modules/state/stores"
-  import { getRatState } from "$lib/components/Rat/state.svelte"
+  import { ratState } from "$lib/components/Rat/state.svelte"
 
   import InteractiveItem from "$lib/components/Rat/RatInfo/RatInventory/InteractiveItem.svelte"
   import EmptySlot from "$lib/components/Rat/RatInfo/RatInventory/EmptySlot.svelte"
-
-  // Compare inventories with rat State size comparison and add some delay
-  let ratState = getRatState()
 
   const MAX_INVENTORY_SIZE = 6
   let emptySlots = $state(

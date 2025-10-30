@@ -6,10 +6,10 @@
   import { player } from "$lib/modules/state/stores"
   import { UIState } from "$lib/modules/ui/state.svelte"
   import { UI } from "$lib/modules/ui/enums"
-  import { getRatState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
+  import { ratState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
   import { Mascot } from "$lib/components/Shared"
 
-  let ratState = getRatState()
+  
 
   // Not enough balance
   let disabled = $derived(($playerERC20Balance ?? 0) < Number($gameConfig?.ratCreationCost ?? 0))

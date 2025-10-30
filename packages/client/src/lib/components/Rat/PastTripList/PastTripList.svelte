@@ -1,12 +1,12 @@
 <script lang="ts">
-  import { getRatState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
+  import { ratState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
   import { staticContent } from "$lib/modules/content"
   import { player, playerId, rat } from "$lib/modules/state/stores"
 
   import PastTripListItem from "./PastTripListItem.svelte"
   import { BackButton } from "$lib/components/Shared"
 
-  let ratState = getRatState()
+  
 
   let pastTrips = $derived(
     $staticContent.outcomes

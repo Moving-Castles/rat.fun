@@ -1,14 +1,14 @@
 <script lang="ts">
   import { tokenAllowanceApproved } from "$lib/modules/state/stores"
   import { BigButton } from "$lib/components/Shared"
-  import { getRatState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
+  import { ratState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
   import { sendGiveCallerTokens } from "$lib/modules/action-manager/index.svelte"
   import { SmallSpinner } from "$lib/components/Shared"
   import { environment } from "$lib/modules/network"
   import { ENVIRONMENT } from "$lib/mud/enums"
 
   let busy = $state(false)
-  let ratState = getRatState()
+  
 
   const onClick = async () => {
     busy = true

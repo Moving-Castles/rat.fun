@@ -2,12 +2,12 @@
   import { fade } from "svelte/transition"
   import { playSound } from "$lib/modules/sound"
   import { rat, ratImageUrl } from "$lib/modules/state/stores"
-  import { getRatState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
+  import { ratState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
   import { NoImage } from "$lib/components/Shared"
   import HealthBar from "./HealthBar.svelte"
   import { RatAvatar } from "$lib/components/Shared"
 
-  let ratState = getRatState()
+  
 
   const onmousedown = () => {
     playSound("ratfunUI", "glassTap")

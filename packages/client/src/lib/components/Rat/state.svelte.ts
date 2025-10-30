@@ -86,54 +86,56 @@ const VALID_TRANSITIONS: Record<RAT_BOX_STATE, RAT_BOX_STATE[]> = {
   [RAT_BOX_STATE.ERROR]: []
 }
 
-export const getRatState = () => {
-  const setRatBoxBalance = (balance: number | BigInt) => {
-    ratBoxBalance = balance
-  }
+const setRatBoxBalance = (balance: number | BigInt) => {
+  ratBoxBalance = Number(balance)
+}
 
-  const setRatBoxState = (state: RAT_BOX_STATE) => {
-    console.log("Setting rbs", state)
-    ratBoxState = state
-  }
+const setRatBoxState = (state: RAT_BOX_STATE) => {
+  console.log("Setting rbs", state)
+  ratBoxState = state
+}
 
-  const transitionTo = (newState: RAT_BOX_STATE) => {
-    if (newState === ratBoxState) return
-    const validTransitions = VALID_TRANSITIONS[ratBoxState]
-    if (!validTransitions.includes(newState)) {
-      const err = new InvalidStateTransitionError(
-        undefined,
-        undefined,
-        `Invalid state transition from ${ratBoxState} to ${newState}`
-      )
-      errorHandler(err)
-      return
+const transitionTo = (newState: RAT_BOX_STATE) => {
+  if (newState === ratBoxState) return
+  const validTransitions = VALID_TRANSITIONS[ratBoxState]
+  if (!validTransitions.includes(newState)) {
+    const err = new InvalidStateTransitionError(
+      undefined,
+      undefined,
+      `Invalid state transition from ${ratBoxState} to ${newState}`
+    )
+    errorHandler(err)
+    return
+  }
+  setRatBoxState(newState)
+}
+
+const setRatBoxInventory = (inventory: any[]) => {
+  ratBoxInventory = inventory
+}
+
+// Export singleton instance instead of factory function
+export const ratState = {
+  state: {
+    set: setRatBoxState,
+    transitionTo,
+    get current() {
+      return ratBoxState
     }
-    setRatBoxState(newState)
-  }
-
-  const setRatBoxInventory = (inventory: any[]) => {
-    ratBoxInventory = inventory
-  }
-
-  return {
-    state: {
-      set: setRatBoxState,
-      transitionTo,
-      get current() {
-        return ratBoxState
-      }
-    },
-    balance: {
-      set: setRatBoxBalance,
-      get current() {
-        return ratBoxBalance
-      }
-    },
-    inventory: {
-      set: setRatBoxInventory,
-      get current() {
-        return ratBoxInventory
-      }
+  },
+  balance: {
+    set: setRatBoxBalance,
+    get current() {
+      return ratBoxBalance
+    }
+  },
+  inventory: {
+    set: setRatBoxInventory,
+    get current() {
+      return ratBoxInventory
     }
   }
 }
+
+// Keep for backwards compatibility if needed
+export const getRatState = () => ratState

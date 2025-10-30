@@ -27,7 +27,7 @@
     environment as environmentStore,
     walletType as walletTypeStore
   } from "$lib/modules/network"
-  import { getRatState } from "$lib/components/Rat/state.svelte"
+  import { ratState } from "$lib/components/Rat/state.svelte"
 
   // Components
   import Spawn from "$lib/components/Spawn/Spawn.svelte"
@@ -44,8 +44,6 @@
   import EntryKit from "$lib/components/Spawn/EntryKit/EntryKit.svelte"
   import Toasts from "$lib/components/Shared/Toasts/Toasts.svelte"
 
-  let ratState = getRatState()
-
   // Managed state
   export const snapshot: Snapshot<string> = {
     capture: () => {
@@ -53,31 +51,43 @@
       const currentState = {
         adminUnlockedAt: $adminUnlockedAt,
         ratBoxState: ratState.state.current,
-        ratBoxBalance: Number($rat?.balance) ?? 100,
-        ratBoxInventory: $ratInventory || []
+        ratBoxBalance: Number($rat?.balance ?? ratState.balance.current ?? 0),
+        ratBoxInventory: $ratInventory || ratState.inventory.current || []
       }
       console.log(performance.now(), page.route.id, currentState)
 
       if (page?.route?.id?.includes("tripping")) {
-        // Do nothing
+        return undefined
       } else {
         return JSON.stringify(currentState)
       }
     },
     restore: value => {
-      console.log("restore!")
+      if (!value) return
+
+      console.log("restore!", value)
       const parsedValue = JSON.parse(value)
+
+      // Restore admin state
       $adminUnlockedAt = parsedValue.adminUnlockedAt
-      ratState.state.transitionTo(parsedValue.ratBoxState)
-      if (parsedValue?.ratBoxBalance) {
-        console.log("set")
-        ratState.balance.set(Number(parsedValue.ratBoxBalance))
-      }
-      if (parsedValue?.ratBoxInventory) {
-        ratState.inventory.set(parsedValue?.ratBoxInventory || [])
+
+      // Restore rat state - must happen before components mount
+      if (parsedValue.ratBoxState) {
+        ratState.state.set(parsedValue.ratBoxState)
       }
 
-      console.log("restored balance", ratState.balance.current)
+      // Always set balance, even if 0
+      const balanceValue = Number(parsedValue.ratBoxBalance ?? 0)
+      if (!isNaN(balanceValue)) {
+        ratState.balance.set(balanceValue)
+        console.log("restored balance", balanceValue)
+      }
+
+      // Restore inventory
+      if (Array.isArray(parsedValue.ratBoxInventory)) {
+        ratState.inventory.set(parsedValue.ratBoxInventory)
+        console.log("restored inventory", parsedValue.ratBoxInventory.length, "items")
+      }
     }
   }
 
