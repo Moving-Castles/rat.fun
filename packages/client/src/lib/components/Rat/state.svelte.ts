@@ -5,6 +5,7 @@ import { InvalidStateTransitionError } from "$lib/modules/error-handling/errors"
 import { page } from "$app/state"
 import { rat, ratInventory } from "$lib/modules/state/stores"
 import { adminUnlockedAt } from "$lib/modules/ui/state.svelte"
+import { environment } from "$lib/modules/network"
 
 /**
  * ========================================
@@ -147,7 +148,10 @@ export const getRatState = () => ratState
 export const capture = () => {
   const _rat = get(rat)
   const _ratInventory = get(ratInventory)
+  const currentEnv = get(environment)
+
   const currentState = {
+    environment: currentEnv,
     adminUnlockedAt: get(adminUnlockedAt),
     ratBoxState: ratState.state.current,
     ratBoxBalance: Number(_rat?.balance ?? ratState.balance.current ?? 0),
@@ -166,6 +170,15 @@ export const restore = value => {
 
   console.log("restore!", value)
   const parsedValue = JSON.parse(value)
+  const currentEnv = get(environment)
+
+  // Only restore if the snapshot is from the same environment
+  if (parsedValue.environment !== currentEnv) {
+    console.log(
+      `Skipping restore: snapshot is from ${parsedValue.environment}, current env is ${currentEnv}`
+    )
+    return
+  }
 
   // Restore admin state
   adminUnlockedAt.set(parsedValue.adminUnlockedAt)
