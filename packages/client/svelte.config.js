@@ -17,6 +17,7 @@ const config = {
     alias: {
       contracts: "../contracts",
       "@server/*": "../server/src/*",
+      "@websocket-server/*": "../websocket-server/src/*",
       "@sanity-types": "../cms-public/sanity.types"
     }
   }

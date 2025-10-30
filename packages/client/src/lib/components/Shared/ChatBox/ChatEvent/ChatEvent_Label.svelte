@@ -1,7 +1,7 @@
 <script lang="ts">
   import { tippy } from "svelte-tippy"
   import { formatDate } from "$lib/modules/utils"
-  import type { OffChainMessage } from "@server/modules/types"
+  import type { OffChainMessage } from "@websocket-server/modules/types"
 
   let { event }: { event: OffChainMessage } = $props()
 </script>

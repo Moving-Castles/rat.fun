@@ -1,6 +1,6 @@
 import { writable } from "svelte/store"
 import type { Writable } from "svelte/store"
-import type { OffChainMessage } from "@server/modules/types"
+import type { OffChainMessage } from "@websocket-server/modules/types"
 
 export const websocketConnected = writable(false)
 export const clientList = writable([] as string[])

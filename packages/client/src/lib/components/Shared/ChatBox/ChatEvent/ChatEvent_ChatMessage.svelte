@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { OffChainMessage } from "@server/modules/types"
+  import type { OffChainMessage } from "@websocket-server/modules/types"
   import { onMount } from "svelte"
   import { formatDate } from "$lib/modules/utils"
   import { tippy } from "svelte-tippy"

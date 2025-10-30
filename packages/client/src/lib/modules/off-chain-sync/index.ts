@@ -1,4 +1,4 @@
-import type { OffChainMessage } from "@server/modules/types"
+import type { OffChainMessage } from "@websocket-server/modules/types"
 import { ENVIRONMENT } from "$lib/mud/enums"
 import {
   clientList,
