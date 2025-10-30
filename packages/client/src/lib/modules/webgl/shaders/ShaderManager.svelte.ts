@@ -1,7 +1,7 @@
 import { WebGLGeneralRenderer } from "$lib/modules/webgl"
 import { shaders } from "$lib/modules/webgl/shaders/index.svelte"
 
-export type UniformType = "float" | "vec2" | "vec3" | "vec4" | "int" | "bool" | "number"
+export type UniformType = "float" | "vec2" | "vec3" | "vec4" | "int" | "bool"
 
 export type UniformDefinition = {
   name: `u_${string}`
@@ -15,6 +15,10 @@ export class ShaderManager {
   private resizeTimeout: ReturnType<typeof setTimeout> | null = null
   private invert = $state<boolean>(false)
   private currentShaderKey: string | null = null
+  private customUniforms: Record<
+    string,
+    { type: UniformType; value: number | boolean | number[] }
+  > = {}
 
   constructor() {
     // No initialization needed
@@ -89,10 +93,17 @@ export class ShaderManager {
   /**
    * Set new shader programmatically
    */
-  setShader(shaderKey: string, inverted: boolean = false) {
+  setShader(
+    shaderKey: string,
+    inverted: boolean = false,
+    uniforms?: Record<string, { type: UniformType; value: number | boolean | number[] }>
+  ) {
     const shaderSource = shaders?.[shaderKey as keyof typeof shaders]
 
     if (!shaderSource) throw new Error("ShaderNotExistError")
+
+    // Store custom uniforms
+    this.customUniforms = uniforms || {}
 
     // Check if we're already showing this shader
     if (this.currentShaderKey === shaderKey && this._renderer) {
@@ -100,6 +111,10 @@ export class ShaderManager {
       if (this.invert !== inverted) {
         this.setInvert(inverted)
       }
+      // Update custom uniforms if renderer exists
+      Object.entries(this.customUniforms).forEach(([name, uniform]) => {
+        this._renderer?.setUniform(name, uniform.value, uniform.type)
+      })
       console.log(
         `%c[ShaderManager] Shader "${shaderKey}" already active, skipping recreate`,
         "color: #FF9800"
@@ -145,6 +160,11 @@ export class ShaderManager {
       type: "bool",
       value: this.invert
     }
+
+    // Add custom uniforms
+    Object.entries(this.customUniforms).forEach(([name, uniform]) => {
+      initialUniforms[name] = uniform
+    })
 
     try {
       // Use the factory function from your WebGL module

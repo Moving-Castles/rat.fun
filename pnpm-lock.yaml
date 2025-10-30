@@ -246,6 +246,9 @@ importers:
       vite-plugin-devtools-json:
         specifier: ^1.0.0
         version: 1.0.0(vite@7.1.12(@types/node@24.7.2)(jiti@2.6.1)(sass-embedded@1.93.2)(sass@1.93.2)(tsx@4.20.6)(yaml@2.8.1))
+      websocket-server:
+        specifier: workspace:*
+        version: link:../websocket-server
 
   packages/cms-private:
     dependencies:

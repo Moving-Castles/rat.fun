@@ -7,6 +7,7 @@ import { clouds } from "./clouds"
 import { vortex } from "./vortex"
 import { swirlyNoise } from "./swirly-noise"
 import { black } from "./black"
+import { tripProcessing } from "./trip-processing"
 
 const shaders = {
   plasma,
@@ -14,7 +15,8 @@ const shaders = {
   clouds,
   vortex,
   swirlyNoise,
-  black
+  black,
+  tripProcessing
 }
 
 /**
@@ -37,4 +39,4 @@ export {
   createShaderManager
 }
 
-export const shaderManager = $state(createShaderManager())
+export const shaderManager: ShaderManager = $state(createShaderManager())

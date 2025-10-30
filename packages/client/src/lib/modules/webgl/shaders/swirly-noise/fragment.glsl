@@ -18,9 +18,6 @@ precision mediump float;
 #define NOISE_LACUNARITY 2.0       // Noise frequency increase per octave
 
 // Color parameters
-#define DARK_GREY_R 0.65           // Dark grey color - Red component
-#define DARK_GREY_G 0.25           // Dark grey color - Green component
-#define DARK_GREY_B 0.65           // Dark grey color - Blue component
 #define NOISE_POWER 2.0            // Power curve for noise variation
 #define NOISE_OPACITY 0.8          // Opacity multiplier for noise
 
@@ -42,6 +39,7 @@ precision mediump float;
 
 uniform float u_time;        // Animation time
 uniform vec2 u_resolution;   // Screen resolution
+uniform vec3 u_color;        // Base color for the effect
 
 // ============================================================================
 // UTILITY FUNCTIONS
@@ -115,14 +113,13 @@ void main() {
   
   // Apply power curve for subtle variations
   noise = pow(noise, NOISE_POWER);
-  
-  // Define color palette (dark grey and black)
-  vec3 darkGrey = vec3(DARK_GREY_R, DARK_GREY_G, DARK_GREY_B);
+
+  // Define color palette (use uniform color and black)
   vec3 black = vec3(ZERO, ZERO, ZERO);
-  
-  // Mix between dark grey and black based on noise
-  vec3 color = mix(black, darkGrey, noise * NOISE_OPACITY);
-  
+
+  // Mix between black and the palette color based on noise
+  vec3 color = mix(black, u_color, noise * NOISE_OPACITY);
+
   // Output final color with full alpha
   gl_FragColor = vec4(color, ONE);
 }

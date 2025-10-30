@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { Hex } from "viem"
   import type { EnterTripReturnValue } from "@server/modules/types"
+  import { sha256 } from "viem"
   import { onMount } from "svelte"
   import { staticContent } from "$lib/modules/content"
   import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
@@ -26,6 +27,13 @@
   } = $props()
 
   let result = $state<EnterTripReturnValue | null>(null)
+
+  // Calculate trip hash and seeds for visual consistency
+  const tripHash = sha256(tripId)
+  const seed1Hex = tripHash.slice(2, 10) // Skip '0x' and take 8 chars
+  const seed2Hex = tripHash.slice(10, 18) // Take next 8 chars
+  const seed1 = parseInt(seed1Hex, 16) / 0xffffffff // Normalize to 0-1
+  const seed2 = parseInt(seed2Hex, 16) / 0xffffffff // Normalize to 0-1
 
   // Get static trip content from cms
   let staticTripContent = $derived($staticContent.trips.find(r => r._id == (tripId ?? "")))
@@ -95,6 +103,7 @@
   <!-- ### 2. TRIP PROCESSING ### -->
   {#if tripResultState.state === TRIP_STATE.PROCESSING}
     <TripProcessing
+      {tripId}
       {result}
       onComplete={() => {
         transitionTo(TRIP_STATE.RESULTS)
@@ -104,7 +113,7 @@
 
   <!-- ### 3. TRIP RESULTS ### -->
   {#if tripResultState.state === TRIP_STATE.RESULTS && result}
-    <TripReport {result} />
+    <TripReport {result} {seed1} {seed2} />
   {/if}
 </div>
 

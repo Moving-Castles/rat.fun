@@ -84,7 +84,8 @@
   --tab-bar-height: 90px;
 
   /* Border */
-  --color-border: var(--color-grey-mid);
+  /* --color-border: #637263; */
+  --color-border: #8a6572;
   --default-border-style: 1px solid var(--color-border);
   --dashed-border-style: 1px dashed var(--color-border);
 
