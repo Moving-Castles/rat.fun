@@ -67,7 +67,7 @@
   // ???
   $effect(() => {
     if ($entryKitSession) {
-      console.log("IN EFFECT:entryKitSession", $entryKitSession)
+      // console.log("IN EFFECT:entryKitSession", $entryKitSession)
       if ($entryKitSession?.account?.client && $entryKitSession.userAddress) {
         const wallet = setupWalletNetwork($publicNetwork, $entryKitSession)
         const isSpawned = initWalletNetwork(wallet, $entryKitSession.userAddress, walletType)

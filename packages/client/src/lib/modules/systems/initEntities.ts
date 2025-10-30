@@ -15,7 +15,7 @@ import { entities } from "$lib/modules/state/stores"
 import { createComponentSystem } from "$lib/modules/systems"
 
 export function initEntities() {
-  console.log("init entities called")
+  // console.log("init entities called")
   // Only sync game specific tables
   const tableKeys = get(publicNetwork).tableKeys
   const filteredComponents = filterObjectByKey(get(publicNetwork).components, tableKeys)

@@ -41,7 +41,7 @@ export async function sendUnlockAdmin() {
     }
 
     adminUnlockedAt.set(Date.now())
-    console.log("Admin privileges granted")
+    // console.log("Admin privileges granted")
   } catch (e) {
     errorHandler(e)
   }

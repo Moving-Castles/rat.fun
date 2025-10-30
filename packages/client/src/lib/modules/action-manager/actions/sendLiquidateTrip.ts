@@ -10,7 +10,7 @@ const DEFAULT_TIMING = 4000
  * @param tripId The ID of the trip to liquidate
  */
 export async function sendLiquidateTrip(tripId: string) {
-  console.log("Go and liquidate", busy.CloseTrip.current, tripId)
+  // console.log("Go and liquidate", busy.CloseTrip.current, tripId)
   if (busy.CloseTrip.current !== 0 || !tripId) return
 
   busy.CloseTrip.set(0.99, { duration: DEFAULT_TIMING })

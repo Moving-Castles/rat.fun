@@ -128,7 +128,7 @@
     if ($rat) {
       if ($rat.balance > 0 && !$rat.dead) {
         ;[firstName, lastName, ratNumber] = $rat.name.split("_")
-        console.log(firstName, lastName, ratNumber)
+        // console.log(firstName, lastName, ratNumber)
         deploymentDone = true
         return // return before calling create rat
       }

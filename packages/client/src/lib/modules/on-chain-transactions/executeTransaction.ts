@@ -21,7 +21,7 @@ export async function executeTransaction(
   params: (string | Hex | number | bigint)[] = [],
   useConnectorClient: boolean = false
 ): Promise<TransactionReceipt | false> {
-  console.log("executeTransaction", systemId, params, useConnectorClient)
+  // console.log("executeTransaction", systemId, params, useConnectorClient)
 
   try {
     // Prepare the action's client
@@ -29,7 +29,7 @@ export async function executeTransaction(
       ? await prepareConnectorClientForTransaction()
       : get(walletNetwork).walletClient
 
-    console.log("client", client)
+    // console.log("client", client)
 
     let tx
     if (systemId === WorldFunctions.Approve) {
