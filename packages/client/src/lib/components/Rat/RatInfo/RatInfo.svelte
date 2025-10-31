@@ -1,10 +1,13 @@
 <script lang="ts">
+  import { onMount } from "svelte"
   import { rat } from "$lib/modules/state/stores"
   import { frozenRat, resetFrozenState } from "$lib/components/GameRun/state.svelte"
   import { RatStats, RatInventory, LiquidateRat } from "$lib/components/Rat"
 
   // Sync display rat to on-chain rat
   let displayRat = $state<Rat | null>(null)
+
+  $inspect(displayRat)
 
   const updateDisplayRat = async () => {
     if (frozenRat) {
@@ -22,7 +25,7 @@
     }
   }
 
-  updateDisplayRat()
+  onMount(updateDisplayRat)
 </script>
 
 <div class="rat-info">

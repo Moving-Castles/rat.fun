@@ -9,20 +9,9 @@
   let inventory = $derived<Item[]>(displayRat ? getRatInventory(displayRat) : [])
 
   const MAX_INVENTORY_SIZE = 6
-  const emptySlots = Array(MAX_INVENTORY_SIZE - (inventory?.length || 0)).fill(null)
+  let emptySlots = $derived(Array(MAX_INVENTORY_SIZE - (inventory?.length || 0)).fill(null))
 
-  let inventorySlots = $state([...inventory, ...emptySlots])
-
-  $effect(() => {
-    // Fill the inventory slots after 1s
-    setTimeout(() => {
-      // console.log("after 2s")
-      inventorySlots = [
-        ...inventory,
-        ...Array(MAX_INVENTORY_SIZE - (inventory?.length || 0)).fill(null)
-      ]
-    }, 1000)
-  })
+  let inventorySlots = $derived([...inventory, ...emptySlots])
 </script>
 
 <div class="inventory">
@@ -30,10 +19,9 @@
     <div class="inventory-container">
       <!-- INVENTORY GRID -->
       {#each inventorySlots as item, index (index)}
+        <EmptySlot {index} />
         {#if item}
           <InteractiveItem {item} {index} />
-        {:else}
-          <EmptySlot {index} />
         {/if}
       {/each}
     </div>
@@ -45,8 +33,9 @@
     width: 100%;
     border-right: none;
     overflow: hidden;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(1fr, 3);
+    // flex-direction: column;
     border-right: var(--dashed-border-style);
     overflow-x: hidden;
     overflow-y: scroll;
@@ -64,5 +53,31 @@
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(2, 1fr);
     height: 100%;
+  }
+
+  :global(.index-0),
+  :global(.index-3) {
+    grid-column: 1/2;
+  }
+
+  :global(.index-1),
+  :global(.index-4) {
+    grid-column: 2/3;
+  }
+  :global(.index-2),
+  :global(.index-5) {
+    grid-column: 3/4;
+  }
+
+  :global(.index-0),
+  :global(.index-1),
+  :global(.index-2) {
+    grid-row: 1/2;
+  }
+
+  :global(.index-3),
+  :global(.index-4),
+  :global(.index-5) {
+    grid-row: 2/3;
   }
 </style>

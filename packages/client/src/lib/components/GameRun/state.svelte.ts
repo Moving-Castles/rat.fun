@@ -124,6 +124,7 @@ export const processingTrip = writable<ProcessingTrip | null>(null)
  * @param tripId The trip ID
  */
 export function freezeObjects(rat: Rat, trip: Trip, tripId: Hex) {
+  console.log("Freeze objects")
   // Frozen Rat
   const prepFrozenRat = structuredClone(rat) as FrozenRat
   if (!prepFrozenRat.inventory) {
@@ -161,6 +162,7 @@ export function resetProcessingState() {
 }
 
 export function resetFrozenState() {
+  console.log("reset frozen state")
   frozenRat = null
   frozenTrip = null
 }

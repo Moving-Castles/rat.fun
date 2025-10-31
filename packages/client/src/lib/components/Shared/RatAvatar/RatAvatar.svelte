@@ -38,7 +38,7 @@
     new Tween(1, { duration: 150 }),
     new Tween(0, { duration: 150 }),
     new Tween(0, { duration: 150 }),
-    new Tween(1, { duration: 1000, easing: bounceOut }),
+    new Tween(1, { duration: 100, easing: bounceOut }),
     new Tween(1, { duration: 150 }),
     new Tween(1, { duration: 150 }),
     new Tween(1, { duration: 150 }),
@@ -60,7 +60,7 @@
     rect = e.currentTarget ? (e.currentTarget as HTMLElement).getBoundingClientRect() : undefined
     bodyScale.set(0.8)
     armsScale.set(1.1)
-    headScale.set(5)
+    headScale.set(2)
     armsTranslate.set(45)
 
     const movementX = e.pageX - rect.left - rect.width / 2
@@ -139,7 +139,7 @@
       // transform-origin: 50% 150%;
 
       .interactions {
-        transform-origin: 50% 0%;
+        transform-origin: 50% 20%;
       }
 
       &.survived {

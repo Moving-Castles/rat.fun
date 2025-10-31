@@ -1,17 +1,33 @@
 <script lang="ts">
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import { DangerButton } from "$lib/components/Shared"
+  import { rat } from "$lib/modules/state/stores"
   import { ratState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
   import { getRatTotalValue } from "$lib/modules/state/utils"
   import { Tween } from "svelte/motion"
 
   let { displayRat }: { displayRat: Rat | null } = $props()
 
-  let totalValue = $derived(displayRat ? getRatTotalValue(displayRat) : 0)
-  const tweenedValue = new Tween(totalValue)
+  const initialValue = displayRat ? getRatTotalValue(displayRat) : getRatTotalValue($rat)
+  console.log("displayRat", $state.snapshot(displayRat))
+  console.log("initial value", initialValue)
+  const tweenedValue = new Tween(initialValue)
+  let playing = $state(false)
 
   $effect(() => {
-    tweenedValue.set(totalValue, { delay: 2000 })
+    if (displayRat) {
+      tweenedValue.set(getRatTotalValue(displayRat), { delay: 2000 })
+    }
+  })
+
+  $effect(() => {
+    if (tweenedValue.current > tweenedValue.target && !playing) {
+      playing = true
+      console.log("play positive sound")
+    } else if (!playing && tweenedValue.current < tweenedValue.target) {
+      playing = true
+      console.log("play negative sound")
+    }
   })
 
   const onClick = async () => {

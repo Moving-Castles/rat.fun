@@ -17,7 +17,7 @@
 </script>
 
 <div
-  class="empty-slot"
+  class="empty-slot index-{index}"
   class:hovered={isHovered}
   role="button"
   tabindex="0"
