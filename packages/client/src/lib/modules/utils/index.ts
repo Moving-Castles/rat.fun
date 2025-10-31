@@ -209,7 +209,7 @@ export function stepsEasing(t: number, steps: number = 4, direction = "start") {
  * @param blocks The number of blocks to convert to seconds
  * @returns The number of seconds
  */
-function blocksToSeconds(blocks: number) {
+export function blocksToSeconds(blocks: number) {
   return blocks * BLOCKTIME
 }
 

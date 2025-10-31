@@ -5,6 +5,8 @@
   import { urlFor } from "$lib/modules/content/sanity"
   import { NoImage } from "$lib/components/Shared"
   import { lightboxState } from "$lib/modules/ui/state.svelte"
+  import { blocksToReadableTime } from "$lib/modules/utils"
+  import { blockNumber } from "$lib/modules/network"
 
   let { trip, sanityTripContent, tripId }: { trip: Trip; sanityTripContent: any; tripId?: Hex } =
     $props()
@@ -57,6 +59,7 @@
     <div class="trip-image">
       {#key $lastUpdated}
         {#if tripImageUrl}
+          <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
           <img onclick={openLightbox} src={tripImageUrl} alt={`trip #${trip.index}`} />
         {:else}
           <NoImage />
@@ -76,18 +79,32 @@
       <div class="label">Creator</div>
       <div class="value">{getTripOwnerName(trip)}</div>
     </div>
+    <!-- LAST VISIT BLOCK -->
+    {#if trip.lastVisitBlock}
+      <div class="row last-visit-block">
+        <div class="label">LAST VISIT</div>
+        <div class="value">
+          {blocksToReadableTime(Number($blockNumber) - Number(trip.lastVisitBlock))}
+        </div>
+      </div>
+    {/if}
     <!-- VISIT COUNT -->
     <div class="row visit-count">
       <div class="label">VISITS</div>
       <div class="value">{trip.visitCount}</div>
     </div>
     <!-- KILL COUNT -->
-    <!-- {#if trip?.killCount > 0}
+    {#if trip?.killCount > 0}
       <div class="row kill-count">
         <div class="label">KILLS</div>
         <div class="value">{trip?.killCount}</div>
       </div>
-    {/if} -->
+    {/if}
+    <!-- BALANCE -->
+    <div class="row balance" class:depleted={Number(trip.balance) == 0}>
+      <div class="label">BALANCE</div>
+      <div class="value">${trip.balance}</div>
+    </div>
     <!-- {#if trip?.minRatValueToEnter > 0}
       <div class="row min-rat-value-to-enter">
         <div class="label">MIN RAT VALUE TO ENTER</div>
@@ -100,11 +117,6 @@
         <div class="value">${$maxValuePerWin}</div>
       </div>
     {/if}
-    <!-- BALANCE -->
-    <!-- <div class="row balance" class:depleted={Number(trip.balance) == 0}>
-      <div class="label">BALANCE</div>
-      <div class="value">${trip.balance}</div>
-    </div> -->
   </div>
 </div>
 

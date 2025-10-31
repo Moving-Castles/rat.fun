@@ -1,19 +1,14 @@
 <script lang="ts">
   import type { Hex } from "viem"
-  import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
+  import type { Trip as SanityTrip } from "@sanity-types"
   import { urlFor } from "$lib/modules/content/sanity"
   import { renderSafeString } from "$lib/modules/utils"
-  import { getTripMaxValuePerWin } from "$lib/modules/state/utils"
   import { staticContent } from "$lib/modules/content"
   import { playSound } from "$lib/modules/sound"
-  import { Tooltip, NoImage, ArchetypeBar } from "$lib/components/Shared"
-
-  import type { Trip as SanityTrip } from "@sanity-types"
+  import { NoImage } from "$lib/components/Shared"
+  import TripItemStats from "./TripItemStats/TripItemStats.svelte"
 
   let { tripId, trip }: { tripId: Hex; trip: Trip } = $props()
-
-  // Portion of trip creation cost
-  let maxValuePerWin = getTripMaxValuePerWin(trip.tripCreationCost, trip.balance)
 
   let sanityTripContent: SanityTrip | undefined = $derived(
     $staticContent?.trips?.find(r => r._id.trim() == tripId.trim()) ?? undefined
@@ -82,25 +77,7 @@
     </div>
     <!-- MAX WIN -->
     <div class="meta-data">
-      <div class="meta-data-item max-win">
-        <div class="inner">
-          <Tooltip content="Max Win">
-            {CURRENCY_SYMBOL}{$maxValuePerWin}
-          </Tooltip>
-        </div>
-      </div>
-      <div class="meta-data-item trip-factor">
-        {#if sanityTripContent}
-          <ArchetypeBar content={sanityTripContent} />
-        {/if}
-      </div>
-      <div class="meta-data-item max-win">
-        <div class="inner">
-          <Tooltip content="Kill / Visit">
-            {sanityTripContent?.kills ?? 0} / {sanityTripContent?.visits ?? 0}
-          </Tooltip>
-        </div>
-      </div>
+      <TripItemStats {trip} />
     </div>
   </div>
 </a>
@@ -135,7 +112,7 @@
     .column {
       &.left {
         height: 100%;
-        width: 280px;
+        width: 300px;
         margin-right: 10px;
         display: flex;
         flex-direction: column;
@@ -204,17 +181,6 @@
           padding-left: 10px;
           width: 100px;
           height: 200px;
-
-          .meta-data-item {
-            background: rgba(255, 255, 255, 0.4);
-            color: var(--background);
-            margin-bottom: 5px;
-            border-radius: 4px;
-
-            .inner {
-              padding: 10px;
-            }
-          }
         }
 
         .small {
