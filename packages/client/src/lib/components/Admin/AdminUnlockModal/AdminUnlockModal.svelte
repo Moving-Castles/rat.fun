@@ -59,6 +59,7 @@
     class="modal"
   >
     <div
+      onclick={() => showAdminUnlockModal.set(false)}
       style="transform: translate({buttonX.current}px, {buttonY.current}px);"
       class="mode-switch"
     >

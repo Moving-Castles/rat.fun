@@ -58,7 +58,7 @@
 
   const comeDown = () => {
     // Check if admin should be unlocked after rat death in trip
-    if (ratDead && get(shouldUnlockAdmin)) {
+    if (ratDead && $shouldUnlockAdmin) {
       showAdminUnlockModal.set(true)
     }
 

@@ -251,13 +251,11 @@ export const realisedProfitLoss = derived(
 
 export const showAdminUnlockModal = writable(false)
 
-export const shouldUnlockAdmin = derived(
-  [player, gameConfig],
-  ([$player, $gameConfig]) => {
-    if (!$player || !$gameConfig) return false
-    const pastRatsCount = $player.pastRats?.length ?? 0
-    const requiredCount = $gameConfig.ratsKilledForAdminAccess
-    // Only trigger when exactly reaching the threshold
-    return pastRatsCount === requiredCount
-  }
-)
+export const shouldUnlockAdmin = derived([player, gameConfig], ([$player, $gameConfig]) => {
+  if (!$player || !$gameConfig) return false
+  const pastRatsCount = $player.pastRats?.length ?? 0
+  const requiredCount = $gameConfig.ratsKilledForAdminAccess
+
+  // Only trigger when exactly reaching the threshold
+  return pastRatsCount === requiredCount
+})

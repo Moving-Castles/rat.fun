@@ -10,8 +10,6 @@
 
   import { SmallSpinner } from "$lib/components/Shared"
 
-
-
   onMount(async () => {
     // playSound("ratfunUI", "ratDeath")
 
@@ -34,7 +32,7 @@
     ratState.state.transitionTo(RAT_BOX_STATE.DEAD_RAT)
 
     // Check if admin should be unlocked
-    if (get(shouldUnlockAdmin)) {
+    if ($shouldUnlockAdmin) {
       showAdminUnlockModal.set(true)
     }
   })
