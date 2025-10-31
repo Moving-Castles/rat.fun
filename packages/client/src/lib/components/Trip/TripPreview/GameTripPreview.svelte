@@ -11,8 +11,6 @@
   import { getTripMinRatValueToEnter } from "$lib/modules/state/utils"
   import { ratState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
 
-  
-
   import {
     TripPreviewHeader,
     TripPreviewPrompt,
