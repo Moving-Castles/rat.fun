@@ -28,7 +28,7 @@
     tripDescription.length < 1 || tripDescription.length > $gameConfig.maxTripPromptLength
   )
 
-  let tripCreationCost = $state(200)
+  let tripCreationCost = $state(MIN_TRIP_CREATION_COST)
 
   // Floor the trip creation cost to ensure it's an integer
   let flooredTripCreationCost = $derived(Math.floor(tripCreationCost))
