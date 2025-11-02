@@ -98,6 +98,7 @@
       line-height: 1em;
       padding-inline: 10px;
       font-size: var(--font-size-small);
+      overflow: hidden;
 
       p {
         margin: 0;
