@@ -4,6 +4,7 @@
 
 # Require explicit chain ID parameter
 CHAIN_ID=$1
+VALUE=$2
 
 # Function to get RPC URL by chain ID
 get_rpc_url() {
@@ -12,6 +13,9 @@ get_rpc_url() {
         "31337")
             echo "http://localhost:8545"
             ;;
+        "8453")
+            echo "https://mainnet.base.org"
+            ;;
         "84532")
             echo "https://sepolia.base.org"
             ;;
@@ -19,6 +23,7 @@ get_rpc_url() {
             echo "Error: Unknown chain ID '$chain_id'"
             echo "Supported chain IDs:"
             echo "  31337 - localhost"
+            echo "  8453  - base-mainnet"
             echo "  84532 - base-sepolia"
             exit 1
             ;;
@@ -29,7 +34,7 @@ get_rpc_url() {
 get_world_address() {
     local chain_id=$1
     local script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-    local worlds_file="$script_dir/../worlds.json"
+    local worlds_file="$script_dir/../../worlds.json"
 
     if [ ! -f "$worlds_file" ]; then
         echo "Error: $worlds_file not found"
@@ -50,10 +55,26 @@ get_world_address() {
 # Check if chain ID is provided
 if [ -z "$CHAIN_ID" ]; then
     echo "Error: Chain ID parameter is required"
-    echo "Usage: $0 <chain-id>"
+    echo "Usage: $0 <chain-id> <value>"
     echo "  Supported chain IDs:"
     echo "    31337 - localhost"
+    echo "    8453  - base-mainnet"
     echo "    84532 - base-sepolia"
+    echo "  Value: 0-100 (percentage)"
+    exit 1
+fi
+
+# Check if value is provided
+if [ -z "$VALUE" ]; then
+    echo "Error: Value parameter is required"
+    echo "Usage: $0 <chain-id> <value>"
+    echo "  Value: 0-100 (percentage)"
+    exit 1
+fi
+
+# Validate value is a number between 0 and 100
+if ! [[ "$VALUE" =~ ^[0-9]+$ ]] || [ "$VALUE" -lt 0 ] || [ "$VALUE" -gt 100 ]; then
+    echo "Error: Value must be a number between 0 and 100"
     exit 1
 fi
 
@@ -66,6 +87,9 @@ case $CHAIN_ID in
     "31337")
         echo "Targeting localhost chain (ID: $CHAIN_ID)..."
         ;;
+    "8453")
+        echo "Targeting Base Mainnet chain (ID: $CHAIN_ID)..."
+        ;;
     "84532")
         echo "Targeting Base Sepolia chain (ID: $CHAIN_ID)..."
         ;;
@@ -73,6 +97,7 @@ esac
 
 echo "RPC URL: $RPC"
 echo "World Address: $WORLD_ADDRESS"
+echo "Setting MaxValuePerWin to: $VALUE%"
 echo ""
 
-forge script CreateWorldEvent --sig run\(address\) $WORLD_ADDRESS --broadcast --rpc-url $RPC -vvvv 
+forge script SetMaxValuePerWin --sig run\(address,uint32\) $WORLD_ADDRESS $VALUE --broadcast --rpc-url $RPC -vvvv

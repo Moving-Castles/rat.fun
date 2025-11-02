@@ -12,6 +12,9 @@ get_rpc_url() {
         "31337")
             echo "http://localhost:8545"
             ;;
+        "8453")
+            echo "https://mainnet.base.org"
+            ;;
         "84532")
             echo "https://sepolia.base.org"
             ;;
@@ -19,6 +22,7 @@ get_rpc_url() {
             echo "Error: Unknown chain ID '$chain_id'"
             echo "Supported chain IDs:"
             echo "  31337 - localhost"
+            echo "  8453  - base-mainnet"
             echo "  84532 - base-sepolia"
             exit 1
             ;;
@@ -53,6 +57,7 @@ if [ -z "$CHAIN_ID" ]; then
     echo "Usage: $0 <chain-id>"
     echo "  Supported chain IDs:"
     echo "    31337 - localhost"
+    echo "    8453  - base-mainnet"
     echo "    84532 - base-sepolia"
     exit 1
 fi
@@ -65,6 +70,9 @@ WORLD_ADDRESS=$(get_world_address "$CHAIN_ID")
 case $CHAIN_ID in
     "31337")
         echo "Targeting localhost chain (ID: $CHAIN_ID)..."
+        ;;
+    "8453")
+        echo "Targeting Base Mainnet chain (ID: $CHAIN_ID)..."
         ;;
     "84532")
         echo "Targeting Base Sepolia chain (ID: $CHAIN_ID)..."

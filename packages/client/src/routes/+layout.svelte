@@ -23,6 +23,10 @@
     environment as environmentStore,
     walletType as walletTypeStore
   } from "$lib/modules/network"
+  import { gameConfig, gamePercentagesConfig } from "$lib/modules/state/stores"
+
+  $inspect("$gameConfig", $gameConfig)
+  $inspect("$gamePercentagesConfig", $gamePercentagesConfig)
 
   // Components
   import Spawn from "$lib/components/Spawn/Spawn.svelte"
