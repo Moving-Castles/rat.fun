@@ -73,7 +73,7 @@
   <td class="cell-spark">
     {#if data}
       <div class="mini-graph">
-        <TripProfitLossSpark smallIcons height={24} plotData={data} isEmpty={data.length === 0} />
+        <TripProfitLossSpark height={24} plotData={data} isEmpty={data.length === 0} />
       </div>
     {:else}
       <div class="mini-graph"></div>

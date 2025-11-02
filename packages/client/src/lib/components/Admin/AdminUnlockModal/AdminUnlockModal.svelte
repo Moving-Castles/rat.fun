@@ -4,7 +4,6 @@
   import { ShaderLocal } from "$lib/components/Shared"
   import { playSound } from "$lib/modules/sound"
   import { ModeSwitchButton } from "$lib/components/Shared"
-  import { LogText } from "$lib/components/GameRun"
   import { Tween } from "svelte/motion"
   import { showAdminUnlockModal } from "$lib/modules/state/stores"
 
@@ -51,6 +50,7 @@
   <div transition:fade|global class="bg">
     <ShaderLocal shaderKey="magic" />
   </div>
+  <!-- svelte-ignore a11y_no_static_element_interactions -->
   <div
     transition:fade|global
     onintroend={() => {
@@ -58,6 +58,7 @@
     }}
     class="modal"
   >
+    <!-- svelte-ignore a11y_click_events_have_key_events -->
     <div
       onclick={() => showAdminUnlockModal.set(false)}
       style="transform: translate({buttonX.current}px, {buttonY.current}px);"

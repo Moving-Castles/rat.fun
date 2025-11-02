@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from "svelte"
   import { gameConfig } from "$lib/modules/state/stores"
   import { playerERC20Balance } from "$lib/modules/erc20Listener/stores"
   import { getTripMaxValuePerWin, getTripMinRatValueToEnter } from "$lib/modules/state/utils"
@@ -10,17 +11,20 @@
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import { MIN_TRIP_CREATION_COST } from "@server/config"
   import { collapsed } from "$lib/modules/ui/state.svelte"
-  import { onMount } from "svelte"
 
   let {
     ondone,
-    onsubmit
+    onsubmit,
+    onclose,
+    savedTripDescription
   }: {
     ondone: () => void
     onsubmit?: (data: { prompt: string; cost: number }) => void
+    onclose?: (currentDescription: string) => void
+    savedTripDescription?: string
   } = $props()
 
-  let tripDescription: string = $state("")
+  let tripDescription: string = $state(savedTripDescription ?? "")
   let textareaElement: HTMLTextAreaElement | null = $state(null)
 
   // Prompt has to be between 1 and MAX_TRIP_PROMPT_LENGTH characters
@@ -93,9 +97,117 @@
       textareaElement.focus()
     }
   })
+
+  const onKeyDown = (e: KeyboardEvent) => {
+    if (e.key === "Escape") {
+      onclose?.(tripDescription)
+    }
+  }
 </script>
 
+<svelte:window onkeydown={onKeyDown} />
+
 {#if busy.CreateTrip.current === 0}
+  <!-- svelte-ignore a11y_click_events_have_key_events -->
+  <!-- svelte-ignore a11y_no_static_element_interactions -->
+  <div
+    class="modal-backdrop"
+    onclick={e => {
+      if (e.target === e.currentTarget) {
+        onclose?.(tripDescription)
+      }
+    }}
+  >
+    <div class="modal-content">
+      <div class="create-trip" class:collapsed={$collapsed}>
+        <div class="controls">
+          <!-- TRIP DESCRIPTION -->
+          <div class="form-group">
+            <label for="trip-description">
+              <span class="highlight">Trip Description</span>
+              <CharacterCounter
+                currentLength={tripDescription.length}
+                maxLength={$gameConfig.maxTripPromptLength}
+              />
+            </label>
+            <textarea
+              disabled={busy.CreateTrip.current !== 0}
+              id="trip-description"
+              rows={$collapsed ? 12 : 6}
+              {placeholder}
+              oninput={typeHit}
+              bind:value={tripDescription}
+              bind:this={textareaElement}
+            ></textarea>
+          </div>
+
+          <!-- TRIP CREATION COST SLIDER -->
+          <div class="slider-group">
+            <label for="trip-creation-cost-slider">
+              <span class="highlight">TRIP CREATION COST</span>
+              <input
+                class="cost-display"
+                onblur={e => {
+                  const value = Number((e.target as HTMLInputElement).value)
+                  if (value < MIN_TRIP_CREATION_COST || value > $playerERC20Balance) {
+                    tripCreationCost = Math.min(
+                      $playerERC20Balance,
+                      Math.max(MIN_TRIP_CREATION_COST, value)
+                    )
+                  }
+                }}
+                bind:value={tripCreationCost}
+                type="number"
+              />
+            </label>
+            <div class="slider-container">
+              <input
+                type="range"
+                id="trip-creation-cost-slider"
+                class="cost-slider"
+                step={Math.floor($playerERC20Balance / 40)}
+                min={Math.min($playerERC20Balance, MIN_TRIP_CREATION_COST)}
+                max={$playerERC20Balance}
+                oninput={e => {
+                  // playSample(Number(e.target.value) / Number($playerERC20Balance))
+                }}
+                bind:value={tripCreationCost}
+              />
+              <div class="slider-labels">
+                <span class="slider-min"
+                  >{CURRENCY_SYMBOL}{Math.min($playerERC20Balance, MIN_TRIP_CREATION_COST)}</span
+                >
+                <span class="slider-max">{CURRENCY_SYMBOL}{$playerERC20Balance}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- CALCULATED VALUES -->
+          <div class="calculated-values">
+            <div class="value-box">
+              <div class="value-label">MIN RAT VALUE TO TRIP</div>
+              <div class="value-amount">{CURRENCY_SYMBOL}{$minRatValueToEnter}</div>
+            </div>
+            <div class="value-box">
+              <div class="value-label">MAX VALUE PER WIN</div>
+              <div class="value-amount">{CURRENCY_SYMBOL}{$maxValuePerWin}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="actions">
+          <BigButton
+            text="Create trip"
+            cost={flooredTripCreationCost}
+            {disabled}
+            onclick={onClick}
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+{:else}
   <div class="create-trip" class:collapsed={$collapsed}>
     <div class="controls">
       <!-- TRIP DESCRIPTION -->
@@ -145,9 +257,6 @@
             step={Math.floor($playerERC20Balance / 40)}
             min={Math.min($playerERC20Balance, MIN_TRIP_CREATION_COST)}
             max={$playerERC20Balance}
-            oninput={e => {
-              // playSample(Number(e.target.value) / Number($playerERC20Balance))
-            }}
             bind:value={tripCreationCost}
           />
           <div class="slider-labels">
@@ -359,5 +468,25 @@
       overflow: hidden;
       height: 160px;
     }
+  }
+
+  .modal-backdrop {
+    background: rgba(0, 0, 0, 0.8);
+    position: fixed;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overscroll-behavior: none;
+    z-index: var(--z-high);
+    width: 100dvw;
+    height: 100dvh;
+  }
+
+  .modal-content {
+    position: relative;
+    z-index: 1;
+    overflow-x: hidden;
+    overflow-y: scroll;
   }
 </style>

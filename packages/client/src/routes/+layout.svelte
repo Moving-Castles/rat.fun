@@ -14,9 +14,10 @@
   import { onMount, onDestroy } from "svelte"
   import { initStaticContent } from "$lib/modules/content"
   import { publicNetwork } from "$lib/modules/network"
-  import { UIState, notificationsRead, lightboxState } from "$lib/modules/ui/state.svelte"
+  import { UIState, lightboxState } from "$lib/modules/ui/state.svelte"
   import { UI } from "$lib/modules/ui/enums"
-  import { activeWorldEvent } from "$lib/modules/state/stores"
+  // import { activeWorldEvent } from "$lib/modules/state/stores"
+  // import {  notificationsRead} from "$lib/modules/ui/state.svelte"
   import { errorHandler } from "$lib/modules/error-handling"
   import {
     environment as environmentStore,
@@ -29,12 +30,10 @@
   import { AdminUnlockModal } from "$lib/components/Admin"
   import {
     ShaderGlobal,
-    Modal,
-    ModalTarget,
-    WorldEventPopup,
+    // WorldEventPopup,
     Lightbox
   } from "$lib/components/Shared"
-  import { page } from "$app/state"
+  // import { page } from "$app/state"
   import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
   import EntryKit from "$lib/components/Spawn/EntryKit/EntryKit.svelte"
   import Toasts from "$lib/components/Shared/Toasts/Toasts.svelte"
@@ -98,22 +97,21 @@
   {/if}
 </div>
 
-{#if $activeWorldEvent && !notificationsRead.current.includes($activeWorldEvent.cmsId)}
-  {#snippet worldEventContent()}
-    <WorldEventPopup />
-  {/snippet}
+<!-- {#if $activeWorldEvent && !notificationsRead.current.includes($activeWorldEvent.cmsId)} -->
+<!-- {#snippet worldEventContent()}
+    <WorldEventPopup /> -->
+<!-- {/snippet}
   <ModalTarget
     onclose={() => {
       notificationsRead.set([...notificationsRead.current, $activeWorldEvent.cmsId])
     }}
     content={worldEventContent}
   ></ModalTarget>
-{/if}
+{/if} -->
 
 <AdminUnlockModal />
 
 <EntryKit />
-<Modal />
 <Toasts />
 
 {#if lightboxState.isOpen}

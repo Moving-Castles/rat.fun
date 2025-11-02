@@ -10,12 +10,10 @@
   import { line } from "d3-shape"
 
   let {
-    smallIcons = false,
     plotData,
     isEmpty = false,
     height = 300
   }: {
-    smallIcons?: boolean
     plotData: (TripEventCreation | TripEventLiquidation | TripEventDeath | TripEventVisit)[]
     isEmpty: boolean
     height?: number
@@ -122,22 +120,6 @@
     background-image:
       linear-gradient(to right, var(--color-grey-dark) 1px, transparent 1px),
       linear-gradient(to bottom, var(--color-grey-dark) 1px, transparent 1px);
-  }
-
-  .y-axis {
-    writing-mode: vertical-rl;
-    transform: rotate(180deg);
-    width: 30px;
-    height: 100%;
-    position: absolute;
-  }
-
-  .x-axis {
-    width: 100%;
-    height: 30px;
-    position: absolute;
-    bottom: 0;
-    z-index: var(--z-base);
   }
 
   .graph {

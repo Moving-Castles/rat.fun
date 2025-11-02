@@ -20,7 +20,6 @@
   import AdminEventLog from "$lib/components/Admin/AdminEventLog/AdminEventLog.svelte"
 
   import { BackButton } from "$lib/components/Shared"
-  import { proveWithdrawal } from "viem/op-stack"
 
   let {
     tripId,
@@ -37,10 +36,6 @@
   // Show liquidate button if:
   //  * - Trip is not depleted
   let showLiquidateButton = $derived(trip.balance > 0)
-
-  let blockUntilUnlock = $derived(
-    Number(trip.creationBlock) + $gameConfig.cooldownCloseTrip - Number($blockNumber)
-  )
 
   let event = $derived(graphData[$focusEvent])
 
@@ -91,12 +86,7 @@
     </div>
     {#if showLiquidateButton}
       <div class="full">
-        <LiquidateTrip
-          onclick={() => (liquidating = true)}
-          {tripId}
-          {trip}
-          isOwnTripListing={true}
-        />
+        <LiquidateTrip onclick={() => (liquidating = true)} {trip} />
       </div>
     {/if}
   </div>

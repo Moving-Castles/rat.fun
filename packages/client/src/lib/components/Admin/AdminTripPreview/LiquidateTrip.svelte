@@ -1,27 +1,10 @@
 <script lang="ts">
-  import { getModalState } from "$lib/components/Shared/Modal/state.svelte"
   import { gameConfig } from "$lib/modules/state/stores"
   import { blockNumber } from "$lib/modules/network"
-  import { staticContent, lastUpdated } from "$lib/modules/content"
-  import { urlFor } from "$lib/modules/content/sanity"
-  import { busy, sendLiquidateTrip } from "$lib/modules/action-manager/index.svelte"
-  import { sendLiquidateTripMessage } from "$lib/modules/off-chain-sync"
-  import { errorHandler } from "$lib/modules/error-handling"
+  import { busy } from "$lib/modules/action-manager/index.svelte"
+  import { DangerButton } from "$lib/components/Shared"
 
-  import { ModalTarget, NoImage, DangerButton, SmallSpinner } from "$lib/components/Shared"
-
-  let {
-    trip,
-    tripId,
-    onclick
-  }: { trip: Trip; tripId: string; isOwnTripListing: boolean; onclick: () => void } = $props()
-
-  let { modal } = getModalState()
-
-  let sanityTripContent = $derived($staticContent.trips.find(r => r._id == tripId))
-
-  let confirming = $state(false)
-  let liquidationMessage = $state("CONFIRM TRIP LIQUIDATION")
+  let { trip, onclick }: { trip: Trip; onclick: () => void } = $props()
 
   // Cooldown until trip can be liquidated
   let blockUntilUnlock = $derived(
@@ -41,53 +24,6 @@
     />
   </div>
 </div>
-
-{#snippet confirmLiquidation()}
-  <div class="confirmation-modal danger">
-    {#if busy.CloseTrip.current !== 0}
-      <div class="loading">
-        Liquidating trip <SmallSpinner soundOn />
-      </div>
-    {:else}
-      <div class="content">
-        <div class="trip-image">
-          {#key $lastUpdated}
-            {#if sanityTripContent}
-              <img src={urlFor(sanityTripContent?.image).url()} alt={`trip #${trip.index}`} />
-            {:else}
-              <NoImage />
-            {/if}
-          {/key}
-        </div>
-        <DangerButton
-          text={liquidationMessage}
-          onclick={async () => {
-            try {
-              liquidationMessage = "Liquidating trip..."
-              await sendLiquidateTrip(tripId)
-            } catch (error) {
-              errorHandler(error)
-              liquidationMessage = "Could not liquidate trip"
-            } finally {
-              sendLiquidateTripMessage(tripId)
-              modal.close()
-            }
-          }}
-          disabled={busy.CloseTrip.current !== 0}
-        />
-      </div>
-    {/if}
-  </div>
-{/snippet}
-
-{#if confirming}
-  <ModalTarget
-    onclose={() => {
-      confirming = false
-    }}
-    content={confirmLiquidation}
-  />
-{/if}
 
 <style lang="scss">
   .liquidate-trip {

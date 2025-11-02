@@ -39,10 +39,6 @@ export { default as Lightbox } from "./Lightbox/Lightbox.svelte"
 /* Loaders */
 export { default as SmallSpinner } from "./Loaders/SmallSpinner.svelte"
 
-/* Modal */
-export { default as Modal } from "./Modal/Modal.svelte"
-export { default as ModalTarget } from "./Modal/ModalTarget.svelte"
-
 /* Topbar */
 export { default as TopBar } from "./TopBar/TopBar.svelte"
 export { default as WorldEventPopup } from "./WorldEventPopup/WorldEventPopup.svelte"

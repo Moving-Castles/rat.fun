@@ -2,30 +2,29 @@
   import { onMount } from "svelte"
   import type { TripEventBaseline, TripEvent, PendingTrip } from "$lib/components/Admin/types"
   import { TRIP_EVENT_TYPE } from "$lib/components/Admin/enums"
-
   import {
     playerTrips,
     playerNonDepletedTrips,
     playerDepletedTrips
   } from "$lib/modules/state/stores"
   import { busy } from "$lib/modules/action-manager/index.svelte"
-  import { getModalState } from "$lib/components/Shared/Modal/state.svelte"
   import { backgroundMusic } from "$lib/modules/sound/stores"
   import { playSound } from "$lib/modules/sound"
   import { staticContent } from "$lib/modules/content"
   import { calculateProfitLossForTrip } from "./helpers"
   import * as sortFunctions from "$lib/components/Trip/TripListing/sortFunctions"
 
-  import AdminEventLog from "$lib/components/Admin/AdminEventLog/AdminEventLog.svelte"
-  import CreateTrip from "$lib/components/Admin/CreateTrip/CreateTrip.svelte"
-  import AdminActiveTripTable from "$lib/components/Admin/AdminActiveTripTable/AdminActiveTripTable.svelte"
-  import AdminPastTripTable from "$lib/components/Admin/AdminPastTripTable/AdminPastTripTable.svelte"
-  import ProfitLossHistoryGraph from "$lib/components/Admin/ProfitLossHistoryGraph/ProfitLossHistoryGraph.svelte"
-  import ProfitLossOverview from "$lib/components/Admin/ProfitLossOverview/ProfitLossOverview.svelte"
+  import {
+    AdminEventLog,
+    CreateTrip,
+    AdminActiveTripTable,
+    AdminPastTripTable,
+    ProfitLossHistoryGraph,
+    ProfitLossOverview
+  } from "$lib/components/Admin"
 
-  let { modal } = getModalState()
-
-  let focus = $state("")
+  let showCreateTripModal = $state(false)
+  let savedTripDescription = $state<string>("")
   let pendingTrip = $state<PendingTrip>(null)
   let clientHeight = $state(0)
 
@@ -79,7 +78,6 @@
   let graphData = $derived.by(() => {
     const trips = Object.values($playerTrips)
     if (!trips.length) {
-      // console.log("no trips", performance.now())
       return []
     }
 
@@ -138,22 +136,6 @@
   })
 </script>
 
-{#snippet createTripModal()}
-  <CreateTrip
-    onsubmit={(data: PendingTrip) => {
-      modal.hide()
-      // Set pending state
-      pendingTrip = data
-    }}
-    ondone={() => {
-      // Clear pending state with some delay, so it can be replaced in the list with style
-      setTimeout(() => {
-        pendingTrip = null
-      }, 2000)
-    }}
-  />
-{/snippet}
-
 <div class="admin-container">
   <!-- Top row -->
   <div class="admin-row top">
@@ -163,7 +145,7 @@
         <ProfitLossOverview
           onCreateTripClick={() => {
             if (busy.CreateTrip.current !== 0) return
-            modal.set(createTripModal)
+            showCreateTripModal = true
           }}
         />
       </div>
@@ -200,6 +182,26 @@
     </div>
   </div>
 </div>
+
+{#if showCreateTripModal}
+  <CreateTrip
+    {savedTripDescription}
+    onclose={(currentDescription: string) => {
+      showCreateTripModal = false
+      savedTripDescription = currentDescription
+    }}
+    onsubmit={(data: PendingTrip) => {
+      showCreateTripModal = false
+      savedTripDescription = ""
+      pendingTrip = data
+    }}
+    ondone={() => {
+      setTimeout(() => {
+        pendingTrip = null
+      }, 2000)
+    }}
+  />
+{/if}
 
 <style lang="scss">
   .admin-container {

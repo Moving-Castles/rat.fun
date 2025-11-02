@@ -3,9 +3,7 @@
   import { focusEvent, focusTrip } from "$lib/modules/ui/state.svelte"
   import { goto } from "$app/navigation"
   import { scaleTime, scaleLinear } from "d3-scale"
-  import { drawReverse } from "$lib/modules/transitions"
   import { page } from "$app/state"
-  import { draw, fade } from "svelte/transition"
   import { max, min } from "d3-array"
   import { line } from "d3-shape"
 

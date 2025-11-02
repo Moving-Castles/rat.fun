@@ -16,8 +16,6 @@
 
   import { LockButton, SmallSpinner } from "$lib/components/Shared"
 
-  
-
   // Pre-generate the final name
   const initialName = generateRatName()
   let { firstName, lastName, ratNumber } = $state(initialName)
@@ -173,7 +171,7 @@
     erc20BalanceListenerActive.set(true)
     playSound("ratfunUI", "ratHello")
     // Await rat store to be the same as this current rat
-    if ($rat.name !== finalName) {
+    if ($rat?.name !== finalName) {
       await waitForPropertyChange(rat, "name", finalName, 10000)
     }
     await new Promise(res => setTimeout(res, 4000))
