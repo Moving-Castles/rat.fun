@@ -21,8 +21,6 @@
 
   let negative = $state(value < 0)
 
-  const isDead = $processingRat && Number($processingRat.balance) + value === 0
-
   // Timeline
   const timeline = gsap.timeline()
 
@@ -78,35 +76,28 @@
       ">-0.3"
     )
 
-    if (isDead) {
-      timeline.call(() => {
+    // Check if rat is dead after balance update
+    timeline.call(() => {
+      const currentBalance = Number($processingRat?.balance || 0)
+      const isDead = currentBalance === 0
+
+      if (isDead) {
         // Stop background music
         $backgroundMusic?.stop()
         // Play death sound
         playSound("ratfunUI", "ratDeath")
-      })
-      timeline.to(valueElement, {
-        textContent: "DEAD",
-        duration: 0,
-        ease: "power2.out"
-      })
-    } else {
-      timeline.call(() => {
+        // Update text to show DEAD
+        if (valueElement) {
+          valueElement.textContent = "DEAD"
+        }
+      } else {
         if (negative) {
           playSound("ratfunUI", "healthNegative")
         } else {
           playSound("ratfunUI", "healthPositive")
         }
-      })
-    }
-
-    // Wait
-    // timeline.to(
-    //   {},
-    //   {
-    //     duration: 0.3
-    //   }
-    // )
+      }
+    })
   }
 
   // Timeline is constructed

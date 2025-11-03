@@ -108,14 +108,6 @@
         playSound("ratfunUI", "itemPositive")
       }
     })
-
-    // Wait
-    // timeline.to(
-    //   {},
-    //   {
-    //     duration: 0.3
-    //   }
-    // )
   }
 
   // Timeline is constructed
