@@ -122,36 +122,36 @@ export async function setupNetwork(
   })
 
   // Add logging to track polling behavior
-  let lastPollTime = Date.now()
-  let blockUpdateCount = 0
-  let logUpdateCount = 0
+  // let lastPollTime = Date.now()
+  // let blockUpdateCount = 0
+  // let logUpdateCount = 0
 
-  latestBlock$.subscribe(block => {
-    const now = Date.now()
-    const timeSinceLastPoll = now - lastPollTime
-    blockUpdateCount++
-    console.log(
-      `📊 [Blockchain Poll] Block update #${blockUpdateCount} | ` +
-        `Block: ${block.number} | ` +
-        `Time since last: ${timeSinceLastPoll}ms | ` +
-        `Memory: ${Math.round(process.memoryUsage().heapUsed / 1024 / 1024)}MB`
-    )
-    lastPollTime = now
-  })
+  // latestBlock$.subscribe(block => {
+  //   const now = Date.now()
+  //   const timeSinceLastPoll = now - lastPollTime
+  //   blockUpdateCount++
+  //   console.log(
+  //     `📊 [Blockchain Poll] Block update #${blockUpdateCount} | ` +
+  //       `Block: ${block.number} | ` +
+  //       `Time since last: ${timeSinceLastPoll}ms | ` +
+  //       `Memory: ${Math.round(process.memoryUsage().heapUsed / 1024 / 1024)}MB`
+  //   )
+  //   lastPollTime = now
+  // })
 
-  storedBlockLogs$.subscribe(logs => {
-    if (logs.logs.length > 0) {
-      logUpdateCount++
-      console.log(
-        `📝 [Blockchain Logs] Log batch #${logUpdateCount} | ` +
-          `Events: ${logs.logs.length} | ` +
-          `Block: ${logs.blockNumber} | ` +
-          `Memory: ${Math.round(process.memoryUsage().heapUsed / 1024 / 1024)}MB`
-      )
-    }
-  })
+  // storedBlockLogs$.subscribe(logs => {
+  //   if (logs.logs.length > 0) {
+  //     logUpdateCount++
+  //     console.log(
+  //       `📝 [Blockchain Logs] Log batch #${logUpdateCount} | ` +
+  //         `Events: ${logs.logs.length} | ` +
+  //         `Block: ${logs.blockNumber} | ` +
+  //         `Memory: ${Math.round(process.memoryUsage().heapUsed / 1024 / 1024)}MB`
+  //     )
+  //   }
+  // })
 
-  console.log("✅ [MUD Setup] Observable logging enabled")
+  // console.log("✅ [MUD Setup] Observable logging enabled")
 
   return {
     world,
