@@ -36,15 +36,31 @@
   let pastTripsSortDirection = $state<"asc" | "desc">("asc")
   let pastTripsSortFunction = $state(sortFunctions.entriesChronologically)
 
+  // Memoized lookups for static content to avoid repeated find/filter operations
+  let tripContentMap = $derived(new Map($staticContent?.trips?.map(t => [t._id, t]) || []))
+
+  let outcomesByTripId = $derived(
+    ($staticContent?.outcomes || []).reduce(
+      (acc, outcome) => {
+        if (outcome.tripId) {
+          if (!acc[outcome.tripId]) acc[outcome.tripId] = []
+          acc[outcome.tripId].push(outcome)
+        }
+        return acc
+      },
+      {} as Record<string, typeof $staticContent.outcomes>
+    )
+  )
+
   // Calculate plot data for all trips
   let allSparkPlots = $derived.by(() => {
     const plots: Record<string, TripEvent[]> = {}
 
     Object.entries($playerTrips).forEach(([tripId, trip]) => {
-      const sanityTripContent = $staticContent?.trips?.find(r => r._id == tripId)
+      const sanityTripContent = tripContentMap.get(tripId)
       if (!sanityTripContent) return
 
-      const outcomes = $staticContent?.outcomes?.filter(o => o.tripId == tripId) || []
+      const outcomes = outcomesByTripId[tripId] || []
       const profitLoss = calculateProfitLossForTrip(trip, tripId, sanityTripContent, outcomes, true)
 
       // Accumulate the value changes and add index
@@ -85,11 +101,11 @@
 
     trips.forEach(trip => {
       const tripId = Object.keys($playerTrips).find(key => $playerTrips[key] === trip) || ""
-      const sanityTripContent = $staticContent?.trips?.find(r => r._id == tripId)
+      const sanityTripContent = tripContentMap.get(tripId)
 
       if (!sanityTripContent) return
 
-      const outcomes = $staticContent?.outcomes?.filter(o => o.tripId == tripId) || []
+      const outcomes = outcomesByTripId[tripId] || []
       const profitLoss = calculateProfitLossForTrip(trip, tripId, sanityTripContent, outcomes)
 
       combinedData.push(...profitLoss)

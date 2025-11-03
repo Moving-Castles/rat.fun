@@ -38,8 +38,6 @@ export enum RAT_BOX_STATE {
 
 // Local state
 let ratBoxState = $state<RAT_BOX_STATE>(RAT_BOX_STATE.INIT)
-let ratBoxBalance = $state<number>(0)
-let ratBoxInventory = $state<any[]>([])
 
 /**
  * Defines valid state transitions between rat box states
