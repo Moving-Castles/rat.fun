@@ -27,6 +27,7 @@
   let savedTripDescription = $state<string>("")
   let pendingTrip = $state<PendingTrip>(null)
   let clientHeight = $state(0)
+  let shouldLoadGraphData = $state(false)
 
   // Sorting state for active trips
   let activeTripsSortDirection = $state<"asc" | "desc">("asc")
@@ -91,7 +92,13 @@
   })
 
   // Data processing logic moved from ProfitLossHistoryGraph
+  // Lazy load graph data to avoid blocking initial render
   let graphData = $derived.by(() => {
+    console.log("shouldLoadGraphData", shouldLoadGraphData)
+    if (!shouldLoadGraphData) {
+      return []
+    }
+
     const trips = Object.values($playerTrips)
     if (!trips.length) {
       return []
@@ -149,6 +156,11 @@
   onMount(() => {
     $backgroundMusic?.stop()
     $backgroundMusic = playSound("ratfunMusic", "admin", true)
+
+    // Defer graph data loading to avoid blocking initial render
+    setTimeout(() => {
+      shouldLoadGraphData = true
+    }, 50)
   })
 </script>
 
