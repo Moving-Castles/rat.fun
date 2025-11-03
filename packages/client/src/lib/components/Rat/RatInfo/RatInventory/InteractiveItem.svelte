@@ -29,7 +29,6 @@
 
 <div
   in:scale|global={{ duration: 100, delay: 600 + index * 60 }}
-  out:scale|global={{ duration: 100 }}
   onintroend={() => {
     playSound("ratfunUI", "itemPositive", false, false, 1, 0, 0.3)
   }}

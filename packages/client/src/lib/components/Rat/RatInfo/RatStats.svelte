@@ -117,21 +117,6 @@
       @media (max-width: 700px) {
         width: auto;
       }
-
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        // filter: grayscale(1);
-        // mix-blend-mode: screen;
-        cursor: grab;
-        transition: transform 0.2s ease;
-
-        &:active {
-          transform: scale(1.9);
-          transition: transform 0.2s ease;
-        }
-      }
     }
   }
 </style>

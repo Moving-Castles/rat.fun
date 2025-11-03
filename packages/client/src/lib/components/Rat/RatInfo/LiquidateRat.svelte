@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onDestroy } from "svelte"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import { DangerButton } from "$lib/components/Shared"
   import { rat } from "$lib/modules/state/stores"
@@ -31,6 +32,11 @@
   const onclick = async () => {
     ratState.state.transitionTo(RAT_BOX_STATE.CONFIRM_LIQUIDATION)
   }
+
+  onDestroy(() => {
+    // Stop tween immediately to prevent delayed unmount
+    tweenedValue.set(tweenedValue.current, { duration: 0 })
+  })
 </script>
 
 <div class="liquidate-rat">

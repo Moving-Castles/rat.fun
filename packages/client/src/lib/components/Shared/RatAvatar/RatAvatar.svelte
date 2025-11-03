@@ -28,7 +28,7 @@
   const ROTATION_STRENGTH = 10
   const SKEW_STRENGTH = 10
 
-  let armTimeline = gsap.timeline({ repeat: -1, yoyo: true })
+  let armTimeline: gsap.core.Timeline | null = null
 
   const onmousedown = (e: MouseEvent) => {
     if (inert) return false
@@ -113,6 +113,9 @@
   onMount(() => {
     if (!armsElement || inert) return
 
+    // Create timeline inside onMount for proper scoping
+    armTimeline = gsap.timeline({ repeat: -1, yoyo: true })
+
     armTimeline.to(armsElement, {
       rotation: -2,
       duration: 0.4
@@ -129,7 +132,11 @@
   })
 
   onDestroy(() => {
-    armTimeline.kill()
+    // Kill timeline immediately without completing animations
+    if (armTimeline) {
+      armTimeline.kill()
+      armTimeline = null
+    }
   })
 </script>
 
