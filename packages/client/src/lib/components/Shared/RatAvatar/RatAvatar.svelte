@@ -63,21 +63,30 @@
     // Create timeline for animation sequence
     const tl = gsap.timeline()
 
-    tl.to(bodyElement, {
-      scale: 0.95,
-      duration: 0
-    })
+    tl.to(
+      [bodyElement, armsElement],
+      {
+        scale: 0.95,
+        duration: 0.1,
+        ease: "elastic.out(1.5)"
+      },
+      0
+    )
 
     // Animate head and ears with scale and directional movement
-    tl.to([headElement, earsElement], {
-      scale: 1.2,
-      rotation: rotationDirection,
-      duration: 0.2,
-      y: -10,
-      skewY: skewDirection,
-      ease: "elastic.out(1.5)",
-      delay: 0.1
-    })
+    tl.to(
+      [headElement, earsElement],
+      {
+        scale: 1.2,
+        rotation: rotationDirection,
+        duration: 0.2,
+        y: -10,
+        skewY: skewDirection,
+        ease: "elastic.out(1.5)",
+        delay: 0.1
+      },
+      0
+    )
 
     tl.call(
       () => {
@@ -103,7 +112,7 @@
     )
 
     tl.to(
-      bodyElement,
+      [bodyElement, armsElement],
       {
         scale: 1,
         duration: 0.2,
