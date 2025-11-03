@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount, onDestroy } from "svelte"
   import { player } from "$lib/modules/state/stores"
   import { addressToRatParts } from "$lib/modules/utils"
   import { staticContent } from "$lib/modules/content"
@@ -24,6 +25,11 @@
   let headElement: HTMLDivElement | null = $state(null)
   let earsElement: HTMLDivElement | null = $state(null)
 
+  const ROTATION_STRENGTH = 10
+  const SKEW_STRENGTH = 10
+
+  let armTimeline = gsap.timeline({ repeat: -1, yoyo: true })
+
   const onmousedown = (e: MouseEvent) => {
     if (inert) return false
     if (!bodyElement || !armsElement || !headElement || !earsElement) return false
@@ -31,38 +37,100 @@
 
     // Calculate click position relative to container center
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect()
-    // const movementX = (e.pageX - rect.left - rect.width / 2) / 5
-    // const movementY = (e.pageY - rect.top - rect.height / 2) / 5
+    const clickX = e.pageX - rect.left
+    const centerX = rect.width / 2
+
+    // Define 20% dead zone in the middle (±10% from center)
+    const deadZoneSize = rect.width * 0.1
+    const leftThreshold = centerX - deadZoneSize
+    const rightThreshold = centerX + deadZoneSize
+
+    // Determine rotation based on click position
+    let rotationDirection = 0
+    let skewDirection = 0
+
+    if (clickX < leftThreshold) {
+      // Left side
+      rotationDirection = -ROTATION_STRENGTH
+      skewDirection = -SKEW_STRENGTH
+    } else if (clickX > rightThreshold) {
+      // Right side
+      rotationDirection = ROTATION_STRENGTH
+      skewDirection = SKEW_STRENGTH
+    }
+    // Middle zone: rotationDirection and skewDirection remain 0
+
+    // Create timeline for animation sequence
+    const tl = gsap.timeline()
 
     // Animate head and ears with scale and directional movement
-    gsap.to([headElement, earsElement], {
+    tl.to([headElement, earsElement], {
       scale: 1.2,
-      rotation: 10,
-      // x: movementX,
-      // y: movementY,
+      rotation: rotationDirection,
       duration: 0.2,
-      ease: "elastic.out(1.5)"
+      y: -10,
+      skewY: skewDirection,
+      ease: "elastic.out(1.5)",
+      delay: 0.1
     })
 
-    // Reset after 600ms (matching Mascot's timing)
-    setTimeout(() => {
-      gsap.to([headElement, earsElement], {
+    tl.call(
+      () => {
+        playSound("ratfunUI", "chirp")
+      },
+      [],
+      0.2
+    )
+
+    // Wait until 600ms total (matching Mascot's timing), then reset
+    tl.to(
+      [headElement, earsElement],
+      {
         scale: 1,
         rotation: 0,
         x: 0,
         y: 0,
+        skewY: 0,
         duration: 0.2,
         ease: "elastic.out(1.5)"
-      })
+      },
+      0.6
+    )
 
-      gsap.to(armsElement, {
+    tl.to(
+      armsElement,
+      {
         scale: 1,
         y: 0,
         duration: 0.2,
         ease: "elastic.out(1.5)"
-      })
-    }, 600)
+      },
+      0.6
+    )
   }
+
+  // Setup constant arm animation
+  onMount(() => {
+    if (!armsElement || inert) return
+
+    armTimeline.to(armsElement, {
+      rotation: -2,
+      duration: 0.4
+      // ease: "sine.inOut"
+    })
+
+    armTimeline.to(armsElement, {
+      rotation: 2,
+      duration: 0.4
+      // ease: "sine.inOut"
+    })
+
+    armTimeline.play()
+  })
+
+  onDestroy(() => {
+    armTimeline.kill()
+  })
 </script>
 
 <div {onmousedown} class="rat-container" role="button" tabindex="0">
@@ -94,7 +162,7 @@
     height: 260px;
     display: block;
     position: relative;
-    cursor: grab;
+    cursor: pointer;
     user-select: none;
   }
 
@@ -102,6 +170,7 @@
     position: absolute;
     width: 260px;
     inset: 0;
+    opacity: 0.9;
 
     img {
       width: 100%;
@@ -110,16 +179,11 @@
     }
 
     &.ratBodies {
-      transform-origin: 50% 100%;
+      transform-origin: 50% 50%;
     }
 
     &.ratArms {
-      transform-origin: 50% 100%;
-    }
-
-    &.ratEars,
-    &.ratHeads {
-      // transform-origin: 50% 150%;
+      transform-origin: 50% 50%;
     }
   }
 
