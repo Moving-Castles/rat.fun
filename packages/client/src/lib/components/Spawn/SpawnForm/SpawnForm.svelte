@@ -6,7 +6,7 @@
   import { player } from "$lib/modules/state/stores"
   import { typeHit } from "$lib/modules/sound"
   import { InputValidationError } from "$lib/modules/error-handling/errors"
-  import { waitForPropertyChange } from "$lib/modules/state/utils"
+  import { waitForPropertyChangeFrom } from "$lib/modules/state/utils"
 
   import { BigButton, Mascot, SmallSpinner } from "$lib/components/Shared"
 
@@ -38,7 +38,7 @@
       }
 
       await sendSpawn(name)
-      await waitForPropertyChange(player, "name", undefined, 10000)
+      await waitForPropertyChangeFrom(player, "name", undefined, 10000)
       onComplete(name)
     } catch (error) {
       console.error(error)

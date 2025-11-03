@@ -2,7 +2,7 @@
   import { onMount, onDestroy } from "svelte"
   import { fade } from "svelte/transition"
   import { rat } from "$lib/modules/state/stores"
-  import { waitForPropertyChange } from "$lib/modules/state/utils"
+  import { waitForPropertyChangeFrom } from "$lib/modules/state/utils"
   import { sendCreateRat } from "$lib/modules/action-manager/index.svelte"
   import { generateRatName, lastNameFragments, firstNameFragments } from "./ratNameGenerator"
   import { sendDeployRatMessage } from "$lib/modules/off-chain-sync"
@@ -20,6 +20,7 @@
   const initialName = generateRatName()
   let { firstName, lastName, ratNumber } = $state(initialName)
   let finalName = $derived(`${firstName}_${lastName}_${ratNumber}`)
+  let oldName = $state("")
 
   let deploymentDone = $state(false)
   let waitingForDeployment = $state(false)
@@ -135,6 +136,11 @@
         return // return before calling create rat
       }
     }
+
+    // Store the old name for use in waitForPropertyChangeFrom
+    oldName = $rat?.name ?? ""
+
+    // Send transaction
     await sendCreateRat(finalName)
 
     try {
@@ -169,15 +175,15 @@
   async function done() {
     // Update balance after deployment
     await refetchBalance()
+
     // Resume erc20 balance listener
     erc20BalanceListenerActive.set(true)
+
     playSound("ratfunUI", "ratHello")
-    // Await rat store to be the same as this current rat
-    if ($rat?.name !== finalName) {
-      await waitForPropertyChange(rat, "name", finalName, 10000)
-    }
-    // Does not seem to be needed. And slows down the transition to has rat state
-    // await new Promise(res => setTimeout(res, 4000))
+
+    // Await rat name to have changed FROM oldName
+    await waitForPropertyChangeFrom(rat, "name", oldName, 10000)
+
     // Transition to has rat state
     ratState.state.transitionTo(RAT_BOX_STATE.HAS_RAT)
   }

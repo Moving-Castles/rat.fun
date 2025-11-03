@@ -166,7 +166,7 @@ export function getRatTotalValue(rat: Rat | null) {
  * @param timeoutMs Optional timeout in milliseconds (default: 30000)
  * @returns Promise that resolves with the new value when it changes
  */
-export function waitForPropertyChange<T, K extends keyof T>(
+export function waitForPropertyChangeFrom<T, K extends keyof T>(
   store: { subscribe: (callback: (value: T) => void) => () => void },
   propertyPath: K,
   oldValue: T[K] | undefined,
