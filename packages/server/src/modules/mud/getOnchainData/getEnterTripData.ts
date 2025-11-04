@@ -50,9 +50,6 @@ export async function getEnterTripData(
     // Use entity ID directly - no need to register entity (prevents memory leak)
     const ratEntity = ratId as Entity
 
-    console.log("ratId", ratId)
-    console.log("ratEntity", ratEntity)
-
     // Retry until the rat owner is found or the timeout is reached
     // If a rat is sent in quickly after creation, the owner may not be set yet
     // We assume if the owner is set the other values are also set
@@ -63,8 +60,6 @@ export async function getEnterTripData(
       result => result !== undefined && result !== null
     )
     const ratOwner = ratOwnerResult?.value as string
-
-    console.log("ratOwner", ratOwner)
 
     // Check if rat exists
     if (!ratOwner) {

@@ -33,6 +33,7 @@ import { writeOutcomeToCMS, updateArchetypeData } from "@modules/cms/public"
 
 // Validation
 import { validateInputData } from "./validation"
+import { runDebugValidation } from "./debugValidation"
 
 // Error handling
 import { handleBackgroundError } from "@modules/error-handling"
@@ -159,6 +160,27 @@ async function routes(fastify: FastifyInstance) {
         )) as CorrectionReturnValue
         console.timeEnd("–– Correction LLM")
 
+        // * * * * * * * * * * * * * * * * * *
+        // Debug validation
+        // * * * * * * * * * * * * * * * * * *
+
+        if (process?.env?.DEBUG == "true") {
+          runDebugValidation({
+            ratId: ratId as Hex,
+            tripId: tripId as Hex,
+            playerId,
+            rat,
+            trip,
+            eventResults,
+            validatedOutcome,
+            correctedEvents,
+            ratValueChange,
+            tripValueChange,
+            newRatBalance,
+            newTripValue
+          })
+        }
+
         // Calculate main processing time
         const mainProcessingTime = performance.now() - startProcessingTime
 
@@ -226,7 +248,6 @@ async function routes(fastify: FastifyInstance) {
           tripDepleted: newTripValue == 0
         }
 
-        // console.log("Sending response to client...")
         // Send response and return immediately to close connection properly
         return reply.send(response)
       } catch (error) {

@@ -45,6 +45,8 @@ fastify.register(ping)
 fastify.register(healthz)
 fastify.register(unlockAdmin)
 
+console.log("__ DEBUG", process?.env?.DEBUG == "true")
+
 // Graceful shutdown handler
 const gracefulShutdown = async (signal: string) => {
   console.log(`Received ${signal}. Starting graceful shutdown...`)
