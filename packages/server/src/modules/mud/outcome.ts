@@ -24,7 +24,6 @@
 import { Hex } from "viem"
 import { OutcomeReturnValue, ItemChange } from "@modules/types"
 import { Rat, Trip } from "@modules/types"
-import { handleBackgroundError } from "@modules/error-handling"
 import { captureError } from "@modules/sentry"
 
 /**
@@ -164,7 +163,11 @@ export function createOutcomeCallArgs(rat: Rat, trip: Trip, outcome: OutcomeRetu
   console.log("\n📤 FINAL CONTRACT ARGUMENTS:")
   console.log("  ratId:", contractArgs[0])
   console.log("  tripId:", contractArgs[1])
-  console.log("  balanceTransfer (bigint):", contractArgs[2], `← from sum of ${balanceTransfersSum}`)
+  console.log(
+    "  balanceTransfer (bigint):",
+    contractArgs[2],
+    `← from sum of ${balanceTransfersSum}`
+  )
   console.log("  itemsToRemove:", contractArgs[3].length, "items")
   console.log("  itemsToAdd:", contractArgs[4].length, "items")
   console.log("\n💡 PREDICTED NET EFFECT:")
@@ -172,7 +175,10 @@ export function createOutcomeCallArgs(rat: Rat, trip: Trip, outcome: OutcomeRetu
     "  Rat balance change (before constraints):",
     balanceTransfersSum - totalItemValueToRemove + totalItemValueToAdd
   )
-  console.log("  Trip balance change (before constraints):", -(balanceTransfersSum + totalItemValueToAdd - totalItemValueToRemove))
+  console.log(
+    "  Trip balance change (before constraints):",
+    -(balanceTransfersSum + totalItemValueToAdd - totalItemValueToRemove)
+  )
   console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n")
 
   return contractArgs
@@ -403,7 +409,9 @@ export function updateOutcome(
       actualBalanceChange
     )
 
-    const error = new Error("Invalid Balance Types: Balance values are not numbers in updateOutcome")
+    const error = new Error(
+      "Invalid Balance Types: Balance values are not numbers in updateOutcome"
+    )
     captureError(error, {
       ratId: newRat.id,
       expectedType: typeof expectedBalanceChange,
@@ -444,42 +452,93 @@ export function updateOutcome(
   // This preserves the narrative structure (all logSteps) while ensuring
   // the correction LLM has context to rewrite the story coherently
 
-  console.warn("⚠️  BALANCE TRANSFER MISMATCH DETECTED")
-  console.warn("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-  console.warn("Rat ID:", newRat.id)
-  console.warn("Expected (LLM):", expectedBalanceChange)
-  console.warn("Actual balance change:", actualBalanceChange)
-  if (ratDied && implicitItemValueTransfer > 0) {
-    console.warn("Implicit item value transfer (death):", implicitItemValueTransfer)
-    console.warn("Effective actual (balance + items):", effectiveActualBalanceChange)
+  // CRITICAL: Detect sign flips (LLM expected gain, contract did loss, or vice versa)
+  const scaleFactor =
+    expectedBalanceChange === 0 ? 1 : effectiveActualBalanceChange / expectedBalanceChange
+  const isSignFlip =
+    Math.sign(expectedBalanceChange) !== Math.sign(effectiveActualBalanceChange) &&
+    expectedBalanceChange !== 0 &&
+    effectiveActualBalanceChange !== 0
+
+  if (isSignFlip) {
+    console.error("🚨🚨🚨 CRITICAL: SIGN FLIP DETECTED 🚨🚨🚨")
+    console.error("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+    console.error("CONTRACT DID THE OPPOSITE OF WHAT LLM INTENDED!")
+    console.error("Rat ID:", newRat.id)
+    console.error(
+      "LLM expected:",
+      expectedBalanceChange,
+      `(${expectedBalanceChange > 0 ? "GAIN" : "LOSS"})`
+    )
+    console.error(
+      "Contract did:",
+      effectiveActualBalanceChange,
+      `(${effectiveActualBalanceChange > 0 ? "GAIN" : "LOSS"})`
+    )
+    console.error("Scale factor:", scaleFactor, "← NEGATIVE = OPPOSITE DIRECTION")
+    console.error("Old balance:", oldBalance)
+    console.error("New balance:", newBalance)
+    console.error("Rat died:", ratDied)
+    console.error("LLM suggested transfers:", JSON.stringify(llmOutcome.balanceTransfers, null, 2))
+    console.error("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+
+    // Report sign flip to Sentry as a separate critical issue
+    const signFlipError = new Error(
+      `CRITICAL Sign Flip: LLM expected ${expectedBalanceChange > 0 ? "gain" : "loss"}, contract did ${effectiveActualBalanceChange > 0 ? "gain" : "loss"}`
+    )
+    captureError(signFlipError, {
+      ratId: newRat.id,
+      llmExpected: expectedBalanceChange,
+      llmDirection: expectedBalanceChange > 0 ? "gain" : "loss",
+      contractActual: effectiveActualBalanceChange,
+      contractDirection: effectiveActualBalanceChange > 0 ? "gain" : "loss",
+      scaleFactor,
+      oldBalance,
+      newBalance,
+      ratDied,
+      suggestedTransfers: llmOutcome.balanceTransfers,
+      context: "Trip Entry - Sign Flip"
+    })
+  } else {
+    console.warn("⚠️  BALANCE TRANSFER MISMATCH DETECTED")
+    console.warn("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+    console.warn("Rat ID:", newRat.id)
+    console.warn("Expected (LLM):", expectedBalanceChange)
+    console.warn("Actual balance change:", actualBalanceChange)
+    if (ratDied && implicitItemValueTransfer > 0) {
+      console.warn("Implicit item value transfer (death):", implicitItemValueTransfer)
+      console.warn("Effective actual (balance + items):", effectiveActualBalanceChange)
+    }
+    console.warn("Difference:", effectiveActualBalanceChange - expectedBalanceChange)
+    console.warn("Scale factor:", scaleFactor)
+    console.warn("Old balance:", oldBalance)
+    console.warn("New balance:", newBalance)
+    console.warn("Rat died:", ratDied)
+    console.warn("LLM suggested transfers:", JSON.stringify(llmOutcome.balanceTransfers, null, 2))
+    console.warn("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+
+    // Report to Sentry for monitoring (but this is expected behavior, not critical)
+    const error = new Error(
+      `Balance Transfer Mismatch: Expected does not match actual on-chain balance change`
+    )
+
+    const errorContext = {
+      ratId: newRat.id,
+      expected: expectedBalanceChange,
+      actualBalanceChange: actualBalanceChange,
+      effectiveActualBalanceChange: effectiveActualBalanceChange,
+      difference: effectiveActualBalanceChange - expectedBalanceChange,
+      scaleFactor,
+      oldBalance,
+      newBalance,
+      ratDied,
+      implicitItemValueTransfer: ratDied ? implicitItemValueTransfer : 0,
+      suggestedTransfers: llmOutcome.balanceTransfers,
+      context: "Trip Entry - Balance Transfer Mismatch"
+    }
+
+    captureError(error, errorContext)
   }
-  console.warn("Difference:", effectiveActualBalanceChange - expectedBalanceChange)
-  console.warn("Old balance:", oldBalance)
-  console.warn("New balance:", newBalance)
-  console.warn("Rat died:", ratDied)
-  console.warn("LLM suggested transfers:", JSON.stringify(llmOutcome.balanceTransfers, null, 2))
-  console.warn("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-
-  // Report to Sentry for monitoring (but this is expected behavior, not critical)
-  const error = new Error(
-    `Balance Transfer Mismatch: Expected does not match actual on-chain balance change`
-  )
-
-  const errorContext = {
-    ratId: newRat.id,
-    expected: expectedBalanceChange,
-    actualBalanceChange: actualBalanceChange,
-    effectiveActualBalanceChange: effectiveActualBalanceChange,
-    difference: effectiveActualBalanceChange - expectedBalanceChange,
-    oldBalance,
-    newBalance,
-    ratDied,
-    implicitItemValueTransfer: ratDied ? implicitItemValueTransfer : 0,
-    suggestedTransfers: llmOutcome.balanceTransfers,
-    context: "Trip Entry - Balance Transfer Mismatch"
-  }
-
-  captureError(error, errorContext)
 
   // Scale transfers proportionally to match the actual outcome
   // This ensures the user sees the progression that led to the final state
@@ -532,6 +591,11 @@ function getLogStep(name: string, list: ItemChange[]) {
  *   Scale factor: -100 / -135 = 0.74
  *   Result: [{step: 5, -11}, {step: 4, -89}] = -100
  *
+ * SIGN FLIP WARNING:
+ *   If scaleFactor is negative, it means the contract did the OPPOSITE of what
+ *   the LLM intended. This is critical because the narrative will contradict reality.
+ *   Example: LLM says "wins +100", contract does "loses -100"
+ *
  * @param transfers - The LLM's suggested transfers
  * @param targetSum - The actual balance change that occurred on-chain
  * @returns Scaled transfers that sum to targetSum
@@ -550,7 +614,15 @@ function scaleBalanceTransfers(
 
   // Edge case: Single transfer - just use the actual value
   if (transfers.length === 1) {
-    console.log("__   Single transfer: using actual value directly")
+    const originalAmount = transfers[0].amount
+    const signFlipped = Math.sign(originalAmount) !== Math.sign(targetSum) && originalAmount !== 0 && targetSum !== 0
+
+    if (signFlipped) {
+      console.warn("__   ⚠️  SIGN FLIP: Single transfer changed from", originalAmount, "to", targetSum)
+    } else {
+      console.log("__   Single transfer: using actual value directly")
+    }
+
     return [{ logStep: transfers[0].logStep, amount: targetSum }]
   }
 
@@ -559,6 +631,11 @@ function scaleBalanceTransfers(
   const scaleFactor = originalSum === 0 ? 1 : targetSum / originalSum
 
   console.log(`__   Scale factor: ${targetSum} / ${originalSum} = ${scaleFactor}`)
+
+  // Warn about sign flips
+  if (scaleFactor < 0) {
+    console.warn("__   🚨 SIGN FLIP: Negative scale factor means ALL transfers reversed direction!")
+  }
 
   // Scale each transfer proportionally
   const scaledTransfers = transfers.map(transfer => ({
@@ -583,7 +660,10 @@ function scaleBalanceTransfers(
   }
 
   console.log("__   Scaled transfers:", scaledTransfers)
-  console.log("__   Verification sum:", scaledTransfers.reduce((sum, t) => sum + t.amount, 0))
+  console.log(
+    "__   Verification sum:",
+    scaledTransfers.reduce((sum, t) => sum + t.amount, 0)
+  )
 
   return scaledTransfers
 }
