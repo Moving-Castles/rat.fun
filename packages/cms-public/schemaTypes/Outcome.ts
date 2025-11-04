@@ -118,6 +118,7 @@ export default {
     },
     {
       title: "Trip value",
+      description: "The value of the trip after the visit",
       name: "tripValue",
       type: "number",
       readOnly: true,
@@ -132,6 +133,7 @@ export default {
     },
     {
       title: "Rat value",
+      description: "The value of the rat after the visit",
       name: "ratValue",
       type: "number",
       readOnly: true,

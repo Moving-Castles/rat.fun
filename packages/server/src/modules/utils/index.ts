@@ -35,8 +35,6 @@ export async function retryUntilResult<T>(
   while (Date.now() - startTime < timeoutMs) {
     const result = fn()
 
-    console.log(Date.now(), "result", result)
-
     // Use custom condition if provided, otherwise check for truthy result
     const isValid = condition ? condition(result) : Boolean(result)
 
@@ -48,7 +46,6 @@ export async function retryUntilResult<T>(
     await new Promise(resolve => setTimeout(resolve, retryIntervalMs))
   }
 
-  console.log(Date.now(), "!!! NO RESULT FOUND !!!")
   return null
 }
 

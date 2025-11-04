@@ -54,13 +54,6 @@ export default {
       validation: (Rule: any) => Rule.required()
     },
     {
-      title: "Trip factor",
-      name: "tripFactor",
-      type: "number",
-      readOnly: true,
-      validation: (Rule: any) => Rule.required()
-    },
-    {
       title: "Archetype | Gives Items",
       name: "archetypeItemAdd",
       type: "number",

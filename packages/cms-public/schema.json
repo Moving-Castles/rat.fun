@@ -1113,13 +1113,6 @@
         },
         "optional": true
       },
-      "tripFactor": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "number"
-        },
-        "optional": true
-      },
       "archetypeItemAdd": {
         "type": "objectAttribute",
         "value": {

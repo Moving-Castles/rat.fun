@@ -17,33 +17,9 @@ type NewOutcomeDoc = Omit<OutcomeDoc, "_createdAt" | "_updatedAt" | "_rev">
 type NewTripDoc = Omit<TripDoc, "_createdAt" | "_updatedAt" | "_rev">
 
 /**
- * Get the trip factor from the CMS
- * @param tripId - The ID of the trip
- * @returns The trip factor
- */
-export const getTripFactor = async (tripId: string) => {
-  try {
-    const trip = (await loadDataPublicSanity(queries.trip, { tripId })) as TripDoc
-
-    return trip?.tripFactor ?? 0.5
-  } catch (error) {
-    // If it's already one of our custom errors, rethrow it
-    if (error instanceof CMSError) {
-      throw error
-    }
-
-    // Otherwise, wrap it in our custom error
-    throw new CMSAPIError(
-      `Error trip document: ${error instanceof Error ? error.message : String(error)}`,
-      error
-    )
-  }
-}
-
-/**
  * Get the trip archetype data from the CMS
  * @param tripId - The ID of the trip
- * @returns The trip factor
+ * @returns The archetype data
  */
 export const getArchetypeData = async (tripId: string) => {
   try {
@@ -220,35 +196,6 @@ export async function updateTripWithImage(tripID: string, imageBuffer: Buffer): 
     // Otherwise, wrap it in our custom error
     throw new CMSAPIError(
       `Error updating trip with image: ${error instanceof Error ? error.message : String(error)}`,
-      error
-    )
-  }
-}
-
-/**
- * Update the trip factor in the CMS
- * @param tripID - The ID of the trip
- * @param tripFactor - The trip factor
- * @returns The updated trip document
- */
-export async function updateTripFactor(tripID: string, tripFactor: number): Promise<TripDoc> {
-  try {
-    // Update the trip document with the trip factor
-    const trip = (await publicSanityClient
-      .patch(tripID)
-      .set({ tripFactor: tripFactor })
-      .commit()) as TripDoc
-
-    return trip
-  } catch (error) {
-    // If it's already one of our custom errors, rethrow it
-    if (error instanceof CMSError) {
-      throw error
-    }
-
-    // Otherwise, wrap it in our custom error
-    throw new CMSAPIError(
-      `Error writing trip factor to CMS: ${error instanceof Error ? error.message : String(error)}`,
       error
     )
   }
