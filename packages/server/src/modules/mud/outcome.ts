@@ -17,6 +17,7 @@ import { Hex } from "viem"
 import { OutcomeReturnValue, ItemChange } from "@modules/types"
 import { Rat, Trip } from "@modules/types"
 import { handleBackgroundError } from "@modules/error-handling"
+import { captureError } from "@modules/sentry"
 
 /**
  * Parse the LLM outcome into the arguments for the smart contract's applyOutcome function
@@ -30,6 +31,14 @@ import { handleBackgroundError } from "@modules/error-handling"
  * @returns Arguments formatted for the applyOutcome contract call: [ratId, tripId, balanceTransfer, itemsToRemove, itemsToAdd]
  */
 export function createOutcomeCallArgs(rat: Rat, trip: Trip, outcome: OutcomeReturnValue) {
+  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+  console.log("📦 createOutcomeCallArgs - Formatting LLM outcome for contract")
+  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+  console.log("Rat ID:", rat.id)
+  console.log("Trip ID:", trip.id)
+  console.log("Rat current balance:", rat.balance)
+  console.log("Trip current balance:", trip.balance)
+
   // * * * * * * * * * * * * * * * * * *
   // BALANCE TRANSFERS
   // * * * * * * * * * * * * * * * * * *
@@ -38,14 +47,39 @@ export function createOutcomeCallArgs(rat: Rat, trip: Trip, outcome: OutcomeRetu
   // Positive value = Trip gives to Rat (limited by trip budget)
   // Negative value = Rat gives to Trip (limited by rat balance)
 
-  const balanceTransfersSum =
-    (outcome?.balanceTransfers ?? []).reduce((acc, curr) => acc + curr.amount, 0) ?? 0
+  console.log("\n📊 BALANCE TRANSFERS:")
 
-  console.log("__ createOutcomeCallArgs - Balance transfers sum:", balanceTransfersSum)
-  console.log(
-    "__ Individual transfers:",
-    outcome?.balanceTransfers?.map(t => `${t.logStep}:${t.amount}`)
-  )
+  const balanceTransfers = outcome?.balanceTransfers ?? []
+
+  if (balanceTransfers.length === 0) {
+    console.log("  ℹ️  No balance transfers from LLM")
+  } else {
+    console.log(`  Found ${balanceTransfers.length} transfer(s):`)
+    balanceTransfers.forEach((transfer, index) => {
+      console.log(
+        `    [${index}] logStep:${transfer.logStep}, amount:${transfer.amount} (type: ${typeof transfer.amount})`
+      )
+    })
+  }
+
+  // Verify all amounts are numbers before summing
+  const invalidTransfers = balanceTransfers.filter(t => typeof t.amount !== "number")
+  if (invalidTransfers.length > 0) {
+    console.error("  🚨 ERROR: Found non-number amounts in balanceTransfers!")
+    invalidTransfers.forEach(t => {
+      console.error(`    - logStep:${t.logStep}, amount:${t.amount}, type:${typeof t.amount}`)
+    })
+  }
+
+  // Sum the transfers with detailed logging
+  const balanceTransfersSum = balanceTransfers.reduce((acc, curr, index) => {
+    const newTotal = acc + curr.amount
+    console.log(`    Sum step ${index}: ${acc} + ${curr.amount} = ${newTotal}`)
+    return newTotal
+  }, 0)
+
+  console.log(`  ✅ Final sum: ${balanceTransfersSum}`)
+  console.log(`  Converting to BigInt: ${BigInt(balanceTransfersSum)}`)
 
   // * * * * * * * * * * * * * * * * * *
   // ITEMS TO REMOVE
@@ -53,10 +87,28 @@ export function createOutcomeCallArgs(rat: Rat, trip: Trip, outcome: OutcomeRetu
   // Extract IDs of items the LLM wants to remove from rat's inventory
   // These items' values will be transferred back to the trip
 
+  console.log("\n🗑️  ITEMS TO REMOVE:")
   const itemsToRemoveFromRat =
     (outcome?.itemChanges ?? []).filter(c => c.type === "remove").map(c => c.id) ?? []
 
-  console.log("__ Items to remove:", itemsToRemoveFromRat.length)
+  if (itemsToRemoveFromRat.length === 0) {
+    console.log("  ℹ️  No items to remove")
+  } else {
+    console.log(`  Found ${itemsToRemoveFromRat.length} item(s) to remove:`)
+    itemsToRemoveFromRat.forEach((id, index) => {
+      const item = outcome.itemChanges?.find(c => c.id === id)
+      console.log(`    [${index}] ${id} - ${item?.name} (value: ${item?.value})`)
+    })
+  }
+
+  // Calculate total value of items being removed (these will refund to trip)
+  const totalItemValueToRemove = itemsToRemoveFromRat
+    .map(id => {
+      const item = outcome.itemChanges?.find(c => c.id === id)
+      return item?.value ?? 0
+    })
+    .reduce((sum, val) => sum + val, 0)
+  console.log(`  💰 Total value to refund to trip: ${totalItemValueToRemove}`)
 
   // * * * * * * * * * * * * * * * * * *
   // ITEMS TO ADD
@@ -68,6 +120,7 @@ export function createOutcomeCallArgs(rat: Rat, trip: Trip, outcome: OutcomeRetu
   // - Trip must have budget to cover item value
   // - Item names limited to 48 characters
 
+  console.log("\n➕ ITEMS TO ADD:")
   const itemsToAddToRat =
     (outcome?.itemChanges ?? [])
       .filter(c => c.type === "add")
@@ -78,19 +131,43 @@ export function createOutcomeCallArgs(rat: Rat, trip: Trip, outcome: OutcomeRetu
         }
       }) ?? []
 
-  console.log(
-    "__ Items to add:",
-    itemsToAddToRat.map(i => `${i.name}(${i.value})`)
-  )
+  if (itemsToAddToRat.length === 0) {
+    console.log("  ℹ️  No items to add")
+  } else {
+    console.log(`  Found ${itemsToAddToRat.length} item(s) to add:`)
+    itemsToAddToRat.forEach((item, index) => {
+      console.log(`    [${index}] ${item.name} (value: ${item.value})`)
+    })
+  }
+
+  // Calculate total value of items being added (these will cost trip budget)
+  const totalItemValueToAdd = itemsToAddToRat.reduce((sum, item) => sum + Number(item.value), 0)
+  console.log(`  💰 Total value to deduct from trip: ${totalItemValueToAdd}`)
 
   // Return arguments in the format expected by ManagerSystem.applyOutcome()
-  return [rat.id, trip.id, BigInt(balanceTransfersSum), itemsToRemoveFromRat, itemsToAddToRat] as [
-    Hex,
-    Hex,
-    bigint,
-    Hex[],
-    { name: string; value: bigint }[]
-  ]
+  const contractArgs = [
+    rat.id,
+    trip.id,
+    BigInt(balanceTransfersSum),
+    itemsToRemoveFromRat,
+    itemsToAddToRat
+  ] as [Hex, Hex, bigint, Hex[], { name: string; value: bigint }[]]
+
+  console.log("\n📤 FINAL CONTRACT ARGUMENTS:")
+  console.log("  ratId:", contractArgs[0])
+  console.log("  tripId:", contractArgs[1])
+  console.log("  balanceTransfer (bigint):", contractArgs[2], `← from sum of ${balanceTransfersSum}`)
+  console.log("  itemsToRemove:", contractArgs[3].length, "items")
+  console.log("  itemsToAdd:", contractArgs[4].length, "items")
+  console.log("\n💡 PREDICTED NET EFFECT:")
+  console.log(
+    "  Rat balance change (before constraints):",
+    balanceTransfersSum - totalItemValueToRemove + totalItemValueToAdd
+  )
+  console.log("  Trip balance change (before constraints):", -(balanceTransfersSum + totalItemValueToAdd - totalItemValueToRemove))
+  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n")
+
+  return contractArgs
 }
 
 /**
@@ -120,8 +197,13 @@ export function updateOutcome(
     console.error("🚨 CRITICAL: Missing rat data in updateOutcome")
     console.error("oldRat:", oldRat)
     console.error("newRat:", newRat)
-    const error = new Error("Missing rat data in updateOutcome")
-    handleBackgroundError(error, "Trip Entry - Missing Rat Data")
+
+    const error = new Error("Missing Rat Data: oldRat or newRat is null/undefined in updateOutcome")
+    captureError(error, {
+      hasOldRat: !!oldRat,
+      hasNewRat: !!newRat,
+      context: "Trip Entry - Missing Rat Data"
+    })
     return newOutcome
   }
 
@@ -258,10 +340,16 @@ export function updateOutcome(
       "value:",
       actualBalanceChange
     )
-    const error = new Error(
-      `Invalid balance types in updateOutcome: expected=${typeof expectedBalanceChange}, actual=${typeof actualBalanceChange}`
-    )
-    handleBackgroundError(error, "Trip Entry - Invalid Balance Types")
+
+    const error = new Error("Invalid Balance Types: Balance values are not numbers in updateOutcome")
+    captureError(error, {
+      ratId: newRat.id,
+      expectedType: typeof expectedBalanceChange,
+      expectedValue: expectedBalanceChange,
+      actualType: typeof actualBalanceChange,
+      actualValue: actualBalanceChange,
+      context: "Trip Entry - Invalid Balance Types"
+    })
     return newOutcome
   }
 
@@ -291,7 +379,7 @@ export function updateOutcome(
 
   console.error("🚨 BALANCE TRANSFER MISMATCH DETECTED")
   console.error("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-  console.error("Rat ID:", newRat.id) // FIX 3: Include context
+  console.error("Rat ID:", newRat.id)
   console.error("Expected (LLM):", expectedBalanceChange)
   console.error("Actual (Chain):", actualBalanceChange)
   console.error("Difference:", actualBalanceChange - expectedBalanceChange)
@@ -301,11 +389,26 @@ export function updateOutcome(
   console.error("LLM suggested transfers:", JSON.stringify(llmOutcome.balanceTransfers, null, 2))
   console.error("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
 
-  // FIX 3: Enhanced error context with rat ID
+  // Use consistent error message so Sentry groups all balance mismatches together
   const error = new Error(
-    `Balance transfer mismatch for rat ${newRat.id}: Expected ${expectedBalanceChange}, got ${actualBalanceChange} (diff: ${actualBalanceChange - expectedBalanceChange})`
+    `Balance Transfer Mismatch: Expected does not match actual on-chain balance change`
   )
-  handleBackgroundError(error, "Trip Entry - Balance Transfer Mismatch")
+
+  // Add all the dynamic data as context instead of in the error message
+  // This ensures Sentry groups all balance mismatches into ONE issue
+  const errorContext = {
+    ratId: newRat.id,
+    expected: expectedBalanceChange,
+    actual: actualBalanceChange,
+    difference: actualBalanceChange - expectedBalanceChange,
+    oldBalance,
+    newBalance,
+    ratDied,
+    suggestedTransfers: llmOutcome.balanceTransfers,
+    context: "Trip Entry - Balance Transfer Mismatch"
+  }
+
+  captureError(error, errorContext)
 
   // For now, we return empty balanceTransfers to indicate the mismatch
   // This means the client won't see the step-by-step transfers in the UI

@@ -164,22 +164,20 @@ async function routes(fastify: FastifyInstance) {
         // Debug validation
         // * * * * * * * * * * * * * * * * * *
 
-        if (process?.env?.DEBUG == "true") {
-          runDebugValidation({
-            ratId: ratId as Hex,
-            tripId: tripId as Hex,
-            playerId,
-            rat,
-            trip,
-            eventResults,
-            validatedOutcome,
-            correctedEvents,
-            ratValueChange,
-            tripValueChange,
-            newRatBalance,
-            newTripValue
-          })
-        }
+        runDebugValidation({
+          ratId: ratId as Hex,
+          tripId: tripId as Hex,
+          playerId,
+          rat,
+          trip,
+          eventResults,
+          validatedOutcome,
+          correctedEvents,
+          ratValueChange,
+          tripValueChange,
+          newRatBalance,
+          newTripValue
+        })
 
         // Calculate main processing time
         const mainProcessingTime = performance.now() - startProcessingTime
