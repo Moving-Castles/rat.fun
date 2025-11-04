@@ -11,6 +11,14 @@
  * - Balance transfers: Positive = Trip→Rat, Negative = Rat→Trip
  * - Item values: Always positive, adding costs trip budget, removing refunds trip
  * - Budget constraints: Contract enforces limits the LLM may exceed
+ *
+ * DEATH MECHANICS:
+ * When a rat dies (balance → 0):
+ * - Contract transfers rat's balance to trip
+ * - Contract transfers item VALUES to trip (for accounting)
+ * - Items physically STAY in dead rat's inventory (gas optimization)
+ * - Contract aborts and skips further item processing
+ * - Validation must account for implicit item value transfer
  */
 
 import { Hex } from "viem"
@@ -220,11 +228,22 @@ export function updateOutcome(
   console.log("__ LLM suggested balanceTransfers:", llmOutcome.balanceTransfers)
 
   // FIX 2: Detect rat death early
-  // If rat died (balance = 0), the contract aborts and skips item processing
+  // If rat died (balance = 0), special handling:
+  // - Contract transfers item VALUES to trip (for accounting)
+  // - But items stay in dead rat's inventory (to save gas)
+  // - Contract returns early, skipping further item processing
   const ratDied = newBalance === 0 && oldBalance > 0
+
   if (ratDied) {
-    console.warn("⚠️  RAT DIED during trip - Contract aborted item processing at balance = 0")
-    console.warn("__ Items were NOT processed due to early return in contract")
+    console.warn("⚠️  RAT DIED during trip - Special death handling:")
+    console.warn("__ - Rat balance → 0")
+    console.warn("__ - Item VALUES transferred to trip")
+    console.warn("__ - Items stay in dead rat inventory (gas optimization)")
+    console.warn("__ - Contract aborted further item processing")
+
+    // Calculate total value of items that stayed with dead rat
+    const deadRatItemValue = oldInventory.reduce((sum, item) => sum + (item.value ?? 0), 0)
+    console.warn(`__ - Total item value transferred: ${deadRatItemValue}`)
   }
 
   // * * * * * * * * * * * * * * * * * *
@@ -241,42 +260,56 @@ export function updateOutcome(
   // - Insufficient trip budget to cover item value
   // - Rat died before item processing (contract early return)
   // We determine what ACTUALLY changed by comparing old vs new inventory
+  //
+  // SPECIAL CASE - RAT DEATH:
+  // - Items stay in dead rat's inventory (gas optimization)
+  // - But their VALUES are transferred to trip
+  // - We do NOT report items as "removed" to the client (they physically stayed)
+  // - But we DO account for the value transfer in balance validation below
 
   newOutcome.itemChanges = []
 
-  // Find items that were ADDED (exist in new but not in old)
-  for (let i = 0; i < newInventory.length; i++) {
-    const itemInNewRat = newInventory[i]
-    const existedBefore = oldInventory.find(item => item.id === itemInNewRat.id)
+  if (ratDied) {
+    // On death, items stay in inventory but we don't process new item changes
+    // The client doesn't need to see items "removed" because they physically stayed
+    console.log("__ Skipping item change detection - rat died, items frozen")
+  } else {
+    // Normal case: compare inventories to detect actual changes
 
-    if (!existedBefore) {
-      // This item was added by the contract
-      const logStep = getLogStep(itemInNewRat.name, llmOutcome.itemChanges)
-      newOutcome.itemChanges.push({
-        logStep,
-        type: "add",
-        name: itemInNewRat.name,
-        value: itemInNewRat.value,
-        id: itemInNewRat.id
-      })
+    // Find items that were ADDED (exist in new but not in old)
+    for (let i = 0; i < newInventory.length; i++) {
+      const itemInNewRat = newInventory[i]
+      const existedBefore = oldInventory.find(item => item.id === itemInNewRat.id)
+
+      if (!existedBefore) {
+        // This item was added by the contract
+        const logStep = getLogStep(itemInNewRat.name, llmOutcome.itemChanges)
+        newOutcome.itemChanges.push({
+          logStep,
+          type: "add",
+          name: itemInNewRat.name,
+          value: itemInNewRat.value,
+          id: itemInNewRat.id
+        })
+      }
     }
-  }
 
-  // Find items that were REMOVED (exist in old but not in new)
-  for (let i = 0; i < oldInventory.length; i++) {
-    const itemInOldRat = oldInventory[i]
-    const stillExists = newInventory.find(item => item.id === itemInOldRat.id)
+    // Find items that were REMOVED (exist in old but not in new)
+    for (let i = 0; i < oldInventory.length; i++) {
+      const itemInOldRat = oldInventory[i]
+      const stillExists = newInventory.find(item => item.id === itemInOldRat.id)
 
-    if (!stillExists) {
-      // This item was removed by the contract
-      const logStep = getLogStep(itemInOldRat.name, llmOutcome.itemChanges)
-      newOutcome.itemChanges.push({
-        logStep,
-        type: "remove",
-        name: itemInOldRat.name,
-        value: itemInOldRat.value,
-        id: itemInOldRat.id
-      })
+      if (!stillExists) {
+        // This item was removed by the contract
+        const logStep = getLogStep(itemInOldRat.name, llmOutcome.itemChanges)
+        newOutcome.itemChanges.push({
+          logStep,
+          type: "remove",
+          name: itemInOldRat.name,
+          value: itemInOldRat.value,
+          id: itemInOldRat.id
+        })
+      }
     }
   }
 
@@ -325,6 +358,35 @@ export function updateOutcome(
   // Calculate what actually happened on-chain (using type-validated numbers)
   const actualBalanceChange = newBalance - oldBalance
 
+  // SPECIAL CASE - RAT DEATH:
+  // When rat dies, contract implicitly transfers item VALUES to trip (in addition to balance)
+  // Even though items physically stay in dead rat's inventory
+  // We need to account for this implicit item value transfer when validating
+  let implicitItemValueTransfer = 0
+  if (ratDied) {
+    implicitItemValueTransfer = oldInventory.reduce((sum, item) => sum + (item.value ?? 0), 0)
+    console.log(
+      `__ Death adjustment: Contract implicitly transferred ${implicitItemValueTransfer} in item values to trip`
+    )
+  }
+
+  // For validation, compare what LLM expected vs what contract actually did
+  // On death, contract does: balance transfer + implicit item value transfer
+  // So we need to account for that implicit transfer
+  const effectiveActualBalanceChange = actualBalanceChange - implicitItemValueTransfer
+
+  console.log("__ Balance validation:")
+  console.log("__   LLM expected:", expectedBalanceChange)
+  console.log("__   Actual balance change:", actualBalanceChange)
+  if (ratDied) {
+    console.log("__   Implicit item value transfer:", implicitItemValueTransfer)
+    console.log(
+      "__   Effective actual (balance + items):",
+      effectiveActualBalanceChange,
+      "← This should match expected"
+    )
+  }
+
   // FIX 6: Type check before comparison
   if (typeof expectedBalanceChange !== "number" || typeof actualBalanceChange !== "number") {
     console.error("🚨 CRITICAL: Balance values are not numbers!")
@@ -353,18 +415,19 @@ export function updateOutcome(
     return newOutcome
   }
 
-  console.log(
-    "__ Balance change - Expected:",
-    expectedBalanceChange,
-    "Actual:",
-    actualBalanceChange
-  )
-
   // * * * * * * * * * * * * * * * * * *
   // CASE 1: Expected matches actual - everything worked as planned
   // * * * * * * * * * * * * * * * * * *
-  if (expectedBalanceChange === actualBalanceChange) {
+  // Use effectiveActualBalanceChange which accounts for implicit item value transfer on death
+  const balanceMatches = expectedBalanceChange === effectiveActualBalanceChange
+
+  if (balanceMatches) {
     console.log("__ ✓ Balance transfer successful - LLM intent matched on-chain execution")
+    if (ratDied && implicitItemValueTransfer > 0) {
+      console.log(
+        `__   (Note: Includes implicit ${implicitItemValueTransfer} item value transfer due to death)`
+      )
+    }
     newOutcome.balanceTransfers = [...llmOutcome.balanceTransfers]
     return newOutcome
   }
@@ -381,8 +444,12 @@ export function updateOutcome(
   console.error("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
   console.error("Rat ID:", newRat.id)
   console.error("Expected (LLM):", expectedBalanceChange)
-  console.error("Actual (Chain):", actualBalanceChange)
-  console.error("Difference:", actualBalanceChange - expectedBalanceChange)
+  console.error("Actual balance change:", actualBalanceChange)
+  if (ratDied && implicitItemValueTransfer > 0) {
+    console.error("Implicit item value transfer (death):", implicitItemValueTransfer)
+    console.error("Effective actual (balance + items):", effectiveActualBalanceChange)
+  }
+  console.error("Difference:", effectiveActualBalanceChange - expectedBalanceChange)
   console.error("Old balance:", oldBalance)
   console.error("New balance:", newBalance)
   console.error("Rat died:", ratDied)
@@ -399,11 +466,13 @@ export function updateOutcome(
   const errorContext = {
     ratId: newRat.id,
     expected: expectedBalanceChange,
-    actual: actualBalanceChange,
-    difference: actualBalanceChange - expectedBalanceChange,
+    actualBalanceChange: actualBalanceChange,
+    effectiveActualBalanceChange: effectiveActualBalanceChange,
+    difference: effectiveActualBalanceChange - expectedBalanceChange,
     oldBalance,
     newBalance,
     ratDied,
+    implicitItemValueTransfer: ratDied ? implicitItemValueTransfer : 0,
     suggestedTransfers: llmOutcome.balanceTransfers,
     context: "Trip Entry - Balance Transfer Mismatch"
   }
