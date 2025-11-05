@@ -8,7 +8,7 @@ import { OutcomeReturnValue } from "@modules/types"
 import { SetupNetworkResult } from "./setupNetwork"
 import { Rat, Trip } from "@modules/types"
 import { getEnterTripData } from "@modules/mud/getOnchainData/getEnterTripData"
-import { createOutcomeCallArgs, updateOutcome } from "./outcome"
+import { createOutcomeCallArgs, updateOutcome, validateOutcome } from "./outcome"
 import { getTripValue, getRatValue } from "./value"
 import {
   SystemCallError,
@@ -38,13 +38,10 @@ export function createSystemCalls(network: SetupNetworkResult) {
         maxPriorityFeePerGas: (feeData.maxPriorityFeePerGas * 200n) / 100n, // 100% higher priority
         gas: 2000000n // Set generous gas limit
       })
-      const reciept = await network.waitForTransaction(tx)
-
-      console.log("reciept", reciept)
+      await network.waitForTransaction(tx)
 
       // Suggested outcomes were sent to the chain
-      // We get the new onchain state
-      // and update the outcome with the actual changes
+      // We get the new onchain state and update the outcome with the actual changes
       try {
         const newOnChainData = await getEnterTripData(rat.id, trip.id)
 
@@ -55,6 +52,15 @@ export function createSystemCalls(network: SetupNetworkResult) {
         const newRatBalance = newOnChainData.rat?.balance ?? 0
 
         const { newRatValue, ratValueChange } = getRatValue(rat, newOnChainData.rat)
+
+        // Validate the outcome to ensure system invariants hold
+        validateOutcome(
+          newOnChainData.rat,
+          trip,
+          newOnChainData.trip as Trip,
+          ratValueChange,
+          tripValueChange
+        )
 
         return {
           validatedOutcome,

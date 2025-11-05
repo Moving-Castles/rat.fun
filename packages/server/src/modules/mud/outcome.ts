@@ -386,36 +386,6 @@ export function updateOutcome(
     )
   }
 
-  // FIX 6: Type check before comparison
-  if (typeof expectedBalanceChange !== "number" || typeof actualBalanceChange !== "number") {
-    console.error("🚨 CRITICAL: Balance values are not numbers!")
-    console.error(
-      "expectedBalanceChange type:",
-      typeof expectedBalanceChange,
-      "value:",
-      expectedBalanceChange
-    )
-    console.error(
-      "actualBalanceChange type:",
-      typeof actualBalanceChange,
-      "value:",
-      actualBalanceChange
-    )
-
-    const error = new Error(
-      "Invalid Balance Types: Balance values are not numbers in updateOutcome"
-    )
-    captureError(error, {
-      ratId: newRat.id,
-      expectedType: typeof expectedBalanceChange,
-      expectedValue: expectedBalanceChange,
-      actualType: typeof actualBalanceChange,
-      actualValue: actualBalanceChange,
-      context: "Trip Entry - Invalid Balance Types"
-    })
-    return newOutcome
-  }
-
   // * * * * * * * * * * * * * * * * * *
   // CASE 1: Expected matches actual - everything worked as planned
   // * * * * * * * * * * * * * * * * * *
@@ -465,95 +435,62 @@ export function updateOutcome(
   // balanceTransfers should ONLY reflect balance changes (what UI shows as health)
   // Item value transfers are tracked separately
 
-  // CRITICAL: Detect sign flips (LLM expected gain, contract did loss, or vice versa)
+  // Detect sign flips (LLM expected gain, contract did loss, or vice versa)
   const scaleFactor = expectedBalanceChange === 0 ? 1 : actualBalanceChange / expectedBalanceChange
   const isSignFlip =
     Math.sign(expectedBalanceChange) !== Math.sign(actualBalanceChange) &&
     expectedBalanceChange !== 0 &&
     actualBalanceChange !== 0
 
-  if (isSignFlip) {
-    console.error("🚨🚨🚨 CRITICAL: SIGN FLIP DETECTED 🚨🚨🚨")
-    console.error("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-    console.error("CONTRACT DID THE OPPOSITE OF WHAT LLM INTENDED!")
-    console.error("Rat ID:", newRat.id)
-    console.error(
-      "LLM expected:",
-      expectedBalanceChange,
-      `(${expectedBalanceChange > 0 ? "GAIN" : "LOSS"})`
-    )
-    console.error(
-      "Contract did:",
-      actualBalanceChange,
-      `(${actualBalanceChange > 0 ? "GAIN" : "LOSS"})`
-    )
-    console.error("Scale factor:", scaleFactor, "← NEGATIVE = OPPOSITE DIRECTION")
-    console.error("Old balance:", oldBalance)
-    console.error("New balance:", newBalance)
-    console.error("Rat died:", ratDied)
-    console.error("LLM suggested transfers:", JSON.stringify(llmOutcome.balanceTransfers, null, 2))
-    console.error("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+  // Log based on severity
+  const logFn = isSignFlip ? console.error : console.warn
+  const severity = isSignFlip ? "🚨 CRITICAL SIGN FLIP" : "⚠️  BALANCE TRANSFER MISMATCH"
 
-    // Report sign flip to Sentry as a separate critical issue
-    const signFlipError = new Error(
-      `CRITICAL Sign Flip: LLM expected ${expectedBalanceChange > 0 ? "gain" : "loss"}, contract did ${actualBalanceChange > 0 ? "gain" : "loss"}`
+  logFn("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+  logFn(`${severity} DETECTED`)
+  logFn("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+  logFn("Rat ID:", newRat.id)
+  logFn(
+    "Expected (LLM):",
+    expectedBalanceChange,
+    `(${expectedBalanceChange > 0 ? "GAIN" : "LOSS"})`
+  )
+  logFn("Actual (Contract):", actualBalanceChange, `(${actualBalanceChange > 0 ? "GAIN" : "LOSS"})`)
+  logFn("Difference:", actualBalanceChange - expectedBalanceChange)
+  logFn("Scale factor:", scaleFactor, isSignFlip ? "← NEGATIVE = OPPOSITE DIRECTION" : "")
+  logFn("Old balance:", oldBalance)
+  logFn("New balance:", newBalance)
+  logFn("Rat died:", ratDied)
+  if (ratDied && implicitItemValueTransfer > 0) {
+    logFn(
+      "Note: Item values transferred separately on death:",
+      implicitItemValueTransfer,
+      "(NOT included in balanceTransfers)"
     )
-    captureError(signFlipError, {
-      ratId: newRat.id,
-      llmExpected: expectedBalanceChange,
-      llmDirection: expectedBalanceChange > 0 ? "gain" : "loss",
-      contractActual: actualBalanceChange,
-      contractDirection: actualBalanceChange > 0 ? "gain" : "loss",
-      scaleFactor,
-      oldBalance,
-      newBalance,
-      ratDied,
-      implicitItemValueTransfer: ratDied ? implicitItemValueTransfer : 0,
-      suggestedTransfers: llmOutcome.balanceTransfers,
-      context: "Trip Entry - Sign Flip"
-    })
-  } else {
-    console.warn("⚠️  BALANCE TRANSFER MISMATCH DETECTED")
-    console.warn("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-    console.warn("Rat ID:", newRat.id)
-    console.warn("Expected (LLM):", expectedBalanceChange)
-    console.warn("Actual balance change:", actualBalanceChange)
-    if (ratDied && implicitItemValueTransfer > 0) {
-      console.warn(
-        "Note: Item values transferred separately on death:",
-        implicitItemValueTransfer,
-        "(NOT included in balanceTransfers)"
-      )
-    }
-    console.warn("Difference:", actualBalanceChange - expectedBalanceChange)
-    console.warn("Scale factor:", scaleFactor)
-    console.warn("Old balance:", oldBalance)
-    console.warn("New balance:", newBalance)
-    console.warn("Rat died:", ratDied)
-    console.warn("LLM suggested transfers:", JSON.stringify(llmOutcome.balanceTransfers, null, 2))
-    console.warn("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-
-    // Report to Sentry for monitoring (but this is expected behavior, not critical)
-    const error = new Error(
-      `Balance Transfer Mismatch: Expected does not match actual on-chain balance change`
-    )
-
-    const errorContext = {
-      ratId: newRat.id,
-      expected: expectedBalanceChange,
-      actualBalanceChange: actualBalanceChange,
-      difference: actualBalanceChange - expectedBalanceChange,
-      scaleFactor,
-      oldBalance,
-      newBalance,
-      ratDied,
-      implicitItemValueTransfer: ratDied ? implicitItemValueTransfer : 0,
-      suggestedTransfers: llmOutcome.balanceTransfers,
-      context: "Trip Entry - Balance Transfer Mismatch"
-    }
-
-    captureError(error, errorContext)
   }
+  logFn("LLM suggested transfers:", JSON.stringify(llmOutcome.balanceTransfers, null, 2))
+  logFn("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+
+  // Report to Sentry
+  const errorMessage = isSignFlip
+    ? `Balance Transfer Mismatch (SIGN FLIP): LLM expected ${expectedBalanceChange > 0 ? "gain" : "loss"}, contract did ${actualBalanceChange > 0 ? "gain" : "loss"}`
+    : `Balance Transfer Mismatch: Expected does not match actual on-chain balance change`
+
+  const error = new Error(errorMessage)
+  captureError(error, {
+    ratId: newRat.id,
+    isSignFlip,
+    expected: expectedBalanceChange,
+    actual: actualBalanceChange,
+    difference: actualBalanceChange - expectedBalanceChange,
+    scaleFactor,
+    oldBalance,
+    newBalance,
+    ratDied,
+    implicitItemValueTransfer: ratDied ? implicitItemValueTransfer : 0,
+    suggestedTransfers: llmOutcome.balanceTransfers,
+    context: "Trip Entry - Balance Transfer Mismatch"
+  })
 
   // Scale transfers proportionally to match the actual BALANCE outcome
   // balanceTransfers represents ONLY balance/health changes (what the UI displays)
@@ -781,4 +718,90 @@ function dampenTransfersToAvoidZero(
   // (Better to show crossing zero than break the math)
   console.warn("__     ⚠️  Could not avoid zero-crossing, using original scaled transfers")
   return transfers
+}
+
+/**
+ * Validate the outcome after chain execution
+ *
+ * This performs critical invariant checks to ensure the system is working correctly:
+ * 1. Value conservation - what rat gains/loses equals what trip loses/gains
+ * 2. Trip balance math - trip balance updated correctly
+ *
+ * Note: Balance transfer math (sum of transfers = actual change) is guaranteed by
+ * updateOutcome() and does not need to be validated here.
+ *
+ * @param newRat - Rat state after trip
+ * @param oldTrip - Trip state before entry
+ * @param newTrip - Trip state after entry
+ * @param ratValueChange - Total economic value change for rat (balance + items)
+ * @param tripValueChange - Balance change for trip
+ */
+export function validateOutcome(
+  newRat: Rat,
+  oldTrip: Trip,
+  newTrip: Trip,
+  ratValueChange: number,
+  tripValueChange: number
+): void {
+  console.log("__ VALIDATING OUTCOME")
+
+  const errors: string[] = []
+
+  // * * * * * * * * * * * * * * * * * *
+  // CHECK 1: Value Conservation
+  // * * * * * * * * * * * * * * * * * *
+  // The economic value gained by rat should equal the value lost by trip
+  // This is a fundamental conservation law in the game economy
+  const valueSum = ratValueChange + tripValueChange
+
+  if (valueSum !== 0) {
+    const error = `Value conservation violated: ratValueChange=${ratValueChange}, tripValueChange=${tripValueChange}, sum=${valueSum} (expected 0)`
+    errors.push(error)
+    console.error(`__   ❌ ${error}`)
+  } else {
+    console.log(`__   ✓ Value conservation: ${ratValueChange} + ${tripValueChange} = 0`)
+  }
+
+  // * * * * * * * * * * * * * * * * * *
+  // CHECK 2: Trip Balance Math
+  // * * * * * * * * * * * * * * * * * *
+  // Trip balance should be updated by the trip value change
+  const oldTripBalance = Number(oldTrip.balance ?? 0)
+  const newTripBalance = Number(newTrip.balance ?? 0)
+  const expectedTripBalance = oldTripBalance + tripValueChange
+
+  if (expectedTripBalance !== newTripBalance) {
+    const error = `Trip balance incorrect: oldBalance=${oldTripBalance}, valueChange=${tripValueChange}, expected=${expectedTripBalance}, actual=${newTripBalance}`
+    errors.push(error)
+    console.error(`__   ❌ ${error}`)
+  } else {
+    console.log(
+      `__   ✓ Trip balance: oldBalance(${oldTripBalance}) + change(${tripValueChange}) = newBalance(${newTripBalance})`
+    )
+  }
+
+  // Report to Sentry if any validation failed
+  if (errors.length > 0) {
+    console.error("🚨 OUTCOME VALIDATION FAILED:", {
+      ratId: newRat.id,
+      tripId: newTrip.id,
+      totalFailures: errors.length
+    })
+
+    // Report each error separately for better Sentry grouping
+    errors.forEach(errorMessage => {
+      const error = new Error(`Outcome Validation Failed: ${errorMessage}`)
+      captureError(error, {
+        ratId: newRat.id,
+        tripId: newTrip.id,
+        ratValueChange,
+        oldTripBalance,
+        newTripBalance,
+        tripValueChange,
+        context: "Trip Entry - Outcome Validation"
+      })
+    })
+  } else {
+    console.log("__   ✅ All outcome validations passed")
+  }
 }

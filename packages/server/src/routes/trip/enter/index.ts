@@ -33,7 +33,6 @@ import { writeOutcomeToCMS, updateArchetypeData } from "@modules/cms/public"
 
 // Validation
 import { validateInputData } from "./validation"
-import { runDebugValidation } from "./debugValidation"
 
 // Error handling
 import { handleBackgroundError } from "@modules/error-handling"
@@ -159,25 +158,6 @@ async function routes(fastify: FastifyInstance) {
           Number(process.env.CORRECTION_TEMPERATURE)
         )) as CorrectionReturnValue
         console.timeEnd("–– Correction LLM")
-
-        // * * * * * * * * * * * * * * * * * *
-        // Debug validation
-        // * * * * * * * * * * * * * * * * * *
-
-        runDebugValidation({
-          ratId: ratId as Hex,
-          tripId: tripId as Hex,
-          playerId,
-          rat,
-          trip,
-          eventResults,
-          validatedOutcome,
-          correctedEvents,
-          ratValueChange,
-          tripValueChange,
-          newRatBalance,
-          newTripValue
-        })
 
         // Calculate main processing time
         const mainProcessingTime = performance.now() - startProcessingTime
