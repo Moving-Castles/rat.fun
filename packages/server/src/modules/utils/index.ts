@@ -9,6 +9,21 @@ export function isValidBytes32(value: any): value is Hex {
   return isHex(value) && value.length === 66
 }
 
+/**
+ *  Unpadded to padded
+ * @param address The address to convert
+ * @returns The padded address
+ */
+export function addressToId(address: string): string {
+  if (!address) return "0x0"
+  // remove '0x' prefix, pad the address with leading zeros up to 64 characters, then add '0x' prefix back
+  return "0x" + address.slice(2).padStart(64, "0").toLowerCase()
+}
+
+/**
+ * Generates a random bytes32 hex string
+ * @returns A random bytes32 hex string
+ */
 export function generateRandomBytes32(): Hex {
   const bytes = crypto.getRandomValues(new Uint8Array(32))
   return ("0x" +

@@ -32,6 +32,7 @@ import {
   handleBackgroundError
 } from "@modules/error-handling"
 import { isValidBytes32 } from "@modules/utils"
+import { TripLogger } from "@modules/logging"
 
 /**
  * Parse the LLM outcome into the arguments for the smart contract's applyOutcome function
@@ -42,16 +43,22 @@ import { isValidBytes32 } from "@modules/utils"
  * @param rat - The rat entering the trip
  * @param trip - The trip being entered
  * @param outcome - The outcome suggested by the LLM
+ * @param logger - Logger for accumulating trip logs
  * @returns Arguments formatted for the applyOutcome contract call: [ratId, tripId, balanceTransfer, itemsToRemove, itemsToAdd]
  */
-export function createOutcomeCallArgs(rat: Rat, trip: Trip, outcome: OutcomeReturnValue) {
-  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-  console.log("📦 createOutcomeCallArgs - Formatting LLM outcome for contract")
-  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-  console.log("Rat ID:", rat.id)
-  console.log("Trip ID:", trip.id)
-  console.log("Rat current balance:", rat.balance)
-  console.log("Trip current balance:", trip.balance)
+export function createOutcomeCallArgs(
+  rat: Rat,
+  trip: Trip,
+  outcome: OutcomeReturnValue,
+  logger: TripLogger
+) {
+  logger.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+  logger.log("📦 createOutcomeCallArgs - Formatting LLM outcome for contract")
+  logger.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+  logger.log("Rat ID:", rat.id)
+  logger.log("Trip ID:", trip.id)
+  logger.log("Rat current balance:", rat.balance)
+  logger.log("Trip current balance:", trip.balance)
 
   // * * * * * * * * * * * * * * * * * *
   // BALANCE TRANSFERS
@@ -61,14 +68,14 @@ export function createOutcomeCallArgs(rat: Rat, trip: Trip, outcome: OutcomeRetu
   // Positive value = Trip gives to Rat (limited by trip budget)
   // Negative value = Rat gives to Trip (limited by rat balance)
 
-  console.log("\n📊 BALANCE TRANSFERS:")
+  logger.log("\n📊 BALANCE TRANSFERS:")
 
   const balanceTransfersLLM = outcome?.balanceTransfers ?? []
 
   if (balanceTransfersLLM.length === 0) {
-    console.log("  ℹ️  No balance transfers from LLM")
+    logger.log("  ℹ️  No balance transfers from LLM")
   } else {
-    console.log(`  LLM provided ${balanceTransfersLLM.length} transfer(s)`)
+    logger.log(`  LLM provided ${balanceTransfersLLM.length} transfer(s)`)
   }
 
   // Validate and filter balance transfers - amounts must be numbers
@@ -78,32 +85,32 @@ export function createOutcomeCallArgs(rat: Rat, trip: Trip, outcome: OutcomeRetu
   balanceTransfersLLM.forEach((transfer, index) => {
     if (typeof transfer.amount === "number" && !isNaN(transfer.amount)) {
       validBalanceTransfers.push(transfer)
-      console.log(`    [✓] logStep:${transfer.logStep}, amount:${transfer.amount}`)
+      logger.log(`    [✓] logStep:${transfer.logStep}, amount:${transfer.amount}`)
     } else {
       invalidTransfers.push(transfer)
-      console.warn(
+      logger.log(
         `    [✗] logStep:${transfer.logStep}, amount:${transfer.amount} (type: ${typeof transfer.amount}) - SKIPPED`
       )
     }
   })
 
   if (invalidTransfers.length > 0) {
-    console.warn(`  ⚠️  Skipped ${invalidTransfers.length} invalid balance transfer(s)`)
+    logger.log(`  ⚠️  Skipped ${invalidTransfers.length} invalid balance transfer(s)`)
     invalidTransfers.forEach(t => {
-      console.warn(`      - logStep ${t.logStep}: amount was ${JSON.stringify(t.amount)}`)
+      logger.log(`      - logStep ${t.logStep}: amount was ${JSON.stringify(t.amount)}`)
     })
-    console.warn("  ⚠️  LLM provided undefined/null/non-number amounts")
+    logger.log("  ⚠️  LLM provided undefined/null/non-number amounts")
   }
 
   // Sum only valid transfers
   const balanceTransfersSum = validBalanceTransfers.reduce((acc, curr, index) => {
     const newTotal = acc + curr.amount
-    console.log(`    Sum step ${index}: ${acc} + ${curr.amount} = ${newTotal}`)
+    logger.log(`    Sum step ${index}: ${acc} + ${curr.amount} = ${newTotal}`)
     return newTotal
   }, 0)
 
-  console.log(`  ✅ Final sum: ${balanceTransfersSum}`)
-  console.log(`  Converting to BigInt: ${BigInt(balanceTransfersSum)}`)
+  logger.log(`  ✅ Final sum: ${balanceTransfersSum}`)
+  logger.log(`  Converting to BigInt: ${BigInt(balanceTransfersSum)}`)
 
   // * * * * * * * * * * * * * * * * * *
   // ITEMS TO REMOVE
@@ -112,33 +119,33 @@ export function createOutcomeCallArgs(rat: Rat, trip: Trip, outcome: OutcomeRetu
   // These items' values will be transferred back to the trip
   // IMPORTANT: Validate all IDs - LLM sometimes provides invalid/missing IDs
 
-  console.log("\n🗑️  ITEMS TO REMOVE:")
+  logger.log("\n🗑️  ITEMS TO REMOVE:")
   const itemsToRemoveLLM = (outcome?.itemChanges ?? []).filter(c => c.type === "remove")
 
   const itemsToRemoveFromRat: Hex[] = []
   const invalidRemovals: Array<{ name: string; id: any }> = []
 
   if (itemsToRemoveLLM.length === 0) {
-    console.log("  ℹ️  No items to remove")
+    logger.log("  ℹ️  No items to remove")
   } else {
-    console.log(`  LLM requested ${itemsToRemoveLLM.length} item(s) to remove`)
+    logger.log(`  LLM requested ${itemsToRemoveLLM.length} item(s) to remove`)
 
     itemsToRemoveLLM.forEach(item => {
       if (isValidBytes32(item.id)) {
         itemsToRemoveFromRat.push(item.id)
-        console.log(`    [✓] ${item.id} - ${item.name} (value: ${item.value})`)
+        logger.log(`    [✓] ${item.id} - ${item.name} (value: ${item.value})`)
       } else {
         invalidRemovals.push({ name: item.name, id: item.id })
-        console.warn(`    [✗] Invalid ID for "${item.name}": ${JSON.stringify(item.id)} - SKIPPED`)
+        logger.log(`    [✗] Invalid ID for "${item.name}": ${JSON.stringify(item.id)} - SKIPPED`)
       }
     })
 
     if (invalidRemovals.length > 0) {
-      console.warn(`  ⚠️  Skipped ${invalidRemovals.length} invalid removal(s):`)
+      logger.log(`  ⚠️  Skipped ${invalidRemovals.length} invalid removal(s):`)
       invalidRemovals.forEach(({ name, id }) => {
-        console.warn(`      - ${name}: ID was ${JSON.stringify(id)}`)
+        logger.log(`      - ${name}: ID was ${JSON.stringify(id)}`)
       })
-      console.warn(
+      logger.log(
         "  ⚠️  Common causes: LLM trying to remove items added in same trip, or providing invalid IDs"
       )
     }
@@ -148,7 +155,7 @@ export function createOutcomeCallArgs(rat: Rat, trip: Trip, outcome: OutcomeRetu
   const totalItemValueToRemove = itemsToRemoveLLM
     .filter(item => isValidBytes32(item.id))
     .reduce((sum, item) => sum + (item.value ?? 0), 0)
-  console.log(`  💰 Total value to refund to trip: ${totalItemValueToRemove}`)
+  logger.log(`  💰 Total value to refund to trip: ${totalItemValueToRemove}`)
 
   // * * * * * * * * * * * * * * * * * *
   // ITEMS TO ADD
@@ -160,7 +167,7 @@ export function createOutcomeCallArgs(rat: Rat, trip: Trip, outcome: OutcomeRetu
   // - Trip must have budget to cover item value
   // - Item names limited to 48 characters
 
-  console.log("\n➕ ITEMS TO ADD:")
+  logger.log("\n➕ ITEMS TO ADD:")
   const itemsToAddToRat =
     (outcome?.itemChanges ?? [])
       .filter(c => c.type === "add")
@@ -172,17 +179,17 @@ export function createOutcomeCallArgs(rat: Rat, trip: Trip, outcome: OutcomeRetu
       }) ?? []
 
   if (itemsToAddToRat.length === 0) {
-    console.log("  ℹ️  No items to add")
+    logger.log("  ℹ️  No items to add")
   } else {
-    console.log(`  Found ${itemsToAddToRat.length} item(s) to add:`)
+    logger.log(`  Found ${itemsToAddToRat.length} item(s) to add:`)
     itemsToAddToRat.forEach((item, index) => {
-      console.log(`    [${index}] ${item.name} (value: ${item.value})`)
+      logger.log(`    [${index}] ${item.name} (value: ${item.value})`)
     })
   }
 
   // Calculate total value of items being added (these will cost trip budget)
   const totalItemValueToAdd = itemsToAddToRat.reduce((sum, item) => sum + Number(item.value), 0)
-  console.log(`  💰 Total value to deduct from trip: ${totalItemValueToAdd}`)
+  logger.log(`  💰 Total value to deduct from trip: ${totalItemValueToAdd}`)
 
   // Return arguments in the format expected by ManagerSystem.applyOutcome()
   const contractArgs = [
@@ -193,26 +200,22 @@ export function createOutcomeCallArgs(rat: Rat, trip: Trip, outcome: OutcomeRetu
     itemsToAddToRat
   ] as [Hex, Hex, bigint, Hex[], { name: string; value: bigint }[]]
 
-  console.log("\n📤 FINAL CONTRACT ARGUMENTS:")
-  console.log("  ratId:", contractArgs[0])
-  console.log("  tripId:", contractArgs[1])
-  console.log(
-    "  balanceTransfer (bigint):",
-    contractArgs[2],
-    `← from sum of ${balanceTransfersSum}`
-  )
-  console.log("  itemsToRemove:", contractArgs[3].length, "items")
-  console.log("  itemsToAdd:", contractArgs[4].length, "items")
-  console.log("\n💡 PREDICTED NET EFFECT:")
-  console.log(
+  logger.log("\n📤 FINAL CONTRACT ARGUMENTS:")
+  logger.log("  ratId:", contractArgs[0])
+  logger.log("  tripId:", contractArgs[1])
+  logger.log("  balanceTransfer (bigint):", contractArgs[2], `← from sum of ${balanceTransfersSum}`)
+  logger.log("  itemsToRemove:", contractArgs[3].length, "items")
+  logger.log("  itemsToAdd:", contractArgs[4].length, "items")
+  logger.log("\n💡 PREDICTED NET EFFECT:")
+  logger.log(
     "  Rat balance change (before constraints):",
     balanceTransfersSum - totalItemValueToRemove + totalItemValueToAdd
   )
-  console.log(
+  logger.log(
     "  Trip balance change (before constraints):",
     -(balanceTransfersSum + totalItemValueToAdd - totalItemValueToRemove)
   )
-  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n")
+  logger.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n")
 
   return contractArgs
 }
@@ -227,12 +230,14 @@ export function createOutcomeCallArgs(rat: Rat, trip: Trip, outcome: OutcomeRetu
  * @param llmOutcome - The outcome suggested by the LLM (before chain execution)
  * @param oldRat - The rat's state before the trip
  * @param newRat - The rat's state after the trip (from chain)
+ * @param logger - Logger for accumulating trip logs
  * @returns The validated outcome reflecting what actually happened on-chain
  */
 export function updateOutcome(
   llmOutcome: OutcomeReturnValue,
   oldRat: Rat,
-  newRat: Rat
+  newRat: Rat,
+  logger: TripLogger
 ): OutcomeReturnValue {
   // Deep clone the LLM outcome to avoid mutating the original
   const newOutcome = JSON.parse(JSON.stringify(llmOutcome)) as OutcomeReturnValue
@@ -253,11 +258,11 @@ export function updateOutcome(
   const oldInventory = Array.isArray(oldRat.inventory) ? oldRat.inventory : []
   const newInventory = Array.isArray(newRat.inventory) ? newRat.inventory : []
 
-  console.log("__ updateOutcome: Reconciling LLM suggestions with on-chain reality")
-  console.log("__ Rat ID:", newRat.id)
-  console.log("__ oldRat balance:", oldBalance, "inventory:", oldInventory.length)
-  console.log("__ newRat balance:", newBalance, "inventory:", newInventory.length)
-  console.log("__ LLM suggested balanceTransfers:", llmOutcome.balanceTransfers)
+  logger.log("__ updateOutcome: Reconciling LLM suggestions with on-chain reality")
+  logger.log("__ Rat ID:", newRat.id)
+  logger.log("__ oldRat balance:", oldBalance, "inventory:", oldInventory.length)
+  logger.log("__ newRat balance:", newBalance, "inventory:", newInventory.length)
+  logger.log("__ LLM suggested balanceTransfers:", llmOutcome.balanceTransfers)
 
   // Detect rat death early
   // If rat died (balance = 0), special handling:
@@ -267,15 +272,15 @@ export function updateOutcome(
   const ratDied = newBalance === 0 && oldBalance > 0
 
   if (ratDied) {
-    console.warn("⚠️  RAT DIED during trip - Special death handling:")
-    console.warn("__ - Rat balance → 0")
-    console.warn("__ - Item VALUES transferred to trip")
-    console.warn("__ - Items stay in dead rat inventory (gas optimization)")
-    console.warn("__ - Contract aborted further item processing")
+    logger.log("⚠️  RAT DIED during trip - Special death handling:")
+    logger.log("__ - Rat balance → 0")
+    logger.log("__ - Item VALUES transferred to trip")
+    logger.log("__ - Items stay in dead rat inventory (gas optimization)")
+    logger.log("__ - Contract aborted further item processing")
 
     // Calculate total value of items that stayed with dead rat
     const deadRatItemValue = oldInventory.reduce((sum, item) => sum + (item.value ?? 0), 0)
-    console.warn(`__ - Total item value transferred: ${deadRatItemValue}`)
+    logger.log(`__ - Total item value transferred: ${deadRatItemValue}`)
   }
 
   // * * * * * * * * * * * * * * * * * *
@@ -302,12 +307,12 @@ export function updateOutcome(
   newOutcome.itemChanges = []
 
   // Log inventory states for debugging
-  console.log("__ Comparing inventories to detect item changes:")
-  console.log(
+  logger.log("__ Comparing inventories to detect item changes:")
+  logger.log(
     `__   Old inventory (${oldInventory.length} items):`,
     oldInventory.map(i => `${i.name} (${i.id})`).join(", ") || "none"
   )
-  console.log(
+  logger.log(
     `__   New inventory (${newInventory.length} items):`,
     newInventory.map(i => `${i.name} (${i.id})`).join(", ") || "none"
   )
@@ -315,12 +320,12 @@ export function updateOutcome(
   if (ratDied) {
     // On death, items stay in inventory but we don't process new item changes
     // The client doesn't need to see items "removed" because they physically stayed
-    console.log("__ Skipping item change detection - rat died, items frozen")
+    logger.log("__ Skipping item change detection - rat died, items frozen")
   } else {
     // Normal case: compare inventories to detect actual changes
 
     // Find items that were ADDED (exist in new but not in old)
-    console.log("__ Checking for added items...")
+    logger.log("__ Checking for added items...")
     for (let i = 0; i < newInventory.length; i++) {
       const itemInNewRat = newInventory[i]
       const existedBefore = oldInventory.find(item => item.id === itemInNewRat.id)
@@ -328,7 +333,7 @@ export function updateOutcome(
       if (!existedBefore) {
         // This item was added by the contract
         const logStep = getLogStep(itemInNewRat.name, llmOutcome.itemChanges)
-        console.log(`__   ✓ Detected ADDITION: ${itemInNewRat.name} (ID: ${itemInNewRat.id})`)
+        logger.log(`__   ✓ Detected ADDITION: ${itemInNewRat.name} (ID: ${itemInNewRat.id})`)
         newOutcome.itemChanges.push({
           logStep,
           type: "add",
@@ -337,12 +342,12 @@ export function updateOutcome(
           id: itemInNewRat.id
         })
       } else {
-        console.log(`__   - Item already existed: ${itemInNewRat.name} (ID: ${itemInNewRat.id})`)
+        logger.log(`__   - Item already existed: ${itemInNewRat.name} (ID: ${itemInNewRat.id})`)
       }
     }
 
     // Find items that were REMOVED (exist in old but not in new)
-    console.log("__ Checking for removed items...")
+    logger.log("__ Checking for removed items...")
     for (let i = 0; i < oldInventory.length; i++) {
       const itemInOldRat = oldInventory[i]
       const stillExists = newInventory.find(item => item.id === itemInOldRat.id)
@@ -350,7 +355,7 @@ export function updateOutcome(
       if (!stillExists) {
         // This item was removed by the contract
         const logStep = getLogStep(itemInOldRat.name, llmOutcome.itemChanges)
-        console.log(`__   ✓ Detected REMOVAL: ${itemInOldRat.name} (ID: ${itemInOldRat.id})`)
+        logger.log(`__   ✓ Detected REMOVAL: ${itemInOldRat.name} (ID: ${itemInOldRat.id})`)
         newOutcome.itemChanges.push({
           logStep,
           type: "remove",
@@ -359,28 +364,28 @@ export function updateOutcome(
           id: itemInOldRat.id
         })
       } else {
-        console.log(`__   - Item still exists: ${itemInOldRat.name} (ID: ${itemInOldRat.id})`)
+        logger.log(`__   - Item still exists: ${itemInOldRat.name} (ID: ${itemInOldRat.id})`)
       }
     }
   }
 
   // Log actual item changes that occurred
   if (newOutcome.itemChanges.length > 0) {
-    console.log("__ ✓ Actual item changes applied by contract:")
+    logger.log("__ ✓ Actual item changes applied by contract:")
     newOutcome.itemChanges.forEach(change => {
-      console.log(
+      logger.log(
         `__   - ${change.type}: ${change.name} (value: ${change.value}, logStep: ${change.logStep})`
       )
     })
   } else {
-    console.log("__ No item changes occurred (may have been rejected by contract)")
+    logger.log("__ No item changes occurred (may have been rejected by contract)")
   }
 
   // Check if LLM suggested items but none were applied
   const llmSuggestedItems = (llmOutcome.itemChanges ?? []).length > 0
   if (llmSuggestedItems && newOutcome.itemChanges.length === 0) {
-    console.warn("⚠️  LLM suggested item changes, but NONE were applied by contract")
-    console.warn("__ Possible reasons: inventory full, insufficient budget, or rat died")
+    logger.log("⚠️  LLM suggested item changes, but NONE were applied by contract")
+    logger.log("__ Possible reasons: inventory full, insufficient budget, or rat died")
   }
 
   // * * * * * * * * * * * * * * * * * *
@@ -396,7 +401,7 @@ export function updateOutcome(
 
   // If LLM didn't suggest any balance transfers, we're done
   if (!llmOutcome.balanceTransfers || llmOutcome.balanceTransfers.length === 0) {
-    console.log("__ No balance transfers suggested by LLM")
+    logger.log("__ No balance transfers suggested by LLM")
     return newOutcome
   }
 
@@ -406,13 +411,13 @@ export function updateOutcome(
   )
 
   if (validLLMTransfers.length === 0) {
-    console.log("__ LLM provided balance transfers, but all were invalid (undefined/NaN amounts)")
+    logger.log("__ LLM provided balance transfers, but all were invalid (undefined/NaN amounts)")
     return newOutcome
   }
 
   if (validLLMTransfers.length < llmOutcome.balanceTransfers.length) {
     const invalidCount = llmOutcome.balanceTransfers.length - validLLMTransfers.length
-    console.warn(`__ Filtered out ${invalidCount} invalid balance transfer(s) from LLM`)
+    logger.log(`__ Filtered out ${invalidCount} invalid balance transfer(s) from LLM`)
   }
 
   // Calculate what the LLM expected to happen (using only valid transfers)
@@ -429,16 +434,16 @@ export function updateOutcome(
   let implicitItemValueTransfer = 0
   if (ratDied) {
     implicitItemValueTransfer = oldInventory.reduce((sum, item) => sum + (item.value ?? 0), 0)
-    console.log(
+    logger.log(
       `__ Death note: ${implicitItemValueTransfer} in item values will be transferred to trip (separate from balance)`
     )
   }
 
-  console.log("__ Balance validation:")
-  console.log("__   LLM expected balance change:", expectedBalanceChange)
-  console.log("__   Actual balance change:", actualBalanceChange)
+  logger.log("__ Balance validation:")
+  logger.log("__   LLM expected balance change:", expectedBalanceChange)
+  logger.log("__   Actual balance change:", actualBalanceChange)
   if (ratDied && implicitItemValueTransfer > 0) {
-    console.log(
+    logger.log(
       `__   (Plus ${implicitItemValueTransfer} in item values - tracked separately, not in balanceTransfers)`
     )
   }
@@ -450,9 +455,9 @@ export function updateOutcome(
   const balanceMatches = expectedBalanceChange === actualBalanceChange
 
   if (balanceMatches) {
-    console.log("__ ✓ Balance transfer successful - LLM intent matched on-chain execution")
+    logger.log("__ ✓ Balance transfer successful - LLM intent matched on-chain execution")
     if (ratDied && implicitItemValueTransfer > 0) {
-      console.log(
+      logger.log(
         `__   (Note: ${implicitItemValueTransfer} in item values transferred separately on death)`
       )
     }
@@ -463,16 +468,17 @@ export function updateOutcome(
     const crossesZero = checkIfCrossesZero(validLLMTransfers, oldBalance)
 
     if (crossesZero && finalBalance > 0) {
-      console.warn(
+      logger.log(
         "__   ⚠️  Sequence crosses zero (temporary death) even though net is correct - Dampening"
       )
       const dampenedTransfers = dampenTransfersToAvoidZero(
         validLLMTransfers,
         oldBalance,
-        actualBalanceChange
+        actualBalanceChange,
+        logger
       )
       newOutcome.balanceTransfers = dampenedTransfers
-      console.log("__   Dampened transfers:", dampenedTransfers)
+      logger.log("__   Dampened transfers:", dampenedTransfers)
     } else {
       newOutcome.balanceTransfers = [...validLLMTransfers]
     }
@@ -525,18 +531,23 @@ export function updateOutcome(
   // Scale transfers proportionally to match the actual BALANCE outcome
   // balanceTransfers represents ONLY balance/health changes (what the UI displays)
   // Item value transfers on death are tracked separately via getRatValue/getTripValue
-  console.log("__ Scaling balance transfers to match actual balance change:", actualBalanceChange)
+  logger.log("__ Scaling balance transfers to match actual balance change:", actualBalanceChange)
   if (ratDied && implicitItemValueTransfer > 0) {
-    console.log(
+    logger.log(
       `__   (Item values of ${implicitItemValueTransfer} handled separately - not in balanceTransfers)`
     )
   }
 
-  const scaledTransfers = scaleBalanceTransfers(validLLMTransfers, actualBalanceChange, oldBalance)
+  const scaledTransfers = scaleBalanceTransfers(
+    validLLMTransfers,
+    actualBalanceChange,
+    oldBalance,
+    logger
+  )
 
   newOutcome.balanceTransfers = scaledTransfers
 
-  console.log("__ ✓ Scaled transfers preserve narrative structure for correction LLM")
+  logger.log("__ ✓ Scaled transfers preserve narrative structure for correction LLM")
 
   return newOutcome
 }
@@ -586,16 +597,17 @@ function getLogStep(name: string, list: ItemChange[]) {
 function scaleBalanceTransfers(
   transfers: Array<{ logStep: number; amount: number }>,
   targetSum: number,
-  startingBalance: number
+  startingBalance: number,
+  logger: TripLogger
 ): Array<{ logStep: number; amount: number }> {
   if (transfers.length === 0) {
     return []
   }
 
-  console.log("__ Scaling balance transfers to match actual on-chain outcome")
-  console.log("__   Starting balance:", startingBalance)
-  console.log("__   Original transfers:", transfers)
-  console.log("__   Target sum:", targetSum)
+  logger.log("__ Scaling balance transfers to match actual on-chain outcome")
+  logger.log("__   Starting balance:", startingBalance)
+  logger.log("__   Original transfers:", transfers)
+  logger.log("__   Target sum:", targetSum)
 
   // Edge case: Single transfer - just use the actual value
   if (transfers.length === 1) {
@@ -604,14 +616,14 @@ function scaleBalanceTransfers(
       Math.sign(originalAmount) !== Math.sign(targetSum) && originalAmount !== 0 && targetSum !== 0
 
     if (signFlipped) {
-      console.warn(
+      logger.log(
         "__   ⚠️  SIGN FLIP: Single transfer changed from",
         originalAmount,
         "to",
         targetSum
       )
     } else {
-      console.log("__   Single transfer: using actual value directly")
+      logger.log("__   Single transfer: using actual value directly")
     }
 
     return [{ logStep: transfers[0].logStep, amount: targetSum }]
@@ -621,11 +633,11 @@ function scaleBalanceTransfers(
   const originalSum = transfers.reduce((sum, t) => sum + t.amount, 0)
   const scaleFactor = originalSum === 0 ? 1 : targetSum / originalSum
 
-  console.log(`__   Scale factor: ${targetSum} / ${originalSum} = ${scaleFactor}`)
+  logger.log(`__   Scale factor: ${targetSum} / ${originalSum} = ${scaleFactor}`)
 
   // Warn about sign flips
   if (scaleFactor < 0) {
-    console.warn("__   🚨 SIGN FLIP: Negative scale factor means ALL transfers reversed direction!")
+    logger.log("__   🚨 SIGN FLIP: Negative scale factor means ALL transfers reversed direction!")
   }
 
   // Scale each transfer proportionally
@@ -639,14 +651,14 @@ function scaleBalanceTransfers(
   const roundingError = targetSum - scaledSum
 
   if (roundingError !== 0) {
-    console.log(`__   Rounding error: ${roundingError}`)
+    logger.log(`__   Rounding error: ${roundingError}`)
     const largestIndex = scaledTransfers.reduce(
       (maxIdx, transfer, idx, arr) =>
         Math.abs(transfer.amount) > Math.abs(arr[maxIdx].amount) ? idx : maxIdx,
       0
     )
     scaledTransfers[largestIndex].amount += roundingError
-    console.log(`__   Adjusted transfer [${largestIndex}] by ${roundingError}`)
+    logger.log(`__   Adjusted transfer [${largestIndex}] by ${roundingError}`)
   }
 
   // Check if transfers cross zero during progression (rat "dies" then recovers)
@@ -655,21 +667,24 @@ function scaleBalanceTransfers(
   const crossesZero = checkIfCrossesZero(scaledTransfers, startingBalance)
 
   if (crossesZero && finalBalance > 0) {
-    console.warn(
-      "__   ⚠️  TRANSFERS CROSS ZERO (temporary death) - Dampening to avoid UI confusion"
-    )
+    logger.log("__   ⚠️  TRANSFERS CROSS ZERO (temporary death) - Dampening to avoid UI confusion")
 
     // Dampen the swings while maintaining the net
-    scaledTransfers = dampenTransfersToAvoidZero(scaledTransfers, startingBalance, targetSum)
+    scaledTransfers = dampenTransfersToAvoidZero(
+      scaledTransfers,
+      startingBalance,
+      targetSum,
+      logger
+    )
 
-    console.log("__   Dampened transfers:", scaledTransfers)
-    console.log(
+    logger.log("__   Dampened transfers:", scaledTransfers)
+    logger.log(
       "__   Verification sum:",
       scaledTransfers.reduce((sum, t) => sum + t.amount, 0)
     )
   } else {
-    console.log("__   Scaled transfers:", scaledTransfers)
-    console.log(
+    logger.log("__   Scaled transfers:", scaledTransfers)
+    logger.log(
       "__   Verification sum:",
       scaledTransfers.reduce((sum, t) => sum + t.amount, 0)
     )
@@ -705,15 +720,16 @@ function checkIfCrossesZero(
 function dampenTransfersToAvoidZero(
   transfers: Array<{ logStep: number; amount: number }>,
   startingBalance: number,
-  targetSum: number
+  targetSum: number,
+  logger: TripLogger
 ): Array<{ logStep: number; amount: number }> {
-  console.log("__     Dampening transfers to avoid zero-crossing...")
+  logger.log("__     Dampening transfers to avoid zero-crossing...")
 
   // Try dampening factors until we find one that works
   const dampeningFactors = [0.5, 0.3, 0.1, 0.05]
 
   for (const dampening of dampeningFactors) {
-    console.log(`__     Trying dampening factor: ${dampening}`)
+    logger.log(`__     Trying dampening factor: ${dampening}`)
 
     // Scale all transfers except the last one
     const dampened = transfers.slice(0, -1).map(t => ({
@@ -735,14 +751,14 @@ function dampenTransfersToAvoidZero(
 
     // Check if this avoids crossing zero
     if (!checkIfCrossesZero(finalTransfers, startingBalance)) {
-      console.log(`__     ✓ Success with dampening factor ${dampening}`)
+      logger.log(`__     ✓ Success with dampening factor ${dampening}`)
       return finalTransfers
     }
   }
 
   // If all dampening factors fail, return original scaled transfers
   // (Better to show crossing zero than break the math)
-  console.warn("__     ⚠️  Could not avoid zero-crossing, using original scaled transfers")
+  logger.log("__     ⚠️  Could not avoid zero-crossing, using original scaled transfers")
   return transfers
 }
 
@@ -761,15 +777,17 @@ function dampenTransfersToAvoidZero(
  * @param newTrip - Trip state after entry
  * @param ratValueChange - Total economic value change for rat (balance + items)
  * @param tripValueChange - Balance change for trip
+ * @param logger - Logger for accumulating trip logs
  */
 export function validateOutcome(
   newRat: Rat,
   oldTrip: Trip,
   newTrip: Trip,
   ratValueChange: number,
-  tripValueChange: number
+  tripValueChange: number,
+  logger: TripLogger
 ): void {
-  console.log("__ VALIDATING OUTCOME")
+  logger.log("__ VALIDATING OUTCOME")
 
   // * * * * * * * * * * * * * * * * * *
   // CHECK 1: Value Conservation
@@ -782,7 +800,7 @@ export function validateOutcome(
     const error = new ValueConservationError(ratValueChange, tripValueChange, newRat.id, newTrip.id)
     handleBackgroundError(error, "Trip Entry - Value Conservation")
   } else {
-    console.log(`__   ✓ Value conservation: ${ratValueChange} + ${tripValueChange} = 0`)
+    logger.log(`__   ✓ Value conservation: ${ratValueChange} + ${tripValueChange} = 0`)
   }
 
   // * * * * * * * * * * * * * * * * * *
@@ -804,13 +822,13 @@ export function validateOutcome(
     )
     handleBackgroundError(error, "Trip Entry - Trip Balance")
   } else {
-    console.log(
+    logger.log(
       `__   ✓ Trip balance: oldBalance(${oldTripBalance}) + change(${tripValueChange}) = newBalance(${newTripBalance})`
     )
   }
 
   // Log success if no errors occurred
   if (valueSum === 0 && expectedTripBalance === newTripBalance) {
-    console.log("__   ✅ All outcome validations passed")
+    logger.log("__   ✅ All outcome validations passed")
   }
 }

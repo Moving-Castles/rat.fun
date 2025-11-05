@@ -43,6 +43,9 @@ import { calculateArchetypeData } from "@modules/archetypes/calculateArchetypeDa
 // Utils
 import { withTimeout } from "@modules/utils"
 
+// Logging
+import { createTripLogger } from "@modules/logging"
+
 // Initialize LLM: Anthropic
 const llmClient = getLLMClient(ANTHROPIC_API_KEY)
 
@@ -53,26 +56,36 @@ async function routes(fastify: FastifyInstance) {
     "/trip/enter",
     opts,
     async (request: FastifyRequest<{ Body: SignedRequest<EnterTripRequestBody> }>, reply) => {
+      // Extract tripId early so we can create logger before any errors
+      const { tripId, ratId } = request.body.data
+
+      // Create logger for this trip (do this first to ensure cleanup on errors)
+      const logger = createTripLogger(tripId)
+
       try {
         // Start main processing timer
         const startProcessingTime = performance.now()
-
-        const { tripId, ratId } = request.body.data
+        logger.log("━━━ Trip Entry Started ━━━")
+        logger.log(`Rat ID: ${ratId}`)
+        logger.log(`Trip ID: ${tripId}`)
 
         // Recover player address from signature and convert to MUD bytes32 format
         const playerId = await verifyRequest(request.body)
+        logger.log(`Player ID: ${playerId}`)
 
         // * * * * * * * * * * * * * * * * * *
         // Get onchain data
         // * * * * * * * * * * * * * * * * * *
 
-        console.time("–– Get on chain data")
+        const onchainDataStart = performance.now()
+        logger.log("Fetching onchain data...")
         const { trip, rat, player, gamePercentagesConfig, worldEvent } = (await getEnterTripData(
           ratId,
+          logger,
           tripId,
           playerId
         )) as Required<EnterTripData>
-        console.timeEnd("–– Get on chain data")
+        logger.log(`✓ Onchain data fetched (${Math.round(performance.now() - onchainDataStart)}ms)`)
 
         // * * * * * * * * * * * * * * * * * *
         // Validate data
@@ -84,28 +97,33 @@ async function routes(fastify: FastifyInstance) {
         // Get system prompts from CMS
         // * * * * * * * * * * * * * * * * * *
 
-        console.time("–– CMS")
+        const cmsStart = performance.now()
+        logger.log("Fetching system prompts from CMS...")
         const { combinedSystemPrompt, correctionSystemPrompt } = await getSystemPrompts()
-        console.timeEnd("–– CMS")
+        logger.log(`✓ System prompts fetched (${Math.round(performance.now() - cmsStart)}ms)`)
 
         // * * * * * * * * * * * * * * * * * *
         // Construct event messages
         // * * * * * * * * * * * * * * * * * *
 
-        console.time("–– Construct event messages")
+        const constructStart = performance.now()
+        logger.log("Constructing event messages...")
         const eventMessages = await constructEventMessages(
           rat,
           trip,
           gamePercentagesConfig,
           worldEvent
         )
-        console.timeEnd("–– Construct event messages")
+        logger.log(
+          `✓ Event messages constructed (${Math.round(performance.now() - constructStart)}ms)`
+        )
 
         // * * * * * * * * * * * * * * * * * *
         // Call event model
         // * * * * * * * * * * * * * * * * * *
 
-        console.time("–– Event LLM")
+        const eventLLMStart = performance.now()
+        logger.log("Calling event LLM...")
         const eventResults = (await callModel(
           llmClient,
           eventMessages,
@@ -113,7 +131,7 @@ async function routes(fastify: FastifyInstance) {
           process.env.EVENT_MODEL ?? "claude-sonnet-4-20250514",
           Number(process.env.EVENT_TEMPERATURE)
         )) as EventsReturnValue
-        console.timeEnd("–– Event LLM")
+        logger.log(`✓ Event LLM completed (${Math.round(performance.now() - eventLLMStart)}ms)`)
 
         // * * * * * * * * * * * * * * * * * *
         // Apply outcome onchain
@@ -123,7 +141,8 @@ async function routes(fastify: FastifyInstance) {
         const { debuggingInfo, ...unvalidatedOutcome } = eventResults.outcome
 
         // Apply the outcome suggested by the LLM to the onchain state and get back the actual outcome.
-        console.time("–– Chain")
+        const chainStart = performance.now()
+        logger.log("Applying outcome onchain...")
         const {
           validatedOutcome,
           newTripValue,
@@ -131,11 +150,11 @@ async function routes(fastify: FastifyInstance) {
           newRatBalance,
           newRatValue,
           ratValueChange
-        } = await systemCalls.applyOutcome(rat, trip, unvalidatedOutcome)
-        console.timeEnd("–– Chain")
+        } = await systemCalls.applyOutcome(rat, trip, unvalidatedOutcome, logger)
+        logger.log(`✓ Outcome applied onchain (${Math.round(performance.now() - chainStart)}ms)`)
 
-        console.log("unvalidatedOutcome", unvalidatedOutcome)
-        console.log("validatedOutcome", validatedOutcome)
+        logger.log("Balance change: " + (newRatBalance - rat.balance))
+        logger.log("Value change: " + ratValueChange)
 
         // * * * * * * * * * * * * * * * * * *
         // Construct correction messages
@@ -143,7 +162,8 @@ async function routes(fastify: FastifyInstance) {
 
         // The event log might now not reflect the actual outcome.
         // Run it through the LLM again to get the corrected event log.
-        console.time("–– Correction LLM")
+        const correctionStart = performance.now()
+        logger.log("Running correction LLM...")
         const correctionMessages = constructCorrectionMessages(
           unvalidatedOutcome,
           validatedOutcome,
@@ -157,17 +177,19 @@ async function routes(fastify: FastifyInstance) {
           process.env.CORRECTION_MODEL ?? "claude-sonnet-4-20250514",
           Number(process.env.CORRECTION_TEMPERATURE)
         )) as CorrectionReturnValue
-        console.timeEnd("–– Correction LLM")
+        logger.log(
+          `✓ Correction LLM completed (${Math.round(performance.now() - correctionStart)}ms)`
+        )
 
         // Calculate main processing time
         const mainProcessingTime = performance.now() - startProcessingTime
+        logger.log(`━━━ Total processing time: ${Math.round(mainProcessingTime)}ms ━━━`)
 
         // * * * * * * * * * * * * * * * * * *
         // Background actions
         // * * * * * * * * * * * * * * * * * *
 
         const backgroundActions = async () => {
-          console.time("–– Background actions")
           try {
             // * * * * * * * * * * * * * * * * * *
             // Calculate trip archetypes
@@ -177,6 +199,9 @@ async function routes(fastify: FastifyInstance) {
             // * * * * * * * * * * * * * * * * * *
             // Write outcome to CMS
             // * * * * * * * * * * * * * * * * * *
+
+            // Get accumulated logs
+            const logOutput = logger.getLogsAsString()
 
             writeOutcomeToCMS(
               network.worldContract?.address ?? "0x0",
@@ -195,18 +220,24 @@ async function routes(fastify: FastifyInstance) {
                 internalText: "No debugging info available",
                 randomSeed: 0,
                 batchId: 0
-              }
+              },
+              logOutput
             )
+            // Clear logs after successful completion
+            logger.clear()
           } catch (error) {
+            // On error, also log it before clearing
+            console.error(`❌ Error in background actions: ${error}`)
+            logger.clear()
             handleBackgroundError(error, "Trip Entry - CMS")
-          } finally {
-            console.timeEnd("–– Background actions")
           }
         }
 
         // Start the background process without awaiting (with overall timeout of 30 seconds)
         withTimeout(backgroundActions(), 30000, "Background task timed out").catch(error => {
           console.error("Background task failed or timed out:", error)
+          // Ensure cleanup even if timeout occurs
+          logger.clear()
         })
 
         // * * * * * * * * * * * * * * * * * *
@@ -230,6 +261,8 @@ async function routes(fastify: FastifyInstance) {
         // Send response and return immediately to close connection properly
         return reply.send(response)
       } catch (error) {
+        // Clean up logger on main error path to prevent memory leak
+        logger.clear()
         throw error
       }
     }

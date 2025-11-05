@@ -2,7 +2,7 @@ import { Hex, recoverMessageAddress } from "viem"
 import { SignedRequest } from "@modules/types"
 import { hasDelegation } from "@modules/mud/getOnchainData/hasDelegation"
 import { hasNonce, storeNonce } from "@modules/signature/db"
-import { addressToId } from "@modules/signature/utils"
+import { addressToId } from "@modules/utils"
 import { stringifyRequestForSignature } from "@modules/signature/stringifyRequestForSignature"
 import { REQUEST_SIGNATURE_TIMEOUT_MS } from "@config"
 import {

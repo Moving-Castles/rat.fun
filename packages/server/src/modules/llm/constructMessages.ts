@@ -40,8 +40,6 @@ export async function constructEventMessages(
   const randomSeed = Math.floor(Math.random() * 101) / 100
   messages.push({ role: "user", content: `randomSeed: ${randomSeed}` })
 
-  console.log("randomSeed", randomSeed)
-
   return messages
 }
 

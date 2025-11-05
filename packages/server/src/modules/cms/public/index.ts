@@ -218,6 +218,7 @@ export async function updateTripWithImage(tripID: string, imageBuffer: Buffer): 
  * @param outcome - The validated outcome
  * @param mainProcessingTime - Processing time in ms
  * @param debuggingInfo - Debug information from LLM
+ * @param logOutput - Accumulated logs from the trip processing
  */
 export async function writeOutcomeToCMS(
   worldAddress: string,
@@ -232,7 +233,8 @@ export async function writeOutcomeToCMS(
   events: CorrectionReturnValue,
   outcome: OutcomeReturnValue,
   mainProcessingTime: number,
-  debuggingInfo: DebuggingInfo
+  debuggingInfo: DebuggingInfo,
+  logOutput?: string
 ): Promise<OutcomeDoc> {
   try {
     const outcomeID = uuidv4()
@@ -271,6 +273,7 @@ export async function writeOutcomeToCMS(
       playerName: player.name,
       mainProcessingTime: mainProcessingTime,
       debuggingInfo: debuggingInfoString,
+      logOutput: logOutput,
       slug: {
         _type: "slug",
         current: outcomeID

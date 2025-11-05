@@ -1,18 +1,5 @@
 import { GamePercentagesConfig, Rat, Trip } from "@modules/types"
-
-export function getTripValue(trip: Trip, newTrip: Trip | undefined) {
-  const newTripValue = newTrip?.balance ?? 0
-  const tripValueChange = newTripValue - trip.balance
-
-  // When a rat dies, trip receives rat's balance + item values
-  // tripValueChange will reflect this full gain automatically
-  // since the contract adds both to trip.balance
-
-  return {
-    newTripValue,
-    tripValueChange
-  }
-}
+import { TripLogger } from "@modules/logging"
 
 export function getTripMaxValuePerWin(
   tripCreationCost: number,
@@ -34,7 +21,21 @@ export function getTripMinRatValueToEnter(
   return Math.floor((tripCreationCost * gamePercentagesConfig.minRatValueToEnter) / 100)
 }
 
-export function getRatValue(rat: Rat, newRat: Rat) {
+export function getTripValue(trip: Trip, newTrip: Trip | undefined) {
+  const newTripValue = newTrip?.balance ?? 0
+  const tripValueChange = newTripValue - trip.balance
+
+  // When a rat dies, trip receives rat's balance + item values
+  // tripValueChange will reflect this full gain automatically
+  // since the contract adds both to trip.balance
+
+  return {
+    newTripValue,
+    tripValueChange
+  }
+}
+
+export function getRatValue(rat: Rat, newRat: Rat, logger: TripLogger) {
   const newRatValue = calculateTotalRatValue(newRat)
   const oldRatValue = calculateTotalRatValue(rat)
 
@@ -54,10 +55,10 @@ export function getRatValue(rat: Rat, newRat: Rat) {
     // Rat lost everything economically (even though items stayed physically)
     const ratValueChange = -oldRatValue
 
-    console.log("__ getRatValue - RAT DEATH DETECTED:")
-    console.log("__   Old rat value:", oldRatValue, "(balance + items)")
-    console.log("__   New rat physical value:", newRatValue, "(items still in corpse)")
-    console.log("__   Economic value change:", ratValueChange, "(lost everything)")
+    logger.log("__ getRatValue - RAT DEATH DETECTED:")
+    logger.log(`__   Old rat value: ${oldRatValue} (balance + items)`)
+    logger.log(`__   New rat physical value: ${newRatValue} (items still in corpse)`)
+    logger.log(`__   Economic value change: ${ratValueChange} (lost everything)`)
 
     return {
       newRatValue: 0, // Economically worthless (dead)

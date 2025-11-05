@@ -922,14 +922,14 @@
         },
         "optional": true
       },
-      "tripValue": {
+      "tripValueChange": {
         "type": "objectAttribute",
         "value": {
           "type": "number"
         },
         "optional": true
       },
-      "tripValueChange": {
+      "tripValue": {
         "type": "objectAttribute",
         "value": {
           "type": "number"
@@ -943,14 +943,14 @@
         },
         "optional": true
       },
-      "ratValue": {
+      "ratValueChange": {
         "type": "objectAttribute",
         "value": {
           "type": "number"
         },
         "optional": true
       },
-      "ratValueChange": {
+      "ratValue": {
         "type": "objectAttribute",
         "value": {
           "type": "number"
@@ -972,6 +972,13 @@
         "optional": true
       },
       "debuggingInfo": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "logOutput": {
         "type": "objectAttribute",
         "value": {
           "type": "string"

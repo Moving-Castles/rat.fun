@@ -15,6 +15,7 @@ import {
   ContractCallError,
   OutcomeUpdateError
 } from "@modules/error-handling/errors"
+import { TripLogger } from "@modules/logging"
 
 export type SystemCalls = ReturnType<typeof createSystemCalls>
 
@@ -24,17 +25,20 @@ export function createSystemCalls(network: SetupNetworkResult) {
    * @param rat - The rat to apply the outcome to
    * @param trip - The trip to apply the outcome to
    * @param outcome - The outcome to apply to the rat and trip
+   * @param logger - Logger for accumulating trip logs
    * @returns The validated outcome and calculated changes
    */
-  const applyOutcome = async (rat: Rat, trip: Trip, outcome: OutcomeReturnValue) => {
+  const applyOutcome = async (
+    rat: Rat,
+    trip: Trip,
+    outcome: OutcomeReturnValue,
+    logger: TripLogger
+  ) => {
     try {
-      const args = createOutcomeCallArgs(rat, trip, outcome)
+      // Get trip count before sending transaction
+      const initialTripCount = rat.tripCount
 
-      // Capture initial tripCount BEFORE sending transaction
-      const { TripCount } = network.components
-      const ratEntity = rat.id as any
-      const { getComponentValue } = await import("@latticexyz/recs")
-      const initialTripCount = Number(getComponentValue(TripCount, ratEntity)?.value ?? 0)
+      const args = createOutcomeCallArgs(rat, trip, outcome, logger)
 
       // Get current gas prices for speed optimization
       const feeData = await network.publicClient.estimateFeesPerGas()
@@ -51,20 +55,18 @@ export function createSystemCalls(network: SetupNetworkResult) {
       try {
         // Wait for store sync to update after contract execution
         // Based on tripCount increment
-        console.log("__ Waiting for store sync to update after contract execution...")
-
-        const newOnChainData = await getEnterTripData(rat.id, trip.id, undefined, {
+        const newOnChainData = await getEnterTripData(rat.id, logger, trip.id, undefined, {
           waitForUpdate: true,
           initialTripCount
         })
 
-        const validatedOutcome = updateOutcome(outcome, rat, newOnChainData.rat)
+        const validatedOutcome = updateOutcome(outcome, rat, newOnChainData.rat, logger)
 
         const { newTripValue, tripValueChange } = getTripValue(trip, newOnChainData.trip)
 
         const newRatBalance = newOnChainData.rat?.balance ?? 0
 
-        const { newRatValue, ratValueChange } = getRatValue(rat, newOnChainData.rat)
+        const { newRatValue, ratValueChange } = getRatValue(rat, newOnChainData.rat, logger)
 
         // Validate the outcome to ensure system invariants hold
         validateOutcome(
@@ -72,7 +74,8 @@ export function createSystemCalls(network: SetupNetworkResult) {
           trip,
           newOnChainData.trip as Trip,
           ratValueChange,
-          tripValueChange
+          tripValueChange,
+          logger
         )
 
         return {

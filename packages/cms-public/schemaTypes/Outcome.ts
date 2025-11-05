@@ -124,16 +124,16 @@ export default {
       readOnly: true
     },
     {
-      title: "Trip value",
-      description: "The value of the trip after the visit",
-      name: "tripValue",
+      title: "Trip value change",
+      name: "tripValueChange",
       type: "number",
       readOnly: true,
       validation: (Rule: any) => Rule.required()
     },
     {
-      title: "Trip value change",
-      name: "tripValueChange",
+      title: "Trip value (new)",
+      description: "The value of the trip after the visit",
+      name: "tripValue",
       type: "number",
       readOnly: true,
       validation: (Rule: any) => Rule.required()
@@ -146,16 +146,16 @@ export default {
       readOnly: true
     },
     {
-      title: "Rat value",
-      description: "The value of the rat after the visit",
-      name: "ratValue",
+      title: "Rat value change",
+      name: "ratValueChange",
       type: "number",
       readOnly: true,
       validation: (Rule: any) => Rule.required()
     },
     {
-      title: "Rat value change",
-      name: "ratValueChange",
+      title: "Rat value (new)",
+      description: "The value of the rat after the visit",
+      name: "ratValue",
       type: "number",
       readOnly: true,
       validation: (Rule: any) => Rule.required()
@@ -177,6 +177,13 @@ export default {
     {
       title: "Debugging info",
       name: "debuggingInfo",
+      type: "text",
+      readOnly: true
+    },
+    {
+      title: "Log Output",
+      description: "Accumulated logs from the trip processing",
+      name: "logOutput",
       type: "text",
       readOnly: true
     },

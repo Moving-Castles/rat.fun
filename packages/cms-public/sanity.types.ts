@@ -161,14 +161,15 @@ export type Outcome = {
     _key: string
   }>
   oldTripValue?: number
-  tripValue?: number
   tripValueChange?: number
+  tripValue?: number
   oldRatValue?: number
-  ratValue?: number
   ratValueChange?: number
+  ratValue?: number
   oldRatBalance?: number
   newRatBalance?: number
   debuggingInfo?: string
+  logOutput?: string
   mainProcessingTime?: number
   slug?: Slug
 }

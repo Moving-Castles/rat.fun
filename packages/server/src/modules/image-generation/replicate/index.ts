@@ -50,13 +50,11 @@ export const generateImage = async (prompt: string) => {
     // Handle different output formats
     if (Array.isArray(output) && output[0]) {
       // Legacy format: array of FileOutput objects
-      console.log("Handling array format with FileOutput objects")
       const fileOutput = output[0] as FileOutput
 
       let blob
       try {
         blob = await fileOutput.blob()
-        console.log("Blob obtained successfully:", blob)
       } catch (blobError) {
         console.error("Error getting blob:", blobError)
         throw new ReplicateError(`Failed to get blob from output: ${blobError}`)
@@ -66,7 +64,6 @@ export const generateImage = async (prompt: string) => {
       buffer = Buffer.from(arrayBuffer)
     } else if (typeof output === "string") {
       // New format: direct URL string
-      console.log("Handling string format (URL):", output)
 
       try {
         const response = await fetch(output)
@@ -75,15 +72,12 @@ export const generateImage = async (prompt: string) => {
         }
         const arrayBuffer = await response.arrayBuffer()
         buffer = Buffer.from(arrayBuffer)
-        console.log("Image fetched from URL, buffer size:", buffer.length)
       } catch (fetchError) {
         console.error("Error fetching image from URL:", fetchError)
         throw new ReplicateError(`Failed to fetch image from URL: ${fetchError}`)
       }
     } else if (output && typeof output === "object" && "getReader" in output) {
       // Newest format: ReadableStream
-      console.log("Handling ReadableStream format")
-
       try {
         const reader = (output as ReadableStream<Uint8Array>).getReader()
         const chunks: Uint8Array[] = []
@@ -105,7 +99,6 @@ export const generateImage = async (prompt: string) => {
         }
 
         buffer = Buffer.from(combinedBuffer)
-        console.log("ReadableStream processed, buffer size:", buffer.length)
       } catch (streamError) {
         console.error("Error processing ReadableStream:", streamError)
         throw new ReplicateError(`Failed to process ReadableStream: ${streamError}`)
@@ -116,8 +109,6 @@ export const generateImage = async (prompt: string) => {
 
     // Process image with sharp
     const noisePath = path.resolve(process.cwd(), "static", "assets", "noise.png")
-    console.log("Looking for noise.png at:", noisePath)
-    console.log("Current working directory:", process.cwd())
 
     const processedBuffer = await sharp(buffer)
       // Merge with noise texture first

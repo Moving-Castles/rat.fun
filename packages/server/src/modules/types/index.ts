@@ -20,6 +20,7 @@ export type Trip = {
 export type Rat = {
   id: string
   name: string
+  tripCount: number
   balance: number
   inventory: Item[]
   dead: boolean
