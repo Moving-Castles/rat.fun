@@ -301,6 +301,17 @@ export function updateOutcome(
 
   newOutcome.itemChanges = []
 
+  // Log inventory states for debugging
+  console.log("__ Comparing inventories to detect item changes:")
+  console.log(
+    `__   Old inventory (${oldInventory.length} items):`,
+    oldInventory.map(i => `${i.name} (${i.id})`).join(", ") || "none"
+  )
+  console.log(
+    `__   New inventory (${newInventory.length} items):`,
+    newInventory.map(i => `${i.name} (${i.id})`).join(", ") || "none"
+  )
+
   if (ratDied) {
     // On death, items stay in inventory but we don't process new item changes
     // The client doesn't need to see items "removed" because they physically stayed
@@ -309,6 +320,7 @@ export function updateOutcome(
     // Normal case: compare inventories to detect actual changes
 
     // Find items that were ADDED (exist in new but not in old)
+    console.log("__ Checking for added items...")
     for (let i = 0; i < newInventory.length; i++) {
       const itemInNewRat = newInventory[i]
       const existedBefore = oldInventory.find(item => item.id === itemInNewRat.id)
@@ -316,6 +328,7 @@ export function updateOutcome(
       if (!existedBefore) {
         // This item was added by the contract
         const logStep = getLogStep(itemInNewRat.name, llmOutcome.itemChanges)
+        console.log(`__   ✓ Detected ADDITION: ${itemInNewRat.name} (ID: ${itemInNewRat.id})`)
         newOutcome.itemChanges.push({
           logStep,
           type: "add",
@@ -323,10 +336,13 @@ export function updateOutcome(
           value: itemInNewRat.value,
           id: itemInNewRat.id
         })
+      } else {
+        console.log(`__   - Item already existed: ${itemInNewRat.name} (ID: ${itemInNewRat.id})`)
       }
     }
 
     // Find items that were REMOVED (exist in old but not in new)
+    console.log("__ Checking for removed items...")
     for (let i = 0; i < oldInventory.length; i++) {
       const itemInOldRat = oldInventory[i]
       const stillExists = newInventory.find(item => item.id === itemInOldRat.id)
@@ -334,6 +350,7 @@ export function updateOutcome(
       if (!stillExists) {
         // This item was removed by the contract
         const logStep = getLogStep(itemInOldRat.name, llmOutcome.itemChanges)
+        console.log(`__   ✓ Detected REMOVAL: ${itemInOldRat.name} (ID: ${itemInOldRat.id})`)
         newOutcome.itemChanges.push({
           logStep,
           type: "remove",
@@ -341,6 +358,8 @@ export function updateOutcome(
           value: itemInOldRat.value,
           id: itemInOldRat.id
         })
+      } else {
+        console.log(`__   - Item still exists: ${itemInOldRat.name} (ID: ${itemInOldRat.id})`)
       }
     }
   }

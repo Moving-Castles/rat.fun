@@ -30,6 +30,12 @@ export function createSystemCalls(network: SetupNetworkResult) {
     try {
       const args = createOutcomeCallArgs(rat, trip, outcome)
 
+      // Capture initial tripCount BEFORE sending transaction
+      const { TripCount } = network.components
+      const ratEntity = rat.id as any
+      const { getComponentValue } = await import("@latticexyz/recs")
+      const initialTripCount = Number(getComponentValue(TripCount, ratEntity)?.value ?? 0)
+
       // Get current gas prices for speed optimization
       const feeData = await network.publicClient.estimateFeesPerGas()
 
@@ -43,7 +49,14 @@ export function createSystemCalls(network: SetupNetworkResult) {
       // Suggested outcomes were sent to the chain
       // We get the new onchain state and update the outcome with the actual changes
       try {
-        const newOnChainData = await getEnterTripData(rat.id, trip.id)
+        // Wait for store sync to update after contract execution
+        // Based on tripCount increment
+        console.log("__ Waiting for store sync to update after contract execution...")
+
+        const newOnChainData = await getEnterTripData(rat.id, trip.id, undefined, {
+          waitForUpdate: true,
+          initialTripCount
+        })
 
         const validatedOutcome = updateOutcome(outcome, rat, newOnChainData.rat)
 

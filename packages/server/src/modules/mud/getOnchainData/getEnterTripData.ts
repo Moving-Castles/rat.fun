@@ -20,7 +20,13 @@ import {
 export async function getEnterTripData(
   ratId: string,
   tripId?: string,
-  playerId?: string
+  playerId?: string,
+  options?: {
+    // When true, wait for tripCount to increment after a contract modification
+    waitForUpdate?: boolean
+    // Initial tripCount before the transaction (captured before sending)
+    initialTripCount?: number
+  }
 ): Promise<EnterTripData> {
   try {
     if (!ratId) {
@@ -38,7 +44,8 @@ export async function getEnterTripData(
       Index,
       GameConfig,
       GamePercentagesConfig,
-      TripCreationCost
+      TripCreationCost,
+      TripCount
     } = network.components
 
     const result = {} as EnterTripData
@@ -70,8 +77,55 @@ export async function getEnterTripData(
     const ratName = getComponentValue(Name, ratEntity)?.value as string
     const ratDead = Boolean(getComponentValue(Dead, ratEntity)?.value ?? false)
     const ratBalance = Number(getComponentValue(Balance, ratEntity)?.value ?? 0)
-    const ratInventory = (getComponentValue(Inventory, ratEntity)?.value ?? [""]) as string[]
-    const inventoryObjects = constructInventoryObject(ratInventory)
+
+    // If we're waiting for an update (after contract call), retry until tripCount increments
+    let ratInventory: string[]
+    let inventoryObjects: Item[]
+
+    if (options?.waitForUpdate) {
+      const startTime = Date.now()
+
+      // Get initial tripCount (should be passed from before the transaction was sent)
+      const initialTripCount =
+        options.initialTripCount ?? Number(getComponentValue(TripCount, ratEntity)?.value ?? 0)
+      console.log(`__ Waiting for tripCount to increment from ${initialTripCount}...`)
+
+      const tripCountResult = await retryUntilResult(
+        () => {
+          const currentTripCount = Number(getComponentValue(TripCount, ratEntity)?.value ?? 0)
+
+          // Wait for tripCount to increment
+          if (currentTripCount > initialTripCount) {
+            const elapsedMs = Date.now() - startTime
+            console.log(
+              `__   ✓ TripCount incremented: ${initialTripCount} → ${currentTripCount} (took ${elapsedMs}ms)`
+            )
+            return currentTripCount
+          }
+
+          return null
+        },
+        5000, // 5 second timeout (increased from 2s since this is more reliable)
+        100 // Check every 100ms
+      )
+
+      if (tripCountResult) {
+        const elapsedMs = Date.now() - startTime
+        console.log(`__   Successfully waited for trip completion in ${elapsedMs}ms`)
+      } else {
+        const elapsedMs = Date.now() - startTime
+        console.warn(
+          `__   ⚠️  Timeout waiting for tripCount increment after ${elapsedMs}ms, using current state`
+        )
+      }
+
+      // After waiting for tripCount, get the updated inventory
+      ratInventory = (getComponentValue(Inventory, ratEntity)?.value ?? [""]) as string[]
+      inventoryObjects = constructInventoryObject(ratInventory)
+    } else {
+      ratInventory = (getComponentValue(Inventory, ratEntity)?.value ?? [""]) as string[]
+      inventoryObjects = constructInventoryObject(ratInventory)
+    }
 
     const rat = {
       id: ratId,
