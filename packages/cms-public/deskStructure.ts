@@ -18,16 +18,6 @@ export default (S: any) =>
         ),
       S.divider(),
       S.listItem()
-        .title("World Events")
-        .icon(MdEvent)
-        .child(
-          S.documentList()
-            .title("World Events")
-            .filter('_type == "worldEvent"')
-            .schemaType("worldEvent")
-        ),
-      S.divider(),
-      S.listItem()
         .title("Trip Folders")
         .icon(MdFolder)
         .child(
@@ -36,7 +26,6 @@ export default (S: any) =>
             .filter('_type == "tripFolder"')
             .schemaType("tripFolder")
         ),
-      S.divider(),
       S.listItem()
         .title("Trip Folder List")
         .icon(MdList)
@@ -47,6 +36,17 @@ export default (S: any) =>
             .documentId("trip-folder-list")
         ),
       S.divider(),
+      S.listItem()
+        .title("World Events")
+        .icon(MdEvent)
+        .child(
+          S.documentList()
+            .title("World Events")
+            .filter('_type == "worldEvent"')
+            .schemaType("worldEvent")
+        ),
+      S.divider(),
+
       S.listItem()
         .title("Rat images")
         .icon(MdChat)
