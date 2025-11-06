@@ -7,6 +7,7 @@
     tippyText,
     disabled = false,
     extraClass = "",
+    hidden = true,
     onmouseup,
     onclick
   }: {
@@ -14,6 +15,7 @@
     tippyText?: string
     disabled?: boolean
     extraClass?: string
+    hidden?: boolean
     onmouseup?: (e: MouseEvent) => void
     onclick?: (e: MouseEvent) => void
   } = $props()
@@ -30,7 +32,7 @@
 </script>
 
 <Tooltip content={tippyText}>
-  <button class={extraClass} class:disabled onmouseup={onmouseupHandler} {onmousedown}>
+  <button class:hidden class={extraClass} class:disabled onmouseup={onmouseupHandler} {onmousedown}>
     <span class="button-text">{text}</span>
   </button>
 </Tooltip>
@@ -38,12 +40,17 @@
 <style lang="scss">
   button {
     width: 100%;
-    height: 100%;
+    height: 100px;
     background: var(--color-alert-priority);
     border: none;
     border-style: outset;
     border-width: 4px;
     border-color: rgba(0, 0, 0, 0.5);
+    opacity: 1;
+
+    &.hidden {
+      opacity: 0;
+    }
 
     &.red {
       background: var(--color-death);
@@ -70,8 +77,11 @@
 
     &.disabled {
       pointer-events: none;
-      opacity: 0.5;
       cursor: default;
+
+      &:not(.hidden) {
+        opacity: 0.5;
+      }
     }
   }
 </style>

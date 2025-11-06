@@ -12,11 +12,13 @@
   let {
     animation = "idle",
     inert = false,
-    grayscale = false
+    grayscale = false,
+    width = 260
   }: {
     animation?: RatAnimation
     inert?: boolean
     grayscale?: boolean
+    width: number
   } = $props()
 
   let images = $derived(addressToRatParts($player?.currentRat, $staticContent?.ratImages))
@@ -31,6 +33,7 @@
   const SKEW_STRENGTH = 10
 
   let armTimeline: gsap.core.Timeline | null = null
+  let deathTimeline: gsap.core.Timeline | null = null
 
   const onmousedown = (e: MouseEvent) => {
     if (inert) return false
@@ -124,62 +127,183 @@
     )
   }
 
-  // Setup constant arm animation
+  // Setup animations
   onMount(() => {
-    if (!armsElement || inert || animation == "dead") return
+    // Setup arm animation for non-dead states
+    if (armsElement && !inert && animation !== "dead") {
+      armTimeline = gsap.timeline({ repeat: -1, yoyo: true })
 
-    // Create timeline inside onMount for proper scoping
-    armTimeline = gsap.timeline({ repeat: -1, yoyo: true })
+      armTimeline.to(armsElement, {
+        rotation: -2,
+        duration: 0.4
+      })
 
-    armTimeline.to(armsElement, {
-      rotation: -2,
-      duration: 0.4
-      // ease: "sine.inOut"
-    })
+      armTimeline.to(armsElement, {
+        rotation: 2,
+        duration: 0.4
+      })
 
-    armTimeline.to(armsElement, {
-      rotation: 2,
-      duration: 0.4
-      // ease: "sine.inOut"
-    })
+      armTimeline.play()
+    }
 
-    armTimeline.play()
+    // Setup death animation
+    if (animation === "dead" && bodyElement && armsElement && headElement && earsElement) {
+      // Kill arm animation if running
+      if (armTimeline) {
+        armTimeline.kill()
+        armTimeline = null
+      }
+
+      // Create death animation timeline
+      deathTimeline = gsap.timeline()
+
+      // Random offsets for variety
+      const bodyRandomX = (Math.random() - 0.5) * 40
+      const armsRandomX = (Math.random() - 0.5) * 40
+      const headRandomX = (Math.random() - 0.5) * 40
+
+      const bodySkewX = gsap.utils.random(-20, 20)
+      const bodySkewY = gsap.utils.random(-15, 15)
+      const armsSkewX = gsap.utils.random(-20, 20)
+      const armsSkewY = gsap.utils.random(-15, 15)
+      const headSkewX = gsap.utils.random(-25, 25)
+      const headSkewY = gsap.utils.random(-18, 18)
+
+      // BODY - starts at 2s
+      deathTimeline.to(
+        bodyElement,
+        {
+          y: -400,
+          x: `+=${bodyRandomX}`,
+          opacity: 0,
+          skewX: bodySkewX,
+          skewY: bodySkewY,
+          rotation: gsap.utils.random(-15, 15),
+          ease: "power1.in",
+          duration: 18
+        },
+        5
+      )
+
+      // Body side-to-side wind motion
+      deathTimeline.to(
+        bodyElement,
+        {
+          x: `+=${gsap.utils.random(-40, 40)}`,
+          repeat: 6,
+          yoyo: true,
+          ease: "sine.inOut",
+          duration: 2.5
+        },
+        5
+      )
+
+      // ARMS - starts at 1s
+      deathTimeline.to(
+        armsElement,
+        {
+          y: -400,
+          x: `+=${armsRandomX}`,
+          opacity: 0,
+          skewX: armsSkewX,
+          skewY: armsSkewY,
+          rotation: gsap.utils.random(-15, 15),
+          ease: "power1.in",
+          duration: 19
+        },
+        6
+      )
+
+      // Arms side-to-side wind motion
+      deathTimeline.to(
+        armsElement,
+        {
+          x: `+=${gsap.utils.random(-45, 45)}`,
+          repeat: 7,
+          yoyo: true,
+          ease: "sine.inOut",
+          duration: 2.5
+        },
+        6
+      )
+
+      // HEAD & EARS - starts immediately
+      deathTimeline.to(
+        [headElement, earsElement],
+        {
+          y: -400,
+          x: `+=${headRandomX}`,
+          opacity: 0,
+          scale: 2,
+          skewX: headSkewX,
+          skewY: headSkewY,
+          rotation: gsap.utils.random(-20, 20),
+          ease: "power1.in",
+          duration: 20
+        },
+        4
+      )
+
+      // Head & ears side-to-side wind motion
+      deathTimeline.to(
+        [headElement, earsElement],
+        {
+          x: `+=${gsap.utils.random(-50, 50)}`,
+          repeat: 8,
+          yoyo: true,
+          ease: "sine.inOut",
+          duration: 2.5
+        },
+        4
+      )
+    }
   })
 
   onDestroy(() => {
-    // Kill timeline immediately without completing animations
+    // Kill timelines immediately without completing animations
     if (armTimeline) {
       armTimeline.kill()
       armTimeline = null
     }
+    if (deathTimeline) {
+      deathTimeline.kill()
+      deathTimeline = null
+    }
   })
 </script>
 
-<div {onmousedown} class="rat-container" role="button" tabindex="0">
+<div
+  {onmousedown}
+  class="rat-container"
+  role="button"
+  tabindex="0"
+  style:width="{width}px"
+  style:height="{width}px"
+>
   {#if images && images.every(image => image.length > 0)}
     <!-- BODY -->
-    <div class="layer ratBodies {animation}" bind:this={bodyElement}>
+    <div style:width="{width}px" class="layer ratBodies {animation}" bind:this={bodyElement}>
       <img draggable="false" class="inner colored" src={images[0]} alt="" />
       {#if grayscale}
         <img draggable="false" class="inner grayscale-reveal delay-2" src={images[0]} alt="" />
       {/if}
     </div>
     <!-- ARMS -->
-    <div class="layer ratArms {animation}" bind:this={armsElement}>
+    <div style:width="{width}px" class="layer ratArms {animation}" bind:this={armsElement}>
       <img draggable="false" class="inner colored" src={images[1]} alt="" />
       {#if grayscale}
         <img draggable="false" class="inner grayscale-reveal delay-1" src={images[1]} alt="" />
       {/if}
     </div>
     <!-- HEAD -->
-    <div class="layer ratHeads {animation}" bind:this={headElement}>
+    <div style:width="{width}px" class="layer ratHeads {animation}" bind:this={headElement}>
       <img draggable="false" class="inner colored" src={images[2]} alt="" />
       {#if grayscale}
         <img draggable="false" class="inner grayscale-reveal" src={images[2]} alt="" />
       {/if}
     </div>
     <!-- EARS -->
-    <div class="layer ratEars {animation}" bind:this={earsElement}>
+    <div style:width="{width}px" class="layer ratEars {animation}" bind:this={earsElement}>
       <img draggable="false" class="inner colored" src={images[3]} alt="" />
       {#if grayscale}
         <img draggable="false" class="inner grayscale-reveal" src={images[3]} alt="" />
@@ -192,8 +316,6 @@
 
 <style lang="scss">
   .rat-container {
-    width: 260px;
-    height: 260px;
     display: block;
     position: relative;
     cursor: pointer;

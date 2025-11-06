@@ -224,23 +224,32 @@
   <div class="slot-container">
     <div class="slot-box">
       <div class="slot-display" class:locked={slot0Stopped}>{firstNameDisplay}</div>
-      {#if !slotMachineDone}
-        <LockButton disabled={currentSlot !== 0} onclick={() => stopSlot(0)} text="Stop" />
-      {/if}
+      <LockButton
+        hidden={slotMachineDone}
+        disabled={currentSlot !== 0}
+        onclick={() => stopSlot(0)}
+        text="Stop"
+      />
     </div>
 
     <div class="slot-box">
       <div class="slot-display" class:locked={slot1Stopped}>{lastNameDisplay}</div>
-      {#if !slotMachineDone}
-        <LockButton disabled={currentSlot !== 1} onclick={() => stopSlot(1)} text="Stop" />
-      {/if}
+      <LockButton
+        hidden={slotMachineDone}
+        disabled={currentSlot !== 1}
+        onclick={() => stopSlot(1)}
+        text="Stop"
+      />
     </div>
 
     <div class="slot-box">
       <div class="slot-display" class:locked={slot2Stopped}>{numberDisplay}</div>
-      {#if !slotMachineDone}
-        <LockButton disabled={currentSlot !== 2} onclick={() => stopSlot(2)} text="Stop" />
-      {/if}
+      <LockButton
+        hidden={slotMachineDone}
+        disabled={currentSlot !== 2}
+        onclick={() => stopSlot(2)}
+        text="Stop"
+      />
     </div>
   </div>
 
@@ -272,7 +281,7 @@
         flex-direction: column;
         align-items: center;
         padding: 1rem;
-
+        gap: 2rem;
         .slot-display {
           display: flex;
           align-items: center;
@@ -281,8 +290,9 @@
           background: white;
           color: black;
           width: 100%;
-          height: 6em;
-          margin-bottom: 2em;
+          height: 100px;
+          flex-shrink: 0;
+          // margin-bottom: 2em;
 
           &.locked {
             background: black;
