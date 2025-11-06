@@ -3,7 +3,7 @@
   import { get } from "svelte/store"
   import { fade } from "svelte/transition"
   import { beforeNavigate, afterNavigate } from "$app/navigation"
-  import { nonDepletedTrips, ratTotalValue, playerHasLiveRat } from "$lib/modules/state/stores"
+  import { nonDepletedTrips, ratTotalValue, playerHasLiveRat, selectedFolderId } from "$lib/modules/state/stores"
   import { getTripMinRatValueToEnter } from "$lib/modules/state/utils"
   import { entriesChronologically } from "./sortFunctions"
   import { blockNumber } from "$lib/modules/network"
@@ -17,7 +17,6 @@
   let sortFunction = $state(entriesChronologically)
   let lastChecked = $state<number>(Number(get(blockNumber)))
   let scrollContainer = $state<HTMLDivElement | null>(null)
-  let selectedFolderId = $state("")
 
   // Build trip folder map from staticContent
   let tripFolderMap = $derived(
@@ -51,7 +50,7 @@
   // Here we add once there are a couple of updates
   let tripList = $derived.by(() => {
     let entries = Object.entries($nonDepletedTrips)
-    entries = filterByFolder(entries, selectedFolderId)
+    entries = filterByFolder(entries, $selectedFolderId)
 
     return entries.sort(sortFunction)
   })
@@ -61,14 +60,14 @@
   )
 
   let activeList = $derived.by(() => {
-    if (selectedFolderId !== "legacy") {
+    if ($selectedFolderId !== "legacy") {
       if (lastChecked > 0) {
         return tripList.filter(r => Number(r[1].creationBlock) <= lastChecked)
       } else {
         return tripList
       }
     } else {
-      return Object.entries($nonDepletedTrips)
+      return legacyTrips
     }
   })
 
@@ -119,25 +118,25 @@
 </script>
 
 <div class="content" bind:this={scrollContainer}>
-  {#if selectedFolderId === ""}
+  {#if $selectedFolderId === ""}
     <TripHeader title={$playerHasLiveRat ? "Select a folder" : "Buy rat to select trip."} />
     <TripFolders
       {legacyTrips}
-      onselect={(folderId: string) => (selectedFolderId = folderId)}
+      onselect={(folderId: string) => ($selectedFolderId = folderId)}
       folders={$staticContent.tripFolders}
       {foldersCounts}
       disabled={!$playerHasLiveRat}
     />
   {:else}
     <div class="back-button-container">
-      <BackButton onclick={() => (selectedFolderId = "")} />
+      <BackButton onclick={() => ($selectedFolderId = "")} />
     </div>
-    {#if selectedFolderId !== ""}
-      {@const i = $staticContent.tripFolders.findIndex(({ _id }) => _id === selectedFolderId)}
+    {#if $selectedFolderId !== ""}
+      {@const i = $staticContent.tripFolders.findIndex(({ _id }) => _id === $selectedFolderId)}
       {@const folderTitle =
-        selectedFolderId === "legacy"
+        $selectedFolderId === "legacy"
           ? "The Void"
-          : ($staticContent.tripFolders.find(({ _id }) => _id == selectedFolderId)?.title ?? "")}
+          : ($staticContent.tripFolders.find(({ _id }) => _id == $selectedFolderId)?.title ?? "")}
       <TripHeader
         title={folderTitle}
         {eligibleCount}
@@ -160,20 +159,14 @@
             </button>
           {/key}
         {/if}
-        {#if selectedFolderId === "legacy"}
-          {#each legacyTrips as tripEntry (tripEntry[0])}
-            <TripItem tripId={tripEntry[0] as Hex} trip={tripEntry[1]} />
-          {/each}
-        {:else}
-          {#each tripsWithEligibility as tripEntry (tripEntry[0])}
-            <TripItem
-              tripId={tripEntry[0] as Hex}
-              trip={tripEntry[1]}
-              disabled={!tripEntry[2]}
-              overlayText={tripEntry[3]}
-            />
-          {/each}
-        {/if}
+        {#each tripsWithEligibility as tripEntry (tripEntry[0])}
+          <TripItem
+            tripId={tripEntry[0] as Hex}
+            trip={tripEntry[1]}
+            disabled={!tripEntry[2]}
+            overlayText={tripEntry[3]}
+          />
+        {/each}
       {:else}
         <div class="empty-listing">
           <div>NO TRIPS</div>
