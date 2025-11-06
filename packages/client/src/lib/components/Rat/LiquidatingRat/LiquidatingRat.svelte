@@ -7,7 +7,7 @@
   import { erc20BalanceListenerActive } from "$lib/modules/erc20Listener/stores"
   import { refetchBalance } from "$lib/modules/erc20Listener"
 
-  import { SmallSpinner } from "$lib/components/Shared"
+  import { SmallSpinner, RatAvatar } from "$lib/components/Shared"
 
   onMount(async () => {
     // playSound("ratfunUI", "ratDeath")
@@ -28,7 +28,7 @@
     erc20BalanceListenerActive.set(true)
 
     // RAT_BOX_STATE.LIQUIDATING_RAT -> RAT_BOX_STATE.DEAD_RAT
-    ratState.state.transitionTo(RAT_BOX_STATE.DEAD_RAT)
+    ratState.state.transitionTo(RAT_BOX_STATE.NO_RAT)
 
     // Check if admin should be unlocked
     if ($shouldUnlockAdmin) {
@@ -38,17 +38,27 @@
 </script>
 
 <div class="liquidating-rat">
+  <div class="avatar">
+    <RatAvatar grayscale animation="dead" />
+  </div>
   <div class="loading">KILLING IN PROGRESS <SmallSpinner soundOn /></div>
 </div>
 
 <style lang="scss">
   .liquidating-rat {
     display: flex;
+    flex-flow: column nowrap;
     justify-content: center;
     align-items: center;
     background-image: url("/images/texture-2.png");
     height: 100%;
     width: 100%;
+    position: relative;
+
+    .avatar {
+      // position: absolute;
+      // transform: translateY(-100%);
+    }
 
     .loading {
       background: orangered;

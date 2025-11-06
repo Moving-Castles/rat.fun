@@ -1,21 +1,39 @@
 <script lang="ts">
-  import { rat } from "$lib/modules/state/stores"
-  import { BigButton } from "$lib/components/Shared"
   import { ratState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
   import { sendApproveMax } from "$lib/modules/action-manager/index.svelte"
-  import { SmallSpinner } from "$lib/components/Shared"
+  import {
+    tokenAllowanceApproved,
+    playerHasTokens,
+    playerHasLiveRat
+  } from "$lib/modules/state/stores"
+
+  import { SmallSpinner, BigButton } from "$lib/components/Shared"
 
   let busy = $state(false)
 
-  const onClick = async () => {
-    busy = true
-    await sendApproveMax()
-
-    if ($rat) {
-      ratState.state.transitionTo(RAT_BOX_STATE.HAS_RAT)
-    } else {
-      ratState.state.transitionTo(RAT_BOX_STATE.NO_RAT)
+  $effect(() => {
+    if ($tokenAllowanceApproved) {
+      // Has allowance,
+      if ($playerHasTokens) {
+        // Has tokens
+        if ($playerHasLiveRat) {
+          // Live rat
+          ratState.state.transitionTo(RAT_BOX_STATE.HAS_RAT)
+        } else {
+          // No live rat
+          ratState.state.transitionTo(RAT_BOX_STATE.NO_RAT)
+        }
+      } else {
+        // No tokens
+        ratState.state.transitionTo(RAT_BOX_STATE.NO_TOKENS)
+      }
     }
+  })
+
+  const onClick = () => {
+    busy = true
+    sendApproveMax()
+    // Wait for result in $effect block above
   }
 </script>
 

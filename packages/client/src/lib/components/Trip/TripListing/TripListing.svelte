@@ -3,7 +3,7 @@
   import { get } from "svelte/store"
   import { fade } from "svelte/transition"
   import { beforeNavigate, afterNavigate } from "$app/navigation"
-  import { trips, rat, ratTotalValue } from "$lib/modules/state/stores"
+  import { trips, ratTotalValue, playerHasLiveRat } from "$lib/modules/state/stores"
   import { getTripMinRatValueToEnter } from "$lib/modules/state/utils"
   import { entriesChronologically } from "./sortFunctions"
   import { filterTrips, filterDepletedTrips } from "./filterFunctions"
@@ -73,7 +73,7 @@
     return activeList.map(([tripId, trip]) => {
       // Check if rat value is high enough
       const minRatValue = get(getTripMinRatValueToEnter(trip.tripCreationCost))
-      if ($ratTotalValue < minRatValue || $rat?.dead == true) {
+      if ($ratTotalValue < minRatValue || !$playerHasLiveRat) {
         return [
           tripId,
           trip,
@@ -117,7 +117,7 @@
 
 <div class="content" bind:this={scrollContainer}>
   <TripHeader
-    hasRat={$rat && !$rat.dead == true}
+    hasRat={$playerHasLiveRat}
     {eligibleCount}
     totalCount={tripList.length}
     tripFolders={$staticContent.tripFolders}

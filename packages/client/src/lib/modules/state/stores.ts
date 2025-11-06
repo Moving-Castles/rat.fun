@@ -129,11 +129,6 @@ export const player = derived(
   ([$entities, $playerId]) => $entities[$playerId] as Player
 )
 
-export const othersTrips = derived(
-  [playerId, trips],
-  ([$playerId, $trips]) => filterByOthers($trips, $playerId) as Trips
-)
-
 export const playerTrips = derived(
   [playerId, trips],
   ([$playerId, $trips]) => filterByPlayer($trips, $playerId) as Trips
@@ -162,9 +157,9 @@ export const playerIsNew = derived(
 )
 
 // Player has few tokens
-export const playerIsBroke = derived(
+export const playerHasTokens = derived(
   playerERC20Balance,
-  $playerERC20Balance => $playerERC20Balance < 100
+  $playerERC20Balance => $playerERC20Balance > 0
 )
 
 // export const playerHasNotGivenTokenAllowance
@@ -178,6 +173,8 @@ export const tokenAllowanceApproved = derived(
 // * * * * * * * * * * * * * * * * *
 
 export const rat = derived([player, rats], ([$player, $rats]) => $rats[$player?.currentRat] as Rat)
+
+export const playerHasLiveRat = derived([rat], ([$rat]) => !!($rat && !$rat.dead))
 
 export const ratInventory = derived([rat, items], ([$rat, $items]) =>
   convertBigIntsToNumbers($rat?.inventory?.map(item => $items[item]) ?? ([] as Item[]))
@@ -225,9 +222,6 @@ export const portfolioClass = derived([profitLoss], ([$profitLoss]) => {
   if ($profitLoss === 0) return "neutral"
   return $profitLoss < 0 ? "downText" : "upText"
 })
-
-const untaxed = (value: number) =>
-  Math.floor((Number(value) * 100) / (100 - Number(get(gamePercentagesConfig).taxationCloseTrip)))
 
 export const realisedInvestment = derived(playerDepletedTrips, $playerDepletedTrips =>
   Object.values($playerDepletedTrips).reduce((a, b) => a + Number(b.tripCreationCost), 0)
