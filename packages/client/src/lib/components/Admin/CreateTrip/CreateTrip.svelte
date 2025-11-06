@@ -149,9 +149,9 @@
           <!-- STEP 1: FOLDER SELECTION -->
           <div class="folder-selection">
             <div class="form-group">
-              <label>
+              <div>
                 <span class="highlight">Select Folder</span>
-              </label>
+              </div>
             </div>
             <TripFolders
               onselect={folderId => {
@@ -459,19 +459,6 @@
         resize: none;
         outline-color: var(--color-alert);
         outline-width: 1px;
-      }
-
-      select {
-        width: 100%;
-        padding: 5px;
-        border: none;
-        background: var(--foreground);
-        font-family: var(--typewriter-font-stack);
-        font-size: var(--font-size-normal);
-        border-radius: 0;
-        outline-color: var(--color-alert);
-        outline-width: 1px;
-        cursor: pointer;
       }
     }
 

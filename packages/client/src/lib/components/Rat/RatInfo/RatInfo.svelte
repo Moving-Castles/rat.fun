@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, onDestroy } from "svelte"
+  import { onMount } from "svelte"
   import { rat } from "$lib/modules/state/stores"
   import { frozenRat, resetFrozenState } from "$lib/components/GameRun/state.svelte"
   import { RatStats, RatInventory, LiquidateRat } from "$lib/components/Rat"
@@ -10,7 +10,6 @@
   $inspect(displayRat)
 
   const updateDisplayRat = async () => {
-    console.log("updateDisplayRat", $rat, frozenRat)
     if (frozenRat) {
       // If we are coming back from a trip frozenRat is set
       displayRat = frozenRat
@@ -27,12 +26,7 @@
   }
 
   onMount(() => {
-    console.log("onMount RatInfo")
     updateDisplayRat()
-  })
-
-  onDestroy(() => {
-    console.log("onDestroy RatInfo")
   })
 </script>
 

@@ -257,3 +257,9 @@ export const shouldUnlockAdmin = derived([player, gameConfig], ([$player, $gameC
   // Only trigger when exactly reaching the threshold
   return pastRatsCount === requiredCount
 })
+
+// * * * * * * * * * * * * * * * * *
+// TRIP LISTING UI STATE
+// * * * * * * * * * * * * * * * * *
+
+export const selectedFolderId = writable("")

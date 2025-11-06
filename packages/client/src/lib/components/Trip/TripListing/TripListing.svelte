@@ -8,12 +8,13 @@
   import { entriesChronologically } from "./sortFunctions"
   import { blockNumber } from "$lib/modules/network"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
-  import { TripItem, TripFolders } from "$lib/components/Trip"
   import { staticContent } from "$lib/modules/content"
-  import { BackButton, SmallSpinner } from "$lib/components/Shared"
+
+  import { TripItem, TripFolders } from "$lib/components/Trip"
+  import { BackButton } from "$lib/components/Shared"
+  import TripHeader from "./TripHeader.svelte"
 
   let sortFunction = $state(entriesChronologically)
-  let textFilter = $state("")
   let lastChecked = $state<number>(Number(get(blockNumber)))
   let scrollContainer = $state<HTMLDivElement | null>(null)
   let selectedFolderId = $state("")
@@ -119,38 +120,31 @@
 
 <div class="content" bind:this={scrollContainer}>
   {#if selectedFolderId === ""}
-    {#if $staticContent.trips.length > 0}
-      <TripFolders
-        {legacyTrips}
-        onselect={(folderId: string) => (selectedFolderId = folderId)}
-        folders={$staticContent.tripFolders}
-        {foldersCounts}
-      />
-    {:else}
-      <div class="loading">
-        <SmallSpinner />
-      </div>
-    {/if}
+    <TripHeader title={$playerHasLiveRat ? "Select a folder" : "Buy rat to select trip."} />
+    <TripFolders
+      {legacyTrips}
+      onselect={(folderId: string) => (selectedFolderId = folderId)}
+      folders={$staticContent.tripFolders}
+      {foldersCounts}
+      disabled={!$playerHasLiveRat}
+    />
   {:else}
-    {#if selectedFolderId !== ""}
-      {@const i = $staticContent.tripFolders.findIndex(({ _id }) => _id === selectedFolderId)}
-      <div
-        class:void={i === -1}
-        style:background-image="url('/images/texture-{2 + (i % 5)}.png');"
-        class="folder-name-container"
-      >
-        {#if selectedFolderId === "legacy"}
-          <span> The Void </span>
-        {:else}
-          <span>
-            {$staticContent.tripFolders.find(({ _id }) => _id == selectedFolderId).title}
-          </span>
-        {/if}
-      </div>
-    {/if}
     <div class="back-button-container">
       <BackButton onclick={() => (selectedFolderId = "")} />
     </div>
+    {#if selectedFolderId !== ""}
+      {@const i = $staticContent.tripFolders.findIndex(({ _id }) => _id === selectedFolderId)}
+      {@const folderTitle =
+        selectedFolderId === "legacy"
+          ? "The Void"
+          : ($staticContent.tripFolders.find(({ _id }) => _id == selectedFolderId)?.title ?? "")}
+      <TripHeader
+        title={folderTitle}
+        {eligibleCount}
+        totalCount={tripsWithEligibility.length}
+        hasBackButton={true}
+      />
+    {/if}
     <div class:animated={false} class="trip-listing" in:fade|global={{ duration: 300 }}>
       {#if activeList.length > 0}
         {#if activeList.length < tripList.length}
@@ -208,17 +202,17 @@
     outline: none;
   }
 
-  .folder-name-container,
   .back-button-container {
     display: block;
     border-bottom: 1px solid var(--color-grey-mid);
     position: sticky;
     height: 60px;
     top: 0;
-    z-index: 20;
+    z-index: 21;
     display: flex;
     justify-content: center;
     align-items: center;
+    background: var(--background);
   }
 
   .new-player-message {
@@ -246,41 +240,6 @@
     align-items: center;
   }
 
-  .void {
-    background: rgb(40, 40, 40);
-    color: white;
-  }
-
-  .trip-header {
-    display: flex;
-    width: 100%;
-    height: 100px;
-    gap: 1rem;
-
-    .back-button {
-      width: 100%;
-      height: 100%;
-      background: var(--color-alert-priority);
-      border: none;
-      border-style: outset;
-      border-width: 5px;
-      border-color: rgba(0, 0, 0, 0.3);
-      position: relative;
-      display: flex;
-      flex-flow: column nowrap;
-      align-items: center;
-      justify-content: center;
-
-      .button-text {
-        font-size: var(--font-size-large);
-        font-family: var(--special-font-stack);
-        line-height: 1em;
-        z-index: 2;
-        position: relative;
-        color: rgb(54, 54, 54);
-      }
-    }
-  }
   .trip-listing {
     flex-basis: 100%;
     flex-shrink: 0;

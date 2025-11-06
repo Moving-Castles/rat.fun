@@ -82,7 +82,7 @@
     tl.to(
       [headElement, earsElement],
       {
-        scale: 1.2,
+        scaleY: 1.2,
         rotation: rotationDirection,
         duration: 0.2,
         y: -10,
@@ -106,6 +106,7 @@
       [headElement, earsElement],
       {
         scale: 1,
+        scaleY: 1,
         rotation: 0,
         x: 0,
         y: 0,

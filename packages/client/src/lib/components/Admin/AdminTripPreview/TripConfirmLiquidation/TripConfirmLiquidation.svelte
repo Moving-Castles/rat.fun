@@ -22,7 +22,6 @@
 
   const onClickConfirm = async () => {
     liquidating = true
-    console.log(tripContent)
     await sendLiquidateTrip(tripId)
     sendLiquidateTripMessage(tripId)
     onDone()
