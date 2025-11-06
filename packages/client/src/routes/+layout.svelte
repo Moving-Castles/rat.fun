@@ -24,10 +24,6 @@
     walletType as walletTypeStore
   } from "$lib/modules/network"
 
-  import { shouldUnlockAdmin } from "$lib/modules/state/stores"
-
-  $inspect("$shouldUnlockAdmin", $shouldUnlockAdmin)
-
   // Components
   import Spawn from "$lib/components/Spawn/Spawn.svelte"
   import Loading from "$lib/components/Loading/Loading.svelte"
