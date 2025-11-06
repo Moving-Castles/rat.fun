@@ -6,7 +6,7 @@
 
   import { onMount } from "svelte"
   import { staticContent } from "$lib/modules/content"
-  import { rat, ratTotalValue } from "$lib/modules/state/stores"
+  import { rat, ratTotalValue, playerHasLiveRat } from "$lib/modules/state/stores"
   import { busy } from "$lib/modules/action-manager/index.svelte"
   import { getTripMinRatValueToEnter } from "$lib/modules/state/utils"
   import { ratState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
@@ -36,14 +36,14 @@
   //  * - TODO: rat has min value to enter
   let showEnterButton = $derived(
     (trip?.balance ?? 0) > 0 &&
-      !$rat?.dead &&
+      $playerHasLiveRat &&
       ratState.state.current !== RAT_BOX_STATE.DEPLOYING_RAT
   )
 
   // Show no rat warning if:
   //  * - Rat does not exist or is dead
   let showNoRatWarning = $derived(
-    $rat?.dead || ratState.state.current === RAT_BOX_STATE.DEPLOYING_RAT
+    !$playerHasLiveRat || ratState.state.current === RAT_BOX_STATE.DEPLOYING_RAT
   )
 
   const onBackButtonClick = () => {
