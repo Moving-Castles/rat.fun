@@ -10,7 +10,7 @@
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import { TripItem, TripFolders } from "$lib/components/Trip"
   import { staticContent } from "$lib/modules/content"
-  import { BackButton } from "$lib/components/Shared"
+  import { BackButton, SmallSpinner } from "$lib/components/Shared"
 
   let sortFunction = $state(entriesChronologically)
   let textFilter = $state("")
@@ -39,6 +39,13 @@
       return tripFolderId === id
     })
   }
+
+  // Filter trips without folder assignments (legacy trips)
+  let legacyTrips = $derived.by(() => {
+    return Object.entries($nonDepletedTrips).filter(([tripId, _]) => {
+      return !tripFolderMap.has(tripId)
+    })
+  })
 
   // Here we add once there are a couple of updates
   let tripList = $derived.by(() => {
@@ -112,12 +119,18 @@
 
 <div class="content" bind:this={scrollContainer}>
   {#if selectedFolderId === ""}
-    <TripFolders
-      legacyTrips={Object.entries($nonDepletedTrips)}
-      onselect={(folderId: string) => (selectedFolderId = folderId)}
-      folders={$staticContent.tripFolders}
-      {foldersCounts}
-    />
+    {#if $staticContent.trips.length > 0}
+      <TripFolders
+        {legacyTrips}
+        onselect={(folderId: string) => (selectedFolderId = folderId)}
+        folders={$staticContent.tripFolders}
+        {foldersCounts}
+      />
+    {:else}
+      <div class="loading">
+        <SmallSpinner />
+      </div>
+    {/if}
   {:else}
     <div class="back-button-container">
       <BackButton onclick={() => (selectedFolderId = "")} />
@@ -138,7 +151,7 @@
           {/key}
         {/if}
         {#if selectedFolderId === "legacy"}
-          {#each Object.entries($nonDepletedTrips) as tripEntry (tripEntry[0])}
+          {#each legacyTrips as tripEntry (tripEntry[0])}
             <TripItem tripId={tripEntry[0] as Hex} trip={tripEntry[1]} />
           {/each}
         {:else}
@@ -202,6 +215,15 @@
     font-size: var(--font-size-normal);
     line-height: 1em;
     text-align: center;
+  }
+
+  .loading {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
   }
 
   .trip-header {
