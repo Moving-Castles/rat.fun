@@ -48,9 +48,8 @@ export function createSystemCalls(network: SetupNetworkResult) {
       const maxPriorityFeePerGas = (feeData.maxPriorityFeePerGas * 200n) / 100n // 100% higher priority
 
       // Ensure maxPriorityFeePerGas doesn't exceed maxFeePerGas
-      const adjustedPriorityFee = maxPriorityFeePerGas > maxFeePerGas
-        ? maxFeePerGas
-        : maxPriorityFeePerGas
+      const adjustedPriorityFee =
+        maxPriorityFeePerGas > maxFeePerGas ? maxFeePerGas : maxPriorityFeePerGas
 
       const tx = await network.worldContract.write.ratfun__applyOutcome(args, {
         maxFeePerGas,
