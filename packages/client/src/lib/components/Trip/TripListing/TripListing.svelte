@@ -3,7 +3,12 @@
   import { get } from "svelte/store"
   import { fade } from "svelte/transition"
   import { beforeNavigate, afterNavigate } from "$app/navigation"
-  import { nonDepletedTrips, ratTotalValue, playerHasLiveRat, selectedFolderId } from "$lib/modules/state/stores"
+  import {
+    nonDepletedTrips,
+    ratTotalValue,
+    playerHasLiveRat,
+    selectedFolderId
+  } from "$lib/modules/state/stores"
   import { getTripMinRatValueToEnter } from "$lib/modules/state/utils"
   import { entriesChronologically } from "./sortFunctions"
   import { blockNumber } from "$lib/modules/network"
@@ -42,8 +47,21 @@
 
   // Filter trips without folder assignments (legacy trips)
   let legacyTrips = $derived.by(() => {
-    return Object.entries($nonDepletedTrips).filter(([tripId, _]) => {
+    const filtered = Object.entries($nonDepletedTrips).filter(([tripId, _]) => {
       return !tripFolderMap.has(tripId)
+    })
+    // HACK !!!!!!
+    // Sort by index (newest first), fallback to creationBlock if index is missing
+    return filtered.sort((a, b) => {
+      const aIndex = Number(a[1]?.index || 0)
+      const bIndex = Number(b[1]?.index || 0)
+      if (aIndex !== 0 && bIndex !== 0) {
+        return bIndex - aIndex // Higher index = newer, so newest first
+      }
+      // Fallback to creationBlock if index is missing
+      const aBlock = Number(a[1]?.creationBlock || 0)
+      const bBlock = Number(b[1]?.creationBlock || 0)
+      return bBlock - aBlock // Higher block = newer, so newest first
     })
   })
 
@@ -51,7 +69,6 @@
   let tripList = $derived.by(() => {
     let entries = Object.entries($nonDepletedTrips)
     entries = filterByFolder(entries, $selectedFolderId)
-
     return entries.sort(sortFunction)
   })
 
@@ -120,13 +137,15 @@
 <div class="content" bind:this={scrollContainer}>
   {#if $selectedFolderId === ""}
     <TripHeader title={$playerHasLiveRat ? "Select a folder" : "Buy rat to select trip."} />
-    <TripFolders
-      {legacyTrips}
-      onselect={(folderId: string) => ($selectedFolderId = folderId)}
-      folders={$staticContent.tripFolders}
-      {foldersCounts}
-      disabled={!$playerHasLiveRat}
-    />
+    {#if $staticContent?.tripFolders?.length ?? 0 > 0}
+      <TripFolders
+        {legacyTrips}
+        onselect={(folderId: string) => ($selectedFolderId = folderId)}
+        folders={$staticContent.tripFolders}
+        {foldersCounts}
+        disabled={!$playerHasLiveRat}
+      />
+    {/if}
   {:else}
     <div class="back-button-container">
       <BackButton onclick={() => ($selectedFolderId = "")} />

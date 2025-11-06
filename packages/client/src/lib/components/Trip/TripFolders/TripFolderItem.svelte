@@ -1,9 +1,11 @@
 <script lang="ts">
+  import { fade } from "svelte/transition"
   import type { TripFolder } from "@sanity-types"
   import { playSound } from "$lib/modules/sound"
   //   import { urlFor, type ImageUrlBuilder } from "$lib/modules/content/sanity"
 
   let {
+    listingIndex,
     folder,
     count,
     isVoid = false,
@@ -11,6 +13,7 @@
     onclick,
     disabled: disabledProp = false
   }: {
+    listingIndex: number
     folder?: TripFolder
     count?: number
     isVoid?: boolean
@@ -37,7 +40,7 @@
   }
 </script>
 
-<div class="tile">
+<div class="tile" in:fade|global={{ duration: 100, delay: listingIndex * 30 }}>
   <button class:disabled class:void={isVoid} {onclick} {onmouseup} {onmousedown}>
     <div class="title">
       {title}

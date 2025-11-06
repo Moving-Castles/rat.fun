@@ -22,6 +22,7 @@
 <div class="tiles">
   {#each folders as folder, i}
     <TripFolderItem
+      listingIndex={i}
       {folder}
       count={foldersCounts[i]}
       {showCounts}
@@ -33,7 +34,13 @@
   {/each}
 
   {#if legacyTrips.length > 0}
-    <TripFolderItem isVoid={true} {showCounts} {disabled} onclick={() => onselect("legacy")} />
+    <TripFolderItem
+      listingIndex={folders.length}
+      isVoid={true}
+      {showCounts}
+      {disabled}
+      onclick={() => onselect("legacy")}
+    />
   {/if}
 </div>
 
