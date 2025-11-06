@@ -11,6 +11,7 @@
   import {
     sendGiveCallerTokens,
     sendApproveMax,
+    sendRevokeApproval,
     sendBuyWithEth,
     sendLiquidateRat,
     sendUnlockAdmin
@@ -103,6 +104,14 @@
         await sendApproveMax()
       }}
       text="Approve max allowance"
+    ></SmallButton>
+    <SmallButton
+      disabled={busy.RevokeApproval.current !== 0 || !$tokenAllowanceApproved}
+      tippyText="Revoke contract spending approval (set to 0)"
+      onclick={async () => {
+        await sendRevokeApproval()
+      }}
+      text="Revoke approval"
     ></SmallButton>
     <SmallButton
       tippyText="Force liquidate rat"

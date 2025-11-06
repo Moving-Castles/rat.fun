@@ -82,7 +82,7 @@
 
 <style lang="scss">
   .player-info {
-    width: 200px;
+    min-width: 200px;
 
     .player-stats {
       display: flex;
