@@ -38,7 +38,10 @@ export const validateTripFolder = async (folderId: string): Promise<boolean> => 
     }
 
     if (folder.restricted) {
-      throw new CMSAPIError(`Trip folder ${folder.title} is restricted and cannot be used for trip creation`, null)
+      throw new CMSAPIError(
+        `Trip folder ${folder.title} is restricted and cannot be used for trip creation`,
+        null
+      )
     }
 
     return true

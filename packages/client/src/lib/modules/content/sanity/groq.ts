@@ -15,7 +15,8 @@ const outcomes = `*[_type == "outcome" && worldAddress == $worldAddress] {
 }`
 const worldEvents =
   '*[_type == "worldEvent" && worldAddress == $worldAddress] | order(activationDateTime asc)'
-const tripFolderList = '*[_id == "trip-folder-list"][0]{ folders[]->{ _id, title, description, image, restricted } }'
+const tripFolderList =
+  '*[_id == "trip-folder-list"][0]{ folders[]->{ _id, title, description, image, restricted } }'
 
 export const queries = {
   ratImages,
