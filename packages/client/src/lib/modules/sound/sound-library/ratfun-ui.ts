@@ -16,11 +16,6 @@ export const ratfunUI: SoundAssets = {
     author: "leo",
     volume: 1
   },
-  lineHit: {
-    src: "/sounds/ratfun/ui/line-hit.wav",
-    author: "leo",
-    volume: 1
-  },
   tick: {
     src: "/sounds/ratfun/ui/tick.wav",
     author: "leo",
@@ -91,16 +86,6 @@ export const ratfunUI: SoundAssets = {
     author: "leo",
     volume: 0.6
   },
-  positive: {
-    src: "/sounds/ratfun/ui/positive.mp3",
-    author: "leo",
-    volume: 1
-  },
-  negative: {
-    src: "/sounds/ratfun/ui/chirp-1.mp3",
-    author: "leo",
-    volume: 1
-  },
   ratHello: {
     src: "/sounds/ratfun/ui/rat-hello.mp3",
     author: "leo",
@@ -125,16 +110,6 @@ export const ratfunUI: SoundAssets = {
     src: "/sounds/ratfun/ui/logo-click.mp3",
     author: "leo",
     volume: 0.5
-  },
-  countUp: {
-    src: "/sounds/ratfun/ui/count-up.mp3",
-    author: "leo",
-    volume: 1
-  },
-  countDown: {
-    src: "/sounds/ratfun/ui/count-down.mp3",
-    author: "leo",
-    volume: 1
   },
   healthPositive: {
     src: "/sounds/ratfun/ui/health-positive.mp3",
@@ -173,11 +148,6 @@ export const ratfunUI: SoundAssets = {
   },
   counterTick: {
     src: "/sounds/ratfun/ui/counter-tick.mp3",
-    author: "leo",
-    volume: 3
-  },
-  counterEnd: {
-    src: "/sounds/ratfun/ui/counter-end.mp3",
     author: "leo",
     volume: 3
   },
