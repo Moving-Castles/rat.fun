@@ -1,23 +1,41 @@
 <script lang="ts">
-  import { tokenAllowanceApproved } from "$lib/modules/state/stores"
-  import { BigButton } from "$lib/components/Shared"
   import { ratState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
   import { sendGiveCallerTokens } from "$lib/modules/action-manager/index.svelte"
-  import { SmallSpinner } from "$lib/components/Shared"
   import { environment } from "$lib/modules/network"
+  import {
+    playerHasTokens,
+    playerHasLiveRat,
+    tokenAllowanceApproved
+  } from "$lib/modules/state/stores"
   import { ENVIRONMENT } from "$lib/mud/enums"
+
+  import { SmallSpinner, BigButton } from "$lib/components/Shared"
 
   let busy = $state(false)
 
-  const onClick = async () => {
-    busy = true
-    await sendGiveCallerTokens()
-
-    if ($tokenAllowanceApproved) {
-      ratState.state.transitionTo(RAT_BOX_STATE.NO_RAT)
-    } else {
-      ratState.state.transitionTo(RAT_BOX_STATE.NO_ALLOWANCE)
+  $effect(() => {
+    if ($playerHasTokens) {
+      // Has tokens
+      if ($tokenAllowanceApproved) {
+        // Has allowance
+        if ($playerHasLiveRat) {
+          // Live rat
+          ratState.state.transitionTo(RAT_BOX_STATE.HAS_RAT)
+        } else {
+          // No live rat
+          ratState.state.transitionTo(RAT_BOX_STATE.NO_RAT)
+        }
+      } else {
+        // No allowance, rat irrelevant
+        ratState.state.transitionTo(RAT_BOX_STATE.NO_ALLOWANCE)
+      }
     }
+  })
+
+  const onClick = () => {
+    busy = true
+    sendGiveCallerTokens()
+    // Wait for result in $effect block above
   }
 </script>
 

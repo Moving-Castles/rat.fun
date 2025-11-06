@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte"
   import { fade } from "svelte/transition"
-  import { rat } from "$lib/modules/state/stores"
+  import { rat, playerHasLiveRat } from "$lib/modules/state/stores"
   import { waitForPropertyChangeFrom } from "$lib/modules/state/utils"
   import { sendCreateRat } from "$lib/modules/action-manager/index.svelte"
   import { generateRatName, lastNameFragments, firstNameFragments } from "./ratNameGenerator"
@@ -126,15 +126,13 @@
 
   async function startDeployment() {
     // Check if the rat was already made, and we are just waiting for the user to click buttons
-    if ($rat) {
-      if ($rat.balance > 0 && !$rat.dead) {
-        const [first, last, num] = $rat.name.split("_")
-        firstName = first
-        lastName = last
-        ratNumber = Number(num)
-        deploymentDone = true
-        return // return before calling create rat
-      }
+    if ($playerHasLiveRat) {
+      const [first, last, num] = $rat.name.split("_")
+      firstName = first
+      lastName = last
+      ratNumber = Number(num)
+      deploymentDone = true
+      return // return before calling create rat
     }
 
     // Store the old name for use in waitForPropertyChangeFrom

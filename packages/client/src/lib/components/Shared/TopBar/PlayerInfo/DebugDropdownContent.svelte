@@ -4,7 +4,7 @@
     player,
     playerAddress,
     playerIsNew,
-    playerIsBroke,
+    playerHasTokens,
     tokenAllowanceApproved
   } from "$lib/modules/state/stores"
   import { playerERC20Allowance, playerERC20Balance } from "$lib/modules/erc20Listener/stores"
@@ -64,9 +64,9 @@
     </p>
   </div>
   <div class="tab">
-    <p class="key">Is broke:</p>
+    <p class="key">Has tokens:</p>
     <p class="value">
-      {$playerIsBroke}
+      {$playerHasTokens}
     </p>
   </div>
   <div class="actions">

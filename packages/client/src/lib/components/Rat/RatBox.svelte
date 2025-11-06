@@ -1,6 +1,10 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte"
-  import { rat, playerIsBroke, tokenAllowanceApproved } from "$lib/modules/state/stores"
+  import {
+    playerHasTokens,
+    tokenAllowanceApproved,
+    playerHasLiveRat
+  } from "$lib/modules/state/stores"
   import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
   import { playSound } from "$lib/modules/sound"
   import {
@@ -15,33 +19,85 @@
   } from "$lib/components/Rat"
   import { RAT_BOX_STATE, ratState } from "$lib/components/Rat/state.svelte"
   import { backgroundMusic } from "$lib/modules/sound/stores"
+  import { playerERC20Balance } from "$lib/modules/erc20Listener/stores"
 
-  $inspect("ratState.state.current", ratState.state.current)
-
-  onMount(() => {
+  onMount(async () => {
     shaderManager.setShader("clouds", true)
     $backgroundMusic?.stop()
     $backgroundMusic = playSound("ratfunMusic", "main", true)
 
-    if (!$rat) {
-      if ($playerIsBroke) {
-        ratState.state.transitionTo(RAT_BOX_STATE.NO_TOKENS)
-      } else if ($tokenAllowanceApproved === false) {
-        ratState.state.transitionTo(RAT_BOX_STATE.NO_ALLOWANCE)
-      } else {
-        ratState.state.transitionTo(RAT_BOX_STATE.NO_RAT)
+    if ($playerERC20Balance === 0) {
+      // Wait for erc20 balance to be updated
+      const startTime = Date.now()
+      while (Date.now() < startTime + 1000) {
+        if ($playerERC20Balance > 0) {
+          break
+        }
+        await new Promise(resolve => setTimeout(resolve, 50))
       }
-    } else {
-      if ($rat.dead) {
-        ratState.state.transitionTo(RAT_BOX_STATE.NO_RAT)
-      } else {
-        ratState.state.transitionTo(RAT_BOX_STATE.HAS_RAT)
-      }
+    }
+
+    /*
+     *  Possible entry scenarios based on:
+     *  - $playerHasTokens
+     *  - $tokenAllowanceApproved
+     *  - $playerHasLiveRat
+     *
+     *  +---+-----------------+------------------------+------------------+
+     *  |   | playerHasTokens | tokenAllowanceApproved | playerHasLiveRat |
+     *  +---+-----------------+------------------------+------------------+
+     *  | 0 |      false      |         false          |      false       |
+     *  | 1 |      false      |         false          |      true        |
+     *  | 2 |      false      |         true           |      false       |
+     *  | 3 |      false      |         true           |      true        |
+     *  | 4 |      true       |         false          |      false       |
+     *  | 5 |      true       |         false          |      true        |
+     *  | 6 |      true       |         true           |      false       |
+     *  | 7 |      true       |         true           |      true        |
+     *  +---+-----------------+------------------------+------------------+
+     *
+     *  State:
+     *  0 => NO_TOKENS
+     *  1 => NO_ALLOWANCE
+     *  2 => NO_TOKENS
+     *  3 => HAS_RAT
+     *  4 => NO_ALLOWANCE
+     *  5 => NO_ALLOWANCE
+     *  6 => NO_RAT
+     *  7 => HAS_RAT
+     */
+
+    // Scenario 1 & 5: Has rat but no allowance
+    if ($playerHasLiveRat === true && $tokenAllowanceApproved === false) {
+      ratState.state.transitionTo(RAT_BOX_STATE.NO_ALLOWANCE)
+    }
+    // Scenario 3 & 7: Has rat and has allowance
+    else if ($playerHasLiveRat === true && $tokenAllowanceApproved === true) {
+      ratState.state.transitionTo(RAT_BOX_STATE.HAS_RAT)
+    }
+    // Scenario 0 & 2: No rat and no tokens
+    else if ($playerHasLiveRat === false && $playerHasTokens === false) {
+      ratState.state.transitionTo(RAT_BOX_STATE.NO_TOKENS)
+    }
+    // Scenario 4: No rat, has tokens, no allowance
+    else if (
+      $playerHasLiveRat === false &&
+      $playerHasTokens === true &&
+      $tokenAllowanceApproved === false
+    ) {
+      ratState.state.transitionTo(RAT_BOX_STATE.NO_ALLOWANCE)
+    }
+    // Scenario 6: No rat, has tokens, has allowance
+    else if (
+      $playerHasLiveRat === false &&
+      $playerHasTokens === true &&
+      $tokenAllowanceApproved === true
+    ) {
+      ratState.state.transitionTo(RAT_BOX_STATE.NO_RAT)
     }
   })
 
   onDestroy(() => {
-    console.log("onDestroy RatBox")
     // Stop background music
     if ($backgroundMusic) {
       $backgroundMusic.stop()
@@ -50,15 +106,6 @@
   })
 </script>
 
-<!-- <div>
-  State: {ratState.state.current}
-</div>
-<div>
-  Balance: {ratState.balance.current}: {$rat.balance}
-</div>
-<div>
-  ItemCount: {ratState.inventorySize.current}: {getRatInventory($rat)?.length ?? 0}
-</div> -->
 <div class="rat-box">
   {#if ratState.state.current === RAT_BOX_STATE.NO_RAT}
     <RatDeploy />
@@ -76,8 +123,6 @@
     <NoAllowance />
   {:else if ratState.state.current === RAT_BOX_STATE.PAST_TRIP_LIST}
     <PastTripList />
-  {:else}
-    error: {ratState.state.current}
   {/if}
 </div>
 
