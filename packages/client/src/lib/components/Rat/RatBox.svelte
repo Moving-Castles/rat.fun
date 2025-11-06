@@ -24,19 +24,23 @@
     $backgroundMusic?.stop()
     $backgroundMusic = playSound("ratfunMusic", "main", true)
 
+    if (!$rat || $rat.dead) {
+      ratState.state.transitionTo(RAT_BOX_STATE.NO_RAT)
+    } else {
+      ratState.state.transitionTo(RAT_BOX_STATE.HAS_RAT)
+    }
+  })
+
+  $effect(() => {
     if (!$rat) {
       if ($playerIsBroke) {
         ratState.state.transitionTo(RAT_BOX_STATE.NO_TOKENS)
       } else if ($tokenAllowanceApproved === false) {
         ratState.state.transitionTo(RAT_BOX_STATE.NO_ALLOWANCE)
-      } else {
+      } else if (
+        [RAT_BOX_STATE.NO_TOKENS, RAT_BOX_STATE.NO_ALLOWANCE].includes(ratState.state.current)
+      ) {
         ratState.state.transitionTo(RAT_BOX_STATE.NO_RAT)
-      }
-    } else {
-      if ($rat.dead) {
-        ratState.state.transitionTo(RAT_BOX_STATE.NO_RAT)
-      } else {
-        ratState.state.transitionTo(RAT_BOX_STATE.HAS_RAT)
       }
     }
   })
