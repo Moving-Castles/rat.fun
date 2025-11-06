@@ -81,6 +81,20 @@ export function filterByOthers(trips: Trips, playerId: Hex): Trips {
 }
 
 /**
+ * Filters trips by prompt
+ * @param trips The trips to filter
+ * @param textFilter The text to filter the prompt by
+ * @returns The filtered trips
+ */
+export function filterByPrompt(trips: Trips, textFilter: string): Trips {
+  return Object.fromEntries(
+    Object.entries(trips).filter(([_, trip]) =>
+      trip.prompt.toLowerCase().includes(textFilter.toLowerCase())
+    )
+  )
+}
+
+/**
  * Checks if a trip is owned by a player
  * @param trip The trip to check
  * @param playerId The player id to check

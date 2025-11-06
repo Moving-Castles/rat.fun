@@ -21,8 +21,9 @@ const DEFAULT_TIMING = 4000
  * Create trip
  * @param tripPrompt The prompt for the trip
  * @param tripCreationCost The cost of the trip
+ * @param folderId The ID of the trip folder category
  */
-export async function sendCreateTrip(tripPrompt: string, tripCreationCost: number) {
+export async function sendCreateTrip(tripPrompt: string, tripCreationCost: number, folderId: string) {
   const _externalAddressesConfig = get(externalAddressesConfig)
   const _playerERC20Allowance = get(playerERC20Allowance)
 
@@ -50,7 +51,8 @@ export async function sendCreateTrip(tripPrompt: string, tripCreationCost: numbe
 
     const requestBody: CreateTripRequestBody = {
       tripPrompt,
-      tripCreationCost
+      tripCreationCost,
+      folderId
     }
 
     const signedRequest = await signRequest(requestBody)

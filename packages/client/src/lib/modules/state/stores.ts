@@ -134,6 +134,10 @@ export const playerTrips = derived(
   ([$playerId, $trips]) => filterByPlayer($trips, $playerId) as Trips
 )
 
+export const nonDepletedTrips = derived([trips], ([$trips]) => {
+  return filterNonDepleted($trips) as Trips
+})
+
 export const playerActiveTrips = derived([playerTrips], ([$playerTrips]) => {
   return filterActive($playerTrips) as Trips
 })

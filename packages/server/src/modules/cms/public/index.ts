@@ -18,6 +18,45 @@ type NewOutcomeDoc = Omit<OutcomeDoc, "_createdAt" | "_updatedAt" | "_rev">
 type NewTripDoc = Omit<TripDoc, "_createdAt" | "_updatedAt" | "_rev">
 
 /**
+ * Validate that a folder ID exists in the trip folder list and is not restricted
+ * @param folderId - The ID of the folder to validate
+ * @returns True if the folder is valid and not restricted
+ * @throws CMSAPIError if the folder is invalid or restricted
+ */
+export const validateTripFolder = async (folderId: string): Promise<boolean> => {
+  try {
+    const folderList = await loadDataPublicSanity(queries.tripFolderList, {})
+
+    if (!folderList || !folderList.folders || !Array.isArray(folderList.folders)) {
+      throw new CMSAPIError("Trip folder list not found or invalid", null)
+    }
+
+    const folder = folderList.folders.find((f: any) => f._id === folderId)
+
+    if (!folder) {
+      throw new CMSAPIError(`Trip folder with ID ${folderId} not found`, null)
+    }
+
+    if (folder.restricted) {
+      throw new CMSAPIError(`Trip folder ${folder.title} is restricted and cannot be used for trip creation`, null)
+    }
+
+    return true
+  } catch (error) {
+    // If it's already one of our custom errors, rethrow it
+    if (error instanceof CMSError) {
+      throw error
+    }
+
+    // Otherwise, wrap it in our custom error
+    throw new CMSAPIError(
+      `Error validating trip folder: ${error instanceof Error ? error.message : String(error)}`,
+      error
+    )
+  }
+}
+
+/**
  * Get the trip archetype data from the CMS
  * @param tripId - The ID of the trip
  * @returns The archetype data
@@ -116,6 +155,7 @@ export async function updateArchetypeData(
  * @param tripID - The ID of the trip
  * @param prompt - The prompt for the trip
  * @param player - The player who created the trip
+ * @param folderId - The ID of the trip folder category
  * @returns The trip document
  */
 export async function writeTripToCMS(
@@ -123,7 +163,8 @@ export async function writeTripToCMS(
   tripIndex: number,
   tripID: string,
   prompt: string,
-  player: Player
+  player: Player,
+  folderId: string
 ): Promise<TripDoc> {
   try {
     // Create the trip document without image reference
@@ -139,6 +180,10 @@ export async function writeTripToCMS(
       slug: {
         _type: "slug",
         current: tripID
+      },
+      folder: {
+        _type: "reference",
+        _ref: folderId
       }
     }
 

@@ -13,6 +13,22 @@
  */
 
 // Source: schema.json
+export type TripFolderList = {
+  _id: string
+  _type: "tripFolderList"
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  folders?: Array<{
+    _ref: string
+    _type: "reference"
+    _weak?: boolean
+    _key: string
+    [internalGroqTypeReferenceTo]?: "tripFolder"
+  }>
+}
+
 export type Statistics = {
   _id: string
   _type: "statistics"
@@ -205,6 +221,35 @@ export type Trip = {
   kills?: number
   visits?: number
   slug?: Slug
+  folder?: {
+    _ref: string
+    _type: "reference"
+    _weak?: boolean
+    [internalGroqTypeReferenceTo]?: "tripFolder"
+  }
+}
+
+export type TripFolder = {
+  _id: string
+  _type: "tripFolder"
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  restricted?: boolean
+  description?: string
+  image?: {
+    asset?: {
+      _ref: string
+      _type: "reference"
+      _weak?: boolean
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset"
+    }
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: "image"
+  }
 }
 
 export type SanityImagePaletteSwatch = {
@@ -326,11 +371,13 @@ export type SanityAssetSourceData = {
 }
 
 export type AllSanitySchemaTypes =
+  | TripFolderList
   | Statistics
   | RatImages
   | WorldEvent
   | Outcome
   | Trip
+  | TripFolder
   | SanityImagePaletteSwatch
   | SanityImagePalette
   | SanityImageDimensions

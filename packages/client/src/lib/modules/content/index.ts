@@ -6,7 +6,9 @@ import type {
   Trip as SanityTrip,
   Outcome as SanityOutcome,
   WorldEvent as SanityWorldEvent,
-  RatImages as SanityRatImages
+  RatImages as SanityRatImages,
+  TripFolder as SanityTripFolder,
+  TripFolderList as SanityTripFolderList
 } from "@sanity-types"
 import { queries } from "./sanity/groq"
 import type { MutationEvent } from "@sanity/client"
@@ -18,6 +20,7 @@ export type StaticContent = {
   trips: SanityTrip[]
   outcomes: SanityOutcome[]
   worldEvents: SanityWorldEvent[]
+  tripFolders: SanityTripFolder[]
 }
 
 // --- STORES -----------------------------------------------------------
@@ -26,7 +29,8 @@ export const staticContent = writable<StaticContent>({
   trips: [] as SanityTrip[],
   outcomes: [] as SanityOutcome[],
   worldEvents: [] as SanityWorldEvent[],
-  ratImages: {} as SanityRatImages
+  ratImages: {} as SanityRatImages,
+  tripFolders: [] as SanityTripFolder[]
 })
 
 export const lastUpdated = writable(performance.now())
@@ -55,7 +59,8 @@ export async function initStaticContent(worldAddress: string) {
     ratImages: data.ratImages,
     trips: data.trips,
     outcomes: data.outcomes,
-    worldEvents: processedWorldEvents
+    worldEvents: processedWorldEvents,
+    tripFolders: data.tripFolders || []
   })
 
   // Subscribe to changes to trips in sanity DB
@@ -92,6 +97,17 @@ export async function initStaticContent(worldAddress: string) {
         )
       }
     })
+  })
+
+  // Subscribe to changes to trip folder list in sanity DB
+  client.listen(queries.tripFolderList, {}).subscribe(update => {
+    const { result } = update
+    if (result && result.folders) {
+      staticContent.update(content => ({
+        ...content,
+        tripFolders: result.folders as SanityTripFolder[]
+      }))
+    }
   })
 }
 

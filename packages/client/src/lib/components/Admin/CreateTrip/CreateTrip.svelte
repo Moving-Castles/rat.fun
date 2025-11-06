@@ -1,9 +1,8 @@
 <script lang="ts">
-  import { onMount } from "svelte"
   import { gameConfig } from "$lib/modules/state/stores"
   import { playerERC20Balance } from "$lib/modules/erc20Listener/stores"
   import { getTripMaxValuePerWin, getTripMinRatValueToEnter } from "$lib/modules/state/utils"
-  import { CharacterCounter, BigButton } from "$lib/components/Shared"
+  import { CharacterCounter, BigButton, BackButton } from "$lib/components/Shared"
   import { busy, sendCreateTrip } from "$lib/modules/action-manager/index.svelte"
   import { typeHit } from "$lib/modules/sound"
   import { errorHandler } from "$lib/modules/error-handling"
@@ -11,6 +10,8 @@
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import { MIN_TRIP_CREATION_COST } from "@server/config"
   import { collapsed } from "$lib/modules/ui/state.svelte"
+  import { staticContent } from "$lib/modules/content"
+  import { TripFolders } from "$lib/components/Trip"
 
   let {
     ondone,
@@ -26,6 +27,21 @@
 
   let tripDescription: string = $state(savedTripDescription ?? "")
   let textareaElement: HTMLTextAreaElement | null = $state(null)
+  let selectedFolderId: string = $state("")
+  let currentStep: "folder" | "details" = $state("folder")
+
+  // Get non-restricted folders from staticContent
+  let availableFolders = $derived($staticContent.tripFolders.filter(folder => !folder.restricted))
+
+  // Calculate folder counts (all non-depleted trips for display)
+  let foldersCounts = $derived(
+    availableFolders.map(() => 0) // Empty counts since this is for creation, not browsing
+  )
+
+  // Get selected folder title for header
+  let selectedFolderTitle = $derived(
+    availableFolders.find(f => f._id === selectedFolderId)?.title ?? ""
+  )
 
   // Prompt has to be between 1 and MAX_TRIP_PROMPT_LENGTH characters
   let invalidTripDescriptionLength = $derived(
@@ -51,13 +67,15 @@
   // - Min rat value to enter is not set
   // - Trip creation cost is less than minimum
   // - Player has insufficient balance
+  // - No folder is selected
   const disabled = $derived(
     invalidTripDescriptionLength ||
       busy.CreateTrip.current !== 0 ||
       !$maxValuePerWin ||
       !$minRatValueToEnter ||
       flooredTripCreationCost < MIN_TRIP_CREATION_COST ||
-      $playerERC20Balance < flooredTripCreationCost
+      $playerERC20Balance < flooredTripCreationCost ||
+      !selectedFolderId
   )
 
   const placeholder =
@@ -80,9 +98,16 @@
           "trip description"
         )
       }
+      if (!selectedFolderId) {
+        throw new InputValidationError(
+          "Please select a category for your trip",
+          "selectedFolderId",
+          selectedFolderId
+        )
+      }
       // Notify parent before sending
       onsubmit?.({ prompt: tripDescription, cost: flooredTripCreationCost })
-      await sendCreateTrip(tripDescription, flooredTripCreationCost)
+      await sendCreateTrip(tripDescription, flooredTripCreationCost, selectedFolderId)
       ondone()
     } catch (error) {
       errorHandler(error)
@@ -91,7 +116,7 @@
     tripDescription = ""
   }
 
-  onMount(() => {
+  $effect(() => {
     // Focus the textarea when the component mounts
     if (textareaElement) {
       textareaElement.focus()
@@ -120,90 +145,124 @@
   >
     <div class="modal-content">
       <div class="create-trip" class:collapsed={$collapsed}>
-        <div class="controls">
-          <!-- TRIP DESCRIPTION -->
-          <div class="form-group">
-            <label for="trip-description">
-              <span class="highlight">Trip Description</span>
-              <CharacterCounter
-                currentLength={tripDescription.length}
-                maxLength={$gameConfig.maxTripPromptLength}
-              />
-            </label>
-            <textarea
-              disabled={busy.CreateTrip.current !== 0}
-              id="trip-description"
-              rows={$collapsed ? 12 : 6}
-              {placeholder}
-              oninput={typeHit}
-              bind:value={tripDescription}
-              bind:this={textareaElement}
-            ></textarea>
+        {#if currentStep === "folder"}
+          <!-- STEP 1: FOLDER SELECTION -->
+          <div class="folder-selection">
+            <div class="form-group">
+              <label>
+                <span class="highlight">Select Folder</span>
+              </label>
+            </div>
+            <TripFolders
+              onselect={folderId => {
+                selectedFolderId = folderId
+                currentStep = "details"
+              }}
+              folders={availableFolders}
+              {foldersCounts}
+              showCounts={false}
+            />
           </div>
+        {:else}
+          <!-- STEP 2: TRIP DETAILS -->
+          <div class="trip-header">
+            <div class="header-text">
+              Creating trip in: <span class="folder-name">{selectedFolderTitle}</span>
+            </div>
+            <button
+              class="back-link"
+              onclick={() => {
+                currentStep = "folder"
+              }}
+            >
+              Back
+            </button>
+          </div>
+          <div class="controls">
+            <!-- TRIP DESCRIPTION -->
+            <div class="form-group">
+              <label for="trip-description">
+                <span class="highlight">Trip Description</span>
+                <CharacterCounter
+                  currentLength={tripDescription.length}
+                  maxLength={$gameConfig.maxTripPromptLength}
+                />
+              </label>
+              <textarea
+                disabled={busy.CreateTrip.current !== 0}
+                id="trip-description"
+                rows={$collapsed ? 12 : 6}
+                {placeholder}
+                oninput={typeHit}
+                bind:value={tripDescription}
+                bind:this={textareaElement}
+              ></textarea>
+            </div>
 
-          <!-- TRIP CREATION COST SLIDER -->
-          <div class="slider-group">
-            <label for="trip-creation-cost-slider">
-              <span class="highlight">TRIP CREATION COST</span>
-              <input
-                class="cost-display"
-                onblur={e => {
-                  const value = Number((e.target as HTMLInputElement).value)
-                  if (value < MIN_TRIP_CREATION_COST || value > $playerERC20Balance) {
-                    tripCreationCost = Math.min(
-                      $playerERC20Balance,
-                      Math.max(MIN_TRIP_CREATION_COST, value)
-                    )
-                  }
-                }}
-                bind:value={tripCreationCost}
-                type="number"
-              />
-            </label>
-            <div class="slider-container">
-              <input
-                type="range"
-                id="trip-creation-cost-slider"
-                class="cost-slider"
-                step={Math.floor($playerERC20Balance / 40)}
-                min={Math.min($playerERC20Balance, MIN_TRIP_CREATION_COST)}
-                max={$playerERC20Balance}
-                oninput={e => {
-                  // playSample(Number(e.target.value) / Number($playerERC20Balance))
-                }}
-                bind:value={tripCreationCost}
-              />
-              <div class="slider-labels">
-                <span class="slider-min"
-                  >{CURRENCY_SYMBOL}{Math.min($playerERC20Balance, MIN_TRIP_CREATION_COST)}</span
-                >
-                <span class="slider-max">{CURRENCY_SYMBOL}{$playerERC20Balance}</span>
+            <!-- TRIP CREATION COST SLIDER -->
+            <div class="slider-group">
+              <label for="trip-creation-cost-slider">
+                <span class="highlight">TRIP CREATION COST</span>
+                <input
+                  class="cost-display"
+                  onblur={e => {
+                    const value = Number((e.target as HTMLInputElement).value)
+                    if (value < MIN_TRIP_CREATION_COST || value > $playerERC20Balance) {
+                      tripCreationCost = Math.min(
+                        $playerERC20Balance,
+                        Math.max(MIN_TRIP_CREATION_COST, value)
+                      )
+                    }
+                  }}
+                  bind:value={tripCreationCost}
+                  type="number"
+                />
+              </label>
+              <div class="slider-container">
+                <input
+                  type="range"
+                  id="trip-creation-cost-slider"
+                  class="cost-slider"
+                  step={Math.floor($playerERC20Balance / 40)}
+                  min={Math.min($playerERC20Balance, MIN_TRIP_CREATION_COST)}
+                  max={$playerERC20Balance}
+                  oninput={e => {
+                    // playSample(Number(e.target.value) / Number($playerERC20Balance))
+                  }}
+                  bind:value={tripCreationCost}
+                />
+                <div class="slider-labels">
+                  <span class="slider-min"
+                    >{CURRENCY_SYMBOL}{Math.min($playerERC20Balance, MIN_TRIP_CREATION_COST)}</span
+                  >
+                  <span class="slider-max">{CURRENCY_SYMBOL}{$playerERC20Balance}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- CALCULATED VALUES -->
+            <div class="calculated-values">
+              <div class="value-box">
+                <div class="value-label">MIN RAT VALUE TO TRIP</div>
+                <div class="value-amount">{CURRENCY_SYMBOL}{$minRatValueToEnter}</div>
+              </div>
+              <div class="value-box">
+                <div class="value-label">MAX VALUE PER WIN</div>
+                <div class="value-amount">{CURRENCY_SYMBOL}{$maxValuePerWin}</div>
               </div>
             </div>
           </div>
 
-          <!-- CALCULATED VALUES -->
-          <div class="calculated-values">
-            <div class="value-box">
-              <div class="value-label">MIN RAT VALUE TO TRIP</div>
-              <div class="value-amount">{CURRENCY_SYMBOL}{$minRatValueToEnter}</div>
-            </div>
-            <div class="value-box">
-              <div class="value-label">MAX VALUE PER WIN</div>
-              <div class="value-amount">{CURRENCY_SYMBOL}{$maxValuePerWin}</div>
-            </div>
+          <!-- ACTIONS -->
+          <div class="actions">
+            <BigButton
+              text="Create trip"
+              cost={flooredTripCreationCost}
+              {disabled}
+              onclick={onClick}
+            />
           </div>
-        </div>
-
-        <!-- ACTIONS -->
-        <div class="actions">
-          <BigButton
-            text="Create trip"
-            cost={flooredTripCreationCost}
-            {disabled}
-            onclick={onClick}
-          />
-        </div>
+        {/if}
       </div>
     </div>
   </div>
@@ -301,6 +360,11 @@
     -moz-appearance: textfield; /* Firefox */
   }
 
+  .modal-content {
+    height: 700px;
+    max-height: 90vh;
+  }
+
   .create-trip {
     height: 100%;
     width: 600px;
@@ -312,6 +376,49 @@
     border: 1px solid var(--color-grey-mid);
     padding: 10px;
 
+    .folder-selection {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+
+      > :global(.tiles) {
+        flex: 1;
+      }
+    }
+
+    .trip-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--color-grey-mid);
+      margin-bottom: 8px;
+      font-family: var(--typewriter-font-stack);
+      font-size: var(--font-size-normal);
+
+      .header-text {
+        .folder-name {
+          font-weight: bold;
+        }
+      }
+
+      .back-link {
+        background: none;
+        border: none;
+        color: var(--foreground);
+        text-decoration: underline;
+        cursor: pointer;
+        font-family: var(--typewriter-font-stack);
+        font-size: var(--font-size-normal);
+        padding: 0;
+
+        &:hover {
+          opacity: 0.7;
+        }
+      }
+    }
+
     .controls {
       display: flex;
       justify-self: start;
@@ -320,9 +427,10 @@
     }
 
     .form-group {
-      padding: 1rem;
+      // padding-top: 30px;
+      // padding-left: 30px;
       display: block;
-      margin-bottom: 15px;
+      // margin-bottom: 15px;
       width: 100%;
 
       label {
@@ -352,11 +460,24 @@
         outline-color: var(--color-alert);
         outline-width: 1px;
       }
+
+      select {
+        width: 100%;
+        padding: 5px;
+        border: none;
+        background: var(--foreground);
+        font-family: var(--typewriter-font-stack);
+        font-size: var(--font-size-normal);
+        border-radius: 0;
+        outline-color: var(--color-alert);
+        outline-width: 1px;
+        cursor: pointer;
+      }
     }
 
     .slider-group {
-      padding-left: 1rem;
-      padding-right: 1rem;
+      // padding-left: 1rem;
+      // padding-right: 1rem;
       display: block;
       width: 100%;
 
@@ -434,8 +555,8 @@
     }
 
     .calculated-values {
-      padding-left: 1rem;
-      padding-right: 1rem;
+      // padding-left: 1rem;
+      // padding-right: 1rem;
       display: flex;
       gap: 0;
       margin-bottom: 1rem;

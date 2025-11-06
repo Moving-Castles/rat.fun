@@ -1,5 +1,5 @@
 // ICONS
-import { MdAirlines, MdStar, MdAutoGraph, MdEvent, MdChat } from "react-icons/md"
+import { MdAirlines, MdStar, MdAutoGraph, MdEvent, MdChat, MdFolder, MdList } from "react-icons/md"
 
 export default (S: any) =>
   S.list()
@@ -18,6 +18,25 @@ export default (S: any) =>
         ),
       S.divider(),
       S.listItem()
+        .title("Trip Folders")
+        .icon(MdFolder)
+        .child(
+          S.documentList()
+            .title("Trip Folders")
+            .filter('_type == "tripFolder"')
+            .schemaType("tripFolder")
+        ),
+      S.listItem()
+        .title("Trip Folder List")
+        .icon(MdList)
+        .child(
+          S.editor()
+            .id("trip-folder-list")
+            .schemaType("tripFolderList")
+            .documentId("trip-folder-list")
+        ),
+      S.divider(),
+      S.listItem()
         .title("World Events")
         .icon(MdEvent)
         .child(
@@ -27,6 +46,7 @@ export default (S: any) =>
             .schemaType("worldEvent")
         ),
       S.divider(),
+
       S.listItem()
         .title("Rat images")
         .icon(MdChat)
