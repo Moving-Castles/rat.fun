@@ -148,6 +148,7 @@ export type EnterTripRequestBody = {
 export type CreateTripRequestBody = {
   tripPrompt: string
   tripCreationCost: number
+  folderId: string
 }
 
 /*

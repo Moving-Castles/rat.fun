@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { onMount } from "svelte"
   import { gameConfig } from "$lib/modules/state/stores"
   import { playerERC20Balance } from "$lib/modules/erc20Listener/stores"
   import { getTripMaxValuePerWin, getTripMinRatValueToEnter } from "$lib/modules/state/utils"
@@ -11,6 +10,7 @@
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import { MIN_TRIP_CREATION_COST } from "@server/config"
   import { collapsed } from "$lib/modules/ui/state.svelte"
+  import { staticContent } from "$lib/modules/content"
 
   let {
     ondone,
@@ -26,6 +26,10 @@
 
   let tripDescription: string = $state(savedTripDescription ?? "")
   let textareaElement: HTMLTextAreaElement | null = $state(null)
+  let selectedFolderId: string = $state("")
+
+  // Get non-restricted folders from staticContent
+  let availableFolders = $derived($staticContent.tripFolders.filter(folder => !folder.restricted))
 
   // Prompt has to be between 1 and MAX_TRIP_PROMPT_LENGTH characters
   let invalidTripDescriptionLength = $derived(
@@ -51,13 +55,15 @@
   // - Min rat value to enter is not set
   // - Trip creation cost is less than minimum
   // - Player has insufficient balance
+  // - No folder is selected
   const disabled = $derived(
     invalidTripDescriptionLength ||
       busy.CreateTrip.current !== 0 ||
       !$maxValuePerWin ||
       !$minRatValueToEnter ||
       flooredTripCreationCost < MIN_TRIP_CREATION_COST ||
-      $playerERC20Balance < flooredTripCreationCost
+      $playerERC20Balance < flooredTripCreationCost ||
+      !selectedFolderId
   )
 
   const placeholder =
@@ -80,9 +86,16 @@
           "trip description"
         )
       }
+      if (!selectedFolderId) {
+        throw new InputValidationError(
+          "Please select a category for your trip",
+          "selectedFolderId",
+          selectedFolderId
+        )
+      }
       // Notify parent before sending
       onsubmit?.({ prompt: tripDescription, cost: flooredTripCreationCost })
-      await sendCreateTrip(tripDescription, flooredTripCreationCost)
+      await sendCreateTrip(tripDescription, flooredTripCreationCost, selectedFolderId)
       ondone()
     } catch (error) {
       errorHandler(error)
@@ -91,7 +104,7 @@
     tripDescription = ""
   }
 
-  onMount(() => {
+  $effect(() => {
     // Focus the textarea when the component mounts
     if (textareaElement) {
       textareaElement.focus()
@@ -139,6 +152,24 @@
               bind:value={tripDescription}
               bind:this={textareaElement}
             ></textarea>
+          </div>
+
+          <!-- TRIP CATEGORY -->
+          <div class="form-group">
+            <label for="trip-category">
+              <span class="highlight">Trip Category</span>
+            </label>
+            <select
+              disabled={busy.CreateTrip.current !== 0}
+              id="trip-category"
+              bind:value={selectedFolderId}
+              oninput={typeHit}
+            >
+              <option value="">Select a category</option>
+              {#each availableFolders as folder}
+                <option value={folder._id}>{folder.title}</option>
+              {/each}
+            </select>
           </div>
 
           <!-- TRIP CREATION COST SLIDER -->
@@ -228,6 +259,24 @@
           bind:value={tripDescription}
           bind:this={textareaElement}
         ></textarea>
+      </div>
+
+      <!-- TRIP CATEGORY -->
+      <div class="form-group">
+        <label for="trip-category">
+          <span class="highlight">Trip Category</span>
+        </label>
+        <select
+          disabled={busy.CreateTrip.current !== 0}
+          id="trip-category"
+          bind:value={selectedFolderId}
+          oninput={typeHit}
+        >
+          <option value="">Select a category</option>
+          {#each availableFolders as folder}
+            <option value={folder._id}>{folder.title}</option>
+          {/each}
+        </select>
       </div>
 
       <!-- TRIP CREATION COST SLIDER -->
@@ -351,6 +400,19 @@
         resize: none;
         outline-color: var(--color-alert);
         outline-width: 1px;
+      }
+
+      select {
+        width: 100%;
+        padding: 5px;
+        border: none;
+        background: var(--foreground);
+        font-family: var(--typewriter-font-stack);
+        font-size: var(--font-size-normal);
+        border-radius: 0;
+        outline-color: var(--color-alert);
+        outline-width: 1px;
+        cursor: pointer;
       }
     }
 

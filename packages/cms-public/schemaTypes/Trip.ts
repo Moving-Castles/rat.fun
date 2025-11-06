@@ -98,6 +98,13 @@ export default {
         source: "title",
         slugify: (input: string) => input.toLowerCase().replace(/ /g, "-")
       }
+    },
+    {
+      title: "Folder",
+      name: "folder",
+      type: "reference",
+      to: [{ type: "tripFolder" }],
+      readOnly: true
     }
   ]
 }

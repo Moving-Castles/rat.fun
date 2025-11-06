@@ -7,7 +7,7 @@ import path from "path"
 import { CreateTripRequestBody, SignedRequest } from "@modules/types"
 
 // CMS
-import { writeTripToCMS, updateTripWithImage } from "@modules/cms/public"
+import { writeTripToCMS, updateTripWithImage, validateTripFolder } from "@modules/cms/public"
 
 // MUD
 import { systemCalls, network } from "@modules/mud/initMud"
@@ -37,7 +37,7 @@ async function routes(fastify: FastifyInstance) {
     opts,
     async (request: FastifyRequest<{ Body: SignedRequest<CreateTripRequestBody> }>, reply) => {
       try {
-        const { tripPrompt, tripCreationCost } = request.body.data
+        const { tripPrompt, tripCreationCost, folderId } = request.body.data
 
         // Recover player address from signature and convert to MUD bytes32 format
         const playerId = await verifyRequest(request.body)
@@ -53,6 +53,9 @@ async function routes(fastify: FastifyInstance) {
         // * * * * * * * * * * * * * * * * * *
 
         validateInputData(gameConfig, player, tripPrompt, tripCreationCost)
+
+        // Validate trip folder
+        await validateTripFolder(folderId)
 
         // * * * * * * * * * * * * * * * * * *
         // Generate unique trip ID
@@ -77,7 +80,7 @@ async function routes(fastify: FastifyInstance) {
         const resolvedNetwork = await network
         const worldAddress = resolvedNetwork.worldContract?.address ?? "0x0"
         const tripIndex = Number(getTripIndex(tripId))
-        await writeTripToCMS(worldAddress, tripIndex, tripId, tripPrompt, player)
+        await writeTripToCMS(worldAddress, tripIndex, tripId, tripPrompt, player, folderId)
         console.timeEnd("–– CMS text write")
 
         // * * * * * * * * * * * * * * * * * *

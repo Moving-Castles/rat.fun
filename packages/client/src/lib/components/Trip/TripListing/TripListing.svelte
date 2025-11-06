@@ -10,15 +10,42 @@
   import { blockNumber } from "$lib/modules/network"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import { TripItem, TripHeader } from "$lib/components/Trip"
+  import { staticContent } from "$lib/modules/content"
 
   let sortFunction = $state(entriesChronologically)
   let showDepletedTrips = false
   let textFilter = $state("")
   let lastChecked = $state<number>(Number(get(blockNumber)))
   let scrollContainer: HTMLDivElement | null = $state(null)
+  let selectedFolderId: string = $state("")
+
+  // Build trip folder map from staticContent
+  let tripFolderMap = $derived(
+    new Map(
+      $staticContent.trips
+        .filter(trip => trip.folder)
+        .map(trip => [trip._id, trip.folder?._ref || ""])
+    )
+  )
+
+  // Set default to first folder when folders are loaded
+  $effect(() => {
+    if ($staticContent.tripFolders.length > 0 && !selectedFolderId) {
+      selectedFolderId = $staticContent.tripFolders[0]._id
+    }
+  })
 
   const updateTrips = () => {
     lastChecked = Number(get(blockNumber))
+  }
+
+  // Filter trips by folder
+  const filterTripsByFolder = (entries: [string, Trip][], folderId: string) => {
+    if (!folderId) return entries
+    return entries.filter(([tripId, _]) => {
+      const tripFolderId = tripFolderMap.get(tripId)
+      return tripFolderId === folderId
+    })
   }
 
   // Here we add once there are a couple of updates
@@ -26,6 +53,7 @@
     let entries = Object.entries($trips)
     entries = filterDepletedTrips(entries, showDepletedTrips)
     entries = filterTrips(entries, textFilter)
+    entries = filterTripsByFolder(entries, selectedFolderId)
     return entries.sort(sortFunction)
   })
 
@@ -88,7 +116,13 @@
 </script>
 
 <div class="content" bind:this={scrollContainer}>
-  <TripHeader hasRat={$rat && !$rat.dead == true} {eligibleCount} totalCount={tripList.length} />
+  <TripHeader
+    hasRat={$rat && !$rat.dead == true}
+    {eligibleCount}
+    totalCount={tripList.length}
+    tripFolders={$staticContent.tripFolders}
+    bind:selectedFolderId
+  />
   <div class:animated={false} class="trip-listing" in:fade|global={{ duration: 300 }}>
     {#if activeList.length > 0}
       {#if activeList.length < tripList.length}

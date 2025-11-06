@@ -15,17 +15,20 @@ const outcomes = `*[_type == "outcome" && worldAddress == $worldAddress] {
 }`
 const worldEvents =
   '*[_type == "worldEvent" && worldAddress == $worldAddress] | order(activationDateTime asc)'
+const tripFolderList = '*[_id == "trip-folder-list"][0]{ folders[]->{ _id, title, description, image, restricted } }'
 
 export const queries = {
   ratImages,
   trips,
   outcomes,
   worldEvents,
+  tripFolderList,
   staticContent: `{
     "ratImages": ${ratImages},
     "trips": ${trips},
     "outcomes": ${outcomes},
-    "worldEvents": ${worldEvents}
+    "worldEvents": ${worldEvents},
+    "tripFolders": ${tripFolderList}.folders
   }`,
   outcomesForTrip: `*[_type == "outcome" && tripId == $tripId && worldAddress == $worldAddress] {
     ...,
