@@ -9,7 +9,6 @@
     DeployingRat,
     ConfirmLiquidation,
     LiquidatingRat,
-    RatDead,
     NoTokens,
     NoAllowance,
     PastTripList
@@ -71,8 +70,6 @@
     <ConfirmLiquidation />
   {:else if ratState.state.current === RAT_BOX_STATE.LIQUIDATING_RAT}
     <LiquidatingRat />
-  {:else if ratState.state.current === RAT_BOX_STATE.DEAD_RAT}
-    <RatDead />
   {:else if ratState.state.current === RAT_BOX_STATE.NO_TOKENS}
     <NoTokens />
   {:else if ratState.state.current === RAT_BOX_STATE.NO_ALLOWANCE}

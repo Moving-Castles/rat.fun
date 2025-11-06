@@ -11,10 +11,12 @@
 
   let {
     animation = "idle",
-    inert = false
+    inert = false,
+    grayscale = false
   }: {
     animation?: RatAnimation
     inert?: boolean
+    grayscale?: boolean
   } = $props()
 
   let images = $derived(addressToRatParts($player?.currentRat, $staticContent?.ratImages))
@@ -124,7 +126,7 @@
 
   // Setup constant arm animation
   onMount(() => {
-    if (!armsElement || inert) return
+    if (!armsElement || inert || animation == "dead") return
 
     // Create timeline inside onMount for proper scoping
     armTimeline = gsap.timeline({ repeat: -1, yoyo: true })
@@ -157,19 +159,31 @@
   {#if images && images.every(image => image.length > 0)}
     <!-- BODY -->
     <div class="layer ratBodies {animation}" bind:this={bodyElement}>
-      <img draggable="false" class="inner" src={images[0]} alt="" />
+      <img draggable="false" class="inner colored" src={images[0]} alt="" />
+      {#if grayscale}
+        <img draggable="false" class="inner grayscale-reveal delay-2" src={images[0]} alt="" />
+      {/if}
     </div>
     <!-- ARMS -->
     <div class="layer ratArms {animation}" bind:this={armsElement}>
-      <img draggable="false" class="inner" src={images[1]} alt="" />
+      <img draggable="false" class="inner colored" src={images[1]} alt="" />
+      {#if grayscale}
+        <img draggable="false" class="inner grayscale-reveal delay-1" src={images[1]} alt="" />
+      {/if}
     </div>
     <!-- HEAD -->
     <div class="layer ratHeads {animation}" bind:this={headElement}>
-      <img draggable="false" class="inner" src={images[2]} alt="" />
+      <img draggable="false" class="inner colored" src={images[2]} alt="" />
+      {#if grayscale}
+        <img draggable="false" class="inner grayscale-reveal" src={images[2]} alt="" />
+      {/if}
     </div>
     <!-- EARS -->
     <div class="layer ratEars {animation}" bind:this={earsElement}>
-      <img draggable="false" class="inner" src={images[3]} alt="" />
+      <img draggable="false" class="inner colored" src={images[3]} alt="" />
+      {#if grayscale}
+        <img draggable="false" class="inner grayscale-reveal" src={images[3]} alt="" />
+      {/if}
     </div>
   {:else}
     <NoImage />
@@ -192,10 +206,41 @@
     inset: 0;
     opacity: 0.9;
 
-    img {
+    img.inner {
       width: 100%;
       height: 100%;
       object-fit: contain;
+      position: absolute;
+      pointer-events: none;
+
+      &.colored {
+        filter: grayscale(0);
+      }
+
+      &.grayscale-reveal {
+        filter: grayscale(1) contrast(0.2);
+        mask: radial-gradient(circle, black 60%, transparent 70%) no-repeat center center;
+        mask-size: 0% 0%;
+        -webkit-mask: radial-gradient(circle, black 60%, transparent 70%) no-repeat center center;
+        -webkit-mask-size: 0% 0%;
+        animation: reveal 6s ease-out forwards;
+
+        &.delay-1 {
+          mask: radial-gradient(circle, black 60%, transparent 70%) no-repeat center;
+          -webkit-mask: radial-gradient(circle, black 60%, transparent 70%) no-repeat center;
+          mask-size: 0% 0%;
+          -webkit-mask-size: 0% 0%;
+          animation: reveal 6s ease-out forwards 1s;
+        }
+
+        &.delay-2 {
+          mask: radial-gradient(circle, black 60%, transparent 70%) no-repeat center;
+          -webkit-mask: radial-gradient(circle, black 60%, transparent 70%) no-repeat center;
+          mask-size: 0% 0%;
+          -webkit-mask-size: 0% 0%;
+          animation: reveal 6s ease-out forwards 2s;
+        }
+      }
     }
 
     &.ratBodies {
@@ -207,7 +252,14 @@
     }
   }
 
-  img {
-    pointer-events: none;
+  @keyframes reveal {
+    0% {
+      mask-size: 0% 0%;
+      -webkit-mask-size: 0% 0%;
+    }
+    100% {
+      mask-size: 250% 250%;
+      -webkit-mask-size: 250% 250%;
+    }
   }
 </style>
