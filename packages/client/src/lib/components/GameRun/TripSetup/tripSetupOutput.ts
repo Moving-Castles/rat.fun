@@ -46,7 +46,7 @@ export function generateTripSetupOutput() {
     },
     {
       type: "text",
-      content: "ABSOLUTELY NO LIABITITY FOR ANY PSYCHOLOGICAL OR BIOLOGICAL DAMAGE OR MUTILATION",
+      content: "ABSOLUTELY NO LIABITITY FOR ANY PSYCHOLOGICAL MUTILATION",
       color: "black",
       backgroundColor: "yellow",
       duration: 0,

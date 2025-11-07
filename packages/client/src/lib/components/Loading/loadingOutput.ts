@@ -63,7 +63,7 @@ export function generateLoadingOutput() {
       type: "loader",
       content: "BOOTING SLOP MACHINE...",
       color: "orange",
-      duration: 10000,
+      duration: 20000,
       typeSpeed: 20,
       backgroundColor: "green",
       loaderCharacters: "*"

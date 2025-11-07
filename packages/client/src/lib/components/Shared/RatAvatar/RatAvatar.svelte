@@ -326,7 +326,6 @@
     width: 100%;
     height: 100%;
     inset: 0;
-    opacity: 0.9;
 
     img.inner {
       width: 100%;

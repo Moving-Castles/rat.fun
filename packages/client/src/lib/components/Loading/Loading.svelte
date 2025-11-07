@@ -173,6 +173,7 @@
       background: yellow;
       font-size: 10px;
       color: black;
+      display: none;
     }
   }
 </style>

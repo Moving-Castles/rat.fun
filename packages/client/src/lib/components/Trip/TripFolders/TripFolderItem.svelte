@@ -74,6 +74,7 @@
       border-style: outset;
       border-width: 10px;
       border-color: rgba(0, 0, 0, 0.5);
+      color: black;
 
       display: flex;
       flex-direction: column;
@@ -81,10 +82,6 @@
       align-items: center;
 
       .title {
-        // width: auto;
-        // padding-bottom: 5px;
-        // padding-top: 5px;
-        // background: rgba(0, 0, 0, 0.5);
         .count {
           font-size: var(--font-size-normal);
         }

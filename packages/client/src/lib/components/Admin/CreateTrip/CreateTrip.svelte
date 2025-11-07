@@ -472,8 +472,6 @@
     }
 
     .slider-group {
-      // padding-left: 1rem;
-      // padding-right: 1rem;
       display: block;
       width: 100%;
 
@@ -551,8 +549,6 @@
     }
 
     .calculated-values {
-      // padding-left: 1rem;
-      // padding-right: 1rem;
       display: flex;
       gap: 0;
       margin-bottom: 1rem;

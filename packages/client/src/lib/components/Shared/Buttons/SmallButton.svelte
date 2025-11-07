@@ -60,6 +60,7 @@
       font-size: var(--font-size-normal);
       font-family: var(--special-font-stack);
       line-height: 1em;
+      color: black;
     }
 
     .button-cost {

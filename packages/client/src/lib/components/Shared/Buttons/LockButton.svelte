@@ -59,6 +59,7 @@
     .button-text {
       font-size: var(--font-size-normal);
       font-family: var(--special-font-stack);
+      color: black;
     }
 
     &:hover {
