@@ -47,12 +47,22 @@
 <style lang="scss">
   .tiles {
     width: 100%;
+    max-width: 100%;
     height: calc(100% - 60px);
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(4, 1fr);
-    place-content: center;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: minmax(0, 1fr);
+    justify-items: stretch;
+    align-items: stretch;
+    align-content: start;
     padding: 10px;
     gap: 10px;
+    overflow-x: hidden;
+  }
+
+  @media (max-width: 480px) {
+    .tiles {
+      grid-template-columns: 1fr;
+    }
   }
 </style>

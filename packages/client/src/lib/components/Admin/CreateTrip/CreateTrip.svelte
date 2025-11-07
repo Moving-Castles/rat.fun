@@ -9,8 +9,8 @@
   import { CharacterLimitError, InputValidationError } from "$lib/modules/error-handling/errors"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import { MIN_TRIP_CREATION_COST } from "@server/config"
-  import { collapsed } from "$lib/modules/ui/state.svelte"
   import { staticContent } from "$lib/modules/content"
+  import { isPhone } from "$lib/modules/ui/state.svelte"
   import { TripFolders } from "$lib/components/Trip"
 
   let {
@@ -144,7 +144,7 @@
     }}
   >
     <div class="modal-content">
-      <div class="create-trip" class:collapsed={$collapsed}>
+      <div class="create-trip">
         {#if currentStep === "folder"}
           <!-- STEP 1: FOLDER SELECTION -->
           <div class="folder-selection">
@@ -191,7 +191,7 @@
               <textarea
                 disabled={busy.CreateTrip.current !== 0}
                 id="trip-description"
-                rows={$collapsed ? 12 : 6}
+                rows={$isPhone ? 3 : 6}
                 {placeholder}
                 oninput={typeHit}
                 bind:value={tripDescription}
@@ -267,7 +267,7 @@
     </div>
   </div>
 {:else}
-  <div class="create-trip" class:collapsed={$collapsed}>
+  <div class="create-trip">
     <div class="controls">
       <!-- TRIP DESCRIPTION -->
       <div class="form-group">
@@ -281,7 +281,7 @@
         <textarea
           disabled={busy.CreateTrip.current !== 0}
           id="trip-description"
-          rows={$collapsed ? 12 : 6}
+          rows={$isPhone ? 3 : 6}
           {placeholder}
           oninput={typeHit}
           bind:value={tripDescription}
@@ -439,10 +439,7 @@
     }
 
     .form-group {
-      // padding-top: 30px;
-      // padding-left: 30px;
       display: block;
-      // margin-bottom: 15px;
       width: 100%;
 
       label {
