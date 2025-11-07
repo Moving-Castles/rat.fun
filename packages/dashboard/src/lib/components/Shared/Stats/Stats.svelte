@@ -2,6 +2,9 @@
   import SignedNumber from "$lib/components/Shared/SignedNumber/SignedNumber.svelte"
   import { activeRats, inactiveRats, activeTrips, inactiveTrips } from "$lib/modules/state/stores"
   import { staticContent } from "$lib/modules/content"
+
+  let startDate = $state<Date | null>(null)
+  let endDate = $state<Date | null>(null)
 </script>
 
 <div class="stats">
@@ -13,18 +16,6 @@
       </h1>
       <h1 class="top">
         <SignedNumber withTween value={$staticContent?.statistics?.ratTotalBalance || 0} />
-        <!-- {#if $staticContent?.statistics?.tripTotalBalance !== 0 && $staticContent?.statistics?.ratTotalBalance !== 0}
-          <span>
-            (<SignedNumber
-              noColor
-              withTween
-              value={(($staticContent?.statistics?.ratTotalBalance || 0) /
-                ($staticContent?.statistics?.tripTotalBalance || 0) -
-                1) *
-                100}
-            />%)
-          </span>
-        {/if} -->
       </h1>
     </div>
     <div class="balance throughput">
@@ -40,32 +31,9 @@
       </h1>
       <h1 class="top">
         <SignedNumber withTween value={$staticContent?.statistics?.tripTotalBalance || 0} />
-        <!-- {#if $staticContent?.statistics?.tripTotalBalance !== 0 && $staticContent?.statistics?.ratTotalBalance !== 0}
-          <span>
-            (<SignedNumber
-              noColor
-              withTween
-              value={(($staticContent?.statistics?.tripTotalBalance || 0) /
-                ($staticContent?.statistics?.ratTotalBalance || 0) -
-                1) *
-                -100}
-            />%)
-          </span>
-        {/if} -->
       </h1>
     </div>
   </div>
-
-  <!-- {#if $staticContent?.statistics?.totalThroughput && $staticContent?.statistics?.totalThroughput > 0}
-      {(
-        Math.abs(
-          $staticContent.statistics.totalBalance / $staticContent.statistics.totalThroughput
-        ) * 100
-      ).toFixed(2)}%
-    {:else}
-      0.00%
-    {/if}
-    <small>imbalance</small> -->
 </div>
 
 <style lang="scss">
