@@ -34,10 +34,14 @@
     overflow: hidden;
 
     .shader-canvas {
-      display: block;
+      display: none;
       width: 100%;
       height: 100%;
       object-fit: cover;
+
+      @media screen and (min-width: 768px) {
+        display: block;
+      }
     }
   }
 </style>
