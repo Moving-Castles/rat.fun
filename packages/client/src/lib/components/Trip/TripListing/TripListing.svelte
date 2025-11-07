@@ -3,12 +3,8 @@
   import { get } from "svelte/store"
   import { fade } from "svelte/transition"
   import { beforeNavigate, afterNavigate } from "$app/navigation"
-  import {
-    nonDepletedTrips,
-    ratTotalValue,
-    playerHasLiveRat,
-    selectedFolderId
-  } from "$lib/modules/state/stores"
+  import { nonDepletedTrips, ratTotalValue, playerHasLiveRat } from "$lib/modules/state/stores"
+  import { selectedFolderId } from "$lib/modules/ui/state.svelte"
   import { getTripMinRatValueToEnter } from "$lib/modules/state/utils"
   import { entriesChronologically } from "./sortFunctions"
   import { blockNumber } from "$lib/modules/network"

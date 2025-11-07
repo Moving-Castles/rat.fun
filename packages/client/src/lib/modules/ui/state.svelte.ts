@@ -10,8 +10,7 @@ export const notificationsRead = new LocalStorage("rat.fun.notifications", [])
 
 // For UI
 export const collapsed = writable(true)
-
 export const focusEvent = writable(-1)
 export const focusTrip = writable("")
-
 export const lightboxState = new LightboxState()
+export const selectedFolderId = writable("")
