@@ -472,7 +472,7 @@
     }
 
     .admin-divider {
-      width: 40px;
+      width: 50px;
     }
   }
 </style>
