@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from "svelte"
+  import { onMount, onDestroy } from "svelte"
   import type { TripEventBaseline, TripEvent, PendingTrip } from "$lib/components/Admin/types"
   import { TRIP_EVENT_TYPE } from "$lib/components/Admin/enums"
   import {
@@ -13,6 +13,12 @@
   import { staticContent } from "$lib/modules/content"
   import { calculateProfitLossForTrip } from "./helpers"
   import * as sortFunctions from "$lib/components/Trip/TripListing/sortFunctions"
+  import {
+    isPhone,
+    phoneActiveAdminView,
+    phoneAdminTripsSubView,
+    phoneAdminProfitSubView
+  } from "$lib/modules/ui/state.svelte"
 
   import {
     AdminEventLog,
@@ -22,6 +28,7 @@
     ProfitLossHistoryGraph,
     ProfitLossOverview
   } from "$lib/components/Admin"
+  import { SmallButton } from "$lib/components/Shared"
 
   let showCreateTripModal = $state(false)
   let savedTripDescription = $state<string>("")
@@ -94,7 +101,6 @@
   // Data processing logic moved from ProfitLossHistoryGraph
   // Lazy load graph data to avoid blocking initial render
   let graphData = $derived.by(() => {
-    console.log("shouldLoadGraphData", shouldLoadGraphData)
     if (!shouldLoadGraphData) {
       return []
     }
@@ -157,19 +163,74 @@
     $backgroundMusic?.stop()
     $backgroundMusic = playSound("ratfunMusic", "admin", true)
 
+    // Reset admin view to home on entry
+    phoneActiveAdminView.set("home")
+    phoneAdminTripsSubView.set("active")
+    phoneAdminProfitSubView.set("graph")
+
     // Defer graph data loading to avoid blocking initial render
     setTimeout(() => {
       shouldLoadGraphData = true
     }, 50)
   })
+
+  onDestroy(() => {
+    // Reset all admin views when leaving cashboard
+    phoneActiveAdminView.set("home")
+    phoneAdminTripsSubView.set("active")
+    phoneAdminProfitSubView.set("graph")
+  })
+
+  // Track previous view to detect when switching away from trips/profit
+  let previousView = $state<"home" | "trips" | "profit">("home")
+
+  $effect(() => {
+    const currentView = $phoneActiveAdminView
+
+    // Reset trips sub-view when switching away from trips
+    if (previousView === "trips" && currentView !== "trips") {
+      phoneAdminTripsSubView.set("active")
+    }
+
+    // Reset profit sub-view when switching away from profit
+    if (previousView === "profit" && currentView !== "profit") {
+      phoneAdminProfitSubView.set("graph")
+    }
+
+    previousView = currentView
+  })
 </script>
 
 <div class="admin-container">
-  <!-- Top row -->
-  <div class="admin-row top">
-    <!-- Trip monitor -->
-    <div class="trip-monitor-container" bind:clientHeight>
-      <div class="p-l-overview">
+  {#if $isPhone}
+    <!-- Phone Navigation -->
+    <div class="phone-nav">
+      <div class="nav-button-wrapper">
+        <SmallButton
+          text="HOME"
+          onclick={() => phoneActiveAdminView.set("home")}
+          disabled={$phoneActiveAdminView === "home"}
+        />
+      </div>
+      <div class="nav-button-wrapper">
+        <SmallButton
+          text="TRIPS"
+          onclick={() => phoneActiveAdminView.set("trips")}
+          disabled={$phoneActiveAdminView === "trips"}
+        />
+      </div>
+      <div class="nav-button-wrapper">
+        <SmallButton
+          text="PROFIT"
+          onclick={() => phoneActiveAdminView.set("profit")}
+          disabled={$phoneActiveAdminView === "profit"}
+        />
+      </div>
+    </div>
+
+    <!-- Phone Views -->
+    {#if $phoneActiveAdminView === "home"}
+      <div class="phone-view">
         <ProfitLossOverview
           onCreateTripClick={() => {
             if (busy.CreateTrip.current !== 0) return
@@ -177,38 +238,114 @@
           }}
         />
       </div>
-      <div class="p-l-graph">
-        <ProfitLossHistoryGraph {graphData} height={clientHeight} />
+    {:else if $phoneActiveAdminView === "trips"}
+      <div class="phone-view">
+        <div class="phone-sub-nav">
+          <div class="sub-nav-button-wrapper">
+            <SmallButton
+              text="ACTIVE"
+              onclick={() => phoneAdminTripsSubView.set("active")}
+              disabled={$phoneAdminTripsSubView === "active"}
+            />
+          </div>
+          <div class="sub-nav-button-wrapper">
+            <SmallButton
+              text="PAST"
+              onclick={() => phoneAdminTripsSubView.set("past")}
+              disabled={$phoneAdminTripsSubView === "past"}
+            />
+          </div>
+        </div>
+        {#if $phoneAdminTripsSubView === "active"}
+          <AdminActiveTripTable
+            {pendingTrip}
+            tripList={activeTripsList}
+            plots={allSparkPlots}
+            bind:sortFunction={activeTripsSortFunction}
+            bind:sortDirection={activeTripsSortDirection}
+          />
+        {:else}
+          <AdminPastTripTable
+            tripList={pastTripsList}
+            bind:sortFunction={pastTripsSortFunction}
+            bind:sortDirection={pastTripsSortDirection}
+          />
+        {/if}
+      </div>
+    {:else if $phoneActiveAdminView === "profit"}
+      <div class="phone-view">
+        <div class="phone-sub-nav">
+          <div class="sub-nav-button-wrapper">
+            <SmallButton
+              text="GRAPH"
+              onclick={() => phoneAdminProfitSubView.set("graph")}
+              disabled={$phoneAdminProfitSubView === "graph"}
+            />
+          </div>
+          <div class="sub-nav-button-wrapper">
+            <SmallButton
+              text="LOG"
+              onclick={() => phoneAdminProfitSubView.set("log")}
+              disabled={$phoneAdminProfitSubView === "log"}
+            />
+          </div>
+        </div>
+        {#if $phoneAdminProfitSubView === "graph"}
+          <div bind:clientHeight style="flex: 1; background: #222;">
+            <ProfitLossHistoryGraph {graphData} height={clientHeight} />
+          </div>
+        {:else}
+          <AdminEventLog {graphData} />
+        {/if}
+      </div>
+    {/if}
+  {:else}
+    <!-- Desktop Layout -->
+    <!-- Top row -->
+    <div class="admin-row top">
+      <!-- Trip monitor -->
+      <div class="trip-monitor-container" bind:clientHeight>
+        <div class="p-l-overview">
+          <ProfitLossOverview
+            onCreateTripClick={() => {
+              if (busy.CreateTrip.current !== 0) return
+              showCreateTripModal = true
+            }}
+          />
+        </div>
+        <div class="p-l-graph">
+          <ProfitLossHistoryGraph {graphData} height={clientHeight} />
+        </div>
+      </div>
+      <!-- Event log -->
+      <div class="event-log-container">
+        <AdminEventLog {graphData} />
       </div>
     </div>
-    <!-- Event log -->
-    <div class="event-log-container">
-      <AdminEventLog {graphData} />
+    <!-- Bottom row -->
+    <div class="admin-row bottom">
+      <!-- Active trips -->
+      <div class="active-trip-table-container">
+        <AdminActiveTripTable
+          {pendingTrip}
+          tripList={activeTripsList}
+          plots={allSparkPlots}
+          bind:sortFunction={activeTripsSortFunction}
+          bind:sortDirection={activeTripsSortDirection}
+        />
+      </div>
+      <!-- Divider -->
+      <div class="admin-divider warning-mute"></div>
+      <!-- Past trips -->
+      <div class="past-trip-table-container">
+        <AdminPastTripTable
+          tripList={pastTripsList}
+          bind:sortFunction={pastTripsSortFunction}
+          bind:sortDirection={pastTripsSortDirection}
+        />
+      </div>
     </div>
-  </div>
-  <!-- Bottom row -->
-  <div class="admin-row bottom">
-    <!-- Active trips -->
-    <div class="active-trip-table-container">
-      <AdminActiveTripTable
-        {pendingTrip}
-        tripList={activeTripsList}
-        plots={allSparkPlots}
-        bind:sortFunction={activeTripsSortFunction}
-        bind:sortDirection={activeTripsSortDirection}
-      />
-    </div>
-    <!-- Divider -->
-    <div class="admin-divider warning-mute"></div>
-    <!-- Past trips -->
-    <div class="past-trip-table-container">
-      <AdminPastTripTable
-        tripList={pastTripsList}
-        bind:sortFunction={pastTripsSortFunction}
-        bind:sortDirection={pastTripsSortDirection}
-      />
-    </div>
-  </div>
+  {/if}
 </div>
 
 {#if showCreateTripModal}
@@ -244,6 +381,51 @@
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
+
+    @media (max-width: 800px) {
+      width: 100%;
+    }
+
+    .phone-nav {
+      display: flex;
+      border-bottom: var(--default-border-style);
+      background: var(--background-semi-transparent);
+      flex-shrink: 0;
+
+      .nav-button-wrapper {
+        flex: 0 0 33.333%;
+        width: 33.333%;
+        height: 60px;
+
+        :global(button) {
+          border-radius: 0;
+        }
+      }
+    }
+
+    .phone-sub-nav {
+      display: flex;
+      border-bottom: var(--default-border-style);
+      background: var(--background-semi-transparent);
+      flex-shrink: 0;
+
+      .sub-nav-button-wrapper {
+        flex: 0 0 50%;
+        width: 50%;
+        height: 50px;
+
+        :global(button) {
+          border-radius: 0;
+        }
+      }
+    }
+
+    .phone-view {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
 
     .admin-row {
       height: 50%;
@@ -290,7 +472,7 @@
     }
 
     .admin-divider {
-      width: 40px;
+      width: 50px;
     }
   }
 </style>

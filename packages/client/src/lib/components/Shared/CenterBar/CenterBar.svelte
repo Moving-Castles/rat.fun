@@ -20,7 +20,7 @@
       var(--color-grey-dark) 40px
     );
 
-    @media (max-width: 700px) {
+    @media (max-width: 800px) {
       width: 100%;
       height: var(--game-center-bar-phone-height);
     }

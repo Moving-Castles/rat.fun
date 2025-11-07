@@ -83,6 +83,9 @@
 <style lang="scss">
   .player-info {
     min-width: 200px;
+    @media (max-width: 800px) {
+      min-width: unset;
+    }
 
     .player-stats {
       display: flex;
@@ -136,5 +139,12 @@
         object-fit: contain;
       }
     }
+
+    // @media (max-width: 800px) {
+    //   // Hide avatar on phone but keep name visible
+    //   .avatar {
+    //     display: none;
+    //   }
+    // }
   }
 </style>

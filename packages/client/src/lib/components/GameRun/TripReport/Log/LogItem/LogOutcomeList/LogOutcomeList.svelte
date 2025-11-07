@@ -83,5 +83,6 @@
     flex-direction: row;
     gap: 5px;
     flex-wrap: wrap;
+    height: 45px;
   }
 </style>

@@ -119,6 +119,7 @@
       width: 500px;
       font-family: var(--special-font-stack);
       font-size: var(--font-size-extra-large);
+      line-height: 0.9em;
     }
   }
 

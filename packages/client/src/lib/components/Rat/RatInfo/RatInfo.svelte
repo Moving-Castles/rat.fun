@@ -7,8 +7,6 @@
   // Sync display rat to on-chain rat
   let displayRat = $state<Rat | null>(null)
 
-  $inspect(displayRat)
-
   const updateDisplayRat = async () => {
     if (frozenRat) {
       // If we are coming back from a trip frozenRat is set
@@ -61,8 +59,9 @@
       overflow: visible;
       height: 260px;
 
-      @media (max-width: 700px) {
+      @media (max-width: 800px) {
         height: 160px;
+        order: 1;
       }
     }
 
@@ -71,6 +70,10 @@
       border-bottom: var(--default-border-style);
       flex: 1; /* Take remaining space */
       overflow: hidden;
+
+      @media (max-width: 800px) {
+        order: 3;
+      }
     }
 
     .rat-liquidate {
@@ -78,6 +81,10 @@
       width: 100%;
       border-bottom: var(--default-border-style);
       flex-shrink: 0;
+
+      @media (max-width: 800px) {
+        order: 2;
+      }
     }
   }
 </style>

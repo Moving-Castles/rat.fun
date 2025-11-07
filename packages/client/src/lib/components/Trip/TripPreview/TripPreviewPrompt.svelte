@@ -23,9 +23,8 @@
     overflow-wrap: anywhere; /* Break anywhere if necessary to prevent overflow */
     width: 100%;
     font-family: var(--special-font-stack);
-    background: var(--color-alert);
+    background: rgba(0, 0, 0, 0.8);
     height: 100%;
-    background: url("/images/texture-2.png");
 
     .content {
       max-width: 55ch;
@@ -39,11 +38,11 @@
       }
 
       &.medium {
-        font-size: var(--font-size-large);
+        font-size: var(--font-size-extra-large);
       }
 
       &.long {
-        font-size: var(--font-size-normal);
+        font-size: var(--font-size-large);
       }
 
       &.extra-long {

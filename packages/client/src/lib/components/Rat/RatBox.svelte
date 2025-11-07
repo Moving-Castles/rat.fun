@@ -133,13 +133,16 @@
   .rat-box {
     display: flex;
     height: var(--game-window-main-height);
-    width: var(--game-column-width);
+    width: 100%;
+    max-width: 100%;
     position: relative;
     z-index: var(--z-top);
     overflow: visible;
 
-    @media (max-width: 700px) {
+    @media (max-width: 800px) {
       width: 100%;
+      flex: 1;
+      height: auto;
     }
   }
 </style>

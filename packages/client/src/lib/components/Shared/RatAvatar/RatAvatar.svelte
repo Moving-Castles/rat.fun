@@ -18,7 +18,7 @@
     animation?: RatAnimation
     inert?: boolean
     grayscale?: boolean
-    width: number
+    width?: number
   } = $props()
 
   let images = $derived(addressToRatParts($player?.currentRat, $staticContent?.ratImages))
@@ -273,38 +273,31 @@
   })
 </script>
 
-<div
-  {onmousedown}
-  class="rat-container"
-  role="button"
-  tabindex="0"
-  style:width="{width}px"
-  style:height="{width}px"
->
+<div {onmousedown} class="rat-container" role="button" tabindex="0" style:--rat-width="{width}px">
   {#if images && images.every(image => image.length > 0)}
     <!-- BODY -->
-    <div style:width="{width}px" class="layer ratBodies {animation}" bind:this={bodyElement}>
+    <div class="layer ratBodies {animation}" bind:this={bodyElement}>
       <img draggable="false" class="inner colored" src={images[0]} alt="" />
       {#if grayscale}
         <img draggable="false" class="inner grayscale-reveal delay-2" src={images[0]} alt="" />
       {/if}
     </div>
     <!-- ARMS -->
-    <div style:width="{width}px" class="layer ratArms {animation}" bind:this={armsElement}>
+    <div class="layer ratArms {animation}" bind:this={armsElement}>
       <img draggable="false" class="inner colored" src={images[1]} alt="" />
       {#if grayscale}
         <img draggable="false" class="inner grayscale-reveal delay-1" src={images[1]} alt="" />
       {/if}
     </div>
     <!-- HEAD -->
-    <div style:width="{width}px" class="layer ratHeads {animation}" bind:this={headElement}>
+    <div class="layer ratHeads {animation}" bind:this={headElement}>
       <img draggable="false" class="inner colored" src={images[2]} alt="" />
       {#if grayscale}
         <img draggable="false" class="inner grayscale-reveal" src={images[2]} alt="" />
       {/if}
     </div>
     <!-- EARS -->
-    <div style:width="{width}px" class="layer ratEars {animation}" bind:this={earsElement}>
+    <div class="layer ratEars {animation}" bind:this={earsElement}>
       <img draggable="false" class="inner colored" src={images[3]} alt="" />
       {#if grayscale}
         <img draggable="false" class="inner grayscale-reveal" src={images[3]} alt="" />
@@ -321,11 +314,17 @@
     position: relative;
     cursor: pointer;
     user-select: none;
+    width: var(--rat-width);
+    height: var(--rat-width);
+    max-width: 100%;
+    max-height: 100%;
+    aspect-ratio: 1;
   }
 
   .layer {
     position: absolute;
-    width: 260px;
+    width: 100%;
+    height: 100%;
     inset: 0;
     opacity: 0.9;
 

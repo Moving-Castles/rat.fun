@@ -86,7 +86,7 @@
           filter: drop-shadow(0px 0px 2px #ffffff);
         }
 
-        @media (max-width: 700px) {
+        @media (max-width: 800px) {
           font-size: 48px;
         }
       }

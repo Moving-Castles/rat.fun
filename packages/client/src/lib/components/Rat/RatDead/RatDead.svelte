@@ -40,7 +40,7 @@
       filter: grayscale(1);
       overflow: visible;
 
-      @media (max-width: 700px) {
+      @media (max-width: 800px) {
         width: 160px;
         height: 160px;
       }

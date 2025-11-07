@@ -2,9 +2,7 @@
   import * as sortFunctions from "$lib/components/Trip/TripListing/sortFunctions"
   import { SignedNumber } from "$lib/components/Shared"
   import type { TripEvent, PendingTrip } from "$lib/components/Admin/types"
-  import { derived } from "svelte/store"
   import { profitLoss } from "$lib/modules/state/stores"
-  import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import { focusEvent, focusTrip } from "$lib/modules/ui/state.svelte"
 
   import AdminActiveTripTableItem from "./AdminActiveTripTableItem.svelte"
@@ -25,11 +23,6 @@
   } = $props()
 
   let sortFunctionName = $derived(sortFunction.name)
-
-  const portfolioClass = derived([profitLoss], ([$profitLoss]) => {
-    if ($profitLoss === 0) return "neutral"
-    return $profitLoss > 0 ? "upText" : "downText"
-  })
 
   const sortByVisit = () => {
     sortFunction =
@@ -136,19 +129,6 @@
     // background: #000;
   }
 
-  .no-data {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    justify-self: center;
-    align-self: center;
-  }
-
   th {
     font-size: var(--font-size-small);
     border-top: 1px solid rgb(59, 59, 59);
@@ -193,30 +173,19 @@
 
   .cell-spark {
     width: 80px;
+
+    @media (max-width: 800px) {
+      display: none;
+    }
   }
 
   .cell-action {
     width: 100px;
     height: 100%;
     padding-right: 0;
-  }
 
-  .downText {
-    color: red;
+    @media (max-width: 800px) {
+      width: 150px;
+    }
   }
-
-  .upText {
-    color: #78ee72;
-  }
-
-  // .profit-value {
-  //   &.upText {
-  //     color: black;
-  //     background: #78ee72;
-  //   }
-  //   &.downText {
-  //     color: black;
-  //     background: red;
-  //   }
-  // }
 </style>

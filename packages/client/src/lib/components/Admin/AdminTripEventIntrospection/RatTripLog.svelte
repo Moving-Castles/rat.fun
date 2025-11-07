@@ -1,59 +1,17 @@
 <script lang="ts">
-  import { gsap } from "gsap"
+  import type { Outcome } from "@sanity-types"
+  import type { MergedLogEntry } from "$lib/components/GameRun/types"
+  import type { EnterTripReturnValue } from "@server/modules/types"
   import { onMount } from "svelte"
+  import { gsap } from "gsap"
   import { typeHit } from "$lib/modules/sound"
   import { HEALTH_SYMBOL } from "$lib/modules/ui/constants"
-  import type { Outcome } from "@sanity-types"
+  import { mergeLog } from "$lib/components/GameRun/TripReport/Log"
 
   let { result }: { result: Outcome } = $props()
 
-  // Merge log with outcomes
-  type MergedLogEntry = {
-    timestamp: string
-    event: string
-    balanceTransfer?: { logStep: number; amount: number }
-    itemChanges?: Array<{
-      logStep: number
-      type: "add" | "remove"
-      name: string
-      value: number
-      id?: string
-    }>
-  }
-
-  function mergeLog(result: any): MergedLogEntry[] {
-    const mergedLog: MergedLogEntry[] = JSON.parse(JSON.stringify(result.log))
-    const balanceTransfers = result.balanceTransfers || []
-    const itemChanges = result.itemChanges || []
-
-    for (let i = 0; i < mergedLog.length; i++) {
-      // Balance transfers
-      const balanceTransfersOnLogStep = balanceTransfers.filter(
-        (bT: any) => bT.logStep === i && bT.amount !== 0
-      )
-
-      if (balanceTransfersOnLogStep.length > 0) {
-        const totalAmount = balanceTransfersOnLogStep.reduce(
-          (sum: number, transfer: any) => sum + transfer.amount,
-          0
-        )
-        mergedLog[i].balanceTransfer = {
-          logStep: i,
-          amount: totalAmount
-        }
-      }
-
-      // Item changes
-      const itemChangesOnStep = itemChanges.filter((iC: any) => iC.logStep === i)
-      if (itemChangesOnStep.length > 0) {
-        mergedLog[i].itemChanges = itemChangesOnStep
-      }
-    }
-
-    return mergedLog
-  }
-
-  let mergedLog: MergedLogEntry[] = $derived(mergeLog(result))
+  // ???
+  let mergedLog: MergedLogEntry[] = $derived(mergeLog(result as unknown as EnterTripReturnValue))
   let logEntryElements: HTMLDivElement[] = []
 
   onMount(() => {

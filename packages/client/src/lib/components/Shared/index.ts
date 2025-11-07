@@ -48,6 +48,7 @@ export { default as ModeSwitchButton } from "./Buttons/ModeSwitchButton.svelte"
 export { default as CenterBar } from "./CenterBar/CenterBar.svelte"
 export { default as CharacterCounter } from "./CharacterCounter/CharacterCounter.svelte"
 export { default as NoImage } from "./NoImage/NoImage.svelte"
+export { default as PhoneGameViewButton } from "./PhoneGameViewButton/PhoneGameViewButton.svelte"
 
 /* Utility Components */
 export { default as SEO } from "./SEO/SEO.svelte"

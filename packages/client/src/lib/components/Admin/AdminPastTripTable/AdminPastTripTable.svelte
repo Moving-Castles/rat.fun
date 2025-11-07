@@ -1,10 +1,8 @@
 <script lang="ts">
   import { realisedProfitLoss } from "$lib/modules/state/stores"
   import { focusTrip, focusEvent } from "$lib/modules/ui/state.svelte"
-  import { derived } from "svelte/store"
   import { SignedNumber } from "$lib/components/Shared"
   import * as sortFunctions from "$lib/components/Trip/TripListing/sortFunctions"
-  // import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
 
   import AdminPastTripTableItem from "../AdminPastTripTable/AdminPastTripTableItem.svelte"
 
@@ -34,11 +32,6 @@
     sortDirection = sortDirection === "asc" ? "desc" : "asc"
   }
 
-  const portfolioClass = derived([realisedProfitLoss], ([$realisedProfitLoss]) => {
-    if ($realisedProfitLoss === 0) return "neutral"
-    return $realisedProfitLoss > 0 ? "upText" : "downText"
-  })
-
   const onpointerenter = (id: string) => {
     $focusTrip = id
     $focusEvent = -1
@@ -52,7 +45,7 @@
 
 <div class="admin-trip-table-container">
   <div class="table-summary">
-    <div class="left">Liquidated trips</div>
+    <div class="left">Past trips</div>
     <div class="right">
       Profit:
       <SignedNumber withCurrency value={$realisedProfitLoss} />
@@ -115,19 +108,6 @@
     justify-content: space-between;
     font-size: var(--font-size-normal);
     font-family: var(--special-font-stack);
-  }
-
-  .no-data {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    justify-self: center;
-    align-self: center;
   }
 
   th {

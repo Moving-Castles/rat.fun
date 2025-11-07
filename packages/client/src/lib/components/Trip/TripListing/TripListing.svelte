@@ -198,6 +198,11 @@
     height: var(--game-window-main-height);
     height: var(--game-window-height);
     max-height: 100%;
+
+    @media (max-width: 800px) {
+      flex: 1;
+      height: auto;
+    }
   }
 
   .new-trips-button {

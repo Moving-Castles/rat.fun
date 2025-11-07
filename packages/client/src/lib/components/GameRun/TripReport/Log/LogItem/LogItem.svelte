@@ -105,8 +105,8 @@
 <style lang="scss">
   .log-item {
     display: flex;
+    align-items: flex-start;
     margin-bottom: 0.5em;
-    line-height: 40px;
-    height: 40px;
+    min-height: 40px;
   }
 </style>

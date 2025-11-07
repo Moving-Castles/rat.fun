@@ -62,6 +62,9 @@
       flex-direction: row;
       gap: 10px;
       height: 80px;
+      @media (max-width: 800px) {
+        width: 100%;
+      }
     }
   }
 </style>

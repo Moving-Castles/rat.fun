@@ -185,13 +185,15 @@
 <style lang="scss">
   .log-text {
     display: inline-block;
-    background: var(--color-grey-light);
+    background: rgba(255, 255, 255, 0.6);
     max-width: 100%;
     padding: 5px;
     color: var(--background);
-    line-height: 1em;
+    line-height: 1.4em;
     font-family: var(--special-font-stack);
     font-size: var(--font-size-large);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 
     :global(.item-ref) {
       background: yellow;

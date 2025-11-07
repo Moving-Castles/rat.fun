@@ -25,5 +25,12 @@
     width: 100%;
     height: 100%;
     user-select: none;
+
+    @media (max-width: 800px) {
+      display: flex;
+      flex-direction: row;
+      gap: 10px;
+      padding: 10px;
+    }
   }
 </style>

@@ -8,7 +8,7 @@
   import { lastUpdated, staticContent } from "$lib/modules/content"
   import { urlFor } from "$lib/modules/content/sanity"
   import { NoImage } from "$lib/components/Shared"
-  import { lightboxState } from "$lib/modules/ui/state.svelte"
+  import { lightboxState, isPhone } from "$lib/modules/ui/state.svelte"
   import { blocksToReadableTime } from "$lib/modules/utils"
   import { blockNumber } from "$lib/modules/network"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
@@ -54,6 +54,68 @@
   const openLightbox = () => {
     lightboxState.open(tripLightBoxUrl, `trip #${trip.index}`)
   }
+
+  // Data rows configuration with reactivity
+  let infoRows = $derived([
+    {
+      label: "TRIP",
+      value: `#${trip.index}`,
+      className: "index",
+      hideOnPhone: true
+    },
+    {
+      label: "CREATOR",
+      value: getTripOwnerName(trip),
+      hideOnPhone: false
+    },
+    ...(trip.lastVisitBlock
+      ? [
+          {
+            label: "LAST VISIT",
+            value: blocksToReadableTime(Number($blockNumber) - Number(trip.lastVisitBlock)),
+            className: "last-visit-block",
+            hideOnPhone: true
+          }
+        ]
+      : []),
+    {
+      label: "VISITS",
+      value: String(trip.visitCount),
+      className: "visit-count"
+    },
+    {
+      label: "KILLS",
+      value: String(trip?.killCount ?? 0),
+      className: "kill-count"
+    },
+    {
+      label: "CREATION COST",
+      value: `${CURRENCY_SYMBOL}${trip.tripCreationCost}`,
+      className: "creation-cost",
+      hideOnPhone: true
+    },
+    {
+      label: "BALANCE",
+      value: `${CURRENCY_SYMBOL}${trip.balance}`,
+      className: "balance",
+      depleted: Number(trip.balance) === 0
+    },
+    {
+      label: "MIN RAT VALUE TO ENTER",
+      value: `${CURRENCY_SYMBOL}${$minRatValueToEnter ?? 0}`,
+      className: "min-rat-value-to-enter",
+      hideOnPhone: true
+    },
+    ...($maxValuePerWin > 0
+      ? [
+          {
+            label: "MAX VALUE PER WIN",
+            value: `${CURRENCY_SYMBOL}${$maxValuePerWin}`,
+            className: "max-value-per-win"
+          }
+        ]
+      : [])
+  ])
 </script>
 
 <div class="trip-preview-header">
@@ -61,69 +123,29 @@
   <!-- svelte-ignore a11y_click_events_have_key_events -->
   <!-- svelte-ignore a11y_no_static_element_interactions -->
   <div class="column left">
-    <div class="trip-image">
-      {#key $lastUpdated}
-        {#if tripImageUrl}
-          <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-          <img onclick={openLightbox} src={tripImageUrl} alt={`trip #${trip.index}`} />
-        {:else}
-          <NoImage />
-        {/if}
-      {/key}
-    </div>
+    {#if !$isPhone}
+      <div class="trip-image">
+        {#key $lastUpdated}
+          {#if tripImageUrl}
+            <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+            <img onclick={openLightbox} src={tripImageUrl} alt={`trip #${trip.index}`} />
+          {:else}
+            <NoImage />
+          {/if}
+        {/key}
+      </div>
+    {/if}
   </div>
   <!-- INFO -->
   <div class="info">
-    <!-- INDEX -->
-    <div class="row index">
-      <div class="label">TRIP</div>
-      <div class="value">#{trip.index}</div>
-    </div>
-    <!-- OWNER -->
-    <div class="row">
-      <div class="label">CREATOR</div>
-      <div class="value">{getTripOwnerName(trip)}</div>
-    </div>
-    <!-- LAST VISIT BLOCK -->
-    {#if trip.lastVisitBlock}
-      <div class="row last-visit-block">
-        <div class="label">LAST VISIT</div>
-        <div class="value">
-          {blocksToReadableTime(Number($blockNumber) - Number(trip.lastVisitBlock))}
+    {#each infoRows as row}
+      {#if !$isPhone || !row.hideOnPhone}
+        <div class="row {row.className || ''}" class:depleted={row.depleted}>
+          <div class="label">{row.label}</div>
+          <div class="value">{row.value}</div>
         </div>
-      </div>
-    {/if}
-    <!-- VISIT COUNT -->
-    <div class="row visit-count">
-      <div class="label">VISITS</div>
-      <div class="value">{trip.visitCount}</div>
-    </div>
-    <!-- KILL COUNT -->
-    <div class="row kill-count">
-      <div class="label">KILLS</div>
-      <div class="value">{trip?.killCount ?? 0}</div>
-    </div>
-    <!-- CREATION COST -->
-    <div class="row creation-cost">
-      <div class="label">CREATION COST</div>
-      <div class="value">{CURRENCY_SYMBOL}{trip.tripCreationCost}</div>
-    </div>
-    <!-- BALANCE -->
-    <div class="row balance" class:depleted={Number(trip.balance) == 0}>
-      <div class="label">BALANCE</div>
-      <div class="value">{CURRENCY_SYMBOL}{trip.balance}</div>
-    </div>
-    <!-- MIN RAT VALUE TO ENTER -->
-    <div class="row min-rat-value-to-enter">
-      <div class="label">MIN RAT VALUE TO ENTER</div>
-      <div class="value">{CURRENCY_SYMBOL}{$minRatValueToEnter ?? 0}</div>
-    </div>
-    {#if $maxValuePerWin > 0}
-      <div class="row max-value-per-win">
-        <div class="label">MAX VALUE PER WIN</div>
-        <div class="value">{CURRENCY_SYMBOL}{$maxValuePerWin}</div>
-      </div>
-    {/if}
+      {/if}
+    {/each}
   </div>
 </div>
 
@@ -134,6 +156,11 @@
     flex-direction: row;
     background: var(--background);
     height: 300px;
+
+    @media (max-width: 800px) {
+      flex-direction: column;
+      height: auto;
+    }
 
     .column {
       &.left {
@@ -146,6 +173,13 @@
         justify-content: center;
         z-index: var(--z-base);
 
+        @media (max-width: 800px) {
+          width: 100%;
+          height: auto;
+          margin: 0;
+          order: 0;
+        }
+
         .trip-image {
           line-height: 0;
           width: 280px;
@@ -155,12 +189,22 @@
           overflow: hidden;
           cursor: pointer;
 
+          @media (max-width: 800px) {
+            width: 100%;
+            border-radius: 0;
+            border: none;
+          }
+
           img {
             display: block;
             width: 100%;
             height: 100%;
             aspect-ratio: 1/1;
             object-fit: cover;
+
+            @media (max-width: 800px) {
+              aspect-ratio: 2/0.75;
+            }
           }
         }
       }
@@ -170,6 +214,11 @@
       display: flex;
       flex-direction: column;
       flex: 1;
+
+      @media (max-width: 800px) {
+        order: 1;
+        width: 100%;
+      }
 
       .row {
         width: 100%;
@@ -182,6 +231,14 @@
         justify-content: space-between;
         align-items: center;
         font-size: var(--font-size-small);
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        @media (max-width: 800px) {
+          height: 30px;
+        }
 
         .value {
           font-family: var(--special-font-stack);

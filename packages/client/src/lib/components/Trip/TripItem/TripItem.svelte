@@ -114,6 +114,12 @@
     // overflow: hidden;
     background: var(--background-semi-transparent);
 
+    @media (max-width: 800px) {
+      flex-direction: column;
+      padding: 0;
+      margin-bottom: 10px;
+    }
+
     &.disabled {
       opacity: 0.7;
     }
@@ -128,6 +134,9 @@
 
       .trip-image {
         transform: scale(1.05);
+        @media (max-width: 800px) {
+          transform: none;
+        }
       }
     }
 
@@ -161,6 +170,12 @@
         flex-direction: column;
         z-index: var(--z-base);
 
+        @media (max-width: 800px) {
+          width: 100%;
+          margin-right: 0;
+          order: 0;
+        }
+
         .trip-image {
           line-height: 0;
           width: 100%;
@@ -169,12 +184,21 @@
           border: 5px solid rgba(255, 255, 255, 0.2);
           overflow: hidden;
 
+          @media (max-width: 800px) {
+            border-radius: 0;
+            border: none;
+          }
+
           img {
             display: block;
             width: 100%;
             height: 100%;
             aspect-ratio: 1/1;
             object-fit: cover;
+
+            @media (max-width: 800px) {
+              aspect-ratio: 2/1;
+            }
           }
         }
       }
@@ -185,6 +209,12 @@
         justify-content: space-between;
         width: 100%;
         flex-wrap: nowrap;
+
+        @media (max-width: 800px) {
+          flex-direction: column;
+          width: 100%;
+          order: 1;
+        }
 
         .trip-prompt {
           width: calc(100% - 100px);
@@ -197,6 +227,14 @@
           overflow: hidden;
           white-space: normal;
           line-height: 0.9em;
+
+          @media (max-width: 800px) {
+            width: 100%;
+            padding: 10px;
+            order: 2;
+            overflow: visible;
+            text-overflow: unset;
+          }
 
           &.short {
             font-size: var(--font-size-large);
@@ -216,6 +254,10 @@
 
           .content {
             max-width: 55ch;
+
+            @media (max-width: 800px) {
+              max-width: 100%;
+            }
           }
         }
 
@@ -224,6 +266,15 @@
           padding-left: 10px;
           width: 100px;
           height: 200px;
+
+          @media (max-width: 800px) {
+            width: 100%;
+            height: auto;
+            border-left: none;
+            border-top: var(--default-border-style);
+            padding-left: 0;
+            order: 3;
+          }
         }
 
         .small {

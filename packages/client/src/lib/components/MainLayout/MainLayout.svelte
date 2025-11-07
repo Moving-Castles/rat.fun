@@ -34,7 +34,7 @@
       display: flex;
       position: relative;
       overflow: visible;
-      @media (max-width: 700px) {
+      @media (max-width: 800px) {
         flex-direction: column;
       }
     }

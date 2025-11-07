@@ -42,7 +42,7 @@
 
     <!-- IMAGE -->
     <div class="image-container">
-      <div in:fade|global>
+      <div class="avatar-wrapper" in:fade|global>
         <RatAvatar />
       </div>
     </div>
@@ -64,7 +64,7 @@
       width: calc(100% - 260px);
       overflow: visible;
 
-      @media (max-width: 700px) {
+      @media (max-width: 800px) {
         width: auto;
         flex: 1;
       }
@@ -78,7 +78,7 @@
         justify-content: space-between;
 
         &.index-container {
-          @media (max-width: 700px) {
+          @media (max-width: 800px) {
             display: none;
           }
           .index {
@@ -101,7 +101,7 @@
           font-size: var(--font-size-normal);
           cursor: pointer;
 
-          @media (max-width: 700px) {
+          @media (max-width: 800px) {
             display: none;
           }
         }
@@ -113,9 +113,21 @@
       border-left: var(--default-border-style);
       position: relative;
       z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
-      @media (max-width: 700px) {
-        width: auto;
+      @media (max-width: 800px) {
+        width: 180px;
+        flex-shrink: 0;
+      }
+
+      .avatar-wrapper {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
     }
   }

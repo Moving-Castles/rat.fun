@@ -6,7 +6,7 @@
 
   import { onMount } from "svelte"
   import { staticContent } from "$lib/modules/content"
-  import { rat, ratTotalValue, playerHasLiveRat } from "$lib/modules/state/stores"
+  import { ratTotalValue, playerHasLiveRat } from "$lib/modules/state/stores"
   import { busy } from "$lib/modules/action-manager/index.svelte"
   import { getTripMinRatValueToEnter } from "$lib/modules/state/utils"
   import { ratState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
@@ -108,6 +108,10 @@
       flex-shrink: 0;
       overflow: hidden;
       height: 300px;
+
+      @media (max-width: 800px) {
+        height: auto;
+      }
     }
 
     .trip-prompt {
@@ -126,6 +130,10 @@
       display: flex;
       align-items: center;
       justify-content: center;
+
+      @media (max-width: 800px) {
+        height: 200px;
+      }
     }
   }
 

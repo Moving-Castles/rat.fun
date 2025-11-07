@@ -68,16 +68,16 @@
 
 <style lang="scss">
   .timestamp {
-    display: inline-block;
-    background: var(--color-alert-priority);
+    display: inline-flex;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.8);
     padding: 5px;
-    color: var(--background);
+    padding-inline: 10px;
+    color: var(--foreground);
     font-size: var(--font-size-normal);
     margin-right: 10px;
-
-    span {
-      position: relative;
-      top: -4px;
-    }
+    line-height: 1;
+    height: calc(var(--font-size-large) * 1.4 + 10px);
+    flex-shrink: 0;
   }
 </style>

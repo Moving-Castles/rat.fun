@@ -70,5 +70,12 @@
     .right {
       display: flex;
     }
+
+    @media (max-width: 800px) {
+      // Hide marquee on phone
+      .marquee-container {
+        display: none;
+      }
+    }
   }
 </style>

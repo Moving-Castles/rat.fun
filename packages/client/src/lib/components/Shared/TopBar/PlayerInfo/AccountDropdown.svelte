@@ -40,7 +40,7 @@
     z-index: 2000;
     border: 1px solid var(--color-border);
     width: 600px;
-    @media (max-width: 700px) {
+    @media (max-width: 800px) {
       width: 100%;
     }
 
