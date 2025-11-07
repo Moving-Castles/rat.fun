@@ -21,9 +21,20 @@ export class ShaderManager {
     string,
     { type: UniformType; value: number | boolean | number[] }
   > = {}
+  private contextExhausted = $state<boolean>(false)
+  private recoveryTimeout: ReturnType<typeof setTimeout> | null = null
+  private recoveryAttempts = 0
+  private maxRecoveryAttempts = 10
 
   constructor() {
     // No initialization needed
+  }
+
+  /**
+   * Get context exhausted state
+   */
+  get isContextExhausted(): boolean {
+    return this.contextExhausted
   }
 
   /**
@@ -138,20 +149,28 @@ export class ShaderManager {
     if (this._canvas) {
       try {
         this.initializeRenderer(this._canvas, shaderSource)
-      } catch {
-        // Error already logged to Sentry in initializeRenderer
-        // Set a fallback black shader to prevent blank screen
-        console.warn(`Failed to initialize shader "${shaderKey}", falling back to black shader`)
-        if (shaderKey !== "black") {
-          try {
-            const blackShaderSource = shaders?.["black"]
-            if (blackShaderSource) {
-              this.initializeRenderer(this._canvas, blackShaderSource)
-            }
-          } catch (fallbackError) {
-            console.error("Failed to initialize fallback shader:", fallbackError)
-          }
+        // Successfully created renderer, clear exhausted flag
+        this.contextExhausted = false
+        if (this._canvas) {
+          this._canvas.style.display = "block"
         }
+      } catch (error) {
+        // Error already logged to Sentry in initializeRenderer
+        console.error(`Failed to initialize shader "${shaderKey}":`, error)
+
+        // Mark context as exhausted and hide canvas to show CSS fallback
+        this.contextExhausted = true
+        if (this._canvas) {
+          this._canvas.style.display = "none"
+          console.warn(
+            `%c[ShaderManager] Context exhausted. Canvas hidden, showing CSS fallback background. Will retry in 5s...`,
+            "color: #FF5722; font-weight: bold"
+          )
+        }
+
+        // Don't try to create black fallback - it also needs a context!
+        // Instead, trigger recovery system
+        this.scheduleContextRecovery(shaderKey)
       }
     }
   }
@@ -238,10 +257,65 @@ export class ShaderManager {
   }
 
   /**
+   * Schedule context recovery attempt
+   */
+  private scheduleContextRecovery(shaderKey: string) {
+    // Clear any existing recovery timeout
+    if (this.recoveryTimeout) {
+      clearTimeout(this.recoveryTimeout)
+      this.recoveryTimeout = null
+    }
+
+    // Don't retry indefinitely
+    if (this.recoveryAttempts >= this.maxRecoveryAttempts) {
+      console.error(
+        `%c[ShaderManager] Max recovery attempts (${this.maxRecoveryAttempts}) reached. Giving up.`,
+        "color: #F44336; font-weight: bold"
+      )
+      return
+    }
+
+    this.recoveryAttempts++
+
+    // Wait 5 seconds for contexts to clear, then try again
+    this.recoveryTimeout = setTimeout(() => {
+      console.log(
+        `%c[ShaderManager] Attempting context recovery (attempt ${this.recoveryAttempts}/${this.maxRecoveryAttempts})...`,
+        "color: #2196F3; font-weight: bold"
+      )
+
+      if (this._canvas) {
+        const shaderSource = shaders?.[shaderKey as keyof typeof shaders]
+        if (shaderSource) {
+          try {
+            this.initializeRenderer(this._canvas, shaderSource)
+            // Success! Reset recovery attempts and show canvas
+            this.recoveryAttempts = 0
+            this.contextExhausted = false
+            if (this._canvas) {
+              this._canvas.style.display = "block"
+            }
+            console.log(
+              `%c[ShaderManager] Context recovery successful!`,
+              "color: #4CAF50; font-weight: bold"
+            )
+          } catch (error) {
+            // Still failing, try again
+            console.warn(`Recovery attempt ${this.recoveryAttempts} failed, will retry...`)
+            this.scheduleContextRecovery(shaderKey)
+          }
+        }
+      }
+    }, 5000)
+  }
+
+  /**
    * Clean up resources
    */
   destroy() {
     this.currentShaderKey = null
+    this.contextExhausted = false
+    this.recoveryAttempts = 0
 
     if (this._renderer) {
       this._renderer.destroy()
@@ -253,6 +327,11 @@ export class ShaderManager {
     if (this.resizeTimeout) {
       clearTimeout(this.resizeTimeout)
       this.resizeTimeout = null
+    }
+
+    if (this.recoveryTimeout) {
+      clearTimeout(this.recoveryTimeout)
+      this.recoveryTimeout = null
     }
   }
 }

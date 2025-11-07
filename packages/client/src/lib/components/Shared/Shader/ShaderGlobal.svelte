@@ -9,6 +9,14 @@
     if (canvas) {
       // Set the canvas on the global shaderManager
       shaderManager.canvas = canvas
+
+      // If shaders were previously disabled due to context exhaustion,
+      // the canvas might be hidden. Try to restore it.
+      if (shaderManager.isContextExhausted && canvas) {
+        console.log(
+          "[ShaderGlobal] Context was exhausted, canvas will remain hidden until recovery"
+        )
+      }
     }
   })
 

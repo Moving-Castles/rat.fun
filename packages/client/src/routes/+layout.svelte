@@ -135,5 +135,6 @@
     position: fixed;
     inset: 0;
     z-index: var(--z-background);
+    background: #000;
   }
 </style>

@@ -41,4 +41,4 @@ export {
   createShaderManager
 }
 
-export const shaderManager: ShaderManager = $state(createShaderManager())
+export const shaderManager = createShaderManager()
