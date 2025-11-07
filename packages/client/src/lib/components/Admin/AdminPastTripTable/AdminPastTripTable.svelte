@@ -52,7 +52,7 @@
 
 <div class="admin-trip-table-container">
   <div class="table-summary">
-    <div class="left">Liquidated trips</div>
+    <div class="left">Past trips</div>
     <div class="right">
       Profit:
       <SignedNumber withCurrency value={$realisedProfitLoss} />

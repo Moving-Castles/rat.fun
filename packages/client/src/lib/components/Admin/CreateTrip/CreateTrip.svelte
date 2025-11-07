@@ -2,7 +2,7 @@
   import { gameConfig } from "$lib/modules/state/stores"
   import { playerERC20Balance } from "$lib/modules/erc20Listener/stores"
   import { getTripMaxValuePerWin, getTripMinRatValueToEnter } from "$lib/modules/state/utils"
-  import { CharacterCounter, BigButton, BackButton } from "$lib/components/Shared"
+  import { CharacterCounter, BigButton } from "$lib/components/Shared"
   import { busy, sendCreateTrip } from "$lib/modules/action-manager/index.svelte"
   import { typeHit } from "$lib/modules/sound"
   import { errorHandler } from "$lib/modules/error-handling"
@@ -363,11 +363,18 @@
   .modal-content {
     height: 700px;
     max-height: 90vh;
+
+    @media (max-width: 800px) {
+      height: 100vh;
+      max-height: 80vh;
+      width: 100vw;
+    }
   }
 
   .create-trip {
     height: 100%;
     width: 600px;
+    max-width: 100%;
     display: flex;
     flex-flow: column nowrap;
     background-image: url("/images/texture-3.png");
@@ -375,6 +382,11 @@
     justify-content: space-between;
     border: 1px solid var(--color-grey-mid);
     padding: 10px;
+
+    @media (max-width: 800px) {
+      width: 100vw;
+      border: none;
+    }
 
     .folder-selection {
       flex: 1;
@@ -587,6 +599,10 @@
     align-items: center;
     overscroll-behavior: none;
     z-index: var(--z-modal);
+
+    @media (max-width: 800px) {
+      background: var(--background);
+    }
   }
 
   .modal-content {
@@ -594,5 +610,9 @@
     z-index: 1;
     overflow-x: hidden;
     overflow-y: scroll;
+
+    @media (max-width: 800px) {
+      overflow-y: auto;
+    }
   }
 </style>

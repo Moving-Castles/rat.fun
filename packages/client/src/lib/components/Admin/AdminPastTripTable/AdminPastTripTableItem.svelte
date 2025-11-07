@@ -67,12 +67,21 @@
     font-size: var(--font-size-small);
     font-family: var(--admin-font-stack);
 
+    @media (max-width: 800px) {
+      height: 36px;
+    }
+
     td {
       vertical-align: middle;
       height: 24px;
       line-height: 24px;
       border-bottom: 1px solid rgb(59, 59, 59);
       border-right: 1px dashed rgb(59, 59, 59);
+
+      @media (max-width: 800px) {
+        height: 36px;
+        line-height: 36px;
+      }
     }
 
     .single-line {

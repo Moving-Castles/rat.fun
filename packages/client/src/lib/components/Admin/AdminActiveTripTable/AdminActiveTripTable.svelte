@@ -193,12 +193,20 @@
 
   .cell-spark {
     width: 80px;
+
+    @media (max-width: 800px) {
+      display: none;
+    }
   }
 
   .cell-action {
     width: 100px;
     height: 100%;
     padding-right: 0;
+
+    @media (max-width: 800px) {
+      width: 150px;
+    }
   }
 
   .downText {

@@ -173,6 +173,10 @@
     .action-container {
       height: 160px;
       padding-top: 10px;
+
+      @media (max-width: 800px) {
+        height: 280px;
+      }
     }
   }
 
