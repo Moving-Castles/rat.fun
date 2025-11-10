@@ -1,5 +1,6 @@
 import fs from "node:fs/promises"
 import { StandardMerkleTree } from "@openzeppelin/merkle-tree"
+import { StandardMerkleTreeData } from "@openzeppelin/merkle-tree/dist/standard"
 import { Hex } from "viem"
 import { merkleTreeJsonOutputFile } from "./constants"
 
@@ -8,7 +9,11 @@ import { merkleTreeJsonOutputFile } from "./constants"
  * Returns null if account has no claim
  */
 export async function getProof(account: Hex) {
-  const tree = StandardMerkleTree.load<[Hex, string]>(JSON.parse(await fs.readFile(merkleTreeJsonOutputFile, "utf8")))
+  return await getProofFromJson(account, JSON.parse(await fs.readFile(merkleTreeJsonOutputFile, "utf8")))
+}
+
+export async function getProofFromJson(account: Hex, data: StandardMerkleTreeData<[Hex, string]>) {
+  const tree = StandardMerkleTree.load<[Hex, string]>(data)
 
   for (const [i, v] of tree.entries()) {
     if (v[0] === account.toLowerCase()) {

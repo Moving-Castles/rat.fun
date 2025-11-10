@@ -9,7 +9,8 @@
     "./static/*": "./static/*"
   },
   "scripts": {
-    "build": "pnpm tsx ./script/buildTree && tsup"
+    "build": "pnpm tsx ./script/buildTree && tsup",
+    "logTestProofs": "pnpm tsx ./script/logTestProofs"
   },
   "dependencies": {
     "@openzeppelin/merkle-tree": "^1.0.8",
