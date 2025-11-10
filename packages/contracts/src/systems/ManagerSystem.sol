@@ -64,6 +64,9 @@ contract ManagerSystem is System {
     // Increment trip count
     TripCount.set(_ratId, TripCount.get(_ratId) + 1);
 
+    // Update last visit block
+    LastVisitBlock.set(_tripId, block.number);
+
     // * * * * * * * * * * * * *
     // BUDGETING
     // * * * * * * * * * * * * *
@@ -92,9 +95,6 @@ contract ManagerSystem is System {
     tripBudget = LibManager.removeItemsFromRat(tripBudget, _ratId, _tripId, _itemsToRemoveFromRat);
     // As items always have positive value, this will always decrease the trip balance
     tripBudget = LibManager.addItemsToRat(tripBudget, _ratId, _tripId, _itemsToAddToRat);
-
-    // Update last visit block
-    LastVisitBlock.set(_tripId, block.number);
   }
 
   /**
