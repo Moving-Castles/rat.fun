@@ -302,4 +302,65 @@ contract TripSystemTest is BaseTest {
 
     vm.stopPrank();
   }
+
+  function testRevertCloseTripTwice() public {
+    setInitialBalance(alice);
+    vm.startPrank(alice);
+    bytes32 playerId = world.ratfun__spawn("alice");
+    approveGamePool(type(uint256).max);
+    vm.stopPrank();
+
+    prankAdmin();
+    bytes32 tripId = world.ratfun__createTrip(playerId, bytes32(0), TRIP_INITIAL_BALANCE, "A test trip");
+    vm.stopPrank();
+
+    // Wait for cooldown
+    vm.roll(block.number + GameConfig.getCooldownCloseTrip() + 1);
+
+    // Close trip first time - should succeed
+    vm.startPrank(alice);
+    world.ratfun__closeTrip(tripId);
+
+    // Verify trip is closed
+    assertEq(Balance.get(tripId), 0);
+    assertEq(Liquidated.get(tripId), true);
+
+    // Try to close again - should revert
+    vm.expectRevert("trip depleted or already closed");
+    world.ratfun__closeTrip(tripId);
+    vm.stopPrank();
+  }
+
+  function testRevertCloseDepletedTrip() public {
+    setInitialBalance(alice);
+    vm.startPrank(alice);
+    bytes32 aliceId = world.ratfun__spawn("alice");
+    approveGamePool(type(uint256).max);
+    bytes32 ratId = world.ratfun__createRat("roger");
+    vm.stopPrank();
+
+    prankAdmin();
+    bytes32 tripId = world.ratfun__createTrip(aliceId, bytes32(0), 1000, "test trip");
+
+    // Deplete the trip balance through applyOutcome
+    // Max value per win is 25% of 1000 = 250
+    world.ratfun__applyOutcome(ratId, tripId, 250, new bytes32[](0), new Item[](0));
+    world.ratfun__applyOutcome(ratId, tripId, 250, new bytes32[](0), new Item[](0));
+    world.ratfun__applyOutcome(ratId, tripId, 250, new bytes32[](0), new Item[](0));
+    world.ratfun__applyOutcome(ratId, tripId, 250, new bytes32[](0), new Item[](0));
+    vm.stopPrank();
+
+    // Verify trip is depleted but NOT explicitly liquidated
+    assertEq(Balance.get(tripId), 0, "Trip should be depleted");
+    assertEq(Liquidated.get(tripId), false, "Trip should not be marked as liquidated");
+
+    // Wait for cooldown
+    vm.roll(block.number + GameConfig.getCooldownCloseTrip() + 1);
+
+    // Try to close depleted trip - should revert
+    vm.startPrank(alice);
+    vm.expectRevert("trip depleted or already closed");
+    world.ratfun__closeTrip(tripId);
+    vm.stopPrank();
+  }
 }

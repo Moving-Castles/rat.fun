@@ -66,6 +66,7 @@ contract TripSystem is System {
     require(block.number > (CreationBlock.get(_tripId) + GameConfig.getCooldownCloseTrip()), "in cooldown");
 
     uint256 valueToPlayer = Balance.get(_tripId);
+    require(valueToPlayer > 0, "trip depleted or already closed");
 
     // Set Gross liquidation value, before taxation, on trip
     LiquidationValue.set(_tripId, valueToPlayer);
