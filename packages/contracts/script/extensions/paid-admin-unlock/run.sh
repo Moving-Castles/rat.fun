@@ -7,6 +7,7 @@
 
 # forge script ./DeployUnlockAdminSystem.s.sol --sig run\(address\) $LOCALHOST_WORLD_ADDRESS --rpc-url $LOCALHOST_RPC_URL --broadcast -vvv --batch-size 5
 # forge script ./DeployManagerSystem.s.sol --sig run\(address\) $LOCALHOST_WORLD_ADDRESS --rpc-url $LOCALHOST_RPC_URL --broadcast -vvv --batch-size 5
+# forge script ./DeployTripSystem.s.sol --sig run\(address\) $LOCALHOST_WORLD_ADDRESS --rpc-url $LOCALHOST_RPC_URL --broadcast -vvv --batch-size 5
 
 # # # # # # # # # # # #
 # TESTNET (Base Sepolia)
@@ -17,9 +18,10 @@
 
 # forge script ./DeployUnlockAdminSystem.s.sol --sig run\(address\) $TESTNET_WORLD_ADDRESS --rpc-url $TESTNET_RPC_URL --broadcast -vvv --batch-size 5
 # forge script ./DeployManagerSystem.s.sol --sig run\(address\) $TESTNET_WORLD_ADDRESS --rpc-url $TESTNET_RPC_URL --broadcast -vvv --batch-size 5
+# forge script ./DeployTripSystem.s.sol --sig run\(address\) $TESTNET_WORLD_ADDRESS --rpc-url $TESTNET_RPC_URL --broadcast -vvv --batch-size 5
 
 
-# # # # # # # # # # # # 
+# # # # # # # # # # # #
 # MAINNET (Base Mainnet)
 # # # # # # # # # # # #
 
@@ -28,3 +30,4 @@
 
 # forge script ./DeployUnlockAdminSystem.s.sol --sig run\(address\) $MAINNET_WORLD_ADDRESS --rpc-url $MAINNET_RPC_URL --broadcast -vvv --batch-size 5
 # forge script ./DeployManagerSystem.s.sol --sig run\(address\) $MAINNET_WORLD_ADDRESS --rpc-url $MAINNET_RPC_URL --broadcast -vvv --batch-size 5
+# forge script ./DeployTripSystem.s.sol --sig run\(address\) $MAINNET_WORLD_ADDRESS --rpc-url $MAINNET_RPC_URL --broadcast -vvv --batch-size 5
