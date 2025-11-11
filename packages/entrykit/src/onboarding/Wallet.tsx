@@ -1,5 +1,4 @@
 import { useDisconnect } from "wagmi"
-import { useENS } from "../useENS"
 import { TruncatedHex } from "../ui/TruncatedHex"
 import { Button } from "../ui/Button"
 import { useAccountModal } from "../useAccountModal"
@@ -12,18 +11,16 @@ export type Props = StepContentProps & {
 }
 
 export function Wallet({ isActive, isExpanded, userAddress }: Props) {
-  const { data: ens } = useENS(userAddress)
   const { disconnect, isPending: disconnectIsPending } = useShowMutationError(useDisconnect())
   const { closeAccountModal } = useAccountModal()
 
-  // TODO: render ENS avatar if available?
   return (
     <div className="flex flex-col gap-4">
       <div className="flex justify-between gap-4">
         <div>
           <div>Account</div>
           <div className="font-mono text-white">
-            {ens?.name ?? <TruncatedHex hex={userAddress} />}
+            <TruncatedHex hex={userAddress} />
           </div>
         </div>
         <Button

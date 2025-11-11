@@ -4,7 +4,7 @@ import { Logo } from "./icons/Logo"
 import { useAccount } from "wagmi"
 import { twMerge } from "tailwind-merge"
 import { PendingIcon } from "./icons/PendingIcon"
-import { AccountName } from "./AccountName"
+import { TruncatedHex } from "./ui/TruncatedHex"
 import { usePrerequisites } from "./onboarding/usePrerequisites"
 import { useRef } from "react"
 
@@ -40,8 +40,7 @@ export function AccountButton() {
 
   const buttonLabel = (() => {
     if (prereqs.isSuccess) {
-      if (!prereqs.data.hasAllowance) return "Top up"
-      if (!prereqs.data.hasDelegation || !prereqs.data.isSpender) return "Set up"
+      if (!prereqs.data.hasDelegation) return "Set up"
     }
     return "Sign in"
   })()
@@ -61,7 +60,7 @@ export function AccountButton() {
           onClick={openAccountModal}
         >
           <span className="flex-grow inline-flex gap-2.5 items-center text-left font-medium">
-            {userAddress ? <AccountName address={userAddress} /> : null}
+            {userAddress ? <TruncatedHex hex={userAddress} /> : null}
           </span>
         </button>
       ) : (

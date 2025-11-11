@@ -4,7 +4,6 @@ import css from "tailwindcss/tailwind.css?inline"
 import { useResizeObserver } from "usehooks-ts"
 import { mergeRefs } from "react-merge-refs"
 import { FrameProvider } from "./FrameProvider"
-import { useTheme } from "../useTheme"
 
 export type Props = {
   mode: "modal" | "child"
@@ -42,12 +41,12 @@ export const Shadow = forwardRef<HTMLIFrameElement, Props>(function Shadow(
   })
 
   const frameDocument = frame?.contentDocument
-  const theme = useTheme()
   useEffect(() => {
     if (frameDocument) {
-      frameDocument.body.setAttribute("data-theme", theme)
+      // Default to dark theme
+      frameDocument.body.setAttribute("data-theme", "dark")
     }
-  }, [frameDocument, theme])
+  }, [frameDocument])
 
   const frameStyle: CSSProperties =
     mode === "modal"
