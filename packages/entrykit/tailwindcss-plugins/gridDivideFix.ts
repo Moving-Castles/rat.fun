@@ -1,4 +1,4 @@
-import plugin from "tailwindcss/plugin";
+import plugin from "tailwindcss/plugin"
 
 // See https://github.com/tailwindlabs/tailwindcss/issues/13400
 
@@ -11,8 +11,8 @@ export const gridDivideFix = plugin(function ({ addComponents }) {
       // TODO: can we do this with vars instead of unsetting a property here?
       "& > :not([hidden]) ~ :not([hidden]):nth-child(-n + 2)": {
         borderTopWidth: "0",
-        borderBottomWidth: "0",
-      },
-    },
-  });
-});
+        borderBottomWidth: "0"
+      }
+    }
+  })
+})

@@ -20,6 +20,7 @@ The tight coupling to MUD is intentional and necessary - EntryKit bridges standa
 These components work with **any** ERC-4337 implementation, not just MUD.
 
 #### Contracts & Infrastructure (All Standard)
+
 - `EntryPoint v0.7` - Standard singleton contract (deterministic deployment)
 - `SimpleAccount` - Standard ERC-4337 smart account implementation
 - `SimpleAccountFactory` - Standard account factory contract
@@ -58,6 +59,7 @@ getSessionSigner.ts
 ```
 
 **What's Generic Here**:
+
 - Smart account creation and management
 - Bundler communication
 - User operation lifecycle
@@ -73,6 +75,7 @@ getSessionSigner.ts
 These work with **any** Ethereum dApp, completely independent of MUD.
 
 #### Standards & Protocols Used
+
 - **WalletConnect Protocol** - Standard wallet connection
 - **EIP-1193** - Ethereum Provider API
 - **wagmi/viem** - Standard Ethereum TypeScript libraries
@@ -114,12 +117,14 @@ ConnectWallet.tsx
 ```
 
 **External Dependencies (All Generic)**:
+
 - `connectkit@^1.9.0` - Generic wallet connection UI kit
 - `@walletconnect/ethereum-provider@2.20.2` - Standard protocol
 - `wagmi@2.x` - Standard React hooks for Ethereum
 - `viem@2.x` - Standard Ethereum library
 
 **What's Generic Here**:
+
 - Connecting to any Ethereum wallet
 - Chain switching
 - Account management
@@ -158,6 +163,7 @@ errors/
 ```
 
 **External Dependencies (All Generic)**:
+
 - `@radix-ui/react-dialog@^1.0.5` - Accessible modal primitives
 - `@radix-ui/react-select@^1.0.5` - Accessible select primitives
 - `react-error-boundary@5.0.0` - Generic error boundaries
@@ -165,6 +171,7 @@ errors/
 - `zustand@^4.5.2` - Generic state management
 
 **What's Generic Here**:
+
 - Buttons, modals, inputs, dropdowns
 - Error handling and display
 - Icons and visual elements
@@ -181,7 +188,9 @@ This is where EntryKit becomes **tightly coupled to MUD's architecture**.
 ### 1. World Contract Integration
 
 #### MUD Concept
+
 The **World** is MUD's central smart contract that:
+
 - Manages all systems (game logic contracts)
 - Stores all tables (on-chain state)
 - Controls access and permissions via delegations
@@ -189,38 +198,40 @@ The **World** is MUD's central smart contract that:
 #### EntryKit's MUD-Specific World Dependencies
 
 **Configuration Requires World**:
+
 ```typescript
 // config/output.ts
 export type EntryKitConfig = {
-  chainId: number;
-  worldAddress: Address;  // ← MUD-SPECIFIC REQUIREMENT
-  appName: string;
-  appIcon: string;
-  theme?: "dark" | "light";
-};
+  chainId: number
+  worldAddress: Address // ← MUD-SPECIFIC REQUIREMENT
+  appName: string
+  appIcon: string
+  theme?: "dark" | "light"
+}
 ```
 
 **Every EntryKit instance is bound to a specific World contract.** You cannot use EntryKit without MUD.
 
 **Common Constants (MUD-Specific)**:
+
 ```typescript
 // common.ts
-import worldConfig from "@latticexyz/world/mud.config";
+import worldConfig from "@latticexyz/world/mud.config"
 
 // MUD World delegation constant
 export const unlimitedDelegationControlId = resourceToHex({
   type: "system",
   namespace: "",
   name: "unlimited"
-});
+})
 
 // MUD World tables
-export const worldTables = worldConfig.namespaces.world.tables;
+export const worldTables = worldConfig.namespaces.world.tables
 
 // MUD World ABI subset
 export const worldAbi = parseAbi([
-  "function registerDelegation(address delegatee, bytes32 delegationControlId, bytes initCallData)",
-]);
+  "function registerDelegation(address delegatee, bytes32 delegationControlId, bytes initCallData)"
+])
 ```
 
 ---
@@ -230,6 +241,7 @@ export const worldAbi = parseAbi([
 **What Is MUD Delegation?**
 
 MUD implements a permission system where:
+
 1. User (EOA) grants permission to session account (smart account)
 2. Permission is stored in `UserDelegationControl` table in World contract
 3. Session account can call World systems on behalf of user
@@ -243,25 +255,26 @@ MUD implements a permission system where:
 // onboarding/getDelegation.ts
 export async function getDelegation({
   client,
-  worldAddress,      // ← MUD World
-  userAddress,       // ← Original user
-  sessionAddress,    // ← Session account
-  blockTag = "pending",
+  worldAddress, // ← MUD World
+  userAddress, // ← Original user
+  sessionAddress, // ← Session account
+  blockTag = "pending"
 }: GetDelegationParams) {
   // Query MUD Store table
   const record = await getRecord(client, {
     address: worldAddress,
-    table: worldTables.UserDelegationControl,  // ← MUD World table
+    table: worldTables.UserDelegationControl, // ← MUD World table
     key: { delegator: userAddress, delegatee: sessionAddress },
-    blockTag,
-  });
+    blockTag
+  })
 
   // Check if unlimited delegation is registered
-  return record.delegationControlId === unlimitedDelegationControlId;
+  return record.delegationControlId === unlimitedDelegationControlId
 }
 ```
 
 **MUD-Specific Aspects**:
+
 - Uses `@latticexyz/store/internal` to read tables
 - Queries MUD's `UserDelegationControl` table
 - Checks for specific delegation type (unlimited)
@@ -275,13 +288,13 @@ if (registerDelegation) {
   await userClient.writeContract({
     address: worldAddress,
     abi: worldAbi,
-    functionName: "registerDelegation",  // ← MUD World function
+    functionName: "registerDelegation", // ← MUD World function
     args: [
-      sessionAddress,                    // Delegatee (session)
-      unlimitedDelegationControlId,      // Delegation type
-      "0x"                               // Init call data
-    ],
-  });
+      sessionAddress, // Delegatee (session)
+      unlimitedDelegationControlId, // Delegation type
+      "0x" // Init call data
+    ]
+  })
 }
 ```
 
@@ -294,6 +307,7 @@ if (registerDelegation) {
 This is the **most critical MUD integration** in EntryKit.
 
 #### Standard AA Client (Generic)
+
 ```typescript
 // Standard ERC-4337 usage
 const bundlerClient = createBundlerClient({...})
@@ -309,93 +323,90 @@ await bundlerClient.writeContract({
 ```
 
 #### MUD Session Client (Specific)
+
 ```typescript
 // getSessionClient.ts
 export async function getSessionClient({
   userAddress,
   sessionAccount,
   sessionSigner,
-  worldAddress,      // ← MUD-specific
+  worldAddress // ← MUD-specific
 }) {
   const bundlerClient = createBundlerClient({
     transport: getBundlerTransport(client.chain),
     client,
-    account: sessionAccount,
-  });
+    account: sessionAccount
+  })
 
   const sessionClient = bundlerClient
-    .extend(smartAccountActions)  // ← Standard AA
+    .extend(smartAccountActions) // ← Standard AA
     .extend(
-      callFrom({                   // ← MUD-SPECIFIC EXTENSION
+      callFrom({
+        // ← MUD-SPECIFIC EXTENSION
         worldAddress,
         delegatorAddress: userAddress,
-        publicClient: client,
-      }),
+        publicClient: client
+      })
     )
     .extend(
-      sendUserOperationFrom({      // ← MUD-SPECIFIC EXTENSION
+      sendUserOperationFrom({
+        // ← MUD-SPECIFIC EXTENSION
         worldAddress,
         delegatorAddress: userAddress,
-        publicClient: client,
-      }),
+        publicClient: client
+      })
     )
     .extend(() => ({
-      userAddress,      // ← MUD context
-      worldAddress,     // ← MUD context
+      userAddress, // ← MUD context
+      worldAddress, // ← MUD context
       internal_signer: sessionSigner
-    }));
+    }))
 
-  return sessionClient;
+  return sessionClient
 }
 ```
 
 #### What `callFrom` Does (MUD-Specific Pattern)
 
 When you call:
+
 ```typescript
 await sessionClient.writeContract({
   address: worldAddress,
   abi: worldAbi,
   functionName: "movePlayer",
-  args: [x, y],
-});
+  args: [x, y]
+})
 ```
 
 The `callFrom` extension intercepts and transforms it into:
+
 ```typescript
 await World.callFrom(
-  userAddress,     // ← Original user (delegator)
-  systemId,        // ← MUD system ID (e.g., MoveSystem)
-  callData         // ← Encoded function call
-);
+  userAddress, // ← Original user (delegator)
+  systemId, // ← MUD system ID (e.g., MoveSystem)
+  callData // ← Encoded function call
+)
 ```
 
 **World Contract Logic** (in Solidity):
+
 ```solidity
-function callFrom(
-  address delegator,
-  bytes32 systemId,
-  bytes calldata callData
-) external {
+function callFrom(address delegator, bytes32 systemId, bytes calldata callData) external {
   // 1. Check delegation exists
-  require(
-    UserDelegationControl[delegator][msg.sender] != 0,
-    "No delegation"
-  );
+  require(UserDelegationControl[delegator][msg.sender] != 0, "No delegation");
 
   // 2. Check delegation allows this system
-  require(
-    canCallSystem(delegator, msg.sender, systemId),
-    "Delegation doesn't allow this system"
-  );
+  require(canCallSystem(delegator, msg.sender, systemId), "Delegation doesn't allow this system");
 
   // 3. Execute as delegator
-  _msgSender = delegator;  // Internal context
+  _msgSender = delegator; // Internal context
   ISystem(systemId).call(callData);
 }
 ```
 
 **This is the core MUD pattern**:
+
 - All calls route through World contract
 - World validates delegation
 - Systems execute with user's identity
@@ -410,6 +421,7 @@ function callFrom(
 For EOAs (not smart accounts), MUD provides a different pattern: signature-based execution.
 
 #### The Problem
+
 - EOAs cannot be session accounts (they're not smart contracts)
 - EOAs cannot benefit from AA features
 - But we still want gasless transactions for EOAs
@@ -417,6 +429,7 @@ For EOAs (not smart accounts), MUD provides a different pattern: signature-based
 #### MUD's Solution: CallWithSignature
 
 **Flow**:
+
 1. User (EOA) signs a message authorizing a call
 2. Session account submits the signature + call
 3. `CallWithSignatureSystem` validates signature
@@ -427,56 +440,56 @@ For EOAs (not smart accounts), MUD provides a different pattern: signature-based
 ```typescript
 // utils/signCall.ts
 export async function signCall({
-  userClient,      // EOA client
-  worldAddress,    // MUD World
-  systemId,        // MUD system to call
-  callData,        // Function call
-  nonce,
+  userClient, // EOA client
+  worldAddress, // MUD World
+  systemId, // MUD system to call
+  callData, // Function call
+  nonce
 }) {
   // Get nonce from MUD's table
   const nonce = await getRecord(client, {
     address: worldAddress,
-    table: moduleConfig.tables.CallWithSignatureNonces,  // ← MUD table
+    table: moduleConfig.tables.CallWithSignatureNonces, // ← MUD table
     key: { signer: userClient.account.address },
-    blockTag: "pending",
-  });
+    blockTag: "pending"
+  })
 
   // Parse MUD system ID
-  const { namespace: systemNamespace, name: systemName } =
-    hexToResource(systemId);
+  const { namespace: systemNamespace, name: systemName } = hexToResource(systemId)
 
   // Sign EIP-712 typed data (MUD-specific format)
   return await signTypedData({
     account: userClient.account,
     domain: {
-      verifyingContract: worldAddress,  // ← MUD World
-      salt: toHex(userClient.chain.id, { size: 32 }),
+      verifyingContract: worldAddress, // ← MUD World
+      salt: toHex(userClient.chain.id, { size: 32 })
     },
-    types: callWithSignatureTypes,  // ← MUD-specific types
+    types: callWithSignatureTypes, // ← MUD-specific types
     primaryType: "Call",
     message: {
       signer: userClient.account.address,
-      systemNamespace,   // ← MUD namespace
-      systemName,        // ← MUD system name
+      systemNamespace, // ← MUD namespace
+      systemName, // ← MUD system name
       callData,
-      nonce,
-    },
-  });
+      nonce
+    }
+  })
 }
 ```
 
 **MUD-Specific Typed Data**:
+
 ```typescript
 // From @latticexyz/world-module-callwithsignature
 export const callWithSignatureTypes = {
   Call: [
     { name: "signer", type: "address" },
-    { name: "systemNamespace", type: "bytes14" },  // ← MUD concept
-    { name: "systemName", type: "bytes16" },       // ← MUD concept
+    { name: "systemNamespace", type: "bytes14" }, // ← MUD concept
+    { name: "systemName", type: "bytes16" }, // ← MUD concept
     { name: "callData", type: "bytes" },
-    { name: "nonce", type: "uint256" },
-  ],
-};
+    { name: "nonce", type: "uint256" }
+  ]
+}
 ```
 
 #### Execution Implementation
@@ -484,36 +497,37 @@ export const callWithSignatureTypes = {
 ```typescript
 // utils/callWithSignature.ts
 export async function callWithSignature({
-  sessionClient,   // Session account submits
-  userClient,      // User EOA signs
-  worldAddress,    // MUD World
-  systemId,        // MUD system
-  callData,
+  sessionClient, // Session account submits
+  userClient, // User EOA signs
+  worldAddress, // MUD World
+  systemId, // MUD system
+  callData
 }) {
   // Get user's signature
   const signature = await signCall({
     userClient,
     worldAddress,
     systemId,
-    callData,
-  });
+    callData
+  })
 
   // Session account submits to CallWithSignatureSystem
   return sessionClient.writeContract({
     address: worldAddress,
-    abi: CallWithSignatureAbi,              // ← MUD module ABI
-    functionName: "callWithSignature",      // ← MUD module function
+    abi: CallWithSignatureAbi, // ← MUD module ABI
+    functionName: "callWithSignature", // ← MUD module function
     args: [
-      userClient.account.address,  // Signer
-      systemId,                    // MUD system
-      callData,                    // Call
-      signature                    // Proof
-    ],
-  });
+      userClient.account.address, // Signer
+      systemId, // MUD system
+      callData, // Call
+      signature // Proof
+    ]
+  })
 }
 ```
 
 **World Contract Execution** (Solidity):
+
 ```solidity
 function callWithSignature(
   address signer,
@@ -522,10 +536,7 @@ function callWithSignature(
   bytes calldata signature
 ) external {
   // 1. Recover signer from signature
-  address recoveredSigner = ecrecover(
-    hash(systemId, callData, nonces[signer]),
-    signature
-  );
+  address recoveredSigner = ecrecover(hash(systemId, callData, nonces[signer]), signature);
   require(recoveredSigner == signer, "Invalid signature");
 
   // 2. Increment nonce
@@ -538,6 +549,7 @@ function callWithSignature(
 ```
 
 **This Entire Flow Is MUD-Specific**:
+
 - Nonce management via MUD Store tables
 - EIP-712 domain bound to World
 - Message format uses MUD's system/namespace structure
@@ -554,39 +566,37 @@ The onboarding UI orchestrates both standard and MUD-specific setup steps.
 
 ```typescript
 // onboarding/usePrerequisites.ts (simplified)
-export function usePrerequisites({
-  userAddress,
-  sessionAddress,
-}) {
+export function usePrerequisites({ userAddress, sessionAddress }) {
   // 1. Check gas balance in paymaster (Quarry/MUD-specific)
   const gasBalance = useQuery({
     queryKey: ["getBalance", sessionAddress],
-    queryFn: () => getBalance({ client, paymaster, address: sessionAddress }),
-  });
+    queryFn: () => getBalance({ client, paymaster, address: sessionAddress })
+  })
 
   // 2. Check if session is registered spender (Quarry/MUD-specific)
   const isSpenderRegistered = useQuery({
     queryKey: ["getSpender", sessionAddress],
-    queryFn: () => getSpender({ client, paymaster, address: sessionAddress }),
-  });
+    queryFn: () => getSpender({ client, paymaster, address: sessionAddress })
+  })
 
   // 3. Check delegation in World (MUD-specific)
   const hasDelegation = useQuery({
     queryKey: ["getDelegation", userAddress, sessionAddress],
-    queryFn: () => getDelegation({
-      client,
-      worldAddress,
-      userAddress,
-      sessionAddress
-    }),
-  });
+    queryFn: () =>
+      getDelegation({
+        client,
+        worldAddress,
+        userAddress,
+        sessionAddress
+      })
+  })
 
   return {
     hasGasBalance: gasBalance > 0n,
     isSpenderRegistered,
     hasDelegation,
-    isReady: hasGasBalance && isSpenderRegistered && hasDelegation,
-  };
+    isReady: hasGasBalance && isSpenderRegistered && hasDelegation
+  }
 }
 ```
 
@@ -598,10 +608,10 @@ export function useSetupSession({ userClient, connector }) {
   return useMutation({
     mutationFn: async ({
       sessionClient,
-      registerSpender,      // ← Quarry/MUD-specific
-      registerDelegation,   // ← MUD-specific
+      registerSpender, // ← Quarry/MUD-specific
+      registerDelegation // ← MUD-specific
     }) => {
-      const calls = [];
+      const calls = []
 
       // Quarry/MUD-specific: Register session as spender
       if (registerSpender && paymaster?.type === "quarry") {
@@ -609,10 +619,10 @@ export function useSetupSession({ userClient, connector }) {
           defineCall({
             to: paymaster.address,
             abi: paymasterAbi,
-            functionName: "registerSpender",  // ← Quarry function
-            args: [sessionAddress],
-          }),
-        );
+            functionName: "registerSpender", // ← Quarry function
+            args: [sessionAddress]
+          })
+        )
       }
 
       // MUD-specific: Register delegation in World
@@ -621,17 +631,17 @@ export function useSetupSession({ userClient, connector }) {
           defineCall({
             to: worldAddress,
             abi: worldAbi,
-            functionName: "registerDelegation",  // ← MUD function
-            args: [sessionAddress, unlimitedDelegationControlId, "0x"],
-          }),
-        );
+            functionName: "registerDelegation", // ← MUD function
+            args: [sessionAddress, unlimitedDelegationControlId, "0x"]
+          })
+        )
       }
 
       // Execute setup calls
       if (userClient.account.type === "smart") {
         // Submit as user operation (AA)
-        const hash = await sendUserOperation({ calls });
-        await waitForUserOperationReceipt({ hash });
+        const hash = await sendUserOperation({ calls })
+        await waitForUserOperationReceipt({ hash })
       } else {
         // EOAs use callWithSignature (MUD-specific)
         for (const call of calls) {
@@ -641,42 +651,42 @@ export function useSetupSession({ userClient, connector }) {
             sessionClient,
             worldAddress: call.to,
             systemId: getSystemId(call),
-            callData: encodeFunctionData(call),
-          });
-          await waitForTransactionReceipt({ hash: tx });
+            callData: encodeFunctionData(call)
+          })
+          await waitForTransactionReceipt({ hash: tx })
         }
       }
 
       // Deploy session account (standard AA)
       if (!(await sessionClient.account.isDeployed?.())) {
         const hash = await sendUserOperation({
-          calls: [{ to: zeroAddress }],  // Empty op to deploy
-        });
-        await waitForUserOperationReceipt({ hash });
+          calls: [{ to: zeroAddress }] // Empty op to deploy
+        })
+        await waitForUserOperationReceipt({ hash })
       }
 
       // Invalidate queries to refresh prerequisites
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ["getSpender"] }),
         queryClient.invalidateQueries({ queryKey: ["getDelegation"] }),
-        queryClient.invalidateQueries({ queryKey: ["getPrerequisites"] }),
-      ]);
-    },
-  });
+        queryClient.invalidateQueries({ queryKey: ["getPrerequisites"] })
+      ])
+    }
+  })
 }
 ```
 
 **Onboarding Steps Breakdown**:
 
-| Step | Type | Description |
-|------|------|-------------|
-| 1. Connect Wallet | Generic | Standard wallet connection |
-| 2. Check Gas Balance | Quarry/MUD | Check Quarry paymaster balance |
-| 3. Deposit (if needed) | Generic | Use Relay.link bridge |
-| 4. Register Spender | Quarry/MUD | Register session in Quarry |
-| 5. Register Delegation | MUD | Register delegation in World |
-| 6. Deploy Session Account | Generic AA | Deploy SimpleAccount |
-| 7. Ready | - | Session client ready |
+| Step                      | Type       | Description                    |
+| ------------------------- | ---------- | ------------------------------ |
+| 1. Connect Wallet         | Generic    | Standard wallet connection     |
+| 2. Check Gas Balance      | Quarry/MUD | Check Quarry paymaster balance |
+| 3. Deposit (if needed)    | Generic    | Use Relay.link bridge          |
+| 4. Register Spender       | Quarry/MUD | Register session in Quarry     |
+| 5. Register Delegation    | MUD        | Register delegation in World   |
+| 6. Deploy Session Account | Generic AA | Deploy SimpleAccount           |
+| 7. Ready                  | -          | Session client ready           |
 
 **MUD-Specific Prerequisites**: Steps 2, 4, 5
 
@@ -689,6 +699,7 @@ Quarry is a **MUD-specific paymaster service** with sophisticated gas management
 ### Standard Paymaster vs Quarry
 
 #### ERC-4337 Standard Paymaster Interface
+
 ```solidity
 interface IPaymaster {
   function validatePaymasterUserOp(
@@ -714,7 +725,8 @@ Quarry implements a **dual balance system** with sophisticated allowance managem
 
 ```typescript
 // quarry/common.ts
-export const paymasterConfig = defineStore({  // ← Uses MUD Store
+export const paymasterConfig = defineStore({
+  // ← Uses MUD Store
   namespaces: {
     root: {
       tables: {
@@ -722,9 +734,9 @@ export const paymasterConfig = defineStore({  // ← Uses MUD Store
         Balance: {
           schema: {
             user: "address",
-            balance: "uint256",
+            balance: "uint256"
           },
-          key: ["user"],
+          key: ["user"]
         },
 
         // Sponsor-granted allowances (non-withdrawable)
@@ -733,43 +745,43 @@ export const paymasterConfig = defineStore({  // ← Uses MUD Store
           name: "AllowanceV2",
           schema: {
             user: "address",
-            sponsor: "address",    // Who granted this allowance
-            allowance: "uint256",  // Amount available
-            next: "address",       // Linked list next
-            previous: "address",   // Linked list previous
+            sponsor: "address", // Who granted this allowance
+            allowance: "uint256", // Amount available
+            next: "address", // Linked list next
+            previous: "address" // Linked list previous
           },
-          key: ["user", "sponsor"],
+          key: ["user", "sponsor"]
         },
 
         // Head of allowance linked list per user
         AllowanceList: {
           schema: {
             user: "address",
-            first: "address",      // First allowance in list
-            length: "uint256",     // Number of allowances
+            first: "address", // First allowance in list
+            length: "uint256" // Number of allowances
           },
-          key: ["user"],
+          key: ["user"]
         },
 
         // Maps smart accounts to EOA owners
         Spender: {
           schema: {
-            spender: "address",    // Smart account
-            user: "address",       // EOA owner
+            spender: "address", // Smart account
+            user: "address" // EOA owner
           },
-          key: ["spender"],
+          key: ["spender"]
         },
 
         SystemConfig: {
           schema: {
-            entryPoint: "address",
+            entryPoint: "address"
           },
-          key: [],
-        },
-      },
-    },
-  },
-});
+          key: []
+        }
+      }
+    }
+  }
+})
 ```
 
 **Quarry-Specific Operations**:
@@ -794,8 +806,8 @@ export const paymasterAbi = parseAbi([
   "error SpenderSystem_HasOwnBalance(address spender)",
 
   // Paymaster validation (ERC-4337)
-  "error PaymasterSystem_InsufficientFunds(address user, uint256 maxCost, uint256 availableAllowance, uint256 availableBalance)",
-]);
+  "error PaymasterSystem_InsufficientFunds(address user, uint256 maxCost, uint256 availableAllowance, uint256 availableBalance)"
+])
 ```
 
 ### Quarry's Gas Spending Logic
@@ -810,9 +822,9 @@ function validatePaymasterUserOp(
   uint256 maxCost
 ) external returns (bytes memory context, uint256 validationData) {
   address spender = userOp.sender;
-  address user = Spender[spender];  // Get EOA from session account
+  address user = Spender[spender]; // Get EOA from session account
 
-  uint256 availableAllowance = getAllowance(user);  // Sum all allowances
+  uint256 availableAllowance = getAllowance(user); // Sum all allowances
   uint256 availableBalance = Balance[user];
   uint256 totalAvailable = availableAllowance + availableBalance;
 
@@ -855,6 +867,7 @@ function postOp(
 ```
 
 **Why This Is MUD-Specific**:
+
 1. **Uses MUD Store** for all state management
 2. **Linked list data structure** in MUD tables
 3. **Sponsor/allowance model** designed for game economies:
@@ -883,6 +896,7 @@ onboarding/quarry/
 ```
 
 **EntryKit Quarry Usage**:
+
 1. **Check balance/allowance** during onboarding
 2. **Register spender** (session account) with paymaster
 3. **Guide deposits** if balance too low
@@ -890,6 +904,7 @@ onboarding/quarry/
 5. **Request allowances** from sponsors (future feature)
 
 **Could You Swap Paymasters?** Theoretically yes, but:
+
 - You'd lose the sophisticated balance/allowance system
 - You'd need to implement spender registration
 - You'd need to adapt the onboarding flow
@@ -917,6 +932,7 @@ data/relayChains.json      # 40+ supported chains
 **What's MUD-Specific**: EntryKit uses it specifically to fund Quarry paymaster accounts for MUD applications.
 
 **Relay Chain Data**:
+
 ```json
 {
   "1": {
@@ -933,6 +949,7 @@ data/relayChains.json      # 40+ supported chains
 ```
 
 **Integration Flow**:
+
 1. User connects wallet on source chain (e.g., Ethereum mainnet)
 2. EntryKit detects insufficient gas balance on target chain (e.g., Redstone)
 3. Shows deposit modal with Relay.link bridge
@@ -968,10 +985,12 @@ useDelegation.ts               # Delegation helpers
 ### Prerequisite Flow
 
 **Standard Prerequisites** (Generic):
+
 - ✅ Wallet connected
 - ✅ On correct chain
 
 **MUD-Specific Prerequisites**:
+
 - ✅ Gas balance > 0 in Quarry paymaster
 - ✅ Session account registered as spender in Quarry
 - ✅ Delegation registered in World contract
@@ -982,9 +1001,9 @@ useDelegation.ts               # Delegation helpers
 ```typescript
 // store.ts (zustand)
 type State = {
-  signers: Record<Address, Hex>;  // Session private keys
+  signers: Record<Address, Hex> // Session private keys
   // ... other state
-};
+}
 
 // Generic state pattern, but content is MUD-specific (delegations)
 ```
@@ -1085,6 +1104,7 @@ Misc MUD (3 files):
 ### Mixed Files (~35 files)
 
 Files that use both generic patterns and MUD-specific logic:
+
 - Onboarding flow components (generic UI, MUD prerequisites)
 - Session client management (generic AA, MUD extensions)
 - Hooks (generic React patterns, MUD data fetching)
@@ -1095,26 +1115,27 @@ Files that use both generic patterns and MUD-specific logic:
 
 ### Quantitative Breakdown
 
-| Category | Files | % | Generic | MUD-Specific |
-|----------|-------|---|---------|--------------|
-| **UI Components** | 25 | 20% | ✅ | - |
-| **Wallet Connection** | 8 | 7% | ✅ | - |
-| **Error Handling** | 6 | 5% | ✅ | - |
-| **ERC-4337 AA** | 5 | 4% | ✅ | - |
-| **Generic Utilities** | 6 | 5% | ✅ | - |
-| **World Integration** | 8 | 7% | - | ✅ |
-| **CallWithSignature** | 5 | 4% | - | ✅ |
-| **Quarry Paymaster** | 13 | 11% | - | ✅ |
-| **Bridge Integration** | 5 | 4% | - | ✅ |
-| **Configuration** | 4 | 3% | - | ✅ |
-| **Onboarding Flow** | 12 | 10% | Partial | Partial |
-| **Session Management** | 10 | 8% | Partial | Partial |
-| **Misc/Other** | 15 | 12% | Mixed | Mixed |
-| **TOTAL** | 122 | 100% | **~40%** | **~60%** |
+| Category               | Files | %    | Generic  | MUD-Specific |
+| ---------------------- | ----- | ---- | -------- | ------------ |
+| **UI Components**      | 25    | 20%  | ✅       | -            |
+| **Wallet Connection**  | 8     | 7%   | ✅       | -            |
+| **Error Handling**     | 6     | 5%   | ✅       | -            |
+| **ERC-4337 AA**        | 5     | 4%   | ✅       | -            |
+| **Generic Utilities**  | 6     | 5%   | ✅       | -            |
+| **World Integration**  | 8     | 7%   | -        | ✅           |
+| **CallWithSignature**  | 5     | 4%   | -        | ✅           |
+| **Quarry Paymaster**   | 13    | 11%  | -        | ✅           |
+| **Bridge Integration** | 5     | 4%   | -        | ✅           |
+| **Configuration**      | 4     | 3%   | -        | ✅           |
+| **Onboarding Flow**    | 12    | 10%  | Partial  | Partial      |
+| **Session Management** | 10    | 8%   | Partial  | Partial      |
+| **Misc/Other**         | 15    | 12%  | Mixed    | Mixed        |
+| **TOTAL**              | 122   | 100% | **~40%** | **~60%**     |
 
 ### Qualitative Assessment
 
 **Generic Standards Used**:
+
 - ERC-4337 Account Abstraction ✅
 - EIP-1193 Ethereum Provider ✅
 - EIP-712 Typed Data Signing ✅
@@ -1124,6 +1145,7 @@ Files that use both generic patterns and MUD-specific logic:
 - Radix UI primitives ✅
 
 **MUD-Specific Patterns**:
+
 - World contract routing ✅
 - Delegation system ✅
 - callFrom extensions ✅
@@ -1139,14 +1161,16 @@ Files that use both generic patterns and MUD-specific logic:
 ### 1. World Address Requirement
 
 **Every EntryKit instance requires a World contract**:
+
 ```typescript
 const config = defineConfig({
   chainId: 31337,
-  worldAddress: "0x...",  // ← Cannot be optional
-});
+  worldAddress: "0x..." // ← Cannot be optional
+})
 ```
 
 **Why**: EntryKit's entire architecture assumes:
+
 - Delegation registered in World
 - All calls route through World
 - Permissions managed by World
@@ -1182,10 +1206,11 @@ System/Contract
 
 ```typescript
 // Appears in 57 locations across codebase
-import { callFrom, sendUserOperationFrom } from "@latticexyz/world/internal";
+import { callFrom, sendUserOperationFrom } from "@latticexyz/world/internal"
 ```
 
 **What it does**:
+
 - Wraps session client to route calls through World
 - Automatically adds delegator context
 - Validates delegation on every call
@@ -1196,6 +1221,7 @@ import { callFrom, sendUserOperationFrom } from "@latticexyz/world/internal";
 ### 4. Quarry Paymaster
 
 **While theoretically swappable**, Quarry provides:
+
 - Balance + allowance dual system
 - Spender registration (maps session accounts to users)
 - Withdrawal capability
@@ -1211,6 +1237,7 @@ import { callFrom, sendUserOperationFrom } from "@latticexyz/world/internal";
 ### Yes: Create "SessionKit" Library
 
 **What you'd keep**:
+
 ```
 Generic ERC-4337:
   ✅ Session keypair management
@@ -1231,6 +1258,7 @@ Generic UI:
 ```
 
 **What you'd remove**:
+
 ```
 MUD-Specific:
   ❌ World contract integration
@@ -1242,6 +1270,7 @@ MUD-Specific:
 ```
 
 **What you'd abstract**:
+
 ```
 Interfaces:
   interface PermissionSystem {
@@ -1259,11 +1288,13 @@ Interfaces:
 ### Result: Generic AA Onboarding Library
 
 **Pros**:
+
 - Reusable across any AA application
 - Smaller, more focused
 - Easier to maintain
 
 **Cons**:
+
 - Loses MUD-specific optimizations
 - Loses World integration
 - Loses Quarry features
@@ -1278,6 +1309,7 @@ Interfaces:
 ### MUD's Architecture Requirements
 
 **MUD games need**:
+
 1. **Centralized access control** → World contract with delegations
 2. **System-based architecture** → callFrom routing
 3. **Gasless gameplay** → Sophisticated paymaster (Quarry)
@@ -1285,12 +1317,14 @@ Interfaces:
 5. **EOA support** → CallWithSignature for non-AA wallets
 
 **EntryKit provides the bridge** between:
+
 - Standard ERC-4337 infrastructure (generic)
 - MUD's unique architecture (specific)
 
 ### Design Trade-offs
 
 **EntryKit chose**:
+
 - **Tight coupling** over generic reusability
 - **MUD optimization** over broad compatibility
 - **Complete integration** over modular flexibility
@@ -1302,17 +1336,20 @@ Interfaces:
 ## Conclusion
 
 ### The Numbers
+
 - **~40% Generic Standards**: ERC-4337, wallet connection, UI components
 - **~60% MUD-Specific**: World integration, delegation, callFrom, Quarry
 
 ### The Philosophy
 
 **EntryKit is not**:
+
 - A generic AA library
 - A wallet connection kit
 - A UI component library
 
 **EntryKit is**:
+
 - A **MUD-specific onboarding solution**
 - Built on top of **standard infrastructure** (ERC-4337, wagmi)
 - Tightly integrated with **MUD's architecture** (World, Store, delegation)

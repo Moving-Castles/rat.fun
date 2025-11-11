@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import { IconSVG, Props } from "./IconSVG";
+import { IconSVG, Props } from "./IconSVG"
 
 export function CopyIcon(props: Props) {
   return (
@@ -13,5 +13,5 @@ export function CopyIcon(props: Props) {
         strokeLinejoin="round"
       />
     </IconSVG>
-  );
+  )
 }

@@ -1,4 +1,4 @@
-import { IconSVG, Props } from "./IconSVG";
+import { IconSVG, Props } from "./IconSVG"
 
 export function BoltIcon(props: Props) {
   return (
@@ -11,5 +11,5 @@ export function BoltIcon(props: Props) {
         strokeLinejoin="round"
       />
     </IconSVG>
-  );
+  )
 }

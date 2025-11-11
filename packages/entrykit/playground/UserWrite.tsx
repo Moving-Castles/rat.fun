@@ -1,17 +1,17 @@
-import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
-import { useEntryKitConfig } from "../src/EntryKitConfigProvider";
+import { useWaitForTransactionReceipt, useWriteContract } from "wagmi"
+import { useEntryKitConfig } from "../src/EntryKitConfigProvider"
 
 export function UserWrite() {
-  const { chainId, worldAddress } = useEntryKitConfig();
+  const { chainId, worldAddress } = useEntryKitConfig()
 
-  const { writeContractAsync, data: hash } = useWriteContract();
-  const { data: receipt } = useWaitForTransactionReceipt({ hash });
+  const { writeContractAsync, data: hash } = useWriteContract()
+  const { data: receipt } = useWaitForTransactionReceipt({ hash })
 
   return (
     <div>
       <button
         onClick={async () => {
-          console.log("writing from user");
+          console.log("writing from user")
 
           const hash = await writeContractAsync({
             chainId,
@@ -24,23 +24,23 @@ export function UserWrite() {
                   {
                     name: "x",
                     type: "int32",
-                    internalType: "int32",
+                    internalType: "int32"
                   },
                   {
                     name: "y",
                     type: "int32",
-                    internalType: "int32",
-                  },
+                    internalType: "int32"
+                  }
                 ],
                 outputs: [],
-                stateMutability: "nonpayable",
-              },
+                stateMutability: "nonpayable"
+              }
             ],
             functionName: "move",
-            args: [1, 1],
-          });
+            args: [1, 1]
+          })
 
-          console.log("got tx", hash);
+          console.log("got tx", hash)
         }}
       >
         User write
@@ -48,5 +48,5 @@ export function UserWrite() {
       <br />
       tx: {hash ?? "??"} ({receipt?.status ?? "??"})
     </div>
-  );
+  )
 }

@@ -1,4 +1,4 @@
-import { IconSVG, Props } from "./IconSVG";
+import { IconSVG, Props } from "./IconSVG"
 
 export function CloseIcon(props: Props) {
   return (
@@ -12,5 +12,5 @@ export function CloseIcon(props: Props) {
         strokeLinejoin="round"
       />
     </IconSVG>
-  );
+  )
 }

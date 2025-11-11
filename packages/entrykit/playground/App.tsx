@@ -1,23 +1,26 @@
-import { useEffect } from "react";
-import { useLocalStorage } from "usehooks-ts";
-import { UserWrite } from "./UserWrite";
-import { ConnectKitButton } from "connectkit";
-import { SessionWrite } from "./SessionWrite";
-import { useAccountModal } from "../src/useAccountModal";
-import { AccountButton } from "../src/AccountButton";
-import { useConnections } from "wagmi";
+import { useEffect } from "react"
+import { useLocalStorage } from "usehooks-ts"
+import { UserWrite } from "./UserWrite"
+import { ConnectKitButton } from "connectkit"
+import { SessionWrite } from "./SessionWrite"
+import { useAccountModal } from "../src/useAccountModal"
+import { AccountButton } from "../src/AccountButton"
+import { useConnections } from "wagmi"
 
 export function App() {
-  const { openAccountModal } = useAccountModal();
-  const connections = useConnections();
+  const { openAccountModal } = useAccountModal()
+  const connections = useConnections()
 
-  const [openModal, setOpenModal] = useLocalStorage<boolean>("mud:entryKitPlayground:openModalOnMount", false);
+  const [openModal, setOpenModal] = useLocalStorage<boolean>(
+    "mud:entryKitPlayground:openModalOnMount",
+    false
+  )
 
   useEffect(() => {
     if (openModal) {
-      openAccountModal();
+      openAccountModal()
     }
-  }, [openAccountModal, openModal]);
+  }, [openAccountModal, openModal])
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "0.5em" }}>
@@ -26,7 +29,11 @@ export function App() {
       </div>
       <div>
         <label style={{ display: "flex", gap: "0.25em" }}>
-          <input type="checkbox" checked={openModal} onChange={(event) => setOpenModal(event.currentTarget.checked)} />
+          <input
+            type="checkbox"
+            checked={openModal}
+            onChange={event => setOpenModal(event.currentTarget.checked)}
+          />
           Open modal on mount
         </label>
       </div>
@@ -39,7 +46,7 @@ export function App() {
       <div>
         <SessionWrite />
       </div>
-      <div>connections: {connections.map((c) => c.connector.name).join(", ")}</div>
+      <div>connections: {connections.map(c => c.connector.name).join(", ")}</div>
     </div>
-  );
+  )
 }

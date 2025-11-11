@@ -1,20 +1,20 @@
-import { useDisconnect } from "wagmi";
-import { useENS } from "../useENS";
-import { TruncatedHex } from "../ui/TruncatedHex";
-import { Button } from "../ui/Button";
-import { useAccountModal } from "../useAccountModal";
-import { Hex } from "viem";
-import { useShowMutationError } from "../errors/useShowMutationError";
-import { StepContentProps } from "./common";
+import { useDisconnect } from "wagmi"
+import { useENS } from "../useENS"
+import { TruncatedHex } from "../ui/TruncatedHex"
+import { Button } from "../ui/Button"
+import { useAccountModal } from "../useAccountModal"
+import { Hex } from "viem"
+import { useShowMutationError } from "../errors/useShowMutationError"
+import { StepContentProps } from "./common"
 
 export type Props = StepContentProps & {
-  userAddress: Hex;
-};
+  userAddress: Hex
+}
 
 export function Wallet({ isActive, isExpanded, userAddress }: Props) {
-  const { data: ens } = useENS(userAddress);
-  const { disconnect, isPending: disconnectIsPending } = useShowMutationError(useDisconnect());
-  const { closeAccountModal } = useAccountModal();
+  const { data: ens } = useENS(userAddress)
+  const { disconnect, isPending: disconnectIsPending } = useShowMutationError(useDisconnect())
+  const { closeAccountModal } = useAccountModal()
 
   // TODO: render ENS avatar if available?
   return (
@@ -22,7 +22,9 @@ export function Wallet({ isActive, isExpanded, userAddress }: Props) {
       <div className="flex justify-between gap-4">
         <div>
           <div>Account</div>
-          <div className="font-mono text-white">{ens?.name ?? <TruncatedHex hex={userAddress} />}</div>
+          <div className="font-mono text-white">
+            {ens?.name ?? <TruncatedHex hex={userAddress} />}
+          </div>
         </div>
         <Button
           variant={isActive ? "primary" : "tertiary"}
@@ -30,16 +32,18 @@ export function Wallet({ isActive, isExpanded, userAddress }: Props) {
           autoFocus={isActive}
           pending={disconnectIsPending}
           onClick={() => {
-            closeAccountModal();
-            disconnect();
+            closeAccountModal()
+            disconnect()
           }}
         >
           Sign out
         </Button>
       </div>
       {isExpanded ? (
-        <p className="text-sm">Each of your onchain actions in this app is associated with your account.</p>
+        <p className="text-sm">
+          Each of your onchain actions in this app is associated with your account.
+        </p>
       ) : null}
     </div>
-  );
+  )
 }

@@ -1,17 +1,17 @@
-import { useAccount, useConnectorClient } from "wagmi";
-import { ConnectWallet } from "./ConnectWallet";
-import { ConnectedSteps } from "./onboarding/ConnectedSteps";
-import { useEntryKitConfig } from "./EntryKitConfigProvider";
-import { useRef } from "react";
+import { useAccount, useConnectorClient } from "wagmi"
+import { ConnectWallet } from "./ConnectWallet"
+import { ConnectedSteps } from "./onboarding/ConnectedSteps"
+import { useEntryKitConfig } from "./EntryKitConfigProvider"
+import { useRef } from "react"
 
 export function AccountModalContent() {
-  const { chainId } = useEntryKitConfig();
-  const { address: userAddress, connector } = useAccount();
-  const userClient = useConnectorClient({ chainId, connector });
-  const initialUserAddress = useRef(userAddress);
+  const { chainId } = useEntryKitConfig()
+  const { address: userAddress, connector } = useAccount()
+  const userClient = useConnectorClient({ chainId, connector })
+  const initialUserAddress = useRef(userAddress)
 
   if (userClient.status !== "success") {
-    return <ConnectWallet />;
+    return <ConnectWallet />
   }
 
   return (
@@ -20,5 +20,5 @@ export function AccountModalContent() {
       userClient={userClient.data}
       initialUserAddress={initialUserAddress.current}
     />
-  );
+  )
 }

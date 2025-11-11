@@ -1,10 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
-import { DepositStatus } from "./DepositStatus";
-import { useChains } from "wagmi";
-import { TransferDeposit } from "./useDeposits";
-import { Balance } from "../../ui/Balance";
+import { useQuery } from "@tanstack/react-query"
+import { DepositStatus } from "./DepositStatus"
+import { useChains } from "wagmi"
+import { TransferDeposit } from "./useDeposits"
+import { Balance } from "../../ui/Balance"
 
-export type Props = TransferDeposit & { onDismiss: () => void };
+export type Props = TransferDeposit & { onDismiss: () => void }
 
 export function TransferDepositStatus({
   amount,
@@ -13,27 +13,27 @@ export function TransferDepositStatus({
   receipt: receiptPromise,
   start,
   estimatedTime,
-  onDismiss,
+  onDismiss
 }: Props) {
-  const chains = useChains();
-  const chain = chains.find((chain) => chain.id === chainL1Id)!;
+  const chains = useChains()
+  const chain = chains.find(chain => chain.id === chainL1Id)!
 
   const receipt = useQuery({
     queryKey: ["transferDepositStatus", hash],
-    queryFn: () => receiptPromise,
-  });
+    queryFn: () => receiptPromise
+  })
 
   return (
     <DepositStatus
       status={receipt.status}
       progress={{
         duration: estimatedTime,
-        elapsed: Math.min(estimatedTime, Date.now() - start.getTime()),
+        elapsed: Math.min(estimatedTime, Date.now() - start.getTime())
       }}
       onDismiss={onDismiss}
     >
       {(() => {
-        const blockExplorer = chain.blockExplorers?.default.url;
+        const blockExplorer = chain.blockExplorers?.default.url
         if (receipt.status === "pending") {
           return (
             <>
@@ -47,7 +47,7 @@ export function TransferDepositStatus({
               </a>
               …
             </>
-          );
+          )
         }
         if (receipt.status === "error") {
           return (
@@ -62,13 +62,15 @@ export function TransferDepositStatus({
               </a>
               .
             </>
-          );
+          )
         }
         return (
           <>
             Successfully{" "}
             <a
-              href={blockExplorer ? `${blockExplorer}/tx/${receipt.data.transactionHash}` : undefined}
+              href={
+                blockExplorer ? `${blockExplorer}/tx/${receipt.data.transactionHash}` : undefined
+              }
               target="_blank"
               rel="noreferrer noopener"
             >
@@ -76,8 +78,8 @@ export function TransferDepositStatus({
             </a>{" "}
             <Balance wei={amount} />
           </>
-        );
+        )
       })()}
     </DepositStatus>
-  );
+  )
 }

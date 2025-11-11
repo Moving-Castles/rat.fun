@@ -1,4 +1,4 @@
-import { IconSVG, Props } from "./IconSVG";
+import { IconSVG, Props } from "./IconSVG"
 
 export function ArrowLeftIcon(props: Props) {
   return (
@@ -12,5 +12,5 @@ export function ArrowLeftIcon(props: Props) {
         strokeLinejoin="round"
       />
     </IconSVG>
-  );
+  )
 }

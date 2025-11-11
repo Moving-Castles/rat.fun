@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import { IconSVG, Props } from "./IconSVG";
+import { IconSVG, Props } from "./IconSVG"
 
 export function GlobeIcon(props: Props) {
   return (
@@ -13,5 +13,5 @@ export function GlobeIcon(props: Props) {
         strokeLinejoin="round"
       />
     </IconSVG>
-  );
+  )
 }

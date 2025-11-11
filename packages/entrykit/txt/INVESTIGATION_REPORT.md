@@ -12,6 +12,7 @@
 EntryKit is a comprehensive user onboarding toolkit for MUD (Multi-User Dungeon) applications. It provides a complete solution for wallet connection, account abstraction, session management, and gasless transactions using ERC-4337 account abstraction standard. The package streamlines the complex process of getting users started with blockchain-based MUD applications by handling wallet connections, creating session accounts, managing gas payments through paymasters, and providing a polished UI experience.
 
 **Key Statistics**:
+
 - 122 source files (TypeScript/TSX)
 - ~5,819 total lines of code
 - 17 subdirectories in src
@@ -24,6 +25,7 @@ EntryKit is a comprehensive user onboarding toolkit for MUD (Multi-User Dungeon)
 ## 1. Package Purpose and Functionality
 
 ### Core Mission
+
 EntryKit serves as a "UI kit to streamline signing in to MUD apps" by providing:
 
 1. **Wallet Connection Management**: Integration with multiple wallet providers (MetaMask, Coinbase Wallet, WalletConnect, Safe, id.place)
@@ -36,12 +38,14 @@ EntryKit serves as a "UI kit to streamline signing in to MUD apps" by providing:
 ### Key Features
 
 #### Account Abstraction
+
 - Uses ERC-4337 (EntryPoint v0.7) for account abstraction
 - Creates SimpleAccount smart wallets for users
 - Session-based signing using local signers stored in browser
 - Delegation-based transaction routing through MUD World contracts
 
 #### Paymaster Support
+
 - **Simple Paymaster**: Basic generous paymaster for local development
 - **Quarry Paymaster**: Production-ready paymaster with allowance/balance system
   - Allowance grants (non-withdrawable sponsored gas)
@@ -50,6 +54,7 @@ EntryKit serves as a "UI kit to streamline signing in to MUD apps" by providing:
   - Spender registration system
 
 #### UI Components
+
 - `EntryKitProvider`: Root provider component
 - `AccountButton`: Pre-built account connection button
 - `AccountModal`: Full-featured onboarding modal with multi-step flow
@@ -58,7 +63,9 @@ EntryKit serves as a "UI kit to streamline signing in to MUD apps" by providing:
 - Error boundaries and overlay system
 
 #### Onboarding Flow
+
 The onboarding process includes these steps:
+
 1. **Wallet Connection**: Connect to external wallet (MetaMask, etc.)
 2. **Gas Balance Check**: Verify user has sufficient gas funds
 3. **Deposit/Top-up**: If needed, guide user to deposit funds via Relay.link bridge
@@ -72,6 +79,7 @@ The onboarding process includes these steps:
 ### Production Dependencies (13 packages)
 
 #### Ethereum & Account Abstraction
+
 1. **@account-abstraction/contracts** (^0.7.0)
    - Purpose: ERC-4337 EntryPoint and account contracts
    - Usage: Contract ABIs and bytecode for deployment
@@ -87,6 +95,7 @@ The onboarding process includes these steps:
    - Usage: Passkey-based wallet authentication (experimental)
 
 #### UI Libraries
+
 4. **@radix-ui/react-dialog** (^1.0.5)
    - Purpose: Accessible modal/dialog components
    - Usage: Account modal, onboarding flow modals
@@ -110,6 +119,7 @@ The onboarding process includes these steps:
    - Usage: Error handling in UI (ErrorFallback.tsx, ErrorOverlay.tsx)
 
 #### Wallet & Blockchain Integration
+
 9. **@walletconnect/ethereum-provider** (2.20.2)
    - Purpose: WalletConnect protocol implementation
    - Usage: Custom WalletConnect connector
@@ -121,6 +131,7 @@ The onboarding process includes these steps:
     - Features: Bridge URL generation, supported chains data
 
 #### State Management & Utilities
+
 11. **zustand** (^4.5.2)
     - Purpose: Lightweight state management
     - Usage: Modal state, error state, session state
@@ -136,6 +147,7 @@ The onboarding process includes these steps:
     - Usage: useLocalStorage and other utility hooks
 
 #### Developer Tools
+
 14. **debug** (^4.3.4)
     - Purpose: Debug logging utility
     - Usage: Debug namespaces throughout codebase
@@ -150,6 +162,7 @@ The onboarding process includes these steps:
     - Usage: Not heavily used, possibly for future features
 
 ### Peer Dependencies (Required by consumers)
+
 - **react** (18.x || 19.x)
 - **react-dom** (18.x || 19.x)
 - **viem** (2.x) - Ethereum interaction library
@@ -157,6 +170,7 @@ The onboarding process includes these steps:
 - **@tanstack/react-query** (5.x) - Async state management
 
 ### Dev Dependencies (Build tooling)
+
 - TypeScript compilation tools
 - Vite for playground
 - Tailwind CSS for styling
@@ -171,10 +185,12 @@ EntryKit depends on **9 internal packages** from the MUD monorepo:
 
 ### Core Infrastructure (4 packages)
 
-#### 1. @latticexyz/common (workspace:*)
+#### 1. @latticexyz/common (workspace:\*)
+
 **Purpose**: Shared utilities and common functionality
 **Usage Intensity**: HEAVY (most frequently imported)
 **Key Imports**:
+
 - `resourceToHex`, `hexToResource` - Resource ID conversions
 - `writeContract` - Contract write operations
 - `transactionQueue` - Transaction management
@@ -187,54 +203,65 @@ EntryKit depends on **9 internal packages** from the MUD monorepo:
 
 **Files using it**: ~20+ files across the codebase
 
-#### 2. @latticexyz/store (workspace:*)
+#### 2. @latticexyz/store (workspace:\*)
+
 **Purpose**: MUD Store protocol for on-chain state management
 **Usage Intensity**: MEDIUM
 **Key Imports**:
+
 - `defineStore` - Store configuration
 - `getRecord` (from /internal) - Reading store records
 - `storeEventsAbi` - Store event definitions
 
 **Primary Use Cases**:
+
 - Quarry paymaster table definitions (quarry/common.ts)
 - Reading delegation and system state from World
 
-#### 3. @latticexyz/config (workspace:*)
+#### 3. @latticexyz/config (workspace:\*)
+
 **Purpose**: Configuration utilities and types
 **Usage Intensity**: LOW
 **Usage**: Type definitions and configuration helpers
 
-#### 4. @latticexyz/protocol-parser (workspace:*)
+#### 4. @latticexyz/protocol-parser (workspace:\*)
+
 **Purpose**: Protocol data parsing utilities
 **Usage Intensity**: LOW
 **Usage**: Parsing on-chain protocol data
 
 ### World-Specific Packages (3 packages)
 
-#### 5. @latticexyz/world (workspace:*)
+#### 5. @latticexyz/world (workspace:\*)
+
 **Purpose**: MUD World framework - core smart contract system
 **Usage Intensity**: HEAVY
 **Key Imports**:
+
 - `worldConfig` (from mud.config) - World table definitions
 - `IBaseWorld.abi.json` - World contract ABI
 - `callFrom`, `sendUserOperationFrom` (from /internal) - Delegated call execution
 - `systemsConfig` - World systems configuration
 
 **Primary Use Cases**:
+
 - Delegation setup and management
 - World table access (ResourceIds, FunctionSelectors, etc.)
 - Routing transactions through World contract
 - Session-based contract calls
 
-#### 6. @latticexyz/world-module-callwithsignature (workspace:*)
+#### 6. @latticexyz/world-module-callwithsignature (workspace:\*)
+
 **Purpose**: Call-with-signature functionality for delegated calls
 **Usage Intensity**: MEDIUM
 **Key Imports**:
+
 - `CallWithSignatureSystem.abi.json` - System ABI
 - `callWithSignatureTypes` (from /internal) - TypedData definitions
 - `moduleConfig` - Module configuration
 
 **Primary Use Cases**:
+
 - Signature-based transaction execution
 - Session account delegation
 - Nonce management for signed calls
@@ -243,44 +270,51 @@ EntryKit depends on **9 internal packages** from the MUD monorepo:
 
 ### Specialized Services (3 packages)
 
-#### 7. @latticexyz/paymaster (workspace:*)
+#### 7. @latticexyz/paymaster (workspace:\*)
+
 **Purpose**: Paymaster contracts for gasless transactions
 **Usage Intensity**: MEDIUM
 **Key Imports**:
+
 - `GenerousPaymaster.json` - Paymaster contract artifact
 
 **Primary Use Cases**:
+
 - Local development paymaster deployment (bin/deploy.ts)
 - Quarry paymaster integration (parallel implementation)
 
-#### 8. @latticexyz/id.place (workspace:*)
+#### 8. @latticexyz/id.place (workspace:\*)
+
 **Purpose**: Passkey-based wallet service integration
 **Usage Intensity**: LOW (experimental feature)
 **Key Imports**:
+
 - `IdPlaceConnector`, `isIdPlaceConnector` (from /internal)
 
 **Primary Use Cases**:
+
 - Experimental passkey authentication (v2.2.23+)
 - Alternative to traditional wallet connections
 
 **Usage Pattern**: Conditional imports, feature-flagged
 
 #### 9. @latticexyz/world-consumer (NOT USED)
+
 **Purpose**: N/A
 **Note**: Listed in git status but not actually a dependency
 
 ### Dependency Summary Table
 
-| Package | Type | Usage | Primary Function |
-|---------|------|-------|------------------|
-| common | Core | Heavy | Utilities, deployment, transactions |
-| store | Core | Medium | State management, table access |
-| config | Core | Light | Configuration types |
-| protocol-parser | Core | Light | Data parsing |
-| world | World | Heavy | Smart contract framework, delegation |
-| world-module-callwithsignature | World | Medium | Signature-based calls |
-| paymaster | Service | Medium | Gas sponsorship |
-| id.place | Service | Light | Passkey authentication |
+| Package                        | Type    | Usage  | Primary Function                     |
+| ------------------------------ | ------- | ------ | ------------------------------------ |
+| common                         | Core    | Heavy  | Utilities, deployment, transactions  |
+| store                          | Core    | Medium | State management, table access       |
+| config                         | Core    | Light  | Configuration types                  |
+| protocol-parser                | Core    | Light  | Data parsing                         |
+| world                          | World   | Heavy  | Smart contract framework, delegation |
+| world-module-callwithsignature | World   | Medium | Signature-based calls                |
+| paymaster                      | Service | Medium | Gas sponsorship                      |
+| id.place                       | Service | Light  | Passkey authentication               |
 
 ---
 
@@ -337,6 +371,7 @@ src/
 ### Key Architectural Patterns
 
 #### 1. Client Architecture
+
 ```
 User Wallet (EOA)
     ↓ (connects via wagmi)
@@ -350,21 +385,24 @@ MUD World Contract
 ```
 
 **SessionClient Type**:
+
 ```typescript
 type SessionClient = Client<Transport, Chain, SmartAccount> & {
-  userAddress: Address;        // Original user's EOA
-  worldAddress: Address;       // MUD World contract
-  internal_signer: LocalAccount; // Session keypair
+  userAddress: Address // Original user's EOA
+  worldAddress: Address // MUD World contract
+  internal_signer: LocalAccount // Session keypair
 }
 ```
 
 #### 2. Delegation Pattern
+
 - User delegates to session account in World contract
 - Session account can call World functions on behalf of user
 - Uses "unlimited" delegation control by default
 - Enables gasless transactions for user
 
 #### 3. Provider Pattern
+
 ```
 EntryKitProvider (config wrapper)
   └─ EntryKitConfigProvider (config context)
@@ -375,13 +413,16 @@ EntryKitProvider (config wrapper)
 ```
 
 #### 4. State Management
+
 - **Zustand stores**: Modal state, error state, session persistence
 - **React Query**: Async data fetching (balances, allowances, ENS)
 - **Wagmi hooks**: Wallet connection, blockchain state
 - **Local Storage**: Session persistence, user preferences
 
 #### 5. Hook-Based API
+
 Primary hooks for consumers:
+
 - `useSessionClient()` - Get ready session client
 - `useAccountModal()` - Control onboarding modal
 - `useFunds()` - Check gas balance/allowance
@@ -396,6 +437,7 @@ Primary hooks for consumers:
 **Location**: `getSessionAccount.ts`, `getSessionSigner.ts`, `getSessionClient.ts`
 
 **Flow**:
+
 1. Generate or retrieve session keypair from localStorage
 2. Create SimpleAccount with session signer as owner
 3. Configure with EntryPoint v0.7 and bundler
@@ -408,13 +450,16 @@ Primary hooks for consumers:
 ### Paymaster Integration
 
 #### Simple Paymaster (Development)
+
 - Deployed via `entrykit-deploy` CLI command
 - Only for chainId 31337 (Anvil/local)
 - Pre-funded with 100 ETH
 - Sponsors all transactions unconditionally
 
 #### Quarry Paymaster (Production)
+
 **Tables**:
+
 - `Balance`: User deposits (withdrawable)
 - `Allowance`: Sponsor grants (non-withdrawable)
 - `AllowanceList`: Linked list of allowances
@@ -422,6 +467,7 @@ Primary hooks for consumers:
 - `SystemConfig`: EntryPoint configuration
 
 **Operations**:
+
 - `depositTo()` - Add to balance
 - `grantAllowance()` - Sponsor allocates allowance
 - `getAllowance()` - Check available allowance
@@ -433,6 +479,7 @@ Primary hooks for consumers:
 ### Transaction Routing
 
 **User Operations** (via session client):
+
 ```
 sessionClient.sendUserOperation()
     ↓
@@ -450,6 +497,7 @@ System execution
 ```
 
 **Direct Writes** (via write contract):
+
 ```
 sessionClient.writeContract()
     ↓
@@ -465,6 +513,7 @@ converted to user operation
 **Integration**: Relay.link SDK
 **Data Source**: `src/data/relayChains.json` (40+ chains)
 **Features**:
+
 - Chain selection modal
 - Balance checking
 - Bridge URL generation
@@ -490,11 +539,13 @@ converted to user operation
 **Config**: `tsup.config.ts`
 
 **Entry Points**:
+
 1. `src/exports/index.ts` → `dist/tsup/exports/index.js`
 2. `src/exports/internal.ts` → `dist/tsup/exports/internal.js`
 3. `src/bin/deploy.ts` → `dist/tsup/bin/deploy.js`
 
 **Special Configuration**:
+
 - CSS injection disabled (shadow DOM usage)
 - CSS loaded as base64 text strings
 - React JSX transform
@@ -517,15 +568,18 @@ converted to user operation
 
 **Purpose**: Deploy ERC-4337 infrastructure
 **Contracts Deployed**:
+
 1. EntryPoint v0.7 (deterministic via CREATE2)
 2. SimpleAccountFactory
 3. GenerousPaymaster (local only)
 
 **Environment Variables**:
+
 - `PRIVATE_KEY`: Deployer private key
 - Auto-detects RPC URL via MUD tooling
 
 **Usage**:
+
 ```bash
 PRIVATE_KEY=0x... pnpm entrykit-deploy
 # or for local:
@@ -618,12 +672,14 @@ function Header() {
 **Location**: `playground/`
 **Purpose**: Development testing environment
 **Features**:
+
 - Live testing of onboarding flow
 - User vs session write testing
 - Connection status display
 - Modal state testing
 
 **Run**:
+
 ```bash
 pnpm playground        # Start dev server
 pnpm playground:setup  # Setup sequence
@@ -643,14 +699,17 @@ pnpm test:ci   # Run tests once with type checking
 ## 9. Notable Implementation Details
 
 ### Fee Caching
+
 **Feature**: `withFeeCache()` utility (v2.2.23)
 **Purpose**: Cache gas fee estimates for 10 seconds
 **Chains**: Redstone, Pyrope, Garnet
 **Benefit**: Reduce RPC calls, faster UX
 
 ### Error Handling
+
 **System**: Comprehensive error overlay system
 **Components**:
+
 - `ErrorFallback` - Boundary fallback UI
 - `ErrorOverlay` - Modal error display
 - `ErrorsOverlay` - Multiple error aggregation
@@ -658,11 +717,13 @@ pnpm test:ci   # Run tests once with type checking
 - Query/mutation error hooks
 
 ### Signature Validation
+
 **Function**: `validateSigner()` (exported internal)
 **Purpose**: Validate session signatures against user delegations
 **Use Case**: Login flows with session signer on behalf of users
 
 ### Theme Support
+
 **Hook**: `useTheme()`
 **Values**: "light" | "dark" | undefined
 **Default**: OS preference
@@ -697,14 +758,17 @@ entrykit
 ### Dependency Change Risk Assessment
 
 **High Risk** (breaks EntryKit if changed):
+
 - `@latticexyz/common` - Breaking changes would impact many files
 - `@latticexyz/world` - Core to delegation and World interaction
 
 **Medium Risk**:
+
 - `@latticexyz/world-module-callwithsignature` - Signature system changes
 - `@latticexyz/store` - Table definition changes
 
 **Low Risk**:
+
 - Other packages have limited surface area in EntryKit
 
 ---
@@ -712,11 +776,13 @@ entrykit
 ## 11. Recent Changes and Evolution
 
 ### Version 2.2.23 (Current)
+
 - Fee caching for improved performance
 - id.place passkey support (experimental)
 - Viem 2.35.1, wagmi 2.16.5 updates
 
 ### Version 2.2.22
+
 - **Major**: Migrated from RainbowKit to ConnectKit
 - Quarry paymaster top-up via Relay.link
 - Wiresaw fast user operations support
@@ -724,11 +790,13 @@ entrykit
 - Improved error states in `useSessionClient`
 
 ### Version 2.2.21
+
 - Session client world address exposed
 - React 19 peer dependency support
 - Signature validation export
 
 ### Historical Notes
+
 - Originally used RainbowKit (replaced in 2.2.22)
 - Custom WalletConnect connector to fix chain switching
 - Continuous refinement of onboarding UX
@@ -763,6 +831,7 @@ entrykit
 ## 13. Security Considerations
 
 ### Session Key Management
+
 - **Storage**: localStorage (browser-based)
 - **Scope**: Per-user address
 - **Lifetime**: Persistent until manually cleared
@@ -770,12 +839,14 @@ entrykit
 - **Mitigation**: Delegation limits blast radius, keys are rotatable
 
 ### Delegation Security
+
 - **Control**: Uses "unlimited" delegation by default
 - **Scope**: Session account can call any system in World on behalf of user
 - **Consideration**: Apps should implement custom delegation controls if needed
 - **Recovery**: User can revoke delegation from EOA
 
 ### Paymaster Security
+
 - **Balance**: User-owned, withdrawable
 - **Allowance**: Sponsor-granted, non-withdrawable
 - **Spending**: Automatic based on user operations
@@ -816,6 +887,7 @@ entrykit
 EntryKit is a sophisticated, production-ready package that abstracts away the complexity of onboarding users to blockchain-based MUD applications. It successfully bridges the gap between traditional wallet connections and gasless, session-based interactions required for smooth gameplay experiences.
 
 **Strengths**:
+
 - Comprehensive feature set for user onboarding
 - Deep integration with MUD ecosystem
 - Well-structured codebase with clear separation of concerns
@@ -823,6 +895,7 @@ EntryKit is a sophisticated, production-ready package that abstracts away the co
 - Production-tested with real deployments
 
 **Dependencies Summary**:
+
 - **External**: 13 production dependencies (mostly well-established libraries)
 - **Internal**: 9 monorepo packages (tight MUD integration)
 - **Peer**: Standard React + Ethereum stack (viem, wagmi)
@@ -891,19 +964,19 @@ EntryKit sits at the user-facing edge of the MUD stack, depending on most core M
 
 ## Appendix B: File Count by Category
 
-| Category | Count | Purpose |
-|----------|-------|---------|
-| UI Components | 25 | Buttons, modals, inputs, icons |
-| Hooks | 18 | React hooks for state/data |
-| Utilities | 12 | Helper functions |
-| Config | 8 | Configuration system |
-| Onboarding | 14 | User onboarding flow |
-| Quarry Integration | 8 | Paymaster integration |
-| Error Handling | 6 | Error boundaries/overlays |
-| Client Management | 10 | Account/session clients |
-| Types/Exports | 5 | Type definitions, exports |
-| Other | 16 | Misc files |
-| **Total** | **122** | |
+| Category           | Count   | Purpose                        |
+| ------------------ | ------- | ------------------------------ |
+| UI Components      | 25      | Buttons, modals, inputs, icons |
+| Hooks              | 18      | React hooks for state/data     |
+| Utilities          | 12      | Helper functions               |
+| Config             | 8       | Configuration system           |
+| Onboarding         | 14      | User onboarding flow           |
+| Quarry Integration | 8       | Paymaster integration          |
+| Error Handling     | 6       | Error boundaries/overlays      |
+| Client Management  | 10      | Account/session clients        |
+| Types/Exports      | 5       | Type definitions, exports      |
+| Other              | 16      | Misc files                     |
+| **Total**          | **122** |                                |
 
 ---
 

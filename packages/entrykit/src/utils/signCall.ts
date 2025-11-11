@@ -1,20 +1,20 @@
-import { Address, Chain, Client, Hex, OneOf, Transport, toHex } from "viem";
-import { signTypedData } from "viem/actions";
-import { callWithSignatureTypes } from "@latticexyz/world-module-callwithsignature/internal";
-import { getRecord } from "@latticexyz/store/internal";
-import moduleConfig from "@latticexyz/world-module-callwithsignature/mud.config";
-import { hexToResource } from "@latticexyz/common";
-import { getAction } from "viem/utils";
-import { ConnectedClient } from "../common";
+import { Address, Chain, Client, Hex, OneOf, Transport, toHex } from "viem"
+import { signTypedData } from "viem/actions"
+import { callWithSignatureTypes } from "@latticexyz/world-module-callwithsignature/internal"
+import { getRecord } from "@latticexyz/store/internal"
+import moduleConfig from "@latticexyz/world-module-callwithsignature/mud.config"
+import { hexToResource } from "@latticexyz/common"
+import { getAction } from "viem/utils"
+import { ConnectedClient } from "../common"
 
 // TODO: move this to world package or similar
 
 export type SignCallOptions<chain extends Chain = Chain> = {
-  userClient: ConnectedClient<chain>;
-  worldAddress: Address;
-  systemId: Hex;
-  callData: Hex;
-} & OneOf<{ nonce: bigint } | { client: Client<Transport, chain> }>;
+  userClient: ConnectedClient<chain>
+  worldAddress: Address
+  systemId: Hex
+  callData: Hex
+} & OneOf<{ nonce: bigint } | { client: Client<Transport, chain> }>
 
 export async function signCall<chain extends Chain = Chain>({
   userClient,
@@ -22,7 +22,7 @@ export async function signCall<chain extends Chain = Chain>({
   systemId,
   callData,
   nonce: initialNonce,
-  client,
+  client
 }: SignCallOptions<chain>) {
   const nonce =
     initialNonce ??
@@ -32,22 +32,22 @@ export async function signCall<chain extends Chain = Chain>({
             address: worldAddress,
             table: moduleConfig.tables.CallWithSignatureNonces,
             key: { signer: userClient.account.address },
-            blockTag: "pending",
+            blockTag: "pending"
           })
         ).nonce
-      : 0n);
+      : 0n)
 
-  const { namespace: systemNamespace, name: systemName } = hexToResource(systemId);
+  const { namespace: systemNamespace, name: systemName } = hexToResource(systemId)
 
   return await getAction(
     userClient,
     signTypedData,
-    "signTypedData",
+    "signTypedData"
   )({
     account: userClient.account,
     domain: {
       verifyingContract: worldAddress,
-      salt: toHex(userClient.chain.id, { size: 32 }),
+      salt: toHex(userClient.chain.id, { size: 32 })
     },
     types: callWithSignatureTypes,
     primaryType: "Call",
@@ -56,7 +56,7 @@ export async function signCall<chain extends Chain = Chain>({
       systemNamespace,
       systemName,
       callData,
-      nonce,
-    },
-  });
+      nonce
+    }
+  })
 }

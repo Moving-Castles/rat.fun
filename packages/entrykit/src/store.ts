@@ -1,32 +1,32 @@
-import { createStore } from "zustand/vanilla";
-import { persist } from "zustand/middleware";
-import { Address, Hex } from "viem";
+import { createStore } from "zustand/vanilla"
+import { persist } from "zustand/middleware"
+import { Address, Hex } from "viem"
 
 export type State = {
   readonly signers: {
-    readonly [key in Address]?: Hex;
-  };
-};
+    readonly [key in Address]?: Hex
+  }
+}
 
 export const store = createStore(
   persist<State>(
     () => ({
-      signers: {},
+      signers: {}
     }),
     {
       name: "mud:entrykit",
-      partialize: ({ signers }) => ({ signers }),
-    },
-  ),
-);
+      partialize: ({ signers }) => ({ signers })
+    }
+  )
+)
 
 // keep store in sync across tabs/windows via storage event
 function listener(event: StorageEvent) {
   if (event.key === store.persist.getOptions().name) {
-    store.persist.rehydrate();
+    store.persist.rehydrate()
   }
 }
 
 if (typeof window !== "undefined") {
-  window.addEventListener("storage", listener);
+  window.addEventListener("storage", listener)
 }

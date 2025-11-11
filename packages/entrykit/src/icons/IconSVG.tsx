@@ -1,7 +1,7 @@
-import { SVGProps } from "react";
-import { twMerge } from "tailwind-merge";
+import { SVGProps } from "react"
+import { twMerge } from "tailwind-merge"
 
-export type Props = SVGProps<SVGSVGElement>;
+export type Props = SVGProps<SVGSVGElement>
 
 export function IconSVG({ className, children, ...props }: Props) {
   return (
@@ -14,5 +14,5 @@ export function IconSVG({ className, children, ...props }: Props) {
     >
       {children}
     </svg>
-  );
+  )
 }

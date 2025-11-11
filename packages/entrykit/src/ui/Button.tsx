@@ -1,15 +1,15 @@
 /* eslint-disable max-len */
-import { ButtonHTMLAttributes, DetailedHTMLProps } from "react";
-import { twMerge } from "tailwind-merge";
-import { PendingIcon } from "../icons/PendingIcon";
+import { ButtonHTMLAttributes, DetailedHTMLProps } from "react"
+import { twMerge } from "tailwind-merge"
+import { PendingIcon } from "../icons/PendingIcon"
 
 // TODO: add support for async onClick, where pending is enabled automatically
 // TODO: add error state with popover/tooltip
 
 type ButtonClassNameOptions = {
-  variant?: "primary" | "secondary" | "tertiary";
-  pending?: boolean;
-};
+  variant?: "primary" | "secondary" | "tertiary"
+  pending?: boolean
+}
 
 const buttonClassName = ({ variant = "secondary" }: ButtonClassNameOptions = {}) =>
   twMerge(
@@ -23,18 +23,27 @@ const buttonClassName = ({ variant = "secondary" }: ButtonClassNameOptions = {})
     {
       primary: twMerge("bg-orange-600 text-white focus:border-yellow-400"),
       secondary: twMerge("bg-neutral-700 text-white focus:border-orange-500"),
-      tertiary: twMerge("bg-neutral-800 text-white focus:border-orange-500"),
-    }[variant],
-  );
+      tertiary: twMerge("bg-neutral-800 text-white focus:border-orange-500")
+    }[variant]
+  )
 
 export type ButtonProps = {
-  pending?: boolean;
-  variant?: ButtonClassNameOptions["variant"];
-};
+  pending?: boolean
+  variant?: ButtonClassNameOptions["variant"]
+}
 
-export type Props = ButtonProps & DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>;
+export type Props = ButtonProps &
+  DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>
 
-export const Button = ({ pending, variant, type, className, children, disabled, ...props }: Props) => {
+export const Button = ({
+  pending,
+  variant,
+  type,
+  className,
+  children,
+  disabled,
+  ...props
+}: Props) => {
   return (
     <button
       type={type || "button"}
@@ -53,5 +62,5 @@ export const Button = ({ pending, variant, type, className, children, disabled, 
         <span>{children}</span>
       </span>
     </button>
-  );
-};
+  )
+}

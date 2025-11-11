@@ -1,21 +1,24 @@
-import { Button } from "./ui/Button";
-import { useModal } from "connectkit";
-import { AppInfo } from "./AppInfo";
-import { twMerge } from "tailwind-merge";
-import { useEffect, useRef } from "react";
-import { useConnect, useConnectors } from "wagmi";
-import { IdPlaceConnector, isIdPlaceConnector } from "@latticexyz/id.place/internal";
-import { useEntryKitConfig } from "./EntryKitConfigProvider";
+import { Button } from "./ui/Button"
+import { useModal } from "connectkit"
+import { AppInfo } from "./AppInfo"
+import { twMerge } from "tailwind-merge"
+import { useEffect, useRef } from "react"
+import { useConnect, useConnectors } from "wagmi"
+import { IdPlaceConnector, isIdPlaceConnector } from "@latticexyz/id.place/internal"
+import { useEntryKitConfig } from "./EntryKitConfigProvider"
 
 export function ConnectWallet() {
-  const connectors = useConnectors();
-  const porto = connectors.find(isIdPlaceConnector);
+  const connectors = useConnectors()
+  const porto = connectors.find(isIdPlaceConnector)
 
   // TODO: show error states?
 
   return (
     <div
-      className={twMerge("flex flex-col gap-6 p-6", "animate-in animate-duration-300 fade-in slide-in-from-bottom-8")}
+      className={twMerge(
+        "flex flex-col gap-6 p-6",
+        "animate-in animate-duration-300 fade-in slide-in-from-bottom-8"
+      )}
     >
       <div className="p-4">
         {/* TODO: render appImage if available? */}
@@ -25,16 +28,16 @@ export function ConnectWallet() {
         {porto ? <AccountButton connector={porto} /> : <WalletButton />}
       </div>
     </div>
-  );
+  )
 }
 
 function AccountButton({ connector }: { connector: IdPlaceConnector }) {
-  const { setOpen } = useModal();
-  const { connect, isPending, error } = useConnect();
-  const { chainId } = useEntryKitConfig();
+  const { setOpen } = useModal()
+  const { connect, isPending, error } = useConnect()
+  const { chainId } = useEntryKitConfig()
 
   if (error) {
-    console.error("connect error", error);
+    console.error("connect error", error)
   }
 
   return (
@@ -51,7 +54,7 @@ function AccountButton({ connector }: { connector: IdPlaceConnector }) {
             // Porto connector so a fresh browser instance reusing a synced passkey
             // can be bound to the correct chain ID for the account
             chainId,
-            capabilities: {},
+            capabilities: {}
           })
         }
         autoFocus
@@ -65,19 +68,19 @@ function AccountButton({ connector }: { connector: IdPlaceConnector }) {
         Already have a wallet?
       </button>
     </>
-  );
+  )
 }
 
 function WalletButton() {
-  const { open, setOpen } = useModal();
-  const hasAutoOpenedRef = useRef(false);
+  const { open, setOpen } = useModal()
+  const hasAutoOpenedRef = useRef(false)
 
   useEffect(() => {
     if (!open && !hasAutoOpenedRef.current) {
-      setOpen(true);
-      hasAutoOpenedRef.current = true;
+      setOpen(true)
+      hasAutoOpenedRef.current = true
     }
-  }, [open, setOpen]);
+  }, [open, setOpen])
 
   return (
     <>
@@ -91,5 +94,5 @@ function WalletButton() {
         Connect wallet
       </Button>
     </>
-  );
+  )
 }

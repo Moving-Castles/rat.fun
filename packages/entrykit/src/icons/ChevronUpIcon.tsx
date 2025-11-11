@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import { IconSVG, Props } from "./IconSVG";
+import { IconSVG, Props } from "./IconSVG"
 
 export function ChevronUpIcon(props: Props) {
   return (
@@ -10,5 +10,5 @@ export function ChevronUpIcon(props: Props) {
         clipRule="evenodd"
       />
     </IconSVG>
-  );
+  )
 }

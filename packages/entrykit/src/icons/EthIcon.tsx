@@ -1,7 +1,7 @@
-import { DetailedHTMLProps, SVGAttributes } from "react";
-import { twMerge } from "tailwind-merge";
+import { DetailedHTMLProps, SVGAttributes } from "react"
+import { twMerge } from "tailwind-merge"
 
-export type Props = DetailedHTMLProps<SVGAttributes<SVGSVGElement>, SVGSVGElement>;
+export type Props = DetailedHTMLProps<SVGAttributes<SVGSVGElement>, SVGSVGElement>
 
 export function EthIcon({ className, ...props }: Props) {
   return (
@@ -17,5 +17,5 @@ export function EthIcon({ className, ...props }: Props) {
       <path d="M132 0V296L263 218" />
       <path d="M0 218L132 296V0L0 218Z" fillOpacity="0.5" />
     </svg>
-  );
+  )
 }

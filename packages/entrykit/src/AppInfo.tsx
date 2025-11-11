@@ -1,10 +1,10 @@
-import { useEntryKitConfig } from "./EntryKitConfigProvider";
-import { Logo } from "./icons/Logo";
-import { usePreloadImage } from "./usePreloadImage";
+import { useEntryKitConfig } from "./EntryKitConfigProvider"
+import { Logo } from "./icons/Logo"
+import { usePreloadImage } from "./usePreloadImage"
 
 export function AppInfo() {
-  const { appName, appIcon } = useEntryKitConfig();
-  const { data: hasAppIcon, isLoading: appIconLoading } = usePreloadImage(appIcon);
+  const { appName, appIcon } = useEntryKitConfig()
+  const { data: hasAppIcon, isLoading: appIconLoading } = usePreloadImage(appIcon)
 
   return (
     <div className="flex-grow flex flex-col items-center justify-center gap-2">
@@ -20,5 +20,5 @@ export function AppInfo() {
       </div>
       <div className="text-2xl text-white text-center">{appName}</div>
     </div>
-  );
+  )
 }

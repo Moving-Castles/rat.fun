@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import { IconSVG, Props } from "./IconSVG";
+import { IconSVG, Props } from "./IconSVG"
 
 export function WarningIcon(props: Props) {
   return (
@@ -12,5 +12,5 @@ export function WarningIcon(props: Props) {
         strokeLinejoin="round"
       />
     </IconSVG>
-  );
+  )
 }

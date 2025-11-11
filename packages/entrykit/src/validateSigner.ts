@@ -1,6 +1,6 @@
-import { Address, Client } from "viem";
-import { readContract } from "viem/actions";
-import { getDelegation } from "./onboarding/getDelegation";
+import { Address, Client } from "viem"
+import { readContract } from "viem/actions"
+import { getDelegation } from "./onboarding/getDelegation"
 
 /**
  * @internal
@@ -10,22 +10,24 @@ export async function internal_validateSigner({
   worldAddress,
   userAddress,
   sessionAddress,
-  signerAddress,
+  signerAddress
 }: {
-  client: Client;
-  worldAddress: Address;
-  userAddress: Address;
-  sessionAddress: Address;
-  signerAddress: Address;
+  client: Client
+  worldAddress: Address
+  userAddress: Address
+  sessionAddress: Address
+  signerAddress: Address
 }) {
   const ownerAddress = await readContract(client, {
     address: sessionAddress,
     abi: simpleAccountAbi,
-    functionName: "owner",
-  });
+    functionName: "owner"
+  })
 
   if (ownerAddress.toLowerCase() !== signerAddress.toLowerCase()) {
-    throw new Error(`Session account owner (${ownerAddress}) does not match message signer (${signerAddress}).`);
+    throw new Error(
+      `Session account owner (${ownerAddress}) does not match message signer (${signerAddress}).`
+    )
   }
 
   const hasDelegation = await getDelegation({
@@ -33,11 +35,13 @@ export async function internal_validateSigner({
     worldAddress,
     sessionAddress,
     userAddress,
-    blockTag: "latest",
-  });
+    blockTag: "latest"
+  })
 
   if (!hasDelegation) {
-    throw new Error(`Session account (${sessionAddress}) does not have delegation for user account (${userAddress}).`);
+    throw new Error(
+      `Session account (${sessionAddress}) does not have delegation for user account (${userAddress}).`
+    )
   }
 }
 
@@ -50,10 +54,10 @@ const simpleAccountAbi = [
       {
         internalType: "address",
         name: "",
-        type: "address",
-      },
+        type: "address"
+      }
     ],
     stateMutability: "view",
-    type: "function",
-  },
-] as const;
+    type: "function"
+  }
+] as const

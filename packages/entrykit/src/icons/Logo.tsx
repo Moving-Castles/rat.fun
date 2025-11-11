@@ -1,7 +1,7 @@
-import { DetailedHTMLProps, SVGAttributes } from "react";
-import { twMerge } from "tailwind-merge";
+import { DetailedHTMLProps, SVGAttributes } from "react"
+import { twMerge } from "tailwind-merge"
 
-export type Props = DetailedHTMLProps<SVGAttributes<SVGSVGElement>, SVGSVGElement>;
+export type Props = DetailedHTMLProps<SVGAttributes<SVGSVGElement>, SVGSVGElement>
 
 export function Logo({ className, ...props }: Props) {
   return (
@@ -21,5 +21,5 @@ export function Logo({ className, ...props }: Props) {
       />
       <path d="M7 2h1v1H7zm0-1h1v1H7zM1 0h1v1H1zm1 0h1v1H2zm1 0h1v1H3zm1 0h1v1H4zm1 0h1v1H5zm1 0h1v1H6zm1 0h1v1H7z" />
     </svg>
-  );
+  )
 }

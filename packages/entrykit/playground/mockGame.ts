@@ -11,24 +11,24 @@ export const mockGameAbi = [
           {
             name: "systemId",
             type: "bytes32",
-            internalType: "ResourceId",
+            internalType: "ResourceId"
           },
           {
             name: "callData",
             type: "bytes",
-            internalType: "bytes",
-          },
-        ],
-      },
+            internalType: "bytes"
+          }
+        ]
+      }
     ],
     outputs: [
       {
         name: "returnDatas",
         type: "bytes[]",
-        internalType: "bytes[]",
-      },
+        internalType: "bytes[]"
+      }
     ],
-    stateMutability: "nonpayable",
+    stateMutability: "nonpayable"
   },
   {
     type: "function",
@@ -42,29 +42,29 @@ export const mockGameAbi = [
           {
             name: "from",
             type: "address",
-            internalType: "address",
+            internalType: "address"
           },
           {
             name: "systemId",
             type: "bytes32",
-            internalType: "ResourceId",
+            internalType: "ResourceId"
           },
           {
             name: "callData",
             type: "bytes",
-            internalType: "bytes",
-          },
-        ],
-      },
+            internalType: "bytes"
+          }
+        ]
+      }
     ],
     outputs: [
       {
         name: "returnDatas",
         type: "bytes[]",
-        internalType: "bytes[]",
-      },
+        internalType: "bytes[]"
+      }
     ],
-    stateMutability: "nonpayable",
+    stateMutability: "nonpayable"
   },
   {
     type: "function",
@@ -73,22 +73,22 @@ export const mockGameAbi = [
       {
         name: "systemId",
         type: "bytes32",
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "callData",
         type: "bytes",
-        internalType: "bytes",
-      },
+        internalType: "bytes"
+      }
     ],
     outputs: [
       {
         name: "",
         type: "bytes",
-        internalType: "bytes",
-      },
+        internalType: "bytes"
+      }
     ],
-    stateMutability: "payable",
+    stateMutability: "payable"
   },
   {
     type: "function",
@@ -97,27 +97,27 @@ export const mockGameAbi = [
       {
         name: "delegator",
         type: "address",
-        internalType: "address",
+        internalType: "address"
       },
       {
         name: "systemId",
         type: "bytes32",
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "callData",
         type: "bytes",
-        internalType: "bytes",
-      },
+        internalType: "bytes"
+      }
     ],
     outputs: [
       {
         name: "",
         type: "bytes",
-        internalType: "bytes",
-      },
+        internalType: "bytes"
+      }
     ],
-    stateMutability: "payable",
+    stateMutability: "payable"
   },
   {
     type: "function",
@@ -127,10 +127,10 @@ export const mockGameAbi = [
       {
         name: "",
         type: "address",
-        internalType: "address",
-      },
+        internalType: "address"
+      }
     ],
-    stateMutability: "view",
+    stateMutability: "view"
   },
   {
     type: "function",
@@ -139,16 +139,16 @@ export const mockGameAbi = [
       {
         name: "tableId",
         type: "bytes32",
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "keyTuple",
         type: "bytes32[]",
-        internalType: "bytes32[]",
-      },
+        internalType: "bytes32[]"
+      }
     ],
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "nonpayable"
   },
   {
     type: "function",
@@ -157,27 +157,27 @@ export const mockGameAbi = [
       {
         name: "tableId",
         type: "bytes32",
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "keyTuple",
         type: "bytes32[]",
-        internalType: "bytes32[]",
+        internalType: "bytes32[]"
       },
       {
         name: "dynamicFieldIndex",
         type: "uint8",
-        internalType: "uint8",
-      },
+        internalType: "uint8"
+      }
     ],
     outputs: [
       {
         name: "",
         type: "bytes",
-        internalType: "bytes",
-      },
+        internalType: "bytes"
+      }
     ],
-    stateMutability: "view",
+    stateMutability: "view"
   },
   {
     type: "function",
@@ -186,27 +186,27 @@ export const mockGameAbi = [
       {
         name: "tableId",
         type: "bytes32",
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "keyTuple",
         type: "bytes32[]",
-        internalType: "bytes32[]",
+        internalType: "bytes32[]"
       },
       {
         name: "dynamicFieldIndex",
         type: "uint8",
-        internalType: "uint8",
-      },
+        internalType: "uint8"
+      }
     ],
     outputs: [
       {
         name: "",
         type: "uint256",
-        internalType: "uint256",
-      },
+        internalType: "uint256"
+      }
     ],
-    stateMutability: "view",
+    stateMutability: "view"
   },
   {
     type: "function",
@@ -215,37 +215,37 @@ export const mockGameAbi = [
       {
         name: "tableId",
         type: "bytes32",
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "keyTuple",
         type: "bytes32[]",
-        internalType: "bytes32[]",
+        internalType: "bytes32[]"
       },
       {
         name: "dynamicFieldIndex",
         type: "uint8",
-        internalType: "uint8",
+        internalType: "uint8"
       },
       {
         name: "start",
         type: "uint256",
-        internalType: "uint256",
+        internalType: "uint256"
       },
       {
         name: "end",
         type: "uint256",
-        internalType: "uint256",
-      },
+        internalType: "uint256"
+      }
     ],
     outputs: [
       {
         name: "data",
         type: "bytes",
-        internalType: "bytes",
-      },
+        internalType: "bytes"
+      }
     ],
-    stateMutability: "view",
+    stateMutability: "view"
   },
   {
     type: "function",
@@ -254,32 +254,32 @@ export const mockGameAbi = [
       {
         name: "tableId",
         type: "bytes32",
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "keyTuple",
         type: "bytes32[]",
-        internalType: "bytes32[]",
+        internalType: "bytes32[]"
       },
       {
         name: "fieldIndex",
         type: "uint8",
-        internalType: "uint8",
+        internalType: "uint8"
       },
       {
         name: "fieldLayout",
         type: "bytes32",
-        internalType: "FieldLayout",
-      },
+        internalType: "FieldLayout"
+      }
     ],
     outputs: [
       {
         name: "data",
         type: "bytes",
-        internalType: "bytes",
-      },
+        internalType: "bytes"
+      }
     ],
-    stateMutability: "view",
+    stateMutability: "view"
   },
   {
     type: "function",
@@ -288,27 +288,27 @@ export const mockGameAbi = [
       {
         name: "tableId",
         type: "bytes32",
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "keyTuple",
         type: "bytes32[]",
-        internalType: "bytes32[]",
+        internalType: "bytes32[]"
       },
       {
         name: "fieldIndex",
         type: "uint8",
-        internalType: "uint8",
-      },
+        internalType: "uint8"
+      }
     ],
     outputs: [
       {
         name: "data",
         type: "bytes",
-        internalType: "bytes",
-      },
+        internalType: "bytes"
+      }
     ],
-    stateMutability: "view",
+    stateMutability: "view"
   },
   {
     type: "function",
@@ -317,17 +317,17 @@ export const mockGameAbi = [
       {
         name: "tableId",
         type: "bytes32",
-        internalType: "ResourceId",
-      },
+        internalType: "ResourceId"
+      }
     ],
     outputs: [
       {
         name: "fieldLayout",
         type: "bytes32",
-        internalType: "FieldLayout",
-      },
+        internalType: "FieldLayout"
+      }
     ],
-    stateMutability: "view",
+    stateMutability: "view"
   },
   {
     type: "function",
@@ -336,32 +336,32 @@ export const mockGameAbi = [
       {
         name: "tableId",
         type: "bytes32",
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "keyTuple",
         type: "bytes32[]",
-        internalType: "bytes32[]",
+        internalType: "bytes32[]"
       },
       {
         name: "fieldIndex",
         type: "uint8",
-        internalType: "uint8",
+        internalType: "uint8"
       },
       {
         name: "fieldLayout",
         type: "bytes32",
-        internalType: "FieldLayout",
-      },
+        internalType: "FieldLayout"
+      }
     ],
     outputs: [
       {
         name: "",
         type: "uint256",
-        internalType: "uint256",
-      },
+        internalType: "uint256"
+      }
     ],
-    stateMutability: "view",
+    stateMutability: "view"
   },
   {
     type: "function",
@@ -370,27 +370,27 @@ export const mockGameAbi = [
       {
         name: "tableId",
         type: "bytes32",
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "keyTuple",
         type: "bytes32[]",
-        internalType: "bytes32[]",
+        internalType: "bytes32[]"
       },
       {
         name: "fieldIndex",
         type: "uint8",
-        internalType: "uint8",
-      },
+        internalType: "uint8"
+      }
     ],
     outputs: [
       {
         name: "",
         type: "uint256",
-        internalType: "uint256",
-      },
+        internalType: "uint256"
+      }
     ],
-    stateMutability: "view",
+    stateMutability: "view"
   },
   {
     type: "function",
@@ -399,17 +399,17 @@ export const mockGameAbi = [
       {
         name: "tableId",
         type: "bytes32",
-        internalType: "ResourceId",
-      },
+        internalType: "ResourceId"
+      }
     ],
     outputs: [
       {
         name: "keySchema",
         type: "bytes32",
-        internalType: "Schema",
-      },
+        internalType: "Schema"
+      }
     ],
-    stateMutability: "view",
+    stateMutability: "view"
   },
   {
     type: "function",
@@ -418,37 +418,37 @@ export const mockGameAbi = [
       {
         name: "tableId",
         type: "bytes32",
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "keyTuple",
         type: "bytes32[]",
-        internalType: "bytes32[]",
+        internalType: "bytes32[]"
       },
       {
         name: "fieldLayout",
         type: "bytes32",
-        internalType: "FieldLayout",
-      },
+        internalType: "FieldLayout"
+      }
     ],
     outputs: [
       {
         name: "staticData",
         type: "bytes",
-        internalType: "bytes",
+        internalType: "bytes"
       },
       {
         name: "encodedLengths",
         type: "bytes32",
-        internalType: "EncodedLengths",
+        internalType: "EncodedLengths"
       },
       {
         name: "dynamicData",
         type: "bytes",
-        internalType: "bytes",
-      },
+        internalType: "bytes"
+      }
     ],
-    stateMutability: "view",
+    stateMutability: "view"
   },
   {
     type: "function",
@@ -457,32 +457,32 @@ export const mockGameAbi = [
       {
         name: "tableId",
         type: "bytes32",
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "keyTuple",
         type: "bytes32[]",
-        internalType: "bytes32[]",
-      },
+        internalType: "bytes32[]"
+      }
     ],
     outputs: [
       {
         name: "staticData",
         type: "bytes",
-        internalType: "bytes",
+        internalType: "bytes"
       },
       {
         name: "encodedLengths",
         type: "bytes32",
-        internalType: "EncodedLengths",
+        internalType: "EncodedLengths"
       },
       {
         name: "dynamicData",
         type: "bytes",
-        internalType: "bytes",
-      },
+        internalType: "bytes"
+      }
     ],
-    stateMutability: "view",
+    stateMutability: "view"
   },
   {
     type: "function",
@@ -491,32 +491,32 @@ export const mockGameAbi = [
       {
         name: "tableId",
         type: "bytes32",
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "keyTuple",
         type: "bytes32[]",
-        internalType: "bytes32[]",
+        internalType: "bytes32[]"
       },
       {
         name: "fieldIndex",
         type: "uint8",
-        internalType: "uint8",
+        internalType: "uint8"
       },
       {
         name: "fieldLayout",
         type: "bytes32",
-        internalType: "FieldLayout",
-      },
+        internalType: "FieldLayout"
+      }
     ],
     outputs: [
       {
         name: "",
         type: "bytes32",
-        internalType: "bytes32",
-      },
+        internalType: "bytes32"
+      }
     ],
-    stateMutability: "view",
+    stateMutability: "view"
   },
   {
     type: "function",
@@ -525,17 +525,17 @@ export const mockGameAbi = [
       {
         name: "tableId",
         type: "bytes32",
-        internalType: "ResourceId",
-      },
+        internalType: "ResourceId"
+      }
     ],
     outputs: [
       {
         name: "valueSchema",
         type: "bytes32",
-        internalType: "Schema",
-      },
+        internalType: "Schema"
+      }
     ],
-    stateMutability: "view",
+    stateMutability: "view"
   },
   {
     type: "function",
@@ -544,16 +544,16 @@ export const mockGameAbi = [
       {
         name: "resourceId",
         type: "bytes32",
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "grantee",
         type: "address",
-        internalType: "address",
-      },
+        internalType: "address"
+      }
     ],
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "nonpayable"
   },
   {
     type: "function",
@@ -562,11 +562,11 @@ export const mockGameAbi = [
       {
         name: "initModule",
         type: "address",
-        internalType: "contract IModule",
-      },
+        internalType: "contract IModule"
+      }
     ],
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "nonpayable"
   },
   {
     type: "function",
@@ -575,16 +575,16 @@ export const mockGameAbi = [
       {
         name: "module",
         type: "address",
-        internalType: "contract IModule",
+        internalType: "contract IModule"
       },
       {
         name: "encodedArgs",
         type: "bytes",
-        internalType: "bytes",
-      },
+        internalType: "bytes"
+      }
     ],
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "nonpayable"
   },
   {
     type: "function",
@@ -593,16 +593,16 @@ export const mockGameAbi = [
       {
         name: "module",
         type: "address",
-        internalType: "contract IModule",
+        internalType: "contract IModule"
       },
       {
         name: "encodedArgs",
         type: "bytes",
-        internalType: "bytes",
-      },
+        internalType: "bytes"
+      }
     ],
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "nonpayable"
   },
   {
     type: "function",
@@ -611,16 +611,16 @@ export const mockGameAbi = [
       {
         name: "x",
         type: "int32",
-        internalType: "int32",
+        internalType: "int32"
       },
       {
         name: "y",
         type: "int32",
-        internalType: "int32",
-      },
+        internalType: "int32"
+      }
     ],
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "nonpayable"
   },
   {
     type: "function",
@@ -629,26 +629,26 @@ export const mockGameAbi = [
       {
         name: "tableId",
         type: "bytes32",
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "keyTuple",
         type: "bytes32[]",
-        internalType: "bytes32[]",
+        internalType: "bytes32[]"
       },
       {
         name: "dynamicFieldIndex",
         type: "uint8",
-        internalType: "uint8",
+        internalType: "uint8"
       },
       {
         name: "byteLengthToPop",
         type: "uint256",
-        internalType: "uint256",
-      },
+        internalType: "uint256"
+      }
     ],
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "nonpayable"
   },
   {
     type: "function",
@@ -657,26 +657,26 @@ export const mockGameAbi = [
       {
         name: "tableId",
         type: "bytes32",
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "keyTuple",
         type: "bytes32[]",
-        internalType: "bytes32[]",
+        internalType: "bytes32[]"
       },
       {
         name: "dynamicFieldIndex",
         type: "uint8",
-        internalType: "uint8",
+        internalType: "uint8"
       },
       {
         name: "dataToPush",
         type: "bytes",
-        internalType: "bytes",
-      },
+        internalType: "bytes"
+      }
     ],
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "nonpayable"
   },
   {
     type: "function",
@@ -685,21 +685,21 @@ export const mockGameAbi = [
       {
         name: "delegatee",
         type: "address",
-        internalType: "address",
+        internalType: "address"
       },
       {
         name: "delegationControlId",
         type: "bytes32",
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "initCallData",
         type: "bytes",
-        internalType: "bytes",
-      },
+        internalType: "bytes"
+      }
     ],
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "nonpayable"
   },
   {
     type: "function",
@@ -708,22 +708,22 @@ export const mockGameAbi = [
       {
         name: "systemId",
         type: "bytes32",
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "systemFunctionSignature",
         type: "string",
-        internalType: "string",
-      },
+        internalType: "string"
+      }
     ],
     outputs: [
       {
         name: "worldFunctionSelector",
         type: "bytes4",
-        internalType: "bytes4",
-      },
+        internalType: "bytes4"
+      }
     ],
-    stateMutability: "nonpayable",
+    stateMutability: "nonpayable"
   },
   {
     type: "function",
@@ -732,11 +732,11 @@ export const mockGameAbi = [
       {
         name: "namespaceId",
         type: "bytes32",
-        internalType: "ResourceId",
-      },
+        internalType: "ResourceId"
+      }
     ],
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "nonpayable"
   },
   {
     type: "function",
@@ -745,21 +745,21 @@ export const mockGameAbi = [
       {
         name: "namespaceId",
         type: "bytes32",
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "delegationControlId",
         type: "bytes32",
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "initCallData",
         type: "bytes",
-        internalType: "bytes",
-      },
+        internalType: "bytes"
+      }
     ],
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "nonpayable"
   },
   {
     type: "function",
@@ -768,27 +768,27 @@ export const mockGameAbi = [
       {
         name: "systemId",
         type: "bytes32",
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "worldFunctionSignature",
         type: "string",
-        internalType: "string",
+        internalType: "string"
       },
       {
         name: "systemFunctionSignature",
         type: "string",
-        internalType: "string",
-      },
+        internalType: "string"
+      }
     ],
     outputs: [
       {
         name: "worldFunctionSelector",
         type: "bytes4",
-        internalType: "bytes4",
-      },
+        internalType: "bytes4"
+      }
     ],
-    stateMutability: "nonpayable",
+    stateMutability: "nonpayable"
   },
   {
     type: "function",
@@ -797,21 +797,21 @@ export const mockGameAbi = [
       {
         name: "tableId",
         type: "bytes32",
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "hookAddress",
         type: "address",
-        internalType: "contract IStoreHook",
+        internalType: "contract IStoreHook"
       },
       {
         name: "enabledHooksBitmap",
         type: "uint8",
-        internalType: "uint8",
-      },
+        internalType: "uint8"
+      }
     ],
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "nonpayable"
   },
   {
     type: "function",
@@ -820,21 +820,21 @@ export const mockGameAbi = [
       {
         name: "systemId",
         type: "bytes32",
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "system",
         type: "address",
-        internalType: "contract System",
+        internalType: "contract System"
       },
       {
         name: "publicAccess",
         type: "bool",
-        internalType: "bool",
-      },
+        internalType: "bool"
+      }
     ],
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "nonpayable"
   },
   {
     type: "function",
@@ -843,21 +843,21 @@ export const mockGameAbi = [
       {
         name: "systemId",
         type: "bytes32",
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "hookAddress",
         type: "address",
-        internalType: "contract ISystemHook",
+        internalType: "contract ISystemHook"
       },
       {
         name: "enabledHooksBitmap",
         type: "uint8",
-        internalType: "uint8",
-      },
+        internalType: "uint8"
+      }
     ],
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "nonpayable"
   },
   {
     type: "function",
@@ -866,36 +866,36 @@ export const mockGameAbi = [
       {
         name: "tableId",
         type: "bytes32",
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "fieldLayout",
         type: "bytes32",
-        internalType: "FieldLayout",
+        internalType: "FieldLayout"
       },
       {
         name: "keySchema",
         type: "bytes32",
-        internalType: "Schema",
+        internalType: "Schema"
       },
       {
         name: "valueSchema",
         type: "bytes32",
-        internalType: "Schema",
+        internalType: "Schema"
       },
       {
         name: "keyNames",
         type: "string[]",
-        internalType: "string[]",
+        internalType: "string[]"
       },
       {
         name: "fieldNames",
         type: "string[]",
-        internalType: "string[]",
-      },
+        internalType: "string[]"
+      }
     ],
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "nonpayable"
   },
   {
     type: "function",
@@ -904,11 +904,11 @@ export const mockGameAbi = [
       {
         name: "namespaceId",
         type: "bytes32",
-        internalType: "ResourceId",
-      },
+        internalType: "ResourceId"
+      }
     ],
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "nonpayable"
   },
   {
     type: "function",
@@ -917,16 +917,16 @@ export const mockGameAbi = [
       {
         name: "resourceId",
         type: "bytes32",
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "grantee",
         type: "address",
-        internalType: "address",
-      },
+        internalType: "address"
+      }
     ],
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "nonpayable"
   },
   {
     type: "function",
@@ -935,26 +935,26 @@ export const mockGameAbi = [
       {
         name: "tableId",
         type: "bytes32",
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "keyTuple",
         type: "bytes32[]",
-        internalType: "bytes32[]",
+        internalType: "bytes32[]"
       },
       {
         name: "dynamicFieldIndex",
         type: "uint8",
-        internalType: "uint8",
+        internalType: "uint8"
       },
       {
         name: "data",
         type: "bytes",
-        internalType: "bytes",
-      },
+        internalType: "bytes"
+      }
     ],
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "nonpayable"
   },
   {
     type: "function",
@@ -963,26 +963,26 @@ export const mockGameAbi = [
       {
         name: "tableId",
         type: "bytes32",
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "keyTuple",
         type: "bytes32[]",
-        internalType: "bytes32[]",
+        internalType: "bytes32[]"
       },
       {
         name: "fieldIndex",
         type: "uint8",
-        internalType: "uint8",
+        internalType: "uint8"
       },
       {
         name: "data",
         type: "bytes",
-        internalType: "bytes",
-      },
+        internalType: "bytes"
+      }
     ],
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "nonpayable"
   },
   {
     type: "function",
@@ -991,31 +991,31 @@ export const mockGameAbi = [
       {
         name: "tableId",
         type: "bytes32",
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "keyTuple",
         type: "bytes32[]",
-        internalType: "bytes32[]",
+        internalType: "bytes32[]"
       },
       {
         name: "fieldIndex",
         type: "uint8",
-        internalType: "uint8",
+        internalType: "uint8"
       },
       {
         name: "data",
         type: "bytes",
-        internalType: "bytes",
+        internalType: "bytes"
       },
       {
         name: "fieldLayout",
         type: "bytes32",
-        internalType: "FieldLayout",
-      },
+        internalType: "FieldLayout"
+      }
     ],
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "nonpayable"
   },
   {
     type: "function",
@@ -1024,31 +1024,31 @@ export const mockGameAbi = [
       {
         name: "tableId",
         type: "bytes32",
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "keyTuple",
         type: "bytes32[]",
-        internalType: "bytes32[]",
+        internalType: "bytes32[]"
       },
       {
         name: "staticData",
         type: "bytes",
-        internalType: "bytes",
+        internalType: "bytes"
       },
       {
         name: "encodedLengths",
         type: "bytes32",
-        internalType: "EncodedLengths",
+        internalType: "EncodedLengths"
       },
       {
         name: "dynamicData",
         type: "bytes",
-        internalType: "bytes",
-      },
+        internalType: "bytes"
+      }
     ],
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "nonpayable"
   },
   {
     type: "function",
@@ -1057,31 +1057,31 @@ export const mockGameAbi = [
       {
         name: "tableId",
         type: "bytes32",
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "keyTuple",
         type: "bytes32[]",
-        internalType: "bytes32[]",
+        internalType: "bytes32[]"
       },
       {
         name: "fieldIndex",
         type: "uint8",
-        internalType: "uint8",
+        internalType: "uint8"
       },
       {
         name: "data",
         type: "bytes",
-        internalType: "bytes",
+        internalType: "bytes"
       },
       {
         name: "fieldLayout",
         type: "bytes32",
-        internalType: "FieldLayout",
-      },
+        internalType: "FieldLayout"
+      }
     ],
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "nonpayable"
   },
   {
     type: "function",
@@ -1090,36 +1090,36 @@ export const mockGameAbi = [
       {
         name: "tableId",
         type: "bytes32",
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "keyTuple",
         type: "bytes32[]",
-        internalType: "bytes32[]",
+        internalType: "bytes32[]"
       },
       {
         name: "dynamicFieldIndex",
         type: "uint8",
-        internalType: "uint8",
+        internalType: "uint8"
       },
       {
         name: "startWithinField",
         type: "uint40",
-        internalType: "uint40",
+        internalType: "uint40"
       },
       {
         name: "deleteCount",
         type: "uint40",
-        internalType: "uint40",
+        internalType: "uint40"
       },
       {
         name: "data",
         type: "bytes",
-        internalType: "bytes",
-      },
+        internalType: "bytes"
+      }
     ],
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "nonpayable"
   },
   {
     type: "function",
@@ -1128,26 +1128,26 @@ export const mockGameAbi = [
       {
         name: "tableId",
         type: "bytes32",
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "keyTuple",
         type: "bytes32[]",
-        internalType: "bytes32[]",
+        internalType: "bytes32[]"
       },
       {
         name: "start",
         type: "uint48",
-        internalType: "uint48",
+        internalType: "uint48"
       },
       {
         name: "data",
         type: "bytes",
-        internalType: "bytes",
-      },
+        internalType: "bytes"
+      }
     ],
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "nonpayable"
   },
   {
     type: "function",
@@ -1157,10 +1157,10 @@ export const mockGameAbi = [
       {
         name: "version",
         type: "bytes32",
-        internalType: "bytes32",
-      },
+        internalType: "bytes32"
+      }
     ],
-    stateMutability: "view",
+    stateMutability: "view"
   },
   {
     type: "function",
@@ -1169,21 +1169,21 @@ export const mockGameAbi = [
       {
         name: "fromNamespaceId",
         type: "bytes32",
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "toAddress",
         type: "address",
-        internalType: "address",
+        internalType: "address"
       },
       {
         name: "amount",
         type: "uint256",
-        internalType: "uint256",
-      },
+        internalType: "uint256"
+      }
     ],
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "nonpayable"
   },
   {
     type: "function",
@@ -1192,21 +1192,21 @@ export const mockGameAbi = [
       {
         name: "fromNamespaceId",
         type: "bytes32",
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "toNamespaceId",
         type: "bytes32",
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "amount",
         type: "uint256",
-        internalType: "uint256",
-      },
+        internalType: "uint256"
+      }
     ],
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "nonpayable"
   },
   {
     type: "function",
@@ -1215,16 +1215,16 @@ export const mockGameAbi = [
       {
         name: "namespaceId",
         type: "bytes32",
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "newOwner",
         type: "address",
-        internalType: "address",
-      },
+        internalType: "address"
+      }
     ],
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "nonpayable"
   },
   {
     type: "function",
@@ -1233,11 +1233,11 @@ export const mockGameAbi = [
       {
         name: "delegatee",
         type: "address",
-        internalType: "address",
-      },
+        internalType: "address"
+      }
     ],
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "nonpayable"
   },
   {
     type: "function",
@@ -1246,11 +1246,11 @@ export const mockGameAbi = [
       {
         name: "namespaceId",
         type: "bytes32",
-        internalType: "ResourceId",
-      },
+        internalType: "ResourceId"
+      }
     ],
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "nonpayable"
   },
   {
     type: "function",
@@ -1259,16 +1259,16 @@ export const mockGameAbi = [
       {
         name: "tableId",
         type: "bytes32",
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "hookAddress",
         type: "address",
-        internalType: "contract IStoreHook",
-      },
+        internalType: "contract IStoreHook"
+      }
     ],
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "nonpayable"
   },
   {
     type: "function",
@@ -1277,16 +1277,16 @@ export const mockGameAbi = [
       {
         name: "systemId",
         type: "bytes32",
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "hookAddress",
         type: "address",
-        internalType: "contract ISystemHook",
-      },
+        internalType: "contract ISystemHook"
+      }
     ],
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "nonpayable"
   },
   {
     type: "function",
@@ -1296,10 +1296,10 @@ export const mockGameAbi = [
       {
         name: "",
         type: "bytes32",
-        internalType: "bytes32",
-      },
+        internalType: "bytes32"
+      }
     ],
-    stateMutability: "view",
+    stateMutability: "view"
   },
   {
     type: "event",
@@ -1309,10 +1309,10 @@ export const mockGameAbi = [
         name: "storeVersion",
         type: "bytes32",
         indexed: true,
-        internalType: "bytes32",
-      },
+        internalType: "bytes32"
+      }
     ],
-    anonymous: false,
+    anonymous: false
   },
   {
     type: "event",
@@ -1322,10 +1322,10 @@ export const mockGameAbi = [
         name: "worldVersion",
         type: "bytes32",
         indexed: true,
-        internalType: "bytes32",
-      },
+        internalType: "bytes32"
+      }
     ],
-    anonymous: false,
+    anonymous: false
   },
   {
     type: "event",
@@ -1335,16 +1335,16 @@ export const mockGameAbi = [
         name: "tableId",
         type: "bytes32",
         indexed: true,
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "keyTuple",
         type: "bytes32[]",
         indexed: false,
-        internalType: "bytes32[]",
-      },
+        internalType: "bytes32[]"
+      }
     ],
-    anonymous: false,
+    anonymous: false
   },
   {
     type: "event",
@@ -1354,34 +1354,34 @@ export const mockGameAbi = [
         name: "tableId",
         type: "bytes32",
         indexed: true,
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "keyTuple",
         type: "bytes32[]",
         indexed: false,
-        internalType: "bytes32[]",
+        internalType: "bytes32[]"
       },
       {
         name: "staticData",
         type: "bytes",
         indexed: false,
-        internalType: "bytes",
+        internalType: "bytes"
       },
       {
         name: "encodedLengths",
         type: "bytes32",
         indexed: false,
-        internalType: "EncodedLengths",
+        internalType: "EncodedLengths"
       },
       {
         name: "dynamicData",
         type: "bytes",
         indexed: false,
-        internalType: "bytes",
-      },
+        internalType: "bytes"
+      }
     ],
-    anonymous: false,
+    anonymous: false
   },
   {
     type: "event",
@@ -1391,46 +1391,46 @@ export const mockGameAbi = [
         name: "tableId",
         type: "bytes32",
         indexed: true,
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "keyTuple",
         type: "bytes32[]",
         indexed: false,
-        internalType: "bytes32[]",
+        internalType: "bytes32[]"
       },
       {
         name: "dynamicFieldIndex",
         type: "uint8",
         indexed: false,
-        internalType: "uint8",
+        internalType: "uint8"
       },
       {
         name: "start",
         type: "uint48",
         indexed: false,
-        internalType: "uint48",
+        internalType: "uint48"
       },
       {
         name: "deleteCount",
         type: "uint40",
         indexed: false,
-        internalType: "uint40",
+        internalType: "uint40"
       },
       {
         name: "encodedLengths",
         type: "bytes32",
         indexed: false,
-        internalType: "EncodedLengths",
+        internalType: "EncodedLengths"
       },
       {
         name: "data",
         type: "bytes",
         indexed: false,
-        internalType: "bytes",
-      },
+        internalType: "bytes"
+      }
     ],
-    anonymous: false,
+    anonymous: false
   },
   {
     type: "event",
@@ -1440,28 +1440,28 @@ export const mockGameAbi = [
         name: "tableId",
         type: "bytes32",
         indexed: true,
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "keyTuple",
         type: "bytes32[]",
         indexed: false,
-        internalType: "bytes32[]",
+        internalType: "bytes32[]"
       },
       {
         name: "start",
         type: "uint48",
         indexed: false,
-        internalType: "uint48",
+        internalType: "uint48"
       },
       {
         name: "data",
         type: "bytes",
         indexed: false,
-        internalType: "bytes",
-      },
+        internalType: "bytes"
+      }
     ],
-    anonymous: false,
+    anonymous: false
   },
   {
     type: "error",
@@ -1470,14 +1470,14 @@ export const mockGameAbi = [
       {
         name: "length",
         type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+        internalType: "uint256"
+      }
+    ]
   },
   {
     type: "error",
     name: "FieldLayout_Empty",
-    inputs: [],
+    inputs: []
   },
   {
     type: "error",
@@ -1486,14 +1486,14 @@ export const mockGameAbi = [
       {
         name: "staticDataLength",
         type: "uint256",
-        internalType: "uint256",
+        internalType: "uint256"
       },
       {
         name: "computedStaticDataLength",
         type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+        internalType: "uint256"
+      }
+    ]
   },
   {
     type: "error",
@@ -1502,9 +1502,9 @@ export const mockGameAbi = [
       {
         name: "index",
         type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+        internalType: "uint256"
+      }
+    ]
   },
   {
     type: "error",
@@ -1513,9 +1513,9 @@ export const mockGameAbi = [
       {
         name: "index",
         type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+        internalType: "uint256"
+      }
+    ]
   },
   {
     type: "error",
@@ -1524,9 +1524,9 @@ export const mockGameAbi = [
       {
         name: "index",
         type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+        internalType: "uint256"
+      }
+    ]
   },
   {
     type: "error",
@@ -1535,14 +1535,14 @@ export const mockGameAbi = [
       {
         name: "numFields",
         type: "uint256",
-        internalType: "uint256",
+        internalType: "uint256"
       },
       {
         name: "maxFields",
         type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+        internalType: "uint256"
+      }
+    ]
   },
   {
     type: "error",
@@ -1551,19 +1551,19 @@ export const mockGameAbi = [
       {
         name: "numFields",
         type: "uint256",
-        internalType: "uint256",
+        internalType: "uint256"
       },
       {
         name: "maxFields",
         type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+        internalType: "uint256"
+      }
+    ]
   },
   {
     type: "error",
     name: "Module_AlreadyInstalled",
-    inputs: [],
+    inputs: []
   },
   {
     type: "error",
@@ -1572,19 +1572,19 @@ export const mockGameAbi = [
       {
         name: "dependency",
         type: "address",
-        internalType: "address",
-      },
-    ],
+        internalType: "address"
+      }
+    ]
   },
   {
     type: "error",
     name: "Module_NonRootInstallNotSupported",
-    inputs: [],
+    inputs: []
   },
   {
     type: "error",
     name: "Module_RootInstallNotSupported",
-    inputs: [],
+    inputs: []
   },
   {
     type: "error",
@@ -1593,14 +1593,14 @@ export const mockGameAbi = [
       {
         name: "length",
         type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+        internalType: "uint256"
+      }
+    ]
   },
   {
     type: "error",
     name: "Schema_StaticTypeAfterDynamicType",
-    inputs: [],
+    inputs: []
   },
   {
     type: "error",
@@ -1609,19 +1609,19 @@ export const mockGameAbi = [
       {
         name: "data",
         type: "bytes",
-        internalType: "bytes",
+        internalType: "bytes"
       },
       {
         name: "start",
         type: "uint256",
-        internalType: "uint256",
+        internalType: "uint256"
       },
       {
         name: "end",
         type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+        internalType: "uint256"
+      }
+    ]
   },
   {
     type: "error",
@@ -1630,14 +1630,14 @@ export const mockGameAbi = [
       {
         name: "length",
         type: "uint256",
-        internalType: "uint256",
+        internalType: "uint256"
       },
       {
         name: "accessedIndex",
         type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+        internalType: "uint256"
+      }
+    ]
   },
   {
     type: "error",
@@ -1646,14 +1646,14 @@ export const mockGameAbi = [
       {
         name: "start",
         type: "uint256",
-        internalType: "uint256",
+        internalType: "uint256"
       },
       {
         name: "end",
         type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+        internalType: "uint256"
+      }
+    ]
   },
   {
     type: "error",
@@ -1662,14 +1662,14 @@ export const mockGameAbi = [
       {
         name: "expected",
         type: "uint256",
-        internalType: "uint256",
+        internalType: "uint256"
       },
       {
         name: "received",
         type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+        internalType: "uint256"
+      }
+    ]
   },
   {
     type: "error",
@@ -1678,14 +1678,14 @@ export const mockGameAbi = [
       {
         name: "expected",
         type: "uint256",
-        internalType: "uint256",
+        internalType: "uint256"
       },
       {
         name: "received",
         type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+        internalType: "uint256"
+      }
+    ]
   },
   {
     type: "error",
@@ -1694,19 +1694,19 @@ export const mockGameAbi = [
       {
         name: "expected",
         type: "bytes2",
-        internalType: "bytes2",
+        internalType: "bytes2"
       },
       {
         name: "resourceId",
         type: "bytes32",
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "resourceIdString",
         type: "string",
-        internalType: "string",
-      },
-    ],
+        internalType: "string"
+      }
+    ]
   },
   {
     type: "error",
@@ -1715,19 +1715,19 @@ export const mockGameAbi = [
       {
         name: "startWithinField",
         type: "uint40",
-        internalType: "uint40",
+        internalType: "uint40"
       },
       {
         name: "deleteCount",
         type: "uint40",
-        internalType: "uint40",
+        internalType: "uint40"
       },
       {
         name: "fieldLength",
         type: "uint40",
-        internalType: "uint40",
-      },
-    ],
+        internalType: "uint40"
+      }
+    ]
   },
   {
     type: "error",
@@ -1736,14 +1736,14 @@ export const mockGameAbi = [
       {
         name: "expected",
         type: "uint256",
-        internalType: "uint256",
+        internalType: "uint256"
       },
       {
         name: "received",
         type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+        internalType: "uint256"
+      }
+    ]
   },
   {
     type: "error",
@@ -1752,14 +1752,14 @@ export const mockGameAbi = [
       {
         name: "expected",
         type: "uint256",
-        internalType: "uint256",
+        internalType: "uint256"
       },
       {
         name: "received",
         type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+        internalType: "uint256"
+      }
+    ]
   },
   {
     type: "error",
@@ -1768,14 +1768,14 @@ export const mockGameAbi = [
       {
         name: "expected",
         type: "uint256",
-        internalType: "uint256",
+        internalType: "uint256"
       },
       {
         name: "received",
         type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+        internalType: "uint256"
+      }
+    ]
   },
   {
     type: "error",
@@ -1784,14 +1784,14 @@ export const mockGameAbi = [
       {
         name: "expected",
         type: "uint256",
-        internalType: "uint256",
+        internalType: "uint256"
       },
       {
         name: "received",
         type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+        internalType: "uint256"
+      }
+    ]
   },
   {
     type: "error",
@@ -1800,14 +1800,14 @@ export const mockGameAbi = [
       {
         name: "tableId",
         type: "bytes32",
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "tableIdString",
         type: "string",
-        internalType: "string",
-      },
-    ],
+        internalType: "string"
+      }
+    ]
   },
   {
     type: "error",
@@ -1816,14 +1816,14 @@ export const mockGameAbi = [
       {
         name: "tableId",
         type: "bytes32",
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "tableIdString",
         type: "string",
-        internalType: "string",
-      },
-    ],
+        internalType: "string"
+      }
+    ]
   },
   {
     type: "error",
@@ -1832,19 +1832,19 @@ export const mockGameAbi = [
       {
         name: "resource",
         type: "string",
-        internalType: "string",
+        internalType: "string"
       },
       {
         name: "caller",
         type: "address",
-        internalType: "address",
-      },
-    ],
+        internalType: "address"
+      }
+    ]
   },
   {
     type: "error",
     name: "World_AlreadyInitialized",
-    inputs: [],
+    inputs: []
   },
   {
     type: "error",
@@ -1853,9 +1853,9 @@ export const mockGameAbi = [
       {
         name: "functionSelector",
         type: "bytes4",
-        internalType: "bytes4",
-      },
-    ],
+        internalType: "bytes4"
+      }
+    ]
   },
   {
     type: "error",
@@ -1864,14 +1864,14 @@ export const mockGameAbi = [
       {
         name: "delegator",
         type: "address",
-        internalType: "address",
+        internalType: "address"
       },
       {
         name: "delegatee",
         type: "address",
-        internalType: "address",
-      },
-    ],
+        internalType: "address"
+      }
+    ]
   },
   {
     type: "error",
@@ -1880,9 +1880,9 @@ export const mockGameAbi = [
       {
         name: "functionSelector",
         type: "bytes4",
-        internalType: "bytes4",
-      },
-    ],
+        internalType: "bytes4"
+      }
+    ]
   },
   {
     type: "error",
@@ -1891,9 +1891,9 @@ export const mockGameAbi = [
       {
         name: "functionSelector",
         type: "bytes4",
-        internalType: "bytes4",
-      },
-    ],
+        internalType: "bytes4"
+      }
+    ]
   },
   {
     type: "error",
@@ -1902,14 +1902,14 @@ export const mockGameAbi = [
       {
         name: "balance",
         type: "uint256",
-        internalType: "uint256",
+        internalType: "uint256"
       },
       {
         name: "amount",
         type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+        internalType: "uint256"
+      }
+    ]
   },
   {
     type: "error",
@@ -1918,14 +1918,14 @@ export const mockGameAbi = [
       {
         name: "contractAddress",
         type: "address",
-        internalType: "address",
+        internalType: "address"
       },
       {
         name: "interfaceId",
         type: "bytes4",
-        internalType: "bytes4",
-      },
-    ],
+        internalType: "bytes4"
+      }
+    ]
   },
   {
     type: "error",
@@ -1934,9 +1934,9 @@ export const mockGameAbi = [
       {
         name: "namespace",
         type: "bytes14",
-        internalType: "bytes14",
-      },
-    ],
+        internalType: "bytes14"
+      }
+    ]
   },
   {
     type: "error",
@@ -1945,14 +1945,14 @@ export const mockGameAbi = [
       {
         name: "resourceId",
         type: "bytes32",
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "resourceIdString",
         type: "string",
-        internalType: "string",
-      },
-    ],
+        internalType: "string"
+      }
+    ]
   },
   {
     type: "error",
@@ -1961,19 +1961,19 @@ export const mockGameAbi = [
       {
         name: "expected",
         type: "bytes2",
-        internalType: "bytes2",
+        internalType: "bytes2"
       },
       {
         name: "resourceId",
         type: "bytes32",
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "resourceIdString",
         type: "string",
-        internalType: "string",
-      },
-    ],
+        internalType: "string"
+      }
+    ]
   },
   {
     type: "error",
@@ -1982,14 +1982,14 @@ export const mockGameAbi = [
       {
         name: "resourceId",
         type: "bytes32",
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "resourceIdString",
         type: "string",
-        internalType: "string",
-      },
-    ],
+        internalType: "string"
+      }
+    ]
   },
   {
     type: "error",
@@ -1998,14 +1998,14 @@ export const mockGameAbi = [
       {
         name: "resourceId",
         type: "bytes32",
-        internalType: "ResourceId",
+        internalType: "ResourceId"
       },
       {
         name: "resourceIdString",
         type: "string",
-        internalType: "string",
-      },
-    ],
+        internalType: "string"
+      }
+    ]
   },
   {
     type: "error",
@@ -2014,13 +2014,13 @@ export const mockGameAbi = [
       {
         name: "system",
         type: "address",
-        internalType: "address",
-      },
-    ],
+        internalType: "address"
+      }
+    ]
   },
   {
     type: "error",
     name: "World_UnlimitedDelegationNotAllowed",
-    inputs: [],
-  },
-] as const;
+    inputs: []
+  }
+] as const

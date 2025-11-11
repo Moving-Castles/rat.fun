@@ -1,6 +1,6 @@
-import { DetailedHTMLProps, SVGAttributes } from "react";
+import { DetailedHTMLProps, SVGAttributes } from "react"
 
-export type Props = DetailedHTMLProps<SVGAttributes<SVGSVGElement>, SVGSVGElement>;
+export type Props = DetailedHTMLProps<SVGAttributes<SVGSVGElement>, SVGSVGElement>
 
 // TODO: replace with a version that has whole pixel values in recs
 
@@ -76,5 +76,5 @@ export function GasTankIcon({ className, ...props }: Props) {
       <rect x="21.8184" y="20.1357" width="2.18227" height="2.18227" />
       <rect x="21.8184" y="11.4087" width="2.18227" height="2.18227" />
     </svg>
-  );
+  )
 }

@@ -1,19 +1,19 @@
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useEffect } from "react"
 import {
   Root as DialogRoot,
   DialogPortal,
   DialogContent,
   DialogTitle,
-  DialogDescription,
-} from "@radix-ui/react-dialog";
-import { Shadow } from "./Shadow";
-import { twMerge } from "tailwind-merge";
+  DialogDescription
+} from "@radix-ui/react-dialog"
+import { Shadow } from "./Shadow"
+import { twMerge } from "tailwind-merge"
 
 export type Props = {
-  open?: boolean;
-  onOpenChange?: (open: boolean) => void;
-  children: ReactNode;
-};
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
+  children: ReactNode
+}
 
 export function Modal({ open, onOpenChange, children }: Props) {
   // Focus trapping doesn't seem to completely work with our iframe approach,
@@ -21,19 +21,19 @@ export function Modal({ open, onOpenChange, children }: Props) {
   // We'll patch this behavior for now with our own listener.
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
-      if (event.defaultPrevented) return;
+      if (event.defaultPrevented) return
 
       if (event.key === "Escape" && open) {
-        event.preventDefault();
-        onOpenChange?.(false);
+        event.preventDefault()
+        onOpenChange?.(false)
       }
     }
 
-    window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("keydown", onKeyDown)
     return () => {
-      window.removeEventListener("keydown", onKeyDown);
-    };
-  }, [onOpenChange, open]);
+      window.removeEventListener("keydown", onKeyDown)
+    }
+  }, [onOpenChange, open])
 
   return (
     <DialogRoot open={open} onOpenChange={onOpenChange}>
@@ -44,12 +44,18 @@ export function Modal({ open, onOpenChange, children }: Props) {
            * This intentionally does not use `<DialogOverlay>` due to an issue it causes with scrolling the modal contents.
            * See https://github.com/radix-ui/primitives/issues/1159#issuecomment-1105320294
            */}
-          <div className={twMerge("fixed inset-0", "bg-neutral-800/85", "animate-in animate-duration-300 fade-in")} />
+          <div
+            className={twMerge(
+              "fixed inset-0",
+              "bg-neutral-800/85",
+              "animate-in animate-duration-300 fade-in"
+            )}
+          />
           <div
             className={twMerge(
               "fixed inset-0",
               "grid items-end sm:items-center",
-              "animate-in animate-duration-300 fade-in slide-in-from-bottom-16",
+              "animate-in animate-duration-300 fade-in slide-in-from-bottom-16"
             )}
           >
             <div>
@@ -64,5 +70,5 @@ export function Modal({ open, onOpenChange, children }: Props) {
         </Shadow>
       </DialogPortal>
     </DialogRoot>
-  );
+  )
 }

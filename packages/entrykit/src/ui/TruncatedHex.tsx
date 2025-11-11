@@ -1,12 +1,12 @@
-import { Hex } from "viem";
+import { Hex } from "viem"
 
 export type Props = {
-  hex: Hex;
-};
+  hex: Hex
+}
 
 export function TruncatedHex({ hex }: Props) {
   if (hex.length <= 10) {
-    return <span title={hex}>{hex}</span>;
+    return <span title={hex}>{hex}</span>
   }
 
   return (
@@ -15,5 +15,5 @@ export function TruncatedHex({ hex }: Props) {
       <span className="tracking-[-1ch] text-transparent">{hex.slice(6, -4)}</span>
       {hex.slice(-4)}
     </span>
-  );
+  )
 }

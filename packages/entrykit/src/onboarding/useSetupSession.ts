@@ -1,86 +1,96 @@
-import { Hex, encodeFunctionData, parseEventLogs, zeroAddress } from "viem";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { getAction } from "viem/utils";
-import { entryPoint07Abi, sendUserOperation, waitForUserOperationReceipt } from "viem/account-abstraction";
-import { useEntryKitConfig } from "../EntryKitConfigProvider";
-import { ConnectedClient, unlimitedDelegationControlId, worldAbi } from "../common";
-import { sendCalls, waitForTransactionReceipt } from "viem/actions";
-import { defineCall } from "../utils/defineCall";
-import { Connector, useClient } from "wagmi";
-import IBaseWorldAbi from "@latticexyz/world/out/IBaseWorld.sol/IBaseWorld.abi.json";
-import { callWithSignature } from "../utils/callWithSignature";
-import { systemsConfig as worldSystemsConfig } from "@latticexyz/world/mud.config";
-import { createBundlerClient } from "../createBundlerClient";
-import { getBundlerTransport } from "../getBundlerTransport";
-import { isIdPlaceConnector } from "@latticexyz/id.place/internal";
-import { storeEventsAbi } from "@latticexyz/store";
+import { Hex, encodeFunctionData, parseEventLogs, zeroAddress } from "viem"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { getAction } from "viem/utils"
+import {
+  entryPoint07Abi,
+  sendUserOperation,
+  waitForUserOperationReceipt
+} from "viem/account-abstraction"
+import { useEntryKitConfig } from "../EntryKitConfigProvider"
+import { ConnectedClient, unlimitedDelegationControlId, worldAbi } from "../common"
+import { sendCalls, waitForTransactionReceipt } from "viem/actions"
+import { defineCall } from "../utils/defineCall"
+import { Connector, useClient } from "wagmi"
+import IBaseWorldAbi from "@latticexyz/world/out/IBaseWorld.sol/IBaseWorld.abi.json"
+import { callWithSignature } from "../utils/callWithSignature"
+import { systemsConfig as worldSystemsConfig } from "@latticexyz/world/mud.config"
+import { createBundlerClient } from "../createBundlerClient"
+import { getBundlerTransport } from "../getBundlerTransport"
+import { isIdPlaceConnector } from "@latticexyz/id.place/internal"
+import { storeEventsAbi } from "@latticexyz/store"
 
-export function useSetupSession({ connector, userClient }: { connector: Connector; userClient: ConnectedClient }) {
-  const queryClient = useQueryClient();
-  const { chainId, worldAddress } = useEntryKitConfig();
-  const client = useClient({ chainId });
+export function useSetupSession({
+  connector,
+  userClient
+}: {
+  connector: Connector
+  userClient: ConnectedClient
+}) {
+  const queryClient = useQueryClient()
+  const { chainId, worldAddress } = useEntryKitConfig()
+  const client = useClient({ chainId })
 
-  const mutationKey = ["setupSession", client?.chain.id, userClient.account.address];
+  const mutationKey = ["setupSession", client?.chain.id, userClient.account.address]
   return useMutation({
     retry: 0,
     mutationKey,
     mutationFn: async ({
       sessionClient,
-      registerDelegation,
+      registerDelegation
     }: {
-      sessionClient: ConnectedClient;
-      registerDelegation: boolean;
+      sessionClient: ConnectedClient
+      registerDelegation: boolean
     }): Promise<void> => {
-      if (!client) throw new Error("Client not ready.");
-      const sessionAddress = sessionClient.account.address;
+      if (!client) throw new Error("Client not ready.")
+      const sessionAddress = sessionClient.account.address
 
-      console.log("setting up session", userClient);
+      console.log("setting up session", userClient)
 
       if (isIdPlaceConnector(connector)) {
         // Set up session for smart account wallet
-        const calls = [];
+        const calls = []
 
         if (registerDelegation) {
-          console.log("registering delegation");
+          console.log("registering delegation")
           calls.push(
             defineCall({
               to: worldAddress,
               abi: worldAbi,
               functionName: "registerDelegation",
-              args: [sessionAddress, unlimitedDelegationControlId, "0x"],
-            }),
-          );
+              args: [sessionAddress, unlimitedDelegationControlId, "0x"]
+            })
+          )
         }
 
-        if (!calls.length) return;
+        if (!calls.length) return
 
-        console.log("setting up account with", calls, userClient.account.address, sessionAddress);
+        console.log("setting up account with", calls, userClient.account.address, sessionAddress)
 
         const { id } = await getAction(
           userClient,
           sendCalls,
-          "sendCalls",
+          "sendCalls"
         )({
           account: userClient.account,
-          calls,
-        });
-        console.log("got send calls ID", id);
+          calls
+        })
+        console.log("got send calls ID", id)
 
         // TODO: switch to `waitForCallsStatus`, but needs to be able to run "headless" (no popup)
 
         const bundlerClient = createBundlerClient({
           transport: getBundlerTransport(client.chain),
-          client,
-        });
+          client
+        })
 
-        console.log("waiting for receipt");
+        console.log("waiting for receipt")
         const receipt = await getAction(
           bundlerClient,
           waitForUserOperationReceipt,
-          "waitForUserOperationReceipt",
-        )({ hash: id as Hex });
+          "waitForUserOperationReceipt"
+        )({ hash: id as Hex })
 
-        console.log("got result", receipt);
+        console.log("got result", receipt)
         console.log(
           "parsed logs",
           worldAddress,
@@ -92,48 +102,48 @@ export function useSetupSession({ connector, userClient }: { connector: Connecto
               // ...abi,
               ...worldAbi,
               ...storeEventsAbi,
-              ...calls.flatMap((call) => call.abi as never),
-            ],
-          }),
-        );
+              ...calls.flatMap(call => call.abi as never)
+            ]
+          })
+        )
       } else if (userClient.account.type === "smart") {
         // Set up session for smart account wallet
-        const calls = [];
+        const calls = []
 
         if (registerDelegation) {
-          console.log("registering delegation");
+          console.log("registering delegation")
           calls.push(
             defineCall({
               to: worldAddress,
               abi: worldAbi,
               functionName: "registerDelegation",
-              args: [sessionAddress, unlimitedDelegationControlId, "0x"],
-            }),
-          );
+              args: [sessionAddress, unlimitedDelegationControlId, "0x"]
+            })
+          )
         }
 
-        if (!calls.length) return;
+        if (!calls.length) return
 
-        console.log("setting up account with", calls, userClient);
-        const hash = await getAction(userClient, sendUserOperation, "sendUserOperation")({ calls });
-        console.log("got user op hash", hash);
+        console.log("setting up account with", calls, userClient)
+        const hash = await getAction(userClient, sendUserOperation, "sendUserOperation")({ calls })
+        console.log("got user op hash", hash)
 
         const receipt = await getAction(
           userClient,
           waitForUserOperationReceipt,
-          "waitForUserOperationReceipt",
-        )({ hash });
-        console.log("got user op receipt", receipt);
+          "waitForUserOperationReceipt"
+        )({ hash })
+        console.log("got user op receipt", receipt)
 
         if (!receipt.success) {
-          console.error("not successful?", receipt);
+          console.error("not successful?", receipt)
         }
       } else {
         // Set up session for EOAs
-        const txs: Hex[] = [];
+        const txs: Hex[] = []
 
         if (registerDelegation) {
-          console.log("registering delegation");
+          console.log("registering delegation")
           const tx = await callWithSignature({
             client,
             userClient,
@@ -143,21 +153,25 @@ export function useSetupSession({ connector, userClient }: { connector: Connecto
             callData: encodeFunctionData({
               abi: IBaseWorldAbi,
               functionName: "registerDelegation",
-              args: [sessionAddress, unlimitedDelegationControlId, "0x"],
-            }),
-          });
-          console.log("got delegation tx", tx);
-          txs.push(tx);
+              args: [sessionAddress, unlimitedDelegationControlId, "0x"]
+            })
+          })
+          console.log("got delegation tx", tx)
+          txs.push(tx)
         }
 
-        if (!txs.length) return;
+        if (!txs.length) return
 
-        console.log("waiting for", txs.length, "receipts");
+        console.log("waiting for", txs.length, "receipts")
         for (const hash of txs) {
-          const receipt = await getAction(client, waitForTransactionReceipt, "waitForTransactionReceipt")({ hash });
-          console.log("got tx receipt", receipt);
+          const receipt = await getAction(
+            client,
+            waitForTransactionReceipt,
+            "waitForTransactionReceipt"
+          )({ hash })
+          console.log("got tx receipt", receipt)
           if (receipt.status === "reverted") {
-            console.error("tx reverted?", receipt);
+            console.error("tx reverted?", receipt)
           }
         }
       }
@@ -165,29 +179,29 @@ export function useSetupSession({ connector, userClient }: { connector: Connecto
       // attempt to create session smart account instead of doing lazily
       // so downstream can expect the session account to exist
       await (async () => {
-        if (await sessionClient.account.isDeployed?.()) return;
+        if (await sessionClient.account.isDeployed?.()) return
 
-        console.log("creating session account by sending empty user op");
+        console.log("creating session account by sending empty user op")
         const hash = await getAction(
           sessionClient,
           sendUserOperation,
-          "sendUserOperation",
+          "sendUserOperation"
         )({
-          calls: [{ to: zeroAddress }],
-        });
+          calls: [{ to: zeroAddress }]
+        })
 
         const receipt = await getAction(
           sessionClient,
           waitForUserOperationReceipt,
-          "waitForUserOperationReceipt",
-        )({ hash });
-        console.log("got user op receipt", receipt);
-      })();
+          "waitForUserOperationReceipt"
+        )({ hash })
+        console.log("got user op receipt", receipt)
+      })()
 
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ["getDelegation"] }),
-        queryClient.invalidateQueries({ queryKey: ["getPrerequisites"] }),
-      ]);
-    },
-  });
+        queryClient.invalidateQueries({ queryKey: ["getPrerequisites"] })
+      ])
+    }
+  })
 }

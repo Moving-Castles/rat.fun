@@ -1,82 +1,86 @@
-import { useEffect, useMemo } from "react";
-import { Chain } from "viem";
-import { useSwitchChain } from "wagmi";
-import { twMerge } from "tailwind-merge";
-import * as Select from "@radix-ui/react-select";
-import { RelayChain } from "@reservoir0x/relay-sdk";
-import { useFrame } from "../../ui/FrameProvider";
-import { useTheme } from "../../useTheme";
-import { ChevronUpIcon } from "../../icons/ChevronUpIcon";
-import { ChevronDownIcon } from "../../icons/ChevronDownIcon";
-import { Input } from "../../ui/Input";
-import { ChainIcon } from "./ChainIcon";
-import { useRelay } from "./useRelay";
-import { useShowQueryError } from "../../errors/useShowQueryError";
-import { useChainBalances } from "./useChainBalances";
-import { Balance } from "../../ui/Balance";
-import { PendingIcon } from "../../icons/PendingIcon";
+import { useEffect, useMemo } from "react"
+import { Chain } from "viem"
+import { useSwitchChain } from "wagmi"
+import { twMerge } from "tailwind-merge"
+import * as Select from "@radix-ui/react-select"
+import { RelayChain } from "@reservoir0x/relay-sdk"
+import { useFrame } from "../../ui/FrameProvider"
+import { useTheme } from "../../useTheme"
+import { ChevronUpIcon } from "../../icons/ChevronUpIcon"
+import { ChevronDownIcon } from "../../icons/ChevronDownIcon"
+import { Input } from "../../ui/Input"
+import { ChainIcon } from "./ChainIcon"
+import { useRelay } from "./useRelay"
+import { useShowQueryError } from "../../errors/useShowQueryError"
+import { useChainBalances } from "./useChainBalances"
+import { Balance } from "../../ui/Balance"
+import { PendingIcon } from "../../icons/PendingIcon"
 
 export type ChainWithRelay = Chain & {
   relayChain?: RelayChain & {
-    icon?: Record<string, string>;
-  };
-};
+    icon?: Record<string, string>
+  }
+}
 
 export type Props = {
-  value: number;
-  onChange: (value: number) => void;
-};
+  value: number
+  onChange: (value: number) => void
+}
 
 export function ChainSelect({ value, onChange }: Props) {
-  const theme = useTheme();
-  const { frame } = useFrame();
-  const { chains, switchChain } = useSwitchChain();
-  const relay = useRelay();
-  const relayChains = relay.data?.chains;
+  const theme = useTheme()
+  const { frame } = useFrame()
+  const { chains, switchChain } = useSwitchChain()
+  const relay = useRelay()
+  const relayChains = relay.data?.chains
 
   const sourceChains = useMemo(() => {
     return chains
-      .map((sourceChain) => {
-        const relayChain = relayChains?.find((c) => c.id === sourceChain.id);
+      .map(sourceChain => {
+        const relayChain = relayChains?.find(c => c.id === sourceChain.id)
         return {
           ...sourceChain,
-          relayChain,
-        } satisfies ChainWithRelay;
+          relayChain
+        } satisfies ChainWithRelay
       })
-      .filter((c) => c.relayChain);
-  }, [chains, relayChains]);
+      .filter(c => c.relayChain)
+  }, [chains, relayChains])
 
-  const selectedChain = sourceChains.find((c) => c.id === value)!;
-  const { data: chainsBalances, isLoading } = useShowQueryError(useChainBalances({ chains: sourceChains }));
+  const selectedChain = sourceChains.find(c => c.id === value)!
+  const { data: chainsBalances, isLoading } = useShowQueryError(
+    useChainBalances({ chains: sourceChains })
+  )
 
   const renderedChains = useMemo(() => {
-    if (!chainsBalances) return [];
+    if (!chainsBalances) return []
     const chainsWithBalance = chainsBalances
       .filter(({ balance }) => balance.value > 0n)
-      .map(({ chain, balance }) => ({ chain, balance: balance.value }));
+      .map(({ chain, balance }) => ({ chain, balance: balance.value }))
 
-    return chainsWithBalance.length > 0 ? chainsWithBalance : sourceChains.map((chain) => ({ chain, balance: 0n }));
-  }, [chainsBalances, sourceChains]);
+    return chainsWithBalance.length > 0
+      ? chainsWithBalance
+      : sourceChains.map(chain => ({ chain, balance: 0n }))
+  }, [chainsBalances, sourceChains])
 
   useEffect(() => {
     if (
       renderedChains.length > 0 &&
-      (!selectedChain || !renderedChains.find((c) => c.chain.id === selectedChain?.id))
+      (!selectedChain || !renderedChains.find(c => c.chain.id === selectedChain?.id))
     ) {
-      const defaultChain = renderedChains[0].chain;
-      onChange(defaultChain.id);
-      switchChain({ chainId: defaultChain.id });
+      const defaultChain = renderedChains[0].chain
+      onChange(defaultChain.id)
+      switchChain({ chainId: defaultChain.id })
     }
-  }, [value, selectedChain, renderedChains, onChange, switchChain]);
+  }, [value, selectedChain, renderedChains, onChange, switchChain])
 
   return (
     <Select.Root
       value={value.toString()}
-      onValueChange={(value) => {
+      onValueChange={value => {
         if (value) {
-          const chain = renderedChains.find((item) => item.chain.id.toString() === value)?.chain;
-          if (!chain) throw new Error(`Unknown chain selected: ${value}`);
-          onChange(chain.id);
+          const chain = renderedChains.find(item => item.chain.id.toString() === value)?.chain
+          if (!chain) throw new Error(`Unknown chain selected: ${value}`)
+          onChange(chain.id)
         }
       }}
     >
@@ -109,7 +113,7 @@ export function ChainSelect({ value, onChange }: Props) {
               <Select.Group
                 className={twMerge(
                   "flex flex-col border divide-y",
-                  "bg-neutral-800 text-neutral-300 border-neutral-700 divide-neutral-700",
+                  "bg-neutral-800 text-neutral-300 border-neutral-700 divide-neutral-700"
                 )}
               >
                 {isLoading ? (
@@ -125,16 +129,20 @@ export function ChainSelect({ value, onChange }: Props) {
                         value={chain.id.toString()}
                         className={twMerge(
                           "group flex p-2.5 gap-2.5 items-center cursor-pointer outline-none",
-                          "text-white focus:bg-neutral-700 data-[state=checked]:bg-neutral-900",
+                          "text-white focus:bg-neutral-700 data-[state=checked]:bg-neutral-900"
                         )}
                       >
-                        <ChainIcon id={chain.id} name={chain.name} url={chain.relayChain?.icon?.[theme]} />
+                        <ChainIcon
+                          id={chain.id}
+                          name={chain.name}
+                          url={chain.relayChain?.icon?.[theme]}
+                        />
                         <span className="flex-grow flex-shrink-0">{chain.name}</span>
                         <span className="flex-shrink-0 font-mono text-sm text-neutral-400">
                           <Balance wei={balance} />
                         </span>
                       </Select.Item>
-                    );
+                    )
                   })
                 )}
               </Select.Group>
@@ -143,5 +151,5 @@ export function ChainSelect({ value, onChange }: Props) {
         </Select.Portal>
       ) : null}
     </Select.Root>
-  );
+  )
 }

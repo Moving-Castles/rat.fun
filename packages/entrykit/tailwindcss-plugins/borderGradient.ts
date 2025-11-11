@@ -1,19 +1,19 @@
-import plugin from "tailwindcss/plugin";
+import plugin from "tailwindcss/plugin"
 
 export const borderGradient = plugin(function ({ addUtilities }) {
   addUtilities({
     "@property --tw-border-gradient-angle": {
       syntax: "'<angle>'",
       inherits: "true",
-      initialValue: "0deg",
+      initialValue: "0deg"
     },
     "@property --tw-conic-gradient-angle": {
       syntax: "'<angle>'",
       inherits: "true",
-      initialValue: "0deg",
+      initialValue: "0deg"
     },
     "@keyframes border-gradient": {
-      to: { "--tw-border-gradient-angle": "360deg" },
+      to: { "--tw-border-gradient-angle": "360deg" }
     },
     ".border-gradient": {
       borderColor: "transparent",
@@ -43,7 +43,7 @@ export const borderGradient = plugin(function ({ addUtilities }) {
       //     var(--tw-gradient-to)
       //   )
       // `,
-      animation: "border-gradient 2s linear infinite",
-    },
-  });
-});
+      animation: "border-gradient 2s linear infinite"
+    }
+  })
+})

@@ -1,25 +1,25 @@
-import { PendingIcon } from "../../icons/PendingIcon";
-import { ReactNode, useEffect, useState } from "react";
-import { twMerge } from "tailwind-merge";
-import { CheckIcon } from "../../icons/CheckIcon";
-import { WarningIcon } from "../../icons/WarningIcon";
-import { CloseIcon } from "../../icons/CloseIcon";
+import { PendingIcon } from "../../icons/PendingIcon"
+import { ReactNode, useEffect, useState } from "react"
+import { twMerge } from "tailwind-merge"
+import { CheckIcon } from "../../icons/CheckIcon"
+import { WarningIcon } from "../../icons/WarningIcon"
+import { CloseIcon } from "../../icons/CloseIcon"
 
 export type Props = {
-  status: "pending" | "success" | "error";
+  status: "pending" | "success" | "error"
   progress: {
-    duration: number;
-    elapsed: number;
-  };
-  onDismiss: () => void;
-  children: ReactNode;
-};
+    duration: number
+    elapsed: number
+  }
+  onDismiss: () => void
+  children: ReactNode
+}
 
 export function DepositStatus({ status, progress, children, onDismiss }: Props) {
-  const [appear, setAppear] = useState(false);
+  const [appear, setAppear] = useState(false)
   useEffect(() => {
-    setAppear(true);
-  }, []);
+    setAppear(true)
+  }, [])
 
   return (
     <div className="group bg-neutral-900 flex flex-col animate-in fade-in slide-in-from-bottom-2 animate-out fade-out">
@@ -41,7 +41,7 @@ export function DepositStatus({ status, progress, children, onDismiss }: Props) 
               "col-start-1 row-start-1 flex items-center justify-center transition",
               "opacity-0 pointer-events-none",
               "group-hover:opacity-100 group-hover:pointer-events-auto",
-              "text-neutral-500 hover:text-white",
+              "text-neutral-500 hover:text-white"
             )}
             title="Dismiss"
             onClick={onDismiss}
@@ -55,20 +55,24 @@ export function DepositStatus({ status, progress, children, onDismiss }: Props) 
         <div
           className={twMerge(
             "w-full h-full transition ease-linear",
-            status === "success" ? "bg-green-600" : status === "error" ? "bg-red-600" : "bg-blue-600",
-            status === "pending" ? "opacity-100" : "opacity-0",
+            status === "success"
+              ? "bg-green-600"
+              : status === "error"
+                ? "bg-red-600"
+                : "bg-blue-600",
+            status === "pending" ? "opacity-100" : "opacity-0"
           )}
           style={
             status === "pending"
               ? {
                   transform: appear ? `translateX(0)` : "translate(-100%)",
                   transitionDuration: `${progress.duration}ms`,
-                  transitionDelay: `-${Math.min(progress.duration, progress.elapsed)}ms`,
+                  transitionDelay: `-${Math.min(progress.duration, progress.elapsed)}ms`
                 }
               : undefined
           }
         />
       </div>
     </div>
-  );
+  )
 }

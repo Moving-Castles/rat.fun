@@ -1,28 +1,34 @@
-import { useEffect } from "react";
-import { Hex } from "viem";
-import { Button } from "../ui/Button";
-import { useSetupSession } from "./useSetupSession";
-import { ConnectedClient } from "../common";
-import { useSessionClient } from "../useSessionClient";
-import { useShowQueryError } from "../errors/useShowQueryError";
-import { useShowMutationError } from "../errors/useShowMutationError";
-import { StepContentProps } from "./common";
-import { usePrerequisites } from "./usePrerequisites";
-import { Connector } from "wagmi";
+import { useEffect } from "react"
+import { Hex } from "viem"
+import { Button } from "../ui/Button"
+import { useSetupSession } from "./useSetupSession"
+import { ConnectedClient } from "../common"
+import { useSessionClient } from "../useSessionClient"
+import { useShowQueryError } from "../errors/useShowQueryError"
+import { useShowMutationError } from "../errors/useShowMutationError"
+import { StepContentProps } from "./common"
+import { usePrerequisites } from "./usePrerequisites"
+import { Connector } from "wagmi"
 
 export type Props = StepContentProps & {
-  connector: Connector;
-  userClient: ConnectedClient;
-  registerDelegation: boolean;
-  sessionAddress?: Hex;
-};
+  connector: Connector
+  userClient: ConnectedClient
+  registerDelegation: boolean
+  sessionAddress?: Hex
+}
 
-export function Session({ isActive, isExpanded, connector, userClient, registerDelegation }: Props) {
-  const sessionClient = useShowQueryError(useSessionClient(userClient.account.address));
-  const setup = useShowMutationError(useSetupSession({ userClient, connector }));
-  const hasSession = !registerDelegation;
-  const { data: prerequisites } = usePrerequisites(userClient.account.address);
-  const { hasGasBalance } = prerequisites ?? {};
+export function Session({
+  isActive,
+  isExpanded,
+  connector,
+  userClient,
+  registerDelegation
+}: Props) {
+  const sessionClient = useShowQueryError(useSessionClient(userClient.account.address))
+  const setup = useShowMutationError(useSetupSession({ userClient, connector }))
+  const hasSession = !registerDelegation
+  const { data: prerequisites } = usePrerequisites(userClient.account.address)
+  const { hasGasBalance } = prerequisites ?? {}
 
   useEffect(() => {
     // There seems to be a tanstack-query bug(?) where multiple simultaneous renders loses
@@ -44,16 +50,9 @@ export function Session({ isActive, isExpanded, connector, userClient, registerD
         //   registerDelegation,
         // });
       }
-    });
-    return () => clearTimeout(timer);
-  }, [
-    hasSession,
-    isActive,
-    registerDelegation,
-    sessionClient,
-    setup,
-    hasGasBalance,
-  ]);
+    })
+    return () => clearTimeout(timer)
+  }, [hasSession, isActive, registerDelegation, sessionClient, setup, hasGasBalance])
 
   return (
     <div className="flex flex-col gap-4">
@@ -63,7 +62,12 @@ export function Session({ isActive, isExpanded, connector, userClient, registerD
           <div className="font-mono text-white">{hasSession ? "Enabled" : "Set up"}</div>
         </div>
         {hasSession ? (
-          <Button variant="tertiary" className="flex-shrink-0 text-sm p-1 w-28" autoFocus={isActive} disabled>
+          <Button
+            variant="tertiary"
+            className="flex-shrink-0 text-sm p-1 w-28"
+            autoFocus={isActive}
+            disabled
+          >
             Enabled
           </Button>
         ) : (
@@ -77,7 +81,7 @@ export function Session({ isActive, isExpanded, connector, userClient, registerD
                 ? () =>
                     setup.mutate({
                       sessionClient: sessionClient.data,
-                      registerDelegation,
+                      registerDelegation
                     })
                 : undefined
             }
@@ -87,8 +91,10 @@ export function Session({ isActive, isExpanded, connector, userClient, registerD
         )}
       </div>
       {isExpanded ? (
-        <p className="text-sm">You can perform actions in this app without interruptions for approvals.</p>
+        <p className="text-sm">
+          You can perform actions in this app without interruptions for approvals.
+        </p>
       ) : null}
     </div>
-  );
+  )
 }

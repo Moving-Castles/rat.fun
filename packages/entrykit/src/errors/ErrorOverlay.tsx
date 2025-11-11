@@ -1,19 +1,19 @@
-import { wait } from "@latticexyz/common/utils";
-import { useEffect } from "react";
-import { twMerge } from "tailwind-merge";
+import { wait } from "@latticexyz/common/utils"
+import { useEffect } from "react"
+import { twMerge } from "tailwind-merge"
 
 export type Props = {
-  error?: Error;
-  dismiss?: () => unknown;
-  retry?: () => unknown | Promise<unknown>;
-};
+  error?: Error
+  dismiss?: () => unknown
+  retry?: () => unknown | Promise<unknown>
+}
 
 export function ErrorOverlay({ error, retry, dismiss }: Props) {
   useEffect(() => {
     if (error) {
-      console.error(error);
+      console.error(error)
     }
-  }, [error]);
+  }, [error])
 
   return (
     <div className="pointer-events-none absolute inset-0 overflow-clip">
@@ -21,14 +21,14 @@ export function ErrorOverlay({ error, retry, dismiss }: Props) {
         className={twMerge(
           "absolute inset-0 bg-blue-700/60",
           "transition duration-300",
-          error ? "opacity-100 pointer-events-auto" : "opacity-0",
+          error ? "opacity-100 pointer-events-auto" : "opacity-0"
         )}
       />
       <div
         className={twMerge(
           "absolute inset-0 pb-8",
           "transition duration-300",
-          error ? "translate-y-0 opacity-100 pointer-events-auto" : "-translate-y-4 opacity-0",
+          error ? "translate-y-0 opacity-100 pointer-events-auto" : "-translate-y-4 opacity-0"
         )}
       >
         {error ? (
@@ -50,16 +50,16 @@ export function ErrorOverlay({ error, retry, dismiss }: Props) {
                         "pointer-events-auto group w-24 p-1 -translate-y-2 transition",
                         "bg-blue-600 hover:bg-blue-500 aria-busy:bg-blue-500",
                         "text-white text-sm font-medium",
-                        "aria-busy:pointer-events-none",
+                        "aria-busy:pointer-events-none"
                       )}
-                      onClick={async (event) => {
+                      onClick={async event => {
                         // if we retry and the same error occurs, it'll look like the button click did nothing
                         // so we'll fake a pending state here to give users an indication something is happening
-                        event.currentTarget.ariaBusy = "true";
-                        await wait(500);
-                        retry();
+                        event.currentTarget.ariaBusy = "true"
+                        await wait(500)
+                        retry()
                         if (event.currentTarget) {
-                          event.currentTarget.ariaBusy = null;
+                          event.currentTarget.ariaBusy = null
                         }
                       }}
                     >
@@ -77,7 +77,7 @@ export function ErrorOverlay({ error, retry, dismiss }: Props) {
                         "pointer-events-auto group w-24 p-1 -translate-y-2 transition",
                         "bg-blue-600 hover:bg-blue-500 aria-busy:bg-blue-500",
                         "text-white text-sm font-medium",
-                        "aria-busy:pointer-events-none",
+                        "aria-busy:pointer-events-none"
                       )}
                       onClick={dismiss}
                     >
@@ -91,5 +91,5 @@ export function ErrorOverlay({ error, retry, dismiss }: Props) {
         ) : null}
       </div>
     </div>
-  );
+  )
 }
