@@ -9,6 +9,7 @@ export default defineConfig(() => ({
   entry: {
     "mud.config": "mud.config.ts",
     enums: "enums.ts",
-    worldAbi: "worldAbi.ts"
+    worldAbi: "worldAbi.ts",
+    externalAbis: "externalAbis.ts"
   }
 }))

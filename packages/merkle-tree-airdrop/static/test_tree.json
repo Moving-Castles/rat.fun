@@ -1,9 +1,6 @@
 {
   "format": "standard-v1",
-  "leafEncoding": [
-    "address",
-    "uint256"
-  ],
+  "leafEncoding": ["address", "uint256"],
   "tree": [
     "0x4c1b92236ea350508d7955b858e3b2df9bcfac77256f6e2f9f6be330593258b4",
     "0x47dba099b5ae79334e16c5e8e2d805b6bcee018d94ed30aea3a4076b6221d505",
@@ -17,38 +14,23 @@
   ],
   "values": [
     {
-      "value": [
-        "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
-        "50000000000000000000000"
-      ],
+      "value": ["0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266", "50000000000000000000000"],
       "treeIndex": 5
     },
     {
-      "value": [
-        "0xea61b46ae53db45247afa83892efdb9475e7042c",
-        "3500000000000000000000"
-      ],
+      "value": ["0xea61b46ae53db45247afa83892efdb9475e7042c", "3500000000000000000000"],
       "treeIndex": 8
     },
     {
-      "value": [
-        "0x88386fc84ba6bc95484008f6362f93160ef3e563",
-        "2500000000000000000000"
-      ],
+      "value": ["0x88386fc84ba6bc95484008f6362f93160ef3e563", "2500000000000000000000"],
       "treeIndex": 4
     },
     {
-      "value": [
-        "0x717e6a320cf44b4afac2b0732d9fcbe2b7fa0cf6",
-        "1500000000000000000000"
-      ],
+      "value": ["0x717e6a320cf44b4afac2b0732d9fcbe2b7fa0cf6", "1500000000000000000000"],
       "treeIndex": 6
     },
     {
-      "value": [
-        "0xc41b3ba8828b3321ca811111fa75cd3aa3bb5ace",
-        "500000000000000000000"
-      ],
+      "value": ["0xc41b3ba8828b3321ca811111fa75cd3aa3bb5ace", "500000000000000000000"],
       "treeIndex": 7
     }
   ]

@@ -21,4 +21,8 @@ echo "=== Deploying dashboard to mainnet ==="
 echo "=== Deploying dashboard to testnet ==="
 ./deploy-dashboard-testnet.sh
 
+# Deploy exchange frontend to mainnet
+echo "=== Deploying exchange frontend to mainnet ==="
+./deploy-exchange-frontend.sh
+
 echo "All deployments completed!"

@@ -7,6 +7,7 @@
     "./mud.config": "./dist/mud.config.js",
     "./enums": "./dist/enums.js",
     "./worldAbi": "./dist/worldAbi.js",
+    "./externalAbis": "./dist/externalAbis.js",
     "./out/*": "./out/*",
     "./worlds.json": "./worlds.json"
   },

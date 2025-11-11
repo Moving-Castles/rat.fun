@@ -5,7 +5,7 @@ import { defineConfig } from "vite"
 export default defineConfig(() => {
   return {
     server: {
-      port: 2475 // rats
+      port: 2475
     },
     plugins: [sveltekit(), devtoolsJson()]
   }

@@ -9,7 +9,10 @@ import { merkleTreeJsonOutputFile } from "./constants"
  * Returns null if account has no claim
  */
 export async function getProof(account: Hex) {
-  return await getProofFromJson(account, JSON.parse(await fs.readFile(merkleTreeJsonOutputFile, "utf8")))
+  return await getProofFromJson(
+    account,
+    JSON.parse(await fs.readFile(merkleTreeJsonOutputFile, "utf8"))
+  )
 }
 
 export async function getProofFromJson(account: Hex, data: StandardMerkleTreeData<[Hex, string]>) {

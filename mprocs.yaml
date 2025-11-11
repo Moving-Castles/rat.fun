@@ -5,6 +5,9 @@ procs:
   dashboard:
     cwd: packages/dashboard
     shell: pnpm run dev
+  exchange-frontend:
+    cwd: packages/exchange-frontend
+    shell: pnpm dev
   contracts:
     cwd: packages/contracts
     shell: pnpm mud dev-contracts --rpc http://127.0.0.1:8545

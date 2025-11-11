@@ -21,7 +21,7 @@ contract ERC20AirdropMerkleProof {
   error AlreadyClaimed();
   error InvalidMerkleProof();
 
-  constructor(address _adminAddress,  address _token, bytes32 _root) {
+  constructor(address _adminAddress, address _token, bytes32 _root) {
     adminAddress = _adminAddress;
     token = IERC20(_token);
     root = _root;

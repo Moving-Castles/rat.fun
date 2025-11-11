@@ -1,11 +1,11 @@
 import fs from "node:fs/promises"
 import { parse as parseCsvSync } from "csv-parse/sync"
-import { StandardMerkleTree } from "@openzeppelin/merkle-tree";
-import { formatUnits, Hex, parseUnits } from "viem";
-import { csvInputFile, merkleTreeJsonOutputFile, metadataJsonOutputFile } from "../src/constants";
+import { StandardMerkleTree } from "@openzeppelin/merkle-tree"
+import { formatUnits, Hex, parseUnits } from "viem"
+import { csvInputFile, merkleTreeJsonOutputFile, metadataJsonOutputFile } from "../src/constants"
 
 async function readAccountMultipliersFromCsv() {
-  const file = await fs.readFile(csvInputFile, "utf-8");
+  const file = await fs.readFile(csvInputFile, "utf-8")
   const parsed = parseCsvSync(file, {
     delimiter: ",",
     encoding: "utf-8"
@@ -24,7 +24,7 @@ async function readAccountMultipliersFromCsv() {
   })
 }
 
-const accountMultipliers = await readAccountMultipliersFromCsv();
+const accountMultipliers = await readAccountMultipliersFromCsv()
 
 const decimals = 18
 const baseValue = 500
@@ -33,7 +33,7 @@ const accountValues = accountMultipliers.map(([account, multiplier]) => {
   return [account, value.toString()] as [Hex, string]
 })
 
-const tree = StandardMerkleTree.of(accountValues, ["address", "uint256"]);
+const tree = StandardMerkleTree.of(accountValues, ["address", "uint256"])
 
 const totalValue = accountValues.reduce((acc, [, value]) => acc + BigInt(value), 0n)
 const metadata = {
@@ -42,5 +42,5 @@ const metadata = {
   totalValueFormatted: Number(formatUnits(totalValue, decimals))
 }
 
-await fs.writeFile(merkleTreeJsonOutputFile, JSON.stringify(tree.dump(), null, 2) + "\n");
-await fs.writeFile(metadataJsonOutputFile, JSON.stringify(metadata, null, 2) + "\n");
+await fs.writeFile(merkleTreeJsonOutputFile, JSON.stringify(tree.dump(), null, 2) + "\n")
+await fs.writeFile(metadataJsonOutputFile, JSON.stringify(metadata, null, 2) + "\n")
