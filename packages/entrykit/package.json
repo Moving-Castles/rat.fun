@@ -48,7 +48,6 @@
     "@ark/util": "0.2.2",
     "@latticexyz/common": "2.2.23",
     "@latticexyz/config": "2.2.23",
-    "@latticexyz/id.place": "2.2.23",
     "@latticexyz/paymaster": "2.2.23",
     "@latticexyz/protocol-parser": "2.2.23",
     "@latticexyz/store": "2.2.23",
@@ -65,7 +64,6 @@
     "react-merge-refs": "^2.1.1",
     "tailwind-merge": "^1.12.0",
     "usehooks-ts": "^3.1.0",
-    "webauthn-p256": "0.0.10",
     "zustand": "^4.5.2"
   },
   "devDependencies": {
