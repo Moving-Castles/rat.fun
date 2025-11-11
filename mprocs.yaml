@@ -8,6 +8,9 @@ procs:
   exchange-frontend:
     cwd: packages/exchange-frontend
     shell: pnpm dev
+  claim-frontend:
+    cwd: packages/claim-frontend
+    shell: pnpm dev
   contracts:
     cwd: packages/contracts
     shell: pnpm mud dev-contracts --rpc http://127.0.0.1:8545

@@ -19,8 +19,6 @@
   import { entryKitSession } from "$lib/modules/entry-kit/stores"
   import WalletInfo from "$lib/components/WalletInfo/WalletInfo.svelte"
 
-  $inspect(exchangeState.state.current)
-
   // Listen to changes in the entrykit session (for when user connects wallet)
   $effect(() => {
     if ($entryKitSession) {
