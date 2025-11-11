@@ -12,10 +12,3 @@ export type Step = {
   isComplete: boolean
   content: (props: StepContentProps) => ReactNode
 }
-
-export type RelayChain = {
-  bridgeUrl: string
-}
-export type RelayChains = {
-  [chainId: number]: RelayChain | undefined
-}

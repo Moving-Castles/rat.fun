@@ -72,7 +72,10 @@ if (chainId === 31337) {
     localPaymasterArtifact.bytecode.object,
     encodeAbiParameters(parseAbiParameters("address"), [entryPointAddress])
   ]);
-  const localPaymasterAddress = getContractAddress({ deployerAddress, bytecode: localPaymasterBytecode });
+  const localPaymasterAddress = getContractAddress({
+    deployerAddress,
+    bytecode: localPaymasterBytecode
+  });
   await ensureContractsDeployed({
     client,
     deployerAddress,

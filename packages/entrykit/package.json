@@ -56,7 +56,6 @@
     "@latticexyz/world-module-callwithsignature": "2.2.23",
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-select": "^1.0.5",
-    "@reservoir0x/relay-sdk": "^1.7.0",
     "@walletconnect/ethereum-provider": "2.20.2",
     "connectkit": "^1.9.0",
     "debug": "^4.3.4",

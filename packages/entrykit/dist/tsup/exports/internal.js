@@ -43,7 +43,7 @@ function defineConfig(input) {
 }
 
 // ../../node_modules/.pnpm/tailwindcss@3.4.18_tsx@4.20.6_yaml@2.8.1/node_modules/tailwindcss/tailwind.css?inline
-var tailwind_default = '*, ::before, ::after {\n  --tw-border-spacing-x: 0;\n  --tw-border-spacing-y: 0;\n  --tw-translate-x: 0;\n  --tw-translate-y: 0;\n  --tw-rotate: 0;\n  --tw-skew-x: 0;\n  --tw-skew-y: 0;\n  --tw-scale-x: 1;\n  --tw-scale-y: 1;\n  --tw-pan-x:  ;\n  --tw-pan-y:  ;\n  --tw-pinch-zoom:  ;\n  --tw-scroll-snap-strictness: proximity;\n  --tw-gradient-from-position:  ;\n  --tw-gradient-via-position:  ;\n  --tw-gradient-to-position:  ;\n  --tw-ordinal:  ;\n  --tw-slashed-zero:  ;\n  --tw-numeric-figure:  ;\n  --tw-numeric-spacing:  ;\n  --tw-numeric-fraction:  ;\n  --tw-ring-inset:  ;\n  --tw-ring-offset-width: 0px;\n  --tw-ring-offset-color: #fff;\n  --tw-ring-color: rgb(59 130 246 / 0.5);\n  --tw-ring-offset-shadow: 0 0 #0000;\n  --tw-ring-shadow: 0 0 #0000;\n  --tw-shadow: 0 0 #0000;\n  --tw-shadow-colored: 0 0 #0000;\n  --tw-blur:  ;\n  --tw-brightness:  ;\n  --tw-contrast:  ;\n  --tw-grayscale:  ;\n  --tw-hue-rotate:  ;\n  --tw-invert:  ;\n  --tw-saturate:  ;\n  --tw-sepia:  ;\n  --tw-drop-shadow:  ;\n  --tw-backdrop-blur:  ;\n  --tw-backdrop-brightness:  ;\n  --tw-backdrop-contrast:  ;\n  --tw-backdrop-grayscale:  ;\n  --tw-backdrop-hue-rotate:  ;\n  --tw-backdrop-invert:  ;\n  --tw-backdrop-opacity:  ;\n  --tw-backdrop-saturate:  ;\n  --tw-backdrop-sepia:  ;\n  --tw-contain-size:  ;\n  --tw-contain-layout:  ;\n  --tw-contain-paint:  ;\n  --tw-contain-style:  ;\n}\n\n::backdrop {\n  --tw-border-spacing-x: 0;\n  --tw-border-spacing-y: 0;\n  --tw-translate-x: 0;\n  --tw-translate-y: 0;\n  --tw-rotate: 0;\n  --tw-skew-x: 0;\n  --tw-skew-y: 0;\n  --tw-scale-x: 1;\n  --tw-scale-y: 1;\n  --tw-pan-x:  ;\n  --tw-pan-y:  ;\n  --tw-pinch-zoom:  ;\n  --tw-scroll-snap-strictness: proximity;\n  --tw-gradient-from-position:  ;\n  --tw-gradient-via-position:  ;\n  --tw-gradient-to-position:  ;\n  --tw-ordinal:  ;\n  --tw-slashed-zero:  ;\n  --tw-numeric-figure:  ;\n  --tw-numeric-spacing:  ;\n  --tw-numeric-fraction:  ;\n  --tw-ring-inset:  ;\n  --tw-ring-offset-width: 0px;\n  --tw-ring-offset-color: #fff;\n  --tw-ring-color: rgb(59 130 246 / 0.5);\n  --tw-ring-offset-shadow: 0 0 #0000;\n  --tw-ring-shadow: 0 0 #0000;\n  --tw-shadow: 0 0 #0000;\n  --tw-shadow-colored: 0 0 #0000;\n  --tw-blur:  ;\n  --tw-brightness:  ;\n  --tw-contrast:  ;\n  --tw-grayscale:  ;\n  --tw-hue-rotate:  ;\n  --tw-invert:  ;\n  --tw-saturate:  ;\n  --tw-sepia:  ;\n  --tw-drop-shadow:  ;\n  --tw-backdrop-blur:  ;\n  --tw-backdrop-brightness:  ;\n  --tw-backdrop-contrast:  ;\n  --tw-backdrop-grayscale:  ;\n  --tw-backdrop-hue-rotate:  ;\n  --tw-backdrop-invert:  ;\n  --tw-backdrop-opacity:  ;\n  --tw-backdrop-saturate:  ;\n  --tw-backdrop-sepia:  ;\n  --tw-contain-size:  ;\n  --tw-contain-layout:  ;\n  --tw-contain-paint:  ;\n  --tw-contain-style:  ;\n}/*\n! tailwindcss v3.4.18 | MIT License | https://tailwindcss.com\n*//*\n1. Prevent padding and border from affecting element width. (https://github.com/mozdevs/cssremedy/issues/4)\n2. Allow adding a border to an element by just adding a border-width. (https://github.com/tailwindcss/tailwindcss/pull/116)\n*/\n\n*,\n::before,\n::after {\n  box-sizing: border-box; /* 1 */\n  border-width: 0; /* 2 */\n  border-style: solid; /* 2 */\n  border-color: #e5e7eb; /* 2 */\n}\n\n::before,\n::after {\n  --tw-content: \'\';\n}\n\n/*\n1. Use a consistent sensible line-height in all browsers.\n2. Prevent adjustments of font size after orientation changes in iOS.\n3. Use a more readable tab size.\n4. Use the user\'s configured `sans` font-family by default.\n5. Use the user\'s configured `sans` font-feature-settings by default.\n6. Use the user\'s configured `sans` font-variation-settings by default.\n7. Disable tap highlights on iOS\n*/\n\nhtml,\n:host {\n  line-height: 1.5; /* 1 */\n  -webkit-text-size-adjust: 100%; /* 2 */ /* 3 */\n  tab-size: 4; /* 3 */\n  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; /* 4 */\n  font-feature-settings: normal; /* 5 */\n  font-variation-settings: normal; /* 6 */\n  -webkit-tap-highlight-color: transparent; /* 7 */\n}\n\n/*\n1. Remove the margin in all browsers.\n2. Inherit line-height from `html` so users can set them as a class directly on the `html` element.\n*/\n\nbody {\n  margin: 0; /* 1 */\n  line-height: inherit; /* 2 */\n}\n\n/*\n1. Add the correct height in Firefox.\n2. Correct the inheritance of border color in Firefox. (https://bugzilla.mozilla.org/show_bug.cgi?id=190655)\n3. Ensure horizontal rules are visible by default.\n*/\n\nhr {\n  height: 0; /* 1 */\n  color: inherit; /* 2 */\n  border-top-width: 1px; /* 3 */\n}\n\n/*\nAdd the correct text decoration in Chrome, Edge, and Safari.\n*/\n\nabbr:where([title]) {\n  -webkit-text-decoration: underline dotted;\n          text-decoration: underline dotted;\n}\n\n/*\nRemove the default font size and weight for headings.\n*/\n\nh1,\nh2,\nh3,\nh4,\nh5,\nh6 {\n  font-size: inherit;\n  font-weight: inherit;\n}\n\n/*\nReset links to optimize for opt-in styling instead of opt-out.\n*/\n\na {\n  color: inherit;\n  text-decoration: inherit;\n}\n\n/*\nAdd the correct font weight in Edge and Safari.\n*/\n\nb,\nstrong {\n  font-weight: bolder;\n}\n\n/*\n1. Use the user\'s configured `mono` font-family by default.\n2. Use the user\'s configured `mono` font-feature-settings by default.\n3. Use the user\'s configured `mono` font-variation-settings by default.\n4. Correct the odd `em` font sizing in all browsers.\n*/\n\ncode,\nkbd,\nsamp,\npre {\n  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; /* 1 */\n  font-feature-settings: normal; /* 2 */\n  font-variation-settings: normal; /* 3 */\n  font-size: 1em; /* 4 */\n}\n\n/*\nAdd the correct font size in all browsers.\n*/\n\nsmall {\n  font-size: 80%;\n}\n\n/*\nPrevent `sub` and `sup` elements from affecting the line height in all browsers.\n*/\n\nsub,\nsup {\n  font-size: 75%;\n  line-height: 0;\n  position: relative;\n  vertical-align: baseline;\n}\n\nsub {\n  bottom: -0.25em;\n}\n\nsup {\n  top: -0.5em;\n}\n\n/*\n1. Remove text indentation from table contents in Chrome and Safari. (https://bugs.chromium.org/p/chromium/issues/detail?id=999088, https://bugs.webkit.org/show_bug.cgi?id=201297)\n2. Correct table border color inheritance in all Chrome and Safari. (https://bugs.chromium.org/p/chromium/issues/detail?id=935729, https://bugs.webkit.org/show_bug.cgi?id=195016)\n3. Remove gaps between table borders by default.\n*/\n\ntable {\n  text-indent: 0; /* 1 */\n  border-color: inherit; /* 2 */\n  border-collapse: collapse; /* 3 */\n}\n\n/*\n1. Change the font styles in all browsers.\n2. Remove the margin in Firefox and Safari.\n3. Remove default padding in all browsers.\n*/\n\nbutton,\ninput,\noptgroup,\nselect,\ntextarea {\n  font-family: inherit; /* 1 */\n  font-feature-settings: inherit; /* 1 */\n  font-variation-settings: inherit; /* 1 */\n  font-size: 100%; /* 1 */\n  font-weight: inherit; /* 1 */\n  line-height: inherit; /* 1 */\n  letter-spacing: inherit; /* 1 */\n  color: inherit; /* 1 */\n  margin: 0; /* 2 */\n  padding: 0; /* 3 */\n}\n\n/*\nRemove the inheritance of text transform in Edge and Firefox.\n*/\n\nbutton,\nselect {\n  text-transform: none;\n}\n\n/*\n1. Correct the inability to style clickable types in iOS and Safari.\n2. Remove default button styles.\n*/\n\nbutton,\ninput:where([type=\'button\']),\ninput:where([type=\'reset\']),\ninput:where([type=\'submit\']) {\n  -webkit-appearance: button; /* 1 */\n  background-color: transparent; /* 2 */\n  background-image: none; /* 2 */\n}\n\n/*\nUse the modern Firefox focus style for all focusable elements.\n*/\n\n:-moz-focusring {\n  outline: auto;\n}\n\n/*\nRemove the additional `:invalid` styles in Firefox. (https://github.com/mozilla/gecko-dev/blob/2f9eacd9d3d995c937b4251a5557d95d494c9be1/layout/style/res/forms.css#L728-L737)\n*/\n\n:-moz-ui-invalid {\n  box-shadow: none;\n}\n\n/*\nAdd the correct vertical alignment in Chrome and Firefox.\n*/\n\nprogress {\n  vertical-align: baseline;\n}\n\n/*\nCorrect the cursor style of increment and decrement buttons in Safari.\n*/\n\n::-webkit-inner-spin-button,\n::-webkit-outer-spin-button {\n  height: auto;\n}\n\n/*\n1. Correct the odd appearance in Chrome and Safari.\n2. Correct the outline style in Safari.\n*/\n\n[type=\'search\'] {\n  -webkit-appearance: textfield; /* 1 */\n  outline-offset: -2px; /* 2 */\n}\n\n/*\nRemove the inner padding in Chrome and Safari on macOS.\n*/\n\n::-webkit-search-decoration {\n  -webkit-appearance: none;\n}\n\n/*\n1. Correct the inability to style clickable types in iOS and Safari.\n2. Change font properties to `inherit` in Safari.\n*/\n\n::-webkit-file-upload-button {\n  -webkit-appearance: button; /* 1 */\n  font: inherit; /* 2 */\n}\n\n/*\nAdd the correct display in Chrome and Safari.\n*/\n\nsummary {\n  display: list-item;\n}\n\n/*\nRemoves the default spacing and border for appropriate elements.\n*/\n\nblockquote,\ndl,\ndd,\nh1,\nh2,\nh3,\nh4,\nh5,\nh6,\nhr,\nfigure,\np,\npre {\n  margin: 0;\n}\n\nfieldset {\n  margin: 0;\n  padding: 0;\n}\n\nlegend {\n  padding: 0;\n}\n\nol,\nul,\nmenu {\n  list-style: none;\n  margin: 0;\n  padding: 0;\n}\n\n/*\nReset default styling for dialogs.\n*/\ndialog {\n  padding: 0;\n}\n\n/*\nPrevent resizing textareas horizontally by default.\n*/\n\ntextarea {\n  resize: vertical;\n}\n\n/*\n1. Reset the default placeholder opacity in Firefox. (https://github.com/tailwindlabs/tailwindcss/issues/3300)\n2. Set the default placeholder color to the user\'s configured gray 400 color.\n*/\n\ninput::placeholder,\ntextarea::placeholder {\n  opacity: 1; /* 1 */\n  color: #9ca3af; /* 2 */\n}\n\n/*\nSet the default cursor for buttons.\n*/\n\nbutton,\n[role="button"] {\n  cursor: pointer;\n}\n\n/*\nMake sure disabled buttons don\'t get the pointer cursor.\n*/\n:disabled {\n  cursor: default;\n}\n\n/*\n1. Make replaced elements `display: block` by default. (https://github.com/mozdevs/cssremedy/issues/14)\n2. Add `vertical-align: middle` to align replaced elements more sensibly by default. (https://github.com/jensimmons/cssremedy/issues/14#issuecomment-634934210)\n   This can trigger a poorly considered lint error in some tools but is included by design.\n*/\n\nimg,\nsvg,\nvideo,\ncanvas,\naudio,\niframe,\nembed,\nobject {\n  display: block; /* 1 */\n  vertical-align: middle; /* 2 */\n}\n\n/*\nConstrain images and videos to the parent width and preserve their intrinsic aspect ratio. (https://github.com/mozdevs/cssremedy/issues/14)\n*/\n\nimg,\nvideo {\n  max-width: 100%;\n  height: auto;\n}\n\n/* Make elements with the HTML hidden attribute stay hidden by default */\n[hidden]:where(:not([hidden="until-found"])) {\n  display: none;\n}\n\n.container {\n  width: 100%;\n}\n\n@media (min-width: 640px) {\n\n  .container {\n    max-width: 640px;\n  }\n}\n\n@media (min-width: 768px) {\n\n  .container {\n    max-width: 768px;\n  }\n}\n\n@media (min-width: 1024px) {\n\n  .container {\n    max-width: 1024px;\n  }\n}\n\n@media (min-width: 1280px) {\n\n  .container {\n    max-width: 1280px;\n  }\n}\n\n@media (min-width: 1536px) {\n\n  .container {\n    max-width: 1536px;\n  }\n}\n\n.grid-cols-2.divide-y > :not([hidden]) ~ :not([hidden]):nth-child(-n + 2) {\n  border-top-width: 0;\n  border-bottom-width: 0;\n}\n\n.sr-only {\n  position: absolute;\n  width: 1px;\n  height: 1px;\n  padding: 0;\n  margin: -1px;\n  overflow: hidden;\n  clip: rect(0, 0, 0, 0);\n  white-space: nowrap;\n  border-width: 0;\n}\n\n.pointer-events-none {\n  pointer-events: none;\n}\n\n.pointer-events-auto {\n  pointer-events: auto;\n}\n\n.fixed {\n  position: fixed;\n}\n\n.absolute {\n  position: absolute;\n}\n\n.relative {\n  position: relative;\n}\n\n.sticky {\n  position: sticky;\n}\n\n.inset-0 {\n  inset: 0px;\n}\n\n.bottom-0 {\n  bottom: 0px;\n}\n\n.left-0 {\n  left: 0px;\n}\n\n.right-0 {\n  right: 0px;\n}\n\n.top-0 {\n  top: 0px;\n}\n\n.col-start-1 {\n  grid-column-start: 1;\n}\n\n.row-start-1 {\n  grid-row-start: 1;\n}\n\n.m-0 {\n  margin: 0px;\n}\n\n.m-2 {\n  margin: 0.5rem;\n}\n\n.-mx-0\\.5 {\n  margin-left: -0.125rem;\n  margin-right: -0.125rem;\n}\n\n.-my-1 {\n  margin-top: -0.25rem;\n  margin-bottom: -0.25rem;\n}\n\n.-my-\\[0\\.125em\\] {\n  margin-top: -0.125em;\n  margin-bottom: -0.125em;\n}\n\n.mx-auto {\n  margin-left: auto;\n  margin-right: auto;\n}\n\n.-ml-3 {\n  margin-left: -0.75rem;\n}\n\n.-mr-1 {\n  margin-right: -0.25rem;\n}\n\n.-mt-2 {\n  margin-top: -0.5rem;\n}\n\n.mt-1 {\n  margin-top: 0.25rem;\n}\n\n.mt-4 {\n  margin-top: 1rem;\n}\n\n.block {\n  display: block;\n}\n\n.inline-block {\n  display: inline-block;\n}\n\n.flex {\n  display: flex;\n}\n\n.inline-flex {\n  display: inline-flex;\n}\n\n.table {\n  display: table;\n}\n\n.grid {\n  display: grid;\n}\n\n.inline-grid {\n  display: inline-grid;\n}\n\n.contents {\n  display: contents;\n}\n\n.hidden {\n  display: none;\n}\n\n.aspect-square {\n  aspect-ratio: 1 / 1;\n}\n\n.h-12 {\n  height: 3rem;\n}\n\n.h-16 {\n  height: 4rem;\n}\n\n.h-3\\.5 {\n  height: 0.875rem;\n}\n\n.h-4 {\n  height: 1rem;\n}\n\n.h-6 {\n  height: 1.5rem;\n}\n\n.h-64 {\n  height: 16rem;\n}\n\n.h-\\[1\\.25em\\] {\n  height: 1.25em;\n}\n\n.h-\\[1em\\] {\n  height: 1em;\n}\n\n.h-\\[2px\\] {\n  height: 2px;\n}\n\n.h-full {\n  height: 100%;\n}\n\n.max-h-\\[230px\\] {\n  max-height: 230px;\n}\n\n.max-h-full {\n  max-height: 100%;\n}\n\n.w-16 {\n  width: 4rem;\n}\n\n.w-24 {\n  width: 6rem;\n}\n\n.w-28 {\n  width: 7rem;\n}\n\n.w-3\\.5 {\n  width: 0.875rem;\n}\n\n.w-4 {\n  width: 1rem;\n}\n\n.w-48 {\n  width: 12rem;\n}\n\n.w-6 {\n  width: 1.5rem;\n}\n\n.w-60 {\n  width: 15rem;\n}\n\n.w-8 {\n  width: 2rem;\n}\n\n.w-\\[0\\.6em\\] {\n  width: 0.6em;\n}\n\n.w-\\[1\\.25em\\] {\n  width: 1.25em;\n}\n\n.w-\\[352px\\] {\n  width: 352px;\n}\n\n.w-full {\n  width: 100%;\n}\n\n.max-w-\\[26rem\\] {\n  max-width: 26rem;\n}\n\n.flex-shrink-0 {\n  flex-shrink: 0;\n}\n\n.flex-grow {\n  flex-grow: 1;\n}\n\n.-translate-y-2 {\n  --tw-translate-y: -0.5rem;\n  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));\n}\n\n.-translate-y-4 {\n  --tw-translate-y: -1rem;\n  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));\n}\n\n.translate-x-2 {\n  --tw-translate-x: 0.5rem;\n  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));\n}\n\n.translate-y-0 {\n  --tw-translate-y: 0px;\n  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));\n}\n\n.scale-100 {\n  --tw-scale-x: 1;\n  --tw-scale-y: 1;\n  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));\n}\n\n.scale-50 {\n  --tw-scale-x: .5;\n  --tw-scale-y: .5;\n  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));\n}\n\n.transform {\n  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));\n}\n\n@keyframes spin {\n\n  to {\n    transform: rotate(360deg);\n  }\n}\n\n.animate-spin {\n  animation: spin 1s linear infinite;\n}\n\n.cursor-pointer {\n  cursor: pointer;\n}\n\n.cursor-text {\n  cursor: text;\n}\n\n.grid-cols-2 {\n  grid-template-columns: repeat(2, minmax(0, 1fr));\n}\n\n.grid-cols-\\[1fr_auto_1fr\\] {\n  grid-template-columns: 1fr auto 1fr;\n}\n\n.flex-col {\n  flex-direction: column;\n}\n\n.place-items-center {\n  place-items: center;\n}\n\n.items-end {\n  align-items: flex-end;\n}\n\n.items-center {\n  align-items: center;\n}\n\n.justify-end {\n  justify-content: flex-end;\n}\n\n.justify-center {\n  justify-content: center;\n}\n\n.justify-between {\n  justify-content: space-between;\n}\n\n.gap-1 {\n  gap: 0.25rem;\n}\n\n.gap-2 {\n  gap: 0.5rem;\n}\n\n.gap-2\\.5 {\n  gap: 0.625rem;\n}\n\n.gap-4 {\n  gap: 1rem;\n}\n\n.gap-5 {\n  gap: 1.25rem;\n}\n\n.gap-6 {\n  gap: 1.5rem;\n}\n\n.space-y-6 > :not([hidden]) ~ :not([hidden]) {\n  --tw-space-y-reverse: 0;\n  margin-top: calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));\n  margin-bottom: calc(1.5rem * var(--tw-space-y-reverse));\n}\n\n.divide-y > :not([hidden]) ~ :not([hidden]) {\n  --tw-divide-y-reverse: 0;\n  border-top-width: calc(1px * calc(1 - var(--tw-divide-y-reverse)));\n  border-bottom-width: calc(1px * var(--tw-divide-y-reverse));\n}\n\n.divide-neutral-700 > :not([hidden]) ~ :not([hidden]) {\n  --tw-divide-opacity: 1;\n  border-color: rgb(64 64 64 / var(--tw-divide-opacity, 1));\n}\n\n.divide-neutral-800 > :not([hidden]) ~ :not([hidden]) {\n  --tw-divide-opacity: 1;\n  border-color: rgb(38 38 38 / var(--tw-divide-opacity, 1));\n}\n\n.self-auto {\n  align-self: auto;\n}\n\n.self-center {\n  align-self: center;\n}\n\n.overflow-auto {\n  overflow: auto;\n}\n\n.overflow-clip {\n  overflow: clip;\n}\n\n.overflow-y-auto {\n  overflow-y: auto;\n}\n\n.whitespace-pre-wrap {\n  white-space: pre-wrap;\n}\n\n.rounded-full {\n  border-radius: 9999px;\n}\n\n.border {\n  border-width: 1px;\n}\n\n.border-2 {\n  border-width: 2px;\n}\n\n.border-4 {\n  border-width: 4px;\n}\n\n.border-dashed {\n  border-style: dashed;\n}\n\n.border-neutral-300 {\n  --tw-border-opacity: 1;\n  border-color: rgb(212 212 212 / var(--tw-border-opacity, 1));\n}\n\n.border-neutral-700 {\n  --tw-border-opacity: 1;\n  border-color: rgb(64 64 64 / var(--tw-border-opacity, 1));\n}\n\n.border-transparent {\n  border-color: transparent;\n}\n\n.border-white\\/50 {\n  border-color: rgb(255 255 255 / 0.5);\n}\n\n.bg-black\\/10 {\n  background-color: rgb(0 0 0 / 0.1);\n}\n\n.bg-blue-600 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(37 99 235 / var(--tw-bg-opacity, 1));\n}\n\n.bg-blue-700 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(29 78 216 / var(--tw-bg-opacity, 1));\n}\n\n.bg-blue-700\\/60 {\n  background-color: rgb(29 78 216 / 0.6);\n}\n\n.bg-green-600 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(22 163 74 / var(--tw-bg-opacity, 1));\n}\n\n.bg-neutral-100 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(245 245 245 / var(--tw-bg-opacity, 1));\n}\n\n.bg-neutral-700 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(64 64 64 / var(--tw-bg-opacity, 1));\n}\n\n.bg-neutral-800 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(38 38 38 / var(--tw-bg-opacity, 1));\n}\n\n.bg-neutral-800\\/85 {\n  background-color: rgb(38 38 38 / 0.85);\n}\n\n.bg-neutral-900 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(23 23 23 / var(--tw-bg-opacity, 1));\n}\n\n.bg-orange-500 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(249 115 22 / var(--tw-bg-opacity, 1));\n}\n\n.bg-orange-600 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(234 88 12 / var(--tw-bg-opacity, 1));\n}\n\n.bg-red-600 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(220 38 38 / var(--tw-bg-opacity, 1));\n}\n\n.bg-transparent {\n  background-color: transparent;\n}\n\n.bg-gradient-to-b {\n  background-image: linear-gradient(to bottom, var(--tw-gradient-stops));\n}\n\n.from-transparent {\n  --tw-gradient-from: transparent var(--tw-gradient-from-position);\n  --tw-gradient-to: rgb(0 0 0 / 0) var(--tw-gradient-to-position);\n  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);\n}\n\n.to-blue-700 {\n  --tw-gradient-to: #1d4ed8 var(--tw-gradient-to-position);\n}\n\n.bg-cover {\n  background-size: cover;\n}\n\n.bg-center {\n  background-position: center;\n}\n\n.bg-no-repeat {\n  background-repeat: no-repeat;\n}\n\n.object-cover {\n  object-fit: cover;\n}\n\n.p-1 {\n  padding: 0.25rem;\n}\n\n.p-2 {\n  padding: 0.5rem;\n}\n\n.p-2\\.5 {\n  padding: 0.625rem;\n}\n\n.p-3 {\n  padding: 0.75rem;\n}\n\n.p-4 {\n  padding: 1rem;\n}\n\n.p-6 {\n  padding: 1.5rem;\n}\n\n.p-\\[\\.75em\\] {\n  padding: .75em;\n}\n\n.px-8 {\n  padding-left: 2rem;\n  padding-right: 2rem;\n}\n\n.py-1 {\n  padding-top: 0.25rem;\n  padding-bottom: 0.25rem;\n}\n\n.py-2 {\n  padding-top: 0.5rem;\n  padding-bottom: 0.5rem;\n}\n\n.py-8 {\n  padding-top: 2rem;\n  padding-bottom: 2rem;\n}\n\n.pb-2 {\n  padding-bottom: 0.5rem;\n}\n\n.pb-8 {\n  padding-bottom: 2rem;\n}\n\n.pt-10 {\n  padding-top: 2.5rem;\n}\n\n.pt-8 {\n  padding-top: 2rem;\n}\n\n.text-left {\n  text-align: left;\n}\n\n.text-center {\n  text-align: center;\n}\n\n.font-mono {\n  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;\n}\n\n.text-2xl {\n  font-size: 1.5rem;\n  line-height: 2rem;\n}\n\n.text-\\[\\.75em\\] {\n  font-size: .75em;\n}\n\n.text-base {\n  font-size: 1rem;\n  line-height: 1.5rem;\n}\n\n.text-lg {\n  font-size: 1.125rem;\n  line-height: 1.75rem;\n}\n\n.text-sm {\n  font-size: 0.875rem;\n  line-height: 1.25rem;\n}\n\n.text-xs {\n  font-size: 0.75rem;\n  line-height: 1rem;\n}\n\n.font-bold {\n  font-weight: 700;\n}\n\n.font-medium {\n  font-weight: 500;\n}\n\n.leading-loose {\n  line-height: 2;\n}\n\n.leading-none {\n  line-height: 1;\n}\n\n.tracking-\\[-1ch\\] {\n  letter-spacing: -1ch;\n}\n\n.text-amber-500 {\n  --tw-text-opacity: 1;\n  color: rgb(245 158 11 / var(--tw-text-opacity, 1));\n}\n\n.text-black {\n  --tw-text-opacity: 1;\n  color: rgb(0 0 0 / var(--tw-text-opacity, 1));\n}\n\n.text-gray-400 {\n  --tw-text-opacity: 1;\n  color: rgb(156 163 175 / var(--tw-text-opacity, 1));\n}\n\n.text-green-600 {\n  --tw-text-opacity: 1;\n  color: rgb(22 163 74 / var(--tw-text-opacity, 1));\n}\n\n.text-neutral-300 {\n  --tw-text-opacity: 1;\n  color: rgb(212 212 212 / var(--tw-text-opacity, 1));\n}\n\n.text-neutral-400 {\n  --tw-text-opacity: 1;\n  color: rgb(163 163 163 / var(--tw-text-opacity, 1));\n}\n\n.text-neutral-500 {\n  --tw-text-opacity: 1;\n  color: rgb(115 115 115 / var(--tw-text-opacity, 1));\n}\n\n.text-orange-500 {\n  --tw-text-opacity: 1;\n  color: rgb(249 115 22 / var(--tw-text-opacity, 1));\n}\n\n.text-transparent {\n  color: transparent;\n}\n\n.text-white {\n  --tw-text-opacity: 1;\n  color: rgb(255 255 255 / var(--tw-text-opacity, 1));\n}\n\n.text-white\\/20 {\n  color: rgb(255 255 255 / 0.2);\n}\n\n.text-white\\/80 {\n  color: rgb(255 255 255 / 0.8);\n}\n\n.opacity-0 {\n  opacity: 0;\n}\n\n.opacity-100 {\n  opacity: 1;\n}\n\n.opacity-25 {\n  opacity: 0.25;\n}\n\n.opacity-30 {\n  opacity: 0.3;\n}\n\n.opacity-50 {\n  opacity: 0.5;\n}\n\n.opacity-75 {\n  opacity: 0.75;\n}\n\n.outline-none {\n  outline: 2px solid transparent;\n  outline-offset: 2px;\n}\n\n.ring-1 {\n  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);\n  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);\n  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);\n}\n\n.ring-2 {\n  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);\n  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);\n  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);\n}\n\n.ring-neutral-700\\/50 {\n  --tw-ring-color: rgb(64 64 64 / 0.5);\n}\n\n.ring-transparent {\n  --tw-ring-color: transparent;\n}\n\n.filter {\n  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);\n}\n\n.transition {\n  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;\n  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);\n  transition-duration: 150ms;\n}\n\n.transition-colors {\n  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;\n  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);\n  transition-duration: 150ms;\n}\n\n.duration-100 {\n  transition-duration: 100ms;\n}\n\n.duration-300 {\n  transition-duration: 300ms;\n}\n\n.ease-linear {\n  transition-timing-function: linear;\n}\n\n@keyframes enter {\n\n  from {\n    opacity: var(--tw-enter-opacity, 1);\n    transform: translate3d(var(--tw-enter-translate-x, 0), var(--tw-enter-translate-y, 0), 0) scale3d(var(--tw-enter-scale, 1), var(--tw-enter-scale, 1), var(--tw-enter-scale, 1)) rotate(var(--tw-enter-rotate, 0));\n  }\n}\n\n@keyframes exit {\n\n  to {\n    opacity: var(--tw-exit-opacity, 1);\n    transform: translate3d(var(--tw-exit-translate-x, 0), var(--tw-exit-translate-y, 0), 0) scale3d(var(--tw-exit-scale, 1), var(--tw-exit-scale, 1), var(--tw-exit-scale, 1)) rotate(var(--tw-exit-rotate, 0));\n  }\n}\n\n.animate-in {\n  animation-name: enter;\n  animation-duration: 150ms;\n  --tw-enter-opacity: initial;\n  --tw-enter-scale: initial;\n  --tw-enter-rotate: initial;\n  --tw-enter-translate-x: initial;\n  --tw-enter-translate-y: initial;\n}\n\n.animate-out {\n  animation-name: exit;\n  animation-duration: 150ms;\n  --tw-exit-opacity: initial;\n  --tw-exit-scale: initial;\n  --tw-exit-rotate: initial;\n  --tw-exit-translate-x: initial;\n  --tw-exit-translate-y: initial;\n}\n\n.fade-in {\n  --tw-enter-opacity: 0;\n}\n\n.fade-out {\n  --tw-exit-opacity: 0;\n}\n\n.slide-in-from-bottom-16 {\n  --tw-enter-translate-y: 4rem;\n}\n\n.slide-in-from-bottom-2 {\n  --tw-enter-translate-y: 0.5rem;\n}\n\n.slide-in-from-bottom-8 {\n  --tw-enter-translate-y: 2rem;\n}\n\n.slide-in-from-top-2 {\n  --tw-enter-translate-y: -0.5rem;\n}\n\n.animate-duration-300 {\n  animation-duration: 300ms;\n}\n\n.ease-linear {\n  animation-timing-function: linear;\n}\n\n@property --tw-border-gradient-angle {\n  syntax: \'<angle>\';\n  inherits: true;\n  initial-value: 0deg;\n}\n\n@property --tw-conic-gradient-angle {\n  syntax: \'<angle>\';\n  inherits: true;\n  initial-value: 0deg;\n}\n\n@keyframes border-gradient {\n\n  to {\n    --tw-border-gradient-angle: 360deg;\n  }\n}\n\n.placeholder\\:text-neutral-500::placeholder {\n  --tw-text-opacity: 1;\n  color: rgb(115 115 115 / var(--tw-text-opacity, 1));\n}\n\n.after\\:select-none::after {\n  content: var(--tw-content);\n  -webkit-user-select: none;\n          user-select: none;\n}\n\n.after\\:content-\\[\\\'\\2026\\\'\\]::after {\n  --tw-content: \'\u2026\';\n  content: var(--tw-content);\n}\n\n.focus-within\\:border-transparent:focus-within {\n  border-color: transparent;\n}\n\n.focus-within\\:ring-orange-500:focus-within {\n  --tw-ring-opacity: 1;\n  --tw-ring-color: rgb(249 115 22 / var(--tw-ring-opacity, 1));\n}\n\n.hover\\:bg-blue-500:hover {\n  --tw-bg-opacity: 1;\n  background-color: rgb(59 130 246 / var(--tw-bg-opacity, 1));\n}\n\n.hover\\:bg-neutral-200:hover {\n  --tw-bg-opacity: 1;\n  background-color: rgb(229 229 229 / var(--tw-bg-opacity, 1));\n}\n\n.hover\\:bg-orange-400:hover {\n  --tw-bg-opacity: 1;\n  background-color: rgb(251 146 60 / var(--tw-bg-opacity, 1));\n}\n\n.hover\\:text-white:hover {\n  --tw-text-opacity: 1;\n  color: rgb(255 255 255 / var(--tw-text-opacity, 1));\n}\n\n.hover\\:text-white\\/40:hover {\n  color: rgb(255 255 255 / 0.4);\n}\n\n.hover\\:text-white\\/80:hover {\n  color: rgb(255 255 255 / 0.8);\n}\n\n.hover\\:brightness-125:hover {\n  --tw-brightness: brightness(1.25);\n  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);\n}\n\n.focus\\:border-orange-500:focus {\n  --tw-border-opacity: 1;\n  border-color: rgb(249 115 22 / var(--tw-border-opacity, 1));\n}\n\n.focus\\:border-yellow-400:focus {\n  --tw-border-opacity: 1;\n  border-color: rgb(250 204 21 / var(--tw-border-opacity, 1));\n}\n\n.focus\\:bg-neutral-700:focus {\n  --tw-bg-opacity: 1;\n  background-color: rgb(64 64 64 / var(--tw-bg-opacity, 1));\n}\n\n.active\\:bg-orange-600:active {\n  --tw-bg-opacity: 1;\n  background-color: rgb(234 88 12 / var(--tw-bg-opacity, 1));\n}\n\n.active\\:brightness-150:active {\n  --tw-brightness: brightness(1.5);\n  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);\n}\n\n.group:hover .group-hover\\:pointer-events-none {\n  pointer-events: none;\n}\n\n.group:hover .group-hover\\:pointer-events-auto {\n  pointer-events: auto;\n}\n\n.group:hover .group-hover\\:rotate-90 {\n  --tw-rotate: 90deg;\n  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));\n}\n\n.group:hover .group-hover\\:opacity-0 {\n  opacity: 0;\n}\n\n.group:hover .group-hover\\:opacity-100 {\n  opacity: 1;\n}\n\n.peer:placeholder-shown ~ .peer-placeholder-shown\\:text-neutral-500 {\n  --tw-text-opacity: 1;\n  color: rgb(115 115 115 / var(--tw-text-opacity, 1));\n}\n\n.aria-busy\\:pointer-events-none[aria-busy="true"] {\n  pointer-events: none;\n}\n\n.aria-busy\\:bg-blue-500[aria-busy="true"] {\n  --tw-bg-opacity: 1;\n  background-color: rgb(59 130 246 / var(--tw-bg-opacity, 1));\n}\n\n.aria-disabled\\:pointer-events-none[aria-disabled="true"] {\n  pointer-events: none;\n}\n\n.aria-disabled\\:opacity-50[aria-disabled="true"] {\n  opacity: 0.5;\n}\n\n.group[aria-busy="true"] .group-aria-busy\\:inline {\n  display: inline;\n}\n\n.group[aria-busy="true"] .group-aria-busy\\:hidden {\n  display: none;\n}\n\n.group\\/button[aria-busy="true"] .group-aria-busy\\/button\\:translate-x-0 {\n  --tw-translate-x: 0px;\n  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));\n}\n\n.group[aria-busy="true"] .group-aria-busy\\:scale-100 {\n  --tw-scale-x: 1;\n  --tw-scale-y: 1;\n  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));\n}\n\n.group[aria-busy="true"] .group-aria-busy\\:scale-125 {\n  --tw-scale-x: 1.25;\n  --tw-scale-y: 1.25;\n  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));\n}\n\n.group\\/button[aria-busy="true"] .group-aria-busy\\/button\\:opacity-100 {\n  opacity: 1;\n}\n\n.group[aria-busy="true"] .group-aria-busy\\:opacity-0 {\n  opacity: 0;\n}\n\n.group[aria-busy="true"] .group-aria-busy\\:opacity-100 {\n  opacity: 1;\n}\n\n.group\\/button[aria-busy="true"] .group-aria-busy\\/button\\:duration-300 {\n  transition-duration: 300ms;\n}\n\n.group[aria-expanded="true"] .group-aria-expanded\\:inline {\n  display: inline;\n}\n\n.group[aria-expanded="true"] .group-aria-expanded\\:hidden {\n  display: none;\n}\n\n.data-\\[highlighted\\]\\:bg-neutral-200[data-highlighted] {\n  --tw-bg-opacity: 1;\n  background-color: rgb(229 229 229 / var(--tw-bg-opacity, 1));\n}\n\n.data-\\[state\\=checked\\]\\:bg-neutral-900[data-state="checked"] {\n  --tw-bg-opacity: 1;\n  background-color: rgb(23 23 23 / var(--tw-bg-opacity, 1));\n}\n\n.links\\:font-medium a[href]:not(.links-unset) {\n  font-weight: 500;\n}\n\n.links\\:text-white a[href]:not(.links-unset) {\n  --tw-text-opacity: 1;\n  color: rgb(255 255 255 / var(--tw-text-opacity, 1));\n}\n\n.links\\:underline a[href]:not(.links-unset) {\n  text-decoration-line: underline;\n}\n\n.links\\:decoration-neutral-500 a[href]:not(.links-unset) {\n  text-decoration-color: #737373;\n}\n\n.links\\:underline-offset-4 a[href]:not(.links-unset) {\n  text-underline-offset: 4px;\n}\n\n.hover\\:links\\:decoration-orange-500 a[href]:not(.links-unset):hover {\n  text-decoration-color: #f97316;\n}\n\n@media (min-width: 640px) {\n\n  .sm\\:items-center {\n    align-items: center;\n  }\n}\n\n.dark\\:border-neutral-700:where([data-theme="dark"], [data-theme="dark"] *) {\n  --tw-border-opacity: 1;\n  border-color: rgb(64 64 64 / var(--tw-border-opacity, 1));\n}\n\n.dark\\:bg-neutral-800:where([data-theme="dark"], [data-theme="dark"] *) {\n  --tw-bg-opacity: 1;\n  background-color: rgb(38 38 38 / var(--tw-bg-opacity, 1));\n}\n\n.dark\\:bg-white\\/10:where([data-theme="dark"], [data-theme="dark"] *) {\n  background-color: rgb(255 255 255 / 0.1);\n}\n\n.dark\\:text-white:where([data-theme="dark"], [data-theme="dark"] *) {\n  --tw-text-opacity: 1;\n  color: rgb(255 255 255 / var(--tw-text-opacity, 1));\n}\n\n.dark\\:hover\\:bg-neutral-700:hover:where([data-theme="dark"], [data-theme="dark"] *) {\n  --tw-bg-opacity: 1;\n  background-color: rgb(64 64 64 / var(--tw-bg-opacity, 1));\n}\n\n.\\[\\&_\\>_\\:is\\(dt\\2c dd\\)\\]\\:px-1 > :is(dt,dd) {\n  padding-left: 0.25rem;\n  padding-right: 0.25rem;\n}\n\n.\\[\\&_\\>_dd\\]\\:text-right > dd {\n  text-align: right;\n}\n';
+var tailwind_default = '*, ::before, ::after {\n  --tw-border-spacing-x: 0;\n  --tw-border-spacing-y: 0;\n  --tw-translate-x: 0;\n  --tw-translate-y: 0;\n  --tw-rotate: 0;\n  --tw-skew-x: 0;\n  --tw-skew-y: 0;\n  --tw-scale-x: 1;\n  --tw-scale-y: 1;\n  --tw-pan-x:  ;\n  --tw-pan-y:  ;\n  --tw-pinch-zoom:  ;\n  --tw-scroll-snap-strictness: proximity;\n  --tw-gradient-from-position:  ;\n  --tw-gradient-via-position:  ;\n  --tw-gradient-to-position:  ;\n  --tw-ordinal:  ;\n  --tw-slashed-zero:  ;\n  --tw-numeric-figure:  ;\n  --tw-numeric-spacing:  ;\n  --tw-numeric-fraction:  ;\n  --tw-ring-inset:  ;\n  --tw-ring-offset-width: 0px;\n  --tw-ring-offset-color: #fff;\n  --tw-ring-color: rgb(59 130 246 / 0.5);\n  --tw-ring-offset-shadow: 0 0 #0000;\n  --tw-ring-shadow: 0 0 #0000;\n  --tw-shadow: 0 0 #0000;\n  --tw-shadow-colored: 0 0 #0000;\n  --tw-blur:  ;\n  --tw-brightness:  ;\n  --tw-contrast:  ;\n  --tw-grayscale:  ;\n  --tw-hue-rotate:  ;\n  --tw-invert:  ;\n  --tw-saturate:  ;\n  --tw-sepia:  ;\n  --tw-drop-shadow:  ;\n  --tw-backdrop-blur:  ;\n  --tw-backdrop-brightness:  ;\n  --tw-backdrop-contrast:  ;\n  --tw-backdrop-grayscale:  ;\n  --tw-backdrop-hue-rotate:  ;\n  --tw-backdrop-invert:  ;\n  --tw-backdrop-opacity:  ;\n  --tw-backdrop-saturate:  ;\n  --tw-backdrop-sepia:  ;\n  --tw-contain-size:  ;\n  --tw-contain-layout:  ;\n  --tw-contain-paint:  ;\n  --tw-contain-style:  ;\n}\n\n::backdrop {\n  --tw-border-spacing-x: 0;\n  --tw-border-spacing-y: 0;\n  --tw-translate-x: 0;\n  --tw-translate-y: 0;\n  --tw-rotate: 0;\n  --tw-skew-x: 0;\n  --tw-skew-y: 0;\n  --tw-scale-x: 1;\n  --tw-scale-y: 1;\n  --tw-pan-x:  ;\n  --tw-pan-y:  ;\n  --tw-pinch-zoom:  ;\n  --tw-scroll-snap-strictness: proximity;\n  --tw-gradient-from-position:  ;\n  --tw-gradient-via-position:  ;\n  --tw-gradient-to-position:  ;\n  --tw-ordinal:  ;\n  --tw-slashed-zero:  ;\n  --tw-numeric-figure:  ;\n  --tw-numeric-spacing:  ;\n  --tw-numeric-fraction:  ;\n  --tw-ring-inset:  ;\n  --tw-ring-offset-width: 0px;\n  --tw-ring-offset-color: #fff;\n  --tw-ring-color: rgb(59 130 246 / 0.5);\n  --tw-ring-offset-shadow: 0 0 #0000;\n  --tw-ring-shadow: 0 0 #0000;\n  --tw-shadow: 0 0 #0000;\n  --tw-shadow-colored: 0 0 #0000;\n  --tw-blur:  ;\n  --tw-brightness:  ;\n  --tw-contrast:  ;\n  --tw-grayscale:  ;\n  --tw-hue-rotate:  ;\n  --tw-invert:  ;\n  --tw-saturate:  ;\n  --tw-sepia:  ;\n  --tw-drop-shadow:  ;\n  --tw-backdrop-blur:  ;\n  --tw-backdrop-brightness:  ;\n  --tw-backdrop-contrast:  ;\n  --tw-backdrop-grayscale:  ;\n  --tw-backdrop-hue-rotate:  ;\n  --tw-backdrop-invert:  ;\n  --tw-backdrop-opacity:  ;\n  --tw-backdrop-saturate:  ;\n  --tw-backdrop-sepia:  ;\n  --tw-contain-size:  ;\n  --tw-contain-layout:  ;\n  --tw-contain-paint:  ;\n  --tw-contain-style:  ;\n}/*\n! tailwindcss v3.4.18 | MIT License | https://tailwindcss.com\n*//*\n1. Prevent padding and border from affecting element width. (https://github.com/mozdevs/cssremedy/issues/4)\n2. Allow adding a border to an element by just adding a border-width. (https://github.com/tailwindcss/tailwindcss/pull/116)\n*/\n\n*,\n::before,\n::after {\n  box-sizing: border-box; /* 1 */\n  border-width: 0; /* 2 */\n  border-style: solid; /* 2 */\n  border-color: #e5e7eb; /* 2 */\n}\n\n::before,\n::after {\n  --tw-content: \'\';\n}\n\n/*\n1. Use a consistent sensible line-height in all browsers.\n2. Prevent adjustments of font size after orientation changes in iOS.\n3. Use a more readable tab size.\n4. Use the user\'s configured `sans` font-family by default.\n5. Use the user\'s configured `sans` font-feature-settings by default.\n6. Use the user\'s configured `sans` font-variation-settings by default.\n7. Disable tap highlights on iOS\n*/\n\nhtml,\n:host {\n  line-height: 1.5; /* 1 */\n  -webkit-text-size-adjust: 100%; /* 2 */ /* 3 */\n  tab-size: 4; /* 3 */\n  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; /* 4 */\n  font-feature-settings: normal; /* 5 */\n  font-variation-settings: normal; /* 6 */\n  -webkit-tap-highlight-color: transparent; /* 7 */\n}\n\n/*\n1. Remove the margin in all browsers.\n2. Inherit line-height from `html` so users can set them as a class directly on the `html` element.\n*/\n\nbody {\n  margin: 0; /* 1 */\n  line-height: inherit; /* 2 */\n}\n\n/*\n1. Add the correct height in Firefox.\n2. Correct the inheritance of border color in Firefox. (https://bugzilla.mozilla.org/show_bug.cgi?id=190655)\n3. Ensure horizontal rules are visible by default.\n*/\n\nhr {\n  height: 0; /* 1 */\n  color: inherit; /* 2 */\n  border-top-width: 1px; /* 3 */\n}\n\n/*\nAdd the correct text decoration in Chrome, Edge, and Safari.\n*/\n\nabbr:where([title]) {\n  -webkit-text-decoration: underline dotted;\n          text-decoration: underline dotted;\n}\n\n/*\nRemove the default font size and weight for headings.\n*/\n\nh1,\nh2,\nh3,\nh4,\nh5,\nh6 {\n  font-size: inherit;\n  font-weight: inherit;\n}\n\n/*\nReset links to optimize for opt-in styling instead of opt-out.\n*/\n\na {\n  color: inherit;\n  text-decoration: inherit;\n}\n\n/*\nAdd the correct font weight in Edge and Safari.\n*/\n\nb,\nstrong {\n  font-weight: bolder;\n}\n\n/*\n1. Use the user\'s configured `mono` font-family by default.\n2. Use the user\'s configured `mono` font-feature-settings by default.\n3. Use the user\'s configured `mono` font-variation-settings by default.\n4. Correct the odd `em` font sizing in all browsers.\n*/\n\ncode,\nkbd,\nsamp,\npre {\n  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; /* 1 */\n  font-feature-settings: normal; /* 2 */\n  font-variation-settings: normal; /* 3 */\n  font-size: 1em; /* 4 */\n}\n\n/*\nAdd the correct font size in all browsers.\n*/\n\nsmall {\n  font-size: 80%;\n}\n\n/*\nPrevent `sub` and `sup` elements from affecting the line height in all browsers.\n*/\n\nsub,\nsup {\n  font-size: 75%;\n  line-height: 0;\n  position: relative;\n  vertical-align: baseline;\n}\n\nsub {\n  bottom: -0.25em;\n}\n\nsup {\n  top: -0.5em;\n}\n\n/*\n1. Remove text indentation from table contents in Chrome and Safari. (https://bugs.chromium.org/p/chromium/issues/detail?id=999088, https://bugs.webkit.org/show_bug.cgi?id=201297)\n2. Correct table border color inheritance in all Chrome and Safari. (https://bugs.chromium.org/p/chromium/issues/detail?id=935729, https://bugs.webkit.org/show_bug.cgi?id=195016)\n3. Remove gaps between table borders by default.\n*/\n\ntable {\n  text-indent: 0; /* 1 */\n  border-color: inherit; /* 2 */\n  border-collapse: collapse; /* 3 */\n}\n\n/*\n1. Change the font styles in all browsers.\n2. Remove the margin in Firefox and Safari.\n3. Remove default padding in all browsers.\n*/\n\nbutton,\ninput,\noptgroup,\nselect,\ntextarea {\n  font-family: inherit; /* 1 */\n  font-feature-settings: inherit; /* 1 */\n  font-variation-settings: inherit; /* 1 */\n  font-size: 100%; /* 1 */\n  font-weight: inherit; /* 1 */\n  line-height: inherit; /* 1 */\n  letter-spacing: inherit; /* 1 */\n  color: inherit; /* 1 */\n  margin: 0; /* 2 */\n  padding: 0; /* 3 */\n}\n\n/*\nRemove the inheritance of text transform in Edge and Firefox.\n*/\n\nbutton,\nselect {\n  text-transform: none;\n}\n\n/*\n1. Correct the inability to style clickable types in iOS and Safari.\n2. Remove default button styles.\n*/\n\nbutton,\ninput:where([type=\'button\']),\ninput:where([type=\'reset\']),\ninput:where([type=\'submit\']) {\n  -webkit-appearance: button; /* 1 */\n  background-color: transparent; /* 2 */\n  background-image: none; /* 2 */\n}\n\n/*\nUse the modern Firefox focus style for all focusable elements.\n*/\n\n:-moz-focusring {\n  outline: auto;\n}\n\n/*\nRemove the additional `:invalid` styles in Firefox. (https://github.com/mozilla/gecko-dev/blob/2f9eacd9d3d995c937b4251a5557d95d494c9be1/layout/style/res/forms.css#L728-L737)\n*/\n\n:-moz-ui-invalid {\n  box-shadow: none;\n}\n\n/*\nAdd the correct vertical alignment in Chrome and Firefox.\n*/\n\nprogress {\n  vertical-align: baseline;\n}\n\n/*\nCorrect the cursor style of increment and decrement buttons in Safari.\n*/\n\n::-webkit-inner-spin-button,\n::-webkit-outer-spin-button {\n  height: auto;\n}\n\n/*\n1. Correct the odd appearance in Chrome and Safari.\n2. Correct the outline style in Safari.\n*/\n\n[type=\'search\'] {\n  -webkit-appearance: textfield; /* 1 */\n  outline-offset: -2px; /* 2 */\n}\n\n/*\nRemove the inner padding in Chrome and Safari on macOS.\n*/\n\n::-webkit-search-decoration {\n  -webkit-appearance: none;\n}\n\n/*\n1. Correct the inability to style clickable types in iOS and Safari.\n2. Change font properties to `inherit` in Safari.\n*/\n\n::-webkit-file-upload-button {\n  -webkit-appearance: button; /* 1 */\n  font: inherit; /* 2 */\n}\n\n/*\nAdd the correct display in Chrome and Safari.\n*/\n\nsummary {\n  display: list-item;\n}\n\n/*\nRemoves the default spacing and border for appropriate elements.\n*/\n\nblockquote,\ndl,\ndd,\nh1,\nh2,\nh3,\nh4,\nh5,\nh6,\nhr,\nfigure,\np,\npre {\n  margin: 0;\n}\n\nfieldset {\n  margin: 0;\n  padding: 0;\n}\n\nlegend {\n  padding: 0;\n}\n\nol,\nul,\nmenu {\n  list-style: none;\n  margin: 0;\n  padding: 0;\n}\n\n/*\nReset default styling for dialogs.\n*/\ndialog {\n  padding: 0;\n}\n\n/*\nPrevent resizing textareas horizontally by default.\n*/\n\ntextarea {\n  resize: vertical;\n}\n\n/*\n1. Reset the default placeholder opacity in Firefox. (https://github.com/tailwindlabs/tailwindcss/issues/3300)\n2. Set the default placeholder color to the user\'s configured gray 400 color.\n*/\n\ninput::placeholder,\ntextarea::placeholder {\n  opacity: 1; /* 1 */\n  color: #9ca3af; /* 2 */\n}\n\n/*\nSet the default cursor for buttons.\n*/\n\nbutton,\n[role="button"] {\n  cursor: pointer;\n}\n\n/*\nMake sure disabled buttons don\'t get the pointer cursor.\n*/\n:disabled {\n  cursor: default;\n}\n\n/*\n1. Make replaced elements `display: block` by default. (https://github.com/mozdevs/cssremedy/issues/14)\n2. Add `vertical-align: middle` to align replaced elements more sensibly by default. (https://github.com/jensimmons/cssremedy/issues/14#issuecomment-634934210)\n   This can trigger a poorly considered lint error in some tools but is included by design.\n*/\n\nimg,\nsvg,\nvideo,\ncanvas,\naudio,\niframe,\nembed,\nobject {\n  display: block; /* 1 */\n  vertical-align: middle; /* 2 */\n}\n\n/*\nConstrain images and videos to the parent width and preserve their intrinsic aspect ratio. (https://github.com/mozdevs/cssremedy/issues/14)\n*/\n\nimg,\nvideo {\n  max-width: 100%;\n  height: auto;\n}\n\n/* Make elements with the HTML hidden attribute stay hidden by default */\n[hidden]:where(:not([hidden="until-found"])) {\n  display: none;\n}\n\n.container {\n  width: 100%;\n}\n\n@media (min-width: 640px) {\n\n  .container {\n    max-width: 640px;\n  }\n}\n\n@media (min-width: 768px) {\n\n  .container {\n    max-width: 768px;\n  }\n}\n\n@media (min-width: 1024px) {\n\n  .container {\n    max-width: 1024px;\n  }\n}\n\n@media (min-width: 1280px) {\n\n  .container {\n    max-width: 1280px;\n  }\n}\n\n@media (min-width: 1536px) {\n\n  .container {\n    max-width: 1536px;\n  }\n}\n\n.grid-cols-2.divide-y > :not([hidden]) ~ :not([hidden]):nth-child(-n + 2) {\n  border-top-width: 0;\n  border-bottom-width: 0;\n}\n\n.sr-only {\n  position: absolute;\n  width: 1px;\n  height: 1px;\n  padding: 0;\n  margin: -1px;\n  overflow: hidden;\n  clip: rect(0, 0, 0, 0);\n  white-space: nowrap;\n  border-width: 0;\n}\n\n.pointer-events-none {\n  pointer-events: none;\n}\n\n.pointer-events-auto {\n  pointer-events: auto;\n}\n\n.fixed {\n  position: fixed;\n}\n\n.absolute {\n  position: absolute;\n}\n\n.relative {\n  position: relative;\n}\n\n.sticky {\n  position: sticky;\n}\n\n.inset-0 {\n  inset: 0px;\n}\n\n.bottom-0 {\n  bottom: 0px;\n}\n\n.left-0 {\n  left: 0px;\n}\n\n.right-0 {\n  right: 0px;\n}\n\n.top-0 {\n  top: 0px;\n}\n\n.col-start-1 {\n  grid-column-start: 1;\n}\n\n.row-start-1 {\n  grid-row-start: 1;\n}\n\n.m-0 {\n  margin: 0px;\n}\n\n.m-2 {\n  margin: 0.5rem;\n}\n\n.-mx-0\\.5 {\n  margin-left: -0.125rem;\n  margin-right: -0.125rem;\n}\n\n.-my-1 {\n  margin-top: -0.25rem;\n  margin-bottom: -0.25rem;\n}\n\n.-my-\\[0\\.125em\\] {\n  margin-top: -0.125em;\n  margin-bottom: -0.125em;\n}\n\n.mx-auto {\n  margin-left: auto;\n  margin-right: auto;\n}\n\n.-ml-3 {\n  margin-left: -0.75rem;\n}\n\n.-mt-2 {\n  margin-top: -0.5rem;\n}\n\n.block {\n  display: block;\n}\n\n.flex {\n  display: flex;\n}\n\n.inline-flex {\n  display: inline-flex;\n}\n\n.table {\n  display: table;\n}\n\n.grid {\n  display: grid;\n}\n\n.inline-grid {\n  display: inline-grid;\n}\n\n.contents {\n  display: contents;\n}\n\n.hidden {\n  display: none;\n}\n\n.h-12 {\n  height: 3rem;\n}\n\n.h-16 {\n  height: 4rem;\n}\n\n.h-3\\.5 {\n  height: 0.875rem;\n}\n\n.h-4 {\n  height: 1rem;\n}\n\n.h-6 {\n  height: 1.5rem;\n}\n\n.h-64 {\n  height: 16rem;\n}\n\n.h-\\[1\\.25em\\] {\n  height: 1.25em;\n}\n\n.h-\\[1em\\] {\n  height: 1em;\n}\n\n.h-full {\n  height: 100%;\n}\n\n.max-h-full {\n  max-height: 100%;\n}\n\n.w-16 {\n  width: 4rem;\n}\n\n.w-24 {\n  width: 6rem;\n}\n\n.w-28 {\n  width: 7rem;\n}\n\n.w-3\\.5 {\n  width: 0.875rem;\n}\n\n.w-4 {\n  width: 1rem;\n}\n\n.w-48 {\n  width: 12rem;\n}\n\n.w-6 {\n  width: 1.5rem;\n}\n\n.w-60 {\n  width: 15rem;\n}\n\n.w-\\[0\\.6em\\] {\n  width: 0.6em;\n}\n\n.w-\\[1\\.25em\\] {\n  width: 1.25em;\n}\n\n.w-full {\n  width: 100%;\n}\n\n.max-w-\\[26rem\\] {\n  max-width: 26rem;\n}\n\n.flex-shrink-0 {\n  flex-shrink: 0;\n}\n\n.flex-grow {\n  flex-grow: 1;\n}\n\n.-translate-y-2 {\n  --tw-translate-y: -0.5rem;\n  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));\n}\n\n.-translate-y-4 {\n  --tw-translate-y: -1rem;\n  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));\n}\n\n.translate-x-2 {\n  --tw-translate-x: 0.5rem;\n  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));\n}\n\n.translate-y-0 {\n  --tw-translate-y: 0px;\n  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));\n}\n\n.scale-100 {\n  --tw-scale-x: 1;\n  --tw-scale-y: 1;\n  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));\n}\n\n.scale-50 {\n  --tw-scale-x: .5;\n  --tw-scale-y: .5;\n  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));\n}\n\n@keyframes spin {\n\n  to {\n    transform: rotate(360deg);\n  }\n}\n\n.animate-spin {\n  animation: spin 1s linear infinite;\n}\n\n.cursor-pointer {\n  cursor: pointer;\n}\n\n.grid-cols-\\[1fr_auto_1fr\\] {\n  grid-template-columns: 1fr auto 1fr;\n}\n\n.flex-col {\n  flex-direction: column;\n}\n\n.place-items-center {\n  place-items: center;\n}\n\n.items-end {\n  align-items: flex-end;\n}\n\n.items-center {\n  align-items: center;\n}\n\n.justify-end {\n  justify-content: flex-end;\n}\n\n.justify-center {\n  justify-content: center;\n}\n\n.justify-between {\n  justify-content: space-between;\n}\n\n.gap-1 {\n  gap: 0.25rem;\n}\n\n.gap-2 {\n  gap: 0.5rem;\n}\n\n.gap-2\\.5 {\n  gap: 0.625rem;\n}\n\n.gap-4 {\n  gap: 1rem;\n}\n\n.gap-6 {\n  gap: 1.5rem;\n}\n\n.space-y-6 > :not([hidden]) ~ :not([hidden]) {\n  --tw-space-y-reverse: 0;\n  margin-top: calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));\n  margin-bottom: calc(1.5rem * var(--tw-space-y-reverse));\n}\n\n.divide-y > :not([hidden]) ~ :not([hidden]) {\n  --tw-divide-y-reverse: 0;\n  border-top-width: calc(1px * calc(1 - var(--tw-divide-y-reverse)));\n  border-bottom-width: calc(1px * var(--tw-divide-y-reverse));\n}\n\n.divide-neutral-800 > :not([hidden]) ~ :not([hidden]) {\n  --tw-divide-opacity: 1;\n  border-color: rgb(38 38 38 / var(--tw-divide-opacity, 1));\n}\n\n.self-auto {\n  align-self: auto;\n}\n\n.self-center {\n  align-self: center;\n}\n\n.overflow-auto {\n  overflow: auto;\n}\n\n.overflow-clip {\n  overflow: clip;\n}\n\n.whitespace-pre-wrap {\n  white-space: pre-wrap;\n}\n\n.rounded-full {\n  border-radius: 9999px;\n}\n\n.border {\n  border-width: 1px;\n}\n\n.border-4 {\n  border-width: 4px;\n}\n\n.border-neutral-300 {\n  --tw-border-opacity: 1;\n  border-color: rgb(212 212 212 / var(--tw-border-opacity, 1));\n}\n\n.border-neutral-700 {\n  --tw-border-opacity: 1;\n  border-color: rgb(64 64 64 / var(--tw-border-opacity, 1));\n}\n\n.border-transparent {\n  border-color: transparent;\n}\n\n.bg-black\\/10 {\n  background-color: rgb(0 0 0 / 0.1);\n}\n\n.bg-blue-600 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(37 99 235 / var(--tw-bg-opacity, 1));\n}\n\n.bg-blue-700 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(29 78 216 / var(--tw-bg-opacity, 1));\n}\n\n.bg-blue-700\\/60 {\n  background-color: rgb(29 78 216 / 0.6);\n}\n\n.bg-neutral-100 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(245 245 245 / var(--tw-bg-opacity, 1));\n}\n\n.bg-neutral-700 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(64 64 64 / var(--tw-bg-opacity, 1));\n}\n\n.bg-neutral-800 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(38 38 38 / var(--tw-bg-opacity, 1));\n}\n\n.bg-neutral-800\\/85 {\n  background-color: rgb(38 38 38 / 0.85);\n}\n\n.bg-neutral-900 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(23 23 23 / var(--tw-bg-opacity, 1));\n}\n\n.bg-orange-500 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(249 115 22 / var(--tw-bg-opacity, 1));\n}\n\n.bg-orange-600 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(234 88 12 / var(--tw-bg-opacity, 1));\n}\n\n.bg-gradient-to-b {\n  background-image: linear-gradient(to bottom, var(--tw-gradient-stops));\n}\n\n.from-transparent {\n  --tw-gradient-from: transparent var(--tw-gradient-from-position);\n  --tw-gradient-to: rgb(0 0 0 / 0) var(--tw-gradient-to-position);\n  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);\n}\n\n.to-blue-700 {\n  --tw-gradient-to: #1d4ed8 var(--tw-gradient-to-position);\n}\n\n.bg-cover {\n  background-size: cover;\n}\n\n.bg-center {\n  background-position: center;\n}\n\n.bg-no-repeat {\n  background-repeat: no-repeat;\n}\n\n.object-cover {\n  object-fit: cover;\n}\n\n.p-1 {\n  padding: 0.25rem;\n}\n\n.p-2 {\n  padding: 0.5rem;\n}\n\n.p-2\\.5 {\n  padding: 0.625rem;\n}\n\n.p-3 {\n  padding: 0.75rem;\n}\n\n.p-4 {\n  padding: 1rem;\n}\n\n.p-6 {\n  padding: 1.5rem;\n}\n\n.p-\\[\\.75em\\] {\n  padding: .75em;\n}\n\n.px-8 {\n  padding-left: 2rem;\n  padding-right: 2rem;\n}\n\n.py-2 {\n  padding-top: 0.5rem;\n  padding-bottom: 0.5rem;\n}\n\n.py-8 {\n  padding-top: 2rem;\n  padding-bottom: 2rem;\n}\n\n.pb-8 {\n  padding-bottom: 2rem;\n}\n\n.pt-8 {\n  padding-top: 2rem;\n}\n\n.text-left {\n  text-align: left;\n}\n\n.text-center {\n  text-align: center;\n}\n\n.font-mono {\n  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;\n}\n\n.text-2xl {\n  font-size: 1.5rem;\n  line-height: 2rem;\n}\n\n.text-\\[\\.75em\\] {\n  font-size: .75em;\n}\n\n.text-base {\n  font-size: 1rem;\n  line-height: 1.5rem;\n}\n\n.text-lg {\n  font-size: 1.125rem;\n  line-height: 1.75rem;\n}\n\n.text-sm {\n  font-size: 0.875rem;\n  line-height: 1.25rem;\n}\n\n.text-xs {\n  font-size: 0.75rem;\n  line-height: 1rem;\n}\n\n.font-bold {\n  font-weight: 700;\n}\n\n.font-medium {\n  font-weight: 500;\n}\n\n.leading-none {\n  line-height: 1;\n}\n\n.tracking-\\[-1ch\\] {\n  letter-spacing: -1ch;\n}\n\n.text-black {\n  --tw-text-opacity: 1;\n  color: rgb(0 0 0 / var(--tw-text-opacity, 1));\n}\n\n.text-neutral-400 {\n  --tw-text-opacity: 1;\n  color: rgb(163 163 163 / var(--tw-text-opacity, 1));\n}\n\n.text-neutral-500 {\n  --tw-text-opacity: 1;\n  color: rgb(115 115 115 / var(--tw-text-opacity, 1));\n}\n\n.text-orange-500 {\n  --tw-text-opacity: 1;\n  color: rgb(249 115 22 / var(--tw-text-opacity, 1));\n}\n\n.text-transparent {\n  color: transparent;\n}\n\n.text-white {\n  --tw-text-opacity: 1;\n  color: rgb(255 255 255 / var(--tw-text-opacity, 1));\n}\n\n.text-white\\/20 {\n  color: rgb(255 255 255 / 0.2);\n}\n\n.text-white\\/80 {\n  color: rgb(255 255 255 / 0.8);\n}\n\n.opacity-0 {\n  opacity: 0;\n}\n\n.opacity-100 {\n  opacity: 1;\n}\n\n.opacity-25 {\n  opacity: 0.25;\n}\n\n.opacity-30 {\n  opacity: 0.3;\n}\n\n.opacity-75 {\n  opacity: 0.75;\n}\n\n.outline-none {\n  outline: 2px solid transparent;\n  outline-offset: 2px;\n}\n\n.ring-1 {\n  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);\n  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);\n  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);\n}\n\n.ring-2 {\n  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);\n  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);\n  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);\n}\n\n.ring-neutral-700\\/50 {\n  --tw-ring-color: rgb(64 64 64 / 0.5);\n}\n\n.ring-transparent {\n  --tw-ring-color: transparent;\n}\n\n.filter {\n  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);\n}\n\n.transition {\n  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;\n  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);\n  transition-duration: 150ms;\n}\n\n.transition-colors {\n  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;\n  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);\n  transition-duration: 150ms;\n}\n\n.duration-100 {\n  transition-duration: 100ms;\n}\n\n.duration-300 {\n  transition-duration: 300ms;\n}\n\n@keyframes enter {\n\n  from {\n    opacity: var(--tw-enter-opacity, 1);\n    transform: translate3d(var(--tw-enter-translate-x, 0), var(--tw-enter-translate-y, 0), 0) scale3d(var(--tw-enter-scale, 1), var(--tw-enter-scale, 1), var(--tw-enter-scale, 1)) rotate(var(--tw-enter-rotate, 0));\n  }\n}\n\n@keyframes exit {\n\n  to {\n    opacity: var(--tw-exit-opacity, 1);\n    transform: translate3d(var(--tw-exit-translate-x, 0), var(--tw-exit-translate-y, 0), 0) scale3d(var(--tw-exit-scale, 1), var(--tw-exit-scale, 1), var(--tw-exit-scale, 1)) rotate(var(--tw-exit-rotate, 0));\n  }\n}\n\n.animate-in {\n  animation-name: enter;\n  animation-duration: 150ms;\n  --tw-enter-opacity: initial;\n  --tw-enter-scale: initial;\n  --tw-enter-rotate: initial;\n  --tw-enter-translate-x: initial;\n  --tw-enter-translate-y: initial;\n}\n\n.fade-in {\n  --tw-enter-opacity: 0;\n}\n\n.slide-in-from-bottom-16 {\n  --tw-enter-translate-y: 4rem;\n}\n\n.slide-in-from-bottom-8 {\n  --tw-enter-translate-y: 2rem;\n}\n\n.animate-duration-300 {\n  animation-duration: 300ms;\n}\n\n@property --tw-border-gradient-angle {\n  syntax: \'<angle>\';\n  inherits: true;\n  initial-value: 0deg;\n}\n\n@property --tw-conic-gradient-angle {\n  syntax: \'<angle>\';\n  inherits: true;\n  initial-value: 0deg;\n}\n\n@keyframes border-gradient {\n\n  to {\n    --tw-border-gradient-angle: 360deg;\n  }\n}\n\n.placeholder\\:text-neutral-500::placeholder {\n  --tw-text-opacity: 1;\n  color: rgb(115 115 115 / var(--tw-text-opacity, 1));\n}\n\n.after\\:select-none::after {\n  content: var(--tw-content);\n  -webkit-user-select: none;\n          user-select: none;\n}\n\n.after\\:content-\\[\\\'\\2026\\\'\\]::after {\n  --tw-content: \'\u2026\';\n  content: var(--tw-content);\n}\n\n.focus-within\\:border-transparent:focus-within {\n  border-color: transparent;\n}\n\n.focus-within\\:ring-orange-500:focus-within {\n  --tw-ring-opacity: 1;\n  --tw-ring-color: rgb(249 115 22 / var(--tw-ring-opacity, 1));\n}\n\n.hover\\:bg-blue-500:hover {\n  --tw-bg-opacity: 1;\n  background-color: rgb(59 130 246 / var(--tw-bg-opacity, 1));\n}\n\n.hover\\:bg-neutral-200:hover {\n  --tw-bg-opacity: 1;\n  background-color: rgb(229 229 229 / var(--tw-bg-opacity, 1));\n}\n\n.hover\\:bg-orange-400:hover {\n  --tw-bg-opacity: 1;\n  background-color: rgb(251 146 60 / var(--tw-bg-opacity, 1));\n}\n\n.hover\\:text-white:hover {\n  --tw-text-opacity: 1;\n  color: rgb(255 255 255 / var(--tw-text-opacity, 1));\n}\n\n.hover\\:text-white\\/40:hover {\n  color: rgb(255 255 255 / 0.4);\n}\n\n.hover\\:text-white\\/80:hover {\n  color: rgb(255 255 255 / 0.8);\n}\n\n.hover\\:brightness-125:hover {\n  --tw-brightness: brightness(1.25);\n  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);\n}\n\n.focus\\:border-orange-500:focus {\n  --tw-border-opacity: 1;\n  border-color: rgb(249 115 22 / var(--tw-border-opacity, 1));\n}\n\n.focus\\:border-yellow-400:focus {\n  --tw-border-opacity: 1;\n  border-color: rgb(250 204 21 / var(--tw-border-opacity, 1));\n}\n\n.active\\:bg-orange-600:active {\n  --tw-bg-opacity: 1;\n  background-color: rgb(234 88 12 / var(--tw-bg-opacity, 1));\n}\n\n.active\\:brightness-150:active {\n  --tw-brightness: brightness(1.5);\n  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);\n}\n\n.group:hover .group-hover\\:rotate-90 {\n  --tw-rotate: 90deg;\n  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));\n}\n\n.aria-busy\\:pointer-events-none[aria-busy="true"] {\n  pointer-events: none;\n}\n\n.aria-busy\\:bg-blue-500[aria-busy="true"] {\n  --tw-bg-opacity: 1;\n  background-color: rgb(59 130 246 / var(--tw-bg-opacity, 1));\n}\n\n.aria-disabled\\:pointer-events-none[aria-disabled="true"] {\n  pointer-events: none;\n}\n\n.aria-disabled\\:opacity-50[aria-disabled="true"] {\n  opacity: 0.5;\n}\n\n.group[aria-busy="true"] .group-aria-busy\\:inline {\n  display: inline;\n}\n\n.group[aria-busy="true"] .group-aria-busy\\:hidden {\n  display: none;\n}\n\n.group\\/button[aria-busy="true"] .group-aria-busy\\/button\\:translate-x-0 {\n  --tw-translate-x: 0px;\n  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));\n}\n\n.group[aria-busy="true"] .group-aria-busy\\:scale-100 {\n  --tw-scale-x: 1;\n  --tw-scale-y: 1;\n  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));\n}\n\n.group[aria-busy="true"] .group-aria-busy\\:scale-125 {\n  --tw-scale-x: 1.25;\n  --tw-scale-y: 1.25;\n  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));\n}\n\n.group\\/button[aria-busy="true"] .group-aria-busy\\/button\\:opacity-100 {\n  opacity: 1;\n}\n\n.group[aria-busy="true"] .group-aria-busy\\:opacity-0 {\n  opacity: 0;\n}\n\n.group[aria-busy="true"] .group-aria-busy\\:opacity-100 {\n  opacity: 1;\n}\n\n.group\\/button[aria-busy="true"] .group-aria-busy\\/button\\:duration-300 {\n  transition-duration: 300ms;\n}\n\n.data-\\[highlighted\\]\\:bg-neutral-200[data-highlighted] {\n  --tw-bg-opacity: 1;\n  background-color: rgb(229 229 229 / var(--tw-bg-opacity, 1));\n}\n\n.links\\:font-medium a[href]:not(.links-unset) {\n  font-weight: 500;\n}\n\n.links\\:text-white a[href]:not(.links-unset) {\n  --tw-text-opacity: 1;\n  color: rgb(255 255 255 / var(--tw-text-opacity, 1));\n}\n\n.links\\:underline a[href]:not(.links-unset) {\n  text-decoration-line: underline;\n}\n\n.links\\:decoration-neutral-500 a[href]:not(.links-unset) {\n  text-decoration-color: #737373;\n}\n\n.links\\:underline-offset-4 a[href]:not(.links-unset) {\n  text-underline-offset: 4px;\n}\n\n.hover\\:links\\:decoration-orange-500 a[href]:not(.links-unset):hover {\n  text-decoration-color: #f97316;\n}\n\n@media (min-width: 640px) {\n\n  .sm\\:items-center {\n    align-items: center;\n  }\n}\n\n.dark\\:border-neutral-700:where([data-theme="dark"], [data-theme="dark"] *) {\n  --tw-border-opacity: 1;\n  border-color: rgb(64 64 64 / var(--tw-border-opacity, 1));\n}\n\n.dark\\:bg-neutral-800:where([data-theme="dark"], [data-theme="dark"] *) {\n  --tw-bg-opacity: 1;\n  background-color: rgb(38 38 38 / var(--tw-bg-opacity, 1));\n}\n\n.dark\\:bg-white\\/10:where([data-theme="dark"], [data-theme="dark"] *) {\n  background-color: rgb(255 255 255 / 0.1);\n}\n\n.dark\\:text-white:where([data-theme="dark"], [data-theme="dark"] *) {\n  --tw-text-opacity: 1;\n  color: rgb(255 255 255 / var(--tw-text-opacity, 1));\n}\n\n.dark\\:hover\\:bg-neutral-700:hover:where([data-theme="dark"], [data-theme="dark"] *) {\n  --tw-bg-opacity: 1;\n  background-color: rgb(64 64 64 / var(--tw-bg-opacity, 1));\n}\n';
 var Context = createContext(null);
 function FrameProvider({ frame, children }) {
   const value = useContext(Context);
@@ -172,7 +172,16 @@ function Modal({ open, onOpenChange, children }) {
     };
   }, [onOpenChange, open]);
   return /* @__PURE__ */ jsx(Root, { open, onOpenChange, children: /* @__PURE__ */ jsx(DialogPortal, { children: /* @__PURE__ */ jsxs(Shadow, { mode: "modal", children: [
-    /* @__PURE__ */ jsx("div", { className: twMerge("fixed inset-0", "bg-neutral-800/85", "animate-in animate-duration-300 fade-in") }),
+    /* @__PURE__ */ jsx(
+      "div",
+      {
+        className: twMerge(
+          "fixed inset-0",
+          "bg-neutral-800/85",
+          "animate-in animate-duration-300 fade-in"
+        )
+      }
+    ),
     /* @__PURE__ */ jsx(
       "div",
       {
@@ -249,7 +258,15 @@ var buttonClassName = ({ variant = "secondary" } = {}) => twMerge(
     tertiary: twMerge("bg-neutral-800 text-white focus:border-orange-500")
   }[variant]
 );
-var Button = ({ pending, variant, type, className, children, disabled, ...props }) => {
+var Button = ({
+  pending,
+  variant,
+  type,
+  className,
+  children,
+  disabled,
+  ...props
+}) => {
   return /* @__PURE__ */ jsx(
     "button",
     {
@@ -326,7 +343,10 @@ function ConnectWallet() {
   return /* @__PURE__ */ jsxs(
     "div",
     {
-      className: twMerge("flex flex-col gap-6 p-6", "animate-in animate-duration-300 fade-in slide-in-from-bottom-8"),
+      className: twMerge(
+        "flex flex-col gap-6 p-6",
+        "animate-in animate-duration-300 fade-in slide-in-from-bottom-8"
+      ),
       children: [
         /* @__PURE__ */ jsx("div", { className: "p-4", children: /* @__PURE__ */ jsx(AppInfo, {}) }),
         /* @__PURE__ */ jsx("div", { className: "self-center flex flex-col gap-2 w-60", children: porto ? /* @__PURE__ */ jsx(AccountButton, { connector: porto }) : /* @__PURE__ */ jsx(WalletButton, {}) })
@@ -395,7 +415,11 @@ function WalletButton() {
 var defaultClientConfig = {
   pollingInterval: 250
 };
-var unlimitedDelegationControlId = resourceToHex({ type: "system", namespace: "", name: "unlimited" });
+var unlimitedDelegationControlId = resourceToHex({
+  type: "system",
+  namespace: "",
+  name: "unlimited"
+});
 var worldTables = worldConfig.namespaces.world.tables;
 var worldAbi = parseAbi([
   "function registerDelegation(address delegatee, bytes32 delegationControlId, bytes initCallData)"
@@ -539,7 +563,9 @@ function getPrequisitesQueryOptions({
       } = await queryClient.fetchQuery(getSessionAccountQueryOptions({ client, userAddress }));
       const [funds, hasDelegation] = await Promise.all([
         queryClient.fetchQuery(getFundsQueryOptions({ queryClient, config, client, userAddress })),
-        queryClient.fetchQuery(getDelegationQueryOptions({ client, worldAddress, userAddress, sessionAddress }))
+        queryClient.fetchQuery(
+          getDelegationQueryOptions({ client, worldAddress, userAddress, sessionAddress })
+        )
       ]);
       const hasGasBalance = funds.sessionBalance == null || funds.sessionBalance > 0n;
       return {
@@ -575,7 +601,9 @@ function useENS(address) {
     enabled: !!normalizedAddress,
     queryKey: ["ens", normalizedAddress],
     queryFn: async () => {
-      const data = await fetch(`https://api.ensideas.com/ens/resolve/${normalizedAddress}`).then((res) => res.json());
+      const data = await fetch(`https://api.ensideas.com/ens/resolve/${normalizedAddress}`).then(
+        (res) => res.json()
+      );
       return {
         address: data.address ?? void 0,
         name: data.name ?? void 0,
@@ -786,7 +814,10 @@ function createFeeEstimator(client) {
   }
   return void 0;
 }
-function useSetupSession({ connector, userClient }) {
+function useSetupSession({
+  connector,
+  userClient
+}) {
   const queryClient = useQueryClient();
   const { chainId, worldAddress } = useEntryKitConfig();
   const client = useClient({ chainId });
@@ -899,7 +930,11 @@ function useSetupSession({ connector, userClient }) {
         if (!txs.length) return;
         console.log("waiting for", txs.length, "receipts");
         for (const hash of txs) {
-          const receipt = await getAction(client, waitForTransactionReceipt, "waitForTransactionReceipt")({ hash });
+          const receipt = await getAction(
+            client,
+            waitForTransactionReceipt,
+            "waitForTransactionReceipt"
+          )({ hash });
           console.log("got tx receipt", receipt);
           if (receipt.status === "reverted") {
             console.error("tx reverted?", receipt);
@@ -1017,7 +1052,13 @@ function useShowQueryError(result) {
   }, [error, refetch]);
   return result;
 }
-function Session({ isActive, isExpanded, connector, userClient, registerDelegation }) {
+function Session({
+  isActive,
+  isExpanded,
+  connector,
+  userClient,
+  registerDelegation
+}) {
   const sessionClient = useShowQueryError(useSessionClient(userClient.account.address));
   const setup = useShowMutationError(useSetupSession({ userClient, connector }));
   const hasSession = !registerDelegation;
@@ -1028,21 +1069,23 @@ function Session({ isActive, isExpanded, connector, userClient, registerDelegati
       if (isActive && setup.status === "idle" && sessionClient.data && !hasSession && hasGasBalance) ;
     });
     return () => clearTimeout(timer);
-  }, [
-    hasSession,
-    isActive,
-    registerDelegation,
-    sessionClient,
-    setup,
-    hasGasBalance
-  ]);
+  }, [hasSession, isActive, registerDelegation, sessionClient, setup, hasGasBalance]);
   return /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-4", children: [
     /* @__PURE__ */ jsxs("div", { className: "flex justify-between gap-4", children: [
       /* @__PURE__ */ jsxs("div", { children: [
         /* @__PURE__ */ jsx("div", { children: "Session" }),
         /* @__PURE__ */ jsx("div", { className: "font-mono text-white", children: hasSession ? "Enabled" : "Set up" })
       ] }),
-      hasSession ? /* @__PURE__ */ jsx(Button, { variant: "tertiary", className: "flex-shrink-0 text-sm p-1 w-28", autoFocus: isActive, disabled: true, children: "Enabled" }) : /* @__PURE__ */ jsx(
+      hasSession ? /* @__PURE__ */ jsx(
+        Button,
+        {
+          variant: "tertiary",
+          className: "flex-shrink-0 text-sm p-1 w-28",
+          autoFocus: isActive,
+          disabled: true,
+          children: "Enabled"
+        }
+      ) : /* @__PURE__ */ jsx(
         Button,
         {
           variant: isActive ? "primary" : "tertiary",
@@ -1094,286 +1137,6 @@ function Balance({ wei }) {
     /* @__PURE__ */ jsx(EthIcon, {})
   ] });
 }
-
-// src/data/relayChains.json
-var relayChains_default = {
-  "1": {
-    bridgeUrl: "https://relay.link/bridge/ethereum"
-  },
-  "10": {
-    bridgeUrl: "https://relay.link/bridge/optimism"
-  },
-  "56": {
-    bridgeUrl: "https://relay.link/bridge/bnb"
-  },
-  "100": {
-    bridgeUrl: "https://relay.link/bridge/gnosis"
-  },
-  "111": {
-    bridgeUrl: "https://testnets.relay.link/bridge/bob"
-  },
-  "130": {
-    bridgeUrl: "https://relay.link/bridge/unichain"
-  },
-  "137": {
-    bridgeUrl: "https://relay.link/bridge/polygon"
-  },
-  "146": {
-    bridgeUrl: "https://relay.link/bridge/sonic"
-  },
-  "185": {
-    bridgeUrl: "https://relay.link/bridge/mint"
-  },
-  "288": {
-    bridgeUrl: "https://relay.link/bridge/boba"
-  },
-  "324": {
-    bridgeUrl: "https://relay.link/bridge/zksync"
-  },
-  "360": {
-    bridgeUrl: "https://relay.link/bridge/shape"
-  },
-  "480": {
-    bridgeUrl: "https://relay.link/bridge/world-chain"
-  },
-  "690": {
-    bridgeUrl: "https://relay.link/bridge/redstone"
-  },
-  "747": {
-    bridgeUrl: "https://relay.link/bridge/flow-evm"
-  },
-  "919": {
-    bridgeUrl: "https://testnets.relay.link/bridge/mode-testnet"
-  },
-  "1101": {
-    bridgeUrl: "https://relay.link/bridge/polygon-zkevm"
-  },
-  "1135": {
-    bridgeUrl: "https://relay.link/bridge/lisk"
-  },
-  "1301": {
-    bridgeUrl: "https://testnets.relay.link/bridge/unichain-sepolia"
-  },
-  "1329": {
-    bridgeUrl: "https://relay.link/bridge/sei"
-  },
-  "1424": {
-    bridgeUrl: "https://relay.link/bridge/perennial"
-  },
-  "1514": {
-    bridgeUrl: "https://relay.link/bridge/story"
-  },
-  "1625": {
-    bridgeUrl: "https://relay.link/bridge/gravity"
-  },
-  "1868": {
-    bridgeUrl: "https://relay.link/bridge/soneium"
-  },
-  "1923": {
-    bridgeUrl: "https://relay.link/bridge/swellchain"
-  },
-  "1993": {
-    bridgeUrl: "https://testnets.relay.link/bridge/b3"
-  },
-  "1996": {
-    bridgeUrl: "https://relay.link/bridge/sanko"
-  },
-  "2187": {
-    bridgeUrl: "https://relay.link/bridge/game7"
-  },
-  "2741": {
-    bridgeUrl: "https://relay.link/bridge/abstract"
-  },
-  "2911": {
-    bridgeUrl: "https://relay.link/bridge/hychain"
-  },
-  "4202": {
-    bridgeUrl: "https://testnets.relay.link/bridge/lisk-sepolia"
-  },
-  "4321": {
-    bridgeUrl: "https://relay.link/bridge/echos"
-  },
-  "5000": {
-    bridgeUrl: "https://relay.link/bridge/mantle"
-  },
-  "5112": {
-    bridgeUrl: "https://relay.link/bridge/ham"
-  },
-  "7560": {
-    bridgeUrl: "https://relay.link/bridge/cyber"
-  },
-  "7865": {
-    bridgeUrl: "https://relay.link/bridge/powerloom"
-  },
-  "7897": {
-    bridgeUrl: "https://relay.link/bridge/arena-z"
-  },
-  "8333": {
-    bridgeUrl: "https://relay.link/bridge/B3"
-  },
-  "8453": {
-    bridgeUrl: "https://relay.link/bridge/base"
-  },
-  "9897": {
-    bridgeUrl: "https://testnets.relay.link/bridge/arena-z-testnet"
-  },
-  "11011": {
-    bridgeUrl: "https://testnets.relay.link/bridge/shape-sepolia"
-  },
-  "11124": {
-    bridgeUrl: "https://testnets.relay.link/bridge/abstract"
-  },
-  "13746": {
-    bridgeUrl: "https://testnets.relay.link/bridge/game7-testnet"
-  },
-  "17000": {
-    bridgeUrl: "https://testnets.relay.link/bridge/holesky"
-  },
-  "17069": {
-    bridgeUrl: "https://testnets.relay.link/bridge/garnet"
-  },
-  "17071": {
-    bridgeUrl: "https://relay.link/bridge/onchain-points"
-  },
-  "33139": {
-    bridgeUrl: "https://relay.link/bridge/apechain"
-  },
-  "33979": {
-    bridgeUrl: "https://relay.link/bridge/funki"
-  },
-  "34443": {
-    bridgeUrl: "https://relay.link/bridge/mode"
-  },
-  "42161": {
-    bridgeUrl: "https://relay.link/bridge/arbitrum"
-  },
-  "42170": {
-    bridgeUrl: "https://relay.link/bridge/arbitrum-nova"
-  },
-  "42220": {
-    bridgeUrl: "https://relay.link/bridge/celo"
-  },
-  "43114": {
-    bridgeUrl: "https://relay.link/bridge/avalanche"
-  },
-  "55244": {
-    bridgeUrl: "https://relay.link/bridge/superposition"
-  },
-  "57073": {
-    bridgeUrl: "https://relay.link/bridge/ink"
-  },
-  "59144": {
-    bridgeUrl: "https://relay.link/bridge/linea"
-  },
-  "60808": {
-    bridgeUrl: "https://relay.link/bridge/bob"
-  },
-  "70700": {
-    bridgeUrl: "https://relay.link/bridge/apex"
-  },
-  "70701": {
-    bridgeUrl: "https://relay.link/bridge/boss"
-  },
-  "70800": {
-    bridgeUrl: "https://testnets.relay.link/bridge/apex-testnet"
-  },
-  "70805": {
-    bridgeUrl: "https://testnets.relay.link/bridge/cloud"
-  },
-  "80002": {
-    bridgeUrl: "https://testnets.relay.link/bridge/amoy"
-  },
-  "80094": {
-    bridgeUrl: "https://relay.link/bridge/berachain"
-  },
-  "81457": {
-    bridgeUrl: "https://relay.link/bridge/blast"
-  },
-  "84532": {
-    bridgeUrl: "https://testnets.relay.link/bridge/base-sepolia"
-  },
-  "167000": {
-    bridgeUrl: "https://relay.link/bridge/taiko"
-  },
-  "167009": {
-    bridgeUrl: "https://testnets.relay.link/bridge/hekla"
-  },
-  "421614": {
-    bridgeUrl: "https://testnets.relay.link/bridge/arbitrum-sepolia"
-  },
-  "534352": {
-    bridgeUrl: "https://relay.link/bridge/scroll"
-  },
-  "543210": {
-    bridgeUrl: "https://relay.link/bridge/zero-network"
-  },
-  "660279": {
-    bridgeUrl: "https://relay.link/bridge/xai"
-  },
-  "695569": {
-    bridgeUrl: "https://testnets.relay.link/bridge/pyrope"
-  },
-  "911867": {
-    bridgeUrl: "https://testnets.relay.link/bridge/odyssey"
-  },
-  "984122": {
-    bridgeUrl: "https://relay.link/bridge/forma"
-  },
-  "1118190": {
-    bridgeUrl: "https://testnets.relay.link/bridge/eclipse-testnet"
-  },
-  "3397901": {
-    bridgeUrl: "https://testnets.relay.link/bridge/funki-testnet"
-  },
-  "3441006": {
-    bridgeUrl: "https://testnets.relay.link/bridge/manta-pacific-testnet"
-  },
-  "4457845": {
-    bridgeUrl: "https://testnets.relay.link/bridge/zero-sepolia"
-  },
-  "7777777": {
-    bridgeUrl: "https://relay.link/bridge/zora"
-  },
-  "8253038": {
-    bridgeUrl: "https://relay.link/bridge/bitcoin"
-  },
-  "9092725": {
-    bridgeUrl: "https://testnets.relay.link/bridge/bitcoin-testnet4"
-  },
-  "9286185": {
-    bridgeUrl: "https://relay.link/bridge/eclipse"
-  },
-  "11155111": {
-    bridgeUrl: "https://testnets.relay.link/bridge/sepolia"
-  },
-  "11155420": {
-    bridgeUrl: "https://testnets.relay.link/bridge/op-sepolia"
-  },
-  "666666666": {
-    bridgeUrl: "https://relay.link/bridge/degen"
-  },
-  "792703809": {
-    bridgeUrl: "https://relay.link/bridge/solana"
-  },
-  "845320008": {
-    bridgeUrl: "https://testnets.relay.link/bridge/lordchain-testnet"
-  },
-  "888888888": {
-    bridgeUrl: "https://relay.link/bridge/ancient8"
-  },
-  "999999999": {
-    bridgeUrl: "https://testnets.relay.link/bridge/zora-sepolia"
-  },
-  "1380012617": {
-    bridgeUrl: "https://relay.link/bridge/rari"
-  },
-  "1936682084": {
-    bridgeUrl: "https://testnets.relay.link/bridge/solana-devnet"
-  },
-  "88153591557": {
-    bridgeUrl: "https://testnets.relay.link/bridge/arbitrum-blueberry"
-  }
-};
 function useSetBalance() {
   const queryClient = useQueryClient();
   const { chainId } = useEntryKitConfig();
@@ -1447,7 +1210,6 @@ function GasBalance({ isActive, isExpanded, sessionAddress }) {
   const prevBalance = usePrevious(balance.data);
   useWatchBlockNumber({ onBlockNumber: () => balance.refetch() });
   const setBalance2 = useShowMutationError(useSetBalance());
-  const relayChain = relayChains_default[chain.id];
   const handleCopy = () => {
     navigator.clipboard.writeText(sessionAddress);
     setCopied(true);
@@ -1478,26 +1240,6 @@ function GasBalance({ isActive, isExpanded, sessionAddress }) {
           }),
           children: "Top up"
         }
-      ) : relayChain != null ? (
-        // TODO: convert this to a <ButtonLink>
-        /* @__PURE__ */ jsx(
-          "a",
-          {
-            href: `${relayChain.bridgeUrl}?${new URLSearchParams({ toAddress: sessionAddress, amount: "0.01" })}`,
-            target: "_blank",
-            rel: "noopener noreferrer",
-            children: /* @__PURE__ */ jsx(
-              Button,
-              {
-                variant: isActive ? "primary" : "tertiary",
-                className: "flex-shrink-0 text-sm p-1 w-28",
-                autoFocus: isActive || isExpanded,
-                pending: balance.status === "pending",
-                children: "Top up"
-              }
-            )
-          }
-        )
       ) : null
     ] }),
     isExpanded ? /* @__PURE__ */ jsxs(Fragment, { children: [
@@ -1592,15 +1334,7 @@ function ConnectedSteps({ connector, userClient, initialUserAddress }) {
       )
     });
     return steps2;
-  }, [
-    hasDelegation,
-    hasGasBalance,
-    paymaster,
-    sessionAddress,
-    userAddress,
-    userClient,
-    connector
-  ]);
+  }, [hasDelegation, hasGasBalance, paymaster, sessionAddress, userAddress, userClient, connector]);
   const [selectedStepId] = useState(null);
   const nextStep = steps.find((step) => step.content != null && !step.isComplete);
   const completedSteps = steps.filter((step) => step.isComplete);
@@ -1631,7 +1365,23 @@ function ConnectedSteps({ connector, userClient, initialUserAddress }) {
           }
           return null;
         }
-        return /* @__PURE__ */ jsx("div", { className: twMerge("py-8 flex flex-col justify-center", isActive ? "flex-grow" : null), children: /* @__PURE__ */ jsx("div", { className: twMerge("flex flex-col", isDisabled ? "opacity-30 pointer-events-none" : null), children: content }) }, step.id);
+        return /* @__PURE__ */ jsx(
+          "div",
+          {
+            className: twMerge("py-8 flex flex-col justify-center", isActive ? "flex-grow" : null),
+            children: /* @__PURE__ */ jsx(
+              "div",
+              {
+                className: twMerge(
+                  "flex flex-col",
+                  isDisabled ? "opacity-30 pointer-events-none" : null
+                ),
+                children: content
+              }
+            )
+          },
+          step.id
+        );
       })
     }
   );
@@ -1862,7 +1612,11 @@ function AccountButton2() {
     "button",
     {
       type: "button",
-      className: twMerge(containerClassNames, secondaryClassNames, secondaryInteractiveClassNames),
+      className: twMerge(
+        containerClassNames,
+        secondaryClassNames,
+        secondaryInteractiveClassNames
+      ),
       onClick: openAccountModal,
       children: /* @__PURE__ */ jsx("span", { className: "flex-grow inline-flex gap-2.5 items-center text-left font-medium", children: userAddress ? /* @__PURE__ */ jsx(AccountName, { address: userAddress }) : null })
     },
@@ -2133,9 +1887,11 @@ function walletConnect(parameters) {
           let blockExplorerUrls;
           if (addEthereumChainParameter?.blockExplorerUrls)
             blockExplorerUrls = addEthereumChainParameter.blockExplorerUrls;
-          else blockExplorerUrls = chain.blockExplorers?.default.url ? [chain.blockExplorers?.default.url] : [];
+          else
+            blockExplorerUrls = chain.blockExplorers?.default.url ? [chain.blockExplorers?.default.url] : [];
           let rpcUrls;
-          if (addEthereumChainParameter?.rpcUrls?.length) rpcUrls = addEthereumChainParameter.rpcUrls;
+          if (addEthereumChainParameter?.rpcUrls?.length)
+            rpcUrls = addEthereumChainParameter.rpcUrls;
           else rpcUrls = [...chain.rpcUrls.default.http];
           const addEthereumChain = {
             blockExplorerUrls,
@@ -2229,7 +1985,8 @@ function walletConnect(parameters) {
       if (!isNewChainsStale) return false;
       const connectorChains = config.chains.map((x) => x.id);
       const namespaceChains = this.getNamespaceChainsIds();
-      if (namespaceChains.length && !namespaceChains.some((id) => connectorChains.includes(id))) return false;
+      if (namespaceChains.length && !namespaceChains.some((id) => connectorChains.includes(id)))
+        return false;
       const requestedChains = await this.getRequestedChainsIds();
       return !connectorChains.every((id) => requestedChains.includes(id));
     },
@@ -2246,7 +2003,9 @@ function extractRpcUrls(parameters) {
   const fallbackUrl = chain.rpcUrls.default.http[0];
   if (!parameters.transports) return [fallbackUrl];
   const transport = parameters.transports?.[chain.id]?.({ chain });
-  const transports = transport?.value?.transports || [transport];
+  const transports = transport?.value?.transports || [
+    transport
+  ];
   return transports.map(({ value }) => value?.url || fallbackUrl);
 }
 
@@ -2306,7 +2065,9 @@ async function internal_validateSigner({
     functionName: "owner"
   });
   if (ownerAddress.toLowerCase() !== signerAddress.toLowerCase()) {
-    throw new Error(`Session account owner (${ownerAddress}) does not match message signer (${signerAddress}).`);
+    throw new Error(
+      `Session account owner (${ownerAddress}) does not match message signer (${signerAddress}).`
+    );
   }
   const hasDelegation = await getDelegation({
     client,
@@ -2316,7 +2077,9 @@ async function internal_validateSigner({
     blockTag: "latest"
   });
   if (!hasDelegation) {
-    throw new Error(`Session account (${sessionAddress}) does not have delegation for user account (${userAddress}).`);
+    throw new Error(
+      `Session account (${sessionAddress}) does not have delegation for user account (${userAddress}).`
+    );
   }
 }
 var simpleAccountAbi = [

@@ -6,9 +6,8 @@ import { Button } from "../ui/Button"
 import { Balance } from "../ui/Balance"
 import { useBalance, useWatchBlockNumber } from "wagmi"
 import { useEntryKitConfig } from "../EntryKitConfigProvider"
-import relayChains from "../data/relayChains.json"
 import { useSetBalance } from "./useSetBalance"
-import { RelayChains, StepContentProps } from "./common"
+import { StepContentProps } from "./common"
 import { TruncatedHex } from "../ui/TruncatedHex"
 import { useShowMutationError } from "../errors/useShowMutationError"
 import { useShowQueryError } from "../errors/useShowQueryError"
@@ -30,7 +29,6 @@ export function GasBalance({ isActive, isExpanded, sessionAddress }: Props) {
   useWatchBlockNumber({ onBlockNumber: () => balance.refetch() })
 
   const setBalance = useShowMutationError(useSetBalance())
-  const relayChain = (relayChains as RelayChains)[chain.id]
 
   const handleCopy = () => {
     navigator.clipboard.writeText(sessionAddress)
@@ -75,22 +73,6 @@ export function GasBalance({ isActive, isExpanded, sessionAddress }: Props) {
           >
             Top up
           </Button>
-        ) : relayChain != null ? (
-          // TODO: convert this to a <ButtonLink>
-          <a
-            href={`${relayChain.bridgeUrl}?${new URLSearchParams({ toAddress: sessionAddress, amount: "0.01" })}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Button
-              variant={isActive ? "primary" : "tertiary"}
-              className="flex-shrink-0 text-sm p-1 w-28"
-              autoFocus={isActive || isExpanded}
-              pending={balance.status === "pending"}
-            >
-              Top up
-            </Button>
-          </a>
         ) : null}
       </div>
       {isExpanded ? (
