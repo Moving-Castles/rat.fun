@@ -1,6 +1,6 @@
 import { Address, Client } from "viem"
 import { readContract } from "viem/actions"
-import { getDelegation } from "./onboarding/getDelegation"
+import { checkDelegation } from "./delegation/checkDelegation"
 
 /**
  * @internal
@@ -30,7 +30,7 @@ export async function internal_validateSigner({
     )
   }
 
-  const hasDelegation = await getDelegation({
+  const hasDelegation = await checkDelegation({
     client,
     worldAddress,
     sessionAddress,

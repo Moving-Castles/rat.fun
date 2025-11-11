@@ -11,19 +11,9 @@
   "license": "MIT",
   "type": "module",
   "exports": {
-    ".": "./dist/tsup/exports/index.js",
-    "./internal": "./dist/tsup/exports/internal.js"
+    ".": "./dist/index.js"
   },
-  "typesVersions": {
-    "*": {
-      "index": [
-        "./dist/tsup/exports/index.d.ts"
-      ],
-      "internal": [
-        "./dist/tsup/exports/internal.d.ts"
-      ]
-    }
-  },
+  "types": "./dist/index.d.ts",
   "bin": {
     "entrykit-deploy": "./bin/deploy.js"
   },
@@ -42,53 +32,26 @@
   },
   "dependencies": {
     "@account-abstraction/contracts": "^0.7.0",
-    "@ark/util": "0.2.2",
     "@latticexyz/common": "2.2.23",
-    "@latticexyz/config": "2.2.23",
     "@latticexyz/paymaster": "2.2.23",
-    "@latticexyz/protocol-parser": "2.2.23",
     "@latticexyz/store": "2.2.23",
     "@latticexyz/world": "2.2.23",
     "@latticexyz/world-module-callwithsignature": "2.2.23",
-    "@radix-ui/react-dialog": "^1.0.5",
-    "@radix-ui/react-select": "^1.0.5",
-    "connectkit": "^1.9.0",
     "debug": "^4.3.4",
     "dotenv": "^16.0.3",
-    "permissionless": "0.2.30",
-    "react-error-boundary": "5.0.0",
-    "react-merge-refs": "^2.1.1",
-    "tailwind-merge": "^1.12.0",
-    "usehooks-ts": "^3.1.0",
-    "zustand": "^4.5.2"
+    "permissionless": "0.2.30"
   },
   "devDependencies": {
-    "@tanstack/react-query": "^5.56.2",
     "@types/debug": "^4.1.7",
-    "@types/react": "^19.2.2",
-    "@types/react-dom": "^19.2.2",
-    "@types/ws": "^8.5.4",
-    "@vitejs/plugin-react": "^4.3.1",
-    "autoprefixer": "^10.4.20",
-    "eslint-plugin-react": "7.31.11",
-    "eslint-plugin-react-hooks": "4.6.0",
-    "postcss": "^8.4.47",
-    "react": "19.2.0",
-    "react-dom": "19.2.0",
+    "@types/node": "^22.0.0",
     "shx": "^0.4.0",
-    "tailwindcss": "^3.4.13",
     "tsup": "^8.0.0",
     "tsx": "^4.0.0",
     "typescript": "^5.9.3",
-    "viem": "2.38.6",
-    "wagmi": "2.19.2"
+    "viem": "2.38.6"
   },
   "peerDependencies": {
-    "@tanstack/react-query": "5.x",
-    "react": "18.x || 19.x",
-    "react-dom": "18.x || 19.x",
-    "viem": "2.38.6",
-    "wagmi": "2.19.2"
+    "viem": "2.x"
   },
   "publishConfig": {
     "access": "public"
