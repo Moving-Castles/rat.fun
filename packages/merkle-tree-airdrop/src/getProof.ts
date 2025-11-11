@@ -1,8 +1,6 @@
-import fs from "node:fs/promises"
 import { StandardMerkleTree } from "@openzeppelin/merkle-tree"
-import { StandardMerkleTreeData } from "@openzeppelin/merkle-tree/dist/standard"
 import { Hex } from "viem"
-import { merkleTreeJsonOutputFile } from "./constants"
+import merkleTree from "../static/tree.json" with { type: "json" }
 
 export interface GetProofReturnType {
   value: bigint,
@@ -16,12 +14,12 @@ export interface GetProofReturnType {
 export async function getProof(account: Hex) {
   return await getProofFromJson(
     account,
-    JSON.parse(await fs.readFile(merkleTreeJsonOutputFile, "utf8"))
+    merkleTree
   )
 }
 
-export async function getProofFromJson(account: Hex, data: StandardMerkleTreeData<[Hex, string]>): Promise<GetProofReturnType | null> {
-  const tree = StandardMerkleTree.load<[Hex, string]>(data)
+export async function getProofFromJson(account: Hex, data: Record<string, unknown>): Promise<GetProofReturnType | null> {
+  const tree = StandardMerkleTree.load<[Hex, string]>(data as never)
 
   for (const [i, v] of tree.entries()) {
     if (v[0] === account.toLowerCase()) {
