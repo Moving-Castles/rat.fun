@@ -1,10 +1,11 @@
 {
-  "name": "@dk1a/entrykit-fork",
-  "version": "2.2.22-d3ec59d514cd685b08f2d9940735a93f97235a15",
+  "name": "@latticexyz/entrykit",
+  "version": "2.2.23-local",
   "description": "User onboarding flows for MUD apps",
+  "private": true,
   "repository": {
     "type": "git",
-    "url": "https://github.com/latticexyz/mud.git",
+    "url": "https://github.com/Moving-Castles/rat.fun.git",
     "directory": "packages/entrykit"
   },
   "license": "MIT",
@@ -45,14 +46,14 @@
   "dependencies": {
     "@account-abstraction/contracts": "^0.7.0",
     "@ark/util": "0.2.2",
-    "@latticexyz/common": "workspace:*",
-    "@latticexyz/config": "workspace:*",
-    "@latticexyz/id.place": "workspace:*",
-    "@latticexyz/paymaster": "workspace:*",
-    "@latticexyz/protocol-parser": "workspace:*",
-    "@latticexyz/store": "workspace:*",
-    "@latticexyz/world": "workspace:*",
-    "@latticexyz/world-module-callwithsignature": "workspace:*",
+    "@latticexyz/common": "2.2.23",
+    "@latticexyz/config": "2.2.23",
+    "@latticexyz/id.place": "2.2.23",
+    "@latticexyz/paymaster": "2.2.23",
+    "@latticexyz/protocol-parser": "2.2.23",
+    "@latticexyz/store": "2.2.23",
+    "@latticexyz/world": "2.2.23",
+    "@latticexyz/world-module-callwithsignature": "2.2.23",
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-select": "^1.0.5",
     "@reservoir0x/relay-sdk": "^1.7.0",
@@ -71,8 +72,8 @@
   "devDependencies": {
     "@tanstack/react-query": "^5.56.2",
     "@types/debug": "^4.1.7",
-    "@types/react": "18.2.22",
-    "@types/react-dom": "18.2.7",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
     "@types/ws": "^8.5.4",
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.20",
@@ -80,21 +81,25 @@
     "eslint-plugin-react-hooks": "4.6.0",
     "mprocs": "^0.7.3",
     "postcss": "^8.4.47",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "shx": "^0.4.0",
     "tailwindcss": "^3.4.13",
-    "viem": "2.35.1",
+    "tsup": "^8.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.9.3",
+    "viem": "2.38.6",
     "vite": "^5.4.1",
     "vite-plugin-dts": "^4.2.4",
     "vite-plugin-externalize-deps": "^0.8.0",
-    "wagmi": "2.16.5"
+    "wagmi": "2.19.2"
   },
   "peerDependencies": {
     "@tanstack/react-query": "5.x",
     "react": "18.x || 19.x",
     "react-dom": "18.x || 19.x",
-    "viem": "2.x",
-    "wagmi": "2.x"
+    "viem": "2.38.6",
+    "wagmi": "2.19.2"
   },
   "publishConfig": {
     "access": "public"
