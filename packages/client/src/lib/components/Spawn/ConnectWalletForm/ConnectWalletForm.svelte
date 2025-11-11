@@ -2,8 +2,8 @@
   import { WALLET_TYPE } from "$lib/mud/enums"
   import { onMount } from "svelte"
   import gsap from "gsap"
-  import { sessionClient, isSessionReady, entrykit, wagmiConfig } from "$lib/modules/entry-kit"
-  import { connect, getConnectors, getAccount } from "@wagmi/core"
+  import { sessionClient, isSessionReady, wagmiConfig } from "$lib/modules/entry-kit"
+  import { connect, getConnectors } from "@wagmi/core"
   import { get } from "svelte/store"
   import BigButton from "$lib/components/Shared/Buttons/BigButton.svelte"
 
@@ -85,7 +85,11 @@
     {#if walletType === WALLET_TYPE.ENTRYKIT}
       <div class="button-container" bind:this={buttonElement}>
         {#if connecting || settingUp}
-          <BigButton text={connecting ? "Connecting..." : "Setting up..."} disabled={true} />
+          <BigButton
+            text={connecting ? "Connecting..." : "Setting up..."}
+            disabled={true}
+            onclick={() => {}}
+          />
         {:else}
           <BigButton text="Connect wallet" onclick={openWalletSelect} />
         {/if}

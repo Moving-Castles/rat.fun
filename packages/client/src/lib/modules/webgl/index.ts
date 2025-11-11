@@ -66,15 +66,15 @@ export class WebGLGeneralRenderer implements WebGLRenderer {
         activeContextCount++
       }
       activeContexts.set(canvas, this.gl)
-      console.log(
-        `%c[WebGL] Context ${existingContext ? "reused" : "created"}: ${activeContextCount} active (${totalContextsCreated} total created)`,
-        "color: #4CAF50; font-weight: bold"
-      )
+      // console.log(
+      //   `%c[WebGL] Context ${existingContext ? "reused" : "created"}: ${activeContextCount} active (${totalContextsCreated} total created)`,
+      //   "color: #4CAF50; font-weight: bold"
+      // )
     } else {
-      console.log(
-        `%c[WebGL] Context reused from same canvas: ${activeContextCount} active`,
-        "color: #9C27B0; font-weight: bold"
-      )
+      // console.log(
+      //   `%c[WebGL] Context reused from same canvas: ${activeContextCount} active`,
+      //   "color: #9C27B0; font-weight: bold"
+      // )
     }
   }
 

@@ -7,6 +7,7 @@
   import { typeHit } from "$lib/modules/sound"
   import { InputValidationError } from "$lib/modules/error-handling/errors"
   import { waitForPropertyChangeFrom } from "$lib/modules/state/utils"
+  import { isSessionReady, sessionClient } from "$lib/modules/entry-kit"
 
   import { BigButton, Mascot, SmallSpinner } from "$lib/components/Shared"
 
@@ -25,6 +26,12 @@
   const timeline = gsap.timeline()
 
   async function submitForm() {
+    // Check if session is ready before allowing spawn
+    if (!$sessionClient || !$isSessionReady) {
+      console.warn("Session not ready yet, cannot spawn")
+      return
+    }
+
     busy = true
     try {
       // Validate name is not empty
@@ -37,6 +44,7 @@
         throw new InputValidationError("Name is too long (maximum 50 characters)", "name", name)
       }
 
+      console.log("Spawning with session:", $sessionClient.account.address)
       await sendSpawn(name)
       await waitForPropertyChangeFrom(player, "name", undefined, 10000)
       onComplete(name)
@@ -134,7 +142,11 @@
           }}
         />
         <div class="button-container">
-          <BigButton text="SIGN" onclick={submitForm} disabled={!name} />
+          <BigButton
+            text={!$isSessionReady ? "Setting up..." : "SIGN"}
+            onclick={submitForm}
+            disabled={!name || !$sessionClient || !$isSessionReady}
+          />
         </div>
       </div>
     {/if}
