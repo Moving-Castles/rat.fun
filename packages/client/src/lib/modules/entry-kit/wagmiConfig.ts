@@ -30,17 +30,18 @@ export function wagmiConfig(chainId: number) {
 
   console.log("hasExtensionSupport()", hasExtensionSupport())
 
-  // If browser supports extensions, leave connectors empty to allow auto-detection
-  // If browser does not seem to support extensions (mobile), add specific connectors
+  // Always include injected connector - it auto-detects all browser extension wallets
+  // (MetaMask, Rainbow, Brave Wallet, etc.)
+  connectors.push(injected())
+
+  // On mobile or non-extension environments, add additional connectors
   if (!hasExtensionSupport()) {
     connectors.push(
       coinbaseWallet({
         appName,
         overrideIsMetaMask: false
       }),
-      metaMask(),
-      walletConnect({ projectId: PUBLIC_WALLET_CONNECT_PROJECT_ID }),
-      injected()
+      walletConnect({ projectId: PUBLIC_WALLET_CONNECT_PROJECT_ID })
     )
   }
 

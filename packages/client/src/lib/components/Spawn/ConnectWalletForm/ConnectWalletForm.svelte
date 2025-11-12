@@ -16,8 +16,29 @@
   let showWalletSelect = $state(false)
   let connecting = $state(false)
   let settingUp = $state(false)
+  let availableConnectors = $state<Array<{ id: string; name: string }>>([])
 
   const timeline = gsap.timeline()
+
+  // Preferred wallet order (case-insensitive matching)
+  const PREFERRED_WALLET_ORDER = ["metamask", "phantom", "rabby", "coinbase"]
+
+  /**
+   * Get the sort priority for a connector based on preferred order
+   * Returns index in preferred list, or high number if not in list
+   */
+  function getWalletPriority(connector: { id: string; name: string }): number {
+    const searchTerm = `${connector.id} ${connector.name}`.toLowerCase()
+
+    for (let i = 0; i < PREFERRED_WALLET_ORDER.length; i++) {
+      if (searchTerm.includes(PREFERRED_WALLET_ORDER[i])) {
+        return i
+      }
+    }
+
+    // Not in preferred list, send to bottom
+    return 9999
+  }
 
   // Watch for session to become ready
   $effect(() => {
@@ -28,24 +49,20 @@
     }
   })
 
-  async function connectWallet(connectorId?: string) {
+  async function connectWallet(connectorId: string) {
     console.log("connectWallet", connectorId)
     const config = get(wagmiConfig)
     if (!config) return
 
-    console.log("config", config)
-
     try {
       connecting = true
 
-      // If no connector specified, try to auto-detect injected wallet
+      // Find the connector by ID
       const connectors = getConnectors(config)
-      const connector = connectorId
-        ? connectors.find(c => c.id === connectorId)
-        : connectors.find(c => c.type === "injected")
+      const connector = connectors.find(c => c.id === connectorId)
 
       if (!connector) {
-        console.error("No wallet connector found")
+        console.error("Connector not found:", connectorId)
         return
       }
 
@@ -62,6 +79,20 @@
   }
 
   function openWalletSelect() {
+    // Get available connectors when opening the modal
+    const config = get(wagmiConfig)
+    if (config) {
+      const connectors = getConnectors(config)
+      // Filter out the generic "Injected" connector - only show specific wallets
+      availableConnectors = connectors
+        .filter(c => c.id !== "injected" && c.name !== "Injected")
+        .map(c => ({
+          id: c.id,
+          name: c.name
+        }))
+        .sort((a, b) => getWalletPriority(a) - getWalletPriority(b))
+      console.log("Available connectors:", availableConnectors)
+    }
     showWalletSelect = true
   }
 
@@ -105,30 +136,19 @@
             <button class="close-btn" onclick={() => (showWalletSelect = false)}>×</button>
             <h2>Connect Wallet</h2>
             <div class="wallet-options">
-              <button
-                class="wallet-option"
-                onclick={() => connectWallet("io.metamask")}
-                disabled={connecting}
-              >
-                MetaMask
-              </button>
-              <button
-                class="wallet-option"
-                onclick={() => connectWallet("com.coinbase.wallet")}
-                disabled={connecting}
-              >
-                Coinbase Wallet
-              </button>
-              <button
-                class="wallet-option"
-                onclick={() => connectWallet("walletConnect")}
-                disabled={connecting}
-              >
-                WalletConnect
-              </button>
-              <button class="wallet-option" onclick={() => connectWallet()} disabled={connecting}>
-                Browser Wallet
-              </button>
+              {#if availableConnectors.length > 0}
+                {#each availableConnectors as connector}
+                  <button
+                    class="wallet-option"
+                    onclick={() => connectWallet(connector.id)}
+                    disabled={connecting}
+                  >
+                    {connector.name}
+                  </button>
+                {/each}
+              {:else}
+                <p class="no-wallets">No wallet connectors available</p>
+              {/if}
             </div>
           </div>
         </div>
@@ -214,6 +234,13 @@
         display: flex;
         flex-direction: column;
         gap: 12px;
+
+        .no-wallets {
+          text-align: center;
+          color: var(--foreground);
+          margin: 16px 0;
+          opacity: 0.7;
+        }
 
         .wallet-option {
           background: transparent;
