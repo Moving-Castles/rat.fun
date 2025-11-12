@@ -1,4 +1,4 @@
-import { Hex, encodeFunctionData, zeroAddress, Client } from "viem"
+import { Hex, encodeFunctionData, zeroAddress } from "viem"
 import { sendUserOperation, waitForUserOperationReceipt } from "viem/account-abstraction"
 import { waitForTransactionReceipt } from "viem/actions"
 import { getAction } from "viem/utils"
