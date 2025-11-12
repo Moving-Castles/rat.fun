@@ -29,8 +29,11 @@
   })
 
   async function connectWallet(connectorId?: string) {
+    console.log("connectWallet", connectorId)
     const config = get(wagmiConfig)
     if (!config) return
+
+    console.log("config", config)
 
     try {
       connecting = true

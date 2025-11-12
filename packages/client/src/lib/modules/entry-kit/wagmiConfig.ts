@@ -1,5 +1,5 @@
 import { Chain, http } from "viem"
-import { createConfig, CreateConnectorFn } from "wagmi"
+import { createConfig, createStorage, CreateConnectorFn } from "wagmi"
 import { coinbaseWallet, injected, safe, metaMask, walletConnect } from "wagmi/connectors"
 import {
   extendedBase,
@@ -28,6 +28,8 @@ export function wagmiConfig(chainId: number) {
   // Build connectors list
   const connectors: CreateConnectorFn[] = []
 
+  console.log("hasExtensionSupport()", hasExtensionSupport())
+
   // If browser supports extensions, leave connectors empty to allow auto-detection
   // If browser does not seem to support extensions (mobile), add specific connectors
   if (!hasExtensionSupport()) {
@@ -52,10 +54,15 @@ export function wagmiConfig(chainId: number) {
     )
   }
 
+  console.log("connectors", connectors)
+
   return createConfig({
     chains: [chain],
     transports,
     connectors,
-    pollingInterval: extendedBaseSepolia.id === chainId ? 2000 : undefined
+    pollingInterval: extendedBaseSepolia.id === chainId ? 2000 : undefined,
+    storage: createStorage({
+      storage: typeof window !== "undefined" ? window.localStorage : undefined
+    })
   })
 }

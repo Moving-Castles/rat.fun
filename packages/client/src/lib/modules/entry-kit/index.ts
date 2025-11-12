@@ -2,6 +2,7 @@ import { EntryKit } from "entrykit-drawbridge"
 import { readable, derived, writable } from "svelte/store"
 import { paymasters } from "./paymasters"
 import { wagmiConfig as createWagmiConfig } from "./wagmiConfig"
+import { reconnect } from "@wagmi/core"
 import type { Hex, Address } from "viem"
 import type { Config } from "wagmi"
 import type { NetworkConfig } from "$lib/mud/utils"
@@ -40,7 +41,13 @@ export function initializeEntryKit(networkConfig: NetworkConfig) {
   })
 
   // Update wagmi config
-  wagmiConfig.set(createWagmiConfig(networkConfig.chainId))
+  const config = createWagmiConfig(networkConfig.chainId)
+  wagmiConfig.set(config)
+
+  // Reconnect to previously connected wallet if available
+  reconnect(config).catch(error => {
+    console.log("[EntryKit] No previous connection to restore:", error.message)
+  })
 
   return entrykitInstance
 }
