@@ -1,4 +1,4 @@
-import { EntryKit } from "entrykit-drawbridge"
+import { EntryKit, type SessionClient } from "entrykit-drawbridge"
 import { readable, derived } from "svelte/store"
 import { paymasters } from "./paymasters"
 import { chains, transports, getConnectors } from "./wagmiConfig"
@@ -6,19 +6,13 @@ import type { Hex, Address } from "viem"
 import type { NetworkConfig } from "$lib/mud/utils"
 
 // Re-export types from package
-export type { ConnectorInfo } from "entrykit-drawbridge"
+export type { ConnectorInfo, SessionClient } from "entrykit-drawbridge"
 
 type EntryKitState = {
-  sessionClient: SessionClientLike | null
+  sessionClient: SessionClient | null
   userAddress: Address | null
   sessionAddress: Address | null
   isReady: boolean
-}
-
-type SessionClientLike = {
-  account: {
-    address: Address
-  }
 }
 
 // EntryKit instance (singleton)
@@ -106,7 +100,7 @@ export const entrykitState = readable<EntryKitState>(
 )
 
 // Convenience stores
-export const sessionClient = derived<typeof entrykitState, SessionClientLike | null>(
+export const sessionClient = derived<typeof entrykitState, SessionClient | null>(
   entrykitState,
   $state => $state?.sessionClient ?? null
 )

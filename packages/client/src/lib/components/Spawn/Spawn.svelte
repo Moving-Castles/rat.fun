@@ -15,7 +15,7 @@
   import { setupWalletNetwork } from "$lib/mud/setupWalletNetwork"
   import { setupBurnerWalletNetwork } from "$lib/mud/setupBurnerWalletNetwork"
   import { initWalletNetwork } from "$lib/initWalletNetwork"
-  import { sessionClient as entryKitSession, isSessionReady } from "$lib/modules/entry-kit"
+  import { sessionClient, isSessionReady } from "$lib/modules/entry-kit"
   import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
   import { backgroundMusic } from "$lib/modules/sound/stores"
 
@@ -70,10 +70,10 @@
   // Listen to changes in entrykit session
   $effect(() => {
     // Only proceed if we have a session client
-    if (!$entryKitSession) return
+    if (!$sessionClient) return
 
     // Check if we have the necessary client properties
-    if (!$entryKitSession?.account?.client || !$entryKitSession.userAddress) return
+    if (!$sessionClient?.account?.client || !$sessionClient.userAddress) return
 
     console.log("[Spawn] EntryKit session detected", {
       isSessionReady: $isSessionReady,
@@ -82,8 +82,8 @@
 
     // If session is ready - setup wallet and check if spawned
     if ($isSessionReady) {
-      const wallet = setupWalletNetwork($publicNetwork, $entryKitSession)
-      const isSpawned = initWalletNetwork(wallet, $entryKitSession.userAddress, walletType)
+      const wallet = setupWalletNetwork($publicNetwork, $sessionClient)
+      const isSpawned = initWalletNetwork(wallet, $sessionClient.userAddress, walletType)
 
       if (isSpawned) {
         console.log("[Spawn] Already spawned, completing spawn flow")

@@ -8,19 +8,6 @@
   import { Admin } from "$lib/components/Admin"
 
   let { children }: { children?: any } = $props()
-
-  // Redirect to game route if player is not authorized to view admin page
-  // $effect(() => {
-  //   if ($player) {
-  //     if (!$player.masterKey) {
-  //       if (page.route.id === "/(main)/cashboard/[tripId]") {
-  //         goto(`/${page.params.tripId}`)
-  //       } else {
-  //         goto("/")
-  //       }
-  //     }
-  //   }
-  // })
 </script>
 
 <SEO prependTitle="ADMIN" />
