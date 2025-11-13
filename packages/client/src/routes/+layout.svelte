@@ -23,7 +23,7 @@
     environment as environmentStore,
     walletType as walletTypeStore
   } from "$lib/modules/network"
-  import { initializeEntryKit, cleanupEntryKit } from "$lib/modules/entry-kit"
+  import { initializeEntryKit, cleanupEntryKit, userAddress } from "$lib/modules/entry-kit"
   import { getNetworkConfig } from "$lib/mud/getNetworkConfig"
 
   // Components
@@ -62,6 +62,21 @@
   const spawned = () => {
     UIState.set(UI.READY)
   }
+
+  // Detect wallet disconnection and navigate back to spawn
+  $effect(() => {
+    // Only monitor disconnections for EntryKit wallet type
+    if ($walletTypeStore !== WALLET_TYPE.ENTRYKIT) return
+
+    // Only act when in READY state (not during initial load or spawn flow)
+    if ($UIState !== UI.READY) return
+
+    // If user address becomes null, wallet was disconnected
+    if ($userAddress === null) {
+      console.log("[+layout] Wallet disconnected externally, navigating back to spawn")
+      UIState.set(UI.SPAWNING)
+    }
+  })
 
   // Initialize Sentry
   if (browser && !import.meta.env.DEV) {
