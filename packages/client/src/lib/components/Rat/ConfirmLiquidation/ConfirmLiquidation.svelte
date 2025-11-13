@@ -3,6 +3,7 @@
   import { playSound } from "$lib/modules/sound"
   import { BigButton, ValueBreakdown } from "$lib/components/Shared"
   import { ratState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
+  import { strings } from "$lib/modules/strings"
 
   const onClickConfirm = () => {
     // RAT_BOX_STATE.CONFIRM_LIQUIDATION -> RAT_BOX_STATE.LIQUIDATING_RAT
@@ -19,17 +20,17 @@
 <div class="confirm-liquidation">
   <div class="confirm-liquidation-text">
     <h1>
-      Are you sure you want to liquidate {$rat?.name}?
+      {strings.confirmLiquidationMessage($rat?.name)}
     </h1>
     <ValueBreakdown
       originalValue={Number($ratTotalValue)}
-      originalLabel="Rat value"
+      originalLabel={strings.ratValue}
       taxRateKey="taxationLiquidateRat"
     />
   </div>
   <div class="button-container">
-    <BigButton text="Abort" onclick={onClickAbort} />
-    <BigButton text="Confirm" onclick={onClickConfirm} />
+    <BigButton text={strings.cancel} onclick={onClickAbort} />
+    <BigButton text={strings.confirm} onclick={onClickConfirm} />
   </div>
 </div>
 

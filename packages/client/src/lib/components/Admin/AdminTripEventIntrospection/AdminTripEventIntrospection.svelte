@@ -9,7 +9,7 @@
     <RatTripLog result={event.meta} />
   {:else}
     <div class="empty">
-      <p class="void glow">NO DATA</p>
+      <p class="void glow">{strings.noData.toUpperCase()}</p>
     </div>
   {/if}
 </div>

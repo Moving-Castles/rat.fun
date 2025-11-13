@@ -13,7 +13,7 @@
   // Amounts distributed from
 
   const playerColumns: ColumnConfig[] = [
-    { key: "creationBlock", displayName: "Create @" },
+    { key: "creationBlock", displayName: strings.cr },
     { key: "name", displayName: "Name" },
     { key: "erc20Balance", displayName: "ERC20 Balance" },
     { key: "balance", displayName: "On-chain Balance" },

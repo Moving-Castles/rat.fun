@@ -7,6 +7,7 @@
   import { Tooltip, BigButton } from "$lib/components/Shared"
   import { balance, investment, profitLoss, portfolioClass } from "$lib/modules/state/stores"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
+  import { strings } from "$lib/modules/strings"
 
   let { onCreateTripClick }: { onCreateTripClick: () => void } = $props()
 
@@ -43,12 +44,12 @@
   <div class="profit-container">
     <!-- Active profit -->
     <div class="profit-inner">
-      <p>Active Profit</p>
+      <p>{strings.activeProfit}</p>
       <div class="percentage {$portfolioClass}">
         ({$plSymbolExplicit}{(100 - tweenedActiveProfit.current * 100).toFixed(2)}%)
       </div>
       <div class="content {$portfolioClass}">
-        <Tooltip content="Active profit">
+        <Tooltip content={strings.activeProfit}>
           <div class="profit-amount">
             {$plSymbolExplicit}{CURRENCY_SYMBOL}{Math.abs(Math.floor(tweenedProfitLoss.current))}
           </div>
@@ -59,13 +60,13 @@
   <!-- Portfolio -->
   <div class="portfolio-container">
     <div class="portfolio-box">
-      <p>Invested</p>
+      <p>{strings.invested}</p>
       <div class="portfolio-amount">
         {CURRENCY_SYMBOL}{$investment}
       </div>
     </div>
     <div class="portfolio-box">
-      <p>Portfolio</p>
+      <p>{strings.portfolio}</p>
       <div class="portfolio-amount">
         {CURRENCY_SYMBOL}{$balance}
       </div>
@@ -75,7 +76,7 @@
   <div class="action-container">
     <BigButton
       disabled={busy.CreateTrip.current > 0}
-      text="Create Trip"
+      text={strings.createTrip}
       onclick={onCreateTripClick}
     />
   </div>

@@ -3,6 +3,7 @@
   import { ratState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
   import HealthBar from "./HealthBar.svelte"
   import { RatAvatar } from "$lib/components/Shared"
+  import { strings } from "$lib/modules/strings"
 
   let { displayRat }: { displayRat: Rat | null } = $props()
 </script>
@@ -13,7 +14,7 @@
     <div class="info-container">
       <!-- INDEX -->
       <div class="info-item index-container">
-        <span class="index">RAT #{displayRat.index}</span>
+        <span class="index">{strings.rat} #{displayRat.index}</span>
       </div>
 
       <!-- NAME -->
@@ -35,7 +36,7 @@
         onclick={() => ratState.state.transitionTo(RAT_BOX_STATE.PAST_TRIP_LIST)}
       >
         <span>
-          Trips: {displayRat.tripCount ?? 0}
+          {strings.trips}: {displayRat.tripCount ?? 0}
         </span>
       </div>
     </div>

@@ -6,6 +6,7 @@
     playerHasTokens,
     playerHasLiveRat
   } from "$lib/modules/state/stores"
+  import { strings } from "$lib/modules/strings"
 
   import { SmallSpinner, BigButton } from "$lib/components/Shared"
 
@@ -39,10 +40,10 @@
 
 <div class="no-allowance">
   {#if busy}
-    <div class="loading">Approving allowance <SmallSpinner soundOn /></div>
+    <div class="loading">{strings.approvingAllowance} <SmallSpinner soundOn /></div>
   {:else}
     <div class="button-container">
-      <BigButton text="Approve max allowance" disabled={busy} onclick={onClick} />
+      <BigButton text={strings.approveAllowance} disabled={busy} onclick={onClick} />
     </div>
   {/if}
 </div>

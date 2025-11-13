@@ -8,6 +8,7 @@
     tokenAllowanceApproved
   } from "$lib/modules/state/stores"
   import { ENVIRONMENT } from "$lib/mud/enums"
+  import { strings } from "$lib/modules/strings"
 
   import { SmallSpinner, BigButton } from "$lib/components/Shared"
 
@@ -41,12 +42,12 @@
 
 <div class="no-tokens">
   {#if busy}
-    <div class="loading">Getting tokens <SmallSpinner soundOn /></div>
+    <div class="loading">{strings.gettingTokens} <SmallSpinner soundOn /></div>
   {:else if $environment == ENVIRONMENT.BASE}
-    <div class="notice">You do not have $RAT tokens. Come back later...</div>
+    <div class="notice">{strings.waitForTokens}</div>
   {:else}
     <div class="button-container">
-      <BigButton text="Get 2000 $RAT" disabled={busy} onclick={onClick} />
+      <BigButton text={strings.getTokens(2000)} disabled={busy} onclick={onClick} />
     </div>
   {/if}
 </div>

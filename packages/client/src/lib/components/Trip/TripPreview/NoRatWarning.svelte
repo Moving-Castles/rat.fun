@@ -1,9 +1,9 @@
 <script lang="ts">
-  // ...
+  import { strings } from "$lib/modules/strings"
 </script>
 
 <div class="no-rat-warning">
-  <span>Buy a rat to access this trip</span>
+  <span>{strings.noRatWarning}</span>
 </div>
 
 <style lang="scss">
