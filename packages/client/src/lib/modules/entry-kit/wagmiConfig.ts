@@ -22,9 +22,9 @@ export const transports = {
 } as const
 
 /**
- * Get connectors based on chain and environment
+ * Get connectors based on environment
  */
-export function getConnectors(chainId: number): CreateConnectorFn[] {
+export function getConnectors(): CreateConnectorFn[] {
   const appName = "RAT.FUN"
   const connectors: CreateConnectorFn[] = []
 

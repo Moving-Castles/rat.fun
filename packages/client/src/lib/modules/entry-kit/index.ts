@@ -42,7 +42,7 @@ export async function initializeEntryKit(networkConfig: NetworkConfig): Promise<
   }
 
   // Get connectors for this environment
-  const connectors = getConnectors(networkConfig.chainId)
+  const connectors = getConnectors()
 
   // Create EntryKit instance with wagmi config embedded
   entrykitInstance = new EntryKit({
@@ -52,7 +52,8 @@ export async function initializeEntryKit(networkConfig: NetworkConfig): Promise<
     connectors,
     worldAddress: networkConfig.worldAddress as Hex,
     paymasterClient: paymasters[networkConfig.chainId],
-    pollingInterval: networkConfig.chainId === 84532 ? 2000 : undefined // Base Sepolia = fast polling
+    pollingInterval: networkConfig.chainId === 84532 ? 2000 : undefined, // Base Sepolia = fast polling
+    appName: "RAT.FUN"
   })
 
   // Initialize (await reconnection, setup account watcher)

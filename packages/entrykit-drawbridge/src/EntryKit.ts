@@ -39,6 +39,8 @@ export type EntryKitConfig = {
   paymasterClient?: PaymasterClient
   /** Optional polling interval for wagmi (in ms) */
   pollingInterval?: number
+  /** Optional app name for wallet connectors */
+  appName?: string
 }
 
 /**
