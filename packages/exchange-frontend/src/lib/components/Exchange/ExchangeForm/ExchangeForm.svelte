@@ -41,8 +41,8 @@
   .exchange-form {
     text-align: center;
     color: var(--white);
-    width: 100vw;
-    height: 100vh;
+    width: 100dvw;
+    height: 100dvh;
     overflow: hidden;
     position: relative;
     background-image: url("/images/texture-2.png");

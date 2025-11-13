@@ -367,12 +367,12 @@
 
   .modal-content {
     height: 700px;
-    max-height: 90vh;
+    max-height: 90dvh;
 
     @media (max-width: 800px) {
-      height: 100vh;
-      max-height: 80vh;
-      width: 100vw;
+      height: 100dvh;
+      max-height: 80dvh;
+      width: 100dvw;
     }
   }
 
@@ -389,7 +389,7 @@
     padding: 10px;
 
     @media (max-width: 800px) {
-      width: 100vw;
+      width: 100dvw;
       border: none;
     }
 

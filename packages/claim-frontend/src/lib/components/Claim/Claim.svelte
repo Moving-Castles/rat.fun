@@ -105,8 +105,8 @@
 
 <style lang="scss">
   .claim-container {
-    width: 100vw;
-    height: 100vh;
+    width: 100dvw;
+    height: 100dvh;
     z-index: 1000;
     color: white;
   }
