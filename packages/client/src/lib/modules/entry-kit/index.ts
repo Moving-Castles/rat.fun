@@ -43,6 +43,7 @@ export async function initializeEntryKit(networkConfig: NetworkConfig): Promise<
 
   // Get connectors for this environment
   const connectors = getConnectors()
+  console.log("[EntryKit] Connectors from getConnectors():", connectors.length)
 
   // Create EntryKit instance with wagmi config embedded
   entrykitInstance = new EntryKit({
@@ -60,6 +61,14 @@ export async function initializeEntryKit(networkConfig: NetworkConfig): Promise<
   await entrykitInstance.initialize()
 
   console.log("[EntryKit] Instance ready")
+
+  // Log available connectors for debugging
+  const availableConnectors = entrykitInstance.getAvailableConnectors()
+  console.log(
+    "[EntryKit] Available connectors after init:",
+    availableConnectors.length,
+    availableConnectors
+  )
 }
 
 /**

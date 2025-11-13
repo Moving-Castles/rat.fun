@@ -3,6 +3,7 @@
   import { onMount } from "svelte"
   import gsap from "gsap"
   import { getEntryKit, type ConnectorInfo } from "$lib/modules/entry-kit"
+  import { debugInfo } from "$lib/modules/entry-kit/wagmiConfig"
   import BigButton from "$lib/components/Shared/Buttons/BigButton.svelte"
 
   const { walletType, onComplete = () => {} } = $props<{
@@ -14,6 +15,8 @@
   let showWalletSelect = $state(false)
   let connecting = $state(false)
   let availableConnectors = $state<ConnectorInfo[]>([])
+  let showDebugPanel = $state(false)
+  let allConnectors = $state<ConnectorInfo[]>([])
 
   const timeline = gsap.timeline()
 
@@ -62,12 +65,43 @@
     const entrykit = getEntryKit()
     const connectors = entrykit.getAvailableConnectors()
 
-    // Filter out the generic "Injected" connector - only show specific wallets
-    availableConnectors = connectors
-      .filter(c => c.id !== "injected" && c.name !== "Injected")
-      .sort((a, b) => getWalletPriority(a) - getWalletPriority(b))
+    // Store all connectors for debug panel
+    allConnectors = connectors
 
+    // Filter out the generic "Injected" connector - only show specific wallets
+    // UNLESS it's the only connector (like in Base app mobile browser)
+    const filteredConnectors = connectors.filter(c => c.id !== "injected" && c.name !== "Injected")
+
+    // If we have specific wallets, use those. Otherwise, keep the injected connector.
+    availableConnectors =
+      filteredConnectors.length > 0
+        ? filteredConnectors.sort((a, b) => getWalletPriority(a) - getWalletPriority(b))
+        : connectors
+
+    // Improve the display name for generic "Injected" connector based on detected provider
+    if (availableConnectors.length === 1 && availableConnectors[0].id === "injected") {
+      if (debugInfo.windowEthereumProviders.length > 0) {
+        // Use detected provider name instead of "Injected"
+        const providerName = debugInfo.windowEthereumProviders[0]
+        availableConnectors = [
+          {
+            id: availableConnectors[0].id,
+            name: providerName === "Coinbase" ? "Coinbase Wallet" : providerName,
+            type: availableConnectors[0].type
+          }
+        ]
+      }
+    }
+
+    console.log("[ConnectWalletForm] All connectors:", allConnectors)
     console.log("[ConnectWalletForm] Available connectors:", availableConnectors)
+
+    // If no connectors at all, show modal with debug panel
+    if (allConnectors.length === 0) {
+      showWalletSelect = true
+      showDebugPanel = true
+      return
+    }
 
     // If only one connector available, auto-connect to it
     if (availableConnectors.length === 1) {
@@ -133,6 +167,95 @@
           </div>
         </div>
       {/if}
+
+      <!-- Debug panel -->
+      {#if showDebugPanel}
+        <div class="debug-panel">
+          <div class="debug-content">
+            <button class="close-btn" onclick={() => (showDebugPanel = false)}>×</button>
+            <h2>Connection Debug Info</h2>
+            <div class="debug-section">
+              <h3>Environment</h3>
+              <div class="debug-item">
+                <strong>User Agent:</strong>
+                <span class="debug-value">{debugInfo.userAgent}</span>
+              </div>
+              <div class="debug-item">
+                <strong>Mobile:</strong>
+                <span class="debug-value">{debugInfo.isMobile ? "Yes" : "No"}</span>
+              </div>
+              <div class="debug-item">
+                <strong>Base App:</strong>
+                <span class="debug-value">{debugInfo.isBaseApp ? "Yes" : "No"}</span>
+              </div>
+              <div class="debug-item">
+                <strong>Coinbase Wallet:</strong>
+                <span class="debug-value">{debugInfo.isCoinbaseWallet ? "Yes" : "No"}</span>
+              </div>
+              <div class="debug-item">
+                <strong>In iframe:</strong>
+                <span class="debug-value">{debugInfo.isInIframe ? "Yes" : "No"}</span>
+              </div>
+              <div class="debug-item">
+                <strong>Timestamp:</strong>
+                <span class="debug-value">{debugInfo.timestamp}</span>
+              </div>
+            </div>
+            <div class="debug-section">
+              <h3>Window.ethereum</h3>
+              <div class="debug-item">
+                <strong>Exists:</strong>
+                <span class="debug-value">{debugInfo.hasWindowEthereum ? "Yes" : "No"}</span>
+              </div>
+              {#if debugInfo.hasWindowEthereum}
+                <div class="debug-item">
+                  <strong>Providers:</strong>
+                  <span class="debug-value">
+                    {debugInfo.windowEthereumProviders.length > 0
+                      ? debugInfo.windowEthereumProviders.join(", ")
+                      : "None detected"}
+                  </span>
+                </div>
+              {/if}
+            </div>
+            <div class="debug-section">
+              <h3>Connectors</h3>
+              <div class="debug-item">
+                <strong>Total from getConnectors():</strong>
+                <span class="debug-value">{debugInfo.connectorsCount}</span>
+              </div>
+              <div class="debug-item">
+                <strong>Available from EntryKit:</strong>
+                <span class="debug-value">{allConnectors.length}</span>
+              </div>
+              <div class="debug-item">
+                <strong>After filtering:</strong>
+                <span class="debug-value">{availableConnectors.length}</span>
+              </div>
+            </div>
+            <div class="debug-section">
+              <h3>All Connectors Details</h3>
+              {#if allConnectors.length > 0}
+                {#each allConnectors as connector}
+                  <div class="debug-item connector-detail">
+                    <strong>ID:</strong>
+                    {connector.id}<br />
+                    <strong>Name:</strong>
+                    {connector.name}
+                  </div>
+                {/each}
+              {:else}
+                <p class="debug-warning">No connectors found!</p>
+              {/if}
+            </div>
+          </div>
+        </div>
+      {/if}
+
+      <!-- Floating debug button - always visible -->
+      <button class="floating-debug-btn" onclick={() => (showDebugPanel = !showDebugPanel)}>
+        🐛
+      </button>
     {:else}
       <div class="button-container" bind:this={buttonElement}>
         <BigButton text="Connect Burner" onclick={onComplete} />
@@ -242,6 +365,134 @@
             cursor: not-allowed;
           }
         }
+      }
+    }
+  }
+
+  .floating-debug-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--foreground);
+    color: var(--background);
+    border: 2px solid var(--foreground);
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 9998;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+
+  .debug-toggle-btn {
+    margin-top: 16px;
+    width: 100%;
+    background: transparent;
+    color: var(--foreground);
+    border: 1px solid var(--foreground);
+    padding: 8px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+    opacity: 0.6;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  .debug-panel {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 10000;
+    overflow-y: auto;
+    padding: 20px;
+
+    .debug-content {
+      background: var(--background);
+      color: var(--foreground);
+      border: 2px solid var(--foreground);
+      border-radius: 8px;
+      padding: 32px;
+      max-width: 600px;
+      margin: 0 auto;
+      position: relative;
+      font-size: 12px;
+
+      .close-btn {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        background: transparent;
+        color: var(--foreground);
+        border: none;
+        font-size: 32px;
+        cursor: pointer;
+        line-height: 1;
+        padding: 0;
+        width: 32px;
+        height: 32px;
+
+        &:hover {
+          opacity: 0.7;
+        }
+      }
+
+      h2 {
+        margin: 0 0 24px 0;
+        font-size: 20px;
+        text-align: center;
+      }
+
+      h3 {
+        margin: 16px 0 8px 0;
+        font-size: 14px;
+        border-bottom: 1px solid var(--foreground);
+        padding-bottom: 4px;
+      }
+
+      .debug-section {
+        margin-bottom: 20px;
+      }
+
+      .debug-item {
+        padding: 8px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        word-break: break-all;
+
+        strong {
+          display: inline-block;
+          min-width: 120px;
+        }
+
+        .debug-value {
+          opacity: 0.8;
+        }
+
+        &.connector-detail {
+          background: rgba(255, 255, 255, 0.05);
+          padding: 12px;
+          margin: 8px 0;
+          border-radius: 4px;
+        }
+      }
+
+      .debug-warning {
+        color: #ff6b6b;
+        text-align: center;
+        font-weight: bold;
+        margin: 16px 0;
       }
     }
   }

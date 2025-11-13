@@ -1,12 +1,11 @@
 import { Chain, http } from "viem"
 import { CreateConnectorFn } from "@wagmi/core"
-import { injected, safe, walletConnect } from "wagmi/connectors"
+import { injected, safe } from "wagmi/connectors"
 import {
   extendedBase,
   extendedBaseSepolia,
   extendedMudFoundry
 } from "$lib/mud/extendedChainConfigs"
-import { PUBLIC_WALLET_CONNECT_PROJECT_ID } from "$env/static/public"
 
 export const chains = [
   extendedBase,
@@ -20,6 +19,19 @@ export const transports = {
   [extendedMudFoundry.id]: http()
 } as const
 
+// Debug state for visible debugging (no console in mobile browsers)
+export const debugInfo = {
+  userAgent: "",
+  hasWindowEthereum: false,
+  windowEthereumProviders: [] as string[],
+  isMobile: false,
+  isInIframe: false,
+  connectorsCount: 0,
+  timestamp: "",
+  isBaseApp: false,
+  isCoinbaseWallet: false
+}
+
 /**
  * Get connectors based on environment
  *
@@ -29,7 +41,7 @@ export const transports = {
  * 2. Mobile wallet in-app browsers (MetaMask mobile, Coinbase mobile, etc.)
  *    → injected() connector detects window.ethereum
  * 3. Normal mobile browsers (Safari, Chrome on mobile)
- *    → WalletConnect deep links to wallet apps (MetaMask, Rainbow, Phantom)
+ *    → ??? (WalletConnect deep links to wallet apps (MetaMask, Rainbow, Phantom) should work but does not)
  * 4. Farcaster Mini App
  *    → injected() connector if wallet connected to Farcaster
  *
@@ -38,6 +50,44 @@ export const transports = {
 export function getConnectors(): CreateConnectorFn[] {
   const connectors: CreateConnectorFn[] = []
 
+  // Collect debug info
+  if (typeof window !== "undefined") {
+    debugInfo.userAgent = navigator.userAgent
+    debugInfo.hasWindowEthereum = typeof window.ethereum !== "undefined"
+    debugInfo.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    )
+    debugInfo.isInIframe = window?.parent !== window
+    debugInfo.timestamp = new Date().toISOString()
+
+    // Detect Base app (Coinbase's Base mobile app)
+    debugInfo.isBaseApp = /base/i.test(navigator.userAgent)
+    debugInfo.isCoinbaseWallet = /coinbase/i.test(navigator.userAgent)
+
+    // Check for provider info
+    if (window.ethereum) {
+      const providers: string[] = []
+      // @ts-ignore - checking for provider info
+      if (window.ethereum.isCoinbaseWallet) providers.push("Coinbase")
+      // @ts-ignore
+      if (window.ethereum.isMetaMask) providers.push("MetaMask")
+      // @ts-ignore
+      if (window.ethereum.isRabby) providers.push("Rabby")
+      // @ts-ignore
+      if (window.ethereum.isPhantom) providers.push("Phantom")
+      // @ts-ignore
+      if (window.ethereum.isBraveWallet) providers.push("Brave")
+      // @ts-ignore
+      if (window.ethereum.providers) {
+        providers.push(`Multiple providers (${window.ethereum.providers.length})`)
+      }
+      if (providers.length === 0) {
+        providers.push("Unknown provider")
+      }
+      debugInfo.windowEthereumProviders = providers
+    }
+  }
+
   // ALWAYS include injected connector - works for:
   // 1. Desktop browser extensions (MetaMask, Rainbow, etc.)
   // 2. Mobile wallet in-app browsers (MetaMask mobile, Coinbase mobile)
@@ -45,29 +95,16 @@ export function getConnectors(): CreateConnectorFn[] {
   // 3. Farcaster Mini App (if user's wallet is connected)
   connectors.push(injected())
 
-  // WalletConnect - ONLY on mobile devices when NO injected wallet detected (case #3)
-  // This covers: Normal mobile browsers (Safari, Chrome) where user has wallet apps
-  // but not in-app browser, so we need to deep link to their wallet app
+  // This is where we ideally should handle case #3 (normal mobile browsers)
+  // WalletConnect is problematic, but might be the only option
   if (typeof window !== "undefined") {
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
       navigator.userAgent
     )
     const hasInjectedWallet = typeof window.ethereum !== "undefined"
 
-    // Only add WalletConnect if on mobile AND no injected wallet
     if (isMobile && !hasInjectedWallet) {
-      connectors.push(
-        walletConnect({
-          projectId: PUBLIC_WALLET_CONNECT_PROJECT_ID,
-          metadata: {
-            name: "RAT.FUN",
-            description: "RAT IS FUN",
-            url: "https://rat.fun",
-            icons: ["https://rat.fun/images/favicon.png"]
-          },
-          showQrModal: true // Shows WalletConnect's built-in modal with wallet list
-        })
-      )
+      // Either solve this or inform the user it is not supported
     }
   }
 
@@ -79,6 +116,8 @@ export function getConnectors(): CreateConnectorFn[] {
       })
     )
   }
+
+  debugInfo.connectorsCount = connectors.length
 
   return connectors
 }
