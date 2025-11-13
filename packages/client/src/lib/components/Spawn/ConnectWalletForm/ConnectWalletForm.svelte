@@ -68,6 +68,15 @@
       .sort((a, b) => getWalletPriority(a) - getWalletPriority(b))
 
     console.log("[ConnectWalletForm] Available connectors:", availableConnectors)
+
+    // If only one connector available, auto-connect to it
+    if (availableConnectors.length === 1) {
+      console.log("[ConnectWalletForm] Only one connector available, auto-connecting")
+      connectWallet(availableConnectors[0].id)
+      return
+    }
+
+    // Otherwise show the modal for user to choose
     showWalletSelect = true
   }
 
