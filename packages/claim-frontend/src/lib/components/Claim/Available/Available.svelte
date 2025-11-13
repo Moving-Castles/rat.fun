@@ -4,7 +4,7 @@
   import { BigButton } from "$lib/components/Shared"
   import { prepareConnectorClientForTransaction } from "$lib/modules/entry-kit/connector"
   import { ERC20AirdropMerkleProofAbi } from "contracts/externalAbis"
-  import { entryKitSession } from "$lib/modules/entry-kit/stores"
+  import { userAddress } from "$lib/modules/entry-kit"
 
   // TODO this is a test contract on base mainnet
   const airdropContractAddress = "0xD6d2e85bEfD703847cDBa78589c4c67b7a147020" as const
@@ -16,14 +16,14 @@
   } = $props()
 
   async function sendClaim() {
-    if (!$entryKitSession) throw new Error("entrykit not connected")
+    if (!$userAddress) throw new Error("wallet not connected")
 
     const client = await prepareConnectorClientForTransaction()
     client.writeContract({
       address: airdropContractAddress,
       abi: ERC20AirdropMerkleProofAbi,
       functionName: "claim",
-      args: [$entryKitSession.userAddress, proof.value, proof.proof]
+      args: [$userAddress, proof.value, proof.proof]
     })
   }
 </script>

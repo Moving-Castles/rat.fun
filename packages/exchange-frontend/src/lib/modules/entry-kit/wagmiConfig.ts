@@ -1,14 +1,11 @@
 import { Chain, http } from "viem"
-import { Config, createConfig, CreateConnectorFn } from "wagmi"
-import { coinbaseWallet, injected, safe, metaMask, walletConnect } from "wagmi/connectors"
-import { getDefaultConfig } from "connectkit"
+import { CreateConnectorFn } from "@wagmi/core"
+import { injected, safe } from "wagmi/connectors"
 import {
   extendedBase,
   extendedBaseSepolia,
   extendedMudFoundry
 } from "$lib/mud/extendedChainConfigs"
-import { PUBLIC_WALLET_CONNECT_PROJECT_ID } from "$env/static/public"
-import { hasExtensionSupport } from "$lib/modules/utils"
 
 export const chains = [
   extendedBase,
@@ -22,28 +19,18 @@ export const transports = {
   [extendedMudFoundry.id]: http()
 } as const
 
-export function wagmiConfig(chainId: number): Config<typeof chains, typeof transports> {
-  const appName = "RAT.FUN"
-  const chain = chains.find(chain => chain.id === chainId) as (typeof chains)[number]
-
-  // If browser supports extensions, leave connectors empty to allow auto-detection
+/**
+ * Get connectors based on environment
+ * Simplified for exchange-frontend - no WalletConnect complexity needed
+ */
+export function getConnectors(): CreateConnectorFn[] {
   const connectors: CreateConnectorFn[] = []
-  // If browser does not seem to support extensions (mobile), add specific connectors
-  if (!hasExtensionSupport()) {
-    connectors.push(
-      coinbaseWallet({
-        appName,
-        overrideIsMetaMask: false
-      }),
-      metaMask(),
-      walletConnect({ projectId: PUBLIC_WALLET_CONNECT_PROJECT_ID }),
-      injected()
-    )
-  }
 
-  // If we're in an iframe, include the SafeConnector
-  const shouldUseSafeConnector = !(typeof window === "undefined") && window?.parent !== window
-  if (shouldUseSafeConnector) {
+  // ALWAYS include injected connector for browser extensions and mobile wallet browsers
+  connectors.push(injected())
+
+  // Gnosis Safe connector for Safe apps (iframe context)
+  if (typeof window !== "undefined" && window?.parent !== window) {
     connectors.push(
       safe({
         allowedDomains: [/gnosis-safe.io$/, /app.safe.global$/]
@@ -51,17 +38,5 @@ export function wagmiConfig(chainId: number): Config<typeof chains, typeof trans
     )
   }
 
-  const configParams = getDefaultConfig({
-    appName,
-    chains: [chain],
-    transports,
-    pollingInterval: {
-      [extendedBaseSepolia.id]: 2000
-    },
-    walletConnectProjectId: PUBLIC_WALLET_CONNECT_PROJECT_ID,
-    enableFamily: false,
-    connectors
-  })
-
-  return createConfig(configParams) as never
+  return connectors
 }

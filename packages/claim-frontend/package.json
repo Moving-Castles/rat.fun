@@ -20,7 +20,6 @@
     "@sveltejs/kit": "^2.48.4",
     "@sveltejs/vite-plugin-svelte": "^6.2.1",
     "@types/howler": "^2.2.12",
-    "@types/react": "^19.2.2",
     "contracts": "workspace:*",
     "date-fns": "^4.1.0",
     "eslint": "^9.39.1",
@@ -38,6 +37,7 @@
   },
   "dependencies": {
     "entrykit-drawbridge": "workspace:*",
+    "merkle-tree-airdrop": "workspace:*",
     "@latticexyz/common": "2.2.23-94cac741be24bb5743f2f36235cc3bb40012417a",
     "@latticexyz/dev-tools": "2.2.23-94cac741be24bb5743f2f36235cc3bb40012417a",
     "@latticexyz/recs": "2.2.23-94cac741be24bb5743f2f36235cc3bb40012417a",
@@ -47,7 +47,6 @@
     "@latticexyz/world": "2.2.23-94cac741be24bb5743f2f36235cc3bb40012417a",
     "@sentry/sveltekit": "^10.24.0",
     "@wagmi/core": "2.22.1",
-    "connectkit": "^1.9.1",
     "contracts": "workspace:*",
     "gsap": "^3.13.0",
     "howler": "^2.2.4",

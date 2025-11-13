@@ -7,19 +7,27 @@
   import { onMount, onDestroy } from "svelte"
   import { initSound } from "$lib/modules/sound"
   import { browser } from "$app/environment"
+  import { page } from "$app/state"
   import { UIState } from "$lib/modules/ui/state.svelte"
   import { UI } from "$lib/modules/ui/enums"
   import { environment as environmentStore } from "$lib/modules/network"
+  import { initializeEntryKit, cleanupEntryKit } from "$lib/modules/entry-kit"
+  import { getNetworkConfig } from "$lib/mud/getNetworkConfig"
 
   // Components
   import Loading from "$lib/components/Loading/Loading.svelte"
   import Exchange from "$lib/components/Exchange/Exchange.svelte"
   import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
-  import EntryKit from "$lib/components/EntryKit/EntryKit.svelte"
   import { ShaderGlobal, Toasts } from "$lib/components/Shared"
 
   // Called when loading is complete
   const loaded = async () => {
+    // Initialize EntryKit in wallet-only mode (no session setup)
+    console.log("[+layout] Initializing EntryKit in wallet-only mode...")
+    const networkConfig = getNetworkConfig($environmentStore, page.url)
+    await initializeEntryKit(networkConfig)
+    console.log("[+layout] EntryKit ready")
+
     UIState.set(UI.READY)
   }
 
@@ -30,6 +38,9 @@
   })
 
   onDestroy(() => {
+    // Clean up EntryKit
+    cleanupEntryKit()
+
     // Clean up global shader manager when the app unmounts
     shaderManager.destroy()
   })
@@ -51,7 +62,6 @@
   {/if}
 </div>
 
-<EntryKit />
 <Toasts />
 
 <style lang="scss">

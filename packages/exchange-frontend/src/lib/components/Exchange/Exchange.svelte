@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from "svelte"
-  import { publicNetwork } from "$lib/modules/network"
   import {
     playerFakeTokenBalance,
     playerFakeTokenAllowance
@@ -13,20 +12,21 @@
     ExchangeForm,
     Done
   } from "$lib/components/Exchange"
-  import { WALLET_TYPE } from "$lib/mud/enums"
-  import { setupWalletNetwork } from "$lib/mud/setupWalletNetwork"
-  import { initWalletNetwork } from "$lib/initWalletNetwork"
-  import { entryKitSession } from "$lib/modules/entry-kit/stores"
+  import { userAddress } from "$lib/modules/entry-kit"
+  import { playerAddress } from "$lib/modules/state/stores"
+  import { initErc20Listener } from "$lib/modules/erc20Listener"
+  import { initFakeTokenListener } from "$lib/modules/erc20Listener/fakeToken"
   import WalletInfo from "$lib/components/WalletInfo/WalletInfo.svelte"
 
-  // Listen to changes in the entrykit session (for when user connects wallet)
+  // Listen to changes in wallet connection (for when user connects wallet)
   $effect(() => {
-    if ($entryKitSession) {
-      if ($entryKitSession?.account?.client && $entryKitSession.userAddress) {
-        const wallet = setupWalletNetwork($publicNetwork, $entryKitSession)
-        initWalletNetwork(wallet, $entryKitSession.userAddress, WALLET_TYPE.ENTRYKIT)
-        checkStateAndTransition()
-      }
+    if ($userAddress) {
+      console.log("[Exchange] Wallet connected:", $userAddress)
+      // Set player address and initialize token listeners
+      playerAddress.set($userAddress)
+      initErc20Listener()
+      initFakeTokenListener()
+      checkStateAndTransition()
     }
   })
 
@@ -48,7 +48,14 @@
     exchangeState.state.reset()
 
     // If wallet is already connected (from previous session), wait for balance to load
-    if ($entryKitSession?.account?.client && $entryKitSession.userAddress) {
+    if ($userAddress) {
+      console.log("[Exchange] Wallet already connected on mount:", $userAddress)
+
+      // Set player address and initialize token listeners
+      playerAddress.set($userAddress)
+      initErc20Listener()
+      initFakeTokenListener()
+
       // Wait for fake token balance to be updated
       const startTime = Date.now()
       while (Date.now() < startTime + 1000) {

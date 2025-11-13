@@ -547,7 +547,19 @@ var EntryKit = class {
       return;
     }
     const userAddress = userClient.account.address;
-    console.log("[entrykit-drawbridge] Connecting session for address:", userAddress);
+    console.log("[entrykit-drawbridge] Wallet connected:", userAddress);
+    if (this.config.skipSessionSetup) {
+      console.log("[entrykit-drawbridge] Skipping session setup (wallet-only mode)");
+      this.updateState({
+        status: "ready" /* READY */,
+        sessionClient: null,
+        userAddress,
+        sessionAddress: null,
+        isReady: true
+      });
+      return;
+    }
+    console.log("[entrykit-drawbridge] Setting up session for address:", userAddress);
     const signer = getSessionSigner(userAddress);
     const { account } = await getSessionAccount({
       client: userClient,
@@ -678,6 +690,11 @@ var EntryKit = class {
    * @throws If not connected (call connectWallet() first)
    */
   async setupSession() {
+    if (this.config.skipSessionSetup) {
+      throw new Error(
+        "Cannot setup session when skipSessionSetup is true. This EntryKit instance is in wallet-only mode."
+      );
+    }
     if (!this.state.sessionClient) {
       throw new Error("Not connected. Call connectWallet() first.");
     }

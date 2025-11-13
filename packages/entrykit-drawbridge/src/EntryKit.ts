@@ -33,14 +33,25 @@ export type EntryKitConfig = {
   transports: Record<number, Transport>
   /** Wallet connectors (injected, walletConnect, etc.) */
   connectors: CreateConnectorFn[]
-  /** MUD World contract address */
-  worldAddress: Address
+  /** MUD World contract address (optional if skipSessionSetup is true) */
+  worldAddress?: Address
   /** Optional paymaster client for sponsored transactions */
   paymasterClient?: PaymasterClient
   /** Optional polling interval for wagmi (in ms) */
   pollingInterval?: number
   /** Optional app name for wallet connectors */
   appName?: string
+  /**
+   * Skip session setup entirely - wallet connection only mode
+   * Use this for apps that don't need MUD delegation/session accounts.
+   * When true:
+   * - No session account created
+   * - No delegation registration
+   * - Only provides connected wallet client via wagmi
+   * - worldAddress is optional
+   * @default false
+   */
+  skipSessionSetup?: boolean
 }
 
 /**
@@ -311,7 +322,24 @@ export class EntryKit {
     }
 
     const userAddress = userClient.account.address
-    console.log("[entrykit-drawbridge] Connecting session for address:", userAddress)
+    console.log("[entrykit-drawbridge] Wallet connected:", userAddress)
+
+    // If skipSessionSetup is true, just store the user address and mark as READY
+    // No session account, no delegation - just wallet connection
+    if (this.config.skipSessionSetup) {
+      console.log("[entrykit-drawbridge] Skipping session setup (wallet-only mode)")
+      this.updateState({
+        status: EntryKitStatus.READY,
+        sessionClient: null,
+        userAddress,
+        sessionAddress: null,
+        isReady: true
+      })
+      return
+    }
+
+    // Full session setup flow (MUD delegation)
+    console.log("[entrykit-drawbridge] Setting up session for address:", userAddress)
 
     // Get or create persistent session signer from localStorage
     const signer = getSessionSigner(userAddress)
@@ -327,7 +355,7 @@ export class EntryKit {
       userAddress,
       sessionAccount: account,
       sessionSigner: signer,
-      worldAddress: this.config.worldAddress,
+      worldAddress: this.config.worldAddress!,
       paymasterOverride: this.config.paymasterClient
     })
 
@@ -335,7 +363,7 @@ export class EntryKit {
     // This prevents UI flash where sessionClient exists but isReady is unknown
     const hasDelegation = await checkDelegation({
       client: sessionClient,
-      worldAddress: this.config.worldAddress,
+      worldAddress: this.config.worldAddress!,
       userAddress,
       sessionAddress: account.address
     })
@@ -452,7 +480,7 @@ export class EntryKit {
 
     const hasDelegation = await checkDelegation({
       client: this.state.sessionClient,
-      worldAddress: this.config.worldAddress,
+      worldAddress: this.config.worldAddress!,
       userAddress: this.state.userAddress!,
       sessionAddress: this.state.sessionAddress!
     })
@@ -475,6 +503,12 @@ export class EntryKit {
    * @throws If not connected (call connectWallet() first)
    */
   async setupSession(): Promise<void> {
+    if (this.config.skipSessionSetup) {
+      throw new Error(
+        "Cannot setup session when skipSessionSetup is true. This EntryKit instance is in wallet-only mode."
+      )
+    }
+
     if (!this.state.sessionClient) {
       throw new Error("Not connected. Call connectWallet() first.")
     }
@@ -492,7 +526,7 @@ export class EntryKit {
         client: userClient,
         userClient,
         sessionClient: this.state.sessionClient,
-        worldAddress: this.config.worldAddress
+        worldAddress: this.config.worldAddress!
       })
 
       // Session setup complete - set status to READY

@@ -76,14 +76,25 @@ type EntryKitConfig = {
     transports: Record<number, Transport>;
     /** Wallet connectors (injected, walletConnect, etc.) */
     connectors: CreateConnectorFn[];
-    /** MUD World contract address */
-    worldAddress: Address;
+    /** MUD World contract address (optional if skipSessionSetup is true) */
+    worldAddress?: Address;
     /** Optional paymaster client for sponsored transactions */
     paymasterClient?: PaymasterClient;
     /** Optional polling interval for wagmi (in ms) */
     pollingInterval?: number;
     /** Optional app name for wallet connectors */
     appName?: string;
+    /**
+     * Skip session setup entirely - wallet connection only mode
+     * Use this for apps that don't need MUD delegation/session accounts.
+     * When true:
+     * - No session account created
+     * - No delegation registration
+     * - Only provides connected wallet client via wagmi
+     * - worldAddress is optional
+     * @default false
+     */
+    skipSessionSetup?: boolean;
 };
 /**
  * Current state of the EntryKit instance
