@@ -1,6 +1,6 @@
-import { defineConfig } from "tsup"
+import { defineConfig, type Options } from "tsup"
 
-export default defineConfig(opts => ({
+const config: Options = {
   entry: ["src/index.ts"],
   outDir: "dist",
   format: ["esm"],
@@ -12,4 +12,6 @@ export default defineConfig(opts => ({
   treeshake: true,
   target: "es2022",
   external: ["viem"]
-}))
+}
+
+export default defineConfig(() => config)
