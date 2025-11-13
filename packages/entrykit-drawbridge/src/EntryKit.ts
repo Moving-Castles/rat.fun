@@ -79,7 +79,7 @@ export type ConnectorInfo = {
 }
 
 /**
- * entrykit-drawbridge - Headless ERC-4337 session manager with wagmi integration
+ * entrykit-drawbridge - Stripped down headless version of @latticexyz/entrykit
  *
  * Provides complete wallet connection and session management:
  * - Wagmi integration (connectors, account watching, reconnection)

@@ -5,7 +5,7 @@
 // ===== Main API =====
 
 export { EntryKit } from "./EntryKit"
-export type { EntryKitConfig, EntryKitState, PrerequisiteStatus } from "./EntryKit"
+export type { EntryKitConfig, EntryKitState, PrerequisiteStatus, ConnectorInfo } from "./EntryKit"
 
 // ===== Core Types =====
 

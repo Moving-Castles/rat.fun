@@ -4,7 +4,7 @@ const config: Options = {
   entry: ["src/index.ts"],
   outDir: "dist",
   format: ["esm"],
-  dts: false, // Disabled: complex viem types cause issues, using source types instead
+  dts: true,
   sourcemap: true,
   clean: true,
   minify: false,

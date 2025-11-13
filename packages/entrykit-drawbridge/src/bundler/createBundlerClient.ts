@@ -3,6 +3,7 @@ import {
   BundlerClient,
   BundlerClientConfig,
   SmartAccount,
+  PaymasterClient,
   createBundlerClient as viem_createBundlerClient
 } from "viem/account-abstraction"
 import { defaultClientConfig } from "../core/types"
@@ -38,7 +39,9 @@ export function createBundlerClient<
   if (!client) throw new Error("No `client` provided to `createBundlerClient`.")
 
   const chain = config.chain ?? client.chain
-  const paymaster = chain ? getPaymaster(chain, config.paymaster) : undefined
+  const paymaster = chain
+    ? getPaymaster(chain, config.paymaster as PaymasterClient | undefined)
+    : undefined
 
   return viem_createBundlerClient({
     ...defaultClientConfig,

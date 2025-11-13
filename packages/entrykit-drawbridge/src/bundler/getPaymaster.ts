@@ -1,5 +1,5 @@
 import { Chain, Hex } from "viem"
-import type { BundlerClientConfig, PaymasterClient } from "viem/account-abstraction"
+import type { PaymasterClient } from "viem/account-abstraction"
 
 /**
  * Paymaster configuration
@@ -22,7 +22,7 @@ export type Paymaster =
   | {
       readonly type: "custom"
       readonly address?: Hex
-      readonly paymasterClient: BundlerClientConfig["paymaster"]
+      readonly paymasterClient: PaymasterClient
     }
 
 /**
