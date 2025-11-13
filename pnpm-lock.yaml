@@ -4,6 +4,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  '@walletconnect/logger>pino': 10.0.0
+
 importers:
 
   .:
@@ -10642,9 +10645,6 @@ packages:
   ofetch@1.4.1:
     resolution: {integrity: sha512-QZj2DfGplQAr2oj9KzceK9Hwz6Whxazmn85yYeVuS3u9XTMOGMRx0kO95MQ+vLsj/S/NwBDMMLU5hpxvI6Tklw==}
 
-  on-exit-leak-free@0.2.0:
-    resolution: {integrity: sha512-dqaz3u44QbRXQooZLTUKU41ZrzYrcvLISVgbrzbyCMxpmSLJvZ3ZamIJIZ29P6OhZIkNIQKosdeM6t1LYbA9hg==}
-
   on-exit-leak-free@2.1.2:
     resolution: {integrity: sha512-0eJJY6hXLGf1udHwfNftBqH+g73EU4B504nZeKpz1sYRKafAghwxEJunB2O7rDZkL4PGfsMVnTXZ2EjibbqcsA==}
     engines: {node: '>=14.0.0'}
@@ -11013,9 +11013,6 @@ packages:
     resolution: {integrity: sha512-eW/gHNMlxdSP6dmG6uJip6FXN0EQBwm2clYYd8Wul42Cwu/DK8HEftzsapcNdYe2MfLiIwZqsDk2RDEsTE79hA==}
     engines: {node: '>=10'}
 
-  pino-abstract-transport@0.5.0:
-    resolution: {integrity: sha512-+KAgmVeqXYbTtU2FScx1XS3kNyfZ5TrXY07V96QnUSFqo2gAqlvmaxH67Lj7SWazqsMabf+58ctdTcBgnOLUOQ==}
-
   pino-abstract-transport@2.0.0:
     resolution: {integrity: sha512-F63x5tizV6WCh4R6RHyi2Ml+M70DNRXt/+HANowMflpgGFMAym/VKm6G7ZOQRjqN7XbGxK1Lg9t6ZrtzOaivMw==}
 
@@ -11023,14 +11020,11 @@ packages:
     resolution: {integrity: sha512-cQBBIVG3YajgoUjo1FdKVRX6t9XPxwB9lcNJVD5GCnNM4Y6T12YYx8c6zEejxQsU0wrg9TwmDulcE9LR7qcJqA==}
     hasBin: true
 
-  pino-std-serializers@4.0.0:
-    resolution: {integrity: sha512-cK0pekc1Kjy5w9V2/n+8MkZwusa6EyyxfeQCB799CQRhRt/CqYKiWs5adeu8Shve2ZNffvfC/7J64A2PJo1W/Q==}
-
   pino-std-serializers@7.0.0:
     resolution: {integrity: sha512-e906FRY0+tV27iq4juKzSYPbUj2do2X2JX4EzSca1631EB2QJQUqGbDuERal7LCtOpxl6x3+nvo9NPZcmjkiFA==}
 
-  pino@7.11.0:
-    resolution: {integrity: sha512-dMACeu63HtRLmCG8VKdy4cShCPKaYDR4youZqoSWLxl5Gu99HUw8bw75thbPv9Nip+H+QYX8o3ZJbTdVZZ2TVg==}
+  pino@10.0.0:
+    resolution: {integrity: sha512-eI9pKwWEix40kfvSzqEP6ldqOoBIN7dwD/o91TY5z8vQI12sAffpR/pOqAD1IVVwIVHDpHjkq0joBPdJD0rafA==}
     hasBin: true
 
   pino@9.7.0:
@@ -11267,9 +11261,6 @@ packages:
 
   process-nextick-args@2.0.1:
     resolution: {integrity: sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag==}
-
-  process-warning@1.0.0:
-    resolution: {integrity: sha512-du4wfLyj4yCZq1VupnVSZmRsPJsNuxoDQFdCFHLaYiEbFBD7QE0a+I4D7hOxrVnh78QE/YipFAj9lXHiXocV+Q==}
 
   process-warning@4.0.1:
     resolution: {integrity: sha512-3c2LzQ3rY9d0hc1emcsHhfT9Jwz0cChib/QN89oME2R451w5fy3f0afAhERFZAwrbDU43wk12d0ORBpDVME50Q==}
@@ -11620,10 +11611,6 @@ packages:
   readdirp@4.1.2:
     resolution: {integrity: sha512-GDhwkLfywWL2s6vEjyhri+eXmfH6j1L7JE27WhqLeYzoh/A3DBaYGEj2H/HFZCn/kMfim73FXxEJTw06WtxQwg==}
     engines: {node: '>= 14.18.0'}
-
-  real-require@0.1.0:
-    resolution: {integrity: sha512-r/H9MzAWtrv8aSVjPCMFpDMl5q66GqtmmRkRjpHTsp4zBAa+snZyiQNlMONiUmEJcsnaw0wCauJ2GWODr/aFkg==}
-    engines: {node: '>= 12.13.0'}
 
   real-require@0.2.0:
     resolution: {integrity: sha512-57frrGM/OCTLqLOAh0mhVA9VBMHd+9U7Zb2THMGdBUoZVOtGbJzjxsYGDJ3A9AYYCP4hn6y1TVbaOfzWtm5GFg==}
@@ -12295,6 +12282,9 @@ packages:
     resolution: {integrity: sha512-qMCMfhY040cVHT43K9BFygqYbUPFZKHOg7K73mtTWJRb8pyP3fzf4Ixd5SzdEJQ6MRUg/WBnOLxghZtKKurENQ==}
     engines: {node: '>=10'}
 
+  slow-redact@0.3.2:
+    resolution: {integrity: sha512-MseHyi2+E/hBRqdOi5COy6wZ7j7DxXRz9NkseavNYSvvWC06D8a5cidVZX3tcG5eCW3NIyVU4zT63hw0Q486jw==}
+
   socket.io-client@4.8.1:
     resolution: {integrity: sha512-hJVXfu3E28NmzGk8o1sHhN3om52tRvwYeidbj7xKy2eIIse5IoKX3USlS6Tqt3BHAtflLIkCQBkzVrEEfWUyYQ==}
     engines: {node: '>=10.0.0'}
@@ -12312,9 +12302,6 @@ packages:
 
   solidity-comments-extractor@0.0.8:
     resolution: {integrity: sha512-htM7Vn6LhHreR+EglVMd2s+sZhcXAirB1Zlyrv5zBuTxieCvjfnRpd7iZk75m/u6NOlEyQ94C6TWbBn2cY7w8g==}
-
-  sonic-boom@2.8.0:
-    resolution: {integrity: sha512-kuonw1YOYYNOve5iHdSahXPOK49GqwA+LZhI6Wz/l0rP57iKyXXIHaRagOBHAPmGwJC6od2Z9zgvZ5loSgMlVg==}
 
   sonic-boom@4.2.0:
     resolution: {integrity: sha512-INb7TM37/mAcsGmc9hyyI6+QR3rR1zVRu36B0NeGXKnOOLiZOfER5SA+N7X7k3yUYRzLWafduTDvJAfDswwEww==}
@@ -12688,9 +12675,6 @@ packages:
 
   thenify@3.3.1:
     resolution: {integrity: sha512-RVZSIV5IG10Hk3enotrhvz0T9em6cyHBLkH/YAZuKqd8hRkKhSfCGIcP2KUY0EPxndzANBmNllzWPwak+bheSw==}
-
-  thread-stream@0.15.2:
-    resolution: {integrity: sha512-UkEhKIg2pD+fjkHQKyJO3yoIvAP3N6RlNFt2dUhcS1FGvCD1cQa1M/PGknCLFIyZdtJOWQjejp7bdNqmN7zwdA==}
 
   thread-stream@3.1.0:
     resolution: {integrity: sha512-OqyPZ9u96VohAyMfJykzmivOrY2wfMSf3C5TtFJVgN+Hm6aj+voFhlK+kZEIv2FBh1X6Xp3DlnCOfEQ3B2J86A==}
@@ -25833,7 +25817,7 @@ snapshots:
   '@walletconnect/logger@2.1.2':
     dependencies:
       '@walletconnect/safe-json': 1.0.2
-      pino: 7.11.0
+      pino: 10.0.0
 
   '@walletconnect/relay-api@1.0.11':
     dependencies:
@@ -30448,8 +30432,6 @@ snapshots:
       node-fetch-native: 1.6.6
       ufo: 1.6.1
 
-  on-exit-leak-free@0.2.0: {}
-
   on-exit-leak-free@2.1.2: {}
 
   on-finished@2.4.1:
@@ -30955,11 +30937,6 @@ snapshots:
 
   pify@5.0.0: {}
 
-  pino-abstract-transport@0.5.0:
-    dependencies:
-      duplexify: 4.1.3
-      split2: 4.2.0
-
   pino-abstract-transport@2.0.0:
     dependencies:
       split2: 4.2.0
@@ -30980,23 +30957,21 @@ snapshots:
       sonic-boom: 4.2.0
       strip-json-comments: 3.1.1
 
-  pino-std-serializers@4.0.0: {}
-
   pino-std-serializers@7.0.0: {}
 
-  pino@7.11.0:
+  pino@10.0.0:
     dependencies:
       atomic-sleep: 1.0.0
-      fast-redact: 3.5.0
-      on-exit-leak-free: 0.2.0
-      pino-abstract-transport: 0.5.0
-      pino-std-serializers: 4.0.0
-      process-warning: 1.0.0
+      on-exit-leak-free: 2.1.2
+      pino-abstract-transport: 2.0.0
+      pino-std-serializers: 7.0.0
+      process-warning: 5.0.0
       quick-format-unescaped: 4.0.4
-      real-require: 0.1.0
+      real-require: 0.2.0
       safe-stable-stringify: 2.5.0
-      sonic-boom: 2.8.0
-      thread-stream: 0.15.2
+      slow-redact: 0.3.2
+      sonic-boom: 4.2.0
+      thread-stream: 3.1.0
 
   pino@9.7.0:
     dependencies:
@@ -31272,8 +31247,6 @@ snapshots:
       parse-ms: 4.0.0
 
   process-nextick-args@2.0.1: {}
-
-  process-warning@1.0.0: {}
 
   process-warning@4.0.1: {}
 
@@ -31688,8 +31661,6 @@ snapshots:
       picomatch: 2.3.1
 
   readdirp@4.1.2: {}
-
-  real-require@0.1.0: {}
 
   real-require@0.2.0: {}
 
@@ -32772,6 +32743,8 @@ snapshots:
       astral-regex: 2.0.0
       is-fullwidth-code-point: 3.0.0
 
+  slow-redact@0.3.2: {}
+
   socket.io-client@4.8.1(bufferutil@4.0.9)(utf-8-validate@5.0.10):
     dependencies:
       '@socket.io/component-emitter': 3.1.2
@@ -32819,10 +32792,6 @@ snapshots:
       - typescript
 
   solidity-comments-extractor@0.0.8: {}
-
-  sonic-boom@2.8.0:
-    dependencies:
-      atomic-sleep: 1.0.0
 
   sonic-boom@4.2.0:
     dependencies:
@@ -33286,10 +33255,6 @@ snapshots:
   thenify@3.3.1:
     dependencies:
       any-promise: 1.3.0
-
-  thread-stream@0.15.2:
-    dependencies:
-      real-require: 0.1.0
 
   thread-stream@3.1.0:
     dependencies:

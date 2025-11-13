@@ -42,6 +42,9 @@
   "pnpm": {
     "onlyBuiltDependencies": [
       "esbuild"
-    ]
+    ],
+    "overrides": {
+      "@walletconnect/logger>pino": "10.0.0"
+    }
   }
 }

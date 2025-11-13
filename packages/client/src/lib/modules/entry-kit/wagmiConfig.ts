@@ -1,11 +1,12 @@
 import { Chain, http } from "viem"
 import { CreateConnectorFn } from "@wagmi/core"
-import { injected, safe } from "wagmi/connectors"
+import { injected, safe, walletConnect } from "wagmi/connectors"
 import {
   extendedBase,
   extendedBaseSepolia,
   extendedMudFoundry
 } from "$lib/mud/extendedChainConfigs"
+import { PUBLIC_WALLET_CONNECT_PROJECT_ID } from "$env/static/public"
 
 export const chains = [
   extendedBase,
@@ -22,11 +23,17 @@ export const transports = {
 /**
  * Get connectors based on environment
  *
- * Supports:
- * - Desktop browser extensions (MetaMask, Rainbow, Brave Wallet, etc.)
- * - Mobile wallet in-app browsers (MetaMask mobile, Coinbase Wallet mobile, etc.)
- * - Farcaster Mini App (uses injected provider)
- * - Gnosis Safe apps (iframe context)
+ * Supports all 4 scenarios:
+ * 1. Desktop browser extensions (MetaMask, Rainbow, Brave Wallet, etc.)
+ *    → injected() connector auto-detects installed extensions
+ * 2. Mobile wallet in-app browsers (MetaMask mobile, Coinbase mobile, etc.)
+ *    → injected() connector detects window.ethereum
+ * 3. Normal mobile browsers (Safari, Chrome on mobile)
+ *    → WalletConnect deep links to wallet apps (MetaMask, Rainbow, Phantom)
+ * 4. Farcaster Mini App
+ *    → injected() connector if wallet connected to Farcaster
+ *
+ * Plus: Gnosis Safe apps (iframe context)
  */
 export function getConnectors(): CreateConnectorFn[] {
   const connectors: CreateConnectorFn[] = []
@@ -38,6 +45,32 @@ export function getConnectors(): CreateConnectorFn[] {
   // 3. Farcaster Mini App (if user's wallet is connected)
   connectors.push(injected())
 
+  // WalletConnect - ONLY on mobile devices when NO injected wallet detected (case #3)
+  // This covers: Normal mobile browsers (Safari, Chrome) where user has wallet apps
+  // but not in-app browser, so we need to deep link to their wallet app
+  if (typeof window !== "undefined") {
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    )
+    const hasInjectedWallet = typeof window.ethereum !== "undefined"
+
+    // Only add WalletConnect if on mobile AND no injected wallet
+    if (isMobile && !hasInjectedWallet) {
+      connectors.push(
+        walletConnect({
+          projectId: PUBLIC_WALLET_CONNECT_PROJECT_ID,
+          metadata: {
+            name: "RAT.FUN",
+            description: "RAT IS FUN",
+            url: "https://rat.fun",
+            icons: ["https://rat.fun/images/favicon.png"]
+          },
+          showQrModal: true // Shows WalletConnect's built-in modal with wallet list
+        })
+      )
+    }
+  }
+
   // Gnosis Safe connector for Safe apps (iframe context)
   if (typeof window !== "undefined" && window?.parent !== window) {
     connectors.push(
@@ -46,20 +79,6 @@ export function getConnectors(): CreateConnectorFn[] {
       })
     )
   }
-
-  // TODO: Add WalletConnect for normal mobile browsers (Safari, Chrome on mobile)
-  // when ready to support case #3
-  // connectors.push(
-  //   walletConnect({
-  //     projectId: PUBLIC_WALLET_CONNECT_PROJECT_ID,
-  //     metadata: {
-  //       name: "RAT.FUN",
-  //       description: "On-chain dungeon crawler",
-  //       url: "https://rat.fun",
-  //       icons: ["https://rat.fun/images/favicon.png"]
-  //     }
-  //   })
-  // )
 
   return connectors
 }
