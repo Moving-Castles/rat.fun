@@ -1,5 +1,10 @@
 import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
 
+const scramble = string => {
+  const end = Math.floor(Math.random() * string.length)
+  return `${string.slice(end, -1)}${string.slice(0, end)}`
+}
+
 const stringsData = {
   "en-US": {
     address: "Address",
@@ -126,7 +131,10 @@ t he mentally deranged. Results may vary.`,
     pastTrips: "Past trips",
     profit: "Profit",
     portfolio: "Portfolio",
-    psychoObjectExplanation: `psycho objects are materializations of mental items acquired tripping. Nobody really knows how they work, but they are 1000% real, definitely NOT hallucinations`,
+    psychoObjectExplanation: () =>
+      scramble(
+        `psycho objects are materializations of mental items acquired tripping. Nobody really knows how they work, but they are 1000% real, definitely NOT hallucinations`
+      ),
     rat: "Rat",
     ratAmountKilled: "Rats killed",
     ratBeingRevived:

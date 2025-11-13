@@ -18,20 +18,18 @@
   }
 </script>
 
-<div
-  style="--msg-empty: '{strings.empty.toUpperCase()}'"
-  in:fade|global={{ duration: 80, delay: 20 + index * 20 }}
-  class="empty-slot index-{index}"
-  class:hovered={isHovered}
-  role="button"
-  tabindex="0"
-  onmouseenter={onMouseEnter}
-  onmouseleave={onMouseLeave}
->
-  <Tooltip content={strings.psychoObjectExplanation}>
-    <span></span>
-  </Tooltip>
-</div>
+<Tooltip content={strings.psychoObjectExplanation()}>
+  <div
+    style="--msg-empty: '{strings.empty.toUpperCase()}'"
+    in:fade|global={{ duration: 80, delay: 20 + index * 20 }}
+    class="empty-slot index-{index}"
+    class:hovered={isHovered}
+    role="button"
+    tabindex="0"
+    onmouseenter={onMouseEnter}
+    onmouseleave={onMouseLeave}
+  ></div>
+</Tooltip>
 
 <style lang="scss">
   .empty-slot {
@@ -43,6 +41,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+
+    .fullwidth {
+      width: 100%;
+    }
 
     &::before {
       content: var(--msg-empty);
@@ -50,6 +55,7 @@
       font-size: var(--font-size-normal);
       opacity: 0;
       transition: opacity 0.2s ease;
+      width: 100%;
     }
 
     &:hover::before {
