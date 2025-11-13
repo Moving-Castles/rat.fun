@@ -1,5 +1,6 @@
 <script lang="ts">
   import { page } from "$app/state"
+  import { strings } from "$lib/modules/strings"
 
   import PlayerInfo from "./PlayerInfo/PlayerInfo.svelte"
   import ModeSwitch from "./ModeSwitch.svelte"
@@ -13,7 +14,7 @@
   <PlayerInfo />
   <div class="marquee-container">
     <Marquee numberOfCopies={3} direction="left">
-      <p class="text">THERE IS NO LUCK. ONLY SKILL. THERE ARE NO BAD TRIPS, ONLY BAD RATS.</p>
+      <p class="text">{strings.topBarMarqueeText}</p>
     </Marquee>
   </div>
   <div class="right">

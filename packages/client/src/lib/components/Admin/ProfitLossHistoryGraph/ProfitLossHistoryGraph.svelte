@@ -6,6 +6,7 @@
   import { page } from "$app/state"
   import { max, min } from "d3-array"
   import { line } from "d3-shape"
+  import { strings } from "$lib/modules/strings"
 
   let {
     graphData,
@@ -140,17 +141,17 @@
 
   {#if isEmpty}
     <div style:height="{height}px" class="no-data">
-      <span>NO DATA</span>
+      <span>{strings.noData.toUpperCase()}</span>
     </div>
   {:else}
     <div class="graph" bind:clientWidth={width}>
       <div class="legend y">
-        <button class="active">Profit</button>
+        <button class="active">{strings.profit}</button>
       </div>
       <div class="legend x">
         <button onclick={toggleSource} class="time-option" class:active={timeWindow === "events"}
-          >{#if limitedData.length === graphData.length}All&nbsp;
-          {/if}events ({#if limitedData.length < graphData.length}{limitedData.length}/{graphData.length}{:else}{limitedData.length}{/if})
+          >{#if limitedData.length === graphData.length}{strings.all}&nbsp;
+          {/if}{strings.events.toLowerCase()} ({#if limitedData.length < graphData.length}{limitedData.length}/{graphData.length}{:else}{limitedData.length}{/if})
           {focusedBoundingBox.x}
         </button>
       </div>

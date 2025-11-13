@@ -11,26 +11,27 @@
   import { disconnectWallet } from "$lib/modules/entry-kit/connector"
   import { UIState } from "$lib/modules/ui/state.svelte"
   import { UI } from "$lib/modules/ui/enums"
+  import { strings } from "$lib/modules/strings"
 </script>
 
 <div class="main-dropdown-content">
   <!-- Name -->
   <div class="tab">
-    <p class="key">Name:</p>
+    <p class="key">{strings.name}:</p>
     <p class="value">
       {$player?.name ?? ""}
     </p>
   </div>
   <!-- Wallet -->
   <div class="tab">
-    <p class="key">Connected wallet:</p>
+    <p class="key">{strings.connectedWallet}:</p>
     <p class="value">
       {shortenAddress($playerAddress)}
     </p>
   </div>
   <!-- Balance -->
   <div class="tab">
-    <p class="key">Balance:</p>
+    <p class="key">{strings.balance}:</p>
     <p class="value">
       {CURRENCY_SYMBOL}{$playerERC20Balance}
     </p>
@@ -38,33 +39,22 @@
   <!-- Rats killed -->
   {#if ($player?.pastRats ?? []).length > 0}
     <div class="tab">
-      <p class="key">Rats killed:</p>
+      <p class="key">{strings.ratAmountKilled}:</p>
       <p class="value">
         {$player?.pastRats.length}
       </p>
     </div>
   {/if}
   <SmallButton
-    tippyText="Disconnect wallet"
+    tippyText={strings.disconnectWallet}
     onclick={async () => {
       console.log("[MainDropdownContent] Disconnect button clicked")
       await disconnectWallet()
       console.log("[MainDropdownContent] Disconnect complete, returning to spawn")
       UIState.set(UI.SPAWNING)
     }}
-    text="Disconnect wallet"
+    text={strings.disconnectWallet}
   ></SmallButton>
-  <!-- <div class="buy-button-container">
-    <BigButton
-      disabled={busy.BuyWithEth.current !== 0}
-      tippyText="Buy some Slopamine ({CURRENCY_SYMBOL})"
-      onclick={async () => {
-        await sendBuyWithEth()
-        // playSound("ratfunUI", "coins")
-      }}
-      text="Buy $RAT"
-    ></BigButton>
-  </div> -->
 </div>
 
 <style lang="scss">

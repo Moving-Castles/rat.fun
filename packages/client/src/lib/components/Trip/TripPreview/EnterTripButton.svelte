@@ -5,6 +5,7 @@
   import { goto } from "$app/navigation"
   import { backgroundMusic } from "$lib/modules/sound/stores"
   import { BigButton } from "$lib/components/Shared"
+  import { strings } from "$lib/modules/strings"
 
   let { tripId, trip, disabled }: { tripId: Hex; trip: Trip; disabled: boolean } = $props()
 
@@ -21,11 +22,11 @@
   {#if Number($minRatValueToEnter) > Number($ratTotalValue)}
     <BigButton
       disabled={true}
-      text={`Rat value too low (at least ${Number($minRatValueToEnter)})`}
+      text={strings.minRatValueWarning(Number($minRatValueToEnter))}
       onclick={onClick}
     />
   {:else}
-    <BigButton {disabled} text="Send rat to trip" onclick={onClick} />
+    <BigButton {disabled} text={strings.sendRatToTrip} onclick={onClick} />
   {/if}
 </div>
 

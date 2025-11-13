@@ -1,8 +1,9 @@
 <script lang="ts">
+  import * as sortFunctions from "$lib/components/Trip/TripListing/sortFunctions"
   import { realisedProfitLoss } from "$lib/modules/state/stores"
   import { focusTrip, focusEvent } from "$lib/modules/ui/state.svelte"
   import { SignedNumber } from "$lib/components/Shared"
-  import * as sortFunctions from "$lib/components/Trip/TripListing/sortFunctions"
+  import { strings } from "$lib/modules/strings"
 
   import AdminPastTripTableItem from "../AdminPastTripTable/AdminPastTripTableItem.svelte"
 
@@ -45,9 +46,9 @@
 
 <div class="admin-trip-table-container">
   <div class="table-summary">
-    <div class="left">Past trips</div>
+    <div class="left">{strings.pastTrips}</div>
     <div class="right">
-      Profit:
+      {strings.profit}:
       <SignedNumber withCurrency value={$realisedProfitLoss} />
     </div>
   </div>
@@ -57,20 +58,20 @@
         <!-- Index -->
         <th class="cell-index">#</th>
         <!-- Prompt -->
-        <th class="cell-prompt">Trip</th>
+        <th class="cell-prompt">{strings.trip}</th>
         <!-- Visits -->
         <th class="cell-visits" onclick={sortByVisit}>
-          {#if sortFunctionName === "entriesByVisit"}▼{:else if sortFunctionName === "entriesByVisitDesc"}▲{/if}&nbsp;Visits
+          {#if sortFunctionName === "entriesByVisit"}▼{:else if sortFunctionName === "entriesByVisitDesc"}▲{/if}&nbsp;{strings.visits}
         </th>
         <!-- Kills -->
-        <th class="cell-kills">Kills</th>
+        <th class="cell-kills">{strings.kills}</th>
         <!-- Liquidation -->
-        <th class="cell-balance">Balance</th>
+        <th class="cell-balance">{strings.balance}</th>
         <!-- Profit -->
         <th class="cell-profit" onclick={sortByProfit}>
-          {#if sortFunctionName === "entriesByRealisedProfit"}▼{:else if sortFunctionName === "entriesByRealisedProfitDesc"}▲{/if}&nbsp;Profit
+          {#if sortFunctionName === "entriesByRealisedProfit"}▼{:else if sortFunctionName === "entriesByRealisedProfitDesc"}▲{/if}&nbsp;{strings.profit}
         </th>
-        <th class="cell-liquidated">CoD</th>
+        <th class="cell-liquidated">{strings.causeOfDeathShort}</th>
       </tr>
     </thead>
     <tbody>

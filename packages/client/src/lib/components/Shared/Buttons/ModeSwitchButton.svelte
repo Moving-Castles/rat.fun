@@ -1,6 +1,7 @@
 <script lang="ts">
   import { playSound } from "$lib/modules/sound"
   import { Tooltip, X } from "$lib/components/Shared"
+  import { strings } from "$lib/modules/strings"
 
   let {
     isAdminView,
@@ -35,7 +36,7 @@
         <X />
       </div>
     {:else}
-      <span class="button-text">CASHBOARD</span>
+      <span class="button-text">{strings.admin.toUpperCase()}</span>
     {/if}
   </button>
 </Tooltip>

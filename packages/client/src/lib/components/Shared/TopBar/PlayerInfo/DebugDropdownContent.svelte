@@ -5,7 +5,8 @@
     playerAddress,
     playerIsNew,
     playerHasTokens,
-    tokenAllowanceApproved
+    tokenAllowanceApproved,
+    balance
   } from "$lib/modules/state/stores"
   import { playerERC20Allowance, playerERC20Balance } from "$lib/modules/erc20Listener/stores"
   import {
@@ -22,63 +23,64 @@
   import { busy } from "$lib/modules/action-manager/index.svelte"
   import { ENVIRONMENT } from "$lib/mud/enums"
   import { publicNetwork } from "$lib/modules/network"
+  import { strings } from "$lib/modules/strings"
 </script>
 
 <div class="debug-dropdown-content">
   <div class="tab">
-    <p class="key">Address:</p>
+    <p class="key">{strings.address}:</p>
     <p class="value">
       {$playerAddress}
     </p>
   </div>
   <div class="tab">
-    <p class="key">Environment</p>
+    <p class="key">{strings.environment}</p>
     <p class="value">{$environment}</p>
   </div>
   <div class="tab">
-    <p class="key">Wallet Type:</p>
+    <p class="key">:</p>
     <p class="value">
       {$walletType}
     </p>
   </div>
   <div class="tab">
-    <p class="key">World address:</p>
+    <p class="key">{strings.worldAddress}:</p>
     <p class="value">
       {$publicNetwork.worldAddress}
     </p>
   </div>
   <div class="tab">
-    <p class="key">Spawned:</p>
+    <p class="key">{strings.player}:</p>
     <p class="value">
       {$player?.entityType == ENTITY_TYPE.PLAYER}
     </p>
   </div>
   <div class="tab">
-    <p class="key">Tokens:</p>
+    <p class="key">{strings.balance}:</p>
     <p class="value">
       {$playerERC20Balance}
     </p>
   </div>
   <div class="tab">
-    <p class="key">Allowance:</p>
+    <p class="key">{strings.allowance}:</p>
     <p class="value">
       {$playerERC20Allowance}
     </p>
   </div>
   <div class="tab">
-    <p class="key">Is new:</p>
+    <p class="key">{strings.newIndication}:</p>
     <p class="value">
       {$playerIsNew}
     </p>
   </div>
   <div class="tab">
-    <p class="key">Has tokens:</p>
+    <p class="key">{strings.hasTokens}:</p>
     <p class="value">
       {$playerHasTokens}
     </p>
   </div>
   <div class="tab">
-    <p class="key">Admin unlocked:</p>
+    <p class="key">{strings.adminUnlocked}:</p>
     <p class="value">
       {$player?.masterKey}
     </p>
@@ -87,51 +89,51 @@
     {#if $environment !== ENVIRONMENT.BASE}
       <SmallButton
         disabled={busy.GiveCallerTokens.current !== 0}
-        tippyText="Request tokens from the contract"
+        tippyText={strings.requestTokens}
         onclick={async () => {
           await sendGiveCallerTokens()
         }}
-        text="Get 2000 free slopamine ({CURRENCY_SYMBOL})"
+        text={strings.getFreeTokens(2000)}
       ></SmallButton>
       <SmallButton
         disabled={busy.BuyWithEth.current !== 0}
-        tippyText="Buy some slopamine ({CURRENCY_SYMBOL})"
+        tippyText={strings.buySomeTokens}
         onclick={async () => {
           await sendBuyWithEth()
         }}
-        text="Buy 1 Slopamine ({CURRENCY_SYMBOL}) for 0.001ETH"
+        text={strings.buyTokens(1)}
       ></SmallButton>
       <SmallButton
-        tippyText="Unlock cashboard"
+        tippyText={strings.unlockAdminInstruction}
         onclick={async () => {
           await sendUnlockAdmin()
         }}
         disabled={$player?.masterKey}
-        text="Unlock cashboard"
+        text={strings.unlockAdminInstruction}
       ></SmallButton>
     {/if}
     <SmallButton
       disabled={busy.ApproveMax.current !== 0 || $tokenAllowanceApproved}
-      tippyText="Allow the contract to spend on your behalf"
+      tippyText={strings.approveAllowanceInstruction}
       onclick={async () => {
         await sendApproveMax()
       }}
-      text="Approve max allowance"
+      text={strings.approveAllowance}
     ></SmallButton>
     <SmallButton
       disabled={busy.RevokeApproval.current !== 0 || !$tokenAllowanceApproved}
-      tippyText="Revoke contract spending approval (set to 0)"
+      tippyText={strings.revokeApprovalInstruction}
       onclick={async () => {
         await sendRevokeApproval()
       }}
-      text="Revoke approval"
+      text={strings.revokeApproval}
     ></SmallButton>
     <SmallButton
-      tippyText="Force liquidate rat"
+      tippyText={strings.forceRatLiquidation}
       onclick={async () => {
         await sendLiquidateRat()
       }}
-      text="Force liquidate rat"
+      text={strings.forceRatLiquidation}
     ></SmallButton>
   </div>
 </div>

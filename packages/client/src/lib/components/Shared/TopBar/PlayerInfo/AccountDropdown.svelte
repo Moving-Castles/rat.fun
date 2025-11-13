@@ -2,6 +2,7 @@
   import { fade } from "svelte/transition"
   import MainDropdownContent from "./MainDropdownContent.svelte"
   import DebugDropdownContent from "./DebugDropdownContent.svelte"
+  import { strings } from "$lib/modules/strings"
 
   let showDebug = $state(false)
 
@@ -12,7 +13,7 @@
 
 <div class="account-dropdown" out:fade={{ duration: 200 }}>
   <div class="debug-button">
-    <button onclick={toggleDebug}>Debug</button>
+    <button onclick={toggleDebug}>{strings.debug}</button>
   </div>
   {#if showDebug}
     <DebugDropdownContent />

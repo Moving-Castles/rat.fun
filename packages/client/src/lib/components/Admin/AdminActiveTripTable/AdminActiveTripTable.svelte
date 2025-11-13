@@ -7,6 +7,7 @@
 
   import AdminActiveTripTableItem from "./AdminActiveTripTableItem.svelte"
   import AdminPendingTripTableItem from "./AdminPendingTripTableItem.svelte"
+  import { strings } from "$lib/modules/strings"
 
   let {
     pendingTrip,
@@ -39,9 +40,9 @@
 
 <div class="admin-trip-table-container">
   <div class="table-summary">
-    <div class="left">Active trips</div>
+    <div class="left">{strings.activeTrips}</div>
     <div class="right">
-      Profit:
+      {strings.profit}:
       <SignedNumber withCurrency withTween value={$profitLoss} />
     </div>
   </div>
@@ -51,23 +52,23 @@
         <!-- Index -->
         <th class="cell-index">#</th>
         <!-- Prompt -->
-        <th class="cell-prompt">Trip</th>
+        <th class="cell-prompt">{strings.trip}</th>
         <!-- Visits -->
         <th class="cell-visits" onclick={sortByVisit}>
-          {#if sortFunctionName === "entriesByVisit"}▼{:else if sortFunctionName === "entriesByVisitDesc"}▲{/if}&nbsp;Visits
+          {#if sortFunctionName === "entriesByVisit"}▼{:else if sortFunctionName === "entriesByVisitDesc"}▲{/if}&nbsp;{strings.visits}
         </th>
         <!-- Kills -->
-        <th class="cell-kills">Kills</th>
+        <th class="cell-kills">{strings.kills}</th>
         <!-- Balance -->
-        <th class="cell-balance">Balance</th>
+        <th class="cell-balance">{strings.balance}</th>
         <!-- Profit -->
         <th class="cell-profit" onclick={sortByProfit}>
-          {#if sortFunctionName === "entriesByProfit"}▼{:else if sortFunctionName === "entriesByProfitDesc"}▲{/if}&nbsp;Profit
+          {#if sortFunctionName === "entriesByProfit"}▼{:else if sortFunctionName === "entriesByProfitDesc"}▲{/if}&nbsp;{strings.profit}
         </th>
         <!-- Spark -->
         <th class="cell-spark"></th>
         <!-- Action -->
-        <th class="cell-action">Action</th>
+        <th class="cell-action">{strings.action}</th>
       </tr>
     </thead>
     <tbody>

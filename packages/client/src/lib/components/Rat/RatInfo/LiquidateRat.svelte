@@ -6,6 +6,7 @@
   import { ratState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
   import { getRatTotalValue } from "$lib/modules/state/utils"
   import { Tween } from "svelte/motion"
+  import { strings } from "$lib/modules/strings"
 
   let { displayRat }: { displayRat: Rat | null } = $props()
 
@@ -47,8 +48,8 @@
     </div>
     <div class="action">
       <DangerButton
-        text="Liquidate Rat"
-        tippyText="Liquidate rat to get the value added to your wallet"
+        text={strings.liquidateRatButtonText}
+        tippyText={strings.liquidateRatInstruction}
         {onclick}
       />
     </div>

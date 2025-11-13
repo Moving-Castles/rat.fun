@@ -174,7 +174,7 @@
 
   {#if isEmpty}
     <div style:height="{height}px" class="no-data">
-      <span>NO DATA</span>
+      <span>{strings.noData.toUpperCase()}</span>
     </div>
   {:else}
     <div class="graph" style:height="{height}px" bind:clientWidth={width}>
