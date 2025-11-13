@@ -45,7 +45,7 @@ export async function setupSession({
 }: SetupSessionParams): Promise<void> {
   const sessionAddress = sessionClient.account.address
 
-  console.log("setting up session", userClient)
+  console.log("[entrykit-drawbridge] setting up session", userClient)
 
   if (userClient.account.type === "smart") {
     // ===== Smart Account Flow =====
@@ -55,7 +55,7 @@ export async function setupSession({
     const calls = []
 
     if (registerDelegation) {
-      console.log("registering delegation")
+      console.log("[entrykit-drawbridge] registering delegation")
       calls.push(
         defineCall({
           to: worldAddress,
@@ -68,19 +68,19 @@ export async function setupSession({
 
     if (!calls.length) return
 
-    console.log("setting up account with", calls, userClient)
+    console.log("[entrykit-drawbridge] setting up account with", calls, userClient)
     const hash = await getAction(userClient, sendUserOperation, "sendUserOperation")({ calls })
-    console.log("got user op hash", hash)
+    console.log("[entrykit-drawbridge] got user op hash", hash)
 
     const receipt = await getAction(
       userClient,
       waitForUserOperationReceipt,
       "waitForUserOperationReceipt"
     )({ hash })
-    console.log("got user op receipt", receipt)
+    console.log("[entrykit-drawbridge] got user op receipt", receipt)
 
     if (!receipt.success) {
-      console.error("not successful?", receipt)
+      console.error("[entrykit-drawbridge] not successful?", receipt)
     }
   } else {
     // ===== EOA Flow (CallWithSignature) =====
@@ -93,7 +93,7 @@ export async function setupSession({
     const txs: Hex[] = []
 
     if (registerDelegation) {
-      console.log("registering delegation")
+      console.log("[entrykit-drawbridge] registering delegation")
       const tx = await callWithSignature({
         client,
         userClient,
@@ -106,22 +106,22 @@ export async function setupSession({
           args: [sessionAddress, unlimitedDelegationControlId, "0x"]
         })
       })
-      console.log("got delegation tx", tx)
+      console.log("[entrykit-drawbridge] got delegation tx", tx)
       txs.push(tx)
     }
 
     if (!txs.length) return
 
-    console.log("waiting for", txs.length, "receipts")
+    console.log("[entrykit-drawbridge] waiting for", txs.length, "receipts")
     for (const hash of txs) {
       const receipt = await getAction(
         client,
         waitForTransactionReceipt,
         "waitForTransactionReceipt"
       )({ hash })
-      console.log("got tx receipt", receipt)
+      console.log("[entrykit-drawbridge] got tx receipt", receipt)
       if (receipt.status === "reverted") {
-        console.error("tx reverted?", receipt)
+        console.error("[entrykit-drawbridge] tx reverted?", receipt)
       }
     }
   }
@@ -132,7 +132,7 @@ export async function setupSession({
   // code can assume the account exists and has a deterministic address.
 
   if (!(await sessionClient.account.isDeployed?.())) {
-    console.log("creating session account by sending empty user op")
+    console.log("[entrykit-drawbridge] creating session account by sending empty user op")
 
     // Send empty user operation to trigger account deployment
     // The bundler/EntryPoint will deploy the account as part of executing this operation
@@ -149,6 +149,6 @@ export async function setupSession({
       waitForUserOperationReceipt,
       "waitForUserOperationReceipt"
     )({ hash })
-    console.log("got user op receipt", receipt)
+    console.log("[entrykit-drawbridge] got user op receipt", receipt)
   }
 }

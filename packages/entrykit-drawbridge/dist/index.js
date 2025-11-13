@@ -304,11 +304,11 @@ async function setupSession({
   registerDelegation = true
 }) {
   const sessionAddress = sessionClient.account.address;
-  console.log("setting up session", userClient);
+  console.log("[entrykit-drawbridge] setting up session", userClient);
   if (userClient.account.type === "smart") {
     const calls = [];
     if (registerDelegation) {
-      console.log("registering delegation");
+      console.log("[entrykit-drawbridge] registering delegation");
       calls.push(
         defineCall({
           to: worldAddress,
@@ -319,22 +319,22 @@ async function setupSession({
       );
     }
     if (!calls.length) return;
-    console.log("setting up account with", calls, userClient);
+    console.log("[entrykit-drawbridge] setting up account with", calls, userClient);
     const hash = await getAction(userClient, sendUserOperation, "sendUserOperation")({ calls });
-    console.log("got user op hash", hash);
+    console.log("[entrykit-drawbridge] got user op hash", hash);
     const receipt = await getAction(
       userClient,
       waitForUserOperationReceipt,
       "waitForUserOperationReceipt"
     )({ hash });
-    console.log("got user op receipt", receipt);
+    console.log("[entrykit-drawbridge] got user op receipt", receipt);
     if (!receipt.success) {
-      console.error("not successful?", receipt);
+      console.error("[entrykit-drawbridge] not successful?", receipt);
     }
   } else {
     const txs = [];
     if (registerDelegation) {
-      console.log("registering delegation");
+      console.log("[entrykit-drawbridge] registering delegation");
       const tx = await callWithSignature({
         client,
         userClient,
@@ -347,25 +347,25 @@ async function setupSession({
           args: [sessionAddress, unlimitedDelegationControlId, "0x"]
         })
       });
-      console.log("got delegation tx", tx);
+      console.log("[entrykit-drawbridge] got delegation tx", tx);
       txs.push(tx);
     }
     if (!txs.length) return;
-    console.log("waiting for", txs.length, "receipts");
+    console.log("[entrykit-drawbridge] waiting for", txs.length, "receipts");
     for (const hash of txs) {
       const receipt = await getAction(
         client,
         waitForTransactionReceipt,
         "waitForTransactionReceipt"
       )({ hash });
-      console.log("got tx receipt", receipt);
+      console.log("[entrykit-drawbridge] got tx receipt", receipt);
       if (receipt.status === "reverted") {
-        console.error("tx reverted?", receipt);
+        console.error("[entrykit-drawbridge] tx reverted?", receipt);
       }
     }
   }
   if (!await sessionClient.account.isDeployed?.()) {
-    console.log("creating session account by sending empty user op");
+    console.log("[entrykit-drawbridge] creating session account by sending empty user op");
     const hash = await getAction(
       sessionClient,
       sendUserOperation,
@@ -378,7 +378,7 @@ async function setupSession({
       waitForUserOperationReceipt,
       "waitForUserOperationReceipt"
     )({ hash });
-    console.log("got user op receipt", receipt);
+    console.log("[entrykit-drawbridge] got user op receipt", receipt);
   }
 }
 var EntryKit = class {
@@ -410,24 +410,24 @@ var EntryKit = class {
    * It will attempt to reconnect to a previously connected wallet.
    */
   async initialize() {
-    console.log("[EntryKit] Initializing...");
+    console.log("[entrykit-drawbridge] Initializing...");
     let reconnected = false;
     try {
       await reconnect(this.wagmiConfig);
       reconnected = true;
-      console.log("[EntryKit] Reconnection successful");
-    } catch (error) {
-      console.log("[EntryKit] No previous connection to restore");
+      console.log("[entrykit-drawbridge] Reconnection successful");
+    } catch (err) {
+      console.log("[entrykit-drawbridge] No previous connection to restore");
     }
     this.setupAccountWatcher();
     if (reconnected) {
       const account = getAccount(this.wagmiConfig);
       if (account.isConnected && account.address) {
-        console.log("[EntryKit] Processing reconnected wallet:", account.address);
+        console.log("[entrykit-drawbridge] Processing reconnected wallet:", account.address);
         await this.handleWalletConnection();
       }
     }
-    console.log("[EntryKit] Initialization complete");
+    console.log("[entrykit-drawbridge] Initialization complete");
   }
   // ===== Reactive State Management =====
   /**
@@ -478,12 +478,12 @@ var EntryKit = class {
   setupAccountWatcher() {
     const unwatch = watchAccount(this.wagmiConfig, {
       onChange: async (account) => {
-        console.log("[EntryKit] Account change:", {
+        console.log("[entrykit-drawbridge] Account change:", {
           isConnected: account.isConnected,
           address: account.address
         });
         if (!account.isConnected) {
-          console.log("[EntryKit] Wallet disconnected");
+          console.log("[entrykit-drawbridge] Wallet disconnected");
           this.updateState({
             sessionClient: null,
             userAddress: null,
@@ -494,7 +494,7 @@ var EntryKit = class {
           return;
         }
         if (this.isConnecting) {
-          console.log("[EntryKit] Already processing connection");
+          console.log("[entrykit-drawbridge] Already processing connection");
           return;
         }
         if (!account.connector || !account.address) {
@@ -503,8 +503,8 @@ var EntryKit = class {
         try {
           this.isConnecting = true;
           await this.handleWalletConnection();
-        } catch (error) {
-          console.error("[EntryKit] Connection handler failed:", error);
+        } catch (err) {
+          console.error("[entrykit-drawbridge] Connection handler failed:", err);
         } finally {
           this.isConnecting = false;
         }
@@ -520,16 +520,16 @@ var EntryKit = class {
     let userClient;
     try {
       userClient = await getConnectorClient(this.wagmiConfig);
-    } catch (error) {
-      console.log("[EntryKit] Could not get connector client");
+    } catch (err) {
+      console.log("[entrykit-drawbridge] Could not get connector client");
       return;
     }
     if (!userClient.account || !userClient.chain) {
-      console.log("[EntryKit] Wallet client missing account or chain");
+      console.log("[entrykit-drawbridge] Wallet client missing account or chain");
       return;
     }
     const userAddress = userClient.account.address;
-    console.log("[EntryKit] Connecting session for address:", userAddress);
+    console.log("[entrykit-drawbridge] Connecting session for address:", userAddress);
     const signer = getSessionSigner(userAddress);
     const { account } = await getSessionAccount({
       client: userClient,
@@ -554,7 +554,7 @@ var EntryKit = class {
       sessionAddress: account.address,
       isReady: hasDelegation
     });
-    console.log("[EntryKit] Session connection complete, isReady:", hasDelegation);
+    console.log("[entrykit-drawbridge] Session connection complete, isReady:", hasDelegation);
   }
   // ===== Public API =====
   /**
@@ -586,18 +586,18 @@ var EntryKit = class {
     if (!connector) {
       throw new Error(`Connector not found: ${connectorId}`);
     }
-    console.log("[EntryKit] Connecting to wallet:", connectorId);
+    console.log("[entrykit-drawbridge] Connecting to wallet:", connectorId);
     try {
       await connect(this.wagmiConfig, {
         connector,
         chainId: this.config.chainId
       });
-    } catch (error) {
-      if (error instanceof Error && error.name === "ConnectorAlreadyConnectedError") {
-        console.log("[EntryKit] Already connected");
+    } catch (err) {
+      if (err instanceof Error && err.name === "ConnectorAlreadyConnectedError") {
+        console.log("[entrykit-drawbridge] Already connected");
         return;
       }
-      throw error;
+      throw err;
     }
   }
   /**
@@ -608,17 +608,17 @@ var EntryKit = class {
    * 2. Account watcher will automatically clear EntryKit state
    */
   async disconnectWallet() {
-    console.log("[EntryKit] disconnectWallet() called");
-    console.log("[EntryKit] Current state:", this.state);
-    console.log("[EntryKit] Calling wagmi disconnect()...");
+    console.log("[entrykit-drawbridge] disconnectWallet() called");
+    console.log("[entrykit-drawbridge] Current state:", this.state);
+    console.log("[entrykit-drawbridge] Calling wagmi disconnect()...");
     try {
       await disconnect(this.wagmiConfig);
-      console.log("[EntryKit] wagmi disconnect() returned");
-    } catch (error) {
-      console.error("[EntryKit] wagmi disconnect() threw error:", error);
-      throw error;
+      console.log("[entrykit-drawbridge] wagmi disconnect() returned");
+    } catch (err) {
+      console.error("[entrykit-drawbridge] wagmi disconnect() threw error:", err);
+      throw err;
     }
-    console.log("[EntryKit] Disconnect complete");
+    console.log("[entrykit-drawbridge] Disconnect complete");
   }
   /**
    * Check if session is ready to use
@@ -657,7 +657,7 @@ var EntryKit = class {
     if (!this.state.sessionClient) {
       throw new Error("Not connected. Call connectWallet() first.");
     }
-    console.log("[EntryKit] Setting up session (registering delegation)...");
+    console.log("[entrykit-drawbridge] Setting up session (registering delegation)...");
     const userClient = await getConnectorClient(this.wagmiConfig);
     await setupSession({
       client: userClient,
@@ -666,7 +666,7 @@ var EntryKit = class {
       worldAddress: this.config.worldAddress
     });
     this.updateState({ isReady: true });
-    console.log("[EntryKit] Session setup complete");
+    console.log("[entrykit-drawbridge] Session setup complete");
   }
   /**
    * Cleanup and destroy EntryKit instance
@@ -678,7 +678,7 @@ var EntryKit = class {
    * Call this when unmounting your app.
    */
   destroy() {
-    console.log("[EntryKit] Destroying instance");
+    console.log("[entrykit-drawbridge] Destroying instance");
     if (this.accountWatcherCleanup) {
       this.accountWatcherCleanup();
       this.accountWatcherCleanup = null;

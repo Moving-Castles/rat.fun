@@ -33,12 +33,10 @@
     "@latticexyz/world": "2.2.23",
     "@latticexyz/world-module-callwithsignature": "2.2.23",
     "@wagmi/core": "2.22.1",
-    "debug": "^4.3.4",
     "permissionless": "0.2.30",
     "wagmi": "2.19.2"
   },
   "devDependencies": {
-    "@types/debug": "^4.1.7",
     "@types/node": "^22.0.0",
     "shx": "^0.4.0",
     "tsup": "^8.0.0",
