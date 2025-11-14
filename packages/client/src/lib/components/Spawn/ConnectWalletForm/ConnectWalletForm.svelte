@@ -4,8 +4,8 @@
   import gsap from "gsap"
   import { getEntryKit, type ConnectorInfo } from "$lib/modules/entry-kit"
   import { debugInfo } from "$lib/modules/entry-kit/wagmiConfig"
-  import BigButton from "$lib/components/Shared/Buttons/BigButton.svelte"
   import { isPhone } from "$lib/modules/ui/state.svelte"
+  import BigButton from "$lib/components/Shared/Buttons/BigButton.svelte"
 
   const { walletType, onComplete = () => {} } = $props<{
     walletType: WALLET_TYPE
@@ -13,15 +13,18 @@
   }>()
 
   let buttonElement: HTMLDivElement | null = $state(null)
-  let showWalletSelect = $state(false)
+
   let connecting = $state(false)
-  let availableConnectors = $state<ConnectorInfo[]>([])
+
   let showDebugPanel = $state(false)
+  let showWalletSelect = $state(false)
+  let showNoWalletsModal = $state(false)
+  let showDeepLinkSelect = $state(false)
+
+  let availableConnectors = $state<ConnectorInfo[]>([])
   let allConnectors = $state<ConnectorInfo[]>([])
 
   const timeline = gsap.timeline()
-
-  const shouldShowDeeplinks = $derived($isPhone && !debugInfo.hasWindowEthereum)
 
   const PREFERRED_WALLET_ORDER = ["metamask", "phantom", "rabby", "coinbase"]
 
@@ -39,7 +42,7 @@
     coinbase: {
       ios: "https://go.cb-w.com/dapp?cb_url=https%3A%2F%2Frat.fun",
       android: "https://go.cb-w.com/dapp?cb_url=https%3A%2F%2Frat.fun",
-      name: "Coinbase Wallet"
+      name: "BASE app"
     },
     rabby: {
       ios: "rabby://dapp?url=https%3A%2F%2Frat.fun",
@@ -95,43 +98,15 @@
     }
   }
 
-  function openWalletSelect() {
-    // Get available connectors from EntryKit
-    const entrykit = getEntryKit()
-    const connectors = entrykit.getAvailableConnectors()
-
-    // Store all connectors for debug panel
-    allConnectors = connectors
-
-    // Filter out the generic "Injected" connector - only show specific wallets
-    // UNLESS it's the only connector (like in Base app mobile browser)
-    const filteredConnectors = connectors.filter(c => c.id !== "injected" && c.name !== "Injected")
-
-    // If we have specific wallets, use those. Otherwise, keep the injected connector.
-    availableConnectors =
-      filteredConnectors.length > 0
-        ? filteredConnectors.sort((a, b) => getWalletPriority(a) - getWalletPriority(b))
-        : connectors
-
-    // Improve the display name for generic "Injected" connector based on detected provider
-    if (availableConnectors.length === 1 && availableConnectors[0].id === "injected") {
-      if (debugInfo.windowEthereumProviders.length > 0) {
-        // Use detected provider name instead of "Injected"
-        const providerName = debugInfo.windowEthereumProviders[0]
-        availableConnectors = [
-          {
-            id: availableConnectors[0].id,
-            name: providerName === "Coinbase" ? "Coinbase Wallet" : providerName,
-            type: availableConnectors[0].type
-          }
-        ]
+  function handleClick() {
+    // If no connectors available, show the modal with debug panel
+    if (availableConnectors.length === 0) {
+      console.log("__ no connectors available")
+      if ($isPhone) {
+        showDeepLinkSelect = true
+      } else {
+        showNoWalletsModal = true
       }
-    }
-
-    // If no connectors at all, show modal with debug panel
-    if (allConnectors.length === 0) {
-      showWalletSelect = true
-      showDebugPanel = true
       return
     }
 
@@ -146,7 +121,75 @@
     showWalletSelect = true
   }
 
+  function prepareConnectors() {
+    const entrykit = getEntryKit()
+    const connectors = entrykit.getAvailableConnectors()
+
+    // Check if window.ethereum exists
+    const hasInjectedProvider =
+      typeof window !== "undefined" && typeof window.ethereum !== "undefined"
+
+    console.log("[ConnectWalletForm] Connector setup:", {
+      allConnectors: connectors.length,
+      hasInjectedProvider
+    })
+
+    // Store all connectors for debug panel
+    allConnectors = connectors
+
+    // Filter out generic "Injected" connector - only show specific wallets
+    const filteredConnectors = connectors.filter(c => c.id !== "injected" && c.name !== "Injected")
+
+    // CRITICAL: If we filtered out all connectors BUT window.ethereum exists,
+    // keep injected connector (Base app case)
+    if (filteredConnectors.length === 0 && connectors.length > 0 && hasInjectedProvider) {
+      console.log(
+        "[ConnectWalletForm] No specific wallets but window.ethereum exists - keeping injected"
+      )
+
+      // Improve the display name for injected connector
+      const injectedConnector = connectors.find(c => c.id === "injected")
+      if (injectedConnector) {
+        // Try to get provider name from window.ethereum
+        let providerName = "Wallet"
+        if (window.ethereum) {
+          const eth = window.ethereum as any
+          if (eth.isCoinbaseWallet) providerName = "BASE Wallet"
+          else if (eth.isMetaMask) providerName = "MetaMask"
+          else if (eth.isRabby) providerName = "Rabby"
+          else if (eth.isPhantom) providerName = "Phantom"
+        }
+
+        availableConnectors = [
+          {
+            id: injectedConnector.id,
+            name: providerName,
+            type: injectedConnector.type
+          }
+        ]
+      } else {
+        availableConnectors = connectors
+      }
+    } else if (filteredConnectors.length === 0 && !hasInjectedProvider) {
+      // No specific wallets AND no window.ethereum - show deep links or no wallets
+      console.log("[ConnectWalletForm] No wallets detected")
+      availableConnectors = []
+    } else {
+      // We have specific wallets, use those
+      availableConnectors = filteredConnectors.sort(
+        (a, b) => getWalletPriority(a) - getWalletPriority(b)
+      )
+    }
+
+    console.log("[ConnectWalletForm] Final connectors:", availableConnectors)
+  }
+
   onMount(() => {
+    // Only prepare connectors for ENTRYKIT wallet type
+    if (walletType === WALLET_TYPE.ENTRYKIT) {
+      prepareConnectors()
+    }
+
     if (!buttonElement) {
       return
     }
@@ -171,27 +214,29 @@
         {#if connecting}
           <BigButton text="Connecting..." disabled={true} onclick={() => {}} />
         {:else}
-          <BigButton text="Connect wallet" onclick={openWalletSelect} />
+          <BigButton text="Connect wallet" onclick={handleClick} />
         {/if}
       </div>
 
+      <!-- No wallets modal -->
+      {#if showNoWalletsModal}
+        <div class="wallet-modal">
+          <div class="modal-content">
+            <button class="close-btn" onclick={() => (showNoWalletsModal = false)}>×</button>
+            <h2>No wallets found</h2>
+            <p>No wallets found. Please install a wallet app to continue.</p>
+          </div>
+        </div>
+      {/if}
+
+      <!-- Wallet select -->
       {#if showWalletSelect}
         <div class="wallet-modal">
           <div class="modal-content">
             <button class="close-btn" onclick={() => (showWalletSelect = false)}>×</button>
-            {#if shouldShowDeeplinks}
-              <h2>Open in wallet app</h2>
-            {:else}
-              <h2>Connect Wallet</h2>
-            {/if}
-            <div class="wallet-options">
-              {#if shouldShowDeeplinks}
-                {#each Object.entries(WALLET_DEEPLINKS) as [walletId, wallet]}
-                  <button class="wallet-option" onclick={() => openWalletDeeplink(walletId)}>
-                    {wallet.name}
-                  </button>
-                {/each}
-              {:else if availableConnectors.length > 0}
+            <h2>Connect Wallet</h2>
+            {#if availableConnectors.length > 0}
+              <div class="wallet-options">
                 {#each availableConnectors as connector}
                   <button
                     class="wallet-option"
@@ -201,9 +246,24 @@
                     {connector.name}
                   </button>
                 {/each}
-              {:else}
-                <p class="no-wallets">No wallet connectors available</p>
-              {/if}
+              </div>
+            {/if}
+          </div>
+        </div>
+      {/if}
+
+      <!-- Deep link select -->
+      {#if showDeepLinkSelect}
+        <div class="wallet-modal">
+          <div class="modal-content">
+            <button class="close-btn" onclick={() => (showDeepLinkSelect = false)}>×</button>
+            <h2>Open in wallet app</h2>
+            <div class="wallet-options">
+              {#each Object.entries(WALLET_DEEPLINKS) as [walletId, wallet]}
+                <button class="wallet-option" onclick={() => openWalletDeeplink(walletId)}>
+                  {wallet.name}
+                </button>
+              {/each}
             </div>
           </div>
         </div>

@@ -60,25 +60,50 @@ export function getConnectors(): CreateConnectorFn[] {
     debugInfo.isInIframe = window?.parent !== window
     debugInfo.timestamp = new Date().toISOString()
 
-    // Detect Base app (Coinbase's Base mobile app)
-    debugInfo.isBaseApp = /base/i.test(navigator.userAgent)
-    debugInfo.isCoinbaseWallet = /coinbase/i.test(navigator.userAgent)
-
-    // Check for provider info
+    // Detect Base app / Coinbase Wallet
+    // Multiple detection methods to catch all cases:
     if (window.ethereum) {
+      const eth = window.ethereum as any
+
+      // Method 1: Check isCoinbaseWallet flag
+      const hasCoinbaseFlag = eth.isCoinbaseWallet === true
+
+      // Method 2: Check for Coinbase-specific properties
+      const hasCoinbaseProvider =
+        eth.providerMap?.has?.("CoinbaseWallet") ||
+        eth.providers?.some?.((p: any) => p.isCoinbaseWallet)
+
+      // Method 3: Check if ONLY provider and has smart wallet capabilities
+      const isOnlyProvider = !eth.isMetaMask && !eth.isRabby && !eth.isPhantom && !eth.isBraveWallet
+      const hasSmartWalletFeatures = typeof eth.request === "function"
+
+      debugInfo.isCoinbaseWallet = hasCoinbaseFlag || hasCoinbaseProvider
+      debugInfo.isBaseApp = debugInfo.isCoinbaseWallet && debugInfo.isMobile
+
+      // Check for provider info
       const providers: string[] = []
-      if (window.ethereum.isCoinbaseWallet) providers.push("Coinbase")
-      if (window.ethereum.isMetaMask) providers.push("MetaMask")
-      if (window.ethereum.isRabby) providers.push("Rabby")
-      if (window.ethereum.isPhantom) providers.push("Phantom")
-      if (window.ethereum.isBraveWallet) providers.push("Brave")
-      if (window.ethereum.providers) {
-        providers.push(`Multiple providers (${window.ethereum.providers.length})`)
+      if (eth.isCoinbaseWallet) providers.push("Coinbase")
+      if (eth.isMetaMask) providers.push("MetaMask")
+      if (eth.isRabby) providers.push("Rabby")
+      if (eth.isPhantom) providers.push("Phantom")
+      if (eth.isBraveWallet) providers.push("Brave")
+      if (eth.providers) {
+        providers.push(`Multiple providers (${eth.providers.length})`)
       }
       if (providers.length === 0) {
         providers.push("Unknown provider")
       }
       debugInfo.windowEthereumProviders = providers
+
+      console.log("[wagmiConfig] Wallet detection:", {
+        isCoinbaseWallet: debugInfo.isCoinbaseWallet,
+        isBaseApp: debugInfo.isBaseApp,
+        hasCoinbaseFlag,
+        hasCoinbaseProvider,
+        isOnlyProvider,
+        hasSmartWalletFeatures,
+        providers
+      })
     }
   }
 
