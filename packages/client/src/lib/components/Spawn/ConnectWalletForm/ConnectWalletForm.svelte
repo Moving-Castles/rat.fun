@@ -185,7 +185,10 @@
   }
 
   onMount(() => {
-    prepareConnectors()
+    // Only prepare connectors for ENTRYKIT wallet type
+    if (walletType === WALLET_TYPE.ENTRYKIT) {
+      prepareConnectors()
+    }
 
     if (!buttonElement) {
       return
