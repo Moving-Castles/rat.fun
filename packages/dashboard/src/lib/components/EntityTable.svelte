@@ -219,7 +219,7 @@
         <tbody>
           <tr>
             <td colspan={columns.length} class="no-data">
-              <span>{strings.noData.toUpperCase()}</span>
+              <span>NO DATA</span>
             </td>
           </tr>
         </tbody>

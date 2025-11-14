@@ -2,9 +2,9 @@ procs:
   client:
     cwd: packages/client
     shell: pnpm run dev
-  # dashboard:
-  #   cwd: packages/dashboard
-  #   shell: pnpm run dev
+  dashboard:
+    cwd: packages/dashboard
+    shell: pnpm run dev
   # exchange-frontend:
   #   cwd: packages/exchange-frontend
   #   shell: pnpm dev
