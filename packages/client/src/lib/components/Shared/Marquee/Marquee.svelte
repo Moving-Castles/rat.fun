@@ -32,16 +32,6 @@
   class="marquee {className}"
   class:flex-row={direction === "left" || direction === "right"}
   class:flex-col={direction === "up"}
-  style:mask-image={fade
-    ? `linear-gradient(${
-        direction === "up" ? "to bottom" : "to right"
-      }, transparent 0%, rgba(0, 0, 0, 1.0) 10%, rgba(0, 0, 0, 1.0) 90%, transparent 100%)`
-    : "none"}
-  style:-webkit-mask-image={fade
-    ? `linear-gradient(${
-        direction === "up" ? "to bottom" : "to right"
-      }, transparent 0%, rgba(0, 0, 0, 1.0) 10%, rgba(0, 0, 0, 1.0) 90%, transparent 100%)`
-    : "none"}
 >
   {#each Array(numberOfCopies).fill(0) as _, i (i)}
     <div

@@ -3,10 +3,13 @@
   import { fade } from "svelte/transition"
   import { shaders } from "$lib/modules/webgl/shaders/index.svelte"
   import { createShaderManager } from "$lib/modules/webgl/shaders/index.svelte"
+  import { isPhone } from "$lib/modules/ui/state.svelte"
 
   let { shaderKey }: { shaderKey: keyof typeof shaders } = $props()
 
-  const localShaderManager = createShaderManager()
+  let isPhoneOrFireFoxLol = $derived(/Firefox/i.test(navigator.userAgent) || $isPhone)
+
+  const localShaderManager = createShaderManager(isPhoneOrFireFoxLol ? 0.25 : 1)
 
   let canvasElement = $state<HTMLCanvasElement>()
   let initFailed = $state(false)
@@ -34,7 +37,8 @@
 </script>
 
 <div class="shader-container" in:fade={{ duration: 300 }}>
-  <canvas bind:this={canvasElement} class="shader-canvas"></canvas>
+  <canvas bind:this={canvasElement} class:phone={isPhoneOrFireFoxLol} class="shader-canvas"
+  ></canvas>
 </div>
 
 <style lang="scss">
@@ -48,6 +52,13 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+
+      &.phone {
+        width: 25%;
+        height: 25%;
+        transform-origin: top left;
+        transform: scale(4);
+      }
     }
   }
 </style>

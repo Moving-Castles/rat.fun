@@ -25,9 +25,10 @@ export class ShaderManager {
   private recoveryTimeout: ReturnType<typeof setTimeout> | null = null
   private recoveryAttempts = 0
   private maxRecoveryAttempts = 10
+  private resolutionScale: number = 1
 
-  constructor() {
-    // No initialization needed
+  constructor(resolutionScale: number = 1) {
+    this.resolutionScale = resolutionScale
   }
 
   /**
@@ -60,6 +61,13 @@ export class ShaderManager {
     if (this._renderer && newCanvas) {
       this._renderer.canvas = newCanvas
     }
+  }
+
+  /**
+   * Set resolution scale
+   */
+  setResolutionScale(scale: number) {
+    this.resolutionScale = scale
   }
 
   /**
@@ -183,6 +191,11 @@ export class ShaderManager {
 
     this._canvas = canvas
 
+    // Set canvas internal resolution based on scale
+    const rect = canvas.getBoundingClientRect()
+    canvas.width = Math.floor(rect.width * this.resolutionScale)
+    canvas.height = Math.floor(rect.height * this.resolutionScale)
+
     // Set up initial uniforms
     const initialUniforms: Record<
       string,
@@ -250,7 +263,11 @@ export class ShaderManager {
     }
 
     this.resizeTimeout = setTimeout(() => {
-      if (this._renderer) {
+      if (this._renderer && this._canvas) {
+        // Update canvas internal resolution
+        const rect = this._canvas.getBoundingClientRect()
+        this._canvas.width = Math.floor(rect.width * this.resolutionScale)
+        this._canvas.height = Math.floor(rect.height * this.resolutionScale)
         this._renderer.resize()
       }
     }, 100)

@@ -395,13 +395,12 @@ export class WebGLGeneralRenderer implements WebGLRenderer {
   }
 
   /**
-   * Resizes the canvas and updates the resolution uniform.
-   * Adjusts canvas size based on device pixel ratio and updates u_resolution uniform.
+   * Updates the viewport and resolution uniform based on current canvas dimensions.
+   * Note: Canvas dimensions should be set externally (e.g., by ShaderManager with resolutionScale)
    */
   resize(): void {
-    const rect = this.canvas.getBoundingClientRect()
-    this.canvas.width = rect.width * window.devicePixelRatio
-    this.canvas.height = rect.height * window.devicePixelRatio
+    // Update viewport to match current canvas dimensions
+    this.gl.viewport(0, 0, this.canvas.width, this.canvas.height)
 
     // Update resolution uniform if it exists (using cached location)
     const resolutionLocation = this.uniformLocations.get("u_resolution")

@@ -9,6 +9,10 @@ import { magic } from "./magic"
 import { swirlyNoise } from "./swirly-noise"
 import { black } from "./black"
 import { tripProcessing } from "./trip-processing"
+import { get } from "svelte/store"
+import { isPhone } from "$lib/modules/ui/state.svelte"
+
+const isPhoneOrFirefox = /Firefox/i.test(navigator.userAgent) || get(isPhone)
 
 const shaders = {
   plasma,
@@ -28,8 +32,9 @@ const shaders = {
 /**
  * Factory function for creating shader managers
  */
-function createShaderManager() {
-  return new ShaderManager()
+function createShaderManager(resolutionScale: number = 1) {
+  console.log("CREATING SHADER MANAGER AT RESOLUTION SCALE", resolutionScale)
+  return new ShaderManager(resolutionScale)
 }
 
 export {
@@ -41,4 +46,4 @@ export {
   createShaderManager
 }
 
-export const shaderManager = createShaderManager()
+export const shaderManager = createShaderManager(isPhoneOrFirefox ? 0.25 : 1)
