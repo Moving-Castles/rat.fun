@@ -174,8 +174,8 @@
 
 <style lang="scss">
   .container {
-    width: 100vw;
-    height: 100vh;
+    width: 100dvw;
+    height: 100dvh;
     color: white;
     font-family: var(--special-font-stack);
     text-transform: none;

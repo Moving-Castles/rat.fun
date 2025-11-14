@@ -7,7 +7,7 @@ import { smartAccountActions } from 'permissionless';
 import { callFrom, sendUserOperationFrom } from '@latticexyz/world/internal';
 import { createBundlerClient as createBundlerClient$1, sendUserOperation, waitForUserOperationReceipt } from 'viem/account-abstraction';
 import { getRecord } from '@latticexyz/store/internal';
-import { signTypedData, writeContract, waitForTransactionReceipt } from 'viem/actions';
+import { signTypedData, writeContract, waitForTransactionReceipt, getCode, sendTransaction } from 'viem/actions';
 import { getAction } from 'viem/utils';
 import IBaseWorldAbi from '@latticexyz/world/out/IBaseWorld.sol/IBaseWorld.abi.json';
 import { callWithSignatureTypes } from '@latticexyz/world-module-callwithsignature/internal';
@@ -277,27 +277,98 @@ async function signCall({
     }
   });
 }
+async function isSmartWalletDeployed(sessionClient, walletAddress) {
+  const code = await getAction(
+    sessionClient,
+    getCode,
+    "getCode"
+  )({
+    address: walletAddress
+  });
+  if (code !== void 0 && code !== "0x") {
+    return true;
+  }
+  return false;
+}
+async function deploySmartWallet(sessionClient, walletAddress, factoryAddress, factoryCalldata) {
+  try {
+    const txHash = await getAction(
+      sessionClient,
+      sendTransaction,
+      "sendTransaction"
+    )({
+      account: sessionClient.account,
+      chain: sessionClient.chain,
+      to: factoryAddress,
+      data: factoryCalldata
+    });
+    await getAction(
+      sessionClient,
+      waitForTransactionReceipt,
+      "waitForTransactionReceipt"
+    )({
+      hash: txHash
+    });
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    if (errorMessage.includes("AA10") || errorMessage.includes("already constructed") || errorMessage.includes("already deployed")) {
+      return;
+    }
+    throw new Error(
+      `Failed to deploy smart wallet at ${walletAddress}: ${errorMessage}`
+    );
+  }
+}
 async function callWithSignature({
   sessionClient,
   ...opts
 }) {
   const rawSignature = await signCall(opts);
-  const { address, signature } = parseErc6492Signature(rawSignature);
-  if (address != null) {
-    throw new Error(
-      "ERC-6492 signatures, like from Coinbase Smart Wallet, are not yet supported. Try using a different wallet?"
-    );
+  const {
+    address: factoryAddress,
+    data: factoryCalldata,
+    signature
+  } = parseErc6492Signature(rawSignature);
+  let finalSignature = signature ?? rawSignature;
+  if (factoryAddress != null) {
+    const isDeployed = await isSmartWalletDeployed(sessionClient, opts.userClient.account.address);
+    if (!isDeployed) {
+      await deploySmartWallet(
+        sessionClient,
+        opts.userClient.account.address,
+        factoryAddress,
+        factoryCalldata
+      );
+      const isNowDeployed = await isSmartWalletDeployed(sessionClient, opts.userClient.account.address);
+      if (!isNowDeployed) {
+        throw new Error(
+          `Wallet deployment appeared to succeed but contract code not found at ${opts.userClient.account.address}`
+        );
+      }
+      await new Promise((resolve) => setTimeout(resolve, 2e3));
+    }
+    finalSignature = signature;
   }
-  return getAction(
-    sessionClient,
-    writeContract,
-    "writeContract"
-  )({
-    address: opts.worldAddress,
-    abi: CallWithSignatureAbi,
-    functionName: "callWithSignature",
-    args: [opts.userClient.account.address, opts.systemId, opts.callData, signature]
-  });
+  try {
+    return await getAction(
+      sessionClient,
+      writeContract,
+      "writeContract"
+    )({
+      address: opts.worldAddress,
+      abi: CallWithSignatureAbi,
+      functionName: "callWithSignature",
+      args: [opts.userClient.account.address, opts.systemId, opts.callData, finalSignature]
+    });
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    if (errorMessage.includes("AA10") || errorMessage.includes("already constructed")) {
+      throw new Error(
+        `Smart wallet was just deployed. Please try the operation again in a moment. (If you just added a new address in Coinbase Wallet, this is expected on first use.)`
+      );
+    }
+    throw error;
+  }
 }
 
 // src/utils/defineCall.ts

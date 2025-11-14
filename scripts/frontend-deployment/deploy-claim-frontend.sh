@@ -4,7 +4,7 @@
 source ../.env
 
 # Change directory to the client package
-cd ../../packages/exchange-frontend
+cd ../../packages/claim-frontend
 
 # build the frontend
 pnpm build

@@ -43,8 +43,8 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 100dvw;
+    height: 100dvh;
     z-index: var(--z-top);
     pointer-events: none;
     background-image: url(/images/dust.png);

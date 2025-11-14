@@ -592,25 +592,28 @@ type CallWithSignatureOptions<chain extends Chain = Chain> = SignCallOptions<cha
     sessionClient: ConnectedClient;
 };
 /**
- * Call a World system using signature-based execution (for EOAs)
+ * Call a World system using signature-based execution (for EOAs and smart wallets)
  *
- * MUD's CallWithSignature pattern allows EOAs to execute gasless transactions:
+ * MUD's CallWithSignature pattern allows EOAs and smart wallets to execute gasless transactions:
  *
  * 1. User signs an EIP-712 message (free, off-chain)
  * 2. Session account submits the signature + call to World
  * 3. World's CallWithSignatureSystem validates the signature
  * 4. If valid, executes the call as the user (with user's identity)
  *
- * This enables gasless transactions for EOAs - the session account pays gas
- * via paymaster, but the call executes with the user's permissions/identity.
+ * This enables gasless transactions - the session account pays gas via paymaster,
+ * but the call executes with the user's permissions/identity.
+ *
+ * For undeployed smart wallets (e.g., new Coinbase Smart Wallet), this function
+ * automatically detects ERC-6492 wrapped signatures and deploys the wallet using
+ * the session account before submitting the call.
  *
  * Flow:
- *   User (EOA) → signs message → Session Account → submits to World
+ *   User → signs message → Session Account → (deploys wallet if needed) → submits to World
  *   → World validates signature → executes as User
  *
  * @param options Call parameters including user client and session client
  * @returns Transaction hash
- * @throws If ERC-6492 signature detected (not yet supported)
  */
 declare function callWithSignature<chain extends Chain = Chain>({ sessionClient, ...opts }: CallWithSignatureOptions<chain>): Promise<`0x${string}`>;
 

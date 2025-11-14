@@ -63,7 +63,7 @@
 <style lang="scss">
   .context-main {
     // display: none;
-    width: 100vw;
+    width: 100dvw;
     padding: 20px;
   }
 

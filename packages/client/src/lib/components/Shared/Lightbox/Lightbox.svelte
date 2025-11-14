@@ -48,8 +48,8 @@
   .lightbox-container {
     position: fixed;
     inset: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 100dvw;
+    height: 100dvh;
     z-index: 10000;
     display: flex;
     align-items: center;
