@@ -35,6 +35,16 @@ console.log("tokenAddress", result.tokenAddress)
 await new Promise(resolve => setTimeout(resolve, 5000))
 await publicClient.waitForTransactionReceipt({ hash: result.transactionHash as Hex })
 
+const startingTime = await publicClient.readContract({
+  address: result.hookAddress,
+  abi: dopplerHookAbi,
+  functionName: "startingTime"
+})
+const endingTime = await publicClient.readContract({
+  address: result.hookAddress,
+  abi: dopplerHookAbi,
+  functionName: "endingTime"
+})
 const isToken0 = await publicClient.readContract({
   address: result.hookAddress,
   abi: dopplerHookAbi,
@@ -67,8 +77,8 @@ const auctionParams: AuctionParams = {
     name: await getName(publicClient, createParams.sale.numeraire),
     symbol: await getSymbol(publicClient, createParams.sale.numeraire)
   },
-  auctionDurationDays: createParams.auction.duration,
-  startTimeOffset: createParams.startTimeOffset ?? 0,
+  startingTime: Number(startingTime),
+  endingTime: Number(endingTime),
   isToken0,
   startingTick,
   endingTick,

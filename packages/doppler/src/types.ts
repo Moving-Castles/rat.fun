@@ -16,8 +16,8 @@ export interface AuctionParams {
     name: string
     symbol: string
   }
-  auctionDurationDays: number
-  startTimeOffset: number
+  startingTime: number
+  endingTime: number
   isToken0: boolean
   startingTick: number
   endingTick: number
