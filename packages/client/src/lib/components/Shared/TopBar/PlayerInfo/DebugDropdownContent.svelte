@@ -1,12 +1,10 @@
 <script lang="ts">
-  import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import {
     player,
     playerAddress,
     playerIsNew,
     playerHasTokens,
-    tokenAllowanceApproved,
-    balance
+    tokenAllowanceApproved
   } from "$lib/modules/state/stores"
   import { playerERC20Allowance, playerERC20Balance } from "$lib/modules/erc20Listener/stores"
   import {
@@ -14,8 +12,7 @@
     sendApproveMax,
     sendRevokeApproval,
     sendBuyWithEth,
-    sendLiquidateRat,
-    sendUnlockAdmin
+    sendLiquidateRat
   } from "$lib/modules/action-manager/index.svelte"
   import { SmallButton } from "$lib/components/Shared"
   import { ENTITY_TYPE } from "contracts/enums"
@@ -102,14 +99,6 @@
           await sendBuyWithEth()
         }}
         text={strings.buyTokens(1)}
-      ></SmallButton>
-      <SmallButton
-        tippyText={strings.unlockAdminInstruction}
-        onclick={async () => {
-          await sendUnlockAdmin()
-        }}
-        disabled={$player?.masterKey}
-        text={strings.unlockAdminInstruction}
       ></SmallButton>
     {/if}
     <SmallButton
