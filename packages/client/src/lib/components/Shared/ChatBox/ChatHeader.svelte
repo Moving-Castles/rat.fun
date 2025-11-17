@@ -45,9 +45,6 @@
         background-color: var(--background);
       }
     }
-
-    &.collapsed {
-    }
   }
 
   .header-content {

@@ -1,9 +1,9 @@
 import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
 
-const scramble = string => {
-  const end = Math.floor(Math.random() * string.length)
-  return `${string.slice(end, -1)}${string.slice(0, end)}`
-}
+// const scramble = (string: string) => {
+//   const end = Math.floor(Math.random() * string.length)
+//   return `${string.slice(end, -1)}${string.slice(0, end)}`
+// }
 
 const stringsData = {
   "en-US": {

@@ -439,13 +439,6 @@
         flex-direction: column;
         gap: 12px;
 
-        .no-wallets {
-          text-align: center;
-          color: var(--foreground);
-          margin: 16px 0;
-          opacity: 0.7;
-        }
-
         .wallet-option {
           background: transparent;
           color: var(--foreground);
@@ -491,24 +484,6 @@
 
     &:hover {
       transform: scale(1.1);
-    }
-  }
-
-  .debug-toggle-btn {
-    margin-top: 16px;
-    width: 100%;
-    background: transparent;
-    color: var(--foreground);
-    border: 1px solid var(--foreground);
-    padding: 8px;
-    font-size: 12px;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-family: inherit;
-    opacity: 0.6;
-
-    &:hover {
-      opacity: 1;
     }
   }
 

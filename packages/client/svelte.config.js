@@ -18,7 +18,8 @@ const config = {
       contracts: "../contracts",
       "@server/*": "../server/src/*",
       "@websocket-server/*": "../websocket-server/src/*",
-      "@sanity-types": "../cms-public/sanity.types"
+      "@sanity-types": "../cms-public/sanity.types",
+      "@modules/*": "../server/src/modules/*"
     }
   }
 }

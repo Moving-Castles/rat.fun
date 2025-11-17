@@ -1,7 +1,13 @@
 <script lang="ts">
   import * as sortFunctions from "$lib/components/Trip/TripListing/sortFunctions"
   import { SignedNumber } from "$lib/components/Shared"
-  import type { TripEvent, PendingTrip } from "$lib/components/Admin/types"
+  import type {
+    TripEventCreation,
+    TripEventLiquidation,
+    TripEventDeath,
+    TripEventVisit,
+    PendingTrip
+  } from "$lib/components/Admin/types"
   import { profitLoss } from "$lib/modules/state/stores"
   import { focusEvent, focusTrip } from "$lib/modules/ui/state.svelte"
 
@@ -18,7 +24,10 @@
   }: {
     pendingTrip: PendingTrip
     tripList: [string, Trip][]
-    plots: Record<string, TripEvent[]>
+    plots: Record<
+      string,
+      (TripEventCreation | TripEventLiquidation | TripEventDeath | TripEventVisit)[]
+    >
     sortFunction: (a: [string, Trip], b: [string, Trip]) => number
     sortDirection: "asc" | "desc"
   } = $props()

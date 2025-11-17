@@ -1,5 +1,10 @@
 <script lang="ts">
-  import type { TripEvent } from "$lib/components/Admin/types"
+  import type {
+    TripEventCreation,
+    TripEventLiquidation,
+    TripEventDeath,
+    TripEventVisit
+  } from "$lib/components/Admin/types"
   import { SmallButton, SignedNumber, Tooltip } from "$lib/components/Shared"
   import { TripProfitLossSpark } from "$lib/components/Admin"
   import { goto } from "$app/navigation"
@@ -17,7 +22,7 @@
     onpointerleave
   }: {
     trip: Trip
-    data: TripEvent[]
+    data: (TripEventCreation | TripEventLiquidation | TripEventDeath | TripEventVisit)[]
     id: string
     onpointerenter: () => void
     onpointerleave: () => void

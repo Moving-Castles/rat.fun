@@ -51,11 +51,6 @@
     width: 100%;
     position: relative;
 
-    .avatar {
-      // position: absolute;
-      // transform: translateY(-100%);
-    }
-
     .loading {
       background: orangered;
       padding: 10px;
