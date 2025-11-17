@@ -81,6 +81,10 @@
       justify-content: center;
       align-items: center;
 
+      @media (max-width: 768px) {
+        font-size: var(--font-size-normal);
+      }
+
       .title {
         .count {
           font-size: var(--font-size-normal);
