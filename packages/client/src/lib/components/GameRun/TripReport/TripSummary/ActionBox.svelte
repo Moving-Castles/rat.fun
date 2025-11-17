@@ -8,7 +8,7 @@
   import { goto } from "$app/navigation"
   import { gsap } from "gsap"
   import { BigButton, RatAvatar } from "$lib/components/Shared"
-  import { isPhone, selectedFolderId } from "$lib/modules/ui/state.svelte"
+  import { isPhone, selectedFolderId, phoneActiveGameView } from "$lib/modules/ui/state.svelte"
   import { strings } from "$lib/modules/strings"
 
   let {
@@ -67,6 +67,8 @@
       // Rat died - reset folder selection and frozen state
       selectedFolderId.set("") // Return to folder listing
       resetFrozenState() // Clear frozenRat so next rat doesn't animate from old rat
+      // On phone, go back to ratbox
+      phoneActiveGameView.set("ratbox")
     }
 
     // Return to game
