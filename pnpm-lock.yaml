@@ -4,16 +4,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-overrides:
-  '@whetstone-research/doppler-sdk': link:../doppler-sdk-alpha
-
 importers:
 
   .:
-    dependencies:
-      '@whetstone-research/doppler-sdk':
-        specifier: link:../doppler-sdk-alpha
-        version: link:../doppler-sdk-alpha
     devDependencies:
       '@latticexyz/cli':
         specifier: 2.2.23-94cac741be24bb5743f2f36235cc3bb40012417a
@@ -589,8 +582,8 @@ importers:
   packages/doppler:
     dependencies:
       '@whetstone-research/doppler-sdk':
-        specifier: link:../../../doppler-sdk-alpha
-        version: link:../../../doppler-sdk-alpha
+        specifier: npm:@dk1a/doppler-sdk-fork@0.0.1-alpha.57
+        version: '@dk1a/doppler-sdk-fork@0.0.1-alpha.57(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@4.1.12)'
       doppler-router:
         specifier: ^1.0.15
         version: 1.0.15(viem@2.38.5(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@4.1.12))
@@ -2005,6 +1998,10 @@ packages:
 
   '@date-fns/utc@2.1.1':
     resolution: {integrity: sha512-SlJDfG6RPeEX8wEVv6ZB3kak4MmbtyiI2qX/5zuKdordbrhB/iaJ58GVMZgJ6P1sJaM1gMgENFYYeg1JWrCFrA==}
+
+  '@dk1a/doppler-sdk-fork@0.0.1-alpha.57':
+    resolution: {integrity: sha512-X8DJQC758qmmeJR/El0NNQKcs02IZsXFiAcwjt4m7GODz74xoX75bJhrX5vrE83eV/ky/Vg5dVBqukif7PpuRQ==}
+    engines: {node: '>=18.0.0'}
 
   '@dnd-kit/accessibility@3.1.1':
     resolution: {integrity: sha512-2P+YgaXF+gRsIihwwY1gCsQSYnu9Zyj2py8kY5fFvUM1qm2WA2u639R6YNVfU4GWr+ZM5mqEsfHZZLoRONbemw==}
@@ -16180,6 +16177,15 @@ snapshots:
   '@date-fns/tz@1.4.1': {}
 
   '@date-fns/utc@2.1.1': {}
+
+  '@dk1a/doppler-sdk-fork@0.0.1-alpha.57(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@4.1.12)':
+    dependencies:
+      viem: 2.39.0(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@4.1.12)
+    transitivePeerDependencies:
+      - bufferutil
+      - typescript
+      - utf-8-validate
+      - zod
 
   '@dnd-kit/accessibility@3.1.1(react@19.2.0)':
     dependencies:

@@ -42,12 +42,6 @@
   "pnpm": {
     "onlyBuiltDependencies": [
       "esbuild"
-    ],
-    "overrides": {
-      "@whetstone-research/doppler-sdk": "link:../doppler-sdk-alpha"
-    }
-  },
-  "dependencies": {
-    "@whetstone-research/doppler-sdk": "link:../doppler-sdk-alpha"
+    ]
   }
 }
