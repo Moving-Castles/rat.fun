@@ -10,6 +10,7 @@
   import { line } from "d3-shape"
   import { calculateProfitLossForTrip } from "../../helpers"
   import { focusEvent } from "$lib/modules/ui/state.svelte"
+  import { strings } from "$lib/modules/strings"
 
   let {
     trip,
@@ -174,7 +175,7 @@
 
   {#if isEmpty}
     <div style:height="{height}px" class="no-data">
-      <span>NO DATA</span>
+      <span>{strings.noData.toUpperCase()}</span>
     </div>
   {:else}
     <div class="graph" style:height="{height}px" bind:clientWidth={width}>

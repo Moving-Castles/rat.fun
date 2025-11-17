@@ -7,6 +7,9 @@
   import { typeHit } from "$lib/modules/sound"
   import { InputValidationError } from "$lib/modules/error-handling/errors"
   import { waitForPropertyChangeFrom } from "$lib/modules/state/utils"
+  import { isSessionReady, sessionClient } from "$lib/modules/entry-kit"
+  import { walletNetwork, walletType } from "$lib/modules/network"
+  import { WALLET_TYPE } from "$lib/mud/enums"
 
   import { BigButton, Mascot, SmallSpinner } from "$lib/components/Shared"
 
@@ -17,6 +20,11 @@
   let name = $state("")
   let busy = $state(false)
 
+  // Check if wallet is ready based on wallet type
+  const isWalletReady = $derived($walletType === WALLET_TYPE.BURNER
+    ? !!$walletNetwork.walletClient
+    : $isSessionReady && !!$sessionClient)
+
   let mascotElement: HTMLDivElement | null = $state(null)
   // let textElement: HTMLDivElement | null = $state(null)
   let inputElement: HTMLInputElement | null = $state(null)
@@ -25,6 +33,12 @@
   const timeline = gsap.timeline()
 
   async function submitForm() {
+    // Check if wallet is ready before allowing spawn
+    if (!isWalletReady) {
+      console.warn("Wallet not ready yet, cannot spawn")
+      return
+    }
+
     busy = true
     try {
       // Validate name is not empty
@@ -134,7 +148,11 @@
           }}
         />
         <div class="button-container">
-          <BigButton text="SIGN" onclick={submitForm} disabled={!name} />
+          <BigButton
+            text={!isWalletReady ? "Setting up..." : "SIGN"}
+            onclick={submitForm}
+            disabled={!name || !isWalletReady}
+          />
         </div>
       </div>
     {/if}

@@ -15,17 +15,18 @@
   import { setupWalletNetwork } from "$lib/mud/setupWalletNetwork"
   import { setupBurnerWalletNetwork } from "$lib/mud/setupBurnerWalletNetwork"
   import { initWalletNetwork } from "$lib/initWalletNetwork"
-  import { entryKitSession } from "$lib/modules/entry-kit/stores"
+  import { sessionClient, status, EntryKitStatus } from "$lib/modules/entry-kit"
   import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
   import { backgroundMusic } from "$lib/modules/sound/stores"
 
-  import { Marquee } from "$lib/components/Shared"
-  import { topMarqueeText, bottomMarqueeText } from "./marqueeTexts"
+  import { strings } from "$lib/modules/strings"
 
   import Introduction from "$lib/components/Spawn/Introduction/Introduction.svelte"
   import ConnectWalletForm from "$lib/components/Spawn/ConnectWalletForm/ConnectWalletForm.svelte"
+  import SessionSetup from "$lib/components/Spawn/SessionSetup/SessionSetup.svelte"
   import SpawnForm from "$lib/components/Spawn/SpawnForm/SpawnForm.svelte"
   import HeroImage from "$lib/components/Spawn/HeroImage/HeroImage.svelte"
+  import { Marquee } from "$lib/components/Shared"
 
   const { walletType, spawned = () => {} } = $props<{
     walletType: WALLET_TYPE
@@ -58,24 +59,49 @@
   }
 
   const onWalletConnectionComplete = () => {
+    // For burner wallet, go straight to spawn form
     if (walletType === WALLET_TYPE.BURNER) {
       currentState = SPAWN_STATE.SPAWN_FORM
     }
+    // For EntryKit, the effect will handle transition once state settles
+    // Don't transition yet - wait for delegation check to complete
   }
 
-  // Listen to changes the entrykit session
+  // Listen to changes in entrykit status
   $effect(() => {
-    if ($entryKitSession) {
-      if ($entryKitSession?.account?.client && $entryKitSession.userAddress) {
-        const wallet = setupWalletNetwork($publicNetwork, $entryKitSession)
-        const isSpawned = initWalletNetwork(wallet, $entryKitSession.userAddress, walletType)
+    // Only react to EntryKit status changes
+    if (walletType !== WALLET_TYPE.ENTRYKIT) return
+
+    console.log("[Spawn] EntryKit status changed:", $status)
+
+    switch ($status) {
+      case EntryKitStatus.CONNECTED:
+        // Wallet connected but needs session setup
+        if (currentState !== SPAWN_STATE.SESSION_SETUP) {
+          console.log("[Spawn] Status CONNECTED → transitioning to SESSION_SETUP")
+          currentState = SPAWN_STATE.SESSION_SETUP
+        }
+        break
+
+      case EntryKitStatus.READY:
+        // Session is fully ready - check if already spawned
+        if (!$sessionClient) return
+
+        console.log("[Spawn] Status READY → checking spawn status")
+        const wallet = setupWalletNetwork($publicNetwork, $sessionClient)
+        const isSpawned = initWalletNetwork(wallet, $sessionClient.userAddress, walletType)
 
         if (isSpawned) {
+          console.log("[Spawn] Already spawned, completing spawn flow")
           spawned()
         } else {
+          console.log("[Spawn] Not spawned yet, transitioning to SPAWN_FORM")
           currentState = SPAWN_STATE.SPAWN_FORM
         }
-      }
+        break
+
+      // Other statuses (DISCONNECTED, CONNECTING, SETTING_UP_SESSION) don't require action
+      // The UI components handle showing appropriate screens
     }
   })
 
@@ -109,13 +135,13 @@
 <div class="container">
   <div class="marquee-container top" in:fade|global={{ duration: 200, delay: 1000 }}>
     <Marquee speed={5} numberOfCopies={10} direction="left">
-      <p class="marquee-text">{topMarqueeText}</p>
+      <p class="marquee-text">{strings.topMarqueeText}</p>
     </Marquee>
   </div>
 
   <div class="marquee-container bottom" in:fade|global={{ duration: 200, delay: 1000 }}>
     <Marquee speed={5} numberOfCopies={10} direction="right">
-      <p class="marquee-text">{bottomMarqueeText}</p>
+      <p class="marquee-text">{strings.bottomMarqueeText}</p>
     </Marquee>
   </div>
 
@@ -124,6 +150,12 @@
       <Introduction onComplete={onIntroductionComplete} />
     {:else if currentState === SPAWN_STATE.CONNECT_WALLET}
       <ConnectWalletForm {walletType} onComplete={onWalletConnectionComplete} />
+    {:else if currentState === SPAWN_STATE.SESSION_SETUP}
+      <SessionSetup
+        onComplete={() => {
+          console.log("[Spawn] Session setup completed, effect will handle transition")
+        }}
+      />
     {:else if currentState === SPAWN_STATE.SPAWN_FORM}
       <SpawnForm
         onComplete={() => {
@@ -142,8 +174,8 @@
 
 <style lang="scss">
   .container {
-    width: 100vw;
-    height: 100vh;
+    width: 100dvw;
+    height: 100dvh;
     color: white;
     font-family: var(--special-font-stack);
     text-transform: none;

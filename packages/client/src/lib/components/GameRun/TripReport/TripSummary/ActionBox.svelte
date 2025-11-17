@@ -5,6 +5,7 @@
   import { gsap } from "gsap"
   import { BigButton, RatAvatar } from "$lib/components/Shared"
   import { isPhone } from "$lib/modules/ui/state.svelte"
+  import { strings } from "$lib/modules/strings"
 
   let {
     result,
@@ -16,8 +17,8 @@
 
   // Figure out if rat died or survived
   const ratDead = $derived(result?.ratDead)
-  const statusText = $derived(ratDead ? "DIED" : "SURVIVED")
-  const buttonText = $derived(ratDead ? "MOVE ON" : "COME DOWN")
+  const statusText = $derived(ratDead ? strings.died : strings.survived)
+  const buttonText = $derived(ratDead ? strings.moveOn : strings.comeDown)
 
   // Elements
   let eventElement = $state<HTMLDivElement | null>(null)

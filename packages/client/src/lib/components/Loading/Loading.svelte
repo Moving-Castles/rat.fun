@@ -7,6 +7,7 @@
   import { generateLoadingOutput } from "$lib/components/Loading/loadingOutput"
   import { playSound } from "$lib/modules/sound"
   import { blockNumber, loadingMessage, loadingPercentage, ready } from "$lib/modules/network"
+  import { strings } from "$lib/modules/strings"
 
   import { ENVIRONMENT } from "$lib/mud/enums"
   import { gsap } from "gsap"
@@ -117,13 +118,13 @@
 
 <div class="loading" bind:this={loadingElement}>
   <div class="status-box">
-    <div>BlockNumber: {$blockNumber}</div>
-    <div>LoadingMsg: {$loadingMessage}</div>
-    <div>Loading%: {$loadingPercentage}</div>
-    <div>Ready? {$ready}</div>
+    <div>{strings.blockNumber}: {$blockNumber}</div>
+    <div>{strings.loadingMsg}: {$loadingMessage}</div>
+    <div>{strings.loadingPercentage}: {$loadingPercentage}</div>
+    <div>{strings.readyQuestion} {$ready}</div>
   </div>
   <div class="mc-logo" bind:this={logoElement}>
-    <img src="/images/logo.png" alt="Moving Castles GmbH" />
+    <img src="/images/logo.png" alt={strings.authorFullTitle} />
   </div>
   <div class="terminal-box" bind:this={terminalBoxElement}></div>
 </div>
@@ -135,8 +136,8 @@
     left: 0;
     color: var(--foreground);
     font-size: var(--font-size-normal);
-    width: 100vw;
-    height: 100vh;
+    width: 100dvw;
+    height: 100dvh;
     z-index: var(--z-top);
     user-select: none;
 
@@ -146,8 +147,8 @@
       height: 100%;
       max-width: 800px;
       text-align: left;
-      // word-break: break-all;
       padding: 20px;
+      word-break: break-all;
     }
 
     .mc-logo {

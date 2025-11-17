@@ -6,6 +6,7 @@
   import { max } from "d3-array"
   import { line } from "d3-shape"
   import { Tooltip } from "$lib/components/Shared"
+  import { strings } from "$lib/modules/strings"
 
   let {
     smallIcons = false,
@@ -119,7 +120,7 @@
 
   {#if isEmpty}
     <div style:height="{height}px" class="no-data">
-      <span>NO DATA</span>
+      <span>{strings.noData.toUpperCase()}</span>
     </div>
   {:else}
     <div class="graph" bind:clientWidth={width}>

@@ -7,6 +7,7 @@
   import { focusTrip } from "$lib/modules/ui/state.svelte"
   import { gameConfig } from "$lib/modules/state/stores"
   import { blockNumber } from "$lib/modules/network"
+  import { strings } from "$lib/modules/strings"
 
   let {
     trip,
@@ -58,7 +59,7 @@
     </Tooltip>
   </td>
   <!-- Visits -->
-  <td class="cell-visits">{Number(trip.visitCount ?? ß)}</td>
+  <td class="cell-visits">{Number(trip.visitCount ?? 0)}</td>
   <!-- Kills -->
   <td class="cell-kills">{Number(trip.killCount ?? 0)}</td>
   <!-- Balance -->
@@ -83,7 +84,7 @@
   <td class="cell-action">
     <SmallButton
       disabled={blockUntilUnlock > 0}
-      text={blockUntilUnlock <= 0 ? `Liquidate` : `Wait ${blockUntilUnlock} blocks`}
+      text={blockUntilUnlock <= 0 ? strings.liquidate : strings.waitBlocks(blockUntilUnlock)}
       onmouseup={liquidateButtonOnMouseUp}
     ></SmallButton>
   </td>

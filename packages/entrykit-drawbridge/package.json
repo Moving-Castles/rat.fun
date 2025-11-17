@@ -1,0 +1,53 @@
+{
+  "name": "entrykit-drawbridge",
+  "version": "2.2.23-local",
+  "description": "Stripped down headless version of @latticexyz/entrykit",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Moving-Castles/rat.fun.git",
+    "directory": "packages/entrykit"
+  },
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "pnpm run build:js",
+    "build:js": "tsup",
+    "clean": "pnpm run clean:js",
+    "clean:js": "shx rm -rf dist",
+    "dev": "tsup --watch",
+    "test": "tsc --noEmit && vitest",
+    "test:ci": "tsc --noEmit && vitest --run"
+  },
+  "dependencies": {
+    "@account-abstraction/contracts": "^0.7.0",
+    "@latticexyz/common": "2.2.23",
+    "@latticexyz/store": "2.2.23",
+    "@latticexyz/world": "2.2.23",
+    "@latticexyz/world-module-callwithsignature": "2.2.23",
+    "@wagmi/core": "2.22.1",
+    "permissionless": "0.2.30",
+    "wagmi": "2.19.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "shx": "^0.4.0",
+    "tsup": "^8.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.9.3",
+    "viem": "2.38.6"
+  },
+  "peerDependencies": {
+    "viem": "2.x"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

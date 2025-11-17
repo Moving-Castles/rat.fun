@@ -12,6 +12,7 @@
   import { staticContent } from "$lib/modules/content"
   import { isPhone } from "$lib/modules/ui/state.svelte"
   import { TripFolders } from "$lib/components/Trip"
+  import { strings } from "$lib/modules/strings"
 
   let {
     ondone,
@@ -154,7 +155,7 @@
           <div class="folder-selection">
             <div class="form-group">
               <div>
-                <span class="highlight">Select Folder</span>
+                <span class="highlight">{strings.selectFolder}</span>
               </div>
             </div>
             <TripFolders
@@ -171,7 +172,7 @@
           <!-- STEP 2: TRIP DETAILS -->
           <div class="trip-header">
             <div class="header-text">
-              Creating trip in: <span class="folder-name">{selectedFolderTitle}</span>
+              {strings.creatingTripIn}: <span class="folder-name">{selectedFolderTitle}</span>
             </div>
             <button
               class="back-link"
@@ -179,7 +180,7 @@
                 currentStep = "folder"
               }}
             >
-              Back
+              {strings.back}
             </button>
           </div>
           <div class="controls">
@@ -247,11 +248,11 @@
             <!-- CALCULATED VALUES -->
             <div class="calculated-values">
               <div class="value-box">
-                <div class="value-label">MIN RAT VALUE TO TRIP</div>
+                <div class="value-label">{strings.minRatValueToTrip.toUpperCase()}</div>
                 <div class="value-amount">{CURRENCY_SYMBOL}{$minRatValueToEnter}</div>
               </div>
               <div class="value-box">
-                <div class="value-label">MAX VALUE PER WIN</div>
+                <div class="value-label">{strings.maxValuePerWin.toUpperCase()}</div>
                 <div class="value-amount">{CURRENCY_SYMBOL}{$maxValuePerWin}</div>
               </div>
             </div>
@@ -276,7 +277,7 @@
       <!-- TRIP DESCRIPTION -->
       <div class="form-group">
         <label for="trip-description">
-          <span class="highlight">Trip Description</span>
+          <span class="highlight">{strings.tripDescription}</span>
           <CharacterCounter
             currentLength={tripDescription.length}
             maxLength={$gameConfig.maxTripPromptLength}
@@ -296,7 +297,7 @@
       <!-- TRIP CREATION COST SLIDER -->
       <div class="slider-group">
         <label for="trip-creation-cost-slider">
-          <span class="highlight">TRIP CREATION COST</span>
+          <span class="highlight">{strings.tripCreationCostLabel}</span>
           <input
             class="cost-display"
             onblur={e => {
@@ -366,12 +367,12 @@
 
   .modal-content {
     height: 700px;
-    max-height: 90vh;
+    max-height: 90dvh;
 
     @media (max-width: 800px) {
-      height: 100vh;
-      max-height: 80vh;
-      width: 100vw;
+      height: 100dvh;
+      max-height: 80dvh;
+      width: 100dvw;
     }
   }
 
@@ -388,7 +389,7 @@
     padding: 10px;
 
     @media (max-width: 800px) {
-      width: 100vw;
+      width: 100dvw;
       border: none;
     }
 

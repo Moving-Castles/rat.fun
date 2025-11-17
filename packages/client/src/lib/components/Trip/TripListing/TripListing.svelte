@@ -10,6 +10,7 @@
   import { blockNumber } from "$lib/modules/network"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import { staticContent } from "$lib/modules/content"
+  import { strings } from "$lib/modules/strings"
 
   import { TripItem, TripFolders } from "$lib/components/Trip"
   import { BackButton } from "$lib/components/Shared"
@@ -132,7 +133,7 @@
 
 <div class="content" bind:this={scrollContainer}>
   {#if $selectedFolderId === ""}
-    <TripHeader title={$playerHasLiveRat ? "Select a folder" : "Buy rat to select trip."} />
+    <TripHeader title={$playerHasLiveRat ? strings.tripHeader : strings.tripHeaderNoRat} />
     {#if $staticContent?.tripFolders?.length ?? 0 > 0}
       <TripFolders
         {legacyTrips}

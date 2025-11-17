@@ -18,7 +18,10 @@ export default ts.config(
   ...svelte.configs.prettier,
   {
     languageOptions: {
-      globals: { ...globals.browser, ...globals.node }
+      globals: { ...globals.browser, ...globals.node },
+      parserOptions: {
+        tsconfigRootDir: fileURLToPath(new URL(".", import.meta.url))
+      }
     },
     rules: { "no-undef": "off" }
   },
@@ -29,7 +32,17 @@ export default ts.config(
         projectService: true,
         extraFileExtensions: [".svelte"],
         parser: ts.parser,
-        svelteConfig
+        svelteConfig,
+        tsconfigRootDir: fileURLToPath(new URL(".", import.meta.url))
+      }
+    }
+  },
+  {
+    files: ["**/*.ts", "**/*.tsx"],
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: fileURLToPath(new URL(".", import.meta.url))
       }
     }
   }

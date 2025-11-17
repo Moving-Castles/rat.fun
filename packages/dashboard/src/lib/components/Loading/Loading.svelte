@@ -67,8 +67,8 @@
     left: 0;
     color: var(--foreground);
     font-size: var(--font-size-normal);
-    width: 100vw;
-    height: 100vh;
+    width: 100dvw;
+    height: 100dvh;
     z-index: var(--z-top);
     display: flex;
     justify-content: center;

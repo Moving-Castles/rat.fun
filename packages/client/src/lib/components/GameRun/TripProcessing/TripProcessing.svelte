@@ -91,12 +91,12 @@
   </div>
 {/if}
 
-<div class="splash-screen">
-  <!-- {#if $environment !== ENVIRONMENT.BASE} -->
-  <div class="timer" class:critical={timerDone}>{timeElapsed.toFixed(1)}s</div>
-  <!-- {/if} -->
-  <div class="inner"></div>
-</div>
+{#if import.meta.env.DEV}
+  <div class="splash-screen">
+    <div class="timer" class:critical={timerDone}>{timeElapsed.toFixed(1)}s</div>
+    <div class="inner"></div>
+  </div>
+{/if}
 
 <style lang="scss">
   .popup {

@@ -7,6 +7,7 @@
   import { UI } from "$lib/modules/ui/enums"
   import { ratState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
   import { Mascot } from "$lib/components/Shared"
+  import { strings } from "$lib/modules/strings"
 
   // Not enough balance
   let disabled = $derived(($playerERC20Balance ?? 0) < Number($gameConfig?.ratCreationCost ?? 0))
@@ -29,14 +30,14 @@
     <div class="button-container">
       {#if $player}
         <BigButton
-          text="Buy rat"
+          text={strings.buyRat}
           cost={Number($gameConfig?.ratCreationCost)}
           {disabled}
           extraBig={true}
           onclick={onClick}
         />
       {:else}
-        <BigButton text="Spawn" onclick={onSpawnClick} />
+        <BigButton text={strings.spawn} onclick={onSpawnClick} />
       {/if}
     </div>
   </div>

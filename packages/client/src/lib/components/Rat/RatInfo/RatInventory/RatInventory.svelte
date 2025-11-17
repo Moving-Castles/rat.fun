@@ -12,6 +12,8 @@
   let emptySlots = $derived(Array(MAX_INVENTORY_SIZE - (inventory?.length || 0)).fill(null))
 
   let inventorySlots = $derived([...inventory, ...emptySlots])
+
+  $inspect(inventorySlots)
 </script>
 
 <div class="inventory">
@@ -19,9 +21,10 @@
     <div class="inventory-container">
       <!-- INVENTORY GRID -->
       {#each inventorySlots as item, index (index)}
-        <EmptySlot {index} />
         {#if item}
           <InteractiveItem {item} {index} />
+        {:else}
+          <EmptySlot {index} />
         {/if}
       {/each}
     </div>

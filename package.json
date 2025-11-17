@@ -16,8 +16,7 @@
     "prepare": "(forge --version || pnpm foundry:up) && husky install",
     "test": "pnpm recursive run test",
     "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "pre-commit": "node scripts/pre-commit/check-credentials.js && node scripts/pre-commit/check-env-files.js"
+    "format:check": "prettier --check ."
   },
   "devDependencies": {
     "@latticexyz/cli": "2.2.23-94cac741be24bb5743f2f36235cc3bb40012417a",

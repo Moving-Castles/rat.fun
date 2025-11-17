@@ -231,7 +231,7 @@
 <style lang="scss">
   .table-wrapper {
     width: 100%;
-    max-width: 100vw;
+    max-width: 100dvw;
     overflow-x: auto;
     margin-bottom: 2rem;
   }

@@ -3,13 +3,11 @@ import { Hex } from "viem"
 import { walletType } from "$lib/modules/network"
 import { WALLET_TYPE } from "$lib/mud/enums"
 import { signMessage } from "viem/actions"
-import { SessionClient } from "@latticexyz/entrykit/internal"
+import type { SessionClient } from "entrykit-drawbridge"
 import { SignedRequest, SignedRequestInfo } from "@server/modules/types"
 import { stringifyRequestForSignature } from "@server/modules/signature/stringifyRequestForSignature"
-import { wagmiConfigStateful } from "$lib/modules/entry-kit/stores"
 import { walletNetwork } from "$lib/modules/network"
-import { getConnectorClient } from "@wagmi/core"
-import { WagmiConfigUnavailableError } from "../error-handling"
+import { getEstablishedConnectorClient } from "$lib/modules/entry-kit/connector"
 
 export async function signRequest<T>(data: T): Promise<SignedRequest<T>> {
   const client = get(walletNetwork).walletClient
@@ -43,16 +41,15 @@ export async function signRequest<T>(data: T): Promise<SignedRequest<T>> {
 }
 
 async function getCalledFrom(): Promise<Hex | null> {
-  const wagmiConfig = get(wagmiConfigStateful)
-  if (!wagmiConfig) {
-    throw new WagmiConfigUnavailableError()
-  }
-
   if (get(walletType) === WALLET_TYPE.BURNER) return null
 
-  const connectorClient = await getConnectorClient(wagmiConfig)
-  if (!connectorClient) {
+  try {
+    const connectorClient = await getEstablishedConnectorClient()
+    if (!connectorClient) {
+      return null
+    }
+    return connectorClient.account.address
+  } catch {
     return null
   }
-  return connectorClient.account.address
 }

@@ -1,73 +1,66 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-    />
-    <link rel="icon" type="image/x-icon" href="/images/favicon.png" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Workbench&family=Xanh+Mono:ital@0;1&display=swap"
-      rel="stylesheet"
-    />
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <link rel="icon" type="image/x-icon" href="/images/favicon.png" />
 
-    <link
-      href="https://fonts.googleapis.com/css2?family=Anonymous+Pro:ital,wght@0,400;0,700;1,400;1,700&family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&family=VT323&display=swap"
-      rel="stylesheet"
-    />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Workbench&family=Xanh+Mono:ital@0;1&display=swap"
+    rel="stylesheet" />
 
-    <title>RAT.FUN</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Anonymous+Pro:ital,wght@0,400;0,700;1,400;1,700&family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&family=VT323&display=swap"
+    rel="stylesheet" />
 
-    <meta name="application-name" content="RAT.FUN" />
-    <meta name="apple-mobile-web-app-title" content="RAT.FUN" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-    <meta name="apple-touch-fullscreen" content="yes" />
-    <link rel="apple-touch-icon" href="/images/favicon.png" />
+  <title>RAT.FUN</title>
 
-    <meta
-      name="fc:miniapp"
-      content='{
+  <meta name="application-name" content="RAT.FUN" />
+  <meta name="apple-mobile-web-app-title" content="RAT.FUN" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <meta name="apple-touch-fullscreen" content="yes" />
+  <link rel="apple-touch-icon" href="/images/favicon.png" />
+
+  <meta name="fc:miniapp" content='{
       "version":"next",
-      "imageUrl":"https://base-sepolia.rat.fun/images/logo.png",
+      "imageUrl":"https://rat.fun/images/product/icon.png",
       "button":{
         "title":"Play Now",
         "action":{
           "type":"launch_miniapp",
           "name":"rat.fun",
-          "url":"https://base-sepolia.rat.fun"
+          "url":"https://rat.fun"
         }
       }
-    }'
-    />
+    }' />
 
-    <style>
-      body,
-      html {
-        background: black;
-      }
+  <style>
+    body,
+    html {
+      background: black;
+    }
 
-      .preloader {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-family: monospace;
-      }
-    </style>
-    %sveltekit.head%
-  </head>
+    .preloader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: monospace;
+    }
+  </style>
+  %sveltekit.head%
+</head>
 
-  <body data-sveltekit-preload-data="hover">
-    <div id="sveltekit-app" style="display: contents">%sveltekit.body%</div>
-  </body>
+<body data-sveltekit-preload-data="hover">
+  <div id="sveltekit-app" style="display: contents">%sveltekit.body%</div>
+</body>
+
 </html>

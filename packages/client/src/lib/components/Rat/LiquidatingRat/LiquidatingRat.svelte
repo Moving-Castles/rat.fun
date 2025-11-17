@@ -6,6 +6,7 @@
   import { ratState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
   import { erc20BalanceListenerActive } from "$lib/modules/erc20Listener/stores"
   import { refetchBalance } from "$lib/modules/erc20Listener"
+  import { strings } from "$lib/modules/strings"
 
   import { SmallSpinner, RatAvatar } from "$lib/components/Shared"
 
@@ -36,7 +37,7 @@
   <div class="avatar">
     <RatAvatar grayscale animation="dead" />
   </div>
-  <div class="loading">KILLING IN PROGRESS <SmallSpinner soundOn /></div>
+  <div class="loading">{strings.killInProgress} <SmallSpinner soundOn /></div>
 </div>
 
 <style lang="scss">

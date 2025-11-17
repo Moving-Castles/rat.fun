@@ -3,6 +3,8 @@
   import { playSound } from "$lib/modules/sound"
   import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
   import { goto } from "$app/navigation"
+  import { Tooltip } from "$lib/components/Shared"
+  import { strings } from "$lib/modules/strings"
 
   import ModeSwitchButton from "../Buttons/ModeSwitchButton.svelte"
 
@@ -22,7 +24,9 @@
 </script>
 
 <div class="mode-switch">
-  <ModeSwitchButton {isAdminView} onclick={isAdminView ? exitAdmin : enterAdmin} />
+  <Tooltip content={strings.adminInstruction(500)}>
+    <ModeSwitchButton {isAdminView} onclick={isAdminView ? exitAdmin : enterAdmin} />
+  </Tooltip>
 </div>
 
 <style lang="scss">

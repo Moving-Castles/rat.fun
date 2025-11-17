@@ -2,7 +2,8 @@
   import { fade } from "svelte/transition"
   import type { TripFolder } from "@sanity-types"
   import { playSound } from "$lib/modules/sound"
-  //   import { urlFor, type ImageUrlBuilder } from "$lib/modules/content/sanity"
+  import { Tooltip } from "$lib/components/Shared"
+  import { strings } from "$lib/modules/strings"
 
   let {
     listingIndex,
@@ -26,10 +27,7 @@
   let disabled = $derived(disabledProp || (showCounts && count === 0))
 
   let title = folder?.title ?? "THE VOID"
-
-  //   const image = folder?.image
-  //   const imageUrl = image ? (urlFor(image) as ImageUrlBuilder).width(300).auto("format").url() : ""
-  //   const style = imageUrl ? `background-image: url(${imageUrl});` : ""
+  let tooltip = $derived(folder?.title?.includes("EGO"))
 
   const onmousedown = () => {
     playSound("ratfunUI", "smallButtonDown")
@@ -41,21 +39,23 @@
 </script>
 
 <div class="tile" in:fade|global={{ duration: 100, delay: listingIndex * 30 }}>
-  <button class:disabled class:void={isVoid} {onclick} {onmouseup} {onmousedown}>
-    <div class="title">
-      {title}
-      <span class="count">
-        {#if showCounts}
-          <br />
-          {#if isVoid}
-            (All other trips)
-          {:else}
-            {count ?? 0} trip{count === 1 ? "" : "s"}
+  <Tooltip content={tooltip ? strings.egoDeathExplanation : ""}>
+    <button class:disabled class:void={isVoid} {onclick} {onmouseup} {onmousedown}>
+      <div class="title">
+        {title}
+        <span class="count">
+          {#if showCounts}
+            <br />
+            {#if isVoid}
+              (All other trips)
+            {:else}
+              {count ?? 0} trip{count === 1 ? "" : "s"}
+            {/if}
           {/if}
-        {/if}
-      </span>
-    </div>
-  </button>
+        </span>
+      </div>
+    </button>
+  </Tooltip>
 </div>
 
 <style lang="scss">

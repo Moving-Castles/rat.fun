@@ -3,7 +3,7 @@ import { Hex } from "viem"
 import merkleTree from "../static/tree.json" with { type: "json" }
 
 export interface GetProofReturnType {
-  value: bigint,
+  value: bigint
   proof: string[]
 }
 
@@ -12,13 +12,13 @@ export interface GetProofReturnType {
  * Returns null if account has no claim
  */
 export async function getProof(account: Hex) {
-  return await getProofFromJson(
-    account,
-    merkleTree
-  )
+  return await getProofFromJson(account, merkleTree)
 }
 
-export async function getProofFromJson(account: Hex, data: Record<string, unknown>): Promise<GetProofReturnType | null> {
+export async function getProofFromJson(
+  account: Hex,
+  data: Record<string, unknown>
+): Promise<GetProofReturnType | null> {
   const tree = StandardMerkleTree.load<[Hex, string]>(data as never)
 
   for (const [i, v] of tree.entries()) {

@@ -6,10 +6,9 @@
   import { publicNetwork } from "$lib/modules/network"
   import { CLAIM_STATE, claimState } from "$lib/components/Claim/state.svelte"
   import { Available, ConnectWalletForm, Done } from "$lib/components/Claim"
-  import { WALLET_TYPE } from "$lib/mud/enums"
-  import { setupWalletNetwork } from "$lib/mud/setupWalletNetwork"
-  import { initWalletNetwork } from "$lib/initWalletNetwork"
-  import { entryKitSession } from "$lib/modules/entry-kit/stores"
+  import { userAddress } from "$lib/modules/entry-kit"
+  import { playerAddress } from "$lib/modules/state/stores"
+  import { initErc20Listener } from "$lib/modules/erc20Listener"
   import WalletInfo from "$lib/components/WalletInfo/WalletInfo.svelte"
   import { ERC20AirdropMerkleProofAbi } from "contracts/externalAbis"
   import type { SetupPublicNetworkResult } from "$lib/mud/setupPublicNetwork"
@@ -20,18 +19,17 @@
   let proof = $state<undefined | null | GetProofReturnType>(undefined)
   let hasClaimed = $state<undefined | boolean>(undefined)
 
+  // Get proof when user connects
   $effect(() => {
-    if ($entryKitSession && proof === undefined) {
-      getProofFromJson($entryKitSession.userAddress, merkleTree).then((result) => {
+    if ($userAddress && proof === undefined) {
+      getProofFromJson($userAddress, merkleTree).then(result => {
         proof = result
       })
     }
   })
 
-  async function checkClaimStatus(
-    publicNetwork: SetupPublicNetworkResult,
-    playerAddress: Hex,
-  ) {
+  // Check claim status
+  async function checkClaimStatus(publicNetwork: SetupPublicNetworkResult, playerAddress: Hex) {
     return await publicNetwork.publicClient.readContract({
       address: airdropContractAddress,
       abi: ERC20AirdropMerkleProofAbi,
@@ -41,29 +39,32 @@
   }
 
   $effect(() => {
-    if ($entryKitSession && hasClaimed === undefined) {
-      checkClaimStatus($publicNetwork, $entryKitSession.userAddress).then((result) => {
+    if ($userAddress && hasClaimed === undefined) {
+      checkClaimStatus($publicNetwork, $userAddress).then(result => {
         hasClaimed = result as boolean
       })
     }
   })
 
-  // Listen to changes in the entrykit session (for when user connects wallet)
+  // Listen to changes in wallet connection (for when user connects wallet)
   $effect(() => {
-    if ($entryKitSession) {
-      if ($entryKitSession?.account?.client && $entryKitSession.userAddress) {
-        const wallet = setupWalletNetwork($publicNetwork, $entryKitSession)
-        initWalletNetwork(wallet, $entryKitSession.userAddress, WALLET_TYPE.ENTRYKIT)
-        
-        if (proof === null) {
-          claimState.state.transitionTo(CLAIM_STATE.NOT_AVAILABLE)
-        } else if (proof === undefined || hasClaimed === undefined) {
-          claimState.state.transitionTo(CLAIM_STATE.CHECKING)
-        } else if (hasClaimed) {
-          claimState.state.transitionTo(CLAIM_STATE.DONE)
-        } else {
-          claimState.state.transitionTo(CLAIM_STATE.AVAILABLE)
-        }
+    if ($userAddress) {
+      console.log("[Claim] Wallet connected:", $userAddress)
+
+      // Sync EntryKit userAddress to playerAddress store (for WalletInfo component)
+      playerAddress.set($userAddress)
+      // Initialize ERC20 listener (for balance display in WalletInfo)
+      initErc20Listener()
+
+      // Transition based on claim status
+      if (proof === null) {
+        claimState.state.transitionTo(CLAIM_STATE.NOT_AVAILABLE)
+      } else if (proof === undefined || hasClaimed === undefined) {
+        claimState.state.transitionTo(CLAIM_STATE.CHECKING)
+      } else if (hasClaimed) {
+        claimState.state.transitionTo(CLAIM_STATE.DONE)
+      } else {
+        claimState.state.transitionTo(CLAIM_STATE.AVAILABLE)
       }
     }
   })
@@ -72,31 +73,17 @@
     // Reset state to INIT
     claimState.state.reset()
 
-    claimState.state.transitionTo(CLAIM_STATE.CONNECT_WALLET)
-
-    // // If wallet is already connected (from previous session), wait for balance to load
-    // if ($entryKitSession?.account?.client && $entryKitSession.userAddress) {
-    //   // Wait for fake token balance to be updated
-    //   const startTime = Date.now()
-    //   while (Date.now() < startTime + 1000) {
-    //     if ($playerFakeTokenBalance > 0) {
-    //       break
-    //     }
-    //     await new Promise(resolve => setTimeout(resolve, 50))
-    //   }
-
-    //   // Determine initial state based on balance and allowance
-    //   if ($playerFakeTokenBalance === 0) {
-    //     claimState.state.transitionTo(CLAIM_STATE.NO_TOKENS)
-    //   } else if ($playerFakeTokenAllowance === 0) {
-    //     claimState.state.transitionTo(CLAIM_STATE.APPROVE)
-    //   } else {
-    //     claimState.state.transitionTo(CLAIM_STATE.EXCHANGE)
-    //   }
-    // } else {
-    //   // No wallet connected, show connect wallet screen
-    //   claimState.state.transitionTo(CLAIM_STATE.CONNECT_WALLET)
-    // }
+    // If wallet is already connected (from previous session), transition to checking
+    if ($userAddress) {
+      console.log("[Claim] Wallet already connected on mount:", $userAddress)
+      // Sync to playerAddress store and initialize listeners
+      playerAddress.set($userAddress)
+      initErc20Listener()
+      claimState.state.transitionTo(CLAIM_STATE.CHECKING)
+    } else {
+      // No wallet connected, show connect wallet screen
+      claimState.state.transitionTo(CLAIM_STATE.CONNECT_WALLET)
+    }
   })
 </script>
 
@@ -109,7 +96,7 @@
     {:else if claimState.state.current === CLAIM_STATE.CHECKING || !proof}
       loading...
     {:else if claimState.state.current === CLAIM_STATE.AVAILABLE}
-      <Available proof={proof} />
+      <Available {proof} />
     {:else if claimState.state.current === CLAIM_STATE.DONE}
       <Done />
     {/if}
@@ -118,8 +105,8 @@
 
 <style lang="scss">
   .claim-container {
-    width: 100vw;
-    height: 100vh;
+    width: 100dvw;
+    height: 100dvh;
     z-index: 1000;
     color: white;
   }

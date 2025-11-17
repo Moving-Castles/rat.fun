@@ -128,10 +128,10 @@ export class ShaderManager {
       Object.entries(this.customUniforms).forEach(([name, uniform]) => {
         this._renderer?.setUniform(name, uniform.value, uniform.type)
       })
-      console.log(
-        `%c[ShaderManager] Shader "${shaderKey}" already active, skipping recreate`,
-        "color: #FF9800"
-      )
+      // console.log(
+      //   `%c[ShaderManager] Shader "${shaderKey}" already active, skipping recreate`,
+      //   "color: #FF9800"
+      // )
       return
     }
 
@@ -162,10 +162,10 @@ export class ShaderManager {
         this.contextExhausted = true
         if (this._canvas) {
           this._canvas.style.display = "none"
-          console.warn(
-            `%c[ShaderManager] Context exhausted. Canvas hidden, showing CSS fallback background. Will retry in 5s...`,
-            "color: #FF5722; font-weight: bold"
-          )
+          // console.warn(
+          //   `%c[ShaderManager] Context exhausted. Canvas hidden, showing CSS fallback background. Will retry in 5s...`,
+          //   "color: #FF5722; font-weight: bold"
+          // )
         }
 
         // Don't try to create black fallback - it also needs a context!
@@ -268,10 +268,10 @@ export class ShaderManager {
 
     // Don't retry indefinitely
     if (this.recoveryAttempts >= this.maxRecoveryAttempts) {
-      console.error(
-        `%c[ShaderManager] Max recovery attempts (${this.maxRecoveryAttempts}) reached. Giving up.`,
-        "color: #F44336; font-weight: bold"
-      )
+      // console.error(
+      //   `%c[ShaderManager] Max recovery attempts (${this.maxRecoveryAttempts}) reached. Giving up.`,
+      //   "color: #F44336; font-weight: bold"
+      // )
       return
     }
 
@@ -279,10 +279,10 @@ export class ShaderManager {
 
     // Wait 5 seconds for contexts to clear, then try again
     this.recoveryTimeout = setTimeout(() => {
-      console.log(
-        `%c[ShaderManager] Attempting context recovery (attempt ${this.recoveryAttempts}/${this.maxRecoveryAttempts})...`,
-        "color: #2196F3; font-weight: bold"
-      )
+      // console.log(
+      //   `%c[ShaderManager] Attempting context recovery (attempt ${this.recoveryAttempts}/${this.maxRecoveryAttempts})...`,
+      //   "color: #2196F3; font-weight: bold"
+      // )
 
       if (this._canvas) {
         const shaderSource = shaders?.[shaderKey as keyof typeof shaders]

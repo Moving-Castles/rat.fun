@@ -11,6 +11,7 @@
   import { lightboxState, isPhone } from "$lib/modules/ui/state.svelte"
   import { blocksToReadableTime } from "$lib/modules/utils"
   import { blockNumber } from "$lib/modules/network"
+  import { strings } from "$lib/modules/strings"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
 
   let { trip, tripId }: { trip: Trip; tripId?: Hex } = $props()
@@ -58,20 +59,20 @@
   // Data rows configuration with reactivity
   let infoRows = $derived([
     {
-      label: "TRIP",
+      label: strings.trip.toUpperCase(),
       value: `#${trip.index}`,
       className: "index",
       hideOnPhone: true
     },
     {
-      label: "CREATOR",
+      label: strings.creator.toUpperCase(),
       value: getTripOwnerName(trip),
       hideOnPhone: false
     },
     ...(trip.lastVisitBlock
       ? [
           {
-            label: "LAST VISIT",
+            label: strings.lastVisit.toUpperCase(),
             value: blocksToReadableTime(Number($blockNumber) - Number(trip.lastVisitBlock)),
             className: "last-visit-block",
             hideOnPhone: true
@@ -79,29 +80,29 @@
         ]
       : []),
     {
-      label: "VISITS",
+      label: strings.visits.toUpperCase(),
       value: String(trip.visitCount),
       className: "visit-count"
     },
     {
-      label: "KILLS",
+      label: strings.kills.toUpperCase(),
       value: String(trip?.killCount ?? 0),
       className: "kill-count"
     },
     {
-      label: "CREATION COST",
+      label: strings.creationCost.toUpperCase(),
       value: `${CURRENCY_SYMBOL}${trip.tripCreationCost}`,
       className: "creation-cost",
       hideOnPhone: true
     },
     {
-      label: "BALANCE",
+      label: strings.balance.toUpperCase(),
       value: `${CURRENCY_SYMBOL}${trip.balance}`,
       className: "balance",
       depleted: Number(trip.balance) === 0
     },
     {
-      label: "MIN RAT VALUE TO ENTER",
+      label: strings.minRatValueToEnter.toUpperCase(),
       value: `${CURRENCY_SYMBOL}${$minRatValueToEnter ?? 0}`,
       className: "min-rat-value-to-enter",
       hideOnPhone: true
@@ -109,7 +110,7 @@
     ...($maxValuePerWin > 0
       ? [
           {
-            label: "MAX VALUE PER WIN",
+            label: strings.maxValuePerWin.toUpperCase(),
             value: `${CURRENCY_SYMBOL}${$maxValuePerWin}`,
             className: "max-value-per-win"
           }

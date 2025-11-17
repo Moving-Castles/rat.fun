@@ -31,7 +31,11 @@ export const getEnvironmentFromUrl = (url: URL) => {
   const hostname = url.hostname
   const networkParam = url.searchParams.get("network")
 
-  if (hostname === "rat.fun" || networkParam === "base") {
+  if (
+    hostname === "rat.fun" ||
+    hostname === "rat-fun-drawbridge.netlify.app" ||
+    networkParam === "base"
+  ) {
     return ENVIRONMENT.BASE
   } else if (hostname === "base-sepolia.rat.fun" || networkParam === "base-sepolia") {
     return ENVIRONMENT.BASE_SEPOLIA
@@ -53,6 +57,7 @@ export const getWalletTypeFromUrl = (url: URL) => {
   if (
     hostname === "rat.fun" ||
     hostname === "base-sepolia.rat.fun" ||
+    hostname === "rat-fun-drawbridge.netlify.app" ||
     walletTypeParam === "entrykit"
   ) {
     return WALLET_TYPE.ENTRYKIT
