@@ -1,29 +1,267 @@
 <script lang="ts">
   import { getRatInventory } from "$lib/modules/state/utils"
+  import { gsap } from "gsap"
+  import { playSound } from "$lib/modules/sound"
 
   import InteractiveItem from "$lib/components/Rat/RatInfo/RatInventory/InteractiveItem.svelte"
   import EmptySlot from "$lib/components/Rat/RatInfo/RatInventory/EmptySlot.svelte"
 
-  let { displayRat }: { displayRat: Rat | null } = $props()
+  let {
+    displayRat,
+    oldRat,
+    newRat,
+    onTimeline
+  }: {
+    displayRat: Rat | null
+    oldRat: Rat | null
+    newRat: Rat | null
+    onTimeline?: (timeline: ReturnType<typeof gsap.timeline>) => void
+  } = $props()
 
-  let inventory = $derived<Item[]>(displayRat ? getRatInventory(displayRat) : [])
+  // Calculate old and new inventories for change detection
+  let oldInventory = $derived<Item[]>(oldRat ? getRatInventory(oldRat) : [])
+  let newInventory = $derived<Item[]>(newRat ? getRatInventory(newRat) : [])
+
+  // Detect changes
+  const addedItems = $derived(
+    newInventory.filter(newItem => !oldInventory.some(oldItem => oldItem.id === newItem.id))
+  )
+  const removedItems = $derived(
+    oldInventory.filter(oldItem => !newInventory.some(newItem => newItem.id === oldItem.id))
+  )
+  const hasChanges = $derived(addedItems.length > 0 || removedItems.length > 0)
 
   const MAX_INVENTORY_SIZE = 6
 
-  let emptySlots = $derived(Array(MAX_INVENTORY_SIZE - (inventory?.length || 0)).fill(null))
+  // Build combined slot list for animation
+  // During changes: show old items + new items (will animate out/in)
+  // During normal entry: show new items only
+  type SlotItem = {
+    item: Item | null
+    type: "removed" | "added" | "unchanged" | "empty"
+    originalIndex: number // Position in final grid
+  }
 
-  let inventorySlots = $derived([...inventory, ...emptySlots])
+  let inventorySlots = $derived.by(() => {
+    const slots: SlotItem[] = []
+
+    if (hasChanges) {
+      // Show removed items first (they will animate out)
+      removedItems.forEach((item, idx) => {
+        slots.push({
+          item,
+          type: "removed",
+          originalIndex: idx
+        })
+      })
+
+      // Then show new items (they will animate in)
+      newInventory.forEach((item, idx) => {
+        slots.push({
+          item,
+          type: addedItems.some(added => added.id === item.id) ? "added" : "unchanged",
+          originalIndex: idx
+        })
+      })
+
+      // Fill remaining with empty slots
+      const remaining = MAX_INVENTORY_SIZE - newInventory.length
+      for (let i = 0; i < remaining; i++) {
+        slots.push({
+          item: null,
+          type: "empty",
+          originalIndex: newInventory.length + i
+        })
+      }
+    } else {
+      // Normal entry - just show current inventory
+      newInventory.forEach((item, idx) => {
+        slots.push({
+          item,
+          type: "unchanged",
+          originalIndex: idx
+        })
+      })
+
+      // Fill with empty slots
+      const remaining = MAX_INVENTORY_SIZE - newInventory.length
+      for (let i = 0; i < remaining; i++) {
+        slots.push({
+          item: null,
+          type: "empty",
+          originalIndex: newInventory.length + i
+        })
+      }
+    }
+
+    return slots
+  })
+
+  // Elements
+  let inventoryContainer = $state<HTMLDivElement | null>(null)
+  let slotElements: (HTMLDivElement | null)[] = $state([])
+
+  // Create timeline
+  const timeline = gsap.timeline()
+
+  const prepare = () => {
+    inventorySlots.forEach((slot, idx) => {
+      const el = slotElements[idx]
+      if (!el) return
+
+      if (hasChanges && slot.type === "removed") {
+        // Removed items start visible (will animate out)
+        gsap.set(el, { opacity: 1, scale: 1 })
+      } else {
+        // All other items start invisible
+        gsap.set(el, { opacity: 0, scale: 0.8 })
+      }
+    })
+  }
+
+  const main = () => {
+    const validElements = slotElements.filter(el => el !== null)
+    if (validElements.length === 0) return
+
+    if (hasChanges) {
+      // CHANGE ANIMATION
+
+      // Step 1: Show old state (removed items are visible from prepare)
+      // Wait 0.4s
+
+      // Step 2: Animate out removed items
+      inventorySlots.forEach((slot, idx) => {
+        const el = slotElements[idx]
+        if (!el || slot.type !== "removed") return
+
+        timeline.to(
+          el,
+          {
+            opacity: 0,
+            scale: 0.5,
+            duration: 0.4,
+            ease: "power2.in"
+          },
+          0.4 // After 0.4s wait
+        )
+      })
+
+      // Step 3: Animate in unchanged items (quick)
+      inventorySlots.forEach((slot, idx) => {
+        const el = slotElements[idx]
+        if (!el || slot.type !== "unchanged") return
+
+        timeline.to(
+          el,
+          {
+            opacity: 1,
+            scale: 1,
+            duration: 0.3,
+            ease: "power2.out"
+          },
+          0.6 // Slightly after removal starts
+        )
+      })
+
+      // Step 4: Animate in added items (with pulse + sound)
+      inventorySlots.forEach((slot, idx) => {
+        const el = slotElements[idx]
+        if (!el || slot.type !== "added") return
+
+        // Scale in
+        timeline.to(
+          el,
+          {
+            opacity: 1,
+            scale: 1,
+            duration: 0.4,
+            ease: "back.out(1.5)"
+          },
+          0.9 // After removed items are gone
+        )
+
+        // Pulse effect
+        timeline.to(
+          el,
+          {
+            scale: 1.1,
+            duration: 0.2,
+            yoyo: true,
+            repeat: 1,
+            ease: "power2.inOut",
+            onStart: () => {
+              playSound("ratfunUI", "itemPositive", false, false, 1, 0, 0.3)
+            }
+          },
+          1.3 // After scale in
+        )
+      })
+
+      // Step 5: Fade in empty slots
+      inventorySlots.forEach((slot, idx) => {
+        const el = slotElements[idx]
+        if (!el || slot.type !== "empty") return
+
+        timeline.to(
+          el,
+          {
+            opacity: 1,
+            scale: 1,
+            duration: 0.3,
+            ease: "power2.out"
+          },
+          0.8
+        )
+      })
+    } else {
+      // ENTRY ANIMATION: Normal staggered fade in
+      timeline.to(
+        validElements,
+        {
+          opacity: 1,
+          scale: 1,
+          duration: 0.2,
+          stagger: 0.05,
+          ease: "power2.out"
+        },
+        0.2
+      )
+    }
+  }
+
+  const done = () => {
+    if (timeline && onTimeline) {
+      onTimeline(timeline)
+    }
+  }
+
+  const run = () => {
+    prepare()
+    main()
+    done()
+  }
+
+  $effect(() => {
+    // Wait for all slot elements to be available
+    if (inventoryContainer && slotElements.length === inventorySlots.length) {
+      run()
+    }
+  })
 </script>
 
 <div class="inventory">
   {#if displayRat}
-    <div class="inventory-container">
+    <div class="inventory-container" bind:this={inventoryContainer}>
       <!-- INVENTORY GRID -->
-      {#each inventorySlots as item, index (index)}
-        {#if item}
-          <InteractiveItem {item} {index} />
+      {#each inventorySlots as slot, index (index)}
+        {#if slot.item}
+          <div bind:this={slotElements[index]} class="slot-wrapper index-{slot.originalIndex}">
+            <InteractiveItem item={slot.item} index={slot.originalIndex} />
+          </div>
         {:else}
-          <EmptySlot {index} />
+          <div bind:this={slotElements[index]} class="slot-wrapper index-{slot.originalIndex}">
+            <EmptySlot index={slot.originalIndex} />
+          </div>
         {/if}
       {/each}
     </div>
@@ -57,29 +295,35 @@
     height: 100%;
   }
 
-  :global(.index-0),
-  :global(.index-3) {
+  .slot-wrapper {
+    width: 100%;
+    height: 100%;
+  }
+
+  .slot-wrapper.index-0,
+  .slot-wrapper.index-3 {
     grid-column: 1/2;
   }
 
-  :global(.index-1),
-  :global(.index-4) {
+  .slot-wrapper.index-1,
+  .slot-wrapper.index-4 {
     grid-column: 2/3;
   }
-  :global(.index-2),
-  :global(.index-5) {
+
+  .slot-wrapper.index-2,
+  .slot-wrapper.index-5 {
     grid-column: 3/4;
   }
 
-  :global(.index-0),
-  :global(.index-1),
-  :global(.index-2) {
+  .slot-wrapper.index-0,
+  .slot-wrapper.index-1,
+  .slot-wrapper.index-2 {
     grid-row: 1/2;
   }
 
-  :global(.index-3),
-  :global(.index-4),
-  :global(.index-5) {
+  .slot-wrapper.index-3,
+  .slot-wrapper.index-4,
+  .slot-wrapper.index-5 {
     grid-row: 2/3;
   }
 </style>

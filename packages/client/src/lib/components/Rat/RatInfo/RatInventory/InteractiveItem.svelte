@@ -1,7 +1,8 @@
 <script lang="ts">
-  import { scale } from "svelte/transition"
   import { playSound } from "$lib/modules/sound"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
+  import { Tooltip } from "$lib/components/Shared"
+  import { strings } from "$lib/modules/strings"
 
   let {
     item,
@@ -27,24 +28,22 @@
   }
 </script>
 
-<div
-  in:scale|global={{ duration: 100, delay: 400 + index * 200 }}
-  onintroend={() => {
-    playSound("ratfunUI", "itemPositive", false, false, 1, 0, 0.3)
-  }}
-  class="inventory-item {getRarityClass(item.value)} index-{index}"
-  class:disabled={busy}
-  role="button"
-  tabindex="0"
-  onmouseenter={onMouseEnter}
->
-  <div class="inner">
-    <!-- NAME -->
-    <div class="name">{item.name}</div>
-    <!-- VALUE -->
-    <span class="value">{CURRENCY_SYMBOL}{item.value}</span>
+<Tooltip content={strings.psychoObjectExplanation}>
+  <div
+    class="inventory-item {getRarityClass(item.value)} index-{index}"
+    class:disabled={busy}
+    role="button"
+    tabindex="0"
+    onmouseenter={onMouseEnter}
+  >
+    <div class="inner">
+      <!-- NAME -->
+      <div class="name">{item.name}</div>
+      <!-- VALUE -->
+      <span class="value">{CURRENCY_SYMBOL}{item.value}</span>
+    </div>
   </div>
-</div>
+</Tooltip>
 
 <style lang="scss">
   .inventory-item {
@@ -58,6 +57,7 @@
     align-items: center;
     outline: none;
     width: 100%;
+    height: 100%;
     position: relative;
     overflow: hidden;
     border: 10px inset rgba(0, 0, 0, 0.5);

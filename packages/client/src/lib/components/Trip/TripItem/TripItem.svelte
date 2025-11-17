@@ -238,7 +238,6 @@
             overflow-wrap: anywhere;
             font-family: var(--special-font-stack);
             text-overflow: ellipsis;
-            overflow: hidden;
             white-space: normal;
             line-height: 0.9em;
 

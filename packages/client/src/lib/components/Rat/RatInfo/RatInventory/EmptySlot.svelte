@@ -1,8 +1,6 @@
 <script lang="ts">
-  import { fade } from "svelte/transition"
   import { playSound } from "$lib/modules/sound"
   import { strings } from "$lib/modules/strings"
-  import { Tooltip } from "$lib/components/Shared"
 
   let { index }: { index: number } = $props()
 
@@ -18,18 +16,15 @@
   }
 </script>
 
-<Tooltip content={strings.psychoObjectExplanation}>
-  <div
-    style="--msg-empty: '{strings.empty.toUpperCase()}'"
-    in:fade|global={{ duration: 80, delay: 20 + index * 20 }}
-    class="empty-slot index-{index}"
-    class:hovered={isHovered}
-    role="button"
-    tabindex="0"
-    onmouseenter={onMouseEnter}
-    onmouseleave={onMouseLeave}
-  ></div>
-</Tooltip>
+<div
+  style="--msg-empty: '{strings.empty.toUpperCase()}'"
+  class="empty-slot index-{index}"
+  class:hovered={isHovered}
+  role="button"
+  tabindex="0"
+  onmouseenter={onMouseEnter}
+  onmouseleave={onMouseLeave}
+></div>
 
 <style lang="scss">
   .empty-slot {
