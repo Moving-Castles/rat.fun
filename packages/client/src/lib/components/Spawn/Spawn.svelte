@@ -117,17 +117,14 @@
     if ($UIState === UI.SPAWNING) {
       console.log("[Spawn] Starting music")
       await new Promise(resolve => setTimeout(resolve, 700))
-      $backgroundMusic = playSound({ category: "ratfunMusic", id: "spawn", loop: true })
+      backgroundMusic.play({ category: "ratfunMusic", id: "spawn", loop: true })
       shaderManager.setShader("clouds", true)
     }
   })
 
   function stopMusic() {
     console.log("[Spawn] Stopping music")
-    if ($backgroundMusic) {
-      $backgroundMusic.stop()
-      $backgroundMusic = undefined
-    }
+    backgroundMusic.stop()
   }
 
   onDestroy(() => {

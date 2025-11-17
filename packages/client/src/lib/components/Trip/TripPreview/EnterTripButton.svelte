@@ -12,8 +12,7 @@
   let minRatValueToEnter = getTripMinRatValueToEnter(trip.tripCreationCost)
 
   const onClick = async () => {
-    $backgroundMusic?.stop()
-    backgroundMusic.set(undefined)
+    backgroundMusic.stop()
     await goto(`/${tripId}/tripping?enter=true&rat=${$player.currentRat}&t=${Date.now()}`)
   }
 </script>

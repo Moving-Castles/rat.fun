@@ -109,8 +109,7 @@
       const isDead = currentBalance === 0
 
       if (isDead) {
-        // Stop background music
-        $backgroundMusic?.stop()
+        backgroundMusic.stop()
         // Play death sound
         playSound({ category: "ratfunUI", id: "ratDeath" })
         // Update text to show DEAD

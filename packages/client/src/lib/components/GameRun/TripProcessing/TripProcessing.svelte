@@ -33,7 +33,7 @@
 
   onMount(() => {
     playSound({ category: "ratfunTransitions", id: "tripProcessingEnter" })
-    $backgroundMusic = playSound({ category: "ratfunMusic", id: "tripProcessing" })
+    backgroundMusic.play({ category: "ratfunMusic", id: "tripProcessing" })
 
     // Set the trip processing shader with custom uniforms
     shaderManager.setShader("tripProcessing", false, {
@@ -52,11 +52,7 @@
   })
 
   onDestroy(async () => {
-    // Stop background music
-    if ($backgroundMusic) {
-      $backgroundMusic.stop()
-      $backgroundMusic = undefined
-    }
+    backgroundMusic.stop()
   })
 </script>
 

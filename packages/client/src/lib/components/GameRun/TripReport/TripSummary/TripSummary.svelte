@@ -46,13 +46,7 @@
       () => {
         playSound({ category: "ratfunUI", id: "panelIn" })
         if (ratDead) {
-          const deathMusic = playSound({
-            category: "ratfunMusic",
-            id: "death",
-            loop: true,
-            fadeIn: true
-          })
-          backgroundMusic.set(deathMusic)
+          backgroundMusic.play({ category: "ratfunMusic", id: "death", loop: true, fadeIn: true })
         }
       },
       [],

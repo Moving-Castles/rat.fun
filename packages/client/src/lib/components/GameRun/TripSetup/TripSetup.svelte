@@ -24,7 +24,7 @@
   const SETUP_DURATION = 6000
 
   onMount(async () => {
-    $backgroundMusic = playSound({ category: "ratfunMusic", id: "tripSetup", loop: true })
+    backgroundMusic.play({ category: "ratfunMusic", id: "tripSetup", loop: true })
 
     setTimeout(() => {
       // Stop the terminal typer
@@ -46,10 +46,7 @@
     }
 
     // Stop background music
-    if ($backgroundMusic) {
-      $backgroundMusic.stop()
-      $backgroundMusic = undefined
-    }
+    backgroundMusic.stop()
   })
 </script>
 

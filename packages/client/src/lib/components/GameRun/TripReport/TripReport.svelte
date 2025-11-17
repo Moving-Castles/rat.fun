@@ -111,15 +111,11 @@
       u_color: { type: "vec3", value: [r, g, b] }
     })
 
-    $backgroundMusic = playSound({ category: "ratfunMusic", id: "tripReport", loop: true })
+    backgroundMusic.play({ category: "ratfunMusic", id: "tripReport", loop: true })
   }
 
   const teardownTripReport = () => {
-    // Stop background music
-    if ($backgroundMusic) {
-      $backgroundMusic.stop()
-      $backgroundMusic = undefined
-    }
+    backgroundMusic.stop()
 
     // Stop animation
     if (rootTimeline) {
