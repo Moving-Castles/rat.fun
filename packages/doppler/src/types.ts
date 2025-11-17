@@ -26,4 +26,5 @@ export interface AuctionParams {
     tickSpacing: number
   }
   userAddress: Address
+  spendLimitAmount: string
 }

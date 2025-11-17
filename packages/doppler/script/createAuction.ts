@@ -83,7 +83,8 @@ const auctionParams: AuctionParams = {
   startingTick,
   endingTick,
   pool: createParams.pool,
-  userAddress: createParams.userAddress
+  userAddress: createParams.userAddress,
+  spendLimitAmount: createParams.token.spendLimitAmount.toString()
 }
 
 // TODO remove after result.poolId is fixed https://github.com/whetstoneresearch/doppler-sdk-alpha/pull/36

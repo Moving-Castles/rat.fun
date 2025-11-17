@@ -1,10 +1,10 @@
 {
   "84532": {
-    "poolId": "0x99a3b6dc302c4b95b914956e04b6acd26010945380776cff53c59597875ccfe7",
-    "transactionHash": "0xc4ef4e255c26dc68268eacf72be17ce49a215cb583af9cd9f323657858486d5d",
-    "hookAddress": "0x9c30Dc6a2Ffbfa782581a04c16b11Bda4B28B8E0",
+    "poolId": "0x659572e066d94ef06f3ae0e852a5eab2943e39762f836dde091978a85fe61934",
+    "transactionHash": "0x36568855401322214fd5e9b84cac4d77c8a6717dbd7c5e6f557d334ad34dfc8a",
+    "hookAddress": "0xBEba44a8818af1fEc341Abc2aCEF5a4d2fB0f8e0",
     "token": {
-      "address": "0xb8e3DEEEa840d3b3Be5e617e5563C6a8C3bB978E",
+      "address": "0x6800EDbD255DEB9306Ee94773CcDFDbBFeD9227C",
       "decimals": 18,
       "name": "Slopamine",
       "symbol": "RAT"
@@ -15,8 +15,8 @@
       "name": "TEST_NUMERAIRE_6_DECIMALS",
       "symbol": "TEST"
     },
-    "startingTime": 1763411302,
-    "endingTime": 1764016102,
+    "startingTime": 1763416660,
+    "endingTime": 1764021460,
     "isToken0": false,
     "startingTick": 318990,
     "endingTick": 329310,
@@ -24,6 +24,7 @@
       "fee": 3000,
       "tickSpacing": 30
     },
-    "userAddress": "0xEA61B46aE53dB45247afA83892EFdB9475e7042C"
+    "userAddress": "0xEA61B46aE53dB45247afA83892EFdB9475e7042C",
+    "spendLimitAmount": "95000000000"
   }
 }
