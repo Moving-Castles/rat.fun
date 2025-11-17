@@ -3,7 +3,7 @@
   import type { EnterTripReturnValue } from "@server/modules/types"
   import { mergeLog } from "./index"
   import { gsap } from "gsap"
-  import { LogItem, LogHeader } from "$lib/components/GameRun"
+  import { LogItem, LogStatus } from "$lib/components/GameRun"
 
   let {
     result,
@@ -20,12 +20,13 @@
   let mergedLog: MergedLogEntry[] | undefined = $state(undefined)
   let totalItems: number | undefined = $state(undefined)
   let receivedTimelines = 0
+  let endStatusContainer: HTMLDivElement | null = $state(null)
 
   // Wait for result, then merge log events with corresponding outcomes
   $effect(() => {
     if (result && !mergedLog) {
       mergedLog = mergeLog(result)
-      totalItems = mergedLog.length + 1 // +1 for the header
+      totalItems = mergedLog.length + 1 // +1 for START status only
     }
   })
 
@@ -43,7 +44,16 @@
     receivedTimelines++
 
     if (receivedTimelines === totalItems) {
-      // All timelines added, pass to parent
+      // All log items + START added, now manually add END status animation
+      if (endStatusContainer) {
+        gsap.set(endStatusContainer, { opacity: 0 })
+        logTimeline.to(endStatusContainer, {
+          opacity: 1,
+          duration: 0.5,
+          ease: "power2.out"
+        })
+      }
+      // Pass complete timeline to parent
       done()
     }
   }
@@ -58,12 +68,15 @@
 </script>
 
 <div class="log-container" bind:this={logElement}>
-  <LogHeader onTimeline={addToTimeline} />
+  <LogStatus status="START" onTimeline={timeline => addToTimeline(timeline)} />
   {#if mergedLog && mergedLog.length > 0}
     {#each mergedLog as logEntry, i (i)}
-      <LogItem {logEntry} onTimeline={addToTimeline} delay={0} />
+      <LogItem {logEntry} onTimeline={timeline => addToTimeline(timeline)} delay={0} />
     {/each}
   {/if}
+  <div bind:this={endStatusContainer}>
+    <LogStatus status="END" />
+  </div>
 </div>
 
 <style lang="scss">

@@ -132,15 +132,17 @@
     width: 100%;
     height: 400px;
 
-    // Layout
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
     background-image: url("/images/texture-2.png");
 
+    // Layout
     display: flex;
     flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+    }
 
     .results {
       width: 50%;
@@ -154,6 +156,10 @@
       .results-inner {
         width: 100%;
       }
+
+      @media (max-width: 768px) {
+        width: 100%;
+      }
     }
 
     .actions {
@@ -164,6 +170,10 @@
       justify-content: center;
       align-items: center;
       margin-top: -20px;
+
+      @media (max-width: 768px) {
+        width: 100%;
+      }
     }
   }
 </style>

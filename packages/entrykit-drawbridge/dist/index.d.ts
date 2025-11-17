@@ -1,5 +1,4 @@
 import { Chain, Client, Transport, Address, LocalAccount, Account } from 'viem';
-export { Address, Client, Hex } from 'viem';
 import { SmartAccount, PaymasterClient } from 'viem/account-abstraction';
 import { CreateConnectorFn, Config } from '@wagmi/core';
 

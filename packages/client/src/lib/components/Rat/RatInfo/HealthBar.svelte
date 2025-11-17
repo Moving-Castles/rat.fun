@@ -1,32 +1,91 @@
 <script lang="ts">
   import { HEALTH_SYMBOL } from "$lib/modules/ui/constants"
-  import { Tween } from "svelte/motion"
+  import { gsap } from "gsap"
 
-  let { value }: { value: number } = $props()
+  let {
+    oldHealth,
+    newHealth
+  }: {
+    oldHealth: number
+    newHealth: number
+  } = $props()
 
   // Health 0-25 => 1
   // Health 26-50 => 2
   // Health 51-75 => 3
   // Health 76-> => 4
-  let healthLevel = $derived(Math.floor(value / 25))
+  const getHealthColor = (health: number): string => {
+    const level = Math.floor(health / 25)
+    if (level === 0) return "rgb(255, 66, 66)" // Red
+    if (level === 1) return "rgb(255, 126, 21)" // Orange
+    if (level === 2) return "rgb(129, 255, 255)" // Cyan
+    return "rgb(135, 255, 135)" // Green
+  }
 
-  const tweenedValue = new Tween(value)
+  let oldHealthColor = $derived(getHealthColor(oldHealth))
+  let newHealthColor = $derived(getHealthColor(newHealth))
+
+  // Elements
+  let valueElement = $state<HTMLSpanElement | null>(null)
+  let fillElement = $state<HTMLDivElement | null>(null)
+  let initialized = $state(false)
+
+  const hasChanges = oldHealth !== newHealth
 
   $effect(() => {
-    tweenedValue.set(value)
+    if (!valueElement || !fillElement || initialized) return
+
+    initialized = true
+
+    // Set initial state - show old values immediately
+    gsap.set(valueElement, { textContent: oldHealth })
+    gsap.set(fillElement, {
+      width: `${oldHealth}%`,
+      backgroundColor: oldHealthColor
+    })
+
+    if (hasChanges) {
+      // CHANGE ANIMATION
+      // Container slides in (0.4s from RatStats), wait 0.2s, then animate to new values
+
+      // Animate the numeric value
+      gsap.to(valueElement, {
+        textContent: newHealth,
+        duration: 1.0,
+        snap: { textContent: 1 },
+        ease: "power2.out",
+        delay: 0.6 // 0.4s entry + 0.2s wait
+      })
+
+      // Animate the fill bar width
+      gsap.to(fillElement, {
+        width: `${newHealth}%`,
+        duration: 1.0,
+        ease: "power2.out",
+        delay: 0.6 // Same timing as value
+      })
+
+      // Animate the color change
+      gsap.to(fillElement, {
+        backgroundColor: newHealthColor,
+        duration: 1.0,
+        ease: "power2.out",
+        delay: 0.6 // Same timing as value and width
+      })
+    }
   })
 </script>
 
 <div class="health-bar">
   <div class="health-bar-inner">
-    <span class="health-bar-inner-value">{HEALTH_SYMBOL} {value}</span>
+    <span class="health-bar-inner-value">
+      {HEALTH_SYMBOL} <span bind:this={valueElement}>{oldHealth}</span>
+    </span>
     <div
+      bind:this={fillElement}
       class="health-bar-inner-fill"
-      style:width={`${Math.floor(tweenedValue.current)}%`}
-      class:health-level-1={healthLevel == 0}
-      class:health-level-2={healthLevel == 1}
-      class:health-level-3={healthLevel == 2}
-      class:health-level-4={healthLevel > 2}
+      style:width="{oldHealth}%"
+      style:background-color={oldHealthColor}
     ></div>
   </div>
 </div>
@@ -59,23 +118,7 @@
       top: 0;
       left: 0;
       height: 100%;
-      transition: width 0.2s ease-in-out;
-    }
-
-    .health-level-1 {
-      background-color: rgb(255, 66, 66);
-    }
-
-    .health-level-2 {
-      background-color: rgb(255, 126, 21);
-    }
-
-    .health-level-3 {
-      background-color: rgb(129, 255, 255);
-    }
-
-    .health-level-4 {
-      background-color: rgb(135, 255, 135);
+      /* No CSS transition - GSAP handles all animation */
     }
   }
 </style>

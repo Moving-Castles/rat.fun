@@ -1,53 +1,194 @@
 <script lang="ts">
-  import { onDestroy } from "svelte"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
-  import { DangerButton, Tooltip } from "$lib/components/Shared"
-  import { rat } from "$lib/modules/state/stores"
+  import { DangerButton } from "$lib/components/Shared"
   import { ratState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
   import { getRatTotalValue } from "$lib/modules/state/utils"
-  import { Tween } from "svelte/motion"
   import { strings } from "$lib/modules/strings"
+  import { gsap } from "gsap"
 
-  let { displayRat }: { displayRat: Rat | null } = $props()
+  let {
+    displayRat,
+    oldRat,
+    newRat,
+    onTimeline
+  }: {
+    displayRat: Rat | null
+    oldRat: Rat | null
+    newRat: Rat | null
+    onTimeline?: (timeline: ReturnType<typeof gsap.timeline>) => void
+  } = $props()
 
-  const initialValue = displayRat ? getRatTotalValue(displayRat) : getRatTotalValue($rat)
-  const tweenedValue = new Tween(initialValue)
-  let playing = $state(false)
+  // Calculate old and new total values
+  let oldValue = $derived(oldRat ? getRatTotalValue(oldRat) : 0)
+  let newValue = $derived(newRat ? getRatTotalValue(newRat) : 0)
+  const hasChanges = $derived(oldValue !== newValue)
 
-  $effect(() => {
-    if (displayRat) {
-      tweenedValue.set(getRatTotalValue(displayRat), { delay: 2000 })
+  // Elements
+  let totalValueContainer = $state<HTMLDivElement | null>(null)
+  let valueElement = $state<HTMLSpanElement | null>(null)
+  let actionContainer = $state<HTMLDivElement | null>(null)
+
+  // Create timeline
+  const timeline = gsap.timeline()
+
+  const prepare = () => {
+    gsap.set(totalValueContainer, { opacity: 0 })
+    gsap.set(actionContainer, { opacity: 0 })
+    // Show old value initially
+    gsap.set(valueElement, { textContent: `${CURRENCY_SYMBOL}${oldValue}` })
+
+    if (!hasChanges) {
+      // Only set scale for entry animation if no changes
+      gsap.set(totalValueContainer, { scale: 0.8 })
     }
-  })
+  }
+
+  const main = () => {
+    if (hasChanges) {
+      // CHANGE ANIMATION: Just fade in container, then scale value for count
+
+      // Entry: Simple fade in (no scale)
+      timeline.to(
+        totalValueContainer,
+        {
+          opacity: 1,
+          duration: 0.4,
+          ease: "power2.out"
+        },
+        0.5 // Start after other elements
+      )
+
+      // Scale value up
+      timeline.to(
+        valueElement,
+        {
+          scale: 1.7,
+          duration: 0.3,
+          ease: "back.out(2.0)"
+        },
+        1.0 // Start after entry
+      )
+
+      // Count from old to new (fast)
+      // Use a proxy object to animate the number value
+      const counterObj = { value: oldValue }
+      timeline.to(
+        counterObj,
+        {
+          value: newValue,
+          duration: 0.8,
+          ease: "power2.inOut",
+          onUpdate: () => {
+            if (valueElement) {
+              valueElement.textContent = `${CURRENCY_SYMBOL}${Math.floor(counterObj.value)}`
+            }
+          }
+        },
+        1.3 // During scale
+      )
+
+      // Scale back to 1.0
+      timeline.to(
+        valueElement,
+        {
+          scale: 1,
+          duration: 0.3,
+          ease: "power2.out"
+        },
+        2.1 // After count
+      )
+
+      // End with glow highlight
+      timeline.to(
+        valueElement,
+        {
+          color: "rgba(255, 255, 255, 1)",
+          filter: "drop-shadow(0px 0px 6px #ffffff)",
+          duration: 0.3,
+          ease: "power2.out"
+        },
+        2.4 // After scale back
+      )
+
+      // Hold glow briefly
+      timeline.to(
+        valueElement,
+        {
+          color: "rgba(255, 255, 255, 1)",
+          filter: "drop-shadow(0px 0px 6px #ffffff)",
+          duration: 0.5
+        },
+        2.7
+      )
+
+      // Fade glow back to normal
+      timeline.to(
+        valueElement,
+        {
+          color: "rgba(255, 255, 255, 0.7)",
+          filter: "drop-shadow(0px 0px 0px #ffffff)",
+          duration: 0.5,
+          ease: "power2.out"
+        },
+        3.2
+      )
+    } else {
+      // ENTRY ANIMATION: Scale + fade in container
+      timeline.to(
+        totalValueContainer,
+        {
+          opacity: 1,
+          scale: 1,
+          duration: 0.4,
+          ease: "back.out(20.0)"
+        },
+        0.5 // Start after other elements
+      )
+    }
+
+    // Animate action button - simple fade in
+    timeline.to(
+      actionContainer,
+      {
+        opacity: 1,
+        duration: 0.6,
+        ease: "power2.out"
+      },
+      0.8 // Stagger slightly after value
+    )
+  }
+
+  const done = () => {
+    if (timeline && onTimeline) {
+      onTimeline(timeline)
+    }
+  }
+
+  const run = () => {
+    prepare()
+    main()
+    done()
+  }
 
   $effect(() => {
-    if (tweenedValue.current > tweenedValue.target && !playing) {
-      playing = true
-    } else if (!playing && tweenedValue.current < tweenedValue.target) {
-      playing = true
+    if (totalValueContainer && valueElement && actionContainer) {
+      run()
     }
   })
 
   const onclick = async () => {
     ratState.state.transitionTo(RAT_BOX_STATE.CONFIRM_LIQUIDATION)
   }
-
-  onDestroy(() => {
-    // Stop tween immediately to prevent delayed unmount
-    tweenedValue.set(tweenedValue.current, { duration: 0 })
-  })
 </script>
 
 <div class="liquidate-rat">
   {#if displayRat}
-    <div class="total-value">
-      <!-- <div class="label">Total Value</div> -->
-      <div class:glow={tweenedValue.current !== tweenedValue.target} class="value">
-        <!-- <Tooltip content={} -->
-        <span>{CURRENCY_SYMBOL}{Math.floor(tweenedValue.current)}</span>
+    <div class="total-value" bind:this={totalValueContainer}>
+      <div class="value">
+        <span bind:this={valueElement}>{CURRENCY_SYMBOL}{oldValue}</span>
       </div>
     </div>
-    <div class="action">
+    <div class="action" bind:this={actionContainer}>
       <DangerButton
         text={strings.liquidateRatButtonText}
         tippyText={strings.liquidateRatInstruction}
@@ -70,6 +211,7 @@
       color: white;
       display: flex;
       flex-direction: column;
+      overflow: visible; // Allow value to overflow during scale
 
       .value {
         margin-top: 8px;
@@ -79,12 +221,9 @@
         font-size: 72px;
         line-height: 72px;
         color: rgba(255, 255, 255, 0.7);
-        transition: all 0.2s ease;
-
-        &.glow {
-          color: rgba(255, 255, 255, 1);
-          filter: drop-shadow(0px 0px 2px #ffffff);
-        }
+        overflow: visible; // Allow scaled text to overflow
+        position: relative;
+        z-index: 10; // Ensure it appears above other elements
 
         @media (max-width: 800px) {
           font-size: 48px;

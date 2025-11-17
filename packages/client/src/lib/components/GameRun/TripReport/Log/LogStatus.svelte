@@ -6,9 +6,11 @@
   gsap.registerPlugin(TextPlugin)
 
   let {
+    status,
     delay = 0,
     onTimeline
   }: {
+    status: "START" | "END"
     delay?: number
     onTimeline?: (timeline: ReturnType<typeof gsap.timeline>) => void
   } = $props()
@@ -18,37 +20,42 @@
   // Timeline
   const timeline = gsap.timeline({ delay })
 
+  const statusText = $derived(`TRIP REPORT // ${status}`)
+
   // Ensure root element is mounted
   onMount(() => {
-    timeline.set(".header", {
-      opacity: 0
-    })
+    // Only create animation if onTimeline is provided
+    // Otherwise, parent will handle the animation manually
+    if (onTimeline) {
+      timeline.set(".status", {
+        opacity: 0
+      })
 
-    timeline.to(".header", {
-      opacity: 1,
-      duration: 0.5,
-      ease: "power2.out"
-    })
-    onTimeline?.(timeline)
+      timeline.to(".status", {
+        opacity: 1,
+        duration: 0.5,
+        ease: "power2.out"
+      })
+      onTimeline(timeline)
+    }
   })
 </script>
 
-<div class="log-header" bind:this={element}>
-  <div class="header">TRIP REPORT</div>
+<div class="trip-status" bind:this={element}>
+  <div class="status">{statusText}</div>
 </div>
 
 <style lang="scss">
-  .log-header {
+  .trip-status {
     display: flex;
     margin-bottom: 0.5em;
     line-height: 1.2em;
-    font-size: var(--font-size-large);
+    font-size: var(--font-size-normal);
 
-    .header {
+    .status {
       display: inline-block;
       background: var(--background-semi-transparent);
       color: var(--foreground);
-      border: 1px solid var(--foreground);
       padding: 10px;
       max-width: 60%;
       font-family: var(--typewriter-font-stack);

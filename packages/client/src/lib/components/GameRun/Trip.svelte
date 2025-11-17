@@ -114,17 +114,21 @@
 
   <!-- ### 3. TRIP RESULTS ### -->
   {#if tripResultState.state === TRIP_STATE.RESULTS && result}
-    <TripReport {result} {seed1} {seed2} />
+    <TripReport {result} {seed1} />
   {/if}
 </div>
 
 <style lang="scss">
   .trip {
     height: 100%;
+    width: 100%;
     color: var(--white);
     z-index: var(--z-high);
     font-size: var(--font-size-normal);
     overflow-y: auto;
     top: 32px;
+    position: absolute;
+    top: 0;
+    left: 0;
   }
 </style>

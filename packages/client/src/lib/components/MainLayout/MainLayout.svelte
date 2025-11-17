@@ -4,11 +4,13 @@
   let { children }: { children: import("svelte").Snippet } = $props()
 </script>
 
-<div class="main-area">
-  <TopBar />
-  <div class="main-content">
-    <div class="main-area-inner">
-      {@render children?.()}
+<div class="context-main">
+  <div class="main-area">
+    <TopBar />
+    <div class="main-content">
+      <div class="main-area-inner">
+        {@render children?.()}
+      </div>
     </div>
   </div>
 </div>
@@ -16,6 +18,16 @@
 <div class="dust"></div>
 
 <style lang="scss">
+  .context-main {
+    width: var(--game-window-width);
+    height: var(--game-window-height);
+    overflow: hidden;
+    position: fixed;
+    z-index: var(--z-base);
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
   .main-area {
     width: 100%;
     height: var(--game-window-height);

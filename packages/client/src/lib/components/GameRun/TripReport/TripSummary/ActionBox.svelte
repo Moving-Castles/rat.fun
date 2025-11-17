@@ -1,10 +1,14 @@
 <script lang="ts">
   import type { EnterTripReturnValue } from "@server/modules/types"
-  import { frozenRat, resetProcessingState } from "$lib/components/GameRun/state.svelte"
+  import {
+    frozenRat,
+    resetProcessingState,
+    resetFrozenState
+  } from "$lib/components/GameRun/state.svelte"
   import { goto } from "$app/navigation"
   import { gsap } from "gsap"
   import { BigButton, RatAvatar } from "$lib/components/Shared"
-  import { isPhone } from "$lib/modules/ui/state.svelte"
+  import { isPhone, selectedFolderId, phoneActiveGameView } from "$lib/modules/ui/state.svelte"
   import { strings } from "$lib/modules/strings"
 
   let {
@@ -58,6 +62,15 @@
 
   const comeDown = () => {
     resetProcessingState()
+
+    if (ratDead) {
+      // Rat died - reset folder selection and frozen state
+      selectedFolderId.set("") // Return to folder listing
+      resetFrozenState() // Clear frozenRat so next rat doesn't animate from old rat
+      // On phone, go back to ratbox
+      phoneActiveGameView.set("ratbox")
+    }
+
     // Return to game
     goto("/", { invalidateAll: true })
   }
@@ -96,6 +109,10 @@
       overflow: visible;
       position: absolute;
       top: -180px;
+
+      @media (max-width: 768px) {
+        display: none;
+      }
     }
 
     .event-text {
@@ -106,6 +123,10 @@
       &.dead {
         color: black;
         background: red;
+      }
+
+      @media (max-width: 768px) {
+        display: none;
       }
     }
 

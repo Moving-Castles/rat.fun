@@ -1,6 +1,6 @@
 export { default as TripReport } from "./TripReport/TripReport.svelte"
 export { default as Log } from "./TripReport/Log/Log.svelte"
-export { default as LogHeader } from "./TripReport/Log/LogHeader.svelte"
+export { default as LogStatus } from "./TripReport/Log/LogStatus.svelte"
 export { default as LogItem } from "./TripReport/Log/LogItem/LogItem.svelte"
 export { default as LogOutcomeList } from "./TripReport/Log/LogItem/LogOutcomeList/LogOutcomeList.svelte"
 export { default as LogOutcomeItem } from "./TripReport/Log/LogItem/LogOutcomeList/LogOutcomeItem.svelte"

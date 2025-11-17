@@ -21,9 +21,11 @@
   let busy = $state(false)
 
   // Check if wallet is ready based on wallet type
-  const isWalletReady = $derived($walletType === WALLET_TYPE.BURNER
-    ? !!$walletNetwork.walletClient
-    : $isSessionReady && !!$sessionClient)
+  const isWalletReady = $derived(
+    $walletType === WALLET_TYPE.BURNER
+      ? !!$walletNetwork.walletClient
+      : $isSessionReady && !!$sessionClient
+  )
 
   let mascotElement: HTMLDivElement | null = $state(null)
   // let textElement: HTMLDivElement | null = $state(null)

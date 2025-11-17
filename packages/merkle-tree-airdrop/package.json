@@ -15,7 +15,7 @@
   "dependencies": {
     "@openzeppelin/merkle-tree": "^1.0.8",
     "csv-parse": "^6.1.0",
-    "viem": "2.38.5"
+    "viem": "2.39.0"
   },
   "devDependencies": {
     "@types/node": "^24.7.0",

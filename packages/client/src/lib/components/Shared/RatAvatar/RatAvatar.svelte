@@ -34,11 +34,28 @@
 
   let armTimeline: gsap.core.Timeline | null = null
   let deathTimeline: gsap.core.Timeline | null = null
+  let clickTimeline: gsap.core.Timeline | null = null
 
   const onmousedown = (e: MouseEvent) => {
     if (inert) return false
     if (!bodyElement || !armsElement || !headElement || !earsElement) return false
     playSound("ratfunUI", "glassTap")
+
+    // Kill any existing click animation
+    if (clickTimeline) {
+      clickTimeline.kill()
+      clickTimeline = null
+    }
+
+    // Reset all elements to initial state immediately
+    gsap.set([bodyElement, armsElement, headElement, earsElement], {
+      scale: 1,
+      scaleY: 1,
+      rotation: 0,
+      x: 0,
+      y: 0,
+      skewY: 0
+    })
 
     // Calculate click position relative to container center
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect()
@@ -66,9 +83,9 @@
     // Middle zone: rotationDirection and skewDirection remain 0
 
     // Create timeline for animation sequence
-    const tl = gsap.timeline()
+    clickTimeline = gsap.timeline()
 
-    tl.to(
+    clickTimeline.to(
       [bodyElement, armsElement],
       {
         scale: 0.95,
@@ -79,7 +96,7 @@
     )
 
     // Animate head and ears with scale and directional movement
-    tl.to(
+    clickTimeline.to(
       [headElement, earsElement],
       {
         scaleY: 1.2,
@@ -93,7 +110,7 @@
       0
     )
 
-    tl.call(
+    clickTimeline.call(
       () => {
         playSound("ratfunUI", "chirp")
       },
@@ -102,7 +119,7 @@
     )
 
     // Wait until 600ms total (matching Mascot's timing), then reset
-    tl.to(
+    clickTimeline.to(
       [headElement, earsElement],
       {
         scale: 1,
@@ -117,7 +134,7 @@
       0.4
     )
 
-    tl.to(
+    clickTimeline.to(
       [bodyElement, armsElement],
       {
         scale: 1,
@@ -270,6 +287,10 @@
       deathTimeline.kill()
       deathTimeline = null
     }
+    if (clickTimeline) {
+      clickTimeline.kill()
+      clickTimeline = null
+    }
   })
 </script>
 
@@ -332,6 +353,7 @@
       height: 100%;
       object-fit: contain;
       position: absolute;
+      inset: 0;
       pointer-events: none;
 
       &.colored {

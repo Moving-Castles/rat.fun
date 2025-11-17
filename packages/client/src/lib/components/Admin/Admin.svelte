@@ -1,6 +1,14 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte"
-  import type { TripEventBaseline, TripEvent, PendingTrip } from "$lib/components/Admin/types"
+  import type {
+    TripEventBaseline,
+    TripEvent,
+    TripEventCreation,
+    TripEventLiquidation,
+    TripEventDeath,
+    TripEventVisit,
+    PendingTrip
+  } from "$lib/components/Admin/types"
   import { TRIP_EVENT_TYPE } from "$lib/components/Admin/enums"
   import { strings } from "$lib/modules/strings"
   import {
@@ -66,7 +74,10 @@
 
   // Calculate plot data for all trips
   let allSparkPlots = $derived.by(() => {
-    const plots: Record<string, TripEvent[]> = {}
+    const plots: Record<
+      string,
+      (TripEventCreation | TripEventLiquidation | TripEventDeath | TripEventVisit)[]
+    > = {}
 
     Object.entries($playerTrips).forEach(([tripId, trip]) => {
       const sanityTripContent = tripContentMap.get(tripId)
@@ -75,16 +86,26 @@
       const outcomes = outcomesByTripId[tripId] || []
       const profitLoss = calculateProfitLossForTrip(trip, tripId, sanityTripContent, outcomes, true)
 
-      // Accumulate the value changes and add index
+      // Accumulate the value changes and add index, filtering to only compatible event types
       let runningBalance = 0
-      plots[tripId] = profitLoss.map((point, index) => {
-        runningBalance += point.valueChange || 0
-        return {
-          ...point,
-          index,
-          value: runningBalance
-        }
-      })
+      plots[tripId] = profitLoss
+        .filter(
+          (
+            point
+          ): point is TripEventCreation | TripEventLiquidation | TripEventDeath | TripEventVisit =>
+            point.eventType === TRIP_EVENT_TYPE.CREATION ||
+            point.eventType === TRIP_EVENT_TYPE.LIQUIDATION ||
+            point.eventType === TRIP_EVENT_TYPE.DEATH ||
+            point.eventType === TRIP_EVENT_TYPE.VISIT
+        )
+        .map((point, index) => {
+          runningBalance += point.valueChange || 0
+          return {
+            ...point,
+            index,
+            value: runningBalance
+          }
+        })
     })
 
     return plots

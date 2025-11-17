@@ -205,5 +205,9 @@
       background: pink;
       padding: 2px 4px;
     }
+
+    @media (max-width: 768px) {
+      font-size: var(--font-size-normal);
+    }
   }
 </style>

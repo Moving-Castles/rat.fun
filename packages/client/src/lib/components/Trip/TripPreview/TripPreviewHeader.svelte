@@ -80,20 +80,9 @@
         ]
       : []),
     {
-      label: strings.visits.toUpperCase(),
-      value: String(trip.visitCount),
+      label: `${strings.visits.toUpperCase()} / ${strings.kills.toUpperCase()}`,
+      value: `${String(trip.visitCount)} / ${String(trip?.killCount ?? 0)}`,
       className: "visit-count"
-    },
-    {
-      label: strings.kills.toUpperCase(),
-      value: String(trip?.killCount ?? 0),
-      className: "kill-count"
-    },
-    {
-      label: strings.creationCost.toUpperCase(),
-      value: `${CURRENCY_SYMBOL}${trip.tripCreationCost}`,
-      className: "creation-cost",
-      hideOnPhone: true
     },
     {
       label: strings.balance.toUpperCase(),

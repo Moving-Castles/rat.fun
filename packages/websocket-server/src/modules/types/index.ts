@@ -49,7 +49,11 @@ export type OffChainMessage = {
     | "chat__message"
     | "rat__deploy"
     | "rat__liquidate"
+    | "rat__death"
+    | "trip__creation"
     | "trip__liquidation"
+    | "trip__outcome"
+    | "key__activation"
   playerName?: string
   ratName?: string
   ratId?: string

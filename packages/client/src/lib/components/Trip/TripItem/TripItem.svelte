@@ -7,6 +7,7 @@
   import { playSound } from "$lib/modules/sound"
   import { NoImage } from "$lib/components/Shared"
   import TripItemStats from "./TripItemStats/TripItemStats.svelte"
+  import { getTripOwnerName } from "$lib/modules/state/utils"
 
   let {
     tripId,
@@ -85,12 +86,19 @@
   </div>
   <!-- COLUMN RIGHT -->
   <div class="column right">
-    <!-- PROMPT -->
-    <div class="trip-prompt {getPromptLengthClass(trip.prompt)}">
-      <div class="content">
-        {renderSafeString(trip.prompt)}
+    <div class="main-info">
+      <!-- CREATOR -->
+      <div class="trip-creator">
+        @{getTripOwnerName(trip)}
+      </div>
+      <!-- PROMPT -->
+      <div class="trip-prompt {getPromptLengthClass(trip.prompt)}">
+        <div class="content">
+          {renderSafeString(trip.prompt)}
+        </div>
       </div>
     </div>
+
     <!-- MAX WIN -->
     <div class="meta-data">
       <TripItemStats {trip} />
@@ -216,48 +224,62 @@
           order: 1;
         }
 
-        .trip-prompt {
+        .main-info {
           width: calc(100% - 100px);
-          padding-top: 5px;
-          padding: 5px;
-          word-break: break-word;
-          overflow-wrap: anywhere;
-          font-family: var(--special-font-stack);
-          text-overflow: ellipsis;
-          overflow: hidden;
-          white-space: normal;
-          line-height: 0.9em;
+          padding-inline: 5px;
 
           @media (max-width: 800px) {
             width: 100%;
-            padding: 10px;
-            order: 2;
-            overflow: visible;
-            text-overflow: unset;
           }
-
-          &.short {
-            font-size: var(--font-size-large);
-          }
-
-          &.medium {
-            font-size: var(--font-size-large);
-          }
-
-          &.long {
-            font-size: var(--font-size-normal);
-          }
-
-          &.extra-long {
-            font-size: var(--font-size-normal);
-          }
-
-          .content {
-            max-width: 55ch;
+          .trip-prompt {
+            width: 100%;
+            padding-top: 5px;
+            word-break: break-word;
+            overflow-wrap: anywhere;
+            font-family: var(--special-font-stack);
+            text-overflow: ellipsis;
+            white-space: normal;
+            line-height: 0.9em;
 
             @media (max-width: 800px) {
-              max-width: 100%;
+              padding: 10px;
+              order: 2;
+              overflow: visible;
+              text-overflow: unset;
             }
+
+            &.short {
+              font-size: var(--font-size-large);
+            }
+
+            &.medium {
+              font-size: var(--font-size-large);
+            }
+
+            &.long {
+              font-size: var(--font-size-normal);
+            }
+
+            &.extra-long {
+              font-size: var(--font-size-normal);
+            }
+
+            .content {
+              max-width: 55ch;
+
+              @media (max-width: 800px) {
+                max-width: 100%;
+              }
+            }
+          }
+
+          .trip-creator {
+            font-size: var(--font-size-small);
+            color: var(--color-grey-mid);
+            margin-bottom: 5px;
+            width: 100%;
+            padding-bottom: 5px;
+            border-bottom: var(--default-border-style);
           }
         }
 

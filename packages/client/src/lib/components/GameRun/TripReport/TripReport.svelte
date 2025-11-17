@@ -11,12 +11,10 @@
 
   let {
     result,
-    seed1,
-    seed2
+    seed1
   }: {
     result: EnterTripReturnValue
     seed1: number
-    seed2: number
   } = $props()
 
   // ** Root Timeline Management **
@@ -25,6 +23,9 @@
   let summaryTimeline: ReturnType<typeof gsap.timeline> | null = null
   let receivedTimelines = 0
   const expectedTimelines = 2 // Log and TripSummary
+
+  // Element ref for log container
+  let logContainer = $state<HTMLDivElement | null>(null)
 
   // Handle Log timeline
   const addLogTimeline = (timeline: ReturnType<typeof gsap.timeline>) => {
@@ -50,7 +51,25 @@
 
       // Add summary timeline after log completes with delay
       if (summaryTimeline) {
-        rootTimeline.add(summaryTimeline, ">+0.4") //
+        // Summary timeline starts after log completes with delay
+        const summaryTimelineStart = ">+0.2"
+
+        // Shrink log container height and scroll to bottom at the exact same time
+        if (logContainer) {
+          rootTimeline.to(
+            logContainer,
+            {
+              height: "calc(100% - 400px)",
+              scrollTop: logContainer.scrollHeight,
+              duration: 0.6,
+              ease: "power4.out"
+            },
+            summaryTimelineStart
+          )
+        }
+
+        // Add summary timeline at the same position
+        rootTimeline.add(summaryTimeline, ">-0.2")
       }
 
       // Play the root timeline
@@ -125,7 +144,7 @@
 
 <div class="trip-report-container">
   <!-- LOG -->
-  <div class="log-container">
+  <div class="log-container" bind:this={logContainer}>
     <Log {result} onTimeline={addLogTimeline} />
   </div>
 
@@ -149,6 +168,8 @@
     .log-container {
       width: 100%;
       height: 100%;
+      overflow-y: auto;
+      padding: 10px;
     }
   }
 </style>

@@ -123,7 +123,7 @@
     }
 
     .trip-bottom {
-      height: 200px;
+      height: 160px;
       width: 100%;
       border-top: var(--default-border-style);
       flex-shrink: 0;

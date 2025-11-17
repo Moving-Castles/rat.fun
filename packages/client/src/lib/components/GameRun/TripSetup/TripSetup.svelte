@@ -59,7 +59,7 @@
 
 <style lang="scss">
   .splash-screen {
-    padding: 0;
+    padding: 10px;
     position: fixed;
     top: 0;
     left: 0;

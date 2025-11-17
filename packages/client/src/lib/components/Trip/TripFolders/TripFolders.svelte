@@ -63,6 +63,9 @@
   @media (max-width: 480px) {
     .tiles {
       grid-template-columns: 1fr;
+      grid-auto-rows: minmax(150px, auto);
+      height: auto;
+      min-height: calc(100% - 60px);
     }
   }
 </style>

@@ -1,1 +1,1 @@
-export { default as EntryKit } from "./EntryKit/EntryKit.svelte"
+// EntryKit component has been removed

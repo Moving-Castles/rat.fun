@@ -9,6 +9,7 @@
   import { strings } from "$lib/modules/strings"
 
   import { SmallSpinner, RatAvatar } from "$lib/components/Shared"
+  import { selectedFolderId } from "$lib/modules/ui/state.svelte"
 
   onMount(async () => {
     // playSound("ratfunUI", "ratDeath")
@@ -24,6 +25,9 @@
 
     // Update balance after liquidation
     await refetchBalance()
+
+    // Reset folder selection
+    selectedFolderId.set("")
 
     // Resume erc20 balance listener
     erc20BalanceListenerActive.set(true)
@@ -50,11 +54,6 @@
     height: 100%;
     width: 100%;
     position: relative;
-
-    .avatar {
-      // position: absolute;
-      // transform: translateY(-100%);
-    }
 
     .loading {
       background: orangered;

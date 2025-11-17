@@ -10,7 +10,6 @@ import enter from "@routes/trip/enter"
 import create from "@routes/trip/create"
 import ping from "@routes/test/ping"
 import healthz from "@routes/healthz"
-import unlockAdmin from "@routes/dev/unlock-admin"
 
 // Initialize Sentry before creating the Fastify instance
 initializeSentry()
@@ -43,7 +42,6 @@ fastify.register(enter)
 fastify.register(create)
 fastify.register(ping)
 fastify.register(healthz)
-fastify.register(unlockAdmin)
 
 console.log("__ LOG_LEVEL", process?.env?.LOG_LEVEL ?? "1")
 

@@ -108,9 +108,7 @@
   {:else if $UIState === UI.SPAWNING}
     <Spawn walletType={$walletTypeStore} {spawned} />
   {:else}
-    <div class="context-main">
-      {@render children?.()}
-    </div>
+    {@render children?.()}
   {/if}
 
   {#if browser}
@@ -125,18 +123,6 @@
 {/if}
 
 <style lang="scss">
-  .context-main {
-    // display: none;
-    width: var(--game-window-width);
-    height: var(--game-window-height);
-    overflow: hidden;
-    position: fixed;
-    z-index: var(--z-base);
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-  }
-
   .bg {
     position: fixed;
     inset: 0;

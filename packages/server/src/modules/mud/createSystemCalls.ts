@@ -159,33 +159,8 @@ export function createSystemCalls(network: SetupNetworkResult) {
     }
   }
 
-  /**
-   * Give a master key to a player
-   * @param playerId - The ID of the player to give the master key to
-   * @returns True if the master key was given successfully
-   */
-  const giveMasterKey = async (playerId: Hex) => {
-    try {
-      const tx = await network.worldContract.write.ratfun__giveMasterKey([playerId])
-      await network.waitForTransaction(tx)
-      return true
-    } catch (error) {
-      // If it's already one of our custom errors, rethrow it
-      if (error instanceof SystemCallError) {
-        throw error
-      }
-
-      // Otherwise, wrap it in our custom error
-      throw new ContractCallError(
-        `Error giving master key: ${error instanceof Error ? error.message : String(error)}`,
-        error
-      )
-    }
-  }
-
   return {
     applyOutcome,
-    createTrip,
-    giveMasterKey
+    createTrip
   }
 }

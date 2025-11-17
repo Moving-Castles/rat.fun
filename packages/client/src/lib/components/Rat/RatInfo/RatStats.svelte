@@ -1,17 +1,86 @@
 <script lang="ts">
-  import { fade } from "svelte/transition"
   import { ratState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
   import HealthBar from "./HealthBar.svelte"
   import { RatAvatar } from "$lib/components/Shared"
   import { strings } from "$lib/modules/strings"
+  import { gsap } from "gsap"
 
-  let { displayRat }: { displayRat: Rat | null } = $props()
+  let {
+    displayRat,
+    oldRat,
+    newRat,
+    onTimeline
+  }: {
+    displayRat: Rat | null
+    oldRat: Rat | null
+    newRat: Rat | null
+    onTimeline?: (timeline: ReturnType<typeof gsap.timeline>) => void
+  } = $props()
+
+  // Calculate old and new health values
+  let oldHealth = $derived(oldRat ? Number(oldRat.balance) : 0)
+  let newHealth = $derived(newRat ? Number(newRat.balance) : 0)
+
+  // Elements
+  let infoContainer = $state<HTMLDivElement | null>(null)
+  let imageContainer = $state<HTMLDivElement | null>(null)
+
+  // Create timeline
+  const timeline = gsap.timeline()
+
+  const prepare = () => {
+    gsap.set(infoContainer, { opacity: 0, x: -50 })
+    gsap.set(imageContainer, { opacity: 0 })
+  }
+
+  const main = () => {
+    // Animate info container (name, health, trips) from left
+    timeline.to(
+      infoContainer,
+      {
+        opacity: 1,
+        x: 0,
+        duration: 0.4,
+        ease: "power2.out"
+      },
+      0
+    )
+
+    // Animate image container (avatar) - just fade in
+    timeline.to(
+      imageContainer,
+      {
+        opacity: 1,
+        duration: 0.6,
+        ease: "power2.out"
+      },
+      0.1 // Slight delay for stagger effect
+    )
+  }
+
+  const done = () => {
+    if (timeline && onTimeline) {
+      onTimeline(timeline)
+    }
+  }
+
+  const run = () => {
+    prepare()
+    main()
+    done()
+  }
+
+  $effect(() => {
+    if (infoContainer && imageContainer) {
+      run()
+    }
+  })
 </script>
 
 <div class="rat-stats">
   {#if displayRat}
     <!-- INFO -->
-    <div class="info-container">
+    <div class="info-container" bind:this={infoContainer}>
       <!-- INDEX -->
       <div class="info-item index-container">
         <span class="index">{strings.rat} #{displayRat.index}</span>
@@ -24,7 +93,7 @@
 
       <!-- HEALTHBAR -->
       <div class="info-item">
-        <HealthBar value={Number(displayRat.balance)} />
+        <HealthBar {oldHealth} {newHealth} />
       </div>
 
       <!-- TRIP COUNT -->
@@ -42,8 +111,8 @@
     </div>
 
     <!-- IMAGE -->
-    <div class="image-container">
-      <div class="avatar-wrapper" in:fade|global>
+    <div class="image-container" bind:this={imageContainer}>
+      <div class="avatar-wrapper">
         <RatAvatar />
       </div>
     </div>
