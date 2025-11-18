@@ -1,6 +1,12 @@
 <script lang="ts">
   import { onDestroy, onMount } from "svelte"
-  import { type AuctionParams, readAuctionParams, buyLimitSpentAmount, buyLimitGetCountryCode, buyLimitSetCountryCode } from "doppler"
+  import {
+    type AuctionParams,
+    readAuctionParams,
+    buyLimitSpentAmount,
+    buyLimitGetCountryCode,
+    buyLimitSetCountryCode
+  } from "doppler"
   import { dopplerHookAbi } from "@whetstone-research/doppler-sdk"
   import { publicNetwork } from "$lib/modules/network"
   import { AUCTION_STATE, auctionState } from "$lib/components/Auction/state.svelte"
@@ -49,14 +55,22 @@
   })
 
   async function updateSpentAmount() {
-    spentAmount = await buyLimitSpentAmount($publicNetwork.publicClient, auctionParams.token.address, $userAddress)
+    spentAmount = await buyLimitSpentAmount(
+      $publicNetwork.publicClient,
+      auctionParams.token.address,
+      $userAddress
+    )
   }
 
   // Get spent amount and country code when user connects
   $effect(() => {
     if ($userAddress) {
       updateSpentAmount()
-      buyLimitGetCountryCode($publicNetwork.publicClient, auctionParams.token.address, $userAddress).then(result => {
+      buyLimitGetCountryCode(
+        $publicNetwork.publicClient,
+        auctionParams.token.address,
+        $userAddress
+      ).then(result => {
         savedCountryCode = result
       })
     }
@@ -148,7 +162,7 @@
         }}
       />
     {:else if auctionState.state.current === AUCTION_STATE.AVAILABLE}
-      <Available auctionParams={auctionParams} spentAmount={spentAmount} />
+      <Available {auctionParams} {spentAmount} />
     {:else if auctionState.state.current === AUCTION_STATE.WALLET_LIMIT_REACHED}
       limit reached
     {:else if auctionState.state.current === AUCTION_STATE.ENDED}

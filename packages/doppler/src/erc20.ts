@@ -46,7 +46,11 @@ export async function buyLimitSpendLimitAmount(publicClient: PublicClient, addre
   })
 }
 
-export async function buyLimitSpentAmount(publicClient: PublicClient, address: Hex, holderAddress: Hex) {
+export async function buyLimitSpentAmount(
+  publicClient: PublicClient,
+  address: Hex,
+  holderAddress: Hex
+) {
   return await publicClient.readContract({
     address,
     abi: derc20BuyLimitAbi,
@@ -55,7 +59,11 @@ export async function buyLimitSpentAmount(publicClient: PublicClient, address: H
   })
 }
 
-export async function buyLimitGetCountryCode(publicClient: PublicClient, address: Hex, holderAddress: Hex) {
+export async function buyLimitGetCountryCode(
+  publicClient: PublicClient,
+  address: Hex,
+  holderAddress: Hex
+) {
   return await publicClient.readContract({
     address,
     abi: derc20BuyLimitAbi,
@@ -64,7 +72,11 @@ export async function buyLimitGetCountryCode(publicClient: PublicClient, address
   })
 }
 
-export async function buyLimitSetCountryCode(walletClient: WalletClient<Transport, Chain, Account>, address: Hex, countryCode: string) {
+export async function buyLimitSetCountryCode(
+  walletClient: WalletClient<Transport, Chain, Account>,
+  address: Hex,
+  countryCode: string
+) {
   return await walletClient.writeContract({
     address,
     abi: derc20BuyLimitAbi,

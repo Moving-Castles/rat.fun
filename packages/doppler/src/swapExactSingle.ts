@@ -142,17 +142,14 @@ export async function swapExactSingle(
   const [commands, inputs] = commandBuilder.build()
 
   // Simulate to catch errors
-  const { request } = await simulateContract(
-    walletClient,
-    {
-      address: addresses.universalRouter,
-      abi: [...universalRouterAbi, ...universalRouterErrors],
-      functionName: "execute",
-      args: [commands, inputs],
-      // Send ETH when swapping from native currency
-      value: swapFromNative ? amountIn : 0n
-    }
-  )
+  const { request } = await simulateContract(walletClient, {
+    address: addresses.universalRouter,
+    abi: [...universalRouterAbi, ...universalRouterErrors],
+    functionName: "execute",
+    args: [commands, inputs],
+    // Send ETH when swapping from native currency
+    value: swapFromNative ? amountIn : 0n
+  })
   // Execute
   const txHash = await walletClient.writeContract(request)
   const receipt = await publicClient.waitForTransactionReceipt({ hash: txHash })
@@ -162,7 +159,7 @@ export async function swapExactSingle(
     logs: receipt.logs
   })
   const swapLogs = parsedLogs.filter(
-    ({ eventName, args }) => eventName === "Swap" && args.liquidity > 0 || eventName === "Receipt"
+    ({ eventName, args }) => (eventName === "Swap" && args.liquidity > 0) || eventName === "Receipt"
   )
   return swapLogs
 }

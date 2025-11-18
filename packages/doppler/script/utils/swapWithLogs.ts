@@ -1,4 +1,13 @@
-import { Account, Chain, formatUnits, Hex, parseUnits, PublicClient, Transport, WalletClient } from "viem"
+import {
+  Account,
+  Chain,
+  formatUnits,
+  Hex,
+  parseUnits,
+  PublicClient,
+  Transport,
+  WalletClient
+} from "viem"
 import {
   AuctionParams,
   balanceOf,
@@ -17,7 +26,10 @@ export async function swapWithLogs(
   amount: number,
   isOut: boolean
 ) {
-  const parsedAmount = parseUnits(amount.toString(), isOut ? auctionParams.token.decimals : auctionParams.numeraire.decimals)
+  const parsedAmount = parseUnits(
+    amount.toString(),
+    isOut ? auctionParams.token.decimals : auctionParams.numeraire.decimals
+  )
 
   console.log("before swap")
   const tokenBalanceBefore = formatUnits(

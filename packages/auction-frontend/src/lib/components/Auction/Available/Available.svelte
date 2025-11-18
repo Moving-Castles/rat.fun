@@ -1,6 +1,15 @@
 <script lang="ts">
   import { formatUnits, type Hex, parseUnits } from "viem"
-  import { type AuctionParams, CustomQuoter, type Permit2PermitData, swapExactSingle, isPermit2AllowedMaxRequired, permit2AllowMax, signPermit2ForUniversalRouter, balanceOf } from "doppler"
+  import {
+    type AuctionParams,
+    CustomQuoter,
+    type Permit2PermitData,
+    swapExactSingle,
+    isPermit2AllowedMaxRequired,
+    permit2AllowMax,
+    signPermit2ForUniversalRouter,
+    balanceOf
+  } from "doppler"
   import { BigButton } from "$lib/components/Shared"
   import { prepareConnectorClientForTransaction } from "$lib/modules/entry-kit/connector"
   import { userAddress } from "$lib/modules/entry-kit"
@@ -24,21 +33,38 @@
     auctionParams,
     spentAmount
   }: {
-    auctionParams: AuctionParams,
+    auctionParams: AuctionParams
     spentAmount: bigint
   } = $props()
 
-
   onMount(async () => {
     // Quoter provides the expected amount user didn't specify (input for exact output, or output for exact input)
-    quoter = new CustomQuoter($publicNetwork.publicClient, $publicNetwork.publicClient.chain.id, auctionParams)
+    quoter = new CustomQuoter(
+      $publicNetwork.publicClient,
+      $publicNetwork.publicClient.chain.id,
+      auctionParams
+    )
 
-    isPermit2Req = await isPermit2AllowedMaxRequired($publicNetwork.publicClient, $userAddress, auctionParams.numeraire.address)
+    isPermit2Req = await isPermit2AllowedMaxRequired(
+      $publicNetwork.publicClient,
+      $userAddress,
+      auctionParams.numeraire.address
+    )
 
-    const unformattedNumeraireBalance = await balanceOf($publicNetwork.publicClient, auctionParams.numeraire.address, $userAddress)
-    numeraireBalance = Number(formatUnits(unformattedNumeraireBalance, auctionParams.numeraire.decimals))
+    const unformattedNumeraireBalance = await balanceOf(
+      $publicNetwork.publicClient,
+      auctionParams.numeraire.address,
+      $userAddress
+    )
+    numeraireBalance = Number(
+      formatUnits(unformattedNumeraireBalance, auctionParams.numeraire.decimals)
+    )
 
-    const unformattedTokenBalance = await balanceOf($publicNetwork.publicClient, auctionParams.token.address, $userAddress)
+    const unformattedTokenBalance = await balanceOf(
+      $publicNetwork.publicClient,
+      auctionParams.token.address,
+      $userAddress
+    )
     tokenBalance = Number(formatUnits(unformattedTokenBalance, auctionParams.token.decimals))
   })
 
@@ -53,7 +79,7 @@
       amountOut = undefined
     } else {
       amountIn = parseUnits(v.toString(), auctionParams.numeraire.decimals)
-      quoter.quoteExactInputV4(amountIn, true).then((result) => {
+      quoter.quoteExactInputV4(amountIn, true).then(result => {
         amountOut = result.amountOut
       })
     }
@@ -73,7 +99,7 @@
       amountOut = undefined
     } else {
       amountOut = parseUnits(v.toString(), auctionParams.token.decimals)
-      quoter.quoteExactOutputV4(amountOut, true).then((result) => {
+      quoter.quoteExactOutputV4(amountOut, true).then(result => {
         amountIn = result.amountIn
       })
     }
@@ -84,7 +110,11 @@
 
   async function sendPermit2AllowMax() {
     const client = await prepareConnectorClientForTransaction()
-    const { receipt } = await permit2AllowMax($publicNetwork.publicClient, client, auctionParams.numeraire.address)
+    const { receipt } = await permit2AllowMax(
+      $publicNetwork.publicClient,
+      client,
+      auctionParams.numeraire.address
+    )
     if (receipt.status === "success") {
       isPermit2Req = false
     }
@@ -93,20 +123,24 @@
   async function sendSignPermit2() {
     const client = await prepareConnectorClientForTransaction()
     // TODO ensure signTypedData in a less hacky way
-    const extendedClient = (client as any).extend((client: any) => (
-      {
-        signTypedData: (args: any) => signTypedData(client, args)
-      }
-    ))
+    const extendedClient = (client as any).extend((client: any) => ({
+      signTypedData: (args: any) => signTypedData(client, args)
+    }))
 
     const amount = isExactOut ? amountOut : amountIn
     if (amount === undefined) throw new Error("amount is undefined")
     // For exact out give 10% padding to permit amount to account for price variance and imprecise conversion
     // (because permit is always for input currency)
-    const amountPadded = isExactOut ? amount * 110n / 100n : amount
-    const result = await signPermit2ForUniversalRouter($publicNetwork.publicClient, extendedClient, auctionParams, amountPadded, {
-      isOut: isExactOut
-    })
+    const amountPadded = isExactOut ? (amount * 110n) / 100n : amount
+    const result = await signPermit2ForUniversalRouter(
+      $publicNetwork.publicClient,
+      extendedClient,
+      auctionParams,
+      amountPadded,
+      {
+        isOut: isExactOut
+      }
+    )
     permit = result.permit
     permitSignature = result.permitSignature
   }
@@ -135,20 +169,17 @@
     token balance: {tokenBalance}
   </div>
   <div>
-    spent numeraire: {formatUnits(spentAmount, auctionParams.numeraire.decimals)} / {formatUnits(BigInt(auctionParams.spendLimitAmount), auctionParams.numeraire.decimals)}
+    spent numeraire: {formatUnits(spentAmount, auctionParams.numeraire.decimals)} / {formatUnits(
+      BigInt(auctionParams.spendLimitAmount),
+      auctionParams.numeraire.decimals
+    )}
   </div>
 
   numeraire:
-  <input
-    type="number"
-    bind:value={getAmountIn, setAmountIn}
-  />
-  
+  <input type="number" bind:value={getAmountIn, setAmountIn} />
+
   rat:
-  <input
-    type="number"
-    bind:value={getAmountOut, setAmountOut}
-  />
+  <input type="number" bind:value={getAmountOut, setAmountOut} />
 
   {#if isPermit2Req}
     <BigButton
