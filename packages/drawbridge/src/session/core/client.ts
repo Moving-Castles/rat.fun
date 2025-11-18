@@ -43,6 +43,10 @@ export async function getSessionClient({
     throw new Error("Session account client had no associated chain.")
   }
 
+  if (paymasterOverride) {
+    console.log(`[Drawbridge/SessionClient] Creating session client with paymaster override`)
+  }
+
   // Create bundler client for submitting user operations
   const bundlerClient = createBundlerClient({
     transport: getBundlerTransport(client.chain),

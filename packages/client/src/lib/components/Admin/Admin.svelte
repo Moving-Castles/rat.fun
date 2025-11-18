@@ -19,7 +19,6 @@
   } from "$lib/modules/state/stores"
   import { busy } from "$lib/modules/action-manager/index.svelte"
   import { backgroundMusic } from "$lib/modules/sound/stores"
-  import { playSound } from "$lib/modules/sound"
   import { staticContent } from "$lib/modules/content"
   import { calculateProfitLossForTrip } from "./helpers"
   import * as sortFunctions from "$lib/components/Trip/TripListing/sortFunctions"

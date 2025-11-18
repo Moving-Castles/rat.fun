@@ -45,6 +45,9 @@ export function getPaymaster(
 
   // Use custom paymaster if provided (e.g., Coinbase Paymaster)
   if (paymasterOverride) {
+    console.log(
+      `[Drawbridge/Paymaster] Using custom paymaster client for chain ${chain.name} (${chain.id})`
+    )
     return {
       type: "custom",
       paymasterClient: paymasterOverride
@@ -54,6 +57,9 @@ export function getPaymaster(
   // Check for simple paymaster in chain config
   if ("paymaster" in contracts && contracts.paymaster != null) {
     if ("address" in contracts.paymaster) {
+      console.log(
+        `[Drawbridge/Paymaster] Using simple paymaster at ${contracts.paymaster.address} for chain ${chain.name} (${chain.id})`
+      )
       return {
         type: "simple",
         address: contracts.paymaster.address
@@ -62,5 +68,8 @@ export function getPaymaster(
   }
 
   // No paymaster configured - user pays own gas
+  console.log(
+    `[Drawbridge/Paymaster] No paymaster configured for chain ${chain.name} (${chain.id}) - user will pay gas`
+  )
   return undefined
 }

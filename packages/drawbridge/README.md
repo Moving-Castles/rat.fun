@@ -82,7 +82,13 @@ drawbridge/
 │   ├── types/               # Shared types and constants
 │   │   ├── clients.ts       # SessionClient, ConnectedClient
 │   │   ├── state.ts         # DrawbridgeStatus enum
+│   │   ├── config.ts        # Configuration types
 │   │   └── mud.ts           # MUD-specific constants
+│   │
+│   ├── wallet/              # Wallet connection (wagmi)
+│   │   ├── connection.ts    # Wallet connect/disconnect logic
+│   │   ├── watcher.ts       # Wallet state monitoring
+│   │   └── config.ts        # Wagmi configuration
 │   │
 │   ├── session/             # Session account + delegation
 │   │   ├── core/            # Session infrastructure
@@ -93,7 +99,10 @@ drawbridge/
 │   │   │
 │   │   ├── delegation/      # MUD World delegation
 │   │   │   ├── check.ts     # Check delegation status
-│   │   │   └── setup.ts     # Register delegation (EOA + Smart Account)
+│   │   │   ├── setup.ts     # Orchestrates delegation setup
+│   │   │   ├── eoa.ts       # EOA delegation registration
+│   │   │   ├── smart-account.ts # Smart account delegation
+│   │   │   └── shared.ts    # Shared delegation utilities
 │   │   │
 │   │   └── patterns/        # Session-specific patterns
 │   │       ├── call-with-signature.ts # EOA gasless transactions
@@ -250,6 +259,7 @@ See [delegation documentation](./src/session/delegation/README.md) for details.
 
 ## Module Documentation
 
+- [Wallet Module](./src/wallet/README.md) - Wallet connection and state management
 - [Session Module](./src/session/README.md) - Session account creation and delegation
 - [Delegation Module](./src/session/delegation/README.md) - EOA vs Smart Account paths
 - [Bundler Module](./src/bundler/README.md) - ERC-4337 infrastructure

@@ -43,6 +43,14 @@ export function createBundlerClient<
     ? getPaymaster(chain, config.paymaster as PaymasterClient | undefined)
     : undefined
 
+  if (paymaster) {
+    console.log(
+      `[Drawbridge/BundlerClient] Bundler client configured with ${paymaster.type} paymaster`
+    )
+  } else {
+    console.log(`[Drawbridge/BundlerClient] Bundler client configured without paymaster`)
+  }
+
   return viem_createBundlerClient({
     ...defaultClientConfig,
     // Configure paymaster for gas sponsorship

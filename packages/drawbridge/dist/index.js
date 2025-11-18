@@ -184,6 +184,9 @@ async function getSessionAccount({
 function getPaymaster(chain, paymasterOverride) {
   const contracts = chain.contracts ?? {};
   if (paymasterOverride) {
+    console.log(
+      `[Drawbridge/Paymaster] Using custom paymaster client for chain ${chain.name} (${chain.id})`
+    );
     return {
       type: "custom",
       paymasterClient: paymasterOverride
@@ -191,12 +194,18 @@ function getPaymaster(chain, paymasterOverride) {
   }
   if ("paymaster" in contracts && contracts.paymaster != null) {
     if ("address" in contracts.paymaster) {
+      console.log(
+        `[Drawbridge/Paymaster] Using simple paymaster at ${contracts.paymaster.address} for chain ${chain.name} (${chain.id})`
+      );
       return {
         type: "simple",
         address: contracts.paymaster.address
       };
     }
   }
+  console.log(
+    `[Drawbridge/Paymaster] No paymaster configured for chain ${chain.name} (${chain.id}) - user will pay gas`
+  );
   return void 0;
 }
 
@@ -206,6 +215,13 @@ function createBundlerClient(config) {
   if (!client) throw new Error("No `client` provided to `createBundlerClient`.");
   const chain = config.chain ?? client.chain;
   const paymaster = chain ? getPaymaster(chain, config.paymaster) : void 0;
+  if (paymaster) {
+    console.log(
+      `[Drawbridge/BundlerClient] Bundler client configured with ${paymaster.type} paymaster`
+    );
+  } else {
+    console.log(`[Drawbridge/BundlerClient] Bundler client configured without paymaster`);
+  }
   return createBundlerClient$1({
     ...defaultClientConfig,
     // Configure paymaster for gas sponsorship
@@ -249,6 +265,9 @@ async function getSessionClient({
   const client = sessionAccount.client;
   if (!clientHasChain(client)) {
     throw new Error("Session account client had no associated chain.");
+  }
+  if (paymasterOverride) {
+    console.log(`[Drawbridge/SessionClient] Creating session client with paymaster override`);
   }
   const bundlerClient = createBundlerClient({
     transport: getBundlerTransport(client.chain),
