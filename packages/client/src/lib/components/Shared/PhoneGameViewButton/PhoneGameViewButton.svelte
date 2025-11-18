@@ -1,7 +1,7 @@
 <script lang="ts">
   import { phoneActiveGameView } from "$lib/modules/ui/state.svelte"
   import { BigButton } from "$lib/components/Shared"
-  import { strings } from "$lib/modules/strings"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
 
   let { targetView }: { targetView: "ratbox" | "triplisting" } = $props()
 
@@ -10,7 +10,9 @@
   }
 
   const buttonText = $derived(
-    targetView === "ratbox" ? `← ${strings.rat.toUpperCase()}` : `${strings.trips.toUpperCase()} →`
+    targetView === "ratbox"
+      ? `← ${UI_STRINGS.rat.toUpperCase()}`
+      : `${UI_STRINGS.trips.toUpperCase()} →`
   )
 </script>
 

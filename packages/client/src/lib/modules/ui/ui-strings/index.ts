@@ -1,11 +1,6 @@
 import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
 
-// const scramble = (string: string) => {
-//   const end = Math.floor(Math.random() * string.length)
-//   return `${string.slice(end, -1)}${string.slice(0, end)}`
-// }
-
-const stringsData = {
+const UIStringsData = {
   "en-US": {
     address: "Address",
     admin: "R&D Lab",
@@ -216,9 +211,9 @@ t he mentally deranged. Results may vary.`,
   }
 } as const
 
-type Locale = keyof typeof stringsData
-type Strings = (typeof stringsData)[Locale]
+type Locale = keyof typeof UIStringsData
+type UIStrings = (typeof UIStringsData)[Locale]
 
 const locale: Locale = "en-US"
 
-export const strings: Strings = stringsData[locale]
+export const UI_STRINGS: UIStrings = UIStringsData[locale]

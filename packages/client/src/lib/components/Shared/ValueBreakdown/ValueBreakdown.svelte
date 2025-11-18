@@ -1,7 +1,7 @@
 <script lang="ts">
   import { gamePercentagesConfig } from "$lib/modules/state/stores"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
-  import { strings } from "$lib/modules/strings"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
 
   let {
     originalValue,
@@ -28,7 +28,7 @@
     {originalLabel}: <span class="value">{CURRENCY_SYMBOL}{originalValue}</span>
   </div>
   <div class="value-line">
-    {strings.traumwertSteuerExplanation(Number($gamePercentagesConfig[taxRateKey]))}:
+    {UI_STRINGS.traumwertSteuerExplanation(Number($gamePercentagesConfig[taxRateKey]))}:
     <span class="value negative">-{CURRENCY_SYMBOL}{taxAmount}</span>
   </div>
   <div class="value-line">

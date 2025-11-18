@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { TripEvent } from "$lib/components/Admin/types"
   import RatTripLog from "./RatTripLog.svelte"
-  import { strings } from "$lib/modules/strings"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
   let { event }: { event: TripEvent } = $props()
 </script>
 
@@ -10,7 +10,7 @@
     <RatTripLog result={event.meta} />
   {:else}
     <div class="empty">
-      <p class="void glow">{strings.noData.toUpperCase()}</p>
+      <p class="void glow">{UI_STRINGS.noData.toUpperCase()}</p>
     </div>
   {/if}
 </div>

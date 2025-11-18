@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from "$app/state"
-  import { strings } from "$lib/modules/strings"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
 
   import PlayerInfo from "./PlayerInfo/PlayerInfo.svelte"
   import ModeSwitch from "./ModeSwitch.svelte"
@@ -14,7 +14,7 @@
   <PlayerInfo />
   <div class="marquee-container">
     <Marquee numberOfCopies={3} direction="left">
-      <p class="text">{strings.topBarMarqueeText}</p>
+      <p class="text">{UI_STRINGS.topBarMarqueeText}</p>
     </Marquee>
   </div>
   <div class="right">

@@ -7,7 +7,7 @@
   import { generateLoadingOutput } from "$lib/components/Loading/loadingOutput"
   import { playSound } from "$lib/modules/sound"
   import { blockNumber, loadingMessage, loadingPercentage, ready } from "$lib/modules/network"
-  import { strings } from "$lib/modules/strings"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
 
   import { ENVIRONMENT } from "$lib/mud/enums"
   import { gsap } from "gsap"
@@ -118,13 +118,13 @@
 
 <div class="loading" bind:this={loadingElement}>
   <div class="status-box">
-    <div>{strings.blockNumber}: {$blockNumber}</div>
-    <div>{strings.loadingMsg}: {$loadingMessage}</div>
-    <div>{strings.loadingPercentage}: {$loadingPercentage}</div>
-    <div>{strings.readyQuestion} {$ready}</div>
+    <div>{UI_STRINGS.blockNumber}: {$blockNumber}</div>
+    <div>{UI_STRINGS.loadingMsg}: {$loadingMessage}</div>
+    <div>{UI_STRINGS.loadingPercentage}: {$loadingPercentage}</div>
+    <div>{UI_STRINGS.readyQuestion} {$ready}</div>
   </div>
   <div class="mc-logo" bind:this={logoElement}>
-    <img src="/images/logo.png" alt={strings.authorFullTitle} />
+    <img src="/images/logo.png" alt={UI_STRINGS.authorFullTitle} />
   </div>
   <div class="terminal-box" bind:this={terminalBoxElement}></div>
 </div>

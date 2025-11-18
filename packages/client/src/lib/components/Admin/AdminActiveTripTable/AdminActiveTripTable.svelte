@@ -13,7 +13,7 @@
 
   import AdminActiveTripTableItem from "./AdminActiveTripTableItem.svelte"
   import AdminPendingTripTableItem from "./AdminPendingTripTableItem.svelte"
-  import { strings } from "$lib/modules/strings"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
 
   let {
     pendingTrip,
@@ -49,9 +49,9 @@
 
 <div class="admin-trip-table-container">
   <div class="table-summary">
-    <div class="left">{strings.activeTrips}</div>
+    <div class="left">{UI_STRINGS.activeTrips}</div>
     <div class="right">
-      {strings.profit}:
+      {UI_STRINGS.profit}:
       <SignedNumber withCurrency withTween value={$profitLoss} />
     </div>
   </div>
@@ -61,23 +61,23 @@
         <!-- Index -->
         <th class="cell-index">#</th>
         <!-- Prompt -->
-        <th class="cell-prompt">{strings.trip}</th>
+        <th class="cell-prompt">{UI_STRINGS.trip}</th>
         <!-- Visits -->
         <th class="cell-visits" onclick={sortByVisit}>
-          {#if sortFunctionName === "entriesByVisit"}▼{:else if sortFunctionName === "entriesByVisitDesc"}▲{/if}&nbsp;{strings.visits}
+          {#if sortFunctionName === "entriesByVisit"}▼{:else if sortFunctionName === "entriesByVisitDesc"}▲{/if}&nbsp;{UI_STRINGS.visits}
         </th>
         <!-- Kills -->
-        <th class="cell-kills">{strings.kills}</th>
+        <th class="cell-kills">{UI_STRINGS.kills}</th>
         <!-- Balance -->
-        <th class="cell-balance">{strings.balance}</th>
+        <th class="cell-balance">{UI_STRINGS.balance}</th>
         <!-- Profit -->
         <th class="cell-profit" onclick={sortByProfit}>
-          {#if sortFunctionName === "entriesByProfit"}▼{:else if sortFunctionName === "entriesByProfitDesc"}▲{/if}&nbsp;{strings.profit}
+          {#if sortFunctionName === "entriesByProfit"}▼{:else if sortFunctionName === "entriesByProfitDesc"}▲{/if}&nbsp;{UI_STRINGS.profit}
         </th>
         <!-- Spark -->
         <th class="cell-spark"></th>
         <!-- Action -->
-        <th class="cell-action">{strings.action}</th>
+        <th class="cell-action">{UI_STRINGS.action}</th>
       </tr>
     </thead>
     <tbody>

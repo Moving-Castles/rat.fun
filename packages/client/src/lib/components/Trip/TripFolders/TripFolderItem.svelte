@@ -3,7 +3,7 @@
   import type { TripFolder } from "@sanity-types"
   import { playSound } from "$lib/modules/sound"
   import { Tooltip } from "$lib/components/Shared"
-  import { strings } from "$lib/modules/strings"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
 
   let {
     listingIndex,
@@ -39,7 +39,7 @@
 </script>
 
 <div class="tile" in:fade|global={{ duration: 100, delay: listingIndex * 30 }}>
-  <Tooltip content={tooltip ? strings.egoDeathExplanation : ""}>
+  <Tooltip content={tooltip ? UI_STRINGS.egoDeathExplanation : ""}>
     <button class:disabled class:void={isVoid} {onclick} {onmouseup} {onmousedown}>
       <div class="title">
         {title}

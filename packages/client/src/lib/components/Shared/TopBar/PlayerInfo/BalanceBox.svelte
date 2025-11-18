@@ -5,7 +5,7 @@
   import { playSound } from "$lib/modules/sound"
   import { Tooltip } from "$lib/components/Shared"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
-  import { strings } from "$lib/modules/strings"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
 
   // Element references
   let balanceElement = $state<HTMLSpanElement | null>(null)
@@ -84,7 +84,7 @@
 <!-- BALANCE -->
 <div class="stat-item balance" bind:this={containerElement}>
   <div class="inner-wrapper">
-    <Tooltip content={strings.tokensAvailable}>
+    <Tooltip content={UI_STRINGS.tokensAvailable}>
       <div class="value">
         {CURRENCY_SYMBOL}
         <span bind:this={balanceElement}></span>

@@ -19,7 +19,7 @@
   import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
   import { backgroundMusic } from "$lib/modules/sound/stores"
 
-  import { strings } from "$lib/modules/strings"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
 
   import Introduction from "$lib/components/Spawn/Introduction/Introduction.svelte"
   import ConnectWalletForm from "$lib/components/Spawn/ConnectWalletForm/ConnectWalletForm.svelte"
@@ -136,13 +136,13 @@
 <div class="container">
   <div class="marquee-container top" in:fade|global={{ duration: 200, delay: 1000 }}>
     <Marquee speed={5} numberOfCopies={10} direction="left">
-      <p class="marquee-text">{strings.topMarqueeText}</p>
+      <p class="marquee-text">{UI_STRINGS.topMarqueeText}</p>
     </Marquee>
   </div>
 
   <div class="marquee-container bottom" in:fade|global={{ duration: 200, delay: 1000 }}>
     <Marquee speed={5} numberOfCopies={10} direction="right">
-      <p class="marquee-text">{strings.bottomMarqueeText}</p>
+      <p class="marquee-text">{UI_STRINGS.bottomMarqueeText}</p>
     </Marquee>
   </div>
 

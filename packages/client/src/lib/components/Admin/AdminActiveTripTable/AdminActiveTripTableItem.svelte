@@ -12,7 +12,7 @@
   import { focusTrip } from "$lib/modules/ui/state.svelte"
   import { gameConfig } from "$lib/modules/state/stores"
   import { blockNumber } from "$lib/modules/network"
-  import { strings } from "$lib/modules/strings"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
 
   let {
     trip,
@@ -89,7 +89,7 @@
   <td class="cell-action">
     <SmallButton
       disabled={blockUntilUnlock > 0}
-      text={blockUntilUnlock <= 0 ? strings.liquidate : strings.waitBlocks(blockUntilUnlock)}
+      text={blockUntilUnlock <= 0 ? UI_STRINGS.liquidate : UI_STRINGS.waitBlocks(blockUntilUnlock)}
       onmouseup={liquidateButtonOnMouseUp}
     ></SmallButton>
   </td>

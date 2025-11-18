@@ -2,7 +2,7 @@
   import { ratState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
   import HealthBar from "./HealthBar.svelte"
   import { RatAvatar } from "$lib/components/Shared"
-  import { strings } from "$lib/modules/strings"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
   import { gsap } from "gsap"
 
   let {
@@ -83,7 +83,7 @@
     <div class="info-container" bind:this={infoContainer}>
       <!-- INDEX -->
       <div class="info-item index-container">
-        <span class="index">{strings.rat} #{displayRat.index}</span>
+        <span class="index">{UI_STRINGS.rat} #{displayRat.index}</span>
       </div>
 
       <!-- NAME -->
@@ -105,7 +105,7 @@
         onclick={() => ratState.state.transitionTo(RAT_BOX_STATE.PAST_TRIP_LIST)}
       >
         <span>
-          {strings.trips}: {displayRat.tripCount ?? 0}
+          {UI_STRINGS.trips}: {displayRat.tripCount ?? 0}
         </span>
       </div>
     </div>

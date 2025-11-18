@@ -8,7 +8,7 @@
   import { scaleLinear } from "d3-scale"
   import { max, min } from "d3-array"
   import { line } from "d3-shape"
-  import { strings } from "$lib/modules/strings"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
 
   let {
     plotData,
@@ -74,13 +74,13 @@
 <div class="trip-graph">
   {#if isEmpty}
     <div style:height="{height}px" class="no-data">
-      <span>{strings.noData.toUpperCase()}</span>
+      <span>{UI_STRINGS.noData.toUpperCase()}</span>
     </div>
   {:else}
     <div class="graph" bind:clientWidth={width}>
       {#if plotData?.length === 1}
         <div style:height="{height}px" class="no-data">
-          <span>{strings.noData.toUpperCase()}</span>
+          <span>{UI_STRINGS.noData.toUpperCase()}</span>
         </div>
       {:else if plotData && width && xScale && yScale && lineGenerator}
         <svg {width} {height}>

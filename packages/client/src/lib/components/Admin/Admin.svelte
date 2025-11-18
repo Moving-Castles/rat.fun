@@ -10,7 +10,7 @@
     PendingTrip
   } from "$lib/components/Admin/types"
   import { TRIP_EVENT_TYPE } from "$lib/components/Admin/enums"
-  import { strings } from "$lib/modules/strings"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
   import {
     player,
     playerTrips,
@@ -233,21 +233,21 @@
     <div class="phone-nav">
       <div class="nav-button-wrapper">
         <SmallButton
-          text={strings.home.toUpperCase()}
+          text={UI_STRINGS.home.toUpperCase()}
           onclick={() => phoneActiveAdminView.set("home")}
           disabled={$phoneActiveAdminView === "home"}
         />
       </div>
       <div class="nav-button-wrapper">
         <SmallButton
-          text={strings.trips.toUpperCase()}
+          text={UI_STRINGS.trips.toUpperCase()}
           onclick={() => phoneActiveAdminView.set("trips")}
           disabled={$phoneActiveAdminView === "trips"}
         />
       </div>
       <div class="nav-button-wrapper">
         <SmallButton
-          text={strings.profit.toUpperCase()}
+          text={UI_STRINGS.profit.toUpperCase()}
           onclick={() => phoneActiveAdminView.set("profit")}
           disabled={$phoneActiveAdminView === "profit"}
         />
@@ -269,14 +269,14 @@
         <div class="phone-sub-nav">
           <div class="sub-nav-button-wrapper">
             <SmallButton
-              text={strings.active.toUpperCase()}
+              text={UI_STRINGS.active.toUpperCase()}
               onclick={() => phoneAdminTripsSubView.set("active")}
               disabled={$phoneAdminTripsSubView === "active"}
             />
           </div>
           <div class="sub-nav-button-wrapper">
             <SmallButton
-              text={strings.past.toUpperCase()}
+              text={UI_STRINGS.past.toUpperCase()}
               onclick={() => phoneAdminTripsSubView.set("past")}
               disabled={$phoneAdminTripsSubView === "past"}
             />
@@ -303,14 +303,14 @@
         <div class="phone-sub-nav">
           <div class="sub-nav-button-wrapper">
             <SmallButton
-              text={strings.graph.toUpperCase()}
+              text={UI_STRINGS.graph.toUpperCase()}
               onclick={() => phoneAdminProfitSubView.set("graph")}
               disabled={$phoneAdminProfitSubView === "graph"}
             />
           </div>
           <div class="sub-nav-button-wrapper">
             <SmallButton
-              text={strings.log.toUpperCase()}
+              text={UI_STRINGS.log.toUpperCase()}
               onclick={() => phoneAdminProfitSubView.set("log")}
               disabled={$phoneAdminProfitSubView === "log"}
             />

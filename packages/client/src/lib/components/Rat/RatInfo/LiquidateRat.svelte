@@ -3,7 +3,7 @@
   import { DangerButton } from "$lib/components/Shared"
   import { ratState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
   import { getRatTotalValue } from "$lib/modules/state/utils"
-  import { strings } from "$lib/modules/strings"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
   import { gsap } from "gsap"
 
   let {
@@ -190,8 +190,8 @@
     </div>
     <div class="action" bind:this={actionContainer}>
       <DangerButton
-        text={strings.liquidateRatButtonText}
-        tippyText={strings.liquidateRatInstruction}
+        text={UI_STRINGS.liquidateRatButtonText}
+        tippyText={UI_STRINGS.liquidateRatInstruction}
         {onclick}
       />
     </div>

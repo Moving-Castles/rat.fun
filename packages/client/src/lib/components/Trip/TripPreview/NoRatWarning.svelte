@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { strings } from "$lib/modules/strings"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
 </script>
 
 <div class="no-rat-warning">
-  <span>{strings.noRatWarning}</span>
+  <span>{UI_STRINGS.noRatWarning}</span>
 </div>
 
 <style lang="scss">

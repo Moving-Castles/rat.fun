@@ -13,7 +13,7 @@
   import { erc20BalanceListenerActive } from "$lib/modules/erc20Listener/stores"
   import { refetchBalance } from "$lib/modules/erc20Listener"
   import { playSound } from "$lib/modules/sound"
-  import { strings } from "$lib/modules/strings"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
 
   import { LockButton, SmallSpinner } from "$lib/components/Shared"
 
@@ -227,7 +227,7 @@
         hidden={slotMachineDone}
         disabled={currentSlot !== 0}
         onclick={() => stopSlot(0)}
-        text={strings.stop}
+        text={UI_STRINGS.stop}
       />
     </div>
 
@@ -237,7 +237,7 @@
         hidden={slotMachineDone}
         disabled={currentSlot !== 1}
         onclick={() => stopSlot(1)}
-        text={strings.stop}
+        text={UI_STRINGS.stop}
       />
     </div>
 
@@ -247,14 +247,14 @@
         hidden={slotMachineDone}
         disabled={currentSlot !== 2}
         onclick={() => stopSlot(2)}
-        text={strings.stop}
+        text={UI_STRINGS.stop}
       />
     </div>
   </div>
 
   {#if waitingForDeployment}
     <div class="getting-rat-message" in:fade={{ duration: 200 }}>
-      {strings.gettingRat}
+      {UI_STRINGS.gettingRat}
       <SmallSpinner soundOn />
     </div>
   {/if}

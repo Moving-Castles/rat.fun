@@ -3,7 +3,7 @@
   import { realisedProfitLoss } from "$lib/modules/state/stores"
   import { focusTrip, focusEvent } from "$lib/modules/ui/state.svelte"
   import { SignedNumber } from "$lib/components/Shared"
-  import { strings } from "$lib/modules/strings"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
 
   import AdminPastTripTableItem from "../AdminPastTripTable/AdminPastTripTableItem.svelte"
 
@@ -46,9 +46,9 @@
 
 <div class="admin-trip-table-container">
   <div class="table-summary">
-    <div class="left">{strings.pastTrips}</div>
+    <div class="left">{UI_STRINGS.pastTrips}</div>
     <div class="right">
-      {strings.profit}:
+      {UI_STRINGS.profit}:
       <SignedNumber withCurrency value={$realisedProfitLoss} />
     </div>
   </div>
@@ -58,20 +58,20 @@
         <!-- Index -->
         <th class="cell-index">#</th>
         <!-- Prompt -->
-        <th class="cell-prompt">{strings.trip}</th>
+        <th class="cell-prompt">{UI_STRINGS.trip}</th>
         <!-- Visits -->
         <th class="cell-visits" onclick={sortByVisit}>
-          {#if sortFunctionName === "entriesByVisit"}▼{:else if sortFunctionName === "entriesByVisitDesc"}▲{/if}&nbsp;{strings.visits}
+          {#if sortFunctionName === "entriesByVisit"}▼{:else if sortFunctionName === "entriesByVisitDesc"}▲{/if}&nbsp;{UI_STRINGS.visits}
         </th>
         <!-- Kills -->
-        <th class="cell-kills">{strings.kills}</th>
+        <th class="cell-kills">{UI_STRINGS.kills}</th>
         <!-- Liquidation -->
-        <th class="cell-balance">{strings.balance}</th>
+        <th class="cell-balance">{UI_STRINGS.balance}</th>
         <!-- Profit -->
         <th class="cell-profit" onclick={sortByProfit}>
-          {#if sortFunctionName === "entriesByRealisedProfit"}▼{:else if sortFunctionName === "entriesByRealisedProfitDesc"}▲{/if}&nbsp;{strings.profit}
+          {#if sortFunctionName === "entriesByRealisedProfit"}▼{:else if sortFunctionName === "entriesByRealisedProfitDesc"}▲{/if}&nbsp;{UI_STRINGS.profit}
         </th>
-        <th class="cell-liquidated">{strings.causeOfDeathShort}</th>
+        <th class="cell-liquidated">{UI_STRINGS.causeOfDeathShort}</th>
       </tr>
     </thead>
     <tbody>

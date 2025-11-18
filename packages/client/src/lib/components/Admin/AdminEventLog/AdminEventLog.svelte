@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { TripEvent } from "$lib/components/Admin/types"
-  import { strings } from "$lib/modules/strings"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
   import { TRIP_EVENT_TYPE } from "$lib/components/Admin/enums"
 
   import AdminEventLogItem from "./AdminEventLogItem.svelte"
@@ -26,7 +26,7 @@
     <AdminEventLogItem {point} {behavior} />
   {/each}
   {#if !hideUnlockEvent}
-    <p class="event">{strings.adminUnlockedMessage}</p>
+    <p class="event">{UI_STRINGS.adminUnlockedMessage}</p>
   {/if}
 </div>
 

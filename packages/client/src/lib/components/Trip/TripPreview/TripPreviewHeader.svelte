@@ -11,7 +11,7 @@
   import { lightboxState, isPhone } from "$lib/modules/ui/state.svelte"
   import { blocksToReadableTime } from "$lib/modules/utils"
   import { blockNumber } from "$lib/modules/network"
-  import { strings } from "$lib/modules/strings"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
 
   let { trip, tripId }: { trip: Trip; tripId?: Hex } = $props()
@@ -59,20 +59,20 @@
   // Data rows configuration with reactivity
   let infoRows = $derived([
     {
-      label: strings.trip.toUpperCase(),
+      label: UI_STRINGS.trip.toUpperCase(),
       value: `#${trip.index}`,
       className: "index",
       hideOnPhone: true
     },
     {
-      label: strings.creator.toUpperCase(),
+      label: UI_STRINGS.creator.toUpperCase(),
       value: getTripOwnerName(trip),
       hideOnPhone: false
     },
     ...(trip.lastVisitBlock
       ? [
           {
-            label: strings.lastVisit.toUpperCase(),
+            label: UI_STRINGS.lastVisit.toUpperCase(),
             value: blocksToReadableTime(Number($blockNumber) - Number(trip.lastVisitBlock)),
             className: "last-visit-block",
             hideOnPhone: true
@@ -80,18 +80,18 @@
         ]
       : []),
     {
-      label: `${strings.visits.toUpperCase()} / ${strings.kills.toUpperCase()}`,
+      label: `${UI_STRINGS.visits.toUpperCase()} / ${UI_STRINGS.kills.toUpperCase()}`,
       value: `${String(trip.visitCount)} / ${String(trip?.killCount ?? 0)}`,
       className: "visit-count"
     },
     {
-      label: strings.balance.toUpperCase(),
+      label: UI_STRINGS.balance.toUpperCase(),
       value: `${CURRENCY_SYMBOL}${trip.balance}`,
       className: "balance",
       depleted: Number(trip.balance) === 0
     },
     {
-      label: strings.minRatValueToEnter.toUpperCase(),
+      label: UI_STRINGS.minRatValueToEnter.toUpperCase(),
       value: `${CURRENCY_SYMBOL}${$minRatValueToEnter ?? 0}`,
       className: "min-rat-value-to-enter",
       hideOnPhone: true
@@ -99,7 +99,7 @@
     ...($maxValuePerWin > 0
       ? [
           {
-            label: strings.maxValuePerWin.toUpperCase(),
+            label: UI_STRINGS.maxValuePerWin.toUpperCase(),
             value: `${CURRENCY_SYMBOL}${$maxValuePerWin}`,
             className: "max-value-per-win"
           }

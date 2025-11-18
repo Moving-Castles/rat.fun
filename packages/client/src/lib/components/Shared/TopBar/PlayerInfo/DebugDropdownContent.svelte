@@ -20,64 +20,64 @@
   import { busy } from "$lib/modules/action-manager/index.svelte"
   import { ENVIRONMENT } from "$lib/mud/enums"
   import { publicNetwork } from "$lib/modules/network"
-  import { strings } from "$lib/modules/strings"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
 </script>
 
 <div class="debug-dropdown-content">
   <div class="tab">
-    <p class="key">{strings.address}:</p>
+    <p class="key">{UI_STRINGS.address}:</p>
     <p class="value">
       {$playerAddress}
     </p>
   </div>
   <div class="tab">
-    <p class="key">{strings.environment}</p>
+    <p class="key">{UI_STRINGS.environment}</p>
     <p class="value">{$environment}</p>
   </div>
   <div class="tab">
-    <p class="key">{strings.walletType}:</p>
+    <p class="key">{UI_STRINGS.walletType}:</p>
     <p class="value">
       {$walletType}
     </p>
   </div>
   <div class="tab">
-    <p class="key">{strings.worldAddress}:</p>
+    <p class="key">{UI_STRINGS.worldAddress}:</p>
     <p class="value">
       {$publicNetwork.worldAddress}
     </p>
   </div>
   <div class="tab">
-    <p class="key">{strings.player}:</p>
+    <p class="key">{UI_STRINGS.player}:</p>
     <p class="value">
       {$player?.entityType == ENTITY_TYPE.PLAYER}
     </p>
   </div>
   <div class="tab">
-    <p class="key">{strings.balance}:</p>
+    <p class="key">{UI_STRINGS.balance}:</p>
     <p class="value">
       {$playerERC20Balance}
     </p>
   </div>
   <div class="tab">
-    <p class="key">{strings.allowance}:</p>
+    <p class="key">{UI_STRINGS.allowance}:</p>
     <p class="value">
       {$playerERC20Allowance}
     </p>
   </div>
   <div class="tab">
-    <p class="key">{strings.newIndication}:</p>
+    <p class="key">{UI_STRINGS.newIndication}:</p>
     <p class="value">
       {$playerIsNew}
     </p>
   </div>
   <div class="tab">
-    <p class="key">{strings.hasTokens}:</p>
+    <p class="key">{UI_STRINGS.hasTokens}:</p>
     <p class="value">
       {$playerHasTokens}
     </p>
   </div>
   <div class="tab">
-    <p class="key">{strings.adminUnlocked}:</p>
+    <p class="key">{UI_STRINGS.adminUnlocked}:</p>
     <p class="value">
       {$player?.masterKey}
     </p>
@@ -86,43 +86,43 @@
     {#if $environment !== ENVIRONMENT.BASE}
       <SmallButton
         disabled={busy.GiveCallerTokens.current !== 0}
-        tippyText={strings.requestTokens}
+        tippyText={UI_STRINGS.requestTokens}
         onclick={async () => {
           await sendGiveCallerTokens()
         }}
-        text={strings.getFreeTokens(2000)}
+        text={UI_STRINGS.getFreeTokens(2000)}
       ></SmallButton>
       <SmallButton
         disabled={busy.BuyWithEth.current !== 0}
-        tippyText={strings.buySomeTokens}
+        tippyText={UI_STRINGS.buySomeTokens}
         onclick={async () => {
           await sendBuyWithEth()
         }}
-        text={strings.buyTokens(1)}
+        text={UI_STRINGS.buyTokens(1)}
       ></SmallButton>
     {/if}
     <SmallButton
       disabled={busy.ApproveMax.current !== 0 || $tokenAllowanceApproved}
-      tippyText={strings.approveAllowanceInstruction}
+      tippyText={UI_STRINGS.approveAllowanceInstruction}
       onclick={async () => {
         await sendApproveMax()
       }}
-      text={strings.approveAllowance}
+      text={UI_STRINGS.approveAllowance}
     ></SmallButton>
     <SmallButton
       disabled={busy.RevokeApproval.current !== 0 || !$tokenAllowanceApproved}
-      tippyText={strings.revokeApprovalInstruction}
+      tippyText={UI_STRINGS.revokeApprovalInstruction}
       onclick={async () => {
         await sendRevokeApproval()
       }}
-      text={strings.revokeApproval}
+      text={UI_STRINGS.revokeApproval}
     ></SmallButton>
     <SmallButton
-      tippyText={strings.forceRatLiquidation}
+      tippyText={UI_STRINGS.forceRatLiquidation}
       onclick={async () => {
         await sendLiquidateRat()
       }}
-      text={strings.forceRatLiquidation}
+      text={UI_STRINGS.forceRatLiquidation}
     ></SmallButton>
   </div>
 </div>

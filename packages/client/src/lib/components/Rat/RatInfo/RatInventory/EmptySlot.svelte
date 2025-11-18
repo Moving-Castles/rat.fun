@@ -1,6 +1,6 @@
 <script lang="ts">
   import { playSound } from "$lib/modules/sound"
-  import { strings } from "$lib/modules/strings"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
 
   let { index }: { index: number } = $props()
 
@@ -17,7 +17,7 @@
 </script>
 
 <div
-  style="--msg-empty: '{strings.empty.toUpperCase()}'"
+  style="--msg-empty: '{UI_STRINGS.empty.toUpperCase()}'"
   class="empty-slot index-{index}"
   class:hovered={isHovered}
   role="button"

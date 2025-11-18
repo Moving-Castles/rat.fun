@@ -6,7 +6,7 @@
   import { disconnectWallet } from "$lib/modules/drawbridge/connector"
   import { UIState } from "$lib/modules/ui/state.svelte"
   import { UI } from "$lib/modules/ui/enums"
-  import { strings } from "$lib/modules/strings"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
   import { walletType } from "$lib/modules/network"
   import { WALLET_TYPE } from "$lib/mud/enums"
   import { SmallButton } from "$lib/components/Shared"
@@ -15,21 +15,21 @@
 <div class="main-dropdown-content">
   <!-- Name -->
   <div class="tab">
-    <p class="key">{strings.name}:</p>
+    <p class="key">{UI_STRINGS.name}:</p>
     <p class="value">
       {$player?.name ?? ""}
     </p>
   </div>
   <!-- Wallet -->
   <div class="tab">
-    <p class="key">{strings.connectedWallet}:</p>
+    <p class="key">{UI_STRINGS.connectedWallet}:</p>
     <p class="value">
       {shortenAddress($playerAddress)}
     </p>
   </div>
   <!-- Balance -->
   <div class="tab">
-    <p class="key">{strings.balance}:</p>
+    <p class="key">{UI_STRINGS.balance}:</p>
     <p class="value">
       {CURRENCY_SYMBOL}{$playerERC20Balance}
     </p>
@@ -37,7 +37,7 @@
   <!-- Rats killed -->
   {#if ($player?.pastRats ?? []).length > 0}
     <div class="tab">
-      <p class="key">{strings.ratAmountKilled}:</p>
+      <p class="key">{UI_STRINGS.ratAmountKilled}:</p>
       <p class="value">
         {$player?.pastRats.length}
       </p>
@@ -45,12 +45,12 @@
   {/if}
   {#if $walletType !== WALLET_TYPE.BURNER}
     <SmallButton
-      tippyText={strings.disconnectWallet}
+      tippyText={UI_STRINGS.disconnectWallet}
       onclick={async () => {
         await disconnectWallet()
         UIState.set(UI.SPAWNING)
       }}
-      text={strings.disconnectWallet}
+      text={UI_STRINGS.disconnectWallet}
     ></SmallButton>
   {/if}
 </div>

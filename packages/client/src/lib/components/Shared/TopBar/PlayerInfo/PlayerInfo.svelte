@@ -2,7 +2,7 @@
   import { player, playerAddress } from "$lib/modules/state/stores"
   import { playSound } from "$lib/modules/sound"
   import { Tooltip } from "$lib/components/Shared"
-  import { strings } from "$lib/modules/strings"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
 
   import AccountDropdown from "./AccountDropdown.svelte"
   import BalanceBox from "./BalanceBox.svelte"
@@ -61,10 +61,10 @@
     <!-- NAME -->
     <div class="stat-item name">
       <!-- AVATAR -->
-      <Tooltip content={strings.youIndication($playerAddress)}>
+      <Tooltip content={UI_STRINGS.youIndication($playerAddress)}>
         <div class="inner-wrapper player">
           <div class="avatar">
-            <img src="/images/pfp.png" alt={strings.you} draggable={false} />
+            <img src="/images/pfp.png" alt={UI_STRINGS.you} draggable={false} />
           </div>
           <div class="value">{$player?.name ?? ""}</div>
         </div>
