@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte"
   import gsap from "gsap"
-  import { getDrawbridge, type ConnectorInfo } from "$lib/modules/entry-kit"
+  import { getDrawbridge, type ConnectorInfo } from "$lib/modules/drawbridge"
   import BigButton from "$lib/components/Shared/Buttons/BigButton.svelte"
 
   let buttonElement: HTMLDivElement | null = $state(null)
@@ -36,8 +36,8 @@
     try {
       connecting = true
 
-      const entrykit = getDrawbridge()
-      await entrykit.connectWallet(connectorId)
+      const drawbridge = getDrawbridge()
+      await drawbridge.connectWallet(connectorId)
 
       // Wallet connected - close modal
       showWalletSelect = false
@@ -49,9 +49,9 @@
   }
 
   function openWalletSelect() {
-    // Get available connectors from EntryKit
-    const entrykit = getDrawbridge()
-    const connectors = entrykit.getAvailableConnectors()
+    // Get available connectors from drawbridge
+    const drawbridge = getDrawbridge()
+    const connectors = drawbridge.getAvailableConnectors()
 
     // Filter out the generic "Injected" connector - only show specific wallets
     // UNLESS it's the only connector (like in Base app mobile browser)

@@ -2,9 +2,9 @@
   import { formatUnits } from "viem"
   import type { GetProofReturnType } from "merkle-tree-airdrop"
   import { BigButton } from "$lib/components/Shared"
-  import { prepareConnectorClientForTransaction } from "$lib/modules/entry-kit/connector"
+  import { prepareConnectorClientForTransaction } from "$lib/modules/drawbridge/connector"
   import { ERC20AirdropMerkleProofAbi } from "contracts/externalAbis"
-  import { userAddress } from "$lib/modules/entry-kit"
+  import { userAddress } from "$lib/modules/drawbridge"
 
   // TODO this is a test contract on base mainnet
   const airdropContractAddress = "0xD6d2e85bEfD703847cDBa78589c4c67b7a147020" as const

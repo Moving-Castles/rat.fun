@@ -37,28 +37,28 @@ export async function closeTrip(tripId: string) {
 
 export async function approve(address: string, value: bigint) {
   const scaledValue = value * 10n ** 18n
-  const useConnectorClient = get(walletType) === WALLET_TYPE.ENTRYKIT
+  const useConnectorClient = get(walletType) === WALLET_TYPE.DRAWBRIDGE
   return await executeTransaction(WorldFunctions.Approve, [address, scaledValue], {
     useConnectorClient
   })
 }
 
 export async function approveMax(address: string) {
-  const useConnectorClient = get(walletType) === WALLET_TYPE.ENTRYKIT
+  const useConnectorClient = get(walletType) === WALLET_TYPE.DRAWBRIDGE
   return await executeTransaction(WorldFunctions.Approve, [address, maxUint256], {
     useConnectorClient
   })
 }
 
 export async function revokeApproval(address: string) {
-  const useConnectorClient = get(walletType) === WALLET_TYPE.ENTRYKIT
+  const useConnectorClient = get(walletType) === WALLET_TYPE.DRAWBRIDGE
   return await executeTransaction(WorldFunctions.Approve, [address, 0n], {
     useConnectorClient
   })
 }
 
 export async function buyWithEth(purchaseTokenAmount: number, countryCode: string) {
-  const useConnectorClient = get(walletType) === WALLET_TYPE.ENTRYKIT
+  const useConnectorClient = get(walletType) === WALLET_TYPE.DRAWBRIDGE
   return await executeTransaction(
     WorldFunctions.BuyWithEth,
     [BigInt(purchaseTokenAmount), countryCode],

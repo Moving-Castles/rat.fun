@@ -4,7 +4,7 @@ ERC-4337 account abstraction infrastructure for session accounts.
 
 ## Overview
 
-This module provides the bundler client and paymaster configuration needed for session accounts to submit user operations. All session accounts in entrykit-drawbridge are ERC-4337 smart accounts, which require bundler infrastructure to function.
+This module provides the bundler client and paymaster configuration needed for session accounts to submit user operations. All session accounts in drawbridge are ERC-4337 smart accounts, which require bundler infrastructure to function.
 
 ## What is a Bundler?
 
@@ -131,7 +131,7 @@ const customPaymaster = createPaymasterClient({
   transport: http("https://paymaster.example.com")
 })
 
-const entrykit = new EntryKit({
+const drawbridge = new Drawbridge({
   chains: [myChain],
   paymasterClient: customPaymaster // Override
 })

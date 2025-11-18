@@ -21,7 +21,7 @@
     environment as environmentStore,
     walletType as walletTypeStore
   } from "$lib/modules/network"
-  import { initializeDrawbridge, cleanupDrawbridge, userAddress } from "$lib/modules/entry-kit"
+  import { initializeDrawbridge, cleanupDrawbridge, userAddress } from "$lib/modules/drawbridge"
   import { getNetworkConfig } from "$lib/mud/getNetworkConfig"
 
   // Components
@@ -36,12 +36,12 @@
   // Called when loading is complete
   const loaded = async () => {
     try {
-      // Ensure EntryKit is initialized before proceeding to spawn
-      if ($walletTypeStore === WALLET_TYPE.ENTRYKIT) {
-        console.log("[+layout] Ensuring EntryKit is initialized before spawning...")
+      // Ensure drawbridge is initialized before proceeding to spawn
+      if ($walletTypeStore === WALLET_TYPE.DRAWBRIDGE) {
+        console.log("[+layout] Ensuring drawbridge is initialized before spawning...")
         const networkConfig = getNetworkConfig($environmentStore, page.url)
         await initializeDrawbridge(networkConfig)
-        console.log("[+layout] EntryKit ready")
+        console.log("[+layout] drawbridge ready")
       }
 
       // Get content from CMS
@@ -64,8 +64,8 @@
 
   // Detect wallet disconnection and navigate back to spawn
   $effect(() => {
-    // Only monitor disconnections for EntryKit wallet type
-    if ($walletTypeStore !== WALLET_TYPE.ENTRYKIT) return
+    // Only monitor disconnections for drawbridge wallet type
+    if ($walletTypeStore !== WALLET_TYPE.DRAWBRIDGE) return
 
     // Only act when in READY state (not during initial load or spawn flow)
     if ($UIState !== UI.READY) return
@@ -90,8 +90,8 @@
   })
 
   onDestroy(() => {
-    // Clean up EntryKit if it was initialized
-    if ($walletTypeStore === WALLET_TYPE.ENTRYKIT) {
+    // Clean up drawbridge if it was initialized
+    if ($walletTypeStore === WALLET_TYPE.DRAWBRIDGE) {
       cleanupDrawbridge()
     }
 

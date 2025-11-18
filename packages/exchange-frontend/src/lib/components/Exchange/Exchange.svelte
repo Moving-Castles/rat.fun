@@ -12,7 +12,7 @@
     ExchangeForm,
     Done
   } from "$lib/components/Exchange"
-  import { userAddress } from "$lib/modules/entry-kit"
+  import { userAddress } from "$lib/modules/drawbridge"
   import { playerAddress } from "$lib/modules/state/stores"
   import { initErc20Listener } from "$lib/modules/erc20Listener"
   import { initFakeTokenListener } from "$lib/modules/erc20Listener/fakeToken"

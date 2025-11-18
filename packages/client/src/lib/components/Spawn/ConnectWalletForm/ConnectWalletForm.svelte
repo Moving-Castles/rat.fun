@@ -2,8 +2,8 @@
   import { WALLET_TYPE } from "$lib/mud/enums"
   import { onMount } from "svelte"
   import gsap from "gsap"
-  import { getDrawbridge, type ConnectorInfo } from "$lib/modules/entry-kit"
-  import { debugInfo } from "$lib/modules/entry-kit/wagmiConfig"
+  import { getDrawbridge, type ConnectorInfo } from "$lib/modules/drawbridge"
+  import { debugInfo } from "$lib/modules/drawbridge/wagmiConfig"
   import { isPhone } from "$lib/modules/ui/state.svelte"
   import BigButton from "$lib/components/Shared/Buttons/BigButton.svelte"
 
@@ -84,10 +84,10 @@
     try {
       connecting = true
 
-      const entrykit = getDrawbridge()
-      await entrykit.connectWallet(connectorId)
+      const drawbridge = getDrawbridge()
+      await drawbridge.connectWallet(connectorId)
 
-      // Account watcher in EntryKit will handle session creation
+      // Account watcher in drawbridge will handle session creation
       // Close modal and complete this step
       showWalletSelect = false
       onComplete()
@@ -122,8 +122,8 @@
   }
 
   function prepareConnectors() {
-    const entrykit = getDrawbridge()
-    const connectors = entrykit.getAvailableConnectors()
+    const drawbridge = getDrawbridge()
+    const connectors = drawbridge.getAvailableConnectors()
 
     // Check if window.ethereum exists
     const hasInjectedProvider =
@@ -185,8 +185,8 @@
   }
 
   onMount(() => {
-    // Only prepare connectors for ENTRYKIT wallet type
-    if (walletType === WALLET_TYPE.ENTRYKIT) {
+    // Only prepare connectors for DRAWBRIDGE wallet type
+    if (walletType === WALLET_TYPE.DRAWBRIDGE) {
       prepareConnectors()
     }
 
@@ -209,7 +209,7 @@
 
 <div class="outer-container">
   <div class="inner-container">
-    {#if walletType === WALLET_TYPE.ENTRYKIT}
+    {#if walletType === WALLET_TYPE.DRAWBRIDGE}
       <div class="button-container" bind:this={buttonElement}>
         {#if connecting}
           <BigButton text="Connecting..." disabled={true} onclick={() => {}} />
@@ -326,7 +326,7 @@
                 <span class="debug-value">{debugInfo.connectorsCount}</span>
               </div>
               <div class="debug-item">
-                <strong>Available from EntryKit:</strong>
+                <strong>Available from drawbridge:</strong>
                 <span class="debug-value">{allConnectors.length}</span>
               </div>
               <div class="debug-item">

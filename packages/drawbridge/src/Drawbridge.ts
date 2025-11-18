@@ -92,7 +92,7 @@ export type ConnectorInfo = {
 /**
  * Drawbridge - Headless wallet connection and session management
  *
- * Based on @latticexyz/entrykit - a stripped down, headless version.
+ * Based on @latticexyz/drawbridge - a stripped down, headless version.
  *
  * Provides complete wallet connection and session management:
  * - Wagmi integration (connectors, account watching, reconnection)
@@ -112,21 +112,21 @@ export type ConnectorInfo = {
  * });
  *
  * // Initialize (await reconnection, setup watchers)
- * await entrykit.initialize();
+ * await drawbridge.initialize();
  *
  * // Get available wallets
- * const wallets = entrykit.getAvailableConnectors();
+ * const wallets = drawbridge.getAvailableConnectors();
  *
  * // Connect to wallet
- * await entrykit.connectWallet(wallets[0].id);
+ * await drawbridge.connectWallet(wallets[0].id);
  *
  * // Setup delegation if needed
- * if (!entrykit.isReady) {
- *   await entrykit.setupSession();
+ * if (!drawbridge.isReady) {
+ *   await drawbridge.setupSession();
  * }
  *
  * // Disconnect
- * await entrykit.disconnectWallet();
+ * await drawbridge.disconnectWallet();
  * ```
  */
 export class Drawbridge {
@@ -274,7 +274,7 @@ export class Drawbridge {
    *
    * @example
    * ```typescript
-   * const unsubscribe = entrykit.subscribe((state) => {
+   * const unsubscribe = drawbridge.subscribe((state) => {
    *   if (state.sessionClient) {
    *     console.log("Session ready:", state.sessionClient.account.address);
    *   }
@@ -458,7 +458,7 @@ export class Drawbridge {
    *
    * This will:
    * 1. Connect via wagmi
-   * 2. Account watcher will automatically handle EntryKit session creation
+   * 2. Account watcher will automatically handle drawbridge session creation
    *
    * @param connectorId Connector ID (from getAvailableConnectors())
    * @throws If connector not found or connection fails
@@ -490,7 +490,7 @@ export class Drawbridge {
    *
    * This will:
    * 1. Disconnect via wagmi
-   * 2. Account watcher will automatically clear EntryKit state
+   * 2. Account watcher will automatically clear drawbridge state
    */
   async disconnectWallet(): Promise<void> {
     console.log("[drawbridge] disconnectWallet() called")
@@ -551,7 +551,7 @@ export class Drawbridge {
   async setupSession(onStatus?: (status: SetupSessionStatus) => void): Promise<void> {
     if (this.config.skipSessionSetup) {
       throw new Error(
-        "Cannot setup session when skipSessionSetup is true. This EntryKit instance is in wallet-only mode."
+        "Cannot setup session when skipSessionSetup is true. This drawbridge instance is in wallet-only mode."
       )
     }
 
@@ -588,7 +588,7 @@ export class Drawbridge {
   }
 
   /**
-   * Cleanup and destroy EntryKit instance
+   * Cleanup and destroy drawbridge instance
    *
    * This will:
    * 1. Unwatch account changes

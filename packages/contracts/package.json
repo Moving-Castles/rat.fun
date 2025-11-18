@@ -25,7 +25,7 @@
     "test": "forge clean && pnpm build && tsc --noEmit && mud test",
     "test-verbose": "forge clean && pnpm build && tsc --noEmit && mud test --forgeOptions=' -vvv'",
     "test-single": "forge clean && pnpm build && tsc --noEmit && mud test --forgeOptions='--match-test testCreateTrip'",
-    "entrykit-deploy": "pnpm entrykit-deploy"
+    "drawbridge-deploy": "pnpm drawbridge-deploy"
   },
   "dependencies": {
     "@chainlink/contracts": "^1.4.0",

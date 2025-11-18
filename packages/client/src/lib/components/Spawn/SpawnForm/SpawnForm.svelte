@@ -7,7 +7,7 @@
   import { typeHit } from "$lib/modules/sound"
   import { InputValidationError } from "$lib/modules/error-handling/errors"
   import { waitForPropertyChangeFrom } from "$lib/modules/state/utils"
-  import { isSessionReady, sessionClient } from "$lib/modules/entry-kit"
+  import { isSessionReady, sessionClient } from "$lib/modules/drawbridge"
   import { walletNetwork, walletType } from "$lib/modules/network"
   import { WALLET_TYPE } from "$lib/mud/enums"
 

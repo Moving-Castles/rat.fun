@@ -16,7 +16,7 @@ let drawbridgeInstance: InstanceType<typeof Drawbridge> | null = null
  * This is a simplified version for claim-frontend that only handles wallet connection.
  * No session accounts, no delegation, no MUD World integration.
  *
- * Use entrykit.getWagmiConfig() to get the wagmi config for direct transactions.
+ * Use drawbridge.getWagmiConfig() to get the wagmi config for direct transactions.
  */
 export async function initializeDrawbridge(networkConfig: NetworkConfig): Promise<void> {
   if (drawbridgeInstance) {

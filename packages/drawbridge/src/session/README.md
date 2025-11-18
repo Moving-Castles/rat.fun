@@ -318,7 +318,7 @@ console.log("Has delegation:", hasDelegation)
 
 **Issue:** Session lost after page refresh
 
-- **Check:** localStorage has `entrykit:session-signers` key
+- **Check:** localStorage has `drawbridge:session-signers` key
 - **Fix:** Don't clear localStorage, or re-run session setup
 
 ---

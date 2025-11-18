@@ -1,7 +1,7 @@
 /**
  * drawbridge - Headless wallet connection and session management
  *
- * Based on @latticexyz/entrykit - a stripped down, headless version.
+ * Based on @latticexyz/drawbridge - a stripped down, headless version.
  *
  * Public API: Use the Drawbridge class for wallet connection and session management.
  */

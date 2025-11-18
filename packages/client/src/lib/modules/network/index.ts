@@ -58,9 +58,9 @@ export const getWalletTypeFromUrl = (url: URL) => {
     hostname === "rat.fun" ||
     hostname === "base-sepolia.rat.fun" ||
     hostname === "rat-fun-drawbridge.netlify.app" ||
-    walletTypeParam === "entrykit"
+    walletTypeParam === "drawbridge"
   ) {
-    return WALLET_TYPE.ENTRYKIT
+    return WALLET_TYPE.DRAWBRIDGE
   } else {
     return WALLET_TYPE.BURNER
   }

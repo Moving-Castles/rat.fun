@@ -15,7 +15,7 @@
   import { setupWalletNetwork } from "$lib/mud/setupWalletNetwork"
   import { setupBurnerWalletNetwork } from "$lib/mud/setupBurnerWalletNetwork"
   import { initWalletNetwork } from "$lib/initWalletNetwork"
-  import { sessionClient, status, DrawbridgeStatus } from "$lib/modules/entry-kit"
+  import { sessionClient, status, DrawbridgeStatus } from "$lib/modules/drawbridge"
   import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
   import { backgroundMusic } from "$lib/modules/sound/stores"
 
@@ -63,16 +63,16 @@
     if (walletType === WALLET_TYPE.BURNER) {
       currentState = SPAWN_STATE.SPAWN_FORM
     }
-    // For EntryKit, the effect will handle transition once state settles
+    // For Drawbridge, the effect will handle transition once state settles
     // Don't transition yet - wait for delegation check to complete
   }
 
-  // Listen to changes in entrykit status
+  // Listen to changes in drawbridge status
   $effect(() => {
-    // Only react to EntryKit status changes
-    if (walletType !== WALLET_TYPE.ENTRYKIT) return
+    // Only react to drawbridge status changes
+    if (walletType !== WALLET_TYPE.DRAWBRIDGE) return
 
-    console.log("[Spawn] EntryKit status changed:", $status)
+    console.log("[Spawn] drawbridge status changed:", $status)
 
     switch ($status) {
       case DrawbridgeStatus.CONNECTED:

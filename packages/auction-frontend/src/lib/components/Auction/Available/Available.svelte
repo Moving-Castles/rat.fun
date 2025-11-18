@@ -11,8 +11,8 @@
     balanceOf
   } from "doppler"
   import { BigButton } from "$lib/components/Shared"
-  import { prepareConnectorClientForTransaction } from "$lib/modules/entry-kit/connector"
-  import { userAddress } from "$lib/modules/entry-kit"
+  import { prepareConnectorClientForTransaction } from "$lib/modules/drawbridge/connector"
+  import { userAddress } from "$lib/modules/drawbridge"
   import { publicNetwork } from "$lib/modules/network"
   import { onMount } from "svelte"
   import { signTypedData } from "viem/actions"

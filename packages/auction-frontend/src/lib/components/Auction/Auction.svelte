@@ -11,12 +11,12 @@
   import { publicNetwork } from "$lib/modules/network"
   import { AUCTION_STATE, auctionState } from "$lib/components/Auction/state.svelte"
   import { Available, ConnectWalletForm } from "$lib/components/Auction"
-  import { userAddress } from "$lib/modules/entry-kit"
+  import { userAddress } from "$lib/modules/drawbridge"
   import { playerAddress } from "$lib/modules/state/stores"
   import { initErc20Listener } from "$lib/modules/erc20Listener"
   import WalletInfo from "$lib/components/WalletInfo/WalletInfo.svelte"
   import type { SetupPublicNetworkResult } from "$lib/mud/setupPublicNetwork"
-  import { prepareConnectorClientForTransaction } from "$lib/modules/entry-kit/connector"
+  import { prepareConnectorClientForTransaction } from "$lib/modules/drawbridge/connector"
   import { BigButton } from "$lib/components/Shared"
 
   let auctionParams = $state({} as AuctionParams)
@@ -81,7 +81,7 @@
     if ($userAddress) {
       console.log("[Claim] Wallet connected:", $userAddress)
 
-      // Sync EntryKit userAddress to playerAddress store (for WalletInfo component)
+      // Sync drawbridge userAddress to playerAddress store (for WalletInfo component)
       playerAddress.set($userAddress)
 
       if (auctionState.state.current === AUCTION_STATE.ENDED) {

@@ -30,11 +30,11 @@ function processSession(client: SessionClient) {
 
 ### `state.ts`
 
-EntryKit status enum for state management.
+drawbridge status enum for state management.
 
 **Types:**
 
-- `EntryKitStatus` - Enum representing connection and setup states
+- `DrawbridgeStatus` - Enum representing connection and setup states
 
 **State Flow:**
 
@@ -46,9 +46,9 @@ UNINITIALIZED → DISCONNECTED → CONNECTING → CONNECTED
 **Usage:**
 
 ```typescript
-import { EntryKitStatus } from "../types/state"
+import { DrawbridgeStatus } from "../types/state"
 
-if (status === EntryKitStatus.READY) {
+if (status === DrawbridgeStatus.READY) {
   // Session is ready to use
 }
 ```
@@ -84,14 +84,14 @@ await client.writeContract({
 
 ```typescript
 import { SessionClient } from "../types/clients"
-import { EntryKitStatus } from "../types/state"
+import { DrawbridgeStatus } from "../types/state"
 import { worldAbi } from "../types/mud"
 ```
 
 **Barrel import (all types):**
 
 ```typescript
-import { SessionClient, EntryKitStatus, worldAbi } from "../types"
+import { SessionClient, DrawbridgeStatus, worldAbi } from "../types"
 ```
 
 ## Type Dependencies
@@ -104,7 +104,7 @@ Used by:
   - bundler/
   - delegation/
   - wallet/
-  - EntryKit.ts
+  - drawbridge.ts
 ```
 
-This module has no internal dependencies on other entrykit-drawbridge modules, making it the foundation of the type system.
+This module has no internal dependencies on other drawbridge-drawbridge modules, making it the foundation of the type system.

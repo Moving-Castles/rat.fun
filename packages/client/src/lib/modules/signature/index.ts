@@ -7,7 +7,7 @@ import type { SessionClient } from "drawbridge"
 import { SignedRequest, SignedRequestInfo } from "@server/modules/types"
 import { stringifyRequestForSignature } from "@server/modules/signature/stringifyRequestForSignature"
 import { walletNetwork } from "$lib/modules/network"
-import { getEstablishedConnectorClient } from "$lib/modules/entry-kit/connector"
+import { getEstablishedConnectorClient } from "$lib/modules/drawbridge/connector"
 
 export async function signRequest<T>(data: T): Promise<SignedRequest<T>> {
   const client = get(walletNetwork).walletClient
@@ -20,7 +20,7 @@ export async function signRequest<T>(data: T): Promise<SignedRequest<T>> {
 
   let signature: Hex
   // TODO this is a workaround:
-  // It's unknown whether the client is a SessionClient (entrykit is, burner isn't)
+  // It's unknown whether the client is a SessionClient (drawbridge is, burner isn't)
   // And SessionClient's signMessage method does not work as expected, requiring the use of its internal_signer
   if ("internal_signer" in client) {
     signature = await (client as unknown as SessionClient).internal_signer.signMessage({

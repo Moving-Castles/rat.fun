@@ -52,9 +52,9 @@ export const getWalletTypeFromUrl = (url: URL) => {
   if (
     hostname === "rat.fun" ||
     hostname === "base-sepolia.rat.fun" ||
-    walletTypeParam === "entrykit"
+    walletTypeParam === "drawbridge"
   ) {
-    return WALLET_TYPE.ENTRYKIT
+    return WALLET_TYPE.DRAWBRIDGE
   } else {
     return WALLET_TYPE.BURNER
   }

@@ -3,7 +3,7 @@ import { publicNetwork } from "$lib/modules/network"
 import { addChain, switchChain } from "viem/actions"
 import { getAccount, getChainId, getConnectorClient } from "@wagmi/core"
 import { getChain } from "$lib/mud/utils"
-import { getDrawbridge } from "$lib/modules/entry-kit"
+import { getDrawbridge } from "$lib/modules/drawbridge"
 import { WagmiConfigUnavailableError } from "../error-handling/errors"
 import { ensureWriteContract, type WalletTransactionClient } from "$lib/mud/setupWalletNetwork"
 
@@ -21,8 +21,8 @@ export async function getEstablishedConnectorClient() {
 
 export async function disconnectWallet() {
   try {
-    const entrykit = getDrawbridge()
-    await entrykit.disconnectWallet()
+    const drawbridge = getDrawbridge()
+    await drawbridge.disconnectWallet()
   } catch {
     // Not connected, nothing to do
   }
@@ -30,7 +30,7 @@ export async function disconnectWallet() {
 
 /**
  * Prepares the wallet client obtained from wagmi for sending onchain transactions.
- * - Expects wagmi provider to already have a wallet connected to it by entrykit.
+ * - Expects wagmi provider to already have a wallet connected to it by drawbridge.
  * - Wallet may switch between different chains, ensure the current chain is correct.
  * - Extend the client with MUD's transactionQueue, since it comes directly from wagmi.
  */

@@ -1,6 +1,6 @@
 import { erc20Abi, maxUint256, type TransactionReceipt } from "viem"
 import { ERC20EquivalentExchangeAbi } from "contracts/externalAbis"
-import { prepareConnectorClientForTransaction } from "$lib/modules/entry-kit/connector"
+import { prepareConnectorClientForTransaction } from "$lib/modules/drawbridge/connector"
 import { errorHandler } from "$lib/modules/error-handling"
 import { waitForTransactionReceiptSuccess } from "./executeTransaction"
 

@@ -3,7 +3,7 @@
   import { playerERC20Balance } from "$lib/modules/erc20Listener/stores"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import { shortenAddress } from "$lib/modules/utils"
-  import { disconnectWallet } from "$lib/modules/entry-kit/connector"
+  import { disconnectWallet } from "$lib/modules/drawbridge/connector"
   import { UIState } from "$lib/modules/ui/state.svelte"
   import { UI } from "$lib/modules/ui/enums"
   import { strings } from "$lib/modules/strings"

@@ -6,7 +6,7 @@
   import { publicNetwork } from "$lib/modules/network"
   import { CLAIM_STATE, claimState } from "$lib/components/Claim/state.svelte"
   import { Available, ConnectWalletForm, Done } from "$lib/components/Claim"
-  import { userAddress } from "$lib/modules/entry-kit"
+  import { userAddress } from "$lib/modules/drawbridge"
   import { playerAddress } from "$lib/modules/state/stores"
   import { initErc20Listener } from "$lib/modules/erc20Listener"
   import WalletInfo from "$lib/components/WalletInfo/WalletInfo.svelte"
@@ -51,7 +51,7 @@
     if ($userAddress) {
       console.log("[Claim] Wallet connected:", $userAddress)
 
-      // Sync EntryKit userAddress to playerAddress store (for WalletInfo component)
+      // Sync drawbridge userAddress to playerAddress store (for WalletInfo component)
       playerAddress.set($userAddress)
       // Initialize ERC20 listener (for balance display in WalletInfo)
       initErc20Listener()

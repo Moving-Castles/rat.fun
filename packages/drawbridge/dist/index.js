@@ -849,7 +849,7 @@ var Drawbridge = class {
    *
    * @example
    * ```typescript
-   * const unsubscribe = entrykit.subscribe((state) => {
+   * const unsubscribe = drawbridge.subscribe((state) => {
    *   if (state.sessionClient) {
    *     console.log("Session ready:", state.sessionClient.account.address);
    *   }
@@ -995,7 +995,7 @@ var Drawbridge = class {
    *
    * This will:
    * 1. Connect via wagmi
-   * 2. Account watcher will automatically handle EntryKit session creation
+   * 2. Account watcher will automatically handle drawbridge session creation
    *
    * @param connectorId Connector ID (from getAvailableConnectors())
    * @throws If connector not found or connection fails
@@ -1019,7 +1019,7 @@ var Drawbridge = class {
    *
    * This will:
    * 1. Disconnect via wagmi
-   * 2. Account watcher will automatically clear EntryKit state
+   * 2. Account watcher will automatically clear drawbridge state
    */
   async disconnectWallet() {
     console.log("[drawbridge] disconnectWallet() called");
@@ -1073,7 +1073,7 @@ var Drawbridge = class {
   async setupSession(onStatus) {
     if (this.config.skipSessionSetup) {
       throw new Error(
-        "Cannot setup session when skipSessionSetup is true. This EntryKit instance is in wallet-only mode."
+        "Cannot setup session when skipSessionSetup is true. This drawbridge instance is in wallet-only mode."
       );
     }
     if (!this.state.sessionClient) {
@@ -1098,7 +1098,7 @@ var Drawbridge = class {
     }
   }
   /**
-   * Cleanup and destroy EntryKit instance
+   * Cleanup and destroy drawbridge instance
    *
    * This will:
    * 1. Unwatch account changes

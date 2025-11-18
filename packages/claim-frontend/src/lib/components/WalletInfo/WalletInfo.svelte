@@ -2,7 +2,7 @@
   import { playerAddress, player } from "$lib/modules/state/stores"
   import { playerERC20Balance } from "$lib/modules/erc20Listener/stores"
   import { shortenAddress } from "$lib/modules/utils"
-  import { disconnectWallet } from "$lib/modules/entry-kit/connector"
+  import { disconnectWallet } from "$lib/modules/drawbridge/connector"
   import { SmallButton } from "$lib/components/Shared"
 
   let showDropdown = $state(false)

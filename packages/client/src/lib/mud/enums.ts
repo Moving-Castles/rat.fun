@@ -8,7 +8,7 @@ export enum ENVIRONMENT {
 export enum WALLET_TYPE {
   UNKNOWN = "unknown",
   BURNER = "burner",
-  ENTRYKIT = "entrykit"
+  DRAWBRIDGE = "drawbridge"
 }
 
 export enum SALE_STATUS {

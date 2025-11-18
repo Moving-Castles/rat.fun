@@ -1,1 +1,1 @@
-// EntryKit component has been removed
+// drawbridge component has been removed
