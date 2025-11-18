@@ -62,6 +62,9 @@ declare enum EntryKitStatus {
     ERROR = "error"
 }
 
+/**
+ * Setup session status updates for progress tracking
+ */
 type SetupSessionStatus = {
     type: "checking_wallet";
     message: string;

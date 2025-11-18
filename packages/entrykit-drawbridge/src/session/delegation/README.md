@@ -246,13 +246,3 @@ expect(userClient.account.type).not.toBe("smart")
 const userClient = await getConnectorClient(wagmiConfig)
 expect(userClient.account.type).toBe("smart")
 ```
-
----
-
-## Future Improvements
-
-1. **Split setup.ts** - Separate `setupSessionEOA.ts` and `setupSessionSmartAccount.ts`
-2. **Shared utilities** - Extract common code (status callbacks, session deployment)
-3. **Better type safety** - Replace `any` types with proper Client type parameters
-4. **Retry logic** - Automatic retry on transient failures
-5. **Parallel operations** - Deploy session account in parallel with delegation when possible
