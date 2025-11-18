@@ -2,9 +2,9 @@ import {
   Account,
   Chain,
   Hex,
+  maxUint128,
   maxUint256,
   parseEventLogs,
-  parseUnits,
   PublicClient,
   Transport,
   WalletClient,
@@ -16,7 +16,8 @@ import { AuctionParams } from "./types"
 import { getPoolKey } from "./getPoolKey"
 import { Permit2PermitData, signPermit2 } from "./permit2"
 import { CustomQuoter } from "./CustomQuoter"
-import { swapEventAbi, universalRouterAbi } from "./abis"
+import { swapAndReceiptEventsAbi, universalRouterAbi } from "./abis"
+import { simulateContract } from "viem/actions"
 
 export interface SwapExactParams {
   /** if false, give exact `amount` of numeraire, otherwise receive exact `amount` of tokens. Default false */
@@ -39,7 +40,7 @@ export async function signPermit2ForUniversalRouter(
   publicClient: PublicClient<Transport, Chain>,
   walletClient: WalletClient<Transport, Chain, Account>,
   auctionParams: AuctionParams,
-  amount: number | string,
+  amount: bigint,
   params: {
     isOut?: boolean
   }
@@ -56,7 +57,7 @@ export async function signPermit2ForUniversalRouter(
 
     amountIn = input.amountIn
   } else {
-    amountIn = parseUnits(amount.toString(), auctionParams.numeraire.decimals)
+    amountIn = amount
   }
 
   return await signPermit2(
@@ -76,7 +77,7 @@ export async function swapExactSingle(
   publicClient: PublicClient<Transport, Chain>,
   walletClient: WalletClient<Transport, Chain, Account>,
   auctionParams: AuctionParams,
-  amount: number | string,
+  amount: bigint,
   params: SwapExactParams
 ) {
   const isOut = params.isOut ?? false
@@ -95,22 +96,20 @@ export async function swapExactSingle(
 
     amountIn = input.amountIn
   } else {
-    amountIn = parseUnits(amount.toString(), auctionParams.numeraire.decimals)
+    amountIn = amount
   }
 
   // Build poolKey and zeroForOne as in the quoting example
   const poolKey = getPoolKey(auctionParams)
-  const parsedAmount = parseUnits(amount.toString(), auctionParams.numeraire.decimals)
   const zeroForOne = !auctionParams.isToken0
 
   // Build V4 swap actions
   const actionBuilder = new V4ActionBuilder()
-  // TODO minimum amount out/in? (what's currently 0n)
+  // TODO max/min amount out/in? (what's currently maxUint128/0n)
   if (isOut) {
-    actionBuilder.addSwapExactOutSingle(poolKey, zeroForOne, parsedAmount, 0n, "0x")
+    actionBuilder.addSwapExactOutSingle(poolKey, zeroForOne, amount, maxUint128, "0x")
   } else {
-    console.log(amount)
-    actionBuilder.addSwapExactInSingle(poolKey, zeroForOne, parsedAmount, 0n, "0x")
+    actionBuilder.addSwapExactInSingle(poolKey, zeroForOne, amount, 0n, "0x")
   }
   // Settle and take ensures outputs are transferred correctly
   actionBuilder.addAction(V4ActionType.SETTLE_ALL, [
@@ -142,23 +141,28 @@ export async function swapExactSingle(
   commandBuilder.addV4Swap(actions, actionParams)
   const [commands, inputs] = commandBuilder.build()
 
+  // Simulate to catch errors
+  const { request } = await simulateContract(
+    walletClient,
+    {
+      address: addresses.universalRouter,
+      abi: [...universalRouterAbi, ...universalRouterErrors],
+      functionName: "execute",
+      args: [commands, inputs],
+      // Send ETH when swapping from native currency
+      value: swapFromNative ? amountIn : 0n
+    }
+  )
   // Execute
-  const txHash = await walletClient.writeContract({
-    address: addresses.universalRouter,
-    abi: [...universalRouterAbi, ...universalRouterErrors],
-    functionName: "execute",
-    args: [commands, inputs],
-    // Send ETH when swapping from native currency
-    value: swapFromNative ? amountIn : 0n
-  })
+  const txHash = await walletClient.writeContract(request)
   const receipt = await publicClient.waitForTransactionReceipt({ hash: txHash })
 
   const parsedLogs = parseEventLogs({
-    abi: swapEventAbi,
+    abi: swapAndReceiptEventsAbi,
     logs: receipt.logs
   })
   const swapLogs = parsedLogs.filter(
-    ({ eventName, args }) => eventName === "Swap" && args.liquidity > 0
+    ({ eventName, args }) => eventName === "Swap" && args.liquidity > 0 || eventName === "Receipt"
   )
   return swapLogs
 }

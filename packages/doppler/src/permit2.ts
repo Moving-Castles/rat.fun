@@ -45,7 +45,7 @@ export interface Permit2PermitData {
  * Check if token has max allowance for permit2
  * This could be always present due to the wallet using uniswap itself, since permit2 is a global contract
  */
-export async function isPermit2AllowedMax(
+export async function isPermit2AllowedMaxRequired(
   publicClient: PublicClient<Transport, Chain>,
   walletAddress: Hex,
   tokenAddress: Hex

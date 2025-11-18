@@ -50,7 +50,7 @@ export async function buyLimitSpentAmount(publicClient: PublicClient, address: H
   return await publicClient.readContract({
     address,
     abi: derc20BuyLimitAbi,
-    functionName: "balanceOf",
+    functionName: "getSpentAmounts",
     args: [holderAddress]
   })
 }

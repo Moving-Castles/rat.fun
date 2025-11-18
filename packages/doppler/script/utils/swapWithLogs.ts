@@ -1,8 +1,8 @@
-import { Account, Chain, formatUnits, Hex, PublicClient, Transport, WalletClient } from "viem"
+import { Account, Chain, formatUnits, Hex, parseUnits, PublicClient, Transport, WalletClient } from "viem"
 import {
   AuctionParams,
   balanceOf,
-  isPermit2AllowedMax,
+  isPermit2AllowedMaxRequired,
   isPermitRequired,
   permit2AllowMax,
   Permit2PermitData,
@@ -17,6 +17,8 @@ export async function swapWithLogs(
   amount: number,
   isOut: boolean
 ) {
+  const parsedAmount = parseUnits(amount.toString(), isOut ? auctionParams.token.decimals : auctionParams.numeraire.decimals)
+
   console.log("before swap")
   const tokenBalanceBefore = formatUnits(
     await balanceOf(publicClient, auctionParams.token.address, walletClient.account.address),
@@ -32,26 +34,26 @@ export async function swapWithLogs(
   let permit: Permit2PermitData | undefined = undefined
   let permitSignature: Hex | undefined = undefined
   if (isPermitRequired(auctionParams)) {
-    const isAllowed = await isPermit2AllowedMax(
+    const isAllowedMaxRequired = await isPermit2AllowedMaxRequired(
       publicClient,
       walletClient.account.address,
       auctionParams.numeraire.address
     )
-    if (!isAllowed) {
+    if (isAllowedMaxRequired) {
       await permit2AllowMax(publicClient, walletClient, auctionParams.numeraire.address)
     }
     const result = await signPermit2ForUniversalRouter(
       publicClient,
       walletClient,
       auctionParams,
-      amount,
+      parsedAmount,
       { isOut }
     )
     permit = result.permit
     permitSignature = result.permitSignature
   }
 
-  await swapExactSingle(publicClient, walletClient, auctionParams, amount, {
+  await swapExactSingle(publicClient, walletClient, auctionParams, parsedAmount, {
     isOut,
     permit,
     permitSignature

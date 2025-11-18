@@ -1,5 +1,5 @@
 import { dopplerLensAbi, getAddresses, Quoter } from "@whetstone-research/doppler-sdk"
-import { parseUnits, formatUnits, PublicClient } from "viem"
+import { formatUnits, PublicClient } from "viem"
 import { AuctionParams } from "./types"
 import { getPoolKey } from "./getPoolKey"
 
@@ -48,13 +48,13 @@ export class CustomQuoter {
     this.auctionParams = auctionParams
   }
 
-  async quoteExactInputV4(exactAmount: number | string, numeraireForToken: boolean) {
+  async quoteExactInputV4(exactAmount: bigint, numeraireForToken: boolean) {
     const zeroForOne = this.zeroForOne(numeraireForToken)
 
     const result = await this.quoter.quoteExactInputV4Quoter({
       poolKey: this.poolKey,
       zeroForOne,
-      exactAmount: parseUnits(exactAmount.toString(), this.inputDecimals(zeroForOne)),
+      exactAmount,
       hookData: "0x"
     })
 
@@ -64,13 +64,13 @@ export class CustomQuoter {
     }
   }
 
-  async quoteExactOutputV4(exactAmount: number | string, numeraireForToken: boolean) {
+  async quoteExactOutputV4(exactAmount: bigint, numeraireForToken: boolean) {
     const zeroForOne = this.zeroForOne(numeraireForToken)
 
     const result = await this.quoter.quoteExactOutputV4Quoter({
       poolKey: this.poolKey,
       zeroForOne,
-      exactAmount: parseUnits(exactAmount.toString(), this.outputDecimals(zeroForOne)),
+      exactAmount,
       hookData: "0x"
     })
 
@@ -80,7 +80,7 @@ export class CustomQuoter {
     }
   }
 
-  async quoteExactInputV4Lens(exactAmount: number | string, numeraireForToken: boolean) {
+  async quoteExactInputV4Lens(exactAmount: bigint, numeraireForToken: boolean) {
     const zeroForOne = this.zeroForOne(numeraireForToken)
 
     const { result } = await this.publicClient.simulateContract({
@@ -91,7 +91,7 @@ export class CustomQuoter {
         {
           poolKey: this.poolKey,
           zeroForOne,
-          exactAmount: parseUnits(exactAmount.toString(), this.inputDecimals(zeroForOne)),
+          exactAmount,
           hookData: "0x"
         }
       ]

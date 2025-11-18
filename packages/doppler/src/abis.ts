@@ -175,7 +175,7 @@ export const universalRouterAbi = [
   { stateMutability: "payable", type: "receive" }
 ] as const
 
-export const swapEventAbi = [
+export const swapAndReceiptEventsAbi = [
   {
     anonymous: false,
     inputs: [
@@ -190,7 +190,8 @@ export const swapEventAbi = [
     ],
     name: "Swap",
     type: "event"
-  }
+  },
+  {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"buyer","type":"address"},{"indexed":true,"internalType":"string","name":"countryCode","type":"string"},{"indexed":false,"internalType":"uint256","name":"tokenAmount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"numeraireAmount","type":"uint256"}],"name":"Receipt","type":"event"}
 ] as const
 
 export const v2router02Abi = [
