@@ -59,16 +59,18 @@ export async function isWalletDeployed(client: Client, address: Address): Promis
  * validate signatures or execute transactions.
  *
  * @param client Client to use for deployment transaction (usually session client with paymaster)
- * @param userAddress User's wallet address to deploy
  * @param factoryAddress Factory contract address that can deploy the wallet
  * @param factoryCalldata Deployment calldata for the factory
  */
 export async function deployWallet(
   client: Client,
-  userAddress: Address,
   factoryAddress: Address,
   factoryCalldata: Address
 ): Promise<void> {
+  if (!client.account) {
+    throw new Error("Client must have an account to deploy wallet")
+  }
+
   try {
     const txHash = await getAction(
       client,
@@ -104,38 +106,4 @@ export async function deployWallet(
 
     throw new Error(`Failed to deploy smart wallet: ${errorMessage}`)
   }
-}
-
-/**
- * Deploy a smart wallet if it's not already deployed
- *
- * @param client Client to use for deployment
- * @param userAddress User's wallet address
- * @param factoryAddress Factory contract address
- * @param factoryCalldata Deployment calldata
- * @returns True if deployment was needed and completed, false if already deployed
- */
-export async function deployWalletIfNeeded(
-  client: Client,
-  userAddress: Address,
-  factoryAddress: Address,
-  factoryCalldata: Address
-): Promise<boolean> {
-  const deployed = await isWalletDeployed(client, userAddress)
-
-  if (deployed) {
-    return false
-  }
-
-  await deployWallet(client, userAddress, factoryAddress, factoryCalldata)
-
-  // Verify deployment succeeded
-  const nowDeployed = await isWalletDeployed(client, userAddress)
-  if (!nowDeployed) {
-    throw new Error(
-      `Wallet deployment appeared to succeed but contract code not found at ${userAddress}`
-    )
-  }
-
-  return true
 }

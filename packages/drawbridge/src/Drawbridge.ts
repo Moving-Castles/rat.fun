@@ -569,7 +569,7 @@ export class Drawbridge {
 
     try {
       await setupSession({
-        client: userClient,
+        publicClient: userClient,
         userClient,
         sessionClient: this.state.sessionClient,
         worldAddress: this.config.worldAddress!,

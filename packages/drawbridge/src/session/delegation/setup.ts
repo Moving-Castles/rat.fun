@@ -3,21 +3,20 @@ import { SessionClient, ConnectedClient } from "../../types"
 import { SetupSessionStatus } from "./shared"
 import { setupSessionSmartAccount } from "./smart-account"
 import { setupSessionEOA } from "./eoa"
+import { checkDelegation } from "./check"
 
 /**
  * Complete setup session parameters (supports both EOA and Smart Account)
  */
 export type SetupSessionParams = {
   /** Public client for reading blockchain state */
-  client: Client
+  publicClient: Client
   /** User's connected wallet client (EOA or Smart Account) */
   userClient: ConnectedClient
   /** Session smart account client with MUD extensions */
   sessionClient: SessionClient
   /** MUD World contract address */
   worldAddress: Hex
-  /** Whether to register delegation (default: true) */
-  registerDelegation?: boolean
   /** Progress callback for status updates */
   onStatus?: (status: SetupSessionStatus) => void
 }
@@ -30,6 +29,8 @@ export type { SetupSessionStatus }
  *
  * This is the main entry point that automatically routes to the correct implementation
  * based on the user's wallet type.
+ *
+ * Returns early if session is already fully set up.
  *
  * Flow differs based on wallet type:
  *
@@ -45,23 +46,40 @@ export type { SetupSessionStatus }
  * - Session account submits the signature + call
  * - World validates signature and executes as user
  *
- * **Finally:**
- * - Deploys session account if not yet deployed (via empty user operation)
- *
  * @param params Setup parameters
  */
 export async function setupSession({
-  client,
+  publicClient,
   userClient,
   sessionClient,
   worldAddress,
-  registerDelegation = true,
   onStatus
 }: SetupSessionParams): Promise<void> {
+  const userAddress = userClient.account.address
+  const sessionAddress = sessionClient.account.address
+
   console.log("[drawbridge] Setup session:", {
-    userAddress: userClient.account.address,
+    userAddress,
     accountType: userClient.account.type
   })
+
+  // Check if session is already fully set up
+  const hasDelegation = await checkDelegation({
+    client: publicClient,
+    worldAddress,
+    userAddress,
+    sessionAddress
+  })
+
+  const sessionDeployed = await sessionClient.account.isDeployed?.()
+
+  if (hasDelegation && sessionDeployed) {
+    console.log("[drawbridge] Session already fully set up, skipping")
+    onStatus?.({ type: "complete", message: "Session already set up!" })
+    return
+  }
+
+  console.log("[drawbridge] Session setup required:", { hasDelegation, sessionDeployed })
 
   // Route to appropriate implementation based on wallet type
   if (userClient.account.type === "smart") {
@@ -69,16 +87,14 @@ export async function setupSession({
       userClient,
       sessionClient,
       worldAddress,
-      registerDelegation,
       onStatus
     })
   } else {
     return setupSessionEOA({
-      client,
+      publicClient,
       userClient,
       sessionClient,
       worldAddress,
-      registerDelegation,
       onStatus
     })
   }

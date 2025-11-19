@@ -1,5 +1,5 @@
 import { resourceToHex, hexToResource } from '@latticexyz/common';
-import { parseAbi, isHex, http, encodeFunctionData, zeroAddress, parseErc6492Signature, toHex } from 'viem';
+import { parseAbi, isHex, http, encodeFunctionData, zeroAddress, toHex } from 'viem';
 import worldConfig, { systemsConfig } from '@latticexyz/world/mud.config';
 import { generatePrivateKey, privateKeyToAccount } from 'viem/accounts';
 import { toSimpleSmartAccount } from 'permissionless/accounts';
@@ -8,7 +8,7 @@ import { callFrom, sendUserOperationFrom } from '@latticexyz/world/internal';
 import { createBundlerClient as createBundlerClient$1, sendUserOperation, waitForUserOperationReceipt } from 'viem/account-abstraction';
 import { getRecord } from '@latticexyz/store/internal';
 import { getAction } from 'viem/utils';
-import { waitForTransactionReceipt, getCode, writeContract, sendTransaction, signTypedData } from 'viem/actions';
+import { waitForTransactionReceipt, getCode, sendTransaction, writeContract, signTypedData } from 'viem/actions';
 import IBaseWorldAbi from '@latticexyz/world/out/IBaseWorld.sol/IBaseWorld.abi.json';
 import { callWithSignatureTypes } from '@latticexyz/world-module-callwithsignature/internal';
 import moduleConfig from '@latticexyz/world-module-callwithsignature/mud.config';
@@ -321,7 +321,10 @@ async function isWalletDeployed(client, address) {
   });
   return code !== void 0 && code !== "0x";
 }
-async function deployWallet(client, userAddress, factoryAddress, factoryCalldata) {
+async function deployWallet(client, factoryAddress, factoryCalldata) {
+  if (!client.account) {
+    throw new Error("Client must have an account to deploy wallet");
+  }
   try {
     const txHash = await getAction(
       client,
@@ -349,20 +352,6 @@ async function deployWallet(client, userAddress, factoryAddress, factoryCalldata
     }
     throw new Error(`Failed to deploy smart wallet: ${errorMessage}`);
   }
-}
-async function deployWalletIfNeeded(client, userAddress, factoryAddress, factoryCalldata) {
-  const deployed = await isWalletDeployed(client, userAddress);
-  if (deployed) {
-    return false;
-  }
-  await deployWallet(client, userAddress, factoryAddress, factoryCalldata);
-  const nowDeployed = await isWalletDeployed(client, userAddress);
-  if (!nowDeployed) {
-    throw new Error(
-      `Wallet deployment appeared to succeed but contract code not found at ${userAddress}`
-    );
-  }
-  return true;
 }
 function clearFactoryData(account) {
   try {
@@ -464,7 +453,6 @@ async function setupSessionSmartAccount({
   userClient,
   sessionClient,
   worldAddress,
-  registerDelegation = true,
   onStatus
 }) {
   const sessionAddress = sessionClient.account.address;
@@ -483,32 +471,27 @@ async function setupSessionSmartAccount({
   } else if (!alreadyDeployed && hasFactoryData) {
     console.log("[drawbridge] Deploying user wallet...");
     onStatus?.({ type: "deploying_wallet", message: "Deploying wallet (one-time setup)..." });
-    await deployWalletIfNeeded(
-      sessionClient,
-      userAddress,
-      factoryArgs.factory,
-      factoryArgs.factoryData
-    );
+    await deployWallet(sessionClient, factoryArgs.factory, factoryArgs.factoryData);
+    const nowDeployed = await isWalletDeployed(sessionClient, userAddress);
+    if (!nowDeployed) {
+      throw new Error(
+        `Wallet deployment appeared to succeed but contract code not found at ${userAddress}`
+      );
+    }
     onStatus?.({ type: "wallet_deployed", message: "Wallet deployed successfully!" });
     clearFactoryData(account);
   } else {
     onStatus?.({ type: "wallet_deployed", message: "Wallet ready" });
   }
-  const calls = [];
-  if (registerDelegation) {
-    calls.push({
+  onStatus?.({ type: "registering_delegation", message: "Setting up session..." });
+  const calls = [
+    {
       to: worldAddress,
       abi: worldAbi,
       functionName: "registerDelegation",
       args: [sessionAddress, unlimitedDelegationControlId, "0x"]
-    });
-  }
-  if (!calls.length) {
-    await deploySessionAccount(sessionClient, onStatus);
-    onStatus?.({ type: "complete", message: "Session setup complete!" });
-    return;
-  }
-  onStatus?.({ type: "registering_delegation", message: "Setting up session..." });
+    }
+  ];
   const accountBeforeSend = userClient.account;
   if (accountBeforeSend.factory || accountBeforeSend.factoryData) {
     console.warn("[drawbridge] Factory still present, attempting removal again...");
@@ -585,86 +568,50 @@ async function callWithSignature({
   sessionClient,
   ...opts
 }) {
-  const rawSignature = await signCall(opts);
-  const {
-    address: factoryAddress,
-    data: factoryCalldata,
-    signature
-  } = parseErc6492Signature(rawSignature);
-  let finalSignature = signature ?? rawSignature;
-  if (factoryAddress != null) {
-    console.log("[callWithSignature] ERC-6492 signature detected");
-    await deployWalletIfNeeded(
-      sessionClient,
-      opts.userClient.account.address,
-      factoryAddress,
-      factoryCalldata
-    );
-    finalSignature = signature;
-  }
-  try {
-    return await getAction(
-      sessionClient,
-      writeContract,
-      "writeContract"
-    )({
-      address: opts.worldAddress,
-      abi: CallWithSignatureAbi,
-      functionName: "callWithSignature",
-      args: [opts.userClient.account.address, opts.systemId, opts.callData, finalSignature]
-    });
-  } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    if (isAlreadyDeployedError(errorMessage)) {
-      throw new Error("Smart wallet was just deployed. Please try again.");
-    }
-    throw error;
-  }
+  const signature = await signCall(opts);
+  return await getAction(
+    sessionClient,
+    writeContract,
+    "writeContract"
+  )({
+    address: opts.worldAddress,
+    abi: CallWithSignatureAbi,
+    functionName: "callWithSignature",
+    args: [opts.userClient.account.address, opts.systemId, opts.callData, signature]
+  });
 }
 
 // src/session/delegation/eoa.ts
 async function setupSessionEOA({
-  client,
+  publicClient,
   userClient,
   sessionClient,
   worldAddress,
-  registerDelegation = true,
   onStatus
 }) {
   const sessionAddress = sessionClient.account.address;
   const userAddress = userClient.account.address;
   console.log("[drawbridge] EOA setup:", { userAddress });
-  const txs = [];
-  if (registerDelegation) {
-    const tx = await callWithSignature({
-      client: sessionClient,
-      userClient,
-      sessionClient,
-      worldAddress,
-      systemId: systemsConfig.systems.RegistrationSystem.systemId,
-      callData: encodeFunctionData({
-        abi: IBaseWorldAbi,
-        functionName: "registerDelegation",
-        args: [sessionAddress, unlimitedDelegationControlId, "0x"]
-      })
-    });
-    txs.push(tx);
-  }
-  if (!txs.length) {
-    await deploySessionAccount(sessionClient, onStatus);
-    onStatus?.({ type: "complete", message: "Session setup complete!" });
-    return;
-  }
   onStatus?.({ type: "registering_delegation", message: "Setting up session..." });
-  for (const hash of txs) {
-    const receipt = await getAction(
-      client,
-      waitForTransactionReceipt,
-      "waitForTransactionReceipt"
-    )({ hash });
-    if (receipt.status === "reverted") {
-      throw new Error("Delegation registration transaction reverted");
-    }
+  const hash = await callWithSignature({
+    client: sessionClient,
+    userClient,
+    sessionClient,
+    worldAddress,
+    systemId: systemsConfig.systems.RegistrationSystem.systemId,
+    callData: encodeFunctionData({
+      abi: IBaseWorldAbi,
+      functionName: "registerDelegation",
+      args: [sessionAddress, unlimitedDelegationControlId, "0x"]
+    })
+  });
+  const receipt = await getAction(
+    publicClient,
+    waitForTransactionReceipt,
+    "waitForTransactionReceipt"
+  )({ hash });
+  if (receipt.status === "reverted") {
+    throw new Error("Delegation registration transaction reverted");
   }
   await deploySessionAccount(sessionClient, onStatus);
   console.log("[drawbridge] EOA setup complete");
@@ -673,32 +620,44 @@ async function setupSessionEOA({
 
 // src/session/delegation/setup.ts
 async function setupSession({
-  client,
+  publicClient,
   userClient,
   sessionClient,
   worldAddress,
-  registerDelegation = true,
   onStatus
 }) {
+  const userAddress = userClient.account.address;
+  const sessionAddress = sessionClient.account.address;
   console.log("[drawbridge] Setup session:", {
-    userAddress: userClient.account.address,
+    userAddress,
     accountType: userClient.account.type
   });
+  const hasDelegation = await checkDelegation({
+    client: publicClient,
+    worldAddress,
+    userAddress,
+    sessionAddress
+  });
+  const sessionDeployed = await sessionClient.account.isDeployed?.();
+  if (hasDelegation && sessionDeployed) {
+    console.log("[drawbridge] Session already fully set up, skipping");
+    onStatus?.({ type: "complete", message: "Session already set up!" });
+    return;
+  }
+  console.log("[drawbridge] Session setup required:", { hasDelegation, sessionDeployed });
   if (userClient.account.type === "smart") {
     return setupSessionSmartAccount({
       userClient,
       sessionClient,
       worldAddress,
-      registerDelegation,
       onStatus
     });
   } else {
     return setupSessionEOA({
-      client,
+      publicClient,
       userClient,
       sessionClient,
       worldAddress,
-      registerDelegation,
       onStatus
     });
   }
@@ -1117,7 +1076,7 @@ var Drawbridge = class {
     const userClient = await getConnectorClient(this.wagmiConfig);
     try {
       await setupSession({
-        client: userClient,
+        publicClient: userClient,
         userClient,
         sessionClient: this.state.sessionClient,
         worldAddress: this.config.worldAddress,

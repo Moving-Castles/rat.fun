@@ -2,7 +2,7 @@ import { sendUserOperation, waitForUserOperationReceipt } from "viem/account-abs
 import { getAction } from "viem/utils"
 import { unlimitedDelegationControlId, worldAbi, ConnectedClient } from "../../types"
 import {
-  deployWalletIfNeeded,
+  deployWallet,
   isWalletDeployed,
   isAlreadyDeployedError
 } from "../patterns/wallet-deployment"
@@ -16,8 +16,6 @@ import {
 export type SetupSessionSmartAccountParams = SetupSessionBaseParams & {
   /** User's connected smart wallet client */
   userClient: ConnectedClient
-  /** Whether to register delegation (default: true) */
-  registerDelegation?: boolean
 }
 
 /**
@@ -39,7 +37,6 @@ export async function setupSessionSmartAccount({
   userClient,
   sessionClient,
   worldAddress,
-  registerDelegation = true,
   onStatus
 }: SetupSessionSmartAccountParams): Promise<void> {
   const sessionAddress = sessionClient.account.address
@@ -49,7 +46,7 @@ export async function setupSessionSmartAccount({
 
   onStatus?.({ type: "checking_wallet", message: "Checking wallet status..." })
 
-  // CHECK AND DEPLOY USER'S WALLET IF NEEDED
+  // Check and deploy user's wallet if needed
   const account = userClient.account as SmartAccountWithFactory
   const factoryArgs = await account.getFactoryArgs()
   const hasFactoryData = factoryArgs.factory && factoryArgs.factoryData
@@ -58,22 +55,29 @@ export async function setupSessionSmartAccount({
 
   const alreadyDeployed = await isWalletDeployed(sessionClient, userAddress)
 
+  console.log("[drawbridge] Wallet deployed:", alreadyDeployed)
+
   if (alreadyDeployed && hasFactoryData) {
+    console.log("[drawbridge] CASE 1: Wallet deployed and has factory data")
     // Wallet deployed but has factory data - remove it
     console.log("[drawbridge] Removing factory data from deployed wallet")
     onStatus?.({ type: "wallet_deployed", message: "Wallet ready" })
     clearFactoryData(account)
   } else if (!alreadyDeployed && hasFactoryData) {
+    console.log("[drawbridge] CASE 2: Wallet not deployed and has factory data")
     // Wallet not deployed - deploy it
     console.log("[drawbridge] Deploying user wallet...")
     onStatus?.({ type: "deploying_wallet", message: "Deploying wallet (one-time setup)..." })
 
-    await deployWalletIfNeeded(
-      sessionClient,
-      userAddress,
-      factoryArgs.factory!,
-      factoryArgs.factoryData!
-    )
+    await deployWallet(sessionClient, factoryArgs.factory!, factoryArgs.factoryData!)
+
+    // Verify deployment succeeded
+    const nowDeployed = await isWalletDeployed(sessionClient, userAddress)
+    if (!nowDeployed) {
+      throw new Error(
+        `Wallet deployment appeared to succeed but contract code not found at ${userAddress}`
+      )
+    }
 
     onStatus?.({ type: "wallet_deployed", message: "Wallet deployed successfully!" })
 
@@ -84,25 +88,16 @@ export async function setupSessionSmartAccount({
   }
 
   // Proceed with delegation registration
-  const calls = []
+  onStatus?.({ type: "registering_delegation", message: "Setting up session..." })
 
-  if (registerDelegation) {
-    calls.push({
+  const calls = [
+    {
       to: worldAddress,
       abi: worldAbi,
       functionName: "registerDelegation",
       args: [sessionAddress, unlimitedDelegationControlId, "0x"]
-    })
-  }
-
-  if (!calls.length) {
-    // No delegation to register, just deploy session account
-    await deploySessionAccount(sessionClient, onStatus)
-    onStatus?.({ type: "complete", message: "Session setup complete!" })
-    return
-  }
-
-  onStatus?.({ type: "registering_delegation", message: "Setting up session..." })
+    }
+  ]
 
   // Final check: if factory/factoryData still present, try removal again
   const accountBeforeSend = userClient.account as SmartAccountWithFactory

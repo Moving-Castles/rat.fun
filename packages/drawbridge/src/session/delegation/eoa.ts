@@ -1,4 +1,4 @@
-import { Hex, encodeFunctionData, Client } from "viem"
+import { encodeFunctionData, Client } from "viem"
 import { waitForTransactionReceipt } from "viem/actions"
 import { getAction } from "viem/utils"
 import IBaseWorldAbi from "@latticexyz/world/out/IBaseWorld.sol/IBaseWorld.abi.json"
@@ -9,11 +9,9 @@ import { SetupSessionBaseParams, deploySessionAccount } from "./shared"
 
 export type SetupSessionEOAParams = SetupSessionBaseParams & {
   /** Public client for reading blockchain state */
-  client: Client
+  publicClient: Client
   /** User's connected EOA wallet client */
   userClient: ConnectedClient
-  /** Whether to register delegation (default: true) */
-  registerDelegation?: boolean
 }
 
 /**
@@ -24,23 +22,15 @@ export type SetupSessionEOAParams = SetupSessionBaseParams & {
  * 2. Session account submits the signature + call to World
  * 3. World.callWithSignature() validates the signature
  * 4. If valid, World registers delegation as the user
- * 5. Deploy session account if needed
- *
- * This enables gasless transactions - the user only signs a message,
- * and the session account pays gas via paymaster to submit it.
- *
- * **Why this approach?**
- * EOAs can't use paymasters directly (they're not smart accounts), so we use
- * the CallWithSignature pattern to enable gasless transactions.
+ * 5. Deploy session account
  *
  * @param params Setup parameters for EOA
  */
 export async function setupSessionEOA({
-  client,
+  publicClient,
   userClient,
   sessionClient,
   worldAddress,
-  registerDelegation = true,
   onStatus
 }: SetupSessionEOAParams): Promise<void> {
   const sessionAddress = sessionClient.account.address
@@ -48,43 +38,29 @@ export async function setupSessionEOA({
 
   console.log("[drawbridge] EOA setup:", { userAddress })
 
-  const txs: Hex[] = []
-
-  if (registerDelegation) {
-    const tx = await callWithSignature({
-      client: sessionClient,
-      userClient,
-      sessionClient,
-      worldAddress,
-      systemId: worldSystemsConfig.systems.RegistrationSystem.systemId,
-      callData: encodeFunctionData({
-        abi: IBaseWorldAbi,
-        functionName: "registerDelegation",
-        args: [sessionAddress, unlimitedDelegationControlId, "0x"]
-      })
-    })
-    txs.push(tx)
-  }
-
-  if (!txs.length) {
-    // No delegation to register, just deploy session account
-    await deploySessionAccount(sessionClient, onStatus)
-    onStatus?.({ type: "complete", message: "Session setup complete!" })
-    return
-  }
-
   onStatus?.({ type: "registering_delegation", message: "Setting up session..." })
 
-  for (const hash of txs) {
-    const receipt = await getAction(
-      client,
-      waitForTransactionReceipt,
-      "waitForTransactionReceipt"
-    )({ hash })
+  const hash = await callWithSignature({
+    client: sessionClient,
+    userClient,
+    sessionClient,
+    worldAddress,
+    systemId: worldSystemsConfig.systems.RegistrationSystem.systemId,
+    callData: encodeFunctionData({
+      abi: IBaseWorldAbi,
+      functionName: "registerDelegation",
+      args: [sessionAddress, unlimitedDelegationControlId, "0x"]
+    })
+  })
 
-    if (receipt.status === "reverted") {
-      throw new Error("Delegation registration transaction reverted")
-    }
+  const receipt = await getAction(
+    publicClient,
+    waitForTransactionReceipt,
+    "waitForTransactionReceipt"
+  )({ hash })
+
+  if (receipt.status === "reverted") {
+    throw new Error("Delegation registration transaction reverted")
   }
 
   // Deploy session account if needed
