@@ -148,7 +148,14 @@
       max-width: 800px;
       text-align: left;
       padding: 20px;
-      word-break: break-all;
+      overflow-x: hidden;
+      overflow-wrap: break-word;
+
+      @media (max-width: 800px) {
+        padding: 10px;
+        font-size: var(--font-size-small);
+        max-width: 100dvw;
+      }
     }
 
     .mc-logo {

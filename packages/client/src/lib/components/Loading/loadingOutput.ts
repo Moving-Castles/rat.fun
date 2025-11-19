@@ -60,8 +60,15 @@ export function generateLoadingOutput() {
       delayAfter: 150
     },
     {
-      type: "loader",
+      type: "text",
       content: "BOOTING SLOP MACHINE...",
+      color: "cyan",
+      backgroundColor: "black",
+      delayAfter: 10
+    },
+    {
+      type: "loader",
+      content: "",
       color: "orange",
       duration: 20000,
       typeSpeed: 20,

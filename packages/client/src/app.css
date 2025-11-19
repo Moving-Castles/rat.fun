@@ -241,6 +241,27 @@ a {
   }
 }
 
+.terminal-line {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  width: 100%;
+}
+
 .terminal-line--loader {
+  display: block;
   word-break: break-all;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+  -webkit-line-break: after-white-space;
+  max-width: 100%;
+  width: 100%;
+  overflow: hidden;
+  white-space: normal;
+}
+
+.terminal-line--loader span {
+  display: inline;
+  word-break: break-all;
+  overflow-wrap: anywhere;
 }

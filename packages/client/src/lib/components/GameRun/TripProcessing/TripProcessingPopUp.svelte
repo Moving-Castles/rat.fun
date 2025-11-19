@@ -39,7 +39,7 @@
     div {
       font-family: var(--special-font-stack);
       font-size: 10dvw;
-      line-height: 0.8em;
+      line-height: 1em;
     }
   }
 </style>

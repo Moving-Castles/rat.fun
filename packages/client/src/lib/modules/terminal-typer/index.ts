@@ -142,17 +142,38 @@ async function typeLoader(
 function addLine(targetElement: HTMLElement, type: "text" | "loader") {
   const line = document.createElement("div")
   line.className = `terminal-line terminal-line--${type}`
+  if (type === "loader") {
+    line.style.wordBreak = "break-all"
+    line.style.overflowWrap = "anywhere"
+    line.style.maxWidth = "100%"
+    line.style.width = "100%"
+  }
   targetElement.appendChild(line)
 }
 
 function addChar(targetElement: HTMLElement, char: string, color: string, backgroundColor: string) {
   const currentLine = targetElement.lastElementChild as HTMLElement
   if (currentLine) {
+    const isLoaderLine = currentLine.classList.contains("terminal-line--loader")
+
     const span = document.createElement("span")
     span.textContent = char
     span.style.color = color
     span.style.backgroundColor = backgroundColor
+    span.style.display = "inline"
+
+    // Only apply aggressive word-break to loader lines
+    if (isLoaderLine) {
+      span.style.wordBreak = "break-all"
+    }
+
     currentLine.appendChild(span)
+
+    // Add zero-width space after each character for iOS Safari line breaking
+    if (isLoaderLine) {
+      const zwsp = document.createTextNode("\u200B")
+      currentLine.appendChild(zwsp)
+    }
   }
 }
 
@@ -164,11 +185,31 @@ function addTextToLine(
 ) {
   const currentLine = targetElement.lastElementChild as HTMLElement
   if (currentLine) {
-    const span = document.createElement("span")
-    span.textContent = text
-    span.style.color = color
-    span.style.backgroundColor = backgroundColor
-    currentLine.appendChild(span)
+    const isLoaderLine = currentLine.classList.contains("terminal-line--loader")
+
+    if (isLoaderLine && text.length > 0) {
+      // For loader lines, add each character with a zero-width space for iOS Safari
+      for (const char of text) {
+        const span = document.createElement("span")
+        span.textContent = char
+        span.style.color = color
+        span.style.backgroundColor = backgroundColor
+        span.style.display = "inline"
+        span.style.wordBreak = "break-all"
+        currentLine.appendChild(span)
+
+        const zwsp = document.createTextNode("\u200B")
+        currentLine.appendChild(zwsp)
+      }
+    } else {
+      // For text lines, add as a single span without aggressive word-break
+      const span = document.createElement("span")
+      span.textContent = text
+      span.style.color = color
+      span.style.backgroundColor = backgroundColor
+      span.style.display = "inline"
+      currentLine.appendChild(span)
+    }
   }
 }
 

@@ -56,7 +56,7 @@
   })
 </script>
 
-{#if timeElapsed > 1 && timeElapsed < 18}
+{#if timeElapsed > 10 && timeElapsed < 18}
   <TripProcessingPopUp type="first" />
 {:else if timeElapsed > 20 && timeElapsed < 28}
   <TripProcessingPopUp type="second" />

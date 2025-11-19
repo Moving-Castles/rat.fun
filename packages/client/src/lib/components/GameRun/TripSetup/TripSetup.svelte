@@ -56,7 +56,7 @@
 
 <style lang="scss">
   .splash-screen {
-    padding: 10px;
+    padding: 20px;
     position: fixed;
     top: 0;
     left: 0;
@@ -66,12 +66,22 @@
     font-size: var(--font-size-normal);
     background: rgba(0, 0, 0, 0.1);
     user-select: none;
+    @media (max-width: 800px) {
+      padding: 10px;
+    }
 
     .terminal-box {
       font-size: var(--font-size-normal);
       width: calc(100% - 30px);
       max-width: 800px;
       height: calc(100% - 40px);
+      overflow-x: hidden;
+      overflow-wrap: break-word;
+
+      @media (max-width: 800px) {
+        font-size: var(--font-size-small);
+        max-width: 100dvw;
+      }
     }
   }
 </style>
