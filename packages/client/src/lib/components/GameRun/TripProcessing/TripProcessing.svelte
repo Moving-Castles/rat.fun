@@ -1,10 +1,10 @@
 <script lang="ts">
   import type { EnterTripReturnValue } from "@server/modules/types"
   import { onMount, onDestroy } from "svelte"
-  import * as transitions from "svelte/transition"
   import { playSound } from "$lib/modules/sound"
   import { backgroundMusic } from "$lib/modules/sound/stores"
   import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
+  import TripProcessingPopUp from "./TripProcessingPopUp.svelte"
 
   const {
     onComplete,
@@ -56,35 +56,12 @@
   })
 </script>
 
-{#if timeElapsed > 10 && timeElapsed < 18}
-  <div
-    in:transitions.scale|global={{ duration: 500, opacity: 1 }}
-    out:transitions.fade={{ duration: 300 }}
-    class="popup"
-  >
-    <div>RAT STILL IN HALLUCINATORY STATE.<br />PLEASE STAND BY...</div>
-  </div>
+{#if timeElapsed > 1 && timeElapsed < 18}
+  <TripProcessingPopUp type="first" />
 {:else if timeElapsed > 20 && timeElapsed < 28}
-  <div
-    in:transitions.scale|global={{ duration: 500, opacity: 1 }}
-    out:transitions.fade={{ duration: 300 }}
-    class="popup"
-  >
-    <div>
-      RAT BEING REVIVED FROM DEEP DRUG INDUCED COMA.<br />EVERYTHING IS NORMAL.<br />PLEASE STAND
-      BY...
-    </div>
-  </div>
+  <TripProcessingPopUp type="second" />
 {:else if timeElapsed > 30}
-  <div
-    in:transitions.scale|global={{ duration: 500, opacity: 1 }}
-    out:transitions.fade={{ duration: 300 }}
-    class="popup"
-  >
-    <div>
-      ALL IS FINE.<br /> JUST ONE MOMENT.<br /> WE VALUE YOUR PATIENCE.
-    </div>
-  </div>
+  <TripProcessingPopUp type="third" />
 {/if}
 
 {#if import.meta.env.DEV}
@@ -95,30 +72,6 @@
 {/if}
 
 <style lang="scss">
-  .popup {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    width: 600px;
-    height: 300px;
-    transform: translate(-50%, -50%);
-    color: white;
-    border: 3px solid var(--color-grey-mid);
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    z-index: var(--z-modal);
-    background: black;
-    div {
-      width: 500px;
-      font-family: var(--special-font-stack);
-      font-size: var(--font-size-extra-large);
-      line-height: 0.9em;
-    }
-  }
-
   .splash-screen {
     padding: 0;
     position: absolute;
