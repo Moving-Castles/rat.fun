@@ -205,7 +205,7 @@
             object-fit: cover;
 
             @media (max-width: 800px) {
-              aspect-ratio: 2/1;
+              aspect-ratio: 2.4/1;
             }
           }
         }
@@ -280,6 +280,10 @@
             width: 100%;
             padding-bottom: 5px;
             border-bottom: var(--default-border-style);
+
+            @media (max-width: 800px) {
+              padding-top: 5px;
+            }
           }
         }
 

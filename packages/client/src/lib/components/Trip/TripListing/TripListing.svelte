@@ -105,6 +105,14 @@
       }
     }
   })
+
+  // Scroll to top when folder selection changes
+  $effect(() => {
+    $selectedFolderId // Track dependency
+    if (scrollContainer) {
+      scrollContainer.scrollTop = 0
+    }
+  })
 </script>
 
 <div class="content" bind:this={scrollContainer}>
