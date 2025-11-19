@@ -1,0 +1,47 @@
+{
+  "name": "common",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "tsup --watch",
+    "build": "tsup",
+    "test": "tsc --noEmit",
+    "format": "prettier --write .",
+    "lint": "prettier --check . && eslint ."
+  },
+  "exports": {
+    "./basic-network": "./dist/basic-network.js",
+    "./error-handling": "./dist/error-handling.js",
+    "./mud": "./dist/mud.js",
+    "./mud/world": "./dist/mud/world.js"
+  },
+  "devDependencies": {
+    "@eslint/compat": "^1.4.1",
+    "@eslint/js": "^9.39.1",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "date-fns": "^4.1.0",
+    "eslint": "^9.39.1",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^16.5.0",
+    "sass-embedded": "^1.93.3",
+    "tsup": "^8.5.0",
+    "typescript-eslint": "^8.46.4",
+    "uuid": "^13.0.0"
+  },
+  "dependencies": {
+    "@latticexyz/common": "2.2.23-94cac741be24bb5743f2f36235cc3bb40012417a",
+    "@latticexyz/dev-tools": "2.2.23-94cac741be24bb5743f2f36235cc3bb40012417a",
+    "@latticexyz/recs": "2.2.23-94cac741be24bb5743f2f36235cc3bb40012417a",
+    "@latticexyz/schema-type": "2.2.23-94cac741be24bb5743f2f36235cc3bb40012417a",
+    "@latticexyz/store-sync": "2.2.23-94cac741be24bb5743f2f36235cc3bb40012417a",
+    "@latticexyz/utils": "2.2.23-94cac741be24bb5743f2f36235cc3bb40012417a",
+    "@latticexyz/world": "2.2.23-94cac741be24bb5743f2f36235cc3bb40012417a",
+    "@wagmi/core": "2.22.1",
+    "contracts": "workspace:*",
+    "rxjs": "^7.5.5",
+    "viem": "2.39.0",
+    "wagmi": "^2.19.2"
+  }
+}
