@@ -152,7 +152,7 @@
     if (amount === undefined) throw new Error("amount is undefined")
 
     const client = await prepareConnectorClientForTransaction()
-    const swapResult = swapExactSingle($publicNetwork.publicClient, client, auctionParams, amount, {
+    const swapResult = await swapExactSingle($publicNetwork.publicClient, client, auctionParams, amount, {
       isOut: isExactOut,
       permit,
       permitSignature

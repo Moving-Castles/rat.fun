@@ -12,7 +12,7 @@ const PRIVATE_KEY = process.env.PRIVATE_KEY as Hex
 
 const account = privateKeyToAccount(PRIVATE_KEY)
 
-const chain = await promptChain()
+const chain = promptChain()
 
 const { publicClient, sdk } = getClients(account, chain)
 

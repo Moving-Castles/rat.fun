@@ -5,7 +5,7 @@ import { validateChain } from "./validateChain"
 export function promptChain() {
   const program = new Command()
   program
-    .requiredOption("-c, --chain-id <CHAINID>", "Chain id", parseInt, 84532)
+    .requiredOption("-c, --chain-id <CHAINID>", "Chain id", (val: string) => parseInt(val), 84532)
     .parse(process.argv)
 
   const options = program.opts()
