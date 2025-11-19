@@ -2,11 +2,12 @@
   import { WALLET_TYPE } from "$lib/mud/enums"
   import { onMount } from "svelte"
   import gsap from "gsap"
-  import { getDrawbridge, type ConnectorInfo } from "$lib/modules/drawbridge"
+  import { getDrawbridge, type ConnectorInfo, drawbridgeError } from "$lib/modules/drawbridge"
   import { debugInfo } from "$lib/modules/drawbridge/wagmiConfig"
   import { isPhone } from "$lib/modules/ui/state.svelte"
   import BigButton from "$lib/components/Shared/Buttons/BigButton.svelte"
   import { spawnState, SPAWN_STATE } from "$lib/components/Spawn/state.svelte"
+  import { errorHandler } from "$lib/modules/error-handling"
 
   const { walletType } = $props<{
     walletType: WALLET_TYPE
@@ -94,10 +95,19 @@
       spawnState.state.transitionTo(SPAWN_STATE.SESSION_SETUP)
     } catch (error) {
       console.error("[ConnectWalletForm] Connection failed:", error)
+      errorHandler(error, "Failed to connect wallet")
     } finally {
       connecting = false
     }
   }
+
+  // Watch for async errors from drawbridge (e.g., from account watcher)
+  $effect(() => {
+    if ($drawbridgeError) {
+      console.error("[ConnectWalletForm] Drawbridge error:", $drawbridgeError)
+      errorHandler($drawbridgeError, "Wallet connection error")
+    }
+  })
 
   function handleClick() {
     // If no connectors available, show the modal with debug panel

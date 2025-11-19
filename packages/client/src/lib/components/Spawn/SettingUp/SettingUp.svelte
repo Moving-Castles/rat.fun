@@ -4,7 +4,9 @@
   import { getDrawbridge, isSessionReady } from "$lib/modules/drawbridge"
   import { spawnState, SPAWN_STATE } from "$lib/components/Spawn/state.svelte"
   import { SmallSpinner } from "$lib/components/Shared"
+  import { errorHandler } from "$lib/modules/error-handling"
 
+  // ??? not read
   let setupComplete = $state(false)
   let error = $state<string | null>(null)
 
@@ -41,6 +43,9 @@
     } catch (err) {
       console.error("[SettingUp] Session setup failed:", err)
       error = err instanceof Error ? err.message : "Session setup failed"
+
+      // Send to Sentry and show user-friendly toast
+      errorHandler(err, "Session setup failed")
 
       // Wait a moment to show error, then go back to setup screen
       setTimeout(() => {

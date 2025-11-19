@@ -93,7 +93,8 @@ export const drawbridgeState = readable<DrawbridgeState>(
     sessionClient: null,
     userAddress: null,
     sessionAddress: null,
-    isReady: false
+    isReady: false,
+    error: null
   },
   set => {
     // Subscribe when Drawbridge becomes available
@@ -118,6 +119,7 @@ export const sessionClient = derived<typeof drawbridgeState, SessionClient | nul
 export const userAddress = derived(drawbridgeState, $state => $state?.userAddress ?? null)
 export const sessionAddress = derived(drawbridgeState, $state => $state?.sessionAddress ?? null)
 export const isSessionReady = derived(drawbridgeState, $state => $state?.isReady ?? false)
+export const drawbridgeError = derived(drawbridgeState, $state => $state?.error ?? null)
 
 // Derived store to check if session setup is needed
 export const needsSessionSetup = derived(

@@ -464,11 +464,14 @@ async function setupSessionSmartAccount({
   const hasFactoryData = factoryArgs.factory && factoryArgs.factoryData;
   console.log("[drawbridge] Smart wallet check:", { hasFactoryData, userAddress });
   const alreadyDeployed = await isWalletDeployed(sessionClient, userAddress);
+  console.log("[drawbridge] Wallet deployed:", alreadyDeployed);
   if (alreadyDeployed && hasFactoryData) {
+    console.log("[drawbridge] CASE 1: Wallet deployed and has factory data");
     console.log("[drawbridge] Removing factory data from deployed wallet");
     onStatus?.({ type: "wallet_deployed", message: "Wallet ready" });
     clearFactoryData(account);
   } else if (!alreadyDeployed && hasFactoryData) {
+    console.log("[drawbridge] CASE 2: Wallet not deployed and has factory data");
     console.log("[drawbridge] Deploying user wallet...");
     onStatus?.({ type: "deploying_wallet", message: "Deploying wallet (one-time setup)..." });
     await deployWallet(sessionClient, factoryArgs.factory, factoryArgs.factoryData);
@@ -753,7 +756,8 @@ var Drawbridge = class {
       sessionClient: null,
       userAddress: null,
       sessionAddress: null,
-      isReady: false
+      isReady: false,
+      error: null
     };
     this.wagmiConfig = createWalletConfig({
       chains: config.chains,
@@ -884,7 +888,8 @@ var Drawbridge = class {
           sessionClient: null,
           userAddress: null,
           sessionAddress: null,
-          isReady: false
+          isReady: false,
+          error: null
         });
         this.isConnecting = false;
         return;
@@ -905,6 +910,10 @@ var Drawbridge = class {
         await this.handleWalletConnection();
       } catch (err) {
         console.error("[drawbridge] Connection handler failed:", err);
+        this.updateState({
+          status: "error" /* ERROR */,
+          error: err instanceof Error ? err : new Error(String(err))
+        });
       } finally {
         this.isConnecting = false;
       }
@@ -929,6 +938,13 @@ var Drawbridge = class {
     }
     const userAddress = userClient.account.address;
     console.log("[drawbridge] Wallet connected:", userAddress);
+    if (userClient.chain.id !== this.config.chainId) {
+      const error = new Error(
+        `Chain mismatch: wallet on chain ${userClient.chain.id}, expected ${this.config.chainId}`
+      );
+      console.error("[drawbridge]", error.message);
+      throw error;
+    }
     if (this.config.skipSessionSetup) {
       console.log("[drawbridge] Skipping session setup (wallet-only mode)");
       this.updateState({
@@ -936,7 +952,8 @@ var Drawbridge = class {
         sessionClient: null,
         userAddress,
         sessionAddress: null,
-        isReady: true
+        isReady: true,
+        error: null
       });
       return;
     }
@@ -953,18 +970,27 @@ var Drawbridge = class {
       worldAddress: this.config.worldAddress,
       paymasterOverride: this.config.paymasterClient
     });
-    const hasDelegation = await checkDelegation({
-      client: sessionClient,
-      worldAddress: this.config.worldAddress,
-      userAddress,
-      sessionAddress: account.address
-    });
+    let hasDelegation = false;
+    try {
+      hasDelegation = await checkDelegation({
+        client: sessionClient,
+        worldAddress: this.config.worldAddress,
+        userAddress,
+        sessionAddress: account.address
+      });
+    } catch (err) {
+      console.error("[drawbridge] Failed to check delegation:", err);
+      throw new Error(
+        `Failed to check delegation: ${err instanceof Error ? err.message : String(err)}`
+      );
+    }
     this.updateState({
       status: hasDelegation ? "ready" /* READY */ : "connected" /* CONNECTED */,
       sessionClient,
       userAddress,
       sessionAddress: account.address,
-      isReady: hasDelegation
+      isReady: hasDelegation,
+      error: null
     });
     console.log("[drawbridge] Session connection complete, isReady:", hasDelegation);
   }
@@ -1082,7 +1108,7 @@ var Drawbridge = class {
         worldAddress: this.config.worldAddress,
         onStatus
       });
-      this.updateState({ status: "ready" /* READY */, isReady: true });
+      this.updateState({ status: "ready" /* READY */, isReady: true, error: null });
       console.log("[drawbridge] Session setup complete");
     } catch (err) {
       this.updateState({ status: "connected" /* CONNECTED */ });
@@ -1109,7 +1135,8 @@ var Drawbridge = class {
       sessionClient: null,
       userAddress: null,
       sessionAddress: null,
-      isReady: false
+      isReady: false,
+      error: null
     });
   }
   /**

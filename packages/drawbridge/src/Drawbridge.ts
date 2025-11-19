@@ -65,6 +65,8 @@ export type DrawbridgeState = {
   sessionAddress: Address | null
   /** Whether session has delegation registered and is ready to use */
   isReady: boolean
+  /** Error that occurred during connection or session setup, null if no error */
+  error: Error | null
 }
 
 /**
@@ -148,7 +150,8 @@ export class Drawbridge {
       sessionClient: null,
       userAddress: null,
       sessionAddress: null,
-      isReady: false
+      isReady: false,
+      error: null
     }
 
     // Create wagmi config
@@ -322,7 +325,8 @@ export class Drawbridge {
           sessionClient: null,
           userAddress: null,
           sessionAddress: null,
-          isReady: false
+          isReady: false,
+          error: null
         })
         this.isConnecting = false
         return
@@ -349,6 +353,11 @@ export class Drawbridge {
         await this.handleWalletConnection()
       } catch (err) {
         console.error("[drawbridge] Connection handler failed:", err)
+        // Propagate error through state so UI can handle it
+        this.updateState({
+          status: DrawbridgeStatus.ERROR,
+          error: err instanceof Error ? err : new Error(String(err))
+        })
       } finally {
         this.isConnecting = false
       }
@@ -379,6 +388,15 @@ export class Drawbridge {
     const userAddress = userClient.account.address
     console.log("[drawbridge] Wallet connected:", userAddress)
 
+    // Validate wallet is on the correct chain
+    if (userClient.chain.id !== this.config.chainId) {
+      const error = new Error(
+        `Chain mismatch: wallet on chain ${userClient.chain.id}, expected ${this.config.chainId}`
+      )
+      console.error("[drawbridge]", error.message)
+      throw error
+    }
+
     // If skipSessionSetup is true, just store the user address and mark as READY
     // No session account, no delegation - just wallet connection
     if (this.config.skipSessionSetup) {
@@ -388,7 +406,8 @@ export class Drawbridge {
         sessionClient: null,
         userAddress,
         sessionAddress: null,
-        isReady: true
+        isReady: true,
+        error: null
       })
       return
     }
@@ -417,21 +436,31 @@ export class Drawbridge {
 
     // Check if delegation already exists BEFORE notifying listeners
     // This prevents UI flash where sessionClient exists but isReady is unknown
-    const hasDelegation = await checkDelegation({
-      client: sessionClient,
-      worldAddress: this.config.worldAddress!,
-      userAddress,
-      sessionAddress: account.address
-    })
+    let hasDelegation = false
+    try {
+      hasDelegation = await checkDelegation({
+        client: sessionClient,
+        worldAddress: this.config.worldAddress!,
+        userAddress,
+        sessionAddress: account.address
+      })
+    } catch (err) {
+      console.error("[drawbridge] Failed to check delegation:", err)
+      throw new Error(
+        `Failed to check delegation: ${err instanceof Error ? err.message : String(err)}`
+      )
+    }
 
     // Update state once with complete information
     // Set status to READY if delegation exists, CONNECTED if not
+    // Clear any previous errors on successful connection
     this.updateState({
       status: hasDelegation ? DrawbridgeStatus.READY : DrawbridgeStatus.CONNECTED,
       sessionClient,
       userAddress,
       sessionAddress: account.address,
-      isReady: hasDelegation
+      isReady: hasDelegation,
+      error: null
     })
 
     console.log("[drawbridge] Session connection complete, isReady:", hasDelegation)
@@ -576,8 +605,8 @@ export class Drawbridge {
         onStatus
       })
 
-      // Session setup complete - set status to READY
-      this.updateState({ status: DrawbridgeStatus.READY, isReady: true })
+      // Session setup complete - set status to READY and clear any errors
+      this.updateState({ status: DrawbridgeStatus.READY, isReady: true, error: null })
 
       console.log("[drawbridge] Session setup complete")
     } catch (err) {
@@ -611,7 +640,8 @@ export class Drawbridge {
       sessionClient: null,
       userAddress: null,
       sessionAddress: null,
-      isReady: false
+      isReady: false,
+      error: null
     })
   }
 

@@ -136,6 +136,8 @@ type DrawbridgeState = {
     sessionAddress: Address | null;
     /** Whether session has delegation registered and is ready to use */
     isReady: boolean;
+    /** Error that occurred during connection or session setup, null if no error */
+    error: Error | null;
 };
 /**
  * Result of checking session prerequisites
