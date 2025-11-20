@@ -41,8 +41,7 @@ export async function executeTransaction(
           address: get(externalAddressesConfig).erc20Address,
           abi: erc20Abi,
           functionName: "approve",
-          args: params as [`0x${string}`, bigint],
-          gas: 5000000n // TODO: Added to fix gas estimation. Change this.
+          args: params as [`0x${string}`, bigint]
         })
       } else {
         throw new TransactionError(`Invalid arguments: ${params.join(":")}`)
@@ -54,7 +53,6 @@ export async function executeTransaction(
         abi: worldContract.abi,
         functionName: systemId,
         args: params,
-        gas: 5000000n, // TODO: Added to fix gas estimation. Change this.
         ...(value !== undefined ? { value } : {})
       }
       tx = await client.writeContract(txConfig)

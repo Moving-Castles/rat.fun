@@ -5,10 +5,10 @@ import { generatePrivateKey, privateKeyToAccount } from 'viem/accounts';
 import { toSimpleSmartAccount } from 'permissionless/accounts';
 import { smartAccountActions } from 'permissionless';
 import { callFrom, sendUserOperationFrom } from '@latticexyz/world/internal';
+import { waitForTransactionReceipt, estimateFeesPerGas, getCode, sendTransaction, writeContract, signTypedData } from 'viem/actions';
 import { createBundlerClient as createBundlerClient$1, sendUserOperation, waitForUserOperationReceipt } from 'viem/account-abstraction';
 import { getRecord } from '@latticexyz/store/internal';
 import { getAction } from 'viem/utils';
-import { waitForTransactionReceipt, getCode, sendTransaction, writeContract, signTypedData } from 'viem/actions';
 import IBaseWorldAbi from '@latticexyz/world/out/IBaseWorld.sol/IBaseWorld.abi.json';
 import { callWithSignatureTypes } from '@latticexyz/world-module-callwithsignature/internal';
 import moduleConfig from '@latticexyz/world-module-callwithsignature/mud.config';
@@ -243,6 +243,16 @@ function createFeeEstimator(client) {
   if (!client.chain) return;
   if (client.chain.id === 31337) {
     return async () => ({ maxFeePerGas: 100000n, maxPriorityFeePerGas: 0n });
+  }
+  if (client.chain.id === 8453 || client.chain.id === 84532) {
+    return async () => {
+      const fees = await estimateFeesPerGas(client);
+      const minPriorityFee = 1000000n;
+      return {
+        maxFeePerGas: fees.maxFeePerGas,
+        maxPriorityFeePerGas: fees.maxPriorityFeePerGas > minPriorityFee ? fees.maxPriorityFeePerGas : minPriorityFee
+      };
+    };
   }
   return void 0;
 }
