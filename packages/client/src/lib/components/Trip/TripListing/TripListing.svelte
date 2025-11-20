@@ -29,14 +29,8 @@
     )
   )
 
-  // Show ALL folders, with restricted folders sorted first
-  let sortedFolders = $derived(
-    [...$staticContent.tripFolders].sort((a, b) => {
-      if (a.restricted && !b.restricted) return -1
-      if (!a.restricted && b.restricted) return 1
-      return 0
-    })
-  )
+  // Show ALL folders in their original order
+  let sortedFolders = $derived($staticContent.tripFolders)
 
   const updateTrips = () => {
     lastChecked = Number(get(blockNumber))

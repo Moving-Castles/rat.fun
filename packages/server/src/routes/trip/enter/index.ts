@@ -72,7 +72,7 @@ async function routes(fastify: FastifyInstance) {
         logger.log(`Outcome ID: ${outcomeId}`)
 
         // Recover player address from signature and convert to MUD bytes32 format
-        const playerId = await verifyRequest(request.body)
+        const { playerId } = await verifyRequest(request.body)
         logger.log(`Player ID: ${playerId}`)
 
         // * * * * * * * * * * * * * * * * * *

@@ -42,9 +42,6 @@
     <button class:disabled class:restricted={isRestricted} {onclick} {onmouseup} {onmousedown}>
       <div class="title">
         {title}
-        {#if isRestricted}
-          <span class="restricted-badge">★</span>
-        {/if}
         <span class="count">
           {#if showCounts}
             <br />
@@ -89,15 +86,6 @@
         .count {
           font-size: var(--font-size-normal);
         }
-
-        .restricted-badge {
-          position: absolute;
-          top: -8px;
-          right: -8px;
-          font-size: 1.2em;
-          color: gold;
-          text-shadow: 0 0 4px rgba(255, 215, 0, 0.8);
-        }
       }
 
       &:hover {
@@ -109,20 +97,13 @@
       }
 
       &.restricted {
-        border-color: gold;
-        box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
-        background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), transparent);
-
-        &:hover {
-          border-color: rgba(255, 215, 0, 0.8);
-          box-shadow: 0 0 12px rgba(255, 215, 0, 0.6);
-        }
+        background: rgb(222, 222, 50);
       }
 
       &.disabled {
         opacity: 0.5;
         pointer-events: none;
-        filter: grayscale(100%);
+        // filter: grayscale(100%);
       }
     }
   }

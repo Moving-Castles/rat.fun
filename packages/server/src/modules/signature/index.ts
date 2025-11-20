@@ -15,9 +15,12 @@ import {
  * Verify the request timeout, nonce and signature,
  * optionally substitute the call signer address for `callFrom`,
  * and return the caller address converted to id.
- * @returns callerAddress signer or delegator player id.
+ * @param signedRequest - The signed request to verify.
+ * @returns callerAddress and playerId.
  */
-export async function verifyRequest<T>(signedRequest: SignedRequest<T>): Promise<Hex> {
+export async function verifyRequest<T>(
+  signedRequest: SignedRequest<T>
+): Promise<{ callerAddress: Hex; playerId: Hex }> {
   const recoveredAddress = await recoverMessageAddress({
     message: stringifyRequestForSignature(signedRequest),
     signature: signedRequest.signature
@@ -43,5 +46,7 @@ export async function verifyRequest<T>(signedRequest: SignedRequest<T>): Promise
     callerAddress = signedRequest.info.calledFrom
   }
 
-  return addressToId(callerAddress) as Hex
+  const playerId = addressToId(callerAddress) as Hex
+
+  return { callerAddress, playerId }
 }

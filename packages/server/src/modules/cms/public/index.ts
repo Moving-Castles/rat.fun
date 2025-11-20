@@ -1,7 +1,9 @@
 import type {
   Outcome as OutcomeDoc,
   Trip as TripDoc,
-  Statistics as StatisticsDoc
+  Statistics as StatisticsDoc,
+  TripFolderList as TripFolderListDoc,
+  TripFolder as TripFolderDoc
 } from "@sanity-public-cms-types"
 import type { Rat, Trip, Player, DebuggingInfo } from "@modules/types"
 import type { CorrectionReturnValue, OutcomeReturnValue } from "@modules/types"
@@ -16,27 +18,31 @@ import { v4 as uuidv4 } from "uuid"
 // Define a type for new outcome documents that omits Sanity-specific fields
 type NewOutcomeDoc = Omit<OutcomeDoc, "_createdAt" | "_updatedAt" | "_rev">
 type NewTripDoc = Omit<TripDoc, "_createdAt" | "_updatedAt" | "_rev">
+type ExpandedTripFolderListDoc = Omit<TripFolderListDoc, "folders"> & { folders: TripFolderDoc[] }
 
 /**
  * Validate that a folder ID exists in the trip folder list and is not restricted,
  * or if restricted, that the user is whitelisted
  * @param folderId - The ID of the folder to validate
- * @param userAddress - Optional user address to check against whitelist
+ * @param callerAddress - Optional caller address to check against whitelist
  * @returns True if the folder is valid and accessible
  * @throws CMSAPIError if the folder is invalid or not accessible
  */
 export const validateTripFolder = async (
   folderId: string,
-  userAddress?: string
+  callerAddress?: string
 ): Promise<boolean> => {
   try {
-    const folderList = await loadDataPublicSanity(queries.tripFolderList, {})
+    const folderList = (await loadDataPublicSanity(
+      queries.tripFolderList,
+      {}
+    )) as ExpandedTripFolderListDoc
 
     if (!folderList || !folderList.folders || !Array.isArray(folderList.folders)) {
       throw new CMSAPIError("Trip folder list not found or invalid", null)
     }
 
-    const folder = folderList.folders.find((f: any) => f._id === folderId)
+    const folder = folderList.folders.find(f => f._id === folderId)
 
     if (!folder) {
       throw new CMSAPIError(`Trip folder with ID ${folderId} not found`, null)
@@ -46,8 +52,8 @@ export const validateTripFolder = async (
       // Check if user is whitelisted
       const whitelist = folderList.whitelist || []
       const isWhitelisted =
-        userAddress &&
-        whitelist.some((addr: string) => addr.toLowerCase() === userAddress.toLowerCase())
+        callerAddress &&
+        whitelist.some((addr: string) => addr.toLowerCase() === callerAddress.toLowerCase())
 
       if (!isWhitelisted) {
         throw new CMSAPIError(
