@@ -43,7 +43,7 @@ export async function initializeDrawbridge(networkConfig: NetworkConfig): Promis
     transports,
     connectors,
     skipSessionSetup: true, // ← Wallet-only mode, no session setup
-    pollingInterval: networkConfig.chainId === 84532 ? 2000 : undefined, // Base Sepolia = fast polling
+    pollingInterval: 2000,
     appName: "RAT.FUN"
   })
 
