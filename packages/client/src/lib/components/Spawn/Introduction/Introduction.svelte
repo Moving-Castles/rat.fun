@@ -58,6 +58,13 @@
     }
   }
 
+  function handleKeydown(event: KeyboardEvent) {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault()
+      handleContinue()
+    }
+  }
+
   onMount(() => {
     if (mascotRef) {
       mascotRef.showSpeechBubble(introductionSteps[0].text, { autoHide: false })
@@ -96,7 +103,14 @@
 
 <div class="outer-container">
   <div class="inner-container">
-    <div class="mascot-container" bind:this={mascotElement} onclick={handleContinue}>
+    <div
+      class="mascot-container"
+      bind:this={mascotElement}
+      role="button"
+      tabindex="0"
+      onclick={handleContinue}
+      onkeydown={handleKeydown}
+    >
       <Mascot bind:this={mascotRef} entranceOn={true} smallDanceOn={true} />
     </div>
     <div class="button-container" bind:this={buttonElement}>
