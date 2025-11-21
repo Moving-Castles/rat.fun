@@ -125,23 +125,42 @@ function createFeeEstimator(
       logFeeEstimationStart()
       try {
         const fees = await estimateFeesPerGas(client)
-        const minPriorityFee = 1_000_000n // 0.001 gwei minimum (Coinbase requirement)
-        const maxTotalFee = 500_000_000n // 0.5 gwei max to keep under $1 paymaster limit
+
+        // GAS PRICE UNIT CONVERSIONS:
+        // 1 gwei = 1,000,000,000 wei (9 zeros)
+        // 1 wei  = 0.000000001 gwei
+
+        // Coinbase bundler REQUIRES minimum 1 gwei priority fee
+        // Any lower and operations will be silently rejected
+        const minPriorityFee = 1_000_000_000n // 1 gwei = 1,000,000,000 wei
+
+        // Cap total fee to prevent exceeding paymaster budget during gas spikes
+        // At 750k gas × 10 gwei × $3000 ETH = $22.50 (well under reasonable limits)
+        const maxTotalFee = 10_000_000_000n // 10 gwei = 10,000,000,000 wei
+
+        // Determine the priority fee (must meet Coinbase's 1 gwei minimum)
+        const priorityFee =
+          fees.maxPriorityFeePerGas > minPriorityFee ? fees.maxPriorityFeePerGas : minPriorityFee
+
+        // EIP-1559 constraint: maxFeePerGas MUST be >= maxPriorityFeePerGas
+        // If network's maxFeePerGas is too low, increase it to accommodate the priority fee
+        const adjustedMaxFee = fees.maxFeePerGas < priorityFee ? priorityFee : fees.maxFeePerGas
 
         // Cap maxFeePerGas to prevent exceeding paymaster budget during gas spikes
-        const cappedMaxFee = fees.maxFeePerGas > maxTotalFee ? maxTotalFee : fees.maxFeePerGas
+        const cappedMaxFee = adjustedMaxFee > maxTotalFee ? maxTotalFee : adjustedMaxFee
 
         const result = {
           maxFeePerGas: cappedMaxFee,
-          maxPriorityFeePerGas:
-            fees.maxPriorityFeePerGas > minPriorityFee ? fees.maxPriorityFeePerGas : minPriorityFee
+          maxPriorityFeePerGas: priorityFee
         }
 
         logFeeEstimationResult({
           networkMaxFee: fees.maxFeePerGas,
+          adjustedMaxFee,
           cappedMaxFee: result.maxFeePerGas,
           maxPriorityFeePerGas: result.maxPriorityFeePerGas,
-          maxTotalFee
+          maxTotalFee,
+          minPriorityFee
         })
 
         return result
@@ -150,8 +169,8 @@ function createFeeEstimator(
         // This can happen with some wallet providers or RPC endpoints
         logFeeEstimationFallback(error)
         return {
-          maxFeePerGas: 1_000_000_000n, // 1 gwei (1 billion wei)
-          maxPriorityFeePerGas: 100_000_000n // 0.1 gwei minimum (100 million wei) - Higher to ensure bundler processes it
+          maxFeePerGas: 10_000_000_000n, // 10 gwei = 10,000,000,000 wei
+          maxPriorityFeePerGas: 1_000_000_000n // 1 gwei = 1,000,000,000 wei (Coinbase minimum)
         }
       }
     }

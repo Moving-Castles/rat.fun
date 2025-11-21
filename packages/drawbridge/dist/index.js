@@ -222,12 +222,39 @@ function logFeeEstimationStart() {
   console.log("[Fee Estimator] Estimating fees for Base chain...");
 }
 function logFeeEstimationResult(data) {
-  console.log("[Fee Estimator] Fees:", {
-    networkMaxFee: (Number(data.networkMaxFee) / 1e9).toFixed(3) + " gwei",
-    cappedMaxFee: (Number(data.cappedMaxFee) / 1e9).toFixed(3) + " gwei",
-    maxPriorityFeePerGas: (Number(data.maxPriorityFeePerGas) / 1e9).toFixed(3) + " gwei",
-    wasCapped: data.networkMaxFee > data.maxTotalFee
-  });
+  const networkMaxFeeGwei = Number(data.networkMaxFee) / 1e9;
+  const adjustedMaxFeeGwei = Number(data.adjustedMaxFee) / 1e9;
+  const cappedMaxFeeGwei = Number(data.cappedMaxFee) / 1e9;
+  const priorityFeeGwei = Number(data.maxPriorityFeePerGas) / 1e9;
+  const maxTotalFeeGwei = Number(data.maxTotalFee) / 1e9;
+  const minPriorityFeeGwei = Number(data.minPriorityFee) / 1e9;
+  const wasAdjusted = data.adjustedMaxFee > data.networkMaxFee;
+  const wasCapped = data.cappedMaxFee < data.adjustedMaxFee;
+  console.log("\u250C\u2500 Fee Estimation Result \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500");
+  console.log("\u2502");
+  console.log("\u2502 Network estimate:");
+  console.log("\u2502   maxFeePerGas:         ", networkMaxFeeGwei.toFixed(3), "gwei", `(${data.networkMaxFee} wei)`);
+  console.log("\u2502");
+  console.log("\u2502 Our configuration:");
+  console.log("\u2502   minPriorityFee:       ", minPriorityFeeGwei.toFixed(3), "gwei", `(${data.minPriorityFee} wei)`, "\u2190 Coinbase requirement");
+  console.log("\u2502   maxTotalFee cap:      ", maxTotalFeeGwei.toFixed(3), "gwei", `(${data.maxTotalFee} wei)`);
+  console.log("\u2502");
+  if (wasAdjusted) {
+    console.log("\u2502 \u26A0\uFE0F  Adjustment needed:");
+    console.log("\u2502   Network's maxFeePerGas was too low for priority fee!");
+    console.log("\u2502   Adjusted maxFeePerGas:", adjustedMaxFeeGwei.toFixed(3), "gwei", `(${data.adjustedMaxFee} wei)`, "\u2190 Increased to match priority");
+    console.log("\u2502");
+  }
+  console.log("\u2502 Final values sent:");
+  console.log("\u2502   maxFeePerGas:         ", cappedMaxFeeGwei.toFixed(3), "gwei", `(${data.cappedMaxFee} wei)`, wasCapped ? "\u2190 CAPPED" : "");
+  console.log("\u2502   maxPriorityFeePerGas: ", priorityFeeGwei.toFixed(3), "gwei", `(${data.maxPriorityFeePerGas} wei)`);
+  console.log("\u2502");
+  if (data.cappedMaxFee < data.maxPriorityFeePerGas) {
+    console.log("\u2502 \u274C ERROR: maxFeePerGas < maxPriorityFeePerGas!");
+    console.log("\u2502    This violates EIP-1559 rules and will fail!");
+    console.log("\u2502");
+  }
+  console.log("\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500");
 }
 function logFeeEstimationFallback(error) {
   console.warn(
@@ -381,27 +408,31 @@ function createFeeEstimator(client) {
       logFeeEstimationStart();
       try {
         const fees = await estimateFeesPerGas(client);
-        const minPriorityFee = 1000000n;
-        const maxTotalFee = 500000000n;
-        const cappedMaxFee = fees.maxFeePerGas > maxTotalFee ? maxTotalFee : fees.maxFeePerGas;
+        const minPriorityFee = 1000000000n;
+        const maxTotalFee = 10000000000n;
+        const priorityFee = fees.maxPriorityFeePerGas > minPriorityFee ? fees.maxPriorityFeePerGas : minPriorityFee;
+        const adjustedMaxFee = fees.maxFeePerGas < priorityFee ? priorityFee : fees.maxFeePerGas;
+        const cappedMaxFee = adjustedMaxFee > maxTotalFee ? maxTotalFee : adjustedMaxFee;
         const result = {
           maxFeePerGas: cappedMaxFee,
-          maxPriorityFeePerGas: fees.maxPriorityFeePerGas > minPriorityFee ? fees.maxPriorityFeePerGas : minPriorityFee
+          maxPriorityFeePerGas: priorityFee
         };
         logFeeEstimationResult({
           networkMaxFee: fees.maxFeePerGas,
+          adjustedMaxFee,
           cappedMaxFee: result.maxFeePerGas,
           maxPriorityFeePerGas: result.maxPriorityFeePerGas,
-          maxTotalFee
+          maxTotalFee,
+          minPriorityFee
         });
         return result;
       } catch (error) {
         logFeeEstimationFallback(error);
         return {
-          maxFeePerGas: 1000000000n,
-          // 1 gwei (1 billion wei)
-          maxPriorityFeePerGas: 100000000n
-          // 0.1 gwei minimum (100 million wei) - Higher to ensure bundler processes it
+          maxFeePerGas: 10000000000n,
+          // 10 gwei = 10,000,000,000 wei
+          maxPriorityFeePerGas: 1000000000n
+          // 1 gwei = 1,000,000,000 wei (Coinbase minimum)
         };
       }
     };

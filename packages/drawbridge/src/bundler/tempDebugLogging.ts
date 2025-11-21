@@ -33,16 +33,47 @@ export function logFeeEstimationStart(): void {
  */
 export function logFeeEstimationResult(data: {
   networkMaxFee: bigint
+  adjustedMaxFee: bigint
   cappedMaxFee: bigint
   maxPriorityFeePerGas: bigint
   maxTotalFee: bigint
+  minPriorityFee: bigint
 }): void {
-  console.log("[Fee Estimator] Fees:", {
-    networkMaxFee: (Number(data.networkMaxFee) / 1e9).toFixed(3) + " gwei",
-    cappedMaxFee: (Number(data.cappedMaxFee) / 1e9).toFixed(3) + " gwei",
-    maxPriorityFeePerGas: (Number(data.maxPriorityFeePerGas) / 1e9).toFixed(3) + " gwei",
-    wasCapped: data.networkMaxFee > data.maxTotalFee
-  })
+  const networkMaxFeeGwei = Number(data.networkMaxFee) / 1e9
+  const adjustedMaxFeeGwei = Number(data.adjustedMaxFee) / 1e9
+  const cappedMaxFeeGwei = Number(data.cappedMaxFee) / 1e9
+  const priorityFeeGwei = Number(data.maxPriorityFeePerGas) / 1e9
+  const maxTotalFeeGwei = Number(data.maxTotalFee) / 1e9
+  const minPriorityFeeGwei = Number(data.minPriorityFee) / 1e9
+
+  const wasAdjusted = data.adjustedMaxFee > data.networkMaxFee
+  const wasCapped = data.cappedMaxFee < data.adjustedMaxFee
+
+  console.log("┌─ Fee Estimation Result ────────────────────────────")
+  console.log("│")
+  console.log("│ Network estimate:")
+  console.log("│   maxFeePerGas:         ", networkMaxFeeGwei.toFixed(3), "gwei", `(${data.networkMaxFee} wei)`)
+  console.log("│")
+  console.log("│ Our configuration:")
+  console.log("│   minPriorityFee:       ", minPriorityFeeGwei.toFixed(3), "gwei", `(${data.minPriorityFee} wei)`, "← Coinbase requirement")
+  console.log("│   maxTotalFee cap:      ", maxTotalFeeGwei.toFixed(3), "gwei", `(${data.maxTotalFee} wei)`)
+  console.log("│")
+  if (wasAdjusted) {
+    console.log("│ ⚠️  Adjustment needed:")
+    console.log("│   Network's maxFeePerGas was too low for priority fee!")
+    console.log("│   Adjusted maxFeePerGas:", adjustedMaxFeeGwei.toFixed(3), "gwei", `(${data.adjustedMaxFee} wei)`, "← Increased to match priority")
+    console.log("│")
+  }
+  console.log("│ Final values sent:")
+  console.log("│   maxFeePerGas:         ", cappedMaxFeeGwei.toFixed(3), "gwei", `(${data.cappedMaxFee} wei)`, wasCapped ? "← CAPPED" : "")
+  console.log("│   maxPriorityFeePerGas: ", priorityFeeGwei.toFixed(3), "gwei", `(${data.maxPriorityFeePerGas} wei)`)
+  console.log("│")
+  if (data.cappedMaxFee < data.maxPriorityFeePerGas) {
+    console.log("│ ❌ ERROR: maxFeePerGas < maxPriorityFeePerGas!")
+    console.log("│    This violates EIP-1559 rules and will fail!")
+    console.log("│")
+  }
+  console.log("└────────────────────────────────────────────────────")
 }
 
 /**
