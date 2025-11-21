@@ -3,7 +3,7 @@
  * for changes in the World state (using the System contracts).
  */
 
-import { Hex } from "viem"
+import { Hex, parseGwei } from "viem"
 import { OutcomeReturnValue } from "@modules/types"
 import { SetupNetworkResult } from "./setupNetwork"
 import { Rat, Trip } from "@modules/types"
@@ -19,7 +19,46 @@ import { TripLogger } from "@modules/logging"
 
 export type SystemCalls = ReturnType<typeof createSystemCalls>
 
+/**
+ * Gas configuration for server transactions
+ */
+const GAS_CONFIG = {
+  MAX_FEE_GWEI: 5, // Cap at 5 gwei to prevent excessive costs during spikes
+  PRIORITY_BOOST: 1.5, // 50% boost for faster inclusion (reduced from 2x)
+  GAS_LIMIT: 600_000n // Conservative limit (reduced from 2M)
+} as const
+
 export function createSystemCalls(network: SetupNetworkResult) {
+  /**
+   * Get gas parameters for server transactions
+   * Applies fee caps and priority boost based on current network conditions
+   *
+   * @param feeData Current network fee estimates
+   * @returns Gas parameters to use for transaction
+   */
+  async function getGasParams(
+    feeData: Awaited<ReturnType<typeof network.publicClient.estimateFeesPerGas>>
+  ) {
+    // Boost priority fee for faster inclusion
+    const PRIORITY_MULTIPLIER = BigInt(Math.floor(GAS_CONFIG.PRIORITY_BOOST * 100))
+    const basePriorityFee = feeData.maxPriorityFeePerGas ?? 0n
+    const boostedPriorityFee = (basePriorityFee * PRIORITY_MULTIPLIER) / 100n
+
+    // Cap maxFeePerGas to prevent excessive costs during spikes
+    const maxFeeCapWei = parseGwei(GAS_CONFIG.MAX_FEE_GWEI.toString())
+    const baseMaxFee = feeData.maxFeePerGas ?? maxFeeCapWei
+    const maxFeePerGas = baseMaxFee < maxFeeCapWei ? baseMaxFee : maxFeeCapWei
+
+    // Ensure maxPriorityFeePerGas doesn't exceed maxFeePerGas (EIP-1559 constraint)
+    const maxPriorityFeePerGas =
+      boostedPriorityFee > maxFeePerGas ? maxFeePerGas : boostedPriorityFee
+
+    return {
+      maxFeePerGas,
+      maxPriorityFeePerGas,
+      gas: GAS_CONFIG.GAS_LIMIT
+    }
+  }
   /**
    * Apply the outcome changes to the blockchain state
    * @param rat - The rat to apply the outcome to
@@ -42,22 +81,11 @@ export function createSystemCalls(network: SetupNetworkResult) {
 
       const args = createOutcomeCallArgs(rat, trip, outcome, logger, outcomeId)
 
-      // Get current gas prices for speed optimization
+      // Get gas parameters with caps and priority boost
       const feeData = await network.publicClient.estimateFeesPerGas()
+      const gasParams = await getGasParams(feeData)
 
-      // Calculate gas fees with multipliers
-      const maxFeePerGas = (feeData.maxFeePerGas * 150n) / 100n // 50% higher than estimated
-      const maxPriorityFeePerGas = (feeData.maxPriorityFeePerGas * 200n) / 100n // 100% higher priority
-
-      // Ensure maxPriorityFeePerGas doesn't exceed maxFeePerGas
-      const adjustedPriorityFee =
-        maxPriorityFeePerGas > maxFeePerGas ? maxFeePerGas : maxPriorityFeePerGas
-
-      const tx = await network.worldContract.write.ratfun__applyOutcome(args, {
-        maxFeePerGas,
-        maxPriorityFeePerGas: adjustedPriorityFee,
-        gas: 2000000n // Set generous gas limit
-      })
+      const tx = await network.worldContract.write.ratfun__applyOutcome(args, gasParams)
       await network.waitForTransaction(tx)
 
       // Suggested outcomes were sent to the chain
@@ -146,12 +174,14 @@ export function createSystemCalls(network: SetupNetworkResult) {
     tripPrompt: string
   ) => {
     try {
-      const tx = await network.worldContract.write.ratfun__createTrip([
-        playerId,
-        tripID,
-        BigInt(tripCreationCost),
-        tripPrompt
-      ])
+      // Get gas parameters with caps and priority boost
+      const feeData = await network.publicClient.estimateFeesPerGas()
+      const gasParams = await getGasParams(feeData)
+
+      const tx = await network.worldContract.write.ratfun__createTrip(
+        [playerId, tripID, BigInt(tripCreationCost), tripPrompt],
+        gasParams
+      )
 
       await network.waitForTransaction(tx)
 
