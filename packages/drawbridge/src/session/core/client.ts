@@ -30,13 +30,15 @@ export async function getSessionClient({
   sessionAccount,
   sessionSigner,
   worldAddress,
-  paymasterOverride
+  paymasterOverride,
+  ethPriceUSD
 }: {
   userAddress: Address
   sessionAccount: SmartAccount
   sessionSigner: LocalAccount
   worldAddress: Address
   paymasterOverride?: PaymasterClient
+  ethPriceUSD?: number
 }): Promise<SessionClient> {
   const client = sessionAccount.client
   if (!clientHasChain(client)) {
@@ -49,7 +51,7 @@ export async function getSessionClient({
 
   // Create bundler client for submitting user operations
   const bundlerClient = createBundlerClient({
-    transport: getBundlerTransport(client.chain),
+    transport: getBundlerTransport(client.chain, ethPriceUSD),
     client,
     account: sessionAccount,
     paymaster: paymasterOverride

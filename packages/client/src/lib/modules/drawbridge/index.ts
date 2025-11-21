@@ -48,7 +48,8 @@ export async function initializeDrawbridge(networkConfig: NetworkConfig): Promis
     worldAddress: networkConfig.worldAddress as Hex,
     paymasterClient: paymasters[networkConfig.chainId],
     pollingInterval: 2000,
-    appName: "RAT.FUN"
+    appName: "RAT.FUN",
+    ethPriceUSD: 2800 // $2,800
   })
 
   // Initialize (await reconnection, setup account watcher)

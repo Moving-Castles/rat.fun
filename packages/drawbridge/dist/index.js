@@ -1,5 +1,5 @@
 import { resourceToHex, hexToResource } from '@latticexyz/common';
-import { parseAbi, isHex, http, encodeFunctionData, formatEther, formatGwei, zeroAddress, toHex } from 'viem';
+import { parseAbi, isHex, http, encodeFunctionData, parseEther, formatEther, formatGwei, zeroAddress, toHex } from 'viem';
 import worldConfig, { systemsConfig } from '@latticexyz/world/mud.config';
 import { generatePrivateKey, privateKeyToAccount } from 'viem/accounts';
 import { toSimpleSmartAccount } from 'permissionless/accounts';
@@ -236,8 +236,9 @@ function createBundlerClient(config) {
     ...config
   });
 }
-var APPROXIMATE_CURRENT_ETH_PRICE = 2800;
-function logUserOperationCost(userOp) {
+var DEFAULT_ETH_PRICE = 2800;
+function logUserOperationCost(userOp, ethPriceUSD) {
+  const ETH_PRICE = ethPriceUSD || DEFAULT_ETH_PRICE;
   const callGas = BigInt(userOp.callGasLimit);
   const verificationGas = BigInt(userOp.verificationGasLimit);
   const preVerificationGas = BigInt(userOp.preVerificationGas);
@@ -248,7 +249,7 @@ function logUserOperationCost(userOp) {
   const totalGas = callGas + verificationGas + preVerificationGas + paymasterVerificationGas + paymasterPostOpGas;
   const maxCostWei = totalGas * maxFeePerGas;
   const maxCostETH = formatEther(maxCostWei);
-  const maxCostUSD = Number(maxCostETH) * APPROXIMATE_CURRENT_ETH_PRICE;
+  const maxCostUSD = Number(maxCostETH) * ETH_PRICE;
   console.log("\u250C\u2500 User Operation Gas & Cost \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500");
   console.log("\u2502");
   console.log("\u2502 Gas Estimates:");
@@ -278,18 +279,58 @@ function logUserOperationCost(userOp) {
   console.log("\u2502");
   console.log("\u2502 Estimated Max Cost:");
   console.log("\u2502   ETH:  ", maxCostETH, "ETH");
+  console.log("\u2502   USD:  $" + maxCostUSD.toFixed(2), "(at $" + ETH_PRICE + " ETH)");
+  console.log("\u2502");
+  console.log("\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500");
+}
+function logFeeCapApplied(data) {
+  const originalCost = Number(data.totalGas) * Number(formatGwei(data.originalMaxFee)) / 1e9;
+  const cappedCost = Number(data.totalGas) * Number(formatGwei(data.cappedMaxFee)) / 1e9;
+  const originalCostUSD = originalCost * data.ethPrice;
+  const cappedCostUSD = cappedCost * data.ethPrice;
+  const priorityWasReduced = data.cappedPriorityFee < data.originalPriorityFee;
+  console.log("\u250C\u2500 \u26A0\uFE0F  GAS PRICE SPIKE - FEE CAP APPLIED \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500");
+  console.log("\u2502");
+  console.log("\u2502 \u{1F6E1}\uFE0F  Budget Protection: Capping fees to stay under $" + data.maxBudgetUSD);
+  console.log("\u2502");
+  console.log("\u2502 This operation:");
+  console.log("\u2502   Total gas:            ", data.totalGas.toString(), "gas");
+  console.log("\u2502");
+  console.log("\u2502 Network fees would cost:");
+  console.log("\u2502   maxFeePerGas:         ", formatGwei(data.originalMaxFee), "gwei");
+  console.log("\u2502   maxPriorityFeePerGas: ", formatGwei(data.originalPriorityFee), "gwei");
+  console.log("\u2502   Estimated cost:       ", originalCost.toFixed(8), "ETH");
+  console.log("\u2502   USD cost:              $" + originalCostUSD.toFixed(2), "\u2190 OVER BUDGET!");
+  console.log("\u2502");
+  console.log("\u2502 Capped to:");
+  console.log("\u2502   maxFeePerGas:         ", formatGwei(data.cappedMaxFee), "gwei", "\u2190 CAPPED");
+  if (priorityWasReduced) {
+    console.log(
+      "\u2502   maxPriorityFeePerGas: ",
+      formatGwei(data.cappedPriorityFee),
+      "gwei",
+      "\u2190 REDUCED (EIP-1559)"
+    );
+  } else {
+    console.log("\u2502   maxPriorityFeePerGas: ", formatGwei(data.cappedPriorityFee), "gwei");
+  }
+  console.log("\u2502   Estimated cost:       ", cappedCost.toFixed(8), "ETH");
+  console.log("\u2502   USD cost:              $" + cappedCostUSD.toFixed(2), "\u2705");
+  console.log("\u2502");
   console.log(
-    "\u2502   USD:  $" + maxCostUSD.toFixed(2),
-    "(at $" + APPROXIMATE_CURRENT_ETH_PRICE + " ETH)"
+    "\u2502 \u23F3 Transaction will wait in mempool until gas drops below",
+    formatGwei(data.cappedMaxFee),
+    "gwei"
   );
   console.log("\u2502");
   console.log("\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500");
 }
 
 // src/bundler/transport.ts
-function getBundlerTransport(chain) {
+function getBundlerTransport(chain, ethPriceUSD) {
   const bundlerHttpUrl = chain.rpcUrls.bundler?.http[0];
   if (bundlerHttpUrl) {
+    const shouldApplyFeeCap = chain.id === 8453 || chain.id === 84532;
     return http(bundlerHttpUrl, {
       onFetchRequest: async (request) => {
         try {
@@ -299,8 +340,11 @@ function getBundlerTransport(chain) {
             const body = JSON.parse(text);
             if (body?.method === "eth_sendUserOperation") {
               const userOp = body?.params?.[0];
+              if (userOp && shouldApplyFeeCap) {
+                applyFeeCap(userOp, ethPriceUSD);
+              }
               if (userOp) {
-                logUserOperationCost(userOp);
+                logUserOperationCost(userOp, ethPriceUSD);
               }
             }
           }
@@ -311,6 +355,34 @@ function getBundlerTransport(chain) {
   }
   throw new Error(`Chain ${chain.id} config did not include a bundler RPC URL.`);
 }
+function applyFeeCap(userOp, ethPriceUSD) {
+  const MAX_COST_USD = 0.9;
+  const DEFAULT_ETH_PRICE2 = 3e3;
+  const PRICE_MARGIN = 500;
+  const ETH_PRICE_USD = (ethPriceUSD || DEFAULT_ETH_PRICE2) + PRICE_MARGIN;
+  const totalGas = BigInt(userOp.callGasLimit || 0) + BigInt(userOp.verificationGasLimit || 0) + BigInt(userOp.preVerificationGas || 0) + BigInt(userOp.paymasterVerificationGasLimit || 0) + BigInt(userOp.paymasterPostOpGasLimit || 0);
+  const maxBudgetETH = parseEther((MAX_COST_USD / ETH_PRICE_USD).toString());
+  const maxFeePerGasCap = maxBudgetETH / totalGas;
+  const originalMaxFee = BigInt(userOp.maxFeePerGas);
+  const originalPriorityFee = BigInt(userOp.maxPriorityFeePerGas);
+  if (originalMaxFee > maxFeePerGasCap) {
+    userOp.maxFeePerGas = "0x" + maxFeePerGasCap.toString(16);
+    let cappedPriorityFee = originalPriorityFee;
+    if (originalPriorityFee > maxFeePerGasCap) {
+      cappedPriorityFee = maxFeePerGasCap;
+      userOp.maxPriorityFeePerGas = "0x" + maxFeePerGasCap.toString(16);
+    }
+    logFeeCapApplied({
+      totalGas,
+      originalMaxFee,
+      originalPriorityFee,
+      cappedMaxFee: maxFeePerGasCap,
+      cappedPriorityFee,
+      maxBudgetUSD: MAX_COST_USD,
+      ethPrice: ETH_PRICE_USD
+    });
+  }
+}
 
 // src/session/core/client.ts
 async function getSessionClient({
@@ -318,7 +390,8 @@ async function getSessionClient({
   sessionAccount,
   sessionSigner,
   worldAddress,
-  paymasterOverride
+  paymasterOverride,
+  ethPriceUSD
 }) {
   const client = sessionAccount.client;
   if (!clientHasChain(client)) {
@@ -328,7 +401,7 @@ async function getSessionClient({
     console.log(`[Drawbridge/SessionClient] Creating session client with paymaster override`);
   }
   const bundlerClient = createBundlerClient({
-    transport: getBundlerTransport(client.chain),
+    transport: getBundlerTransport(client.chain, ethPriceUSD),
     client,
     account: sessionAccount,
     paymaster: paymasterOverride
@@ -1026,7 +1099,8 @@ var Drawbridge = class {
       sessionAccount: account,
       sessionSigner: signer,
       worldAddress: this.config.worldAddress,
-      paymasterOverride: this.config.paymasterClient
+      paymasterOverride: this.config.paymasterClient,
+      ethPriceUSD: this.config.ethPriceUSD
     });
     let hasDelegation = false;
     try {

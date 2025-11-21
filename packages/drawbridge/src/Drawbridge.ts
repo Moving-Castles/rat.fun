@@ -38,6 +38,12 @@ export type DrawbridgeConfig = {
   /** Optional app name for wallet connectors */
   appName?: string
   /**
+   * Current ETH price in USD for gas cost calculations
+   * Used with $500 margin in fee cap: (ethPriceUSD + 500)
+   * If not provided, defaults to $3,000
+   */
+  ethPriceUSD?: number
+  /**
    * Skip session setup entirely - wallet connection only mode
    * Use this for apps that don't need MUD delegation/session accounts.
    * When true:
@@ -431,7 +437,8 @@ export class Drawbridge {
       sessionAccount: account,
       sessionSigner: signer,
       worldAddress: this.config.worldAddress!,
-      paymasterOverride: this.config.paymasterClient
+      paymasterOverride: this.config.paymasterClient,
+      ethPriceUSD: this.config.ethPriceUSD
     })
 
     // Check if delegation already exists BEFORE notifying listeners
