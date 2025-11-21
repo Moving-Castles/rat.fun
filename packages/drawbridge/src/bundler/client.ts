@@ -10,6 +10,12 @@ import {
 import { defaultClientConfig } from "../types"
 import { getPaymaster } from "./paymaster"
 import { type GasEstimates } from "./gasEstimator"
+import {
+  logBundlerClientConfig,
+  logFeeEstimationStart,
+  logFeeEstimationResult,
+  logFeeEstimationFallback
+} from "./tempDebugLogging"
 
 /**
  * Create a bundler client for submitting ERC-4337 user operations
@@ -57,7 +63,7 @@ export function createBundlerClient<
     console.log(`[Drawbridge/BundlerClient] Bundler client configured without paymaster`)
   }
 
-  console.log("[Drawbridge/BundlerClient] Config:", {
+  logBundlerClientConfig({
     pollingInterval: defaultClientConfig.pollingInterval,
     hasPaymaster: !!paymaster,
     paymasterType: paymaster?.type
@@ -116,7 +122,7 @@ function createFeeEstimator(
   // Coinbase bundler requires minimum maxPriorityFeePerGas of 1 gwei
   if (client.chain.id === 8453 || client.chain.id === 84532) {
     return async () => {
-      console.log("[Fee Estimator] Estimating fees for Base chain...")
+      logFeeEstimationStart()
       try {
         const fees = await estimateFeesPerGas(client)
         const minPriorityFee = 1_000_000n // 0.001 gwei minimum (Coinbase requirement)
@@ -131,21 +137,18 @@ function createFeeEstimator(
             fees.maxPriorityFeePerGas > minPriorityFee ? fees.maxPriorityFeePerGas : minPriorityFee
         }
 
-        console.log("[Fee Estimator] Fees:", {
-          networkMaxFee: (Number(fees.maxFeePerGas) / 1e9).toFixed(3) + " gwei",
-          cappedMaxFee: (Number(result.maxFeePerGas) / 1e9).toFixed(3) + " gwei",
-          maxPriorityFeePerGas: (Number(result.maxPriorityFeePerGas) / 1e9).toFixed(3) + " gwei",
-          wasCapped: fees.maxFeePerGas > maxTotalFee
+        logFeeEstimationResult({
+          networkMaxFee: fees.maxFeePerGas,
+          cappedMaxFee: result.maxFeePerGas,
+          maxPriorityFeePerGas: result.maxPriorityFeePerGas,
+          maxTotalFee
         })
 
         return result
       } catch (error) {
         // If eth_maxPriorityFeePerGas is not supported by the RPC provider, use safe defaults
         // This can happen with some wallet providers or RPC endpoints
-        console.warn(
-          "[Fee Estimator] Estimation failed, using defaults:",
-          error instanceof Error ? error.message : String(error)
-        )
+        logFeeEstimationFallback(error)
         return {
           maxFeePerGas: 1_000_000_000n, // 1 gwei (1 billion wei)
           maxPriorityFeePerGas: 100_000_000n // 0.1 gwei minimum (100 million wei) - Higher to ensure bundler processes it

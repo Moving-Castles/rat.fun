@@ -1,5 +1,6 @@
 import { Chain, http } from "viem"
 import { gasEstimator, type GasEstimates } from "./gasEstimator"
+import { logBundlerRpcMethod, logUserOperationGas } from "./tempDebugLogging"
 
 /**
  * Get bundler RPC transport for a chain
@@ -26,35 +27,20 @@ export function getBundlerTransport(chain: Chain, gasEstimates?: GasEstimates) {
       gasEstimates,
       http(bundlerHttpUrl, {
         onFetchRequest: async request => {
-          // Log ALL bundler calls to identify rate limit sources
           try {
             if (request.body) {
               const clonedRequest = request.clone()
               const text = await clonedRequest.text()
               const body = JSON.parse(text)
 
-              // Count calls for rate limit debugging
               if (body?.method) {
-                console.log(`[Bundler RPC] ${body.method}`)
+                logBundlerRpcMethod(body.method)
               }
 
-              // Only log detailed gas when actually sending a user operation
               if (body?.method === "eth_sendUserOperation") {
                 const userOp = body?.params?.[0]
                 if (userOp) {
-                  const callGas = BigInt(userOp.callGasLimit)
-                  const verifyGas = BigInt(userOp.verificationGasLimit)
-                  const preVerifyGas = BigInt(userOp.preVerificationGas)
-                  const maxFee = BigInt(userOp.maxFeePerGas)
-                  const priorityFee = BigInt(userOp.maxPriorityFeePerGas)
-
-                  console.log("[Bundler] Sending user operation with gas:", {
-                    callGasLimit: callGas.toString(),
-                    verificationGasLimit: verifyGas.toString(),
-                    preVerificationGas: preVerifyGas.toString(),
-                    maxFeePerGas: (Number(maxFee) / 1e9).toFixed(3) + " gwei",
-                    maxPriorityFeePerGas: (Number(priorityFee) / 1e9).toFixed(3) + " gwei"
-                  })
+                  logUserOperationGas(userOp)
                 }
               }
             }

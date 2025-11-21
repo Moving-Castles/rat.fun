@@ -1,5 +1,17 @@
 import { BundlerRpcSchema, Transport, Hex } from "viem"
 import { formatUserOperationRequest } from "viem/account-abstraction"
+import {
+  logGasEstimatorRpcMethod,
+  logSmartAccountUnwrap,
+  logSmartAccountUnwrapResult,
+  logMudCallFromUnwrap,
+  logMudCallFromUnwrapResult,
+  logGasEstimateBreakdown,
+  logNoCustomGasEstimates,
+  logNoMeasurementForSelector,
+  logGasEstimatorError,
+  logCallGasLimitComparison
+} from "./tempDebugLogging"
 
 /**
  * Gas estimation configuration for user operations
@@ -7,6 +19,18 @@ import { formatUserOperationRequest } from "viem/account-abstraction"
  */
 export type GasEstimates = {
   [selector: string]: bigint
+}
+
+/**
+ * Response from eth_estimateUserOperationGas RPC call
+ * All fields are returned as hex strings from the bundler
+ */
+type UserOperationGasEstimate = {
+  callGasLimit: Hex
+  verificationGasLimit: Hex
+  preVerificationGas: Hex
+  paymasterVerificationGasLimit?: Hex
+  paymasterPostOpGasLimit?: Hex
 }
 
 /**
@@ -21,23 +45,23 @@ function extractFunctionSelector(callData: Hex): string | null {
   // Smart account's execute(address,uint256,bytes) wrapper (0xb61d27f6)
   // Structure: selector(4) + target(32) + value(32) + dataOffset(32) + dataLength(32) + actualData
   if (data.startsWith("0xb61d27f6")) {
-    console.log("[Gas Estimator] Unwrapping smart account execute()")
+    logSmartAccountUnwrap()
     // Skip: "0x" + selector(8) + target(64) + value(64) + offset(64) + length(64) = 266 chars
     const offset = 2 + 8 + 64 + 64 + 64 + 64
     if (data.length > offset) {
       data = ("0x" + data.slice(offset)) as Hex
-      console.log("[Gas Estimator] After unwrap, selector:", data.slice(0, 10))
+      logSmartAccountUnwrapResult(data.slice(0, 10))
     }
   }
 
   // MUD's callFrom wraps the actual call (0xdd2bcbae)
   // Structure: selector(4) + delegator(32) + systemId(32) + offset(32) + length(32) + actualCallData
   if (data.startsWith("0xdd2bcbae")) {
-    console.log("[Gas Estimator] Unwrapping MUD callFrom()")
+    logMudCallFromUnwrap()
     const offset = 2 + 8 + 64 + 64 + 64 + 64
     if (data.length > offset + 8) {
       data = data.slice(offset, offset + 10) as Hex
-      console.log("[Gas Estimator] Final selector:", data)
+      logMudCallFromUnwrapResult(data)
       return data
     }
   }
@@ -62,8 +86,7 @@ export function gasEstimator<const transport extends Transport>(
     const { request: originalRequest, ...rest } = getTransport(opts)
 
     const request = async ({ method, params }: any, options?: any) => {
-      // Log ALL RPC methods to debug
-      console.log("[Gas Estimator] RPC Method:", method)
+      logGasEstimatorRpcMethod(method)
 
       if (method === "eth_estimateUserOperationGas") {
         const [userOp] = params
@@ -72,13 +95,21 @@ export function gasEstimator<const transport extends Transport>(
 
         if (measuredGas) {
           // First, get viem's default estimation for the other gas fields
-          let defaultEstimate
+          let defaultEstimate: UserOperationGasEstimate
           try {
             defaultEstimate = await originalRequest({ method, params }, options)
           } catch (error) {
-            console.error("[Gas Estimator] Failed to get default estimate from bundler:", error)
+            logGasEstimatorError(error)
             throw error
           }
+
+          // Log comparison between bundler's default and our measured value
+          const bundlerDefaultCallGas = BigInt(defaultEstimate.callGasLimit)
+          logCallGasLimitComparison({
+            selector,
+            bundlerDefault: bundlerDefaultCallGas,
+            measured: measuredGas
+          })
 
           // Override only callGasLimit with our measured value
           // Convert hex strings to BigInt for other fields
@@ -104,58 +135,24 @@ export function gasEstimator<const transport extends Transport>(
           const maxFeePerGas = userOp.maxFeePerGas ? BigInt(userOp.maxFeePerGas) : null
           const gasPrice = maxFeePerGas ? Number(maxFeePerGas) / 1e9 : null // Convert to gwei
 
-          console.log("┌─ User Operation Gas Estimate ─────────────────────")
-          console.log("│ Function selector:", selector)
-          console.log("│")
-          console.log("│ Gas Breakdown:")
-          console.log(
-            "│   callGasLimit:               ",
-            estimate.callGasLimit.toString().padStart(7),
-            "gas (CUSTOM)"
-          )
-          console.log(
-            "│   verificationGasLimit:       ",
-            estimate.verificationGasLimit.toString().padStart(7),
-            "gas (viem default)"
-          )
-          console.log(
-            "│   preVerificationGas:         ",
-            estimate.preVerificationGas.toString().padStart(7),
-            "gas (viem default)"
-          )
-          console.log(
-            "│   paymasterVerificationGasLimit:",
-            estimate.paymasterVerificationGasLimit.toString().padStart(5),
-            "gas (viem default)"
-          )
-          console.log(
-            "│   paymasterPostOpGasLimit:    ",
-            estimate.paymasterPostOpGasLimit.toString().padStart(7),
-            "gas (viem default)"
-          )
-          console.log("│   ─────────────────────────────────────────────")
-          console.log("│   Total gas limit:            ", totalGas.toString().padStart(7), "gas")
-          console.log("│")
-          if (gasPrice !== null) {
-            console.log("│ Current gas price:", gasPrice.toFixed(3), "gwei")
-            console.log(
-              "│ Estimated max cost:",
-              ((Number(totalGas) * gasPrice) / 1e9).toFixed(6),
-              "ETH"
-            )
-            console.log("│ (To get USD: multiply ETH cost × ETH price)")
-          }
-          console.log("│")
-          console.log("│ Source: Custom callGasLimit + viem defaults for verification")
-          console.log("└───────────────────────────────────────────────────")
+          logGasEstimateBreakdown({
+            selector,
+            callGasLimit: estimate.callGasLimit,
+            verificationGasLimit: estimate.verificationGasLimit,
+            preVerificationGas: estimate.preVerificationGas,
+            paymasterVerificationGasLimit: estimate.paymasterVerificationGasLimit,
+            paymasterPostOpGasLimit: estimate.paymasterPostOpGasLimit,
+            totalGas,
+            gasPrice
+          })
 
           return formatUserOperationRequest(estimate)
         }
 
         if (!gasEstimates) {
-          console.log("[Gas Estimator] No custom gas estimates configured - using viem default")
+          logNoCustomGasEstimates()
         } else {
-          console.log("[Gas Estimator] No measurement for", selector, "- using viem default")
+          logNoMeasurementForSelector(selector)
         }
       }
 
