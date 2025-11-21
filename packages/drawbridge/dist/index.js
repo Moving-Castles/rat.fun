@@ -1,14 +1,14 @@
 import { resourceToHex, hexToResource } from '@latticexyz/common';
-import { parseAbi, isHex, http, encodeFunctionData, parseGwei, formatGwei, zeroAddress, toHex } from 'viem';
+import { parseAbi, isHex, http, encodeFunctionData, zeroAddress, toHex } from 'viem';
 import worldConfig, { systemsConfig } from '@latticexyz/world/mud.config';
 import { generatePrivateKey, privateKeyToAccount } from 'viem/accounts';
 import { toSimpleSmartAccount } from 'permissionless/accounts';
 import { smartAccountActions } from 'permissionless';
 import { callFrom, sendUserOperationFrom } from '@latticexyz/world/internal';
-import { waitForTransactionReceipt, estimateFeesPerGas, getCode, sendTransaction, writeContract, signTypedData } from 'viem/actions';
-import { createBundlerClient as createBundlerClient$1, sendUserOperation, waitForUserOperationReceipt, formatUserOperationRequest } from 'viem/account-abstraction';
+import { createBundlerClient as createBundlerClient$1, sendUserOperation, waitForUserOperationReceipt } from 'viem/account-abstraction';
 import { getRecord } from '@latticexyz/store/internal';
 import { getAction } from 'viem/utils';
+import { waitForTransactionReceipt, getCode, sendTransaction, writeContract, signTypedData } from 'viem/actions';
 import IBaseWorldAbi from '@latticexyz/world/out/IBaseWorld.sol/IBaseWorld.abi.json';
 import { callWithSignatureTypes } from '@latticexyz/world-module-callwithsignature/internal';
 import moduleConfig from '@latticexyz/world-module-callwithsignature/mud.config';
@@ -209,184 +209,9 @@ function getPaymaster(chain, paymasterOverride) {
   );
   return void 0;
 }
-function logBundlerClientConfig(config) {
-  console.log("[Drawbridge/BundlerClient] Config:", {
-    pollingInterval: config.pollingInterval,
-    hasPaymaster: config.hasPaymaster,
-    paymasterType: config.paymasterType
-  });
-}
-function logFeeEstimationStart() {
-  console.log("[Fee Estimator] Estimating fees for Base chain...");
-}
-function logFeeEstimationResult(data) {
-  const wasAdjusted = data.adjustedMaxFee > data.networkMaxFee;
-  const wasCapped = data.cappedMaxFee < data.adjustedMaxFee;
-  console.log("\u250C\u2500 Fee Estimation Result \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500");
-  console.log("\u2502");
-  console.log("\u2502 Network estimate:");
-  console.log(
-    "\u2502   maxFeePerGas:         ",
-    formatGwei(data.networkMaxFee),
-    "gwei",
-    `(${data.networkMaxFee} wei)`
-  );
-  console.log("\u2502");
-  console.log("\u2502 Our configuration:");
-  console.log(
-    "\u2502   minPriorityFee:       ",
-    formatGwei(data.minPriorityFee),
-    "gwei",
-    `(${data.minPriorityFee} wei)`,
-    "\u2190 Coinbase requirement"
-  );
-  console.log(
-    "\u2502   maxTotalFee cap:      ",
-    formatGwei(data.maxTotalFee),
-    "gwei",
-    `(${data.maxTotalFee} wei)`
-  );
-  console.log("\u2502");
-  if (wasAdjusted) {
-    console.log("\u2502 \u26A0\uFE0F  Adjustment needed:");
-    console.log("\u2502   Network's maxFeePerGas was too low for priority fee!");
-    console.log(
-      "\u2502   Adjusted maxFeePerGas:",
-      formatGwei(data.adjustedMaxFee),
-      "gwei",
-      `(${data.adjustedMaxFee} wei)`,
-      "\u2190 Increased to match priority"
-    );
-    console.log("\u2502");
-  }
-  console.log("\u2502 Final values sent:");
-  console.log(
-    "\u2502   maxFeePerGas:         ",
-    formatGwei(data.cappedMaxFee),
-    "gwei",
-    `(${data.cappedMaxFee} wei)`,
-    wasCapped ? "\u2190 CAPPED" : ""
-  );
-  console.log(
-    "\u2502   maxPriorityFeePerGas: ",
-    formatGwei(data.maxPriorityFeePerGas),
-    "gwei",
-    `(${data.maxPriorityFeePerGas} wei)`
-  );
-  console.log("\u2502");
-  if (data.cappedMaxFee < data.maxPriorityFeePerGas) {
-    console.log("\u2502 \u274C ERROR: maxFeePerGas < maxPriorityFeePerGas!");
-    console.log("\u2502    This violates EIP-1559 rules and will fail!");
-    console.log("\u2502");
-  }
-  console.log("\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500");
-}
-function logFeeEstimationFallback(error) {
-  console.warn(
-    "[Fee Estimator] Estimation failed, using defaults:",
-    error instanceof Error ? error.message : String(error)
-  );
-}
-function logBundlerRpcMethod(method) {
-  console.log(`[Bundler RPC] ${method}`);
-}
-function logUserOperationGas(userOp) {
-  const callGas = BigInt(userOp.callGasLimit);
-  const verifyGas = BigInt(userOp.verificationGasLimit);
-  const preVerifyGas = BigInt(userOp.preVerificationGas);
-  const maxFee = BigInt(userOp.maxFeePerGas);
-  const priorityFee = BigInt(userOp.maxPriorityFeePerGas);
-  console.log("[Bundler] Sending user operation with gas:", {
-    callGasLimit: callGas.toString(),
-    verificationGasLimit: verifyGas.toString(),
-    preVerificationGas: preVerifyGas.toString(),
-    maxFeePerGas: formatGwei(maxFee) + " gwei",
-    maxPriorityFeePerGas: formatGwei(priorityFee) + " gwei"
-  });
-}
-function logGasEstimatorRpcMethod(method) {
-  console.log("[Gas Estimator] RPC Method:", method);
-}
-function logSmartAccountUnwrap() {
-  console.log("[Gas Estimator] Unwrapping smart account execute()");
-}
-function logSmartAccountUnwrapResult(selector) {
-  console.log("[Gas Estimator] After unwrap, selector:", selector);
-}
-function logMudCallFromUnwrap() {
-  console.log("[Gas Estimator] Unwrapping MUD callFrom()");
-}
-function logMudCallFromUnwrapResult(selector) {
-  console.log("[Gas Estimator] Final selector:", selector);
-}
-function logGasEstimateBreakdown(data) {
-  console.log("\u250C\u2500 User Operation Gas Estimate \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500");
-  console.log("\u2502 Function selector:", data.selector);
-  console.log("\u2502");
-  console.log("\u2502 Gas Breakdown:");
-  console.log(
-    "\u2502   callGasLimit:               ",
-    data.callGasLimit.toString().padStart(7),
-    "gas (CUSTOM)"
-  );
-  console.log(
-    "\u2502   verificationGasLimit:       ",
-    data.verificationGasLimit.toString().padStart(7),
-    "gas (viem default)"
-  );
-  console.log(
-    "\u2502   preVerificationGas:         ",
-    data.preVerificationGas.toString().padStart(7),
-    "gas (viem default)"
-  );
-  console.log(
-    "\u2502   paymasterVerificationGasLimit:",
-    data.paymasterVerificationGasLimit.toString().padStart(5),
-    "gas (viem default)"
-  );
-  console.log(
-    "\u2502   paymasterPostOpGasLimit:    ",
-    data.paymasterPostOpGasLimit.toString().padStart(7),
-    "gas (viem default)"
-  );
-  console.log("\u2502   \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500");
-  console.log("\u2502   Total gas limit:            ", data.totalGas.toString().padStart(7), "gas");
-  console.log("\u2502");
-  if (data.gasPrice !== null) {
-    console.log("\u2502 Current gas price:", data.gasPrice.toFixed(3), "gwei");
-    const costInWei = data.totalGas * BigInt(Math.floor(data.gasPrice * 1e9));
-    console.log("\u2502 Estimated max cost:", (Number(costInWei) / 1e18).toFixed(6), "ETH");
-    console.log("\u2502 (To get USD: multiply ETH cost \xD7 ETH price)");
-  }
-  console.log("\u2502");
-  console.log("\u2502 Source: Custom callGasLimit + viem defaults for verification");
-  console.log("\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500");
-}
-function logNoCustomGasEstimates() {
-  console.log("[Gas Estimator] No custom gas estimates configured - using viem default");
-}
-function logNoMeasurementForSelector(selector) {
-  console.log("[Gas Estimator] No measurement for", selector, "- using viem default");
-}
-function logGasEstimatorError(error) {
-  console.error("[Gas Estimator] Failed to get default estimate from bundler:", error);
-}
-function logCallGasLimitComparison(data) {
-  const diff = Number(data.measured) - Number(data.bundlerDefault);
-  const percentDiff = diff / Number(data.bundlerDefault) * 100;
-  console.log("[Gas Estimator] callGasLimit Comparison:");
-  console.log("  Selector:", data.selector);
-  console.log("  Bundler default:", data.bundlerDefault.toString());
-  console.log("  Our measured:   ", data.measured.toString());
-  console.log(
-    "  Difference:     ",
-    diff > 0 ? "+" + diff : diff,
-    `(${percentDiff > 0 ? "+" : ""}${percentDiff.toFixed(1)}%)`
-  );
-}
 
 // src/bundler/client.ts
-function createBundlerClient(config, gasEstimates) {
+function createBundlerClient(config) {
   const client = config.client;
   if (!client) throw new Error("No `client` provided to `createBundlerClient`.");
   const chain = config.chain ?? client.chain;
@@ -398,11 +223,6 @@ function createBundlerClient(config, gasEstimates) {
   } else {
     console.log(`[Drawbridge/BundlerClient] Bundler client configured without paymaster`);
   }
-  logBundlerClientConfig({
-    pollingInterval: defaultClientConfig.pollingInterval,
-    hasPaymaster: !!paymaster,
-    paymasterType: paymaster?.type
-  });
   return createBundlerClient$1({
     ...defaultClientConfig,
     // Configure paymaster for gas sponsorship
@@ -413,164 +233,13 @@ function createBundlerClient(config, gasEstimates) {
         paymasterData: "0x"
       })
     } : void 0,
-    // Custom fee estimation for specific chains
-    userOperation: {
-      estimateFeesPerGas: createFeeEstimator(client)
-    },
     ...config
   });
 }
-function createFeeEstimator(client) {
-  if (!client.chain) return;
-  if (client.chain.id === 31337) {
-    return async () => ({ maxFeePerGas: 100000n, maxPriorityFeePerGas: 0n });
-  }
-  if (client.chain.id === 8453 || client.chain.id === 84532) {
-    return async () => {
-      logFeeEstimationStart();
-      try {
-        const fees = await estimateFeesPerGas(client);
-        const minPriorityFee = parseGwei("1");
-        const maxTotalFee = parseGwei("10");
-        const priorityFee = fees.maxPriorityFeePerGas > minPriorityFee ? fees.maxPriorityFeePerGas : minPriorityFee;
-        const adjustedMaxFee = fees.maxFeePerGas < priorityFee ? priorityFee : fees.maxFeePerGas;
-        const cappedMaxFee = adjustedMaxFee > maxTotalFee ? maxTotalFee : adjustedMaxFee;
-        const result = {
-          maxFeePerGas: cappedMaxFee,
-          maxPriorityFeePerGas: priorityFee
-        };
-        logFeeEstimationResult({
-          networkMaxFee: fees.maxFeePerGas,
-          adjustedMaxFee,
-          cappedMaxFee: result.maxFeePerGas,
-          maxPriorityFeePerGas: result.maxPriorityFeePerGas,
-          maxTotalFee,
-          minPriorityFee
-        });
-        return result;
-      } catch (error) {
-        logFeeEstimationFallback(error);
-        return {
-          maxFeePerGas: parseGwei("10"),
-          maxPriorityFeePerGas: parseGwei("1")
-          // Coinbase minimum
-        };
-      }
-    };
-  }
-  return void 0;
-}
-function extractFunctionSelector(callData) {
-  if (!callData || callData.length < 10) return null;
-  let data = callData;
-  if (data.startsWith("0xb61d27f6")) {
-    logSmartAccountUnwrap();
-    const offset = 2 + 8 + 64 + 64 + 64 + 64;
-    if (data.length > offset) {
-      data = "0x" + data.slice(offset);
-      logSmartAccountUnwrapResult(data.slice(0, 10));
-    }
-  }
-  if (data.startsWith("0xdd2bcbae")) {
-    logMudCallFromUnwrap();
-    const offset = 2 + 8 + 64 + 64 + 64 + 64;
-    if (data.length > offset + 8) {
-      data = data.slice(offset, offset + 10);
-      logMudCallFromUnwrapResult(data);
-      return data;
-    }
-  }
-  return data.slice(0, 10);
-}
-function gasEstimator(gasEstimates, getTransport) {
-  return ((opts) => {
-    const { request: originalRequest, ...rest } = getTransport(opts);
-    const request = async ({ method, params }, options) => {
-      logGasEstimatorRpcMethod(method);
-      if (method === "eth_estimateUserOperationGas") {
-        const [userOp] = params;
-        const selector = extractFunctionSelector(userOp.callData);
-        const measuredGas = selector && gasEstimates ? gasEstimates[selector] : null;
-        if (measuredGas) {
-          let defaultEstimate;
-          try {
-            defaultEstimate = await originalRequest({ method, params }, options);
-          } catch (error) {
-            logGasEstimatorError(error);
-            throw error;
-          }
-          const bundlerDefaultCallGas = BigInt(defaultEstimate.callGasLimit);
-          logCallGasLimitComparison({
-            selector,
-            bundlerDefault: bundlerDefaultCallGas,
-            measured: measuredGas
-          });
-          const estimate = {
-            callGasLimit: measuredGas,
-            verificationGasLimit: BigInt(defaultEstimate.verificationGasLimit),
-            preVerificationGas: BigInt(defaultEstimate.preVerificationGas),
-            paymasterVerificationGasLimit: BigInt(
-              defaultEstimate.paymasterVerificationGasLimit || "0x6978"
-            ),
-            // 27000 default
-            paymasterPostOpGasLimit: BigInt(defaultEstimate.paymasterPostOpGasLimit || "0x6978")
-            // 27000 default
-          };
-          const totalGas = estimate.callGasLimit + estimate.verificationGasLimit + estimate.preVerificationGas + estimate.paymasterVerificationGasLimit + estimate.paymasterPostOpGasLimit;
-          const maxFeePerGas = userOp.maxFeePerGas ? BigInt(userOp.maxFeePerGas) : null;
-          const gasPrice = maxFeePerGas ? Number(formatGwei(maxFeePerGas)) : null;
-          logGasEstimateBreakdown({
-            selector,
-            callGasLimit: estimate.callGasLimit,
-            verificationGasLimit: estimate.verificationGasLimit,
-            preVerificationGas: estimate.preVerificationGas,
-            paymasterVerificationGasLimit: estimate.paymasterVerificationGasLimit,
-            paymasterPostOpGasLimit: estimate.paymasterPostOpGasLimit,
-            totalGas,
-            gasPrice
-          });
-          return formatUserOperationRequest(estimate);
-        }
-        if (!gasEstimates) {
-          logNoCustomGasEstimates();
-        } else {
-          logNoMeasurementForSelector(selector);
-        }
-      }
-      return originalRequest({ method, params }, options);
-    };
-    return { request, ...rest };
-  });
-}
-
-// src/bundler/transport.ts
-function getBundlerTransport(chain, gasEstimates) {
+function getBundlerTransport(chain) {
   const bundlerHttpUrl = chain.rpcUrls.bundler?.http[0];
   if (bundlerHttpUrl) {
-    return gasEstimator(
-      gasEstimates,
-      http(bundlerHttpUrl, {
-        onFetchRequest: async (request) => {
-          try {
-            if (request.body) {
-              const clonedRequest = request.clone();
-              const text = await clonedRequest.text();
-              const body = JSON.parse(text);
-              if (body?.method) {
-                logBundlerRpcMethod(body.method);
-              }
-              if (body?.method === "eth_sendUserOperation") {
-                const userOp = body?.params?.[0];
-                if (userOp) {
-                  logUserOperationGas(userOp);
-                }
-              }
-            }
-          } catch (e) {
-          }
-        }
-      })
-    );
+    return http(bundlerHttpUrl);
   }
   throw new Error(`Chain ${chain.id} config did not include a bundler RPC URL.`);
 }
@@ -581,8 +250,7 @@ async function getSessionClient({
   sessionAccount,
   sessionSigner,
   worldAddress,
-  paymasterOverride,
-  gasEstimates
+  paymasterOverride
 }) {
   const client = sessionAccount.client;
   if (!clientHasChain(client)) {
@@ -591,13 +259,12 @@ async function getSessionClient({
   if (paymasterOverride) {
     console.log(`[Drawbridge/SessionClient] Creating session client with paymaster override`);
   }
-  const bundlerClient = createBundlerClient(
-    {
-      transport: getBundlerTransport(client.chain, gasEstimates),
-      client,
-      account: sessionAccount,
-      paymaster: paymasterOverride
-    });
+  const bundlerClient = createBundlerClient({
+    transport: getBundlerTransport(client.chain),
+    client,
+    account: sessionAccount,
+    paymaster: paymasterOverride
+  });
   const sessionClient = bundlerClient.extend(smartAccountActions).extend(
     callFrom({
       worldAddress,
@@ -1291,8 +958,7 @@ var Drawbridge = class {
       sessionAccount: account,
       sessionSigner: signer,
       worldAddress: this.config.worldAddress,
-      paymasterOverride: this.config.paymasterClient,
-      gasEstimates: this.config.gasEstimates
+      paymasterOverride: this.config.paymasterClient
     });
     let hasDelegation = false;
     try {

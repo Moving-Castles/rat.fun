@@ -1,10 +1,4 @@
-import {
-  Drawbridge,
-  DrawbridgeStatus,
-  type SessionClient,
-  type DrawbridgeState,
-  type GasEstimates
-} from "drawbridge"
+import { Drawbridge, DrawbridgeStatus, type SessionClient, type DrawbridgeState } from "drawbridge"
 import { readable, derived } from "svelte/store"
 import { paymasters } from "./paymasters"
 import { chains, transports, getConnectors } from "./wagmiConfig"
@@ -12,21 +6,8 @@ import type { Hex } from "viem"
 import type { NetworkConfig } from "$lib/mud/utils"
 
 // Re-export types from package
-export type { ConnectorInfo, SessionClient, GasEstimates } from "drawbridge"
+export type { ConnectorInfo, SessionClient } from "drawbridge"
 export { DrawbridgeStatus } from "drawbridge"
-
-/**
- * Gas estimates for user operations
- * Based on gas-report.json with 1.3x safety multiplier
- * Keeps costs under Coinbase paymaster's $1 USD limit
- */
-const gasEstimates: GasEstimates = {
-  "0x59a5564c": 236000n, // spawn (181,844 × 1.3)
-  "0x894ecc58": 587500n, // createRat (451,966 × 1.3)
-  "0x4575ab44": 528000n, // liquidateRat (406,188 × 1.3)
-  "0x2cb5f784": 312000n, // closeTrip (240,205 × 1.3)
-  "0xd40d9ea6": 175000n // unlockAdmin (134,620 × 1.3)
-}
 
 // Drawbridge instance (singleton)
 let drawbridgeInstance: InstanceType<typeof Drawbridge> | null = null
@@ -67,8 +48,7 @@ export async function initializeDrawbridge(networkConfig: NetworkConfig): Promis
     worldAddress: networkConfig.worldAddress as Hex,
     paymasterClient: paymasters[networkConfig.chainId],
     pollingInterval: 2000,
-    appName: "RAT.FUN",
-    gasEstimates
+    appName: "RAT.FUN"
   })
 
   // Initialize (await reconnection, setup account watcher)

@@ -13,8 +13,7 @@ export type {
   DrawbridgeConfig,
   DrawbridgeState,
   PrerequisiteStatus,
-  ConnectorInfo,
-  GasEstimates
+  ConnectorInfo
 } from "./Drawbridge"
 
 export type { SessionClient, ConnectedClient } from "./types"

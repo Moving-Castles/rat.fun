@@ -90,14 +90,6 @@ type SetupSessionStatus = {
 };
 
 /**
- * Gas estimation configuration for user operations
- * Maps function selectors (4-byte hex) to gas limits
- */
-type GasEstimates = {
-    /** Maps function selector (e.g., "0x4575ab44") to callGasLimit */
-    [selector: string]: bigint;
-};
-/**
  * Configuration for Drawbridge instance
  */
 type DrawbridgeConfig = {
@@ -117,17 +109,6 @@ type DrawbridgeConfig = {
     pollingInterval?: number;
     /** Optional app name for wallet connectors */
     appName?: string;
-    /**
-     * Optional custom gas estimates for user operations
-     * Maps function selectors to callGasLimit values
-     * If not provided, uses viem's default estimation
-     * @example
-     * gasEstimates: {
-     *   "0x4575ab44": 528000n, // liquidateRat
-     *   "0x894ecc58": 587500n  // createRat
-     * }
-     */
-    gasEstimates?: GasEstimates;
     /**
      * Skip session setup entirely - wallet connection only mode
      * Use this for apps that don't need MUD delegation/session accounts.
@@ -356,4 +337,4 @@ declare class Drawbridge {
     getWagmiConfig(): Config;
 }
 
-export { type ConnectedClient, type ConnectorInfo, Drawbridge, type DrawbridgeConfig, type DrawbridgeState, DrawbridgeStatus, type GasEstimates, type PrerequisiteStatus, type SessionClient };
+export { type ConnectedClient, type ConnectorInfo, Drawbridge, type DrawbridgeConfig, type DrawbridgeState, DrawbridgeStatus, type PrerequisiteStatus, type SessionClient };

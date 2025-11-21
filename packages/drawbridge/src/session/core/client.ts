@@ -5,7 +5,7 @@ import type { PaymasterClient } from "viem/account-abstraction"
 import { createBundlerClient } from "../../bundler/client"
 import { SessionClient } from "../../types"
 import { SmartAccount } from "viem/account-abstraction"
-import { getBundlerTransport, type GasEstimates } from "../../bundler/transport"
+import { getBundlerTransport } from "../../bundler/transport"
 
 /**
  * Create session client with MUD World extensions
@@ -30,15 +30,13 @@ export async function getSessionClient({
   sessionAccount,
   sessionSigner,
   worldAddress,
-  paymasterOverride,
-  gasEstimates
+  paymasterOverride
 }: {
   userAddress: Address
   sessionAccount: SmartAccount
   sessionSigner: LocalAccount
   worldAddress: Address
   paymasterOverride?: PaymasterClient
-  gasEstimates?: GasEstimates
 }): Promise<SessionClient> {
   const client = sessionAccount.client
   if (!clientHasChain(client)) {
@@ -50,15 +48,12 @@ export async function getSessionClient({
   }
 
   // Create bundler client for submitting user operations
-  const bundlerClient = createBundlerClient(
-    {
-      transport: getBundlerTransport(client.chain, gasEstimates),
-      client,
-      account: sessionAccount,
-      paymaster: paymasterOverride
-    },
-    gasEstimates
-  )
+  const bundlerClient = createBundlerClient({
+    transport: getBundlerTransport(client.chain),
+    client,
+    account: sessionAccount,
+    paymaster: paymasterOverride
+  })
 
   // Extend with standard ERC-4337 smart account actions
   const sessionClient = bundlerClient
