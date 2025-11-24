@@ -85,9 +85,9 @@
 <div class="stat-item balance" bind:this={containerElement}>
   <div class="inner-wrapper">
     <Tooltip content={UI_STRINGS.tokensAvailable}>
-      <div class="value">
-        {CURRENCY_SYMBOL}
-        <span bind:this={balanceElement}></span>
+      <div class="balance-value">
+        <span class="value" bind:this={balanceElement}></span>
+        <span class="currency-symbol">{CURRENCY_SYMBOL}</span>
       </div>
     </Tooltip>
   </div>
@@ -117,8 +117,12 @@
       align-items: center;
       width: 100%;
 
-      .value {
+      .balance-value {
         display: flex;
+
+        .value {
+          margin-right: 5px;
+        }
       }
     }
   }

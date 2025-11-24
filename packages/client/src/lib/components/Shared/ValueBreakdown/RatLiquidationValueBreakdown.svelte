@@ -5,34 +5,26 @@
 
   let {
     originalValue,
-    originalLabel = "Value",
-    taxRateKey,
-    payoutLabel = "Payout"
+    originalLabel
   }: {
     originalValue: number
-    originalLabel?: string
-    taxRateKey: "taxationLiquidateRat" | "taxationCloseTrip"
-    taxLabel?: string
-    payoutLabel?: string
+    originalLabel: string
   } = $props()
 
-  // Calculate tax and payout amounts
-  const taxAmount = Math.floor((originalValue * $gamePercentagesConfig[taxRateKey]) / 100)
+  // Calculate tax and payout amounts for rat liquidation
+  const taxAmount = Math.floor((originalValue * $gamePercentagesConfig.taxationLiquidateRat) / 100)
   const payoutAmount = Math.floor(
-    (originalValue * (100 - $gamePercentagesConfig[taxRateKey])) / 100
+    (originalValue * (100 - $gamePercentagesConfig.taxationLiquidateRat)) / 100
   )
 </script>
 
 <div class="value-breakdown">
   <div class="value-line">
-    {originalLabel}: <span class="value">{CURRENCY_SYMBOL}{originalValue}</span>
+    {UI_STRINGS.traumwertSteuerExplanation(Number($gamePercentagesConfig.taxationLiquidateRat))}:
+    <span class="value negative">-{taxAmount} {CURRENCY_SYMBOL}</span>
   </div>
   <div class="value-line">
-    {UI_STRINGS.traumwertSteuerExplanation(Number($gamePercentagesConfig[taxRateKey]))}:
-    <span class="value negative">-{CURRENCY_SYMBOL}{taxAmount}</span>
-  </div>
-  <div class="value-line">
-    {payoutLabel}: <span class="value payout">{CURRENCY_SYMBOL}{payoutAmount}</span>
+    Payout: <span class="value payout">{payoutAmount} {CURRENCY_SYMBOL}</span>
   </div>
 </div>
 

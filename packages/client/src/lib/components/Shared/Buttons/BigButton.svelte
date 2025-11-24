@@ -36,7 +36,7 @@
     <div class="button-content">
       <span class="button-text">{text}</span>
       {#if cost}
-        <span class="button-cost">({CURRENCY_SYMBOL}{cost})</span>
+        <span class="button-cost">({cost} {CURRENCY_SYMBOL})</span>
       {/if}
     </div>
     <div class="canvas-container">

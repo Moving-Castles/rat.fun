@@ -98,7 +98,7 @@
   })
 
   const generateTooltipContent = (point: TripEvent) => {
-    let toolTipContent = `<div>Trip balance: <span class="tooltip-value">${CURRENCY_SYMBOL}${point.value}</span>`
+    let toolTipContent = `<div>Trip balance: <span class="tooltip-value">${point.value} ${CURRENCY_SYMBOL}</span>`
 
     if (point.valueChange) {
       const valueChangeClass =

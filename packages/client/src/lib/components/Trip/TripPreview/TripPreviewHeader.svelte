@@ -86,13 +86,13 @@
     },
     {
       label: UI_STRINGS.balance.toUpperCase(),
-      value: `${CURRENCY_SYMBOL}${trip.balance}`,
+      value: `${trip.balance} ${CURRENCY_SYMBOL}`,
       className: "balance",
       depleted: Number(trip.balance) === 0
     },
     {
       label: UI_STRINGS.minRatValueToEnter.toUpperCase(),
-      value: `${CURRENCY_SYMBOL}${$minRatValueToEnter ?? 0}`,
+      value: `${$minRatValueToEnter ?? 0} ${CURRENCY_SYMBOL}`,
       className: "min-rat-value-to-enter",
       hideOnPhone: true
     },
@@ -100,7 +100,7 @@
       ? [
           {
             label: UI_STRINGS.maxValuePerWin.toUpperCase(),
-            value: `${CURRENCY_SYMBOL}${$maxValuePerWin}`,
+            value: `${$maxValuePerWin} ${CURRENCY_SYMBOL}`,
             className: "max-value-per-win"
           }
         ]

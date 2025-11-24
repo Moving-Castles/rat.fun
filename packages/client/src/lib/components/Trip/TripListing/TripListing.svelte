@@ -74,7 +74,7 @@
           tripId,
           trip,
           false,
-          `Rat value of ${CURRENCY_SYMBOL}${minRatValue} required`,
+          `Rat value of ${minRatValue} ${CURRENCY_SYMBOL} required`,
           minRatValue
         ]
       }

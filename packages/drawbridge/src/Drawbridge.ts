@@ -358,7 +358,13 @@ export class Drawbridge {
         this.isConnecting = true
         await this.handleWalletConnection()
       } catch (err) {
-        console.error("[drawbridge] Connection handler failed:", err)
+        console.error("[drawbridge] Connection handler failed:", {
+          error: err,
+          errorMessage: err instanceof Error ? err.message : String(err),
+          errorName: err instanceof Error ? err.name : "Unknown",
+          errorStack: err instanceof Error ? err.stack : undefined,
+          timestamp: new Date().toISOString()
+        })
         // Propagate error through state so UI can handle it
         this.updateState({
           status: DrawbridgeStatus.ERROR,
@@ -423,6 +429,18 @@ export class Drawbridge {
 
     // Get or create persistent session signer from localStorage
     const signer = getSessionSigner(userAddress)
+
+    // DEBUG: Log details before creating session account
+    console.log("[drawbridge] About to create session account with client:", {
+      chainId: userClient.chain.id,
+      chainName: userClient.chain.name,
+      accountAddress: userClient.account.address,
+      accountType: userClient.account.type,
+      transportType: (userClient.transport as any)?.type || "unknown",
+      bundlerRpc: (userClient.chain as any)?.rpcUrls?.bundler?.http?.[0] || "none",
+      defaultRpc: userClient.chain.rpcUrls?.default?.http?.[0] || "none",
+      timestamp: new Date().toISOString()
+    })
 
     // Create ERC-4337 SimpleAccount smart wallet
     // TypeScript: We've already checked chain exists on line 298, so cast is safe

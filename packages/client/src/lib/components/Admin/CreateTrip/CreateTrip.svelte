@@ -84,8 +84,12 @@
       !selectedFolderId
   )
 
-  const placeholder =
-    "You're creating a trip that can modify items, and tokens of rats that enter. Your trip balance decreases whenever a rat gains something, and increases when your trip takes something. You can withdraw remaining balance from your trip."
+  const placeholder = `Outline any expected subjective experiences or outcomes the rat
+will have. Our hyper specialised Biological Intelligence Operating System will synthesize a trip based on your description.
+
+Trips induce remote viewing trances in susceptible vermin.
+
+During a trance rats might materialise psycho objects, transferring some value from your trip to their flesh. Shall a trip be too heroic and kill the rat you will collect its total value.`
 
   async function onClick() {
     try {
@@ -240,10 +244,11 @@
                   bind:value={tripCreationCost}
                 />
                 <div class="slider-labels">
-                  <span class="slider-min"
-                    >{CURRENCY_SYMBOL}{Math.min($playerERC20Balance, MIN_TRIP_CREATION_COST)}</span
-                  >
-                  <span class="slider-max">{CURRENCY_SYMBOL}{$playerERC20Balance}</span>
+                  <span class="slider-min">
+                    {Math.min($playerERC20Balance, MIN_TRIP_CREATION_COST)}
+                    {CURRENCY_SYMBOL}
+                  </span>
+                  <span class="slider-max">{$playerERC20Balance}{CURRENCY_SYMBOL}</span>
                 </div>
               </div>
             </div>
@@ -252,11 +257,11 @@
             <div class="calculated-values">
               <div class="value-box">
                 <div class="value-label">{UI_STRINGS.minRatValueToTrip.toUpperCase()}</div>
-                <div class="value-amount">{CURRENCY_SYMBOL}{$minRatValueToEnter}</div>
+                <div class="value-amount">{$minRatValueToEnter} {CURRENCY_SYMBOL}</div>
               </div>
               <div class="value-box">
                 <div class="value-label">{UI_STRINGS.maxValuePerWin.toUpperCase()}</div>
-                <div class="value-amount">{CURRENCY_SYMBOL}{$maxValuePerWin}</div>
+                <div class="value-amount">{$maxValuePerWin} {CURRENCY_SYMBOL}</div>
               </div>
             </div>
           </div>
@@ -289,7 +294,7 @@
         <textarea
           disabled={busy.CreateTrip.current !== 0}
           id="trip-description"
-          rows={$isPhone ? 3 : 6}
+          rows={$isPhone ? 3 : 10}
           {placeholder}
           oninput={typeHit}
           bind:value={tripDescription}
@@ -328,9 +333,10 @@
           />
           <div class="slider-labels">
             <span class="slider-min"
-              >{CURRENCY_SYMBOL}{Math.min($playerERC20Balance, MIN_TRIP_CREATION_COST)}</span
-            >
-            <span class="slider-max">{CURRENCY_SYMBOL}{$playerERC20Balance}</span>
+              >{Math.min($playerERC20Balance, MIN_TRIP_CREATION_COST)} {CURRENCY_SYMBOL}
+            </span>
+
+            <span class="slider-max">{$playerERC20Balance} {CURRENCY_SYMBOL}</span>
           </div>
         </div>
       </div>
@@ -339,11 +345,11 @@
       <div class="calculated-values">
         <div class="value-box">
           <div class="value-label">MIN RAT VALUE TO TRIP</div>
-          <div class="value-amount">{CURRENCY_SYMBOL}{$minRatValueToEnter}</div>
+          <div class="value-amount">{$minRatValueToEnter} {CURRENCY_SYMBOL}</div>
         </div>
         <div class="value-box">
           <div class="value-label">MAX VALUE PER WIN</div>
-          <div class="value-amount">{CURRENCY_SYMBOL}{$maxValuePerWin}</div>
+          <div class="value-amount">{$maxValuePerWin} {CURRENCY_SYMBOL}</div>
         </div>
       </div>
     </div>

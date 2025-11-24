@@ -2,7 +2,7 @@
   import type { Trip as SanityTrip } from "@sanity-types"
   import { sendLiquidateTrip } from "$lib/modules/action-manager/index.svelte"
   import { sendLiquidateTripMessage } from "$lib/modules/off-chain-sync"
-  import { BigButton, ValueBreakdown, SmallSpinner } from "$lib/components/Shared"
+  import { BigButton, TripClosureValueBreakdown, SmallSpinner } from "$lib/components/Shared"
 
   let {
     tripId,
@@ -38,10 +38,9 @@
       <h1>
         Are you sure you want to liquidate trip #{tripContent.index}?
       </h1>
-      <ValueBreakdown
+      <TripClosureValueBreakdown
         originalValue={Number(trip.balance)}
         originalLabel="Trip balance"
-        taxRateKey="taxationCloseTrip"
         payoutLabel="You will recover"
       />
     </div>

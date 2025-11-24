@@ -2,6 +2,7 @@
   import type { EnterTripReturnValue } from "@server/modules/types"
   import { frozenRat } from "$lib/components/GameRun/state.svelte"
   import { getRatInventory } from "$lib/modules/state/utils"
+  import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import { gsap } from "gsap"
 
   let {
@@ -69,12 +70,14 @@
 <div class="items" bind:this={itemsElement} class:empty>
   {#each addedItems as itemChange}
     <div class="item add">
-      {itemChange.name} (+{itemChange.value})
+      {itemChange.name} (+{itemChange.value}
+      {CURRENCY_SYMBOL})
     </div>
   {/each}
   {#each removedItems as itemChange}
     <div class="item remove">
-      {itemChange.name} (-{itemChange.value})
+      {itemChange.name} (-{itemChange.value}
+      {CURRENCY_SYMBOL})
     </div>
   {/each}
 </div>

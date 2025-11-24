@@ -58,7 +58,7 @@
       color: white;
 
       .button-text {
-        font-size: var(--font-size-large);
+        font-size: var(--font-size-extra-large);
         font-family: var(--special-font-stack);
       }
     }

@@ -26,7 +26,8 @@
 
 <span class="signed-number {colorClass} {className}">
   {#if (hideZero && value !== 0) || !hideZero}
-    {sign}{#if withCurrency}{CURRENCY_SYMBOL}{/if}{Math.floor(Math.abs(tweenedValue.current))}
+    {sign}{Math.floor(Math.abs(tweenedValue.current))}{#if withCurrency}
+      {CURRENCY_SYMBOL}{/if}
   {/if}
 </span>
 

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { rat, ratTotalValue } from "$lib/modules/state/stores"
   import { playSound } from "$lib/modules/sound"
-  import { BigButton, ValueBreakdown } from "$lib/components/Shared"
+  import { BigButton, RatLiquidationValueBreakdown, TotalValue } from "$lib/components/Shared"
   import { ratState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
   import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
 
@@ -18,19 +18,23 @@
 </script>
 
 <div class="confirm-liquidation">
-  <div class="confirm-liquidation-text">
-    <h1>
+  <div class="confirm-liquidation-content">
+    <div class="total-value-container">
+      <TotalValue />
+    </div>
+    <div class="confirm-liquidation-text">
+      <RatLiquidationValueBreakdown
+        originalValue={Number($ratTotalValue)}
+        originalLabel={UI_STRINGS.ratValue($rat?.name)}
+      />
+    </div>
+    <div class="fine-print">
       {UI_STRINGS.confirmLiquidationMessage($rat?.name)}
-    </h1>
-    <ValueBreakdown
-      originalValue={Number($ratTotalValue)}
-      originalLabel={UI_STRINGS.ratValue($rat?.name)}
-      taxRateKey="taxationLiquidateRat"
-    />
-  </div>
-  <div class="button-container">
-    <BigButton text={UI_STRINGS.cancel} onclick={onClickAbort} />
-    <BigButton text={UI_STRINGS.confirm} onclick={onClickConfirm} />
+    </div>
+    <div class="button-container">
+      <BigButton text={UI_STRINGS.cancel} onclick={onClickAbort} />
+      <BigButton text={UI_STRINGS.confirm} onclick={onClickConfirm} />
+    </div>
   </div>
 </div>
 
@@ -46,25 +50,38 @@
     background-image: url("/images/texture-2.png");
     background-size: 200px;
 
-    .confirm-liquidation-text {
-      width: 80%;
-      padding-bottom: 10px;
-      color: black;
-      background: rgb(243, 45, 0);
-    }
+    .confirm-liquidation-content {
+      width: calc(100% - 40px);
 
-    .button-container {
-      overflow: hidden;
-      width: 80%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      display: flex;
-      flex-direction: row;
-      gap: 10px;
-      height: 80px;
-      @media (max-width: 800px) {
+      .confirm-liquidation-text {
         width: 100%;
+        padding-bottom: 10px;
+        color: black;
+      }
+
+      .fine-print {
+        width: 100%;
+        padding-bottom: 10px;
+        padding-top: 10px;
+        color: black;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        background: rgba(255, 255, 255, 0.5);
+      }
+
+      .button-container {
+        overflow: hidden;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+        height: 80px;
+        @media (max-width: 800px) {
+          width: 100%;
+        }
       }
     }
   }

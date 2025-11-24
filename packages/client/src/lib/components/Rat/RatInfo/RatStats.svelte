@@ -97,17 +97,19 @@
       </div>
 
       <!-- TRIP COUNT -->
-      <!-- svelte-ignore a11y_click_events_have_key_events -->
-      <div
-        class="info-item trip-count"
-        role="button"
-        tabindex="0"
-        onclick={() => ratState.state.transitionTo(RAT_BOX_STATE.PAST_TRIP_LIST)}
-      >
-        <span>
-          {UI_STRINGS.trips}: {displayRat.tripCount ?? 0}
-        </span>
-      </div>
+      {#if displayRat.tripCount ?? 0 > 0}
+        <!-- svelte-ignore a11y_click_events_have_key_events -->
+        <div
+          class="info-item trip-count"
+          role="button"
+          tabindex="0"
+          onclick={() => ratState.state.transitionTo(RAT_BOX_STATE.PAST_TRIP_LIST)}
+        >
+          <span>
+            {UI_STRINGS.trips}: {displayRat.tripCount ?? 0}
+          </span>
+        </div>
+      {/if}
     </div>
 
     <!-- IMAGE -->

@@ -142,7 +142,7 @@
       : "tooltip-value"
     let explicitSymbol =
       valueChangeClass === "tooltip-value" ? "" : valueChangeClass.includes("positive") ? "+" : "-"
-    toolTipContent += `P/L: <span class="${valueChangeClass}">${explicitSymbol}${CURRENCY_SYMBOL}${Math.abs(point.value || 0)}</span></div>`
+    toolTipContent += `P/L: <span class="${valueChangeClass}">${explicitSymbol}${Math.abs(point.value || 0)} ${CURRENCY_SYMBOL}</span></div>`
 
     return toolTipContent
   }

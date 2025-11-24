@@ -2,6 +2,7 @@
   import type { EnterTripReturnValue } from "@server/modules/types"
   import { onMount, onDestroy } from "svelte"
   import { Log, TripSummary } from "$lib/components/GameRun"
+  import TripSummary2 from "./TripSummary/TripSummary2.svelte"
   import { playSound } from "$lib/modules/sound"
   import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
   import { gsap } from "gsap"
@@ -145,7 +146,7 @@
   </div>
 
   <!-- RESULT SUMMARY -->
-  <TripSummary {result} onTimeline={addSummaryTimeline} />
+  <TripSummary2 {result} onTimeline={addSummaryTimeline} />
 </div>
 
 <style lang="scss">

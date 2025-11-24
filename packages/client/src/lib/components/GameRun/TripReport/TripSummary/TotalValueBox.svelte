@@ -49,11 +49,11 @@
 
   const getDisplayValueChange = (valueChange: number) => {
     if (valueChange === 0) {
-      return CURRENCY_SYMBOL + "0"
+      return "0 " + CURRENCY_SYMBOL
     } else if (valueChange > 0) {
-      return CURRENCY_SYMBOL + "+" + valueChange
+      return "+" + valueChange + " " + CURRENCY_SYMBOL
     } else {
-      return CURRENCY_SYMBOL + valueChange
+      return valueChange + " " + CURRENCY_SYMBOL
     }
   }
 
@@ -112,8 +112,9 @@
   <div class="label">
     <span>VALUE</span>
   </div>
-  <div class="value">
-    <span>{CURRENCY_SYMBOL}<span bind:this={valueElement}>{initialTotalValue}</span></span>
+  <div class="value-container">
+    <span class="value" bind:this={valueElement}>{initialTotalValue}</span>
+    <span class="currency-symbol">{CURRENCY_SYMBOL}</span>
   </div>
   <div class="change" bind:this={changeElement}>
     <Tooltip content={displayValueChange}>
@@ -138,7 +139,7 @@
       align-items: center;
       justify-content: center;
     }
-    .value {
+    .value-container {
       width: 50%;
       border-right: 1px solid white;
       height: 100%;
@@ -146,6 +147,10 @@
       align-items: center;
       justify-content: center;
       font-size: var(--font-size-extra-large);
+
+      .value {
+        margin-right: 10px;
+      }
     }
     .change {
       width: 20%;

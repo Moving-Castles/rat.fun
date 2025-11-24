@@ -40,7 +40,7 @@
       <!-- NAME -->
       <div class="name">{item.name}</div>
       <!-- VALUE -->
-      <span class="value">{CURRENCY_SYMBOL}{item.value}</span>
+      <span class="value">{item.value} {CURRENCY_SYMBOL}</span>
     </div>
   </div>
 </Tooltip>

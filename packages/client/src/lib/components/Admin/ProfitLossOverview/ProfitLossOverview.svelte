@@ -51,7 +51,12 @@
       <div class="content {$portfolioClass}">
         <Tooltip content={UI_STRINGS.activeProfit}>
           <div class="profit-amount">
-            {$plSymbolExplicit}{CURRENCY_SYMBOL}{Math.abs(Math.floor(tweenedProfitLoss.current))}
+            <span class="profit-amount-value">
+              {$plSymbolExplicit}{Math.abs(Math.floor(tweenedProfitLoss.current))}
+            </span>
+            <span class="currency-symbol">
+              {CURRENCY_SYMBOL}
+            </span>
           </div>
         </Tooltip>
       </div>
@@ -62,13 +67,23 @@
     <div class="portfolio-box">
       <p>{UI_STRINGS.invested}</p>
       <div class="portfolio-amount">
-        {CURRENCY_SYMBOL}{$investment}
+        <div class="portfolio-amount-inner">
+          <span class="portfolio-amount-value">{$investment}</span>
+          <span class="currency-symbol">
+            {CURRENCY_SYMBOL}
+          </span>
+        </div>
       </div>
     </div>
     <div class="portfolio-box">
       <p>{UI_STRINGS.portfolio}</p>
       <div class="portfolio-amount">
-        {CURRENCY_SYMBOL}{$balance}
+        <div class="portfolio-amount-inner">
+          <span class="portfolio-amount-value">{$balance}</span>
+          <span class="currency-symbol">
+            {CURRENCY_SYMBOL}
+          </span>
+        </div>
       </div>
     </div>
   </div>
@@ -220,16 +235,31 @@
     font-family: var(--special-font-stack);
     font-size: 82px;
     margin: 0;
-    vertical-align: middle;
     width: 100%;
     text-align: center;
+
+    .profit-amount-value {
+      margin-right: 2px;
+    }
   }
 
   .portfolio-amount {
     font-family: var(--special-font-stack);
     font-size: 42px;
     display: inline-block;
-    text-align: center;
     width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .portfolio-amount-inner {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .portfolio-amount-value {
+        margin-right: 5px;
+      }
+    }
   }
 </style>

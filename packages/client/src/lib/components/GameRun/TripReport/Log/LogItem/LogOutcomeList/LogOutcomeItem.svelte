@@ -30,7 +30,7 @@
   let negative = action === "remove"
 
   // Calculate final text for width measurement
-  const finalText = `${name} (${CURRENCY_SYMBOL}${negative ? "-" : ""}${value})`
+  const finalText = `${name} (${negative ? "-" : ""}${value} ${CURRENCY_SYMBOL})`
 
   // Stage 1: Prepare the animation
   const prepare = () => {
@@ -84,7 +84,7 @@
 
     // Set final text with sign and change color simultaneously
     timeline.to(valueElement, {
-      textContent: `${name} (${CURRENCY_SYMBOL}${negative ? "-" : ""}${value})`,
+      textContent: `${name} (${negative ? "-" : ""}${value} ${CURRENCY_SYMBOL})`,
       duration: 0,
       ease: "power2.out"
     })

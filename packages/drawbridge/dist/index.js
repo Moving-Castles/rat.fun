@@ -177,8 +177,75 @@ async function getSessionAccount({
   userAddress
 }) {
   const signer = getSessionSigner(userAddress);
-  const account = await toSimpleSmartAccount({ client, owner: signer });
-  return { account, signer };
+  console.log("[getSessionAccount] Creating session account:", {
+    userAddress,
+    signerAddress: signer.address,
+    chainId: client.chain?.id,
+    chainName: client.chain?.name,
+    transportType: client.transport?.type || "unknown",
+    hasBundlerRpc: client.chain?.rpcUrls?.bundler?.http?.[0] || "none",
+    timestamp: (/* @__PURE__ */ new Date()).toISOString()
+  });
+  const originalTransport = client.transport;
+  const loggingTransport = (args) => {
+    const transport = originalTransport(args);
+    const originalRequest = transport.request;
+    return {
+      ...transport,
+      request: async (requestArgs) => {
+        const requestId = Math.random().toString(36).substring(7);
+        console.log(`[getSessionAccount:RPC:${requestId}] Request:`, {
+          method: requestArgs.method,
+          params: requestArgs.params,
+          timestamp: (/* @__PURE__ */ new Date()).toISOString()
+        });
+        try {
+          const result = await originalRequest(requestArgs);
+          console.log(`[getSessionAccount:RPC:${requestId}] Success:`, {
+            method: requestArgs.method,
+            resultType: typeof result,
+            timestamp: (/* @__PURE__ */ new Date()).toISOString()
+          });
+          return result;
+        } catch (error) {
+          console.error(`[getSessionAccount:RPC:${requestId}] Failed:`, {
+            method: requestArgs.method,
+            error: error instanceof Error ? error.message : String(error),
+            errorName: error instanceof Error ? error.name : "Unknown",
+            errorStack: error instanceof Error ? error.stack : void 0,
+            timestamp: (/* @__PURE__ */ new Date()).toISOString()
+          });
+          throw error;
+        }
+      }
+    };
+  };
+  const wrappedClient = { ...client, transport: loggingTransport };
+  try {
+    console.log("[getSessionAccount] Calling toSimpleSmartAccount...");
+    const account = await toSimpleSmartAccount({
+      client: wrappedClient,
+      owner: signer
+    });
+    console.log("[getSessionAccount] Session account created successfully:", {
+      accountAddress: account.address,
+      accountType: account.type,
+      timestamp: (/* @__PURE__ */ new Date()).toISOString()
+    });
+    return { account, signer };
+  } catch (error) {
+    console.error("[getSessionAccount] Failed to create session account:", {
+      error,
+      errorMessage: error instanceof Error ? error.message : String(error),
+      errorName: error instanceof Error ? error.name : "Unknown",
+      errorStack: error instanceof Error ? error.stack : void 0,
+      userAddress,
+      signerAddress: signer.address,
+      chainId: client.chain?.id,
+      timestamp: (/* @__PURE__ */ new Date()).toISOString()
+    });
+    throw error;
+  }
 }
 
 // src/bundler/paymaster.ts
@@ -327,23 +394,109 @@ function logFeeCapApplied(data) {
 }
 
 // src/bundler/transport.ts
+var RETRY_CONFIG = {
+  maxRetries: 4,
+  // Total of 5 attempts (1 initial + 4 retries)
+  baseDelayMs: 1e3,
+  // Start with 1 second
+  maxDelayMs: 16e3
+  // Cap at 16 seconds
+};
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+function getRetryDelay(attempt) {
+  const delay = RETRY_CONFIG.baseDelayMs * Math.pow(2, attempt);
+  return Math.min(delay, RETRY_CONFIG.maxDelayMs);
+}
+async function isPaymasterCostRejection(response) {
+  if (response.status !== 200) return false;
+  try {
+    const clonedResponse = response.clone();
+    const body = await clonedResponse.json();
+    if (body?.error?.code === -32002) {
+      const details = body.error.details || body.error.message || "";
+      return details.toLowerCase().includes("max sponsorship cost");
+    }
+    return false;
+  } catch {
+    return false;
+  }
+}
+async function fetchWithRetry(input, init) {
+  let lastError = null;
+  for (let attempt = 0; attempt <= RETRY_CONFIG.maxRetries; attempt++) {
+    try {
+      const response = await fetch(input, init);
+      if (response.status === 429) {
+        const isLastAttempt = attempt === RETRY_CONFIG.maxRetries;
+        if (isLastAttempt) {
+          let errorMessage = "Rate limit exceeded";
+          try {
+            const errorBody = await response.json();
+            if (errorBody?.errorMessage) {
+              errorMessage = errorBody.errorMessage;
+            }
+          } catch {
+          }
+          throw new Error(
+            `${errorMessage}. All ${RETRY_CONFIG.maxRetries + 1} retry attempts exhausted.`
+          );
+        }
+        const delayMs = getRetryDelay(attempt);
+        console.warn(
+          `[Drawbridge/Transport] Rate limit hit (429). Retrying in ${delayMs}ms (attempt ${attempt + 1}/${RETRY_CONFIG.maxRetries + 1})...`
+        );
+        await sleep(delayMs);
+        continue;
+      }
+      if (await isPaymasterCostRejection(response)) {
+        const isLastAttempt = attempt === RETRY_CONFIG.maxRetries;
+        if (isLastAttempt) {
+          return response;
+        }
+        const delayMs = getRetryDelay(attempt);
+        console.warn(
+          `[Drawbridge/Transport] Paymaster cost limit exceeded. Retrying in ${delayMs}ms (attempt ${attempt + 1}/${RETRY_CONFIG.maxRetries + 1})...`
+        );
+        await sleep(delayMs);
+        continue;
+      }
+      return response;
+    } catch (error) {
+      lastError = error instanceof Error ? error : new Error(String(error));
+      if (attempt === RETRY_CONFIG.maxRetries) {
+        throw lastError;
+      }
+      const delayMs = getRetryDelay(attempt);
+      console.warn(
+        `[Drawbridge/Transport] Network error. Retrying in ${delayMs}ms (attempt ${attempt + 1}/${RETRY_CONFIG.maxRetries + 1})...`,
+        error
+      );
+      await sleep(delayMs);
+    }
+  }
+  throw lastError || new Error("Unexpected error in fetchWithRetry");
+}
 function getBundlerTransport(chain, ethPriceUSD) {
   const bundlerHttpUrl = chain.rpcUrls.bundler?.http[0];
   if (bundlerHttpUrl) {
     const shouldApplyFeeCap = chain.id === 8453 || chain.id === 84532;
     return http(bundlerHttpUrl, {
+      // Use custom fetch with retry logic
+      fetchFn: fetchWithRetry,
       onFetchRequest: async (request) => {
         try {
           if (request.body) {
             const clonedRequest = request.clone();
             const text = await clonedRequest.text();
             const body = JSON.parse(text);
-            if (body?.method === "eth_sendUserOperation") {
+            if (body?.method === "pm_getPaymasterData" || body?.method === "eth_sendUserOperation" || body?.method === "eth_estimateUserOperationGas") {
               const userOp = body?.params?.[0];
               if (userOp && shouldApplyFeeCap) {
                 applyFeeCap(userOp, ethPriceUSD);
               }
-              if (userOp) {
+              if (body?.method === "eth_sendUserOperation" && userOp) {
                 logUserOperationCost(userOp, ethPriceUSD);
               }
             }
@@ -365,18 +518,25 @@ function applyFeeCap(userOp, ethPriceUSD) {
   const maxFeePerGasCap = maxBudgetETH / totalGas;
   const originalMaxFee = BigInt(userOp.maxFeePerGas);
   const originalPriorityFee = BigInt(userOp.maxPriorityFeePerGas);
+  let maxFeeWasCapped = false;
+  let cappedMaxFee = originalMaxFee;
+  let cappedPriorityFee = originalPriorityFee;
   if (originalMaxFee > maxFeePerGasCap) {
     userOp.maxFeePerGas = "0x" + maxFeePerGasCap.toString(16);
-    let cappedPriorityFee = originalPriorityFee;
-    if (originalPriorityFee > maxFeePerGasCap) {
-      cappedPriorityFee = maxFeePerGasCap;
-      userOp.maxPriorityFeePerGas = "0x" + maxFeePerGasCap.toString(16);
-    }
+    cappedMaxFee = maxFeePerGasCap;
+    maxFeeWasCapped = true;
+  }
+  const currentMaxFee = BigInt(userOp.maxFeePerGas);
+  if (originalPriorityFee > currentMaxFee) {
+    userOp.maxPriorityFeePerGas = "0x" + currentMaxFee.toString(16);
+    cappedPriorityFee = currentMaxFee;
+  }
+  if (maxFeeWasCapped || cappedPriorityFee !== originalPriorityFee) {
     logFeeCapApplied({
       totalGas,
       originalMaxFee,
       originalPriorityFee,
-      cappedMaxFee: maxFeePerGasCap,
+      cappedMaxFee,
       cappedPriorityFee,
       maxBudgetUSD: MAX_COST_USD,
       ethPrice: ETH_PRICE_USD
@@ -1040,7 +1200,13 @@ var Drawbridge = class {
         this.isConnecting = true;
         await this.handleWalletConnection();
       } catch (err) {
-        console.error("[drawbridge] Connection handler failed:", err);
+        console.error("[drawbridge] Connection handler failed:", {
+          error: err,
+          errorMessage: err instanceof Error ? err.message : String(err),
+          errorName: err instanceof Error ? err.name : "Unknown",
+          errorStack: err instanceof Error ? err.stack : void 0,
+          timestamp: (/* @__PURE__ */ new Date()).toISOString()
+        });
         this.updateState({
           status: "error" /* ERROR */,
           error: err instanceof Error ? err : new Error(String(err))
@@ -1090,6 +1256,16 @@ var Drawbridge = class {
     }
     console.log("[drawbridge] Setting up session for address:", userAddress);
     const signer = getSessionSigner(userAddress);
+    console.log("[drawbridge] About to create session account with client:", {
+      chainId: userClient.chain.id,
+      chainName: userClient.chain.name,
+      accountAddress: userClient.account.address,
+      accountType: userClient.account.type,
+      transportType: userClient.transport?.type || "unknown",
+      bundlerRpc: userClient.chain?.rpcUrls?.bundler?.http?.[0] || "none",
+      defaultRpc: userClient.chain.rpcUrls?.default?.http?.[0] || "none",
+      timestamp: (/* @__PURE__ */ new Date()).toISOString()
+    });
     const { account } = await getSessionAccount({
       client: userClient,
       userAddress

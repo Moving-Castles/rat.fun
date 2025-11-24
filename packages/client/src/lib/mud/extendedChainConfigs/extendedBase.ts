@@ -11,9 +11,7 @@ export const extendedBase = {
   rpcUrls: {
     default: {
       http: [PUBLIC_BASE_RPC_URL, ...baseConfig.rpcUrls.default.http],
-      ...(PUBLIC_BASE_RPC_WEBSOCKET_URL
-        ? { webSocket: [PUBLIC_BASE_RPC_WEBSOCKET_URL] }
-        : {})
+      ...(PUBLIC_BASE_RPC_WEBSOCKET_URL ? { webSocket: [PUBLIC_BASE_RPC_WEBSOCKET_URL] } : {})
     },
     bundler: {
       http: [PUBLIC_BASE_BUNDLER_URL]

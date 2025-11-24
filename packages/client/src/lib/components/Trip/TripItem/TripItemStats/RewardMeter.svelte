@@ -7,7 +7,7 @@
 
 <div class="meta-data-item max-win">
   <Tooltip content="Max reward">
-    <div class="inner">{CURRENCY_SYMBOL}{maxValuePerWin}</div>
+    <div class="inner">{maxValuePerWin} {CURRENCY_SYMBOL}</div>
   </Tooltip>
 </div>
 

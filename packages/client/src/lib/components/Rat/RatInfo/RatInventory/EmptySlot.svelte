@@ -28,10 +28,10 @@
 
 <style lang="scss">
   .empty-slot {
-    background: rgba(0, 0, 0, 0.8);
-    border: 2px solid black;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(0, 0, 0, 0.4);
     min-height: 40px;
-    opacity: 0.5;
+    opacity: 1;
     position: relative;
     display: flex;
     align-items: center;
@@ -42,11 +42,12 @@
 
     &::before {
       content: var(--msg-empty);
-      color: rgba(255, 255, 255, 0.6);
+      color: rgba(255, 255, 255, 0.3);
       font-size: var(--font-size-normal);
       opacity: 0;
       transition: opacity 0.2s ease;
       width: 100%;
+      pointer-events: none;
     }
 
     &:hover::before {

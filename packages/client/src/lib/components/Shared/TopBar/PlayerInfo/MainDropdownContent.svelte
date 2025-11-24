@@ -31,7 +31,8 @@
   <div class="tab">
     <p class="key">{UI_STRINGS.balance}:</p>
     <p class="value">
-      {CURRENCY_SYMBOL}{$playerERC20Balance}
+      {$playerERC20Balance}
+      {CURRENCY_SYMBOL}
     </p>
   </div>
   <!-- Rats killed -->

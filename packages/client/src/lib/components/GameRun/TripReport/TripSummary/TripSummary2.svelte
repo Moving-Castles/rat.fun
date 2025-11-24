@@ -26,7 +26,7 @@
 
   // Track child timelines
   let receivedTimelines = 0
-  const totalItems = 4 // HealthBox, ItemBox, TotalValueBox, ActionBox
+  const totalItems = 2 // TotalValueBox2, ActionBox
 
   // Create parent timeline
   const summaryTimeline = gsap.timeline()
@@ -103,12 +103,12 @@
   <!-- COLUMN 1 -->
   <div class="results">
     <div class="results-inner">
-      <HealthBox
-        {result}
-        initialBalance={Number(frozenRat?.balance ?? 0)}
-        onTimeline={addToTimeline}
-      />
-      <ItemBox {result} onTimeline={addToTimeline} />
+      <!-- <HealthBox
+          {result}
+          initialBalance={Number(frozenRat?.balance ?? 0)}
+          onTimeline={addToTimeline}
+        />
+        <ItemBox {result} onTimeline={addToTimeline} /> -->
       <TotalValueBox2
         {result}
         initialTotalValue={frozenRat?.initialTotalValue ?? 0}

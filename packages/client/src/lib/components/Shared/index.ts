@@ -49,7 +49,14 @@ export { default as PhoneGameViewButton } from "./PhoneGameViewButton/PhoneGameV
 /* Toasts */
 export { default as Toasts } from "./Toasts/Toasts.svelte"
 
+/* Total Value */
+export { default as TotalValue } from "./TotalValue/TotalValue.svelte"
+export { default as TotalValueChange } from "./TotalValue/TotalValueChange.svelte"
+
+/* Value Breakdown */
+export { default as TripClosureValueBreakdown } from "./ValueBreakdown/TripClosureValueBreakdown.svelte"
+export { default as RatLiquidationValueBreakdown } from "./ValueBreakdown/RatLiquidationValueBreakdown.svelte"
+
 /* Utility Components */
 export { default as SEO } from "./SEO/SEO.svelte"
-export { default as ValueBreakdown } from "./ValueBreakdown/ValueBreakdown.svelte"
 export { default as SignedNumber } from "./SignedNumber/SignedNumber.svelte"

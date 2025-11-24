@@ -4,6 +4,7 @@
   import { playSound } from "$lib/modules/sound"
 
   import InteractiveItem from "$lib/components/Rat/RatInfo/RatInventory/InteractiveItem.svelte"
+  import InteractiveItem2 from "$lib/components/Rat/RatInfo/RatInventory/InteractiveItem2.svelte"
   import EmptySlot from "$lib/components/Rat/RatInfo/RatInventory/EmptySlot.svelte"
 
   let {
@@ -254,15 +255,18 @@
     <div class="inventory-container" bind:this={inventoryContainer}>
       <!-- INVENTORY GRID -->
       {#each inventorySlots as slot, index (index)}
-        {#if slot.item}
-          <div bind:this={slotElements[index]} class="slot-wrapper index-{slot.originalIndex}">
-            <InteractiveItem item={slot.item} index={slot.originalIndex} />
-          </div>
-        {:else}
-          <div bind:this={slotElements[index]} class="slot-wrapper index-{slot.originalIndex}">
+        <div bind:this={slotElements[index]} class="slot-wrapper index-{slot.originalIndex}">
+          <!-- Always render the container slot -->
+          <div class="slot-container">
             <EmptySlot index={slot.originalIndex} />
           </div>
-        {/if}
+          <!-- Render item on top if present -->
+          {#if slot.item}
+            <div class="slot-item">
+              <InteractiveItem2 item={slot.item} index={slot.originalIndex} />
+            </div>
+          {/if}
+        </div>
       {/each}
     </div>
   {/if}
@@ -298,6 +302,25 @@
   .slot-wrapper {
     width: 100%;
     height: 100%;
+    position: relative;
+  }
+
+  .slot-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+
+  .slot-item {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
   }
 
   .slot-wrapper.index-0,
