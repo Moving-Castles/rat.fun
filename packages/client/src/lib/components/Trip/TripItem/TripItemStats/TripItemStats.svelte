@@ -1,10 +1,10 @@
 <script lang="ts">
   import { getTripMaxValuePerWin } from "$lib/modules/state/utils"
 
-  import RiskMeter from "./RiskMeter.svelte"
   import RewardMeter from "./RewardMeter.svelte"
   import PopularAlert from "./PopularAlert.svelte"
   import LowBalanceAlert from "./LowBalanceAlert.svelte"
+  import SurvivalMeter from "./SurvivalMeter.svelte"
 
   let { trip }: { trip: Trip } = $props()
 
@@ -13,7 +13,7 @@
 
 <div class="meta-data">
   <!-- METERS -->
-  <RiskMeter {trip} />
+  <SurvivalMeter {trip} />
   <RewardMeter maxValuePerWin={$maxValuePerWin} />
   <!-- ALERTS -->
   <PopularAlert {trip} />

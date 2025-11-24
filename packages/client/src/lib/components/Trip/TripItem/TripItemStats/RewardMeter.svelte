@@ -1,12 +1,13 @@
 <script lang="ts">
   import { Tooltip } from "$lib/components/Shared"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
 
   let { maxValuePerWin }: { maxValuePerWin: number } = $props()
 </script>
 
 <div class="meta-data-item max-win">
-  <Tooltip content="Max reward">
+  <Tooltip content={UI_STRINGS.maxValuePerWin}>
     <div class="inner">{maxValuePerWin} {CURRENCY_SYMBOL}</div>
   </Tooltip>
 </div>
