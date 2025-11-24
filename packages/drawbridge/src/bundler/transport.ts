@@ -236,24 +236,33 @@ function applyFeeCap(userOp: any, ethPriceUSD?: number): void {
   const originalMaxFee = BigInt(userOp.maxFeePerGas)
   const originalPriorityFee = BigInt(userOp.maxPriorityFeePerGas)
 
+  // Track if we applied any caps for logging
+  let maxFeeWasCapped = false
+  let cappedMaxFee = originalMaxFee
+  let cappedPriorityFee = originalPriorityFee
+
   // Apply cap if network's maxFeePerGas would exceed budget
   if (originalMaxFee > maxFeePerGasCap) {
-    // Cap maxFeePerGas
     userOp.maxFeePerGas = "0x" + maxFeePerGasCap.toString(16)
+    cappedMaxFee = maxFeePerGasCap
+    maxFeeWasCapped = true
+  }
 
-    // EIP-1559 constraint: maxPriorityFeePerGas must be <= maxFeePerGas
-    // If priority fee is now higher than capped max fee, reduce it too
-    let cappedPriorityFee = originalPriorityFee
-    if (originalPriorityFee > maxFeePerGasCap) {
-      cappedPriorityFee = maxFeePerGasCap
-      userOp.maxPriorityFeePerGas = "0x" + maxFeePerGasCap.toString(16)
-    }
+  // ALWAYS enforce EIP-1559 constraint: maxPriorityFeePerGas must be <= maxFeePerGas
+  // This must run independently of whether maxFee was capped above
+  const currentMaxFee = BigInt(userOp.maxFeePerGas)
+  if (originalPriorityFee > currentMaxFee) {
+    userOp.maxPriorityFeePerGas = "0x" + currentMaxFee.toString(16)
+    cappedPriorityFee = currentMaxFee
+  }
 
+  // Log if any capping was applied
+  if (maxFeeWasCapped || cappedPriorityFee !== originalPriorityFee) {
     logFeeCapApplied({
       totalGas,
       originalMaxFee,
       originalPriorityFee,
-      cappedMaxFee: maxFeePerGasCap,
+      cappedMaxFee,
       cappedPriorityFee,
       maxBudgetUSD: MAX_COST_USD,
       ethPrice: ETH_PRICE_USD
