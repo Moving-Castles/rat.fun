@@ -1,12 +1,19 @@
 import { base as baseConfig } from "viem/chains"
 import { type MUDChain } from "@latticexyz/common/chains"
-import { PUBLIC_BASE_RPC_URL, PUBLIC_BASE_BUNDLER_URL } from "$env/static/public"
+import {
+  PUBLIC_BASE_RPC_URL,
+  PUBLIC_BASE_BUNDLER_URL,
+  PUBLIC_BASE_RPC_WEBSOCKET_URL
+} from "$env/static/public"
 
 export const extendedBase = {
   ...baseConfig,
   rpcUrls: {
     default: {
-      http: [PUBLIC_BASE_RPC_URL, ...baseConfig.rpcUrls.default.http]
+      http: [PUBLIC_BASE_RPC_URL, ...baseConfig.rpcUrls.default.http],
+      ...(PUBLIC_BASE_RPC_WEBSOCKET_URL
+        ? { webSocket: [PUBLIC_BASE_RPC_WEBSOCKET_URL] }
+        : {})
     },
     bundler: {
       http: [PUBLIC_BASE_BUNDLER_URL]

@@ -33,17 +33,31 @@ export async function setupPublicNetwork(environment: ENVIRONMENT, url: URL) {
    */
   const transports = []
 
+  console.log("[MUD/PublicNetwork] Setting up RPC transports:")
+  console.log("  Chain:", networkConfig.chain.name, `(${networkConfig.chain.id})`)
+  console.log("  HTTP RPC:", networkConfig.provider.jsonRpcUrl)
+  console.log("  WebSocket RPC:", networkConfig.provider.wsRpcUrl || "not configured")
+  console.log("  Environment:", import.meta.env.DEV ? "development" : "production")
+
   // Add WebSocket transport if WebSocket URL is available
   if (networkConfig.provider.wsRpcUrl) {
     if (import.meta.env.DEV) {
-      // Skipping websockets url
+      console.log("  WebSocket disabled in development mode")
     } else {
       transports.push(webSocket(networkConfig.provider.wsRpcUrl))
+      console.log("  WebSocket transport added (primary)")
     }
+  } else {
+    console.log("  No WebSocket URL configured, using HTTP only")
   }
 
   // Always add HTTP transport as fallback
   transports.push(http(networkConfig.provider.jsonRpcUrl))
+  console.log("  HTTP transport added" + (transports.length > 1 ? " (fallback)" : " (primary)"))
+
+  console.log(
+    `  📡 Final transport stack: ${transports.length === 2 ? "WebSocket → HTTP fallback" : "HTTP only"}`
+  )
 
   const clientOptions = {
     chain: networkConfig.chain,
