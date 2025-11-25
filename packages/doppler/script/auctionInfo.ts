@@ -1,6 +1,6 @@
 import { formatUnits, Hex } from "viem"
 import { privateKeyToAccount } from "viem/accounts"
-import { dopplerHookAbi, getAddresses } from "@whetstone-research/doppler-sdk"
+import { dopplerHookAbi } from "@whetstone-research/doppler-sdk"
 import dotenv from "dotenv"
 import { getAssetData, readAuctionParams, tickToPriceWithParams, univ4getSlot0 } from "../src"
 import { getClients } from "./utils/getClients"

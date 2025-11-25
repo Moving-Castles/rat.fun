@@ -23,7 +23,7 @@
     "burnTestNumeraire": "tsx ./script/burnTestNumeraire.ts"
   },
   "dependencies": {
-    "@whetstone-research/doppler-sdk": "npm:@dk1a/doppler-sdk-fork@0.0.1-alpha.57",
+    "@whetstone-research/doppler-sdk": "npm:@dk1a/doppler-sdk-fork@0.0.1-alpha.62",
     "doppler-router": "^1.0.15",
     "dotenv": "^17.2.3",
     "viem": "2.39"

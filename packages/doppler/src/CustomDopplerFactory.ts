@@ -8,6 +8,7 @@ import {
   PublicClient
 } from "viem"
 import {
+  CHAIN_IDS,
   computeOptimalGamma,
   CreateDynamicAuctionParams,
   CreateParams,
@@ -15,7 +16,6 @@ import {
   DEFAULT_V4_YEARLY_MINT_RATE,
   DERC20Bytecode,
   DopplerBytecode,
-  DopplerDN404Bytecode,
   DopplerFactory,
   FLAG_MASK,
   getAddresses,
@@ -23,7 +23,7 @@ import {
   SupportedChainId,
   ZERO_ADDRESS
 } from "@whetstone-research/doppler-sdk"
-import { DERC20BuyLimitBytecode } from "./bytecodes"
+import { DERC20BuyLimitBytecode, DopplerBytecodeBaseMainnet } from "./bytecodes"
 
 // Core configuration types
 // Token configuration (discriminated union)
@@ -356,6 +356,8 @@ export class CustomDopplerFactory<
       ]
     )
 
+    const isBase = this.chainId === CHAIN_IDS.BASE
+
     const { poolManager, numTokensToSell, poolInitializer } = params
 
     const hookInitHashData = encodeAbiParameters(
@@ -394,7 +396,7 @@ export class CustomDopplerFactory<
     )
 
     const hookInitHash = keccak256(
-      encodePacked(["bytes", "bytes"], [DopplerBytecode as Hex, hookInitHashData])
+      encodePacked(["bytes", "bytes"], [isBase ? DopplerBytecodeBaseMainnet as Hex : DopplerBytecode as Hex, hookInitHashData])
     )
 
     const tokenFactoryData = (() => {
