@@ -62,13 +62,13 @@ export async function buildAuctionParams(
 
   //const duration = 30 * DAY_SECONDS
   //const epochLength = 0.5 * DAY_SECONDS
-  const duration = ((30 * DAY_SECONDS) / 30) * 7
-  const epochLength = ((0.5 * DAY_SECONDS) / 30) * 7
+  const duration = ((30 * DAY_SECONDS) / 30) * 14
+  const epochLength = ((0.5 * DAY_SECONDS) / 30) * 14
 
   const gamma = 7 * computeOptimalGamma(startTick, endTick, duration, epochLength, tickSpacing)
 
   const builder = new DynamicAuctionBuilder(chainId)
-    .tokenConfig({ name: "Slopamine", symbol: "RAT", tokenURI: "", yearlyMintRate: 0n })
+    .tokenConfig({ name: "TEST", symbol: "TEST", tokenURI: "", yearlyMintRate: 0n })
     .saleConfig({
       initialSupply: parseEther("90000000"),
       numTokensToSell: parseEther("64000000"),
@@ -90,7 +90,7 @@ export async function buildAuctionParams(
     })
     .withUserAddress(userAccount.address)
     .withIntegrator(userAccount.address)
-    .withTime({ startTimeOffset: 10 })
+    .withTime({ startTimeOffset: 300 })
 
   builder.withGovernance({ type: "default" })
   // Custom factories: LaunchpadGovernanceFactory, TokenFactoryBuyLimit

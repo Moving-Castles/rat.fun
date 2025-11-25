@@ -32,8 +32,8 @@ console.log("hookAddress", result.hookAddress)
 console.log("tokenAddress", result.tokenAddress)
 
 // Wait for transaction receipt
-await new Promise(resolve => setTimeout(resolve, 5000))
 await publicClient.waitForTransactionReceipt({ hash: result.transactionHash as Hex })
+await new Promise(resolve => setTimeout(resolve, 10000))
 
 const startingTime = await publicClient.readContract({
   address: result.hookAddress,
