@@ -23,6 +23,8 @@
   } from "$lib/modules/network"
   import { initializeDrawbridge, cleanupDrawbridge, userAddress } from "$lib/modules/drawbridge"
   import { getNetworkConfig } from "$lib/mud/getNetworkConfig"
+  import { playerId } from "$lib/modules/state/stores"
+  import { initOffChainSync, disconnectOffChainSync } from "$lib/modules/off-chain-sync"
 
   // Components
   import Spawn from "$lib/components/Spawn/Spawn.svelte"
@@ -72,6 +74,31 @@
     if ($userAddress === null) {
       console.log("[+layout] Wallet disconnected externally, navigating back to spawn")
       UIState.set(UI.SPAWNING)
+    }
+  })
+
+  // Initialize/disconnect websocket based on UI state and playerId
+  $effect(() => {
+    const currentPlayerId = $playerId
+    const isReady = $UIState === UI.READY
+    const environment = $environmentStore
+
+    // Connect when UI is ready and we have a valid playerId
+    if (
+      isReady &&
+      currentPlayerId &&
+      currentPlayerId !== "0x0000000000000000000000000000000000000000000000000000000000000000"
+    ) {
+      console.log("[+layout] Initializing off-chain sync for player:", currentPlayerId)
+      initOffChainSync(environment, currentPlayerId)
+    }
+
+    // Disconnect when leaving ready state
+    return () => {
+      if (isReady) {
+        console.log("[+layout] Disconnecting off-chain sync")
+        disconnectOffChainSync()
+      }
     }
   })
 

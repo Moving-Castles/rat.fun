@@ -13,7 +13,7 @@ export function getNumeraire(chainId: SupportedChainId): Address {
   } else if (chainId === 8453) {
     // return baseMainnetEURC
     // TODO this is a test numeraire token on mainnet, replace it with eurc for real auction
-    return "0x119a88cAAD38D3B61BeCf997A87df7a398A9D20f";
+    return "0x119a88cAAD38D3B61BeCf997A87df7a398A9D20f"
   } else {
     throw new Error("Unsupported chainId for numeraire")
   }

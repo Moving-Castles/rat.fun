@@ -4,6 +4,7 @@
 
   import PlayerInfo from "./PlayerInfo/PlayerInfo.svelte"
   import ModeSwitch from "./ModeSwitch.svelte"
+  import OnlineUsers from "./OnlineUsers/OnlineUsers.svelte"
 
   import { Marquee } from "$lib/components/Shared"
 
@@ -18,6 +19,7 @@
     </Marquee>
   </div>
   <div class="right">
+    <OnlineUsers />
     <ModeSwitch {isAdminView} />
   </div>
 </div>

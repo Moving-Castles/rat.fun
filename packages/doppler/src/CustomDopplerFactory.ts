@@ -396,7 +396,10 @@ export class CustomDopplerFactory<
     )
 
     const hookInitHash = keccak256(
-      encodePacked(["bytes", "bytes"], [isBase ? DopplerBytecodeBaseMainnet as Hex : DopplerBytecode as Hex, hookInitHashData])
+      encodePacked(
+        ["bytes", "bytes"],
+        [isBase ? (DopplerBytecodeBaseMainnet as Hex) : (DopplerBytecode as Hex), hookInitHashData]
+      )
     )
 
     const tokenFactoryData = (() => {

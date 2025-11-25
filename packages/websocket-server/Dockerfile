@@ -39,6 +39,6 @@ RUN pnpm install --prod --ignore-scripts --filter websocket-server...
 
 USER nodejs
 
-EXPOSE 3132
+EXPOSE 3232
 
 CMD ["pnpm", "--filter", "websocket-server", "start"]

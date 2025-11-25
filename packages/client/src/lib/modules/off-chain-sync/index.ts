@@ -65,8 +65,8 @@ export async function initOffChainSync(environment: ENVIRONMENT, playerId: strin
       baseUrl = `wss://${PUBLIC_BASE_WEBSOCKET_HOST}`
       break
     default:
-      // Default to localhost:3132 if env var not set
-      baseUrl = `ws://${PUBLIC_DEVELOPMENT_WEBSOCKET_HOST || "localhost:3132"}`
+      // Default to localhost:3232 if env var not set
+      baseUrl = `ws://${PUBLIC_DEVELOPMENT_WEBSOCKET_HOST || "localhost:3232"}`
   }
 
   const url = `${baseUrl}/ws/${playerId}?${queryParams.toString()}`

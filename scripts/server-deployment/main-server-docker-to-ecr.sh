@@ -81,15 +81,15 @@ echo -e "${GREEN}✅ AWS Account ID: $AWS_ACCOUNT_ID${NC}"
 
 # Create ECR repository if it doesn't exist
 echo -e "${YELLOW}📦 Creating ECR repository if it doesn't exist...${NC}"
-aws ecr describe-repositories --repository-names "$ECR_REPOSITORY_NAME" --region "$AWS_REGION" --output json 2>/dev/null | cat || \
-aws ecr create-repository --repository-name "$ECR_REPOSITORY_NAME" --region "$AWS_REGION"
-
-if [ $? -eq 0 ]; then
-    echo -e "${GREEN}✅ ECR repository ready: $ECR_REPOSITORY_NAME${NC}"
-else
-    echo -e "${RED}❌ Failed to create/verify ECR repository${NC}"
-    exit 1
+if ! aws ecr describe-repositories --repository-names "$ECR_REPOSITORY_NAME" --region "$AWS_REGION" &>/dev/null; then
+    echo -e "${YELLOW}📦 Repository doesn't exist, creating...${NC}"
+    aws ecr create-repository --repository-name "$ECR_REPOSITORY_NAME" --region "$AWS_REGION"
+    if [ $? -ne 0 ]; then
+        echo -e "${RED}❌ Failed to create ECR repository${NC}"
+        exit 1
+    fi
 fi
+echo -e "${GREEN}✅ ECR repository ready: $ECR_REPOSITORY_NAME${NC}"
 
 # Get ECR login token and authenticate Docker
 echo -e "${YELLOW}🔐 Authenticating with ECR...${NC}"
