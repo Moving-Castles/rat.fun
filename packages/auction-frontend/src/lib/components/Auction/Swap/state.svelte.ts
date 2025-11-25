@@ -1,6 +1,6 @@
 import { errorHandler } from "$lib/modules/error-handling"
 import { InvalidStateTransitionError } from "$lib/modules/error-handling/errors"
-import type { AuctionParams, CustomQuoter, Permit2PermitData } from "doppler"
+import type { AuctionParams, CustomQuoter, Permit2PermitData, SwapReceipt } from "doppler"
 import type { Hex } from "viem"
 
 /**
@@ -37,7 +37,7 @@ let savedCountryCode = $state<string | undefined>(undefined)
 let isPermit2Req = $state<boolean | null>(null)
 let numeraireBalance = $state<number | undefined>(undefined)
 let tokenBalance = $state<number | undefined>(undefined)
-let swapReceipt = $state<any>(null)
+let swapReceipt = $state<SwapReceipt | null>(null)
 
 /**
  * Defines valid state transitions between swap states
@@ -191,7 +191,7 @@ export const swapState = {
     setTokenBalance: (balance: number | undefined) => {
       tokenBalance = balance
     },
-    setSwapReceipt: (receipt: any) => {
+    setSwapReceipt: (receipt: SwapReceipt | null) => {
       swapReceipt = receipt
     },
 

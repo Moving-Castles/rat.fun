@@ -5,6 +5,7 @@ import {
   maxUint128,
   maxUint256,
   parseEventLogs,
+  ParseEventLogsReturnType,
   PublicClient,
   Transport,
   WalletClient,
@@ -18,6 +19,8 @@ import { Permit2PermitData, signPermit2 } from "./permit2"
 import { CustomQuoter } from "./CustomQuoter"
 import { swapAndReceiptEventsAbi, universalRouterAbi } from "./abis"
 import { simulateContract } from "viem/actions"
+
+export type SwapReceipt = ParseEventLogsReturnType<typeof swapAndReceiptEventsAbi>
 
 export interface SwapExactParams {
   /** if false, give exact `amount` of numeraire, otherwise receive exact `amount` of tokens. Default false */

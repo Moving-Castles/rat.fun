@@ -16,9 +16,9 @@
     }
 
     // Find the Receipt event log
-    const receiptLog = receipt.find((log: any) => log.eventName === "Receipt")
+    const receiptLog = receipt.find(log => log.eventName === "Receipt")
 
-    if (!receiptLog) {
+    if (!receiptLog || receiptLog.eventName !== "Receipt") {
       return null
     }
 
@@ -27,11 +27,11 @@
     return {
       buyer,
       countryCode,
-      tokenAmount: formatUnits(tokenAmount, auctionParams.token.decimals),
-      numeraireAmount: formatUnits(numeraireAmount, auctionParams.numeraire.decimals),
+      tokenAmount: formatUnits(tokenAmount!, auctionParams.token.decimals),
+      numeraireAmount: formatUnits(numeraireAmount!, auctionParams.numeraire.decimals),
       tokenSymbol: auctionParams.token.symbol,
       numeraireSymbol: auctionParams.numeraire.symbol,
-      inGameRats: Math.floor(Number(formatUnits(tokenAmount, auctionParams.token.decimals)) / 100)
+      inGameRats: Math.floor(Number(formatUnits(tokenAmount!, auctionParams.token.decimals)) / 100)
     }
   }
 
