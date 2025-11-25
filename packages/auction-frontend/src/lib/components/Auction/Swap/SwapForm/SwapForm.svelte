@@ -3,11 +3,6 @@
   import { swapState, SWAP_STATE } from "../state.svelte"
   import SpendLimitProgressBar from "./SpendLimitProgressBar.svelte"
 
-  // Disable form in agreement and permit2 allow max states
-  let disabled = $derived.by(() => {
-    return [SWAP_STATE.AGREEMENT, SWAP_STATE.PERMIT2_ALLOW_MAX].includes(swapState.state.current)
-  })
-
   /**
    * Get numeraire amount formatted for display in input field
    */
@@ -124,8 +119,7 @@
   }
 </script>
 
-<div class="swap-form" class:disabled>
-  <!-- Balances section -->
+<div class="swap-form">
   <div class="balances-section">
     <div class="balance-item">
       <span class="label">Numeraire balance:</span>
@@ -190,11 +184,6 @@
     min-width: 400px;
     margin-bottom: 20px;
     width: 100%;
-
-    &.disabled {
-      opacity: 0.5;
-      pointer-events: none;
-    }
   }
 
   .balances-section {
