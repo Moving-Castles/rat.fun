@@ -32,15 +32,17 @@
     })
   }
 
-  $effect(() => {
-    if (!auctionParams.hookAddress) return
-    checkEarlyExit($publicNetwork).then(earlyExit => {
-      console.log("[Auction] earlyExit:", earlyExit)
-      if (earlyExit) {
-        auctionState.state.transitionTo(AUCTION_STATE.ENDED)
-      }
-    })
-  })
+  function checkSaleEnded() {
+    const now = Date.now() / 1000
+    return now >= auctionParams.endingTime
+  }
+
+  function clearEndingTimeInterval() {
+    if (endingTimeInterval) {
+      clearInterval(endingTimeInterval)
+      endingTimeInterval = null
+    }
+  }
 
   const setupAndGoToSwap = () => {
     // Sync drawbridge userAddress to playerAddress store (for WalletInfo component)
@@ -70,6 +72,18 @@
 
     auctionParams = readAuctionParamsStrict($publicNetwork.publicClient.chain.id)
     console.log("[Auction] auctionParams:", auctionParams)
+    if (!auctionParams) {
+      console.error("[Auction] auctionParams not found")
+      auctionState.state.transitionTo(AUCTION_STATE.ERROR)
+      return
+    }
+
+    const saleEnded = checkSaleEnded()
+    const earlyExit = await checkEarlyExit($publicNetwork)
+    if (saleEnded || earlyExit) {
+      auctionState.state.transitionTo(AUCTION_STATE.ENDED)
+      return
+    }
 
     console.log("[Auction] userAddress:", $userAddress)
     // If wallet is already connected (from previous session), transition to swap
@@ -81,26 +95,18 @@
       auctionState.state.transitionTo(AUCTION_STATE.CONNECT_WALLET)
     }
 
-    // Monitor auction ending time
-    endingTimeInterval = setInterval(() => {
-      const now = Date.now() / 1000
-      console.log("[Auction] now:", now)
-      console.log("[Auction] auctionParams.endingTime:", auctionParams.endingTime)
-      if (now >= auctionParams.endingTime) {
-        console.log("[Auction] endingTime reached, transitioning to ENDED state")
-        clearInterval(endingTimeInterval!)
-        endingTimeInterval = null
+    // Monitor auction ending time and early exit
+    endingTimeInterval = setInterval(async () => {
+      const saleEnded = checkSaleEnded()
+      const earlyExit = await checkEarlyExit($publicNetwork)
+      if (saleEnded || earlyExit) {
+        clearEndingTimeInterval()
         auctionState.state.transitionTo(AUCTION_STATE.ENDED)
       }
-    }, 60_000)
+    }, 30_000)
   })
 
-  onDestroy(() => {
-    if (endingTimeInterval) {
-      clearInterval(endingTimeInterval)
-      endingTimeInterval = null
-    }
-  })
+  onDestroy(clearEndingTimeInterval)
 </script>
 
 <WalletInfo />
