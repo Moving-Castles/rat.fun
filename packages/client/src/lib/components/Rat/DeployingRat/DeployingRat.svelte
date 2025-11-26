@@ -308,7 +308,7 @@
       padding: 10px;
       font-size: var(--font-size-normal);
       color: var(--background);
-      background: orangered;
+      background: white;
     }
   }
 </style>

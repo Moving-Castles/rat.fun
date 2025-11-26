@@ -51,7 +51,7 @@
     position: relative;
 
     .loading {
-      background: orangered;
+      background: black;
       padding: 10px;
     }
   }

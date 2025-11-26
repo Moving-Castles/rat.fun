@@ -3,6 +3,7 @@
   import { Tooltip } from "$lib/components/Shared"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import { ShaderLocal } from "$lib/components/Shared"
+  import { shaders } from "$lib/modules/webgl/shaders/index.svelte"
 
   export type BigButtonType =
     | "default"
@@ -31,6 +32,18 @@
     onclick: () => void
   } = $props()
 
+  const shaderKeyMap: Record<BigButtonType, keyof typeof shaders> = {
+    default: "plasma",
+    abort: "plasmaOptimized",
+    confirm: "plasmaOptimizedGreen",
+    danger: "plasmaOptimized",
+    cash_out: "starfield",
+    buy_rat: "plasmaLamp",
+    create_trip: "plasma"
+  }
+
+  let shaderKey = $derived(shaderKeyMap[type])
+
   const onmousedown = () => {
     playSound({ category: "ratfunUI", id: "bigButtonDown" })
   }
@@ -50,7 +63,7 @@
       {/if}
     </div>
     <div class="canvas-container">
-      <ShaderLocal shaderKey="plasma" />
+      <ShaderLocal {shaderKey} />
     </div>
   </button>
 </Tooltip>
@@ -133,6 +146,7 @@
     }
 
     &.type-abort {
+      border-radius: 20px;
       background: var(--color-death);
       &:hover {
         background: var(--color-death-light);
@@ -140,15 +154,22 @@
       &:active {
         background: var(--color-death-muted);
       }
+      .canvas-container {
+        border-radius: 20px;
+      }
     }
 
     &.type-confirm {
-      background: var(--color-alert-priority);
+      border-radius: 20px;
+      background: rgb(60, 120, 60);
       &:hover {
-        background: var(--color-alert-priority-light);
+        background: rgb(80, 160, 80);
       }
       &:active {
-        background: var(--color-alert-priority-muted);
+        background: rgb(40, 80, 40);
+      }
+      .canvas-container {
+        border-radius: 20px;
       }
     }
 
@@ -163,7 +184,6 @@
     }
 
     &.type-cash_out {
-      background: var(--color-death);
       &:hover {
         background: var(--color-death-light);
       }

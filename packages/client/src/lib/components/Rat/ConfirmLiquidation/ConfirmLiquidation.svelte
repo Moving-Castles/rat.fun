@@ -32,8 +32,8 @@
       {UI_STRINGS.confirmLiquidationMessage($rat?.name)}
     </div>
     <div class="button-container">
-      <BigButton text={UI_STRINGS.cancel} onclick={onClickAbort} />
-      <BigButton text={UI_STRINGS.confirm} onclick={onClickConfirm} />
+      <BigButton text={UI_STRINGS.cancel} type="abort" onclick={onClickAbort} />
+      <BigButton text={UI_STRINGS.confirm} type="confirm" onclick={onClickConfirm} />
     </div>
   </div>
 </div>

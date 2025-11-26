@@ -278,6 +278,7 @@ During a trance rats might materialise psycho objects, transferring some value f
           <div class="actions">
             <BigButton
               text="Create trip"
+              type="create_trip"
               cost={flooredTripCreationCost}
               {disabled}
               onclick={onClick}
@@ -364,7 +365,13 @@ During a trance rats might materialise psycho objects, transferring some value f
 
     <!-- ACTIONS -->
     <div class="actions">
-      <BigButton text="Create trip" cost={flooredTripCreationCost} {disabled} onclick={onClick} />
+      <BigButton
+        text="Create trip"
+        type="create_trip"
+        cost={flooredTripCreationCost}
+        {disabled}
+        onclick={onClick}
+      />
     </div>
   </div>
 {/if}

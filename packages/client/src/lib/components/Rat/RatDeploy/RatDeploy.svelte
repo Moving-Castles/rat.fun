@@ -30,6 +30,7 @@
     <div class="button-container">
       {#if $player}
         <BigButton
+          type="buy_rat"
           text={UI_STRINGS.buyRat}
           cost={Number($gameConfig?.ratCreationCost)}
           {disabled}

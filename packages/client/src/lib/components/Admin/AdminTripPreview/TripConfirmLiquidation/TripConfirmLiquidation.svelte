@@ -43,8 +43,8 @@
       />
     </div>
     <div class="button-container">
-      <BigButton text="Abort" onclick={onAbort} />
-      <BigButton text="Confirm" onclick={onClickConfirm} />
+      <BigButton text="Abort" type="abort" onclick={onAbort} />
+      <BigButton text="Confirm" type="confirm" onclick={onClickConfirm} />
     </div>
   {/if}
 </div>
@@ -74,7 +74,7 @@
     }
 
     .loading {
-      background: orangered;
+      background: white;
       padding: 10px;
     }
   }

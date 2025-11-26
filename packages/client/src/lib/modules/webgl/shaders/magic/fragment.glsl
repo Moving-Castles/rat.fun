@@ -21,7 +21,7 @@ precision mediump float;
 #define SPIRAL_ANGLE 1.047197551// π/3 radians (60 degrees)
 
 // Color parameters - Magical purple/pink/cyan theme
-#define COLOR_AMPLITUDE.85// Amplitude for color oscillation
+#define COLOR_AMPLITUDE .85// Amplitude for color oscillation
 #define COLOR_SPEED 2.5// Speed of color animation
 
 // Mathematical constants
@@ -47,14 +47,9 @@ void main(){
   // Normalize fragment coordinates to [0,1] range
   vec2 position=gl_FragCoord.xy/u_resolution;
   
-  // Apply zoom in effect with acceleration over time - from TOP RIGHT corner
-  float zoomFactor=ONE+pow(u_time,ZOOM_POWER)*ZOOM_INTENSITY;
-  vec2 center=vec2(.95,.95);// Top right corner (1.0, 1.0)
-  position=center+(position-center)/zoomFactor;
-  
   // Center coordinates around top right corner
-  float cX=position.x-.95;// Offset from right edge
-  float cY=position.y-.95;// Offset from top edge
+  float cX=position.x-.5;// Offset from right edge
+  float cY=position.y-.5;// Offset from top edge
   
   // Convert to log-polar coordinates for spiral effects
   float newX=log(sqrt(cX*cX+cY*cY));// Radial distance (log scale)
@@ -78,9 +73,9 @@ void main(){
   
   // Create final color with magical purple/pink/cyan theme
   vec3 finalColor=vec3(
-    sin(color+u_time/COLOR_SPEED*intensityMultiplier)*COLOR_AMPLITUDE+.3,// Red (magenta/pink)
-    sin(color+u_time/COLOR_SPEED*intensityMultiplier+PI*.5)*COLOR_AMPLITUDE*.6,// Green (reduced for purple)
-    cos(color+u_time/COLOR_SPEED*intensityMultiplier)*COLOR_AMPLITUDE+.4// Blue (cyan/purple)
+    sin(color+u_time/COLOR_SPEED*intensityMultiplier)*COLOR_AMPLITUDE+.1,// Red (magenta/pink)
+    sin(color+u_time/COLOR_SPEED*intensityMultiplier+PI*.5)*COLOR_AMPLITUDE*.9,// Green (reduced for purple)
+    cos(color+u_time/COLOR_SPEED*intensityMultiplier)*COLOR_AMPLITUDE+.1// Blue (cyan/purple)
   );
   
   // Apply color inversion if enabled

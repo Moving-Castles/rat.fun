@@ -90,6 +90,7 @@
   <!-- Action -->
   <div class="action-container">
     <BigButton
+      type="create_trip"
       disabled={busy.CreateTrip.current > 0}
       text={UI_STRINGS.createTrip}
       onclick={onCreateTripClick}
