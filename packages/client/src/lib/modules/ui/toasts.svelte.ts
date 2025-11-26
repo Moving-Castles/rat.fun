@@ -13,7 +13,13 @@ export interface Toast {
   duration?: number
 }
 
-const DEFAULT_DURATION = 6000
+const TOAST_DURATION: Record<TOAST_TYPE, number> = {
+  [TOAST_TYPE.ERROR]: 8000,
+  [TOAST_TYPE.WARNING]: 8000,
+  [TOAST_TYPE.INFO]: 8000,
+  [TOAST_TYPE.PLAYER_NOTIFICATION]: 2000,
+  [TOAST_TYPE.TRIP_NOTIFICATION]: 8000
+}
 
 // Shorten words that are extremely long (addresses, etc.)
 const processMessage = (msg: string) => {
@@ -33,10 +39,11 @@ class ToastManager {
 
   add(toast: Omit<Toast, "id">): string {
     const id = crypto.randomUUID()
+    const type = toast.type ?? TOAST_TYPE.ERROR
     const newToast: Toast = {
       id,
-      type: TOAST_TYPE.ERROR,
-      duration: DEFAULT_DURATION,
+      type,
+      duration: TOAST_DURATION[type],
       ...toast
     }
     newToast.message = processMessage(newToast.message)

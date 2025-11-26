@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { slide } from "svelte/transition"
+  import { slide, fade } from "svelte/transition"
   import { toastManager } from "$lib/modules/ui/toasts.svelte"
 
   const onToastClick = (id: string) => {
@@ -13,7 +13,8 @@
       <!-- svelte-ignore a11y_click_events_have_key_events -->
       <!-- svelte-ignore a11y_no_static_element_interactions -->
       <div
-        transition:slide|global
+        in:slide|global={{ duration: 200 }}
+        out:fade|global={{ duration: 200 }}
         class="toast toast-{toast.type}"
         onclick={() => onToastClick(toast.id)}
       >
@@ -43,6 +44,7 @@
     border: var(--default-border-style);
     padding: 12px 16px;
     max-width: 400px;
+    min-width: 200px;
     font-family: var(--typewriter-font-stack);
     font-size: var(--font-size-small);
     line-height: var(--font-size-small);

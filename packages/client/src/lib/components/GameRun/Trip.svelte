@@ -2,7 +2,7 @@
   import type { Hex } from "viem"
   import type { EnterTripReturnValue } from "@server/modules/types"
   import { sha256 } from "viem"
-  import { onMount } from "svelte"
+  import { onMount, onDestroy } from "svelte"
   import { staticContent } from "$lib/modules/content"
   import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
   import { sendEnterTrip } from "$lib/modules/action-manager/actions/sendEnterTrip"
@@ -19,6 +19,10 @@
   } from "$lib/components/GameRun/state.svelte"
   import { rat, trips } from "$lib/modules/state/stores"
   import { TripSetup, TripProcessing, TripReport } from "$lib/components/GameRun"
+  import {
+    suppressNotifications,
+    unsuppressNotifications
+  } from "$lib/modules/ui/notification-settings"
 
   let {
     tripId
@@ -75,6 +79,9 @@
     shaderManager.setShader("black")
     resetTripState()
 
+    // Suppress notifications during game run
+    suppressNotifications()
+
     // Clean the URL
     replaceState(`/${tripId}/tripping`, {})
 
@@ -86,6 +93,11 @@
 
     // Process the trip entry
     processTripEntry()
+  })
+
+  onDestroy(() => {
+    // Re-enable notifications when leaving game run
+    unsuppressNotifications()
   })
 </script>
 
