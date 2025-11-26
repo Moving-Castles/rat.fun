@@ -42,7 +42,7 @@
     background: var(--background);
     border: var(--default-border-style);
     padding: 12px 16px;
-    width: 400px;
+    max-width: 400px;
     font-family: var(--typewriter-font-stack);
     font-size: var(--font-size-small);
     line-height: var(--font-size-small);
@@ -56,28 +56,34 @@
     transition: all 0.2s ease;
     overflow: hidden;
 
+    @media (max-width: 768px) {
+      max-width: 90%;
+    }
+
     &:hover {
       opacity: 0.8;
     }
 
     &.toast-error {
       border-color: var(--color-alert-priority);
-      background: var(--background);
-    }
-
-    &.toast-success {
-      border-color: var(--color-success);
-      background: var(--background);
     }
 
     &.toast-warning {
       border-color: var(--color-alert);
-      background: var(--background);
     }
 
     &.toast-info {
       border-color: var(--color-grey-mid);
-      background: var(--background);
+    }
+
+    &.toast-player-notification {
+      font-size: var(--font-size-normal);
+      border-color: var(--color-up);
+    }
+
+    &.toast-trip-notification {
+      font-size: var(--font-size-normal);
+      border-color: var(--color-up);
     }
   }
 

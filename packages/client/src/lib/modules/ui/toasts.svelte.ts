@@ -1,9 +1,19 @@
+export enum TOAST_TYPE {
+  ERROR = "error",
+  WARNING = "warning",
+  INFO = "info",
+  PLAYER_NOTIFICATION = "player-notification",
+  TRIP_NOTIFICATION = "trip-notification"
+}
+
 export interface Toast {
   id: string
   message: string
-  type?: "error" | "success" | "warning" | "info"
+  type?: TOAST_TYPE
   duration?: number
 }
+
+const DEFAULT_DURATION = 6000
 
 // Shorten words that are extremely long (addresses, etc.)
 const processMessage = (msg: string) => {
@@ -25,8 +35,8 @@ class ToastManager {
     const id = crypto.randomUUID()
     const newToast: Toast = {
       id,
-      type: "error",
-      duration: 10000,
+      type: TOAST_TYPE.ERROR,
+      duration: DEFAULT_DURATION,
       ...toast
     }
     newToast.message = processMessage(newToast.message)

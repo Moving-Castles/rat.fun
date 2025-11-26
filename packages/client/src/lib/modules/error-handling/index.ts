@@ -10,7 +10,7 @@ import {
   WebSocketError,
   type ExpectedError
 } from "./errors"
-import { toastManager } from "$lib/modules/ui/toasts.svelte"
+import { toastManager, TOAST_TYPE } from "$lib/modules/ui/toasts.svelte"
 import { parseViemError } from "./viemErrorParser"
 import { BaseError } from "viem"
 export * from "./errors"
@@ -110,7 +110,14 @@ export function errorHandler(error: ExpectedError | unknown, message = "") {
     ErrorClass => processedError instanceof ErrorClass
   )
   if (!shouldSuppressToast) {
-    toastManager.add({ message: errorMessage, type: severity })
+    // Map Sentry severity to toast type
+    const toastType =
+      severity === "warning"
+        ? TOAST_TYPE.WARNING
+        : severity === "info"
+          ? TOAST_TYPE.INFO
+          : TOAST_TYPE.ERROR
+    toastManager.add({ message: errorMessage, type: toastType })
   }
 
   captureMessage(errorMessage, severity, sentryContext)

@@ -10,6 +10,7 @@ import {
 import { errorHandler, WebSocketError } from "$lib/modules/error-handling"
 import { players } from "$lib/modules/state/stores"
 import { shortenAddress } from "$lib/modules/utils"
+import { toastManager, TOAST_TYPE } from "$lib/modules/ui/toasts.svelte"
 
 type ClientsUpdateMessage = {
   id: string
@@ -27,11 +28,13 @@ let reconnectTimeout: ReturnType<typeof setTimeout> | null = null
 // Store environment and playerId for reconnection
 let currentEnvironment: ENVIRONMENT | null = null
 let currentPlayerId: string | null = null
+let hasReceivedInitialClientList = false
 
 export async function initOffChainSync(environment: ENVIRONMENT, playerId: string) {
   // Store for reconnection
   currentEnvironment = environment
   currentPlayerId = playerId
+  hasReceivedInitialClientList = false
 
   // Clean up any existing connection
   if (socket) {
@@ -87,12 +90,29 @@ export async function initOffChainSync(environment: ENVIRONMENT, playerId: strin
     // Update client list when players connect/disconnect
     if (messageContent.topic === "clients__update") {
       const currentPlayers = get(players)
+      const previousOnlinePlayers = get(onlinePlayers)
+      const previousIds = new Set(previousOnlinePlayers.map(p => p.id))
+
       const onlinePlayersList = messageContent.message
         .map(playerId => ({
           id: playerId,
           name: currentPlayers[playerId]?.name ?? shortenAddress(playerId)
         }))
         .sort((a, b) => a.name.localeCompare(b.name))
+
+      // Show toast for new players joining (not for yourself, not on initial load)
+      if (hasReceivedInitialClientList) {
+        for (const player of onlinePlayersList) {
+          if (!previousIds.has(player.id) && player.id !== currentPlayerId) {
+            toastManager.add({
+              message: `${player.name} joined`,
+              type: TOAST_TYPE.PLAYER_NOTIFICATION
+            })
+          }
+        }
+      }
+
+      hasReceivedInitialClientList = true
       onlinePlayers.set(onlinePlayersList)
     }
   }
