@@ -35,6 +35,10 @@
 
   const MAX_INVENTORY_SIZE = 6
 
+  // Header values
+  let filledSlots = $derived(newInventory.length)
+  let totalValue = $derived(newInventory.reduce((sum, item) => sum + Number(item.value ?? 0), 0))
+
   // Build combined slot list for animation
   // During changes: show old items + new items (will animate out/in)
   // During normal entry: show new items only
@@ -252,7 +256,7 @@
 </script>
 
 <div class="inventory">
-  <InventoryHeader />
+  <InventoryHeader {filledSlots} totalSlots={MAX_INVENTORY_SIZE} {totalValue} />
   {#if displayRat}
     <div class="inventory-container" bind:this={inventoryContainer}>
       <!-- INVENTORY GRID -->
