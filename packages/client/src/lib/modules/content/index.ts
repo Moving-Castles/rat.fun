@@ -1,5 +1,5 @@
 import { isBefore } from "date-fns"
-import { writable, derived } from "svelte/store"
+import { writable, derived, get } from "svelte/store"
 import { client, loadData } from "./sanity"
 import { blockNumber } from "$lib/modules/network"
 import type {
@@ -11,6 +11,14 @@ import type {
 } from "@sanity-types"
 import { queries } from "./sanity/groq"
 import type { MutationEvent } from "@sanity/client"
+import {
+  resetTripNotifications,
+  markInitialOutcomesReceived,
+  handleNewOutcome,
+  setPlayerIdStore
+} from "./trip-notifications"
+
+export { setPlayerIdStore }
 
 // --- TYPES ------------------------------------------------------------
 
@@ -52,6 +60,9 @@ export const upcomingWorldEvent = derived(
 // --- API --------------------------------------------------------------
 
 export async function initStaticContent(worldAddress: string) {
+  // Reset trip notifications state before loading
+  resetTripNotifications()
+
   const data = (await loadData(queries.staticContent, { worldAddress })) as StaticContent
 
   const processedWorldEvents = data.worldEvents.filter(upcomingWorldEventFilter)
@@ -65,6 +76,9 @@ export async function initStaticContent(worldAddress: string) {
     tripFolderWhitelist: data.tripFolderWhitelist || []
   })
 
+  // Mark initial outcomes as received so we only notify for new ones
+  markInitialOutcomesReceived()
+
   // Subscribe to changes to trips in sanity DB
   client.listen(queries.trips, { worldAddress }).subscribe(update => {
     staticContent.update(content => ({
@@ -75,6 +89,12 @@ export async function initStaticContent(worldAddress: string) {
 
   // Subscribe to changes to outcomes in sanity DB
   client.listen(queries.outcomes, { worldAddress }).subscribe(update => {
+    // Handle new outcome notifications
+    if (update.transition === "appear" && update.result) {
+      const currentContent = get(staticContent)
+      handleNewOutcome(update.result as SanityOutcome, currentContent.trips)
+    }
+
     staticContent.update(content => ({
       ...content,
       outcomes: handleSanityUpdate<SanityOutcome>(

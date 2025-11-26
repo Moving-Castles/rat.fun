@@ -11,7 +11,7 @@
   import { goto } from "$app/navigation"
   import { onMount, onDestroy } from "svelte"
   import { page } from "$app/state"
-  import { initStaticContent } from "$lib/modules/content"
+  import { initStaticContent, setPlayerIdStore } from "$lib/modules/content"
   import { publicNetwork } from "$lib/modules/network"
   import { UIState, lightboxState } from "$lib/modules/ui/state.svelte"
   import { UI } from "$lib/modules/ui/enums"
@@ -49,6 +49,8 @@
       // Get content from CMS
       // We do not wait, for faster loading time...
       initStaticContent($publicNetwork.worldAddress)
+      // HACK: Set playerId store for trip notifications (avoids circular dependency)
+      setPlayerIdStore(playerId)
       // Loading done. Set the UI state to spawning
       UIState.set(UI.SPAWNING)
     } catch (error) {
