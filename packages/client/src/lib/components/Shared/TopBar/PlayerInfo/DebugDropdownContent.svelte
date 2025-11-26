@@ -9,8 +9,7 @@
   import { playerERC20Allowance, playerERC20Balance } from "$lib/modules/erc20Listener/stores"
   import {
     sendGiveCallerTokens,
-    sendApproveMax,
-    sendRevokeApproval,
+    sendApprove,
     sendBuyWithEth,
     sendLiquidateRat
   } from "$lib/modules/action-manager/index.svelte"
@@ -21,6 +20,8 @@
   import { ENVIRONMENT } from "$lib/mud/enums"
   import { publicNetwork } from "$lib/modules/network"
   import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
+
+  const MAX_ALLOWANCE = 1_000_000n
 </script>
 
 <div class="debug-dropdown-content">
@@ -102,18 +103,18 @@
       ></SmallButton>
     {/if}
     <SmallButton
-      disabled={busy.ApproveMax.current !== 0 || $tokenAllowanceApproved}
+      disabled={busy.Approve.current !== 0 || $tokenAllowanceApproved}
       tippyText={UI_STRINGS.approveAllowanceInstruction}
       onclick={async () => {
-        await sendApproveMax()
+        await sendApprove(MAX_ALLOWANCE)
       }}
       text={UI_STRINGS.approveAllowance}
     ></SmallButton>
     <SmallButton
-      disabled={busy.RevokeApproval.current !== 0 || !$tokenAllowanceApproved}
+      disabled={busy.Approve.current !== 0 || !$tokenAllowanceApproved}
       tippyText={UI_STRINGS.revokeApprovalInstruction}
       onclick={async () => {
-        await sendRevokeApproval()
+        await sendApprove(0n)
       }}
       text={UI_STRINGS.revokeApproval}
     ></SmallButton>

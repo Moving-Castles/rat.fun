@@ -1,16 +1,14 @@
 <script lang="ts">
   import { ratState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
-  import { sendApproveMax } from "$lib/modules/action-manager/index.svelte"
   import {
     tokenAllowanceApproved,
     playerHasTokens,
     playerHasLiveRat
   } from "$lib/modules/state/stores"
   import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
+  import { openAllowanceModal } from "$lib/modules/ui/allowance-modal.svelte"
 
-  import { SmallSpinner, BigButton } from "$lib/components/Shared"
-
-  let busy = $state(false)
+  import { BigButton } from "$lib/components/Shared"
 
   $effect(() => {
     if ($tokenAllowanceApproved) {
@@ -32,20 +30,15 @@
   })
 
   const onClick = () => {
-    busy = true
-    sendApproveMax()
-    // Wait for result in $effect block above
+    openAllowanceModal()
   }
 </script>
 
 <div class="no-allowance">
-  {#if busy}
-    <div class="loading">{UI_STRINGS.approvingAllowance} <SmallSpinner soundOn /></div>
-  {:else}
-    <div class="button-container">
-      <BigButton text={UI_STRINGS.approveAllowance} disabled={busy} onclick={onClick} />
-    </div>
-  {/if}
+  <p class="description">{UI_STRINGS.manageAllowanceDescription}</p>
+  <div class="button-container">
+    <BigButton text={UI_STRINGS.manageAllowance} onclick={onClick} />
+  </div>
 </div>
 
 <style lang="scss">
@@ -59,28 +52,27 @@
     background-image: url("/images/texture-2.png");
     background-size: 200px;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    padding: 20px;
 
-    .loading {
-      font-size: var(--font-size-normal);
+    .description {
       font-family: var(--typewriter-font-stack);
-      color: black;
-      background: orangered;
-      padding: 10px;
+      font-size: var(--font-size-large);
+      color: var(--foreground);
+      line-height: 1.5;
+      margin-bottom: 20px;
+      background: var(--black-semi-transparent);
     }
 
     .button-container {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translateX(-50%) translateY(-50%);
       overflow: hidden;
-      width: 90%;
+      width: 100%;
+      height: 160px;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 200px;
     }
   }
 </style>

@@ -30,7 +30,8 @@
   import Spawn from "$lib/components/Spawn/Spawn.svelte"
   import Loading from "$lib/components/Loading/Loading.svelte"
   import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
-  import { ShaderGlobal, Lightbox, Toasts } from "$lib/components/Shared"
+  import { ShaderGlobal, Lightbox, Toasts, ManageAllowanceModal } from "$lib/components/Shared"
+  import { allowanceModalState, closeAllowanceModal } from "$lib/modules/ui/allowance-modal.svelte"
   import { sdk } from "@farcaster/miniapp-sdk"
 
   let { children }: LayoutProps = $props()
@@ -150,6 +151,13 @@
 
 {#if lightboxState.isOpen}
   <Lightbox src={lightboxState.src} alt={lightboxState.alt} onClose={() => lightboxState.close()} />
+{/if}
+
+{#if allowanceModalState.isOpen}
+  <ManageAllowanceModal
+    onclose={closeAllowanceModal}
+    warningMessage={allowanceModalState.warningMessage}
+  />
 {/if}
 
 <style lang="scss">

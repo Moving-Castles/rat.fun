@@ -3,8 +3,7 @@ import { cubicOut as easing } from "svelte/easing"
 
 // Import all send functions from actions directory
 export { sendSpawn } from "./actions/sendSpawn"
-export { sendApproveMax } from "./actions/sendApproveMax"
-export { sendRevokeApproval } from "./actions/sendRevokeApproval"
+export { sendApprove } from "./actions/sendApprove"
 export { sendGiveCallerTokens } from "./actions/sendGiveCallerTokens"
 export { sendCreateRat } from "./actions/sendCreateRat"
 export { sendEnterTrip } from "./actions/sendEnterTrip"
@@ -16,8 +15,7 @@ export { sendUnlockAdmin } from "./actions/sendUnlockAdmin"
 
 const DEFAULT_TIMINGS = {
   Spawn: 4000,
-  ApproveMax: 4000,
-  RevokeApproval: 4000,
+  Approve: 4000,
   GiveCallerTokens: 4000,
   CreateTrip: 4000,
   EnterTrip: 4000,
@@ -31,8 +29,7 @@ const DEFAULT_TIMINGS = {
 
 export const busy = $state({
   Spawn: new Tween(0, { duration: DEFAULT_TIMINGS.Spawn, easing }),
-  ApproveMax: new Tween(0, { duration: DEFAULT_TIMINGS.ApproveMax, easing }),
-  RevokeApproval: new Tween(0, { duration: DEFAULT_TIMINGS.RevokeApproval, easing }),
+  Approve: new Tween(0, { duration: DEFAULT_TIMINGS.Approve, easing }),
   GiveCallerTokens: new Tween(0, { duration: DEFAULT_TIMINGS.GiveCallerTokens, easing }),
   CreateTrip: new Tween(0, { duration: DEFAULT_TIMINGS.CreateTrip, easing }),
   EnterTrip: new Tween(0, { duration: DEFAULT_TIMINGS.EnterTrip, easing }),

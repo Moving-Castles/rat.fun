@@ -60,3 +60,6 @@ export { default as SignedNumber } from "./SignedNumber/SignedNumber.svelte"
 
 /* Inputs */
 export { default as Checkbox } from "./Inputs/Checkbox.svelte"
+
+/* Modals */
+export { default as ManageAllowanceModal } from "./ManageAllowanceModal/ManageAllowanceModal.svelte"

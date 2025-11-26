@@ -3,6 +3,8 @@
   import { playerERC20Balance } from "$lib/modules/erc20Listener/stores"
   import { getTripMaxValuePerWin, getTripMinRatValueToEnter } from "$lib/modules/state/utils"
   import { CharacterCounter, BigButton } from "$lib/components/Shared"
+  import { playerERC20Allowance } from "$lib/modules/erc20Listener/stores"
+  import { openAllowanceModal } from "$lib/modules/ui/allowance-modal.svelte"
   import { busy, sendCreateTrip } from "$lib/modules/action-manager/index.svelte"
   import { typeHit } from "$lib/modules/sound"
   import { errorHandler } from "$lib/modules/error-handling"
@@ -92,6 +94,12 @@ Trips induce remote viewing trances in susceptible vermin.
 During a trance rats might materialise psycho objects, transferring some value from your trip to their flesh. Shall a trip be too heroic and kill the rat you will collect its total value.`
 
   async function onClick() {
+    // Check allowance before proceeding
+    if ($playerERC20Allowance < flooredTripCreationCost) {
+      openAllowanceModal(UI_STRINGS.insufficientAllowance)
+      return
+    }
+
     try {
       // Validate trip description before sending
       if (!tripDescription || tripDescription.trim() === "") {

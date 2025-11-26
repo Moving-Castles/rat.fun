@@ -16,6 +16,7 @@
     tripNotificationsEnabled
   } from "$lib/modules/ui/notification-settings"
   import { toastManager, TOAST_TYPE } from "$lib/modules/ui/toasts.svelte"
+  import { openAllowanceModal } from "$lib/modules/ui/allowance-modal.svelte"
 
   const toggleMusic = () => {
     musicEnabled.current = !musicEnabled.current
@@ -94,9 +95,13 @@
     </div>
   {/if}
 
-  <!-- Manage Allowance Button (placeholder) -->
+  <!-- Manage Allowance Button -->
   <div class="row">
-    <SmallButton tippyText="Manage Allowance" onclick={() => {}} text="Manage Allowance" />
+    <SmallButton
+      tippyText={UI_STRINGS.manageAllowance}
+      onclick={() => openAllowanceModal()}
+      text={UI_STRINGS.manageAllowance}
+    />
   </div>
 
   <div class="divider"></div>
