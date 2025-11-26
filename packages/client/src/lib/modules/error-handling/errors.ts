@@ -55,7 +55,7 @@ export class FaucetError extends NetworkError {
 
 export class RateLimitError extends NetworkError {
   constructor(
-    message: string = "Rate limit exceeded. Please wait a moment and try again.",
+    message: string = "Please wait a moment and try again.",
     public retryAfter?: number,
     public originalError?: unknown
   ) {
@@ -363,16 +363,6 @@ export class InputValidationError extends ValidationError {
     super("INPUT_VALIDATION_ERROR", "Input validation failed", message)
   }
 }
-
-export class ChatValidationError extends ValidationError {
-  constructor(
-    message: string,
-    public messageContent?: string
-  ) {
-    super("CHAT_VALIDATION_ERROR", "Chat message validation failed", message)
-  }
-}
-
 export class CharacterLimitError extends ValidationError {
   constructor(currentLength: number, maxLength: number, fieldName: string = "input") {
     super(
@@ -466,7 +456,6 @@ export type ExpectedError =
   | ContentInitializationError
   | ValidationError
   | InputValidationError
-  | ChatValidationError
   | CharacterLimitError
   | GameError
   | TripError

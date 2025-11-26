@@ -6,7 +6,6 @@
     playerHasLiveRat
   } from "$lib/modules/state/stores"
   import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
-  import { playSound } from "$lib/modules/sound"
   import {
     RatInfo,
     RatDeploy,
