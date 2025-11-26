@@ -1,7 +1,5 @@
 <script lang="ts">
   import { playSound } from "$lib/modules/sound"
-  import { Tooltip } from "$lib/components/Shared"
-  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
 
   let {
@@ -28,24 +26,22 @@
   }
 </script>
 
-<Tooltip content={UI_STRINGS.psychoObjectExplanation}>
-  <div
-    class="inventory-item-wrapper {getRarityClass(item.value)} index-{index}"
-    class:disabled={busy}
-    role="button"
-    tabindex="0"
-    onmouseenter={onMouseEnter}
-  >
-    <div class="inventory-item">
-      <div class="item-front">
-        <div class="name">{item.name}</div>
-      </div>
-      <div class="item-back">
-        <div class="value">{Number(item.value)} {CURRENCY_SYMBOL}</div>
-      </div>
+<div
+  class="inventory-item-wrapper {getRarityClass(item.value)} index-{index}"
+  class:disabled={busy}
+  role="button"
+  tabindex="0"
+  onmouseenter={onMouseEnter}
+>
+  <div class="inventory-item">
+    <div class="item-front">
+      <div class="name">{item.name}</div>
+    </div>
+    <div class="item-back">
+      <div class="value">{Number(item.value)} {CURRENCY_SYMBOL}</div>
     </div>
   </div>
-</Tooltip>
+</div>
 
 <style lang="scss">
   .inventory-item-wrapper {

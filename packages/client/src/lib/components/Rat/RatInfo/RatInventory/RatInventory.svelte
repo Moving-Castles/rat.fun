@@ -6,6 +6,7 @@
   import InteractiveItem from "$lib/components/Rat/RatInfo/RatInventory/InteractiveItem.svelte"
   import InteractiveItem2 from "$lib/components/Rat/RatInfo/RatInventory/InteractiveItem2.svelte"
   import EmptySlot from "$lib/components/Rat/RatInfo/RatInventory/EmptySlot.svelte"
+  import InventoryHeader from "$lib/components/Rat/RatInfo/RatInventory/InventoryHeader.svelte"
 
   let {
     displayRat,
@@ -251,6 +252,7 @@
 </script>
 
 <div class="inventory">
+  <InventoryHeader />
   {#if displayRat}
     <div class="inventory-container" bind:this={inventoryContainer}>
       <!-- INVENTORY GRID -->
@@ -277,9 +279,8 @@
     width: 100%;
     border-right: none;
     overflow: hidden;
-    display: grid;
-    grid-template-columns: repeat(1fr, 3);
-    // flex-direction: column;
+    display: flex;
+    flex-direction: column;
     border-right: var(--dashed-border-style);
     overflow-x: hidden;
     overflow-y: scroll;
@@ -292,11 +293,12 @@
     display: grid;
     gap: 6px;
     padding: 6px;
-    flex-shrink: 0;
     box-sizing: border-box;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(2, 1fr);
-    height: 100%;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
   }
 
   .slot-wrapper {

@@ -138,7 +138,7 @@
       flex-direction: row;
       border-bottom: var(--default-border-style);
       overflow: visible;
-      height: 260px;
+      height: 240px;
 
       @media (max-width: 800px) {
         height: 160px;
