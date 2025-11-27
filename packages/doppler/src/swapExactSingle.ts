@@ -36,32 +36,17 @@ export async function signPermit2ForUniversalRouter(
   publicClient: PublicClient<Transport, Chain>,
   walletClient: WalletClient<Transport, Chain, Account>,
   auctionParams: AuctionParams,
-  amount: bigint,
-  params: {
-    isOut?: boolean
-  }
+  amount: bigint
 ) {
-  const isOut = params.isOut ?? false
-
   const chainId = publicClient.chain.id
   const addresses = getAddresses(chainId)
-
-  let amountIn: bigint
-  if (isOut) {
-    const quoter = new CustomQuoter(publicClient, chainId, auctionParams)
-    const input = await quoter.quoteExactOutputV4(amount, true)
-
-    amountIn = input.amountIn
-  } else {
-    amountIn = amount
-  }
 
   return await signPermit2(
     publicClient,
     walletClient,
     auctionParams.numeraire.address,
     addresses.universalRouter,
-    amountIn
+    amount
   )
 }
 

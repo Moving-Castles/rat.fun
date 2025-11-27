@@ -12,6 +12,7 @@ import {
 import {
   AuctionParams,
   balanceOf,
+  CustomQuoter,
   getPoolKey,
   isPermit2AllowedMaxRequired,
   permit2AllowMax,
@@ -55,12 +56,20 @@ export async function swapWithLogs(
     if (isAllowedMaxRequired) {
       await permit2AllowMax(publicClient, walletClient, auctionParams.numeraire.address)
     }
+    let amountIn: bigint
+    if (isOut) {
+      const quoter = new CustomQuoter(publicClient, publicClient.chain.id, auctionParams)
+      const input = await quoter.quoteExactOutputV4(parsedAmount, true)
+  
+      amountIn = input.amountIn
+    } else {
+      amountIn = parsedAmount
+    }
     const result = await signPermit2ForUniversalRouter(
       publicClient,
       walletClient,
       auctionParams,
-      parsedAmount,
-      { isOut }
+      amountIn
     )
     permit = result.permit
     permitSignature = result.permitSignature
