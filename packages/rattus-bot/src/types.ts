@@ -10,6 +10,8 @@ export interface Config {
   ratName: string
   worldAddress?: string
   rpcHttpUrl?: string
+  liquidateAtValue?: number // Liquidate rat when total value reaches this threshold
+  liquidateBelowValue?: number // Liquidate rat when total value falls below this threshold
 }
 
 export interface Trip {
@@ -18,6 +20,8 @@ export interface Trip {
   balance: number
   tripCreationCost: number
   owner: string
+  visitCount: number
+  killCount: number
 }
 
 export interface Rat {
@@ -65,8 +69,8 @@ export interface SignedRequest<T> {
 }
 
 export interface LogEntry {
-  type: string
-  text: string
+  timestamp: string
+  event: string
 }
 
 export interface EnterTripReturnValue {
@@ -77,4 +81,19 @@ export interface EnterTripReturnValue {
   debuggingInfo: unknown
   ratDead: boolean
   tripDepleted: boolean
+}
+
+export interface TripOutcomeHistory {
+  tripId: string
+  tripPrompt: string
+  totalValueBefore: number
+  totalValueAfter: number
+  valueChange: number
+  died: boolean
+  logSummary: string
+}
+
+export interface TripSelectionResult {
+  trip: Trip
+  explanation: string
 }

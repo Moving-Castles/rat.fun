@@ -1,5 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk"
-import type { Config, Rat } from "./types"
+import type { Config, Rat, TripOutcomeHistory } from "./types"
 import {
   setupMud,
   spawn,
@@ -11,7 +11,9 @@ import {
   getRat,
   getGameConfig,
   canRatEnterTrip,
-  getRatTotalValue
+  getRatTotalValue,
+  getInventoryDetails,
+  type SetupResult
 } from "./modules/mud"
 import { enterTrip } from "./modules/server"
 import { selectTrip } from "./modules/trip-selector"
@@ -26,6 +28,17 @@ import {
   logDeath,
   logStats
 } from "./modules/logger"
+import { loadOutcomeHistory, saveOutcomeHistory } from "./modules/history"
+
+// Add liquidateRat action
+async function liquidateRat(mud: SetupResult): Promise<string> {
+  console.log("Liquidating rat...")
+  const tx = await mud.worldContract.write.ratfun__liquidateRat()
+  console.log(`Liquidate transaction sent: ${tx}`)
+  await mud.waitForTransaction(tx)
+  console.log("Rat liquidated successfully!")
+  return tx
+}
 
 export async function runBot(config: Config) {
   logInfo("Starting Rattus Bot...")
@@ -33,6 +46,12 @@ export async function runBot(config: Config) {
   logInfo(`Server URL: ${config.serverUrl}`)
   logInfo(`Trip selector: ${config.tripSelector}`)
   logInfo(`Auto-respawn: ${config.autoRespawn}`)
+  if (config.liquidateAtValue) {
+    logInfo(`Liquidate at value: ${config.liquidateAtValue}`)
+  }
+  if (config.liquidateBelowValue) {
+    logInfo(`Liquidate below value: ${config.liquidateBelowValue}`)
+  }
 
   // Initialize Anthropic client if using Claude selector
   let anthropic: Anthropic | undefined
@@ -46,17 +65,21 @@ export async function runBot(config: Config) {
   const mud = await setupMud(config.privateKey, config.chainId, config.worldAddress)
   logSuccess("MUD setup complete!")
 
+  // Wait a moment for sync to fully complete
+  logInfo("Waiting for state sync...")
+  await sleep(2000)
+
   const walletAddress = mud.walletClient.account.address
   const playerId = addressToId(walletAddress)
   logInfo(`Wallet address: ${walletAddress}`)
   logInfo(`Player ID: ${playerId}`)
 
-  // Check if player exists
+  // Check if player exists (retry a few times in case sync is still catching up)
   logInfo("Checking player status...")
-  let player = getPlayer(mud, playerId)
+  let player = await retryUntilResult(() => getPlayer(mud, playerId), 5000, 500)
 
   if (!player) {
-    logWarning("Player not found, spawning...")
+    logInfo("Player not found, spawning...")
     await spawn(mud, config.ratName)
 
     // Wait for player to appear in MUD state
@@ -125,13 +148,96 @@ export async function runBot(config: Config) {
 
   // Main bot loop
   let tripCount = 0
-  const startingBalance = rat.balance
-  const startingRatName = rat.name
+  let startingBalance = rat.balance
+  let startingRatName = rat.name
+
+  // Track outcome history for learning (persists across respawns and bot restarts)
+  const outcomeHistory: TripOutcomeHistory[] = loadOutcomeHistory()
 
   logInfo("Starting main loop...")
   logInfo("==========================================")
 
   while (true) {
+    // Check if we should liquidate based on value threshold
+    if (config.liquidateAtValue && rat) {
+      const totalValue = getRatTotalValue(mud, rat)
+      if (totalValue >= config.liquidateAtValue) {
+        logSuccess(
+          `Rat value (${totalValue}) reached liquidation threshold (${config.liquidateAtValue})!`
+        )
+
+        logStats({
+          ratName: rat.name,
+          totalTrips: tripCount,
+          startingBalance,
+          finalBalance: totalValue
+        })
+
+        // Liquidate the rat
+        await liquidateRat(mud)
+        logSuccess("Rat liquidated! Creating new rat...")
+
+        await createRat(mud, config.ratName)
+        await sleep(3000)
+
+        // Re-fetch player and rat
+        player = getPlayer(mud, playerId)
+        if (player?.currentRat) {
+          ratId = player.currentRat
+          rat = await retryUntilResult(() => getRat(mud, ratId!), 10000, 500)
+        }
+
+        if (!rat) {
+          throw new Error("Failed to create new rat after liquidation")
+        }
+
+        logSuccess(`New rat created: ${rat.name} (balance: ${rat.balance})`)
+        startingBalance = rat.balance
+        startingRatName = rat.name
+        tripCount = 0
+        continue
+      }
+    }
+
+    // Check if we should liquidate because value fell too low
+    if (config.liquidateBelowValue && rat) {
+      const totalValue = getRatTotalValue(mud, rat)
+      if (totalValue < config.liquidateBelowValue) {
+        logWarning(`Rat value (${totalValue}) fell below threshold (${config.liquidateBelowValue})`)
+
+        logStats({
+          ratName: rat.name,
+          totalTrips: tripCount,
+          startingBalance,
+          finalBalance: totalValue
+        })
+
+        // Liquidate the rat
+        await liquidateRat(mud)
+        logInfo("Rat liquidated due to low value. Creating new rat...")
+
+        await createRat(mud, config.ratName)
+        await sleep(3000)
+
+        // Re-fetch player and rat
+        player = getPlayer(mud, playerId)
+        if (player?.currentRat) {
+          ratId = player.currentRat
+          rat = await retryUntilResult(() => getRat(mud, ratId!), 10000, 500)
+        }
+
+        if (!rat) {
+          throw new Error("Failed to create new rat after liquidation")
+        }
+
+        logSuccess(`New rat created: ${rat.name} (balance: ${rat.balance})`)
+        startingBalance = rat.balance
+        startingRatName = rat.name
+        tripCount = 0
+        continue
+      }
+    }
+
     // Get available trips
     const trips = getAvailableTrips(mud)
     logInfo(`Found ${trips.length} available trips`)
@@ -152,33 +258,53 @@ export async function runBot(config: Config) {
       continue
     }
 
-    // Select a trip
-    const selectedTrip = await selectTrip(config, enterableTrips, rat!, anthropic)
-    if (!selectedTrip) {
+    // Select a trip (pass history for learning)
+    const selection = await selectTrip(config, enterableTrips, rat!, anthropic, outcomeHistory)
+    if (!selection) {
       logError("Failed to select a trip")
       await sleep(5000)
       continue
     }
 
+    const { trip: selectedTrip, explanation } = selection
+
     tripCount++
     logTrip(tripCount, `Entering: "${selectedTrip.prompt.slice(0, 60)}..."`)
     logTrip(tripCount, `Trip balance: ${selectedTrip.balance}`)
+    logInfo(`Selection reason: ${explanation}`)
+
+    // Store rat total value before trip (balance + inventory)
+    const totalValueBefore = getRatTotalValue(mud, rat!)
 
     // Enter the trip
     try {
       const outcome = await enterTrip(config.serverUrl, mud.walletClient, selectedTrip.id, rat!.id)
 
       // Log the story
+      const logEntries: string[] = []
       if (outcome.log && outcome.log.length > 0) {
         console.log("")
         for (const entry of outcome.log) {
-          console.log(`  ${entry.text}`)
+          console.log(`  ${entry.event}`)
+          logEntries.push(entry.event)
         }
         console.log("")
       }
 
       // Check if rat died
       if (outcome.ratDead) {
+        // Record outcome for history
+        outcomeHistory.push({
+          tripId: selectedTrip.id,
+          tripPrompt: selectedTrip.prompt,
+          totalValueBefore,
+          totalValueAfter: 0,
+          valueChange: -totalValueBefore,
+          died: true,
+          logSummary: logEntries.slice(0, 3).join(" | ")
+        })
+        saveOutcomeHistory(outcomeHistory)
+
         logDeath(rat!.name, tripCount)
 
         logStats({
@@ -206,6 +332,8 @@ export async function runBot(config: Config) {
           }
 
           logSuccess(`New rat created: ${rat.name} (balance: ${rat.balance})`)
+          startingBalance = rat.balance
+          startingRatName = rat.name
           tripCount = 0 // Reset trip count for new rat
         } else {
           logInfo("Auto-respawn disabled, exiting...")
@@ -216,10 +344,30 @@ export async function runBot(config: Config) {
         await sleep(2000) // Wait for chain state to update
         rat = getRat(mud, rat!.id)
         if (rat) {
-          const totalValue = getRatTotalValue(mud, rat)
+          const totalValueAfter = getRatTotalValue(mud, rat)
+          const valueChange = totalValueAfter - totalValueBefore
+
+          // Record outcome for history
+          outcomeHistory.push({
+            tripId: selectedTrip.id,
+            tripPrompt: selectedTrip.prompt,
+            totalValueBefore,
+            totalValueAfter,
+            valueChange,
+            died: false,
+            logSummary: logEntries.slice(0, 3).join(" | ")
+          })
+          saveOutcomeHistory(outcomeHistory)
+
+          const changeStr = valueChange >= 0 ? `+${valueChange}` : `${valueChange}`
+          const inventoryItems = getInventoryDetails(mud, rat)
+          const inventoryStr =
+            inventoryItems.length > 0
+              ? `, Inventory: [${inventoryItems.map(i => `${i.name}(${i.value})`).join(", ")}]`
+              : ""
           logRat(
             rat.name,
-            `Balance: ${rat.balance}, Total Value: ${totalValue}, Trips: ${tripCount}`
+            `Balance: ${rat.balance}, Total Value: ${totalValueAfter} (${changeStr}), Trips: ${tripCount}${inventoryStr}`
           )
         }
       }

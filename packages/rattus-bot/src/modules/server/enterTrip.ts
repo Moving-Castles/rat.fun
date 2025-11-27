@@ -19,7 +19,13 @@ export async function enterTrip(
   const signedRequest = await signRequest(requestBody, walletClient)
 
   const url = `${serverUrl}/trip/enter`
-  console.log(`Calling server: ${url}`)
+
+  // Start a ticker to show progress while waiting
+  let seconds = 0
+  const ticker = setInterval(() => {
+    seconds++
+    process.stdout.write(`\r⏳ Waiting for trip result... ${seconds}s`)
+  }, 1000)
 
   // 45 second timeout to allow for server processing
   const controller = new AbortController()
@@ -35,7 +41,9 @@ export async function enterTrip(
       signal: controller.signal
     })
 
+    clearInterval(ticker)
     clearTimeout(timeoutId)
+    process.stdout.write("\r" + " ".repeat(40) + "\r") // Clear the ticker line
 
     if (!response.ok) {
       const error = await response.json()
@@ -45,7 +53,9 @@ export async function enterTrip(
     const outcome = (await response.json()) as EnterTripReturnValue
     return outcome
   } catch (err) {
+    clearInterval(ticker)
     clearTimeout(timeoutId)
+    process.stdout.write("\r" + " ".repeat(40) + "\r") // Clear the ticker line
 
     if (err instanceof Error) {
       if (err.name === "AbortError") {

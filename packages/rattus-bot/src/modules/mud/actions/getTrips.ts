@@ -8,7 +8,8 @@ import { ENTITY_TYPE } from "contracts/enums"
  * Get all available trips (balance > 0) from MUD state
  */
 export function getAvailableTrips(mud: SetupResult): Trip[] {
-  const { EntityType, Balance, Prompt, TripCreationCost, Owner } = mud.components
+  const { EntityType, Balance, Prompt, TripCreationCost, Owner, VisitCount, KillCount } =
+    mud.components
 
   const trips: Trip[] = []
 
@@ -26,13 +27,17 @@ export function getAvailableTrips(mud: SetupResult): Trip[] {
           getComponentValue(TripCreationCost, entityId as Entity)?.value ?? 0
         )
         const owner = (getComponentValue(Owner, entityId as Entity)?.value ?? "") as string
+        const visitCount = Number(getComponentValue(VisitCount, entityId as Entity)?.value ?? 0)
+        const killCount = Number(getComponentValue(KillCount, entityId as Entity)?.value ?? 0)
 
         trips.push({
           id: entityId,
           prompt,
           balance,
           tripCreationCost,
-          owner
+          owner,
+          visitCount,
+          killCount
         })
       }
     }
@@ -45,11 +50,15 @@ export function getAvailableTrips(mud: SetupResult): Trip[] {
  * Get player data from MUD state
  */
 export function getPlayer(mud: SetupResult, playerId: string): Player | null {
-  const { Name, Balance, CurrentRat } = mud.components
+  const { Name, Balance, CurrentRat, EntityType } = mud.components
 
-  const name = getComponentValue(Name, playerId as Entity)?.value as string | undefined
-  if (!name) return null
+  // Check if entity exists by looking for EntityType (more reliable than Name)
+  const entityTypeValue = getComponentValue(EntityType, playerId as Entity)
+  const entityType = entityTypeValue?.value
 
+  if (entityType !== ENTITY_TYPE.PLAYER) return null
+
+  const name = (getComponentValue(Name, playerId as Entity)?.value ?? "Unknown") as string
   const balance = Number(getComponentValue(Balance, playerId as Entity)?.value ?? 0)
   const currentRat = (getComponentValue(CurrentRat, playerId as Entity)?.value ?? null) as
     | string
@@ -134,6 +143,24 @@ export function getRatTotalValue(mud: SetupResult, rat: Rat): number {
   }
 
   return totalValue
+}
+
+/**
+ * Get inventory items with their names and values
+ */
+export function getInventoryDetails(mud: SetupResult, rat: Rat): { name: string; value: number }[] {
+  const { Name, Value } = mud.components
+  const items: { name: string; value: number }[] = []
+
+  for (const itemId of rat.inventory) {
+    if (itemId) {
+      const name = (getComponentValue(Name, itemId as Entity)?.value ?? "Unknown") as string
+      const value = Number(getComponentValue(Value, itemId as Entity)?.value ?? 0)
+      items.push({ name, value })
+    }
+  }
+
+  return items
 }
 
 /**

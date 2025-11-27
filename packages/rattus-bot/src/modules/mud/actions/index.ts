@@ -8,5 +8,6 @@ export {
   getGameConfig,
   getGamePercentagesConfig,
   getRatTotalValue,
+  getInventoryDetails,
   canRatEnterTrip
 } from "./getTrips"

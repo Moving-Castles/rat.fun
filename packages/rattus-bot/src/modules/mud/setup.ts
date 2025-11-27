@@ -76,7 +76,7 @@ export async function setupMud(
   })
 
   console.log("Syncing MUD state from indexer...")
-  const { components, waitForTransaction } = await syncToRecs({
+  const { components, waitForTransaction, storedBlockLogs$ } = await syncToRecs({
     world,
     config: mudConfig,
     address: networkConfig.worldAddress as Hex,
@@ -84,7 +84,34 @@ export async function setupMud(
     startBlock: BigInt(networkConfig.initialBlockNumber),
     indexerUrl: networkConfig.indexerUrl
   })
-  console.log("MUD sync complete!")
+
+  // Wait for initial sync to complete (wait for first block with logs)
+  console.log("Waiting for initial state sync...")
+  try {
+    await new Promise<void>((resolve, reject) => {
+      const timeoutId = setTimeout(() => {
+        subscription.unsubscribe()
+        reject(new Error("Sync timeout"))
+      }, 30000)
+
+      const subscription = storedBlockLogs$.subscribe({
+        next: (block: { blockNumber: bigint }) => {
+          if (block.blockNumber > 0n) {
+            clearTimeout(timeoutId)
+            subscription.unsubscribe()
+            resolve()
+          }
+        },
+        error: err => {
+          clearTimeout(timeoutId)
+          reject(err)
+        }
+      })
+    })
+    console.log("MUD sync complete!")
+  } catch (e) {
+    console.log("Warning: Sync timeout, proceeding with available data...")
+  }
 
   return {
     world,
