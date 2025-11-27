@@ -15,10 +15,13 @@ async function routes(fastify: FastifyInstance) {
     return { status: "ok", connections: wsConnections.size }
   })
 
-  fastify.get(
+  // Fastify 5 TypeProvider issue: websocket option not recognized in RouteShorthandOptions
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ;(fastify as any).get(
     "/ws/:playerId",
     { websocket: true, schema: schema },
-    async (socket, req: FastifyRequest<WebSocketParams>) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    async (socket: any, req: FastifyRequest<WebSocketParams>) => {
       const { playerId } = req.params
       const { data, info, signature } = req.query
 
