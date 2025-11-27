@@ -60,7 +60,7 @@
   {:else}
     <!-- FALLBACK -->
     <span class="message-body">
-      {topic}
+      <!-- {topic} -->
     </span>
   {/if}
 </a>

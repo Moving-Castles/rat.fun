@@ -6,16 +6,18 @@
     TripEventCreation,
     TripEventDepletion
   } from "$lib/components/Admin/types"
-  import { TRIP_EVENT_TYPE, VALUE_CHANGE_DIRECTION } from "$lib/components/Admin/enums"
+  import { VALUE_CHANGE_DIRECTION } from "$lib/components/Admin/enums"
   import { SignedNumber } from "$lib/components/Shared"
   import { timeSince } from "$lib/modules/utils"
+  import { makeHref } from "$lib/components/Admin/helpers"
   import { focusEvent, focusTrip } from "$lib/modules/ui/state.svelte"
 
   import { Tooltip } from "$lib/components/Shared"
 
   let {
     point,
-    behavior = "click"
+    behavior = "click",
+    isScrolling = false
   }: {
     point:
       | TripEventVisit
@@ -24,6 +26,7 @@
       | TripEventCreation
       | TripEventDepletion
     behavior?: "hover" | "click"
+    isScrolling?: boolean
   } = $props()
 
   let valueChangeDirection = $derived(
@@ -34,23 +37,16 @@
         : VALUE_CHANGE_DIRECTION.NEUTRAL
   )
 
+  let visitClass = $derived(
+    point.eventType === "trip_visit" || point.eventType === "trip_death" ? "trip_visit" : ""
+  )
+
   let focus = $derived(
     $focusEvent === point.index || (point.tripId === $focusTrip && $focusEvent === -1)
   )
   let timeStamp = $derived(timeSince(new Date(point.time).getTime()))
 
-  const href = $derived.by(() => {
-    // For visit and death events, meta is SanityOutcome
-    if (point.eventType === TRIP_EVENT_TYPE.VISIT || point.eventType === TRIP_EVENT_TYPE.DEATH) {
-      return `/cashboard/${point.meta?.tripId}?focusId=${point.meta._id}`
-    } else if (
-      point.eventType === TRIP_EVENT_TYPE.LIQUIDATION ||
-      point.eventType === TRIP_EVENT_TYPE.CREATION
-    ) {
-      // For liquidation and creation events, meta is SanityTrip
-      return `/cashboard/${point.meta._id}`
-    }
-  })
+  const href = makeHref(point)
 
   const onpointerup = () => {
     if (behavior === "click") {
@@ -60,14 +56,14 @@
   }
 
   const onpointerenter = () => {
-    if (behavior === "hover") {
+    if (behavior === "hover" && !isScrolling) {
       $focusEvent = point.index
       $focusTrip = point.tripId
     }
   }
 
   const onpointerleave = () => {
-    if (behavior === "hover") {
+    if (behavior === "hover" && !isScrolling) {
       $focusEvent = -1
       $focusTrip = ""
     }
@@ -82,21 +78,23 @@
 
 {#snippet ratVisitEvent(p: TripEventVisit | TripEventDeath)}
   <span class="event-message">
+    trip #{p.meta?.tripIndex}
     <span class="event-icon">→</span>
-    {p.meta?.playerName} sent {p.meta?.ratName} to trip #{p.meta?.tripIndex}
+    {p.meta?.playerName}
   </span>
   <div class="event-valuechange">
-    <SignedNumber hideZero value={p.valueChange} />
+    <SignedNumber neutralColor="rgba(255, 255, 0, 1);" value={p.valueChange} />
   </div>
 {/snippet}
 
 {#snippet ratDied(p: TripEventDeath)}
   <span class="event-message">
+    trip #{p.meta?.tripIndex}
     <span class="event-icon">✝</span>
-    {p.meta?.ratName} died tripping #{p.meta?.tripIndex}
+    {p.meta?.playerName}
   </span>
   <div class="event-valuechange">
-    <SignedNumber hideZero value={p.valueChange} />
+    <SignedNumber neutralColor="rgba(255, 255, 0, 1);" value={p.valueChange} />
   </div>
 {/snippet}
 
@@ -105,9 +103,7 @@
     <span class="event-icon">*</span>
     You liquidated trip #{p.meta?.index}
   </span>
-  <div class="event-valuechange">
-    <!-- <SignedNumber hideZero value={p.valueChange} /> -->
-  </div>
+  <div class="event-valuechange"></div>
 {/snippet}
 
 {#snippet tripDepleted(p: TripEventDepletion)}
@@ -115,24 +111,23 @@
     <span class="event-icon">*</span>
     Trip #{p.meta?.index} got depleted
   </span>
-  <div class="event-valuechange">
-    <!-- <SignedNumber hideZero value={p.valueChange} /> -->
-  </div>
+  <div class="event-valuechange"></div>
 {/snippet}
 
 {#snippet tripCreated(p: TripEventCreation)}
   <span class="event-message">
     <span class="event-icon">*</span>
     You created trip #{p.meta?.index}
+    <!-- {p.meta.tripCreationCost} -->
   </span>
   <div class="event-valuechange">
-    <SignedNumber hideZero value={p.valueChange} />
+    <SignedNumber neutralColor="rgba(255, 255, 0, 1);" hideZero value={p.valueChange} />
   </div>
 {/snippet}
 
 <a
-  class="event {valueChangeDirection}"
   {href}
+  class="event {visitClass} {valueChangeDirection}"
   {onpointerdown}
   {onpointerup}
   {onpointerenter}
@@ -169,15 +164,25 @@
     font-family: var(--admin-font-stack);
     padding-top: 2px;
     padding-bottom: 4px;
+    border: none;
+    border-style: outset;
+    border-width: 2px;
+    border-color: rgba(0, 0, 0, 0.3);
 
-    &.positive {
-      background: rgba(0, 255, 0, 0.4);
+    &.focus {
+      background: black;
     }
-    &.negative {
-      background: rgba(255, 0, 0, 0.4);
-    }
-    &.neutral {
-      background: rgba(255, 255, 0, 0.4);
+
+    &.trip_visit:not(.focus) {
+      &.positive {
+        background: rgba(0, 255, 0, 0.4);
+      }
+      &.negative {
+        background: rgba(255, 0, 0, 0.4);
+      }
+      &.neutral {
+        background: rgba(255, 255, 0, 0.4);
+      }
     }
 
     .event-content {
@@ -185,10 +190,6 @@
       justify-content: space-between;
       width: 100%;
       min-height: 10px;
-    }
-
-    &.focus {
-      background: black;
     }
   }
 </style>

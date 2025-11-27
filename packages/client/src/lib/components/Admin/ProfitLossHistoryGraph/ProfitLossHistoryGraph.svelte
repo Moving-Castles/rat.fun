@@ -129,6 +129,23 @@
       limit = 50
     }
   }
+
+  // Auto-expand graph window when keyboard navigating to events outside current view
+  $effect(() => {
+    if ($focusEvent !== -1 && graphData.length > 0) {
+      const focusedEvent = graphData.find(point => point.index === $focusEvent)
+
+      if (focusedEvent) {
+        const focusedEventPosition = graphData.indexOf(focusedEvent)
+        const windowStart = graphData.length - limit
+
+        // If focused event is before the current window, expand to include it
+        if (focusedEventPosition < windowStart) {
+          limit = graphData.length - focusedEventPosition
+        }
+      }
+    }
+  })
 </script>
 
 <div class="profit-loss-graph">

@@ -34,5 +34,5 @@ export const phoneActiveGameView = writable<"ratbox" | "triplisting">("ratbox")
 export const phoneActiveAdminView = writable<"home" | "trips" | "profit">("home")
 
 // Phone admin sub-view state - tracks sub-navigation within trips and profit views
-export const phoneAdminTripsSubView = writable<"active" | "past">("active")
+export const adminTripsSubView = writable<"active" | "past">("active")
 export const phoneAdminProfitSubView = writable<"graph" | "log">("graph")

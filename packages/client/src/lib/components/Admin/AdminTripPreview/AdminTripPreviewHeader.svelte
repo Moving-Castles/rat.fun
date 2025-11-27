@@ -24,6 +24,12 @@
 </script>
 
 <div class="trip-preview-header">
+  <!-- Depleted / Liquidated -->
+  {#if Number(trip.balance) === 0 && trip.liquidationBlock}
+    <div class="watermark">Liquidated</div>
+  {:else if Number(trip.balance) === 0}
+    <div class="watermark">Depleted</div>
+  {/if}
   <!-- IMAGE -->
   <!-- svelte-ignore a11y_click_events_have_key_events -->
   <!-- svelte-ignore a11y_no_static_element_interactions -->
@@ -86,6 +92,17 @@
     position: relative;
     display: flex;
     flex-direction: row;
+    overflow: hidden;
+
+    .watermark {
+      position: absolute;
+      font-size: 100px;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%) rotate(-10deg);
+      pointer-events: none;
+      opacity: 0.2;
+    }
 
     .background-image {
       position: absolute;

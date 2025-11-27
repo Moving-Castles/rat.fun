@@ -134,10 +134,6 @@
     .min-height {
       height: 300px;
     }
-
-    &.depleted {
-      filter: grayscale(0.8) contrast(0.7);
-    }
   }
 
   .back-button-container {
