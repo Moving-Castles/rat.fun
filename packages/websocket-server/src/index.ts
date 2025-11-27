@@ -18,9 +18,14 @@ const fastify = Fastify({
 })
 
 // Register plugins
-fastify.register(websocket)
-fastify.register(compress)
-fastify.register(cors, {
+// Note: Fastify 5 has a TypeProvider variance issue where plugin types don't align
+// with the inferred FastifyInstance type. Runtime behavior is correct.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+fastify.register(websocket as any)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+fastify.register(compress as any)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+fastify.register(cors as any, {
   origin: "*", // Allow all origins (restrict for production)
   methods: ["GET", "POST"]
 })

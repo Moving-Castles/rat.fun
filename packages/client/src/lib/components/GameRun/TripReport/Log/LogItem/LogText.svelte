@@ -44,6 +44,11 @@
       className: "system-message",
       sound: () => typeHit(),
       soundMode: "each"
+    },
+    BALANCE: {
+      className: "balance-message",
+      sound: () => typeHit(),
+      soundMode: "each"
     }
   }
 
@@ -180,7 +185,12 @@
     }
 
     :global(.system-message) {
-      background: rgba(0, 0, 0, 0.2);
+      background: orangered;
+      padding: 2px 4px;
+    }
+
+    :global(.balance-message) {
+      background: green;
       padding: 2px 4px;
     }
 

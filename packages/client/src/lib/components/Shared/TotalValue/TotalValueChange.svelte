@@ -116,8 +116,11 @@
     padding: 10px 20px;
     transition: background-color 0.2s ease;
 
+    @media (max-width: 768px) {
+      font-size: 20dvw;
+    }
+
     .value {
-      font-size: 8dvw;
       margin-right: 5px;
     }
 

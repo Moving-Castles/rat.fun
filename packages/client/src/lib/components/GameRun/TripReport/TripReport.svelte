@@ -10,6 +10,23 @@
   import { environment } from "$lib/modules/network"
   import { ENVIRONMENT } from "$lib/mud/enums"
 
+  /**
+   * Timeline structure:
+   *
+   * TripReport (rootTimeline)
+   * ├── Log (logTimeline)
+   * │   ├── LogStatus (START)
+   * │   ├── LogInventory
+   * │   ├── LogItem (×N)
+   * │   │   ├── LogTimestamp
+   * │   │   ├── LogText
+   * │   │   └── LogOutcomeList
+   * │   └── LogStatus (END) - animated manually
+   * └── TripSummary2 (summaryTimeline)
+   *     ├── TotalValueBox2
+   *     └── ActionBox
+   */
+
   let {
     result,
     seed1

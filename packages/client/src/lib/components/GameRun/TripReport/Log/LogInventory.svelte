@@ -16,6 +16,11 @@
   // Timeline
   const timeline = gsap.timeline({ delay })
 
+  // Element refs
+  let labelElement = $state<HTMLDivElement | null>(null)
+  let itemElements = $state<HTMLDivElement[]>([])
+  let emptyElement = $state<HTMLDivElement | null>(null)
+
   // Get inventory items from frozen rat
   let inventoryItems = $derived(frozenRat?.inventory ?? [])
   let hasItems = $derived(inventoryItems.length > 0)
@@ -31,18 +36,32 @@
   }
 
   onMount(() => {
-    // Only create animation if onTimeline is provided
-    // Otherwise, parent will handle the animation manually
     if (onTimeline) {
-      timeline.set(".inventory-content", {
-        opacity: 0
-      })
+      // Animate label first
+      if (labelElement) {
+        timeline.to(labelElement, {
+          opacity: 1,
+          duration: 0.15,
+          ease: "power2.out"
+        })
+      }
 
-      timeline.to(".inventory-content", {
-        opacity: 1,
-        duration: 0.5,
-        ease: "power2.out"
-      })
+      // Then animate each item sequentially, or the empty div
+      if (hasItems && itemElements.length > 0) {
+        itemElements.forEach(el => {
+          timeline.to(el, {
+            opacity: 1,
+            duration: 0.15,
+            ease: "power2.out"
+          })
+        })
+      } else if (emptyElement) {
+        timeline.to(emptyElement, {
+          opacity: 1,
+          duration: 0.15,
+          ease: "power2.out"
+        })
+      }
 
       onTimeline(timeline)
     }
@@ -51,18 +70,15 @@
 
 <div class="log-inventory">
   <div class="inventory-content">
-    <span class="label">Rat enters with:</span>
+    <div class="label" bind:this={labelElement}>Rat enters with:</div>
     {#if hasItems}
-      <span class="items">
-        {#each inventoryItems as item, i}
-          <span class="item">
-            {getItemName(item)}{#if i < inventoryItems.length - 1},
-            {/if}
-          </span>
-        {/each}
-      </span>
+      {#each inventoryItems as item, i}
+        <div class="item" bind:this={itemElements[i]}>
+          {getItemName(item)}
+        </div>
+      {/each}
     {:else}
-      <span class="empty">no PsychoObjects</span>
+      <div class="empty" bind:this={emptyElement}>No PsychoObjects</div>
     {/if}
   </div>
 </div>
@@ -75,23 +91,31 @@
     font-size: var(--font-size-normal);
 
     .inventory-content {
-      display: inline-block;
-      background: var(--background-semi-transparent);
+      display: flex;
+      flex-wrap: wrap;
       color: var(--foreground);
-      padding: 10px;
-      max-width: 80%;
       font-family: var(--typewriter-font-stack);
 
       .label {
+        opacity: 0;
+        padding: 5px;
         margin-right: 0.5em;
+        background: var(--background-semi-transparent);
       }
 
       .item {
-        color: var(--color-item);
+        opacity: 0;
+        padding: 5px;
+        color: black;
+        background: yellow;
+        margin-right: 0.5em;
       }
 
       .empty {
-        opacity: 0.7;
+        opacity: 0;
+        padding: 5px;
+        color: black;
+        background: lightgray;
       }
     }
   }
