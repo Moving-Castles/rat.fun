@@ -46,10 +46,12 @@ export async function buildAuctionParams(
   const numeraireDecimals = await getDecimals(publicClient, numeraire)
 
   //const spendLimitAmount = parseUnits("950", numeraireDecimals)
-  const spendLimitAmount = parseUnits("95000", numeraireDecimals)
+  const spendLimitAmount = parseUnits((950 / 1000000).toString(), numeraireDecimals)
 
-  const startPrice = 0.005
-  const endPrice = 0.014
+  // const startPrice = 0.005
+  // const endPrice = 0.014
+  const startPrice = 0.005 / 1000000
+  const endPrice = 0.014 / 1000000
   const { startTick, endTick } = calculateTickRange(
     isToken0,
     startPrice,
