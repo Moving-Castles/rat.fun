@@ -10,7 +10,8 @@ export const UIState = writable(UI.LOADING)
 
 // For UI
 export const collapsed = writable(true)
-export const focusEvent = writable(-1)
+export const focusEvent = writable(-1) // Preview/hover state
+export const selectedEvent = writable(-1) // Committed selection state (for flashback)
 export const focusTrip = writable("")
 export const lightboxState = new LightboxState()
 export const selectedFolderId = writable("")

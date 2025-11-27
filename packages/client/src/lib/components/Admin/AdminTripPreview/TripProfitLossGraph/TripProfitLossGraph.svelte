@@ -9,7 +9,7 @@
   import { max, min } from "d3-array"
   import { line } from "d3-shape"
   import { calculateProfitLossForTrip } from "../../helpers"
-  import { focusEvent } from "$lib/modules/ui/state.svelte"
+  import { focusEvent, selectedEvent } from "$lib/modules/ui/state.svelte"
   import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
 
   let {
@@ -17,14 +17,26 @@
     tripId,
     height = 400,
     behavior = "hover",
-    data = $bindable([])
+    data = $bindable([]),
+    focusEventOverride = undefined,
+    selectedEventOverride = undefined,
+    onFocusChange = undefined,
+    onSelectionChange = undefined
   }: {
     trip: Trip
     tripId: string
     height?: number
     behavior?: "hover" | "click"
     data?: TripEvent[]
+    focusEventOverride?: number
+    selectedEventOverride?: number
+    onFocusChange?: (index: number) => void
+    onSelectionChange?: (index: number) => void
   } = $props()
+
+  // Use override values if provided, otherwise use global stores
+  let effectiveFocusEvent = $derived(focusEventOverride !== undefined ? focusEventOverride : $focusEvent)
+  let effectiveSelectedEvent = $derived(selectedEventOverride !== undefined ? selectedEventOverride : $selectedEvent)
 
   // Add reactive timestamp for real-time updates
   let currentTime = $state(Date.now())
@@ -216,7 +228,7 @@
             {#each profitLossOverTime as point, i (point.time)}
               {@const lastPoint = profitLossOverTime?.[i - 1]}
 
-              {#if $focusEvent === point.index}
+              {#if effectiveFocusEvent === point.index}
                 <line
                   x1={xScale(point.time)}
                   y1={0}
@@ -237,24 +249,41 @@
                   onpointerdown={() => {}}
                   onpointerup={() => {
                     if (behavior === "click") {
-                      $focusEvent = point.index
+                      if (onFocusChange) {
+                        onFocusChange(point.index)
+                      } else {
+                        $focusEvent = point.index
+                      }
+                      if (onSelectionChange) {
+                        onSelectionChange(point.index)
+                      } else {
+                        $selectedEvent = point.index
+                      }
                     }
                   }}
                   onpointerenter={() => {
                     if (behavior === "hover") {
-                      $focusEvent = point.index
+                      if (onFocusChange) {
+                        onFocusChange(point.index)
+                      } else {
+                        $focusEvent = point.index
+                      }
                     }
                   }}
                   onpointerleave={() => {
                     if (behavior === "hover") {
-                      $focusEvent = -1
+                      if (onFocusChange) {
+                        onFocusChange(-1)
+                      } else {
+                        $focusEvent = -1
+                      }
                     }
                   }}
                 >
                   {#if point.eventType === "trip_death"}
                     <circle
                       fill="var(--color-grey-light)"
-                      stroke={$focusEvent === point.index ? "white" : ""}
+                      stroke={effectiveFocusEvent === point.index ? "white" : ""}
                       r="5"
                       cx={xScale(point.time)}
                       cy={yScale(point.value)}
@@ -262,7 +291,7 @@
                   {:else if point.eventType === "trip_liquidated"}
                     <circle
                       fill="var(--color-grey-light)"
-                      stroke={$focusEvent === point.index ? "white" : ""}
+                      stroke={effectiveFocusEvent === point.index ? "white" : ""}
                       r="5"
                       cx={xScale(point.time)}
                       cy={yScale(point.value)}
@@ -270,7 +299,7 @@
                   {:else if point.eventType === "trip_created"}
                     <circle
                       fill="var(--color-grey-light)"
-                      stroke={$focusEvent === point.index ? "white" : ""}
+                      stroke={effectiveFocusEvent === point.index ? "white" : ""}
                       r="5"
                       cx={xScale(point.time)}
                       cy={yScale(point.value)}
@@ -278,7 +307,7 @@
                   {:else}
                     <circle
                       fill="var(--color-grey-light)"
-                      stroke={$focusEvent === point.index ? "white" : ""}
+                      stroke={effectiveFocusEvent === point.index ? "white" : ""}
                       r="5"
                       cx={xScale(point.time)}
                       cy={yScale(point.value)}

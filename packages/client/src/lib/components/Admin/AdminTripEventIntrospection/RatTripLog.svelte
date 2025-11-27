@@ -67,75 +67,8 @@
 </script>
 
 <div class="rat-trip-log">
-  <!-- Left Panel: Summary -->
-  <div class="summary-panel">
-    <div class="summary-content">
-      <h3 class="header1">Trip Summary</h3>
-
-      <div class="summary-grid">
-        <div class="summary-row">
-          <span class="label">Rat status</span>
-          <span class="value">
-            {#if result.ratValue === 0}
-              <span class="status-dead">Died</span>
-            {:else}
-              <span class="status-depleted">Survived</span>
-            {/if}
-          </span>
-        </div>
-
-        <div class="summary-row">
-          <span class="label">Rat Value</span>
-          <span class="value" class:negative={result.ratValueChange ?? 0 < 0}>
-            {result.ratValue} ({(result.ratValueChange ?? 0 >= 0)
-              ? "+"
-              : ""}{result.ratValueChange})
-          </span>
-        </div>
-
-        <div class="summary-row">
-          <span class="label">Trip Value</span>
-          <span class="value" class:positive={result.ratValueChange ?? 0 > 0}>
-            {result.ratValue} (+{result.ratValueChange})
-          </span>
-        </div>
-
-        <div class="summary-row">
-          <span class="label">Balance Transfer</span>
-          <span
-            class="value"
-            class:negative={(result.balanceTransfers || []).reduce(
-              (sum, bt) => sum + (bt.amount ?? 0),
-              0
-            ) < 0}
-          >
-            {(result.balanceTransfers || []).reduce((sum, bt) => sum + (bt.amount ?? 0), 0)}
-          </span>
-        </div>
-
-        <div class="summary-row">
-          <span class="label">Items Added</span>
-          <span class="value">
-            {(result.itemChanges || []).filter(ic => ic.type === "add").length}
-          </span>
-        </div>
-
-        <div class="summary-row">
-          <span class="label">Items Removed</span>
-          <span class="value">
-            {(result.itemChanges || []).filter(ic => ic.type === "remove").length}
-          </span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Separator -->
-  <div class="separator"></div>
-
   <!-- Right Panel: Event Log -->
   <div class="log-panel">
-    <h3 class="header2">Event Log</h3>
     <div class="log-container">
       {#if mergedLog}
         {#each mergedLog as entry, i}

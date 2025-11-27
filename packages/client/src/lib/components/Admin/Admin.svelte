@@ -22,12 +22,14 @@
   import { staticContent } from "$lib/modules/content"
   import { calculateProfitLossForTrip } from "./helpers"
   import * as sortFunctions from "$lib/components/Trip/TripListing/sortFunctions"
+  import { page } from "$app/state"
   import {
     isPhone,
     phoneActiveAdminView,
     adminTripsSubView,
     phoneAdminProfitSubView,
     focusEvent,
+    selectedEvent,
     focusTrip
   } from "$lib/modules/ui/state.svelte"
   import { goto } from "$app/navigation"
@@ -39,7 +41,8 @@
     AdminPastTripTable,
     ProfitLossHistoryGraph,
     ProfitLossOverview,
-    AdminUnlockModal
+    AdminUnlockModal,
+    AdminTripEventIntrospection
   } from "$lib/components/Admin"
   import { makeHref } from "$lib/components/Admin/helpers"
   import { SmallButton } from "$lib/components/Shared"
@@ -195,31 +198,38 @@
   let href = $state("")
 
   const handleKeypress = e => {
+    // Only handle keyboard events on main cashboard, not on nested trip view
+    if (page.route?.id?.includes("/cashboard/[tripId]")) return
+
     if (!allVisitsData.length) return
 
     const currentVisitIndex = allVisitsData.findIndex(visit => visit.index === $focusEvent)
 
-    if (e.key === "ArrowRight" || e.key === "ArrowDown") {
-      // Move to next visit/death
-      const nextIndex = currentVisitIndex === -1 ? 0 : currentVisitIndex + 1
-      if (nextIndex < allVisitsData.length) {
-        const nextEvent = allVisitsData[nextIndex]
-        $focusEvent = nextEvent.index
-        $focusTrip = nextEvent.tripId
-      }
-    } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
-      // Move to previous visit/death
+    if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+      // Move down in visual list (which is previous in reversed array)
       const prevIndex = currentVisitIndex === -1 ? allVisitsData.length - 1 : currentVisitIndex - 1
       if (prevIndex >= 0) {
         const prevEvent = allVisitsData[prevIndex]
         $focusEvent = prevEvent.index
         $focusTrip = prevEvent.tripId
       }
+    } else if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+      // Move up in visual list (which is next in reversed array)
+      const nextIndex = currentVisitIndex === -1 ? 0 : currentVisitIndex + 1
+      if (nextIndex < allVisitsData.length) {
+        const nextEvent = allVisitsData[nextIndex]
+        $focusEvent = nextEvent.index
+        $focusTrip = nextEvent.tripId
+      }
     } else if (e.key === "Return" || e.key === "Enter") {
+      // Commit selection and navigate
+      $selectedEvent = $focusEvent
       const href = makeHref(graphData[$focusEvent])
       goto(href)
     }
   }
+
+  let effectiveEvent = $derived(graphData?.[$selectedEvent])
 
   $effect(() => {
     const currentView = $phoneActiveAdminView
@@ -248,6 +258,14 @@
     // Defer graph data loading to avoid blocking initial render
     setTimeout(() => {
       shouldLoadGraphData = true
+
+      // Initialize selectedEvent to first visit/death event after data loads
+      setTimeout(() => {
+        if (allVisitsData.length > 0) {
+          const firstEvent = allVisitsData[0]
+          selectedEvent.set(firstEvent.index)
+        }
+      }, 100)
     }, 50)
   })
 
@@ -359,7 +377,7 @@
             <ProfitLossHistoryGraph {graphData} height={clientHeight} />
           </div>
         {:else}
-          <AdminEventLog graphData={logData} />
+          <AdminEventLog graphData={logData} behavior="click" />
         {/if}
       </div>
     {/if}
@@ -383,7 +401,7 @@
       </div>
       <!-- Event log -->
       <div class="event-log-container">
-        <AdminEventLog graphData={logData} />
+        <AdminEventLog graphData={logData} behavior="click" />
       </div>
     </div>
     <!-- Bottom row -->
@@ -426,7 +444,16 @@
       <div class="admin-divider warning-mute"></div>
       <!-- Past trips -->
       <div class="flashback-container">
-        <div class="flashbacks">FLASHBACK</div>
+        <div class="flashbacks">
+          <div class="full">
+            <div class="min-height">
+              {#key effectiveEvent?.meta?._id}
+                <AdminTripEventIntrospection event={effectiveEvent} />
+              {/key}
+            </div>
+          </div>
+          <!-- Show flashback here for the LAST OPENED OUTCOME -->
+        </div>
       </div>
     </div>
   {/if}

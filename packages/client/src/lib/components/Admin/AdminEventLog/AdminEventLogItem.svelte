@@ -10,14 +10,18 @@
   import { SignedNumber } from "$lib/components/Shared"
   import { timeSince } from "$lib/modules/utils"
   import { makeHref } from "$lib/components/Admin/helpers"
-  import { focusEvent, focusTrip } from "$lib/modules/ui/state.svelte"
+  import { focusEvent, selectedEvent, focusTrip } from "$lib/modules/ui/state.svelte"
 
   import { Tooltip } from "$lib/components/Shared"
 
   let {
     point,
     behavior = "click",
-    isScrolling = false
+    isScrolling = false,
+    focusEventOverride = undefined,
+    selectedEventOverride = undefined,
+    onFocusChange = undefined,
+    onSelectionChange = undefined
   }: {
     point:
       | TripEventVisit
@@ -27,7 +31,15 @@
       | TripEventDepletion
     behavior?: "hover" | "click"
     isScrolling?: boolean
+    focusEventOverride?: number
+    selectedEventOverride?: number
+    onFocusChange?: (index: number, tripId: string) => void
+    onSelectionChange?: (index: number, tripId: string) => void
   } = $props()
+
+  // Use override values if provided, otherwise use global stores
+  let effectiveFocusEvent = $derived(focusEventOverride !== undefined ? focusEventOverride : $focusEvent)
+  let effectiveSelectedEvent = $derived(selectedEventOverride !== undefined ? selectedEventOverride : $selectedEvent)
 
   let valueChangeDirection = $derived(
     point.valueChange > 0
@@ -41,8 +53,9 @@
     point.eventType === "trip_visit" || point.eventType === "trip_death" ? "trip_visit" : ""
   )
 
-  let focus = $derived(
-    $focusEvent === point.index || (point.tripId === $focusTrip && $focusEvent === -1)
+  let selected = $derived(effectiveSelectedEvent === point.index)
+  let hovered = $derived(
+    effectiveFocusEvent === point.index || (point.tripId === $focusTrip && effectiveFocusEvent === -1)
   )
   let timeStamp = $derived(timeSince(new Date(point.time).getTime()))
 
@@ -50,22 +63,39 @@
 
   const onpointerup = () => {
     if (behavior === "click") {
-      $focusEvent = point.index
-      $focusTrip = point.tripId
+      if (onFocusChange) {
+        onFocusChange(point.index, point.tripId)
+      } else {
+        $focusEvent = point.index
+        $focusTrip = point.tripId
+      }
+      if (onSelectionChange) {
+        onSelectionChange(point.index, point.tripId)
+      } else {
+        $selectedEvent = point.index
+      }
     }
   }
 
   const onpointerenter = () => {
     if (behavior === "hover" && !isScrolling) {
-      $focusEvent = point.index
-      $focusTrip = point.tripId
+      if (onFocusChange) {
+        onFocusChange(point.index, point.tripId)
+      } else {
+        $focusEvent = point.index
+        $focusTrip = point.tripId
+      }
     }
   }
 
   const onpointerleave = () => {
     if (behavior === "hover" && !isScrolling) {
-      $focusEvent = -1
-      $focusTrip = ""
+      if (onFocusChange) {
+        onFocusChange(-1, "")
+      } else {
+        $focusEvent = -1
+        $focusTrip = ""
+      }
     }
   }
 
@@ -132,7 +162,8 @@
   {onpointerup}
   {onpointerenter}
   {onpointerleave}
-  class:focus
+  class:selected
+  class:hovered
 >
   <Tooltip content={timeStamp}>
     <div class="event-content">
@@ -169,11 +200,11 @@
     border-width: 2px;
     border-color: rgba(0, 0, 0, 0.3);
 
-    &.focus {
+    &.selected {
       background: black;
     }
 
-    &.trip_visit:not(.focus) {
+    &.trip_visit:not(.selected) {
       &.positive {
         background: rgba(0, 255, 0, 0.4);
       }
@@ -182,6 +213,18 @@
       }
       &.neutral {
         background: rgba(255, 255, 0, 0.4);
+      }
+
+      &.hovered {
+        &.positive {
+          background: rgba(0, 255, 0, 0.6);
+        }
+        &.negative {
+          background: rgba(255, 0, 0, 0.6);
+        }
+        &.neutral {
+          background: rgba(255, 255, 0, 0.6);
+        }
       }
     }
 

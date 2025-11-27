@@ -1,66 +1,95 @@
 <script lang="ts">
-  import { focusEvent } from "$lib/modules/ui/state.svelte"
+  import { focusEvent, selectedEvent } from "$lib/modules/ui/state.svelte"
   import type { TripEvent } from "$lib/components/Admin/types"
   import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
 
-  import AdminEventLogItem from "./AdminEventLogItem.svelte"
+  import { tick } from "svelte"
 
-  let y = $state(0)
+  import AdminEventLogItem from "./AdminEventLogItem.svelte"
 
   let {
     graphData,
     hideUnlockEvent = false,
-    behavior = "hover"
+    behavior = "hover",
+    focusEventOverride = undefined,
+    selectedEventOverride = undefined,
+    onFocusChange = undefined,
+    onSelectionChange = undefined
   }: {
     graphData: TripEvent[]
     hideUnlockEvent?: boolean
     behavior?: "hover" | "click"
+    focusEventOverride?: number
+    selectedEventOverride?: number
+    onFocusChange?: (index: number, tripId: string) => void
+    onSelectionChange?: (index: number, tripId: string) => void
   } = $props()
+
+  // Use override values if provided, otherwise use global stores
+  let effectiveFocusEvent = $derived(
+    focusEventOverride !== undefined ? focusEventOverride : $focusEvent
+  )
+  let effectiveSelectedEvent = $derived(
+    selectedEventOverride !== undefined ? selectedEventOverride : $selectedEvent
+  )
   let scrollContainer = $state<HTMLElement>()
   let isScrolling = $state(false)
   let scrollTimeout: ReturnType<typeof setTimeout> | null = null
 
   $effect(() => {
-    if ($focusEvent !== -1) {
-      const element = scrollContainer?.querySelector(".focus")
+    // React to focusEvent or selectedEvent changes and scroll to the element
+    // Explicitly reference both to ensure reactivity
+    const focus = effectiveFocusEvent
+    const selected = effectiveSelectedEvent
+    const shouldScroll = (focus !== -1 || selected !== -1) && graphData.length > 0
 
-      if (element && scrollContainer) {
-        const containerRect = scrollContainer.getBoundingClientRect()
-        const elementRect = element.getBoundingClientRect()
+    if (shouldScroll) {
+      // Use tick() to ensure Svelte has updated the DOM
+      tick().then(() => {
+        // Prioritize hovered (active navigation) over selected
+        const element =
+          scrollContainer?.querySelector(".hovered") || scrollContainer?.querySelector(".selected")
 
-        // Only scroll if element is outside viewport
-        const isVisible =
-          elementRect.top >= containerRect.top && elementRect.bottom <= containerRect.bottom
+        if (element && scrollContainer) {
+          const containerRect = scrollContainer.getBoundingClientRect()
+          const elementRect = element.getBoundingClientRect()
 
-        if (!isVisible) {
-          // Set flag to prevent pointer events from interfering
-          isScrolling = true
+          // Only scroll if element is outside viewport
+          const isVisible =
+            elementRect.top >= containerRect.top && elementRect.bottom <= containerRect.bottom
 
-          // Clear any existing timeout
-          if (scrollTimeout) clearTimeout(scrollTimeout)
+          if (!isVisible) {
+            // Set flag to prevent pointer events from interfering
+            isScrolling = true
 
-          element.scrollIntoView({ block: "nearest" })
+            // Clear any existing timeout
+            if (scrollTimeout) clearTimeout(scrollTimeout)
 
-          // Clear flag after scroll animation completes
-          scrollTimeout = setTimeout(() => {
-            isScrolling = false
-            scrollTimeout = null
-          }, 150)
+            element.scrollIntoView({ block: "nearest" })
+
+            // Clear flag after scroll animation completes
+            scrollTimeout = setTimeout(() => {
+              isScrolling = false
+              scrollTimeout = null
+            }, 150)
+          }
         }
-      }
+      })
     }
   })
 </script>
 
-<div
-  bind:this={scrollContainer}
-  class="admin-event-log"
-  onscroll={e => {
-    y = e.currentTarget.scrollTop - e.currentTarget.clientHeight
-  }}
->
+<div bind:this={scrollContainer} class="admin-event-log">
   {#each graphData as point, index (point.index)}
-    <AdminEventLogItem {point} {behavior} {isScrolling} />
+    <AdminEventLogItem
+      {point}
+      {behavior}
+      {isScrolling}
+      {focusEventOverride}
+      {selectedEventOverride}
+      {onFocusChange}
+      {onSelectionChange}
+    />
   {/each}
   {#if !hideUnlockEvent}
     <p class="event">{UI_STRINGS.adminUnlockedMessage}</p>

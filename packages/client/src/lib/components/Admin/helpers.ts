@@ -153,3 +153,78 @@ export function makeHref(
     return `/cashboard/${point.meta._id}`
   }
 }
+
+/**
+ * Maps a local trip-specific event index to the global combined event index.
+ * This is needed because nested AdminTripPreview has a different graphData array
+ * than the parent Admin component.
+ */
+export function mapLocalIndexToGlobal(
+  localIndex: number,
+  localGraphData: TripEvent[],
+  playerTrips: Record<string, Trip>,
+  staticContent: any
+): number {
+  const localEvent = localGraphData[localIndex]
+  if (!localEvent?.meta?._id) return -1
+
+  // Reconstruct parent's combined graphData the same way Admin.svelte does
+  const trips = Object.values(playerTrips)
+  if (!trips.length) return -1
+
+  const combinedData: TripEvent[] = []
+  const tripContentMap = new Map(staticContent?.trips?.map((t: any) => [t._id, t]) || [])
+  const outcomesByTripId = (staticContent?.outcomes || []).reduce(
+    (acc: Record<string, SanityOutcome[]>, outcome: SanityOutcome) => {
+      if (outcome.tripId) {
+        if (!acc[outcome.tripId]) acc[outcome.tripId] = []
+        acc[outcome.tripId].push(outcome)
+      }
+      return acc
+    },
+    {}
+  )
+
+  trips.forEach(trip => {
+    const tripId = Object.keys(playerTrips).find(key => playerTrips[key] === trip) || ""
+    const sanityTripContent = tripContentMap.get(tripId)
+    if (!sanityTripContent) return
+    const outcomes = outcomesByTripId[tripId] || []
+    const profitLoss = calculateProfitLossForTrip(trip, tripId, sanityTripContent, outcomes)
+    combinedData.push(...profitLoss)
+  })
+
+  // Sort by time
+  combinedData.sort((a, b) => a.time - b.time)
+
+  // Add baseline
+  const earliestTime = combinedData.length > 0 ? combinedData[0].time : Date.now()
+  const dataWithBaseline = [
+    {
+      eventType: TRIP_EVENT_TYPE.BASELINE,
+      time: earliestTime - 1000,
+      value: 0,
+      valueChange: 0,
+      tripId: "",
+      tripCreationCost: 0
+    },
+    ...combinedData
+  ]
+
+  // Accumulate and add indices
+  let runningBalance = 0
+  const parentGraphData = dataWithBaseline.map((point, index) => {
+    runningBalance += point.valueChange || 0
+    return {
+      ...point,
+      index,
+      value: runningBalance
+    }
+  })
+
+  // Find matching event by meta._id
+  const globalIndex = parentGraphData.findIndex(e => e?.meta?._id === localEvent.meta._id)
+
+  // Return the found index, or -1 if not found
+  return globalIndex >= 0 ? globalIndex : -1
+}
