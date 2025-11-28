@@ -21,4 +21,8 @@ interface IPermit2 {
   }
 
   function permit(address owner, PermitSingle memory permitSingle, bytes calldata signature) external;
+
+  function approve(address token, address spender, uint160 amount, uint48 expiration) external;
+
+  function transferFrom(address from, address to, uint160 amount, address token) external;
 }

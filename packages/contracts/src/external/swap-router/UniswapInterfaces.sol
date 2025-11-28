@@ -9,7 +9,7 @@ library UniswapConstants {
   uint256 internal constant SWAP_EXACT_IN_SINGLE = 0x06;
   uint256 internal constant SWAP_EXACT_OUT_SINGLE = 0x08;
   uint256 internal constant SETTLE_ALL = 0x0c;
-  uint256 internal constant TAKE_ALL = 0x0f;
+  uint256 internal constant TAKE_PORTION = 0x10;
 }
 
 struct PoolKey {

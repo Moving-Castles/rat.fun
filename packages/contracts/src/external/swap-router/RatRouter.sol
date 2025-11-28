@@ -78,6 +78,8 @@ contract RatRouter {
   ) external payable {
     uint256 amountIn = msg.value;
     weth.deposit{ value: msg.value }();
+    // Approve aerodrome router to spend tokens
+    IERC20(address(weth)).approve(address(aerodromeRouter), amountIn);
 
     _swapExactIn(
       amountIn,
@@ -96,11 +98,15 @@ contract RatRouter {
     IPermit2.PermitSingle calldata permit,
     bytes calldata permitSignature
   ) public {
+    // Permit and transfer tokens from sender to this contract
     permit2.permit(
       msg.sender,
       permit,
       permitSignature
     );
+    permit2.transferFrom(msg.sender, address(this), uint160(amountIn), permit.details.token);
+    // Approve aerodrome router to spend tokens
+    IERC20(permit.details.token).approve(address(aerodromeRouter), amountIn);
 
     _swapExactIn(
       amountIn,
@@ -121,8 +127,6 @@ contract RatRouter {
     uint128 amountOutAerodrome = _executeAerodromeRouterExactInput(aerodromePath, deadline, amountIn);
 
     _executeUniversalRouterV4SwapExactInputSingle(uniswapPoolKey, uniswapZeroForOne, amountOutAerodrome);
-
-    _transferFinalCurrencyToSender(uniswapPoolKey, uniswapZeroForOne);
   }
 
   function _executeAerodromeRouterExactInput(bytes memory path, uint256 deadline, uint256 amountIn) internal returns (uint128) {
@@ -141,11 +145,18 @@ contract RatRouter {
     bool zeroForOne,
     uint128 amountIn
   ) internal {
+    address fromCurrency = zeroForOne ? poolKey.currency0 : poolKey.currency1;
+    address toCurrency = zeroForOne ? poolKey.currency1 : poolKey.currency0;
+
+    // Approve universal router to spend tokens
+    IERC20(fromCurrency).approve(address(permit2), amountIn);
+    permit2.approve(fromCurrency, address(universalRouter), amountIn, uint48(block.timestamp));
+
     // 3 actions
     bytes memory actions = abi.encodePacked(
       bytes1(uint8(UniswapConstants.SWAP_EXACT_IN_SINGLE)),
       bytes1(uint8(UniswapConstants.SETTLE_ALL)),
-      bytes1(uint8(UniswapConstants.TAKE_ALL))
+      bytes1(uint8(UniswapConstants.TAKE_PORTION))
     );
     bytes[] memory params = new bytes[](3);
     // action 0 - SWAP_EXACT_IN_SINGLE
@@ -157,9 +168,9 @@ contract RatRouter {
       hookData: ""
     }));
     // action 1 - SETTLE_ALL
-    params[1] = abi.encode(zeroForOne ? poolKey.currency0 : poolKey.currency1, type(uint256).max);
-    // action 2 - TAKE_ALL
-    params[2] = abi.encode(zeroForOne ? poolKey.currency1 : poolKey.currency0, 0);
+    params[1] = abi.encode(fromCurrency, type(uint256).max);
+    // action 2 - TAKE_PORTION (10_000 bips = 100%)
+    params[2] = abi.encode(toCurrency, msg.sender, 10_000);
 
     // 1 command
     bytes memory commands = abi.encodePacked(UniswapConstants.COMMAND_V4_SWAP);
@@ -168,16 +179,5 @@ contract RatRouter {
     inputs[0] = abi.encode(actions, params);
 
     universalRouter.execute(commands, inputs);
-  }
-
-  function _transferFinalCurrencyToSender(
-    PoolKey memory poolKey,
-    bool zeroForOne
-  ) internal {
-    address finalCurrency = zeroForOne ? poolKey.currency1 : poolKey.currency0;
-    IERC20(finalCurrency).transfer(
-      msg.sender,
-      IERC20(finalCurrency).balanceOf(address(this))
-    );
   }
 }
