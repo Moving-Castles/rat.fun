@@ -4,8 +4,11 @@ import {
   LLMError,
   LLMAPIError,
   LLMParseError,
-  LLMOverloadedError
+  LLMOverloadedError,
+  LLMTruncatedError
 } from "@modules/error-handling/errors"
+
+const MAX_TOKENS = Number(process.env.LLM_MAX_TOKENS) || 4096
 
 export async function callModel(
   anthropic: Anthropic,
@@ -17,7 +20,7 @@ export async function callModel(
   try {
     const msg = await anthropic.messages.create({
       model,
-      max_tokens: 1024,
+      max_tokens: MAX_TOKENS,
       messages,
       system: [
         {
@@ -28,6 +31,17 @@ export async function callModel(
       ],
       temperature
     })
+
+    // Check if response was truncated due to max_tokens
+    if (msg.stop_reason === "max_tokens") {
+      throw new LLMTruncatedError(
+        `LLM response truncated: hit max_tokens limit (${MAX_TOKENS}). stop_reason: ${msg.stop_reason}, input_tokens: ${msg.usage.input_tokens}, output_tokens: ${msg.usage.output_tokens}`,
+        msg.stop_reason,
+        msg.usage.input_tokens,
+        msg.usage.output_tokens,
+        MAX_TOKENS
+      )
+    }
 
     return parseReturnMessage(msg)
   } catch (error) {

@@ -82,6 +82,18 @@ export class LLMOverloadedError extends LLMError {
   }
 }
 
+export class LLMTruncatedError extends LLMError {
+  constructor(
+    message: string,
+    public stopReason: string,
+    public inputTokens: number,
+    public outputTokens: number,
+    public maxTokens: number
+  ) {
+    super("LLM_TRUNCATED_ERROR", "LLM response truncated", message)
+  }
+}
+
 // ============================================================================
 // Onchain Data Errors
 // ============================================================================
