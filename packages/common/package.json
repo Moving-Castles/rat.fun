@@ -40,7 +40,7 @@
     "@latticexyz/world": "2.2.23-94cac741be24bb5743f2f36235cc3bb40012417a",
     "@wagmi/core": "2.22.1",
     "contracts": "workspace:*",
-    "rxjs": "^7.5.5",
+    "rxjs": "7.5.5",
     "viem": "2.39.0",
     "wagmi": "^2.19.2"
   }
