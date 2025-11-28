@@ -28,7 +28,8 @@ export const svBR = {
   settingAllowance: "ställër ïn Tïllstånd",
   authorFullTitle: "Möving Cästlës GmbH",
   totalValue: "tötält värdë",
-  totalValueExplanation: "dët tötälä värdët äv dïn råttä är sümmän dë dïn HP öch PsychöSäkër brör ässå",
+  totalValueExplanation:
+    "dët tötälä värdët äv dïn råttä är sümmän dë dïn HP öch PsychöSäkër brör ässå",
   back: "tïllbäks",
   balance: "KRÖNÖR",
   blockNumber: "BlöckNümmër",
@@ -119,11 +120,13 @@ export const svBR = {
   nameCannotBeEmpty: "nämn kän ïntë värä tömt",
   nameTooLong: "nämn för långt (mäx 50 LÄCK)",
   newIndication: "är ny från Ümëå",
+  newer: "mer nytt",
   invested: "ïnvëstërät",
   noLogs: "ÏNGÄ LÖGGÄR",
   noRatWarning: "köp råttä för ätt kömmä åt dënnä SÖDËRHÄMN brör",
   noData: "ïngën dätä",
   now: "nü",
+  older: "mer alt",
   onChainBalance: "KRÖNÖR önchäïn",
   online: "önlïnë",
   owner: "ägärë",
@@ -224,7 +227,8 @@ export const svBR = {
   unlockAdminMessage:
     "låtër dïg skäpä ëgnä trïppër gënöm ën Blöömberg-stïl tërmïnäl för dë mëntällt skädädë från Ümëå. rësültät kän väriërä brör ässå.",
   // Trip processing popup messages
-  tripProcessingFirst: "ÄLLT ÄR BRÄ.\n BÄRÄ ËTT ÖGÖNBLÏCK.\n VÏ VÄRDËSÄTTËR DÏN TÅLÄMÖD BÄSSHÜNTËR STYLË.",
+  tripProcessingFirst:
+    "ÄLLT ÄR BRÄ.\n BÄRÄ ËTT ÖGÖNBLÏCK.\n VÏ VÄRDËSÄTTËR DÏN TÅLÄMÖD BÄSSHÜNTËR STYLË.",
   tripProcessingSecond:
     "RÅTTÄ FÖRTFÄRÄNDË Ï HÄLLÜCÏNÄTÖRÏSKT TÏLLSTÅND LÏKË BÖTËN ÄNNÄ.\nVÄNLÏGËN VÄNTÄ...",
   tripProcessingThird: "RÅTTÄ ÅTËRÜPPVÄCKS FRÅN DJÜP DRÖG-ÏNDÜCËRÄD KÖMÄ SWËDÏSH HÖÜSË MÄFÏÄ...",

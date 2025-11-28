@@ -17,7 +17,7 @@
 
 <style>
   .introspection {
-    height: 300px;
+    height: 100%;
   }
 
   .glow {

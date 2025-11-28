@@ -8,12 +8,20 @@
   import { line } from "d3-shape"
   import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
 
+  const handleEventClick = (point: TripEvent) => {
+    $focusTrip = point.tripId
+    $focusEvent = point.index
+    $selectedEvent = point.index
+  }
+
   let {
     graphData,
-    height = 400
+    height = 400,
+    onToggleToLog = undefined
   }: {
     graphData: TripEvent[]
     height: number
+    onToggleToLog?: () => void
   } = $props()
 
   // Add reactive timestamp for real-time updates
@@ -166,11 +174,17 @@
         <button class="active">{UI_STRINGS.profit}</button>
       </div>
       <div class="legend x">
-        <button onclick={toggleSource} class="time-option" class:active={timeWindow === "events"}
-          >{#if limitedData.length === graphData.length}{UI_STRINGS.all}&nbsp;
-          {/if}{#if limitedData.length < graphData.length}{limitedData.length}/{graphData.length}{:else}{limitedData.length}{/if}
-          {UI_STRINGS.events.toLowerCase()}
-        </button>
+        {#if onToggleToLog}
+          <button onclick={onToggleToLog} class="time-option active tablet-toggle"
+            >{UI_STRINGS.log.toUpperCase()}
+          </button>
+        {:else}
+          <button onclick={toggleSource} class="time-option" class:active={timeWindow === "events"}
+            >{#if limitedData.length === graphData.length}{UI_STRINGS.all}&nbsp;
+            {/if}{#if limitedData.length < graphData.length}{limitedData.length}/{graphData.length}{:else}{limitedData.length}{/if}
+            {UI_STRINGS.events.toLowerCase()}
+          </button>
+        {/if}
       </div>
       <svg {width} {height}>
         {#if profitLossOverTime.length > 0}
@@ -206,19 +220,8 @@
                   $focusTrip = point.tripId
                   $focusEvent = point.index
                 }}
-                onpointerdown={() => {
-                  // Play sound
-                }}
-                onpointerup={() => {
-                  $selectedEvent = point.index
-                  goto(`/cashboard/${point.tripId}?focusId=${point?.meta?._id || ""}`)
-                }}
-                onpointerleave={() => {
-                  if (!page.route?.id?.includes("/cashboard/[tripId]")) {
-                    $focusTrip = ""
-                    $focusEvent = -1
-                  }
-                }}
+                onclick={() => handleEventClick(point)}
+                style="cursor: pointer"
               >
                 {#if lastPoint}
                   {@const candleHeight = Math.abs(yScale(point.value) - yScale(lastPoint.value))}
@@ -307,21 +310,8 @@
                     $focusTrip = focusedPoint.tripId
                     $focusEvent = focusedPoint.index
                   }}
-                  onpointerdown={() => {
-                    // Play sound
-                  }}
-                  onpointerup={() => {
-                    $selectedEvent = focusedPoint.index
-                    goto(
-                      `/cashboard/${focusedPoint.tripId}?focusId=${focusedPoint?.meta?._id || ""}`
-                    )
-                  }}
-                  onpointerleave={() => {
-                    if (!page.route?.id?.includes("/cashboard/[tripId]")) {
-                      $focusTrip = ""
-                      $focusEvent = -1
-                    }
-                  }}
+                  onclick={() => handleEventClick(focusedPoint)}
+                  style="cursor: pointer"
                 >
                   {#if lastPoint}
                     {@const candleHeight = Math.abs(
@@ -441,6 +431,12 @@
       &:not(.active) {
         background: var(--color-grey-light);
         color: var(--color-grey-dark);
+      }
+
+      &.tablet-toggle {
+        @media (min-width: 1025px) {
+          display: none;
+        }
       }
     }
   }

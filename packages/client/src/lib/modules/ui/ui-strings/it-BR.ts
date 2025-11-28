@@ -45,8 +45,7 @@ export const itBR = {
   connectBurner: "konnetti Burner",
   connectWallet: "konnetti wallett",
   connectedWallet: "wallett konness",
-  confirmLiquidateTripPrompt: (index: number): string =>
-    `sei sikuro de likwidar trip #${index}?`,
+  confirmLiquidateTripPrompt: (index: number): string => `sei sikuro de likwidar trip #${index}?`,
   cost: "€:",
   createdTrip: "trip kraftat",
   creatingTripIn: "kraftand trip in:",
@@ -74,7 +73,8 @@ export const itBR = {
   filter: "filtr",
   fomoAlertBalance: (balance: number): string => `ALARM FOMO! €€€ è ${balance}`,
   forceRatLiquidation: "likwida rat kon forza",
-  getFreeTokens: (amount: number): string => `prendi ${amount} ${CURRENCY_SYMBOL} gratis fra no cap`,
+  getFreeTokens: (amount: number): string =>
+    `prendi ${amount} ${CURRENCY_SYMBOL} gratis fra no cap`,
   gettingRat: "prend il tuo rat zio...",
   gettingTokens: "prend token...",
   getTokens: (amount: number): string => `prendi ${amount} $RAT`,
@@ -118,6 +118,7 @@ export const itBR = {
   nameCannotBeEmpty: "nom non puo esser vuot",
   nameTooLong: "nom tropp lung (max 50 chars)",
   newIndication: "è nuovo fra",
+  newer: "Piu nuvo",
   invested: "investit",
   noLogs: "ZERO LOGG",
   noRatWarning: "buyya rat x accessar sto trip bro",
@@ -126,6 +127,7 @@ export const itBR = {
   onChainBalance: "€€€ onchain",
   online: "onlain",
   owner: "proprietar",
+  older: "piu anticci",
   pastRatsCount: "rat passat",
   payout: "payout",
   player: "playator",
@@ -251,7 +253,8 @@ export const itBR = {
   startOver: "rikominca",
   // Session setup
   sessionSetup: "setup sessione",
-  sessionSetupDescription: "krea sessione sikur x interagir kon il game senza firmar ogni transazion.",
+  sessionSetupDescription:
+    "krea sessione sikur x interagir kon il game senza firmar ogni transazion.",
   setupSession: "setta sessione",
   // Online users
   onlinePlayers: "playator onlain",

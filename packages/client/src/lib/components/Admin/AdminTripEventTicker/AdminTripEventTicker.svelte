@@ -1,17 +1,22 @@
 <script lang="ts">
   import { TRIP_EVENT_TYPE } from "$lib/components/Admin/enums"
-  import { SignedNumber } from "$lib/components/Shared"
+  import { SignedNumber, Tooltip } from "$lib/components/Shared"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
   let { event, previousEnabled, nextEnabled, previous, next } = $props()
 </script>
 
 <div class="admin-trip-event-ticker">
   <div class="buttons">
-    <button onclick={next} disabled={!nextEnabled}>
-      {"<"}
-    </button>
-    <button onclick={previous} disabled={!previousEnabled}>
-      {">"}
-    </button>
+    <Tooltip content={UI_STRINGS.older}>
+      <button onclick={next} disabled={!nextEnabled}>
+        {"<"}
+      </button>
+    </Tooltip>
+    <Tooltip content={UI_STRINGS.newer}>
+      <button onclick={previous} disabled={!previousEnabled}>
+        {">"}
+      </button>
+    </Tooltip>
   </div>
   <div class="title">
     {#if event.eventType === TRIP_EVENT_TYPE.VISIT}

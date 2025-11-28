@@ -16,7 +16,8 @@
     focusEventOverride = undefined,
     selectedEventOverride = undefined,
     onFocusChange = undefined,
-    onSelectionChange = undefined
+    onSelectionChange = undefined,
+    onToggleToGraph = undefined
   }: {
     graphData: TripEvent[]
     hideUnlockEvent?: boolean
@@ -24,6 +25,7 @@
     selectedEventOverride?: number
     onFocusChange?: (index: number, tripId: string) => void
     onSelectionChange?: (index: number, tripId: string) => void
+    onToggleToGraph?: () => void
   } = $props()
 
   let scrollContainer = $state<HTMLElement>()
@@ -49,50 +51,59 @@
   })
 </script>
 
-<div bind:this={scrollContainer} class="admin-event-log">
-  {#each graphData as point, index (point.index)}
-    <!-- svelte-ignore a11y_click_events_have_key_events -->
-    <!-- svelte-ignore a11y_no_static_element_interactions -->
-    <div
-      class:selected={effectiveSelectedEvent === point.index}
-      class:focus={effectiveFocusEvent === point.index}
-      onclick={() => {
-        if (onSelectionChange) {
-          onSelectionChange(point.index, point.tripId)
-        } else {
-          $selectedEvent = point.index
-        }
-      }}
-      onpointerenter={() => {
-        if (onFocusChange) {
-          onFocusChange(point.index, point.tripId)
-        } else {
-          $focusEvent = point.index
-        }
-      }}
-      onpointerup={() => {
-        if (
-          point.eventType === TRIP_EVENT_TYPE.DEPLETED ||
-          point.eventType === TRIP_EVENT_TYPE.CREATION ||
-          point.eventType === TRIP_EVENT_TYPE.LIQUIDATION
-        ) {
-          const href = makeHref(point)
-          if (href) {
-            goto(href)
-          }
-        }
-      }}
-      class="log-item"
-      class:secondary={point.eventType === TRIP_EVENT_TYPE.DEPLETED ||
-        point.eventType === TRIP_EVENT_TYPE.CREATION ||
-        point.eventType === TRIP_EVENT_TYPE.LIQUIDATION}
-    >
-      <AdminEventLogItem {point} />
+<div class="admin-event-log-container">
+  {#if onToggleToGraph}
+    <div class="legend">
+      <button onclick={onToggleToGraph} class="toggle-button active tablet-toggle"
+        >{UI_STRINGS.graph.toUpperCase()}
+      </button>
     </div>
-  {/each}
-  {#if !hideUnlockEvent}
-    <div class="log-item secondary">{UI_STRINGS.adminUnlockedMessage}</div>
   {/if}
+  <div bind:this={scrollContainer} class="admin-event-log">
+    {#each graphData as point, index (point.index)}
+      <!-- svelte-ignore a11y_click_events_have_key_events -->
+      <!-- svelte-ignore a11y_no_static_element_interactions -->
+      <div
+        class:selected={effectiveSelectedEvent === point.index}
+        class:focus={effectiveFocusEvent === point.index}
+        onclick={() => {
+          if (onSelectionChange) {
+            onSelectionChange(point.index, point.tripId)
+          } else {
+            $selectedEvent = point.index
+          }
+        }}
+        onpointerenter={() => {
+          if (onFocusChange) {
+            onFocusChange(point.index, point.tripId)
+          } else {
+            $focusEvent = point.index
+          }
+        }}
+        onpointerup={() => {
+          if (
+            point.eventType === TRIP_EVENT_TYPE.DEPLETED ||
+            point.eventType === TRIP_EVENT_TYPE.CREATION ||
+            point.eventType === TRIP_EVENT_TYPE.LIQUIDATION
+          ) {
+            const href = makeHref(point)
+            if (href) {
+              goto(href)
+            }
+          }
+        }}
+        class="log-item"
+        class:secondary={point.eventType === TRIP_EVENT_TYPE.DEPLETED ||
+          point.eventType === TRIP_EVENT_TYPE.CREATION ||
+          point.eventType === TRIP_EVENT_TYPE.LIQUIDATION}
+      >
+        <AdminEventLogItem {point} />
+      </div>
+    {/each}
+    {#if !hideUnlockEvent}
+      <div class="log-item secondary">{UI_STRINGS.adminUnlockedMessage}</div>
+    {/if}
+  </div>
 </div>
 
 <style lang="scss">
@@ -101,6 +112,39 @@
     top: 0;
     right: 0;
     z-index: 999;
+  }
+  .admin-event-log-container {
+    position: relative;
+    height: 100%;
+    width: 100%;
+
+    .legend {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      z-index: var(--z-top);
+      padding: 8px;
+
+      .toggle-button {
+        border: none;
+
+        &.active {
+          background: black;
+          color: white;
+        }
+
+        &:not(.active) {
+          background: var(--color-grey-light);
+          color: var(--color-grey-dark);
+        }
+
+        &.tablet-toggle {
+          @media (min-width: 1025px) {
+            display: none;
+          }
+        }
+      }
+    }
   }
   .admin-event-log {
     background: var(--color-grey-dark);

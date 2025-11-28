@@ -51,8 +51,9 @@
       <div class="content {$portfolioClass}">
         <Tooltip content={UI_STRINGS.activeProfit}>
           <div class="profit-amount">
+            <span class="symbol-explicit">{$plSymbolExplicit}</span>
             <span class="profit-amount-value">
-              {$plSymbolExplicit}{Math.abs(Math.floor(tweenedProfitLoss.current))}
+              {Math.abs(Math.floor(tweenedProfitLoss.current))}
             </span>
             <span class="currency-symbol">
               {CURRENCY_SYMBOL}
@@ -168,7 +169,7 @@
     }
 
     .portfolio-container {
-      height: 80px;
+      height: 100px;
       display: flex;
       flex-flow: row nowrap;
 
@@ -234,19 +235,32 @@
 
   .profit-amount {
     font-family: var(--special-font-stack);
-    font-size: 82px;
     margin: 0;
     width: 100%;
     text-align: center;
+    font-size: 60px;
+    position: relative;
+    display: flex;
+
+    .symbol-explicit {
+      position: absolute;
+      left: 0;
+      transform: translate(-100%, 0);
+    }
+
+    @media screen and (min-width: 1024px) {
+      font-size: 82px;
+    }
 
     .profit-amount-value {
       margin-right: 2px;
+      position: relative;
     }
   }
 
   .portfolio-amount {
     font-family: var(--special-font-stack);
-    font-size: 42px;
+    font-size: 36px;
     display: inline-block;
     width: 100%;
     display: flex;

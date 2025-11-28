@@ -65,6 +65,8 @@
   let pastTripsSortFunction = $state(sortFunctions.entriesChronologically)
   // Track previous view to detect when switching away from trips/profit
   let previousView = $state<"home" | "trips" | "profit">("home")
+  // Track tablet view toggle (800px-1024px) between graph and log
+  let tabletProfitView = $state<"graph" | "log">("graph")
 
   // Memoized lookups for static content to avoid repeated find/filter operations
   let tripContentMap = $derived(new Map($staticContent?.trips?.map(t => [t._id, t]) || []))
@@ -290,6 +292,7 @@
     phoneActiveAdminView.set("home")
     adminTripsSubView.set("active")
     phoneAdminProfitSubView.set("graph")
+    tabletProfitView = "graph"
 
     // Defer graph data loading to avoid blocking initial render
     setTimeout(() => {
@@ -310,6 +313,7 @@
     phoneActiveAdminView.set("home")
     adminTripsSubView.set("active")
     phoneAdminProfitSubView.set("graph")
+    tabletProfitView = "graph"
   })
 </script>
 
@@ -431,13 +435,21 @@
             }}
           />
         </div>
-        <div class="p-l-graph">
-          <ProfitLossHistoryGraph {graphData} height={clientHeight} />
+        <div class="p-l-graph" class:tablet-hidden={tabletProfitView === "log"}>
+          <ProfitLossHistoryGraph
+            {graphData}
+            height={clientHeight}
+            onToggleToLog={() => (tabletProfitView = "log")}
+          />
         </div>
       </div>
       <!-- Event log -->
-      <div class="event-log-container">
-        <AdminEventLog graphData={logData} behavior="click" />
+      <div class="event-log-container" class:tablet-hidden={tabletProfitView === "graph"}>
+        <AdminEventLog
+          graphData={logData}
+          behavior="click"
+          onToggleToGraph={() => (tabletProfitView = "graph")}
+        />
       </div>
     </div>
     <!-- Bottom row -->
@@ -485,29 +497,30 @@
       <div class="admin-divider warning-mute"></div>
       <!-- Past trips -->
       <div class="flashback-container">
-        <div class="flashbacks">
-          {#if effectiveEvent}
-            {#key effectiveEvent?.meta?._id}
-              <AdminTripEventTicker
-                next={() => next(true, page.route.id?.includes("[tripId]"))}
-                nextEnabled={$selectedEvent > 0}
-                previous={() => previous(true, page.route.id?.includes("[tripId]"))}
-                previousEnabled={$selectedEvent < graphData.length - 1}
-                event={effectiveEvent}
-              />
-            {/key}
-          {/if}
+        {#if effectiveEvent}
+          {#key effectiveEvent?.meta?._id}
+            <AdminTripEventTicker
+              next={() => next(true, page.route.id?.includes("[tripId]"))}
+              nextEnabled={$selectedEvent > 0}
+              previous={() => previous(true, page.route.id?.includes("[tripId]"))}
+              previousEnabled={$selectedEvent < graphData.length - 1}
+              event={effectiveEvent}
+            />
+          {/key}
+        {/if}
 
-          <div class="full">
-            {#key effectiveEvent?.meta?._id}
-              <AdminTripEventIntrospection event={effectiveEvent} />
-              {#if effectiveEvent?.eventType === TRIP_EVENT_TYPE.DEATH || effectiveEvent?.eventType === TRIP_EVENT_TYPE.VISIT}
-                <BigButton text="Open" onclick={go} />
-              {/if}
-            {/key}
-          </div>
-          <!-- Show flashback here for the LAST OPENED OUTCOME -->
+        <div class="full">
+          {#key effectiveEvent?.meta?._id}
+            <AdminTripEventIntrospection event={effectiveEvent} />
+          {/key}
         </div>
+
+        {#if effectiveEvent?.eventType === TRIP_EVENT_TYPE.DEATH || effectiveEvent?.eventType === TRIP_EVENT_TYPE.VISIT}
+          <button class="small-button" onclick={go}
+            >{UI_STRINGS.toTrip.toUpperCase()}{effectiveEvent.meta.tripIndex}</button
+          >
+        {/if}
+        <!-- Show flashback here for the LAST OPENED OUTCOME -->
       </div>
     </div>
   {/if}
@@ -615,6 +628,10 @@
       justify-content: flex-start;
       align-items: center;
 
+      @media (min-width: 801px) and (max-width: 1024px) {
+        width: 100%;
+      }
+
       .p-l-overview {
         min-width: 460px;
         width: 460px;
@@ -629,12 +646,26 @@
         display: flex;
         justify-content: center;
         align-items: center;
+
+        @media (min-width: 801px) and (max-width: 1024px) {
+          &.tablet-hidden {
+            display: none;
+          }
+        }
       }
     }
 
     .event-log-container {
       height: 100%;
       width: 320px;
+
+      @media (min-width: 801px) and (max-width: 1024px) {
+        width: 100%;
+
+        &.tablet-hidden {
+          display: none;
+        }
+      }
     }
 
     .trip-table-container {
@@ -643,6 +674,9 @@
 
     .flashback-container {
       width: calc(50% - 20px);
+      display: grid;
+      height: 100%;
+      grid-template-rows: 30px 1fr 60px;
     }
 
     .admin-divider {
@@ -672,5 +706,21 @@
         text-decoration: underline;
       }
     }
+  }
+
+  .small-button {
+    height: 100%;
+    background: var(--color-alert-priority);
+    width: 100%;
+    border: none;
+    display: block;
+    border-width: 10px;
+    border-style: inset;
+    border-color: rgba(0, 0, 0, 0.3);
+  }
+
+  .full {
+    height: 100%;
+    overflow-y: scroll;
   }
 </style>
