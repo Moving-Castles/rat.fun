@@ -1,16 +1,30 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte"
   import { page } from "$app/state"
+  import { get } from "svelte/store"
   import { initPublicNetwork } from "$lib/initPublicNetwork"
-  import { initEntities } from "$lib/modules/chain-sync/initEntities"
+  import { initEntities } from "$lib/modules/chain-sync"
   import { terminalTyper } from "$lib/modules/terminal-typer/index"
   import { generateLoadingOutput } from "$lib/components/Loading/loadingOutput"
   import { playSound } from "$lib/modules/sound"
-  import { blockNumber, loadingMessage, loadingPercentage, ready } from "$lib/modules/network"
+  import {
+    blockNumber,
+    loadingMessage,
+    loadingPercentage,
+    ready,
+    publicNetwork,
+    walletType as walletTypeStore
+  } from "$lib/modules/network"
   import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
+  import { addressToId } from "$lib/modules/utils"
 
-  import { ENVIRONMENT } from "$lib/mud/enums"
+  import { ENVIRONMENT, WALLET_TYPE } from "$lib/mud/enums"
   import { gsap } from "gsap"
+
+  // Wallet setup imports
+  import { setupBurnerWalletNetwork } from "$lib/mud/setupBurnerWalletNetwork"
+  import { getNetworkConfig } from "$lib/mud/getNetworkConfig"
+  import { initializeDrawbridge, getDrawbridge } from "$lib/modules/drawbridge"
 
   const {
     environment,
@@ -23,6 +37,7 @@
   } = $props()
 
   let minimumDurationComplete = $state(false)
+  let walletSetupComplete = $state(false)
   let typer = $state<{ stop: () => void }>()
 
   // Elements
@@ -30,18 +45,59 @@
   let terminalBoxElement: HTMLDivElement
   let logoElement: HTMLDivElement
 
-  // Wait for both chain sync and minimum duration to complete
-  $effect(() => {
-    if ($ready && minimumDurationComplete) {
-      // Initializes and synchronises MUD entities with our state variables
-      initEntities()
+  /**
+   * Initialize wallet infrastructure and call initEntities if we have a player address.
+   * Returns true if initEntities was called (address known), false otherwise.
+   */
+  async function initWalletAndEntities(): Promise<boolean> {
+    const walletType = get(walletTypeStore)
+    const network = get(publicNetwork)
 
+    if (walletType === WALLET_TYPE.BURNER) {
+      // Burner wallet: always have address from localStorage private key
+      const wallet = setupBurnerWalletNetwork(network)
+      const address = wallet.walletClient?.account?.address
+      if (address) {
+        const playerId = addressToId(address)
+        console.log("[Loading] Burner wallet - initializing entities for:", playerId)
+        initEntities({ activePlayerId: playerId })
+        return true
+      }
+      return false
+    }
+
+    if (walletType === WALLET_TYPE.DRAWBRIDGE) {
+      // Initialize drawbridge
+      const networkConfig = getNetworkConfig(environment, page.url)
+      await initializeDrawbridge(networkConfig)
+
+      // Check if user already has a session (wallet connected from localStorage)
+      const drawbridge = getDrawbridge()
+      const address = drawbridge.getState().userAddress
+      if (address) {
+        const playerId = addressToId(address)
+        console.log("[Loading] Drawbridge session found - initializing entities for:", playerId)
+        initEntities({ activePlayerId: playerId })
+        return true
+      }
+
+      // No existing session - initEntities will be called in Spawn after wallet connection
+      console.log("[Loading] No drawbridge session - deferring initEntities to Spawn")
+      return false
+    }
+
+    return false
+  }
+
+  // Wait for chain sync, minimum duration, AND wallet setup to complete
+  $effect(() => {
+    if ($ready && minimumDurationComplete && walletSetupComplete) {
       // Stop the terminal typer
       if (typer?.stop) {
         typer.stop()
       }
 
-      // We are loaded. Animate the component out...
+      // Animate out and proceed to spawn
       animateOut()
     }
   })
@@ -63,14 +119,14 @@
     // Create strobe effect: 16 cycles of 1/60s (1 frame each at 60fps)
     for (let i = 0; i < 16; i++) {
       tl.to(loadingElement, {
-        background: strobeColors[i % strobeColors.length], // Cycle through strobe colors
+        background: strobeColors[i % strobeColors.length],
         duration: 0,
-        delay: 1 / 60 // Half cycle for on
+        delay: 1 / 60
       })
       tl.to(loadingElement, {
         background: "transparent",
         duration: 0,
-        delay: 1 / 60 // Half cycle for off
+        delay: 1 / 60
       })
     }
 
@@ -92,9 +148,7 @@
   }
 
   onMount(async () => {
-    // This sets up the public network and listens to the SyncProgress component
-    // When sync is complete, the ready store is set to true
-    // We listen to for this in the $effect above
+    // Setup public network and sync from indexer
     await initPublicNetwork(environment, page.url)
 
     // Start the minimum duration timer
@@ -106,10 +160,14 @@
     if (terminalBoxElement) {
       typer = terminalTyper(terminalBoxElement, generateLoadingOutput())
     }
+
+    // Initialize wallet and entities (if address known)
+    // Runs in parallel with chain sync for no added latency
+    await initWalletAndEntities()
+    walletSetupComplete = true
   })
 
   onDestroy(() => {
-    // Stop the terminal typer
     if (typer?.stop) {
       typer.stop()
     }

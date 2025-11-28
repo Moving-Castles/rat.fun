@@ -15,6 +15,8 @@
   import { sessionClient, status, DrawbridgeStatus, isSessionReady } from "$lib/modules/drawbridge"
   import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
   import { backgroundMusic } from "$lib/modules/sound/stores"
+  import { initEntities, isEntitiesInitialized } from "$lib/modules/chain-sync"
+  import { addressToId } from "$lib/modules/utils"
 
   import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
   import {
@@ -95,19 +97,11 @@
       const walletConnected =
         $status !== DrawbridgeStatus.DISCONNECTED && $status !== DrawbridgeStatus.UNINITIALIZED
       const sessionReady = $isSessionReady
-      const isSpawned =
-        walletConnected && sessionReady && $sessionClient
-          ? (() => {
-              const wallet = setupWalletNetwork($publicNetwork, $sessionClient)
-              return initWalletNetwork(wallet, $sessionClient.userAddress, walletType)
-            })()
-          : false
 
       console.log("[Spawn] Drawbridge wallet status:", {
         status: $status,
         walletConnected,
-        sessionReady,
-        isSpawned
+        sessionReady
       })
 
       // Scenario 0: No wallet connected -> WELCOME_SCREEN
@@ -122,11 +116,23 @@
         return SPAWN_STATE.SESSION_SETUP
       }
 
-      // Scenario 7: Wallet connected, session ready, spawned -> exit flow
-      if (isSpawned) {
-        console.log("[Spawn] Scenario 7: Already spawned → exiting flow (no UI)")
-        spawned()
-        return SPAWN_STATE.INIT // No state transition, just exit
+      // Session is ready - ensure entities are initialized before checking spawn status
+      if ($sessionClient) {
+        const playerId = addressToId($sessionClient.userAddress)
+        if (!isEntitiesInitialized(playerId)) {
+          console.log("[Spawn] Initializing entities for drawbridge user:", playerId)
+          initEntities({ activePlayerId: playerId })
+        }
+
+        const wallet = setupWalletNetwork($publicNetwork, $sessionClient)
+        const isSpawned = initWalletNetwork(wallet, $sessionClient.userAddress, walletType)
+
+        // Scenario 7: Wallet connected, session ready, spawned -> exit flow
+        if (isSpawned) {
+          console.log("[Spawn] Scenario 7: Already spawned → exiting flow (no UI)")
+          spawned()
+          return SPAWN_STATE.INIT // No state transition, just exit
+        }
       }
 
       // Scenario 6: Wallet connected, session ready, not spawned -> INTRODUCTION
@@ -175,6 +181,13 @@
     // Check when reaching SESSION_SETUP: if session is already ready, skip this screen
     if (currentState === SPAWN_STATE.SESSION_SETUP) {
       if (walletType === WALLET_TYPE.DRAWBRIDGE && $isSessionReady && $sessionClient) {
+        // Ensure entities are initialized before checking spawn status
+        const playerId = addressToId($sessionClient.userAddress)
+        if (!isEntitiesInitialized(playerId)) {
+          console.log("[Spawn] SESSION_SETUP: Initializing entities for:", playerId)
+          initEntities({ activePlayerId: playerId })
+        }
+
         const wallet = setupWalletNetwork($publicNetwork, $sessionClient)
         const isSpawned = initWalletNetwork(wallet, $sessionClient.userAddress, walletType)
 
@@ -208,6 +221,13 @@
           }
         }
       } else if ($sessionClient) {
+        // Ensure entities are initialized before checking spawn status
+        const playerId = addressToId($sessionClient.userAddress)
+        if (!isEntitiesInitialized(playerId)) {
+          console.log("[Spawn] INTRODUCTION: Initializing entities for:", playerId)
+          initEntities({ activePlayerId: playerId })
+        }
+
         const wallet = setupWalletNetwork($publicNetwork, $sessionClient)
         const isSpawned = initWalletNetwork(wallet, $sessionClient.userAddress, walletType)
 
