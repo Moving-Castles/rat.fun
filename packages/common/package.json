@@ -12,6 +12,7 @@
   },
   "exports": {
     "./basic-network": "./dist/basic-network.js",
+    "./erc20": "./dist/erc20.js",
     "./error-handling": "./dist/error-handling.js",
     "./mud": "./dist/mud.js",
     "./mud/world": "./dist/mud/world.js"

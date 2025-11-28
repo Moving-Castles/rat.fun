@@ -8,6 +8,7 @@ export default defineConfig(() => ({
   clean: true,
   entry: {
     "basic-network": "./src/basic-network/index.ts",
+    "erc20": "./src/erc20/index.ts",
     "error-handling": "./src/error-handling/index.ts",
     "mud": "./src/mud/index.ts",
     "mud/world": "./src/mud/world.ts"
