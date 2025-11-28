@@ -39,19 +39,17 @@ contract RatRouter {
     bytes memory aerodromePath,
     PoolKey memory uniswapPoolKey,
     bool uniswapZeroForOne
-  ) external returns (uint256) {
-    (uint256 amountOut1, , , ) = aerodromeQuoter.quoteExactInput(aerodromePath, amountIn);
+  ) external returns (uint256 amountOutFinal, uint256 amountInUniswap) {
+    (amountInUniswap, , , ) = aerodromeQuoter.quoteExactInput(aerodromePath, amountIn);
 
-    (uint256 amountOut2, ) = uniswapV4Quoter.quoteExactInputSingle(
+    (amountOutFinal, ) = uniswapV4Quoter.quoteExactInputSingle(
       IV4Quoter.QuoteExactSingleParams({
         poolKey: uniswapPoolKey,
         zeroForOne: uniswapZeroForOne,
-        exactAmount: uint128(amountOut1),
+        exactAmount: uint128(amountInUniswap),
         hookData: ""
       })
     );
-
-    return amountOut2;
   }
 
   function quoteExactOut(
@@ -59,8 +57,8 @@ contract RatRouter {
     bytes memory aerodromePath,
     PoolKey memory uniswapPoolKey,
     bool uniswapZeroForOne
-  ) external returns (uint256) {
-    (uint256 amountIn2, ) = uniswapV4Quoter.quoteExactOutputSingle(
+  ) external returns (uint256 amountInInitial, uint256 amountInUniswap) {
+    (amountInUniswap, ) = uniswapV4Quoter.quoteExactOutputSingle(
       IV4Quoter.QuoteExactSingleParams({
         poolKey: uniswapPoolKey,
         zeroForOne: uniswapZeroForOne,
@@ -69,9 +67,7 @@ contract RatRouter {
       })
     );
 
-    (uint256 amountIn1, , , ) = aerodromeQuoter.quoteExactOutput(aerodromePath, amountIn2);
-
-    return amountIn1;
+    (amountInInitial, , , ) = aerodromeQuoter.quoteExactOutput(aerodromePath, amountInUniswap);
   }
 
   function swapExactInEth(
