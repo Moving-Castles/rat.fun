@@ -1,28 +1,39 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte"
   import { page } from "$app/state"
+  import { get } from "svelte/store"
   import { initPublicNetwork } from "$lib/initPublicNetwork"
-  import { initEntities } from "$lib/modules/systems/initEntities"
+  import { initEntities } from "$lib/modules/chain-sync"
   import { terminalTyper } from "$lib/modules/terminal-typer/index"
   import { generateLoadingOutput } from "$lib/components/Loading/loadingOutput"
   import { playSound } from "$lib/modules/sound"
-  import { blockNumber, loadingMessage, loadingPercentage, ready } from "$lib/modules/network"
+  import {
+    blockNumber,
+    loadingMessage,
+    loadingPercentage,
+    ready,
+    publicNetwork,
+    walletType as walletTypeStore
+  } from "$lib/modules/network"
   import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
+  import { addressToId } from "$lib/modules/utils"
 
-  import { ENVIRONMENT } from "$lib/mud/enums"
+  import { ENVIRONMENT, WALLET_TYPE } from "$lib/mud/enums"
   import { gsap } from "gsap"
+
+  // Wallet setup imports
+  import { setupBurnerWalletNetwork } from "$lib/mud/setupBurnerWalletNetwork"
+  import { getNetworkConfig } from "$lib/mud/getNetworkConfig"
+  import { initializeDrawbridge, getDrawbridge } from "$lib/modules/drawbridge"
 
   const {
     environment,
-    loaded = () => {},
-    minimumDuration = 2000
+    loaded = () => {}
   }: {
     environment: ENVIRONMENT
     loaded: () => void
-    minimumDuration?: number
   } = $props()
 
-  let minimumDurationComplete = $state(false)
   let typer = $state<{ stop: () => void }>()
 
   // Elements
@@ -30,86 +41,135 @@
   let terminalBoxElement: HTMLDivElement
   let logoElement: HTMLDivElement
 
-  // Wait for both chain sync and minimum duration to complete
-  $effect(() => {
-    if ($ready && minimumDurationComplete) {
-      // Initializes and synchronises MUD entities with our state variables
-      initEntities()
+  // ============================================================================
+  // ASYNC HELPERS
+  // ============================================================================
 
-      // Stop the terminal typer
-      if (typer?.stop) {
-        typer.stop()
+  /**
+   * Initialize wallet infrastructure and determine player ID if available.
+   * Returns player ID if wallet is connected, null otherwise.
+   */
+  async function initWalletInfrastructure(): Promise<string | null> {
+    const walletType = get(walletTypeStore)
+    const network = get(publicNetwork)
+
+    if (walletType === WALLET_TYPE.BURNER) {
+      const wallet = setupBurnerWalletNetwork(network)
+      const address = wallet.walletClient?.account?.address
+      if (address) {
+        const playerId = addressToId(address)
+        console.log("[Loading] Burner wallet found:", playerId)
+        return playerId
+      }
+      console.log("[Loading] No burner wallet")
+      return null
+    }
+
+    if (walletType === WALLET_TYPE.DRAWBRIDGE) {
+      const networkConfig = getNetworkConfig(environment, page.url)
+      await initializeDrawbridge(networkConfig)
+
+      const drawbridge = getDrawbridge()
+      const address = drawbridge.getState().userAddress
+      if (address) {
+        const playerId = addressToId(address)
+        console.log("[Loading] Drawbridge session found:", playerId)
+        return playerId
       }
 
-      // We are loaded. Animate the component out...
-      animateOut()
+      console.log("[Loading] No drawbridge session")
+      return null
     }
-  })
+
+    return null
+  }
+
+  // ============================================================================
+  // ANIMATION
+  // ============================================================================
 
   const strobeColors = ["#ff0000", "#00ff00", "#0000ff"]
 
-  const animateOut = async () => {
-    const tl = gsap.timeline()
+  function animateOut(): Promise<void> {
+    return new Promise(resolve => {
+      const tl = gsap.timeline()
 
-    tl.to(terminalBoxElement, {
-      opacity: 0,
-      duration: 0
-    })
-
-    tl.call(() => {
-      playSound({ category: "ratfunUI", id: "strobe" })
-    })
-
-    // Create strobe effect: 16 cycles of 1/60s (1 frame each at 60fps)
-    for (let i = 0; i < 16; i++) {
-      tl.to(loadingElement, {
-        background: strobeColors[i % strobeColors.length], // Cycle through strobe colors
-        duration: 0,
-        delay: 1 / 60 // Half cycle for on
+      tl.to(terminalBoxElement, {
+        opacity: 0,
+        duration: 0
       })
-      tl.to(loadingElement, {
-        background: "transparent",
-        duration: 0,
-        delay: 1 / 60 // Half cycle for off
+
+      tl.call(() => {
+        playSound({ category: "ratfunUI", id: "strobe" })
       })
-    }
 
-    tl.to(logoElement, {
-      opacity: 1,
-      duration: 0,
-      delay: 0
-    })
+      // Create strobe effect: 16 cycles of 1/60s (1 frame each at 60fps)
+      for (let i = 0; i < 16; i++) {
+        tl.to(loadingElement, {
+          background: strobeColors[i % strobeColors.length],
+          duration: 0,
+          delay: 1 / 60
+        })
+        tl.to(loadingElement, {
+          background: "transparent",
+          duration: 0,
+          delay: 1 / 60
+        })
+      }
 
-    tl.to(loadingElement, {
-      background: "black",
-      duration: 0,
-      delay: 5 / 60
-    })
+      tl.to(logoElement, {
+        opacity: 1,
+        duration: 0,
+        delay: 0
+      })
 
-    tl.call(() => {
-      loaded()
+      tl.to(loadingElement, {
+        background: "black",
+        duration: 0,
+        delay: 5 / 60
+      })
+
+      tl.call(() => {
+        resolve()
+      })
     })
   }
 
+  // ============================================================================
+  // MAIN LOADING SEQUENCE
+  // ============================================================================
+
   onMount(async () => {
-    // This sets up the public network and listens to the SyncProgress component
-    // When sync is complete, the ready store is set to true
-    // We listen to for this in the $effect above
-    await initPublicNetwork(environment, page.url)
-
-    // Start the minimum duration timer
-    setTimeout(() => {
-      minimumDurationComplete = true
-    }, minimumDuration)
-
-    // Run the terminal typer
+    // Start terminal typer for visual feedback
     if (terminalBoxElement) {
       typer = terminalTyper(terminalBoxElement, generateLoadingOutput())
     }
+
+    // Step 1: Initialize public network and wait for chain sync to complete
+    await initPublicNetwork(environment, page.url)
+
+    // Step 2: Initialize wallet infrastructure (get player ID if wallet exists)
+    const playerId = await initWalletInfrastructure()
+
+    // Step 3: Initialize entities (chain sync is now complete)
+    if (playerId) {
+      console.log("[Loading] Initializing entities for player:", playerId)
+      initEntities({ activePlayerId: playerId })
+    } else {
+      console.log("[Loading] No player ID - deferring initEntities to Spawn")
+    }
+
+    // Step 4: Stop terminal typer
+    if (typer?.stop) {
+      typer.stop()
+    }
+
+    // Step 5: Animate out and signal completion
+    await animateOut()
+    loaded()
   })
 
   onDestroy(() => {
-    // Stop the terminal typer
     if (typer?.stop) {
       typer.stop()
     }

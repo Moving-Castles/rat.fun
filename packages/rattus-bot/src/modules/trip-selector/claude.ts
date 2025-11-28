@@ -66,7 +66,7 @@ Analyze patterns:
 - How do items gained/lost affect total value?
 - What scenarios were dangerous (led to death or large value losses)?
 - What strategies seem to work best?
-- health, token, cash, money, points etc all mean the same thing and are interchangeable.
+- health, token, cash, money, points etc all mean the same thing and are interchangeable. exhanging one for the other 1:1 is pointless.
 `
     }
   }
@@ -90,7 +90,8 @@ Analyze each trip's prompt, balance, and statistics to maximize TOTAL VALUE gain
 2. Which trip has the best risk/reward ratio? High balance trips often mean higher potential gains.
 3. Based on the trip prompt, does it suggest opportunities for the rat to find loot, treasure, or rewards?
 4. Avoid trips with prompts suggesting high danger with no clear reward opportunity.
-5. IMPORTANT: Use the trip statistics to assess danger:
+5. Carefully evaluate if a trip requires the rat to have a particular item to succeed. Or if a particular item that the rat currently has gives it an advantage.
+6. IMPORTANT: Use the trip statistics to assess danger:
    - survivalRate: Bayesian-weighted survival percentage (accounts for sample size uncertainty)
    - confidence: "high" (10+ visits), "medium" (5-9 visits), "low" (<5 visits)
    - Prefer trips with high survivalRate AND high confidence. Be cautious of "low" confidence trips - their survival rate is uncertain.

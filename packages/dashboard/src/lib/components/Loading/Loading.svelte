@@ -2,7 +2,7 @@
   import { onMount } from "svelte"
   import { page } from "$app/state"
   import { initPublicNetwork } from "$lib/initPublicNetwork"
-  import { initEntities } from "$lib/modules/systems/initEntities"
+  import { initEntities } from "$lib/modules/chain-sync/initEntities"
   import { blockNumber, loadingMessage, loadingPercentage, ready } from "$lib/modules/network"
   import { ENVIRONMENT } from "$lib/mud/enums"
 

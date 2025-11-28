@@ -12,7 +12,7 @@ import { get } from "svelte/store"
 import { publicNetwork } from "$lib/modules/network"
 import { filterObjectByKey, toCamelCase, removePrivateKeys } from "$lib/modules/utils"
 import { entities } from "$lib/modules/state/stores"
-import { createComponentSystem } from "$lib/modules/systems"
+import { createComponentSystem } from "$lib/modules/chain-sync"
 
 export function initEntities() {
   // Only sync game specific tables

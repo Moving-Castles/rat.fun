@@ -8,23 +8,20 @@
   import { initSound } from "$lib/modules/sound"
   import { initializeSentry } from "$lib/modules/error-handling"
   import { browser } from "$app/environment"
-  import { goto } from "$app/navigation"
   import { onMount, onDestroy } from "svelte"
-  import { page } from "$app/state"
   import { initStaticContent, setPlayerIdStore } from "$lib/modules/content"
   import { publicNetwork } from "$lib/modules/network"
   import { UIState, lightboxState } from "$lib/modules/ui/state.svelte"
   import { UI } from "$lib/modules/ui/enums"
   import { WALLET_TYPE } from "$lib/mud/enums"
-  import { errorHandler } from "$lib/modules/error-handling"
   import {
     environment as environmentStore,
     walletType as walletTypeStore
   } from "$lib/modules/network"
-  import { initializeDrawbridge, cleanupDrawbridge, userAddress } from "$lib/modules/drawbridge"
-  import { getNetworkConfig } from "$lib/mud/getNetworkConfig"
+  import { cleanupDrawbridge, userAddress } from "$lib/modules/drawbridge"
   import { playerId } from "$lib/modules/state/stores"
   import { initOffChainSync, disconnectOffChainSync } from "$lib/modules/off-chain-sync"
+  import { resetEntitiesInitialization } from "$lib/modules/chain-sync"
 
   // Components
   import Spawn from "$lib/components/Spawn/Spawn.svelte"
@@ -37,27 +34,14 @@
   let { children }: LayoutProps = $props()
 
   // Called when loading is complete
-  const loaded = async () => {
-    try {
-      // Ensure drawbridge is initialized before proceeding to spawn
-      if ($walletTypeStore === WALLET_TYPE.DRAWBRIDGE) {
-        console.log("[+layout] Ensuring drawbridge is initialized before spawning...")
-        const networkConfig = getNetworkConfig($environmentStore, page.url)
-        await initializeDrawbridge(networkConfig)
-        console.log("[+layout] drawbridge ready")
-      }
-
-      // Get content from CMS
-      // We do not wait, for faster loading time...
-      initStaticContent($publicNetwork.worldAddress)
-      // HACK: Set playerId store for trip notifications (avoids circular dependency)
-      setPlayerIdStore(playerId)
-      // Loading done. Set the UI state to spawning
-      UIState.set(UI.SPAWNING)
-    } catch (error) {
-      errorHandler(error)
-      goto("/")
-    }
+  const loaded = () => {
+    // Get content from CMS
+    // We do not wait, for faster loading time...
+    initStaticContent($publicNetwork.worldAddress)
+    // HACK: Set playerId store for trip notifications (avoids circular dependency)
+    setPlayerIdStore(playerId)
+    // Loading done. Set the UI state to spawning
+    UIState.set(UI.SPAWNING)
   }
 
   // Called when spawning is complete
@@ -76,6 +60,8 @@
     // If user address becomes null, wallet was disconnected
     if ($userAddress === null) {
       console.log("[+layout] Wallet disconnected externally, navigating back to spawn")
+      // Reset entities initialization so it will reinitialize for the new wallet
+      resetEntitiesInitialization()
       UIState.set(UI.SPAWNING)
     }
   })

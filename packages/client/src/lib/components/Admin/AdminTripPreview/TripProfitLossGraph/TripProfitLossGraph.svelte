@@ -35,8 +35,12 @@
   } = $props()
 
   // Use override values if provided, otherwise use global stores
-  let effectiveFocusEvent = $derived(focusEventOverride !== undefined ? focusEventOverride : $focusEvent)
-  let effectiveSelectedEvent = $derived(selectedEventOverride !== undefined ? selectedEventOverride : $selectedEvent)
+  let effectiveFocusEvent = $derived(
+    focusEventOverride !== undefined ? focusEventOverride : $focusEvent
+  )
+  let effectiveSelectedEvent = $derived(
+    selectedEventOverride !== undefined ? selectedEventOverride : $selectedEvent
+  )
 
   // Add reactive timestamp for real-time updates
   let currentTime = $state(Date.now())
