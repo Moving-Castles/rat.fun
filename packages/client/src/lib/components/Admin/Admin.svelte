@@ -11,7 +11,7 @@
     PendingTrip
   } from "$lib/components/Admin/types"
   import { TRIP_EVENT_TYPE } from "$lib/components/Admin/enums"
-  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
   import {
     player,
     playerTrips,

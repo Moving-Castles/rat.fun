@@ -6,7 +6,7 @@
   import { page } from "$app/state"
   import { max, min } from "d3-array"
   import { line } from "d3-shape"
-  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
 
   let {
     graphData,

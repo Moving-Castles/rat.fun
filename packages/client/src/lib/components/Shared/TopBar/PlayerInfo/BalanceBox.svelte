@@ -5,7 +5,7 @@
   import { playSound } from "$lib/modules/sound"
   import { Tooltip } from "$lib/components/Shared"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
-  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
 
   // Element references
   let balanceElement = $state<HTMLSpanElement | null>(null)

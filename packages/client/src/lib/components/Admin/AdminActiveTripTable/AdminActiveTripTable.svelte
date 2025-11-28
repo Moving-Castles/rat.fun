@@ -13,7 +13,7 @@
 
   import AdminActiveTripTableItem from "./AdminActiveTripTableItem.svelte"
   import AdminPendingTripTableItem from "./AdminPendingTripTableItem.svelte"
-  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
 
   let {
     pendingTrip,

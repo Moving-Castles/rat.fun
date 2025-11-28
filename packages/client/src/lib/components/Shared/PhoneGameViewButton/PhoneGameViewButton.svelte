@@ -1,7 +1,7 @@
 <script lang="ts">
   import { phoneActiveGameView } from "$lib/modules/ui/state.svelte"
   import { BigButton } from "$lib/components/Shared"
-  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
 
   let { targetView }: { targetView: "ratbox" | "triplisting" } = $props()
 

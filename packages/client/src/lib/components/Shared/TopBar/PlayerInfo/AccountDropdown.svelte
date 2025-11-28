@@ -2,7 +2,7 @@
   import { fade } from "svelte/transition"
   import MainDropdownContent from "./MainDropdownContent.svelte"
   import DebugDropdownContent from "./DebugDropdownContent.svelte"
-  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
 
   let showDebug = $state(false)
 

@@ -3,6 +3,7 @@
   import gsap from "gsap"
   import BigButton from "$lib/components/Shared/Buttons/BigButton.svelte"
   import { spawnState, SPAWN_STATE } from "$lib/components/Spawn/state.svelte"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
 
   let buttonElement: HTMLDivElement | null = $state(null)
 
@@ -32,12 +33,12 @@
 <div class="outer-container">
   <div class="inner-container">
     <div class="text-container">
-      <h2>Session Setup</h2>
-      <p>Create a secure session to interact with the game without signing every transaction.</p>
+      <h2>{UI_STRINGS.sessionSetup}</h2>
+      <p>{UI_STRINGS.sessionSetupDescription}</p>
     </div>
 
     <div class="button-container" bind:this={buttonElement}>
-      <BigButton text="Setup session" onclick={handleSetupSession} />
+      <BigButton text={UI_STRINGS.setupSession} onclick={handleSetupSession} />
     </div>
   </div>
 </div>

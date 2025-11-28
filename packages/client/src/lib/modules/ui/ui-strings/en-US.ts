@@ -219,5 +219,59 @@ t he mentally deranged. Results may vary.`,
   tripHeaderNoRat: "Buy rat to select trip.",
   unlockAdminHeader: "Unlock Cashboard",
   unlockAdminMessage:
-    "Lets you create bespoke trips through a Bloomberg-style terminal for the mentally deranged. Results may vary."
+    "Lets you create bespoke trips through a Bloomberg-style terminal for the mentally deranged. Results may vary.",
+  // Trip processing popup messages
+  tripProcessingFirst: "ALL IS FINE.\n JUST ONE MOMENT.\n WE VALUE YOUR PATIENCE.",
+  tripProcessingSecond: "RAT STILL IN HALLUCINATORY STATE.\nPLEASE STAND BY...",
+  tripProcessingThird: "RAT BEING REVIVED FROM DEEP DRUG INDUCED COMA...",
+  // Trip setup messages
+  tripSetupPresents: "*** RAT.FUN SCIENTIFIC INSTRUMENTS LLC PRESENTS ***",
+  tripSetupWarning: "WARNING",
+  tripSetupExperimental: "THIS IS AN EXPERIMENTAL EXPERIENCE AND MAY BE LETHAL",
+  tripSetupLiability: "ABSOLUTELY NO LIABITITY FOR ANY PSYCHOLOGICAL MUTILATION",
+  tripSetupWarranty:
+    "WARRANTY VOIDED. EXTENDS TO THE PLAYER, RAT SUBJECT AND EVERY OTHER ENTITY IN THE WORLD.",
+  tripSetupResponsibility: "BY NOT DESTROYING THIS MACHINE YOU ACCEPT FULL RESPONSIBILITY",
+  tripSetupFault: "EVERYTHING IS YOUR FAULT",
+  tripSetupSkull: "ALL EVENTS HAPPEN INSIDE THE SKULL OF THE RAT",
+  tripSetupSetting: "Setting up trip: ",
+  tripSetupPneumatic: "= Pneumatic system engaged",
+  tripSetupConveyed: "= Rat conveyed to trip chamber",
+  tripSetupDiaper: "= PETA approved Diaper attached",
+  tripSetupProbes: "= Intercranial probes attached",
+  tripSetupDosed: "= Rat dosed with 44mg of Slopamine",
+  tripSetupInitiated: "= Trip initiated: ",
+  // Trip report
+  tripReportStart: "TRIP REPORT // START",
+  tripReportEnd: "TRIP REPORT // END",
+  balanceLabel: "Balance",
+  dead: "DEAD",
+  // Spawn error messages
+  somethingWentWrong: "Something went wrong",
+  errorOccurred: "An error occurred during the spawn process. Please try again.",
+  startOver: "Start over",
+  // Session setup
+  sessionSetup: "Session Setup",
+  sessionSetupDescription:
+    "Create a secure session to interact with the game without signing every transaction.",
+  setupSession: "Setup session",
+  // Online users
+  onlinePlayers: "Online players",
+  connecting: "Connecting...",
+  onlinePlayersCount: (count: number): string => `Online Players (${count})`,
+  noPlayersOnline: "No players online",
+  // Settings
+  playerNotifications: "Player Notifications",
+  tripNotifications: "Trip Notifications",
+  language: "Language",
+  // Loading sequence
+  loadingCompany: "RAT.FUN SCIENTIFIC INSTRUMENTS LLC",
+  loadingCopyright: "(c) 2034 Sexc-hell island, Kowloon, Hong Kong",
+  loadingRights: "All Rights Reserved in accordance with Maritime Law",
+  loadingDissociated: "FULLY DISSOCIATED AND DISOWNED SISTER COMPANY OF MOVING CASTLES GMBH",
+  loadingPatent: "Patent pending in all non-aligned territories",
+  loadingTrademarks: "FUN and RAT are registered trademarks of RAT.FUN SCIENTIFIC INSTRUMENTS LLC",
+  loadingAgreement:
+    "BY READING THIS TEXT YOU AGREE TO BE BOUND BY THE TERMS OF THE AGREEMENT AND FORFEIT YOUR HUMAN RIGHTS",
+  loadingBoot: "BOOTING SLOP MACHINE..."
 } as const

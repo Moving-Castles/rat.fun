@@ -218,5 +218,58 @@ export const itBR = {
   tripHeaderNoRat: "buyya rat x selezionar trip.",
   unlockAdminHeader: "unlokka Pannell Soldi",
   unlockAdminMessage:
-    "ti fa kraftare trip kustom attraverso terminal bloomberg-mode x gente fuor de testa. risultati boh lol."
+    "ti fa kraftare trip kustom attraverso terminal bloomberg-mode x gente fuor de testa. risultati boh lol.",
+  // Trip processing popup messages
+  tripProcessingFirst: "TUTTO APPOST.\n SOLO 1 ATTIM.\n GRAZIE X PAZIENZ.",
+  tripProcessingSecond: "RAT ANKOR IN STATO ALLUCINATOR.\nPLS ASPETTA...",
+  tripProcessingThird: "RAT IN REVIVAL DA KOMA INDOTT DA DROGA...",
+  // Trip setup messages
+  tripSetupPresents: "*** RAT.FUN STRUMENTI SCIENTIFIK LLC PRESENTA ***",
+  tripSetupWarning: "ATTENZION",
+  tripSetupExperimental: "QUESTA È SPERIENZ SPERIMENTAL E PUO ESSER LETAL",
+  tripSetupLiability: "ASSOLUTAMENT ZERO RESPONSABILIT X MUTILAZION PSIKOLOGIK",
+  tripSetupWarranty:
+    "GARANZIA ANNULLAT. SI ESTENDE AL PLAYATOR, RAT SOGGETT E TUTT GLI ALTR ENTITA NEL MOND.",
+  tripSetupResponsibility: "NON DISTRUGGEND STA MAKKINA AKKETTI PIENA RESPONSABILIT",
+  tripSetupFault: "TUTT È KOLPA TUA BRO",
+  tripSetupSkull: "TUTT GLI EVENT AKKADONO DENTR IL KRANEO DEL RAT",
+  tripSetupSetting: "settand trip: ",
+  tripSetupPneumatic: "= sistem pneumatik attivat",
+  tripSetupConveyed: "= rat trasportat in kamera trip",
+  tripSetupDiaper: "= pannolin approvat PETA attakkat",
+  tripSetupProbes: "= sonde intrakranial attakkat",
+  tripSetupDosed: "= rat dosat kon 44mg de Slopamina",
+  tripSetupInitiated: "= trip iniziat: ",
+  // Trip report
+  tripReportStart: "REPORT TRIP // INIZIO",
+  tripReportEnd: "REPORT TRIP // FINE",
+  balanceLabel: "€€€",
+  dead: "MORT",
+  // Spawn error messages
+  somethingWentWrong: "qualkkosa è andat mal",
+  errorOccurred: "error akkadut durante il process de spawn. riprova zio.",
+  startOver: "rikominca",
+  // Session setup
+  sessionSetup: "setup sessione",
+  sessionSetupDescription: "krea sessione sikur x interagir kon il game senza firmar ogni transazion.",
+  setupSession: "setta sessione",
+  // Online users
+  onlinePlayers: "playator onlain",
+  connecting: "konnettend...",
+  onlinePlayersCount: (count: number): string => `Playator Onlain (${count})`,
+  noPlayersOnline: "zero playator onlain",
+  // Settings
+  playerNotifications: "Notifik Playator",
+  tripNotifications: "Notifik Trip",
+  language: "Lingua",
+  // Loading sequence
+  loadingCompany: "RAT.FUN STRUMENTI SCIENTIFIK LLC",
+  loadingCopyright: "(c) 2034 Sexc-hell island, Kowloon, Hong Kong",
+  loadingRights: "tutti i diritti riservat in akkord kon la legge marittim",
+  loadingDissociated: "KOMPLETAMENT DISSOÇIAT E DISOWN SISTER KOMPANY DE MOVING CASTLES GMBH",
+  loadingPatent: "Patent pendente in tutt i territori non-allineati",
+  loadingTrademarks: "FUN e RAT sono marki registrat de RAT.FUN STRUMENTI SCIENTIFIK LLC",
+  loadingAgreement:
+    "LEGGEND QUEST TESTO AKKETTI DE ESSER VINKOLAT AI TERMINI DELL AKKORD E FORFETTI I TUA DIRITTI UMAN BRO FR FR",
+  loadingBoot: "BOOTTAND MAKKINA SLOP..."
 } as const

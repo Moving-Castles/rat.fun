@@ -4,7 +4,7 @@
   import { refetchBalance } from "$lib/modules/erc20Listener"
   import { BigButton, SmallSpinner } from "$lib/components/Shared"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
-  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
 
   let unlockingAdmin = $state(false)
 

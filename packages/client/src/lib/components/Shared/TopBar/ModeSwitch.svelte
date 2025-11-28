@@ -4,7 +4,7 @@
   import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
   import { goto } from "$app/navigation"
   import { Tooltip } from "$lib/components/Shared"
-  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
 
   import ModeSwitchButton from "../Buttons/ModeSwitchButton.svelte"
 

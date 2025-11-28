@@ -6,7 +6,13 @@
   import { disconnectWallet } from "$lib/modules/drawbridge/connector"
   import { UIState } from "$lib/modules/ui/state.svelte"
   import { UI } from "$lib/modules/ui/enums"
-  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
+  import {
+    UI_STRINGS,
+    setLocale,
+    getCurrentLocale,
+    availableLocales,
+    localeNames
+  } from "$lib/modules/ui/ui-strings/index.svelte"
   import { walletType, saleStatus } from "$lib/modules/network"
   import { WALLET_TYPE, SALE_STATUS } from "$lib/mud/enums"
   import { SmallButton, Checkbox } from "$lib/components/Shared"
@@ -108,21 +114,39 @@
 
   <!-- Music Toggle -->
   <div class="row toggle-row">
-    <span class="label">Music</span>
+    <span class="label">{UI_STRINGS.music}</span>
     <Checkbox checked={musicEnabled.current} onchange={toggleMusic} />
   </div>
 
   <!-- Player Notification Toggle -->
   <div class="row toggle-row">
-    <span class="label">Player Notifications</span>
+    <span class="label">{UI_STRINGS.playerNotifications}</span>
     <Checkbox checked={playerNotificationsEnabled.current} onchange={togglePlayerNotifications} />
   </div>
 
   <!-- Trip Notification Toggle -->
   <div class="row toggle-row">
-    <span class="label">Trip Notifications</span>
+    <span class="label">{UI_STRINGS.tripNotifications}</span>
     <Checkbox checked={tripNotificationsEnabled.current} onchange={toggleTripNotifications} />
   </div>
+
+  <div class="divider"></div>
+
+  {#if import.meta.env.DEV}
+    <!-- Language Selector -->
+    <div class="row">
+      <span class="label">{UI_STRINGS.language}</span>
+      <select
+        class="language-select"
+        value={getCurrentLocale()}
+        onchange={e => setLocale(e.currentTarget.value as any)}
+      >
+        {#each availableLocales as locale}
+          <option value={locale}>{localeNames[locale]}</option>
+        {/each}
+      </select>
+    </div>
+  {/if}
 </div>
 
 <style lang="scss">
@@ -154,6 +178,20 @@
       height: 1px;
       background: var(--color-border);
       margin: 4px 0;
+    }
+  }
+
+  .language-select {
+    font-family: var(--special-font-stack);
+    background: var(--background);
+    color: var(--foreground);
+    border: 1px solid var(--color-border);
+    padding: 4px 8px;
+    font-size: var(--font-size-normal);
+    cursor: pointer;
+
+    &:hover {
+      background: var(--background-hover);
     }
   }
 </style>

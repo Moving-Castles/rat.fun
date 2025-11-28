@@ -3,7 +3,7 @@
   import type { TripFolder } from "@sanity-types"
   import { playSound } from "$lib/modules/sound"
   import { Tooltip } from "$lib/components/Shared"
-  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
 
   let {
     listingIndex,

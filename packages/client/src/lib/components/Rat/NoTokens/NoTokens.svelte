@@ -8,7 +8,7 @@
     tokenAllowanceApproved
   } from "$lib/modules/state/stores"
   import { ENVIRONMENT } from "$lib/mud/enums"
-  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
 
   import { SmallSpinner, BigButton } from "$lib/components/Shared"
 

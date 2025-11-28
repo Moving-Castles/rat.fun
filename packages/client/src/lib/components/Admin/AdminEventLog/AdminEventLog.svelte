@@ -3,7 +3,7 @@
   import { makeHref } from "$lib/components/Admin/helpers"
   import { focusEvent, selectedEvent } from "$lib/modules/ui/state.svelte"
   import type { TripEvent } from "$lib/components/Admin/types"
-  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
   import { goto } from "$app/navigation"
 
   import { tick } from "svelte"

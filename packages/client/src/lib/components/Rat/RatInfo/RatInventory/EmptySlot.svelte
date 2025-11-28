@@ -1,6 +1,6 @@
 <script lang="ts">
   import { playSound } from "$lib/modules/sound"
-  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
 
   let { index }: { index: number } = $props()
 

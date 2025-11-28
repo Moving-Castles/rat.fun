@@ -5,7 +5,7 @@
     playerHasTokens,
     playerHasLiveRat
   } from "$lib/modules/state/stores"
-  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
   import { openAllowanceModal } from "$lib/modules/ui/allowance-modal.svelte"
 
   import { BigButton } from "$lib/components/Shared"

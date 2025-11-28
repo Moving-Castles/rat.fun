@@ -2,6 +2,7 @@
   import { onMount } from "svelte"
   import { gsap } from "gsap"
   import { TextPlugin } from "gsap/TextPlugin"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
 
   gsap.registerPlugin(TextPlugin)
 
@@ -20,7 +21,9 @@
   // Timeline
   const timeline = gsap.timeline({ delay })
 
-  const statusText = $derived(`TRIP REPORT // ${status}`)
+  const statusText = $derived(
+    status === "START" ? UI_STRINGS.tripReportStart : UI_STRINGS.tripReportEnd
+  )
 
   // Ensure root element is mounted
   onMount(() => {

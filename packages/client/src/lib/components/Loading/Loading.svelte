@@ -15,7 +15,7 @@
     publicNetwork,
     walletType as walletTypeStore
   } from "$lib/modules/network"
-  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
   import { addressToId } from "$lib/modules/utils"
 
   import { ENVIRONMENT, WALLET_TYPE } from "$lib/mud/enums"

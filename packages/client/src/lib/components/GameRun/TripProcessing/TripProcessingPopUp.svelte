@@ -1,5 +1,6 @@
 <script lang="ts">
   import * as transitions from "svelte/transition"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
 
   let { type }: { type: "first" | "second" | "third" } = $props()
 </script>
@@ -11,14 +12,14 @@
 >
   {#if type === "first"}
     <div>
-      ALL IS FINE.<br /> JUST ONE MOMENT.<br /> WE VALUE YOUR PATIENCE.
+      {UI_STRINGS.tripProcessingFirst}
     </div>
   {:else if type === "second"}
     <div>
-      RAT STILL IN HALLUCINATORY STATE.<br />PLEASE STAND BY...
+      {UI_STRINGS.tripProcessingSecond}
     </div>
   {:else if type === "third"}
-    <div>RAT BEING REVIVED FROM DEEP DRUG INDUCED COMA...</div>
+    <div>{UI_STRINGS.tripProcessingThird}</div>
   {/if}
 </div>
 

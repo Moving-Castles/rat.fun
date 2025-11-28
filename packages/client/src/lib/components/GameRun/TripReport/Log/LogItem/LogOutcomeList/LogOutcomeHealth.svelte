@@ -6,6 +6,7 @@
   import { HEALTH_SYMBOL } from "$lib/modules/ui/constants"
   import { backgroundMusic } from "$lib/modules/sound/stores"
   import { addEasedCountAnimation } from "$lib/modules/utils/animations"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
 
   let {
     value,
@@ -56,7 +57,7 @@
         type: "balance",
         action: negative ? "reduce" : "increase",
         value,
-        name: "Balance"
+        name: UI_STRINGS.balanceLabel
       }
     ])
 
@@ -114,7 +115,7 @@
         playSound({ category: "ratfunUI", id: "ratDeath" })
         // Update text to show DEAD
         if (valueElement) {
-          valueElement.textContent = "DEAD"
+          valueElement.textContent = UI_STRINGS.dead
         }
       } else {
         if (negative) {

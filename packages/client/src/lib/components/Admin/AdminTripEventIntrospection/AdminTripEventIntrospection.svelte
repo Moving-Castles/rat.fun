@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { TripEvent } from "$lib/components/Admin/types"
   import RatTripLog from "./RatTripLog.svelte"
-  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
   let { event }: { event: TripEvent } = $props()
 </script>
 

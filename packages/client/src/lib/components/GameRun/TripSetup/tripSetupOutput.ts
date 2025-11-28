@@ -1,10 +1,11 @@
 import type { TerminalOutputUnit } from "$lib/modules/terminal-typer/types"
+import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
 
 export function generateTripSetupOutput() {
   const tripSetupOutput: TerminalOutputUnit[] = [
     {
       type: "text",
-      content: "*** RAT.FUN SCIENTIFIC INSTRUMENTS LLC PRESENTS ***",
+      content: UI_STRINGS.tripSetupPresents,
       color: "white",
       backgroundColor: "black",
       duration: 0,
@@ -21,7 +22,7 @@ export function generateTripSetupOutput() {
     },
     {
       type: "text",
-      content: "WARNING",
+      content: UI_STRINGS.tripSetupWarning,
       duration: 0,
       color: "black",
       backgroundColor: "yellow",
@@ -38,7 +39,7 @@ export function generateTripSetupOutput() {
     },
     {
       type: "text",
-      content: "THIS IS AN EXPERIMENTAL EXPERIENCE AND MAY BE LETHAL",
+      content: UI_STRINGS.tripSetupExperimental,
       color: "black",
       backgroundColor: "yellow",
       duration: 0,
@@ -46,7 +47,7 @@ export function generateTripSetupOutput() {
     },
     {
       type: "text",
-      content: "ABSOLUTELY NO LIABITITY FOR ANY PSYCHOLOGICAL MUTILATION",
+      content: UI_STRINGS.tripSetupLiability,
       color: "black",
       backgroundColor: "yellow",
       duration: 0,
@@ -54,8 +55,7 @@ export function generateTripSetupOutput() {
     },
     {
       type: "text",
-      content:
-        "WARRANTY VOIDED. EXTENDS TO THE PLAYER, RAT SUBJECT AND EVERY OTHER ENTITY IN THE WORLD.",
+      content: UI_STRINGS.tripSetupWarranty,
       color: "black",
       backgroundColor: "yellow",
       duration: 0,
@@ -63,7 +63,7 @@ export function generateTripSetupOutput() {
     },
     {
       type: "text",
-      content: "BY NOT DESTROYING THIS MACHINE YOU ACCEPT FULL RESPONSIBILITY",
+      content: UI_STRINGS.tripSetupResponsibility,
       color: "black",
       backgroundColor: "yellow",
       duration: 0,
@@ -71,7 +71,7 @@ export function generateTripSetupOutput() {
     },
     {
       type: "text",
-      content: "EVERYTHING IS YOUR FAULT",
+      content: UI_STRINGS.tripSetupFault,
       color: "black",
       backgroundColor: "yellow",
       duration: 0,
@@ -79,7 +79,7 @@ export function generateTripSetupOutput() {
     },
     {
       type: "text",
-      content: "ALL EVENTS HAPPEN INSIDE THE SKULL OF THE RAT",
+      content: UI_STRINGS.tripSetupSkull,
       color: "black",
       backgroundColor: "yellow",
       duration: 0,
@@ -87,7 +87,7 @@ export function generateTripSetupOutput() {
     },
     {
       type: "loader",
-      content: "Setting up trip: ",
+      content: UI_STRINGS.tripSetupSetting,
       duration: 500,
       color: "white",
       backgroundColor: "green",
@@ -96,42 +96,42 @@ export function generateTripSetupOutput() {
     },
     {
       type: "text",
-      content: "= Pneumatic system engaged",
+      content: UI_STRINGS.tripSetupPneumatic,
       color: "white",
       backgroundColor: "black",
       delayAfter: 100
     },
     {
       type: "text",
-      content: "= Rat conveyed to trip chamber",
+      content: UI_STRINGS.tripSetupConveyed,
       color: "white",
       backgroundColor: "black",
       delayAfter: 100
     },
     {
       type: "text",
-      content: "= PETA approved Diaper attached",
+      content: UI_STRINGS.tripSetupDiaper,
       color: "white",
       backgroundColor: "black",
       delayAfter: 100
     },
     {
       type: "text",
-      content: "= Intercranial probes attached",
+      content: UI_STRINGS.tripSetupProbes,
       color: "white",
       backgroundColor: "black",
       delayAfter: 100
     },
     {
       type: "text",
-      content: "= Rat dosed with 44mg of Slopamine",
+      content: UI_STRINGS.tripSetupDosed,
       color: "white",
       backgroundColor: "black",
       delayAfter: 100
     },
     {
       type: "text",
-      content: "= Trip initiated: ",
+      content: UI_STRINGS.tripSetupInitiated,
       color: "white",
       backgroundColor: "black",
       delayAfter: 100

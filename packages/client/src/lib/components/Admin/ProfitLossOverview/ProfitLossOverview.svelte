@@ -7,7 +7,7 @@
   import { Tooltip, BigButton } from "$lib/components/Shared"
   import { balance, investment, profitLoss, portfolioClass } from "$lib/modules/state/stores"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
-  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
 
   let { onCreateTripClick }: { onCreateTripClick: () => void } = $props()
 

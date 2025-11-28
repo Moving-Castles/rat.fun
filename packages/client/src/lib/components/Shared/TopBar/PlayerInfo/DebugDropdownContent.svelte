@@ -19,7 +19,7 @@
   import { busy } from "$lib/modules/action-manager/index.svelte"
   import { ENVIRONMENT } from "$lib/mud/enums"
   import { publicNetwork } from "$lib/modules/network"
-  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
 
   const MAX_ALLOWANCE = 1_000_000n
 </script>

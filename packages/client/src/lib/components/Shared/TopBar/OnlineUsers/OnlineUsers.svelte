@@ -3,6 +3,7 @@
   import { onlinePlayers, websocketConnected } from "$lib/modules/off-chain-sync/stores"
   import { playSound } from "$lib/modules/sound"
   import { Tooltip } from "$lib/components/Shared"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
 
   let showDropdown = $state(false)
   let dropdownElement = $state<HTMLElement | undefined>(undefined)
@@ -49,7 +50,7 @@
 </script>
 
 <div class="online-users">
-  <Tooltip content={$websocketConnected ? "Online players" : "Connecting..."}>
+  <Tooltip content={$websocketConnected ? UI_STRINGS.onlinePlayers : UI_STRINGS.connecting}>
     <button
       class="online-button"
       class:connected={$websocketConnected}
@@ -65,9 +66,9 @@
 
 {#if showDropdown}
   <div class="online-dropdown" bind:this={dropdownElement} out:fade={{ duration: 200 }}>
-    <div class="header">Online Players ({onlineCount})</div>
+    <div class="header">{UI_STRINGS.onlinePlayersCount(onlineCount)}</div>
     {#if $onlinePlayers.length === 0}
-      <div class="empty">No players online</div>
+      <div class="empty">{UI_STRINGS.noPlayersOnline}</div>
     {:else}
       <ul class="player-list">
         {#each $onlinePlayers as player (player.id)}

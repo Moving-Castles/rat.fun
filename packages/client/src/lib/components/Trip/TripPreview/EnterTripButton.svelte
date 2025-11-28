@@ -6,7 +6,7 @@
   import { goto } from "$app/navigation"
   import { backgroundMusic } from "$lib/modules/sound/stores"
   import { BigButton } from "$lib/components/Shared"
-  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
   import { openAllowanceModal } from "$lib/modules/ui/allowance-modal.svelte"
 
   let { tripId, trip, disabled }: { tripId: Hex; trip: Trip; disabled: boolean } = $props()

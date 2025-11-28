@@ -1,10 +1,11 @@
 import type { TerminalOutputUnit } from "$lib/modules/terminal-typer/types"
+import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
 
 export function generateLoadingOutput() {
   const tripSetupOutput: TerminalOutputUnit[] = [
     {
       type: "text",
-      content: "RAT.FUN SCIENTIFIC INSTRUMENTS LLC",
+      content: UI_STRINGS.loadingCompany,
       color: "white",
       backgroundColor: "black",
       duration: 0,
@@ -12,7 +13,7 @@ export function generateLoadingOutput() {
     },
     {
       type: "text",
-      content: "(c) 2034 Sexc-hell island, Kowloon, Hong Kong",
+      content: UI_STRINGS.loadingCopyright,
       color: "white",
       backgroundColor: "black",
       duration: 0,
@@ -20,7 +21,7 @@ export function generateLoadingOutput() {
     },
     {
       type: "text",
-      content: "All Rights Reserved in accordance with Maritime Law",
+      content: UI_STRINGS.loadingRights,
       color: "white",
       backgroundColor: "black",
       duration: 0,
@@ -28,7 +29,7 @@ export function generateLoadingOutput() {
     },
     {
       type: "text",
-      content: "FULLY DISSOCIATED AND DISOWNED SISTER COMPANY OF MOVING CASTLES GMBH",
+      content: UI_STRINGS.loadingDissociated,
       color: "white",
       backgroundColor: "black",
       duration: 0,
@@ -36,7 +37,7 @@ export function generateLoadingOutput() {
     },
     {
       type: "text",
-      content: "Patent pending in all non-aligned territories",
+      content: UI_STRINGS.loadingPatent,
       color: "white",
       backgroundColor: "black",
       duration: 0,
@@ -44,7 +45,7 @@ export function generateLoadingOutput() {
     },
     {
       type: "text",
-      content: "FUN and RAT are registered trademarks of RAT.FUN SCIENTIFIC INSTRUMENTS LLC",
+      content: UI_STRINGS.loadingTrademarks,
       color: "white",
       backgroundColor: "black",
       duration: 0,
@@ -52,8 +53,7 @@ export function generateLoadingOutput() {
     },
     {
       type: "text",
-      content:
-        "BY READING THIS TEXT YOU AGREE TO BE BOUND BY THE TERMS OF THE AGREEMENT AND FORFEIT YOUR HUMAN RIGHTS",
+      content: UI_STRINGS.loadingAgreement,
       color: "white",
       backgroundColor: "black",
       duration: 0,
@@ -61,7 +61,7 @@ export function generateLoadingOutput() {
     },
     {
       type: "text",
-      content: "BOOTING SLOP MACHINE...",
+      content: UI_STRINGS.loadingBoot,
       color: "cyan",
       backgroundColor: "black",
       delayAfter: 10

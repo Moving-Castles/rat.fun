@@ -11,7 +11,7 @@
   import { lightboxState, isPhone } from "$lib/modules/ui/state.svelte"
   import { blocksToReadableTime } from "$lib/modules/utils"
   import { blockNumber } from "$lib/modules/network"
-  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
 
   let { trip, tripId }: { trip: Trip; tripId?: Hex } = $props()

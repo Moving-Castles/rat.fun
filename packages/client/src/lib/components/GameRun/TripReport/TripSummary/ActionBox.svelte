@@ -9,7 +9,7 @@
   import { gsap } from "gsap"
   import { BigButton, RatAvatar } from "$lib/components/Shared"
   import { isPhone, selectedFolderId, phoneActiveGameView } from "$lib/modules/ui/state.svelte"
-  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
 
   let {
     result,

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
 </script>
 
 <div class="no-rat-warning">

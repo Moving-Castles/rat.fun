@@ -14,7 +14,7 @@
   import { staticContent } from "$lib/modules/content"
   import { isPhone } from "$lib/modules/ui/state.svelte"
   import { TripFolders } from "$lib/components/Trip"
-  import { UI_STRINGS } from "$lib/modules/ui/ui-strings"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
   import { playerIsWhitelisted } from "$lib/modules/state/stores"
 
   let {

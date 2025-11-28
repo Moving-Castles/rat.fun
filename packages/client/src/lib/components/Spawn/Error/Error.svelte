@@ -3,6 +3,7 @@
   import gsap from "gsap"
   import { BigButton } from "$lib/components/Shared"
   import { spawnState, SPAWN_STATE } from "$lib/components/Spawn/state.svelte"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
 
   let messageElement = $state<HTMLDivElement | null>(null)
   let buttonElement = $state<HTMLDivElement | null>(null)
@@ -51,11 +52,11 @@
 <div class="outer-container">
   <div class="inner-container">
     <div class="message-container" bind:this={messageElement}>
-      <p class="error-title">Something went wrong</p>
-      <p class="error-message">An error occurred during the spawn process. Please try again.</p>
+      <p class="error-title">{UI_STRINGS.somethingWentWrong}</p>
+      <p class="error-message">{UI_STRINGS.errorOccurred}</p>
     </div>
     <div class="button-container" bind:this={buttonElement}>
-      <BigButton text="Start over" onclick={handleRetry} />
+      <BigButton text={UI_STRINGS.startOver} onclick={handleRetry} />
     </div>
   </div>
 </div>
