@@ -68,7 +68,9 @@ export function loadConfig(opts: {
     serverUrl: process.env.SERVER_URL || getServerUrl(chainId),
     tripSelector: (opts.selector || process.env.TRIP_SELECTOR || "claude") as
       | "claude"
-      | "heuristic",
+      | "heuristic"
+      | "random"
+      | "historical",
     autoRespawn: opts.autoRespawn ?? process.env.AUTO_RESPAWN === "true",
     ratName: opts.name || process.env.RAT_NAME || "RattusBot",
     worldAddress: process.env.WORLD_ADDRESS,

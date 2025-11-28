@@ -26,7 +26,9 @@ import {
   logTrip,
   logRat,
   logDeath,
-  logStats
+  logStats,
+  logSessionStats,
+  logValueBar
 } from "./modules/logger"
 import { loadOutcomeHistory, saveOutcomeHistory } from "./modules/history"
 
@@ -151,6 +153,11 @@ export async function runBot(config: Config) {
   let startingBalance = rat.balance
   let startingRatName = rat.name
 
+  // Session-wide statistics
+  let sessionTotalRats = 1
+  let sessionTotalTrips = 0
+  let sessionTotalProfitLoss = 0
+
   // Track outcome history for learning (persists across respawns and bot restarts)
   const outcomeHistory: TripOutcomeHistory[] = loadOutcomeHistory()
 
@@ -166,11 +173,20 @@ export async function runBot(config: Config) {
           `Rat value (${totalValue}) reached liquidation threshold (${config.liquidateAtValue})!`
         )
 
+        // Update session stats
+        sessionTotalTrips += tripCount
+        sessionTotalProfitLoss += totalValue - startingBalance
+
         logStats({
           ratName: rat.name,
           totalTrips: tripCount,
           startingBalance,
           finalBalance: totalValue
+        })
+        logSessionStats({
+          totalRats: sessionTotalRats,
+          totalTrips: sessionTotalTrips,
+          totalProfitLoss: sessionTotalProfitLoss
         })
 
         // Liquidate the rat
@@ -192,6 +208,7 @@ export async function runBot(config: Config) {
         }
 
         logSuccess(`New rat created: ${rat.name} (balance: ${rat.balance})`)
+        sessionTotalRats++
         startingBalance = rat.balance
         startingRatName = rat.name
         tripCount = 0
@@ -205,11 +222,20 @@ export async function runBot(config: Config) {
       if (totalValue < config.liquidateBelowValue) {
         logWarning(`Rat value (${totalValue}) fell below threshold (${config.liquidateBelowValue})`)
 
+        // Update session stats
+        sessionTotalTrips += tripCount
+        sessionTotalProfitLoss += totalValue - startingBalance
+
         logStats({
           ratName: rat.name,
           totalTrips: tripCount,
           startingBalance,
           finalBalance: totalValue
+        })
+        logSessionStats({
+          totalRats: sessionTotalRats,
+          totalTrips: sessionTotalTrips,
+          totalProfitLoss: sessionTotalProfitLoss
         })
 
         // Liquidate the rat
@@ -231,6 +257,7 @@ export async function runBot(config: Config) {
         }
 
         logSuccess(`New rat created: ${rat.name} (balance: ${rat.balance})`)
+        sessionTotalRats++
         startingBalance = rat.balance
         startingRatName = rat.name
         tripCount = 0
@@ -259,7 +286,15 @@ export async function runBot(config: Config) {
     }
 
     // Select a trip (pass history for learning)
-    const selection = await selectTrip(config, enterableTrips, rat!, anthropic, outcomeHistory)
+    const worldAddress = mud.worldContract.address
+    const selection = await selectTrip(
+      config,
+      enterableTrips,
+      rat!,
+      anthropic,
+      outcomeHistory,
+      worldAddress
+    )
     if (!selection) {
       logError("Failed to select a trip")
       await sleep(5000)
@@ -307,11 +342,20 @@ export async function runBot(config: Config) {
 
         logDeath(rat!.name, tripCount)
 
+        // Update session stats
+        sessionTotalTrips += tripCount
+        sessionTotalProfitLoss += 0 - startingBalance
+
         logStats({
           ratName: startingRatName,
           totalTrips: tripCount,
           startingBalance,
           finalBalance: 0
+        })
+        logSessionStats({
+          totalRats: sessionTotalRats,
+          totalTrips: sessionTotalTrips,
+          totalProfitLoss: sessionTotalProfitLoss
         })
 
         if (config.autoRespawn) {
@@ -332,6 +376,7 @@ export async function runBot(config: Config) {
           }
 
           logSuccess(`New rat created: ${rat.name} (balance: ${rat.balance})`)
+          sessionTotalRats++
           startingBalance = rat.balance
           startingRatName = rat.name
           tripCount = 0 // Reset trip count for new rat
@@ -369,6 +414,11 @@ export async function runBot(config: Config) {
             rat.name,
             `Balance: ${rat.balance}, Total Value: ${totalValueAfter} (${changeStr}), Trips: ${tripCount}${inventoryStr}`
           )
+          logValueBar({
+            currentValue: totalValueAfter,
+            liquidateBelowValue: config.liquidateBelowValue,
+            liquidateAtValue: config.liquidateAtValue
+          })
         }
       }
 

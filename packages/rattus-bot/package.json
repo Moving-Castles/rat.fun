@@ -18,6 +18,7 @@
     "@latticexyz/store": "2.2.23-94cac741be24bb5743f2f36235cc3bb40012417a",
     "@latticexyz/store-sync": "2.2.23-94cac741be24bb5743f2f36235cc3bb40012417a",
     "@latticexyz/world": "2.2.23-94cac741be24bb5743f2f36235cc3bb40012417a",
+    "@sanity/client": "^7.13.1",
     "commander": "^12.0.0",
     "contracts": "workspace:*",
     "dotenv": "^17.2.3",

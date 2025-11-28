@@ -83,7 +83,9 @@ async function getNetworkConfig(chainId, worldAddressOverride) {
   const chainIndex = supportedChains.findIndex((c) => c.id === chainId);
   const chain = supportedChains[chainIndex];
   if (!chain) {
-    throw new Error(`Chain ${chainId} not supported. Supported chains: ${supportedChains.map((c) => c.id).join(", ")}`);
+    throw new Error(
+      `Chain ${chainId} not supported. Supported chains: ${supportedChains.map((c) => c.id).join(", ")}`
+    );
   }
   const world = worlds_default[chain.id.toString()];
   const worldAddress = worldAddressOverride || world?.address;
@@ -2586,7 +2588,7 @@ async function setupMud(privateKey, chainId, worldAddressOverride) {
     client: { public: publicClient, wallet: walletClient }
   });
   console.log("Syncing MUD state from indexer...");
-  const { components, waitForTransaction } = await syncToRecs({
+  const { components, waitForTransaction, storedBlockLogs$ } = await syncToRecs({
     world,
     config: mud_config_default,
     address: networkConfig.worldAddress,
@@ -2594,7 +2596,31 @@ async function setupMud(privateKey, chainId, worldAddressOverride) {
     startBlock: BigInt(networkConfig.initialBlockNumber),
     indexerUrl: networkConfig.indexerUrl
   });
-  console.log("MUD sync complete!");
+  console.log("Waiting for initial state sync...");
+  try {
+    await new Promise((resolve, reject) => {
+      const timeoutId = setTimeout(() => {
+        subscription.unsubscribe();
+        reject(new Error("Sync timeout"));
+      }, 3e4);
+      const subscription = storedBlockLogs$.subscribe({
+        next: (block) => {
+          if (block.blockNumber > 0n) {
+            clearTimeout(timeoutId);
+            subscription.unsubscribe();
+            resolve();
+          }
+        },
+        error: (err) => {
+          clearTimeout(timeoutId);
+          reject(err);
+        }
+      });
+    });
+    console.log("MUD sync complete!");
+  } catch (e) {
+    console.log("Warning: Sync timeout, proceeding with available data...");
+  }
   return {
     world,
     components,
@@ -2631,7 +2657,10 @@ import { maxUint256, erc20Abi } from "viem";
 import { getComponentValue } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 async function approveMaxTokens(mud) {
-  const externalAddresses = getComponentValue(mud.components.ExternalAddressesConfig, singletonEntity);
+  const externalAddresses = getComponentValue(
+    mud.components.ExternalAddressesConfig,
+    singletonEntity
+  );
   if (!externalAddresses) {
     throw new Error("ExternalAddressesConfig not found in MUD state");
   }
@@ -2652,7 +2681,10 @@ async function approveMaxTokens(mud) {
   return tx;
 }
 async function getAllowance(mud, ownerAddress) {
-  const externalAddresses = getComponentValue(mud.components.ExternalAddressesConfig, singletonEntity);
+  const externalAddresses = getComponentValue(
+    mud.components.ExternalAddressesConfig,
+    singletonEntity
+  );
   if (!externalAddresses) {
     throw new Error("ExternalAddressesConfig not found in MUD state");
   }
@@ -2672,7 +2704,7 @@ import { getComponentValue as getComponentValue2 } from "@latticexyz/recs";
 import { singletonEntity as singletonEntity2 } from "@latticexyz/store-sync/recs";
 import { ENTITY_TYPE as ENTITY_TYPE2 } from "contracts/enums";
 function getAvailableTrips(mud) {
-  const { EntityType, Balance, Prompt, TripCreationCost, Owner } = mud.components;
+  const { EntityType, Balance, Prompt, TripCreationCost, Owner, VisitCount, KillCount } = mud.components;
   const trips = [];
   EntityType.values.value.forEach((entityType, entityKey) => {
     const entityId = entityKey.description;
@@ -2680,14 +2712,20 @@ function getAvailableTrips(mud) {
       const balance = Number(getComponentValue2(Balance, entityId)?.value ?? 0);
       if (balance > 0) {
         const prompt = getComponentValue2(Prompt, entityId)?.value ?? "";
-        const tripCreationCost = Number(getComponentValue2(TripCreationCost, entityId)?.value ?? 0);
+        const tripCreationCost = Number(
+          getComponentValue2(TripCreationCost, entityId)?.value ?? 0
+        );
         const owner = getComponentValue2(Owner, entityId)?.value ?? "";
+        const visitCount = Number(getComponentValue2(VisitCount, entityId)?.value ?? 0);
+        const killCount = Number(getComponentValue2(KillCount, entityId)?.value ?? 0);
         trips.push({
           id: entityId,
           prompt,
           balance,
           tripCreationCost,
-          owner
+          owner,
+          visitCount,
+          killCount
         });
       }
     }
@@ -2695,9 +2733,11 @@ function getAvailableTrips(mud) {
   return trips;
 }
 function getPlayer(mud, playerId) {
-  const { Name, Balance, CurrentRat } = mud.components;
-  const name = getComponentValue2(Name, playerId)?.value;
-  if (!name) return null;
+  const { Name, Balance, CurrentRat, EntityType } = mud.components;
+  const entityTypeValue = getComponentValue2(EntityType, playerId);
+  const entityType = entityTypeValue?.value;
+  if (entityType !== ENTITY_TYPE2.PLAYER) return null;
+  const name = getComponentValue2(Name, playerId)?.value ?? "Unknown";
   const balance = Number(getComponentValue2(Balance, playerId)?.value ?? 0);
   const currentRat = getComponentValue2(CurrentRat, playerId)?.value ?? null;
   return {
@@ -2757,6 +2797,18 @@ function getRatTotalValue(mud, rat) {
   }
   return totalValue;
 }
+function getInventoryDetails(mud, rat) {
+  const { Name, Value } = mud.components;
+  const items = [];
+  for (const itemId of rat.inventory) {
+    if (itemId) {
+      const name = getComponentValue2(Name, itemId)?.value ?? "Unknown";
+      const value = Number(getComponentValue2(Value, itemId)?.value ?? 0);
+      items.push({ name, value });
+    }
+  }
+  return items;
+}
 function canRatEnterTrip(mud, rat, trip) {
   const config = getGamePercentagesConfig(mud);
   const ratValue = getRatTotalValue(mud, rat);
@@ -2791,7 +2843,11 @@ async function enterTrip(serverUrl, walletClient, tripId, ratId) {
   };
   const signedRequest = await signRequest(requestBody, walletClient);
   const url = `${serverUrl}/trip/enter`;
-  console.log(`Calling server: ${url}`);
+  let seconds = 0;
+  const ticker = setInterval(() => {
+    seconds++;
+    process.stdout.write(`\r\u23F3 Waiting for trip result... ${seconds}s`);
+  }, 1e3);
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 45e3);
   try {
@@ -2803,7 +2859,9 @@ async function enterTrip(serverUrl, walletClient, tripId, ratId) {
       body: JSON.stringify(signedRequest),
       signal: controller.signal
     });
+    clearInterval(ticker);
     clearTimeout(timeoutId);
+    process.stdout.write("\r" + " ".repeat(40) + "\r");
     if (!response.ok) {
       const error = await response.json();
       throw new Error(`Server error: ${error.error}: ${error.message}`);
@@ -2811,7 +2869,9 @@ async function enterTrip(serverUrl, walletClient, tripId, ratId) {
     const outcome = await response.json();
     return outcome;
   } catch (err) {
+    clearInterval(ticker);
     clearTimeout(timeoutId);
+    process.stdout.write("\r" + " ".repeat(40) + "\r");
     if (err instanceof Error) {
       if (err.name === "AbortError") {
         throw new Error("Request timed out after 45 seconds");
@@ -2830,67 +2890,296 @@ function selectTripHeuristic(trips) {
   const sorted = [...trips].sort((a, b) => b.balance - a.balance);
   return sorted[0];
 }
+function selectTripRandom(trips) {
+  if (trips.length === 0) return null;
+  const randomIndex = Math.floor(Math.random() * trips.length);
+  return trips[randomIndex];
+}
 
 // src/modules/trip-selector/claude.ts
-async function selectTripWithClaude(anthropic, trips, rat) {
+async function selectTripWithClaude(anthropic, trips, rat, outcomeHistory = []) {
   if (trips.length === 0) return null;
-  if (trips.length === 1) return trips[0];
-  const tripsForPrompt = trips.map((t) => ({
-    id: t.id,
-    prompt: t.prompt,
-    balance: t.balance
-  }));
-  const prompt = `You are an AI assistant helping a rat named "${rat.name}" choose which trip to enter in a game.
+  if (trips.length === 1) {
+    return {
+      trip: trips[0],
+      explanation: "Only one trip available"
+    };
+  }
+  const tripsForPrompt = trips.map((t) => {
+    const priorWeight = 5;
+    const priorSurvival = priorWeight * 0.5;
+    const actualSurvival = t.visitCount - t.killCount;
+    const weightedSurvivalRate = Math.round(
+      (priorSurvival + actualSurvival) / (priorWeight + t.visitCount) * 100
+    );
+    return {
+      id: t.id,
+      prompt: t.prompt,
+      balance: t.balance,
+      visitCount: t.visitCount,
+      killCount: t.killCount,
+      survivalRate: weightedSurvivalRate,
+      confidence: t.visitCount >= 10 ? "high" : t.visitCount >= 5 ? "medium" : "low"
+    };
+  });
+  let historySection = "";
+  if (outcomeHistory.length > 0) {
+    const availableTripIds = new Set(trips.map((t) => t.id));
+    const relevantHistory = outcomeHistory.filter((h) => availableTripIds.has(h.tripId)).slice(-10);
+    if (relevantHistory.length > 0) {
+      historySection = `
+## Previous Trip Outcomes (for learning)
+Here are the outcomes of recent trips this rat has taken on currently available trips. Use this to inform your strategy:
+${JSON.stringify(relevantHistory, null, 2)}
 
-The rat currently has:
+Note: valueChange represents the change in TOTAL VALUE (balance + inventory items). This is the key success metric.
+
+Analyze patterns:
+\u2013 If rat died or lost a lot of value in a trip, do not re-enter unless there is very clear ground to assume the outcome will be different this time.
+- Which types of trip prompts led to positive vs negative valueChange?
+- How do items gained/lost affect total value?
+- What scenarios were dangerous (led to death or large value losses)?
+- What strategies seem to work best?
+- health, token, cash, money, points etc all mean the same thing and are interchangeable. exhanging one for the other 1:1 is pointless.
+`;
+    }
+  }
+  const prompt = `You are an AI strategist helping a rat named "${rat.name}" choose which trip to enter in a game.
+
+## Primary Goal
+Your goal is to INCREASE the rat's TOTAL VALUE (balance + inventory item values). The rat gains value by completing trips that provide positive value changes - this includes gaining balance OR valuable items. Trips that result in 0 value change are wasteful - they risk death without any reward. Always prioritize trips likely to yield positive total value gains.
+
+## Current Rat State
 - Balance: ${rat.balance} credits
-- ${rat.inventory.length} items in inventory
-
-Available trips to choose from:
+- Items in inventory: ${rat.inventory.length}
+- Total trips survived: ${rat.tripCount}
+${historySection}
+## Available Trips
 ${JSON.stringify(tripsForPrompt, null, 2)}
 
-Analyze each trip's prompt and balance. Consider:
-1. Which trip scenario seems most favorable for the rat?
-2. Which trip has a good balance (more potential rewards)?
-3. Which trip prompt suggests interesting or manageable challenges?
+## Your Task
+Analyze each trip's prompt, balance, and statistics to maximize TOTAL VALUE gain. Consider:
+1. Which trip is most likely to result in a POSITIVE value change (balance + items)? Avoid trips that seem likely to have no reward.
+2. Which trip has the best risk/reward ratio? High balance trips often mean higher potential gains.
+3. Based on the trip prompt, does it suggest opportunities for the rat to find loot, treasure, or rewards?
+4. Avoid trips with prompts suggesting high danger with no clear reward opportunity.
+5. Carefully evaluate if a trip requires the rat to have a particular item to succeed. Or if a particular item that the rat currently has gives it an advantage.
+6. IMPORTANT: Use the trip statistics to assess danger:
+   - survivalRate: Bayesian-weighted survival percentage (accounts for sample size uncertainty)
+   - confidence: "high" (10+ visits), "medium" (5-9 visits), "low" (<5 visits)
+   - Prefer trips with high survivalRate AND high confidence. Be cautious of "low" confidence trips - their survival rate is uncertain.
+${outcomeHistory.length > 0 ? "6. What patterns from previous outcomes show which trip types yield gains vs losses or deaths?" : ""}
 
-Respond with ONLY the trip ID of your chosen trip. No explanation, just the ID.`;
+## Response Format
+Respond with a JSON object containing:
+- tripId: The full ID of your chosen trip
+- explanation: A brief (1-2 sentence) explanation of why you chose this trip
+
+Example:
+\`\`\`json
+{
+  "tripId": "0x1234...",
+  "explanation": "This trip offers high rewards with a relatively safe scenario based on the prompt."
+}
+\`\`\`
+
+Respond with ONLY the JSON object, no other text.`;
   try {
     const response = await anthropic.messages.create({
       model: "claude-sonnet-4-20250514",
-      max_tokens: 100,
+      max_tokens: 300,
       messages: [{ role: "user", content: prompt }]
     });
     const content = response.content[0];
     if (content.type !== "text") {
       console.warn("Unexpected response type from Claude, falling back to heuristic");
-      return trips.sort((a, b) => b.balance - a.balance)[0];
+      return fallbackSelection(trips);
     }
-    const selectedId = content.text.trim();
-    const selectedTrip = trips.find((t) => t.id === selectedId);
+    let parsed;
+    try {
+      let jsonText = content.text.trim();
+      if (jsonText.startsWith("```json")) {
+        jsonText = jsonText.slice(7);
+      }
+      if (jsonText.startsWith("```")) {
+        jsonText = jsonText.slice(3);
+      }
+      if (jsonText.endsWith("```")) {
+        jsonText = jsonText.slice(0, -3);
+      }
+      parsed = JSON.parse(jsonText.trim());
+    } catch {
+      console.warn("Failed to parse Claude response as JSON:", content.text);
+      return fallbackSelection(trips);
+    }
+    const selectedTrip = trips.find((t) => t.id === parsed.tripId);
     if (!selectedTrip) {
-      console.warn(`Claude selected unknown trip ID: ${selectedId}, falling back to heuristic`);
-      return trips.sort((a, b) => b.balance - a.balance)[0];
+      console.warn(`Claude selected unknown trip ID: ${parsed.tripId}, falling back to heuristic`);
+      return fallbackSelection(trips);
     }
-    return selectedTrip;
+    return {
+      trip: selectedTrip,
+      explanation: parsed.explanation
+    };
   } catch (error) {
     console.error("Error calling Claude API:", error);
     console.warn("Falling back to heuristic selection");
-    return trips.sort((a, b) => b.balance - a.balance)[0];
+    return fallbackSelection(trips);
   }
+}
+function fallbackSelection(trips) {
+  const trip = trips.sort((a, b) => b.balance - a.balance)[0];
+  return {
+    trip,
+    explanation: "Fallback: selected trip with highest balance"
+  };
+}
+
+// src/modules/cms/index.ts
+import { createClient } from "@sanity/client";
+var PUBLIC_SANITY_CMS_ID = "saljmqwt";
+var sanityClient = createClient({
+  projectId: PUBLIC_SANITY_CMS_ID,
+  dataset: "production",
+  apiVersion: "2025-06-01",
+  useCdn: false
+});
+async function getOutcomesForTrips(tripIds, worldAddress) {
+  const query = `*[_type == "outcome" && tripId in $tripIds && worldAddress == $worldAddress] {
+    _id,
+    tripId,
+    ratId,
+    ratName,
+    ratValueChange,
+    ratValue,
+    oldRatValue,
+    newRatBalance,
+    oldRatBalance
+  }`;
+  return sanityClient.fetch(query, { tripIds, worldAddress });
+}
+
+// src/modules/trip-selector/historical.ts
+function calculateTripStats(trips, outcomes) {
+  const outcomesByTrip = /* @__PURE__ */ new Map();
+  for (const outcome of outcomes) {
+    const existing = outcomesByTrip.get(outcome.tripId) || [];
+    existing.push(outcome);
+    outcomesByTrip.set(outcome.tripId, existing);
+  }
+  return trips.map((trip) => {
+    const tripOutcomes = outcomesByTrip.get(trip.id) || [];
+    const totalOutcomes = tripOutcomes.length;
+    if (totalOutcomes === 0) {
+      return {
+        tripId: trip.id,
+        trip,
+        totalOutcomes: 0,
+        avgValueChange: 0,
+        totalValueChange: 0,
+        survivalRate: 0.5,
+        // Unknown, assume 50%
+        deaths: 0
+      };
+    }
+    const totalValueChange = tripOutcomes.reduce((sum, o) => sum + (o.ratValueChange ?? 0), 0);
+    const avgValueChange = totalValueChange / totalOutcomes;
+    const deaths = tripOutcomes.filter(
+      (o) => (o.newRatBalance ?? 0) === 0 && (o.oldRatBalance ?? 0) > 0
+    ).length;
+    const survivalRate = (totalOutcomes - deaths) / totalOutcomes;
+    return {
+      tripId: trip.id,
+      trip,
+      totalOutcomes,
+      avgValueChange,
+      totalValueChange,
+      survivalRate,
+      deaths
+    };
+  });
+}
+function scoreTrip(stats) {
+  if (stats.totalOutcomes === 0) {
+    return stats.trip.balance * 0.1;
+  }
+  const confidenceBonus = Math.min(stats.totalOutcomes / 20, 1) * 10;
+  return stats.avgValueChange + confidenceBonus;
+}
+async function selectTripHistorical(trips, worldAddress) {
+  if (trips.length === 0) return null;
+  const tripIds = trips.map((t) => t.id);
+  const outcomes = await getOutcomesForTrips(tripIds, worldAddress);
+  const stats = calculateTripStats(trips, outcomes);
+  const scoredTrips = stats.map((s) => ({
+    stats: s,
+    score: scoreTrip(s)
+  }));
+  scoredTrips.sort((a, b) => b.score - a.score);
+  const best = scoredTrips[0];
+  if (!best) return null;
+  let explanation;
+  if (best.stats.totalOutcomes === 0) {
+    explanation = `No historical data, selected based on trip balance (${best.stats.trip.balance})`;
+  } else {
+    const avgStr = best.stats.avgValueChange >= 0 ? `+${best.stats.avgValueChange.toFixed(1)}` : best.stats.avgValueChange.toFixed(1);
+    const survivalPct = (best.stats.survivalRate * 100).toFixed(0);
+    explanation = `Best historical performance: avg ${avgStr} value change, ${survivalPct}% survival rate (${best.stats.totalOutcomes} outcomes)`;
+  }
+  return {
+    trip: best.stats.trip,
+    explanation
+  };
 }
 
 // src/modules/trip-selector/index.ts
-async function selectTrip(config, trips, rat, anthropic) {
-  if (trips.length === 0) {
+async function selectTrip(configOrOptions, trips, rat, anthropic, outcomeHistory = [], worldAddress) {
+  let config;
+  let tripsArray;
+  let ratObj;
+  let anthropicClient;
+  let history;
+  let worldAddr;
+  if ("config" in configOrOptions) {
+    config = configOrOptions.config;
+    tripsArray = configOrOptions.trips;
+    ratObj = configOrOptions.rat;
+    anthropicClient = configOrOptions.anthropic;
+    history = configOrOptions.outcomeHistory ?? [];
+    worldAddr = configOrOptions.worldAddress;
+  } else {
+    config = configOrOptions;
+    tripsArray = trips;
+    ratObj = rat;
+    anthropicClient = anthropic;
+    history = outcomeHistory;
+    worldAddr = worldAddress;
+  }
+  if (tripsArray.length === 0) {
     return null;
   }
-  if (config.tripSelector === "claude" && anthropic) {
+  if (config.tripSelector === "claude" && anthropicClient) {
     console.log("Using Claude AI to select trip...");
-    return selectTripWithClaude(anthropic, trips, rat);
+    return selectTripWithClaude(anthropicClient, tripsArray, ratObj, history);
+  } else if (config.tripSelector === "random") {
+    console.log("Using random selection...");
+    const trip = selectTripRandom(tripsArray);
+    if (!trip) return null;
+    return {
+      trip,
+      explanation: "Selected trip randomly"
+    };
+  } else if (config.tripSelector === "historical" && worldAddr) {
+    console.log("Using historical data from CMS to select trip...");
+    return selectTripHistorical(tripsArray, worldAddr);
   } else {
     console.log("Using heuristic (highest balance) to select trip...");
-    return selectTripHeuristic(trips);
+    const trip = selectTripHeuristic(tripsArray);
+    if (!trip) return null;
+    return {
+      trip,
+      explanation: "Selected trip with highest balance"
+    };
   }
 }
 
@@ -2965,17 +3254,104 @@ function logStats(stats) {
   console.log(`  Total Trips:     ${stats.totalTrips}`);
   console.log(`  Starting Balance: ${stats.startingBalance}`);
   console.log(`  Final Balance:    ${stats.finalBalance}`);
-  console.log(`  ${profitLossColor}Profit/Loss:     ${profitLoss >= 0 ? "+" : ""}${profitLoss}${colors.reset}`);
+  console.log(
+    `  ${profitLossColor}Profit/Loss:     ${profitLoss >= 0 ? "+" : ""}${profitLoss}${colors.reset}`
+  );
   console.log(``);
+}
+function logSessionStats(stats) {
+  const profitLossColor = stats.totalProfitLoss >= 0 ? colors.green : colors.red;
+  console.log(`${colors.bright}${colors.cyan}`);
+  console.log(`==========================================`);
+  console.log(`  SESSION STATISTICS`);
+  console.log(`==========================================`);
+  console.log(`${colors.reset}`);
+  console.log(`  Total Rats:      ${stats.totalRats}`);
+  console.log(`  Total Trips:     ${stats.totalTrips}`);
+  console.log(
+    `  ${profitLossColor}Total P/L:       ${stats.totalProfitLoss >= 0 ? "+" : ""}${stats.totalProfitLoss}${colors.reset}`
+  );
+  console.log(``);
+}
+function logValueBar(options) {
+  const { currentValue, liquidateBelowValue, liquidateAtValue } = options;
+  if (liquidateBelowValue === void 0 && liquidateAtValue === void 0) {
+    return;
+  }
+  const barWidth = 40;
+  const minValue = liquidateBelowValue ?? 0;
+  const maxValue = liquidateAtValue ?? currentValue * 1.5;
+  const range = maxValue - minValue;
+  const position = range > 0 ? Math.max(0, Math.min(1, (currentValue - minValue) / range)) : 0.5;
+  const filledWidth = Math.round(position * barWidth);
+  const filledPart = "\u2588".repeat(filledWidth);
+  const emptyPart = "\u2591".repeat(barWidth - filledWidth);
+  let barColor;
+  if (position < 0.2) {
+    barColor = colors.red;
+  } else if (position < 0.4) {
+    barColor = colors.yellow;
+  } else if (position > 0.9) {
+    barColor = colors.green;
+  } else {
+    barColor = colors.cyan;
+  }
+  const leftLabel = liquidateBelowValue !== void 0 ? `${liquidateBelowValue}` : "0";
+  const rightLabel = liquidateAtValue !== void 0 ? `${liquidateAtValue}` : "\u221E";
+  console.log(
+    `${colors.dim}[VALUE]${colors.reset} ${leftLabel} ${barColor}${filledPart}${colors.dim}${emptyPart}${colors.reset} ${rightLabel} (${currentValue})`
+  );
+}
+
+// src/modules/history/index.ts
+import { readFileSync, writeFileSync, existsSync } from "fs";
+var HISTORY_FILE = "outcome-history.json";
+function loadOutcomeHistory() {
+  try {
+    if (existsSync(HISTORY_FILE)) {
+      const data = readFileSync(HISTORY_FILE, "utf-8");
+      const history = JSON.parse(data);
+      console.log(`Loaded ${history.length} previous outcomes from ${HISTORY_FILE}`);
+      return history;
+    }
+  } catch (error) {
+    console.warn(
+      `Failed to load outcome history: ${error instanceof Error ? error.message : error}`
+    );
+  }
+  return [];
+}
+function saveOutcomeHistory(history) {
+  try {
+    writeFileSync(HISTORY_FILE, JSON.stringify(history, null, 2));
+  } catch (error) {
+    console.warn(
+      `Failed to save outcome history: ${error instanceof Error ? error.message : error}`
+    );
+  }
 }
 
 // src/bot.ts
+async function liquidateRat(mud) {
+  console.log("Liquidating rat...");
+  const tx = await mud.worldContract.write.ratfun__liquidateRat();
+  console.log(`Liquidate transaction sent: ${tx}`);
+  await mud.waitForTransaction(tx);
+  console.log("Rat liquidated successfully!");
+  return tx;
+}
 async function runBot(config) {
   logInfo("Starting Rattus Bot...");
   logInfo(`Chain ID: ${config.chainId}`);
   logInfo(`Server URL: ${config.serverUrl}`);
   logInfo(`Trip selector: ${config.tripSelector}`);
   logInfo(`Auto-respawn: ${config.autoRespawn}`);
+  if (config.liquidateAtValue) {
+    logInfo(`Liquidate at value: ${config.liquidateAtValue}`);
+  }
+  if (config.liquidateBelowValue) {
+    logInfo(`Liquidate below value: ${config.liquidateBelowValue}`);
+  }
   let anthropic;
   if (config.tripSelector === "claude") {
     anthropic = new Anthropic({ apiKey: config.anthropicApiKey });
@@ -2984,21 +3360,19 @@ async function runBot(config) {
   logInfo("Setting up MUD connection...");
   const mud = await setupMud(config.privateKey, config.chainId, config.worldAddress);
   logSuccess("MUD setup complete!");
+  logInfo("Waiting for state sync...");
+  await sleep(2e3);
   const walletAddress = mud.walletClient.account.address;
   const playerId = addressToId(walletAddress);
   logInfo(`Wallet address: ${walletAddress}`);
   logInfo(`Player ID: ${playerId}`);
   logInfo("Checking player status...");
-  let player = getPlayer(mud, playerId);
+  let player = await retryUntilResult(() => getPlayer(mud, playerId), 5e3, 500);
   if (!player) {
-    logWarning("Player not found, spawning...");
+    logInfo("Player not found, spawning...");
     await spawn(mud, config.ratName);
     logInfo("Waiting for player to sync...");
-    player = await retryUntilResult(
-      () => getPlayer(mud, playerId),
-      1e4,
-      500
-    );
+    player = await retryUntilResult(() => getPlayer(mud, playerId), 1e4, 500);
     if (!player) {
       throw new Error("Failed to create player - timeout waiting for sync");
     }
@@ -3038,11 +3412,7 @@ async function runBot(config) {
     player = getPlayer(mud, playerId);
     if (player?.currentRat) {
       ratId = player.currentRat;
-      rat = await retryUntilResult(
-        () => getRat(mud, ratId),
-        1e4,
-        500
-      );
+      rat = await retryUntilResult(() => getRat(mud, ratId), 1e4, 500);
     }
     if (!rat) {
       throw new Error("Failed to create rat - timeout waiting for sync");
@@ -3050,11 +3420,91 @@ async function runBot(config) {
     logSuccess(`Rat created: ${rat.name} (balance: ${rat.balance})`);
   }
   let tripCount = 0;
-  const startingBalance = rat.balance;
-  const startingRatName = rat.name;
+  let startingBalance = rat.balance;
+  let startingRatName = rat.name;
+  let sessionTotalRats = 1;
+  let sessionTotalTrips = 0;
+  let sessionTotalProfitLoss = 0;
+  const outcomeHistory = loadOutcomeHistory();
   logInfo("Starting main loop...");
   logInfo("==========================================");
   while (true) {
+    if (config.liquidateAtValue && rat) {
+      const totalValue = getRatTotalValue(mud, rat);
+      if (totalValue >= config.liquidateAtValue) {
+        logSuccess(
+          `Rat value (${totalValue}) reached liquidation threshold (${config.liquidateAtValue})!`
+        );
+        sessionTotalTrips += tripCount;
+        sessionTotalProfitLoss += totalValue - startingBalance;
+        logStats({
+          ratName: rat.name,
+          totalTrips: tripCount,
+          startingBalance,
+          finalBalance: totalValue
+        });
+        logSessionStats({
+          totalRats: sessionTotalRats,
+          totalTrips: sessionTotalTrips,
+          totalProfitLoss: sessionTotalProfitLoss
+        });
+        await liquidateRat(mud);
+        logSuccess("Rat liquidated! Creating new rat...");
+        await createRat(mud, config.ratName);
+        await sleep(3e3);
+        player = getPlayer(mud, playerId);
+        if (player?.currentRat) {
+          ratId = player.currentRat;
+          rat = await retryUntilResult(() => getRat(mud, ratId), 1e4, 500);
+        }
+        if (!rat) {
+          throw new Error("Failed to create new rat after liquidation");
+        }
+        logSuccess(`New rat created: ${rat.name} (balance: ${rat.balance})`);
+        sessionTotalRats++;
+        startingBalance = rat.balance;
+        startingRatName = rat.name;
+        tripCount = 0;
+        continue;
+      }
+    }
+    if (config.liquidateBelowValue && rat) {
+      const totalValue = getRatTotalValue(mud, rat);
+      if (totalValue < config.liquidateBelowValue) {
+        logWarning(`Rat value (${totalValue}) fell below threshold (${config.liquidateBelowValue})`);
+        sessionTotalTrips += tripCount;
+        sessionTotalProfitLoss += totalValue - startingBalance;
+        logStats({
+          ratName: rat.name,
+          totalTrips: tripCount,
+          startingBalance,
+          finalBalance: totalValue
+        });
+        logSessionStats({
+          totalRats: sessionTotalRats,
+          totalTrips: sessionTotalTrips,
+          totalProfitLoss: sessionTotalProfitLoss
+        });
+        await liquidateRat(mud);
+        logInfo("Rat liquidated due to low value. Creating new rat...");
+        await createRat(mud, config.ratName);
+        await sleep(3e3);
+        player = getPlayer(mud, playerId);
+        if (player?.currentRat) {
+          ratId = player.currentRat;
+          rat = await retryUntilResult(() => getRat(mud, ratId), 1e4, 500);
+        }
+        if (!rat) {
+          throw new Error("Failed to create new rat after liquidation");
+        }
+        logSuccess(`New rat created: ${rat.name} (balance: ${rat.balance})`);
+        sessionTotalRats++;
+        startingBalance = rat.balance;
+        startingRatName = rat.name;
+        tripCount = 0;
+        continue;
+      }
+    }
     const trips = getAvailableTrips(mud);
     logInfo(`Found ${trips.length} available trips`);
     if (trips.length === 0) {
@@ -3069,31 +3519,54 @@ async function runBot(config) {
       await sleep(1e4);
       continue;
     }
-    const selectedTrip = await selectTrip(config, enterableTrips, rat, anthropic);
-    if (!selectedTrip) {
+    const worldAddress = mud.worldContract.address;
+    const selection = await selectTrip(config, enterableTrips, rat, anthropic, outcomeHistory, worldAddress);
+    if (!selection) {
       logError("Failed to select a trip");
       await sleep(5e3);
       continue;
     }
+    const { trip: selectedTrip, explanation } = selection;
     tripCount++;
     logTrip(tripCount, `Entering: "${selectedTrip.prompt.slice(0, 60)}..."`);
     logTrip(tripCount, `Trip balance: ${selectedTrip.balance}`);
+    logInfo(`Selection reason: ${explanation}`);
+    const totalValueBefore = getRatTotalValue(mud, rat);
     try {
       const outcome = await enterTrip(config.serverUrl, mud.walletClient, selectedTrip.id, rat.id);
+      const logEntries = [];
       if (outcome.log && outcome.log.length > 0) {
         console.log("");
         for (const entry of outcome.log) {
-          console.log(`  ${entry.text}`);
+          console.log(`  ${entry.event}`);
+          logEntries.push(entry.event);
         }
         console.log("");
       }
       if (outcome.ratDead) {
+        outcomeHistory.push({
+          tripId: selectedTrip.id,
+          tripPrompt: selectedTrip.prompt,
+          totalValueBefore,
+          totalValueAfter: 0,
+          valueChange: -totalValueBefore,
+          died: true,
+          logSummary: logEntries.slice(0, 3).join(" | ")
+        });
+        saveOutcomeHistory(outcomeHistory);
         logDeath(rat.name, tripCount);
+        sessionTotalTrips += tripCount;
+        sessionTotalProfitLoss += 0 - startingBalance;
         logStats({
           ratName: startingRatName,
           totalTrips: tripCount,
           startingBalance,
           finalBalance: 0
+        });
+        logSessionStats({
+          totalRats: sessionTotalRats,
+          totalTrips: sessionTotalTrips,
+          totalProfitLoss: sessionTotalProfitLoss
         });
         if (config.autoRespawn) {
           logInfo("Auto-respawn enabled, creating new rat...");
@@ -3102,16 +3575,15 @@ async function runBot(config) {
           player = getPlayer(mud, playerId);
           if (player?.currentRat) {
             ratId = player.currentRat;
-            rat = await retryUntilResult(
-              () => getRat(mud, ratId),
-              1e4,
-              500
-            );
+            rat = await retryUntilResult(() => getRat(mud, ratId), 1e4, 500);
           }
           if (!rat) {
             throw new Error("Failed to create new rat after death");
           }
           logSuccess(`New rat created: ${rat.name} (balance: ${rat.balance})`);
+          sessionTotalRats++;
+          startingBalance = rat.balance;
+          startingRatName = rat.name;
           tripCount = 0;
         } else {
           logInfo("Auto-respawn disabled, exiting...");
@@ -3121,8 +3593,30 @@ async function runBot(config) {
         await sleep(2e3);
         rat = getRat(mud, rat.id);
         if (rat) {
-          const totalValue = getRatTotalValue(mud, rat);
-          logRat(rat.name, `Balance: ${rat.balance}, Total Value: ${totalValue}, Trips: ${tripCount}`);
+          const totalValueAfter = getRatTotalValue(mud, rat);
+          const valueChange = totalValueAfter - totalValueBefore;
+          outcomeHistory.push({
+            tripId: selectedTrip.id,
+            tripPrompt: selectedTrip.prompt,
+            totalValueBefore,
+            totalValueAfter,
+            valueChange,
+            died: false,
+            logSummary: logEntries.slice(0, 3).join(" | ")
+          });
+          saveOutcomeHistory(outcomeHistory);
+          const changeStr = valueChange >= 0 ? `+${valueChange}` : `${valueChange}`;
+          const inventoryItems = getInventoryDetails(mud, rat);
+          const inventoryStr = inventoryItems.length > 0 ? `, Inventory: [${inventoryItems.map((i) => `${i.name}(${i.value})`).join(", ")}]` : "";
+          logRat(
+            rat.name,
+            `Balance: ${rat.balance}, Total Value: ${totalValueAfter} (${changeStr}), Trips: ${tripCount}${inventoryStr}`
+          );
+          logValueBar({
+            currentValue: totalValueAfter,
+            liquidateBelowValue: config.liquidateBelowValue,
+            liquidateAtValue: config.liquidateAtValue
+          });
         }
       }
       await sleep(2e3);
@@ -3138,23 +3632,37 @@ async function runBot(config) {
 function getServerUrl(chainId) {
   switch (chainId) {
     case 8453:
-      return "https://base.rat.fun";
+      return "https://base.rat-fun-server.com";
     case 84532:
-      return "https://base-sepolia.rat.fun";
+      return "https://base-sepolia.rat-fun-server.com";
     default:
       return "http://localhost:3131";
   }
 }
 function loadConfig(opts) {
   const chainId = Number(opts.chain || process.env.CHAIN_ID || "84532");
-  const privateKey = process.env.PRIVATE_KEY;
+  let privateKey = process.env.PRIVATE_KEY;
   if (!privateKey) {
     throw new Error("PRIVATE_KEY environment variable is required");
+  }
+  if (!privateKey.startsWith("0x")) {
+    privateKey = `0x${privateKey}`;
+  }
+  if (!/^0x[0-9a-fA-F]{64}$/.test(privateKey)) {
+    throw new Error(
+      "Invalid PRIVATE_KEY format. Expected 32 bytes hex string (64 hex chars, optionally prefixed with 0x)"
+    );
   }
   const anthropicApiKey = process.env.ANTHROPIC_API_KEY;
   if (!anthropicApiKey) {
     throw new Error("ANTHROPIC_API_KEY environment variable is required");
   }
+  const liquidateAtEnv = process.env.LIQUIDATE_AT_VALUE;
+  const liquidateAtOpt = opts.liquidateAt;
+  const liquidateAtValue = liquidateAtOpt ? Number(liquidateAtOpt) : liquidateAtEnv ? Number(liquidateAtEnv) : void 0;
+  const liquidateBelowEnv = process.env.LIQUIDATE_BELOW_VALUE;
+  const liquidateBelowOpt = opts.liquidateBelow;
+  const liquidateBelowValue = liquidateBelowOpt ? Number(liquidateBelowOpt) : liquidateBelowEnv ? Number(liquidateBelowEnv) : void 0;
   return {
     privateKey,
     anthropicApiKey,
@@ -3164,18 +3672,25 @@ function loadConfig(opts) {
     autoRespawn: opts.autoRespawn ?? process.env.AUTO_RESPAWN === "true",
     ratName: opts.name || process.env.RAT_NAME || "RattusBot",
     worldAddress: process.env.WORLD_ADDRESS,
-    rpcHttpUrl: process.env.RPC_HTTP_URL
+    rpcHttpUrl: process.env.RPC_HTTP_URL,
+    liquidateAtValue,
+    liquidateBelowValue
   };
 }
 
 // src/index.ts
-var program = new Command().name("rattus-bot").description("Autonomous rat.fun player bot").version("1.0.0").option("-c, --chain <id>", "Chain ID (8453=Base, 84532=Base Sepolia, 31337=local)").option("-s, --selector <type>", "Trip selector: claude or heuristic").option("-r, --auto-respawn", "Automatically create new rat on death").option("-n, --name <name>", "Name for the rat").action(async (options) => {
+var program = new Command().name("rattus-bot").description("Autonomous rat.fun player bot").version("1.0.0").option("-c, --chain <id>", "Chain ID (8453=Base, 84532=Base Sepolia, 31337=local)").option("-s, --selector <type>", "Trip selector: claude or heuristic").option("-r, --auto-respawn", "Automatically create new rat on death").option("-n, --name <name>", "Name for the rat").option("-l, --liquidate-at <value>", "Liquidate rat when total value reaches this threshold").option(
+  "-b, --liquidate-below <value>",
+  "Liquidate rat when total value falls below this threshold"
+).action(async (options) => {
   try {
     const config = loadConfig({
       chain: options.chain,
       selector: options.selector,
       autoRespawn: options.autoRespawn,
-      name: options.name
+      name: options.name,
+      liquidateAt: options.liquidateAt,
+      liquidateBelow: options.liquidateBelow
     });
     await runBot(config);
   } catch (error) {
