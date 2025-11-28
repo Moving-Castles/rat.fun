@@ -50,12 +50,12 @@ export async function isPermit2AllowedMaxRequired(
   walletAddress: Hex,
   tokenAddress: Hex
 ) {
-  const addresses = getAddresses(publicClient.chain.id)
+  const permit2Address = getAddresses(publicClient.chain.id).permit2
   const allowance = await publicClient.readContract({
     address: tokenAddress,
     abi: erc20Abi,
     functionName: "allowance",
-    args: [walletAddress, addresses.permit2]
+    args: [walletAddress, permit2Address]
   })
   return allowance < maxUint256
 }
@@ -68,12 +68,12 @@ export async function permit2AllowMax(
   walletClient: WalletClient<Transport, Chain, Account>,
   tokenAddress: Hex
 ) {
-  const addresses = getAddresses(publicClient.chain.id)
+  const permit2Address = getAddresses(publicClient.chain.id).permit2
   const txHash = await walletClient.writeContract({
     address: tokenAddress,
     abi: erc20Abi,
     functionName: "approve",
-    args: [addresses.permit2, maxUint256]
+    args: [permit2Address, maxUint256]
   })
   const receipt = await publicClient.waitForTransactionReceipt({ hash: txHash })
   return {
@@ -114,9 +114,9 @@ export async function signPermit2(
       token: tokenAddress,
       amount,
       expiration: nowSec + 3600n,
-      nonce: nonce
+      nonce
     },
-    spender: spender,
+    spender,
     sigDeadline: nowSec + 3600n
   } as const satisfies Permit2PermitData
 

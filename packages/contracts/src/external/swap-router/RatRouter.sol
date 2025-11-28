@@ -93,16 +93,12 @@ contract RatRouter {
     bytes calldata aerodromePath,
     PoolKey memory uniswapPoolKey,
     bool uniswapZeroForOne,
-    IPermit2.PermitTransferFrom calldata permit,
+    IPermit2.PermitSingle calldata permit,
     bytes calldata permitSignature
   ) public {
-    permit2.permitTransferFrom(
-      permit,
-      IPermit2.SignatureTransferDetails({
-          to: address(this),
-          requestedAmount: amountIn
-      }),
+    permit2.permit(
       msg.sender,
+      permit,
       permitSignature
     );
 
@@ -111,7 +107,7 @@ contract RatRouter {
       aerodromePath,
       uniswapPoolKey,
       uniswapZeroForOne,
-      permit.deadline
+      permit.details.expiration
     );
   }
 

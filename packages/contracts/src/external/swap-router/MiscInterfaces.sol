@@ -7,26 +7,18 @@ interface IWETH {
 }
 
 interface IPermit2 {
-  struct TokenPermissions {
+  struct PermitDetails {
     address token;
-    uint256 amount;
+    uint160 amount;
+    uint48 expiration;
+    uint48 nonce;
   }
 
-  struct PermitTransferFrom {
-    TokenPermissions permitted;
-    uint256 nonce;
-    uint256 deadline;
+  struct PermitSingle {
+    PermitDetails details;
+    address spender;
+    uint256 sigDeadline;
   }
 
-  struct SignatureTransferDetails {
-    address to;
-    uint256 requestedAmount;
-  }
-
-  function permitTransferFrom(
-    PermitTransferFrom calldata permit,
-    SignatureTransferDetails calldata transferDetails,
-    address owner,
-    bytes calldata signature
-  ) external;
+  function permit(address owner, PermitSingle memory permitSingle, bytes calldata signature) external;
 }
