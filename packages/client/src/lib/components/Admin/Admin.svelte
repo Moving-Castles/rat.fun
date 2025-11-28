@@ -242,7 +242,7 @@
     }
   }
 
-  const handleKeypress = e => {
+  const handleKeypress = (e: KeyboardEvent) => {
     // Only handle keyboard events on main cashboard, not on nested trip view
     if (page.route?.id?.includes("/cashboard/[tripId]")) return
 

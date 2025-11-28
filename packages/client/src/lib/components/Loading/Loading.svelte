@@ -2,7 +2,7 @@
   import { onMount, onDestroy } from "svelte"
   import { page } from "$app/state"
   import { initPublicNetwork } from "$lib/initPublicNetwork"
-  import { initEntities } from "$lib/modules/systems/initEntities"
+  import { initEntities } from "$lib/modules/chain-sync/initEntities"
   import { terminalTyper } from "$lib/modules/terminal-typer/index"
   import { generateLoadingOutput } from "$lib/components/Loading/loadingOutput"
   import { playSound } from "$lib/modules/sound"

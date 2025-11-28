@@ -1,5 +1,5 @@
 import { setupPublicNetwork } from "$lib/mud/setupPublicNetwork"
-import { createSyncProgressSystem } from "$lib/modules/systems"
+import { createSyncProgressSystem } from "$lib/modules/chain-sync"
 import { publicNetwork, initBlockListener } from "$lib/modules/network"
 import { ENVIRONMENT } from "$lib/mud/enums"
 
