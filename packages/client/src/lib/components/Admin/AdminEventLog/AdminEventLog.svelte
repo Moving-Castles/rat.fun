@@ -71,7 +71,6 @@
         }
       }}
       onpointerup={() => {
-        console.log("up")
         if (
           point.eventType === TRIP_EVENT_TYPE.DEPLETED ||
           point.eventType === TRIP_EVENT_TYPE.CREATION ||
@@ -92,7 +91,7 @@
     </div>
   {/each}
   {#if !hideUnlockEvent}
-    <button class="log-item">{UI_STRINGS.adminUnlockedMessage}</button>
+    <div class="log-item secondary">{UI_STRINGS.adminUnlockedMessage}</div>
   {/if}
 </div>
 

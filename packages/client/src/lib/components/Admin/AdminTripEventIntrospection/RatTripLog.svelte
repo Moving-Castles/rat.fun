@@ -1,52 +1,21 @@
 <script lang="ts">
+  import { onMount, onDestroy } from "svelte"
   import type { Outcome } from "@sanity-types"
   import type { MergedLogEntry } from "$lib/components/GameRun/types"
   import type { EnterTripReturnValue } from "@server/modules/types"
-  import { onMount } from "svelte"
   import { gsap } from "gsap"
   import { typeHit } from "$lib/modules/sound"
   import { HEALTH_SYMBOL } from "$lib/modules/ui/constants"
   import { mergeLog } from "$lib/components/GameRun/TripReport/Log"
 
   let { result }: { result: Outcome } = $props()
+  let timeline = $state(gsap.timeline())
 
   // ???
   let mergedLog: MergedLogEntry[] = $derived(mergeLog(result as unknown as EnterTripReturnValue))
   let logEntryElements: HTMLDivElement[] = []
 
   onMount(() => {
-    // Animate log entries in sequence
-    const timeline = gsap.timeline()
-
-    gsap.set(".header1", { opacity: 0 })
-    gsap.set(".header2", { opacity: 0 })
-    gsap.set(".separator", { opacity: 0 })
-    gsap.set(".summary-grid", { opacity: 0 })
-    timeline.call(typeHit)
-    timeline.to(".header1", {
-      opacity: 1,
-      duration: 0.1,
-      ease: "power2.out"
-    })
-    timeline.call(typeHit)
-    timeline.to(".summary-grid", {
-      opacity: 1,
-      duration: 0.1,
-      ease: "power2.out"
-    })
-    timeline.call(typeHit)
-    timeline.to(".header2", {
-      opacity: 1,
-      duration: 0.1,
-      ease: "power2.out"
-    })
-    timeline.call(typeHit)
-    timeline.to(".separator", {
-      opacity: 1,
-      duration: 0.2,
-      ease: "power2.out"
-    })
-
     logEntryElements.forEach((el, i) => {
       if (el) {
         gsap.set(el, { opacity: 0, y: 10 })
@@ -63,6 +32,12 @@
         )
       }
     })
+  })
+
+  onDestroy(() => {
+    if (timeline) {
+      timeline.clear()
+    }
   })
 </script>
 
@@ -209,6 +184,8 @@
     margin-bottom: 0.5em;
     line-height: 1.2em;
     font-size: var(--font-size-normal);
+    justify-content: flex-start;
+    align-items: flex-start;
   }
 
   .timestamp {

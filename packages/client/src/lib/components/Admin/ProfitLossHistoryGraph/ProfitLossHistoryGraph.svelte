@@ -168,8 +168,8 @@
       <div class="legend x">
         <button onclick={toggleSource} class="time-option" class:active={timeWindow === "events"}
           >{#if limitedData.length === graphData.length}{UI_STRINGS.all}&nbsp;
-          {/if}{UI_STRINGS.events.toLowerCase()} ({#if limitedData.length < graphData.length}{limitedData.length}/{graphData.length}{:else}{limitedData.length}{/if})
-          {focusedBoundingBox.x}
+          {/if}{#if limitedData.length < graphData.length}{limitedData.length}/{graphData.length}{:else}{limitedData.length}{/if}
+          {UI_STRINGS.events.toLowerCase()}
         </button>
       </div>
       <svg {width} {height}>

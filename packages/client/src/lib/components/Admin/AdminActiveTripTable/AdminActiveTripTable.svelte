@@ -48,13 +48,6 @@
 </script>
 
 <div class="admin-trip-table-container">
-  <div class="table-summary">
-    <div class="left">{UI_STRINGS.activeTrips}</div>
-    <div class="right">
-      {UI_STRINGS.profit}:
-      <SignedNumber withCurrency withTween value={$profitLoss} />
-    </div>
-  </div>
   <table class="admin-trip-table">
     <thead class="trip-table-header">
       <tr>

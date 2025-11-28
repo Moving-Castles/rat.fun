@@ -15,19 +15,19 @@
   </div>
   <div class="title">
     {#if event.eventType === TRIP_EVENT_TYPE.VISIT}
-      <span class="summary">Flashback:</span>
       <span class="summary">
-        {event.meta.playerName} sent {event.meta.ratName}
+        {event.meta.playerName} sent {event.meta.ratName} to trip #{event.meta.tripIndex}
       </span>
     {:else if event.eventType === TRIP_EVENT_TYPE.DEATH}
-      <span class="summary">Flashback:</span>
       <span class="summary">
-        {event.meta.playerName} let {event.meta.ratName} die
+        {event.meta.playerName} let {event.meta.ratName} die in trip #{event.meta.tripIndex}
       </span>
     {/if}
   </div>
   {#if event.eventType === TRIP_EVENT_TYPE.DEATH || event.eventType === TRIP_EVENT_TYPE.VISIT}
-    <SignedNumber value={event.valueChange} />
+    <span class="number">
+      <SignedNumber value={event.valueChange} />
+    </span>
   {/if}
 </div>
 
@@ -36,9 +36,13 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: black;
+    background: white;
+    color: black;
     text-align: left;
-    padding: var(--trip-item-padding);
+    padding: 2px 6px;
     font-size: var(--font-size-small);
+  }
+
+  .number {
   }
 </style>

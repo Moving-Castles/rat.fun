@@ -45,13 +45,6 @@
 </script>
 
 <div class="admin-trip-table-container">
-  <div class="table-summary">
-    <div class="left">{UI_STRINGS.pastTrips}</div>
-    <div class="right">
-      {UI_STRINGS.profit}:
-      <SignedNumber withCurrency value={$realisedProfitLoss} />
-    </div>
-  </div>
   <table class="admin-trip-table">
     <thead>
       <tr>
@@ -101,14 +94,6 @@
     width: 100%;
     table-layout: fixed;
     border-collapse: collapse;
-  }
-
-  .table-summary {
-    padding: 10px;
-    display: flex;
-    justify-content: space-between;
-    font-size: var(--font-size-normal);
-    font-family: var(--special-font-stack);
   }
 
   th {
