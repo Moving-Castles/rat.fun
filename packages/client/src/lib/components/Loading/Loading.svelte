@@ -38,7 +38,11 @@
 
   let minimumDurationComplete = $state(false)
   let walletSetupComplete = $state(false)
+  let entitiesInitialized = $state(false)
   let typer = $state<{ stop: () => void }>()
+
+  // Store player ID if we can determine it early
+  let earlyPlayerId = $state<string | null>(null)
 
   // Elements
   let loadingElement: HTMLDivElement
@@ -46,10 +50,10 @@
   let logoElement: HTMLDivElement
 
   /**
-   * Initialize wallet infrastructure and call initEntities if we have a player address.
-   * Returns true if initEntities was called (address known), false otherwise.
+   * Initialize wallet infrastructure and determine player ID if available.
+   * Does NOT call initEntities - that happens after chain sync is ready.
    */
-  async function initWalletAndEntities(): Promise<boolean> {
+  async function initWalletInfrastructure(): Promise<string | null> {
     const walletType = get(walletTypeStore)
     const network = get(publicNetwork)
 
@@ -59,11 +63,10 @@
       const address = wallet.walletClient?.account?.address
       if (address) {
         const playerId = addressToId(address)
-        console.log("[Loading] Burner wallet - initializing entities for:", playerId)
-        initEntities({ activePlayerId: playerId })
-        return true
+        console.log("[Loading] Burner wallet address found:", playerId)
+        return playerId
       }
-      return false
+      return null
     }
 
     if (walletType === WALLET_TYPE.DRAWBRIDGE) {
@@ -76,22 +79,34 @@
       const address = drawbridge.getState().userAddress
       if (address) {
         const playerId = addressToId(address)
-        console.log("[Loading] Drawbridge session found - initializing entities for:", playerId)
-        initEntities({ activePlayerId: playerId })
-        return true
+        console.log("[Loading] Drawbridge session found:", playerId)
+        return playerId
       }
 
       // No existing session - initEntities will be called in Spawn after wallet connection
       console.log("[Loading] No drawbridge session - deferring initEntities to Spawn")
-      return false
+      return null
     }
 
-    return false
+    return null
   }
 
-  // Wait for chain sync, minimum duration, AND wallet setup to complete
+  // When chain sync is ready AND we have a player ID, initialize entities
   $effect(() => {
-    if ($ready && minimumDurationComplete && walletSetupComplete) {
+    if ($ready && walletSetupComplete && !entitiesInitialized) {
+      if (earlyPlayerId) {
+        console.log("[Loading] Chain sync ready - initializing entities for:", earlyPlayerId)
+        initEntities({ activePlayerId: earlyPlayerId })
+      } else {
+        console.log("[Loading] Chain sync ready - no player ID, deferring initEntities to Spawn")
+      }
+      entitiesInitialized = true
+    }
+  })
+
+  // Wait for chain sync, minimum duration, wallet setup, AND entities init to complete
+  $effect(() => {
+    if ($ready && minimumDurationComplete && walletSetupComplete && entitiesInitialized) {
       // Stop the terminal typer
       if (typer?.stop) {
         typer.stop()
@@ -149,6 +164,7 @@
 
   onMount(async () => {
     // Setup public network and sync from indexer
+    // Note: This returns after setup, but $ready becomes true asynchronously when sync completes
     await initPublicNetwork(environment, page.url)
 
     // Start the minimum duration timer
@@ -161,9 +177,10 @@
       typer = terminalTyper(terminalBoxElement, generateLoadingOutput())
     }
 
-    // Initialize wallet and entities (if address known)
-    // Runs in parallel with chain sync for no added latency
-    await initWalletAndEntities()
+    // Initialize wallet infrastructure and get player ID if available
+    // This runs in parallel with chain sync
+    // initEntities is called in the $effect above once $ready is true
+    earlyPlayerId = await initWalletInfrastructure()
     walletSetupComplete = true
   })
 

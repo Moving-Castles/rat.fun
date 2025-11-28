@@ -19,7 +19,7 @@ export function createComponentSystem(componentKey: string) {
     // Abort if the values are exactly the same
     // In this case we assume this is directly after hydration from the indexer
     if (deepEqual(nextValue, prevValue)) {
-      logLiveUpdate(componentKey, entityID, "set", true, nextValue)
+      // logLiveUpdate(componentKey, entityID, "set", true, nextValue)
       return
     }
 
@@ -31,8 +31,8 @@ export function createComponentSystem(componentKey: string) {
         ? nextValue.value
         : nextValue
 
-    const operation = newValue === undefined ? "delete" : "set"
-    logLiveUpdate(componentKey, entityID, operation, false, newValue)
+    // const operation = newValue === undefined ? "delete" : "set"
+    // logLiveUpdate(componentKey, entityID, operation, false, newValue)
 
     entities.update(value => {
       // Create an empty entity if it does not exist
