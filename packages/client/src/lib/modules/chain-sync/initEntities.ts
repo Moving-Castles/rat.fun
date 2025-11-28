@@ -1,11 +1,10 @@
 /**
- * ========================================
- *  modules/systems/initEntities.ts
- * ========================================
- * This module initializes the entities store.
- * It transfers the components given by MUD on startup into the svelte stores
- * It also creates systems to listen to changes to game specific tables
- * Additional filtering can be added here
+ * Entity Initialization
+ *
+ * Hydrates the entities store from MUD's initial sync data.
+ * - Transfers component data from MUD indexer into Svelte stores
+ * - Creates subscriptions for live updates on game-specific tables
+ * - Additional filtering can be added here
  */
 
 import { get } from "svelte/store"
@@ -15,7 +14,7 @@ import { entities } from "$lib/modules/state/stores"
 import { createComponentSystem } from "$lib/modules/chain-sync"
 
 export function initEntities() {
-  // Only sync game specific tables
+  // Filter to only game-specific tables (excludes MUD system tables)
   const tableKeys = get(publicNetwork).tableKeys
   const filteredComponents = filterObjectByKey(get(publicNetwork).components, tableKeys)
 
