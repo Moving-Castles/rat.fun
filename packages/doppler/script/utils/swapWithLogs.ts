@@ -3,6 +3,7 @@ import {
   Chain,
   formatUnits,
   Hex,
+  maxUint128,
   parseUnits,
   PublicClient,
   Transport,
@@ -15,7 +16,7 @@ import {
   balanceOf,
   CustomQuoter,
   getPoolKey,
-  isPermit2AllowedMaxRequired,
+  isPermit2AllowanceRequired,
   permit2AllowMax,
   Permit2PermitData,
   signPermit2,
@@ -49,10 +50,11 @@ export async function swapWithLogs(
   let permit: Permit2PermitData | undefined = undefined
   let permitSignature: Hex | undefined = undefined
   if (isPermitRequired(auctionParams)) {
-    const isAllowedMaxRequired = await isPermit2AllowedMaxRequired(
+    const isAllowedMaxRequired = await isPermit2AllowanceRequired(
       publicClient,
       walletClient.account.address,
-      auctionParams.numeraire.address
+      auctionParams.numeraire.address,
+      maxUint128
     )
     if (isAllowedMaxRequired) {
       await permit2AllowMax(publicClient, walletClient, auctionParams.numeraire.address)

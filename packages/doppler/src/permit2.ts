@@ -42,13 +42,14 @@ export interface Permit2PermitData {
 }
 
 /**
- * Check if token has max allowance for permit2
+ * Check if token has sufficient allowance for permit2
  * This could be always present due to the wallet using uniswap itself, since permit2 is a global contract
  */
-export async function isPermit2AllowedMaxRequired(
+export async function isPermit2AllowanceRequired(
   publicClient: PublicClient<Transport, Chain>,
   walletAddress: Hex,
-  tokenAddress: Hex
+  tokenAddress: Hex,
+  requiredAllowance: bigint
 ) {
   const permit2Address = getAddresses(publicClient.chain.id).permit2
   const allowance = await publicClient.readContract({
@@ -57,7 +58,7 @@ export async function isPermit2AllowedMaxRequired(
     functionName: "allowance",
     args: [walletAddress, permit2Address]
   })
-  return allowance < maxUint256
+  return allowance < requiredAllowance
 }
 
 /**
