@@ -1,11 +1,51 @@
 import { get } from "svelte/store"
-import { publicNetwork } from "$lib/modules/network"
+import type { Hex, WalletClient, Chain, Account, Transport, Client } from "viem"
+import type { SmartAccount } from "viem/account-abstraction"
 import { addChain, switchChain } from "viem/actions"
 import { getAccount, getChainId, getConnectorClient } from "@wagmi/core"
-import { getChain } from "$lib/mud/utils"
+import { transactionQueue } from "@latticexyz/common/actions"
+
+import { networkConfig } from "$lib/network"
 import { getDrawbridge } from "$lib/modules/drawbridge"
-import { WagmiConfigUnavailableError } from "../error-handling/errors"
-import { ensureWriteContract, type WalletTransactionClient } from "$lib/mud/setupWalletNetwork"
+import { WagmiConfigUnavailableError, NetworkNotInitializedError } from "../error-handling/errors"
+
+// Types for wallet clients
+type WalletClientInput =
+  | WalletClient<Transport, Chain, Account>
+  | Client<Transport, Chain, Account>
+  | Client<Transport, Chain, SmartAccount>
+
+type WriteContractArgs = {
+  address: Hex
+  abi: unknown
+  functionName: string
+  args?: unknown[]
+  gas?: bigint
+  value?: bigint
+}
+
+export type WalletTransactionClient = WalletClientInput & {
+  writeContract: (args: WriteContractArgs) => Promise<Hex>
+}
+
+/**
+ * Ensure the provided viem client exposes a `writeContract` helper.
+ */
+function ensureWriteContract(client: WalletClientInput): WalletTransactionClient {
+  if ("writeContract" in client && typeof client.writeContract === "function") {
+    return client as WalletTransactionClient
+  }
+
+  if ("extend" in client && typeof client.extend === "function") {
+    const extended = (client as WalletClient<Transport, Chain, Account>).extend(transactionQueue())
+    if ("writeContract" in extended && typeof extended.writeContract === "function") {
+      return extended as WalletTransactionClient
+    }
+    return extended as WalletTransactionClient
+  }
+
+  return client as WalletTransactionClient
+}
 
 /**
  * Returns the wallet connector client from wagmi.
@@ -39,15 +79,21 @@ export async function prepareConnectorClientForTransaction(): Promise<WalletTran
   if (!wagmiConfig) {
     throw new WagmiConfigUnavailableError()
   }
+
+  const config = get(networkConfig)
+  if (!config) {
+    throw new NetworkNotInitializedError()
+  }
+
   let connectorClient = await getConnectorClient(wagmiConfig)
 
   // User's wallet may switch between different chains, ensure the current chain is correct
-  const expectedChainId = get(publicNetwork).config.chain.id
+  const expectedChainId = config.chainId
   if (getChainId(wagmiConfig) !== expectedChainId) {
     try {
       await switchChain(connectorClient, { id: expectedChainId })
     } catch {
-      await addChain(connectorClient, { chain: getChain(expectedChainId) })
+      await addChain(connectorClient, { chain: config.chain })
       await switchChain(connectorClient, { id: expectedChainId })
     }
 

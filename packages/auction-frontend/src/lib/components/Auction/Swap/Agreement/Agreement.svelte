@@ -3,7 +3,7 @@
   import { BigButton, Checkbox } from "$lib/components/Shared"
   import { prepareConnectorClientForTransaction } from "$lib/modules/drawbridge/connector"
   import { userAddress } from "$lib/modules/drawbridge"
-  import { publicNetwork } from "$lib/modules/network"
+  import { publicClient as publicClientStore } from "$lib/network"
   import { asPublicClient, asWalletClient } from "$lib/utils/clientAdapter"
   import { swapState, SWAP_STATE } from "../state.svelte"
 
@@ -52,7 +52,7 @@
         auctionParams.token.address,
         countryCode
       )
-      await asPublicClient($publicNetwork.publicClient).waitForTransactionReceipt({ hash: txHash })
+      await asPublicClient($publicClientStore!).waitForTransactionReceipt({ hash: txHash })
 
       // Update state and transition
       swapState.data.setSavedCountryCode(countryCode)

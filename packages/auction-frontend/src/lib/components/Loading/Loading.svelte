@@ -1,11 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte"
   import { page } from "$app/state"
-  import { initPublicNetwork } from "$lib/initPublicNetwork"
-  import { initEntities } from "$lib/modules/chain-sync/initEntities"
-  import { loadingPercentage, ready } from "$lib/modules/network"
-
-  import { ENVIRONMENT } from "$lib/mud/enums"
+  import { initNetwork, networkReady, loadingMessage, ENVIRONMENT } from "$lib/network"
 
   const {
     environment,
@@ -15,33 +11,25 @@
     loaded: () => void
   } = $props()
 
-  // Elements
-  let loadingElement: HTMLDivElement
-  let logoElement: HTMLDivElement
-
-  // Wait for both chain sync and minimum duration to complete
+  // When network is ready, call loaded callback
   $effect(() => {
-    if ($ready) {
-      // Initializes and synchronises MUD entities with our state variables
-      initEntities()
+    if ($networkReady) {
       loaded()
     }
   })
 
   onMount(async () => {
-    // This sets up the public network and listens to the SyncProgress component
-    // When sync is complete, the ready store is set to true
-    // We listen to for this in the $effect above
-    await initPublicNetwork(environment, page.url)
+    // Initialize network (drawbridge + read external addresses)
+    await initNetwork(environment, page.url)
   })
 </script>
 
-<div class="loading" bind:this={loadingElement}>
+<div class="loading">
   <div class="status-box">
-    <div class="mc-logo" bind:this={logoElement}>
+    <div class="mc-logo">
       <img src="/images/logo.png" alt="Moving Castles GmbH" />
     </div>
-    <div>{$loadingPercentage}</div>
+    <div>{$loadingMessage}</div>
   </div>
 </div>
 

@@ -1,10 +1,5 @@
 import { maxUint256 } from "viem"
-import { WALLET_TYPE } from "$lib/mud/enums"
-import { get } from "svelte/store"
-import { walletType } from "$lib/modules/network"
 import { executeTransaction } from "./executeTransaction"
-
-// const NAMESPACE = "ratfun__"
 
 export enum WorldFunctions {
   Approve = "ERC20-approve"
@@ -14,22 +9,13 @@ export enum WorldFunctions {
 
 export async function approve(address: string, value: bigint) {
   const scaledValue = value * 10n ** 18n
-  const useConnectorClient = get(walletType) === WALLET_TYPE.DRAWBRIDGE
-  return await executeTransaction(WorldFunctions.Approve, [address, scaledValue], {
-    useConnectorClient
-  })
+  return await executeTransaction(WorldFunctions.Approve, [address, scaledValue])
 }
 
 export async function approveMax(address: string) {
-  const useConnectorClient = get(walletType) === WALLET_TYPE.DRAWBRIDGE
-  return await executeTransaction(WorldFunctions.Approve, [address, maxUint256], {
-    useConnectorClient
-  })
+  return await executeTransaction(WorldFunctions.Approve, [address, maxUint256])
 }
 
 export async function revokeApproval(address: string) {
-  const useConnectorClient = get(walletType) === WALLET_TYPE.DRAWBRIDGE
-  return await executeTransaction(WorldFunctions.Approve, [address, 0n], {
-    useConnectorClient
-  })
+  return await executeTransaction(WorldFunctions.Approve, [address, 0n])
 }

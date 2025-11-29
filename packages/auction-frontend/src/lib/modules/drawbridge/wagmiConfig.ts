@@ -1,22 +1,36 @@
-import { Chain, http } from "viem"
+import { type Chain, http } from "viem"
+import { base, baseSepolia, foundry } from "viem/chains"
 import { CreateConnectorFn } from "@wagmi/core"
 import { injected, safe } from "wagmi/connectors"
-import {
-  extendedBase,
-  extendedBaseSepolia,
-  extendedMudFoundry
-} from "$lib/mud/extendedChainConfigs"
+import { PUBLIC_BASE_RPC_URL, PUBLIC_BASE_SEPOLIA_RPC_URL } from "$env/static/public"
 
-export const chains = [
-  extendedBase,
-  extendedBaseSepolia,
-  extendedMudFoundry
-] as const satisfies Chain[]
+/**
+ * Extended chain configs with custom RPC URLs
+ */
+const extendedBase = {
+  ...base,
+  rpcUrls: {
+    default: {
+      http: [PUBLIC_BASE_RPC_URL, ...base.rpcUrls.default.http]
+    }
+  }
+} as const satisfies Chain
+
+const extendedBaseSepolia = {
+  ...baseSepolia,
+  rpcUrls: {
+    default: {
+      http: [PUBLIC_BASE_SEPOLIA_RPC_URL, ...baseSepolia.rpcUrls.default.http]
+    }
+  }
+} as const satisfies Chain
+
+export const chains = [extendedBase, extendedBaseSepolia, foundry] as const satisfies Chain[]
 
 export const transports = {
   [extendedBase.id]: http(),
   [extendedBaseSepolia.id]: http(),
-  [extendedMudFoundry.id]: http()
+  [foundry.id]: http()
 } as const
 
 /**

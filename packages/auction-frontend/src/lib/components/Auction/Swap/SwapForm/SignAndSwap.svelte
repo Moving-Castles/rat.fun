@@ -3,7 +3,7 @@
   import { BigButton, Checkbox } from "$lib/components/Shared"
   import { prepareConnectorClientForTransaction } from "$lib/modules/drawbridge/connector"
   import { userAddress } from "$lib/modules/drawbridge"
-  import { publicNetwork } from "$lib/modules/network"
+  import { publicClient as publicClientStore } from "$lib/network"
   import { ratRouterAddress, swapExactIn } from "$lib/modules/swap-router"
   import { signTypedData } from "viem/actions"
   import { asPublicClient } from "$lib/utils/clientAdapter"
@@ -53,7 +53,7 @@
       // (because permit is always for input currency)
       const amountPadded = isExactOut ? (amountIn * 110n) / 100n : amountIn
       const result = await signPermit2(
-        asPublicClient($publicNetwork.publicClient),
+        asPublicClient($publicClientStore!),
         extendedClient,
         swapState.data.fromCurrency.address,
         ratRouterAddress,
@@ -82,7 +82,7 @@
         result.permitSignature
       )
       const swapResult = await waitForDopplerSwapReceipt(
-        asPublicClient($publicNetwork.publicClient),
+        asPublicClient($publicClientStore!),
         swapTxHash
       )
       console.log("[SignAndSwap] Swap executed successfully:", swapResult)

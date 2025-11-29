@@ -1,6 +1,6 @@
 import * as Sentry from "@sentry/sveltekit"
 import { get } from "svelte/store"
-import { environment as environmentStore } from "$lib/modules/network"
+import { environment as environmentStore } from "$lib/network"
 import { PUBLIC_SENTRY_DSN } from "$env/static/public"
 import { version } from "$app/environment"
 import { AppError, type ExpectedError } from "./errors"

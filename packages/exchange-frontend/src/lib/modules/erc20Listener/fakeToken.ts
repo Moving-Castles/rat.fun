@@ -1,7 +1,7 @@
 import { Hex } from "viem"
 import { get } from "svelte/store"
-import { publicNetwork } from "$lib/modules/network"
-import { playerAddress } from "$lib/modules/state/stores"
+import { publicClient as publicClientStore } from "$lib/network"
+import { userAddress } from "$lib/modules/drawbridge"
 import { readPlayerERC20Allowance, readPlayerERC20Balance } from "$lib/modules/erc20Listener"
 import { playerFakeTokenAllowance, playerFakeTokenBalance } from "$lib/modules/erc20Listener/stores"
 import {
@@ -15,9 +15,14 @@ let fakeAllowanceInterval: NodeJS.Timeout | null = null
 const FAKE_ALLOWANCE_INTERVAL = 60_000 // 1 minute
 
 export async function refetchFakeTokenAllowance() {
+  const pubClient = get(publicClientStore)
+  const playerAddr = get(userAddress) as Hex | null
+
+  if (!pubClient || !playerAddr) return
+
   const allowance = await readPlayerERC20Allowance(
-    get(publicNetwork),
-    get(playerAddress) as Hex,
+    pubClient,
+    playerAddr,
     fakeTokenExchangeAddress,
     fakeTokenErc20Address
   )
@@ -25,11 +30,12 @@ export async function refetchFakeTokenAllowance() {
 }
 
 export async function refetchFakeTokenBalance() {
-  const balance = await readPlayerERC20Balance(
-    get(publicNetwork),
-    get(playerAddress) as Hex,
-    fakeTokenErc20Address
-  )
+  const pubClient = get(publicClientStore)
+  const playerAddr = get(userAddress) as Hex | null
+
+  if (!pubClient || !playerAddr) return
+
+  const balance = await readPlayerERC20Balance(pubClient, playerAddr, fakeTokenErc20Address)
   playerFakeTokenBalance.set(balance)
 }
 
@@ -40,10 +46,10 @@ export function initFakeTokenListener() {
   // Clear old intervals
   stopFakeTokenListener()
 
-  const currentNetwork = get(publicNetwork)
-  const currentPlayerAddress = get(playerAddress) as Hex
+  const currentPublicClient = get(publicClientStore)
+  const currentPlayerAddress = get(userAddress) as Hex | null
 
-  if (!currentNetwork || !currentPlayerAddress) {
+  if (!currentPublicClient || !currentPlayerAddress) {
     return
   }
 

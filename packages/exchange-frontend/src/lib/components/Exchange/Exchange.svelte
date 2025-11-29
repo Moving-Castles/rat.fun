@@ -13,7 +13,6 @@
     Done
   } from "$lib/components/Exchange"
   import { userAddress } from "$lib/modules/drawbridge"
-  import { playerAddress } from "$lib/modules/state/stores"
   import { initErc20Listener } from "$lib/modules/erc20Listener"
   import { initFakeTokenListener } from "$lib/modules/erc20Listener/fakeToken"
   import WalletInfo from "$lib/components/WalletInfo/WalletInfo.svelte"
@@ -22,8 +21,7 @@
   $effect(() => {
     if ($userAddress) {
       console.log("[Exchange] Wallet connected:", $userAddress)
-      // Set player address and initialize token listeners
-      playerAddress.set($userAddress)
+      // Initialize token listeners
       initErc20Listener()
       initFakeTokenListener()
       checkStateAndTransition()
@@ -51,8 +49,7 @@
     if ($userAddress) {
       console.log("[Exchange] Wallet already connected on mount:", $userAddress)
 
-      // Set player address and initialize token listeners
-      playerAddress.set($userAddress)
+      // Initialize token listeners
       initErc20Listener()
       initFakeTokenListener()
 

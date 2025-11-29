@@ -1,17 +1,16 @@
 <script lang="ts">
   import { onMount } from "svelte"
   import type { Hex } from "viem"
+  import type { PublicClient } from "drawbridge"
   import { getProofFromJson, type GetProofReturnType } from "merkle-tree-airdrop"
   import merkleTree from "merkle-tree-airdrop/static/test_tree.json" with { type: "json" }
-  import { publicNetwork } from "$lib/modules/network"
+  import { publicClient as publicClientStore } from "$lib/network"
   import { CLAIM_STATE, claimState } from "$lib/components/Claim/state.svelte"
   import { Available, ConnectWalletForm, Done } from "$lib/components/Claim"
   import { userAddress } from "$lib/modules/drawbridge"
-  import { playerAddress } from "$lib/modules/state/stores"
   import { initErc20Listener } from "$lib/modules/erc20Listener"
   import WalletInfo from "$lib/components/WalletInfo/WalletInfo.svelte"
   import { ERC20AirdropMerkleProofAbi } from "contracts/externalAbis"
-  import type { SetupPublicNetworkResult } from "$lib/mud/setupPublicNetwork"
 
   // TODO this is a test contract on base mainnet
   const airdropContractAddress = "0xD6d2e85bEfD703847cDBa78589c4c67b7a147020" as const
@@ -29,8 +28,8 @@
   })
 
   // Check claim status
-  async function checkClaimStatus(publicNetwork: SetupPublicNetworkResult, playerAddress: Hex) {
-    return await publicNetwork.publicClient.readContract({
+  async function checkClaimStatus(publicClient: PublicClient, playerAddress: Hex) {
+    return await publicClient.readContract({
       address: airdropContractAddress,
       abi: ERC20AirdropMerkleProofAbi,
       functionName: "hasClaimed",
@@ -39,8 +38,9 @@
   }
 
   $effect(() => {
-    if ($userAddress && hasClaimed === undefined) {
-      checkClaimStatus($publicNetwork, $userAddress).then(result => {
+    const pubClient = $publicClientStore
+    if ($userAddress && hasClaimed === undefined && pubClient) {
+      checkClaimStatus(pubClient, $userAddress).then(result => {
         hasClaimed = result as boolean
       })
     }
@@ -51,8 +51,6 @@
     if ($userAddress) {
       console.log("[Claim] Wallet connected:", $userAddress)
 
-      // Sync drawbridge userAddress to playerAddress store (for WalletInfo component)
-      playerAddress.set($userAddress)
       // Initialize ERC20 listener (for balance display in WalletInfo)
       initErc20Listener()
 
@@ -76,8 +74,7 @@
     // If wallet is already connected (from previous session), transition to checking
     if ($userAddress) {
       console.log("[Claim] Wallet already connected on mount:", $userAddress)
-      // Sync to playerAddress store and initialize listeners
-      playerAddress.set($userAddress)
+      // Initialize listeners
       initErc20Listener()
       claimState.state.transitionTo(CLAIM_STATE.CHECKING)
     } else {

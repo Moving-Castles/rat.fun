@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { playerAddress, player } from "$lib/modules/state/stores"
-  import { playerFakeTokenBalance, playerERC20Balance } from "$lib/modules/erc20Listener/stores"
+  import { playerERC20Balance } from "$lib/modules/erc20Listener/stores"
+  import { userAddress } from "$lib/modules/drawbridge"
   import { shortenAddress } from "$lib/modules/utils"
   import { disconnectWallet } from "$lib/modules/drawbridge/connector"
   import { SmallButton } from "$lib/components/Shared"
@@ -46,17 +46,14 @@
     }
   })
 
-  // Only show if wallet is connected (playerAddress is not the default value)
-  let isConnected = $derived($playerAddress && $playerAddress !== "0x0")
+  // Only show if wallet is connected
+  let isConnected = $derived(!!$userAddress)
 </script>
 
 {#if isConnected}
   <div class="wallet-info">
     <button class="wallet-box" bind:this={walletBoxElement} onclick={toggleDropdown}>
-      <div class="address">{shortenAddress($playerAddress)}</div>
-      {#if $player?.name}
-        <div class="name">{$player.name}</div>
-      {/if}
+      <div class="address">{shortenAddress($userAddress!)}</div>
     </button>
 
     {#if showDropdown}
@@ -64,17 +61,7 @@
         <div class="dropdown-content">
           <div class="info-row">
             <span class="label">Address:</span>
-            <span class="value">{shortenAddress($playerAddress)}</span>
-          </div>
-          {#if $player?.name}
-            <div class="info-row">
-              <span class="label">Name:</span>
-              <span class="value">{$player.name}</span>
-            </div>
-          {/if}
-          <div class="info-row">
-            <span class="label">$FAKERAT:</span>
-            <span class="value">{$playerFakeTokenBalance}</span>
+            <span class="value">{shortenAddress($userAddress!)}</span>
           </div>
           <div class="info-row">
             <span class="label">$RAT:</span>
@@ -116,11 +103,6 @@
 
       .address {
         font-weight: bold;
-      }
-
-      .name {
-        font-size: var(--font-size-tiny);
-        opacity: 0.8;
       }
     }
 

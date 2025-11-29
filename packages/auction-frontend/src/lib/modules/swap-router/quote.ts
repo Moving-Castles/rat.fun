@@ -3,7 +3,7 @@ import { Hex } from "viem"
 import { simulateContract } from "viem/actions"
 import { get } from "svelte/store"
 import { RatRouterAbi } from "contracts/externalAbis"
-import { publicNetwork } from "../network"
+import { publicClient as publicClientStore } from "$lib/network"
 import { userAddress } from "../drawbridge"
 import { prepareSwapRouterPathArgs, ratRouterAddress } from "./currency"
 
@@ -12,7 +12,8 @@ export async function quoteExactIn(
   auctionParams: AuctionParams,
   amountIn: bigint
 ) {
-  const publicClient = get(publicNetwork).publicClient
+  const publicClient = get(publicClientStore)
+  if (!publicClient) throw new Error("Network not initialized")
 
   const { result } = await simulateContract(publicClient, {
     address: ratRouterAddress,
@@ -33,7 +34,8 @@ export async function quoteExactOut(
   auctionParams: AuctionParams,
   amountOut: bigint
 ) {
-  const publicClient = get(publicNetwork).publicClient
+  const publicClient = get(publicClientStore)
+  if (!publicClient) throw new Error("Network not initialized")
 
   const { result } = await simulateContract(publicClient, {
     address: ratRouterAddress,

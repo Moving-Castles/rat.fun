@@ -2,7 +2,7 @@
   import { permit2AllowMax } from "doppler"
   import { BigButton } from "$lib/components/Shared"
   import { prepareConnectorClientForTransaction } from "$lib/modules/drawbridge/connector"
-  import { publicNetwork } from "$lib/modules/network"
+  import { publicClient as publicClientStore } from "$lib/network"
   import { asPublicClient, asWalletClient } from "$lib/utils/clientAdapter"
   import { swapState, SWAP_STATE } from "../state.svelte"
 
@@ -18,7 +18,7 @@
     try {
       const client = await prepareConnectorClientForTransaction()
       const { receipt } = await permit2AllowMax(
-        asPublicClient($publicNetwork.publicClient),
+        asPublicClient($publicClientStore!),
         asWalletClient(client),
         swapState.data.fromCurrency.address
       )

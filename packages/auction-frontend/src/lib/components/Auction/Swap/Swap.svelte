@@ -9,7 +9,7 @@
     buyLimitGetCountryCode
   } from "doppler"
   import { userAddress } from "$lib/modules/drawbridge"
-  import { publicNetwork } from "$lib/modules/network"
+  import { publicClient as publicClientStore, networkConfig } from "$lib/network"
   import { isPermit2Required } from "$lib/modules/swap-router"
   import { onMount } from "svelte"
   import { asPublicClient } from "$lib/utils/clientAdapter"
@@ -60,14 +60,17 @@
     // 2. Initialize shared data in swapState
     swapState.data.setAuctionParams(auctionParams)
 
-    const publicClient = asPublicClient($publicNetwork.publicClient)
+    const client = $publicClientStore
+    const config = $networkConfig
+    if (!client || !config) {
+      console.error("[Swap] Network not initialized")
+      return
+    }
+
+    const adaptedClient = asPublicClient(client)
 
     // Initialize quoter
-    const quoter = new CustomQuoter(
-      publicClient,
-      $publicNetwork.publicClient.chain.id,
-      auctionParams
-    )
+    const quoter = new CustomQuoter(adaptedClient, config.chainId, auctionParams)
     swapState.data.setQuoter(quoter)
 
     console.log("[Swap] quoter:", quoter)
@@ -79,7 +82,7 @@
 
     // Load spent amount
     const spentAmount = await buyLimitSpentAmount(
-      publicClient,
+      adaptedClient,
       auctionParams.token.address,
       $userAddress
     )
@@ -87,7 +90,7 @@
 
     // Load country code
     const countryCode = await buyLimitGetCountryCode(
-      publicClient,
+      adaptedClient,
       auctionParams.token.address,
       $userAddress
     )
@@ -97,7 +100,7 @@
     const isPermit2Req =
       isPermit2Required(swapState.data.fromCurrency.address) &&
       (await isPermit2AllowanceRequired(
-        publicClient,
+        adaptedClient,
         $userAddress,
         swapState.data.fromCurrency.address,
         // TODO replace this with actual required allowance for the swap
@@ -110,7 +113,7 @@
     // TODO replace numeraire balance with fromCurrency balance
     // Load balances
     const unformattedNumeraireBalance = await balanceOf(
-      publicClient,
+      adaptedClient,
       auctionParams.numeraire.address,
       $userAddress
     )
@@ -120,7 +123,7 @@
     swapState.data.setNumeraireBalance(numeraireBalance)
 
     const unformattedTokenBalance = await balanceOf(
-      publicClient,
+      adaptedClient,
       auctionParams.token.address,
       $userAddress
     )
