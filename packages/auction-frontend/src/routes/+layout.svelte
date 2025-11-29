@@ -9,7 +9,6 @@
   import { browser } from "$app/environment"
   import { UIState } from "$lib/modules/ui/state.svelte"
   import { UI } from "$lib/modules/ui/enums"
-  import { environment } from "$lib/network"
   import { cleanupDrawbridge } from "$lib/modules/drawbridge"
 
   // Components
@@ -43,7 +42,7 @@
 
 <div class="bg">
   {#if $UIState === UI.LOADING}
-    <Loading environment={$environment} {loaded} />
+    <Loading {loaded} />
   {:else if $UIState === UI.READY}
     <div class="context-main">
       <Auction />

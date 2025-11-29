@@ -34,7 +34,6 @@
     "vite-plugin-devtools-json": "^1.0.0"
   },
   "dependencies": {
-    "@latticexyz/common": "2.2.23-94cac741be24bb5743f2f36235cc3bb40012417a",
     "@sentry/sveltekit": "^10.27.0",
     "@wagmi/core": "2.22.1",
     "@whetstone-research/doppler-sdk": "npm:@dk1a/doppler-sdk-fork@0.0.1-alpha.57",

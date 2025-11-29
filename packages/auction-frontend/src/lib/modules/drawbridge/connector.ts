@@ -1,9 +1,8 @@
 import { get } from "svelte/store"
 import type { Hex, WalletClient, Chain, Account, Transport, Client } from "viem"
 import type { SmartAccount } from "viem/account-abstraction"
-import { addChain, switchChain } from "viem/actions"
+import { addChain, switchChain, writeContract } from "viem/actions"
 import { getAccount, getChainId, getConnectorClient } from "@wagmi/core"
-import { transactionQueue } from "@latticexyz/common/actions"
 
 import { networkConfig } from "$lib/network"
 import { getDrawbridge } from "$lib/modules/drawbridge"
@@ -30,21 +29,22 @@ export type WalletTransactionClient = WalletClientInput & {
 
 /**
  * Ensure the provided viem client exposes a `writeContract` helper.
+ * Uses viem's native writeContract action.
  */
 function ensureWriteContract(client: WalletClientInput): WalletTransactionClient {
   if ("writeContract" in client && typeof client.writeContract === "function") {
     return client as WalletTransactionClient
   }
 
-  if ("extend" in client && typeof client.extend === "function") {
-    const extended = (client as WalletClient<Transport, Chain, Account>).extend(transactionQueue())
-    if ("writeContract" in extended && typeof extended.writeContract === "function") {
-      return extended as WalletTransactionClient
-    }
-    return extended as WalletTransactionClient
+  // Wrap the client with viem's writeContract
+  const wrappedClient = client as WalletTransactionClient
+  wrappedClient.writeContract = async (args: WriteContractArgs) => {
+    return writeContract(
+      client as WalletClient<Transport, Chain, Account>,
+      args as Parameters<typeof writeContract>[1]
+    )
   }
-
-  return client as WalletTransactionClient
+  return wrappedClient
 }
 
 /**
@@ -72,7 +72,6 @@ export async function disconnectWallet() {
  * Prepares the wallet client obtained from wagmi for sending onchain transactions.
  * - Expects wagmi provider to already have a wallet connected to it by drawbridge.
  * - Wallet may switch between different chains, ensure the current chain is correct.
- * - Extend the client with MUD's transactionQueue, since it comes directly from wagmi.
  */
 export async function prepareConnectorClientForTransaction(): Promise<WalletTransactionClient> {
   const wagmiConfig = getDrawbridge().getWagmiConfig()
@@ -102,6 +101,6 @@ export async function prepareConnectorClientForTransaction(): Promise<WalletTran
       connector: getAccount(wagmiConfig).connector
     })
   }
-  // MUD's `transactionQueue` extends the client with `writeContract` method
+
   return ensureWriteContract(connectorClient)
 }

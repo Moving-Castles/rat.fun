@@ -1,11 +1,11 @@
 import { type Chain, http } from "viem"
-import { base, baseSepolia, foundry } from "viem/chains"
+import { base } from "viem/chains"
 import { CreateConnectorFn } from "@wagmi/core"
 import { injected, safe } from "wagmi/connectors"
-import { PUBLIC_BASE_RPC_URL, PUBLIC_BASE_SEPOLIA_RPC_URL } from "$env/static/public"
+import { PUBLIC_BASE_RPC_URL } from "$env/static/public"
 
 /**
- * Extended chain configs with custom RPC URLs
+ * Base mainnet chain with custom RPC URL
  */
 const extendedBase = {
   ...base,
@@ -16,26 +16,14 @@ const extendedBase = {
   }
 } as const satisfies Chain
 
-const extendedBaseSepolia = {
-  ...baseSepolia,
-  rpcUrls: {
-    default: {
-      http: [PUBLIC_BASE_SEPOLIA_RPC_URL, ...baseSepolia.rpcUrls.default.http]
-    }
-  }
-} as const satisfies Chain
-
-export const chains = [extendedBase, extendedBaseSepolia, foundry] as const satisfies Chain[]
+export const chains = [extendedBase] as const satisfies Chain[]
 
 export const transports = {
-  [extendedBase.id]: http(),
-  [extendedBaseSepolia.id]: http(),
-  [foundry.id]: http()
+  [extendedBase.id]: http()
 } as const
 
 /**
  * Get connectors based on environment
- * Simplified for claim-frontend - no WalletConnect complexity needed
  */
 export function getConnectors(): CreateConnectorFn[] {
   const connectors: CreateConnectorFn[] = []

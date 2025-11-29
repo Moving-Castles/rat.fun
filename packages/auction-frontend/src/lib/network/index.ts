@@ -4,15 +4,6 @@
  * Re-exports all network functionality.
  */
 
-export { ENVIRONMENT, getEnvironmentFromUrl, getNetworkConfig, type NetworkConfig } from "./config"
-export {
-  environment,
-  networkConfig,
-  publicClient,
-  worldAddress,
-  externalAddresses,
-  networkReady,
-  loadingMessage,
-  type ExternalAddresses
-} from "./stores"
-export { initNetwork, getPublicClient, getExternalAddresses } from "./init"
+export { getNetworkConfig, type NetworkConfig } from "./config"
+export { networkConfig, publicClient, networkReady, loadingMessage } from "./stores"
+export { initNetwork, getPublicClient } from "./init"

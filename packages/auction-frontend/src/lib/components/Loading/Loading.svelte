@@ -1,13 +1,10 @@
 <script lang="ts">
   import { onMount } from "svelte"
-  import { page } from "$app/state"
-  import { initNetwork, networkReady, loadingMessage, ENVIRONMENT } from "$lib/network"
+  import { initNetwork, networkReady, loadingMessage } from "$lib/network"
 
   const {
-    environment,
     loaded = () => {}
   }: {
-    environment: ENVIRONMENT
     loaded: () => void
   } = $props()
 
@@ -19,8 +16,8 @@
   })
 
   onMount(async () => {
-    // Initialize network (drawbridge + read external addresses)
-    await initNetwork(environment, page.url)
+    // Initialize network (drawbridge)
+    await initNetwork()
   })
 </script>
 
