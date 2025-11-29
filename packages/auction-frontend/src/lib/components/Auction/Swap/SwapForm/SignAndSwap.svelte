@@ -14,10 +14,25 @@
   import { signTypedData } from "viem/actions"
   import { asPublicClient, asWalletClient } from "$lib/utils/clientAdapter"
   import { swapState, SWAP_STATE } from "../state.svelte"
+  import { tokenBalances } from "$lib/modules/balances"
 
   let isProcessing = $state(false)
   let processingStep = $state("")
   let waiveWithdrawal = $state(false)
+
+  /**
+   * Check if the current input amount exceeds the user's balance
+   */
+  function isAmountExceedsBalance(): boolean {
+    const fromCurrency = swapState.data.fromCurrency
+    const amountIn = swapState.data.amountIn
+    if (!fromCurrency || amountIn === undefined) return false
+
+    const balance = $tokenBalances[fromCurrency.address]
+    if (!balance) return false
+
+    return amountIn > balance.balance
+  }
 
   /**
    * Check and approve Permit2 if needed, sign permit, and execute swap
@@ -152,8 +167,15 @@
 
 <div class="button-container">
   <BigButton
-    disabled={!swapState.data.amountIn || isProcessing || !waiveWithdrawal}
-    text={isProcessing ? processingStep || "Processing..." : "Swap"}
+    disabled={!swapState.data.amountIn ||
+      isProcessing ||
+      !waiveWithdrawal ||
+      isAmountExceedsBalance()}
+    text={isProcessing
+      ? processingStep || "Processing..."
+      : isAmountExceedsBalance()
+        ? "Insufficient balance"
+        : "Swap"}
     onclick={() => {
       signAndSwap()
     }}

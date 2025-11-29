@@ -42,8 +42,7 @@ export async function initNetwork(): Promise<void> {
     networkReady.set(true)
 
     console.log("[Network] Initialized:", {
-      chainId: config.chainId,
-      ratTokenAddress: config.ratTokenAddress
+      chainId: config.chainId
     })
   } catch (error) {
     console.error("[Network] Initialization failed:", error)

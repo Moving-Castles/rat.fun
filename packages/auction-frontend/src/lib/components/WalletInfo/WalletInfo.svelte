@@ -1,9 +1,10 @@
 <script lang="ts">
-  import { playerERC20Balance } from "$lib/modules/erc20Listener/stores"
   import { userAddress } from "$lib/modules/drawbridge"
   import { shortenAddress } from "$lib/modules/utils"
   import { disconnectWallet } from "$lib/modules/drawbridge/connector"
   import { SmallButton } from "$lib/components/Shared"
+  import { tokenBalances } from "$lib/modules/balances"
+  import { trackedCurrencies } from "$lib/modules/swap-router"
 
   let showDropdown = $state(false)
   let dropdownElement = $state<HTMLElement | undefined>(undefined)
@@ -63,10 +64,17 @@
             <span class="label">Address:</span>
             <span class="value">{shortenAddress($userAddress!)}</span>
           </div>
-          <div class="info-row">
-            <span class="label">$RAT:</span>
-            <span class="value">{$playerERC20Balance}</span>
-          </div>
+          {#each trackedCurrencies as currency}
+            {@const balance = $tokenBalances[currency.address]}
+            <div class="info-row">
+              <span class="label">{currency.symbol}:</span>
+              <span class="value">
+                {balance?.formatted !== undefined
+                  ? balance.formatted.toLocaleString(undefined, { maximumFractionDigits: 4 })
+                  : "..."}
+              </span>
+            </div>
+          {/each}
           <div class="button-container">
             <SmallButton text="Disconnect wallet" onclick={handleDisconnect} />
           </div>

@@ -1,18 +1,17 @@
 /**
  * Network configuration for auction-frontend
  *
- * Base mainnet only. RAT token address from environment variable.
+ * Base mainnet only.
  */
 
-import { type Chain, type Hex } from "viem"
+import { type Chain } from "viem"
 import { base } from "viem/chains"
-import { PUBLIC_BASE_RPC_URL, PUBLIC_RAT_TOKEN_ADDRESS } from "$env/static/public"
+import { PUBLIC_BASE_RPC_URL } from "$env/static/public"
 
 export type NetworkConfig = {
   chain: Chain
   chainId: number
   rpcUrl: string
-  ratTokenAddress: Hex
 }
 
 /**
@@ -34,7 +33,6 @@ export function getNetworkConfig(): NetworkConfig {
   return {
     chain: baseChain,
     chainId: base.id,
-    rpcUrl: baseChain.rpcUrls.default.http[0],
-    ratTokenAddress: PUBLIC_RAT_TOKEN_ADDRESS as Hex
+    rpcUrl: baseChain.rpcUrls.default.http[0]
   }
 }

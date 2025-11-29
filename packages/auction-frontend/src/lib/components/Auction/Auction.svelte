@@ -7,6 +7,7 @@
   import { AUCTION_STATE, auctionState } from "$lib/components/Auction/state.svelte"
   import { userAddress } from "$lib/modules/drawbridge"
   import { initErc20Listener } from "$lib/modules/erc20Listener"
+  import { initBalanceListener } from "$lib/modules/balances"
 
   import { Swap, ConnectWalletForm, Ended, Error as ErrorComponent } from "$lib/components/Auction"
   import WalletInfo from "$lib/components/WalletInfo/WalletInfo.svelte"
@@ -45,6 +46,7 @@
 
   const setupAndGoToSwap = () => {
     initErc20Listener()
+    initBalanceListener()
     auctionState.state.transitionTo(AUCTION_STATE.SWAP)
   }
 

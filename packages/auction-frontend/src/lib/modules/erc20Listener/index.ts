@@ -1,8 +1,9 @@
 import { get } from "svelte/store"
 import { erc20Abi, type Hex } from "viem"
 import type { PublicClient } from "drawbridge"
-import { publicClient as publicClientStore, networkConfig } from "$lib/network"
+import { publicClient as publicClientStore } from "$lib/network"
 import { userAddress } from "$lib/modules/drawbridge"
+import { ratCurrency } from "$lib/modules/swap-router"
 import { playerERC20Balance, erc20BalanceListenerActive } from "./stores"
 
 let balanceInterval: NodeJS.Timeout | null = null
@@ -14,13 +15,12 @@ const BALANCE_INTERVAL = 10_000 // 10 seconds
 export async function refetchBalance() {
   const client = get(publicClientStore)
   const currentUserAddress = get(userAddress) as Hex | null
-  const config = get(networkConfig)
 
-  if (!client || !currentUserAddress || !config) {
+  if (!client || !currentUserAddress) {
     return
   }
 
-  await updateBalance(client, currentUserAddress, config.ratTokenAddress)
+  await updateBalance(client, currentUserAddress, ratCurrency.address)
 }
 
 /**
@@ -46,17 +46,14 @@ export function initErc20Listener() {
 
   const client = get(publicClientStore)
   const currentUserAddress = get(userAddress) as Hex | null
-  const config = get(networkConfig)
 
-  if (!client || !currentUserAddress || !config) {
-    console.log("[ERC20Listener] Cannot init - missing client, address, or config")
+  if (!client || !currentUserAddress) {
+    console.log("[ERC20Listener] Cannot init - missing client or address")
     return
   }
 
-  const ratTokenAddress = config.ratTokenAddress
-
   // Initial fetch and set up balance interval
-  updateBalance(client, currentUserAddress, ratTokenAddress)
+  updateBalance(client, currentUserAddress, ratCurrency.address)
   balanceInterval = setInterval(() => {
     // For certain parts of the gameplay we want to pause automatic balance updates
     if (!get(erc20BalanceListenerActive)) {
@@ -64,8 +61,8 @@ export function initErc20Listener() {
     }
 
     const addr = get(userAddress) as Hex | null
-    if (client && addr && ratTokenAddress) {
-      updateBalance(client, addr, ratTokenAddress)
+    if (client && addr) {
+      updateBalance(client, addr, ratCurrency.address)
     }
   }, BALANCE_INTERVAL)
 
