@@ -12,7 +12,8 @@ import {
   balanceListenerActive,
   ratTokenBalance,
   fakeRatTokenBalance,
-  fakeRatTokenAllowance
+  fakeRatTokenAllowance,
+  exchangeRatBalance
 } from "$lib/modules/erc20Listener/stores"
 
 let balanceInterval: NodeJS.Timeout | null = null
@@ -120,6 +121,20 @@ async function updateFakeRatAllowance(publicClient: PublicClient, playerAddr: He
 }
 
 /**
+ * Update RAT balance held by the exchange contract
+ */
+async function updateExchangeRatBalance(publicClient: PublicClient) {
+  try {
+    const balance = await readBalance(publicClient, exchangeContractAddress, ratTokenAddress)
+    if (balance !== get(exchangeRatBalance)) {
+      exchangeRatBalance.set(balance)
+    }
+  } catch (error) {
+    console.error("Failed to update exchange RAT balance:", error)
+  }
+}
+
+/**
  * Initialize the token listener for both RAT and FakeRAT
  */
 export function initTokenListener() {
@@ -137,6 +152,7 @@ export function initTokenListener() {
   updateRatBalance(currentPublicClient, currentPlayerAddress)
   updateFakeRatBalance(currentPublicClient, currentPlayerAddress)
   updateFakeRatAllowance(currentPublicClient, currentPlayerAddress)
+  updateExchangeRatBalance(currentPublicClient)
 
   // Set up balance polling interval
   balanceInterval = setInterval(() => {
@@ -150,6 +166,7 @@ export function initTokenListener() {
     if (pubClient && playerAddr) {
       updateRatBalance(pubClient, playerAddr)
       updateFakeRatBalance(pubClient, playerAddr)
+      updateExchangeRatBalance(pubClient)
     }
   }, BALANCE_INTERVAL)
 

@@ -58,9 +58,6 @@
 
 <style lang="scss">
   .context-main {
-    // display: none;
-    width: var(--game-window-width);
-    height: var(--game-window-height);
     overflow: hidden;
     position: fixed;
     z-index: var(--z-base);

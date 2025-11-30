@@ -83,12 +83,15 @@
     height: 100dvh;
     z-index: 1000;
     color: white;
-    background-image: url("/images/texture-2.png");
-    background-size: 200px;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: center;
 
     .exchange-inner {
-      width: 100%;
-      height: 100%;
+      width: 800px;
+      max-width: 90dvw;
+      height: auto;
       display: flex;
       justify-content: center;
       align-items: center;

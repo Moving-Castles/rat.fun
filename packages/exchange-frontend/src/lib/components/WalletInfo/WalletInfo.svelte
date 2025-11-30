@@ -1,5 +1,9 @@
 <script lang="ts">
-  import { ratTokenBalance, fakeRatTokenBalance } from "$lib/modules/erc20Listener/stores"
+  import {
+    ratTokenBalance,
+    fakeRatTokenBalance,
+    exchangeRatBalance
+  } from "$lib/modules/erc20Listener/stores"
   import { userAddress } from "$lib/modules/drawbridge"
   import { shortenAddress } from "$lib/modules/utils"
   import { disconnectWallet } from "$lib/modules/drawbridge/connector"
@@ -71,6 +75,11 @@
             <span class="label">$RAT:</span>
             <span class="value">{$ratTokenBalance}</span>
           </div>
+          <div class="divider"></div>
+          <div class="info-row">
+            <span class="label">Available in contract:</span>
+            <span class="value">{$exchangeRatBalance} $RAT</span>
+          </div>
           <div class="button-container">
             <SmallButton text="Disconnect wallet" onclick={handleDisconnect} />
           </div>
@@ -138,6 +147,11 @@
           .value {
             font-weight: bold;
           }
+        }
+
+        .divider {
+          border-top: 1px solid var(--color-border);
+          margin: 4px 0;
         }
 
         .button-container {

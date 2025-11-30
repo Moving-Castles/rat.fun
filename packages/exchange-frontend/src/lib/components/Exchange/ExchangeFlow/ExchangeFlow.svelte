@@ -17,25 +17,14 @@
   })
 </script>
 
-<div class="exchange-flow-container">
-  {#if exchangeFlowState.state.current === EXCHANGE_FLOW_STATE.READY}
-    <Ready />
-  {:else if exchangeFlowState.state.current === EXCHANGE_FLOW_STATE.APPROVING}
-    <Approving />
-  {:else if exchangeFlowState.state.current === EXCHANGE_FLOW_STATE.EXCHANGING}
-    <Exchanging />
-  {:else if exchangeFlowState.state.current === EXCHANGE_FLOW_STATE.COMPLETE}
-    <Complete />
-  {:else if exchangeFlowState.state.current === EXCHANGE_FLOW_STATE.ERROR}
-    <ErrorComponent />
-  {/if}
-</div>
-
-<style lang="scss">
-  .exchange-flow-container {
-    display: flex;
-    flex-flow: column nowrap;
-    align-items: center;
-    justify-content: center;
-  }
-</style>
+{#if exchangeFlowState.state.current === EXCHANGE_FLOW_STATE.READY}
+  <Ready />
+{:else if exchangeFlowState.state.current === EXCHANGE_FLOW_STATE.APPROVING}
+  <Approving />
+{:else if exchangeFlowState.state.current === EXCHANGE_FLOW_STATE.EXCHANGING}
+  <Exchanging />
+{:else if exchangeFlowState.state.current === EXCHANGE_FLOW_STATE.COMPLETE}
+  <Complete />
+{:else if exchangeFlowState.state.current === EXCHANGE_FLOW_STATE.ERROR}
+  <ErrorComponent />
+{/if}
