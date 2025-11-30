@@ -6,7 +6,7 @@ import { CreateConnectorFn, Config } from '@wagmi/core';
  * A viem public client with chain and public actions.
  * Used for all read operations (getBalance, readContract, etc.)
  */
-type PublicClient = Client<Transport, Chain> & PublicActions;
+type PublicClient = Client<Transport, Chain, undefined, undefined, PublicActions<Transport, Chain>>;
 /**
  * A connected wallet client with account.
  * Generic over chain to support various chain configurations.

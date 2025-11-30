@@ -5,7 +5,7 @@ import { SmartAccount } from "viem/account-abstraction"
  * A viem public client with chain and public actions.
  * Used for all read operations (getBalance, readContract, etc.)
  */
-export type PublicClient = Client<Transport, Chain> & PublicActions
+export type PublicClient = Client<Transport, Chain, undefined, undefined, PublicActions<Transport, Chain>>
 
 /**
  * A viem client with an account (connected wallet).
