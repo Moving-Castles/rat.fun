@@ -5,7 +5,7 @@
  */
 
 import { get } from "svelte/store"
-import { getNetworkConfig } from "./config"
+import { setupPublicBasicNetwork } from "@ratfun/common/basic-network"
 import {
   publicClient as publicClientStore,
   networkConfig as networkConfigStore,
@@ -13,6 +13,7 @@ import {
   loadingMessage
 } from "./stores"
 import { initializeDrawbridge, getDrawbridge } from "$lib/modules/drawbridge"
+import { getNetworkConfig } from "./config"
 
 /**
  * Initialize the network
@@ -29,9 +30,13 @@ export async function initNetwork(): Promise<void> {
 
     networkConfigStore.set(config)
 
+    loadingMessage.set("Setting up basic public network...")
+    const publicNetwork = await setupPublicBasicNetwork(config, import.meta.env.DEV)
+
     loadingMessage.set("Initializing wallet connection...")
     await initializeDrawbridge({
-      chainId: config.chainId
+      chain: config.chain,
+      transport: publicNetwork.transport
     })
 
     const drawbridge = getDrawbridge()

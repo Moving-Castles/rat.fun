@@ -1,5 +1,5 @@
 import { errorHandler } from "$lib/modules/error-handling"
-import { InvalidStateTransitionError } from "$lib/modules/error-handling/errors"
+import { InvalidStateTransitionError } from "@ratfun/common/error-handling"
 import { usdcCurrency, type CurrencyData } from "$lib/modules/swap-router"
 import type { AuctionParams, CustomQuoter, Permit2PermitData, SwapReceipt } from "doppler"
 import type { Hex } from "viem"

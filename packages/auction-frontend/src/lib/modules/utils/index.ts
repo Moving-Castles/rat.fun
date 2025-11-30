@@ -6,7 +6,7 @@
  */
 
 import { Hex } from "viem"
-import { JSONParseError } from "../error-handling/errors"
+import { JSONParseError } from "@ratfun/common/error-handling"
 
 const BLOCKTIME = 2
 

@@ -1,135 +1,73 @@
-import { get } from "svelte/store"
-import { erc20Abi, formatUnits, type Hex } from "viem"
-import type { PublicClient } from "drawbridge"
-import { publicClient as publicClientStore } from "$lib/network"
-import { userAddress } from "$lib/modules/drawbridge"
-import { trackedCurrencies, type CurrencyData } from "$lib/modules/swap-router"
-import { tokenBalances, balanceListenerActive, type TokenBalance } from "./stores"
-
-export * from "./stores"
-
-let balanceInterval: NodeJS.Timeout | null = null
-const BALANCE_INTERVAL = 10_000 // 10 seconds
+import { ERC20BalanceListener, ETHBalanceListener } from "@ratfun/common/erc20"
+import { PublicClient } from "drawbridge"
+import { derived, get, Unsubscriber, writable } from "svelte/store"
+import { formatUnits, Hex } from "viem"
+import { availableCurrencies, CurrencyData, ratCurrency, wethCurrency } from "../swap-router"
 
 /**
- * Fetch balance for a single currency
+ * Token balance with metadata
  */
-async function fetchBalance(
-  client: PublicClient,
-  playerAddress: Hex,
+export interface TokenBalance {
+  balance: bigint
+  formatted: number
+}
+
+interface CurrencyListener {
+  listener: ERC20BalanceListener | ETHBalanceListener
   currency: CurrencyData
-): Promise<TokenBalance> {
-  let balance: bigint
-
-  if (currency.isNative) {
-    // Native ETH balance
-    balance = await client.getBalance({ address: playerAddress })
-  } else {
-    // ERC20 balance
-    balance = await client.readContract({
-      address: currency.address,
-      abi: erc20Abi,
-      functionName: "balanceOf",
-      args: [playerAddress]
-    })
-  }
-
-  return {
-    address: currency.address,
-    symbol: currency.symbol,
-    balance,
-    decimals: currency.decimals,
-    formatted: Number(formatUnits(balance, currency.decimals))
-  }
 }
 
-/**
- * Update all tracked token balances
- */
-async function updateAllBalances(client: PublicClient, playerAddress: Hex) {
-  const newBalances: Record<Hex, TokenBalance> = {}
-
-  await Promise.all(
-    trackedCurrencies.map(async currency => {
-      try {
-        const balance = await fetchBalance(client, playerAddress, currency)
-        newBalances[currency.address] = balance
-      } catch (error) {
-        console.error(`[Balances] Failed to fetch ${currency.symbol} balance:`, error)
-      }
-    })
-  )
-
-  tokenBalances.set(newBalances)
-}
+export const balanceListeners = writable<CurrencyListener[]>([])
 
 /**
- * Manually refetch all balances
+ * Initialize the balance listeners for all tracked currencies
  */
-export async function refetchBalances() {
-  const client = get(publicClientStore)
-  const currentUserAddress = get(userAddress) as Hex | null
-
-  if (!client || !currentUserAddress) {
-    return
+export function initBalanceListeners(publicClient: PublicClient, userAddress: Hex) {
+  // Stop old listeners
+  for (const { listener } of get(balanceListeners)) {
+    listener.stop()
   }
 
-  await updateAllBalances(client, currentUserAddress)
-}
+  publicClient.getBalance({ address: userAddress })
 
-/**
- * Initialize the balance listener for all tracked currencies
- */
-export function initBalanceListener() {
-  // Clear old intervals
-  stopBalanceListener()
-
-  const client = get(publicClientStore)
-  const currentUserAddress = get(userAddress) as Hex | null
-
-  if (!client || !currentUserAddress) {
-    console.log("[Balances] Cannot init - missing client or address")
-    return
-  }
-
-  // Initial fetch
-  updateAllBalances(client, currentUserAddress)
-
-  // Set up polling interval
-  balanceInterval = setInterval(() => {
-    if (!get(balanceListenerActive)) {
-      return
+  // Create listeners for ratCurrency and all availableCurrencies
+  const newBalanceListeners: CurrencyListener[] = []
+  for (const currency of [ratCurrency, ...availableCurrencies]) {
+    const balanceListener = {
+      // ETH has a different listener class
+      listener: currency.address === wethCurrency.address ? new ETHBalanceListener(publicClient, userAddress) : new ERC20BalanceListener(publicClient, userAddress, currency.address),
+      currency
     }
-
-    const addr = get(userAddress) as Hex | null
-    if (client && addr) {
-      updateAllBalances(client, addr)
-    }
-  }, BALANCE_INTERVAL)
-
-  console.log("[Balances] Initialized for", currentUserAddress)
-}
-
-/**
- * Stop the balance listener
- */
-export function stopBalanceListener() {
-  if (balanceInterval) {
-    clearInterval(balanceInterval)
-    balanceInterval = null
+    // Start each one
+    balanceListener.listener.start()
+    newBalanceListeners.push(balanceListener)
   }
+  // Update store
+  balanceListeners.set(newBalanceListeners)
 }
 
 /**
- * Get balance for a specific currency address
+ * Balances of all tracked currencies
  */
-export function getBalance(address: Hex): TokenBalance | undefined {
-  return get(tokenBalances)[address]
-}
-
-/**
- * Get formatted balance for a specific currency address
- */
-export function getFormattedBalance(address: Hex): number | undefined {
-  return get(tokenBalances)[address]?.formatted
-}
+export const tokenBalances = derived<typeof balanceListeners, Record<Hex, TokenBalance>>(
+  balanceListeners,
+  ($listeners, _, update) => {
+    const unsubscribers: Unsubscriber[] = []
+    // listen for erc20 balance updates
+    for (const { listener, currency } of $listeners) {
+      unsubscribers.push(listener.subscribe(balance => {
+        update(balances => {
+          balances[currency.address] = {
+            balance,
+            formatted: Number(formatUnits(balance, currency.decimals))
+          }
+          return balances
+        })
+      }))
+    }
+    return () => {
+      unsubscribers.forEach(unsubscribe => unsubscribe())
+    }
+  },
+  {}
+)

@@ -1,51 +1,11 @@
 import { get } from "svelte/store"
-import type { Hex, WalletClient, Chain, Account, Transport, Client } from "viem"
-import type { SmartAccount } from "viem/account-abstraction"
-import { addChain, switchChain, writeContract } from "viem/actions"
+import { addChain, switchChain } from "viem/actions"
 import { getAccount, getChainId, getConnectorClient } from "@wagmi/core"
+import { WagmiConfigUnavailableError, NetworkNotInitializedError } from "@ratfun/common/error-handling"
+import { ensureWriteContract, WalletTransactionClient } from "@ratfun/common/basic-network"
 
 import { networkConfig } from "$lib/network"
 import { getDrawbridge } from "$lib/modules/drawbridge"
-import { WagmiConfigUnavailableError, NetworkNotInitializedError } from "../error-handling/errors"
-
-// Types for wallet clients
-type WalletClientInput =
-  | WalletClient<Transport, Chain, Account>
-  | Client<Transport, Chain, Account>
-  | Client<Transport, Chain, SmartAccount>
-
-type WriteContractArgs = {
-  address: Hex
-  abi: unknown
-  functionName: string
-  args?: unknown[]
-  gas?: bigint
-  value?: bigint
-}
-
-export type WalletTransactionClient = WalletClientInput & {
-  writeContract: (args: WriteContractArgs) => Promise<Hex>
-}
-
-/**
- * Ensure the provided viem client exposes a `writeContract` helper.
- * Uses viem's native writeContract action.
- */
-function ensureWriteContract(client: WalletClientInput): WalletTransactionClient {
-  if ("writeContract" in client && typeof client.writeContract === "function") {
-    return client as WalletTransactionClient
-  }
-
-  // Wrap the client with viem's writeContract
-  const wrappedClient = client as WalletTransactionClient
-  wrappedClient.writeContract = async (args: WriteContractArgs) => {
-    return writeContract(
-      client as WalletClient<Transport, Chain, Account>,
-      args as Parameters<typeof writeContract>[1]
-    )
-  }
-  return wrappedClient
-}
 
 /**
  * Returns the wallet connector client from wagmi.

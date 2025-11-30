@@ -1,5 +1,5 @@
 import { errorHandler } from "$lib/modules/error-handling"
-import { InvalidStateTransitionError } from "$lib/modules/error-handling/errors"
+import { InvalidStateTransitionError } from "@ratfun/common/error-handling"
 
 /**
  * ========================================

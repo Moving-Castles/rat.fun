@@ -4,12 +4,12 @@
 
 import { writable } from "svelte/store"
 import type { PublicClient } from "drawbridge"
-import type { NetworkConfig } from "./config"
+import { BasicNetworkConfig } from "@ratfun/common/basic-network"
 
 /**
- * Network configuration (chain, chainId, rpcUrl, ratTokenAddress)
+ * Network configuration (chain, chainId)
  */
-export const networkConfig = writable<NetworkConfig | null>(null)
+export const networkConfig = writable<BasicNetworkConfig | null>(null)
 
 /**
  * Public client for chain reads

@@ -1,11 +1,11 @@
 import * as Sentry from "@sentry/sveltekit"
 import { PUBLIC_SENTRY_DSN } from "$env/static/public"
 import { version } from "$app/environment"
-import { AppError, type ExpectedError } from "./errors"
+import { AppError, ExpectedError, parseViemError } from "@ratfun/common/error-handling"
 import { toastManager } from "$lib/modules/ui/toasts.svelte"
-import { parseViemError } from "./viemErrorParser"
 import { BaseError } from "viem"
-export * from "./errors"
+
+export * from "@ratfun/common/error-handling"
 
 export function captureMessage(
   message: string,

@@ -3,12 +3,11 @@
   import { type AuctionParams, readAuctionParams } from "doppler"
   import { dopplerHookAbi } from "@whetstone-research/doppler-sdk"
   import type { PublicClient } from "drawbridge"
+  import type { Hex } from "viem"
   import { publicClient, networkConfig } from "$lib/network"
   import { AUCTION_STATE, auctionState } from "$lib/components/Auction/state.svelte"
   import { userAddress } from "$lib/modules/drawbridge"
-  import { initErc20Listener } from "$lib/modules/erc20Listener"
-  import { initBalanceListener } from "$lib/modules/balances"
-
+  import { initBalanceListeners } from "$lib/modules/balances"
   import { Swap, ConnectWalletForm, Ended, Error as ErrorComponent } from "$lib/components/Auction"
   import WalletInfo from "$lib/components/WalletInfo/WalletInfo.svelte"
 
@@ -44,15 +43,14 @@
     }
   }
 
-  const setupAndGoToSwap = () => {
-    initErc20Listener()
-    initBalanceListener()
+  const setupAndGoToSwap = (publicClient: PublicClient, userAddress: Hex) => {
+    initBalanceListeners(publicClient, userAddress)
     auctionState.state.transitionTo(AUCTION_STATE.SWAP)
   }
 
   // Listen to changes in wallet connection (for when user connects wallet)
   $effect(() => {
-    if ($userAddress) {
+    if ($publicClient && $userAddress) {
       console.log("[Claim] Wallet connected:", $userAddress)
 
       if (auctionState?.state?.current === AUCTION_STATE.ENDED) {
@@ -60,7 +58,7 @@
         return
       }
 
-      setupAndGoToSwap()
+      setupAndGoToSwap($publicClient, $userAddress)
     }
   })
 
@@ -95,7 +93,7 @@
     // If wallet is already connected (from previous session), transition to swap
     if ($userAddress) {
       console.log("[Claim] Wallet already connected on mount:", $userAddress)
-      setupAndGoToSwap()
+      setupAndGoToSwap(client, $userAddress)
     } else {
       // No wallet connected, show connect wallet screen
       auctionState.state.transitionTo(AUCTION_STATE.CONNECT_WALLET)
@@ -115,7 +113,10 @@
     }, 30_000)
   })
 
-  onDestroy(clearEndingTimeInterval)
+  onDestroy(() => {
+    clearEndingTimeInterval()
+
+  })
 </script>
 
 <WalletInfo />

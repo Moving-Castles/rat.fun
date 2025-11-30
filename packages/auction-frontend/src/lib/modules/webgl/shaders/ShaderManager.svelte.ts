@@ -1,6 +1,6 @@
 import { WebGLGeneralRenderer } from "$lib/modules/webgl"
 import { shaders } from "$lib/modules/webgl/shaders/index.svelte"
-import { ShaderInitializationError } from "$lib/modules/error-handling/errors"
+import { ShaderInitializationError } from "@ratfun/common/error-handling"
 import { errorHandler } from "$lib/modules/error-handling"
 
 export type UniformType = "float" | "vec2" | "vec3" | "vec4" | "int" | "bool"

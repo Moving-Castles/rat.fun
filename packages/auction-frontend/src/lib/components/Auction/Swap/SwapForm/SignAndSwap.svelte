@@ -14,7 +14,7 @@
   import { signTypedData } from "viem/actions"
   import { asPublicClient, asWalletClient } from "$lib/utils/clientAdapter"
   import { swapState, SWAP_STATE } from "../state.svelte"
-  import { tokenBalances } from "$lib/modules/balances"
+  import { balanceListeners, tokenBalances } from "$lib/modules/balances"
 
   let isProcessing = $state(false)
   let processingStep = $state("")
@@ -146,6 +146,13 @@
 
       // Transition to swap complete state
       swapState.state.transitionTo(SWAP_STATE.SWAP_COMPLETE)
+
+      // Manually trigger balance updates for relevant tokens
+      for (const listener of $balanceListeners) {
+        if ([auctionParams.token.address, fromCurrency.address].includes(listener.erc20.address)) {
+          listener.triggerUpdate()
+        }
+      }
     } catch (error) {
       console.error("[SignAndSwap] Error during swap:", error)
       throw error

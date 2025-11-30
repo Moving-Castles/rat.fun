@@ -1,7 +1,8 @@
 import { Drawbridge, DrawbridgeStatus, type DrawbridgeState } from "drawbridge"
 import { readable, derived } from "svelte/store"
-import { chains, transports, getConnectors } from "./wagmiConfig"
-import type { Hex } from "viem"
+import type { Hex, Transport } from "viem"
+import type { MUDChain } from "@ratfun/common/basic-network"
+import { getConnectors } from "./getConnectors"
 
 // Re-export types and enums from package
 export type { ConnectorInfo } from "drawbridge"
@@ -11,7 +12,8 @@ export { DrawbridgeStatus } from "drawbridge"
  * Minimal config needed for drawbridge initialization
  */
 export type DrawbridgeInitConfig = {
-  chainId: number
+  chain: MUDChain
+  transport: Transport
   worldAddress?: Hex
 }
 
@@ -32,13 +34,7 @@ export async function initializeDrawbridge(config: DrawbridgeInitConfig): Promis
     return
   }
 
-  console.log("[Drawbridge] Creating instance with network:", config.chainId)
-
-  // Get chain-specific config
-  const chain = chains.find(c => c.id === config.chainId)
-  if (!chain) {
-    throw new Error(`Unsupported chain ID: ${config.chainId}`)
-  }
+  console.log("[Drawbridge] Creating instance with network:", config.chain.id)
 
   // Get connectors for this environment
   const connectors = getConnectors()
@@ -46,9 +42,9 @@ export async function initializeDrawbridge(config: DrawbridgeInitConfig): Promis
 
   // Create Drawbridge instance in wallet-only mode (skipSessionSetup = true)
   drawbridgeInstance = new Drawbridge({
-    chainId: config.chainId,
-    chains: [chain] as const,
-    transports,
+    chainId: config.chain.id,
+    chains: [config.chain],
+    transports: { [config.chain.id]: config.transport },
     connectors,
     skipSessionSetup: true, // ← Wallet-only mode, no session setup
     pollingInterval: 2000,

@@ -5,7 +5,7 @@ import {
   ShaderError,
   WebGLError,
   UniformLocationError
-} from "$lib/modules/error-handling/errors"
+} from "@ratfun/common/error-handling"
 import { errorHandler } from "$lib/modules/error-handling"
 
 /**
