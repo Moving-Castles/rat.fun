@@ -40,9 +40,11 @@ export type SetupPublicNetworkResult = {
 
 export async function setupPublicNetwork(
   networkConfig: NetworkConfig,
-  devMode: boolean
+  devMode: boolean,
+  publicClient?: PublicClient<Transport, Chain>
 ): Promise<SetupPublicNetworkResult> {
-  const { publicClient, transport } = await setupPublicBasicNetwork(networkConfig, devMode)
+  const basicNetwork = await setupPublicBasicNetwork(networkConfig, devMode)
+  publicClient ??= basicNetwork.publicClient
 
   const resolvedConfig = {
     world,
@@ -69,7 +71,7 @@ export async function setupPublicNetwork(
 
   return {
     config: networkConfig,
-    transport,
+    transport: basicNetwork.transport,
     worldAddress: networkConfig.worldAddress,
     world,
     components,
