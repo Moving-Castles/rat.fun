@@ -2,6 +2,9 @@ import { MUDChain } from "@latticexyz/common/chains"
 import { ENVIRONMENT, WALLET_TYPE } from "./enums"
 import { supportedChains } from "./supportedChains"
 
+// Reexport the custom chain type
+export type { MUDChain }
+
 export const getChain = (chainId: number): MUDChain => {
   const chainIndex = supportedChains.findIndex(c => c.id === chainId)
   const chain = supportedChains[chainIndex]

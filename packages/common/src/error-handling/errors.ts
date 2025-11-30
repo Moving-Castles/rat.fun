@@ -169,6 +169,12 @@ export class BlockTimeoutError extends BlockchainError {
   }
 }
 
+export class NetworkNotInitializedError extends BlockchainError {
+  constructor(message: string = "Network not initialized") {
+    super("NETWORK_NOT_INITIALIZED", "Network initialization error", message)
+  }
+}
+
 // ============================================================================
 // WebGL & Graphics Errors
 // ============================================================================
@@ -363,7 +369,6 @@ export class InputValidationError extends ValidationError {
     super("INPUT_VALIDATION_ERROR", "Input validation failed", message)
   }
 }
-
 export class CharacterLimitError extends ValidationError {
   constructor(currentLength: number, maxLength: number, fieldName: string = "input") {
     super(

@@ -12,13 +12,15 @@ import { transportObserver } from "@latticexyz/common"
 import { BasicNetworkConfig, ChainRpcUrls } from "./getBasicNetworkConfig"
 
 export type SetupPublicBasicNetworkResult = {
+  config: BasicNetworkConfig
+  transport: Transport
   publicClient: PublicClient<Transport, Chain>
 }
 
-export async function setupPublicBasicNetwork(
+export function setupPublicBasicNetwork(
   networkConfig: BasicNetworkConfig,
   devMode: boolean
-): Promise<SetupPublicBasicNetworkResult> {
+): SetupPublicBasicNetworkResult {
   console.log("[MUD/PublicNetwork] Setting up RPC transports:")
   console.log("  Environment:", devMode ? "development" : "production")
   console.log("  Chain:", networkConfig.chain.name, `(${networkConfig.chain.id})`)
@@ -34,6 +36,8 @@ export async function setupPublicBasicNetwork(
   const publicClient = createPublicClient(clientOptions)
 
   return {
+    config: networkConfig,
+    transport,
     publicClient
   }
 }

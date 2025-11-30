@@ -27,6 +27,7 @@ type recsSyncResult = SyncToRecsResult<typeof mudConfig, {}>
 
 export type SetupPublicNetworkResult = {
   config: NetworkConfig
+  transport: Transport
   worldAddress: Hex
   world: World
   components: recsSyncResult["components"]
@@ -41,7 +42,7 @@ export async function setupPublicNetwork(
   networkConfig: NetworkConfig,
   devMode: boolean
 ): Promise<SetupPublicNetworkResult> {
-  const { publicClient } = await setupPublicBasicNetwork(networkConfig, devMode)
+  const { publicClient, transport } = await setupPublicBasicNetwork(networkConfig, devMode)
 
   const resolvedConfig = {
     world,
@@ -68,6 +69,7 @@ export async function setupPublicNetwork(
 
   return {
     config: networkConfig,
+    transport,
     worldAddress: networkConfig.worldAddress,
     world,
     components,
