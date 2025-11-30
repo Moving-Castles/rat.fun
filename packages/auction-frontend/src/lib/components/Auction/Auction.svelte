@@ -2,12 +2,12 @@
   import { onDestroy, onMount } from "svelte"
   import { type AuctionParams, readAuctionParams } from "doppler"
   import { dopplerHookAbi } from "@whetstone-research/doppler-sdk"
-  import { publicNetwork } from "$lib/modules/network"
+  import type { PublicClient } from "drawbridge"
+  import { publicClient, networkConfig } from "$lib/network"
   import { AUCTION_STATE, auctionState } from "$lib/components/Auction/state.svelte"
   import { userAddress } from "$lib/modules/drawbridge"
-  import { playerAddress } from "$lib/modules/state/stores"
   import { initErc20Listener } from "$lib/modules/erc20Listener"
-  import type { SetupPublicNetworkResult } from "$lib/mud/setupPublicNetwork"
+  import { initBalanceListener } from "$lib/modules/balances"
 
   import { Swap, ConnectWalletForm, Ended, Error as ErrorComponent } from "$lib/components/Auction"
   import WalletInfo from "$lib/components/WalletInfo/WalletInfo.svelte"
@@ -24,8 +24,8 @@
 
   // Check if early exit
   // It occurs if the auction is fully bought out before the ending time
-  async function checkEarlyExit(publicNetwork: SetupPublicNetworkResult) {
-    return publicNetwork.publicClient.readContract({
+  async function checkEarlyExit(client: PublicClient) {
+    return client.readContract({
       address: auctionParams.hookAddress,
       abi: dopplerHookAbi,
       functionName: "earlyExit"
@@ -45,10 +45,8 @@
   }
 
   const setupAndGoToSwap = () => {
-    // Sync drawbridge userAddress to playerAddress store (for WalletInfo component)
-    // We know userAddress is not null here
-    playerAddress.set($userAddress!)
     initErc20Listener()
+    initBalanceListener()
     auctionState.state.transitionTo(AUCTION_STATE.SWAP)
   }
 
@@ -70,8 +68,16 @@
     // Reset state to INIT
     auctionState.state.reset()
 
-    auctionParams = readAuctionParamsStrict($publicNetwork.publicClient.chain.id)
-    console.log("[Auction] auctionParams:", auctionParams)
+    const client = $publicClient
+    const config = $networkConfig
+    if (!client || !config) {
+      console.error("[Auction] Network not initialized")
+      auctionState.state.transitionTo(AUCTION_STATE.ERROR)
+      return
+    }
+
+    auctionParams = readAuctionParamsStrict(config.chainId)
+    console.log("[Auction] auctionParams:", $state.snapshot(auctionParams))
     if (!auctionParams) {
       console.error("[Auction] auctionParams not found")
       auctionState.state.transitionTo(AUCTION_STATE.ERROR)
@@ -79,7 +85,7 @@
     }
 
     const saleEnded = checkSaleEnded()
-    const earlyExit = await checkEarlyExit($publicNetwork)
+    const earlyExit = await checkEarlyExit(client)
     if (saleEnded || earlyExit) {
       auctionState.state.transitionTo(AUCTION_STATE.ENDED)
       return
@@ -97,8 +103,11 @@
 
     // Monitor auction ending time and early exit
     endingTimeInterval = setInterval(async () => {
+      const currentClient = $publicClient
+      if (!currentClient) return
+
       const saleEnded = checkSaleEnded()
-      const earlyExit = await checkEarlyExit($publicNetwork)
+      const earlyExit = await checkEarlyExit(currentClient)
       if (saleEnded || earlyExit) {
         clearEndingTimeInterval()
         auctionState.state.transitionTo(AUCTION_STATE.ENDED)

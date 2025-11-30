@@ -1,9 +1,10 @@
 import { Address, Client } from "viem"
 import { getRecord } from "@latticexyz/store/internal"
-import { unlimitedDelegationControlId, worldTables } from "../../types"
+import { unlimitedDelegationControlId, worldTables, PublicClient } from "../../types"
 
 export type CheckDelegationParams = {
-  client: Client
+  /** Public client for reading blockchain state */
+  client: Client | PublicClient
   worldAddress: Address
   userAddress: Address
   sessionAddress: Address

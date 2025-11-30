@@ -7,12 +7,9 @@
   import { onMount, onDestroy } from "svelte"
   import { initSound } from "$lib/modules/sound"
   import { browser } from "$app/environment"
-  import { page } from "$app/state"
   import { UIState } from "$lib/modules/ui/state.svelte"
   import { UI } from "$lib/modules/ui/enums"
-  import { environment as environmentStore } from "$lib/modules/network"
-  import { initializeDrawbridge, cleanupDrawbridge } from "$lib/modules/drawbridge"
-  import { getNetworkConfig } from "$lib/mud/getNetworkConfig"
+  import { cleanupDrawbridge } from "$lib/modules/drawbridge"
 
   // Components
   import Loading from "$lib/components/Loading/Loading.svelte"
@@ -20,14 +17,9 @@
   import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
   import { ShaderGlobal, Toasts } from "$lib/components/Shared"
 
-  // Called when loading is complete
-  const loaded = async () => {
-    // Initialize drawbridge in wallet-only mode (no session setup)
-    console.log("[+layout] Initializing drawbridge in wallet-only mode...")
-    const networkConfig = getNetworkConfig($environmentStore, page.url)
-    await initializeDrawbridge(networkConfig)
-    console.log("[+layout] drawbridge ready")
-
+  // Called when loading is complete (network initialized, drawbridge ready)
+  const loaded = () => {
+    console.log("[+layout] Network and drawbridge ready")
     UIState.set(UI.READY)
   }
 
@@ -50,7 +42,7 @@
 
 <div class="bg">
   {#if $UIState === UI.LOADING}
-    <Loading environment={$environmentStore} {loaded} />
+    <Loading {loaded} />
   {:else if $UIState === UI.READY}
     <div class="context-main">
       <Auction />

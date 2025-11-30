@@ -63,7 +63,7 @@
         ? filteredConnectors.sort((a, b) => getWalletPriority(a) - getWalletPriority(b))
         : connectors
 
-    console.log("[ConnectWalletForm] Available connectors:", availableConnectors)
+    console.log("[ConnectWalletForm] Available connectors:", $state.snapshot(availableConnectors))
 
     // If only one connector available, auto-connect to it
     if (availableConnectors.length === 1) {

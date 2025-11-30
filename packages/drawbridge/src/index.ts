@@ -16,5 +16,5 @@ export type {
   ConnectorInfo
 } from "./Drawbridge"
 
-export type { SessionClient, ConnectedClient } from "./types"
+export type { SessionClient, ConnectedClient, PublicClient } from "./types"
 export { DrawbridgeStatus } from "./types"

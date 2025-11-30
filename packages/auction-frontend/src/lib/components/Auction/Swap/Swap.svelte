@@ -1,21 +1,19 @@
 <script lang="ts">
-  import { formatUnits, maxUint128 } from "viem"
+  import { formatUnits } from "viem"
   import {
     type AuctionParams,
     CustomQuoter,
-    isPermit2AllowanceRequired,
     balanceOf,
     buyLimitSpentAmount,
     buyLimitGetCountryCode
   } from "doppler"
   import { userAddress } from "$lib/modules/drawbridge"
-  import { publicNetwork } from "$lib/modules/network"
-  import { isPermit2Required } from "$lib/modules/swap-router"
+  import { publicClient as publicClientStore, networkConfig } from "$lib/network"
   import { onMount } from "svelte"
   import { asPublicClient } from "$lib/utils/clientAdapter"
   import { swapState, SWAP_STATE } from "./state.svelte"
 
-  import { SwapForm, Agreement, Permit2AllowMax, SignAndSwap, SwapComplete } from "./index"
+  import { SwapForm, Agreement, SignAndSwap, SwapComplete } from "./index"
   import DebugPanel from "./DebugPanel.svelte"
 
   let {
@@ -43,12 +41,8 @@
       return SWAP_STATE.AGREEMENT
     }
 
-    // 3. Check permit2 allowance
-    if (swapState.data.isPermit2Req === true) {
-      return SWAP_STATE.PERMIT2_ALLOW_MAX
-    }
-
-    // 4. Default to sign and swap (ready to swap)
+    // 3. Default to sign and swap (ready to swap)
+    // Permit2 approval is now handled inline when user clicks swap
     return SWAP_STATE.SIGN_AND_SWAP
   }
 
@@ -60,14 +54,17 @@
     // 2. Initialize shared data in swapState
     swapState.data.setAuctionParams(auctionParams)
 
-    const publicClient = asPublicClient($publicNetwork.publicClient)
+    const client = $publicClientStore
+    const config = $networkConfig
+    if (!client || !config) {
+      console.error("[Swap] Network not initialized")
+      return
+    }
+
+    const adaptedClient = asPublicClient(client)
 
     // Initialize quoter
-    const quoter = new CustomQuoter(
-      publicClient,
-      $publicNetwork.publicClient.chain.id,
-      auctionParams
-    )
+    const quoter = new CustomQuoter(adaptedClient, config.chainId, auctionParams)
     swapState.data.setQuoter(quoter)
 
     console.log("[Swap] quoter:", quoter)
@@ -79,7 +76,7 @@
 
     // Load spent amount
     const spentAmount = await buyLimitSpentAmount(
-      publicClient,
+      adaptedClient,
       auctionParams.token.address,
       $userAddress
     )
@@ -87,30 +84,16 @@
 
     // Load country code
     const countryCode = await buyLimitGetCountryCode(
-      publicClient,
+      adaptedClient,
       auctionParams.token.address,
       $userAddress
     )
     swapState.data.setSavedCountryCode(countryCode)
 
-    // Load permit2 requirement
-    const isPermit2Req =
-      isPermit2Required(swapState.data.fromCurrency.address) &&
-      (await isPermit2AllowanceRequired(
-        publicClient,
-        $userAddress,
-        swapState.data.fromCurrency.address,
-        // TODO replace this with actual required allowance for the swap
-        maxUint128
-      ))
-    swapState.data.setIsPermit2Req(isPermit2Req)
-
-    console.log("[Swap] isPermit2Req:", isPermit2Req)
-
     // TODO replace numeraire balance with fromCurrency balance
     // Load balances
     const unformattedNumeraireBalance = await balanceOf(
-      publicClient,
+      adaptedClient,
       auctionParams.numeraire.address,
       $userAddress
     )
@@ -120,7 +103,7 @@
     swapState.data.setNumeraireBalance(numeraireBalance)
 
     const unformattedTokenBalance = await balanceOf(
-      publicClient,
+      adaptedClient,
       auctionParams.token.address,
       $userAddress
     )
@@ -138,8 +121,6 @@
 <div class="swap-container">
   {#if swapState.state.current === SWAP_STATE.AGREEMENT}
     <Agreement />
-  {:else if swapState.state.current === SWAP_STATE.PERMIT2_ALLOW_MAX}
-    <Permit2AllowMax />
   {:else if swapState.state.current === SWAP_STATE.SIGN_AND_SWAP}
     <SwapForm />
     <SignAndSwap />

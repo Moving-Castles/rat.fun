@@ -4,22 +4,44 @@ import { encodePacked, Hex } from "viem"
 export interface CurrencyData {
   address: Hex
   decimals: number
+  symbol: string
+  isNative?: boolean // true for native ETH (not WETH)
 }
 
 // Mainnet-only addresses
 export const ratRouterAddress: Hex = "0x0dAC1415e9DB2917E4Db14b27961378b7DDfD19B"
+
 const eurcCurrency: CurrencyData = {
   address: "0x60a3e35cc302bfa44cb288bc5a4f316fdb1adb42",
-  decimals: 6
+  decimals: 6,
+  symbol: "EURC"
 }
+
 export const usdcCurrency: CurrencyData = {
   address: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
-  decimals: 6
+  decimals: 6,
+  symbol: "USDC"
 }
+
 export const wethCurrency: CurrencyData = {
   address: "0x4200000000000000000000000000000000000006",
-  decimals: 18
+  decimals: 18,
+  symbol: "ETH",
+  isNative: true // ETH is native, we use WETH address for swaps but fetch native balance
 }
+
+// TODO: this is FAKERAT, replace with real token address
+export const ratCurrency: CurrencyData = {
+  address: "0x13751a213f39ef4DadfcD1eb35aAC8AEc0De5bA6",
+  decimals: 18,
+  symbol: "$RAT"
+}
+
+// Available currencies for swap (user can select from these)
+export const availableCurrencies: CurrencyData[] = [usdcCurrency, wethCurrency]
+
+// All tracked currencies (for balance display in WalletInfo)
+export const trackedCurrencies: CurrencyData[] = [usdcCurrency, wethCurrency, ratCurrency]
 
 const aerodromePaths: Record<Hex, [number, Hex][]> = {
   [usdcCurrency.address]: [[50, eurcCurrency.address]],

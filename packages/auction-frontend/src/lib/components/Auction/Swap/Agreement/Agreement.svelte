@@ -3,7 +3,7 @@
   import { BigButton, Checkbox } from "$lib/components/Shared"
   import { prepareConnectorClientForTransaction } from "$lib/modules/drawbridge/connector"
   import { userAddress } from "$lib/modules/drawbridge"
-  import { publicNetwork } from "$lib/modules/network"
+  import { publicClient as publicClientStore } from "$lib/network"
   import { asPublicClient, asWalletClient } from "$lib/utils/clientAdapter"
   import { swapState, SWAP_STATE } from "../state.svelte"
 
@@ -52,17 +52,11 @@
         auctionParams.token.address,
         countryCode
       )
-      await asPublicClient($publicNetwork.publicClient).waitForTransactionReceipt({ hash: txHash })
+      await asPublicClient($publicClientStore!).waitForTransactionReceipt({ hash: txHash })
 
-      // Update state and transition
+      // Update state and transition to swap
       swapState.data.setSavedCountryCode(countryCode)
-
-      // Determine next state based on permit2 requirement
-      if (swapState.data.isPermit2Req === true) {
-        swapState.state.transitionTo(SWAP_STATE.PERMIT2_ALLOW_MAX)
-      } else {
-        swapState.state.transitionTo(SWAP_STATE.SIGN_AND_SWAP)
-      }
+      swapState.state.transitionTo(SWAP_STATE.SIGN_AND_SWAP)
     } catch (error) {
       console.error("[Agreement] Error sending country code:", error)
       throw error

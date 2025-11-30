@@ -1,4 +1,4 @@
-import { Chain, http } from "viem"
+import { Chain, http, webSocket, fallback } from "viem"
 import { CreateConnectorFn } from "@wagmi/core"
 import { injected, safe } from "wagmi/connectors"
 import {
@@ -13,10 +13,36 @@ export const chains = [
   extendedMudFoundry
 ] as const satisfies Chain[]
 
+/**
+ * Create transport with WebSocket primary and HTTP fallback
+ * WebSocket is more efficient for real-time updates (block watching, event subscriptions)
+ * HTTP is used as fallback when WebSocket is unavailable
+ */
+function createTransport(chain: Chain) {
+  const wsUrl =
+    "webSocket" in chain.rpcUrls.default ? chain.rpcUrls.default.webSocket?.[0] : undefined
+  const httpUrl = chain.rpcUrls.default.http[0]
+
+  console.log(`[wagmiConfig] Creating transport for ${chain.name}:`, {
+    wsUrl: wsUrl || "not configured",
+    httpUrl
+  })
+
+  // If no WebSocket URL configured, use HTTP only
+  if (!wsUrl) {
+    console.log(`[wagmiConfig] Using HTTP only for ${chain.name}`)
+    return http(httpUrl)
+  }
+
+  // WebSocket primary with HTTP fallback
+  console.log(`[wagmiConfig] Using WebSocket + HTTP fallback for ${chain.name}`)
+  return fallback([webSocket(wsUrl), http(httpUrl)])
+}
+
 export const transports = {
-  [extendedBase.id]: http(),
-  [extendedBaseSepolia.id]: http(),
-  [extendedMudFoundry.id]: http()
+  [extendedBase.id]: createTransport(extendedBase),
+  [extendedBaseSepolia.id]: createTransport(extendedBaseSepolia),
+  [extendedMudFoundry.id]: createTransport(extendedMudFoundry)
 } as const
 
 // Debug state for visible debugging (no console in mobile browsers)

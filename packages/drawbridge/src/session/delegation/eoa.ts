@@ -1,15 +1,15 @@
-import { encodeFunctionData, Client } from "viem"
+import { encodeFunctionData } from "viem"
 import { waitForTransactionReceipt } from "viem/actions"
 import { getAction } from "viem/utils"
 import IBaseWorldAbi from "@latticexyz/world/out/IBaseWorld.sol/IBaseWorld.abi.json"
 import { systemsConfig as worldSystemsConfig } from "@latticexyz/world/mud.config"
-import { unlimitedDelegationControlId, ConnectedClient } from "../../types"
+import { unlimitedDelegationControlId, ConnectedClient, PublicClient } from "../../types"
 import { callWithSignature } from "../patterns/call-with-signature"
 import { SetupSessionBaseParams, deploySessionAccount } from "./shared"
 
 export type SetupSessionEOAParams = SetupSessionBaseParams & {
   /** Public client for reading blockchain state */
-  publicClient: Client
+  publicClient: PublicClient
   /** User's connected EOA wallet client */
   userClient: ConnectedClient
 }

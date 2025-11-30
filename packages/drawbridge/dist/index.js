@@ -1,5 +1,5 @@
+import { parseAbi, createPublicClient, isHex, http, encodeFunctionData, parseEther, formatEther, formatGwei, zeroAddress, toHex } from 'viem';
 import { resourceToHex, hexToResource } from '@latticexyz/common';
-import { parseAbi, isHex, http, encodeFunctionData, parseEther, formatEther, formatGwei, zeroAddress, toHex } from 'viem';
 import worldConfig, { systemsConfig } from '@latticexyz/world/mud.config';
 import { generatePrivateKey, privateKeyToAccount } from 'viem/accounts';
 import { toSimpleSmartAccount } from 'permissionless/accounts';
@@ -14,6 +14,8 @@ import { callWithSignatureTypes } from '@latticexyz/world-module-callwithsignatu
 import moduleConfig from '@latticexyz/world-module-callwithsignature/mud.config';
 import CallWithSignatureAbi from '@latticexyz/world-module-callwithsignature/out/CallWithSignatureSystem.sol/CallWithSignatureSystem.abi.json';
 import { getConnectorClient, createConfig, createStorage, reconnect, getAccount, watchAccount, getConnectors, connect, disconnect } from '@wagmi/core';
+
+// src/Drawbridge.ts
 
 // src/types/state.ts
 var DrawbridgeStatus = /* @__PURE__ */ ((DrawbridgeStatus2) => {
@@ -173,76 +175,29 @@ function getSessionSigner(userAddress) {
   return privateKeyToAccount(privateKey);
 }
 async function getSessionAccount({
-  client,
+  publicClient,
   userAddress
 }) {
   const signer = getSessionSigner(userAddress);
   console.log("[getSessionAccount] Creating session account:", {
     userAddress,
     signerAddress: signer.address,
-    chainId: client.chain?.id,
-    chainName: client.chain?.name,
-    transportType: client.transport?.type || "unknown",
-    hasBundlerRpc: client.chain?.rpcUrls?.bundler?.http?.[0] || "none",
-    timestamp: (/* @__PURE__ */ new Date()).toISOString()
+    chainId: publicClient.chain?.id,
+    chainName: publicClient.chain?.name
   });
-  const originalTransport = client.transport;
-  const loggingTransport = (args) => {
-    const transport = originalTransport(args);
-    const originalRequest = transport.request;
-    return {
-      ...transport,
-      request: async (requestArgs) => {
-        const requestId = Math.random().toString(36).substring(7);
-        console.log(`[getSessionAccount:RPC:${requestId}] Request:`, {
-          method: requestArgs.method,
-          params: requestArgs.params,
-          timestamp: (/* @__PURE__ */ new Date()).toISOString()
-        });
-        try {
-          const result = await originalRequest(requestArgs);
-          console.log(`[getSessionAccount:RPC:${requestId}] Success:`, {
-            method: requestArgs.method,
-            resultType: typeof result,
-            timestamp: (/* @__PURE__ */ new Date()).toISOString()
-          });
-          return result;
-        } catch (error) {
-          console.error(`[getSessionAccount:RPC:${requestId}] Failed:`, {
-            method: requestArgs.method,
-            error: error instanceof Error ? error.message : String(error),
-            errorName: error instanceof Error ? error.name : "Unknown",
-            errorStack: error instanceof Error ? error.stack : void 0,
-            timestamp: (/* @__PURE__ */ new Date()).toISOString()
-          });
-          throw error;
-        }
-      }
-    };
-  };
-  const wrappedClient = { ...client, transport: loggingTransport };
   try {
-    console.log("[getSessionAccount] Calling toSimpleSmartAccount...");
     const account = await toSimpleSmartAccount({
-      client: wrappedClient,
+      client: publicClient,
       owner: signer
     });
-    console.log("[getSessionAccount] Session account created successfully:", {
-      accountAddress: account.address,
-      accountType: account.type,
-      timestamp: (/* @__PURE__ */ new Date()).toISOString()
-    });
+    console.log("[getSessionAccount] Session account created:", account.address);
     return { account, signer };
   } catch (error) {
     console.error("[getSessionAccount] Failed to create session account:", {
-      error,
-      errorMessage: error instanceof Error ? error.message : String(error),
-      errorName: error instanceof Error ? error.name : "Unknown",
-      errorStack: error instanceof Error ? error.stack : void 0,
+      error: error instanceof Error ? error.message : String(error),
       userAddress,
       signerAddress: signer.address,
-      chainId: client.chain?.id,
-      timestamp: (/* @__PURE__ */ new Date()).toISOString()
+      chainId: publicClient.chain?.id
     });
     throw error;
   }
@@ -546,6 +501,7 @@ function applyFeeCap(userOp, ethPriceUSD) {
 
 // src/session/core/client.ts
 async function getSessionClient({
+  publicClient,
   userAddress,
   sessionAccount,
   sessionSigner,
@@ -553,16 +509,16 @@ async function getSessionClient({
   paymasterOverride,
   ethPriceUSD
 }) {
-  const client = sessionAccount.client;
-  if (!clientHasChain(client)) {
-    throw new Error("Session account client had no associated chain.");
+  const chain = publicClient.chain;
+  if (!chain) {
+    throw new Error("Public client had no associated chain.");
   }
   if (paymasterOverride) {
     console.log(`[Drawbridge/SessionClient] Creating session client with paymaster override`);
   }
   const bundlerClient = createBundlerClient({
-    transport: getBundlerTransport(client.chain, ethPriceUSD),
-    client,
+    transport: getBundlerTransport(chain, ethPriceUSD),
+    client: publicClient,
     account: sessionAccount,
     paymaster: paymasterOverride
   });
@@ -570,19 +526,16 @@ async function getSessionClient({
     callFrom({
       worldAddress,
       delegatorAddress: userAddress,
-      publicClient: client
+      publicClient
     })
   ).extend(
     sendUserOperationFrom({
       worldAddress,
       delegatorAddress: userAddress,
-      publicClient: client
+      publicClient
     })
   ).extend(() => ({ userAddress, worldAddress, internal_signer: sessionSigner }));
   return sessionClient;
-}
-function clientHasChain(client) {
-  return client.chain != null;
 }
 async function checkDelegation({
   client,
@@ -1050,6 +1003,16 @@ var Drawbridge = class {
       isReady: false,
       error: null
     };
+    const chain = config.chains.find((c) => c.id === config.chainId);
+    if (!chain) {
+      throw new Error(`Chain ${config.chainId} not found in provided chains`);
+    }
+    this._publicClient = createPublicClient({
+      chain,
+      transport: config.transports[config.chainId],
+      pollingInterval: config.pollingInterval ?? 2e3
+    });
+    console.log("[drawbridge] Public client created for chain:", chain.name);
     this.wagmiConfig = createWalletConfig({
       chains: config.chains,
       transports: config.transports,
@@ -1256,21 +1219,18 @@ var Drawbridge = class {
     }
     console.log("[drawbridge] Setting up session for address:", userAddress);
     const signer = getSessionSigner(userAddress);
-    console.log("[drawbridge] About to create session account with client:", {
-      chainId: userClient.chain.id,
-      chainName: userClient.chain.name,
-      accountAddress: userClient.account.address,
-      accountType: userClient.account.type,
-      transportType: userClient.transport?.type || "unknown",
-      bundlerRpc: userClient.chain?.rpcUrls?.bundler?.http?.[0] || "none",
-      defaultRpc: userClient.chain.rpcUrls?.default?.http?.[0] || "none",
+    console.log("[drawbridge] About to create session account with publicClient:", {
+      chainId: this._publicClient.chain?.id,
+      chainName: this._publicClient.chain?.name,
+      userAddress,
       timestamp: (/* @__PURE__ */ new Date()).toISOString()
     });
     const { account } = await getSessionAccount({
-      client: userClient,
+      publicClient: this._publicClient,
       userAddress
     });
     const sessionClient = await getSessionClient({
+      publicClient: this._publicClient,
       userAddress,
       sessionAccount: account,
       sessionSigner: signer,
@@ -1281,7 +1241,7 @@ var Drawbridge = class {
     let hasDelegation = false;
     try {
       hasDelegation = await checkDelegation({
-        client: sessionClient,
+        client: this._publicClient,
         worldAddress: this.config.worldAddress,
         userAddress,
         sessionAddress: account.address
@@ -1376,7 +1336,7 @@ var Drawbridge = class {
       return { hasDelegation: false, isReady: false };
     }
     const hasDelegation = await checkDelegation({
-      client: this.state.sessionClient,
+      client: this._publicClient,
       worldAddress: this.config.worldAddress,
       userAddress: this.state.userAddress,
       sessionAddress: this.state.sessionAddress
@@ -1410,7 +1370,7 @@ var Drawbridge = class {
     const userClient = await getConnectorClient(this.wagmiConfig);
     try {
       await setupSession({
-        publicClient: userClient,
+        publicClient: this._publicClient,
         userClient,
         sessionClient: this.state.sessionClient,
         worldAddress: this.config.worldAddress,
@@ -1475,9 +1435,25 @@ var Drawbridge = class {
   get isReady() {
     return this.state.isReady;
   }
-  /** Get wagmi config (for advanced use cases like transactions) */
+  /** Get wagmi config (for advanced use cases like wallet transactions) */
   getWagmiConfig() {
     return this.wagmiConfig;
+  }
+  /**
+   * Get the public client for read operations.
+   *
+   * This is the single source of truth for all chain reads.
+   * Use this client for:
+   * - Reading contract state
+   * - Checking balances
+   * - Waiting for transaction receipts
+   * - Any other read-only operations
+   *
+   * The client is created once in the constructor with the configured
+   * transport (WebSocket + HTTP fallback) and polling interval.
+   */
+  getPublicClient() {
+    return this._publicClient;
   }
 };
 

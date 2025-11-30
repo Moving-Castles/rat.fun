@@ -1,30 +1,56 @@
-import { erc20Abi, maxUint256, type TransactionReceipt } from "viem"
+import { erc20Abi, type Hex, type TransactionReceipt } from "viem"
 import { ERC20EquivalentExchangeAbi } from "contracts/externalAbis"
 import { prepareConnectorClientForTransaction } from "$lib/modules/drawbridge/connector"
 import { errorHandler } from "$lib/modules/error-handling"
-import { waitForTransactionReceiptSuccess } from "./executeTransaction"
+import { getPublicClient } from "$lib/network"
+import {
+  PUBLIC_FAKE_RAT_TOKEN_ADDRESS,
+  PUBLIC_RAT_TOKEN_ADDRESS,
+  PUBLIC_EXCHANGE_CONTRACT_ADDRESS
+} from "$env/static/public"
+import { TransactionError } from "$lib/modules/error-handling/errors"
 
-// Mainnet-only addresses
-export const fakeTokenErc20Address = "0x13751a213f39ef4DadfcD1eb35aAC8AEc0De5bA6"
-// TODO replace with real exchange address (this one exchanges fakeRat for itself)
-export const fakeTokenExchangeAddress = "0x2a2c0be08bb8f5e7debc58d6e41cad6fdfd619fd"
+// Contract addresses from environment
+export const fakeRatTokenAddress = PUBLIC_FAKE_RAT_TOKEN_ADDRESS as Hex
+export const ratTokenAddress = PUBLIC_RAT_TOKEN_ADDRESS as Hex
+export const exchangeContractAddress = PUBLIC_EXCHANGE_CONTRACT_ADDRESS as Hex
 
 /**
- * Must be called before `exchangeFakeToken` so the exchange contract can burn fake tokens
+ * Wait for transaction receipt and verify success
  */
-export async function approveMaxFakeTokenForExchange(): Promise<TransactionReceipt | false> {
-  const spender = fakeTokenExchangeAddress
-  const scaledAmount = maxUint256
+async function waitForTransactionReceiptSuccess(tx: Hex): Promise<TransactionReceipt | false> {
+  const publicClient = getPublicClient()
+
+  const receipt = await publicClient.waitForTransactionReceipt({
+    hash: tx
+  })
+  if (receipt) {
+    if (receipt.status === "success") {
+      return receipt
+    } else {
+      throw new TransactionError(`Transaction failed: ${receipt.transactionHash}`)
+    }
+  }
+  return false
+}
+
+/**
+ * Approve the exchange contract to spend the exact amount of fake tokens
+ * @param amount the amount of tokens to approve (in whole tokens, not scaled)
+ */
+export async function approveFakeTokenForExchange(
+  amount: number
+): Promise<TransactionReceipt | false> {
+  const scaledAmount = BigInt(amount) * 10n ** 18n
 
   try {
-    // Prepare the action's client
     const client = await prepareConnectorClientForTransaction()
 
     const tx = await client.writeContract({
-      address: fakeTokenErc20Address,
+      address: fakeRatTokenAddress,
       abi: erc20Abi,
       functionName: "approve",
-      args: [spender, scaledAmount]
+      args: [exchangeContractAddress, scaledAmount]
     })
 
     return await waitForTransactionReceiptSuccess(tx)
@@ -42,11 +68,10 @@ export async function exchangeFakeToken(amount: number): Promise<TransactionRece
   const scaledAmount = BigInt(amount) * 10n ** 18n
 
   try {
-    // Prepare the action's client
     const client = await prepareConnectorClientForTransaction()
 
     const tx = await client.writeContract({
-      address: fakeTokenExchangeAddress,
+      address: exchangeContractAddress,
       abi: ERC20EquivalentExchangeAbi,
       functionName: "exchange",
       args: [scaledAmount]

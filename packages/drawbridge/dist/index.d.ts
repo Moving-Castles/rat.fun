@@ -1,9 +1,16 @@
-import { Chain, Client, Transport, Address, LocalAccount, Account } from 'viem';
+import { Client, Transport, Chain, Address, LocalAccount, PublicActions, Account } from 'viem';
 import { SmartAccount, PaymasterClient } from 'viem/account-abstraction';
 import { CreateConnectorFn, Config } from '@wagmi/core';
 
 /**
- * A viem client with an account (connected wallet)
+ * A viem public client with chain and public actions.
+ * Used for all read operations (getBalance, readContract, etc.)
+ */
+type PublicClient = Client<Transport, Chain> & PublicActions;
+/**
+ * A connected wallet client with account.
+ * Generic over chain to support various chain configurations.
+ * Used by setupSession for both EOA and Smart Account paths.
  */
 type ConnectedClient<chain extends Chain = Chain> = Client<Transport, chain, Account>;
 /**
@@ -16,7 +23,7 @@ type ConnectedClient<chain extends Chain = Chain> = Client<Transport, chain, Acc
  *
  * Use this to call World systems on behalf of the user via delegation.
  */
-type SessionClient<chain extends Chain = Chain> = Client<Transport, chain, SmartAccount> & {
+type SessionClient = Client<Transport, Chain, SmartAccount> & {
     /** Original user's wallet address (the delegator) */
     readonly userAddress: Address;
     /** MUD World contract address - all calls are routed through this */
@@ -209,6 +216,7 @@ declare class Drawbridge {
     private state;
     private listeners;
     private wagmiConfig;
+    private _publicClient;
     private accountWatcherCleanup;
     private isConnecting;
     private isDisconnecting;
@@ -339,8 +347,22 @@ declare class Drawbridge {
     get sessionAddress(): Address | null;
     /** Check if session is ready (has delegation) */
     get isReady(): boolean;
-    /** Get wagmi config (for advanced use cases like transactions) */
+    /** Get wagmi config (for advanced use cases like wallet transactions) */
     getWagmiConfig(): Config;
+    /**
+     * Get the public client for read operations.
+     *
+     * This is the single source of truth for all chain reads.
+     * Use this client for:
+     * - Reading contract state
+     * - Checking balances
+     * - Waiting for transaction receipts
+     * - Any other read-only operations
+     *
+     * The client is created once in the constructor with the configured
+     * transport (WebSocket + HTTP fallback) and polling interval.
+     */
+    getPublicClient(): PublicClient;
 }
 
-export { type ConnectedClient, type ConnectorInfo, Drawbridge, type DrawbridgeConfig, type DrawbridgeState, DrawbridgeStatus, type PrerequisiteStatus, type SessionClient };
+export { type ConnectedClient, type ConnectorInfo, Drawbridge, type DrawbridgeConfig, type DrawbridgeState, DrawbridgeStatus, type PrerequisiteStatus, type PublicClient, type SessionClient };

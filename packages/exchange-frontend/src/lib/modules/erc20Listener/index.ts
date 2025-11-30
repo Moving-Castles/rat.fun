@@ -1,137 +1,190 @@
 import { get } from "svelte/store"
-import { erc20Abi, Hex } from "viem"
-import { SetupPublicNetworkResult } from "$lib/mud/setupPublicNetwork"
-import { publicNetwork } from "$lib/modules/network"
-import { externalAddressesConfig, playerAddress } from "$lib/modules/state/stores"
-import { playerERC20Allowance, playerERC20Balance } from "$lib/modules/erc20Listener/stores"
-import { erc20BalanceListenerActive } from "$lib/modules/erc20Listener/stores"
+import { erc20Abi, type Hex } from "viem"
+import type { PublicClient } from "drawbridge"
+import { publicClient as publicClientStore } from "$lib/network"
+import {
+  fakeRatTokenAddress,
+  ratTokenAddress,
+  exchangeContractAddress
+} from "$lib/modules/on-chain-transactions/fakeToken"
+import { userAddress } from "$lib/modules/drawbridge"
+import {
+  balanceListenerActive,
+  ratTokenBalance,
+  fakeRatTokenBalance,
+  fakeRatTokenAllowance,
+  exchangeRatBalance
+} from "$lib/modules/erc20Listener/stores"
 
 let balanceInterval: NodeJS.Timeout | null = null
 const BALANCE_INTERVAL = 10_000 // 10 seconds
+
 let allowanceInterval: NodeJS.Timeout | null = null
 const ALLOWANCE_INTERVAL = 60_000 // 1 minute
 
 /**
- * Manually refetch the ERC20 allowance
+ * Manually refetch both token balances
  */
-export async function refetchAllowance() {
-  const currentNetwork = get(publicNetwork) as SetupPublicNetworkResult
-  const currentPlayerAddress = get(playerAddress) as Hex
-  const currentExternalAddresses = get(externalAddressesConfig)
+export async function refetchBalances() {
+  const pubClient = get(publicClientStore)
+  const playerAddr = get(userAddress) as Hex | null
 
-  if (!currentNetwork || !currentPlayerAddress || !currentExternalAddresses) {
-    return
-  }
+  if (!pubClient || !playerAddr) return
 
-  await updateAllowance(currentNetwork, currentPlayerAddress, currentExternalAddresses)
+  await Promise.all([
+    updateRatBalance(pubClient, playerAddr),
+    updateFakeRatBalance(pubClient, playerAddr)
+  ])
 }
 
 /**
- * Manually refetch the ERC20 balance
+ * Manually refetch RAT token balance
  */
-export async function refetchBalance() {
-  const currentNetwork = get(publicNetwork) as SetupPublicNetworkResult
-  const currentPlayerAddress = get(playerAddress) as Hex
-  const currentExternalAddresses = get(externalAddressesConfig)
+export async function refetchRatBalance() {
+  const pubClient = get(publicClientStore)
+  const playerAddr = get(userAddress) as Hex | null
 
-  if (!currentNetwork || !currentPlayerAddress || !currentExternalAddresses) {
-    return
-  }
+  if (!pubClient || !playerAddr) return
 
-  await updateBalance(currentNetwork, currentPlayerAddress, currentExternalAddresses.erc20Address)
+  await updateRatBalance(pubClient, playerAddr)
 }
 
 /**
- * Update the ERC20 balance
- * @param network - The network to update the balance on
- * @param playerAddr - The address of the player to update the balance for
- * @param erc20Address - The address of the ERC20 token to update the balance for
+ * Manually refetch FakeRAT token balance
  */
-async function updateBalance(
-  network: SetupPublicNetworkResult,
-  playerAddr: Hex,
-  erc20Address: Hex
-) {
+export async function refetchFakeRatBalance() {
+  const pubClient = get(publicClientStore)
+  const playerAddr = get(userAddress) as Hex | null
+
+  if (!pubClient || !playerAddr) return
+
+  await updateFakeRatBalance(pubClient, playerAddr)
+}
+
+/**
+ * Manually refetch FakeRAT allowance for exchange contract
+ */
+export async function refetchFakeRatAllowance() {
+  const pubClient = get(publicClientStore)
+  const playerAddr = get(userAddress) as Hex | null
+
+  if (!pubClient || !playerAddr) return
+
+  await updateFakeRatAllowance(pubClient, playerAddr)
+}
+
+/**
+ * Update RAT token balance
+ */
+async function updateRatBalance(publicClient: PublicClient, playerAddr: Hex) {
   try {
-    const balance = await readPlayerERC20Balance(network, playerAddr, erc20Address)
-    if (balance !== get(playerERC20Balance)) {
-      playerERC20Balance.set(balance)
+    const balance = await readBalance(publicClient, playerAddr, ratTokenAddress)
+    if (balance !== get(ratTokenBalance)) {
+      ratTokenBalance.set(balance)
     }
   } catch (error) {
-    console.error("Failed to update ERC20 balance:", error)
+    console.error("Failed to update RAT balance:", error)
   }
 }
 
 /**
- * Update the ERC20 allowance
- * @param network - The network to update the allowance on
- * @param playerAddr - The address of the player to update the allowance for
- * @param externalAddresses - The external addresses to update the allowance for
+ * Update FakeRAT token balance
  */
-async function updateAllowance(
-  network: SetupPublicNetworkResult,
-  playerAddr: Hex,
-  externalAddresses: ExternalAddressesConfigObject
-) {
+async function updateFakeRatBalance(publicClient: PublicClient, playerAddr: Hex) {
   try {
-    const allowance = await readPlayerERC20Allowance(
-      network,
-      playerAddr,
-      externalAddresses.gamePoolAddress,
-      externalAddresses.erc20Address
-    )
-    playerERC20Allowance.set(allowance)
+    const balance = await readBalance(publicClient, playerAddr, fakeRatTokenAddress)
+    if (balance !== get(fakeRatTokenBalance)) {
+      fakeRatTokenBalance.set(balance)
+    }
   } catch (error) {
-    console.error("Failed to update ERC20 allowance:", error)
+    console.error("Failed to update FakeRAT balance:", error)
   }
 }
 
 /**
- * Initialize the ERC20 listener
+ * Update FakeRAT allowance for exchange contract
  */
-export function initErc20Listener() {
-  // Clear old intervals (on network change, wallet change, etc...)
-  stopErc20Listener()
+async function updateFakeRatAllowance(publicClient: PublicClient, playerAddr: Hex) {
+  try {
+    const allowance = await readAllowance(
+      publicClient,
+      playerAddr,
+      exchangeContractAddress,
+      fakeRatTokenAddress
+    )
+    if (allowance !== get(fakeRatTokenAllowance)) {
+      fakeRatTokenAllowance.set(allowance)
+    }
+  } catch (error) {
+    console.error("Failed to update FakeRAT allowance:", error)
+  }
+}
 
-  const currentNetwork = get(publicNetwork) as SetupPublicNetworkResult
-  const currentPlayerAddress = get(playerAddress) as Hex
-  const currentExternalAddresses = get(externalAddressesConfig)
+/**
+ * Update RAT balance held by the exchange contract
+ */
+async function updateExchangeRatBalance(publicClient: PublicClient) {
+  try {
+    const balance = await readBalance(publicClient, exchangeContractAddress, ratTokenAddress)
+    if (balance !== get(exchangeRatBalance)) {
+      exchangeRatBalance.set(balance)
+    }
+  } catch (error) {
+    console.error("Failed to update exchange RAT balance:", error)
+  }
+}
 
-  if (!currentNetwork || !currentPlayerAddress || !currentExternalAddresses) {
+/**
+ * Initialize the token listener for both RAT and FakeRAT
+ */
+export function initTokenListener() {
+  // Clear old intervals
+  stopTokenListener()
+
+  const currentPublicClient = get(publicClientStore)
+  const currentPlayerAddress = get(userAddress) as Hex | null
+
+  if (!currentPublicClient || !currentPlayerAddress) {
     return
   }
 
-  const erc20Address = currentExternalAddresses.erc20Address
+  // Initial fetch for all values
+  updateRatBalance(currentPublicClient, currentPlayerAddress)
+  updateFakeRatBalance(currentPublicClient, currentPlayerAddress)
+  updateFakeRatAllowance(currentPublicClient, currentPlayerAddress)
+  updateExchangeRatBalance(currentPublicClient)
 
-  // Initial fetch and set up balance interval
-  updateBalance(currentNetwork, currentPlayerAddress, erc20Address)
-  // Balance is updated explicitly after user actions, we just have this to listen for external changes
+  // Set up balance polling interval
   balanceInterval = setInterval(() => {
-    // For certain parts of the gameplay we want to pause automatic balance updates
-    // to be able to manually update with specific timing
-    if (!get(erc20BalanceListenerActive)) {
+    if (!get(balanceListenerActive)) {
       return
     }
 
-    if (currentNetwork && currentPlayerAddress && erc20Address) {
-      updateBalance(currentNetwork, currentPlayerAddress, erc20Address)
+    const pubClient = get(publicClientStore)
+    const playerAddr = get(userAddress) as Hex | null
+
+    if (pubClient && playerAddr) {
+      updateRatBalance(pubClient, playerAddr)
+      updateFakeRatBalance(pubClient, playerAddr)
+      updateExchangeRatBalance(pubClient)
     }
   }, BALANCE_INTERVAL)
 
-  // Initial fetch and set up allowance interval
-  updateAllowance(currentNetwork, currentPlayerAddress, currentExternalAddresses)
-  // Allowance is updated explicitly after user actions, we just have this to listen for external changes
+  // Set up allowance polling interval (less frequent)
   allowanceInterval = setInterval(() => {
-    if (currentNetwork && currentPlayerAddress && currentExternalAddresses) {
-      updateAllowance(currentNetwork, currentPlayerAddress, currentExternalAddresses)
+    const pubClient = get(publicClientStore)
+    const playerAddr = get(userAddress) as Hex | null
+
+    if (pubClient && playerAddr) {
+      updateFakeRatAllowance(pubClient, playerAddr)
     }
   }, ALLOWANCE_INTERVAL)
 }
 
 /**
- * Clear all ERC20 listener intervals
+ * Stop all token listener intervals
  */
-export function stopErc20Listener() {
+export function stopTokenListener() {
   if (balanceInterval) {
     clearInterval(balanceInterval)
     balanceInterval = null
@@ -143,19 +196,15 @@ export function stopErc20Listener() {
 }
 
 /**
- * Read the player's ERC20 balance
- * @param publicNetwork - The public network to read the balance from
- * @param playerAddress - The address of the player to read the balance for
- * @param erc20Address - The address of the ERC20 token to read the balance for
- * @returns The balance of the player's ERC20 token
+ * Read token balance
  */
-export async function readPlayerERC20Balance(
-  publicNetwork: SetupPublicNetworkResult,
+async function readBalance(
+  publicClient: PublicClient,
   playerAddress: Hex,
-  erc20Address: Hex
-) {
-  const balance = await publicNetwork.publicClient.readContract({
-    address: erc20Address,
+  tokenAddress: Hex
+): Promise<number> {
+  const balance = await publicClient.readContract({
+    address: tokenAddress,
     abi: erc20Abi,
     functionName: "balanceOf",
     args: [playerAddress]
@@ -165,21 +214,16 @@ export async function readPlayerERC20Balance(
 }
 
 /**
- * Read the player's ERC20 allowance
- * @param publicNetwork - The public network to read the allowance from
- * @param playerAddress - The address of the player to read the allowance for
- * @param spenderAddress - The address of the spender to read the allowance for
- * @param erc20Address - The address of the ERC20 token to read the allowance for
- * @returns The allowance of the player's ERC20 token
+ * Read token allowance
  */
-export async function readPlayerERC20Allowance(
-  publicNetwork: SetupPublicNetworkResult,
+async function readAllowance(
+  publicClient: PublicClient,
   playerAddress: Hex,
   spenderAddress: Hex,
-  erc20Address: Hex
-) {
-  const allowance = await publicNetwork.publicClient.readContract({
-    address: erc20Address,
+  tokenAddress: Hex
+): Promise<number> {
+  const allowance = await publicClient.readContract({
+    address: tokenAddress,
     abi: erc20Abi,
     functionName: "allowance",
     args: [playerAddress, spenderAddress]

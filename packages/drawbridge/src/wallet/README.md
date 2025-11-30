@@ -39,7 +39,7 @@ const wagmiConfig = createWalletConfig({
     [baseSepolia.id]: http()
   },
   connectors: [injected(), coinbaseWallet()],
-  pollingInterval: 4000 // optional
+  pollingInterval: 2000 // optional
 })
 ```
 

@@ -1,6 +1,5 @@
 export { default as Swap } from "./Swap.svelte"
 export { default as SwapForm } from "./SwapForm/SwapForm.svelte"
 export { default as Agreement } from "./Agreement/Agreement.svelte"
-export { default as Permit2AllowMax } from "./Permit2AllowMax/Permit2AllowMax.svelte"
 export { default as SignAndSwap } from "./SwapForm/SignAndSwap.svelte"
 export { default as SwapComplete } from "./SwapComplete/SwapComplete.svelte"

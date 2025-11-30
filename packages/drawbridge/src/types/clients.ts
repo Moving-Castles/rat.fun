@@ -1,8 +1,22 @@
-import { Client, Chain, Transport, Account, Address, LocalAccount } from "viem"
+import { Client, Chain, Transport, Account, Address, LocalAccount, PublicActions } from "viem"
 import { SmartAccount } from "viem/account-abstraction"
 
 /**
- * A viem client with an account (connected wallet)
+ * A viem public client with chain and public actions.
+ * Used for all read operations (getBalance, readContract, etc.)
+ */
+export type PublicClient = Client<Transport, Chain> & PublicActions
+
+/**
+ * A viem client with an account (connected wallet).
+ * Used for wallet operations like signing.
+ */
+export type WalletClient = Client<Transport, Chain, Account>
+
+/**
+ * A connected wallet client with account.
+ * Generic over chain to support various chain configurations.
+ * Used by setupSession for both EOA and Smart Account paths.
  */
 export type ConnectedClient<chain extends Chain = Chain> = Client<Transport, chain, Account>
 
@@ -16,7 +30,7 @@ export type ConnectedClient<chain extends Chain = Chain> = Client<Transport, cha
  *
  * Use this to call World systems on behalf of the user via delegation.
  */
-export type SessionClient<chain extends Chain = Chain> = Client<Transport, chain, SmartAccount> & {
+export type SessionClient = Client<Transport, Chain, SmartAccount> & {
   /** Original user's wallet address (the delegator) */
   readonly userAddress: Address
   /** MUD World contract address - all calls are routed through this */

@@ -1,9 +1,10 @@
 <script lang="ts">
-  import { playerAddress, player } from "$lib/modules/state/stores"
-  import { playerERC20Balance } from "$lib/modules/erc20Listener/stores"
+  import { userAddress } from "$lib/modules/drawbridge"
   import { shortenAddress } from "$lib/modules/utils"
   import { disconnectWallet } from "$lib/modules/drawbridge/connector"
   import { SmallButton } from "$lib/components/Shared"
+  import { tokenBalances } from "$lib/modules/balances"
+  import { trackedCurrencies } from "$lib/modules/swap-router"
 
   let showDropdown = $state(false)
   let dropdownElement = $state<HTMLElement | undefined>(undefined)
@@ -46,17 +47,14 @@
     }
   })
 
-  // Only show if wallet is connected (playerAddress is not the default value)
-  let isConnected = $derived($playerAddress && $playerAddress !== "0x0")
+  // Only show if wallet is connected
+  let isConnected = $derived(!!$userAddress)
 </script>
 
 {#if isConnected}
   <div class="wallet-info">
     <button class="wallet-box" bind:this={walletBoxElement} onclick={toggleDropdown}>
-      <div class="address">{shortenAddress($playerAddress)}</div>
-      {#if $player?.name}
-        <div class="name">{$player.name}</div>
-      {/if}
+      <div class="address">{shortenAddress($userAddress!)}</div>
     </button>
 
     {#if showDropdown}
@@ -64,18 +62,19 @@
         <div class="dropdown-content">
           <div class="info-row">
             <span class="label">Address:</span>
-            <span class="value">{shortenAddress($playerAddress)}</span>
+            <span class="value">{shortenAddress($userAddress!)}</span>
           </div>
-          {#if $player?.name}
+          {#each trackedCurrencies as currency}
+            {@const balance = $tokenBalances[currency.address]}
             <div class="info-row">
-              <span class="label">Name:</span>
-              <span class="value">{$player.name}</span>
+              <span class="label">{currency.symbol}:</span>
+              <span class="value">
+                {balance?.formatted !== undefined
+                  ? balance.formatted.toLocaleString(undefined, { maximumFractionDigits: 4 })
+                  : "..."}
+              </span>
             </div>
-          {/if}
-          <div class="info-row">
-            <span class="label">$RAT:</span>
-            <span class="value">{$playerERC20Balance}</span>
-          </div>
+          {/each}
           <div class="button-container">
             <SmallButton text="Disconnect wallet" onclick={handleDisconnect} />
           </div>
@@ -112,11 +111,6 @@
 
       .address {
         font-weight: bold;
-      }
-
-      .name {
-        font-size: var(--font-size-tiny);
-        opacity: 0.8;
       }
     }
 

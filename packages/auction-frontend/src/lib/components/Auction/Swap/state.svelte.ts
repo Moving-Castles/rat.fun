@@ -1,6 +1,6 @@
 import { errorHandler } from "$lib/modules/error-handling"
 import { InvalidStateTransitionError } from "$lib/modules/error-handling/errors"
-import { usdcCurrency } from "$lib/modules/swap-router"
+import { usdcCurrency, type CurrencyData } from "$lib/modules/swap-router"
 import type { AuctionParams, CustomQuoter, Permit2PermitData, SwapReceipt } from "doppler"
 import type { Hex } from "viem"
 
@@ -15,7 +15,6 @@ import type { Hex } from "viem"
 export enum SWAP_STATE {
   INIT = "INIT",
   AGREEMENT = "AGREEMENT",
-  PERMIT2_ALLOW_MAX = "PERMIT2_ALLOW_MAX",
   SIGN_AND_SWAP = "SIGN_AND_SWAP", // User signs permit then executes swap in one step
   SWAP_COMPLETE = "SWAP_COMPLETE",
   WALLET_LIMIT_REACHED = "WALLET_LIMIT_REACHED",
@@ -35,7 +34,7 @@ let permit = $state<Permit2PermitData | undefined>(undefined)
 let permitSignature = $state<Hex | undefined>(undefined)
 let spentAmount = $state<bigint | undefined>(undefined)
 let savedCountryCode = $state<string | undefined>(undefined)
-let isPermit2Req = $state<boolean | null>(null)
+let fromCurrency = $state<CurrencyData>(usdcCurrency)
 let numeraireBalance = $state<number | undefined>(undefined)
 let tokenBalance = $state<number | undefined>(undefined)
 let swapReceipt = $state<SwapReceipt | null>(null)
@@ -47,17 +46,11 @@ let swapReceipt = $state<SwapReceipt | null>(null)
 const VALID_TRANSITIONS: Record<SWAP_STATE, SWAP_STATE[]> = {
   [SWAP_STATE.INIT]: [
     SWAP_STATE.AGREEMENT,
-    SWAP_STATE.PERMIT2_ALLOW_MAX,
     SWAP_STATE.SIGN_AND_SWAP,
     SWAP_STATE.WALLET_LIMIT_REACHED,
     SWAP_STATE.ERROR
   ],
-  [SWAP_STATE.AGREEMENT]: [
-    SWAP_STATE.PERMIT2_ALLOW_MAX,
-    SWAP_STATE.SIGN_AND_SWAP,
-    SWAP_STATE.ERROR
-  ],
-  [SWAP_STATE.PERMIT2_ALLOW_MAX]: [SWAP_STATE.SIGN_AND_SWAP, SWAP_STATE.ERROR],
+  [SWAP_STATE.AGREEMENT]: [SWAP_STATE.SIGN_AND_SWAP, SWAP_STATE.ERROR],
   [SWAP_STATE.SIGN_AND_SWAP]: [SWAP_STATE.SWAP_COMPLETE, SWAP_STATE.ERROR],
   [SWAP_STATE.SWAP_COMPLETE]: [SWAP_STATE.SIGN_AND_SWAP, SWAP_STATE.ERROR],
   [SWAP_STATE.WALLET_LIMIT_REACHED]: [],
@@ -82,7 +75,7 @@ const resetData = () => {
   permitSignature = undefined
   spentAmount = undefined
   savedCountryCode = undefined
-  isPermit2Req = null
+  fromCurrency = usdcCurrency
   numeraireBalance = undefined
   tokenBalance = undefined
   swapReceipt = null
@@ -131,8 +124,7 @@ export const swapState = {
       return isExactOut
     },
     get fromCurrency() {
-      // TODO token selection
-      return usdcCurrency
+      return fromCurrency
     },
     get permit() {
       return permit
@@ -145,9 +137,6 @@ export const swapState = {
     },
     get savedCountryCode() {
       return savedCountryCode
-    },
-    get isPermit2Req() {
-      return isPermit2Req
     },
     get numeraireBalance() {
       return numeraireBalance
@@ -187,8 +176,8 @@ export const swapState = {
     setSavedCountryCode: (code: string | undefined) => {
       savedCountryCode = code
     },
-    setIsPermit2Req: (value: boolean | null) => {
-      isPermit2Req = value
+    setFromCurrency: (currency: CurrencyData) => {
+      fromCurrency = currency
     },
     setNumeraireBalance: (balance: number | undefined) => {
       numeraireBalance = balance

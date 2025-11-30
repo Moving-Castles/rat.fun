@@ -2,7 +2,7 @@
   import { swapState } from "./state.svelte"
   import { formatUnits } from "viem"
   import { onMount } from "svelte"
-  import { publicNetwork } from "$lib/modules/network"
+  import { publicClient as publicClientStore } from "$lib/network"
   import { dopplerHookAbi } from "@whetstone-research/doppler-sdk"
   import { asPublicClient } from "$lib/utils/clientAdapter"
 
@@ -26,9 +26,15 @@
       return
     }
 
+    const client = $publicClientStore
+    if (!client) {
+      console.error("[DebugPanel] No public client available")
+      return
+    }
+
     isCheckingEarlyExit = true
     try {
-      const result = await asPublicClient($publicNetwork.publicClient).readContract({
+      const result = await asPublicClient(client).readContract({
         address: auctionParams.hookAddress,
         abi: dopplerHookAbi,
         functionName: "earlyExit"
@@ -108,7 +114,7 @@
         </div>
       {/if}
       <div class="debug-value">Country: {swapState.data.savedCountryCode || "none"}</div>
-      <div class="debug-value">Permit2 Req: {swapState.data.isPermit2Req ?? "null"}</div>
+      <div class="debug-value">Currency: {swapState.data.fromCurrency.symbol ?? "unknown"}</div>
     </div>
 
     <div class="debug-section">

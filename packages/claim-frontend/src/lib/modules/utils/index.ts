@@ -7,8 +7,6 @@
 
 import { Hex, sha256 } from "viem"
 import { JSONParseError } from "../error-handling/errors"
-import { get } from "svelte/store"
-import { blockNumber as blockNumberStore } from "$lib/modules/network"
 
 const BLOCKTIME = 2
 
@@ -232,21 +230,6 @@ export function blocksToReadableTime(blocks: number): string {
   const result: string = `${hours}:${paddedMinutes}:${paddedSeconds}`
 
   return result
-}
-
-/**
- * Converts a historical block number to an approximate timestamp
- * Works backwards from the current block number and current time
- * Assumes BLOCKTIME = 2 seconds per block
- * @param blockNumber The historical block number to convert
- * @returns The approximate timestamp in milliseconds (Unix epoch)
- */
-export function blockNumberToTimestamp(blockNumber: number): number {
-  const currentTime = Date.now()
-  const currentBlockNumber = Number(get(blockNumberStore) ?? 0)
-  const blocksDiff = currentBlockNumber - blockNumber
-  const millisecondsDiff = blocksToSeconds(blocksDiff) * 1000
-  return currentTime - millisecondsDiff
 }
 
 /**

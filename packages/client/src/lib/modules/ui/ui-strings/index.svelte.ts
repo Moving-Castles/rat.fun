@@ -1,13 +1,7 @@
 import { enUS } from "./en-US"
-import { itBR } from "./it-BR"
-import { svBR } from "./sv-BR"
-import { nlBR } from "./nl-BR"
 
 const UIStringsData = {
-  "en-US": enUS,
-  "it-BR": itBR,
-  "sv-BR": svBR,
-  "nl-BR": nlBR
+  "en-US": enUS
 } as const
 
 type Locale = keyof typeof UIStringsData
@@ -50,8 +44,5 @@ export const getCurrentLocale = () => currentLocale
 export const availableLocales = Object.keys(UIStringsData) as Locale[]
 
 export const localeNames: Record<Locale, string> = {
-  "en-US": "English",
-  "it-BR": "Italiano (Brainrot)",
-  "sv-BR": "Svenska (Umeå Brainrot)",
-  "nl-BR": "Nederlands (Brainrot)"
+  "en-US": "English"
 }

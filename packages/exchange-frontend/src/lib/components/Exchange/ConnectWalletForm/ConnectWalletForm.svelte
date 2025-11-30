@@ -96,6 +96,9 @@
 
 <div class="outer-container">
   <div class="inner-container">
+    <div class="info-box">
+      <p>Connect your wallet to swap $FAKERAT for real $RAT</p>
+    </div>
     <div class="button-container" bind:this={buttonElement}>
       {#if connecting}
         <BigButton text="Connecting..." disabled={true} onclick={() => {}} />
@@ -139,19 +142,40 @@
     align-items: center;
     justify-content: center;
     color: var(--background);
+    width: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
 
     .inner-container {
       display: flex;
       flex-flow: column nowrap;
       align-items: center;
       justify-content: center;
-      width: 500px;
+      width: 800px;
       max-width: 90dvw;
+
+      .info-box {
+        width: 100%;
+        padding: 0;
+        margin-bottom: 30px;
+        color: white;
+        text-align: center;
+        font-size: var(--font-size-extra-large);
+        font-family: var(--special-font-stack);
+        line-height: 1.1em;
+
+        p {
+          margin: 0;
+          padding: 0;
+        }
+      }
 
       .button-container {
         width: 100%;
         height: 200px;
-        margin-bottom: 20px;
       }
     }
   }

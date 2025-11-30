@@ -1,8 +1,53 @@
 <script lang="ts">
   import { formatUnits, parseUnits } from "viem"
-  import { swapState, SWAP_STATE } from "../state.svelte"
+  import { swapState } from "../state.svelte"
   import SpendLimitProgressBar from "./SpendLimitProgressBar.svelte"
-  import { quoteExactIn, quoteExactOut } from "$lib/modules/swap-router"
+  import { quoteExactIn, quoteExactOut, availableCurrencies } from "$lib/modules/swap-router"
+  import { tokenBalances } from "$lib/modules/balances"
+
+  /**
+   * Get the balance of the currently selected currency
+   */
+  function getSelectedCurrencyBalance(): number | undefined {
+    const fromCurrency = swapState.data.fromCurrency
+    if (!fromCurrency) return undefined
+    return $tokenBalances[fromCurrency.address]?.formatted
+  }
+
+  /**
+   * Check if the current input amount exceeds the user's balance
+   */
+  function isAmountExceedsBalance(): boolean {
+    const balance = getSelectedCurrencyBalance()
+    const amountIn = getAmountIn()
+    if (balance === undefined || amountIn === undefined) return false
+    return amountIn > balance
+  }
+
+  /**
+   * Set amount to max balance
+   */
+  function setMaxAmount() {
+    const balance = getSelectedCurrencyBalance()
+    if (balance !== undefined && balance > 0) {
+      setAmountIn(balance)
+    }
+  }
+
+  /**
+   * Handle currency change from dropdown
+   */
+  function handleCurrencyChange(event: Event) {
+    const select = event.target as HTMLSelectElement
+    const selected = availableCurrencies.find(c => c.address === select.value)
+    if (selected) {
+      swapState.data.setFromCurrency(selected)
+      // Clear amounts when currency changes
+      swapState.data.setAmountIn(undefined)
+      swapState.data.setAmountOut(undefined)
+      swapState.data.clearPermit()
+    }
+  }
 
   /**
    * Get numeraire amount formatted for display in input field
@@ -131,17 +176,6 @@
 </script>
 
 <div class="swap-form">
-  <div class="balances-section">
-    <div class="balance-item">
-      <span class="label">Numeraire balance:</span>
-      <span class="value">{swapState.data.numeraireBalance ?? "..."}</span>
-    </div>
-    <div class="balance-item">
-      <span class="label">Token balance:</span>
-      <span class="value">{swapState.data.tokenBalance ?? "..."}</span>
-    </div>
-  </div>
-
   <!-- Spend limit progress bar -->
   <SpendLimitProgressBar />
 
@@ -149,14 +183,41 @@
     <!-- Input fields section -->
     <div class="inputs-section">
       <div class="input-group">
-        <label for="numeraire-input">Numeraire:</label>
+        <label for="currency-select">Pay with:</label>
+        <select
+          id="currency-select"
+          value={swapState.data.fromCurrency.address}
+          onchange={handleCurrencyChange}
+        >
+          {#each availableCurrencies as currency}
+            <option value={currency.address}>{currency.symbol}</option>
+          {/each}
+        </select>
+      </div>
+      <div class="input-group">
+        <label for="numeraire-input">{swapState.data.fromCurrency.symbol ?? "Amount"}:</label>
         <input
           id="numeraire-input"
           type="number"
           step="any"
           placeholder="0.0"
+          class:error={isAmountExceedsBalance()}
           bind:value={getAmountIn, setAmountIn}
         />
+        <div class="balance-row">
+          <span class="balance-text">
+            Balance: {getSelectedCurrencyBalance()?.toLocaleString(undefined, {
+              maximumFractionDigits: 6
+            }) ?? "..."}
+            {swapState.data.fromCurrency.symbol}
+          </span>
+          {#if getSelectedCurrencyBalance() !== undefined && getSelectedCurrencyBalance()! > 0}
+            <button class="max-button" type="button" onclick={setMaxAmount}>MAX</button>
+          {/if}
+        </div>
+        {#if isAmountExceedsBalance()}
+          <span class="error-text">Insufficient balance</span>
+        {/if}
       </div>
       <div class="input-group">
         <label for="token-input">$RAT</label>
@@ -197,32 +258,6 @@
     width: 100%;
   }
 
-  .balances-section {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    padding: 12px;
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 8px;
-  }
-
-  .balance-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .label {
-    font-size: 14px;
-    color: rgba(255, 255, 255, 0.7);
-  }
-
-  .value {
-    font-size: 14px;
-    font-weight: 500;
-    color: white;
-  }
-
   .inputs-section {
     display: flex;
     flex-direction: column;
@@ -240,6 +275,7 @@
       color: rgba(255, 255, 255, 0.9);
     }
 
+    select,
     input {
       padding: 12px 16px;
       font-size: 16px;
@@ -254,7 +290,18 @@
         border-color: rgba(255, 255, 255, 0.4);
         background: rgba(0, 0, 0, 0.4);
       }
+    }
 
+    select {
+      cursor: pointer;
+
+      option {
+        background: #1a1a1a;
+        color: white;
+      }
+    }
+
+    input {
       &::placeholder {
         color: rgba(255, 255, 255, 0.3);
       }
@@ -270,6 +317,45 @@
         appearance: textfield;
         -moz-appearance: textfield;
       }
+
+      &.error {
+        border-color: #ff4444;
+        background: rgba(255, 68, 68, 0.1);
+      }
+    }
+
+    .balance-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .balance-text {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .max-button {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+      }
+    }
+
+    .error-text {
+      font-size: 12px;
+      color: #ff4444;
     }
   }
 </style>

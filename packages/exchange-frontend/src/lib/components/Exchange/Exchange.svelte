@@ -1,80 +1,63 @@
 <script lang="ts">
   import { onMount } from "svelte"
-  import {
-    playerFakeTokenBalance,
-    playerFakeTokenAllowance
-  } from "$lib/modules/erc20Listener/stores"
+  import type { Hex } from "viem"
+  import { fakeRatTokenBalance } from "$lib/modules/erc20Listener/stores"
   import { EXCHANGE_STATE, exchangeState } from "$lib/components/Exchange/state.svelte"
-  import {
-    ConnectWalletForm,
-    NoTokens,
-    Approve,
-    ExchangeForm,
-    Done
-  } from "$lib/components/Exchange"
+  import { ConnectWalletForm } from "$lib/components/Exchange"
+  import { ExchangeFlow } from "$lib/components/Exchange/ExchangeFlow"
+  import NoTokens from "$lib/components/Exchange/NoTokens/NoTokens.svelte"
   import { userAddress } from "$lib/modules/drawbridge"
-  import { playerAddress } from "$lib/modules/state/stores"
-  import { initErc20Listener } from "$lib/modules/erc20Listener"
-  import { initFakeTokenListener } from "$lib/modules/erc20Listener/fakeToken"
+  import { initTokenListener } from "$lib/modules/erc20Listener"
   import WalletInfo from "$lib/components/WalletInfo/WalletInfo.svelte"
 
-  // Listen to changes in wallet connection (for when user connects wallet)
+  /**
+   * Check if user has FakeRAT tokens
+   */
+  function hasTokens(): boolean {
+    return $fakeRatTokenBalance > 0
+  }
+
+  /**
+   * Handle wallet connected - check balance and transition
+   */
+  async function handleWalletConnected(address: Hex) {
+    console.log("[Exchange] Wallet connected:", address)
+
+    // Initialize token listener
+    initTokenListener()
+
+    // Wait for balance to load
+    const startTime = Date.now()
+    while (Date.now() < startTime + 1000) {
+      if ($fakeRatTokenBalance > 0) {
+        break
+      }
+      await new Promise(resolve => setTimeout(resolve, 50))
+    }
+
+    // Transition based on balance
+    if (hasTokens()) {
+      exchangeState.state.transitionTo(EXCHANGE_STATE.EXCHANGE)
+    } else {
+      exchangeState.state.transitionTo(EXCHANGE_STATE.NO_TOKENS)
+    }
+  }
+
+  // Watch for wallet connection changes
   $effect(() => {
-    if ($userAddress) {
-      console.log("[Exchange] Wallet connected:", $userAddress)
-      // Set player address and initialize token listeners
-      playerAddress.set($userAddress)
-      initErc20Listener()
-      initFakeTokenListener()
-      checkStateAndTransition()
+    if ($userAddress && exchangeState.state.current === EXCHANGE_STATE.CONNECT_WALLET) {
+      handleWalletConnected($userAddress as Hex)
     }
   })
 
-  function checkStateAndTransition() {
-    // Wait for stores to update from polling
-    setTimeout(() => {
-      if ($playerFakeTokenBalance === 0) {
-        exchangeState.state.transitionTo(EXCHANGE_STATE.NO_TOKENS)
-      } else if ($playerFakeTokenAllowance === 0) {
-        exchangeState.state.transitionTo(EXCHANGE_STATE.APPROVE)
-      } else {
-        exchangeState.state.transitionTo(EXCHANGE_STATE.EXCHANGE)
-      }
-    }, 500)
-  }
-
   onMount(async () => {
-    // Reset state to INIT
+    // Reset state
     exchangeState.state.reset()
 
-    // If wallet is already connected (from previous session), wait for balance to load
+    // Check if wallet is already connected
     if ($userAddress) {
-      console.log("[Exchange] Wallet already connected on mount:", $userAddress)
-
-      // Set player address and initialize token listeners
-      playerAddress.set($userAddress)
-      initErc20Listener()
-      initFakeTokenListener()
-
-      // Wait for fake token balance to be updated
-      const startTime = Date.now()
-      while (Date.now() < startTime + 1000) {
-        if ($playerFakeTokenBalance > 0) {
-          break
-        }
-        await new Promise(resolve => setTimeout(resolve, 50))
-      }
-
-      // Determine initial state based on balance and allowance
-      if ($playerFakeTokenBalance === 0) {
-        exchangeState.state.transitionTo(EXCHANGE_STATE.NO_TOKENS)
-      } else if ($playerFakeTokenAllowance === 0) {
-        exchangeState.state.transitionTo(EXCHANGE_STATE.APPROVE)
-      } else {
-        exchangeState.state.transitionTo(EXCHANGE_STATE.EXCHANGE)
-      }
+      await handleWalletConnected($userAddress as Hex)
     } else {
-      // No wallet connected, show connect wallet screen
       exchangeState.state.transitionTo(EXCHANGE_STATE.CONNECT_WALLET)
     }
   })
@@ -86,12 +69,8 @@
   <div class="exchange-inner">
     {#if exchangeState.state.current === EXCHANGE_STATE.CONNECT_WALLET}
       <ConnectWalletForm />
-    {:else if exchangeState.state.current === EXCHANGE_STATE.APPROVE}
-      <Approve />
     {:else if exchangeState.state.current === EXCHANGE_STATE.EXCHANGE}
-      <ExchangeForm />
-    {:else if exchangeState.state.current === EXCHANGE_STATE.DONE}
-      <Done />
+      <ExchangeFlow />
     {:else if exchangeState.state.current === EXCHANGE_STATE.NO_TOKENS}
       <NoTokens />
     {/if}
@@ -104,5 +83,18 @@
     height: 100dvh;
     z-index: 1000;
     color: white;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: center;
+
+    .exchange-inner {
+      width: 800px;
+      max-width: 90dvw;
+      height: auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
   }
 </style>

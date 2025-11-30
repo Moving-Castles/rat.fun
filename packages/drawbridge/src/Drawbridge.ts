@@ -1,6 +1,6 @@
-import { Address, Chain, Client, Transport, Account } from "viem"
+import { Address, Chain, Client, Transport, createPublicClient } from "viem"
 import type { PaymasterClient } from "viem/account-abstraction"
-import { SessionClient, DrawbridgeStatus } from "./types"
+import { SessionClient, DrawbridgeStatus, PublicClient } from "./types"
 import { getSessionSigner } from "./session/core/signer"
 import { getSessionAccount } from "./session/core/account"
 import { getSessionClient } from "./session/core/client"
@@ -142,6 +142,7 @@ export class Drawbridge {
   private state: DrawbridgeState
   private listeners = new Set<StateListener>()
   private wagmiConfig: Config
+  private _publicClient: PublicClient
   private accountWatcherCleanup: (() => void) | null = null
   private isConnecting = false
   private isDisconnecting = false
@@ -160,7 +161,23 @@ export class Drawbridge {
       error: null
     }
 
-    // Create wagmi config
+    // Get the chain for this config
+    const chain = config.chains.find(c => c.id === config.chainId)
+    if (!chain) {
+      throw new Error(`Chain ${config.chainId} not found in provided chains`)
+    }
+
+    // Create dedicated public client for all read operations
+    // This is the single source of truth for chain reads
+    this._publicClient = createPublicClient({
+      chain,
+      transport: config.transports[config.chainId],
+      pollingInterval: config.pollingInterval ?? 2000
+    })
+
+    console.log("[drawbridge] Public client created for chain:", chain.name)
+
+    // Create wagmi config for wallet connections
     this.wagmiConfig = createWalletConfig({
       chains: config.chains,
       transports: config.transports,
@@ -431,26 +448,24 @@ export class Drawbridge {
     const signer = getSessionSigner(userAddress)
 
     // DEBUG: Log details before creating session account
-    console.log("[drawbridge] About to create session account with client:", {
-      chainId: userClient.chain.id,
-      chainName: userClient.chain.name,
-      accountAddress: userClient.account.address,
-      accountType: userClient.account.type,
-      transportType: (userClient.transport as any)?.type || "unknown",
-      bundlerRpc: (userClient.chain as any)?.rpcUrls?.bundler?.http?.[0] || "none",
-      defaultRpc: userClient.chain.rpcUrls?.default?.http?.[0] || "none",
+    console.log("[drawbridge] About to create session account with publicClient:", {
+      chainId: this._publicClient.chain?.id,
+      chainName: this._publicClient.chain?.name,
+      userAddress,
       timestamp: new Date().toISOString()
     })
 
     // Create ERC-4337 SimpleAccount smart wallet
-    // TypeScript: We've already checked chain exists on line 298, so cast is safe
+    // Uses the dedicated publicClient for all chain reads
     const { account } = await getSessionAccount({
-      client: userClient as Client<Transport, Chain, Account>,
+      publicClient: this._publicClient,
       userAddress
     })
 
     // Create session client with MUD World callFrom/sendUserOperationFrom extensions
+    // Uses the dedicated publicClient for MUD extension reads
     const sessionClient = await getSessionClient({
+      publicClient: this._publicClient,
       userAddress,
       sessionAccount: account,
       sessionSigner: signer,
@@ -464,7 +479,7 @@ export class Drawbridge {
     let hasDelegation = false
     try {
       hasDelegation = await checkDelegation({
-        client: sessionClient,
+        client: this._publicClient,
         worldAddress: this.config.worldAddress!,
         userAddress,
         sessionAddress: account.address
@@ -579,7 +594,7 @@ export class Drawbridge {
     }
 
     const hasDelegation = await checkDelegation({
-      client: this.state.sessionClient,
+      client: this._publicClient,
       worldAddress: this.config.worldAddress!,
       userAddress: this.state.userAddress!,
       sessionAddress: this.state.sessionAddress!
@@ -623,7 +638,7 @@ export class Drawbridge {
 
     try {
       await setupSession({
-        publicClient: userClient,
+        publicClient: this._publicClient,
         userClient,
         sessionClient: this.state.sessionClient,
         worldAddress: this.config.worldAddress!,
@@ -704,8 +719,25 @@ export class Drawbridge {
     return this.state.isReady
   }
 
-  /** Get wagmi config (for advanced use cases like transactions) */
+  /** Get wagmi config (for advanced use cases like wallet transactions) */
   getWagmiConfig(): Config {
     return this.wagmiConfig
+  }
+
+  /**
+   * Get the public client for read operations.
+   *
+   * This is the single source of truth for all chain reads.
+   * Use this client for:
+   * - Reading contract state
+   * - Checking balances
+   * - Waiting for transaction receipts
+   * - Any other read-only operations
+   *
+   * The client is created once in the constructor with the configured
+   * transport (WebSocket + HTTP fallback) and polling interval.
+   */
+  getPublicClient(): PublicClient {
+    return this._publicClient
   }
 }

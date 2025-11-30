@@ -1,22 +1,65 @@
 import { get } from "svelte/store"
-import { publicNetwork } from "$lib/modules/network"
-import { addChain, switchChain } from "viem/actions"
+import type { Hex } from "viem"
+import { addChain, switchChain, writeContract } from "viem/actions"
 import { getAccount, getChainId, getConnectorClient } from "@wagmi/core"
-import { getChain } from "$lib/mud/utils"
+import type { Config } from "@wagmi/core"
+
+import { networkConfig } from "$lib/network"
 import { getDrawbridge } from "$lib/modules/drawbridge"
-import { WagmiConfigUnavailableError } from "../error-handling/errors"
-import { ensureWriteContract, type WalletTransactionClient } from "$lib/mud/setupWalletNetwork"
+import { WagmiConfigUnavailableError, NetworkNotInitializedError } from "../error-handling/errors"
+
+type WriteContractArgs = {
+  address: Hex
+  abi: readonly unknown[]
+  functionName: string
+  args?: readonly unknown[]
+  gas?: bigint
+  value?: bigint
+}
+
+export type WalletTransactionClient = {
+  writeContract: (args: WriteContractArgs) => Promise<Hex>
+}
 
 /**
- * Returns the wallet connector client from wagmi.
- * Expects the wallet connection to be established, throws an error otherwise.
+ * Get the connector client from wagmi, ensuring we're on the correct chain.
+ * Returns a client that can be used with viem's writeContract action.
  */
-export async function getEstablishedConnectorClient() {
-  const wagmiConfig = getDrawbridge().getWagmiConfig()
+export async function prepareConnectorClientForTransaction(): Promise<WalletTransactionClient> {
+  const wagmiConfig = getDrawbridge().getWagmiConfig() as Config
   if (!wagmiConfig) {
     throw new WagmiConfigUnavailableError()
   }
-  return await getConnectorClient(wagmiConfig)
+
+  const config = get(networkConfig)
+  if (!config) {
+    throw new NetworkNotInitializedError()
+  }
+
+  let connectorClient = await getConnectorClient(wagmiConfig)
+
+  // User's wallet may switch between different chains, ensure the current chain is correct
+  const expectedChainId = config.chainId
+  if (getChainId(wagmiConfig) !== expectedChainId) {
+    try {
+      await switchChain(connectorClient, { id: expectedChainId })
+    } catch {
+      await addChain(connectorClient, { chain: config.chain })
+      await switchChain(connectorClient, { id: expectedChainId })
+    }
+
+    // manually update the connector and its chain id
+    connectorClient = await getConnectorClient(wagmiConfig, {
+      connector: getAccount(wagmiConfig).connector
+    })
+  }
+
+  // Return a simple wrapper with writeContract using viem's tree-shakable action
+  return {
+    async writeContract(args: WriteContractArgs): Promise<Hex> {
+      return writeContract(connectorClient, args as Parameters<typeof writeContract>[1])
+    }
+  }
 }
 
 export async function disconnectWallet() {
@@ -26,36 +69,4 @@ export async function disconnectWallet() {
   } catch {
     // Not connected, nothing to do
   }
-}
-
-/**
- * Prepares the wallet client obtained from wagmi for sending onchain transactions.
- * - Expects wagmi provider to already have a wallet connected to it by drawbridge.
- * - Wallet may switch between different chains, ensure the current chain is correct.
- * - Extend the client with MUD's transactionQueue, since it comes directly from wagmi.
- */
-export async function prepareConnectorClientForTransaction(): Promise<WalletTransactionClient> {
-  const wagmiConfig = getDrawbridge().getWagmiConfig()
-  if (!wagmiConfig) {
-    throw new WagmiConfigUnavailableError()
-  }
-  let connectorClient = await getConnectorClient(wagmiConfig)
-
-  // User's wallet may switch between different chains, ensure the current chain is correct
-  const expectedChainId = get(publicNetwork).config.chain.id
-  if (getChainId(wagmiConfig) !== expectedChainId) {
-    try {
-      await switchChain(connectorClient, { id: expectedChainId })
-    } catch {
-      await addChain(connectorClient, { chain: getChain(expectedChainId) })
-      await switchChain(connectorClient, { id: expectedChainId })
-    }
-
-    // manually update the connector and its chain id
-    connectorClient = await getConnectorClient(wagmiConfig, {
-      connector: getAccount(wagmiConfig).connector
-    })
-  }
-  // MUD's `transactionQueue` extends the client with `writeContract` method
-  return ensureWriteContract(connectorClient)
 }

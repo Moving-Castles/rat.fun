@@ -1,4 +1,10 @@
-import { Drawbridge, DrawbridgeStatus, type SessionClient, type DrawbridgeState } from "drawbridge"
+import {
+  Drawbridge,
+  DrawbridgeStatus,
+  type SessionClient,
+  type DrawbridgeState,
+  type PublicClient
+} from "drawbridge"
 import { readable, derived } from "svelte/store"
 import { paymasters } from "./paymasters"
 import { chains, transports, getConnectors } from "./wagmiConfig"
@@ -6,7 +12,7 @@ import type { Hex } from "viem"
 import type { NetworkConfig } from "$lib/mud/utils"
 
 // Re-export types from package
-export type { ConnectorInfo, SessionClient } from "drawbridge"
+export type { ConnectorInfo, SessionClient, PublicClient } from "drawbridge"
 export { DrawbridgeStatus } from "drawbridge"
 
 // Drawbridge instance (singleton)
@@ -84,6 +90,22 @@ export function cleanupDrawbridge(): void {
     drawbridgeInstance.destroy()
     drawbridgeInstance = null
   }
+}
+
+/**
+ * Get the public client from drawbridge.
+ *
+ * This is the single source of truth for all chain reads.
+ * Use this to pass to other systems (like MUD) to avoid double RPC polling.
+ *
+ * @throws If drawbridge is not initialized
+ */
+export function getDrawbridgePublicClient(): PublicClient {
+  if (!drawbridgeInstance) {
+    throw new Error("Drawbridge not initialized. Call initializeDrawbridge first.")
+  }
+
+  return drawbridgeInstance.getPublicClient()
 }
 
 // ===== Reactive Stores =====

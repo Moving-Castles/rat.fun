@@ -1,22 +1,45 @@
 <script lang="ts">
-  import { signPermit2, waitForDopplerSwapReceipt } from "doppler"
+  import { maxUint128 } from "viem"
+  import {
+    signPermit2,
+    waitForDopplerSwapReceipt,
+    isPermit2AllowanceRequired,
+    permit2AllowMax
+  } from "doppler"
   import { BigButton, Checkbox } from "$lib/components/Shared"
   import { prepareConnectorClientForTransaction } from "$lib/modules/drawbridge/connector"
   import { userAddress } from "$lib/modules/drawbridge"
-  import { publicNetwork } from "$lib/modules/network"
-  import { ratRouterAddress, swapExactIn } from "$lib/modules/swap-router"
+  import { publicClient as publicClientStore } from "$lib/network"
+  import { ratRouterAddress, swapExactIn, isPermit2Required } from "$lib/modules/swap-router"
   import { signTypedData } from "viem/actions"
-  import { asPublicClient } from "$lib/utils/clientAdapter"
+  import { asPublicClient, asWalletClient } from "$lib/utils/clientAdapter"
   import { swapState, SWAP_STATE } from "../state.svelte"
+  import { tokenBalances } from "$lib/modules/balances"
 
   let isProcessing = $state(false)
+  let processingStep = $state("")
   let waiveWithdrawal = $state(false)
 
   /**
-   * Sign permit2 and execute swap in one flow
-   * This is a two-step process:
-   * 1. Sign permit (offline, no gas)
-   * 2. Execute swap (on-chain transaction)
+   * Check if the current input amount exceeds the user's balance
+   */
+  function isAmountExceedsBalance(): boolean {
+    const fromCurrency = swapState.data.fromCurrency
+    const amountIn = swapState.data.amountIn
+    if (!fromCurrency || amountIn === undefined) return false
+
+    const balance = $tokenBalances[fromCurrency.address]
+    if (!balance) return false
+
+    return amountIn > balance.balance
+  }
+
+  /**
+   * Check and approve Permit2 if needed, sign permit, and execute swap
+   * This can be a three-step process:
+   * 1. Approve Permit2 (on-chain, if needed for this currency)
+   * 2. Sign permit (offline, no gas)
+   * 3. Execute swap (on-chain transaction)
    */
   async function signAndSwap() {
     if (isProcessing) return
@@ -29,20 +52,51 @@
       const amountIn = swapState.data.amountIn
       const amountOut = swapState.data.amountOut
       const isExactOut = swapState.data.isExactOut
+      const fromCurrency = swapState.data.fromCurrency
 
       if (!auctionParams) throw new Error("auction params not initialized")
       if (amountIn === undefined) throw new Error("amountIn is undefined")
 
-      console.log("[SignAndSwap] Starting sign and swap flow")
+      console.log("[SignAndSwap] Starting swap flow for", fromCurrency.symbol)
 
-      // * * * * * * * * * * * * * * * * *
-      // * * * * * * * * * * * * * * * * *
-      // Step 1: Sign permit (offline)
-      // * * * * * * * * * * * * * * * * *
-      // * * * * * * * * * * * * * * * * *
-
-      console.log("[SignAndSwap] Step 1: Signing permit...")
       const client = await prepareConnectorClientForTransaction()
+      const adaptedPublicClient = asPublicClient($publicClientStore!)
+
+      // * * * * * * * * * * * * * * * * * * * * * * * * *
+      // Step 1: Check and approve Permit2 if needed
+      // * * * * * * * * * * * * * * * * * * * * * * * * *
+
+      if (isPermit2Required(fromCurrency.address)) {
+        const needsPermit2Approval = await isPermit2AllowanceRequired(
+          adaptedPublicClient,
+          $userAddress,
+          fromCurrency.address,
+          maxUint128
+        )
+
+        if (needsPermit2Approval) {
+          console.log("[SignAndSwap] Step 1: Approving Permit2...")
+          processingStep = "Approving token access..."
+
+          const { receipt } = await permit2AllowMax(
+            adaptedPublicClient,
+            asWalletClient(client),
+            fromCurrency.address
+          )
+
+          if (receipt.status !== "success") {
+            throw new Error("Permit2 approval failed")
+          }
+          console.log("[SignAndSwap] Permit2 approved")
+        }
+      }
+
+      // * * * * * * * * * * * * * * * * * * * * * * * * *
+      // Step 2: Sign permit (offline)
+      // * * * * * * * * * * * * * * * * * * * * * * * * *
+
+      console.log("[SignAndSwap] Step 2: Signing permit...")
+      processingStep = "Sign permit in wallet..."
 
       // TODO ensure signTypedData in a less hacky way
       const extendedClient = (client as any).extend((client: any) => ({
@@ -53,9 +107,9 @@
       // (because permit is always for input currency)
       const amountPadded = isExactOut ? (amountIn * 110n) / 100n : amountIn
       const result = await signPermit2(
-        asPublicClient($publicNetwork.publicClient),
+        adaptedPublicClient,
         extendedClient,
-        swapState.data.fromCurrency.address,
+        fromCurrency.address,
         ratRouterAddress,
         amountPadded
       )
@@ -66,25 +120,22 @@
 
       console.log("[SignAndSwap] Permit signed successfully")
 
-      // * * * * * * * * * * * * * * * * *
-      // * * * * * * * * * * * * * * * * *
-      // Step 2: Execute swap (on-chain)
-      // * * * * * * * * * * * * * * * * *
-      // * * * * * * * * * * * * * * * * *
+      // * * * * * * * * * * * * * * * * * * * * * * * * *
+      // Step 3: Execute swap (on-chain)
+      // * * * * * * * * * * * * * * * * * * * * * * * * *
 
-      console.log("[SignAndSwap] Step 2: Executing swap...")
+      console.log("[SignAndSwap] Step 3: Executing swap...")
+      processingStep = "Confirm swap in wallet..."
+
       const swapTxHash = await swapExactIn(
-        swapState.data.fromCurrency.address,
+        fromCurrency.address,
         auctionParams,
         // TODO add swapExactOut or consider padding amountIn for isExactOut
         amountIn,
         result.permit,
         result.permitSignature
       )
-      const swapResult = await waitForDopplerSwapReceipt(
-        asPublicClient($publicNetwork.publicClient),
-        swapTxHash
-      )
+      const swapResult = await waitForDopplerSwapReceipt(adaptedPublicClient, swapTxHash)
       console.log("[SignAndSwap] Swap executed successfully:", swapResult)
 
       // Store receipt in state
@@ -96,10 +147,11 @@
       // Transition to swap complete state
       swapState.state.transitionTo(SWAP_STATE.SWAP_COMPLETE)
     } catch (error) {
-      console.error("[SignAndSwap] Error during sign and swap:", error)
+      console.error("[SignAndSwap] Error during swap:", error)
       throw error
     } finally {
       isProcessing = false
+      processingStep = ""
     }
   }
 </script>
@@ -115,8 +167,15 @@
 
 <div class="button-container">
   <BigButton
-    disabled={!swapState.data.amountIn || isProcessing || !waiveWithdrawal}
-    text={isProcessing ? "Processing..." : "Swap"}
+    disabled={!swapState.data.amountIn ||
+      isProcessing ||
+      !waiveWithdrawal ||
+      isAmountExceedsBalance()}
+    text={isProcessing
+      ? processingStep || "Processing..."
+      : isAmountExceedsBalance()
+        ? "Insufficient balance"
+        : "Swap"}
     onclick={() => {
       signAndSwap()
     }}

@@ -1,9 +1,9 @@
-import { Account, Address, Chain, Client, LocalAccount, RpcSchema, Transport } from "viem"
+import { Address, LocalAccount } from "viem"
 import { smartAccountActions } from "permissionless"
 import { callFrom, sendUserOperationFrom } from "@latticexyz/world/internal"
 import type { PaymasterClient } from "viem/account-abstraction"
 import { createBundlerClient } from "../../bundler/client"
-import { SessionClient } from "../../types"
+import { SessionClient, PublicClient } from "../../types"
 import { SmartAccount } from "viem/account-abstraction"
 import { getBundlerTransport } from "../../bundler/transport"
 
@@ -26,6 +26,7 @@ import { getBundlerTransport } from "../../bundler/transport"
  * @returns SessionClient with MUD World extensions
  */
 export async function getSessionClient({
+  publicClient,
   userAddress,
   sessionAccount,
   sessionSigner,
@@ -33,6 +34,8 @@ export async function getSessionClient({
   paymasterOverride,
   ethPriceUSD
 }: {
+  /** Public client for read operations (used by MUD callFrom/sendUserOperationFrom extensions) */
+  publicClient: PublicClient
   userAddress: Address
   sessionAccount: SmartAccount
   sessionSigner: LocalAccount
@@ -40,9 +43,9 @@ export async function getSessionClient({
   paymasterOverride?: PaymasterClient
   ethPriceUSD?: number
 }): Promise<SessionClient> {
-  const client = sessionAccount.client
-  if (!clientHasChain(client)) {
-    throw new Error("Session account client had no associated chain.")
+  const chain = publicClient.chain
+  if (!chain) {
+    throw new Error("Public client had no associated chain.")
   }
 
   if (paymasterOverride) {
@@ -51,8 +54,8 @@ export async function getSessionClient({
 
   // Create bundler client for submitting user operations
   const bundlerClient = createBundlerClient({
-    transport: getBundlerTransport(client.chain, ethPriceUSD),
-    client,
+    transport: getBundlerTransport(chain, ethPriceUSD),
+    client: publicClient,
     account: sessionAccount,
     paymaster: paymasterOverride
   })
@@ -66,7 +69,7 @@ export async function getSessionClient({
       callFrom({
         worldAddress,
         delegatorAddress: userAddress,
-        publicClient: client
+        publicClient
       })
     )
     // Extend with MUD World user operation routing
@@ -74,25 +77,11 @@ export async function getSessionClient({
       sendUserOperationFrom({
         worldAddress,
         delegatorAddress: userAddress,
-        publicClient: client
+        publicClient
       })
     )
     // Add context properties for reference
     .extend(() => ({ userAddress, worldAddress, internal_signer: sessionSigner }))
 
   return sessionClient
-}
-
-/**
- * Type guard to ensure client has a chain
- */
-function clientHasChain<
-  transport extends Transport = Transport,
-  chain extends Chain | undefined = Chain | undefined,
-  account extends Account | undefined = Account | undefined,
-  rpcSchema extends RpcSchema | undefined = undefined
->(
-  client: Client<transport, chain, account, rpcSchema>
-): client is Client<transport, Exclude<chain, undefined>, account, rpcSchema> {
-  return client.chain != null
 }

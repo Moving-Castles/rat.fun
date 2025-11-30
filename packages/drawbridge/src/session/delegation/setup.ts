@@ -1,5 +1,5 @@
-import { Hex, Client } from "viem"
-import { SessionClient, ConnectedClient } from "../../types"
+import { Hex } from "viem"
+import { SessionClient, ConnectedClient, PublicClient } from "../../types"
 import { SetupSessionStatus } from "./shared"
 import { setupSessionSmartAccount } from "./smart-account"
 import { setupSessionEOA } from "./eoa"
@@ -10,7 +10,7 @@ import { checkDelegation } from "./check"
  */
 export type SetupSessionParams = {
   /** Public client for reading blockchain state */
-  publicClient: Client
+  publicClient: PublicClient
   /** User's connected wallet client (EOA or Smart Account) */
   userClient: ConnectedClient
   /** Session smart account client with MUD extensions */

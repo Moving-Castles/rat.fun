@@ -1,11 +1,19 @@
 import { Drawbridge, DrawbridgeStatus, type DrawbridgeState } from "drawbridge"
 import { readable, derived } from "svelte/store"
 import { chains, transports, getConnectors } from "./wagmiConfig"
-import type { NetworkConfig } from "$lib/mud/utils"
+import type { Hex } from "viem"
 
 // Re-export types and enums from package
 export type { ConnectorInfo } from "drawbridge"
 export { DrawbridgeStatus } from "drawbridge"
+
+/**
+ * Minimal config needed for drawbridge initialization
+ */
+export type DrawbridgeInitConfig = {
+  chainId: number
+  worldAddress?: Hex
+}
 
 // Drawbridge instance (singleton)
 let drawbridgeInstance: InstanceType<typeof Drawbridge> | null = null
@@ -13,23 +21,23 @@ let drawbridgeInstance: InstanceType<typeof Drawbridge> | null = null
 /**
  * Initialize Drawbridge in wallet-only mode (no session setup)
  *
- * This is a simplified version for claim-frontend that only handles wallet connection.
+ * This is a simplified version that only handles wallet connection.
  * No session accounts, no delegation, no MUD World integration.
  *
  * Use drawbridge.getWagmiConfig() to get the wagmi config for direct transactions.
  */
-export async function initializeDrawbridge(networkConfig: NetworkConfig): Promise<void> {
+export async function initializeDrawbridge(config: DrawbridgeInitConfig): Promise<void> {
   if (drawbridgeInstance) {
     console.log("[Drawbridge] Already initialized")
     return
   }
 
-  console.log("[Drawbridge] Creating instance with network:", networkConfig.chainId)
+  console.log("[Drawbridge] Creating instance with network:", config.chainId)
 
   // Get chain-specific config
-  const chain = chains.find(c => c.id === networkConfig.chainId)
+  const chain = chains.find(c => c.id === config.chainId)
   if (!chain) {
-    throw new Error(`Unsupported chain ID: ${networkConfig.chainId}`)
+    throw new Error(`Unsupported chain ID: ${config.chainId}`)
   }
 
   // Get connectors for this environment
@@ -38,7 +46,7 @@ export async function initializeDrawbridge(networkConfig: NetworkConfig): Promis
 
   // Create Drawbridge instance in wallet-only mode (skipSessionSetup = true)
   drawbridgeInstance = new Drawbridge({
-    chainId: networkConfig.chainId,
+    chainId: config.chainId,
     chains: [chain] as const,
     transports,
     connectors,
@@ -89,7 +97,8 @@ export const drawbridgeState = readable<DrawbridgeState>(
     sessionClient: null,
     userAddress: null,
     sessionAddress: null,
-    isReady: false
+    isReady: false,
+    error: null
   },
   set => {
     // Subscribe when Drawbridge becomes available

@@ -24,7 +24,11 @@
   // Wallet setup imports
   import { setupBurnerWalletNetwork } from "$lib/mud/setupBurnerWalletNetwork"
   import { getNetworkConfig } from "$lib/mud/getNetworkConfig"
-  import { initializeDrawbridge, getDrawbridge } from "$lib/modules/drawbridge"
+  import {
+    initializeDrawbridge,
+    getDrawbridge,
+    getDrawbridgePublicClient
+  } from "$lib/modules/drawbridge"
 
   const {
     environment,
@@ -46,14 +50,38 @@
   // ============================================================================
 
   /**
-   * Initialize wallet infrastructure and determine player ID if available.
-   * Returns player ID if wallet is connected, null otherwise.
+   * Initialize drawbridge if in DRAWBRIDGE mode.
+   * Returns the public client from drawbridge's wagmi config to reuse for MUD sync.
+   * This avoids double RPC polling.
    */
-  async function initWalletInfrastructure(): Promise<string | null> {
+  async function initDrawbridgeIfNeeded() {
     const walletType = get(walletTypeStore)
-    const network = get(publicNetwork)
+
+    if (walletType !== WALLET_TYPE.DRAWBRIDGE) {
+      return undefined
+    }
+
+    console.log("[Loading] Initializing drawbridge before MUD sync...")
+    const networkConfig = getNetworkConfig(environment, page.url)
+    await initializeDrawbridge(networkConfig)
+
+    // Get the public client from drawbridge to reuse for MUD sync
+    const publicClient = getDrawbridgePublicClient()
+    console.log("[Loading] Got public client from drawbridge")
+
+    return publicClient
+  }
+
+  /**
+   * Get player ID from wallet if connected.
+   * For DRAWBRIDGE: drawbridge is already initialized, just check state.
+   * For BURNER: initialize burner wallet using MUD's public network.
+   */
+  function getPlayerIdFromWallet(): string | null {
+    const walletType = get(walletTypeStore)
 
     if (walletType === WALLET_TYPE.BURNER) {
+      const network = get(publicNetwork)
       const wallet = setupBurnerWalletNetwork(network)
       const address = wallet.walletClient?.account?.address
       if (address) {
@@ -66,9 +94,6 @@
     }
 
     if (walletType === WALLET_TYPE.DRAWBRIDGE) {
-      const networkConfig = getNetworkConfig(environment, page.url)
-      await initializeDrawbridge(networkConfig)
-
       const drawbridge = getDrawbridge()
       const address = drawbridge.getState().userAddress
       if (address) {
@@ -76,7 +101,6 @@
         console.log("[Loading] Drawbridge session found:", playerId)
         return playerId
       }
-
       console.log("[Loading] No drawbridge session")
       return null
     }
@@ -145,13 +169,24 @@
       typer = terminalTyper(terminalBoxElement, generateLoadingOutput())
     }
 
-    // Step 1: Initialize public network and wait for chain sync to complete
-    await initPublicNetwork(environment, page.url)
+    // Step 1: Initialize drawbridge FIRST if in DRAWBRIDGE mode
+    // This gives us a public client to reuse, avoiding double RPC polling
+    const drawbridgePublicClient = await initDrawbridgeIfNeeded()
 
-    // Step 2: Initialize wallet infrastructure (get player ID if wallet exists)
-    const playerId = await initWalletInfrastructure()
+    // Step 2: Initialize public network and wait for chain sync to complete
+    // Pass the drawbridge public client if available (reuses same RPC connection)
+    await initPublicNetwork({
+      environment,
+      url: page.url,
+      publicClient: drawbridgePublicClient
+    })
 
-    // Step 3: Initialize entities (chain sync is now complete)
+    // Step 3: Get player ID from wallet if connected
+    // For DRAWBRIDGE: already initialized in step 1
+    // For BURNER: initializes burner wallet now using MUD's public network
+    const playerId = getPlayerIdFromWallet()
+
+    // Step 4: Initialize entities (chain sync is now complete)
     if (playerId) {
       console.log("[Loading] Initializing entities for player:", playerId)
       initEntities({ activePlayerId: playerId })
@@ -159,12 +194,12 @@
       console.log("[Loading] No player ID - deferring initEntities to Spawn")
     }
 
-    // Step 4: Stop terminal typer
+    // Step 5: Stop terminal typer
     if (typer?.stop) {
       typer.stop()
     }
 
-    // Step 5: Animate out and signal completion
+    // Step 6: Animate out and signal completion
     await animateOut()
     loaded()
   })

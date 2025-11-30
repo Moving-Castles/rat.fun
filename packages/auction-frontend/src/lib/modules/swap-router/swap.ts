@@ -1,6 +1,5 @@
 import { AuctionParams, Permit2PermitData } from "doppler"
 import { Hex } from "viem"
-import { simulateContract, writeContract } from "viem/actions"
 import { RatRouterAbi } from "contracts/externalAbis"
 import { prepareConnectorClientForTransaction } from "../drawbridge/connector"
 import { prepareSwapRouterPathArgs, ratRouterAddress, wethCurrency } from "./currency"
@@ -18,22 +17,20 @@ export async function swapExactIn(
     const nowSec = BigInt(Math.floor(Date.now() / 1000))
     const deadline = nowSec + 3600n
 
-    // Simulate to catch errors
-    const { request } = await simulateContract(client, {
+    // Execute swap with ETH
+    return await client.writeContract({
       address: ratRouterAddress,
       abi: RatRouterAbi,
       functionName: "swapExactInEth",
       args: [...prepareSwapRouterPathArgs(fromCurrencyAddress, auctionParams, false), deadline],
       value: amountIn
     })
-    // Execute
-    return await writeContract(client, request)
   } else {
     if (!permit || !permitSignature)
       throw new Error("Permit2 data and signature required for token swap")
 
-    // Simulate to catch errors
-    const { request } = await simulateContract(client, {
+    // Execute swap with token
+    return await client.writeContract({
       address: ratRouterAddress,
       abi: RatRouterAbi,
       functionName: "swapExactInToken",
@@ -44,7 +41,5 @@ export async function swapExactIn(
         permitSignature
       ]
     })
-    // Execute
-    return await writeContract(client, request)
   }
 }
