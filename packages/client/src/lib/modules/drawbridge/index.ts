@@ -83,6 +83,13 @@ export function getDrawbridge(): InstanceType<typeof Drawbridge> {
 }
 
 /**
+ * Check if Drawbridge has been initialized
+ */
+export function isDrawbridgeInitialized(): boolean {
+  return drawbridgeInstance !== null
+}
+
+/**
  * Cleanup Drawbridge (call on app unmount)
  */
 export function cleanupDrawbridge(): void {

@@ -9,12 +9,10 @@
   import { UI } from "$lib/modules/ui/enums"
 
   import { publicNetwork } from "$lib/modules/network"
-  import { userAddress } from "$lib/modules/drawbridge"
   import { setupWalletNetwork } from "$lib/mud/setupWalletNetwork"
   import { setupBurnerWalletNetwork } from "$lib/mud/setupBurnerWalletNetwork"
   import { initWalletNetwork } from "$lib/initWalletNetwork"
-  import { sessionClient, status, DrawbridgeStatus, isSessionReady } from "$lib/modules/drawbridge"
-  import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
+  import { getDrawbridge } from "$lib/modules/drawbridge"
   import { backgroundMusic } from "$lib/modules/sound/stores"
   import { initEntities, isEntitiesInitialized } from "$lib/modules/chain-sync"
   import { addressToId } from "$lib/modules/utils"
@@ -119,11 +117,21 @@
         isSpawned
       }
     } else {
-      // DRAWBRIDGE
-      const walletConnected =
-        $status !== DrawbridgeStatus.DISCONNECTED && $status !== DrawbridgeStatus.UNINITIALIZED
-      const sessionReady = $isSessionReady
-      const walletAddress = $userAddress
+      // DRAWBRIDGE - read directly from instance to avoid store timing issues
+      const drawbridge = getDrawbridge()
+      const state = drawbridge.getState()
+
+      const walletConnected = !!state.userAddress
+      const sessionReady = state.isReady
+      const walletAddress = state.userAddress
+      const client = state.sessionClient
+
+      console.log("[Spawn] Drawbridge state:", {
+        walletConnected,
+        sessionReady,
+        walletAddress,
+        hasSessionClient: !!client
+      })
 
       if (!walletConnected) {
         return {
@@ -148,16 +156,16 @@
 
       // Session is ready - check spawn status
       let isSpawned = false
-      if ($sessionClient && walletAddress) {
+      if (client && walletAddress) {
         // Ensure entities are initialized before checking spawn status
-        const playerId = addressToId($sessionClient.userAddress)
+        const playerId = addressToId(client.userAddress)
         if (!isEntitiesInitialized(playerId)) {
           console.log("[Spawn] Initializing entities for drawbridge user:", playerId)
           initEntities({ activePlayerId: playerId })
         }
 
-        const wallet = setupWalletNetwork($publicNetwork, $sessionClient)
-        isSpawned = initWalletNetwork(wallet, $sessionClient.userAddress, walletType)
+        const wallet = setupWalletNetwork($publicNetwork, client)
+        isSpawned = initWalletNetwork(wallet, client.userAddress, walletType)
       }
 
       return {
@@ -186,23 +194,8 @@
     return nextState
   }
 
-  let initialized = $state(false)
-
-  // Wait for drawbridge stores to settle before determining initial state
-  $effect(() => {
-    console.log("[Spawn] $effect triggered")
-    // For Drawbridge, wait until status is no longer UNINITIALIZED
-    // This means the stores have been updated with the actual connection state
-    if (walletType === WALLET_TYPE.DRAWBRIDGE && $status === DrawbridgeStatus.UNINITIALIZED) {
-      console.log("[Spawn] Waiting for drawbridge stores to initialize...")
-      return
-    }
-
-    // Only initialize once
-    if (initialized) return
-    initialized = true
-
-    console.log("[Spawn] Stores ready, determining initial state")
+  onMount(async () => {
+    console.log("[Spawn] Component mounted")
 
     // Register the exit flow callback
     spawnState.state.setOnExitFlow(spawned)
@@ -210,27 +203,18 @@
     // Reset state machine to INIT
     spawnState.state.reset()
 
-    // Determine initial state and transition (async)
-    determineInitialState().then(initialState => {
-      console.log("[Spawn] Initial state determined:", initialState)
-      spawnState.state.transitionTo(initialState)
-    })
-  })
+    // Determine initial state and transition
+    // For DRAWBRIDGE: drawbridge is guaranteed to be initialized by Loading component
+    // For BURNER: no async initialization needed
+    const initialState = await determineInitialState()
+    console.log("[Spawn] Initial state determined:", initialState)
+    spawnState.state.transitionTo(initialState)
 
-  // Note: Most state checks are now handled by determineInitialState()
-  // This effect can be used for reactive state changes during the flow if needed
-
-  onMount(async () => {
-    console.log("[Spawn] Component mounted")
-
-    // HACK
-    // When already spawned we are passing through here quickly
-    // And music might be started but onDestroy is not called
-    // Only start music if the UI state has not already changed from SPAWNING
+    // Start background music after a delay
+    // (when already spawned we pass through quickly and music might start unnecessarily)
     await new Promise(resolve => setTimeout(resolve, 500))
     if ($UIState === UI.SPAWNING) {
       backgroundMusic.play({ category: "ratfunMusic", id: "spawn", loop: true })
-      shaderManager.setShader("clouds", true)
     }
   })
 
