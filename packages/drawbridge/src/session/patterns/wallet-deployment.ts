@@ -2,6 +2,7 @@ import { Address, Client } from "viem"
 import { getCode, sendTransaction, waitForTransactionReceipt } from "viem/actions"
 import { getAction } from "viem/utils"
 import { DEPLOYMENT_TIMEOUTS } from "../../types"
+import { logger } from "../../logger"
 
 /**
  * Smart wallet deployment utilities
@@ -100,7 +101,7 @@ export async function deployWallet(
 
     // If already deployed, that's fine - not an error
     if (isAlreadyDeployedError(errorMessage)) {
-      console.log("[drawbridge] Wallet already deployed, continuing")
+      logger.log("[drawbridge] Wallet already deployed, continuing")
       return
     }
 

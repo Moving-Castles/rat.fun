@@ -133,6 +133,13 @@ type DrawbridgeConfig = {
      * @default false
      */
     skipSessionSetup?: boolean;
+    /**
+     * Enable console logging for debugging
+     * When false, all console.log and console.warn calls are suppressed.
+     * Errors are always logged regardless of this setting.
+     * @default false
+     */
+    logging?: boolean;
 };
 /**
  * Current state of the Drawbridge instance

@@ -1,4 +1,5 @@
 import { Address, Hex } from "viem"
+import { logger } from "../../logger"
 
 type SessionStore = {
   signers: Record<string, string> // lowercase address → private key
@@ -43,7 +44,7 @@ export class SessionStorage {
     if (!stored) {
       stored = localStorage.getItem(this.LEGACY_STORAGE_KEY)
       if (stored) {
-        console.log("[drawbridge] Migrating session storage from legacy key")
+        logger.log("[drawbridge] Migrating session storage from legacy key")
       }
     }
 
@@ -56,17 +57,17 @@ export class SessionStorage {
 
       // Validate structure
       if (!parsed.signers || typeof parsed.signers !== "object") {
-        console.warn("[drawbridge] Session storage corrupted - invalid structure, resetting")
+        logger.warn("[drawbridge] Session storage corrupted - invalid structure, resetting")
         return { signers: {} }
       }
 
       return parsed
     } catch (err) {
-      console.error(
+      logger.error(
         "[drawbridge] Failed to parse session storage:",
         err instanceof Error ? err.message : String(err)
       )
-      console.warn("[drawbridge] Session storage will be reset")
+      logger.warn("[drawbridge] Session storage will be reset")
       return { signers: {} }
     }
   }
@@ -85,7 +86,7 @@ export class SessionStorage {
     // Remove legacy key if it exists (cleanup after migration)
     if (localStorage.getItem(this.LEGACY_STORAGE_KEY)) {
       localStorage.removeItem(this.LEGACY_STORAGE_KEY)
-      console.log("[drawbridge] Removed legacy storage key after migration")
+      logger.log("[drawbridge] Removed legacy storage key after migration")
     }
   }
 

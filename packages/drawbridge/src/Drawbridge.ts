@@ -16,6 +16,7 @@ import {
   disconnectWallet as walletDisconnect,
   getAvailableConnectors as walletGetAvailableConnectors
 } from "./wallet"
+import { logger, setLoggingEnabled } from "./logger"
 
 /**
  * Configuration for Drawbridge instance
@@ -54,6 +55,13 @@ export type DrawbridgeConfig = {
    * @default false
    */
   skipSessionSetup?: boolean
+  /**
+   * Enable console logging for debugging
+   * When false, all console.log and console.warn calls are suppressed.
+   * Errors are always logged regardless of this setting.
+   * @default false
+   */
+  logging?: boolean
 }
 
 /**
@@ -151,6 +159,9 @@ export class Drawbridge {
     // Validate configuration
     this.validateConfig(config)
 
+    // Set logging state before any other operations
+    setLoggingEnabled(config.logging ?? false)
+
     this.config = config
     this.state = {
       status: DrawbridgeStatus.UNINITIALIZED,
@@ -175,7 +186,7 @@ export class Drawbridge {
       pollingInterval: config.pollingInterval ?? 2000
     })
 
-    console.log("[drawbridge] Public client created for chain:", chain.name)
+    logger.log("[drawbridge] Public client created for chain:", chain.name)
 
     // Create wagmi config for wallet connections
     this.wagmiConfig = createWalletConfig({
@@ -238,7 +249,7 @@ export class Drawbridge {
 
     // Warn if worldAddress missing with session setup enabled
     if (!config.skipSessionSetup && !config.worldAddress) {
-      console.warn(
+      logger.warn(
         "[drawbridge] Configuration warning: worldAddress not provided but session setup is enabled. " +
           "Session creation will work, but delegation checks will fail. " +
           "Did you forget to pass worldAddress, or did you mean to set skipSessionSetup: true?"
@@ -264,7 +275,7 @@ export class Drawbridge {
    * It will attempt to reconnect to a previously connected wallet.
    */
   async initialize(): Promise<void> {
-    console.log("[drawbridge] Initializing...")
+    logger.log("[drawbridge] Initializing...")
 
     // Attempt to reconnect to previously connected wallet
     const result = await attemptReconnect(this.wagmiConfig)
@@ -280,11 +291,11 @@ export class Drawbridge {
     // If reconnection succeeded, manually handle the initial connection
     // (the watcher won't fire for connections that happened before it was set up)
     if (result.reconnected && result.address) {
-      console.log("[drawbridge] Processing reconnected wallet:", result.address)
+      logger.log("[drawbridge] Processing reconnected wallet:", result.address)
       await this.handleWalletConnection()
     }
 
-    console.log("[drawbridge] Initialization complete")
+    logger.log("[drawbridge] Initialization complete")
   }
 
   // ===== Reactive State Management =====
@@ -342,7 +353,7 @@ export class Drawbridge {
     const unwatch = setupAccountWatcher(this.wagmiConfig, async account => {
       // Handle disconnection
       if (!account.isConnected) {
-        console.log("[drawbridge] Wallet disconnected")
+        logger.log("[drawbridge] Wallet disconnected")
         this.updateState({
           status: DrawbridgeStatus.DISCONNECTED,
           sessionClient: null,
@@ -357,13 +368,13 @@ export class Drawbridge {
 
       // Ignore connection attempts while disconnecting to prevent deadlock
       if (this.isDisconnecting) {
-        console.log("[drawbridge] Ignoring connection attempt during disconnect")
+        logger.log("[drawbridge] Ignoring connection attempt during disconnect")
         return
       }
 
       // Handle connection
       if (this.isConnecting) {
-        console.log("[drawbridge] Already processing connection")
+        logger.log("[drawbridge] Already processing connection")
         return
       }
 
@@ -375,7 +386,7 @@ export class Drawbridge {
         this.isConnecting = true
         await this.handleWalletConnection()
       } catch (err) {
-        console.error("[drawbridge] Connection handler failed:", {
+        logger.error("[drawbridge] Connection handler failed:", {
           error: err,
           errorMessage: err instanceof Error ? err.message : String(err),
           errorName: err instanceof Error ? err.name : "Unknown",
@@ -405,31 +416,31 @@ export class Drawbridge {
     try {
       userClient = await getConnectorClient(this.wagmiConfig)
     } catch (err) {
-      console.log("[drawbridge] Could not get connector client")
+      logger.log("[drawbridge] Could not get connector client")
       return
     }
 
     if (!userClient.account || !userClient.chain) {
-      console.log("[drawbridge] Wallet client missing account or chain")
+      logger.log("[drawbridge] Wallet client missing account or chain")
       return
     }
 
     const userAddress = userClient.account.address
-    console.log("[drawbridge] Wallet connected:", userAddress)
+    logger.log("[drawbridge] Wallet connected:", userAddress)
 
     // Validate wallet is on the correct chain
     if (userClient.chain.id !== this.config.chainId) {
       const error = new Error(
         `Chain mismatch: wallet on chain ${userClient.chain.id}, expected ${this.config.chainId}`
       )
-      console.error("[drawbridge]", error.message)
+      logger.error("[drawbridge]", error.message)
       throw error
     }
 
     // If skipSessionSetup is true, just store the user address and mark as READY
     // No session account, no delegation - just wallet connection
     if (this.config.skipSessionSetup) {
-      console.log("[drawbridge] Skipping session setup (wallet-only mode)")
+      logger.log("[drawbridge] Skipping session setup (wallet-only mode)")
       this.updateState({
         status: DrawbridgeStatus.READY,
         sessionClient: null,
@@ -442,13 +453,13 @@ export class Drawbridge {
     }
 
     // Full session setup flow (MUD delegation)
-    console.log("[drawbridge] Setting up session for address:", userAddress)
+    logger.log("[drawbridge] Setting up session for address:", userAddress)
 
     // Get or create persistent session signer from localStorage
     const signer = getSessionSigner(userAddress)
 
     // DEBUG: Log details before creating session account
-    console.log("[drawbridge] About to create session account with publicClient:", {
+    logger.log("[drawbridge] About to create session account with publicClient:", {
       chainId: this._publicClient.chain?.id,
       chainName: this._publicClient.chain?.name,
       userAddress,
@@ -485,7 +496,7 @@ export class Drawbridge {
         sessionAddress: account.address
       })
     } catch (err) {
-      console.error("[drawbridge] Failed to check delegation:", err)
+      logger.error("[drawbridge] Failed to check delegation:", err)
       throw new Error(
         `Failed to check delegation: ${err instanceof Error ? err.message : String(err)}`
       )
@@ -503,7 +514,7 @@ export class Drawbridge {
       error: null
     })
 
-    console.log("[drawbridge] Session connection complete, isReady:", hasDelegation)
+    logger.log("[drawbridge] Session connection complete, isReady:", hasDelegation)
   }
 
   // ===== Public API =====
@@ -533,7 +544,7 @@ export class Drawbridge {
    * @throws If connector not found or connection fails
    */
   async connectWallet(connectorId: string): Promise<void> {
-    console.log("[drawbridge] Connecting to wallet:", connectorId)
+    logger.log("[drawbridge] Connecting to wallet:", connectorId)
 
     // Set status to CONNECTING
     this.updateState({ status: DrawbridgeStatus.CONNECTING })
@@ -543,7 +554,7 @@ export class Drawbridge {
     } catch (err) {
       // If already connected, that's fine
       if (err instanceof Error && err.name === "ConnectorAlreadyConnectedError") {
-        console.log("[drawbridge] Already connected")
+        logger.log("[drawbridge] Already connected")
         return
       }
       // Reset to DISCONNECTED on error
@@ -562,22 +573,22 @@ export class Drawbridge {
    * 2. Account watcher will automatically clear drawbridge state
    */
   async disconnectWallet(): Promise<void> {
-    console.log("[drawbridge] disconnectWallet() called")
-    console.log("[drawbridge] Current state:", this.state)
-    console.log("[drawbridge] Calling wagmi disconnect()...")
+    logger.log("[drawbridge] disconnectWallet() called")
+    logger.log("[drawbridge] Current state:", this.state)
+    logger.log("[drawbridge] Calling wagmi disconnect()...")
 
     try {
       this.isDisconnecting = true
       await walletDisconnect(this.wagmiConfig)
-      console.log("[drawbridge] Wallet disconnected")
+      logger.log("[drawbridge] Wallet disconnected")
     } catch (err) {
-      console.error("[drawbridge] Disconnect error:", err)
+      logger.error("[drawbridge] Disconnect error:", err)
       throw err
     } finally {
       this.isDisconnecting = false
     }
 
-    console.log("[drawbridge] Disconnect complete")
+    logger.log("[drawbridge] Disconnect complete")
   }
 
   /**
@@ -628,7 +639,7 @@ export class Drawbridge {
       throw new Error("Not connected. Call connectWallet() first.")
     }
 
-    console.log("[drawbridge] Setting up session (registering delegation)...")
+    logger.log("[drawbridge] Setting up session (registering delegation)...")
 
     // Set status to SETTING_UP_SESSION
     this.updateState({ status: DrawbridgeStatus.SETTING_UP_SESSION })
@@ -648,7 +659,7 @@ export class Drawbridge {
       // Session setup complete - set status to READY and clear any errors
       this.updateState({ status: DrawbridgeStatus.READY, isReady: true, error: null })
 
-      console.log("[drawbridge] Session setup complete")
+      logger.log("[drawbridge] Session setup complete")
     } catch (err) {
       // Reset to CONNECTED on error
       this.updateState({ status: DrawbridgeStatus.CONNECTED })
@@ -666,7 +677,7 @@ export class Drawbridge {
    * Call this when unmounting your app.
    */
   destroy(): void {
-    console.log("[drawbridge] Destroying instance")
+    logger.log("[drawbridge] Destroying instance")
 
     // Cleanup account watcher
     if (this.accountWatcherCleanup) {

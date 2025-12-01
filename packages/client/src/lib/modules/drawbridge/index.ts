@@ -55,7 +55,8 @@ export async function initializeDrawbridge(networkConfig: NetworkConfig): Promis
     paymasterClient: paymasters[networkConfig.chainId],
     pollingInterval: 2000,
     appName: "RAT.FUN",
-    ethPriceUSD: 2800 // $2,800
+    ethPriceUSD: 2800, // $2,800
+    logging: false // Disable drawbridge console logging
   })
 
   // Initialize (await reconnection, setup account watcher)

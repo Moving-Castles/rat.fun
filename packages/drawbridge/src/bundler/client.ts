@@ -8,6 +8,7 @@ import {
 } from "viem/account-abstraction"
 import { defaultClientConfig } from "../types"
 import { getPaymaster } from "./paymaster"
+import { logger } from "../logger"
 
 /**
  * Create a bundler client for submitting ERC-4337 user operations
@@ -44,11 +45,11 @@ export function createBundlerClient<
     : undefined
 
   if (paymaster) {
-    console.log(
+    logger.log(
       `[Drawbridge/BundlerClient] Bundler client configured with ${paymaster.type} paymaster`
     )
   } else {
-    console.log(`[Drawbridge/BundlerClient] Bundler client configured without paymaster`)
+    logger.log(`[Drawbridge/BundlerClient] Bundler client configured without paymaster`)
   }
 
   return viem_createBundlerClient({

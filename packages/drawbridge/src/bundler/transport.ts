@@ -1,5 +1,6 @@
 import { Chain, http, parseEther } from "viem"
 import { logUserOperationCost, logFeeCapApplied } from "./logging"
+import { logger } from "../logger"
 
 /**
  * Retry configuration for rate limiting
@@ -88,7 +89,7 @@ async function fetchWithRetry(
         }
 
         const delayMs = getRetryDelay(attempt)
-        console.warn(
+        logger.warn(
           `[Drawbridge/Transport] Rate limit hit (429). Retrying in ${delayMs}ms (attempt ${attempt + 1}/${RETRY_CONFIG.maxRetries + 1})...`
         )
 
@@ -107,7 +108,7 @@ async function fetchWithRetry(
         }
 
         const delayMs = getRetryDelay(attempt)
-        console.warn(
+        logger.warn(
           `[Drawbridge/Transport] Paymaster cost limit exceeded. Retrying in ${delayMs}ms (attempt ${attempt + 1}/${RETRY_CONFIG.maxRetries + 1})...`
         )
 
@@ -127,7 +128,7 @@ async function fetchWithRetry(
 
       // For network errors, also apply exponential backoff
       const delayMs = getRetryDelay(attempt)
-      console.warn(
+      logger.warn(
         `[Drawbridge/Transport] Network error. Retrying in ${delayMs}ms (attempt ${attempt + 1}/${RETRY_CONFIG.maxRetries + 1})...`,
         error
       )

@@ -12,6 +12,7 @@ import {
   deploySessionAccount,
   clearFactoryData
 } from "./shared"
+import { logger } from "../../logger"
 
 export type SetupSessionSmartAccountParams = SetupSessionBaseParams & {
   /** User's connected smart wallet client */
@@ -42,7 +43,7 @@ export async function setupSessionSmartAccount({
   const sessionAddress = sessionClient.account.address
   const userAddress = userClient.account.address
 
-  console.log("[drawbridge] Smart Account setup:", { userAddress })
+  logger.log("[drawbridge] Smart Account setup:", { userAddress })
 
   onStatus?.({ type: "checking_wallet", message: "Checking wallet status..." })
 
@@ -51,22 +52,22 @@ export async function setupSessionSmartAccount({
   const factoryArgs = await account.getFactoryArgs()
   const hasFactoryData = factoryArgs.factory && factoryArgs.factoryData
 
-  console.log("[drawbridge] Smart wallet check:", { hasFactoryData, userAddress })
+  logger.log("[drawbridge] Smart wallet check:", { hasFactoryData, userAddress })
 
   const alreadyDeployed = await isWalletDeployed(sessionClient, userAddress)
 
-  console.log("[drawbridge] Wallet deployed:", alreadyDeployed)
+  logger.log("[drawbridge] Wallet deployed:", alreadyDeployed)
 
   if (alreadyDeployed && hasFactoryData) {
-    console.log("[drawbridge] CASE 1: Wallet deployed and has factory data")
+    logger.log("[drawbridge] CASE 1: Wallet deployed and has factory data")
     // Wallet deployed but has factory data - remove it
-    console.log("[drawbridge] Removing factory data from deployed wallet")
+    logger.log("[drawbridge] Removing factory data from deployed wallet")
     onStatus?.({ type: "wallet_deployed", message: "Wallet ready" })
     clearFactoryData(account)
   } else if (!alreadyDeployed && hasFactoryData) {
-    console.log("[drawbridge] CASE 2: Wallet not deployed and has factory data")
+    logger.log("[drawbridge] CASE 2: Wallet not deployed and has factory data")
     // Wallet not deployed - deploy it
-    console.log("[drawbridge] Deploying user wallet...")
+    logger.log("[drawbridge] Deploying user wallet...")
     onStatus?.({ type: "deploying_wallet", message: "Deploying wallet (one-time setup)..." })
 
     await deployWallet(sessionClient, factoryArgs.factory!, factoryArgs.factoryData!)
@@ -102,13 +103,13 @@ export async function setupSessionSmartAccount({
   // Final check: if factory/factoryData still present, try removal again
   const accountBeforeSend = userClient.account as SmartAccountWithFactory
   if (accountBeforeSend.factory || accountBeforeSend.factoryData) {
-    console.warn("[drawbridge] Factory still present, attempting removal again...")
+    logger.warn("[drawbridge] Factory still present, attempting removal again...")
     clearFactoryData(accountBeforeSend)
   }
 
   try {
     const hash = await getAction(userClient, sendUserOperation, "sendUserOperation")({ calls })
-    console.log("[drawbridge] User operation sent:", hash)
+    logger.log("[drawbridge] User operation sent:", hash)
 
     const receipt = await getAction(
       userClient,
@@ -121,7 +122,7 @@ export async function setupSessionSmartAccount({
     }
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error)
-    console.error("[drawbridge] User operation error:", errorMessage)
+    logger.error("[drawbridge] User operation error:", errorMessage)
 
     if (isAlreadyDeployedError(errorMessage)) {
       const helpfulError = new Error(
@@ -138,6 +139,6 @@ export async function setupSessionSmartAccount({
   // Deploy session account if needed
   await deploySessionAccount(sessionClient, onStatus)
 
-  console.log("[drawbridge] Smart Account setup complete")
+  logger.log("[drawbridge] Smart Account setup complete")
   onStatus?.({ type: "complete", message: "Session setup complete!" })
 }

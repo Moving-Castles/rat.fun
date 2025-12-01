@@ -1,5 +1,6 @@
 import { Address } from "viem"
 import { reconnect, connect, disconnect, getConnectors, getAccount, type Config } from "@wagmi/core"
+import { logger } from "../logger"
 
 /**
  * Result of reconnection attempt
@@ -38,17 +39,17 @@ export async function attemptReconnect(wagmiConfig: Config): Promise<ReconnectRe
 
     const account = getAccount(wagmiConfig)
     if (account.isConnected && account.address) {
-      console.log("[wallet] Reconnection successful:", account.address)
+      logger.log("[wallet] Reconnection successful:", account.address)
       return {
         reconnected: true,
         address: account.address
       }
     }
 
-    console.log("[wallet] Reconnected but no account")
+    logger.log("[wallet] Reconnected but no account")
     return { reconnected: false }
   } catch (err) {
-    console.log("[wallet] No previous connection to restore")
+    logger.log("[wallet] No previous connection to restore")
     return { reconnected: false }
   }
 }
@@ -87,14 +88,14 @@ export async function connectWallet(
     throw new Error(`Connector not found: ${connectorId}`)
   }
 
-  console.log("[wallet] Connecting to wallet:", connectorId)
+  logger.log("[wallet] Connecting to wallet:", connectorId)
 
   await connect(wagmiConfig, {
     connector,
     chainId
   })
 
-  console.log("[wallet] Connection initiated")
+  logger.log("[wallet] Connection initiated")
 }
 
 /**
@@ -111,13 +112,13 @@ export async function connectWallet(
  * ```
  */
 export async function disconnectWallet(wagmiConfig: Config): Promise<void> {
-  console.log("[wallet] Disconnecting...")
+  logger.log("[wallet] Disconnecting...")
 
   try {
     await disconnect(wagmiConfig)
-    console.log("[wallet] Disconnected successfully")
+    logger.log("[wallet] Disconnected successfully")
   } catch (err) {
-    console.error("[wallet] Disconnect error:", err)
+    logger.error("[wallet] Disconnect error:", err)
     throw err
   }
 }

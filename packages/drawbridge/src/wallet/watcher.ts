@@ -1,5 +1,6 @@
 import { watchAccount, type Config } from "@wagmi/core"
 import type { GetAccountReturnType } from "@wagmi/core"
+import { logger } from "../logger"
 
 /**
  * Account change handler callback
@@ -52,7 +53,7 @@ export function setupAccountWatcher(
 ): UnwatchAccount {
   return watchAccount(wagmiConfig, {
     onChange: account => {
-      console.log("[wallet] Account change:", {
+      logger.log("[wallet] Account change:", {
         isConnected: account.isConnected,
         address: account.address
       })
@@ -61,7 +62,7 @@ export function setupAccountWatcher(
       const result = onChange(account)
       if (result instanceof Promise) {
         result.catch(err => {
-          console.error("[wallet] Account change handler failed:", err)
+          logger.error("[wallet] Account change handler failed:", err)
         })
       }
     }
