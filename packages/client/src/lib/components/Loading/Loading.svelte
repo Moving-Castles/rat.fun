@@ -4,6 +4,7 @@
   import { get } from "svelte/store"
   import { initPublicNetwork } from "$lib/initPublicNetwork"
   import { initEntities } from "$lib/modules/chain-sync"
+  import { initErc20Listener } from "$lib/modules/erc20Listener"
   import { terminalTyper } from "$lib/modules/terminal-typer/index"
   import { generateLoadingOutput } from "$lib/components/Loading/loadingOutput"
   import { playSound } from "$lib/modules/sound"
@@ -201,7 +202,7 @@
     })
 
     // Step 3: Initialize wallet network if connected
-    // This sets up stores and ERC20 listeners for wallets restored from storage
+    // This sets up stores for wallets restored from storage
     // For DRAWBRIDGE without session: will be initialized later in spawn flow
     const playerId = initWalletIfConnected()
 
@@ -209,6 +210,10 @@
     if (playerId) {
       console.log("[Loading] Initializing entities for player:", playerId)
       initEntities({ activePlayerId: playerId })
+
+      // Step 4b: Initialize ERC20 listener AFTER entities are populated
+      // (externalAddressesConfig is derived from entities store)
+      initErc20Listener()
     } else {
       console.log("[Loading] No player ID - deferring initEntities to Spawn")
     }

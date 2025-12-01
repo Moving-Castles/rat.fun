@@ -4,12 +4,15 @@ import { ENTITY_TYPE } from "contracts/enums"
 import { get } from "svelte/store"
 import { walletNetwork, walletType } from "$lib/modules/network"
 import { playerAddress, entities } from "$lib/modules/state/stores"
-import { initErc20Listener } from "$lib/modules/erc20Listener"
 import { WALLET_TYPE } from "./mud/enums"
 import { addressToId } from "$lib/modules/utils"
 
 /**
- * Initialize the wallet network - sets up stores and ERC20 listeners.
+ * Initialize the wallet network - sets up stores.
+ *
+ * Note: ERC20 listener is NOT initialized here because externalAddressesConfig
+ * (derived from entities store) is not yet populated. Call initErc20Listener()
+ * separately after initEntities() has completed.
  */
 export function initWalletNetwork(
   wallet: SetupWalletNetworkResult,
@@ -19,7 +22,6 @@ export function initWalletNetwork(
   walletType.set(type)
   walletNetwork.set(wallet)
   playerAddress.set(address)
-  initErc20Listener()
 }
 
 /**

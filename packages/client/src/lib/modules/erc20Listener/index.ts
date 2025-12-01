@@ -90,12 +90,17 @@ async function updateAllowance(
  * Initialize the ERC20 listener
  */
 export function initErc20Listener() {
+  console.log("[@client/erc20Listener] Initializing ERC20 listener")
   // Clear old intervals (on network change, wallet change, etc...)
   stopErc20Listener()
 
   const currentNetwork = get(publicNetwork) as SetupPublicNetworkResult
   const currentPlayerAddress = get(playerAddress) as Hex
   const currentExternalAddresses = get(externalAddressesConfig)
+
+  console.log("[@client/erc20Listener] Current network:", currentNetwork)
+  console.log("[@client/erc20Listener] Current player address:", currentPlayerAddress)
+  console.log("[@client/erc20Listener] Current external addresses:", currentExternalAddresses)
 
   if (!currentNetwork || !currentPlayerAddress || !currentExternalAddresses) {
     return

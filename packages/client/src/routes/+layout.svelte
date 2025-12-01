@@ -21,7 +21,15 @@
   import { cleanupDrawbridge, userAddress } from "$lib/modules/drawbridge"
   import { playerId } from "$lib/modules/state/stores"
   import { initOffChainSync, disconnectOffChainSync } from "$lib/modules/off-chain-sync"
-  import { resetEntitiesInitialization } from "$lib/modules/chain-sync"
+  import {
+    resetEntitiesInitialization,
+    initEntities,
+    isEntitiesInitialized
+  } from "$lib/modules/chain-sync"
+  import { initErc20Listener } from "$lib/modules/erc20Listener"
+  import { playerAddress } from "$lib/modules/state/stores"
+  import { get } from "svelte/store"
+  import { addressToId } from "$lib/modules/utils"
 
   // Components
   import Spawn from "$lib/components/Spawn/Spawn.svelte"
@@ -46,6 +54,15 @@
 
   // Called when spawning is complete
   const spawned = () => {
+    // For new users, initEntities was not called during Loading
+    // because there was no playerId yet. Initialize now.
+    const address = get(playerAddress)
+    if (address && !isEntitiesInitialized()) {
+      const activePlayerId = addressToId(address)
+      console.log("[+layout] Spawned: initializing entities for new player:", activePlayerId)
+      initEntities({ activePlayerId })
+      initErc20Listener()
+    }
     UIState.set(UI.READY)
   }
 
