@@ -14,7 +14,12 @@
   import { UIState, lightboxState } from "$lib/modules/ui/state.svelte"
   import { UI } from "$lib/modules/ui/enums"
   import { environment as environmentStore } from "$lib/modules/network"
-  import { cleanupDrawbridge, userAddress } from "$lib/modules/drawbridge"
+  import {
+    cleanupDrawbridge,
+    userAddress,
+    getDrawbridge,
+    isDrawbridgeInitialized
+  } from "$lib/modules/drawbridge"
   import { playerId } from "$lib/modules/state/stores"
   import { initOffChainSync, disconnectOffChainSync } from "$lib/modules/off-chain-sync"
   import { resetEntitiesInitialization } from "$lib/modules/chain-sync"
@@ -49,12 +54,24 @@
   }
 
   // Detect wallet disconnection and navigate back to spawn
+  // NOTE: We subscribe to $userAddress for reactivity, but verify against
+  // drawbridge.getState() to avoid false positives from store sync delays
   $effect(() => {
     // Only act when in READY state (not during initial load or spawn flow)
     if ($UIState !== UI.READY) return
 
-    // If user address becomes null, wallet was disconnected
+    // If user address becomes null, verify it's a real disconnect
     if ($userAddress === null) {
+      // Double-check directly from drawbridge to avoid store race conditions
+      if (isDrawbridgeInitialized()) {
+        const state = getDrawbridge().getState()
+        if (state.userAddress !== null) {
+          // Store says null but drawbridge says connected - it's a store sync delay, ignore
+          console.log("[+layout] Store shows null but drawbridge has address, ignoring")
+          return
+        }
+      }
+
       console.log("[+layout] Wallet disconnected externally, navigating back to spawn")
       // Reset entities initialization so it will reinitialize for the new wallet
       resetEntitiesInitialization()
