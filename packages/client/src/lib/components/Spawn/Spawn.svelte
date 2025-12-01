@@ -9,6 +9,9 @@
   import { UI } from "$lib/modules/ui/enums"
 
   import { publicNetwork } from "$lib/modules/network"
+  import { readPlayerERC20Allowance } from "$lib/modules/erc20Listener"
+  import { externalAddressesConfig } from "$lib/modules/state/stores"
+  import { userAddress } from "$lib/modules/drawbridge"
   import { setupWalletNetwork } from "$lib/mud/setupWalletNetwork"
   import { setupBurnerWalletNetwork } from "$lib/mud/setupBurnerWalletNetwork"
   import { initWalletNetwork } from "$lib/initWalletNetwork"
@@ -20,7 +23,6 @@
 
   import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
   import {
-    WelcomeScreen,
     Introduction,
     ConnectWalletForm,
     SessionSetup,
@@ -42,81 +44,141 @@
    *  Initial state determination based on:
    *  - walletConnected (wallet address available)
    *  - sessionReady (for Drawbridge: session is ready, for Burner: always true)
+   *  - hasAllowance (user has approved allowance > 100 tokens)
    *  - spawned (player already spawned in the game)
    *
-   *  +---+----------------+-------------+---------+------------------+
-   *  |   | walletConnected| sessionReady| spawned | Initial State    |
-   *  +---+----------------+-------------+---------+------------------+
-   *  | 0 |     false      |    false    |  false  | WELCOME_SCREEN   |
-   *  | 1 |     false      |    false    |  true   | Impossible       |
-   *  | 2 |     false      |    true     |  false  | Impossible       |
-   *  | 3 |     false      |    true     |  true   | Impossible       |
-   *  | 4 |     true       |    false    |  false  | SESSION_SETUP    |
-   *  | 5 |     true       |    false    |  true   | SESSION_SETUP    |
-   *  | 6 |     true       |    true     |  false  | INTRODUCTION     |
-   *  | 7 |     true       |    true     |  true   | EXIT_FLOW        |
-   *  +---+----------------+-------------+---------+------------------+
+   *  +----+----------------+-------------+--------------+---------+-------------------+
+   *  |    | walletConnected| sessionReady| hasAllowance | spawned | Initial State     |
+   *  +----+----------------+-------------+--------------+---------+-------------------+
+   *  |  0 |     false      |    false    |    false     |  false  | CONNECT_WALLET    |
+   *  |  1 |     false      |    false    |    false     |  true   | CONNECT_WALLET    |
+   *  |  2 |     false      |    false    |    true      |  false  | CONNECT_WALLET    |
+   *  |  3 |     false      |    false    |    true      |  true   | CONNECT_WALLET    |
+   *  |  4 |     false      |    true     |    false     |  false  | CONNECT_WALLET    |
+   *  |  5 |     false      |    true     |    false     |  true   | CONNECT_WALLET    |
+   *  |  6 |     false      |    true     |    true      |  false  | CONNECT_WALLET    |
+   *  |  7 |     false      |    true     |    true      |  true   | CONNECT_WALLET    |
+   *  |  8 |     true       |    false    |    false     |  false  | INTRODUCTION      |
+   *  |  9 |     true       |    false    |    false     |  true   | ALLOWANCE         |
+   *  | 10 |     true       |    false    |    true      |  false  | SESSION_AND_SPAWN |
+   *  | 11 |     true       |    false    |    true      |  true   | SESSION           |
+   *  | 12 |     true       |    true     |    false     |  false  | ALLOWANCE         |
+   *  | 13 |     true       |    true     |    false     |  true   | ALLOWANCE         |
+   *  | 14 |     true       |    true     |    true      |  false  | SPAWN             |
+   *  | 15 |     true       |    true     |    true      |  true   | EXIT_FLOW         |
+   *  +----+----------------+-------------+--------------+---------+-------------------+
    *
-   *  Note: DONE state is reached only through normal flow (SPAWNING → DONE)
-   *        Scenario 7 exits immediately without showing any UI
+   *  Note:
+   *        - Scenario 0 is a new user flow
+   *        - Scenarios 1 to 7 are not possible be cause we do not have a wallet connected
+   *        - Scenario 11 is returning user who for some reason does not have a session (new browser, cleared cache, etc.)
+   *        - Scenario 12 is returning user who has revoked allowance
+   *        - Scenario 15 is a fully setup returning user
+   *        - hasAllowance = allowance > 100 tokens
+   *        - DONE state is reached only through normal flow (SPAWN_AND_SESSION__LOADING → DONE)
+   *        - Scenario 15 exits immediately without showing any UI
    */
 
-  function determineInitialState(): SPAWN_STATE {
+  const ALLOWANCE_THRESHOLD = 100
+
+  /**
+   * Check if user has sufficient allowance (> 100 tokens)
+   * Returns false if unable to check (no wallet, no addresses configured)
+   */
+  async function checkHasAllowance(walletAddress: string): Promise<boolean> {
+    const addresses = $externalAddressesConfig
+    if (!addresses?.erc20Address || !addresses?.gamePoolAddress) {
+      console.log("[Spawn] Cannot check allowance: external addresses not configured")
+      return false
+    }
+
+    try {
+      const allowance = await readPlayerERC20Allowance(
+        $publicNetwork,
+        walletAddress as `0x${string}`,
+        addresses.gamePoolAddress,
+        addresses.erc20Address
+      )
+      console.log("[Spawn] Current allowance:", allowance)
+      return allowance > ALLOWANCE_THRESHOLD
+    } catch (err) {
+      console.error("[Spawn] Failed to check allowance:", err)
+      return false
+    }
+  }
+
+  async function determineInitialState(): Promise<SPAWN_STATE> {
     console.log("[Spawn] Determining initial state, walletType:", walletType)
 
     if (walletType === WALLET_TYPE.BURNER) {
       const wallet = setupBurnerWalletNetwork($publicNetwork)
       const walletConnected = !!wallet.walletClient?.account.address
-      const isSpawned = walletConnected
-        ? initWalletNetwork(wallet, wallet.walletClient.account.address, WALLET_TYPE.BURNER)
-        : false
+      const walletAddress = wallet.walletClient?.account.address
 
-      console.log("[Spawn] Burner wallet status:", { walletConnected, isSpawned })
-
-      // Scenario 0: No wallet connected -> WELCOME_SCREEN
-      if (!walletConnected) {
-        console.log("[Spawn] Scenario 0: No wallet connected → WELCOME_SCREEN")
-        return SPAWN_STATE.WELCOME_SCREEN
+      // Scenario 0: No wallet connected -> CONNECT_WALLET
+      if (!walletConnected || !walletAddress) {
+        console.log("[Spawn] Scenario 0: No wallet connected → CONNECT_WALLET")
+        return SPAWN_STATE.CONNECT_WALLET
       }
 
-      // Scenario 7: Wallet connected, session ready (always for burner), spawned -> exit flow
+      const isSpawned = initWalletNetwork(wallet, walletAddress, WALLET_TYPE.BURNER)
+      // For burner wallet, session is always ready
+      const sessionReady = true
+      const hasAllowance = await checkHasAllowance(walletAddress)
+
+      console.log("[Spawn] Burner wallet status:", {
+        walletConnected,
+        sessionReady,
+        hasAllowance,
+        isSpawned
+      })
+
+      // Scenario 15: All conditions met -> EXIT_FLOW
       if (
-        isSpawned ||
+        (isSpawned && hasAllowance) ||
         (page.route.id === "/(main)/(game)/[tripId]" && !page.url.searchParams.has("spawn"))
       ) {
-        console.log("[Spawn] Scenario 7: Already spawned → exiting flow (no UI)")
+        console.log("[Spawn] Scenario 15: All setup → EXIT_FLOW")
         return SPAWN_STATE.EXIT_FLOW
       }
 
-      // Scenario 6: Wallet connected, session ready (always for burner), not spawned -> INTRODUCTION
-      console.log("[Spawn] Scenario 6: Wallet connected, not spawned → INTRODUCTION")
-      return SPAWN_STATE.INTRODUCTION
+      // Scenario 14: Session ready, has allowance, not spawned -> SPAWN
+      if (hasAllowance && !isSpawned) {
+        console.log("[Spawn] Scenario 14: Has allowance, not spawned → SPAWN")
+        return SPAWN_STATE.SPAWN
+      }
+
+      // Scenario 12/13: Session ready, no allowance -> ALLOWANCE
+      if (!hasAllowance) {
+        console.log("[Spawn] Scenario 12/13: No allowance → ALLOWANCE")
+        return SPAWN_STATE.ALLOWANCE
+      }
+
+      // Fallback (shouldn't reach here)
+      console.log("[Spawn] Fallback → SPAWN")
+      return SPAWN_STATE.SPAWN
     } else {
       // DRAWBRIDGE
       const walletConnected =
         $status !== DrawbridgeStatus.DISCONNECTED && $status !== DrawbridgeStatus.UNINITIALIZED
       const sessionReady = $isSessionReady
+      const walletAddress = $userAddress
 
-      console.log("[Spawn] Drawbridge wallet status:", {
-        status: $status,
-        walletConnected,
-        sessionReady
-      })
-
-      // Scenario 0: No wallet connected -> WELCOME_SCREEN
+      // Scenario 0: No wallet connected -> CONNECT_WALLET
       if (!walletConnected) {
-        console.log("[Spawn] Scenario 0: No wallet connected → WELCOME_SCREEN")
-        return SPAWN_STATE.WELCOME_SCREEN
+        console.log("[Spawn] Scenario 0: No wallet connected → CONNECT_WALLET")
+        return SPAWN_STATE.CONNECT_WALLET
       }
 
-      // Scenario 4 & 5: Wallet connected but session not ready -> SESSION_SETUP
+      // Scenario 8-11: Wallet connected but session not ready -> SESSION
       if (!sessionReady) {
-        console.log("[Spawn] Scenario 4/5: Wallet connected, session not ready → SESSION_SETUP")
-        return SPAWN_STATE.SESSION_SETUP
+        console.log("[Spawn] Scenario 8-11: Wallet connected, session not ready → SESSION")
+        return SPAWN_STATE.SESSION
       }
 
-      // Session is ready - ensure entities are initialized before checking spawn status
-      if ($sessionClient) {
+      // Session is ready - check allowance and spawn status
+      if ($sessionClient && walletAddress) {
+        // Ensure entities are initialized before checking spawn status
         const playerId = addressToId($sessionClient.userAddress)
         if (!isEntitiesInitialized(playerId)) {
           console.log("[Spawn] Initializing entities for drawbridge user:", playerId)
@@ -125,17 +187,37 @@
 
         const wallet = setupWalletNetwork($publicNetwork, $sessionClient)
         const isSpawned = initWalletNetwork(wallet, $sessionClient.userAddress, walletType)
+        const hasAllowance = await checkHasAllowance(walletAddress)
 
-        // Scenario 7: Wallet connected, session ready, spawned -> exit flow
-        if (isSpawned) {
-          console.log("[Spawn] Scenario 7: Already spawned → exiting flow (no UI)")
+        console.log("[Spawn] Drawbridge status:", {
+          walletConnected,
+          sessionReady,
+          hasAllowance,
+          isSpawned
+        })
+
+        // Scenario 15: All conditions met -> EXIT_FLOW
+        if (isSpawned && hasAllowance) {
+          console.log("[Spawn] Scenario 15: All setup → EXIT_FLOW")
           return SPAWN_STATE.EXIT_FLOW
+        }
+
+        // Scenario 14: Session ready, has allowance, not spawned -> SPAWN
+        if (hasAllowance && !isSpawned) {
+          console.log("[Spawn] Scenario 14: Has allowance, not spawned → SPAWN")
+          return SPAWN_STATE.SPAWN
+        }
+
+        // Scenario 12/13: Session ready, no allowance -> ALLOWANCE
+        if (!hasAllowance) {
+          console.log("[Spawn] Scenario 12/13: No allowance → ALLOWANCE")
+          return SPAWN_STATE.ALLOWANCE
         }
       }
 
-      // Scenario 6: Wallet connected, session ready, not spawned -> INTRODUCTION
-      console.log("[Spawn] Scenario 6: Wallet connected, session ready, not spawned → INTRODUCTION")
-      return SPAWN_STATE.INTRODUCTION
+      // Fallback: session ready but no client (shouldn't happen)
+      console.log("[Spawn] Fallback: session ready but no client → ALLOWANCE")
+      return SPAWN_STATE.ALLOWANCE
     }
   }
 
@@ -162,81 +244,15 @@
     // Reset state machine to INIT
     spawnState.state.reset()
 
-    // Determine initial state and transition
-    const initialState = determineInitialState()
-    console.log("[Spawn] Initial state determined:", initialState)
-
-    // Transition to the determined state
-    spawnState.state.transitionTo(initialState)
+    // Determine initial state and transition (async)
+    determineInitialState().then(initialState => {
+      console.log("[Spawn] Initial state determined:", initialState)
+      spawnState.state.transitionTo(initialState)
+    })
   })
 
-  // Check if player is already spawned when reaching certain states
-  $effect(() => {
-    const currentState = spawnState.state.current
-
-    // Skip checks if not initialized yet
-    if (!initialized) return
-
-    // Check when reaching SESSION_SETUP: if session is already ready, skip this screen
-    if (currentState === SPAWN_STATE.SESSION_SETUP) {
-      if (walletType === WALLET_TYPE.DRAWBRIDGE && $isSessionReady && $sessionClient) {
-        // Ensure entities are initialized before checking spawn status
-        const playerId = addressToId($sessionClient.userAddress)
-        if (!isEntitiesInitialized(playerId)) {
-          console.log("[Spawn] SESSION_SETUP: Initializing entities for:", playerId)
-          initEntities({ activePlayerId: playerId })
-        }
-
-        const wallet = setupWalletNetwork($publicNetwork, $sessionClient)
-        const isSpawned = initWalletNetwork(wallet, $sessionClient.userAddress, walletType)
-
-        if (isSpawned) {
-          console.log("[Spawn] At SESSION_SETUP but already spawned → fast-tracking to game")
-          spawnState.state.transitionTo(SPAWN_STATE.EXIT_FLOW)
-          return
-        }
-
-        // Session ready but not spawned → skip to INTRODUCTION
-        console.log("[Spawn] At SESSION_SETUP but session ready → skipping to INTRODUCTION")
-        spawnState.state.transitionTo(SPAWN_STATE.INTRODUCTION)
-      }
-    }
-
-    // Check when reaching INTRODUCTION: if already spawned, fast-track
-    // Introduction should only be shown to users who are actually spawning (not yet spawned)
-    if (currentState === SPAWN_STATE.INTRODUCTION) {
-      if (walletType === WALLET_TYPE.BURNER) {
-        const wallet = setupBurnerWalletNetwork($publicNetwork)
-        if (wallet.walletClient?.account.address) {
-          const isSpawned = initWalletNetwork(
-            wallet,
-            wallet.walletClient.account.address,
-            WALLET_TYPE.BURNER
-          )
-
-          if (isSpawned) {
-            console.log("[Spawn] At INTRODUCTION but already spawned → fast-tracking to game")
-            spawnState.state.transitionTo(SPAWN_STATE.EXIT_FLOW)
-          }
-        }
-      } else if ($sessionClient) {
-        // Ensure entities are initialized before checking spawn status
-        const playerId = addressToId($sessionClient.userAddress)
-        if (!isEntitiesInitialized(playerId)) {
-          console.log("[Spawn] INTRODUCTION: Initializing entities for:", playerId)
-          initEntities({ activePlayerId: playerId })
-        }
-
-        const wallet = setupWalletNetwork($publicNetwork, $sessionClient)
-        const isSpawned = initWalletNetwork(wallet, $sessionClient.userAddress, walletType)
-
-        if (isSpawned) {
-          console.log("[Spawn] At INTRODUCTION but already spawned → fast-tracking to game")
-          spawnState.state.transitionTo(SPAWN_STATE.EXIT_FLOW)
-        }
-      }
-    }
-  })
+  // Note: Most state checks are now handled by determineInitialState()
+  // This effect can be used for reactive state changes during the flow if needed
 
   onMount(async () => {
     console.log("[Spawn] Component mounted")
@@ -271,16 +287,26 @@
   </div>
 
   <div class="content">
-    {#if spawnState.state.current === SPAWN_STATE.WELCOME_SCREEN}
-      <WelcomeScreen />
+    {#if spawnState.state.current === SPAWN_STATE.CONNECT_WALLET}
+      <ConnectWalletForm />
     {:else if spawnState.state.current === SPAWN_STATE.INTRODUCTION}
       <Introduction />
-    {:else if spawnState.state.current === SPAWN_STATE.CONNECT_WALLET}
-      <ConnectWalletForm />
-    {:else if spawnState.state.current === SPAWN_STATE.SESSION_SETUP}
+    {:else if spawnState.state.current === SPAWN_STATE.ALLOWANCE}
+      <!-- TODO: Allowance component -->
+      <div>ALLOWANCE - Set allowance</div>
+    {:else if spawnState.state.current === SPAWN_STATE.ALLOWANCE__LOADING}
+      <!-- TODO: Allowance loading component -->
+      <div>ALLOWANCE__LOADING - Setting allowance...</div>
+    {:else if spawnState.state.current === SPAWN_STATE.SESSION}
       <SessionSetup />
-    {:else if spawnState.state.current === SPAWN_STATE.SESSION_SETUP__LOADING}
+    {:else if spawnState.state.current === SPAWN_STATE.SESSION__LOADING}
       <SettingUp />
+    {:else if spawnState.state.current === SPAWN_STATE.SESSION_AND_SPAWN}
+      <!-- TODO: Combined session and spawn component -->
+      <div>SESSION_AND_SPAWN - Setup session and spawn</div>
+    {:else if spawnState.state.current === SPAWN_STATE.SESSION_AND_SPAWN__LOADING}
+      <!-- TODO: Combined loading component -->
+      <div>SESSION_AND_SPAWN__LOADING - Setting up...</div>
     {:else if spawnState.state.current === SPAWN_STATE.SPAWN}
       <SpawnForm />
     {:else if spawnState.state.current === SPAWN_STATE.SPAWN__LOADING}

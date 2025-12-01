@@ -36,7 +36,7 @@
           console.error("[SettingUp] Session setup timed out")
           error = "Session setup timed out"
           setTimeout(() => {
-            spawnState.state.transitionTo(SPAWN_STATE.SESSION_SETUP)
+            spawnState.state.transitionTo(SPAWN_STATE.SESSION)
           }, 2000)
         }
       }, 10000)
@@ -49,7 +49,7 @@
 
       // Wait a moment to show error, then go back to setup screen
       setTimeout(() => {
-        spawnState.state.transitionTo(SPAWN_STATE.SESSION_SETUP)
+        spawnState.state.transitionTo(SPAWN_STATE.SESSION)
       }, 2000)
     }
   }

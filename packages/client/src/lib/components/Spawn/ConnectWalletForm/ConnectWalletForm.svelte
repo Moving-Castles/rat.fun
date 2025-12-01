@@ -85,11 +85,11 @@
 
       console.log("[ConnectWalletForm] Wallet connected successfully")
       // Account watcher in drawbridge will handle session creation
-      // Close modal and transition to SESSION_SETUP
+      // Close modal and transition to SESSION
       showWalletSelect = false
-      // !!! HACK: Wait for 1 second to avoid showing flash of SESSION_SETUP if we are setup
+      // !!! HACK: Wait for 1 second to avoid showing flash of SESSION if we are setup
       await new Promise(resolve => setTimeout(resolve, 1000))
-      spawnState.state.transitionTo(SPAWN_STATE.SESSION_SETUP)
+      spawnState.state.transitionTo(SPAWN_STATE.SESSION)
     } catch (error) {
       console.error("[ConnectWalletForm] Connection failed:", error)
       errorHandler(error, "Failed to connect wallet")

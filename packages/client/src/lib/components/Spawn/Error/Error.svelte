@@ -13,7 +13,7 @@
   function handleRetry() {
     console.log("[Error] Retry button clicked")
     // Reset and start over
-    spawnState.state.transitionTo(SPAWN_STATE.WELCOME_SCREEN)
+    spawnState.state.transitionTo(SPAWN_STATE.CONNECT_WALLET)
   }
 
   onMount(() => {
