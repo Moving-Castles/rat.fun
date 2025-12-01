@@ -225,11 +225,16 @@
 
 <div class="outer-container">
   <div class="inner-container">
+    <div class="text-container">
+      <p>good morning operator</p>
+      <p>Welcome to xxxxx a remote viewing slop machine</p>
+      <p>connect wallet to prove operator identity</p>
+    </div>
     <div class="button-container" bind:this={buttonElement}>
       {#if connecting}
         <BigButton text="Connecting..." disabled={true} onclick={() => {}} />
       {:else}
-        <BigButton text="Connect wallet" onclick={handleClick} />
+        <BigButton text="I AM OPERATOR" onclick={handleClick} />
       {/if}
     </div>
 
@@ -581,5 +586,12 @@
         margin: 16px 0;
       }
     }
+  }
+
+  .text-container {
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.6);
+    text-align: center;
+    margin-bottom: 20px;
   }
 </style>

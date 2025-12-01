@@ -24,7 +24,10 @@
     }
 
     try {
-      // Step 1: Setup session
+      /* - - - - - - - - - - - - -
+       * Step 1: Set up session
+       * - - - - - - - - - - - - - */
+
       console.log("[SessionAndSpawnLoading] Step 1: Setting up session")
       status = "Setting up session"
 
@@ -52,7 +55,10 @@
         }, 10000)
       })
 
-      // Step 2: Spawn
+      /* - - - - - - - - - - - - -
+       * Step 2: Spawn
+       * - - - - - - - - - - - - - */
+
       console.log("[SessionAndSpawnLoading] Step 2: Spawning")
       status = "Issuing member card"
 

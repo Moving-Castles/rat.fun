@@ -69,14 +69,6 @@
         },
         "0"
       )
-      // .to(
-      //   textElement,
-      //   {
-      //     opacity: 1,
-      //     duration: 0.3
-      //   },
-      //   "0.1"
-      // )
       .to(
         inputElement,
         {

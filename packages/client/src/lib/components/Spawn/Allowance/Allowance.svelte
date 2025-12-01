@@ -32,12 +32,14 @@
 <div class="outer-container">
   <div class="inner-container">
     <div class="text-container">
-      <h2>Set Allowance</h2>
-      <p>Allow the game to spend tokens on your behalf. This is required to play.</p>
+      <p>slop machine need permission to spend your tokens</p>
+      <p>rats cost tokens</p>
+      <p>trips cost tokens</p>
+      <p>you spend $RAT to get $RAT</p>
     </div>
 
     <div class="button-container" bind:this={buttonElement}>
-      <BigButton text="APPROVE" onclick={handleSetAllowance} />
+      <BigButton text="AUTHORIZE SLOP MACHINE" onclick={handleSetAllowance} />
     </div>
   </div>
 </div>

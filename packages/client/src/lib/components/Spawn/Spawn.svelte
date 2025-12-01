@@ -190,6 +190,7 @@
 
   // Wait for drawbridge stores to settle before determining initial state
   $effect(() => {
+    console.log("[Spawn] $effect triggered")
     // For Drawbridge, wait until status is no longer UNINITIALIZED
     // This means the stores have been updated with the actual connection state
     if (walletType === WALLET_TYPE.DRAWBRIDGE && $status === DrawbridgeStatus.UNINITIALIZED) {

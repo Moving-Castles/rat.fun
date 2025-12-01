@@ -90,12 +90,21 @@
       <Mascot entranceOn={true} bigDanceOn={true} />
     </div>
 
+    <div class="text-container">
+      <p>sign session key for machine to execute fast</p>
+
+      <p>everything your fault</p>
+      <p>is skill game</p>
+
+      <p>enter your operator name to agree</p>
+    </div>
+
     <!-- FORM -->
     <div class="form" bind:this={buttonElement}>
       <!-- INPUT -->
       <input
         type="text"
-        placeholder="YOUR NAME"
+        placeholder="SIGN YOUR NAME"
         bind:value={name}
         bind:this={inputElement}
         onkeydown={e => {
@@ -106,7 +115,7 @@
         }}
       />
       <div class="button-container">
-        <BigButton text="JOIN" onclick={submitForm} disabled={!name} />
+        <BigButton text="EVERYTHING IS MY FAULT" onclick={submitForm} disabled={!name} />
       </div>
     </div>
   </div>
