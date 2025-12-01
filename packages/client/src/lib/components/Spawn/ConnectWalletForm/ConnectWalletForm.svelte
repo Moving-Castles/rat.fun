@@ -246,6 +246,7 @@
   })
 </script>
 
+<div class="debug-badge">CONNECT_WALLET</div>
 <div class="outer-container">
   <div class="inner-container">
     <div class="text-container">
@@ -616,5 +617,18 @@
     background: rgba(255, 255, 255, 0.6);
     text-align: center;
     margin-bottom: 20px;
+  }
+
+  .debug-badge {
+    position: fixed;
+    top: 50px;
+    right: 10px;
+    background: magenta;
+    color: white;
+    padding: 4px 8px;
+    font-size: 10px;
+    font-family: monospace;
+    z-index: 9999;
+    border-radius: 4px;
   }
 </style>

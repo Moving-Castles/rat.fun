@@ -29,6 +29,7 @@
   })
 </script>
 
+<div class="debug-badge">ALLOWANCE</div>
 <div class="outer-container">
   <div class="inner-container">
     <div class="text-container">
@@ -84,5 +85,18 @@
         height: 200px;
       }
     }
+  }
+
+  .debug-badge {
+    position: fixed;
+    top: 50px;
+    right: 10px;
+    background: magenta;
+    color: white;
+    padding: 4px 8px;
+    font-size: 10px;
+    font-family: monospace;
+    z-index: 9999;
+    border-radius: 4px;
   }
 </style>
