@@ -20,7 +20,18 @@ export function initializeSentry(): void {
     environment,
     release,
     tracesSampleRate,
-    profilesSampleRate
+    profilesSampleRate,
+    beforeSend(event, hint) {
+      // Add rawText from LLM errors (LLMParseError, LLMSchemaError) to the event context
+      const error = hint.originalException
+      if (error && typeof error === "object" && "rawText" in error) {
+        event.extra = {
+          ...event.extra,
+          llmRawResponse: (error as { rawText: string }).rawText
+        }
+      }
+      return event
+    }
   })
 
   console.log(`Sentry initialized for environment: ${environment}`)
