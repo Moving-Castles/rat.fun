@@ -271,7 +271,6 @@ async function routes(fastify: FastifyInstance) {
           log: correctedEvents.log,
           itemChanges: validatedOutcome.itemChanges,
           balanceTransfers: validatedOutcome.balanceTransfers,
-          debuggingInfo: eventResults.outcome.debuggingInfo,
           ratDead: newRatBalance == 0,
           tripDepleted: newTripValue == 0
         }

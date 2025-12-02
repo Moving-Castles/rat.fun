@@ -122,7 +122,7 @@ export type DebuggingInfo = {
  * ─────────────────────────────────────────────
  */
 
-export type EnterTripReturnValue = OutcomeReturnValue & {
+export type EnterTripReturnValue = Omit<OutcomeReturnValue, "debuggingInfo"> & {
   ratDead: boolean
   tripDepleted: boolean
   log: LogEntry[]

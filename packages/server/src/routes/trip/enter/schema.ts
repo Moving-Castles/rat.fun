@@ -61,14 +61,6 @@ export const schema = {
             }
           }
         },
-        debuggingInfo: {
-          type: "object",
-          properties: {
-            internalText: { type: "string" },
-            randomSeed: { type: "number" },
-            batchId: { type: "number" }
-          }
-        },
         ratDead: { type: "boolean" },
         tripDepleted: { type: "boolean" }
       },
