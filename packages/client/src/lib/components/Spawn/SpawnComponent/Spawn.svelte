@@ -29,13 +29,11 @@
       return
     }
 
-    if (name.length > 50) {
-      console.warn("[SpawnForm] Name is too long (maximum 50 characters)")
-      return
-    }
+    // Crop name to limit
+    const finalName = name.slice(0, 50)
 
     // Store name in state machine
-    spawnState.data.setPlayerName(name)
+    spawnState.data.setPlayerName(finalName)
     console.log("[SpawnForm] Name stored, transitioning to SPAWNING")
 
     // Transition to spawning state

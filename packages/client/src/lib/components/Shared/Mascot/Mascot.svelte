@@ -208,11 +208,12 @@
     transform: translateX(50%);
     z-index: 10;
     background: rgba(255, 255, 255, 0.8);
-    border: 3px solid black;
+    border: 2px solid black;
     padding: 10px;
-    width: 500px;
+    width: 600px;
+    max-width: 90dvw;
     pointer-events: none;
-    font-size: var(--font-size-normal);
+    font-size: 22px;
   }
 
   .mascot {

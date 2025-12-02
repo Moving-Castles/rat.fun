@@ -24,13 +24,11 @@
       return
     }
 
-    if (name.length > 50) {
-      console.warn("[SessionAndSpawn] Name is too long (maximum 50 characters)")
-      return
-    }
+    // Crop name to limit
+    const finalName = name.slice(0, 50)
 
     // Store name in state machine
-    spawnState.data.setPlayerName(name)
+    spawnState.data.setPlayerName(finalName)
     console.log("[SessionAndSpawn] Name stored, transitioning to SESSION_AND_SPAWN__LOADING")
 
     // Transition to loading state
@@ -88,7 +86,7 @@
 <div class="outer-container">
   <div class="inner-container">
     <div class="mascot-container" bind:this={mascotElement}>
-      <Mascot entranceOn={true} bigDanceOn={true} text={sessionAndSpawnMascotText} />
+      <Mascot text={sessionAndSpawnMascotText} />
     </div>
 
     <!-- FORM -->
@@ -170,7 +168,7 @@
           border-bottom: var(--default-border-style);
           outline: none;
           width: 100%;
-          height: 80px;
+          height: 60px;
           margin-bottom: 20px;
           text-align: center;
 

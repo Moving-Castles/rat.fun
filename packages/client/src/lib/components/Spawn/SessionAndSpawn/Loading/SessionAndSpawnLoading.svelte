@@ -6,7 +6,7 @@
   import { player } from "$lib/modules/state/stores"
   import { waitForPropertyChangeFrom } from "$lib/modules/state/utils"
   import { spawnState, SPAWN_STATE } from "$lib/components/Spawn/state.svelte"
-  import { SmallSpinner, Mascot } from "$lib/components/Shared"
+  import { SmallSpinner } from "$lib/components/Shared"
   import { errorHandler } from "$lib/modules/error-handling"
   import { publicNetwork } from "$lib/modules/network"
   import { setupWalletNetwork } from "$lib/mud/setupWalletNetwork"
@@ -122,9 +122,6 @@
         {error}
       </div>
     {:else}
-      <div class="mascot-container" in:fade={{ duration: 200 }}>
-        <Mascot smallDanceOn={true} />
-      </div>
       <div class="message" in:fade={{ duration: 200 }}>
         {status}
         <SmallSpinner soundOn />
@@ -163,13 +160,6 @@
       justify-content: center;
       width: var(--spawn-inner-width);
       max-width: 90dvw;
-
-      .mascot-container {
-        width: var(--spawn-mascot-size);
-        height: var(--spawn-mascot-size);
-        margin-bottom: var(--spawn-mascot-margin-bottom);
-        pointer-events: none;
-      }
 
       .message {
         font-size: var(--font-size-large);

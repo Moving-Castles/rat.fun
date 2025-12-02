@@ -1,7 +1,6 @@
 <script lang="ts">
   import { onDestroy, onMount } from "svelte"
   import { page } from "$app/state"
-  // import { fade } from "svelte/transition"
 
   import { UIState } from "$lib/modules/ui/state.svelte"
   import { UI } from "$lib/modules/ui/enums"
@@ -72,7 +71,13 @@
     await new Promise(resolve => setTimeout(resolve, 500))
     if ($UIState === UI.SPAWNING) {
       shaderManager.setShader("black")
-      backgroundMusic.play({ category: "ratfunMusic", id: "spawn", loop: true })
+      backgroundMusic.play({
+        category: "ratfunMusic",
+        id: "spawn",
+        loop: true,
+        fadeIn: true,
+        volume: 0.3
+      })
     }
   })
 

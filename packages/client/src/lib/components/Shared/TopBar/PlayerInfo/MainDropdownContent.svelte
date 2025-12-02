@@ -58,7 +58,7 @@
   </div>
 
   <!-- Disconnect Wallet Button -->
-  <div class="row">
+  <div class="row button-row">
     <SmallButton
       tippyText={UI_STRINGS.disconnectWallet}
       onclick={async () => {
@@ -88,13 +88,13 @@
 
   <!-- Buy $RAT Button (placeholder, only if sale is live) -->
   {#if $saleStatus === SALE_STATUS.LIVE}
-    <div class="row">
+    <div class="row button-row">
       <SmallButton tippyText="Buy $RAT" onclick={() => {}} text="Buy $RAT" />
     </div>
   {/if}
 
   <!-- Manage Allowance Button -->
-  <div class="row">
+  <div class="row button-row">
     <SmallButton
       tippyText={UI_STRINGS.manageAllowance}
       onclick={() => openAllowanceModal()}
@@ -133,6 +133,10 @@
       display: flex;
       align-items: center;
       gap: 8px;
+
+      &.button-row {
+        height: 40px;
+      }
 
       .label {
         font-family: var(--typewriter-font-stack);
