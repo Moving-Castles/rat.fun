@@ -1,27 +1,41 @@
 <script lang="ts">
-  import { BigButton } from "$lib/components/Shared"
+  import { onMount } from "svelte"
+  import gsap from "gsap"
+  import { BigButton, Mascot } from "$lib/components/Shared"
   import { spawnState, SPAWN_STATE } from "$lib/components/Spawn/state.svelte"
+  import { introductionMascotText } from "./introductionMascotText"
+
+  let mascotElement = $state<HTMLDivElement | null>(null)
   let buttonElement = $state<HTMLDivElement | null>(null)
+
+  const timeline = gsap.timeline()
 
   const onClick = () => {
     spawnState.state.transitionTo(SPAWN_STATE.ALLOWANCE)
   }
+
+  onMount(() => {
+    console.log("[Introduction] Component mounted")
+
+    if (!mascotElement || !buttonElement) {
+      return
+    }
+
+    gsap.set([mascotElement, buttonElement], { opacity: 0 })
+
+    timeline
+      .to(mascotElement, { opacity: 1, duration: 0.4 }, "0")
+      .to(buttonElement, { opacity: 1, duration: 0.4 }, "0.2")
+  })
 </script>
 
 <div class="debug-badge">INTRODUCTION</div>
 <div class="outer-container">
   <div class="inner-container">
-    <div class="text-container">
-      <p>first time loggin on?</p>
-      <p>These are the basics:</p>
-      <p>buy rat</p>
-      <p>send to trip</p>
-      <p>rat survive or die</p>
-      <p>get health and objects</p>
-      <p>cash out value</p>
-      <p>repeat</p>
-      <p>do not get attached to rat</p>
+    <div class="mascot-container" bind:this={mascotElement}>
+      <Mascot text={introductionMascotText} />
     </div>
+
     <div class="button-container" bind:this={buttonElement}>
       <BigButton text="I WILL NOT GET ATTACHED TO RAT" onclick={onClick} />
     </div>
@@ -42,19 +56,19 @@
       flex-flow: column nowrap;
       align-items: center;
       justify-content: center;
-      width: 700px;
+      width: var(--spawn-inner-width);
       max-width: 90dvw;
 
       .mascot-container {
-        width: 400px;
-        height: 400px;
-        margin-bottom: 20px;
-        cursor: pointer;
+        width: var(--spawn-mascot-size);
+        height: var(--spawn-mascot-size);
+        margin-bottom: var(--spawn-mascot-margin-bottom);
+        pointer-events: none;
       }
 
       .button-container {
         width: 100%;
-        height: 160px;
+        height: var(--spawn-button-height);
       }
     }
   }
@@ -70,5 +84,6 @@
     font-family: monospace;
     z-index: 9999;
     border-radius: 4px;
+    display: none;
   }
 </style>

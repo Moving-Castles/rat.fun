@@ -4,7 +4,7 @@
   import { getDrawbridge, type ConnectorInfo, drawbridgeError } from "$lib/modules/drawbridge"
   import { debugInfo } from "$lib/modules/drawbridge/wagmiConfig"
   import { isPhone } from "$lib/modules/ui/state.svelte"
-  import BigButton from "$lib/components/Shared/Buttons/BigButton.svelte"
+  import { BigButton, Mascot } from "$lib/components/Shared"
   import { spawnState, determineNextState } from "$lib/components/Spawn/state.svelte"
   import { buildFlowContext } from "$lib/components/Spawn/flowContext"
   import { errorHandler } from "$lib/modules/error-handling"
@@ -14,7 +14,9 @@
   import { WALLET_TYPE } from "$lib/mud/enums"
   import { initEntities, isEntitiesInitialized } from "$lib/modules/chain-sync"
   import { addressToId } from "$lib/modules/utils"
+  import { connectWalletFormMascotText } from "./connectWalletFormMascotText"
 
+  let mascotElement: HTMLDivElement | null = $state(null)
   let buttonElement: HTMLDivElement | null = $state(null)
 
   let connecting = $state(false)
@@ -229,31 +231,25 @@
 
     prepareConnectors()
 
-    if (!buttonElement) {
+    if (!mascotElement || !buttonElement) {
       return
     }
 
-    // Set initial opacity to 0
-    buttonElement.style.opacity = "0"
+    gsap.set([mascotElement, buttonElement], { opacity: 0 })
 
-    // Animate opacity to 1
-    if (buttonElement) {
-      timeline.to(buttonElement, {
-        opacity: 1,
-        duration: 0.4
-      })
-    }
+    timeline
+      .to(mascotElement, { opacity: 1, duration: 0.4 }, "0")
+      .to(buttonElement, { opacity: 1, duration: 0.4 }, "0.2")
   })
 </script>
 
 <div class="debug-badge">CONNECT_WALLET</div>
 <div class="outer-container">
   <div class="inner-container">
-    <div class="text-container">
-      <p>good morning operator</p>
-      <p>Welcome to xxxxx a remote viewing slop machine</p>
-      <p>connect wallet to prove operator identity</p>
+    <div class="mascot-container" bind:this={mascotElement}>
+      <Mascot text={connectWalletFormMascotText} />
     </div>
+
     <div class="button-container" bind:this={buttonElement}>
       {#if connecting}
         <BigButton text="Connecting..." disabled={true} onclick={() => {}} />
@@ -418,13 +414,19 @@
       flex-flow: column nowrap;
       align-items: center;
       justify-content: center;
-      width: 500px;
+      width: var(--spawn-inner-width);
       max-width: 90dvw;
+
+      .mascot-container {
+        width: var(--spawn-mascot-size);
+        height: var(--spawn-mascot-size);
+        margin-bottom: var(--spawn-mascot-margin-bottom);
+        pointer-events: none;
+      }
 
       .button-container {
         width: 100%;
-        height: 200px;
-        margin-bottom: 20px;
+        height: var(--spawn-button-height);
       }
     }
   }
@@ -520,6 +522,7 @@
     justify-content: center;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     transition: all 0.2s;
+    display: none;
 
     &:hover {
       transform: scale(1.1);
@@ -612,13 +615,6 @@
     }
   }
 
-  .text-container {
-    padding: 10px;
-    background: rgba(255, 255, 255, 0.6);
-    text-align: center;
-    margin-bottom: 20px;
-  }
-
   .debug-badge {
     position: fixed;
     top: 50px;
@@ -630,5 +626,6 @@
     font-family: monospace;
     z-index: 9999;
     border-radius: 4px;
+    display: none;
   }
 </style>

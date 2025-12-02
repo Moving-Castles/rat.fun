@@ -4,12 +4,14 @@
   import gsap from "gsap"
   import { BigButton, Mascot } from "$lib/components/Shared"
   import { spawnState, SPAWN_STATE } from "$lib/components/Spawn/state.svelte"
+  import { getDoneMascotText } from "./doneMascotText"
 
   let mascotElement = $state<HTMLDivElement | null>(null)
-  let textElement = $state<HTMLDivElement | null>(null)
   let buttonElement = $state<HTMLDivElement | null>(null)
 
   const timeline = gsap.timeline()
+
+  const mascotText = $derived(getDoneMascotText($player?.name ?? "Operator"))
 
   function handleEnjoy() {
     console.log("[Done] Enjoy button clicked, transitioning to EXIT_FLOW")
@@ -19,41 +21,15 @@
   onMount(() => {
     console.log("[Done] Component mounted")
 
-    if (!mascotElement || !textElement || !buttonElement) {
+    if (!mascotElement || !buttonElement) {
       return
     }
 
-    // Set initial opacity to 0
-    gsap.set([mascotElement, textElement, buttonElement], {
-      opacity: 0
-    })
+    gsap.set([mascotElement, buttonElement], { opacity: 0 })
 
-    // Staggered fade-in animations
     timeline
-      .to(
-        mascotElement,
-        {
-          opacity: 1,
-          duration: 0.4
-        },
-        "0"
-      )
-      .to(
-        textElement,
-        {
-          opacity: 1,
-          duration: 0.3
-        },
-        "0.1"
-      )
-      .to(
-        buttonElement,
-        {
-          opacity: 1,
-          duration: 0.3
-        },
-        "0.2"
-      )
+      .to(mascotElement, { opacity: 1, duration: 0.4 }, "0")
+      .to(buttonElement, { opacity: 1, duration: 0.4 }, "0.2")
   })
 </script>
 
@@ -61,11 +37,9 @@
 <div class="outer-container">
   <div class="inner-container">
     <div class="mascot-container" bind:this={mascotElement}>
-      <Mascot smallDanceOn={true} />
+      <Mascot smallDanceOn={true} text={mascotText} />
     </div>
-    <div class="text-container" bind:this={textElement}>
-      {$player?.name}, you are set!
-    </div>
+
     <div class="button-container" bind:this={buttonElement}>
       <BigButton text="ENJOY SKILLFULLY" onclick={handleEnjoy} />
     </div>
@@ -84,6 +58,7 @@
     font-family: monospace;
     z-index: 9999;
     border-radius: 4px;
+    display: none;
   }
 
   .outer-container {
@@ -99,26 +74,18 @@
       flex-flow: column nowrap;
       align-items: center;
       justify-content: center;
-      width: 500px;
+      width: var(--spawn-inner-width);
       max-width: 90dvw;
 
       .mascot-container {
-        width: 300px;
-        height: 300px;
-      }
-
-      .text-container {
-        font-size: var(--font-size-large);
-        background: var(--background);
-        color: var(--foreground);
-        padding: 10px;
-        margin-bottom: 20px;
-        margin-top: 20px;
+        width: var(--spawn-mascot-size);
+        height: var(--spawn-mascot-size);
+        margin-bottom: var(--spawn-mascot-margin-bottom);
       }
 
       .button-container {
         width: 100%;
-        height: 200px;
+        height: var(--spawn-button-height);
       }
     }
   }

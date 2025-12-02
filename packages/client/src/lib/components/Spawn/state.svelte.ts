@@ -168,7 +168,7 @@ const setOnExitFlow = (callback: () => void) => {
  *        - Scenario 0 is a new user flow
  *        - Scenarios 1 to 7 are not possible be cause we do not have a wallet connected
  *        - Scenario 11 is returning user who for some reason does not have a session (new browser, cleared cache, etc.)
- *        - Scenario 12 is returning user who has revoked allowance
+ *        - Scenario 13 is returning user who has revoked allowance
  *        - Scenario 15 is a fully setup returning user, exits immediately without showing any UI
  *        - hasAllowance = allowance > 100 tokens
  *        - DONE state is reached only through normal flow (SPAWN_AND_SESSION__LOADING → DONE)

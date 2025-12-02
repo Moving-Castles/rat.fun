@@ -119,6 +119,7 @@
     font-family: monospace;
     z-index: 9999;
     border-radius: 4px;
+    display: none;
   }
 
   .outer-container {

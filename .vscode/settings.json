@@ -8,6 +8,7 @@
   "search.exclude": {
     "**/build": true,
     "**/dist": true,
-    "**/.svelte-kit": true
+    "**/.svelte-kit": true,
+    "**/pnpm-lock.yaml": true
   }
 }

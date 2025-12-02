@@ -83,6 +83,7 @@
     font-family: monospace;
     z-index: 9999;
     border-radius: 4px;
+    display: none;
   }
 
   .outer-container {
@@ -98,12 +99,13 @@
       flex-flow: column nowrap;
       align-items: center;
       justify-content: center;
-      width: 500px;
+      width: var(--spawn-inner-width);
       max-width: 90dvw;
 
       .mascot-container {
-        width: 300px;
-        height: 300px;
+        width: var(--spawn-mascot-size);
+        height: var(--spawn-mascot-size);
+        margin-bottom: var(--spawn-mascot-margin-bottom);
         pointer-events: none;
       }
 

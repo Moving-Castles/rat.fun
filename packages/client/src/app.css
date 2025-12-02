@@ -79,6 +79,12 @@
   /* Layout: Trip Result */
   --info-box-height: 260px;
 
+  /* Layout: Spawn */
+  --spawn-mascot-size: 400px;
+  --spawn-mascot-margin-bottom: 20px;
+  --spawn-button-height: 140px;
+  --spawn-inner-width: 600px;
+
   /* Sizing */
   --default-padding: 14px;
   --tab-bar-height: 90px;

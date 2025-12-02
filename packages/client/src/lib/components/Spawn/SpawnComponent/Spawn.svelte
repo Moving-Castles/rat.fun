@@ -7,6 +7,7 @@
 
   import { BigButton, Mascot } from "$lib/components/Shared"
   import { spawnState, SPAWN_STATE } from "$lib/components/Spawn/state.svelte"
+  import { spawnMascotText } from "./spawnMascotText"
 
   let name = $state("")
 
@@ -93,7 +94,7 @@
   <div class="inner-container">
     <!-- MASCOT -->
     <div class="mascot-container" bind:this={mascotElement}>
-      <Mascot entranceOn={true} bigDanceOn={true} />
+      <Mascot entranceOn={true} bigDanceOn={true} text={spawnMascotText} />
     </div>
 
     <!-- FORM -->
@@ -134,6 +135,7 @@
     font-family: monospace;
     z-index: 9999;
     border-radius: 4px;
+    display: none;
   }
 
   .outer-container {
@@ -149,12 +151,13 @@
       flex-flow: column nowrap;
       align-items: center;
       justify-content: center;
-      width: 600px;
+      width: var(--spawn-inner-width);
       max-width: 90dvw;
 
       .mascot-container {
-        width: 300px;
-        height: 300px;
+        width: var(--spawn-mascot-size);
+        height: var(--spawn-mascot-size);
+        margin-bottom: var(--spawn-mascot-margin-bottom);
         pointer-events: none;
       }
 
@@ -188,7 +191,7 @@
 
         .button-container {
           width: 100%;
-          height: 120px;
+          height: var(--spawn-button-height);
         }
       }
     }

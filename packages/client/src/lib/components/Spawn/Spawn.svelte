@@ -1,14 +1,14 @@
 <script lang="ts">
   import { onDestroy, onMount } from "svelte"
   import { page } from "$app/state"
-  import { fade } from "svelte/transition"
+  // import { fade } from "svelte/transition"
 
   import { UIState } from "$lib/modules/ui/state.svelte"
   import { UI } from "$lib/modules/ui/enums"
 
   import { backgroundMusic } from "$lib/modules/sound/stores"
+  import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
 
-  import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
   import {
     Introduction,
     ConnectWalletForm,
@@ -25,7 +25,6 @@
   } from "$lib/components/Spawn"
   import { spawnState, SPAWN_STATE, determineNextState } from "$lib/components/Spawn/state.svelte"
   import { buildFlowContext } from "$lib/components/Spawn/flowContext"
-  import { Marquee } from "$lib/components/Shared"
 
   const { spawned = () => {} } = $props<{
     spawned: () => void
@@ -72,6 +71,7 @@
     // (when already spawned we pass through quickly and music might start unnecessarily)
     await new Promise(resolve => setTimeout(resolve, 500))
     if ($UIState === UI.SPAWNING) {
+      shaderManager.setShader("black")
       backgroundMusic.play({ category: "ratfunMusic", id: "spawn", loop: true })
     }
   })
@@ -82,18 +82,6 @@
 </script>
 
 <div class="container">
-  <div class="marquee-container top" in:fade|global={{ duration: 200, delay: 1000 }}>
-    <Marquee speed={5} numberOfCopies={10} direction="left">
-      <p class="marquee-text">{UI_STRINGS.topMarqueeText}</p>
-    </Marquee>
-  </div>
-
-  <div class="marquee-container bottom" in:fade|global={{ duration: 200, delay: 1000 }}>
-    <Marquee speed={5} numberOfCopies={10} direction="right">
-      <p class="marquee-text">{UI_STRINGS.bottomMarqueeText}</p>
-    </Marquee>
-  </div>
-
   <div class="content">
     {#if spawnState.state.current === SPAWN_STATE.CONNECT_WALLET}
       <ConnectWalletForm />
@@ -136,33 +124,6 @@
     .content {
       position: relative;
       z-index: 1;
-    }
-
-    .marquee-container {
-      position: absolute;
-      left: 0;
-      width: 100%;
-      height: 40px;
-      z-index: 1;
-      background: rgba(0, 0, 0, 0.5);
-      font-size: var(--font-size-normal);
-      font-family: var(--typewriter-font-stack);
-      text-transform: uppercase;
-
-      .marquee-text {
-        padding: 0;
-        margin: 0;
-        height: 40px;
-        line-height: 40px;
-      }
-
-      &.top {
-        top: 0;
-      }
-
-      &.bottom {
-        bottom: 0;
-      }
     }
   }
 </style>

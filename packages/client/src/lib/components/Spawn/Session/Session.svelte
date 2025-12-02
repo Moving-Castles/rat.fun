@@ -1,10 +1,12 @@
 <script lang="ts">
   import { onMount } from "svelte"
   import gsap from "gsap"
-  import BigButton from "$lib/components/Shared/Buttons/BigButton.svelte"
+  import { BigButton, Mascot } from "$lib/components/Shared"
   import { spawnState, SPAWN_STATE } from "$lib/components/Spawn/state.svelte"
   import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
+  import { sessionMascotText } from "./sessionMascotText"
 
+  let mascotElement: HTMLDivElement | null = $state(null)
   let buttonElement: HTMLDivElement | null = $state(null)
 
   const timeline = gsap.timeline()
@@ -17,27 +19,24 @@
   onMount(() => {
     console.log("[SessionSetup] Component mounted")
 
-    if (!buttonElement) {
+    if (!mascotElement || !buttonElement) {
       return
     }
 
-    buttonElement.style.opacity = "0"
+    gsap.set([mascotElement, buttonElement], { opacity: 0 })
 
-    timeline.to(buttonElement, {
-      opacity: 1,
-      duration: 0.4
-    })
+    timeline
+      .to(mascotElement, { opacity: 1, duration: 0.4 }, "0")
+      .to(buttonElement, { opacity: 1, duration: 0.4 }, "0.2")
   })
 </script>
 
 <div class="debug-badge">SESSION</div>
 <div class="outer-container">
   <div class="inner-container">
-    <div class="text-container">
-      <h2>{UI_STRINGS.sessionSetup}</h2>
-      <p>{UI_STRINGS.sessionSetupDescription}</p>
+    <div class="mascot-container" bind:this={mascotElement}>
+      <Mascot text={sessionMascotText} />
     </div>
-
     <div class="button-container" bind:this={buttonElement}>
       <BigButton text={UI_STRINGS.setupSession} onclick={handleSetupSession} />
     </div>
@@ -58,30 +57,19 @@
       flex-flow: column nowrap;
       align-items: center;
       justify-content: center;
-      width: 500px;
+      width: var(--spawn-inner-width);
       max-width: 90dvw;
 
-      .text-container {
-        text-align: center;
-        margin-bottom: 40px;
-        color: var(--foreground);
-
-        h2 {
-          font-size: var(--font-size-xlarge);
-          margin: 0 0 20px 0;
-          font-family: var(--special-font-stack);
-        }
-
-        p {
-          font-size: var(--font-size-normal);
-          margin: 0 0 10px 0;
-          line-height: 1.5;
-        }
+      .mascot-container {
+        width: var(--spawn-mascot-size);
+        height: var(--spawn-mascot-size);
+        margin-bottom: var(--spawn-mascot-margin-bottom);
+        pointer-events: none;
       }
 
       .button-container {
         width: 100%;
-        height: 200px;
+        height: var(--spawn-button-height);
       }
     }
   }
@@ -97,5 +85,6 @@
     font-family: monospace;
     z-index: 9999;
     border-radius: 4px;
+    display: none;
   }
 </style>

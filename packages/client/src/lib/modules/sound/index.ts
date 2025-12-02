@@ -2,6 +2,8 @@ import { Howl } from "howler"
 import { soundLibrary } from "$lib/modules/sound/sound-library"
 import type { SoundAssets, PlaySoundConfig } from "./types"
 
+export type { PlaySoundConfig }
+
 /**
  * Preloads a sound library by creating Howl instances for each sound.
  * This ensures that there's minimal delay when the sounds are played for the first time.
