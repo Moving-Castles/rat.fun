@@ -11,6 +11,18 @@ async function routes(fastify: FastifyInstance, options: object) {
       timestamp: new Date().toISOString(),
       uptime: process.uptime(),
       app_version: process.env.APP_VERSION || "unknown",
+      llm: {
+        event: {
+          model: process.env.EVENT_MODEL || "unknown",
+          temperature: process.env.EVENT_TEMPERATURE ? Number(process.env.EVENT_TEMPERATURE) : null
+        },
+        correction: {
+          model: process.env.CORRECTION_MODEL || "unknown",
+          temperature: process.env.CORRECTION_TEMPERATURE
+            ? Number(process.env.CORRECTION_TEMPERATURE)
+            : null
+        }
+      },
       services: {
         redis: { status: "unknown" as string, error: null as string | null },
         blockchain: {

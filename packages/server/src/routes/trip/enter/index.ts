@@ -129,7 +129,7 @@ async function routes(fastify: FastifyInstance) {
           llmClient,
           eventMessages,
           combinedSystemPrompt,
-          process.env.EVENT_MODEL ?? "claude-sonnet-4-20250514",
+          process.env.EVENT_MODEL!,
           Number(process.env.EVENT_TEMPERATURE),
           EventsReturnValueSchema
         )
@@ -180,7 +180,7 @@ async function routes(fastify: FastifyInstance) {
           llmClient,
           correctionMessages,
           correctionSystemPrompt,
-          process.env.CORRECTION_MODEL ?? "claude-sonnet-4-20250514",
+          process.env.CORRECTION_MODEL!,
           Number(process.env.CORRECTION_TEMPERATURE),
           CorrectionReturnValueSchema
         )
