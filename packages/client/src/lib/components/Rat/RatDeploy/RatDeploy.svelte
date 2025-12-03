@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onDestroy } from "svelte"
   import { gameConfig } from "$lib/modules/state/stores"
   import { playerERC20Balance } from "$lib/modules/erc20Listener/stores"
   import { BigButton } from "$lib/components/Shared"
@@ -34,6 +35,11 @@
     // Triggers the Spawn flow, defined in @Spawn.svelte
     UIState.set(UI.SPAWNING)
   }
+
+  onDestroy(() => {
+    // Only show mascot messages once
+    clearPendingMascotMessage()
+  })
 </script>
 
 <div class="deploy-rat">
