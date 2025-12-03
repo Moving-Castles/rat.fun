@@ -27,7 +27,7 @@ export type SetupPublicNetworkResult = Awaited<ReturnType<typeof setupPublicNetw
 
 /**
  * Create a public client with WebSocket + HTTP fallback transports
- * Used when no external public client is provided (burner wallet mode)
+ * Used when no external public client is provided
  */
 function createPublicClientWithTransports(networkConfig: ReturnType<typeof getNetworkConfig>) {
   const transports = []
@@ -89,7 +89,7 @@ export async function setupPublicNetwork(options: SetupPublicNetworkOptions) {
     console.log("[MUD/PublicNetwork] Using provided public client (from drawbridge)")
     publicClient = providedPublicClient
   } else {
-    // Create a new public client (for burner wallet mode)
+    // Create a new public client
     console.log("[MUD/PublicNetwork] Creating new public client")
     publicClient = createPublicClientWithTransports(networkConfig)
   }

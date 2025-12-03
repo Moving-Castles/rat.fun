@@ -48,7 +48,7 @@
         mascotElement,
         {
           duration: 0.7,
-          opacity: 0.7,
+          opacity: 1,
           scale: 1,
           ease: "elastic.out(1.5)"
         },
@@ -263,7 +263,7 @@
     height: 100%;
     aspect-ratio: 1/1;
     object-fit: contain;
-    opacity: 0.7;
+    opacity: 1;
     pointer-events: none;
 
     .layer {

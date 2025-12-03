@@ -327,10 +327,6 @@
       }
     }
 
-    .section-header {
-      padding: 0 8px;
-    }
-
     .back-button-container {
       display: block;
       border-bottom: 1px solid var(--color-grey-mid);

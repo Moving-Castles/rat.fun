@@ -11,6 +11,21 @@ import create from "@routes/trip/create"
 import ping from "@routes/test/ping"
 import healthz from "@routes/healthz"
 
+// Validate required environment variables
+const requiredEnvVars = [
+  "EVENT_MODEL",
+  "EVENT_TEMPERATURE",
+  "CORRECTION_MODEL",
+  "CORRECTION_TEMPERATURE"
+] as const
+
+for (const envVar of requiredEnvVars) {
+  if (!process.env[envVar]) {
+    console.error(`Missing required environment variable: ${envVar}`)
+    process.exit(1)
+  }
+}
+
 // Initialize Sentry before creating the Fastify instance
 initializeSentry()
 

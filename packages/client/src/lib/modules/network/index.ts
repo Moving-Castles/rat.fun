@@ -50,18 +50,7 @@ export const getEnvironmentFromUrl = (url: URL) => {
  * @param url - The URL the client is accessed on
  * @returns The wallet type the client is using
  */
-export const getWalletTypeFromUrl = (url: URL) => {
-  const hostname = url.hostname
-  const walletTypeParam = url.searchParams.get("walletType")
-
-  if (
-    hostname === "rat.fun" ||
-    hostname === "base-sepolia.rat.fun" ||
-    hostname === "rat-fun-drawbridge.netlify.app" ||
-    walletTypeParam === "drawbridge"
-  ) {
-    return WALLET_TYPE.DRAWBRIDGE
-  } else {
-    return WALLET_TYPE.BURNER
-  }
+export const getWalletTypeFromUrl = (_url: URL) => {
+  // Only DRAWBRIDGE wallet type is supported
+  return WALLET_TYPE.DRAWBRIDGE
 }

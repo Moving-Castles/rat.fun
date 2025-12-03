@@ -3,6 +3,7 @@
  */
 
 import { formatGwei, formatEther } from "viem"
+import { logger } from "../logger"
 
 const DEFAULT_ETH_PRICE = 2800
 
@@ -41,38 +42,38 @@ export function logUserOperationCost(
   const maxCostETH = formatEther(maxCostWei)
   const maxCostUSD = Number(maxCostETH) * ETH_PRICE
 
-  console.log("┌─ User Operation Gas & Cost ────────────────────────")
-  console.log("│")
-  console.log("│ Gas Estimates:")
-  console.log("│   callGasLimit:                ", callGas.toString().padStart(7), "gas")
-  console.log("│   verificationGasLimit:        ", verificationGas.toString().padStart(7), "gas")
-  console.log("│   preVerificationGas:          ", preVerificationGas.toString().padStart(7), "gas")
+  logger.log("┌─ User Operation Gas & Cost ────────────────────────")
+  logger.log("│")
+  logger.log("│ Gas Estimates:")
+  logger.log("│   callGasLimit:                ", callGas.toString().padStart(7), "gas")
+  logger.log("│   verificationGasLimit:        ", verificationGas.toString().padStart(7), "gas")
+  logger.log("│   preVerificationGas:          ", preVerificationGas.toString().padStart(7), "gas")
   if (paymasterVerificationGas > 0n) {
-    console.log(
+    logger.log(
       "│   paymasterVerificationGasLimit:",
       paymasterVerificationGas.toString().padStart(7),
       "gas"
     )
   }
   if (paymasterPostOpGas > 0n) {
-    console.log(
+    logger.log(
       "│   paymasterPostOpGasLimit:     ",
       paymasterPostOpGas.toString().padStart(7),
       "gas"
     )
   }
-  console.log("│   ─────────────────────────────────────────────")
-  console.log("│   Total gas:                   ", totalGas.toString().padStart(7), "gas")
-  console.log("│")
-  console.log("│ Fee Parameters:")
-  console.log("│   maxFeePerGas:                ", formatGwei(maxFeePerGas), "gwei")
-  console.log("│   maxPriorityFeePerGas:        ", formatGwei(maxPriorityFeePerGas), "gwei")
-  console.log("│")
-  console.log("│ Estimated Max Cost:")
-  console.log("│   ETH:  ", maxCostETH, "ETH")
-  console.log("│   USD:  $" + maxCostUSD.toFixed(2), "(at $" + ETH_PRICE + " ETH)")
-  console.log("│")
-  console.log("└────────────────────────────────────────────────────")
+  logger.log("│   ─────────────────────────────────────────────")
+  logger.log("│   Total gas:                   ", totalGas.toString().padStart(7), "gas")
+  logger.log("│")
+  logger.log("│ Fee Parameters:")
+  logger.log("│   maxFeePerGas:                ", formatGwei(maxFeePerGas), "gwei")
+  logger.log("│   maxPriorityFeePerGas:        ", formatGwei(maxPriorityFeePerGas), "gwei")
+  logger.log("│")
+  logger.log("│ Estimated Max Cost:")
+  logger.log("│   ETH:  ", maxCostETH, "ETH")
+  logger.log("│   USD:  $" + maxCostUSD.toFixed(2), "(at $" + ETH_PRICE + " ETH)")
+  logger.log("│")
+  logger.log("└────────────────────────────────────────────────────")
 }
 
 /**
@@ -94,39 +95,39 @@ export function logFeeCapApplied(data: {
 
   const priorityWasReduced = data.cappedPriorityFee < data.originalPriorityFee
 
-  console.log("┌─ ⚠️  GAS PRICE SPIKE - FEE CAP APPLIED ────────────")
-  console.log("│")
-  console.log("│ 🛡️  Budget Protection: Capping fees to stay under $" + data.maxBudgetUSD)
-  console.log("│")
-  console.log("│ This operation:")
-  console.log("│   Total gas:            ", data.totalGas.toString(), "gas")
-  console.log("│")
-  console.log("│ Network fees would cost:")
-  console.log("│   maxFeePerGas:         ", formatGwei(data.originalMaxFee), "gwei")
-  console.log("│   maxPriorityFeePerGas: ", formatGwei(data.originalPriorityFee), "gwei")
-  console.log("│   Estimated cost:       ", originalCost.toFixed(8), "ETH")
-  console.log("│   USD cost:              $" + originalCostUSD.toFixed(2), "← OVER BUDGET!")
-  console.log("│")
-  console.log("│ Capped to:")
-  console.log("│   maxFeePerGas:         ", formatGwei(data.cappedMaxFee), "gwei", "← CAPPED")
+  logger.log("┌─ ⚠️  GAS PRICE SPIKE - FEE CAP APPLIED ────────────")
+  logger.log("│")
+  logger.log("│ 🛡️  Budget Protection: Capping fees to stay under $" + data.maxBudgetUSD)
+  logger.log("│")
+  logger.log("│ This operation:")
+  logger.log("│   Total gas:            ", data.totalGas.toString(), "gas")
+  logger.log("│")
+  logger.log("│ Network fees would cost:")
+  logger.log("│   maxFeePerGas:         ", formatGwei(data.originalMaxFee), "gwei")
+  logger.log("│   maxPriorityFeePerGas: ", formatGwei(data.originalPriorityFee), "gwei")
+  logger.log("│   Estimated cost:       ", originalCost.toFixed(8), "ETH")
+  logger.log("│   USD cost:              $" + originalCostUSD.toFixed(2), "← OVER BUDGET!")
+  logger.log("│")
+  logger.log("│ Capped to:")
+  logger.log("│   maxFeePerGas:         ", formatGwei(data.cappedMaxFee), "gwei", "← CAPPED")
   if (priorityWasReduced) {
-    console.log(
+    logger.log(
       "│   maxPriorityFeePerGas: ",
       formatGwei(data.cappedPriorityFee),
       "gwei",
       "← REDUCED (EIP-1559)"
     )
   } else {
-    console.log("│   maxPriorityFeePerGas: ", formatGwei(data.cappedPriorityFee), "gwei")
+    logger.log("│   maxPriorityFeePerGas: ", formatGwei(data.cappedPriorityFee), "gwei")
   }
-  console.log("│   Estimated cost:       ", cappedCost.toFixed(8), "ETH")
-  console.log("│   USD cost:              $" + cappedCostUSD.toFixed(2), "✅")
-  console.log("│")
-  console.log(
+  logger.log("│   Estimated cost:       ", cappedCost.toFixed(8), "ETH")
+  logger.log("│   USD cost:              $" + cappedCostUSD.toFixed(2), "✅")
+  logger.log("│")
+  logger.log(
     "│ ⏳ Transaction will wait in mempool until gas drops below",
     formatGwei(data.cappedMaxFee),
     "gwei"
   )
-  console.log("│")
-  console.log("└────────────────────────────────────────────────────")
+  logger.log("│")
+  logger.log("└────────────────────────────────────────────────────")
 }

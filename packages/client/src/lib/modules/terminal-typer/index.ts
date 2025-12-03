@@ -30,6 +30,8 @@ async function typeUnit(
 ) {
   const typeSpeed = unit.typeSpeed ?? DEFAULT_TYPE_SPEED
   const delayAfter = unit.delayAfter ?? DEFAULT_DELAY_AFTER
+  const sound = unit.sound ?? { category: "ratfunUI", id: "type" }
+  const onChar = unit.onChar
 
   if (unit.type === "text") {
     await typeText(
@@ -39,7 +41,9 @@ async function typeUnit(
       unit.color,
       unit.backgroundColor,
       unit.duration,
-      isStopped
+      isStopped,
+      sound,
+      onChar
     )
     if (!isStopped()) await sleep(delayAfter)
   } else if (unit.type === "loader") {
@@ -51,7 +55,9 @@ async function typeUnit(
       unit.color,
       unit.backgroundColor,
       unit.loaderCharacters ?? "",
-      isStopped
+      isStopped,
+      sound,
+      onChar
     )
     if (!isStopped()) await sleep(delayAfter)
   }
@@ -64,7 +70,9 @@ async function typeText(
   color: string,
   backgroundColor: string,
   duration: number | undefined,
-  isStopped: () => boolean
+  isStopped: () => boolean,
+  sound: { category: string; id: string },
+  onChar?: (char: string, index: number) => void
 ) {
   // Start new line
   addLine(targetElement, "text")
@@ -72,14 +80,17 @@ async function typeText(
   // If duration is 0, output everything at once
   if (duration === 0) {
     addTextToLine(targetElement, content, color, backgroundColor)
-    playSound({ category: "ratfunUI", id: "terminalHit" })
+    playSound(sound)
     return
   }
 
+  let index = 0
   for (const char of content) {
     if (isStopped()) break
     addChar(targetElement, char, color, backgroundColor)
-    playSound({ category: "ratfunUI", id: "type" })
+    playSound(sound)
+    onChar?.(char, index)
+    index++
     await sleep(typeSpeed)
   }
 }
@@ -92,14 +103,16 @@ async function typeLoader(
   color: string,
   backgroundColor: string,
   loaderCharacters: string,
-  isStopped: () => boolean
+  isStopped: () => boolean,
+  sound: { category: string; id: string },
+  onChar?: (char: string, index: number) => void
 ) {
   // Start new line
   addLine(targetElement, "loader")
 
   // Output the content all at once
   addTextToLine(targetElement, content, color, backgroundColor)
-  playSound({ category: "ratfunUI", id: "terminalHit" })
+  playSound(sound)
 
   // If duration is 0, output everything at once
   if (duration === 0) {
@@ -109,6 +122,7 @@ async function typeLoader(
   // Then repeat loaderCharacters for the duration
   const startTime = Date.now()
   let currentLoaderContent = ""
+  let index = 0
 
   while (Date.now() - startTime < duration && !isStopped()) {
     // Clear current line content
@@ -128,7 +142,9 @@ async function typeLoader(
       if (isStopped()) return
       currentLoaderContent += char
       addChar(targetElement, char, color, backgroundColor)
-      playSound({ category: "ratfunUI", id: "type3" })
+      playSound(sound)
+      onChar?.(char, index)
+      index++
       await sleep(typeSpeed)
 
       // Check if we've exceeded duration after each character

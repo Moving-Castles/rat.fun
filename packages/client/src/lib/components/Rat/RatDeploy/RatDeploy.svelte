@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onDestroy } from "svelte"
   import { gameConfig } from "$lib/modules/state/stores"
   import { playerERC20Balance } from "$lib/modules/erc20Listener/stores"
   import { BigButton } from "$lib/components/Shared"
@@ -8,24 +9,43 @@
   import { ratState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
   import { Mascot } from "$lib/components/Shared"
   import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
+  import {
+    pendingMascotMessage,
+    clearPendingMascotMessage,
+    getMascotMessage
+  } from "$lib/modules/ui/mascot-messages"
+
+  // Get mascot text from pending message if any
+  const mascotText = $derived(
+    $pendingMascotMessage ? getMascotMessage($pendingMascotMessage).text : []
+  )
 
   // Not enough balance
   let disabled = $derived(($playerERC20Balance ?? 0) < Number($gameConfig?.ratCreationCost ?? 0))
 
   const onClick = async () => {
+    // Clear any pending mascot message when buying rat
+    clearPendingMascotMessage()
     ratState.state.transitionTo(RAT_BOX_STATE.DEPLOYING_RAT)
   }
 
   const onSpawnClick = async () => {
+    // Clear any pending mascot message
+    clearPendingMascotMessage()
     // Triggers the Spawn flow, defined in @Spawn.svelte
     UIState.set(UI.SPAWNING)
   }
+
+  onDestroy(() => {
+    // Only show mascot messages once
+    clearPendingMascotMessage()
+  })
 </script>
 
 <div class="deploy-rat">
   <div class="inner-container">
     <div class="mascot-container">
-      <Mascot entranceOn={true} smallDanceOn={true} />
+      <Mascot smallDanceOn={true} text={mascotText} closeTextOnClick={true} isGameMascot={true} />
     </div>
     <div class="button-container">
       {#if $player}

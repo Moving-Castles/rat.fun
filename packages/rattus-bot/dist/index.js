@@ -3520,7 +3520,14 @@ async function runBot(config) {
       continue;
     }
     const worldAddress = mud.worldContract.address;
-    const selection = await selectTrip(config, enterableTrips, rat, anthropic, outcomeHistory, worldAddress);
+    const selection = await selectTrip(
+      config,
+      enterableTrips,
+      rat,
+      anthropic,
+      outcomeHistory,
+      worldAddress
+    );
     if (!selection) {
       logError("Failed to select a trip");
       await sleep(5e3);

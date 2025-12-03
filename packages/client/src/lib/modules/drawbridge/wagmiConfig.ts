@@ -23,19 +23,19 @@ function createTransport(chain: Chain) {
     "webSocket" in chain.rpcUrls.default ? chain.rpcUrls.default.webSocket?.[0] : undefined
   const httpUrl = chain.rpcUrls.default.http[0]
 
-  console.log(`[wagmiConfig] Creating transport for ${chain.name}:`, {
-    wsUrl: wsUrl || "not configured",
-    httpUrl
-  })
+  // console.log(`[wagmiConfig] Creating transport for ${chain.name}:`, {
+  //   wsUrl: wsUrl || "not configured",
+  //   httpUrl
+  // })
 
   // If no WebSocket URL configured, use HTTP only
   if (!wsUrl) {
-    console.log(`[wagmiConfig] Using HTTP only for ${chain.name}`)
+    // console.log(`[wagmiConfig] Using HTTP only for ${chain.name}`)
     return http(httpUrl)
   }
 
   // WebSocket primary with HTTP fallback
-  console.log(`[wagmiConfig] Using WebSocket + HTTP fallback for ${chain.name}`)
+  // console.log(`[wagmiConfig] Using WebSocket + HTTP fallback for ${chain.name}`)
   return fallback([webSocket(wsUrl), http(httpUrl)])
 }
 
@@ -121,15 +121,15 @@ export function getConnectors(): CreateConnectorFn[] {
       }
       debugInfo.windowEthereumProviders = providers
 
-      console.log("[wagmiConfig] Wallet detection:", {
-        isCoinbaseWallet: debugInfo.isCoinbaseWallet,
-        isBaseApp: debugInfo.isBaseApp,
-        hasCoinbaseFlag,
-        hasCoinbaseProvider,
-        isOnlyProvider,
-        hasSmartWalletFeatures,
-        providers
-      })
+      // console.log("[wagmiConfig] Wallet detection:", {
+      //   isCoinbaseWallet: debugInfo.isCoinbaseWallet,
+      //   isBaseApp: debugInfo.isBaseApp,
+      //   hasCoinbaseFlag,
+      //   hasCoinbaseProvider,
+      //   isOnlyProvider,
+      //   hasSmartWalletFeatures,
+      //   providers
+      // })
     }
   }
 

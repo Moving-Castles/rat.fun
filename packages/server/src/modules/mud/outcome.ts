@@ -71,44 +71,18 @@ export function createOutcomeCallArgs(
 
   logger.log("\n📊 BALANCE TRANSFERS:")
 
-  const balanceTransfersLLM = outcome?.balanceTransfers ?? []
+  const balanceTransfersLLM = outcome.balanceTransfers
 
   if (balanceTransfersLLM.length === 0) {
     logger.log("  ℹ️  No balance transfers from LLM")
   } else {
     logger.log(`  LLM provided ${balanceTransfersLLM.length} transfer(s)`)
-  }
-
-  // Validate and filter balance transfers - amounts must be numbers
-  const validBalanceTransfers: Array<{ logStep: number; amount: number }> = []
-  const invalidTransfers: Array<{ logStep: number; amount: any }> = []
-
-  balanceTransfersLLM.forEach((transfer, index) => {
-    if (typeof transfer.amount === "number" && !isNaN(transfer.amount)) {
-      validBalanceTransfers.push(transfer)
-      logger.log(`    [✓] logStep:${transfer.logStep}, amount:${transfer.amount}`)
-    } else {
-      invalidTransfers.push(transfer)
-      logger.log(
-        `    [✗] logStep:${transfer.logStep}, amount:${transfer.amount} (type: ${typeof transfer.amount}) - SKIPPED`
-      )
-    }
-  })
-
-  if (invalidTransfers.length > 0) {
-    logger.log(`  ⚠️  Skipped ${invalidTransfers.length} invalid balance transfer(s)`)
-    invalidTransfers.forEach(t => {
-      logger.log(`      - logStep ${t.logStep}: amount was ${JSON.stringify(t.amount)}`)
+    balanceTransfersLLM.forEach(transfer => {
+      logger.log(`    logStep:${transfer.logStep}, amount:${transfer.amount}`)
     })
-    logger.log("  ⚠️  LLM provided undefined/null/non-number amounts")
   }
 
-  // Sum only valid transfers
-  const balanceTransfersSum = validBalanceTransfers.reduce((acc, curr, index) => {
-    const newTotal = acc + curr.amount
-    logger.log(`    Sum step ${index}: ${acc} + ${curr.amount} = ${newTotal}`)
-    return newTotal
-  }, 0)
+  const balanceTransfersSum = balanceTransfersLLM.reduce((acc, curr) => acc + curr.amount, 0)
 
   logger.log(`  ✅ Final sum: ${balanceTransfersSum}`)
   logger.log(`  Converting to BigInt: ${BigInt(balanceTransfersSum)}`)
@@ -121,7 +95,7 @@ export function createOutcomeCallArgs(
   // IMPORTANT: Validate all IDs - LLM sometimes provides invalid/missing IDs
 
   logger.log("\n🗑️  ITEMS TO REMOVE:")
-  const itemsToRemoveLLM = (outcome?.itemChanges ?? []).filter(c => c.type === "remove")
+  const itemsToRemoveLLM = outcome.itemChanges.filter(c => c.type === "remove")
 
   const itemsToRemoveFromRat: Hex[] = []
   const invalidRemovals: Array<{ name: string; id: any }> = []
@@ -155,7 +129,7 @@ export function createOutcomeCallArgs(
   // Calculate total value of items being removed (these will refund to trip)
   const totalItemValueToRemove = itemsToRemoveLLM
     .filter(item => isValidBytes32(item.id))
-    .reduce((sum, item) => sum + (item.value ?? 0), 0)
+    .reduce((sum, item) => sum + item.value, 0)
   logger.log(`  💰 Total value to refund to trip: ${totalItemValueToRemove}`)
 
   // * * * * * * * * * * * * * * * * * *
@@ -169,15 +143,12 @@ export function createOutcomeCallArgs(
   // - Item names limited to 48 characters
 
   logger.log("\n➕ ITEMS TO ADD:")
-  const itemsToAddToRat =
-    (outcome?.itemChanges ?? [])
-      .filter(c => c.type === "add")
-      .map(c => {
-        return {
-          name: c.name.slice(0, 48), // Enforce name length limit
-          value: BigInt(Math.abs(c.value)) // Item values are always positive
-        }
-      }) ?? []
+  const itemsToAddToRat = outcome.itemChanges
+    .filter(c => c.type === "add")
+    .map(c => ({
+      name: c.name.slice(0, 48), // Enforce name length limit
+      value: BigInt(Math.abs(c.value)) // Item values are always positive
+    }))
 
   if (itemsToAddToRat.length === 0) {
     logger.log("  ℹ️  No items to add")
@@ -386,7 +357,7 @@ export function updateOutcome(
   }
 
   // Check if LLM suggested items but none were applied
-  const llmSuggestedItems = (llmOutcome.itemChanges ?? []).length > 0
+  const llmSuggestedItems = llmOutcome.itemChanges.length > 0
   if (llmSuggestedItems && newOutcome.itemChanges.length === 0) {
     logger.log("⚠️  LLM suggested item changes, but NONE were applied by contract")
     logger.log("__ Possible reasons: inventory full, insufficient budget, or rat died")
@@ -404,28 +375,16 @@ export function updateOutcome(
   newOutcome.balanceTransfers = []
 
   // If LLM didn't suggest any balance transfers, we're done
-  if (!llmOutcome.balanceTransfers || llmOutcome.balanceTransfers.length === 0) {
+  if (llmOutcome.balanceTransfers.length === 0) {
     logger.log("__ No balance transfers suggested by LLM")
     return newOutcome
   }
 
-  // Filter out invalid balance transfers (same validation as in createOutcomeCallArgs)
-  const validLLMTransfers = llmOutcome.balanceTransfers.filter(
-    t => typeof t.amount === "number" && !isNaN(t.amount)
+  // Calculate what the LLM expected to happen
+  const expectedBalanceChange = llmOutcome.balanceTransfers.reduce(
+    (acc, curr) => acc + curr.amount,
+    0
   )
-
-  if (validLLMTransfers.length === 0) {
-    logger.log("__ LLM provided balance transfers, but all were invalid (undefined/NaN amounts)")
-    return newOutcome
-  }
-
-  if (validLLMTransfers.length < llmOutcome.balanceTransfers.length) {
-    const invalidCount = llmOutcome.balanceTransfers.length - validLLMTransfers.length
-    logger.log(`__ Filtered out ${invalidCount} invalid balance transfer(s) from LLM`)
-  }
-
-  // Calculate what the LLM expected to happen (using only valid transfers)
-  const expectedBalanceChange = validLLMTransfers.reduce((acc, curr) => acc + curr.amount, 0)
 
   // Calculate what actually happened on-chain (using type-validated numbers)
   const actualBalanceChange = newBalance - oldBalance
@@ -469,14 +428,14 @@ export function updateOutcome(
     // Even when balance matches, check if the step-by-step sequence crosses zero
     // This prevents UI from showing temporary death states
     const finalBalance = oldBalance + actualBalanceChange
-    const crossesZero = checkIfCrossesZero(validLLMTransfers, oldBalance)
+    const crossesZero = checkIfCrossesZero(llmOutcome.balanceTransfers, oldBalance)
 
     if (crossesZero && finalBalance > 0) {
       logger.log(
         "__   ⚠️  Sequence crosses zero (temporary death) even though net is correct - Dampening"
       )
       const dampenedTransfers = dampenTransfersToAvoidZero(
-        validLLMTransfers,
+        llmOutcome.balanceTransfers,
         oldBalance,
         actualBalanceChange,
         logger
@@ -484,7 +443,7 @@ export function updateOutcome(
       newOutcome.balanceTransfers = dampenedTransfers
       logger.log("__   Dampened transfers:", dampenedTransfers)
     } else {
-      newOutcome.balanceTransfers = [...validLLMTransfers]
+      newOutcome.balanceTransfers = [...llmOutcome.balanceTransfers]
     }
 
     return newOutcome
@@ -526,7 +485,7 @@ export function updateOutcome(
       newBalance,
       ratDied,
       implicitItemValueTransfer: ratDied ? implicitItemValueTransfer : 0,
-      suggestedTransfers: validLLMTransfers
+      suggestedTransfers: llmOutcome.balanceTransfers
     }
   )
 
@@ -547,7 +506,7 @@ export function updateOutcome(
   }
 
   const scaledTransfers = scaleBalanceTransfers(
-    validLLMTransfers,
+    llmOutcome.balanceTransfers,
     actualBalanceChange,
     oldBalance,
     logger

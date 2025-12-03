@@ -20,8 +20,16 @@
   import { ENVIRONMENT } from "$lib/mud/enums"
   import { publicNetwork } from "$lib/modules/network"
   import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
+  import { getDrawbridge, isSessionReady } from "$lib/modules/drawbridge"
 
   const MAX_ALLOWANCE = 1_000_000n
+
+  function clearLocalSession() {
+    const drawbridge = getDrawbridge()
+    drawbridge.clearStorage()
+    // Reload to reset the app state
+    window.location.reload()
+  }
 </script>
 
 <div class="debug-dropdown-content">
@@ -83,6 +91,12 @@
       {$player?.masterKey}
     </p>
   </div>
+  <div class="tab">
+    <p class="key">Session Ready:</p>
+    <p class="value">
+      {$isSessionReady}
+    </p>
+  </div>
   <div class="actions">
     {#if $environment !== ENVIRONMENT.BASE}
       <SmallButton
@@ -124,6 +138,11 @@
         await sendLiquidateRat()
       }}
       text={UI_STRINGS.forceRatLiquidation}
+    ></SmallButton>
+    <SmallButton
+      tippyText="Clear local session key (keeps on-chain delegation)"
+      onclick={clearLocalSession}
+      text="Clear Local Session"
     ></SmallButton>
   </div>
 </div>

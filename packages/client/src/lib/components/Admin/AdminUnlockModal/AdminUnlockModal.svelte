@@ -5,6 +5,11 @@
   import { BigButton, SmallSpinner } from "$lib/components/Shared"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
+  import {
+    setPendingMascotMessage,
+    isAdminUnlockShown,
+    setAdminUnlockShown
+  } from "$lib/modules/ui/mascot-messages"
 
   let unlockingAdmin = $state(false)
 
@@ -12,6 +17,12 @@
     unlockingAdmin = true
     await sendUnlockAdmin()
     refetchBalance()
+
+    // Set pending mascot message if not shown before
+    if (!isAdminUnlockShown()) {
+      setPendingMascotMessage({ type: "admin_unlock" })
+      setAdminUnlockShown()
+    }
   }
 </script>
 

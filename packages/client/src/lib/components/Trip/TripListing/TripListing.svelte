@@ -124,7 +124,7 @@
   })
 </script>
 
-<div class="content" bind:this={scrollContainer}>
+<div class="content" bind:this={scrollContainer} data-tutorial="trip-list">
   {#if showNoRatListing}
     <TripHeader title={UI_STRINGS.tripHeaderNoRat} />
     <NoRatListing />

@@ -94,6 +94,16 @@ export class LLMTruncatedError extends LLMError {
   }
 }
 
+export class LLMSchemaError extends LLMError {
+  constructor(
+    message: string,
+    public rawText: string,
+    public zodErrors: unknown
+  ) {
+    super("LLM_SCHEMA_ERROR", "LLM response schema validation failed", message)
+  }
+}
+
 // ============================================================================
 // Onchain Data Errors
 // ============================================================================

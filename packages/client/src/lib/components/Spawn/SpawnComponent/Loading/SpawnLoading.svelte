@@ -17,7 +17,7 @@
     // Defensive check - should never happen due to state machine guarantees
     if (!name) {
       console.error("[Spawning] No name found in state - this should not happen")
-      spawnState.state.transitionTo(SPAWN_STATE.SPAWN_FORM)
+      spawnState.state.transitionTo(SPAWN_STATE.SPAWN)
       return
     }
 
@@ -41,7 +41,7 @@
 
       // Wait a moment to show error, then go back to form
       setTimeout(() => {
-        spawnState.state.transitionTo(SPAWN_STATE.SPAWN_FORM)
+        spawnState.state.transitionTo(SPAWN_STATE.SPAWN)
       }, 2000)
     }
   }
@@ -52,6 +52,7 @@
   })
 </script>
 
+<div class="debug-badge">SPAWN_LOADING</div>
 <div class="outer-container">
   <div class="inner-container">
     {#if error}
@@ -59,9 +60,6 @@
         {error}
       </div>
     {:else if spawning}
-      <div class="mascot-container" in:fade={{ duration: 200 }}>
-        <Mascot smallDanceOn={true} />
-      </div>
       <div class="message" in:fade={{ duration: 200 }}>
         Issuing member card
         <SmallSpinner soundOn />
@@ -71,6 +69,20 @@
 </div>
 
 <style lang="scss">
+  .debug-badge {
+    position: fixed;
+    top: 50px;
+    right: 10px;
+    background: magenta;
+    color: white;
+    padding: 4px 8px;
+    font-size: 10px;
+    font-family: monospace;
+    z-index: 9999;
+    border-radius: 4px;
+    display: none;
+  }
+
   .outer-container {
     display: flex;
     flex-flow: column nowrap;
@@ -84,14 +96,8 @@
       flex-flow: column nowrap;
       align-items: center;
       justify-content: center;
-      width: 500px;
+      width: var(--spawn-inner-width);
       max-width: 90dvw;
-
-      .mascot-container {
-        width: 300px;
-        height: 300px;
-        pointer-events: none;
-      }
 
       .message {
         font-size: var(--font-size-large);

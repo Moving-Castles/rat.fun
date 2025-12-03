@@ -19,6 +19,7 @@
   import { RAT_BOX_STATE, ratState } from "$lib/components/Rat/state.svelte"
   import { backgroundMusic } from "$lib/modules/sound/stores"
   import { playerERC20Balance } from "$lib/modules/erc20Listener/stores"
+  import { TutorialPopup } from "$lib/modules/ui/tutorial-messages"
 
   onMount(async () => {
     shaderManager.setShader("clouds", true)
@@ -123,6 +124,9 @@
     <PastTripList />
   {/if}
 </div>
+
+<!-- Tutorial system -->
+<TutorialPopup />
 
 <style lang="scss">
   .rat-box {

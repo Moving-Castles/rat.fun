@@ -4,7 +4,6 @@
  *
  */
 
-import { getBurnerPrivateKey } from "@latticexyz/common"
 import { getChain, getWorldFromChainId } from "./utils"
 import { ENVIRONMENT } from "./enums"
 import { MUDChain } from "@latticexyz/common/chains"
@@ -63,11 +62,6 @@ export function getNetworkConfig(environment: ENVIRONMENT, url: URL) {
     indexerUrl = undefined
   }
 
-  // Only call getBurnerPrivateKey if we're in a browser environment
-  const privateKey =
-    searchParams?.get("privateKey") ??
-    (typeof window !== "undefined" ? getBurnerPrivateKey() : null)
-
   return {
     provider: {
       chainId,
@@ -76,10 +70,8 @@ export function getNetworkConfig(environment: ENVIRONMENT, url: URL) {
         searchParams?.get("wsRpc") ??
         ("webSocket" in chain.rpcUrls.default ? chain.rpcUrls.default.webSocket?.[0] : undefined)
     },
-    privateKey: searchParams?.get("privateKey") ?? privateKey, // do not run getBurnerPrivateKey in
-    useBurner: searchParams?.has("useBurner"),
     chainId,
-    faucetServiceUrl: searchParams?.get("faucet") ?? (chain as MUDChain).faucetUrl, // Todo, update
+    faucetServiceUrl: searchParams?.get("faucet") ?? (chain as MUDChain).faucetUrl,
     worldAddress,
     initialBlockNumber,
     disableCache: import.meta.env.PROD,

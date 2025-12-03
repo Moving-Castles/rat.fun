@@ -187,7 +187,7 @@ export function mapLocalIndexToGlobal(
 
   trips.forEach(trip => {
     const tripId = Object.keys(playerTrips).find(key => playerTrips[key] === trip) || ""
-    const sanityTripContent = tripContentMap.get(tripId)
+    const sanityTripContent = tripContentMap.get(tripId) as SanityTrip | undefined
     if (!sanityTripContent) return
     const outcomes = outcomesByTripId[tripId] || []
     const profitLoss = calculateProfitLossForTrip(trip, tripId, sanityTripContent, outcomes)
@@ -223,7 +223,9 @@ export function mapLocalIndexToGlobal(
   })
 
   // Find matching event by meta._id
-  const globalIndex = parentGraphData.findIndex(e => e?.meta?._id === localEvent.meta._id)
+  const globalIndex = parentGraphData.findIndex(
+    e => "meta" in e && e.meta?._id === localEvent.meta._id
+  )
 
   // Return the found index, or -1 if not found
   return globalIndex >= 0 ? globalIndex : -1

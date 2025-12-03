@@ -13,6 +13,7 @@
   import { refetchBalance } from "$lib/modules/erc20Listener"
   import { playSound } from "$lib/modules/sound"
   import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
+  import { startTutorial, isTutorialCompleted } from "$lib/modules/ui/tutorial-messages"
 
   import { LockButton, SmallSpinner } from "$lib/components/Shared"
 
@@ -180,6 +181,15 @@
 
     // Await rat name to have changed FROM oldName
     await waitForPropertyChangeFrom(rat, "name", oldName, 10000)
+
+    // Start tutorial after rat purchase
+    // TODO: Remove isTutorialCompleted check for production
+    // if (!isTutorialCompleted()) {
+    // Small delay to let UI settle before showing tutorial
+    setTimeout(() => {
+      startTutorial()
+    }, 500)
+    // }
 
     // Transition to has rat state
     ratState.state.transitionTo(RAT_BOX_STATE.HAS_RAT)

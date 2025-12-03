@@ -215,6 +215,8 @@
               {@const focus = point.tripId === $focusTrip && $focusEvent === -1}
               {@const lastPoint = profitLossOverTime?.[profitLossOverTime.indexOf(point) - 1]}
 
+              <!-- svelte-ignore a11y_click_events_have_key_events -->
+              <!-- svelte-ignore a11y_no_static_element_interactions -->
               <g
                 onpointerenter={() => {
                   $focusTrip = point.tripId
@@ -305,6 +307,8 @@
                   stroke-dasharray="4,4"
                 />
 
+                <!-- svelte-ignore a11y_click_events_have_key_events -->
+                <!-- svelte-ignore a11y_no_static_element_interactions -->
                 <g
                   onpointerenter={() => {
                     $focusTrip = focusedPoint.tripId

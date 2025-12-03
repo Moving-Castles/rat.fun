@@ -5,6 +5,7 @@
  * - Transfers component data from MUD indexer into Svelte stores
  * - Applies filtering to reduce client load (when activePlayerId provided)
  * - Creates subscriptions for live updates on game-specific tables
+ * - Uses chunked processing with RAF yields to avoid blocking UI
  */
 
 import { get } from "svelte/store"
@@ -14,6 +15,18 @@ import { entities } from "$lib/modules/state/stores"
 import { createComponentSystem } from "$lib/modules/chain-sync"
 import { logHydrationStats, trackComponentHydration } from "./tempDebugLogger"
 import { ENTITY_TYPE } from "contracts/enums"
+
+// ============================================================================
+// UI YIELD UTILITIES
+// ============================================================================
+
+/**
+ * Yields to the browser to allow UI updates (animations, etc.)
+ * Uses requestAnimationFrame for smooth yielding.
+ */
+function yieldToUI(): Promise<void> {
+  return new Promise(resolve => requestAnimationFrame(() => resolve()))
+}
 
 // ============================================================================
 // ENTITY FILTERING
@@ -177,15 +190,15 @@ export function isEntitiesInitialized(playerId?: string | null): boolean {
  */
 export function resetEntitiesInitialization(): void {
   initializedForPlayer = null
-  console.log("[initEntities] Reset - will reinitialize on next call")
+  // console.log("[initEntities] Reset - will reinitialize on next call")
 }
 
-export function initEntities(options: InitEntitiesOptions = {}) {
+export async function initEntities(options: InitEntitiesOptions = {}) {
   const { activePlayerId = null } = options
 
   // Guard against duplicate initialization for same player
   if (activePlayerId && initializedForPlayer === activePlayerId) {
-    console.log("[initEntities] Already initialized for player:", activePlayerId)
+    // console.log("[initEntities] Already initialized for player:", activePlayerId)
     return
   }
 
@@ -196,18 +209,13 @@ export function initEntities(options: InitEntitiesOptions = {}) {
   // Build filter context (needs player's rat and inventory info)
   const filterContext = buildFilterContext(activePlayerId, filteredComponents)
 
-  if (activePlayerId) {
-    console.log("[initEntities] Filtering enabled for player:", activePlayerId)
-    console.log("[initEntities] Active rat:", filterContext.activePlayerCurrentRat)
-    console.log("[initEntities] Inventory items:", filterContext.activePlayerRatInventory.size)
-  } else {
-    console.log("[initEntities] No activePlayerId - syncing all entities")
-  }
-
   const syncEntities = {} as Entities
   const componentBreakdown: Record<string, { entityCount: number; totalValues: number }> = {}
 
   // First pass: hydrate all entities from components
+  // Yield to UI every few components to keep animations smooth
+  const COMPONENT_BATCH_SIZE = 3
+
   for (let i = 0; i < tableKeys.length; i++) {
     const componentKey = tableKeys[i]
     const component = filteredComponents[componentKey]
@@ -256,14 +264,24 @@ export function initEntities(options: InitEntitiesOptions = {}) {
       entityCount,
       totalValues
     )
+
+    // Yield to UI periodically to keep animations smooth
+    if ((i + 1) % COMPONENT_BATCH_SIZE === 0) {
+      await yieldToUI()
+    }
   }
 
   // Second pass: apply entity filtering
+  // Process in batches to avoid blocking UI
   const finalEntities = {} as Entities
   let filteredOutCount = 0
   let partialSyncCount = 0
 
-  for (const [entityKey, entity] of Object.entries(syncEntities)) {
+  const entityEntries = Object.entries(syncEntities)
+  const ENTITY_BATCH_SIZE = 50
+
+  for (let i = 0; i < entityEntries.length; i++) {
+    const [entityKey, entity] = entityEntries[i]
     const { sync, fullSync } = shouldSyncEntity(entityKey, entity, filterContext)
 
     if (!sync) {
@@ -276,6 +294,11 @@ export function initEntities(options: InitEntitiesOptions = {}) {
     }
 
     finalEntities[entityKey] = filterEntityProps(entity, fullSync)
+
+    // Yield to UI periodically
+    if ((i + 1) % ENTITY_BATCH_SIZE === 0) {
+      await yieldToUI()
+    }
   }
 
   // Log hydration stats (pre and post filtering)

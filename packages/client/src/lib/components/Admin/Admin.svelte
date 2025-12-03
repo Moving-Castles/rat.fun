@@ -417,7 +417,7 @@
             <ProfitLossHistoryGraph {graphData} height={clientHeight} />
           </div>
         {:else}
-          <AdminEventLog graphData={logData} behavior="click" />
+          <AdminEventLog graphData={logData} />
         {/if}
       </div>
     {/if}
@@ -445,11 +445,7 @@
       </div>
       <!-- Event log -->
       <div class="event-log-container" class:tablet-hidden={tabletProfitView === "graph"}>
-        <AdminEventLog
-          graphData={logData}
-          behavior="click"
-          onToggleToGraph={() => (tabletProfitView = "graph")}
-        />
+        <AdminEventLog graphData={logData} onToggleToGraph={() => (tabletProfitView = "graph")} />
       </div>
     </div>
     <!-- Bottom row -->
@@ -458,14 +454,16 @@
       <div class="trip-table-container">
         <div class="table-summary">
           <div class="left">
-            <span
+            <button
+              type="button"
               class="toggle"
               class:secondary={$adminTripsSubView === "past"}
-              onclick={() => adminTripsSubView.set("active")}>{UI_STRINGS.activeTrips}</span
-            ><span
+              onclick={() => adminTripsSubView.set("active")}>{UI_STRINGS.activeTrips}</button
+            ><button
+              type="button"
               class="toggle"
               class:secondary={$adminTripsSubView === "active"}
-              onclick={() => adminTripsSubView.set("past")}>{UI_STRINGS.pastTrips}</span
+              onclick={() => adminTripsSubView.set("past")}>{UI_STRINGS.pastTrips}</button
             >
           </div>
           <div class="right">
@@ -613,12 +611,6 @@
       display: flex;
       flex-direction: row;
       flex-wrap: nowrap;
-
-      .admin-nav-toggle {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        width: 100%;
-      }
     }
 
     .trip-monitor-container {
@@ -702,6 +694,12 @@
     gap: 0.5rem;
 
     .toggle {
+      background: none;
+      border: none;
+      padding: 0;
+      font: inherit;
+      cursor: pointer;
+
       &:hover {
         text-decoration: underline;
       }

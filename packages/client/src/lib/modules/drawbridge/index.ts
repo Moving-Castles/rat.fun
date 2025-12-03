@@ -29,11 +29,11 @@ let drawbridgeInstance: InstanceType<typeof Drawbridge> | null = null
  */
 export async function initializeDrawbridge(networkConfig: NetworkConfig): Promise<void> {
   if (drawbridgeInstance) {
-    console.log("[Drawbridge] Already initialized")
+    // console.log("[@client/Drawbridge] Already initialized")
     return
   }
 
-  console.log("[Drawbridge] Creating instance with network:", networkConfig.chainId)
+  // console.log("[@client/Drawbridge] Creating instance with network:", networkConfig.chainId)
 
   // Get chain-specific config
   const chain = chains.find(c => c.id === networkConfig.chainId)
@@ -43,7 +43,7 @@ export async function initializeDrawbridge(networkConfig: NetworkConfig): Promis
 
   // Get connectors for this environment
   const connectors = getConnectors()
-  console.log("[Drawbridge] Connectors from getConnectors():", connectors.length)
+  // console.log("[@client/Drawbridge] Connectors from getConnectors():", connectors.length)
 
   // Create Drawbridge instance with wagmi config embedded
   drawbridgeInstance = new Drawbridge({
@@ -55,21 +55,22 @@ export async function initializeDrawbridge(networkConfig: NetworkConfig): Promis
     paymasterClient: paymasters[networkConfig.chainId],
     pollingInterval: 2000,
     appName: "RAT.FUN",
-    ethPriceUSD: 2800 // $2,800
+    ethPriceUSD: 2800, // $2,800
+    logging: false // Disable drawbridge console logging
   })
 
   // Initialize (await reconnection, setup account watcher)
   await drawbridgeInstance.initialize()
 
-  console.log("[Drawbridge] Instance ready")
+  console.log("[@client/Drawbridge] Instance ready")
 
   // Log available connectors for debugging
-  const availableConnectors = drawbridgeInstance.getAvailableConnectors()
-  console.log(
-    "[Drawbridge] Available connectors after init:",
-    availableConnectors.length,
-    availableConnectors
-  )
+  // const availableConnectors = drawbridgeInstance.getAvailableConnectors()
+  // console.log(
+  //   "[@client/Drawbridge] Available connectors after init:",
+  //   availableConnectors.length,
+  //   availableConnectors
+  // )
 }
 
 /**
@@ -80,6 +81,13 @@ export function getDrawbridge(): InstanceType<typeof Drawbridge> {
     throw new Error("Drawbridge not initialized. Call initializeDrawbridge first.")
   }
   return drawbridgeInstance
+}
+
+/**
+ * Check if Drawbridge has been initialized
+ */
+export function isDrawbridgeInitialized(): boolean {
+  return drawbridgeInstance !== null
 }
 
 /**

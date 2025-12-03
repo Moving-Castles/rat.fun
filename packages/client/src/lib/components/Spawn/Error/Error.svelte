@@ -1,10 +1,11 @@
 <script lang="ts">
   import { onMount } from "svelte"
   import gsap from "gsap"
-  import { BigButton } from "$lib/components/Shared"
+  import { BigButton, Mascot } from "$lib/components/Shared"
   import { spawnState, SPAWN_STATE } from "$lib/components/Spawn/state.svelte"
   import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
 
+  let mascotElement = $state<HTMLDivElement | null>(null)
   let messageElement = $state<HTMLDivElement | null>(null)
   let buttonElement = $state<HTMLDivElement | null>(null)
 
@@ -13,48 +14,37 @@
   function handleRetry() {
     console.log("[Error] Retry button clicked")
     // Reset and start over
-    spawnState.state.transitionTo(SPAWN_STATE.WELCOME_SCREEN)
+    spawnState.state.transitionTo(SPAWN_STATE.CONNECT_WALLET)
   }
 
   onMount(() => {
     console.log("[Error] Component mounted")
 
-    if (!messageElement || !buttonElement) {
+    if (!mascotElement || !messageElement || !buttonElement) {
       return
     }
 
-    // Set initial opacity to 0
-    gsap.set([messageElement, buttonElement], {
-      opacity: 0
-    })
+    gsap.set([mascotElement, messageElement, buttonElement], { opacity: 0 })
 
-    // Staggered fade-in animations
     timeline
-      .to(
-        messageElement,
-        {
-          opacity: 1,
-          duration: 0.4
-        },
-        "0"
-      )
-      .to(
-        buttonElement,
-        {
-          opacity: 1,
-          duration: 0.3
-        },
-        "0.1"
-      )
+      .to(mascotElement, { opacity: 1, duration: 0.4 }, "0")
+      .to(messageElement, { opacity: 1, duration: 0.4 }, "0.1")
+      .to(buttonElement, { opacity: 1, duration: 0.3 }, "0.2")
   })
 </script>
 
+<div class="debug-badge">ERROR</div>
 <div class="outer-container">
   <div class="inner-container">
+    <div class="mascot-container" bind:this={mascotElement}>
+      <Mascot />
+    </div>
+
     <div class="message-container" bind:this={messageElement}>
       <p class="error-title">{UI_STRINGS.somethingWentWrong}</p>
       <p class="error-message">{UI_STRINGS.errorOccurred}</p>
     </div>
+
     <div class="button-container" bind:this={buttonElement}>
       <BigButton text={UI_STRINGS.startOver} onclick={handleRetry} />
     </div>
@@ -62,6 +52,20 @@
 </div>
 
 <style lang="scss">
+  .debug-badge {
+    position: fixed;
+    top: 50px;
+    right: 10px;
+    background: magenta;
+    color: white;
+    padding: 4px 8px;
+    font-size: 10px;
+    font-family: monospace;
+    z-index: 9999;
+    border-radius: 4px;
+    display: none;
+  }
+
   .outer-container {
     display: flex;
     flex-flow: column nowrap;
@@ -75,8 +79,15 @@
       flex-flow: column nowrap;
       align-items: center;
       justify-content: center;
-      width: 500px;
+      width: var(--spawn-inner-width);
       max-width: 90dvw;
+
+      .mascot-container {
+        width: var(--spawn-mascot-size);
+        height: var(--spawn-mascot-size);
+        margin-bottom: var(--spawn-mascot-margin-bottom);
+        pointer-events: none;
+      }
 
       .message-container {
         text-align: center;
@@ -103,7 +114,7 @@
 
       .button-container {
         width: 100%;
-        height: 200px;
+        height: var(--spawn-button-height);
       }
     }
   }

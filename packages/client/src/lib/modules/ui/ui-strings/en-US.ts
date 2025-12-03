@@ -3,9 +3,8 @@ import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
 export const enUS = {
   address: "Address",
   admin: "CASHBOARD",
-  adminInstruction: (price: number) => `Unlock our latest rat-a-licious feature
-    \nfor ${price} ${CURRENCY_SYMBOL}. Lets you create bespoke trips\nhrough a Bloomberg-style terminal for
-t he mentally deranged. Results may vary.`,
+  adminInstruction: (price: number) =>
+    `Unlock our latest rat-a-licious feature for ${price} ${CURRENCY_SYMBOL}. Lets you create bespoke trips through a Bloomberg-style terminal for the mentally deranged. Results may vary.`,
   action: "Action",
   all: "All",
   activeProfit: "Active profit",
@@ -26,7 +25,7 @@ t he mentally deranged. Results may vary.`,
     "Set how much the game contract is allowed to spend on your behalf. This is required to have fun.",
   newAllowance: "NEW ALLOWANCE",
   setAllowance: "Set Allowance",
-  settingAllowance: "Setting Allowance",
+  settingAllowance: "Authorizing machine",
   authorFullTitle: "Moving Castles GmbH",
   totalValue: "Total value",
   totalValueExplanation: "The total value of your rat is a sum of your health and PsychoObjects",
@@ -43,7 +42,6 @@ t he mentally deranged. Results may vary.`,
   confirmLiquidationMessage: (name: string): string =>
     `Are you sure you want to cash out? ${name} will be terminated in the process.`,
   comeDown: "COME DOWN",
-  connectBurner: "Connect Burner",
   connectWallet: "Connect wallet",
   connectedWallet: "Connected wallet",
   confirmLiquidateTripPrompt: (index: number): string =>
@@ -66,7 +64,7 @@ t he mentally deranged. Results may vary.`,
   dieInTrip: "die in trip",
   diedTripping: "died tripping #",
   disconnectWallet: "Disconnect wallet",
-  egoDeathExplanation: `!!! ATTENTION OPERATOR !!!\ntrips are untested substances and\nmight cause extreme death to your rat!`,
+  egoDeathExplanation: `!!! ATTENTION OPERATOR !!! trips are untested substances and might cause extreme death to your rat!`,
   empty: "Empty",
   enjoySkillfully: "ENJOY SKILLFULLY",
   events: "Events",

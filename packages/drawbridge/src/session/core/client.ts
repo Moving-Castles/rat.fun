@@ -6,6 +6,7 @@ import { createBundlerClient } from "../../bundler/client"
 import { SessionClient, PublicClient } from "../../types"
 import { SmartAccount } from "viem/account-abstraction"
 import { getBundlerTransport } from "../../bundler/transport"
+import { logger } from "../../logger"
 
 /**
  * Create session client with MUD World extensions
@@ -49,7 +50,7 @@ export async function getSessionClient({
   }
 
   if (paymasterOverride) {
-    console.log(`[Drawbridge/SessionClient] Creating session client with paymaster override`)
+    logger.log(`[Drawbridge/SessionClient] Creating session client with paymaster override`)
   }
 
   // Create bundler client for submitting user operations

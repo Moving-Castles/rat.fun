@@ -8,6 +8,7 @@ import {
 import { getAction } from "viem/utils"
 import { SessionClient, DEPLOYMENT_TIMEOUTS } from "../../types"
 import { isAlreadyDeployedError } from "../patterns/wallet-deployment"
+import { logger } from "../../logger"
 
 /**
  * Smart account with optional factory properties (internal use only)
@@ -39,13 +40,13 @@ export function clearFactoryData(account: SmartAccountWithFactory): void {
     account.factory = undefined
     account.factoryData = undefined
 
-    console.log("[drawbridge] Factory data cleared:", {
+    logger.log("[drawbridge] Factory data cleared:", {
       stillHasFactory: !!account.factory,
       stillHasFactoryData: !!account.factoryData
     })
   } catch (err) {
     // Fall back to Object.defineProperty for read-only properties
-    console.warn("[drawbridge] Direct deletion failed, trying Object.defineProperty")
+    logger.warn("[drawbridge] Direct deletion failed, trying Object.defineProperty")
 
     try {
       Object.defineProperty(account, "factory", {
@@ -59,9 +60,9 @@ export function clearFactoryData(account: SmartAccountWithFactory): void {
         configurable: true
       })
 
-      console.log("[drawbridge] Factory data cleared via defineProperty")
+      logger.log("[drawbridge] Factory data cleared via defineProperty")
     } catch (fallbackErr) {
-      console.error("[drawbridge] Could not remove factory (readonly property)")
+      logger.error("[drawbridge] Could not remove factory (readonly property)")
     }
   }
 }
@@ -105,10 +106,10 @@ export async function deploySessionAccount(
   onStatus?: (status: SetupSessionStatus) => void
 ): Promise<void> {
   const sessionDeployed = await sessionClient.account.isDeployed?.()
-  console.log("[drawbridge] Session account deployed:", sessionDeployed)
+  logger.log("[drawbridge] Session account deployed:", sessionDeployed)
 
   if (sessionDeployed) {
-    console.log("[drawbridge] Session account already deployed")
+    logger.log("[drawbridge] Session account already deployed")
     return
   }
 
@@ -123,7 +124,7 @@ export async function deploySessionAccount(
       calls: [{ to: zeroAddress }]
     })
 
-    console.log("[drawbridge] Session deploy tx:", hash)
+    logger.log("[drawbridge] Session deploy tx:", hash)
 
     // Add timeout
     const receiptPromise = getAction(
@@ -151,13 +152,13 @@ export async function deploySessionAccount(
     }
   } catch (error) {
     const errorMsg = error instanceof Error ? error.message : String(error)
-    console.error("[drawbridge] Session deployment error:", errorMsg)
+    logger.error("[drawbridge] Session deployment error:", errorMsg)
 
     // Check if timeout but actually deployed
     if (errorMsg.includes("timeout")) {
       const nowDeployed = await sessionClient.account.isDeployed?.()
       if (nowDeployed) {
-        console.log("[drawbridge] Session deployed despite timeout")
+        logger.log("[drawbridge] Session deployed despite timeout")
         onStatus?.({ type: "complete", message: "Session setup complete!" })
         return
       }
@@ -165,20 +166,20 @@ export async function deploySessionAccount(
 
     // Check if "already deployed" error (RPC cache inconsistency)
     if (isAlreadyDeployedError(errorMsg)) {
-      console.log("[drawbridge] Session account already deployed (bundler confirmed)")
-      console.log("[drawbridge] Waiting for RPC cache to update...")
+      logger.log("[drawbridge] Session account already deployed (bundler confirmed)")
+      logger.log("[drawbridge] Waiting for RPC cache to update...")
 
       // Wait for RPC cache to update before re-checking
       await new Promise(resolve => setTimeout(resolve, DEPLOYMENT_TIMEOUTS.BUNDLER_STATE_SYNC))
 
       const nowDeployed = await sessionClient.account.isDeployed?.()
       if (nowDeployed) {
-        console.log("[drawbridge] Session deployment verified after cache update")
+        logger.log("[drawbridge] Session deployment verified after cache update")
         onStatus?.({ type: "complete", message: "Session setup complete!" })
         return
       }
 
-      console.warn("[drawbridge] Cache still stale after delay - treating as deployed anyway")
+      logger.warn("[drawbridge] Cache still stale after delay - treating as deployed anyway")
       // Bundler has authoritative view - if it says deployed, trust it
       onStatus?.({ type: "complete", message: "Session setup complete!" })
       return

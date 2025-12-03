@@ -52,7 +52,4 @@
     display: flex;
     gap: 8px;
   }
-
-  .number {
-  }
 </style>

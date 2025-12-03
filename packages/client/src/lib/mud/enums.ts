@@ -7,7 +7,6 @@ export enum ENVIRONMENT {
 
 export enum WALLET_TYPE {
   UNKNOWN = "unknown",
-  BURNER = "burner",
   DRAWBRIDGE = "drawbridge"
 }
 

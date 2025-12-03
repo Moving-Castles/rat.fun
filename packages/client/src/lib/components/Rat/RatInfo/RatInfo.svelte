@@ -111,15 +111,15 @@
 
 <div class="rat-info">
   <!-- Stats -->
-  <div class="rat-stats-container">
+  <div class="rat-stats-container" data-tutorial="rat-panel">
     <RatStats {displayRat} {oldRat} {newRat} onTimeline={addStatsTimeline} />
   </div>
   <!-- Inventory -->
-  <div class="rat-inventory-container">
+  <div class="rat-inventory-container" data-tutorial="inventory">
     <RatInventory {displayRat} {oldRat} {newRat} onTimeline={addInventoryTimeline} />
   </div>
   <!-- Liquidate -->
-  <div class="rat-liquidate-container">
+  <div class="rat-liquidate-container" data-tutorial="cash-out">
     <LiquidateRat2 {displayRat} {oldRat} {newRat} onTimeline={addLiquidateTimeline} />
   </div>
 </div>

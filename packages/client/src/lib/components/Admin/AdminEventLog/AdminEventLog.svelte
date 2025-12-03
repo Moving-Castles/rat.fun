@@ -60,7 +60,7 @@
     </div>
   {/if}
   <div bind:this={scrollContainer} class="admin-event-log">
-    {#each graphData as point, index (point.index)}
+    {#each graphData.filter(p => p.eventType !== TRIP_EVENT_TYPE.BASELINE) as point, index (point.index)}
       <!-- svelte-ignore a11y_click_events_have_key_events -->
       <!-- svelte-ignore a11y_no_static_element_interactions -->
       <div
@@ -107,12 +107,6 @@
 </div>
 
 <style lang="scss">
-  .fixed-debug {
-    position: fixed;
-    top: 0;
-    right: 0;
-    z-index: 999;
-  }
   .admin-event-log-container {
     position: relative;
     height: 100%;
@@ -157,15 +151,6 @@
     gap: 8px;
     padding: 6px;
     user-select: none;
-
-    .event {
-      padding: 0;
-      margin: 0;
-      color: white;
-      display: block;
-      margin-bottom: 4px;
-      font-size: var(--font-size-small);
-    }
 
     .log-item {
       width: 100%;

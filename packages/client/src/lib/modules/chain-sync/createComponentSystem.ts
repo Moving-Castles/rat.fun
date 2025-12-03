@@ -4,7 +4,6 @@ import { publicNetwork } from "$lib/modules/network"
 import { toCamelCase } from "$lib/modules/utils"
 import type { Component, ComponentUpdate } from "@latticexyz/recs"
 import { deepEqual } from "@wagmi/core"
-import { logLiveUpdate } from "./tempDebugLogger"
 
 /**
  * Creates a reactive subscription for a single MUD component.

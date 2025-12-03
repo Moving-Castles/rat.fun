@@ -13,15 +13,17 @@
   import { publicNetwork } from "$lib/modules/network"
   import { UIState, lightboxState } from "$lib/modules/ui/state.svelte"
   import { UI } from "$lib/modules/ui/enums"
-  import { WALLET_TYPE } from "$lib/mud/enums"
+  import { environment as environmentStore } from "$lib/modules/network"
   import {
-    environment as environmentStore,
-    walletType as walletTypeStore
-  } from "$lib/modules/network"
-  import { cleanupDrawbridge, userAddress } from "$lib/modules/drawbridge"
+    cleanupDrawbridge,
+    userAddress,
+    getDrawbridge,
+    isDrawbridgeInitialized
+  } from "$lib/modules/drawbridge"
   import { playerId } from "$lib/modules/state/stores"
   import { initOffChainSync, disconnectOffChainSync } from "$lib/modules/off-chain-sync"
   import { resetEntitiesInitialization } from "$lib/modules/chain-sync"
+  import { initErc20Listener } from "$lib/modules/erc20Listener"
 
   // Components
   import Spawn from "$lib/components/Spawn/Spawn.svelte"
@@ -44,21 +46,32 @@
     UIState.set(UI.SPAWNING)
   }
 
-  // Called when spawning is complete
   const spawned = () => {
+    console.log("[+layout] spawned() called")
+    // Initialize ERC20 listener (centralized here for all scenarios)
+    initErc20Listener()
     UIState.set(UI.READY)
   }
 
   // Detect wallet disconnection and navigate back to spawn
+  // NOTE: We subscribe to $userAddress for reactivity, but verify against
+  // drawbridge.getState() to avoid false positives from store sync delays
   $effect(() => {
-    // Only monitor disconnections for drawbridge wallet type
-    if ($walletTypeStore !== WALLET_TYPE.DRAWBRIDGE) return
-
     // Only act when in READY state (not during initial load or spawn flow)
     if ($UIState !== UI.READY) return
 
-    // If user address becomes null, wallet was disconnected
+    // If user address becomes null, verify it's a real disconnect
     if ($userAddress === null) {
+      // Double-check directly from drawbridge to avoid store race conditions
+      if (isDrawbridgeInitialized()) {
+        const state = getDrawbridge().getState()
+        if (state.userAddress !== null) {
+          // Store says null but drawbridge says connected - it's a store sync delay, ignore
+          console.log("[+layout] Store shows null but drawbridge has address, ignoring")
+          return
+        }
+      }
+
       console.log("[+layout] Wallet disconnected externally, navigating back to spawn")
       // Reset entities initialization so it will reinitialize for the new wallet
       resetEntitiesInitialization()
@@ -78,14 +91,14 @@
       currentPlayerId &&
       currentPlayerId !== "0x0000000000000000000000000000000000000000000000000000000000000000"
     ) {
-      console.log("[+layout] Initializing off-chain sync for player:", currentPlayerId)
+      // console.log("[+layout] Initializing off-chain sync for player:", currentPlayerId)
       initOffChainSync(environment, currentPlayerId)
     }
 
     // Disconnect when leaving ready state
     return () => {
       if (isReady) {
-        console.log("[+layout] Disconnecting off-chain sync")
+        // console.log("[+layout] Disconnecting off-chain sync")
         disconnectOffChainSync()
       }
     }
@@ -107,10 +120,8 @@
   })
 
   onDestroy(() => {
-    // Clean up drawbridge if it was initialized
-    if ($walletTypeStore === WALLET_TYPE.DRAWBRIDGE) {
-      cleanupDrawbridge()
-    }
+    // Clean up drawbridge
+    cleanupDrawbridge()
 
     // Clean up global shader manager when the app unmounts
     shaderManager.destroy()
@@ -123,7 +134,7 @@
   {#if $UIState === UI.LOADING}
     <Loading environment={$environmentStore} {loaded} />
   {:else if $UIState === UI.SPAWNING}
-    <Spawn walletType={$walletTypeStore} {spawned} />
+    <Spawn {spawned} />
   {:else}
     {@render children?.()}
   {/if}

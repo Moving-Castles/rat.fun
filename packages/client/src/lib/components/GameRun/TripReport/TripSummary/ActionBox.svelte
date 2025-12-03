@@ -10,6 +10,8 @@
   import { BigButton, RatAvatar } from "$lib/components/Shared"
   import { isPhone, selectedFolderId, phoneActiveGameView } from "$lib/modules/ui/state.svelte"
   import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
+  import { player } from "$lib/modules/state/stores"
+  import { setPendingMascotMessage } from "$lib/modules/ui/mascot-messages"
 
   let {
     result,
@@ -64,11 +66,25 @@
     resetProcessingState()
 
     if (ratDead) {
+      // Get death count (pastRats includes this death)
+      const deathCount = $player?.pastRats?.length ?? 1
+
+      // Set death message
+      setPendingMascotMessage({ type: "death", deathCount })
+
       // Rat died - reset folder selection and frozen state
       selectedFolderId.set("") // Return to folder listing
       resetFrozenState() // Clear frozenRat so next rat doesn't animate from old rat
       // On phone, go back to ratbox
       phoneActiveGameView.set("ratbox")
+    } else {
+      // Rat survived - check for big win
+      const payout =
+        result.balanceTransfers?.reduce((acc, transfer) => acc + transfer.amount, 0) ?? 0
+
+      if (payout >= 200) {
+        setPendingMascotMessage({ type: "bigwin", payout })
+      }
     }
 
     // Return to game

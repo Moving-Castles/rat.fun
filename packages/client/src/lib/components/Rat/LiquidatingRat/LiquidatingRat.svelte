@@ -8,6 +8,11 @@
 
   import { SmallSpinner, RatAvatar } from "$lib/components/Shared"
   import { selectedFolderId } from "$lib/modules/ui/state.svelte"
+  import {
+    setPendingMascotMessage,
+    isFirstCashoutShown,
+    setFirstCashoutShown
+  } from "$lib/modules/ui/mascot-messages"
 
   onMount(async () => {
     // playSound("ratfunUI", "ratDeath")
@@ -26,6 +31,12 @@
 
     // Resume erc20 balance listener
     erc20BalanceListenerActive.set(true)
+
+    // Set pending mascot message for first cash out
+    if (!isFirstCashoutShown()) {
+      setPendingMascotMessage({ type: "first_cashout" })
+      setFirstCashoutShown()
+    }
 
     // RAT_BOX_STATE.LIQUIDATING_RAT -> RAT_BOX_STATE.DEAD_RAT
     ratState.state.transitionTo(RAT_BOX_STATE.NO_RAT)

@@ -1,3 +1,5 @@
+import type { PlaySoundConfig } from "$lib/modules/sound"
+
 export type TerminalOutputUnit = {
   type: "text" | "loader"
   content: string
@@ -7,4 +9,6 @@ export type TerminalOutputUnit = {
   delayAfter?: number
   color: string
   backgroundColor: string
+  sound?: PlaySoundConfig
+  onChar?: (char: string, index: number) => void
 }

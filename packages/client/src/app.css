@@ -79,6 +79,12 @@
   /* Layout: Trip Result */
   --info-box-height: 260px;
 
+  /* Layout: Spawn */
+  --spawn-mascot-size: 400px;
+  --spawn-mascot-margin-bottom: 20px;
+  --spawn-button-height: 140px;
+  --spawn-inner-width: 600px;
+
   /* Sizing */
   --default-padding: 14px;
   --tab-bar-height: 90px;
@@ -213,8 +219,49 @@ button {
 }
 
 .tippy-content {
-  font-size: var(--font-size-small);
+  font-size: 16px;
+  line-height: 1.1em;
   border-radius: 0;
+  background: rgba(190, 190, 190, 0.8);
+  color: black;
+  border: 1px solid var(--color-border);
+}
+
+/* Tutorial tippy theme */
+.tippy-box[data-theme~="tutorial"] {
+  background: rgba(255, 255, 255, 0.95);
+  color: black;
+  border: 2px solid black;
+  border-radius: 0;
+  padding: 0;
+}
+
+.tippy-box[data-theme~="tutorial"] .tippy-content {
+  padding: 0;
+  background: transparent;
+  border: none;
+}
+
+.tippy-box[data-theme~="tutorial"] .tippy-arrow {
+  color: black;
+}
+
+/* Tutorial highlight effect for target element */
+[data-tutorial-highlight] {
+  position: relative;
+  z-index: 100;
+  box-shadow: 0 0 0 4px rgba(255, 255, 0, 0.6);
+  animation: tutorial-pulse 1s ease-in-out infinite;
+}
+
+@keyframes tutorial-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 4px rgba(255, 255, 0, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(255, 255, 0, 0.3);
+  }
 }
 
 .flash-fast-thrice {

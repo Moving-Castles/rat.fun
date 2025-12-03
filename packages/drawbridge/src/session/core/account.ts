@@ -3,6 +3,7 @@ import { SmartAccount } from "viem/account-abstraction"
 import { toSimpleSmartAccount } from "permissionless/accounts"
 import { getSessionSigner } from "./signer"
 import { PublicClient } from "../../types"
+import { logger } from "../../logger"
 
 export type GetSessionAccountReturnType = {
   readonly account: SmartAccount
@@ -24,7 +25,7 @@ export async function getSessionAccount({
 }): Promise<GetSessionAccountReturnType> {
   const signer = getSessionSigner(userAddress)
 
-  console.log("[getSessionAccount] Creating session account:", {
+  logger.log("[getSessionAccount] Creating session account:", {
     userAddress,
     signerAddress: signer.address,
     chainId: publicClient.chain?.id,
@@ -37,10 +38,10 @@ export async function getSessionAccount({
       owner: signer
     })
 
-    console.log("[getSessionAccount] Session account created:", account.address)
+    logger.log("[getSessionAccount] Session account created:", account.address)
     return { account, signer }
   } catch (error) {
-    console.error("[getSessionAccount] Failed to create session account:", {
+    logger.error("[getSessionAccount] Failed to create session account:", {
       error: error instanceof Error ? error.message : String(error),
       userAddress,
       signerAddress: signer.address,

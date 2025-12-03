@@ -29,6 +29,7 @@ import {
   LLMError,
   LLMAPIError,
   LLMParseError,
+  LLMSchemaError,
   CMSError,
   CMSAPIError,
   CMSDataError,
@@ -153,11 +154,14 @@ export function errorHandler(error: FastifyError, request: FastifyRequest, reply
     error instanceof RedisDataError
   ) {
     // Capture server errors in Sentry with error level
-    // For outcome validation errors, include the context in Sentry
-    const errorContext =
-      error instanceof OutcomeValidationError && error.context
-        ? { ...sentryContext, ...error.context }
-        : sentryContext
+    // Include additional context for specific error types
+    let errorContext: Record<string, any> = sentryContext
+
+    if (error instanceof OutcomeValidationError && error.context) {
+      errorContext = { ...sentryContext, ...error.context }
+    } else if (error instanceof LLMParseError || error instanceof LLMSchemaError) {
+      errorContext = { ...sentryContext, llmRawResponse: error.rawText }
+    }
 
     captureError(error, errorContext)
     return createServerErrorResponse(reply, request, error)
@@ -226,21 +230,18 @@ export function handleBackgroundError(
 
   // Capture background errors in Sentry
   if (error instanceof Error) {
-    const sentryContext =
-      error instanceof OutcomeValidationError && error.context
-        ? {
-            context: "background",
-            backgroundContext: contextStr,
-            errorCode,
-            ...error.context,
-            ...additionalContext
-          }
-        : {
-            context: "background",
-            backgroundContext: contextStr,
-            errorCode,
-            ...additionalContext
-          }
+    let sentryContext: Record<string, any> = {
+      context: "background",
+      backgroundContext: contextStr,
+      errorCode,
+      ...additionalContext
+    }
+
+    if (error instanceof OutcomeValidationError && error.context) {
+      sentryContext = { ...sentryContext, ...error.context }
+    } else if (error instanceof LLMParseError || error instanceof LLMSchemaError) {
+      sentryContext = { ...sentryContext, llmRawResponse: error.rawText }
+    }
 
     captureError(error, sentryContext)
   } else {
@@ -284,6 +285,7 @@ export {
   LLMError,
   LLMAPIError,
   LLMParseError,
+  LLMSchemaError,
   CMSError,
   CMSAPIError,
   CMSDataError,

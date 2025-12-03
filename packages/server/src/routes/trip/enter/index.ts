@@ -7,14 +7,13 @@ import { v4 as uuidv4 } from "uuid"
 import {
   EnterTripData,
   EnterTripReturnValue,
-  EventsReturnValue,
-  CorrectionReturnValue,
   SignedRequest,
   EnterTripRequestBody
 } from "@modules/types"
 
 // LLM
 import { constructEventMessages, constructCorrectionMessages } from "@modules/llm/constructMessages"
+import { EventsReturnValueSchema, CorrectionReturnValueSchema } from "@modules/llm/schemas"
 
 // Anthropic
 import { getLLMClient } from "@modules/llm/anthropic"
@@ -126,13 +125,14 @@ async function routes(fastify: FastifyInstance) {
 
         const eventLLMStart = performance.now()
         logger.log("Calling event LLM...")
-        const eventResults = (await callModel(
+        const eventResults = await callModel(
           llmClient,
           eventMessages,
           combinedSystemPrompt,
-          process.env.EVENT_MODEL ?? "claude-sonnet-4-20250514",
-          Number(process.env.EVENT_TEMPERATURE)
-        )) as EventsReturnValue
+          process.env.EVENT_MODEL!,
+          Number(process.env.EVENT_TEMPERATURE),
+          EventsReturnValueSchema
+        )
         logger.log(`✓ Event LLM completed (${Math.round(performance.now() - eventLLMStart)}ms)`)
 
         // * * * * * * * * * * * * * * * * * *
@@ -158,6 +158,9 @@ async function routes(fastify: FastifyInstance) {
         logger.log("Balance change: " + (newRatBalance - rat.balance))
         logger.log("Value change: " + ratValueChange)
 
+        // Balance (aka. health) is 0 => RAT IS DEAD
+        const ratDead = newRatBalance === 0
+
         // * * * * * * * * * * * * * * * * * *
         // Construct correction messages
         // * * * * * * * * * * * * * * * * * *
@@ -169,16 +172,18 @@ async function routes(fastify: FastifyInstance) {
         const correctionMessages = constructCorrectionMessages(
           unvalidatedOutcome,
           validatedOutcome,
-          eventResults.log
+          eventResults.log,
+          ratDead
         )
 
-        const correctedEvents = (await callModel(
+        const correctedEvents = await callModel(
           llmClient,
           correctionMessages,
           correctionSystemPrompt,
-          process.env.CORRECTION_MODEL ?? "claude-sonnet-4-20250514",
-          Number(process.env.CORRECTION_TEMPERATURE)
-        )) as CorrectionReturnValue
+          process.env.CORRECTION_MODEL!,
+          Number(process.env.CORRECTION_TEMPERATURE),
+          CorrectionReturnValueSchema
+        )
         logger.log(
           `✓ Correction LLM completed (${Math.round(performance.now() - correctionStart)}ms)`
         )
@@ -215,11 +220,7 @@ async function routes(fastify: FastifyInstance) {
               correctedEvents,
               validatedOutcome,
               mainProcessingTime,
-              debuggingInfo ?? {
-                internalText: "No debugging info available",
-                randomSeed: 0,
-                batchId: 0
-              },
+              debuggingInfo,
               logOutput
             ).catch(error => {
               console.error(`❌ Error writing to private CMS: ${error}`)
@@ -271,15 +272,10 @@ async function routes(fastify: FastifyInstance) {
 
         const response: EnterTripReturnValue = {
           id: ratId as Hex,
-          log: correctedEvents.log ?? [],
+          log: correctedEvents.log,
           itemChanges: validatedOutcome.itemChanges,
           balanceTransfers: validatedOutcome.balanceTransfers,
-          debuggingInfo: eventResults.outcome?.debuggingInfo ?? {
-            internalText: "No debugging info available",
-            randomSeed: 0,
-            batchId: 0
-          },
-          ratDead: newRatBalance == 0,
+          ratDead: ratDead,
           tripDepleted: newTripValue == 0
         }
 

@@ -3,113 +3,41 @@
   import gsap from "gsap"
   import { BigButton, Mascot } from "$lib/components/Shared"
   import { spawnState, SPAWN_STATE } from "$lib/components/Spawn/state.svelte"
+  import { introductionMascotText } from "./introductionMascotText"
 
   let mascotElement = $state<HTMLDivElement | null>(null)
-  let mascotRef = $state<Mascot | null>(null)
   let buttonElement = $state<HTMLDivElement | null>(null)
-  let currentTextIndex = $state(0)
 
   const timeline = gsap.timeline()
 
-  type IntroductionSteps = {
-    text: string
-    buttonLabel: string
-  }
-
-  const introductionSteps: IntroductionSteps[] = [
-    {
-      text: "Gooood moooooorning **OPERATOR**!",
-      buttonLabel: "OK"
-    },
-    {
-      text: "Welcome to our rat controlled remote viewing **SLOP MACHINE**.",
-      buttonLabel: "OK"
-    },
-    {
-      text: "If operated skilfully this machine will bring you great riches!",
-      buttonLabel: "OK"
-    },
-    {
-      text: "Pump your rats with drugs and send them tripping, then cash out tokens by exploiting their success.",
-      buttonLabel: "OK"
-    },
-    {
-      text: "I can feel your dopamine injectors tingling! What are you waiting for?",
-      buttonLabel: "I AM READY"
-    }
-  ]
-
-  function handleContinue() {
-    // If we haven't shown all texts yet, show the next one
-    if (currentTextIndex < introductionSteps.length) {
-      mascotRef?.showSpeechBubble(introductionSteps[currentTextIndex].text, { autoHide: false })
-      currentTextIndex++
-    } else {
-      // After all texts are shown, transition to next step
-      spawnState.state.transitionTo(SPAWN_STATE.SPAWN_FORM)
-    }
-  }
-
-  function handleKeydown(event: KeyboardEvent) {
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault()
-      handleContinue()
-    }
+  const onClick = () => {
+    spawnState.state.transitionTo(SPAWN_STATE.ALLOWANCE)
   }
 
   onMount(() => {
-    if (mascotRef) {
-      mascotRef.showSpeechBubble(introductionSteps[0].text, { autoHide: false })
-      currentTextIndex = 1
-    }
+    console.log("[Introduction] Component mounted")
 
     if (!mascotElement || !buttonElement) {
       return
     }
 
-    // Set initial opacity to 0
-    gsap.set([mascotElement, buttonElement], {
-      opacity: 0
-    })
+    gsap.set([mascotElement, buttonElement], { opacity: 0 })
 
-    // Staggered fade-in animations
     timeline
-      .to(
-        mascotElement,
-        {
-          opacity: 1,
-          duration: 0.4
-        },
-        "0"
-      )
-      .to(
-        buttonElement,
-        {
-          opacity: 1,
-          duration: 0.3
-        },
-        "0.1"
-      )
+      .to(mascotElement, { opacity: 1, duration: 0.4 }, "0")
+      .to(buttonElement, { opacity: 1, duration: 0.4 }, "0.2")
   })
 </script>
 
+<div class="debug-badge">INTRODUCTION</div>
 <div class="outer-container">
   <div class="inner-container">
-    <div
-      class="mascot-container"
-      bind:this={mascotElement}
-      role="button"
-      tabindex="0"
-      onclick={handleContinue}
-      onkeydown={handleKeydown}
-    >
-      <Mascot bind:this={mascotRef} entranceOn={true} smallDanceOn={true} />
+    <div class="mascot-container" bind:this={mascotElement}>
+      <Mascot text={introductionMascotText} finishTextOnClick={true} />
     </div>
+
     <div class="button-container" bind:this={buttonElement}>
-      <BigButton
-        text={introductionSteps[currentTextIndex - 1]?.buttonLabel ?? ""}
-        onclick={handleContinue}
-      />
+      <BigButton text="I WILL NOT GET ATTACHED TO RAT" onclick={onClick} />
     </div>
   </div>
 </div>
@@ -128,20 +56,34 @@
       flex-flow: column nowrap;
       align-items: center;
       justify-content: center;
-      width: 700px;
+      width: var(--spawn-inner-width);
       max-width: 90dvw;
 
       .mascot-container {
-        width: 400px;
-        height: 400px;
-        margin-bottom: 20px;
-        cursor: pointer;
+        width: var(--spawn-mascot-size);
+        height: var(--spawn-mascot-size);
+        margin-bottom: var(--spawn-mascot-margin-bottom);
+        pointer-events: none;
       }
 
       .button-container {
         width: 100%;
-        height: 160px;
+        height: var(--spawn-button-height);
       }
     }
+  }
+
+  .debug-badge {
+    position: fixed;
+    top: 50px;
+    right: 10px;
+    background: magenta;
+    color: white;
+    padding: 4px 8px;
+    font-size: 10px;
+    font-family: monospace;
+    z-index: 9999;
+    border-radius: 4px;
+    display: none;
   }
 </style>

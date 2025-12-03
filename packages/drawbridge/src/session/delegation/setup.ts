@@ -4,6 +4,7 @@ import { SetupSessionStatus } from "./shared"
 import { setupSessionSmartAccount } from "./smart-account"
 import { setupSessionEOA } from "./eoa"
 import { checkDelegation } from "./check"
+import { logger } from "../../logger"
 
 /**
  * Complete setup session parameters (supports both EOA and Smart Account)
@@ -58,7 +59,7 @@ export async function setupSession({
   const userAddress = userClient.account.address
   const sessionAddress = sessionClient.account.address
 
-  console.log("[drawbridge] Setup session:", {
+  logger.log("[drawbridge] Setup session:", {
     userAddress,
     accountType: userClient.account.type
   })
@@ -74,12 +75,12 @@ export async function setupSession({
   const sessionDeployed = await sessionClient.account.isDeployed?.()
 
   if (hasDelegation && sessionDeployed) {
-    console.log("[drawbridge] Session already fully set up, skipping")
+    logger.log("[drawbridge] Session already fully set up, skipping")
     onStatus?.({ type: "complete", message: "Session already set up!" })
     return
   }
 
-  console.log("[drawbridge] Session setup required:", { hasDelegation, sessionDeployed })
+  logger.log("[drawbridge] Session setup required:", { hasDelegation, sessionDeployed })
 
   // Route to appropriate implementation based on wallet type
   if (userClient.account.type === "smart") {

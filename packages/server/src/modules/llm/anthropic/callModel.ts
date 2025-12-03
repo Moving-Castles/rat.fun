@@ -1,22 +1,45 @@
 import { MessageParam } from "@anthropic-ai/sdk/resources"
 import Anthropic from "@anthropic-ai/sdk"
+import { z } from "zod"
 import {
   LLMError,
   LLMAPIError,
   LLMParseError,
+  LLMSchemaError,
   LLMOverloadedError,
   LLMTruncatedError
 } from "@modules/error-handling/errors"
 
 const MAX_TOKENS = Number(process.env.LLM_MAX_TOKENS) || 4096
 
+// Overload: with schema - returns typed result
+export async function callModel<T extends z.ZodTypeAny>(
+  anthropic: Anthropic,
+  messages: MessageParam[],
+  system: string,
+  model: string,
+  temperature: number,
+  schema: T
+): Promise<z.infer<T>>
+
+// Overload: without schema - returns unknown
 export async function callModel(
   anthropic: Anthropic,
   messages: MessageParam[],
   system: string,
   model: string,
-  temperature: number = 1
-) {
+  temperature?: number
+): Promise<unknown>
+
+// Implementation
+export async function callModel<T extends z.ZodTypeAny>(
+  anthropic: Anthropic,
+  messages: MessageParam[],
+  system: string,
+  model: string,
+  temperature: number = 1,
+  schema?: T
+): Promise<unknown> {
   try {
     const msg = await anthropic.messages.create({
       model,
@@ -43,7 +66,7 @@ export async function callModel(
       )
     }
 
-    return parseReturnMessage(msg)
+    return parseReturnMessage(msg, schema)
   } catch (error) {
     // If it's already one of our custom errors, rethrow it
     if (error instanceof LLMError) {
@@ -73,7 +96,10 @@ export async function callModel(
   }
 }
 
-function parseReturnMessage(msg: Anthropic.Messages.Message) {
+function parseReturnMessage<T extends z.ZodTypeAny>(
+  msg: Anthropic.Messages.Message,
+  schema?: T
+): unknown {
   try {
     // Fix for the linter error - check if content exists and has a text property
     let rawText = ""
@@ -88,15 +114,30 @@ function parseReturnMessage(msg: Anthropic.Messages.Message) {
     rawText = rawText.replace(/^```json\s*/i, "").replace(/```$/, "")
 
     // Parse the text into a native object
+    let parsedValue: unknown
     try {
-      const returnValue = JSON.parse(rawText)
-      return returnValue
+      parsedValue = JSON.parse(rawText)
     } catch (parseError) {
       throw new LLMParseError(
         `Failed to parse LLM response as JSON: ${parseError instanceof Error ? parseError.message : String(parseError)}`,
         rawText
       )
     }
+
+    // If a schema is provided, validate and transform the parsed value
+    if (schema) {
+      const result = schema.safeParse(parsedValue)
+      if (!result.success) {
+        throw new LLMSchemaError(
+          `LLM response failed schema validation: ${result.error.issues.map(i => `${i.path.join(".")}: ${i.message}`).join(", ")}`,
+          rawText,
+          result.error.issues
+        )
+      }
+      return result.data
+    }
+
+    return parsedValue
   } catch (error) {
     // If it's already one of our custom errors, rethrow it
     if (error instanceof LLMError) {

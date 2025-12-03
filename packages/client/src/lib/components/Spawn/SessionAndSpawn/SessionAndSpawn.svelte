@@ -3,21 +3,11 @@
   import gsap from "gsap"
 
   import { typeHit } from "$lib/modules/sound"
-  import { isSessionReady, sessionClient } from "$lib/modules/drawbridge"
-  import { walletNetwork, walletType } from "$lib/modules/network"
-  import { WALLET_TYPE } from "$lib/mud/enums"
-
   import { BigButton, Mascot } from "$lib/components/Shared"
   import { spawnState, SPAWN_STATE } from "$lib/components/Spawn/state.svelte"
+  import { sessionAndSpawnMascotText } from "./sessionAndSpawnMascotText"
 
   let name = $state("")
-
-  // Check if wallet is ready based on wallet type
-  const isWalletReady = $derived(
-    $walletType === WALLET_TYPE.BURNER
-      ? !!$walletNetwork.walletClient
-      : $isSessionReady && !!$sessionClient
-  )
 
   let mascotElement: HTMLDivElement | null = $state(null)
   let inputElement: HTMLInputElement | null = $state(null)
@@ -26,29 +16,27 @@
   const timeline = gsap.timeline()
 
   function submitForm() {
-    console.log("[SpawnForm] Submit form with name:", name)
+    console.log("[SessionAndSpawn] Submit form with name:", name)
 
     // Validate name before transitioning
     if (!name || name.trim() === "") {
-      console.warn("[SpawnForm] Name cannot be empty")
+      console.warn("[SessionAndSpawn] Name cannot be empty")
       return
     }
 
-    if (name.length > 50) {
-      console.warn("[SpawnForm] Name is too long (maximum 50 characters)")
-      return
-    }
+    // Crop name to limit
+    const finalName = name.slice(0, 50)
 
     // Store name in state machine
-    spawnState.data.setPlayerName(name)
-    console.log("[SpawnForm] Name stored, transitioning to SPAWNING")
+    spawnState.data.setPlayerName(finalName)
+    console.log("[SessionAndSpawn] Name stored, transitioning to SESSION_AND_SPAWN__LOADING")
 
-    // Transition to spawning state
-    spawnState.state.transitionTo(SPAWN_STATE.SPAWNING)
+    // Transition to loading state
+    spawnState.state.transitionTo(SPAWN_STATE.SESSION_AND_SPAWN__LOADING)
   }
 
   onMount(() => {
-    console.log("[SpawnForm] Component mounted")
+    console.log("[SessionAndSpawn] Component mounted")
 
     if (!mascotElement || !inputElement || !buttonElement) {
       return
@@ -69,14 +57,6 @@
         },
         "0"
       )
-      // .to(
-      //   textElement,
-      //   {
-      //     opacity: 1,
-      //     duration: 0.3
-      //   },
-      //   "0.1"
-      // )
       .to(
         inputElement,
         {
@@ -102,11 +82,11 @@
   })
 </script>
 
+<div class="debug-badge">SESSION_AND_SPAWN</div>
 <div class="outer-container">
   <div class="inner-container">
-    <!-- MASCOT -->
     <div class="mascot-container" bind:this={mascotElement}>
-      <Mascot entranceOn={true} bigDanceOn={true} />
+      <Mascot text={sessionAndSpawnMascotText} finishTextOnClick={true} />
     </div>
 
     <!-- FORM -->
@@ -114,7 +94,7 @@
       <!-- INPUT -->
       <input
         type="text"
-        placeholder="YOUR NAME"
+        placeholder="SIGN YOUR NAME"
         bind:value={name}
         bind:this={inputElement}
         onkeydown={e => {
@@ -125,17 +105,27 @@
         }}
       />
       <div class="button-container">
-        <BigButton
-          text={!isWalletReady ? "Setting up..." : "SIGN"}
-          onclick={submitForm}
-          disabled={!name || !isWalletReady}
-        />
+        <BigButton text="EVERYTHING IS MY FAULT" onclick={submitForm} disabled={!name} />
       </div>
     </div>
   </div>
 </div>
 
 <style lang="scss">
+  .debug-badge {
+    position: fixed;
+    top: 50px;
+    right: 10px;
+    background: magenta;
+    color: white;
+    padding: 4px 8px;
+    font-size: 10px;
+    font-family: monospace;
+    z-index: 9999;
+    border-radius: 4px;
+    display: none;
+  }
+
   .outer-container {
     display: flex;
     flex-flow: column nowrap;
@@ -149,12 +139,13 @@
       flex-flow: column nowrap;
       align-items: center;
       justify-content: center;
-      width: 600px;
+      width: var(--spawn-inner-width);
       max-width: 90dvw;
 
       .mascot-container {
-        width: 300px;
-        height: 300px;
+        width: var(--spawn-mascot-size);
+        height: var(--spawn-mascot-size);
+        margin-bottom: var(--spawn-mascot-margin-bottom);
         pointer-events: none;
       }
 
@@ -177,7 +168,7 @@
           border-bottom: var(--default-border-style);
           outline: none;
           width: 100%;
-          height: 80px;
+          height: 60px;
           margin-bottom: 20px;
           text-align: center;
 
@@ -188,7 +179,7 @@
 
         .button-container {
           width: 100%;
-          height: 120px;
+          height: var(--spawn-button-height);
         }
       }
     }

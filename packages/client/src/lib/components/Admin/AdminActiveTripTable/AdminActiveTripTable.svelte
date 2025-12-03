@@ -121,14 +121,6 @@
     }
   }
 
-  .table-summary {
-    padding: 10px;
-    display: flex;
-    justify-content: space-between;
-    font-size: var(--font-size-normal);
-    font-family: var(--special-font-stack);
-  }
-
   th {
     font-size: var(--font-size-small);
     border-top: 1px solid rgb(59, 59, 59);

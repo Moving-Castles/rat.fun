@@ -6,6 +6,7 @@ import { systemsConfig as worldSystemsConfig } from "@latticexyz/world/mud.confi
 import { unlimitedDelegationControlId, ConnectedClient, PublicClient } from "../../types"
 import { callWithSignature } from "../patterns/call-with-signature"
 import { SetupSessionBaseParams, deploySessionAccount } from "./shared"
+import { logger } from "../../logger"
 
 export type SetupSessionEOAParams = SetupSessionBaseParams & {
   /** Public client for reading blockchain state */
@@ -36,7 +37,7 @@ export async function setupSessionEOA({
   const sessionAddress = sessionClient.account.address
   const userAddress = userClient.account.address
 
-  console.log("[drawbridge] EOA setup:", { userAddress })
+  logger.log("[drawbridge] EOA setup:", { userAddress })
 
   onStatus?.({ type: "registering_delegation", message: "Setting up session..." })
 
@@ -66,6 +67,6 @@ export async function setupSessionEOA({
   // Deploy session account if needed
   await deploySessionAccount(sessionClient, onStatus)
 
-  console.log("[drawbridge] EOA setup complete")
+  logger.log("[drawbridge] EOA setup complete")
   onStatus?.({ type: "complete", message: "Session setup complete!" })
 }

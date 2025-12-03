@@ -89,74 +89,6 @@
     gap: 0;
   }
 
-  // Left Panel: Summary
-  .summary-panel {
-    flex: 1;
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
-
-  .summary-content {
-    width: 100%;
-    padding: 0 16px 0 8px;
-  }
-
-  .summary-content h3 {
-    // margin-bottom: 15px;
-    font-size: var(--font-size-normal);
-    font-weight: normal;
-  }
-
-  .summary-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-  }
-
-  .summary-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 8px 0;
-    border-bottom: 1px solid var(--color-grey-dark);
-    font-size: var(--font-size-normal);
-
-    &:last-child {
-      border-bottom: none;
-    }
-  }
-
-  .summary-row .label {
-    opacity: 0.7;
-  }
-
-  .summary-row .value {
-    &.negative {
-      color: var(--color-death);
-    }
-
-    &.positive {
-      color: var(--color-success);
-    }
-  }
-
-  .status-dead {
-    color: var(--color-death);
-  }
-
-  .status-depleted {
-    color: var(--color-alert-priority);
-  }
-
-  // Separator
-  .separator {
-    width: 1px;
-    background: var(--color-border);
-    flex-shrink: 0;
-    margin-right: 8px;
-  }
-
   // Right Panel: Log
   .log-panel {
     flex: 1;
@@ -165,12 +97,6 @@
     height: 100%;
     overflow: hidden;
     padding: 0 8px;
-  }
-
-  .log-panel h3 {
-    margin-bottom: 10px;
-    font-size: var(--font-size-normal);
-    font-weight: normal;
   }
 
   .log-container {
