@@ -158,6 +158,9 @@ async function routes(fastify: FastifyInstance) {
         logger.log("Balance change: " + (newRatBalance - rat.balance))
         logger.log("Value change: " + ratValueChange)
 
+        // Balance (aka. health) is 0 => RAT IS DEAD
+        const ratDead = newRatBalance === 0
+
         // * * * * * * * * * * * * * * * * * *
         // Construct correction messages
         // * * * * * * * * * * * * * * * * * *
@@ -169,7 +172,8 @@ async function routes(fastify: FastifyInstance) {
         const correctionMessages = constructCorrectionMessages(
           unvalidatedOutcome,
           validatedOutcome,
-          eventResults.log
+          eventResults.log,
+          ratDead
         )
 
         const correctedEvents = await callModel(
@@ -271,7 +275,7 @@ async function routes(fastify: FastifyInstance) {
           log: correctedEvents.log,
           itemChanges: validatedOutcome.itemChanges,
           balanceTransfers: validatedOutcome.balanceTransfers,
-          ratDead: newRatBalance == 0,
+          ratDead: ratDead,
           tripDepleted: newTripValue == 0
         }
 

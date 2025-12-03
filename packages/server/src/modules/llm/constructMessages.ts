@@ -46,9 +46,12 @@ export async function constructEventMessages(
 export function constructCorrectionMessages(
   unvalidatedOutcome: OutcomeReturnValue,
   validatedOutcome: OutcomeReturnValue,
-  events: LogEntry[]
+  events: LogEntry[],
+  ratDead: boolean
 ): MessageParam[] {
   const messages: MessageParam[] = []
+  // Rat died in trip
+  messages.push({ role: "user", content: `RatDead: ${ratDead}` })
   // Unvalidated outcome
   messages.push({ role: "user", content: `OldOutcome: ${JSON.stringify(unvalidatedOutcome)}` })
   // Validated outcome
