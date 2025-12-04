@@ -108,6 +108,9 @@ export function initializeSentry(): void {
     environment: "base",
     release,
     tracesSampleRate,
-    profilesSampleRate
+    profilesSampleRate,
+    initialScope: {
+      tags: { project: "rat-fun-exchange" }
+    }
   })
 }

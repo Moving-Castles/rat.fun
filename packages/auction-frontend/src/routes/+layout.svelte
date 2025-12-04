@@ -6,6 +6,7 @@
 
   import { onMount, onDestroy } from "svelte"
   import { initSound } from "$lib/modules/sound"
+  import { initializeSentry } from "$lib/modules/error-handling"
   import { browser } from "$app/environment"
   import { UIState } from "$lib/modules/ui/state.svelte"
   import { UI } from "$lib/modules/ui/enums"
@@ -16,6 +17,11 @@
   import Auction from "$lib/components/Auction/Auction.svelte"
   import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
   import { ShaderGlobal, Toasts } from "$lib/components/Shared"
+
+  // Initialize Sentry (only in browser and production)
+  if (browser && !import.meta.env.DEV) {
+    initializeSentry()
+  }
 
   // Called when loading is complete (network initialized, drawbridge ready)
   const loaded = () => {

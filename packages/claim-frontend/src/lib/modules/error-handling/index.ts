@@ -108,6 +108,9 @@ export function initializeSentry(): void {
     environment: "production", // claim-frontend is always on Base mainnet
     release,
     tracesSampleRate,
-    profilesSampleRate
+    profilesSampleRate,
+    initialScope: {
+      tags: { project: "rat-fun-claim" }
+    }
   })
 }
