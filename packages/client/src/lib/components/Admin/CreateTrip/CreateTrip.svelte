@@ -86,12 +86,8 @@
       !selectedFolderId
   )
 
-  const placeholder = `Outline any expected subjective experiences or outcomes the rat
-will have. Our hyper specialised Biological Intelligence Operating System will synthesize a trip based on your description.
-
-Trips induce remote viewing trances in susceptible vermin.
-
-During a trance rats might materialise psycho objects, transferring some value from your trip to their flesh. Shall a trip be too heroic and kill the rat you will collect its total value.`
+  const placeholder = `Describe the trip your rat will embark onto.
+  During a trip rats might materialise psycho objects, transferring some of your trip’s tokens to themselves. However, shall a trip be too heroic and kill the rat, you will collect its total value.`
 
   async function onClick() {
     // Check allowance before proceeding
