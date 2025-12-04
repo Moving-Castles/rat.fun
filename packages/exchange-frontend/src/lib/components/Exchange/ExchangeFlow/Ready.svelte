@@ -99,7 +99,6 @@
       gap: 1ch;
 
       @media (max-width: 768px) {
-        font-size: var(--font-size-extra-large);
         flex-direction: column;
         gap: 0;
       }
