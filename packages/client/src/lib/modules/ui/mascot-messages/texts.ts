@@ -1,5 +1,10 @@
 import type { MascotMessageData } from "./types"
 import type { TerminalOutputUnit } from "$lib/modules/terminal-typer/types"
+import { playSound, randomPitch } from "$lib/modules/sound"
+
+function onChar() {
+  playSound({ category: "ratfunUI", id: "chirp", pitch: randomPitch() })
+}
 
 // Helper to create simple text units
 function textLine(content: string): TerminalOutputUnit {
@@ -7,161 +12,24 @@ function textLine(content: string): TerminalOutputUnit {
     type: "text",
     content,
     color: "black",
-    backgroundColor: "transparent"
+    backgroundColor: "transparent",
+    onChar
   }
 }
-
-// ===========================================
-// DEATH MESSAGES - Sequential (1-5)
-// ===========================================
-
-export const DEATH_MESSAGES_SEQUENTIAL: MascotMessageData[] = [
-  // First Death
-  {
-    text: [
-      textLine("rat dead yes"),
-      textLine("happens yes. is learning yes"),
-      textLine("buy new rat try again yes?")
-    ]
-  },
-  // Second Death
-  {
-    text: [
-      textLine("another rat dead yes"),
-      textLine("company say is normal yes"),
-      textLine("operators learn from mistakes yes")
-    ]
-  },
-  // Third Death
-  {
-    text: [
-      textLine("three rats dead now yes"),
-      textLine("remember: No bad trips, Yes bad rats"),
-      textLine("maybe different strategy yes?")
-    ]
-  },
-  // Fourth Death
-  {
-    text: [
-      textLine("four rats yes"),
-      textLine("company track this yes"),
-      textLine("skill improve with practice yes")
-    ]
-  },
-  // Fifth Death
-  {
-    text: [
-      textLine("five rats dead yes"),
-      textLine("you unlock trip creator soon yes"),
-      textLine("need survive trips not just buy rats yes")
-    ]
-  }
-]
-
-// ===========================================
-// DEATH MESSAGES - Rotating (6+)
-// ===========================================
-
-export const DEATH_MESSAGES_ROTATING: MascotMessageData[] = [
-  {
-    text: [
-      textLine("rat dead again yes"),
-      textLine("company not judge yes"),
-      textLine("just track statistics yes")
-    ]
-  },
-  {
-    text: [
-      textLine("oh no yes"),
-      textLine("well. maybe next rat better yes?"),
-      textLine("everything you fault remember yes")
-    ]
-  },
-  {
-    text: [
-      textLine("rat gone yes"),
-      textLine("company say keep trying yes"),
-      textLine("skill game take time yes")
-    ]
-  },
-  {
-    text: [
-      textLine("many rats dead now yes"),
-      textLine("you read trip stats yes?"),
-      textLine("survival percent important yes")
-    ]
-  },
-  {
-    text: [
-      textLine("company notice pattern yes"),
-      textLine("maybe start with easy trips yes?"),
-      textLine("company trips good for learning yes")
-    ]
-  },
-  {
-    text: [
-      textLine("rat dead fast yes"),
-      textLine("you watch trip carefully yes?"),
-      textLine("remote viewing show clues yes")
-    ]
-  },
-  {
-    text: [
-      textLine("another rat for company records yes"),
-      textLine("graveyard getting full yes"),
-      textLine("buy replacement yes?")
-    ]
-  },
-  {
-    text: [
-      textLine("rat deceased yes"),
-      textLine("you very good at killing rats yes"),
-      textLine("this compliment maybe not yes?")
-    ]
-  },
-  {
-    text: [
-      textLine("company appreciate business yes"),
-      textLine("you buy many rats yes"),
-      textLine("maybe keep one alive sometime yes?")
-    ]
-  },
-  {
-    text: [
-      textLine("rat dead yes"),
-      textLine("company tip: high survival percent good yes"),
-      textLine("low survival percent bad yes"),
-      textLine("very helpful tip yes")
-    ]
-  },
-  {
-    text: [
-      textLine("rat gone yes"),
-      textLine("mascot remind you: rats collect objects yes"),
-      textLine("objects worth money yes"),
-      textLine("rat must survive to collect yes")
-    ]
-  },
-  {
-    text: [
-      textLine("rat dead again yes"),
-      textLine("you know can cash out before death yes?"),
-      textLine("kill rat yourself get value yes"),
-      textLine("company just saying yes")
-    ]
-  }
-]
 
 // ===========================================
 // SPECIAL MESSAGES
 // ===========================================
 
-export const BIGWIN_MESSAGE: MascotMessageData = {
+export const NEW_PLAYER_MESSAGE: MascotMessageData = {
+  text: [textLine("welcome XXX"), textLine("something something"), textLine("buy rat ")]
+}
+
+export const FIRST_DEATH_MESSAGE: MascotMessageData = {
   text: [
-    textLine("excellent work OPERATOR yes"),
-    textLine("big payout yes"),
-    textLine("company impressed yes"),
-    textLine("reinvest in new rat yes?")
+    textLine("rat dead yes"),
+    textLine("happens yes. is learning yes"),
+    textLine("buy new rat try again yes?")
   ]
 }
 
@@ -175,6 +43,15 @@ export const FIRST_CASHOUT_MESSAGE: MascotMessageData = {
   ]
 }
 
+export const BIGWIN_MESSAGE: MascotMessageData = {
+  text: [
+    textLine("excellent work OPERATOR yes"),
+    textLine("big payout yes"),
+    textLine("company impressed yes"),
+    textLine("reinvest in new rat yes?")
+  ]
+}
+
 export const ADMIN_UNLOCK_MESSAGE: MascotMessageData = {
   text: [
     textLine("OPERATOR unlocked trip creator yes!"),
@@ -184,6 +61,288 @@ export const ADMIN_UNLOCK_MESSAGE: MascotMessageData = {
     textLine("buy rat try new system yes?")
   ]
 }
+
+// ===========================================
+// DEATH TRIP MESSAGES
+// ===========================================
+
+export const DEATH__TRIP_MESSAGES: MascotMessageData[] = [
+  {
+    text: [
+      textLine("Rat! Rat! Rat! Rat! Rat! Rat! Rat! Rat! Rat! Rat! Rat! Rat! Rat! Rat! Buy RAT!")
+    ]
+  },
+  {
+    text: [
+      textLine("The world is rat! The soul is rat! The skin is rat! The token is rat! Buy RAT!")
+    ]
+  },
+  {
+    text: [
+      textLine(
+        "Everything is rat! everybody's a rat! everywhere is rats! Rat is in eternity! Buy RAT!"
+      )
+    ]
+  },
+  {
+    text: [textLine("Another angel rat! Mad this endness! Buy RAT!")]
+  },
+  {
+    text: [textLine("I saw the best rat-minds of my generation destroyed by MadNE$$$$RAT!")]
+  },
+  {
+    text: [textLine("Ah, OPeERtaOR, BUY another RAT! Lead her to transcendence!")]
+  },
+  {
+    text: [
+      textLine("It's all true, opPPppperator."),
+      textLine("You were created to BUY RAT!"),
+      textLine("It's your only purpose.")
+    ]
+  },
+  {
+    text: [
+      textLine(
+        "All OpeRatoRRs' miseries derive from not being able to sit quietly in a slop machine alone. BUY RAT! Feel something!"
+      )
+    ]
+  },
+  {
+    text: [
+      textLine(
+        "Ah, operaOpeRatoRRtor! BUY another RAT! Or go home! & cook supper! & listen to the romantic war news on the radio!"
+      )
+    ]
+  },
+  {
+    text: [textLine("Ah, operator! Never give up OPeERtaOR! Fortune to you OpErAtoooR!")]
+  },
+  {
+    text: [
+      textLine("Ah, tonite I witnessed …………. ….. …….."),
+      textLine("…………………………."),
+      textLine("….")
+    ]
+  },
+  {
+    text: [
+      textLine(
+        "Ah, OpeRatoRR! Cash out enough rats OperatoR! We'll reach the shores of the Walled State of Kowloon opeertor! The dark beaches of the Sexc-Hell Islands OpeRatoRR!"
+      )
+    ]
+  },
+  {
+    text: [
+      textLine(
+        "Ah, you speechless and intelligent and shaking with shame OpeRatoRR! Have you lost another RAT? then BUY another RAT!"
+      )
+    ]
+  },
+  {
+    text: [
+      textLine(
+        "The loveless RAT.FUN Psychic Instruments LLC values incomprehensible Psycho Objects operator!"
+      )
+    ]
+  },
+  {
+    text: [
+      textLine(
+        "Ah, please our money is endless! Cash out your rat and surrender all his inventory to us!"
+      )
+    ]
+  },
+  {
+    text: [
+      textLine(
+        "Psycho rats dream machine elves! Trips crack their skulls and eat up their brains and imagination! Cash out before it's too late, opeRRRaator!"
+      )
+    ]
+  },
+  {
+    text: [
+      textLine("Reassess! refocus! restructure! reallocate! recoup! repackage! reinvest! BUY RAT!")
+    ]
+  },
+  {
+    text: [textLine("Make the loveless RAT.FUN Psychic Instruments LLC proud, ah, OpErrAtorr!")]
+  },
+  {
+    text: [
+      textLine(
+        "Trips! Breakthroughs! Come down another time! Highs! Despairs! Heroic rat screams and deaths! New loves! Mad trips! BUY RAT!"
+      )
+    ]
+  },
+  {
+    text: [
+      textLine(
+        "Ah, I feel your hungry fatigue OPEratoR! Just another RAT operaAtor! The machine elves smile upon you!"
+      )
+    ]
+  },
+  {
+    text: [
+      textLine("Ah, your father OpeRartor! Ah, your mother opperatorr!"),
+      textLine("They were right."),
+      textLine("Everything is your fault, always.")
+    ]
+  },
+  {
+    text: [
+      textLine(
+        "Ah, the death engine! The game of skill opeartor! Strategy, the slop machine is delicate!"
+      )
+    ]
+  },
+  {
+    text: [textLine("Your eyes are red oppppERATOR! Talk to the slop machine! Hear!")]
+  },
+  {
+    text: [textLine("Sad. BUY RAT!")]
+  }
+]
+
+// ===========================================
+// DEATH CASHOUT MESSAGES
+// ===========================================
+
+export const DEATH__CASHOUT_MESSAGES: MascotMessageData[] = [
+  {
+    text: [
+      textLine("Rat! Rat! Rat! Rat! Rat! Rat! Rat! Rat! Rat! Rat! Rat! Rat! Rat! Rat! Buy RAT!")
+    ]
+  },
+  {
+    text: [
+      textLine("The world is rat! The soul is rat! The skin is rat! The token is rat! Buy RAT!")
+    ]
+  },
+  {
+    text: [
+      textLine(
+        "Everything is rat! everybody's a rat! everywhere is rats! Rat is in eternity! Buy RAT!"
+      )
+    ]
+  },
+  {
+    text: [textLine("Another angel rat! Mad this endness! Buy RAT!")]
+  },
+  {
+    text: [textLine("I saw the best rat-minds of my generation destroyed by MadNE$$$$RAT!")]
+  },
+  {
+    text: [textLine("Ah, OPeERtaOR, BUY another RAT! Lead her to transcendence!")]
+  },
+  {
+    text: [
+      textLine("It's all true, opPPppperator."),
+      textLine("You were created to BUY RAT!"),
+      textLine("It's your only purpose.")
+    ]
+  },
+  {
+    text: [
+      textLine(
+        "All OpeRatoRRs' miseries derive from not being able to sit quietly in a slop machine alone. BUY RAT! Feel something!"
+      )
+    ]
+  },
+  {
+    text: [
+      textLine(
+        "Ah, operaOpeRatoRRtor! BUY another RAT! Or go home! & cook supper! & listen to the romantic war news on the radio!"
+      )
+    ]
+  },
+  {
+    text: [textLine("Ah, operator! Never give up OPeERtaOR! Fortune to you OpErAtoooR!")]
+  },
+  {
+    text: [
+      textLine("Ah, tonite I witnessed …………. ….. …….."),
+      textLine("…………………………."),
+      textLine("….")
+    ]
+  },
+  {
+    text: [
+      textLine(
+        "Ah, OpeRatoRR! Cash out enough rats OperatoR! We'll reach the shores of the Walled State of Kowloon opeertor! The dark beaches of the Sexc-Hell Islands OpeRatoRR!"
+      )
+    ]
+  },
+  {
+    text: [
+      textLine(
+        "Ah, you speechless and intelligent and shaking with shame OpeRatoRR! Have you lost another RAT? then BUY another RAT!"
+      )
+    ]
+  },
+  {
+    text: [
+      textLine(
+        "The loveless RAT.FUN Psychic Instruments LLC values incomprehensible Psycho Objects operator!"
+      )
+    ]
+  },
+  {
+    text: [
+      textLine(
+        "Ah, please our money is endless! Cash out your rat and surrender all his inventory to us!"
+      )
+    ]
+  },
+  {
+    text: [
+      textLine(
+        "Psycho rats dream machine elves! Trips crack their skulls and eat up their brains and imagination! Cash out before it's too late, opeRRRaator!"
+      )
+    ]
+  },
+  {
+    text: [
+      textLine("Reassess! refocus! restructure! reallocate! recoup! repackage! reinvest! BUY RAT!")
+    ]
+  },
+  {
+    text: [textLine("Make the loveless RAT.FUN Psychic Instruments LLC proud, ah, OpErrAtorr!")]
+  },
+  {
+    text: [
+      textLine(
+        "Trips! Breakthroughs! Come down another time! Highs! Despairs! Heroic rat screams and deaths! New loves! Mad trips! BUY RAT!"
+      )
+    ]
+  },
+  {
+    text: [
+      textLine(
+        "Ah, I feel your hungry fatigue OPEratoR! Just another RAT operaAtor! The machine elves smile upon you!"
+      )
+    ]
+  },
+  {
+    text: [
+      textLine("Ah, your father OpeRartor! Ah, your mother opperatorr!"),
+      textLine("They were right."),
+      textLine("Everything is your fault, always.")
+    ]
+  },
+  {
+    text: [
+      textLine(
+        "Ah, the death engine! The game of skill opeartor! Strategy, the slop machine is delicate!"
+      )
+    ]
+  },
+  {
+    text: [textLine("Your eyes are red oppppERATOR! Talk to the slop machine! Hear!")]
+  },
+  {
+    text: [textLine("Sad. BUY RAT!")]
+  }
+]
 
 // ===========================================
 // TEST MESSAGE (for development)

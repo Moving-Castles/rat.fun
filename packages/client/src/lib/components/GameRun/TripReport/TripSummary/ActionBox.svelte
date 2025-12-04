@@ -10,8 +10,11 @@
   import { BigButton, RatAvatar } from "$lib/components/Shared"
   import { isPhone, selectedFolderId, phoneActiveGameView } from "$lib/modules/ui/state.svelte"
   import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
-  import { player } from "$lib/modules/state/stores"
-  import { setPendingMascotMessage } from "$lib/modules/ui/mascot-messages"
+  import {
+    setPendingMascotMessage,
+    isFirstDeathShown,
+    setFirstDeathShown
+  } from "$lib/modules/ui/mascot-messages"
 
   let {
     result,
@@ -66,11 +69,13 @@
     resetProcessingState()
 
     if (ratDead) {
-      // Get death count (pastRats includes this death)
-      const deathCount = $player?.pastRats?.length ?? 1
-
-      // Set death message
-      setPendingMascotMessage({ type: "death", deathCount })
+      // Set death message - first death or subsequent
+      if (!isFirstDeathShown()) {
+        setPendingMascotMessage({ type: "first_death" })
+        setFirstDeathShown()
+      } else {
+        setPendingMascotMessage({ type: "death_trip" })
+      }
 
       // Rat died - reset folder selection and frozen state
       selectedFolderId.set("") // Return to folder listing

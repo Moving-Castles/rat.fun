@@ -14,10 +14,32 @@ export function clearPendingMascotMessage() {
 }
 
 // localStorage keys
+const NEW_PLAYER_SHOWN_KEY = "ratfun_new_player_shown"
+const FIRST_DEATH_SHOWN_KEY = "ratfun_first_death_shown"
 const FIRST_CASHOUT_SHOWN_KEY = "ratfun_first_cashout_shown"
 const ADMIN_UNLOCK_SHOWN_KEY = "ratfun_admin_unlock_shown"
 
 // localStorage helpers
+export function isNewPlayerShown(): boolean {
+  if (typeof localStorage === "undefined") return false
+  return localStorage.getItem(NEW_PLAYER_SHOWN_KEY) === "true"
+}
+
+export function setNewPlayerShown() {
+  if (typeof localStorage === "undefined") return
+  localStorage.setItem(NEW_PLAYER_SHOWN_KEY, "true")
+}
+
+export function isFirstDeathShown(): boolean {
+  if (typeof localStorage === "undefined") return false
+  return localStorage.getItem(FIRST_DEATH_SHOWN_KEY) === "true"
+}
+
+export function setFirstDeathShown() {
+  if (typeof localStorage === "undefined") return
+  localStorage.setItem(FIRST_DEATH_SHOWN_KEY, "true")
+}
+
 export function isFirstCashoutShown(): boolean {
   if (typeof localStorage === "undefined") return false
   return localStorage.getItem(FIRST_CASHOUT_SHOWN_KEY) === "true"

@@ -32,10 +32,12 @@
     // Resume erc20 balance listener
     erc20BalanceListenerActive.set(true)
 
-    // Set pending mascot message for first cash out
+    // Set pending mascot message for cash out
     if (!isFirstCashoutShown()) {
       setPendingMascotMessage({ type: "first_cashout" })
       setFirstCashoutShown()
+    } else {
+      setPendingMascotMessage({ type: "death_cashout" })
     }
 
     // RAT_BOX_STATE.LIQUIDATING_RAT -> RAT_BOX_STATE.DEAD_RAT

@@ -5,6 +5,11 @@
   import { BigButton, Mascot } from "$lib/components/Shared"
   import { spawnState, SPAWN_STATE } from "$lib/components/Spawn/state.svelte"
   import { getDoneMascotText } from "./doneMascotText"
+  import {
+    setPendingMascotMessage,
+    isNewPlayerShown,
+    setNewPlayerShown
+  } from "$lib/modules/ui/mascot-messages"
 
   let mascotElement = $state<HTMLDivElement | null>(null)
   let buttonElement = $state<HTMLDivElement | null>(null)
@@ -16,6 +21,13 @@
 
   function handleEnjoy() {
     console.log("[Done] Enjoy button clicked, transitioning to EXIT_FLOW")
+
+    // Set pending mascot message for new player
+    if (!isNewPlayerShown()) {
+      setPendingMascotMessage({ type: "new_player" })
+      setNewPlayerShown()
+    }
+
     spawnState.state.transitionTo(SPAWN_STATE.EXIT_FLOW)
   }
 

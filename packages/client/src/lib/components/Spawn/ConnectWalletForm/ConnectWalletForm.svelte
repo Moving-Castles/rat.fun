@@ -37,7 +37,7 @@
 
   const PREFERRED_WALLET_ORDER = ["metamask", "phantom", "rabby", "coinbase"]
 
-  const buttonText = "I AM OPERATOR"
+  const buttonText = "PROVE OPERATOR’S IDENTITY"
 
   /**
    * Get the sort priority for a connector based on preferred order

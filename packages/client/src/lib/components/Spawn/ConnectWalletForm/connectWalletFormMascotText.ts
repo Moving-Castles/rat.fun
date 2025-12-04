@@ -22,13 +22,5 @@ export const connectWalletFormMascotText: TerminalOutputUnit[] = [
     typeSpeed: 30,
     backgroundColor: "transparent",
     onChar
-  },
-  {
-    type: "text",
-    content: "PROVE OPERATOR’S IDENTITY",
-    color: "black",
-    typeSpeed: 30,
-    backgroundColor: "transparent",
-    onChar
   }
 ]

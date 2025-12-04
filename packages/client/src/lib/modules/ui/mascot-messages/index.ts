@@ -1,7 +1,9 @@
 import type { PendingMascotMessage, MascotMessageData } from "./types"
 import {
-  DEATH_MESSAGES_SEQUENTIAL,
-  DEATH_MESSAGES_ROTATING,
+  NEW_PLAYER_MESSAGE,
+  FIRST_DEATH_MESSAGE,
+  DEATH__TRIP_MESSAGES,
+  DEATH__CASHOUT_MESSAGES,
   BIGWIN_MESSAGE,
   FIRST_CASHOUT_MESSAGE,
   ADMIN_UNLOCK_MESSAGE,
@@ -16,6 +18,10 @@ export {
   pendingMascotMessage,
   setPendingMascotMessage,
   clearPendingMascotMessage,
+  isNewPlayerShown,
+  setNewPlayerShown,
+  isFirstDeathShown,
+  setFirstDeathShown,
   isFirstCashoutShown,
   setFirstCashoutShown,
   isAdminUnlockShown,
@@ -27,8 +33,17 @@ export {
  */
 export function getMascotMessage(pending: PendingMascotMessage): MascotMessageData {
   switch (pending.type) {
-    case "death":
-      return getDeathMessage(pending.deathCount)
+    case "new_player":
+      return NEW_PLAYER_MESSAGE
+
+    case "first_death":
+      return FIRST_DEATH_MESSAGE
+
+    case "death_trip":
+      return getRandomMessage(DEATH__TRIP_MESSAGES)
+
+    case "death_cashout":
+      return getRandomMessage(DEATH__CASHOUT_MESSAGES)
 
     case "bigwin":
       return BIGWIN_MESSAGE
@@ -45,17 +60,9 @@ export function getMascotMessage(pending: PendingMascotMessage): MascotMessageDa
 }
 
 /**
- * Get death message based on death count
- * - Deaths 1-5: Sequential unique messages
- * - Deaths 6+: Rotating messages
+ * Get a random message from an array of messages
  */
-function getDeathMessage(deathCount: number): MascotMessageData {
-  // Deaths 1-5 get unique sequential messages
-  if (deathCount >= 1 && deathCount <= 5) {
-    return DEATH_MESSAGES_SEQUENTIAL[deathCount - 1]
-  }
-
-  // Deaths 6+ get rotating messages based on death count
-  const rotatingIndex = (deathCount - 6) % DEATH_MESSAGES_ROTATING.length
-  return DEATH_MESSAGES_ROTATING[rotatingIndex]
+function getRandomMessage(messages: MascotMessageData[]): MascotMessageData {
+  const index = Math.floor(Math.random() * messages.length)
+  return messages[index]
 }
