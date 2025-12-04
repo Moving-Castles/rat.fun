@@ -29,7 +29,6 @@
   })
 </script>
 
-<div class="debug-badge">INTRODUCTION</div>
 <div class="outer-container">
   <div class="inner-container">
     <div class="mascot-container" bind:this={mascotElement}>
@@ -71,19 +70,5 @@
         height: var(--spawn-button-height);
       }
     }
-  }
-
-  .debug-badge {
-    position: fixed;
-    top: 50px;
-    right: 10px;
-    background: magenta;
-    color: white;
-    padding: 4px 8px;
-    font-size: 10px;
-    font-family: monospace;
-    z-index: 9999;
-    border-radius: 4px;
-    display: none;
   }
 </style>

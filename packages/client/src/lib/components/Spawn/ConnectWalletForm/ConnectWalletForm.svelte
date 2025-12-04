@@ -37,6 +37,8 @@
 
   const PREFERRED_WALLET_ORDER = ["metamask", "phantom", "rabby", "coinbase"]
 
+  const buttonText = "I AM OPERATOR"
+
   /**
    * Get the sort priority for a connector based on preferred order
    * Returns index in preferred list, or high number if not in list
@@ -212,7 +214,6 @@
   })
 </script>
 
-<div class="debug-badge">CONNECT_WALLET</div>
 <div class="outer-container">
   <div class="inner-container">
     <div class="mascot-container" bind:this={mascotElement}>
@@ -223,7 +224,7 @@
       {#if connecting}
         <BigButton text="Connecting..." disabled={true} onclick={() => {}} />
       {:else}
-        <BigButton text="I AM OPERATOR" onclick={handleClick} />
+        <BigButton text={buttonText} onclick={handleClick} />
       {/if}
     </div>
 
@@ -271,19 +272,5 @@
         height: var(--spawn-button-height);
       }
     }
-  }
-
-  .debug-badge {
-    position: fixed;
-    top: 50px;
-    right: 10px;
-    background: magenta;
-    color: white;
-    padding: 4px 8px;
-    font-size: 10px;
-    font-family: monospace;
-    z-index: 9999;
-    border-radius: 4px;
-    display: none;
   }
 </style>

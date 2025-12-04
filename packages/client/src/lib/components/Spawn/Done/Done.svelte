@@ -12,6 +12,7 @@
   const timeline = gsap.timeline()
 
   const mascotText = $derived(getDoneMascotText($player?.name ?? "Operator"))
+  const buttonText = "ENJOY SKILLFULLY"
 
   function handleEnjoy() {
     console.log("[Done] Enjoy button clicked, transitioning to EXIT_FLOW")
@@ -33,7 +34,6 @@
   })
 </script>
 
-<div class="debug-badge">DONE</div>
 <div class="outer-container">
   <div class="inner-container">
     <div class="mascot-container" bind:this={mascotElement}>
@@ -41,26 +41,12 @@
     </div>
 
     <div class="button-container" bind:this={buttonElement}>
-      <BigButton text="ENJOY SKILLFULLY" onclick={handleEnjoy} />
+      <BigButton text={buttonText} onclick={handleEnjoy} />
     </div>
   </div>
 </div>
 
 <style lang="scss">
-  .debug-badge {
-    position: fixed;
-    top: 50px;
-    right: 10px;
-    background: magenta;
-    color: white;
-    padding: 4px 8px;
-    font-size: 10px;
-    font-family: monospace;
-    z-index: 9999;
-    border-radius: 4px;
-    display: none;
-  }
-
   .outer-container {
     display: flex;
     flex-flow: column nowrap;

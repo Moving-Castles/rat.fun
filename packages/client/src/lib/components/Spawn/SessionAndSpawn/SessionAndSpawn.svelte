@@ -7,6 +7,8 @@
   import { spawnState, SPAWN_STATE } from "$lib/components/Spawn/state.svelte"
   import { sessionAndSpawnMascotText } from "./sessionAndSpawnMascotText"
 
+  const buttonText = "EVERYTHING IS MY FAULT"
+
   let name = $state("")
 
   let mascotElement: HTMLDivElement | null = $state(null)
@@ -82,7 +84,6 @@
   })
 </script>
 
-<div class="debug-badge">SESSION_AND_SPAWN</div>
 <div class="outer-container">
   <div class="inner-container">
     <div class="mascot-container" bind:this={mascotElement}>
@@ -105,27 +106,13 @@
         }}
       />
       <div class="button-container">
-        <BigButton text="EVERYTHING IS MY FAULT" onclick={submitForm} disabled={!name} />
+        <BigButton text={buttonText} onclick={submitForm} disabled={!name} />
       </div>
     </div>
   </div>
 </div>
 
 <style lang="scss">
-  .debug-badge {
-    position: fixed;
-    top: 50px;
-    right: 10px;
-    background: magenta;
-    color: white;
-    padding: 4px 8px;
-    font-size: 10px;
-    font-family: monospace;
-    z-index: 9999;
-    border-radius: 4px;
-    display: none;
-  }
-
   .outer-container {
     display: flex;
     flex-flow: column nowrap;

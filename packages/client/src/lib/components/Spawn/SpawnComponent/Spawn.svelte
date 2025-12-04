@@ -87,7 +87,6 @@
   })
 </script>
 
-<div class="debug-badge">SPAWN</div>
 <div class="outer-container">
   <div class="inner-container">
     <!-- MASCOT -->
@@ -122,20 +121,6 @@
 </div>
 
 <style lang="scss">
-  .debug-badge {
-    position: fixed;
-    top: 50px;
-    right: 10px;
-    background: magenta;
-    color: white;
-    padding: 4px 8px;
-    font-size: 10px;
-    font-family: monospace;
-    z-index: 9999;
-    border-radius: 4px;
-    display: none;
-  }
-
   .outer-container {
     display: flex;
     flex-flow: column nowrap;

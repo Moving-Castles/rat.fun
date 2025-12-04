@@ -5,19 +5,18 @@
   import { spawnState, SPAWN_STATE } from "$lib/components/Spawn/state.svelte"
   import { allowanceMascotText } from "./allowanceMascotText"
 
+  const buttonText = "AUTHORIZE REWIRING"
+
   let mascotElement: HTMLDivElement | null = $state(null)
   let buttonElement: HTMLDivElement | null = $state(null)
 
   const timeline = gsap.timeline()
 
   function handleSetAllowance() {
-    console.log("[Allowance] Set allowance button clicked")
     spawnState.state.transitionTo(SPAWN_STATE.ALLOWANCE__LOADING)
   }
 
   onMount(() => {
-    console.log("[Allowance] Component mounted")
-
     if (!mascotElement || !buttonElement) {
       return
     }
@@ -30,7 +29,6 @@
   })
 </script>
 
-<div class="debug-badge">ALLOWANCE</div>
 <div class="outer-container">
   <div class="inner-container">
     <div class="mascot-container" bind:this={mascotElement}>
@@ -38,7 +36,7 @@
     </div>
 
     <div class="button-container" bind:this={buttonElement}>
-      <BigButton text="AUTHORIZE SLOP MACHINE" onclick={handleSetAllowance} />
+      <BigButton text={buttonText} onclick={handleSetAllowance} />
     </div>
   </div>
 </div>
@@ -72,19 +70,5 @@
         height: var(--spawn-button-height);
       }
     }
-  }
-
-  .debug-badge {
-    position: fixed;
-    top: 50px;
-    right: 10px;
-    background: magenta;
-    color: white;
-    padding: 4px 8px;
-    font-size: 10px;
-    font-family: monospace;
-    z-index: 9999;
-    border-radius: 4px;
-    display: none;
   }
 </style>

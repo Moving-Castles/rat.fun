@@ -8,7 +8,7 @@ function onChar() {
 export const connectWalletFormMascotText: TerminalOutputUnit[] = [
   {
     type: "text",
-    content: "good morning operator",
+    content: "Gooooooood morning OPERATOR!",
     typeSpeed: 30,
     color: "black",
     backgroundColor: "transparent",
@@ -16,7 +16,8 @@ export const connectWalletFormMascotText: TerminalOutputUnit[] = [
   },
   {
     type: "text",
-    content: "Welcome to xxxxx a remote viewing slop machine",
+    content:
+      "Before we start we need to verify that you are connecting from one of our allied territories.",
     color: "black",
     typeSpeed: 30,
     backgroundColor: "transparent",
@@ -24,7 +25,7 @@ export const connectWalletFormMascotText: TerminalOutputUnit[] = [
   },
   {
     type: "text",
-    content: "connect wallet to prove operator identity",
+    content: "PROVE OPERATOR’S IDENTITY",
     color: "black",
     typeSpeed: 30,
     backgroundColor: "transparent",

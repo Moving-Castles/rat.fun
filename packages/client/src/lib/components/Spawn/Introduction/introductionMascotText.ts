@@ -1,58 +1,38 @@
 import type { TerminalOutputUnit } from "$lib/modules/terminal-typer/types"
+import { playSound, randomPitch } from "$lib/modules/sound"
+
+function onChar() {
+  playSound({ category: "ratfunUI", id: "chirp", pitch: randomPitch() })
+}
 
 export const introductionMascotText: TerminalOutputUnit[] = [
   {
     type: "text",
-    content: "first time loggin on?",
+    content:
+      "Oh I see you are connecting from our facility within the Walled State of Kowloon, Hong Kong.",
     color: "black",
-    backgroundColor: "transparent"
+    backgroundColor: "transparent",
+    onChar
   },
   {
     type: "text",
-    content: "These are the basics:",
+    content: "One of our finest locations.",
     color: "black",
-    backgroundColor: "transparent"
+    backgroundColor: "transparent",
+    onChar
   },
   {
     type: "text",
-    content: "buy rat",
+    content: "You are operating our new Remote Viewing Slop Machine",
     color: "black",
-    backgroundColor: "transparent"
+    backgroundColor: "transparent",
+    onChar
   },
   {
     type: "text",
-    content: "send to trip",
+    content: "Your job is simple OPERATOR:",
     color: "black",
-    backgroundColor: "transparent"
-  },
-  {
-    type: "text",
-    content: "rat survive or die",
-    color: "black",
-    backgroundColor: "transparent"
-  },
-  {
-    type: "text",
-    content: "get health and objects",
-    color: "black",
-    backgroundColor: "transparent"
-  },
-  {
-    type: "text",
-    content: "cash out value",
-    color: "black",
-    backgroundColor: "transparent"
-  },
-  {
-    type: "text",
-    content: "repeat",
-    color: "black",
-    backgroundColor: "transparent"
-  },
-  {
-    type: "text",
-    content: "do not get attached to rat",
-    color: "black",
-    backgroundColor: "transparent"
+    backgroundColor: "transparent",
+    onChar
   }
 ]

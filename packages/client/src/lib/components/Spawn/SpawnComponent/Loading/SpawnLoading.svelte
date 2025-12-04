@@ -5,10 +5,11 @@
   import { player } from "$lib/modules/state/stores"
   import { waitForPropertyChangeFrom } from "$lib/modules/state/utils"
   import { spawnState, SPAWN_STATE } from "$lib/components/Spawn/state.svelte"
-  import { SmallSpinner, Mascot } from "$lib/components/Shared"
+  import { SmallSpinner } from "$lib/components/Shared"
 
   let error = $state<string | null>(null)
   let spawning = $state(true)
+  let loadingText = $state<string>("Issuing member card")
 
   async function executeSpawn() {
     const name = spawnState.data.playerName
@@ -52,7 +53,6 @@
   })
 </script>
 
-<div class="debug-badge">SPAWN_LOADING</div>
 <div class="outer-container">
   <div class="inner-container">
     {#if error}
@@ -61,7 +61,7 @@
       </div>
     {:else if spawning}
       <div class="message" in:fade={{ duration: 200 }}>
-        Issuing member card
+        {loadingText}
         <SmallSpinner soundOn />
       </div>
     {/if}
@@ -69,20 +69,6 @@
 </div>
 
 <style lang="scss">
-  .debug-badge {
-    position: fixed;
-    top: 50px;
-    right: 10px;
-    background: magenta;
-    color: white;
-    padding: 4px 8px;
-    font-size: 10px;
-    font-family: monospace;
-    z-index: 9999;
-    border-radius: 4px;
-    display: none;
-  }
-
   .outer-container {
     display: flex;
     flex-flow: column nowrap;
