@@ -36,7 +36,7 @@
     </div>
 
     <div class="button-container" bind:this={buttonElement}>
-      <BigButton text="I UNDERSTAND" onclick={onClick} />
+      <BigButton text="I ACCEPT THE DOGMA" onclick={onClick} />
     </div>
   </div>
 </div>

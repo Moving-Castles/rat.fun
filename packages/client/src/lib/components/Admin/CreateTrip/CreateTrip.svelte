@@ -86,8 +86,7 @@
       !selectedFolderId
   )
 
-  const placeholder = `Describe the trip your rat will embark onto.
-  During a trip rats might materialise psycho objects, transferring some of your trip’s tokens to themselves. However, shall a trip be too heroic and kill the rat, you will collect its total value.`
+  const placeholder = `Describe the TRIP your rat will embark onto.\nDuring a TRIP rats might materialise PSYCHO OBJECTS, transferring some of your TRIP’s tokens to themselves.\nHowever, shall a TRIP be too heroic and kill the rat, YOU will collect its total value.`
 
   async function onClick() {
     // Check allowance before proceeding
@@ -362,7 +361,7 @@
     <!-- ACTIONS -->
     <div class="actions">
       <BigButton
-        text="Create trip"
+        text="Create Trip"
         type="create_trip"
         cost={flooredTripCreationCost}
         {disabled}

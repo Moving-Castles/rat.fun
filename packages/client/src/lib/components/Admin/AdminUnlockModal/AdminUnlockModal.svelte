@@ -31,7 +31,7 @@
   <div class="unlock-modal">
     {#if unlockingAdmin || busy.UnlockAdmin.current !== 0}
       <!-- Loading State -->
-      <h2>Unlocking Cashboard</h2>
+      <h2>{UI_STRINGS.unlockAdminLoading}</h2>
       <div class="loading-spinner">
         <SmallSpinner />
       </div>

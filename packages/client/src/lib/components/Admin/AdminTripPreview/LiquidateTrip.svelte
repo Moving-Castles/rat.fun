@@ -3,6 +3,8 @@
   import { blockNumber } from "$lib/modules/network"
   import { busy } from "$lib/modules/action-manager/index.svelte"
   import { BigButton } from "$lib/components/Shared"
+  import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
+  import { playerTrips } from "$lib/modules/state/stores"
 
   let { trip, onclick }: { trip: Trip; onclick: () => void } = $props()
 
@@ -16,9 +18,9 @@
   <div class="action">
     <BigButton
       text={blockUntilUnlock <= 0
-        ? `Liquidate Trip`
-        : `Liquidation unlocked in ${blockUntilUnlock} blocks`}
-      tippyText="Liquidate trip to get the value added to your wallet"
+        ? `CASH OUT TRIP (${trip.balance}${CURRENCY_SYMBOL})`
+        : `CASH OUT unlocked in ${blockUntilUnlock} blocks`}
+      tippyText="Liquidate TRIP to get the value added to your wallet"
       type="danger"
       {onclick}
       disabled={busy.CloseTrip.current !== 0 || blockUntilUnlock > 0}

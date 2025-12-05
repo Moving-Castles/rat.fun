@@ -256,7 +256,7 @@
   const handleKeypress = (e: KeyboardEvent) => {
     e.preventDefault()
 
-    // Only handle keyboard events on main cashboard, not on nested trip view
+    // Only handle keyboard events on main trips lab, not on nested trip view
     if (page.route?.id?.includes("/cashboard/[tripId]")) return
 
     if (!allVisitsData.length) return
@@ -292,7 +292,7 @@
   const handleEventLogSelection = (index: number, tripId: string) => {
     $selectedEvent = index
     // If user is viewing a trip detail page and clicks on the event log,
-    // navigate back to main cashboard
+    // navigate back to main trips lab
     if (page.route?.id?.includes("/cashboard/[tripId]")) {
       goto("/cashboard")
     }
@@ -338,7 +338,7 @@
   })
 
   onDestroy(() => {
-    // Reset all admin views when leaving cashboard
+    // Reset all admin views when leaving trips lab
     phoneActiveAdminView.set("home")
     adminTripsSubView.set("active")
     phoneAdminProfitSubView.set("graph")

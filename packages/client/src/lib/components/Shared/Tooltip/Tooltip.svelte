@@ -9,10 +9,12 @@
     content,
     props = {},
     svg = false,
+    allowHTML = false,
     children
   }: {
     content?: string
     props?: Partial<Props>
+    allowHTML?: boolean
     svg?: boolean
     children: Snippet
   } = $props()
@@ -67,7 +69,7 @@
     content && !$isPhone ? svgTippyAction : noopSvgAction
   )
 
-  let tippyOptions = $derived({ content, ...props })
+  let tippyOptions = $derived({ content, ...props, allowHTML })
 </script>
 
 {#if svg}

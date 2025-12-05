@@ -15,7 +15,8 @@ export const sessionAndSpawnMascotText: TerminalOutputUnit[] = [
   },
   {
     type: "text",
-    content: "Now if you just sign here, you should be able to receive your slop machine pass.",
+    content:
+      "Great! Now if you just sign here, you should be able to receive your slop machine pass.",
     color: "black",
     backgroundColor: "transparent",
     onChar

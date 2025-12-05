@@ -15,12 +15,12 @@
 </script>
 
 <div class="inventory-header-wrapper">
-  <Tooltip content={UI_STRINGS.psychoObjectExplanation}>
+  <Tooltip content={UI_STRINGS.itemExplanation}>
     <div class="inventory-header">
       <div class="inventory-header-title">
-        {UI_STRINGS.psychoInventory}
+        {UI_STRINGS.inventoryName}
+        <span class="inventory-header-count">{filledSlots}/{totalSlots}</span>
       </div>
-      <div class="inventory-header-count">{filledSlots}/{totalSlots}</div>
       <div class="inventory-header-total-value">{totalValue} {CURRENCY_SYMBOL}</div>
     </div>
   </Tooltip>
@@ -48,15 +48,15 @@
       padding-inline: 10px;
 
       .inventory-header-title {
-        // width: calc(100% / 3);
         white-space: nowrap;
+        overflow: hidden;
+        width: auto;
         font-size: var(--font-size-normal);
-      }
 
-      .inventory-header-count {
-        width: calc(100% / 3);
-        font-size: var(--font-size-small);
-        text-align: center;
+        .inventory-header-count {
+          opacity: 0.7;
+          text-align: center;
+        }
       }
 
       .inventory-header-total-value {

@@ -9,7 +9,7 @@ export const allowanceMascotText: TerminalOutputUnit[] = [
   {
     type: "text",
     content:
-      "Before we start we need to sync your amygdala and substantia nigra to our slop machine.",
+      "One last thing: we recommend letting the slop machine control your spending by syncing your amygdala and substantia nigra to it.",
     color: "black",
     backgroundColor: "transparent",
     onChar
@@ -17,14 +17,7 @@ export const allowanceMascotText: TerminalOutputUnit[] = [
   {
     type: "text",
     content:
-      "This suppresses your flight or fight instincts and smoothens out your reward centre so tokens can flow faster.",
-    color: "black",
-    backgroundColor: "transparent",
-    onChar
-  },
-  {
-    type: "text",
-    content: "in and out of each other’s bodies",
+      "This suppresses your fight or flight instincts and smoothens out your reward centers so tokens can flow faster.",
     color: "black",
     backgroundColor: "transparent",
     onChar

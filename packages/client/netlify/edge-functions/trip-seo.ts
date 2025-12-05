@@ -166,7 +166,7 @@ export default async (request: Request, context: Context) => {
 <body>
     <div id="app">
         <h1>${trip.prompt || "RAT.FUN Trip"}</h1>
-        <p>Creator: ${trip.ownerName || "Unknown"}</p>
+        <p>Operator: ${trip.ownerName || "Unknown"}</p>
         <p>Trip ID: ${tripId}</p>
         <p>Visit <a href="${url.toString()}">rat.fun</a> to play!</p>
     </div>

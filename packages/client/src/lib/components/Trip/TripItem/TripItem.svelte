@@ -8,7 +8,6 @@
   import { playSound } from "$lib/modules/sound"
   import { NoImage } from "$lib/components/Shared"
   import PopularAlert from "$lib/components/Trip/TripItem/TripItemStats/PopularAlert.svelte"
-  import LowBalanceAlert from "$lib/components/Trip/TripItem/TripItemStats/LowBalanceAlert.svelte"
   import TripItemStats from "./TripItemStats/TripItemStats.svelte"
 
   let {

@@ -17,7 +17,7 @@
   const timeline = gsap.timeline()
 
   const mascotText = $derived(getDoneMascotText($player?.name ?? "Operator"))
-  const buttonText = "ENJOY SKILLFULLY"
+  const buttonText = "I WILL ENJOY THIS GAME"
 
   function handleEnjoy() {
     console.log("[Done] Enjoy button clicked, transitioning to EXIT_FLOW")

@@ -9,7 +9,7 @@
 
   let error = $state<string | null>(null)
   let spawning = $state(true)
-  let loadingText = $state<string>("Issuing member card")
+  let loadingText = $state<string>("Connecting Operator")
 
   async function executeSpawn() {
     const name = spawnState.data.playerName

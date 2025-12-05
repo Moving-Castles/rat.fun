@@ -5,7 +5,6 @@
   import { TextPlugin } from "gsap/TextPlugin"
   import { terminalTyper } from "$lib/modules/terminal-typer/index"
   import { generateTripSetupOutput } from "./tripSetupOutput"
-  import { playSound } from "$lib/modules/sound"
   import { backgroundMusic } from "$lib/modules/sound/stores"
 
   gsap.registerPlugin(TextPlugin)

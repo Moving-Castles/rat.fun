@@ -28,7 +28,7 @@
   }
 </script>
 
-<Tooltip content={UI_STRINGS.psychoObjectExplanation}>
+<Tooltip content={UI_STRINGS.itemExplanation}>
   <div
     class="inventory-item {getRarityClass(item.value)} index-{index}"
     class:disabled={busy}

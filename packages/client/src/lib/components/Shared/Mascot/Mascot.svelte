@@ -278,6 +278,7 @@
     object-fit: contain;
     opacity: 1;
     pointer-events: none;
+    user-select: none;
 
     .layer {
       position: absolute;

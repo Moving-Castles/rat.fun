@@ -8,21 +8,49 @@ function onChar() {
 export const ruleOverviewMascotText: TerminalOutputUnit[] = [
   {
     type: "text",
-    content: "Before we proceed, let me explain the rules.",
+    content: "Buy one of our organically grown rats with $RAT tokens.",
     color: "black",
     backgroundColor: "transparent",
     onChar
   },
   {
     type: "text",
-    content: "Rule 1: ...",
+    content: "Drug them up to the brim of their skull.",
     color: "black",
     backgroundColor: "transparent",
     onChar
   },
   {
     type: "text",
-    content: "Rule 2: ...",
+    content: "Send them tripping.",
+    color: "black",
+    backgroundColor: "transparent",
+    onChar
+  },
+  {
+    type: "text",
+    content: "Fingercrossed they survive.",
+    color: "black",
+    backgroundColor: "transparent",
+    onChar
+  },
+  {
+    type: "text",
+    content: "Retrieve any PSYCHO OBJECTS (We resell those to various military partners)",
+    color: "black",
+    backgroundColor: "transparent",
+    onChar
+  },
+  {
+    type: "text",
+    content: "Cash out $RAT tokens.",
+    color: "black",
+    backgroundColor: "transparent",
+    onChar
+  },
+  {
+    type: "text",
+    content: "Repeat.",
     color: "black",
     backgroundColor: "transparent",
     onChar

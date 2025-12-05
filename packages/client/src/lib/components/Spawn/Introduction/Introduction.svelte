@@ -11,7 +11,7 @@
   const timeline = gsap.timeline()
 
   const onClick = () => {
-    spawnState.state.transitionTo(SPAWN_STATE.ALLOWANCE)
+    spawnState.state.transitionTo(SPAWN_STATE.RULE_OVERVIEW)
   }
 
   onMount(() => {
@@ -32,11 +32,11 @@
 <div class="outer-container">
   <div class="inner-container">
     <div class="mascot-container" bind:this={mascotElement}>
-      <Mascot text={introductionMascotText} finishTextOnClick={true} />
+      <Mascot text={introductionMascotText1} finishTextOnClick={true} />
     </div>
 
     <div class="button-container" bind:this={buttonElement}>
-      <BigButton text="I WILL NOT GET ATTACHED TO RAT" onclick={onClick} />
+      <BigButton text="EXPLAIN THE RULES" onclick={onClick} />
     </div>
   </div>
 </div>

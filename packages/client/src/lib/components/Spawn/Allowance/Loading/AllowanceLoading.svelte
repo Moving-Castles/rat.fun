@@ -16,7 +16,7 @@
 
   let error = $state<string | null>(null)
 
-  const loadingText = "Setting allowance"
+  const loadingText = "Rewiring in process"
 
   /**
    * Wait for externalAddressesConfig to be populated from chain sync

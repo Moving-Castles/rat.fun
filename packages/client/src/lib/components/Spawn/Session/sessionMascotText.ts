@@ -8,21 +8,14 @@ function onChar() {
 export const sessionMascotText: TerminalOutputUnit[] = [
   {
     type: "text",
-    content: "session setup time",
+    content: "Welcome back operator!",
     color: "black",
     backgroundColor: "transparent",
     onChar
   },
   {
     type: "text",
-    content: "sign once to play fast",
-    color: "black",
-    backgroundColor: "transparent",
-    onChar
-  },
-  {
-    type: "text",
-    content: "no more annoying popups",
+    content: "Retrieve your account below",
     color: "black",
     backgroundColor: "transparent",
     onChar

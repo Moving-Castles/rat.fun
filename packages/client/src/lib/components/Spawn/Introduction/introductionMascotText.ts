@@ -9,28 +9,15 @@ export const introductionMascotText: TerminalOutputUnit[] = [
   {
     type: "text",
     content:
-      "Oh I see you are connecting from our facility within the Walled State of Kowloon, Hong Kong.",
+      "Ah, operator! I see you’re playing this Slop Machine from our facility inside the Walled State of Kowloon, Hong Kong. One of our finest locations.",
     color: "black",
     backgroundColor: "transparent",
     onChar
   },
   {
     type: "text",
-    content: "One of our finest locations.",
-    color: "black",
-    backgroundColor: "transparent",
-    onChar
-  },
-  {
-    type: "text",
-    content: "You are operating our new Remote Viewing Slop Machine",
-    color: "black",
-    backgroundColor: "transparent",
-    onChar
-  },
-  {
-    type: "text",
-    content: "Your job is simple OPERATOR:",
+    content:
+      "The CEO of RAT.FUN Psychic Instruments LLC came up with this elaborate economic scheme on one of his most heroic trips. In the absence of a labour market this is your best chance at upward mobility. ",
     color: "black",
     backgroundColor: "transparent",
     onChar

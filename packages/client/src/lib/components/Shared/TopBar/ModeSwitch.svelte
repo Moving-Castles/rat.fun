@@ -24,7 +24,7 @@
 </script>
 
 <div class="mode-switch">
-  <Tooltip content={UI_STRINGS.adminInstruction(500)}>
+  <Tooltip allowHTML content={UI_STRINGS.adminInstruction(500)}>
     <ModeSwitchButton {isAdminView} onclick={isAdminView ? exitAdmin : enterAdmin} />
   </Tooltip>
 </div>

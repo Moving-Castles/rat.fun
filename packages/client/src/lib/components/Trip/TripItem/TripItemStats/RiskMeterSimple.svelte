@@ -1,7 +1,6 @@
 <script lang="ts">
   import { rat } from "$lib/modules/state/stores"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
-  import LowBalanceAlert from "./LowBalanceAlert.svelte"
 
   let { trip, maxValuePerWin }: { trip: Trip; maxValuePerWin: number } = $props()
 
@@ -28,8 +27,8 @@
     const survivalPercentage = Math.round(survivalRate * 100)
 
     let category: string
-    if (survivalRate >= 0.9) {
-      category = "HIGH" // 90%+ survival
+    if (survivalRate >= 0.8) {
+      category = "HIGH" // 80%+ survival
     } else if (survivalRate >= 0.5) {
       category = "MID" // 50-89% survival
     } else if (survivalRate >= 0.1) {
@@ -43,28 +42,40 @@
       category
     }
   }
+
+  const isLowBalance = (trip: Trip, maxValuePerWin: number) => {
+    if (!trip?.balance || !maxValuePerWin) {
+      return false
+    }
+
+    /* ========================================
+     * Currently, low balance is defined as:
+     * - The trip has a balance less than or equal to the max value per win
+     ======================================== */
+    return Number(trip.balance) <= maxValuePerWin
+  }
 </script>
 
+<div class="meta">SURVIVAL RATE</div>
 <div class="meta-data-item survival-meter {survivalData.category}">
   <!-- <Tooltip content={`SURVIVAL`}> -->
   <div class="inner">{displayText}</div>
   <!-- </Tooltip> -->
 </div>
-<div class="meta">SURVIVAL RATE</div>
+
+<div class="meta">MAX REWARD</div>
+<div class="meta-data-item max-win" class:low-balance={isLowBalance(trip, maxValuePerWin)}>
+  <!-- <Tooltip content="MAX WIN"> -->
+  <div class="inner">{maxValuePerWin}{CURRENCY_SYMBOL}</div>
+  <!-- </Tooltip> -->
+</div>
+
+<div class="meta">MAX RISK</div>
 <div class="meta-data-item max-risk">
   <!-- <Tooltip content="ENTRY RISK"> -->
   <div class="inner">{$rat.balance}{CURRENCY_SYMBOL}</div>
   <!-- </Tooltip> -->
 </div>
-<div class="meta">ENTRY RISK</div>
-<div class="meta-data-item max-win">
-  <!-- <Tooltip content="MAX WIN"> -->
-  <div class="inner">{maxValuePerWin}{CURRENCY_SYMBOL}</div>
-  <!-- </Tooltip> -->
-</div>
-<div class="meta">MAX WIN</div>
-
-<LowBalanceAlert {trip} {maxValuePerWin} />
 
 <style lang="scss">
   .meta {
@@ -72,9 +83,9 @@
     color: var(--color-grey-mid);
     margin: 2px 0 5px;
     width: 100%;
-    // padding-bottom: 5px;
-    border-bottom: var(--default-border);
+    margin-bottom: 5px;
   }
+
   .meta-data-item {
     background: rgba(255, 255, 255, 0.4);
     color: var(--background);
@@ -86,38 +97,35 @@
     align-items: center;
     justify-content: center;
     position: relative;
+    margin-bottom: 10px;
+
+    &.low-balance {
+      background: red;
+    }
 
     &.UNCLEAR {
       background: rgba(255, 255, 255, 0.4);
     }
 
+    &.CRITICAL {
+      background: red;
+    }
+
     &.LOW {
-      background: lightgreen;
+      background: pink;
     }
 
     &.MID {
       background: yellow;
     }
 
-    &.HI {
-      background: pink;
-    }
-
-    &.NITEMARE {
-      background: red;
+    &.HIGH {
+      background: lightgreen;
     }
 
     .inner {
       padding: 0;
       // width: 50%;
-    }
-
-    .divider {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      pointer-events: none;
     }
   }
 </style>

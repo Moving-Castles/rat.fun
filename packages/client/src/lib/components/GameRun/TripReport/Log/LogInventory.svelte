@@ -4,6 +4,7 @@
   import { frozenRat } from "$lib/components/GameRun/state.svelte"
   import { items } from "$lib/modules/state/stores"
   import type { TempItem } from "$lib/components/GameRun/types"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
 
   let {
     delay = 0,
@@ -78,7 +79,7 @@
         </div>
       {/each}
     {:else}
-      <div class="empty" bind:this={emptyElement}>No PsychoObjects</div>
+      <div class="empty" bind:this={emptyElement}>{UI_STRINGS.itemsNone}</div>
     {/if}
   </div>
 </div>

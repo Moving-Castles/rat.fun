@@ -9,7 +9,7 @@ export function getDoneMascotText(playerName: string): TerminalOutputUnit[] {
   return [
     {
       type: "text",
-      content: `${playerName}, you are set!`,
+      content: `${playerName}, time to grind!`,
       color: "black",
       backgroundColor: "transparent",
       onChar

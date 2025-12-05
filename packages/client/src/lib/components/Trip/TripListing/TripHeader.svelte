@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
   let {
     title,
     eligibleCount,
@@ -17,7 +18,7 @@
     <span>{title}</span>
     {#if eligibleCount !== undefined && totalCount !== undefined}
       <span class="trips-count">
-        Trips: {eligibleCount} / {totalCount - eligibleCount} locked
+        {UI_STRINGS.trips}: {eligibleCount} / {totalCount - eligibleCount} locked
       </span>
     {/if}
   </div>
