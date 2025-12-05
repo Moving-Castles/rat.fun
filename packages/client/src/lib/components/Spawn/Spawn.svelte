@@ -12,6 +12,7 @@
 
   import {
     Introduction,
+    RuleOverview,
     ConnectWalletForm,
     Allowance,
     AllowanceLoading,
@@ -94,6 +95,8 @@
       <ConnectWalletForm />
     {:else if spawnState.state.current === SPAWN_STATE.INTRODUCTION}
       <Introduction />
+    {:else if spawnState.state.current === SPAWN_STATE.RULE_OVERVIEW}
+      <RuleOverview />
     {:else if spawnState.state.current === SPAWN_STATE.ALLOWANCE}
       <Allowance />
     {:else if spawnState.state.current === SPAWN_STATE.ALLOWANCE__LOADING}

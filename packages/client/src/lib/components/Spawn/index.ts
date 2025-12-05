@@ -1,5 +1,6 @@
 export { default as Spawn } from "./Spawn.svelte"
 export { default as Introduction } from "./Introduction/Introduction.svelte"
+export { default as RuleOverview } from "./RuleOverview/RuleOverview.svelte"
 export { default as ConnectWalletForm } from "./ConnectWalletForm/ConnectWalletForm.svelte"
 export { default as Allowance } from "./Allowance/Allowance.svelte"
 export { default as AllowanceLoading } from "./Allowance/Loading/AllowanceLoading.svelte"
