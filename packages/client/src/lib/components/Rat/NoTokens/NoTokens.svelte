@@ -70,7 +70,7 @@
       font-size: var(--font-size-normal);
       font-family: var(--typewriter-font-stack);
       color: black;
-      background: orangered;
+      background: white;
       padding: 10px;
     }
 
@@ -78,8 +78,9 @@
       font-size: var(--font-size-normal);
       font-family: var(--typewriter-font-stack);
       color: black;
-      background: orangered;
+      background: red;
       padding: 10px;
+      width: 50%;
     }
     .button-container {
       position: absolute;

@@ -13,8 +13,6 @@
   import { blockNumber } from "$lib/modules/network"
   import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
-  import PopularAlert from "$lib/components/Trip/TripItem/TripItemStats/PopularAlert.svelte"
-  import LowBalanceAlert from "$lib/components/Trip/TripItem/TripItemStats/LowBalanceAlert.svelte"
 
   let { trip, tripId }: { trip: Trip; tripId?: Hex } = $props()
 

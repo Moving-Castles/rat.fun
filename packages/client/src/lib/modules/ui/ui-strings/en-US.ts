@@ -203,7 +203,7 @@ export const enUS = {
   unknown: "unknown",
   valueLabel: "VALUE",
   visits: "Visits",
-  waitForTokens: "🫵YOU🫵 do not have $RAT tokens. 🫵YOU🫵 will come back later.",
+  waitForTokens: "🫵YOU🫵 do not have $RAT tokens. 🫵YOU🫵 will come back on tuesday.",
   waitBlocks: (blocks: number): string => `Wait ${blocks} blocks`,
   walletType: "Wallet Type",
   worldAddress: "World address",

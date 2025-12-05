@@ -1,7 +1,6 @@
 <script lang="ts">
   import { rat } from "$lib/modules/state/stores"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
-  import LowBalanceAlert from "./LowBalanceAlert.svelte"
 
   let { trip, maxValuePerWin }: { trip: Trip; maxValuePerWin: number } = $props()
 
@@ -43,6 +42,18 @@
       category
     }
   }
+
+  const isLowBalance = (trip: Trip, maxValuePerWin: number) => {
+    if (!trip?.balance || !maxValuePerWin) {
+      return false
+    }
+
+    /* ========================================
+     * Currently, low balance is defined as:
+     * - The trip has a balance less than or equal to the max value per win
+     ======================================== */
+    return Number(trip.balance) <= maxValuePerWin
+  }
 </script>
 
 <div class="meta">SURVIVAL RATE</div>
@@ -53,7 +64,7 @@
 </div>
 
 <div class="meta">MAX WIN</div>
-<div class="meta-data-item max-win">
+<div class="meta-data-item max-win" class:low-balance={isLowBalance(trip, maxValuePerWin)}>
   <!-- <Tooltip content="MAX WIN"> -->
   <div class="inner">{maxValuePerWin}{CURRENCY_SYMBOL}</div>
   <!-- </Tooltip> -->
@@ -65,8 +76,6 @@
   <div class="inner">{$rat.balance}{CURRENCY_SYMBOL}</div>
   <!-- </Tooltip> -->
 </div>
-
-<LowBalanceAlert {trip} {maxValuePerWin} />
 
 <style lang="scss">
   .meta {
@@ -89,6 +98,10 @@
     justify-content: center;
     position: relative;
     margin-bottom: 10px;
+
+    &.low-balance {
+      background: red;
+    }
 
     &.UNCLEAR {
       background: rgba(255, 255, 255, 0.4);
