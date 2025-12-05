@@ -122,7 +122,6 @@
 
   .amount {
     font-size: 24px;
-    font-weight: 600;
     color: white;
     padding-top: 10px;
     padding-bottom: 10px;

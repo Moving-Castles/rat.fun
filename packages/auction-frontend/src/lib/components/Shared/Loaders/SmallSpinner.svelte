@@ -27,6 +27,6 @@
 <style>
   .spinner {
     display: inline-block;
-    font-family: monospace;
+    font-family: var(--special-font-stack);
   }
 </style>

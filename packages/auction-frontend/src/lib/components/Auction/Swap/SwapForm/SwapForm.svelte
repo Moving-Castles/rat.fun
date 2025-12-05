@@ -223,9 +223,7 @@
     display: flex;
     flex-flow: column nowrap;
     gap: 20px;
-    padding: 24px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0;
     min-width: 400px;
     margin-bottom: 20px;
     width: 100%;
@@ -234,11 +232,6 @@
   .current-price {
     font-size: 14px;
     color: rgba(255, 255, 255, 0.8);
-
-    .price {
-      font-weight: 600;
-      font-family: monospace;
-    }
   }
 
   .inputs-section {
@@ -276,6 +269,8 @@
 
     select {
       cursor: pointer;
+      font-family: var(--typewriter-font-stack);
+      padding: 10px 6px;
 
       option {
         background: #1a1a1a;
@@ -327,7 +322,6 @@
       border: 1px solid rgba(255, 255, 255, 0.2);
       color: rgba(255, 255, 255, 0.8);
       font-size: 11px;
-      font-weight: 600;
       padding: 2px 8px;
       cursor: pointer;
       transition: all 0.2s;
@@ -356,7 +350,6 @@
 
     strong {
       color: white;
-      font-weight: 600;
     }
   }
 </style>

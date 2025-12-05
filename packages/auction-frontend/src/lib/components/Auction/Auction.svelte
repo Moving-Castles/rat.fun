@@ -7,6 +7,7 @@
   import type { PublicClient } from "drawbridge"
   import type { Hex } from "viem"
   import { publicClient, networkConfig } from "$lib/network"
+  import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
   import { AUCTION_STATE, auctionState } from "$lib/components/Auction/state.svelte"
   import { userAddress } from "$lib/modules/drawbridge"
   import { initBalanceListeners } from "$lib/modules/balances"
@@ -74,6 +75,9 @@
   })
 
   onMount(async () => {
+    // Enable clouds background shader
+    shaderManager.setShader("clouds", true)
+
     // Reset state to INIT
     auctionState.state.reset()
 
@@ -159,7 +163,6 @@
     color: white;
     text-align: center;
     padding: 8px;
-    font-weight: bold;
     font-size: 20px;
     letter-spacing: 2px;
     z-index: 9999;

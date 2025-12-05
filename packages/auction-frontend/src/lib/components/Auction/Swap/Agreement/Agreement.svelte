@@ -118,7 +118,6 @@
     a {
       color: var(--color-alert-priority);
       text-decoration: underline;
-      font-weight: bold;
 
       &:hover {
         color: var(--color-alert-priority-light);

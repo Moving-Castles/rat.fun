@@ -135,7 +135,6 @@
     h2 {
       margin: 0;
       font-size: 24px;
-      font-weight: 600;
       color: white;
       font-weight: normal;
     }
@@ -174,7 +173,6 @@
 
       .value {
         font-size: 18px;
-        font-weight: 600;
       }
     }
 
