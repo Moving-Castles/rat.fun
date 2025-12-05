@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { SmallButton } from "$lib/components/Shared"
   import type { TutorialStep } from "./types"
   import { rat } from "$lib/modules/state/stores"
 
@@ -13,30 +14,39 @@
 
 {#if step === 1}
   <div class="tutorial-box">
-    <p>This is <span class="highlight">{$rat?.name ?? "your rat"}</span>, it has 100 health.</p>
-    <p>Every trip risk rat death</p>
-    <p class="warning">Rat die = lose everything</p>
-    <button class="tutorial-btn" onclick={onNext}>NEXT</button>
+    <p>This is <span class="highlight">{$rat?.name ?? "your rat"}</span></p>
+    <p>It has 100 health.</p>
+    <p>Every trip risks rat death</p>
+    <p>Rat die = lose everything</p>
+    <div class="tutorial-btn-container">
+      <SmallButton text="NEXT" onclick={onNext} />
+    </div>
   </div>
 {:else if step === 2}
   <div class="tutorial-box">
     <p>Rat enter trips. Trips can give max reward in health and objects.</p>
     <p><span class="highlight">Company trips</span> good start.</p>
-    <button class="tutorial-btn" onclick={onNext}>NEXT</button>
+    <div class="tutorial-btn-container">
+      <SmallButton text="NEXT" onclick={onNext} />
+    </div>
   </div>
 {:else if step === 3}
   <div class="tutorial-box">
     <p>Rat collect objects from trips</p>
     <p>Objects worth money. Objects help rat in future trips</p>
-    <button class="tutorial-btn" onclick={onNext}>NEXT</button>
+    <div class="tutorial-btn-container">
+      <SmallButton text="NEXT" onclick={onNext} />
+    </div>
   </div>
 {:else if step === 4}
   <div class="tutorial-box">
     <p>Once rat has high value from health and objects</p>
     <p class="action">Kill rat</p>
     <p>Company pay you value equivalent</p>
-    <p class="warning">Everything your fault, OPERATOR</p>
-    <button class="tutorial-btn" onclick={onNext}>BEGIN OPERATIONS</button>
+    <p class="warning">Everything is your fault, OPERATOR</p>
+    <div class="tutorial-btn-container">
+      <SmallButton text="BEGIN OPERATIONS" onclick={onNext} />
+    </div>
   </div>
 {/if}
 
@@ -69,19 +79,8 @@
     }
   }
 
-  .tutorial-btn {
-    margin-top: 15px;
-    padding: 10px 20px;
-    background: black;
-    color: white;
-    border: none;
-    font-family: var(--special-font-stack);
-    font-size: 16px;
-    cursor: pointer;
-    width: 100%;
-
-    &:hover {
-      background: #333;
-    }
+  .tutorial-btn-container {
+    margin-top: 10px;
+    height: 40px;
   }
 </style>

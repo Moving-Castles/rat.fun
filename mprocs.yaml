@@ -20,9 +20,9 @@ procs:
   server:
     cwd: packages/server
     shell: pnpm dev
-  common:
-    cwd: packages/common
-    shell: pnpm dev
+  # common:
+  #   cwd: packages/common
+  #   shell: pnpm dev
   # websocket-server:
   #   cwd: packages/websocket-server
   #   shell: pnpm dev

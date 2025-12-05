@@ -180,32 +180,9 @@ button {
   padding: 2px;
 }
 
-.border-warning {
-  border-right: 12px solid;
-  border-image-slice: 6;
-
-  border-image-source: repeating-linear-gradient(-45deg, #111, #111 10px, #333 10px, #333 20px);
-}
-
-.warning {
-  border: none;
-  background: repeating-linear-gradient(45deg, #f0d000, #f0d000 20px, #bda400 20px, #bda400 40px);
-}
-
 .danger {
   border: none;
   background: repeating-linear-gradient(45deg, #cc0000, #cc0000 20px, #9e0000 20px, #9e0000 40px);
-}
-.warning-mute {
-  color: var(--foreground);
-  border: none;
-  background: repeating-linear-gradient(45deg, black, black 20px, #222 20px, #222 40px);
-}
-
-.warning-mute-inverse {
-  color: var(--foreground);
-  border: none;
-  background: repeating-linear-gradient(-45deg, black, black 20px, #222 20px, #222 40px);
 }
 
 .tippy-content {

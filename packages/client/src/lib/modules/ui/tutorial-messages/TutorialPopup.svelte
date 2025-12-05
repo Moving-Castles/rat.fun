@@ -5,6 +5,7 @@
   import { tutorialActive, tutorialStep, nextStep } from "./store"
   import { TUTORIAL_STEPS } from "./steps"
   import TutorialContent from "./TutorialContent.svelte"
+  import TutorialOverlay from "./TutorialOverlay.svelte"
 
   let tippyInstance: Instance | null = null
   let mountedComponent: Record<string, unknown> | null = null
@@ -60,9 +61,7 @@
       arrow: true,
       showOnCreate: true,
       appendTo: document.body,
-      onClickOutside: () => {
-        // Prevent closing on outside click - do nothing
-      }
+      hideOnClick: false
     })
 
     // Add highlight to target
@@ -71,3 +70,5 @@
 
   onDestroy(cleanup)
 </script>
+
+<TutorialOverlay />
