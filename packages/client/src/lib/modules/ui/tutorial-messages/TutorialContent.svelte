@@ -1,7 +1,6 @@
 <script lang="ts">
   import { SmallButton } from "$lib/components/Shared"
   import type { TutorialStep } from "./types"
-  import { rat } from "$lib/modules/state/stores"
 
   let {
     step,
@@ -14,38 +13,48 @@
 
 {#if step === 1}
   <div class="tutorial-box">
-    <p>This is <span class="highlight">{$rat?.name ?? "your rat"}</span></p>
-    <p>It has 100 health.</p>
-    <p>Every trip risks rat death</p>
-    <p>Rat die = lose everything</p>
+    <p>
+      Every <span class="highlight">RAT</span> can store <span class="highlight">HEALTH</span> and
+      <span class="highlight">PSYCHO OBJECTS</span>.
+    </p>
+    <p>Both have commercial value for the company in $RAT tokens.</p>
+    <p class="warning">If your RAT dies, you lose all progress.</p>
     <div class="tutorial-btn-container">
       <SmallButton text="NEXT" onclick={onNext} />
     </div>
   </div>
 {:else if step === 2}
   <div class="tutorial-box">
-    <p>Rat enter trips. Trips can give max reward in health and objects.</p>
-    <p><span class="highlight">Company trips</span> good start.</p>
+    <p>Send your RAT tripping here.</p>
+    <p>
+      <span class="highlight">TRIPS</span> are unregulated psychedelics that might materialize
+      <span class="highlight">PSYCHO OBJECTS</span>.
+    </p>
+    <p>May be lethal to RATS in some (most) cases.</p>
+    <p><span class="highlight">COMPANY TRIPS</span> are a great start for the inexperienced.</p>
     <div class="tutorial-btn-container">
       <SmallButton text="NEXT" onclick={onNext} />
     </div>
   </div>
 {:else if step === 3}
   <div class="tutorial-box">
-    <p>Rat collect objects from trips</p>
-    <p>Objects worth money. Objects help rat in future trips</p>
+    <p>
+      <span class="highlight">PSYCHO OBJECTS</span> can help your RAT survive more intense TRIPS.
+    </p>
+    <p>They have commercial value in $RAT tokens.</p>
     <div class="tutorial-btn-container">
       <SmallButton text="NEXT" onclick={onNext} />
     </div>
   </div>
 {:else if step === 4}
   <div class="tutorial-box">
-    <p>Once rat has high value from health and objects</p>
-    <p class="action">Kill rat</p>
-    <p>Company pay you value equivalent</p>
-    <p class="warning">Everything is your fault, OPERATOR</p>
+    <p>
+      You can <span class="highlight">CASH OUT</span> at any moment, converting your RAT and PSYCHO OBJECTS
+      in $RAT tokens.
+    </p>
+    <p>Minus of course a small corporate tax.</p>
     <div class="tutorial-btn-container">
-      <SmallButton text="BEGIN OPERATIONS" onclick={onNext} />
+      <SmallButton text="I'M READY" onclick={onNext} />
     </div>
   </div>
 {/if}
@@ -53,9 +62,10 @@
 <style lang="scss">
   .tutorial-box {
     font-family: var(--special-font-stack);
-    font-size: 18px;
+    font-size: var(--font-size-large);
     padding: 15px;
-    max-width: 320px;
+    width: 100%;
+    line-height: 1.2em;
 
     p {
       margin: 0 0 10px 0;
