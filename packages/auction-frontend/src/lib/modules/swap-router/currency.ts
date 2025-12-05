@@ -1,4 +1,5 @@
-import { AuctionParams, getPoolKey } from "doppler"
+import type { AuctionParams } from "doppler"
+import { getPoolKey } from "doppler"
 import { encodePacked, Hex } from "viem"
 
 export interface CurrencyData {
@@ -11,7 +12,7 @@ export interface CurrencyData {
 // Mainnet-only addresses
 export const ratRouterAddress: Hex = "0x0dAC1415e9DB2917E4Db14b27961378b7DDfD19B"
 
-const eurcCurrency: CurrencyData = {
+export const eurcCurrency: CurrencyData = {
   address: "0x60a3e35cc302bfa44cb288bc5a4f316fdb1adb42",
   decimals: 6,
   symbol: "EURC"
@@ -29,19 +30,19 @@ export const wethCurrency: CurrencyData = {
   symbol: "ETH",
   isNative: true // ETH is native, we use WETH address for swaps but fetch native balance
 }
-
-// TODO: this is FAKERAT, replace with real token address
-export const ratCurrency: CurrencyData = {
-  address: "0xf2DD384662411A21259ab17038574289091F2D41",
-  decimals: 18,
-  symbol: "$RAT"
-}
-
 // Available currencies for swap (user can select from these)
 export const availableCurrencies: CurrencyData[] = [wethCurrency, usdcCurrency]
 
-// All tracked currencies (for balance display in WalletInfo)
-export const trackedCurrencies: CurrencyData[] = [usdcCurrency, wethCurrency, ratCurrency]
+/**
+ * Derive the token currency from auction params
+ */
+export function getTokenCurrency(auctionParams: AuctionParams): CurrencyData {
+  return {
+    address: auctionParams.token.address,
+    decimals: auctionParams.token.decimals,
+    symbol: auctionParams.token.symbol
+  }
+}
 
 const aerodromePaths: Record<Hex, [number, Hex][]> = {
   [usdcCurrency.address]: [[50, eurcCurrency.address]],

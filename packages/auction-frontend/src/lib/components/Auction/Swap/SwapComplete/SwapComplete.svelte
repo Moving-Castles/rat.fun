@@ -111,7 +111,6 @@
     gap: 24px;
     padding: 32px;
     background: rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
     border: 1px solid rgba(0, 255, 0, 0.3);
     min-width: 400px;
     animation: slideIn 0.3s ease-out;
@@ -160,7 +159,6 @@
     gap: 12px;
     padding: 20px;
     background: rgba(0, 0, 0, 0.3);
-    border-radius: 8px;
   }
 
   .receipt-row {

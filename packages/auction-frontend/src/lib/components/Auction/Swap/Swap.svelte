@@ -5,7 +5,8 @@
     CustomQuoter,
     balanceOf,
     buyLimitSpentAmount,
-    buyLimitGetCountryCode
+    buyLimitGetCountryCode,
+    tickToPriceWithParams
   } from "doppler"
   import { userAddress } from "$lib/modules/drawbridge"
   import { publicClient as publicClientStore, networkConfig } from "$lib/network"
@@ -13,10 +14,14 @@
   import { asPublicClient } from "$lib/utils/clientAdapter"
   import { swapState, SWAP_STATE } from "./state.svelte"
   import { tokenBalances } from "$lib/modules/balances"
-  import { wethCurrency, usdcCurrency } from "$lib/modules/swap-router"
+  import {
+    wethCurrency,
+    usdcCurrency,
+    getEurcToUsdcRate,
+    decodeQuoterError
+  } from "$lib/modules/swap-router"
 
   import { SwapForm, Agreement, SignAndSwap, SwapComplete } from "./index"
-  import DebugPanel from "./DebugPanel.svelte"
 
   let {
     auctionParams
@@ -105,10 +110,43 @@
 
     console.log("[Swap] quoter:", quoter)
 
-    // 3. Early return if no wallet
+    // 3. Fetch EURC/USDC rate and current price (no wallet required)
+    try {
+      const rate = await getEurcToUsdcRate()
+      swapState.data.setEurcToUsdcRate(rate)
+      console.log("[Swap] EURC/USDC rate:", rate)
+
+      // Try to get current price by quoting, fall back to tick-based calculation
+      let priceInEurc: number
+
+      try {
+        // Quote how much EURC needed to buy 1 RAT
+        const oneRat = 10n ** BigInt(auctionParams.token.decimals)
+        console.log("[Swap] Quoting for oneRat:", oneRat.toString())
+        const quoteResult = await quoter.quoteExactOutputV4(oneRat, true)
+        console.log("[Swap] Quote result:", quoteResult)
+        priceInEurc = Number(quoteResult.formattedAmount)
+      } catch (quoteError) {
+        // Quote failed (auction may not have started), use starting tick price
+        console.error(
+          "[Swap] Quote failed, using starting tick price:",
+          decodeQuoterError(quoteError)
+        )
+        priceInEurc = tickToPriceWithParams(auctionParams.startingTick, auctionParams)
+        console.log("[Swap] Starting tick price:", priceInEurc, "EURC per RAT")
+      }
+
+      const priceInUsdc = priceInEurc * rate
+      swapState.data.setCurrentPriceUsdc(priceInUsdc)
+      console.log("[Swap] Current price:", priceInUsdc, "USDC per RAT (EURC:", priceInEurc, ")")
+    } catch (error) {
+      console.error("[Swap] Error fetching rate/price:", error)
+    }
+
+    // 4. Early return if no wallet
     if (!$userAddress) return
 
-    // 4. Load user-specific data
+    // 5. Load user-specific data
 
     // Load spent amount
     const spentAmount = await buyLimitSpentAmount(
@@ -146,13 +184,11 @@
     const tokenBalance = Number(formatUnits(unformattedTokenBalance, auctionParams.token.decimals))
     swapState.data.setTokenBalance(tokenBalance)
 
-    // 5. Determine initial state based on conditions
+    // 6. Determine initial state based on conditions
     const nextState = determineInitialState()
     swapState.state.transitionTo(nextState)
   })
 </script>
-
-<DebugPanel />
 
 <div class="swap-container">
   {#if swapState.state.current === SWAP_STATE.AGREEMENT}

@@ -170,7 +170,6 @@
       background: var(--background);
       color: var(--foreground);
       border: 2px solid var(--foreground);
-      border-radius: 8px;
       padding: 32px;
       max-width: 400px;
       width: 90%;

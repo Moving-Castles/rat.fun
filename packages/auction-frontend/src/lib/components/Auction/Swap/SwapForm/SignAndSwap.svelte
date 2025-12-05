@@ -178,7 +178,7 @@
       isProcessing ||
       !waiveWithdrawal ||
       isAmountExceedsBalance()}
-    text={isProcessing ? processingStep || "Processing..." : "Swap"}
+    text={isProcessing ? processingStep || "Processing..." : "Buy $RAT"}
     onclick={() => {
       signAndSwap()
     }}
@@ -211,7 +211,7 @@
 
   .button-container {
     width: 100%;
-    height: 160px;
+    height: 120px;
     display: flex;
     justify-content: center;
     align-items: center;

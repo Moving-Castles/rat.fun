@@ -2,7 +2,7 @@ import { ERC20BalanceListener, ETHBalanceListener } from "@ratfun/common/erc20"
 import { PublicClient } from "drawbridge"
 import { derived, get, Unsubscriber, writable } from "svelte/store"
 import { formatUnits, Hex } from "viem"
-import { availableCurrencies, CurrencyData, ratCurrency, wethCurrency } from "../swap-router"
+import { availableCurrencies, CurrencyData, wethCurrency } from "../swap-router"
 
 /**
  * Token balance with metadata
@@ -20,9 +20,13 @@ interface CurrencyListener {
 export const balanceListeners = writable<CurrencyListener[]>([])
 
 /**
- * Initialize the balance listeners for all tracked currencies
+ * Initialize the balance listeners for token currency and all available currencies
  */
-export function initBalanceListeners(publicClient: PublicClient, userAddress: Hex) {
+export function initBalanceListeners(
+  publicClient: PublicClient,
+  userAddress: Hex,
+  tokenCurrency: CurrencyData
+) {
   // Stop old listeners
   for (const { listener } of get(balanceListeners)) {
     listener.stop()
@@ -30,9 +34,9 @@ export function initBalanceListeners(publicClient: PublicClient, userAddress: He
 
   publicClient.getBalance({ address: userAddress })
 
-  // Create listeners for ratCurrency and all availableCurrencies
+  // Create listeners for tokenCurrency and all availableCurrencies
   const newBalanceListeners: CurrencyListener[] = []
-  for (const currency of [ratCurrency, ...availableCurrencies]) {
+  for (const currency of [tokenCurrency, ...availableCurrencies]) {
     const balanceListener = {
       // ETH has a different listener class
       listener:

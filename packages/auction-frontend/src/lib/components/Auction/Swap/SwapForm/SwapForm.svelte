@@ -1,20 +1,9 @@
 <script lang="ts">
   import { formatUnits, parseUnits, type Hex } from "viem"
   import { swapState } from "../state.svelte"
-  import SpendLimitProgressBar from "./SpendLimitProgressBar.svelte"
-  import { quoteExactIn, quoteExactOut, availableCurrencies } from "$lib/modules/swap-router"
+  import RemainingAllowance from "./RemainingAllowance.svelte"
+  import { quoteExactIn, availableCurrencies, decodeQuoterError } from "$lib/modules/swap-router"
   import { tokenBalances } from "$lib/modules/balances"
-
-  /**
-   * Parse decimal input string, accepting both . and , as decimal separator
-   */
-  function parseDecimalInput(value: string): number | undefined {
-    if (!value || value.trim() === "") return undefined
-    // Normalize: replace comma with period
-    const normalized = value.replace(",", ".")
-    const parsed = parseFloat(normalized)
-    return isNaN(parsed) ? undefined : parsed
-  }
 
   /**
    * Get balance for a currency address
@@ -114,11 +103,9 @@
       quoteExactIn(fromCurrency.address, auctionParams, amountIn)
         .then(result => {
           swapState.data.setAmountOut(result.amountOutFinal)
-          // TODO eurc for limits
-          console.log("eurc", formatUnits(result.amountInUniswap, auctionParams.numeraire.decimals))
         })
         .catch(error => {
-          console.error("[SwapForm] Quote failed:", error)
+          console.error("[SwapForm] Quote failed:", decodeQuoterError(error))
           swapState.data.setAmountOut(undefined)
         })
     }
@@ -136,44 +123,6 @@
   }
 
   /**
-   * Set token amount and quote numeraire amount (exact output swap)
-   * Clears any existing permits since amounts changed
-   */
-  function setAmountOut(value: number | undefined) {
-    const auctionParams = swapState.data.auctionParams
-    if (!auctionParams) return
-
-    // Mark as exact output mode
-    swapState.data.setIsExactOut(true)
-    // Clear permits when amounts change
-    swapState.data.clearPermit()
-
-    const fromCurrency = swapState.data.fromCurrency
-    if (value === undefined || value === null || !fromCurrency) {
-      swapState.data.setAmountIn(undefined)
-      swapState.data.setAmountOut(undefined)
-    } else if (value === 0) {
-      swapState.data.setAmountIn(undefined)
-      swapState.data.setAmountOut(0n)
-    } else {
-      // Parse display value to bigint with proper decimals
-      const amountOut = parseUnits(value.toString(), auctionParams.token.decimals)
-      swapState.data.setAmountOut(amountOut)
-      // Quote the required input amount
-      quoteExactOut(fromCurrency.address, auctionParams, amountOut)
-        .then(result => {
-          swapState.data.setAmountIn(result.amountInInitial)
-          // TODO eurc for limits
-          console.log("eurc", formatUnits(result.amountInUniswap, auctionParams.numeraire.decimals))
-        })
-        .catch(error => {
-          console.error("[SwapForm] Quote failed:", error)
-          swapState.data.setAmountIn(undefined)
-        })
-    }
-  }
-
-  /**
    * Get in-game rats from token amount
    * Each in-game rat costs 100 $RAT
    * Floored since you can't have fractional rats
@@ -187,50 +136,26 @@
   }
 
   /**
-   * Set in-game rats and calculate $RAT amount needed (exact output swap)
-   * Each in-game rat costs 100 $RAT
-   */
-  function setInGameRats(value: number | undefined) {
-    if (value === undefined || value === null) {
-      setAmountOut(undefined)
-    } else {
-      // Convert rats to $RAT amount (multiply by 100)
-      const ratAmount = value * 100
-      setAmountOut(ratAmount)
-    }
-  }
-
-  /**
-   * Handle amount in input change (accepts both . and , as decimal separator)
+   * Handle amount in input change
    */
   function handleAmountInInput(event: Event) {
     const input = event.target as HTMLInputElement
-    const value = parseDecimalInput(input.value)
-    setAmountIn(value)
-  }
-
-  /**
-   * Handle amount out input change (accepts both . and , as decimal separator)
-   */
-  function handleAmountOutInput(event: Event) {
-    const input = event.target as HTMLInputElement
-    const value = parseDecimalInput(input.value)
-    setAmountOut(value)
-  }
-
-  /**
-   * Handle in-game rats input change
-   */
-  function handleRatsInput(event: Event) {
-    const input = event.target as HTMLInputElement
-    const value = parseDecimalInput(input.value)
-    setInGameRats(value !== undefined ? Math.floor(value) : undefined)
+    const value = parseFloat(input.value)
+    setAmountIn(isNaN(value) ? undefined : value)
   }
 </script>
 
 <div class="swap-form">
-  <!-- Spend limit progress bar -->
-  <SpendLimitProgressBar />
+  <!-- Remaining allowance section -->
+  <RemainingAllowance />
+
+  <!-- Current price display -->
+  {#if swapState.data.currentPriceUsdc !== undefined}
+    <div class="current-price">
+      Current Price: <span class="price">{swapState.data.currentPriceUsdc.toFixed(4)}</span> USDC per
+      $RAT
+    </div>
+  {/if}
 
   {#if swapState.data.auctionParams}
     <!-- Input fields section -->
@@ -282,26 +207,12 @@
         </div>
       </div>
       <div class="input-group">
-        <label for="token-input">$RAT</label>
-        <input
-          id="token-input"
-          type="text"
-          inputmode="decimal"
-          placeholder="0.0"
-          value={getAmountOut() ?? ""}
-          oninput={handleAmountOutInput}
-        />
+        <label for="token-input">$RAT:</label>
+        <input id="token-input" type="text" readonly placeholder="0" value={getAmountOut() ?? ""} />
+        <span class="subtext">minimum guaranteed</span>
       </div>
-      <div class="input-group">
-        <label for="rats-input">In-game Rats (100 $RAT each)</label>
-        <input
-          id="rats-input"
-          type="text"
-          inputmode="numeric"
-          placeholder="0"
-          value={getInGameRats() ?? ""}
-          oninput={handleRatsInput}
-        />
+      <div class="rat-subjects-label">
+        ≈ <strong>{getInGameRats() ?? 0}</strong> Rat Subjects
       </div>
     </div>
   {/if}
@@ -314,11 +225,20 @@
     gap: 20px;
     padding: 24px;
     background: rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     min-width: 400px;
     margin-bottom: 20px;
     width: 100%;
+  }
+
+  .current-price {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.8);
+
+    .price {
+      font-weight: 600;
+      font-family: monospace;
+    }
   }
 
   .inputs-section {
@@ -344,7 +264,6 @@
       font-size: 16px;
       background: rgba(0, 0, 0, 0.3);
       border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 8px;
       color: white;
       outline: none;
       transition: all 0.2s;
@@ -373,18 +292,6 @@
     input {
       &::placeholder {
         color: rgba(255, 255, 255, 0.3);
-      }
-
-      // Remove spinner arrows
-      &::-webkit-outer-spin-button,
-      &::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-      }
-
-      &[type="number"] {
-        appearance: textfield;
-        -moz-appearance: textfield;
       }
 
       &.error {
@@ -418,7 +325,6 @@
     .max-button {
       background: rgba(255, 255, 255, 0.1);
       border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 4px;
       color: rgba(255, 255, 255, 0.8);
       font-size: 11px;
       font-weight: 600;
@@ -435,6 +341,22 @@
     .error-text {
       font-size: 12px;
       color: #ff4444;
+    }
+
+    .subtext {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.5);
+    }
+  }
+
+  .rat-subjects-label {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+    padding: 8px 0;
+
+    strong {
+      color: white;
+      font-weight: 600;
     }
   }
 </style>

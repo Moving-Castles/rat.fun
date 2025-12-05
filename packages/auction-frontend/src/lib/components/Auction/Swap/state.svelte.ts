@@ -38,6 +38,8 @@ let fromCurrency = $state<CurrencyData>(wethCurrency)
 let numeraireBalance = $state<number | undefined>(undefined)
 let tokenBalance = $state<number | undefined>(undefined)
 let swapReceipt = $state<SwapReceipt | null>(null)
+let eurcToUsdcRate = $state<number | undefined>(undefined)
+let currentPriceUsdc = $state<number | undefined>(undefined)
 
 /**
  * Defines valid state transitions between swap states
@@ -79,6 +81,8 @@ const resetData = () => {
   numeraireBalance = undefined
   tokenBalance = undefined
   swapReceipt = null
+  eurcToUsdcRate = undefined
+  currentPriceUsdc = undefined
 }
 
 const transitionTo = (newState: SWAP_STATE) => {
@@ -147,6 +151,12 @@ export const swapState = {
     get swapReceipt() {
       return swapReceipt
     },
+    get eurcToUsdcRate() {
+      return eurcToUsdcRate
+    },
+    get currentPriceUsdc() {
+      return currentPriceUsdc
+    },
 
     // Setters
     setAuctionParams: (params: AuctionParams) => {
@@ -187,6 +197,12 @@ export const swapState = {
     },
     setSwapReceipt: (receipt: SwapReceipt | null) => {
       swapReceipt = receipt
+    },
+    setEurcToUsdcRate: (rate: number | undefined) => {
+      eurcToUsdcRate = rate
+    },
+    setCurrentPriceUsdc: (price: number | undefined) => {
+      currentPriceUsdc = price
     },
 
     // Helper methods

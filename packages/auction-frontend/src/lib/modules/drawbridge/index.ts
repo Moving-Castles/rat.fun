@@ -29,15 +29,11 @@ let drawbridgeInstance: InstanceType<typeof Drawbridge> | null = null
  */
 export async function initializeDrawbridge(config: DrawbridgeInitConfig): Promise<void> {
   if (drawbridgeInstance) {
-    console.log("[Drawbridge] Already initialized")
     return
   }
 
-  console.log("[Drawbridge] Creating instance with network:", config.publicClient.chain.id)
-
   // Get connectors for this environment
   const connectors = getConnectors()
-  console.log("[Drawbridge] Connectors from getConnectors():", connectors.length)
 
   // Create Drawbridge instance in wallet-only mode (skipSessionSetup = true)
   drawbridgeInstance = new Drawbridge({
@@ -51,16 +47,6 @@ export async function initializeDrawbridge(config: DrawbridgeInitConfig): Promis
 
   // Initialize (await reconnection, setup account watcher)
   await drawbridgeInstance.initialize()
-
-  console.log("[Drawbridge] Instance ready (wallet-only mode)")
-
-  // Log available connectors for debugging
-  const availableConnectors = drawbridgeInstance.getAvailableConnectors()
-  console.log(
-    "[Drawbridge] Available connectors after init:",
-    availableConnectors.length,
-    availableConnectors
-  )
 }
 
 /**

@@ -10,6 +10,7 @@
   import { AUCTION_STATE, auctionState } from "$lib/components/Auction/state.svelte"
   import { userAddress } from "$lib/modules/drawbridge"
   import { initBalanceListeners } from "$lib/modules/balances"
+  import { getTokenCurrency } from "$lib/modules/swap-router"
   import { Swap, ConnectWalletForm, Ended, Error as ErrorComponent } from "$lib/components/Auction"
   import WalletInfo from "$lib/components/WalletInfo/WalletInfo.svelte"
 
@@ -53,7 +54,8 @@
   }
 
   const setupAndGoToSwap = (publicClient: PublicClient, userAddress: Hex) => {
-    initBalanceListeners(publicClient, userAddress)
+    const tokenCurrency = getTokenCurrency(auctionParams)
+    initBalanceListeners(publicClient, userAddress, tokenCurrency)
     auctionState.state.transitionTo(AUCTION_STATE.SWAP)
   }
 
@@ -151,16 +153,17 @@
   .test-auction-banner {
     position: fixed;
     top: 0;
-    left: 0;
+    right: 0;
     right: 0;
     background: #ff4444;
     color: white;
     text-align: center;
     padding: 8px;
     font-weight: bold;
-    font-size: 14px;
+    font-size: 20px;
     letter-spacing: 2px;
     z-index: 9999;
+    width: auto;
   }
 
   .auction-container {
