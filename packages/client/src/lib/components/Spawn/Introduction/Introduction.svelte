@@ -32,7 +32,7 @@
 <div class="outer-container">
   <div class="inner-container">
     <div class="mascot-container" bind:this={mascotElement}>
-      <Mascot text={introductionMascotText1} finishTextOnClick={true} />
+      <Mascot text={introductionMascotText} finishTextOnClick={true} />
     </div>
 
     <div class="button-container" bind:this={buttonElement}>
