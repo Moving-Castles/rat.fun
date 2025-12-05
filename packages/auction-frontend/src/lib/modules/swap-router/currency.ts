@@ -10,7 +10,8 @@ export interface CurrencyData {
 }
 
 // Mainnet-only addresses
-export const ratRouterAddress: Hex = "0x0dAC1415e9DB2917E4Db14b27961378b7DDfD19B"
+export const deltaRouterAddress: Hex = "0x3658a91bc38f2F7989011D00FDBc11c0d30023A7"
+export const ratQuoterAddress: Hex = "0x58831e87f7F3F59201F8Ca307f34793AB92364Cc"
 
 export const eurcCurrency: CurrencyData = {
   address: "0x60a3e35cc302bfa44cb288bc5a4f316fdb1adb42",
@@ -49,7 +50,7 @@ const aerodromePaths: Record<Hex, [number, Hex][]> = {
   [wethCurrency.address]: [[100, eurcCurrency.address]]
 }
 
-function getAerodromePath(fromCurrencyAddress: Hex, isExactOut: boolean): Hex {
+export function getAerodromePath(fromCurrencyAddress: Hex, isExactOut: boolean): Hex {
   if (!(fromCurrencyAddress in aerodromePaths)) {
     throw new Error("Invalid start address")
   }
@@ -67,7 +68,7 @@ function getAerodromePath(fromCurrencyAddress: Hex, isExactOut: boolean): Hex {
   return packedPath
 }
 
-export function prepareSwapRouterPathArgs(
+export function prepareQuoterPathArgs(
   fromCurrencyAddress: Hex,
   auctionParams: AuctionParams,
   isExactOut: boolean

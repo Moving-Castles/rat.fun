@@ -71,7 +71,7 @@ export async function swapExactSingle(
     if (!permit || !permitSignature) {
       throw new Error("Missing required permit2 permit and signature")
     }
-    commandBuilder.addPermit2Permit(permit, permitSignature)
+    commandBuilder.addPermit2Permit(permit as any, permitSignature)
   }
 
   // Add v4 swap command

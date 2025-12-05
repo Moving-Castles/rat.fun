@@ -39,6 +39,7 @@
     "@sentry/sveltekit": "^10.27.0",
     "@wagmi/core": "2.22.1",
     "@whetstone-research/doppler-sdk": "npm:@dk1a/doppler-sdk-fork@0.0.1-alpha.57",
+    "abitype": "^1.2.1",
     "contracts": "workspace:*",
     "doppler": "workspace:*",
     "drawbridge": "workspace:*",

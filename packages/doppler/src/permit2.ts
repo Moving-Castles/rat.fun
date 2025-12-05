@@ -34,8 +34,8 @@ export interface Permit2PermitData {
   details: {
     token: Hex
     amount: bigint
-    expiration: bigint
-    nonce: bigint
+    expiration: number
+    nonce: number
   }
   spender: Hex
   sigDeadline: bigint
@@ -106,19 +106,19 @@ export async function signPermit2(
     functionName: "allowance",
     args: [walletClient.account.address, tokenAddress, spender]
   })
-  const nonce = BigInt(permit2Allowance[2])
+  const nonce = permit2Allowance[2]
 
   // Permit router to spend tokens
-  const nowSec = BigInt(Math.floor(Date.now() / 1000))
+  const nowSec = Math.floor(Date.now() / 1000)
   const permit = {
     details: {
       token: tokenAddress,
       amount,
-      expiration: nowSec + 3600n,
+      expiration: nowSec + 3600,
       nonce
     },
     spender,
-    sigDeadline: nowSec + 3600n
+    sigDeadline: BigInt(nowSec + 3600)
   } as const satisfies Permit2PermitData
 
   const permitSignature = await walletClient.signTypedData({

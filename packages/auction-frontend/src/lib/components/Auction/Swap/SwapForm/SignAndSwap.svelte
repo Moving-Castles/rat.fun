@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { maxUint128 } from "viem"
+  import { type Hex, maxUint128 } from "viem"
   import {
     signPermit2,
     waitForDopplerSwapReceipt,
@@ -10,7 +10,7 @@
   import { prepareConnectorClientForTransaction } from "$lib/modules/drawbridge/connector"
   import { userAddress } from "$lib/modules/drawbridge"
   import { publicClient as publicClientStore } from "$lib/network"
-  import { ratRouterAddress, swapExactIn, isPermit2Required } from "$lib/modules/swap-router"
+  import { deltaRouterAddress, swapExactIn, isPermit2Required, swapExactOut } from "$lib/modules/swap-router"
   import { signTypedData } from "viem/actions"
   import { asPublicClient, asWalletClient } from "$lib/utils/clientAdapter"
   import { swapState, SWAP_STATE } from "../state.svelte"
@@ -34,6 +34,17 @@
     return amountIn > balance.balance
   }
 
+  function withSlippage(amount: bigint, isOut: boolean): bigint {
+    // Slippage is in basis points (10000 bps = 100%)
+    // TODO could be user-configurable if desired
+    // 200 bps = 2%
+    const maxSlippageBps: bigint = 200n
+
+    // For amountOut limit minimum slippage
+    // For amountIn limit maximum slippage
+    return (amount * (10000n + (isOut ? -1n : 1n) * maxSlippageBps)) / 10000n
+  }
+
   /**
    * Check and approve Permit2 if needed, sign permit, and execute swap
    * This can be a three-step process:
@@ -52,21 +63,22 @@
       const amountIn = swapState.data.amountIn
       const amountOut = swapState.data.amountOut
       const isExactOut = swapState.data.isExactOut
-      const fromCurrency = swapState.data.fromCurrency
+      const fromCurrency = swapState.data.fromCurrency      
 
       if (!auctionParams) throw new Error("auction params not initialized")
       if (amountIn === undefined) throw new Error("amountIn is undefined")
+      if (amountOut === undefined) throw new Error("amountOut is undefined")
 
       console.log("[SignAndSwap] Starting swap flow for", fromCurrency.symbol)
 
       const client = await prepareConnectorClientForTransaction()
       const adaptedPublicClient = asPublicClient($publicClientStore!)
 
-      // * * * * * * * * * * * * * * * * * * * * * * * * *
-      // Step 1: Check and approve Permit2 if needed
-      // * * * * * * * * * * * * * * * * * * * * * * * * *
-
+      // Steps 1 and 2 may be skipped for ETH
       if (isPermit2Required(fromCurrency.address)) {
+        // * * * * * * * * * * * * * * * * * * * * * * * * *
+        // Step 1: Check and approve Permit2 if needed
+        // * * * * * * * * * * * * * * * * * * * * * * * * *
         const needsPermit2Approval = await isPermit2AllowanceRequired(
           adaptedPublicClient,
           $userAddress,
@@ -89,52 +101,62 @@
           }
           console.log("[SignAndSwap] Permit2 approved")
         }
+
+        // * * * * * * * * * * * * * * * * * * * * * * * * *
+        // Step 2: Sign permit (offline)
+        // * * * * * * * * * * * * * * * * * * * * * * * * *
+        console.log("[SignAndSwap] Step 2: Signing permit...")
+        processingStep = "Sign permit in wallet..."
+
+        // TODO ensure signTypedData in a less hacky way
+        const extendedClient = (client as any).extend((client: any) => ({
+          signTypedData: (args: any) => signTypedData(client, args)
+        }))
+
+        // For exact out use amountInMaximum (with slippage padding)
+        const amountPadded = isExactOut ? withSlippage(amountIn, false) : amountIn
+        const result = await signPermit2(
+          adaptedPublicClient,
+          extendedClient,
+          fromCurrency.address,
+          deltaRouterAddress,
+          amountPadded
+        )
+
+        // Update swapState with permit data
+        swapState.data.setPermit(result.permit)
+        swapState.data.setPermitSignature(result.permitSignature)
+
+        console.log("[SignAndSwap] Permit signed successfully")
       }
 
       // * * * * * * * * * * * * * * * * * * * * * * * * *
-      // Step 2: Sign permit (offline)
-      // * * * * * * * * * * * * * * * * * * * * * * * * *
-
-      console.log("[SignAndSwap] Step 2: Signing permit...")
-      processingStep = "Sign permit in wallet..."
-
-      // TODO ensure signTypedData in a less hacky way
-      const extendedClient = (client as any).extend((client: any) => ({
-        signTypedData: (args: any) => signTypedData(client, args)
-      }))
-
-      // For exact out give 10% padding to permit amount to account for price variance and imprecise conversion
-      // (because permit is always for input currency)
-      const amountPadded = isExactOut ? (amountIn * 110n) / 100n : amountIn
-      const result = await signPermit2(
-        adaptedPublicClient,
-        extendedClient,
-        fromCurrency.address,
-        ratRouterAddress,
-        amountPadded
-      )
-
-      // Update swapState with permit data
-      swapState.data.setPermit(result.permit)
-      swapState.data.setPermitSignature(result.permitSignature)
-
-      console.log("[SignAndSwap] Permit signed successfully")
-
-      // * * * * * * * * * * * * * * * * * * * * * * * * *
-      // Step 3: Execute swap (on-chain)
+      // Step 2: Execute swap (on-chain)
       // * * * * * * * * * * * * * * * * * * * * * * * * *
 
       console.log("[SignAndSwap] Step 3: Executing swap...")
       processingStep = "Confirm swap in wallet..."
 
-      const swapTxHash = await swapExactIn(
-        fromCurrency.address,
-        auctionParams,
-        // TODO add swapExactOut or consider padding amountIn for isExactOut
-        amountIn,
-        result.permit,
-        result.permitSignature
-      )
+      let swapTxHash: Hex
+      if (isExactOut) {
+        swapTxHash = await swapExactOut(
+          fromCurrency.address,
+          auctionParams,
+          amountOut,
+          withSlippage(amountIn, false),
+          swapState.data.permit,
+          swapState.data.permitSignature
+        )
+      } else {
+        swapTxHash = await swapExactIn(
+          fromCurrency.address,
+          auctionParams,
+          amountIn,
+          withSlippage(amountOut, true),
+          swapState.data.permit,
+          swapState.data.permitSignature
+        )
+      }
       const swapResult = await waitForDopplerSwapReceipt(adaptedPublicClient, swapTxHash)
       console.log("[SignAndSwap] Swap executed successfully:", swapResult)
 

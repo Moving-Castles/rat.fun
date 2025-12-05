@@ -1,16 +1,15 @@
 import { AuctionParams } from "doppler"
-import { decodeErrorResult, encodePacked, formatUnits, Hex, parseUnits } from "viem"
+import { decodeErrorResult, encodePacked, formatUnits, Hex, parseAbi, parseUnits } from "viem"
 import { simulateContract, readContract } from "viem/actions"
 import { get } from "svelte/store"
-import { RatRouterAbi } from "contracts/externalAbis"
 import { publicClient as publicClientStore } from "$lib/network"
 import { userAddress } from "../drawbridge"
 import {
-  prepareSwapRouterPathArgs,
-  ratRouterAddress,
+  prepareQuoterPathArgs,
   eurcCurrency,
   usdcCurrency,
-  wethCurrency
+  wethCurrency,
+  ratQuoterAddress
 } from "./currency"
 
 // Common errors from Uniswap V4 quoter and doppler hook
@@ -28,6 +27,14 @@ const quoterErrors = [
   { type: "error", name: "InsufficientBalance", inputs: [] },
   { type: "error", name: "NotEnoughLiquidity", inputs: [{ name: "poolId", type: "bytes32" }] }
 ] as const
+
+const ratQuoterAbi = parseAbi([
+  "function quoteExactIn(uint256 amountIn, bytes memory aerodromePath, PoolKey memory uniswapPoolKey, bool uniswapZeroForOne) external returns (uint256 amountOutFinal, uint256 amountInUniswap)",
+  "function quoteExactOut(uint256 amountOut, bytes memory aerodromePath, PoolKey memory uniswapPoolKey, bool uniswapZeroForOne) external returns (uint256 amountInInitial, uint256 amountInUniswap)",
+  "function uniswapV4Quoter() external view returns (address)",
+  "function aerodromeQuoter() external view returns (address)",
+  "struct PoolKey { address currency0; address currency1; uint24 fee; int24 tickSpacing; address hooks; }",
+])
 
 /**
  * Try to decode a nested error from UnexpectedRevertBytes
@@ -105,13 +112,13 @@ export async function quoteExactIn(
   if (!publicClient) throw new Error("Network not initialized")
 
   const { result } = await simulateContract(publicClient, {
-    address: ratRouterAddress,
-    abi: RatRouterAbi,
+    address: ratQuoterAddress,
+    abi: ratQuoterAbi,
     functionName: "quoteExactIn",
-    args: [amountIn, ...prepareSwapRouterPathArgs(fromCurrencyAddress, auctionParams, false)],
+    args: [amountIn, ...prepareQuoterPathArgs(fromCurrencyAddress, auctionParams, false)],
     account: get(userAddress)
   })
-  const [amountOutFinal, amountInUniswap]: [bigint, bigint] = result
+  const [amountOutFinal, amountInUniswap]: readonly [bigint, bigint] = result
   return {
     amountOutFinal,
     amountInUniswap
@@ -128,10 +135,10 @@ export async function getEurcToUsdcRate(): Promise<number> {
 
   // Get the Aerodrome quoter address from RatRouter
   const aerodromeQuoterAddress = (await readContract(publicClient, {
-    address: ratRouterAddress,
-    abi: RatRouterAbi,
+    address: ratQuoterAddress,
+    abi: ratQuoterAbi,
     functionName: "aerodromeQuoter"
-  })) as Hex
+  }))
 
   // Encode path: EURC → USDC (tickSpacing 50 for the EURC/USDC pool)
   const eurcToUsdcPath = encodePacked(
@@ -163,10 +170,11 @@ export async function getEurcToEthRate(): Promise<number> {
 
   // Get the Aerodrome quoter address from RatRouter
   const aerodromeQuoterAddress = (await readContract(publicClient, {
-    address: ratRouterAddress,
-    abi: RatRouterAbi,
-    functionName: "aerodromeQuoter"
-  })) as Hex
+    address: ratQuoterAddress,
+    abi: ratQuoterAbi,
+    functionName: "aerodromeQuoter",
+    args: []
+  }))
 
   // Encode path: EURC → WETH (tickSpacing 100 for the EURC/WETH pool)
   const eurcToEthPath = encodePacked(
@@ -197,13 +205,13 @@ export async function quoteExactOut(
   if (!publicClient) throw new Error("Network not initialized")
 
   const { result } = await simulateContract(publicClient, {
-    address: ratRouterAddress,
-    abi: RatRouterAbi,
+    address: ratQuoterAddress,
+    abi: ratQuoterAbi,
     functionName: "quoteExactOut",
-    args: [amountOut, ...prepareSwapRouterPathArgs(fromCurrencyAddress, auctionParams, true)],
+    args: [amountOut, ...prepareQuoterPathArgs(fromCurrencyAddress, auctionParams, true)],
     account: get(userAddress)
   })
-  const [amountInInitial, amountInUniswap]: [bigint, bigint] = result
+  const [amountInInitial, amountInUniswap]: readonly [bigint, bigint] = result
   return {
     amountInInitial,
     amountInUniswap
