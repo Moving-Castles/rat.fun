@@ -263,7 +263,12 @@
       next()
       commit()
     } else if (e.key === "Return" || e.key === "Enter") {
-      commit()
+      if ($selectedEvent === $focusEvent) {
+        go()
+      } else {
+        commit()
+        go()
+      }
     }
   }
 

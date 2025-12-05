@@ -36,7 +36,8 @@
 
     @media screen and (min-width: 800px) {
       min-width: 600px;
-      width: 600px;
+      max-width: 50vw;
+      // width: 600px;
     }
     &.open {
       transform: translate(0, 0);
