@@ -102,7 +102,11 @@
           point.eventType === TRIP_EVENT_TYPE.CREATION ||
           point.eventType === TRIP_EVENT_TYPE.LIQUIDATION}
       >
-        <AdminEventLogItem {point} />
+        <AdminEventLogItem
+          selected={effectiveSelectedEvent === point.index}
+          focus={effectiveFocusEvent === point.index}
+          {point}
+        />
       </div>
     {/each}
     {#if !hideUnlockEvent}

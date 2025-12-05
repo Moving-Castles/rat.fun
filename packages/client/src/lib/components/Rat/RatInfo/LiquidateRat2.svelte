@@ -3,6 +3,7 @@
   import { BigButton } from "$lib/components/Shared"
   import { ratState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
   import { getRatTotalValue } from "$lib/modules/state/utils"
+  import { ratTotalValue } from "$lib/modules/state/stores"
   import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
   import { gsap } from "gsap"
 
@@ -185,7 +186,7 @@
   {#if displayRat}
     <div class="action" bind:this={actionContainer}>
       <BigButton
-        text={UI_STRINGS.liquidateRatButtonText}
+        text={UI_STRINGS.liquidateRatButtonText($ratTotalValue)}
         tippyText={UI_STRINGS.liquidateRatInstruction}
         type="cash_out"
         {onclick}

@@ -753,6 +753,19 @@
     border-width: 10px;
     border-style: inset;
     border-color: rgba(0, 0, 0, 0.3);
+
+    &:hover {
+      background: var(--color-alert-priority-light);
+    }
+
+    &:active {
+      background: var(--color-alert-priority-muted);
+      border-style: inset;
+      transform: translateY(2px);
+      border-width: 10px;
+      position: relative;
+      top: -2px;
+    }
   }
 
   .full {

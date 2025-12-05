@@ -86,8 +86,21 @@
   <div class="inner-wrapper">
     <Tooltip content={UI_STRINGS.tokensAvailable}>
       <div class="balance-value">
-        <span class="value" bind:this={balanceElement}></span>
-        <span class="currency-symbol">{CURRENCY_SYMBOL}</span>
+        <!-- <span class="label">{UI_STRINGS.tokensAvailableLabel}</span>
+        <span class="content">
+          <span class="value" bind:this={balanceElement}></span>
+          <span class="currency-symbol">{CURRENCY_SYMBOL}</span>
+        </span> -->
+      </div>
+
+      <div class="value">
+        <span class="content">
+          <span class="value" bind:this={balanceElement}></span>
+          <span class="currency-symbol">{CURRENCY_SYMBOL}</span>
+        </span>
+        <span class="label">
+          {UI_STRINGS.tokensAvailableLabel}
+        </span>
       </div>
     </Tooltip>
   </div>
@@ -102,27 +115,32 @@
     border-right: var(--default-border-style);
     color: var(--foreground);
     padding: 0;
-    background: red;
+    justify-content: center;
+    // background: red;
     min-width: 100px;
+    font-size: var(--font-size-small);
 
     &.balance {
+      padding-top: 4px;
       background: var(--color-value);
       color: var(--black);
       font-size: var(--font-size-normal);
     }
 
-    .inner-wrapper {
-      display: inline-flex;
-      padding-inline: 10px;
-      align-items: center;
-      width: 100%;
+    .value {
+      display: flex;
+      flex-flow: column;
+      gap: 0;
 
-      .balance-value {
-        display: flex;
+      .content {
+        height: 18px;
+        font-size: var(--font-size-normal);
+        display: inline-flex;
+      }
 
-        .value {
-          margin-right: 5px;
-        }
+      .label {
+        opacity: 0.5;
+        font-size: var(--font-size-small);
       }
     }
   }

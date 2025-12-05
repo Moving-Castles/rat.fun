@@ -13,7 +13,7 @@
 
   // ???
   let mergedLog: MergedLogEntry[] = $derived(mergeLog(result as unknown as EnterTripReturnValue))
-  let logEntryElements: HTMLDivElement[] = []
+  let logEntryElements: HTMLDivElement[] = $state([])
 
   onMount(() => {
     logEntryElements.forEach((el, i) => {

@@ -66,7 +66,14 @@
           <div class="avatar">
             <img src="/images/pfp.png" alt={UI_STRINGS.you} draggable={false} />
           </div>
-          <div class="value">{$player?.name ?? ""}</div>
+          <div class="value">
+            <span class="content">
+              {$player?.name ?? ""}
+            </span>
+            <span class="label">
+              {UI_STRINGS.operator}
+            </span>
+          </div>
         </div>
       </Tooltip>
     </div>
@@ -123,6 +130,22 @@
             color: var(--foreground);
           }
         }
+      }
+    }
+
+    .value {
+      display: flex;
+      flex-flow: column;
+      gap: 0;
+      padding-top: 4px;
+
+      .content {
+        height: 18px;
+        font-size: var(--font-size-normal);
+      }
+
+      .label {
+        opacity: 0.5;
       }
     }
 

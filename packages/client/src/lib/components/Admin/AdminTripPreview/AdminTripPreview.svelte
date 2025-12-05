@@ -211,11 +211,13 @@
           />
         </div>
       {/if}
-      {#if showLiquidateButton}
-        <div class="full">
+      <div class="full">
+        {#if showLiquidateButton}
           <LiquidateTrip onclick={() => (liquidating = true)} {trip} />
-        </div>
-      {/if}
+        {:else}
+          <h1>Liquidated</h1>
+        {/if}
+      </div>
     </div>
   {:else}
     <!-- Desktop Layout -->

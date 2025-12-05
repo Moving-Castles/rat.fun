@@ -48,7 +48,8 @@
       padding-inline: 10px;
 
       .inventory-header-title {
-        width: calc(100% / 3);
+        // width: calc(100% / 3);
+        white-space: nowrap;
         font-size: var(--font-size-normal);
       }
 
