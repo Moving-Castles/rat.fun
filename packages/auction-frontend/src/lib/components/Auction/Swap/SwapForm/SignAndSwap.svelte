@@ -132,7 +132,7 @@
         // Step 2: Sign permit (offline)
         // * * * * * * * * * * * * * * * * * * * * * * * * *
         console.log("[SignAndSwap] Step 2: Signing permit...")
-        processingStep = "Sign permit in wallet..."
+        processingStep = "Sign permit"
 
         // TODO ensure signTypedData in a less hacky way
         const extendedClient = (client as any).extend((client: any) => ({
@@ -161,7 +161,7 @@
       // * * * * * * * * * * * * * * * * * * * * * * * * *
 
       console.log("[SignAndSwap] Step 3: Executing swap...")
-      processingStep = "Confirm in wallet"
+      processingStep = "Confirm transaction"
 
       let txHash: Hex
       if (isExactOut) {
