@@ -10,7 +10,12 @@
   import { prepareConnectorClientForTransaction } from "$lib/modules/drawbridge/connector"
   import { userAddress } from "$lib/modules/drawbridge"
   import { publicClient as publicClientStore } from "$lib/network"
-  import { deltaRouterAddress, swapExactIn, isPermit2Required, swapExactOut } from "$lib/modules/swap-router"
+  import {
+    deltaRouterAddress,
+    swapExactIn,
+    isPermit2Required,
+    swapExactOut
+  } from "$lib/modules/swap-router"
   import { signTypedData } from "viem/actions"
   import { asPublicClient, asWalletClient } from "$lib/utils/clientAdapter"
   import { swapState, SWAP_STATE } from "../state.svelte"
@@ -63,7 +68,7 @@
       const amountIn = swapState.data.amountIn
       const amountOut = swapState.data.amountOut
       const isExactOut = swapState.data.isExactOut
-      const fromCurrency = swapState.data.fromCurrency      
+      const fromCurrency = swapState.data.fromCurrency
 
       if (!auctionParams) throw new Error("auction params not initialized")
       if (amountIn === undefined) throw new Error("amountIn is undefined")

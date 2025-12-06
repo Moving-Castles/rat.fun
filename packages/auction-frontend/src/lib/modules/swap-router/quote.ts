@@ -33,7 +33,7 @@ const ratQuoterAbi = parseAbi([
   "function quoteExactOut(uint256 amountOut, bytes memory aerodromePath, PoolKey memory uniswapPoolKey, bool uniswapZeroForOne) external returns (uint256 amountInInitial, uint256 amountInUniswap)",
   "function uniswapV4Quoter() external view returns (address)",
   "function aerodromeQuoter() external view returns (address)",
-  "struct PoolKey { address currency0; address currency1; uint24 fee; int24 tickSpacing; address hooks; }",
+  "struct PoolKey { address currency0; address currency1; uint24 fee; int24 tickSpacing; address hooks; }"
 ])
 
 /**
@@ -134,11 +134,11 @@ export async function getEurcToUsdcRate(): Promise<number> {
   if (!publicClient) throw new Error("Network not initialized")
 
   // Get the Aerodrome quoter address from RatRouter
-  const aerodromeQuoterAddress = (await readContract(publicClient, {
+  const aerodromeQuoterAddress = await readContract(publicClient, {
     address: ratQuoterAddress,
     abi: ratQuoterAbi,
     functionName: "aerodromeQuoter"
-  }))
+  })
 
   // Encode path: EURC → USDC (tickSpacing 50 for the EURC/USDC pool)
   const eurcToUsdcPath = encodePacked(
@@ -169,12 +169,12 @@ export async function getEurcToEthRate(): Promise<number> {
   if (!publicClient) throw new Error("Network not initialized")
 
   // Get the Aerodrome quoter address from RatRouter
-  const aerodromeQuoterAddress = (await readContract(publicClient, {
+  const aerodromeQuoterAddress = await readContract(publicClient, {
     address: ratQuoterAddress,
     abi: ratQuoterAbi,
     functionName: "aerodromeQuoter",
     args: []
-  }))
+  })
 
   // Encode path: EURC → WETH (tickSpacing 100 for the EURC/WETH pool)
   const eurcToEthPath = encodePacked(

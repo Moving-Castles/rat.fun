@@ -44,7 +44,8 @@
         />
       </div>
       <div class="fine-print">
-        Are you sure you want to CASH OUT? Trip no. {tripContent.index} will be erased from the SLOP MACHINE database
+        Are you sure you want to CASH OUT? Trip no. {tripContent.index} will be erased from the SLOP
+        MACHINE database
       </div>
       <div class="button-container">
         <div class="abort-button-container">

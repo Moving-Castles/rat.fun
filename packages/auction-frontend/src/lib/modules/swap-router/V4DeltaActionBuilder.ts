@@ -1,5 +1,5 @@
-import { AbiParametersToPrimitiveTypes } from "abitype";
-import { AbiParameter, encodeAbiParameters, Hex, maxUint128, parseAbiParameters } from "viem";
+import { AbiParametersToPrimitiveTypes } from "abitype"
+import { AbiParameter, encodeAbiParameters, Hex, maxUint128, parseAbiParameters } from "viem"
 
 export enum V4ActionType {
   INCREASE_LIQUIDITY = 0x00,
@@ -45,9 +45,9 @@ const POOL_KEY_STRUCT = {
     { name: "currency1", type: "address" },
     { name: "fee", type: "uint24" },
     { name: "tickSpacing", type: "int24" },
-    { name: "hooks", type: "address" },
-  ],
-} as const;
+    { name: "hooks", type: "address" }
+  ]
+} as const
 
 const PATH_KEY_STRUCT = {
   name: "pathKey",
@@ -57,9 +57,9 @@ const PATH_KEY_STRUCT = {
     { name: "fee", type: "uint256" },
     { name: "tickSpacing", type: "int24" },
     { name: "hooks", type: "address" },
-    { name: "hookData", type: "bytes" },
-  ],
-} as const;
+    { name: "hookData", type: "bytes" }
+  ]
+} as const
 
 const ABI_DEFINITION = {
   [V4ActionType.INCREASE_LIQUIDITY]: [
@@ -67,14 +67,14 @@ const ABI_DEFINITION = {
     { type: "uint256" },
     { type: "uint128" },
     { type: "uint128" },
-    { type: "bytes" },
+    { type: "bytes" }
   ],
   [V4ActionType.DECREASE_LIQUIDITY]: [
     { type: "uint256" },
     { type: "uint256" },
     { type: "uint128" },
     { type: "uint128" },
-    { type: "bytes" },
+    { type: "bytes" }
   ],
   [V4ActionType.MINT_POSITION]: [
     POOL_KEY_STRUCT,
@@ -84,19 +84,19 @@ const ABI_DEFINITION = {
     { type: "uint128" },
     { type: "uint128" },
     { type: "address" },
-    { type: "bytes" },
+    { type: "bytes" }
   ],
   [V4ActionType.BURN_POSITION]: [
     { type: "uint256" },
     { type: "uint128" },
     { type: "uint128" },
-    { type: "bytes" },
+    { type: "bytes" }
   ],
   [V4ActionType.INCREASE_LIQUIDITY_FROM_DELTAS]: [
     { type: "uint256" },
     { type: "uint128" },
     { type: "uint128" },
-    { type: "bytes" },
+    { type: "bytes" }
   ],
   [V4ActionType.MINT_POSITION_FROM_DELTAS]: [
     POOL_KEY_STRUCT,
@@ -105,7 +105,7 @@ const ABI_DEFINITION = {
     { type: "uint128" },
     { type: "uint128" },
     { type: "address" },
-    { type: "bytes" },
+    { type: "bytes" }
   ],
   [V4ActionType.SWAP_EXACT_IN_SINGLE]: [
     {
@@ -116,9 +116,9 @@ const ABI_DEFINITION = {
         { name: "zeroForOne", type: "bool" },
         { name: "amountIn", type: "uint128" },
         { name: "amountOutMinimum", type: "uint128" },
-        { name: "hookData", type: "bytes" },
-      ],
-    },
+        { name: "hookData", type: "bytes" }
+      ]
+    }
   ],
   [V4ActionType.SWAP_EXACT_IN]: [
     {
@@ -129,12 +129,12 @@ const ABI_DEFINITION = {
         {
           name: "path",
           type: "tuple[]",
-          components: PATH_KEY_STRUCT.components,
+          components: PATH_KEY_STRUCT.components
         },
         { name: "amountIn", type: "uint128" },
-        { name: "amountOutMinimum", type: "uint128" },
-      ],
-    },
+        { name: "amountOutMinimum", type: "uint128" }
+      ]
+    }
   ],
   [V4ActionType.SWAP_EXACT_OUT_SINGLE]: [
     {
@@ -145,9 +145,9 @@ const ABI_DEFINITION = {
         { name: "zeroForOne", type: "bool" },
         { name: "amountOut", type: "uint128" },
         { name: "amountInMaximum", type: "uint128" },
-        { name: "hookData", type: "bytes" },
-      ],
-    },
+        { name: "hookData", type: "bytes" }
+      ]
+    }
   ],
   [V4ActionType.SWAP_EXACT_OUT]: [
     {
@@ -158,30 +158,18 @@ const ABI_DEFINITION = {
         {
           name: "path",
           type: "tuple[]",
-          components: PATH_KEY_STRUCT.components,
+          components: PATH_KEY_STRUCT.components
         },
         { name: "amountOut", type: "uint128" },
-        { name: "amountInMaximum", type: "uint128" },
-      ],
-    },
+        { name: "amountInMaximum", type: "uint128" }
+      ]
+    }
   ],
-  [V4ActionType.SETTLE]: [
-    { type: "address" },
-    { type: "uint256" },
-    { type: "bool" },
-  ],
+  [V4ActionType.SETTLE]: [{ type: "address" }, { type: "uint256" }, { type: "bool" }],
   [V4ActionType.SETTLE_ALL]: [{ type: "address" }, { type: "uint256" }],
-  [V4ActionType.TAKE]: [
-    { type: "address" },
-    { type: "address" },
-    { type: "uint256" },
-  ],
+  [V4ActionType.TAKE]: [{ type: "address" }, { type: "address" }, { type: "uint256" }],
   [V4ActionType.TAKE_ALL]: [{ type: "address" }, { type: "uint256" }],
-  [V4ActionType.TAKE_PORTION]: [
-    { type: "address" },
-    { type: "address" },
-    { type: "uint256" },
-  ],
+  [V4ActionType.TAKE_PORTION]: [{ type: "address" }, { type: "address" }, { type: "uint256" }],
   [V4ActionType.CLOSE_CURRENCY]: [{ type: "address" }],
   [V4ActionType.SWEEP]: [{ type: "address" }, { type: "address" }],
   [V4ActionType.WRAP]: [{ type: "uint256" }],
@@ -204,31 +192,28 @@ const ABI_DEFINITION = {
   [V4ActionType.AERODROME_SWAP_EXACT_OUT]: parseAbiParameters([
     "V3ExactOutputParams params",
     "struct V3ExactOutputParams { bytes path; uint256 amountOut; uint256 amountInMaximum; }"
-  ]),
+  ])
 } as const satisfies Record<V4ActionType, AbiParameter[] | readonly AbiParameter[]>
 
 export class V4DeltaActionBuilder {
   actions: Hex = "0x"
-  inputs: Hex[] = [];
+  inputs: Hex[] = []
 
-  addAction<T extends V4ActionType>(type: T, parameters: AbiParametersToPrimitiveTypes<typeof ABI_DEFINITION[T]>): this {
-    const encoded = encodeAbiParameters(ABI_DEFINITION[type], parameters as never);
-    this.actions += type.toString(16).padStart(2, "0");
-    this.inputs.push(encoded);
-    return this;
+  addAction<T extends V4ActionType>(
+    type: T,
+    parameters: AbiParametersToPrimitiveTypes<(typeof ABI_DEFINITION)[T]>
+  ): this {
+    const encoded = encodeAbiParameters(ABI_DEFINITION[type], parameters as never)
+    this.actions += type.toString(16).padStart(2, "0")
+    this.inputs.push(encoded)
+    return this
   }
 
   buildExecuteArgs(): [Hex] {
     const encodedArgs = encodeAbiParameters(
-      [
-        { type: "bytes" },
-        { type: "bytes[]" }
-      ],
-      [
-        this.actions,
-        this.inputs
-      ]
-    );
-    return [encodedArgs];
+      [{ type: "bytes" }, { type: "bytes[]" }],
+      [this.actions, this.inputs]
+    )
+    return [encodedArgs]
   }
 }

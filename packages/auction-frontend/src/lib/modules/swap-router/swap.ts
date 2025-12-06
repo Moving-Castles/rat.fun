@@ -21,8 +21,7 @@ export async function swapExactIn(
   if (fromCurrencyAddress === wethCurrency.address) {
     // ETH swap needs value and wrap to WETH
     value = amountIn
-    actionBuilder
-      .addAction(V4ActionType.WRAP, [ActionConstants.CONTRACT_BALANCE] )
+    actionBuilder.addAction(V4ActionType.WRAP, [ActionConstants.CONTRACT_BALANCE])
   } else {
     // ERC20 swap needs permit2 and transfer from user to router
     // (so that delta router can approve its tokens for aerodrome router before calling it)
@@ -31,24 +30,36 @@ export async function swapExactIn(
 
     actionBuilder
       .addAction(V4ActionType.PERMIT2_PERMIT, [permit, permitSignature])
-      .addAction(V4ActionType.PERMIT2_TRANSFER_FROM, [fromCurrencyAddress, ActionConstants.ADDRESS_THIS, amountIn])
+      .addAction(V4ActionType.PERMIT2_TRANSFER_FROM, [
+        fromCurrencyAddress,
+        ActionConstants.ADDRESS_THIS,
+        amountIn
+      ])
   }
 
   actionBuilder
-    .addAction(V4ActionType.AERODROME_SWAP_EXACT_IN, [{
-      path: getAerodromePath(fromCurrencyAddress, false),
-      amountIn,
-      amountOutMinimum: 0n
-    }])
-    .addAction(V4ActionType.SWAP_EXACT_IN_SINGLE, [{
-      poolKey: getPoolKey(auctionParams),
-      zeroForOne: !auctionParams.isToken0,
-      amountIn: ActionConstants.SWAP_CONTRACT_BALANCE,
-      amountOutMinimum,
-      hookData: "0x"
-    }])
+    .addAction(V4ActionType.AERODROME_SWAP_EXACT_IN, [
+      {
+        path: getAerodromePath(fromCurrencyAddress, false),
+        amountIn,
+        amountOutMinimum: 0n
+      }
+    ])
+    .addAction(V4ActionType.SWAP_EXACT_IN_SINGLE, [
+      {
+        poolKey: getPoolKey(auctionParams),
+        zeroForOne: !auctionParams.isToken0,
+        amountIn: ActionConstants.SWAP_CONTRACT_BALANCE,
+        amountOutMinimum,
+        hookData: "0x"
+      }
+    ])
     // payerIsUser = false because router is paying the delta with funds from aerodrome swap
-    .addAction(V4ActionType.SETTLE, [auctionParams.numeraire.address, ActionConstants.OPEN_DELTA, false])
+    .addAction(V4ActionType.SETTLE, [
+      auctionParams.numeraire.address,
+      ActionConstants.OPEN_DELTA,
+      false
+    ])
     .addAction(V4ActionType.TAKE_ALL, [auctionParams.token.address, 0n])
 
   // Execute swap
@@ -77,8 +88,7 @@ export async function swapExactOut(
   if (fromCurrencyAddress === wethCurrency.address) {
     // ETH swap needs value and wrap to WETH
     value = amountInMaximum
-    actionBuilder
-      .addAction(V4ActionType.WRAP, [ActionConstants.CONTRACT_BALANCE] )
+    actionBuilder.addAction(V4ActionType.WRAP, [ActionConstants.CONTRACT_BALANCE])
   } else {
     // ERC20 swap needs permit2 and transfer from user to router
     // (so that delta router can approve its tokens for aerodrome router before calling it)
@@ -87,26 +97,38 @@ export async function swapExactOut(
 
     actionBuilder
       .addAction(V4ActionType.PERMIT2_PERMIT, [permit, permitSignature])
-      .addAction(V4ActionType.PERMIT2_TRANSFER_FROM, [fromCurrencyAddress, ActionConstants.ADDRESS_THIS, amountInMaximum])
+      .addAction(V4ActionType.PERMIT2_TRANSFER_FROM, [
+        fromCurrencyAddress,
+        ActionConstants.ADDRESS_THIS,
+        amountInMaximum
+      ])
   }
 
   actionBuilder
-    .addAction(V4ActionType.SWAP_EXACT_OUT_SINGLE, [{
-      poolKey: getPoolKey(auctionParams),
-      zeroForOne: !auctionParams.isToken0,
-      amountOut,
-      amountInMaximum: maxUint128,
-      hookData: "0x"
-    }])
-    .addAction(V4ActionType.AERODROME_SWAP_EXACT_OUT, [{
-      path: getAerodromePath(fromCurrencyAddress, true),
-      amountOut: ActionConstants.OPEN_DELTA,
-      amountInMaximum
-    }])
+    .addAction(V4ActionType.SWAP_EXACT_OUT_SINGLE, [
+      {
+        poolKey: getPoolKey(auctionParams),
+        zeroForOne: !auctionParams.isToken0,
+        amountOut,
+        amountInMaximum: maxUint128,
+        hookData: "0x"
+      }
+    ])
+    .addAction(V4ActionType.AERODROME_SWAP_EXACT_OUT, [
+      {
+        path: getAerodromePath(fromCurrencyAddress, true),
+        amountOut: ActionConstants.OPEN_DELTA,
+        amountInMaximum
+      }
+    ])
     // payerIsUser = false because router is paying the delta with funds from aerodrome swap
-    .addAction(V4ActionType.SETTLE, [auctionParams.numeraire.address, ActionConstants.OPEN_DELTA, false])
+    .addAction(V4ActionType.SETTLE, [
+      auctionParams.numeraire.address,
+      ActionConstants.OPEN_DELTA,
+      false
+    ])
     .addAction(V4ActionType.TAKE_ALL, [auctionParams.token.address, 0n])
-    
+
   if (fromCurrencyAddress === wethCurrency.address) {
     // Unwrap WETH and return excess ETH to user (ETH is zeroAddress)
     actionBuilder.addAction(V4ActionType.UNWRAP, [ActionConstants.CONTRACT_BALANCE])
