@@ -19,7 +19,7 @@
     { key: "balance", displayName: "On-chain Balance" },
     { key: "currentRat", displayName: "Current Rat" },
     { key: "pastRatsCount", displayName: "Past Rats" },
-    { key: "masterKey", displayName: "Cashboard unlocked" }
+    { key: "masterKey", displayName: "Trips lab unlocked" }
   ]
 
   const ratColumns: ColumnConfig[] = [

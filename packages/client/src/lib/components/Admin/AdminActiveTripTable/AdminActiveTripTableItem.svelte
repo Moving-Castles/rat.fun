@@ -33,13 +33,13 @@
   // Go to trip preview
   const rowOnMouseDown = () => {
     playSound({ category: "ratfunUI", id: "panelIn" })
-    goto("/cashboard/" + id, { noScroll: false })
+    goto("/trips-lab/" + id, { noScroll: false })
   }
 
   // Start liquidation
   const liquidateButtonOnMouseUp = (e: MouseEvent) => {
     e.stopPropagation()
-    goto("/cashboard/" + id + "?liquidate", { noScroll: false })
+    goto("/trips-lab/" + id + "?liquidate", { noScroll: false })
   }
 
   // Cooldown until trip can be liquidated

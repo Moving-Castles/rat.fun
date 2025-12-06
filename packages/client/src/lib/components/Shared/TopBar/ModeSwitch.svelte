@@ -5,6 +5,7 @@
   import { goto } from "$app/navigation"
   import { Tooltip } from "$lib/components/Shared"
   import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
+  import { player } from "$lib/modules/state/stores"
 
   import ModeSwitchButton from "../Buttons/ModeSwitchButton.svelte"
 
@@ -13,7 +14,7 @@
   const enterAdmin = () => {
     playSound({ category: "ratfunTransitions", id: "adminEnter" })
     shaderManager.setShader("black")
-    goto("/cashboard")
+    goto("/trips-lab")
   }
 
   const exitAdmin = () => {
@@ -21,10 +22,13 @@
     shaderManager.setShader("clouds", true)
     goto(page.route.id?.includes("tripId") ? "/" + page.params.tripId : "/")
   }
+
+  // Only show tooltip when admin is not unlocked and not in admin view
+  const showTooltip = $derived(!$player?.masterKey && !isAdminView)
 </script>
 
 <div class="mode-switch" data-tutorial="mode-switch">
-  <Tooltip allowHTML content={UI_STRINGS.adminInstruction(500)}>
+  <Tooltip allowHTML content={showTooltip ? UI_STRINGS.adminInstruction(500) : undefined}>
     <ModeSwitchButton {isAdminView} onclick={isAdminView ? exitAdmin : enterAdmin} />
   </Tooltip>
 </div>

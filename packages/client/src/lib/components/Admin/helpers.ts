@@ -143,14 +143,14 @@ export function makeHref(
 ) {
   // For visit and death events, meta is SanityOutcome
   if (point.eventType === TRIP_EVENT_TYPE.VISIT || point.eventType === TRIP_EVENT_TYPE.DEATH) {
-    return `/cashboard/${point.meta?.tripId}?focusId=${point.meta._id}`
+    return `/trips-lab/${point.meta?.tripId}?focusId=${point.meta._id}`
   } else if (
     point.eventType === TRIP_EVENT_TYPE.LIQUIDATION ||
     point.eventType === TRIP_EVENT_TYPE.CREATION ||
     point.eventType === TRIP_EVENT_TYPE.DEPLETED
   ) {
     // For liquidation and creation events, meta is SanityTrip
-    return `/cashboard/${point.meta._id}`
+    return `/trips-lab/${point.meta._id}`
   }
 }
 

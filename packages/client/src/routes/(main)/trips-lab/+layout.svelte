@@ -14,7 +14,7 @@
 
 <Admin />
 
-{#if page.route.id !== "/(main)/cashboard"}
+{#if page.route.id !== "/(main)/trips-lab"}
   <div in:fly|global={{ x: -800, opacity: 1, duration: 200 }} class="sidebar open">
     {@render children?.()}
   </div>

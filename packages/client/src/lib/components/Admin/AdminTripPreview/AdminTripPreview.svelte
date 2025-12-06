@@ -63,7 +63,7 @@
   )
 
   const onBackButtonClick = () => {
-    goto("/cashboard")
+    goto("/trips-lab")
   }
 
   const commit = () => {
@@ -277,7 +277,7 @@
     {trip}
     tripContent={sanityTripContent}
     onDone={async () => {
-      await goto("/cashboard")
+      await goto("/trips-lab")
       liquidating = false
     }}
     onAbort={() => {

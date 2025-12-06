@@ -7,7 +7,7 @@ import { busy } from "../index.svelte"
 const UNLOCK_ADMIN_COST = 500
 
 /**
- * Unlock admin/cashboard privileges for the current player
+ * Unlock admin/trips-lab privileges for the current player
  * Costs 500 tokens
  */
 export async function sendUnlockAdmin() {

@@ -257,7 +257,7 @@
     e.preventDefault()
 
     // Only handle keyboard events on main trips lab, not on nested trip view
-    if (page.route?.id?.includes("/cashboard/[tripId]")) return
+    if (page.route?.id?.includes("/trips-lab/[tripId]")) return
 
     if (!allVisitsData.length) return
 
@@ -293,8 +293,8 @@
     $selectedEvent = index
     // If user is viewing a trip detail page and clicks on the event log,
     // navigate back to main trips lab
-    if (page.route?.id?.includes("/cashboard/[tripId]")) {
-      goto("/cashboard")
+    if (page.route?.id?.includes("/trips-lab/[tripId]")) {
+      goto("/trips-lab")
     }
   }
 
