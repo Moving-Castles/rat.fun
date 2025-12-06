@@ -44,7 +44,7 @@
     background: var(--color-alert-priority);
     border: none;
     border-style: outset;
-    border-width: 4px;
+    border-width: 8px;
     border-color: rgba(0, 0, 0, 0.5);
     opacity: 1;
 
@@ -57,9 +57,13 @@
     }
 
     .button-text {
-      font-size: var(--font-size-normal);
+      font-size: var(--font-size-large);
       font-family: var(--special-font-stack);
       color: black;
+
+      @media (max-width: 800px) {
+        font-size: var(--font-size-normal);
+      }
     }
 
     &:hover {

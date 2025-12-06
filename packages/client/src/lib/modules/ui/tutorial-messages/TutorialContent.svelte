@@ -96,14 +96,10 @@
     .warning {
       color: red;
     }
-
-    .action {
-      font-weight: bold;
-    }
   }
 
   .tutorial-btn-container {
     margin-top: 10px;
-    height: 40px;
+    height: 60px;
   }
 </style>

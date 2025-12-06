@@ -63,7 +63,7 @@
     overlayEl.style.cssText = `
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.85);
+      background: rgba(0, 0, 0, 0.8);
       z-index: 99;
       pointer-events: auto;
       transition: clip-path 0.15s ease-in-out;

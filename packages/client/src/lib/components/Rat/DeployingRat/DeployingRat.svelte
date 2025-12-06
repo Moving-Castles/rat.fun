@@ -13,7 +13,7 @@
   import { refetchBalance } from "$lib/modules/erc20Listener"
   import { playSound } from "$lib/modules/sound"
   import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
-  import { startTutorial, isTutorialCompleted } from "$lib/modules/ui/tutorial-messages"
+  import { startTutorial } from "$lib/modules/ui/tutorial-messages"
 
   import { LockButton, SmallSpinner } from "$lib/components/Shared"
 
@@ -288,19 +288,29 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding: 1rem;
-        gap: 2rem;
+        padding: 0.5rem;
+        gap: 0.5rem;
+
+        @media (max-width: 800px) {
+          padding: 0.25rem;
+          gap: 0.25rem;
+        }
+
         .slot-display {
           display: flex;
           align-items: center;
           justify-content: center;
           padding: 0.5rem;
-          background: white;
+          background: rgba(255, 255, 255, 0.8);
           color: black;
           width: 100%;
           height: 100px;
           flex-shrink: 0;
-          // margin-bottom: 2em;
+          border: 20px groove var(--color-border);
+
+          @media (max-width: 800px) {
+            font-size: var(--font-size-small);
+          }
 
           &.locked {
             background: black;

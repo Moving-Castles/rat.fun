@@ -96,7 +96,9 @@
       }
 
       .button-cost {
-        font-size: var(--font-size-normal);
+        font-size: var(--font-size-extra-large);
+        font-family: var(--special-font-stack);
+        line-height: 1em;
       }
     }
 
