@@ -201,10 +201,13 @@
 
   /**
    * Handle amount in input change
+   * Accepts both "." and "," as decimal separators for international support
    */
   function handleAmountInInput(event: Event) {
     const input = event.target as HTMLInputElement
-    const value = parseFloat(input.value)
+    // Replace comma with period for locales that use comma as decimal separator
+    const normalizedValue = input.value.replace(",", ".")
+    const value = parseFloat(normalizedValue)
     setAmountIn(isNaN(value) ? undefined : value)
   }
 </script>
@@ -243,49 +246,49 @@
         </select>
       </div>
       <div class="input-group">
-        <label for="numeraire-input">{swapState.data.fromCurrency.symbol ?? "Amount"}:</label>
-        <input
-          id="numeraire-input"
-          type="text"
-          inputmode="decimal"
-          placeholder="0.0"
-          class:error={isAmountExceedsBalance()}
-          value={getAmountInDisplay()}
-          oninput={handleAmountInInput}
-        />
-        <div class="balance-row">
-          <span class="balance-row-left">
-            <span class="balance-text" class:error={isAmountExceedsBalance()}>
-              Balance: {getSelectedCurrencyBalance()?.toLocaleString(undefined, {
-                maximumFractionDigits: 6
-              }) ?? "..."}
-              {swapState.data.fromCurrency.symbol}
-            </span>
-            {#if isAmountExceedsBalance()}
-              <span class="error-text">· Insufficient</span>
-            {/if}
-          </span>
+        <div class="input-with-currency" class:error={isAmountExceedsBalance()}>
+          <span class="currency-label">{swapState.data.fromCurrency.symbol}</span>
+          <input
+            id="numeraire-input"
+            type="text"
+            inputmode="decimal"
+            placeholder="0.0"
+            value={getAmountInDisplay()}
+            oninput={handleAmountInInput}
+          />
           {#if getSelectedCurrencyBalance() !== undefined && getSelectedCurrencyBalance()! > 0}
             <button class="max-button" type="button" onclick={setMaxAmount}>MAX</button>
           {/if}
         </div>
+        <div class="balance-row">
+          <span class="balance-text" class:error={isAmountExceedsBalance()}>
+            Balance: {getSelectedCurrencyBalance()?.toLocaleString(undefined, {
+              maximumFractionDigits: 6
+            }) ?? "..."}
+            {swapState.data.fromCurrency.symbol}
+          </span>
+          {#if isAmountExceedsBalance()}
+            <span class="error-text">· Insufficient</span>
+          {/if}
+        </div>
       </div>
       <div class="input-group">
-        <div class="label-row">
-          <label for="token-input">$RAT:</label>
+        <div class="input-with-currency" class:error={isBelowMinimum()}>
+          <span class="currency-label">$RAT</span>
+          <input
+            id="token-input"
+            type="text"
+            readonly
+            placeholder="0"
+            value={getAmountOut() ?? ""}
+          />
+        </div>
+        <div class="output-row">
+          <span class="error-text" class:visible={isBelowMinimum()}>
+            Minimum purchase is 1 $RAT
+          </span>
           <span class="subtext">minimum guaranteed</span>
         </div>
-        <input
-          id="token-input"
-          type="text"
-          readonly
-          placeholder="0"
-          class:error={isBelowMinimum()}
-          value={getAmountOut() ?? ""}
-        />
-        <span class="error-text" class:visible={isBelowMinimum()}>
-          Minimum purchase is 1 $RAT
-        </span>
         <div class="rat-subjects-label">
           ≈ <strong>{getInGameRats() ?? 0}</strong> Rat Subjects
         </div>
@@ -352,6 +355,13 @@
       font-family: var(--typewriter-font-stack);
       padding: 10px 6px;
       border-radius: 0;
+      background: rgba(255, 255, 255, 0.05);
+
+      &:focus,
+      &:hover,
+      &:active {
+        background: rgba(255, 255, 255, 0.05);
+      }
 
       option {
         background: #1a1a1a;
@@ -369,10 +379,49 @@
       &::placeholder {
         color: rgba(255, 255, 255, 0.3);
       }
+    }
+
+    .input-with-currency {
+      display: flex;
+      align-items: stretch;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.2s;
+
+      &:focus-within {
+        border-color: rgba(255, 255, 255, 0.4);
+        background: rgba(0, 0, 0, 0.4);
+      }
 
       &.error {
         border-color: red;
         background: rgba(255, 68, 68, 0.1);
+      }
+
+      .currency-label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 60px;
+        flex-shrink: 0;
+        font-size: 14px;
+        white-space: nowrap;
+        background: rgba(255, 255, 255, 0.15);
+        color: white;
+        border-right: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      input {
+        flex: 1;
+        min-width: 0;
+        border: none;
+        background: transparent;
+        padding: 12px 16px 12px 8px;
+
+        &:focus {
+          border: none;
+          background: transparent;
+        }
       }
     }
 
@@ -392,28 +441,24 @@
       }
     }
 
-    .balance-row-left {
+    .max-button {
       display: flex;
       align-items: center;
-      gap: 6px;
-    }
-
-    .max-button {
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: rgba(255, 255, 255, 0.8);
-      font-size: 11px;
-      padding: 2px 8px;
+      flex-shrink: 0;
+      background: rgba(255, 255, 255, 0.15);
+      border: none;
+      border-left: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      padding: 0 12px;
       cursor: pointer;
       transition: all 0.2s;
 
       &:hover {
-        background: rgba(255, 255, 255, 0.2);
-        color: white;
+        background: rgba(255, 255, 255, 0.25);
       }
     }
 
-    .label-row {
+    .output-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -423,7 +468,6 @@
       font-size: 12px;
       color: red;
       visibility: hidden;
-      min-height: 18px;
 
       &.visible {
         visibility: visible;

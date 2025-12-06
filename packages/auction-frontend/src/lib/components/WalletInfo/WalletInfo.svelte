@@ -113,8 +113,7 @@
     font-family: var(--typewriter-font-stack);
 
     @media (max-width: 768px) {
-      top: 10px;
-      left: 10px;
+      display: none;
     }
 
     .wallet-box {

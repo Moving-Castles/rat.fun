@@ -244,8 +244,9 @@
     flex-flow: column nowrap;
     align-items: flex-start;
     justify-content: center;
-    padding: 10px;
+    padding: 10px 8px;
     margin-bottom: 10px;
+    width: 100%;
   }
 
   .withdrawal-label {
@@ -257,9 +258,10 @@
   }
 
   .withdrawal-text {
-    font-size: var(--font-size-normal);
+    font-size: var(--font-size-small);
     line-height: 1.2;
     color: white;
+    padding-top: 3px;
 
     @media (max-width: 768px) {
       font-size: var(--font-size-small);
