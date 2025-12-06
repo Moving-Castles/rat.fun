@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { type Hex, maxUint128 } from "viem"
+  import { type Hex, maxUint128, formatUnits } from "viem"
   import {
     signPermit2,
     waitForDopplerSwapReceipt,
@@ -37,6 +37,27 @@
     if (!balance) return false
 
     return amountIn > balance.balance
+  }
+
+  /**
+   * Check if output amount is below minimum (1 $RAT)
+   * Also returns true if input is so small it rounds to 0
+   */
+  function isBelowMinimum(): boolean {
+    const amountIn = swapState.data.amountIn
+    const amountOut = swapState.data.amountOut
+    const auctionParams = swapState.data.auctionParams
+    if (!auctionParams) return false
+
+    // If input rounds to 0, it's below minimum (user entered something too small)
+    if (amountIn === 0n) return true
+
+    // If no output yet, not below minimum
+    if (amountOut === undefined) return false
+
+    // If output is 0 or less than 1 $RAT, it's below minimum
+    const ratAmount = Number(formatUnits(amountOut, auctionParams.token.decimals))
+    return ratAmount < 1
   }
 
   function withSlippage(amount: bigint, isOut: boolean): bigint {
@@ -208,7 +229,8 @@
     disabled={!swapState.data.amountIn ||
       isProcessing ||
       !waiveWithdrawal ||
-      isAmountExceedsBalance()}
+      isAmountExceedsBalance() ||
+      isBelowMinimum()}
     text={isProcessing ? processingStep || "Processing..." : "Buy $RAT"}
     onclick={() => {
       signAndSwap()

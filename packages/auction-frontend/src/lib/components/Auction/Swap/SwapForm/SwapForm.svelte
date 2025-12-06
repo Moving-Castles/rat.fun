@@ -6,6 +6,20 @@
   import { tokenBalances } from "$lib/modules/balances"
 
   /**
+   * Convert a number to decimal string without scientific notation
+   * JavaScript's toString() can produce "1e-7" for small numbers, which viem rejects
+   */
+  function toDecimalString(value: number, maxDecimals: number): string {
+    // Handle edge cases
+    if (!Number.isFinite(value)) return "0"
+
+    // Use toFixed to avoid scientific notation, then trim trailing zeros
+    const fixed = value.toFixed(maxDecimals)
+    // Remove trailing zeros after decimal point, but keep at least one digit after decimal if there is one
+    return fixed.replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "")
+  }
+
+  /**
    * Get balance for a currency address
    */
   function getCurrencyBalance(address: Hex): number | undefined {
@@ -30,13 +44,44 @@
   }
 
   /**
+   * Get amount in as number for comparisons
+   */
+  function getAmountInNumber(): number | undefined {
+    const amountIn = swapState.data.amountIn
+    if (amountIn === undefined) return undefined
+    if (amountIn === 0n) return 0
+    return Number(formatUnits(amountIn, swapState.data.fromCurrency.decimals))
+  }
+
+  /**
    * Check if the current input amount exceeds the user's balance
    */
   function isAmountExceedsBalance(): boolean {
     const balance = getSelectedCurrencyBalance()
-    const amountIn = getAmountIn()
+    const amountIn = getAmountInNumber()
     if (balance === undefined || amountIn === undefined) return false
     return amountIn > balance
+  }
+
+  /**
+   * Check if output amount is below minimum (1 $RAT)
+   * Also returns true if input is so small it rounds to 0
+   */
+  function isBelowMinimum(): boolean {
+    const amountIn = swapState.data.amountIn
+    const amountOut = swapState.data.amountOut
+    const auctionParams = swapState.data.auctionParams
+    if (!auctionParams) return false
+
+    // If input rounds to 0, it's below minimum (user entered something too small)
+    if (amountIn === 0n) return true
+
+    // If no output yet, not below minimum
+    if (amountOut === undefined) return false
+
+    // If output is 0 or less than 1 $RAT, it's below minimum
+    const ratAmount = Number(formatUnits(amountOut, auctionParams.token.decimals))
+    return ratAmount < 1
   }
 
   /**
@@ -66,13 +111,15 @@
 
   /**
    * Get numeraire amount formatted for display in input field
+   * Returns string to avoid scientific notation for small numbers
    */
-  function getAmountIn() {
+  function getAmountInDisplay(): string {
     const amountIn = swapState.data.amountIn
-    if (amountIn === 0n) return 0
+    if (amountIn === 0n) return "0"
     const auctionParams = swapState.data.auctionParams
-    if (!amountIn || !auctionParams) return undefined
-    return Number(formatUnits(amountIn, swapState.data.fromCurrency.decimals))
+    if (!amountIn || !auctionParams) return ""
+    // Use formatUnits which returns a proper decimal string without scientific notation
+    return formatUnits(amountIn, swapState.data.fromCurrency.decimals)
   }
 
   /**
@@ -96,18 +143,35 @@
       swapState.data.setAmountIn(0n)
       swapState.data.setAmountOut(undefined)
     } else {
-      // Parse display value to bigint with proper decimals
-      const amountIn = parseUnits(value.toString(), fromCurrency.decimals)
-      swapState.data.setAmountIn(amountIn)
-      // Quote the expected output amount
-      quoteExactIn(fromCurrency.address, auctionParams, amountIn)
-        .then(result => {
-          swapState.data.setAmountOut(result.amountOutFinal)
-        })
-        .catch(error => {
-          console.error("[SwapForm] Quote failed:", decodeQuoterError(error))
+      try {
+        // Parse display value to bigint with proper decimals
+        // Use toDecimalString to avoid scientific notation for small numbers
+        const valueStr = toDecimalString(value, fromCurrency.decimals)
+        const amountIn = parseUnits(valueStr, fromCurrency.decimals)
+
+        // If the parsed amount is 0 (value was too small), treat as zero
+        if (amountIn === 0n) {
+          swapState.data.setAmountIn(0n)
           swapState.data.setAmountOut(undefined)
-        })
+          return
+        }
+
+        swapState.data.setAmountIn(amountIn)
+        // Quote the expected output amount
+        quoteExactIn(fromCurrency.address, auctionParams, amountIn)
+          .then(result => {
+            swapState.data.setAmountOut(result.amountOutFinal)
+          })
+          .catch(error => {
+            console.error("[SwapForm] Quote failed:", decodeQuoterError(error))
+            swapState.data.setAmountOut(undefined)
+          })
+      } catch (error) {
+        // Handle invalid decimal number errors gracefully
+        console.warn("[SwapForm] Invalid amount:", error)
+        swapState.data.setAmountIn(undefined)
+        swapState.data.setAmountOut(undefined)
+      }
     }
   }
 
@@ -186,7 +250,7 @@
           inputmode="decimal"
           placeholder="0.0"
           class:error={isAmountExceedsBalance()}
-          value={getAmountIn() ?? ""}
+          value={getAmountInDisplay()}
           oninput={handleAmountInInput}
         />
         <div class="balance-row">
@@ -207,9 +271,21 @@
         </div>
       </div>
       <div class="input-group">
-        <label for="token-input">$RAT:</label>
-        <input id="token-input" type="text" readonly placeholder="0" value={getAmountOut() ?? ""} />
-        <span class="subtext">minimum guaranteed</span>
+        <div class="label-row">
+          <label for="token-input">$RAT:</label>
+          <span class="subtext">minimum guaranteed</span>
+        </div>
+        <input
+          id="token-input"
+          type="text"
+          readonly
+          placeholder="0"
+          class:error={isBelowMinimum()}
+          value={getAmountOut() ?? ""}
+        />
+        <span class="error-text" class:visible={isBelowMinimum()}>
+          Minimum purchase is 1 $RAT
+        </span>
         <div class="rat-subjects-label">
           ≈ <strong>{getInGameRats() ?? 0}</strong> Rat Subjects
         </div>
@@ -243,7 +319,7 @@
   .input-group {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 5px;
     margin-bottom: 10px;
     label {
       font-size: 14px;
@@ -332,9 +408,21 @@
       }
     }
 
+    .label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
     .error-text {
       font-size: 12px;
       color: #ff4444;
+      visibility: hidden;
+      min-height: 18px;
+
+      &.visible {
+        visibility: visible;
+      }
     }
 
     .subtext {
