@@ -9,9 +9,6 @@ export { default as X } from "./Graphics/X.svelte"
 /* Mascot */
 export { default as Mascot } from "./Mascot/Mascot.svelte"
 
-/* Marquee */
-export { default as Marquee } from "./Marquee/Marquee.svelte"
-
 /* Shader */
 export { default as ShaderGlobal } from "./Shader/ShaderGlobal.svelte"
 export { default as ShaderLocal } from "./Shader/ShaderLocal.svelte"

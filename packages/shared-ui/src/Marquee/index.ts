@@ -1,1 +1,1 @@
-export { default as Marquee } from './Marquee.svelte'
+export { default as Marquee } from "./Marquee.svelte"

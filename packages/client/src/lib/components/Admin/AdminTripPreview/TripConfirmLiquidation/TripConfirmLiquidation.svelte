@@ -1,7 +1,12 @@
 <script lang="ts">
   import type { Trip as SanityTrip } from "@sanity-types"
   import { sendLiquidateTrip } from "$lib/modules/action-manager/index.svelte"
-  import { BigButton, TripClosureValueBreakdown, SmallSpinner } from "$lib/components/Shared"
+  import {
+    BigButton,
+    TripClosureValueBreakdown,
+    SmallSpinner,
+    TotalValue
+  } from "$lib/components/Shared"
 
   let {
     tripId,
@@ -34,7 +39,7 @@
   {:else}
     <div class="confirm-liquidation-content">
       <div class="total-value-container">
-        <div class="trip-value">${Number(trip.balance).toFixed(2)}</div>
+        <TotalValue value={Number(trip.balance)} />
       </div>
       <div class="confirm-liquidation-text">
         <TripClosureValueBreakdown
@@ -67,24 +72,13 @@
     justify-content: center;
     position: relative;
     width: 100%;
+    height: 100%;
     text-align: center;
     background-image: url("/images/texture-2.png");
     background-size: 200px;
-    height: var(--game-window-main-height);
 
     .confirm-liquidation-content {
       width: calc(100% - 40px);
-
-      .total-value-container {
-        width: 100%;
-        padding-bottom: 20px;
-
-        .trip-value {
-          font-size: 48px;
-          font-weight: bold;
-          color: black;
-        }
-      }
 
       .confirm-liquidation-text {
         width: 100%;
