@@ -1,0 +1,15 @@
+{
+  "name": "@ratfun/shared-ui",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "svelte": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./Marquee": "./src/Marquee/index.ts",
+    "./Checkbox": "./src/Checkbox/index.ts"
+  },
+  "peerDependencies": {
+    "svelte": "^5.0.0"
+  }
+}

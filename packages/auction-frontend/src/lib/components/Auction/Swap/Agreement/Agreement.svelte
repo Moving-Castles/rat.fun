@@ -68,7 +68,7 @@
 
 <div class="agreement-container">
   <label class="agreement-label">
-    <Checkbox bind:checked={accepted} />
+    <Checkbox checked={accepted} onchange={() => (accepted = !accepted)} />
     <span class="agreement-text">
       I accept the <a href="/documents/sale-terms.pdf" target="_blank" rel="noopener noreferrer"
         >Sale Terms</a

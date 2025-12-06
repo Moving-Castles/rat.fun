@@ -217,7 +217,7 @@
 
 <div class="withdrawal-container">
   <label class="withdrawal-label">
-    <Checkbox bind:checked={waiveWithdrawal} />
+    <Checkbox checked={waiveWithdrawal} onchange={() => (waiveWithdrawal = !waiveWithdrawal)} />
     <span class="withdrawal-text">
       I want immediate delivery and waive my 14-day withdrawal right for this purchase.
     </span>

@@ -41,6 +41,7 @@
   },
   "dependencies": {
     "@ratfun/common": "workspace:*",
+    "@ratfun/shared-ui": "workspace:*",
     "@ratfun/webgl": "workspace:*",
     "drawbridge": "workspace:*",
     "@farcaster/miniapp-sdk": "^0.2.1",

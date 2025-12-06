@@ -1,17 +1,19 @@
 <script lang="ts">
   let {
-    checked = $bindable(false),
+    checked = false,
     disabled = false,
+    onchange,
     ariaLabel = "Toggle checkbox"
   }: {
     checked?: boolean
     disabled?: boolean
+    onchange?: () => void
     ariaLabel?: string
   } = $props()
 
   const handleClick = () => {
     if (!disabled) {
-      checked = !checked
+      onchange?.()
     }
   }
 </script>

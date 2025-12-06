@@ -17,7 +17,7 @@ export { default as Logo } from "./Logo/Logo.svelte"
 export { default as RatAvatar } from "./RatAvatar/RatAvatar.svelte"
 
 /* Marquee */
-export { default as Marquee } from "./Marquee/Marquee.svelte"
+export { Marquee } from "@ratfun/shared-ui/Marquee"
 
 /* Shader */
 export { default as ShaderGlobal } from "./Shader/ShaderGlobal.svelte"
@@ -58,7 +58,7 @@ export { default as SEO } from "./SEO/SEO.svelte"
 export { default as SignedNumber } from "./SignedNumber/SignedNumber.svelte"
 
 /* Inputs */
-export { default as Checkbox } from "./Inputs/Checkbox.svelte"
+export { Checkbox } from "@ratfun/shared-ui/Checkbox"
 
 /* Modals */
 export { default as ManageAllowanceModal } from "./ManageAllowanceModal/ManageAllowanceModal.svelte"

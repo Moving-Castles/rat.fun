@@ -4,7 +4,7 @@ export { default as SmallButton } from "./Buttons/SmallButton.svelte"
 export { default as BackButton } from "./Buttons/BackButton.svelte"
 
 /* Inputs */
-export { default as Checkbox } from "./Inputs/Checkbox.svelte"
+export { Checkbox } from "@ratfun/shared-ui/Checkbox"
 
 /* Graphics */
 export { default as X } from "./Graphics/X.svelte"
@@ -13,7 +13,7 @@ export { default as X } from "./Graphics/X.svelte"
 export { default as Mascot } from "./Mascot/Mascot.svelte"
 
 /* Marquee */
-export { default as Marquee } from "./Marquee/Marquee.svelte"
+export { Marquee } from "@ratfun/shared-ui/Marquee"
 
 /* Shader */
 export { default as ShaderGlobal } from "./Shader/ShaderGlobal.svelte"
