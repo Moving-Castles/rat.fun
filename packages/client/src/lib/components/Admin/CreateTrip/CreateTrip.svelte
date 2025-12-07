@@ -433,12 +433,6 @@
       font-family: var(--typewriter-font-stack);
       font-size: var(--font-size-normal);
 
-      .header-text {
-        .folder-name {
-          font-weight: bold;
-        }
-      }
-
       .back-link {
         background: none;
         border: none;
@@ -477,7 +471,6 @@
           background: var(--color-grey-mid);
           padding: 5px;
           color: var(--background);
-          font-weight: normal;
         }
       }
 
@@ -503,7 +496,6 @@
         background: var(--foreground);
         padding: 5px;
         color: var(--background);
-        font-weight: normal;
         font-family: var(--typewriter-font-stack);
         border: none;
         width: 60px;

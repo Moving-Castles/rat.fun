@@ -84,7 +84,6 @@
           color: var(--background);
           padding: 20px;
           margin: 0 0 20px 0;
-          font-weight: bold;
         }
 
         .error-message {

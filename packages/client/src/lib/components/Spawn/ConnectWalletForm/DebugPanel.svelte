@@ -110,7 +110,7 @@
     background: var(--foreground);
     color: var(--background);
     border: 2px solid var(--foreground);
-    font-size: 24px;
+    font-size: var(--font-size-large);
     cursor: pointer;
     z-index: 9998;
     display: flex;
@@ -142,7 +142,7 @@
       max-width: 600px;
       margin: 0 auto;
       position: relative;
-      font-size: 12px;
+      font-size: var(--font-size-normal);
 
       .close-btn {
         position: absolute;
@@ -151,7 +151,7 @@
         background: transparent;
         color: var(--foreground);
         border: none;
-        font-size: 32px;
+        font-size: var(--font-size-extra-large);
         cursor: pointer;
         line-height: 1;
         padding: 0;
@@ -165,13 +165,13 @@
 
       h2 {
         margin: 0 0 24px 0;
-        font-size: 20px;
+        font-size: var(--font-size-medium);
         text-align: center;
       }
 
       h3 {
         margin: 16px 0 8px 0;
-        font-size: 14px;
+        font-size: var(--font-size-normal);
         border-bottom: 1px solid var(--foreground);
         padding-bottom: 4px;
       }
@@ -205,7 +205,6 @@
       .debug-warning {
         color: var(--color-bad);
         text-align: center;
-        font-weight: bold;
         margin: 16px 0;
       }
     }

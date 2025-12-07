@@ -38,7 +38,7 @@
         background: transparent;
         color: var(--foreground);
         border: none;
-        font-size: 32px;
+        font-size: var(--font-size-extra-large);
         cursor: pointer;
         line-height: 1;
         padding: 0;
@@ -52,7 +52,7 @@
 
       h2 {
         margin: 0 0 24px 0;
-        font-size: 24px;
+        font-size: var(--font-size-large);
         text-align: center;
       }
     }

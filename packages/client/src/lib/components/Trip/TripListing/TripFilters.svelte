@@ -203,7 +203,7 @@
     background: var(--color-grey-light);
     border: none;
     outline: none;
-    font-family: var(--font-mono);
+    font-family: var(--typewriter-font-stack);
     height: 20px;
     line-height: 22px;
 
@@ -215,6 +215,6 @@
 
   input[type="text"]::placeholder {
     color: var(--color-grey-dark);
-    font-family: var(--font-mono);
+    font-family: var(--typewriter-font-stack);
   }
 </style>

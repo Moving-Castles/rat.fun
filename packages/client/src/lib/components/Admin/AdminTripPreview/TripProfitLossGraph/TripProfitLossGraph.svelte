@@ -149,7 +149,7 @@
     const eventType = point.eventType || "unknown"
     const eventTypeLabel = mapping[eventType]
 
-    let toolTipContent = `<div><strong>${eventTypeLabel}</strong><br/>`
+    let toolTipContent = `<div>${eventTypeLabel}<br/>`
 
     const valueChangeClass = point.value
       ? point.value > 0

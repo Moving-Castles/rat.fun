@@ -27,7 +27,7 @@
   }
 
   .count {
-    font-size: 1.5rem;
+    font-size: var(--font-size-large);
     margin-bottom: 10px;
   }
 

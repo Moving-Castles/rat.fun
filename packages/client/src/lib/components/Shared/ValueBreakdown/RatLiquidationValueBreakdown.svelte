@@ -50,7 +50,6 @@
     color: var(--background);
     padding: 3px 8px;
     border-radius: 3px;
-    font-weight: bold;
 
     &.negative {
       background: var(--color-bad);

@@ -259,7 +259,7 @@
     width: 600px;
     max-width: 90dvw;
     pointer-events: none;
-    font-size: 22px;
+    font-size: var(--font-size-normal);
     font-family: var(--special-font-stack);
     text-align: left;
 
@@ -319,7 +319,7 @@
       max-width: calc(100dvw - 60px);
       padding: 12px 16px;
       border-width: 2px;
-      font-size: 18px;
+      font-size: var(--font-size-normal);
 
       &.isGameMascot {
         top: 100px;

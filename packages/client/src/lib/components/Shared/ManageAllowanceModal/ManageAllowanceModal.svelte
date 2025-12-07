@@ -222,14 +222,14 @@
     }
 
     h2 {
-      font-size: 24px;
+      font-size: var(--font-size-large);
       margin: 0;
       color: var(--color-white);
       text-align: center;
     }
 
     .description {
-      font-size: 14px;
+      font-size: var(--font-size-normal);
       color: var(--color-grey-light);
       text-align: center;
       margin: 0;
@@ -280,7 +280,6 @@
           background: var(--color-grey-light);
           padding: 5px;
           color: var(--background);
-          font-weight: normal;
         }
       }
 
@@ -288,7 +287,6 @@
         background: var(--foreground);
         padding: 5px;
         color: var(--background);
-        font-weight: normal;
         font-family: var(--typewriter-font-stack);
         border: none;
         width: 100px;
@@ -375,7 +373,7 @@
     }
 
     .loading-spinner {
-      font-size: 32px;
+      font-size: var(--font-size-large);
       margin: 20px 0;
       text-align: center;
     }

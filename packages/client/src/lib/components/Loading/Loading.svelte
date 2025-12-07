@@ -7,13 +7,7 @@
   import { terminalTyper } from "$lib/modules/terminal-typer/index"
   import { generateLoadingOutput } from "$lib/components/Loading/loadingOutput"
   import { playSound } from "$lib/modules/sound"
-  import {
-    blockNumber,
-    loadingMessage,
-    loadingPercentage,
-    ready,
-    publicNetwork
-  } from "$lib/modules/network"
+  import { publicNetwork } from "$lib/modules/network"
   import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
   import { addressToId } from "$lib/modules/utils"
 
@@ -203,12 +197,6 @@
 </script>
 
 <div class="loading" bind:this={loadingElement}>
-  <div class="status-box">
-    <div>{UI_STRINGS.blockNumber}: {$blockNumber}</div>
-    <div>{UI_STRINGS.loadingMsg}: {$loadingMessage}</div>
-    <div>{UI_STRINGS.loadingPercentage}: {$loadingPercentage}</div>
-    <div>{UI_STRINGS.readyQuestion} {$ready}</div>
-  </div>
   <div class="mc-logo" bind:this={logoElement}>
     <img src="/images/logo.png" alt={UI_STRINGS.authorFullTitle} />
   </div>
@@ -257,17 +245,6 @@
         height: 100%;
         object-fit: contain;
       }
-    }
-
-    .status-box {
-      position: fixed;
-      top: 0;
-      right: 0;
-      padding: 10px;
-      background: yellow;
-      font-size: 10px;
-      color: var(--background);
-      display: none;
     }
   }
 </style>

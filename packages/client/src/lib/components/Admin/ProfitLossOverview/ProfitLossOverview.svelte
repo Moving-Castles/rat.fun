@@ -128,7 +128,7 @@
         .unit {
           top: 50%;
           position: absolute;
-          font-size: 240px;
+          font-size: var(--font-size-ultra);
           padding: 5px;
           z-index: var(--z-background);
 
@@ -238,7 +238,7 @@
     margin: 0;
     width: 100%;
     text-align: center;
-    font-size: 60px;
+    font-size: var(--font-size-super-large);
     position: relative;
     display: flex;
 
@@ -249,7 +249,7 @@
     }
 
     @media screen and (min-width: 1024px) {
-      font-size: 82px;
+      font-size: var(--font-size-super-large);
     }
 
     .profit-amount-value {
@@ -260,7 +260,7 @@
 
   .portfolio-amount {
     font-family: var(--special-font-stack);
-    font-size: 36px;
+    font-size: var(--font-size-extra-large);
     display: inline-block;
     width: 100%;
     display: flex;

@@ -105,7 +105,7 @@
 
     .watermark {
       position: absolute;
-      font-size: 100px;
+      font-size: var(--font-size-super-large);
       left: 50%;
       top: 50%;
       transform: translate(-50%, -50%) rotate(-10deg);

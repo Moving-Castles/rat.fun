@@ -84,32 +84,31 @@
     width: 90%;
 
     h2 {
-      font-size: 24px;
+      font-size: var(--font-size-extra-large);
       margin-bottom: 20px;
       color: var(--foreground);
     }
 
     p {
-      font-size: 16px;
+      font-size: var(--font-size-normal);
       margin-bottom: 30px;
       color: var(--color-grey-light);
     }
 
     .unlock-cost {
-      font-size: 18px;
-      font-weight: bold;
+      font-size: var(--font-size-normal);
       margin-bottom: 20px;
       color: var(--foreground);
     }
 
     .insufficient-balance {
-      font-size: 14px;
+      font-size: var(--font-size-normal);
       color: var(--color-bad);
       margin-bottom: 20px;
     }
 
     .loading-spinner {
-      font-size: 32px;
+      font-size: var(--font-size-extra-large);
       margin: 30px 0;
       color: var(--foreground);
     }

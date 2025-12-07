@@ -150,7 +150,6 @@
     font-size: var(--font-size-normal);
     padding-inline: 10px;
     font-family: inherit;
-    font-weight: inherit;
     line-height: inherit;
     letter-spacing: inherit;
     display: inline-block;

@@ -103,7 +103,7 @@
       position: fixed;
       top: 10px;
       right: 10px;
-      font-size: 10px;
+      font-size: var(--font-size-very-small);
       font-family: monospace;
       background: var(--color-grey-mid);
       color: var(--background);
