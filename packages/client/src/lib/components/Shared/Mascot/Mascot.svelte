@@ -290,7 +290,7 @@
     transform: translateX(50%);
     z-index: 10;
     padding: 10px;
-    width: var(--spawn-inner-width);
+    width: 900px;
     max-width: 90dvw;
     pointer-events: none;
     font-size: var(--font-size-mascot);

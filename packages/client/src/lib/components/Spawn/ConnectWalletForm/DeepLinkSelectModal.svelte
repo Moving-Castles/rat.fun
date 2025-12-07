@@ -79,7 +79,7 @@
         background: transparent;
         color: var(--foreground);
         border: none;
-        font-size: var(--font-size-extra-large);
+        font-size: var(--font-size-large);
         cursor: pointer;
         line-height: 1;
         padding: 0;

@@ -87,13 +87,16 @@
           font-size: var(--font-size-normal);
         }
       }
+      transition: transform 0.1s ease-in-out;
 
       &:hover {
         border-color: var(--background-light-transparent);
+        transform: scale(0.97);
       }
 
       &:active {
         filter: invert(1);
+        transform: scale(0.95);
       }
 
       &.restricted {

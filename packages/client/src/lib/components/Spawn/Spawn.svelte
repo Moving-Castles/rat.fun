@@ -71,9 +71,9 @@
 
     // Start background music after a delay
     // (when already spawned we pass through quickly and music might start unnecessarily)
-    await new Promise(resolve => setTimeout(resolve, 500))
     if ($UIState === UI.SPAWNING) {
       shaderManager.setShader("cloudsBw")
+      await new Promise(resolve => setTimeout(resolve, 500))
       backgroundMusic.play({
         category: "ratfunMusic",
         id: "spawn",
