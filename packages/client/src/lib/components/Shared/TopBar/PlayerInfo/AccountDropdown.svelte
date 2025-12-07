@@ -30,7 +30,7 @@
     top: 58px;
     left: 0;
     background-color: var(--background-dark-transparent);
-    color: var(--white);
+    color: var(--foreground);
     padding: 20px;
     transition: all 0.2s ease;
     line-height: 1.3em;

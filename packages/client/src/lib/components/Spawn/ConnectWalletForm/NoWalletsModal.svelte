@@ -16,7 +16,7 @@
   .wallet-modal {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.9);
+    background: var(--background-dark-transparent);
     z-index: 9999;
     display: flex;
     align-items: center;

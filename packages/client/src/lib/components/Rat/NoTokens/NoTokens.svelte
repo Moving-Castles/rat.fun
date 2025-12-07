@@ -59,7 +59,7 @@
 <style lang="scss">
   .no-tokens {
     text-align: center;
-    color: var(--white);
+    color: var(--foreground);
     width: 100%;
     height: 100%;
     overflow: hidden;
@@ -73,16 +73,16 @@
     .loading {
       font-size: var(--font-size-normal);
       font-family: var(--typewriter-font-stack);
-      color: black;
-      background: white;
+      color: var(--background);
+      background: var(--foreground);
       padding: 10px;
     }
 
     .notice {
       font-size: var(--font-size-normal);
       font-family: var(--typewriter-font-stack);
-      color: black;
-      background: red;
+      color: var(--background);
+      background: var(--color-bad);
       padding: 10px;
       width: 50%;
     }
@@ -93,8 +93,8 @@
         font-size: var(--font-size-large);
         font-family: var(--typewriter-font-stack);
         padding: 10px;
-        background: rgba(255, 255, 255, 0.5);
-        color: black;
+        background: var(--foreground-semi-transparent);
+        color: var(--background);
         padding: 10px;
         width: 100%;
         margin-bottom: 20px;

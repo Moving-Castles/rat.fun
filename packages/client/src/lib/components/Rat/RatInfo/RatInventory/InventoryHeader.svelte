@@ -31,7 +31,7 @@
     height: 40px;
     flex-shrink: 0;
     border-bottom: var(--dashed-border-style);
-    background: rgba(0, 0, 0, 0.3);
+    background: var(--background-semi-transparent);
 
     .inventory-header {
       height: 100%;

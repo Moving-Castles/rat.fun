@@ -33,7 +33,7 @@
 
 <style lang="scss">
   .meta-data-item {
-    background: rgba(255, 255, 255, 0.4);
+    background: var(--foreground-light-transparent);
     color: var(--background);
     margin-bottom: 5px;
     border-radius: 4px;
@@ -44,23 +44,23 @@
     justify-content: center;
 
     &.unclear {
-      background: rgba(255, 255, 255, 0.4);
+      background: var(--foreground-light-transparent);
     }
 
     &.low {
-      background: lightgreen;
+      background: var(--color-risk-meter-low);
     }
 
     &.mid {
-      background: yellow;
+      background: var(--color-risk-meter-mid);
     }
 
     &.hi {
-      background: pink;
+      background: var(--color-risk-meter-hi);
     }
 
     &.nitemare {
-      background: red;
+      background: var(--color-risk-meter-nitemare);
     }
 
     .inner {

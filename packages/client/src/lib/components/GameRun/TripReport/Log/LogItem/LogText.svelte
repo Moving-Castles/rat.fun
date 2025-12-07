@@ -164,7 +164,7 @@
 <style lang="scss">
   .log-text {
     display: inline-block;
-    background: rgba(255, 255, 255, 0.6);
+    background: var(--foreground-semi-transparent);
     max-width: 100%;
     padding: 5px;
     color: var(--background);
@@ -175,22 +175,22 @@
     overflow-wrap: break-word;
 
     :global(.item-ref) {
-      background: yellow;
+      background: var(--color-log-text-item);
       padding: 2px 4px;
     }
 
     :global(.quote) {
-      background: pink;
+      background: var(--color-log-text-quote);
       padding: 2px 4px;
     }
 
     :global(.system-message) {
-      background: orangered;
+      background: var(--color-log-text-system);
       padding: 2px 4px;
     }
 
     :global(.balance-message) {
-      background: green;
+      background: var(--color-log-text-balance);
       padding: 2px 4px;
     }
 

@@ -146,8 +146,8 @@
           margin-right: 10px;
           font-size: var(--font-size-large);
           padding: 10px;
-          background: var(--white);
-          color: black;
+          background: var(--foreground);
+          color: var(--background);
           border: none;
           margin-bottom: 0;
           font-family: var(--special-font-stack);

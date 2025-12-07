@@ -67,25 +67,25 @@
     }
 
     &.toast-error {
-      border-color: red;
+      border-color: var(--color-toast-error);
     }
 
     &.toast-warning {
-      border-color: yellow;
+      border-color: var(--color-toast-warning);
     }
 
     &.toast-info {
-      border-color: var(--color-grey-mid);
+      border-color: var(--color-toast-info);
     }
 
     &.toast-player-notification {
       font-size: var(--font-size-normal);
-      border-color: var(--color-up);
+      border-color: var(--color-toast-player-notification);
     }
 
     &.toast-trip-notification {
       font-size: var(--font-size-normal);
-      border-color: var(--color-up);
+      border-color: var(--color-toast-trip-notification);
     }
   }
 

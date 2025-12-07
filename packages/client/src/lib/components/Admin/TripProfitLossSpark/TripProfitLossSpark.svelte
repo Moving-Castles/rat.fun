@@ -109,7 +109,7 @@
     span {
       background: var(--black);
       padding: 2px;
-      color: var(--color-death);
+      color: var(--color-bad);
     }
   }
 

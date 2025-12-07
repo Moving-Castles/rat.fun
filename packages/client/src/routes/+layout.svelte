@@ -110,9 +110,6 @@
   }
 
   onMount(async () => {
-    // Remove preloader
-    document.querySelector(".preloader")?.remove()
-
     initSound()
 
     // Signal readiness to base (farcaster) mini app framework
@@ -162,6 +159,6 @@
     position: fixed;
     inset: 0;
     z-index: var(--z-background);
-    background: #000;
+    background: var(--background);
   }
 </style>

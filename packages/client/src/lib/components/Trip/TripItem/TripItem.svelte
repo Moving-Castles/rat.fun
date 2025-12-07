@@ -144,7 +144,7 @@
     }
 
     &:hover {
-      background-color: rgba(0, 0, 0, 0.8);
+      background-color: var(--background-dark-transparent);
 
       .trip-image {
         transform: scale(1.05);
@@ -157,7 +157,7 @@
     .overlay {
       position: absolute;
       inset: 0;
-      background: rgba(0, 0, 0, 0.7);
+      background: var(--background-dark-transparent);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -170,7 +170,7 @@
         color: var(--foreground);
         text-align: center;
         padding: 20px;
-        background: var(--color-alert);
+        background: var(--color-grey-dark);
         color: var(--background);
       }
     }
@@ -195,7 +195,7 @@
           width: 100%;
           mix-blend-mode: screen;
           border-radius: 20px;
-          border: 5px solid rgba(255, 255, 255, 0.2);
+          border: 5px solid var(--foreground-light-transparent);
           overflow: hidden;
 
           @media (max-width: 800px) {

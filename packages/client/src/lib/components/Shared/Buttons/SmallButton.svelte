@@ -46,21 +46,16 @@
   button {
     width: 100%;
     height: 100%;
-    background: var(--color-alert-priority);
+    background: var(--color-grey-light);
     border: none;
     border-style: outset;
     border-width: 4px;
-    border-color: rgba(0, 0, 0, 0.5);
-
-    &.red {
-      background: var(--color-death);
-    }
-
+    border-color: var(--background-light-transparent);
     .button-text {
       font-size: var(--font-size-normal);
       font-family: var(--special-font-stack);
       line-height: 1em;
-      color: black;
+      color: var(--background);
     }
 
     .button-cost {
@@ -68,25 +63,17 @@
     }
 
     &:hover {
-      background: var(--color-alert-priority-light);
-
-      &.red {
-        background: var(--color-death-light);
-      }
+      background: var(--color-grey-lighter);
     }
 
     &:active {
-      background: var(--color-alert-priority-muted);
+      background: var(--color-grey-mid);
       border-style: inset;
       transform: translateY(2px);
       border-width: 4px;
       position: relative;
       top: -2px;
-      color: white;
-
-      &.red {
-        background: var(--color-death-muted);
-      }
+      color: var(--foreground);
     }
 
     &.disabled {

@@ -107,16 +107,16 @@
       .item {
         opacity: 0;
         padding: 5px;
-        color: black;
-        background: yellow;
+        color: var(--background);
+        background: var(--color-inventory-back);
         margin-right: 0.5em;
       }
 
       .empty {
         opacity: 0;
         padding: 5px;
-        color: black;
-        background: lightgray;
+        color: var(--background);
+        background: var(--color-grey-light);
       }
     }
   }

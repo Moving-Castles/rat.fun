@@ -28,8 +28,8 @@
 
 <style lang="scss">
   .empty-slot {
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(0, 0, 0, 0.4);
+    background: var(--background-light-transparent);
+    border: 1px solid var(--background-semi-transparent);
     min-height: 40px;
     opacity: 1;
     position: relative;
@@ -42,7 +42,7 @@
 
     &::before {
       content: var(--msg-empty);
-      color: rgba(255, 255, 255, 0.6);
+      color: var(--foreground-semi-transparent);
       font-size: var(--font-size-normal);
       opacity: 0;
       transition: opacity 0.2s ease;

@@ -132,7 +132,7 @@
           <g transform="translate({padding.left}, {padding.top})">
             <path
               d={lineGenerator(plotData)}
-              stroke="var(--color-value)"
+              stroke="var(--color-graph-line)"
               stroke-width={2}
               stroke-dasharray={4}
               fill="none"
@@ -141,7 +141,7 @@
             {#if baselinePoints}
               <path
                 d={lineGenerator(baselinePoints)}
-                stroke="#eee"
+                stroke="var(--color-graph-baseline)"
                 stroke-width={1}
                 stroke-dasharray="4 4"
                 fill="none"
@@ -157,7 +157,7 @@
                 <g>
                   {#if !point.valueChange || point.valueChange === 0}
                     <circle
-                      fill="var(--color-value)"
+                      fill="var(--color-graph-line)"
                       r={smallIcons ? 3 : 6}
                       cx={xScale(point.time)}
                       cy={yScale(point.value)}
@@ -167,7 +167,7 @@
                       transform="translate({xScale(point.time)}, {yScale(
                         point.value
                       )}) scale({smallIcons ? 1 : 1}, {smallIcons ? 1.5 : 3})"
-                      fill="var(--color-value-up)"
+                      fill="var(--color-graph-up)"
                       points="-5 2.5, 0 -5, 5 2.5"
                     />
                   {:else}
@@ -175,7 +175,7 @@
                       transform="translate({xScale(point.time)}, {yScale(
                         point.value
                       )}) scale({smallIcons ? 2 : 1}, {smallIcons ? 1.5 : 3})"
-                      fill="var(--color-value-down)"
+                      fill="var(--color-graph-down)"
                       points="-5 -2.5, 0 5, 5 -2.5"
                     />
                   {/if}

@@ -87,7 +87,7 @@
   }
 
   .meta-data-item {
-    background: rgba(255, 255, 255, 0.4);
+    background: var(--foreground-light-transparent);
     color: var(--background);
     margin-bottom: 4px;
     border-radius: 4px;
@@ -100,32 +100,31 @@
     margin-bottom: 10px;
 
     &.low-balance {
-      background: red;
+      background: var(--color-bad);
     }
 
     &.UNCLEAR {
-      background: rgba(255, 255, 255, 0.4);
+      background: var(--foreground-light-transparent);
     }
 
     &.CRITICAL {
-      background: red;
+      background: var(--color-bad);
     }
 
     &.LOW {
-      background: pink;
+      background: var(--color-risk-meter-low);
     }
 
     &.MID {
-      background: yellow;
+      background: var(--color-risk-meter-mid);
     }
 
     &.HIGH {
-      background: lightgreen;
+      background: var(--color-risk-meter-hi);
     }
 
     .inner {
       padding: 0;
-      // width: 50%;
     }
   }
 </style>

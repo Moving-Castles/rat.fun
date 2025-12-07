@@ -266,7 +266,7 @@
       padding: 10px;
       background: yellow;
       font-size: 10px;
-      color: black;
+      color: var(--background);
       display: none;
     }
   }

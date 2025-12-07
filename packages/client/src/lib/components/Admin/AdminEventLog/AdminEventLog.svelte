@@ -132,8 +132,8 @@
         border: none;
 
         &.active {
-          background: black;
-          color: white;
+          background: var(--background);
+          color: var(--foreground);
         }
 
         &:not(.active) {
@@ -168,16 +168,16 @@
       font-size: var(--font-size-small);
 
       &.secondary {
-        color: var(--color-alert-priority);
+        color: var(--color-grey-light);
       }
 
       &.focus {
-        background: black;
+        background: var(--background);
       }
 
       &.selected {
-        background: white;
-        color: black;
+        background: var(--foreground);
+        color: var(--background);
       }
     }
   }

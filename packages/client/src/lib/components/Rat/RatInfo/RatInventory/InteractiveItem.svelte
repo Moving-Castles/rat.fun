@@ -50,7 +50,7 @@
     font-size: var(--font-size-large);
     font-family: var(--special-font-stack);
     display: flex;
-    background: rgba(200, 200, 200, 0.9);
+    background: var(--color-inventory-item-background);
     color: var(--background);
     padding: 5px;
     justify-content: center;
@@ -60,7 +60,7 @@
     height: 100%;
     position: relative;
     overflow: hidden;
-    border: 10px inset rgba(0, 0, 0, 0.5);
+    border: 10px inset var(--background-semi-transparent);
     transition: transform 0.2s ease;
     border-radius: 10px;
     user-select: none;

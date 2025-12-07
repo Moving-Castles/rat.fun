@@ -27,7 +27,7 @@
 <style lang="scss">
   .loading-row {
     opacity: 0.6;
-    background: #111;
+    background: var(--color-grey-darker);
     pointer-events: none;
 
     .loading-graph {
@@ -46,8 +46,8 @@
     td {
       vertical-align: middle;
       line-height: 24px;
-      border-bottom: 1px solid rgb(59, 59, 59);
-      border-right: 1px dashed rgb(59, 59, 59);
+      border-bottom: 1px solid var(--color-grey-dark);
+      border-right: 1px dashed var(--color-grey-dark);
     }
 
     .single-line {

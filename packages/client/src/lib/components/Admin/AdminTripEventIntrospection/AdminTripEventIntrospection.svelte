@@ -1,35 +1,17 @@
 <script lang="ts">
   import type { TripEvent } from "$lib/components/Admin/types"
   import RatTripLog from "./RatTripLog.svelte"
-  import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
   let { event }: { event: TripEvent } = $props()
 </script>
 
 <div class="introspection">
   {#if event && (event.eventType === "trip_visit" || event.eventType === "trip_death")}
     <RatTripLog result={event.meta} />
-  {:else}
-    <div class="empty">
-      <p class="void glow">{UI_STRINGS.noData.toUpperCase()}</p>
-    </div>
   {/if}
 </div>
 
 <style>
   .introspection {
     height: 100%;
-  }
-
-  .glow {
-    filter: drop-shadow(0px 0px 2px #ffffff);
-    opacity: 0.5;
-  }
-
-  .empty {
-    display: flex;
-    width: 100%;
-    height: 100%;
-    justify-content: center;
-    align-items: center;
   }
 </style>

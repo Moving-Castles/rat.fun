@@ -80,12 +80,12 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: rgba(200, 200, 200, 0.95);
+    background: var(--color-inventory-item-background);
     color: var(--background);
     padding: 5px;
-    border: 8px inset rgba(255, 255, 255, 0.4);
+    border: 8px inset var(--background-semi-transparent);
     outline: none;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 2px 8px var(--background-light-transparent);
   }
 
   .item-front {
@@ -95,7 +95,7 @@
 
   .item-back {
     transform: rotateY(180deg);
-    background: rgba(255, 238, 83, 0.95);
+    background: var(--color-inventory-item-reverse-side);
   }
 
   .name,

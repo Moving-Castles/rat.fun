@@ -103,7 +103,7 @@
       timeline.to(
         valueElement,
         {
-          color: "rgba(255, 255, 255, 1)",
+          color: "var(--foreground)",
           filter: "drop-shadow(0px 0px 6px #ffffff)",
           duration: 0.3,
           ease: "power2.out"
@@ -115,7 +115,7 @@
       timeline.to(
         valueElement,
         {
-          color: "rgba(255, 255, 255, 1)",
+          color: "var(--foreground)",
           filter: "drop-shadow(0px 0px 6px #ffffff)",
           duration: 0.5
         },
@@ -126,7 +126,7 @@
       timeline.to(
         valueElement,
         {
-          color: "rgba(255, 255, 255, 0.7)",
+          color: "var(--foreground-light-transparent)",
           filter: "drop-shadow(0px 0px 0px #ffffff)",
           duration: 0.5,
           ease: "power2.out"

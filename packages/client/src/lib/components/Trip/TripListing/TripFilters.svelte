@@ -172,7 +172,7 @@
     }
 
     &.active {
-      background: var(--color-alert);
+      background: var(--color-grey-mid);
       color: var(--foreground);
     }
   }
@@ -208,7 +208,7 @@
     line-height: 22px;
 
     &.active {
-      background: var(--color-alert);
+      background: var(--color-grey-mid);
       color: var(--foreground);
     }
   }

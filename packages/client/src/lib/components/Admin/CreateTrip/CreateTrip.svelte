@@ -474,7 +474,7 @@
         align-items: center;
 
         .highlight {
-          background: var(--color-alert);
+          background: var(--color-grey-mid);
           padding: 5px;
           color: var(--background);
           font-weight: normal;
@@ -490,7 +490,7 @@
         font-size: var(--font-size-normal);
         border-radius: 0;
         resize: none;
-        outline-color: var(--color-alert);
+        outline-color: var(--color-grey-light);
         outline-width: 1px;
       }
     }
@@ -536,7 +536,7 @@
           appearance: none;
           width: 20px;
           height: 20px;
-          background: var(--color-alert);
+          background: var(--color-grey-mid);
           border: 2px solid var(--background);
           cursor: pointer;
         }
@@ -608,7 +608,7 @@
   }
 
   .modal-backdrop {
-    background: rgba(0, 0, 0, 0.8);
+    background: var(--background-dark-transparent);
     position: fixed;
     inset: 0;
     display: flex;

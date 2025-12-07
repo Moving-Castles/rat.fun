@@ -80,7 +80,7 @@
 
         .error-title {
           font-size: var(--font-size-xlarge);
-          background: orangered;
+          background: var(--color-bad);
           color: var(--background);
           padding: 20px;
           margin: 0 0 20px 0;

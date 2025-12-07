@@ -44,7 +44,7 @@
     font-size: 10dvw;
     font-family: var(--special-font-stack);
     color: var(--background);
-    background: gold;
+    background: var(--color-total-value);
     border-radius: 10px;
     user-select: none;
     display: flex;

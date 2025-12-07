@@ -156,7 +156,7 @@
         margin-top: 20px;
 
         &.error {
-          background: orangered;
+          background: var(--color-bad);
           color: var(--background);
         }
       }

@@ -5,8 +5,8 @@ export function generateTripErrorOutput(): TerminalOutputUnit[] {
     type: "loader",
     content: "",
     loaderCharacters: "ERROR ",
-    color: "red",
-    backgroundColor: "black",
+    color: "var(--color-bad)",
+    backgroundColor: "var(--background)",
     duration: 10000,
     delayAfter: 0
   }

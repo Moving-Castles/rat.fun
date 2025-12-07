@@ -68,8 +68,8 @@
 
       border-style: outset;
       border-width: 10px;
-      border-color: rgba(0, 0, 0, 0.5);
-      color: black;
+      border-color: var(--background-light-transparent);
+      color: var(--background);
 
       display: flex;
       flex-direction: column;
@@ -89,7 +89,7 @@
       }
 
       &:hover {
-        border-color: rgba(0, 0, 0, 0.3);
+        border-color: var(--background-light-transparent);
       }
 
       &:active {
@@ -97,7 +97,7 @@
       }
 
       &.restricted {
-        background: rgb(222, 222, 50);
+        background: var(--color-restricted-trip-folder);
       }
 
       &.disabled {

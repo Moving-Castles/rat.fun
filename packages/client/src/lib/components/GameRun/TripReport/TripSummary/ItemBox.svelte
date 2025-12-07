@@ -84,7 +84,7 @@
 
 <style lang="scss">
   .items {
-    border: 1px solid white;
+    border: 1px solid var(--foreground);
     border-bottom: none;
     display: flex;
     flex-direction: row;
@@ -98,14 +98,14 @@
 
     .item {
       padding: 10px;
-      color: black;
+      color: var(--background);
       margin-right: 10px;
 
       &.add {
-        background: green;
+        background: var(--color-good);
       }
       &.remove {
-        background: red;
+        background: var(--color-bad);
       }
     }
   }

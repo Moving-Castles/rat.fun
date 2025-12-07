@@ -98,7 +98,7 @@
       outcomeElement,
       {
         duration: 0.1,
-        background: negative ? "red" : "green",
+        background: negative ? "var(--color-bad)" : "var(--color-good)",
         ease: "power2.out"
       },
       "<"
@@ -157,8 +157,6 @@
 
 <style lang="scss">
   .outcome {
-    background: var(--color-success);
-    color: var(--background);
     font-size: var(--font-size-small);
     height: 100%;
     display: flex;
@@ -166,8 +164,7 @@
     justify-content: center;
     padding-inline: 10px;
     font-size: var(--font-size-normal);
-
-    background: var(--color-value);
+    background: var(--color-grey-mid);
     color: var(--background);
 
     &.negative {

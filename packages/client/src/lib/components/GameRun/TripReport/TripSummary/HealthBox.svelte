@@ -65,7 +65,8 @@
     // After count animation, quickly fade in the health change
     timeline.to(changeElement, {
       opacity: 1,
-      backgroundColor: healthChange === 0 ? "" : healthChange > 0 ? "green" : "red",
+      backgroundColor:
+        healthChange === 0 ? "" : healthChange > 0 ? "var(--color-good)" : "var(--color-bad)",
       duration: 0.2,
       ease: "power2.out"
     })
@@ -105,7 +106,7 @@
 
 <style lang="scss">
   .health {
-    border: 1px solid white;
+    border: 1px solid var(--foreground);
     border-bottom: none;
     display: flex;
     flex-direction: row;
@@ -113,7 +114,7 @@
     justify-content: center;
     height: 80px;
     .label {
-      border-right: 1px solid white;
+      border-right: 1px solid var(--foreground);
       width: 30%;
       height: 100%;
       display: flex;
@@ -122,7 +123,7 @@
     }
     .value {
       width: 50%;
-      border-right: 1px solid white;
+      border-right: 1px solid var(--foreground);
       height: 100%;
       display: flex;
       align-items: center;

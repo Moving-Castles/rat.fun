@@ -37,7 +37,7 @@
     z-index: var(--z-high);
     background-repeat: repeat;
     text-align: center;
-    background: rgb(40, 40, 40);
+    background: var(--color-grey-dark);
 
     &.with-back-button {
       top: 60px;
@@ -52,6 +52,6 @@
 
   .trips-count {
     margin-left: 10px;
-    color: var(--color-alert);
+    color: var(--color-grey-light);
   }
 </style>

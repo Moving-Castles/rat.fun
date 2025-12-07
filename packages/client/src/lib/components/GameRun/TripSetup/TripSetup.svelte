@@ -63,7 +63,7 @@
     width: 100dvw;
     color: var(--foreground);
     font-size: var(--font-size-normal);
-    background: rgba(0, 0, 0, 0.1);
+    background: var(--background-light-transparent);
     user-select: none;
     @media (max-width: 800px) {
       padding: 10px;

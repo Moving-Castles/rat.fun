@@ -101,7 +101,7 @@
 <style lang="scss">
   .admin-trip-table-container {
     width: 100%;
-    background: black;
+    background: var(--background);
     height: 100%;
     overflow-y: scroll;
     position: relative;
@@ -117,15 +117,15 @@
     th {
       position: sticky;
       top: 0;
-      background: black;
+      background: var(--background);
     }
   }
 
   th {
     font-size: var(--font-size-small);
-    border-top: 1px solid rgb(59, 59, 59);
-    border-bottom: 1px solid rgb(59, 59, 59);
-    border-right: 1px dashed rgb(59, 59, 59);
+    border-top: 1px solid var(--color-grey-dark);
+    border-bottom: 1px solid var(--color-grey-dark);
+    border-right: 1px dashed var(--color-grey-dark);
     height: 24px;
     padding-right: 1ch;
   }

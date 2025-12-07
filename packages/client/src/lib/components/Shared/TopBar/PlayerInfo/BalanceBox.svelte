@@ -52,7 +52,7 @@
     timeline.to(
       containerElement,
       {
-        backgroundColor: "var(--color-value)",
+        backgroundColor: "var(--color-grey-lighter)",
         duration: 0.3,
         ease: "power4.out"
       },
@@ -100,7 +100,7 @@
     border-right: var(--default-border-style);
     padding: 0;
     min-width: 100px;
-    background: var(--color-value);
+    background: var(--color-grey-lighter);
     color: var(--black);
 
     :global(> *) {

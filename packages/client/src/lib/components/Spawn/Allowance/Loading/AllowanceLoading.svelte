@@ -134,7 +134,7 @@
         text-align: center;
 
         &.error {
-          background: orangered;
+          background: var(--color-bad);
           color: var(--background);
         }
       }

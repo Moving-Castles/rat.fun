@@ -17,7 +17,7 @@
     font-size: var(--font-size-small);
     padding: 2px;
     &.error {
-      background: var(--color-death);
+      background: var(--color-bad);
       color: var(--background);
     }
   }

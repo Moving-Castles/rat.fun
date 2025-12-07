@@ -41,21 +41,16 @@
   button {
     width: 100%;
     height: 100px;
-    background: var(--color-alert-priority);
+    background: var(--color-grey-light);
     border: none;
     border-style: outset;
     border-width: 8px;
-    border-color: rgba(0, 0, 0, 0.5);
+    border-color: var(--background-light-transparent);
     opacity: 1;
 
     &.hidden {
       opacity: 0;
     }
-
-    &.red {
-      background: var(--color-death);
-    }
-
     .button-text {
       font-size: var(--font-size-large);
       font-family: var(--special-font-stack);
@@ -67,17 +62,17 @@
     }
 
     &:hover {
-      background: var(--color-alert-priority-light);
+      background: var(--color-grey-lighter);
     }
 
     &:active {
-      background: var(--color-alert-priority-muted);
+      background: var(--color-grey-mid);
       border-style: inset;
       transform: translateY(2px);
       border-width: 4px;
       position: relative;
       top: -2px;
-      color: white;
+      color: var(--foreground);
     }
 
     &.disabled {

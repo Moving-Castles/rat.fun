@@ -14,8 +14,8 @@
     opacity: 0.8;
     background: repeating-linear-gradient(
       45deg,
-      #000000,
-      #000000 20px,
+      var(--background),
+      var(--background) 20px,
       var(--color-grey-dark) 20px,
       var(--color-grey-dark) 40px
     );

@@ -177,7 +177,7 @@
 
 <style lang="scss">
   .modal-backdrop {
-    background: rgba(0, 0, 0, 0.8);
+    background: var(--background-dark-transparent);
     position: fixed;
     inset: 0;
     display: flex;
@@ -277,7 +277,7 @@
         margin-bottom: 10px;
 
         .highlight {
-          background: var(--color-alert);
+          background: var(--color-grey-light);
           padding: 5px;
           color: var(--background);
           font-weight: normal;
@@ -321,7 +321,7 @@
           appearance: none;
           width: 20px;
           height: 20px;
-          background: var(--color-alert);
+          background: var(--color-grey-light);
           border: 2px solid var(--background);
           cursor: pointer;
         }

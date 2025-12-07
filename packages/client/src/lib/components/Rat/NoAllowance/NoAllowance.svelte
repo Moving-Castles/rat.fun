@@ -44,7 +44,7 @@
 <style lang="scss">
   .no-allowance {
     text-align: center;
-    color: var(--white);
+    color: var(--foreground);
     width: 100%;
     height: 100%;
     overflow: hidden;

@@ -116,7 +116,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 12px var(--background-light-transparent);
     transition: all 0.2s;
     display: none;
 
@@ -128,7 +128,7 @@
   .debug-panel {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.95);
+    background: var(--background-dark-transparent);
     z-index: 10000;
     overflow-y: auto;
     padding: 20px;
@@ -182,7 +182,7 @@
 
       .debug-item {
         padding: 8px 0;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        border-bottom: 1px solid var(--foreground-light-transparent);
         word-break: break-all;
 
         strong {
@@ -195,7 +195,7 @@
         }
 
         &.connector-detail {
-          background: rgba(255, 255, 255, 0.05);
+          background: var(--foreground-light-transparent);
           padding: 12px;
           margin: 8px 0;
           border-radius: 4px;
@@ -203,7 +203,7 @@
       }
 
       .debug-warning {
-        color: #ff6b6b;
+        color: var(--color-bad);
         text-align: center;
         font-weight: bold;
         margin: 16px 0;

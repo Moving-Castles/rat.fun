@@ -83,17 +83,17 @@
       .confirm-liquidation-text {
         width: 100%;
         padding-bottom: 10px;
-        color: black;
+        color: var(--background);
       }
 
       .fine-print {
         width: 100%;
         padding-bottom: 10px;
         padding-top: 10px;
-        color: black;
+        color: var(--background);
         margin-top: 20px;
         margin-bottom: 20px;
-        background: rgba(255, 255, 255, 0.5);
+        background: var(--color-grey-light);
       }
 
       .button-container {
@@ -133,7 +133,7 @@
     }
 
     .loading {
-      background: white;
+      background: var(--foreground);
       padding: 10px;
     }
   }

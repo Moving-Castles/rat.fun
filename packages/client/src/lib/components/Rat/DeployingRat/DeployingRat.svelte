@@ -301,8 +301,8 @@
           align-items: center;
           justify-content: center;
           padding: 0.5rem;
-          background: rgba(255, 255, 255, 0.8);
-          color: black;
+          background: var(--foreground-dark-transparent);
+          color: var(--background);
           width: 100%;
           height: 100px;
           flex-shrink: 0;
@@ -313,8 +313,8 @@
           }
 
           &.locked {
-            background: black;
-            color: white;
+            background: var(--background);
+            color: var(--foreground);
           }
         }
       }
@@ -328,7 +328,7 @@
       padding: 10px;
       font-size: var(--font-size-normal);
       color: var(--background);
-      background: white;
+      background: var(--foreground);
     }
   }
 </style>

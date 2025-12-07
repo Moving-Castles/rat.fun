@@ -116,7 +116,7 @@
       flex-flow: column nowrap;
 
       .profit-inner {
-        background: rgba(0, 0, 0, 0.5);
+        background: var(--background-semi-transparent);
         padding: 1rem;
         position: relative;
         overflow: hidden;
@@ -177,7 +177,7 @@
         width: 50%;
         height: 100%;
         display: flex;
-        background: rgba(0, 0, 0, 0.2);
+        background: var(--background-light-transparent);
         position: relative;
         justify-content: center;
         align-items: center;
@@ -199,21 +199,21 @@
   }
 
   .down {
-    background: red;
+    background: var(--color-down);
   }
 
   .up {
-    background: green;
+    background: var(--color-up);
   }
   .downText {
-    color: red;
+    color: var(--color-down);
   }
 
   .upText {
-    color: #78ee72;
+    color: var(--color-up);
 
     &.glow {
-      filter: drop-shadow(0px 0px 2px #78ee72);
+      filter: drop-shadow(0px 0px 2px var(--color-up));
     }
   }
   p {

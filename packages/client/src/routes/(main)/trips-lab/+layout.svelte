@@ -29,7 +29,7 @@
     z-index: 999;
     top: 58px; // To overlap the topbar border
     left: 0;
-    background: black;
+    background: var(--background);
     transform: translate(-100%, 0);
     transition: transform 0.2s ease;
     border: 1px solid var(--color-grey-mid);

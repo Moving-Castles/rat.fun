@@ -105,7 +105,7 @@
       right: 10px;
       font-size: 10px;
       font-family: monospace;
-      background: var(--color-alert);
+      background: var(--color-grey-mid);
       color: var(--background);
       padding: 5px 21px;
       border-radius: 8px;
@@ -113,7 +113,7 @@
       text-align: center;
 
       &.critical {
-        background: red;
+        background: var(--color-bad);
       }
     }
   }

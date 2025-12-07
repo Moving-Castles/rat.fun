@@ -41,8 +41,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: white;
-    color: black;
+    background: var(--foreground);
+    color: var(--background);
     text-align: left;
     padding: 2px 6px;
     font-size: var(--font-size-small);

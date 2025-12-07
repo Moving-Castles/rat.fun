@@ -30,7 +30,7 @@
 
 <style lang="scss">
   .meta-data-item {
-    background: #ffd700;
+    background: var(--color-popular-alert);
     animation: pulsatingFire 0.5s ease-in-out infinite;
     color: var(--background);
     margin-bottom: 5px;
@@ -50,13 +50,13 @@
   @keyframes pulsatingFire {
     0%,
     100% {
-      background: #ffd700; // yellow
+      background: var(--color-popular-alert-animation-100); // yellow
     }
     33% {
-      background: #ff8c42; // orange
+      background: var(--color-popular-alert-animation-33); // orange
     }
     66% {
-      background: #ff6347; // red
+      background: var(--color-popular-alert-animation-66); // red
     }
   }
 </style>

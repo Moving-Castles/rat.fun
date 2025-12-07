@@ -72,11 +72,11 @@
   button {
     width: 100%;
     height: 100%;
-    background: var(--color-alert-priority);
+    background: var(--color-grey-light);
     border: none;
     border-style: outset;
     border-width: 10px;
-    border-color: rgba(0, 0, 0, 0.3);
+    border-color: var(--background-light-transparent);
     position: relative;
     display: flex;
     flex-flow: column nowrap;
@@ -138,23 +138,23 @@
 
     /* Button types */
     &.type-default {
-      background: var(--color-alert-priority);
+      background: var(--color-grey-light);
       &:hover {
-        background: var(--color-alert-priority-light);
+        background: var(--color-grey-lighter);
       }
       &:active {
-        background: var(--color-alert-priority-muted);
+        background: var(--color-grey-mid);
       }
     }
 
     &.type-abort {
       border-radius: 20px;
-      background: var(--color-death);
+      background: var(--color-bad);
       &:hover {
-        background: var(--color-death-light);
+        background: var(--color-bad-light);
       }
       &:active {
-        background: var(--color-death-muted);
+        background: var(--color-bad-muted);
       }
       .canvas-container {
         border-radius: 20px;
@@ -163,12 +163,12 @@
 
     &.type-confirm {
       border-radius: 20px;
-      background: rgb(60, 120, 60);
+      background: var(--color-good);
       &:hover {
-        background: rgb(80, 160, 80);
+        background: var(--color-good-light);
       }
       &:active {
-        background: rgb(40, 80, 40);
+        background: var(--color-good-muted);
       }
       .canvas-container {
         border-radius: 20px;
@@ -176,41 +176,41 @@
     }
 
     &.type-danger {
-      background: var(--color-death);
+      background: var(--color-bad);
       &:hover {
-        background: var(--color-death-light);
+        background: var(--color-bad-light);
       }
       &:active {
-        background: var(--color-death-muted);
+        background: var(--color-bad-muted);
       }
     }
 
     &.type-cash_out {
       &:hover {
-        background: var(--color-death-light);
+        background: var(--color-bad-light);
       }
       &:active {
-        background: var(--color-death-muted);
+        background: var(--color-bad-muted);
       }
     }
 
     &.type-buy_rat {
-      background: var(--color-alert-priority);
+      background: var(--color-grey-light);
       &:hover {
-        background: var(--color-alert-priority-light);
+        background: var(--color-grey-lighter);
       }
       &:active {
-        background: var(--color-alert-priority-muted);
+        background: var(--color-grey-mid);
       }
     }
 
     &.type-create_trip {
-      background: var(--color-alert-priority);
+      background: var(--color-grey-light);
       &:hover {
-        background: var(--color-alert-priority-light);
+        background: var(--color-grey-lighter);
       }
       &:active {
-        background: var(--color-alert-priority-muted);
+        background: var(--color-grey-mid);
       }
     }
   }

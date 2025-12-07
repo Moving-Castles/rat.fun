@@ -71,7 +71,7 @@
   .timestamp {
     display: inline-flex;
     align-items: center;
-    background: rgba(0, 0, 0, 0.8);
+    background: var(--background-dark-transparent);
     padding: 5px;
     padding-inline: 10px;
     color: var(--foreground);

@@ -45,11 +45,11 @@
   button {
     width: 100%;
     height: 100%;
-    background: var(--color-alert-priority);
+    background: var(--color-grey-light);
     border: none;
     border-style: outset;
     border-width: 5px;
-    border-color: rgba(0, 0, 0, 0.3);
+    border-color: var(--background-light-transparent);
     position: relative;
     display: flex;
     flex-flow: column nowrap;
@@ -62,13 +62,13 @@
       line-height: 1em;
       z-index: 2;
       position: relative;
-      color: rgb(54, 54, 54);
+      color: var(--color-grey-dark);
     }
 
     .button-icon {
       width: 100%;
       height: 60%;
-      color: rgb(54, 54, 54);
+      color: var(--color-grey-dark);
       display: flex;
       flex-flow: row nowrap;
       align-items: center;
@@ -77,15 +77,15 @@
     }
 
     &:hover {
-      background: var(--color-alert-priority-light);
+      background: var(--color-grey-lighter);
     }
 
     &:active {
       border-style: inset;
-      background: var(--color-alert-priority-muted);
+      background: var(--color-grey-mid);
       transform: translateY(2px);
       position: relative;
-      color: white;
+      color: var(--foreground);
     }
 
     &.disabled {

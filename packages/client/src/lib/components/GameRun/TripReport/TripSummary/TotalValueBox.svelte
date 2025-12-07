@@ -82,7 +82,8 @@
     // After count animation, quickly fade in the value change
     timeline.to(changeElement, {
       opacity: 1,
-      backgroundColor: valueChange === 0 ? "" : valueChange > 0 ? "green" : "red",
+      backgroundColor:
+        valueChange === 0 ? "" : valueChange > 0 ? "var(--color-good)" : "var(--color-bad)",
       duration: 0.2,
       ease: "power2.out"
     })
@@ -125,14 +126,14 @@
 
 <style lang="scss">
   .total-value {
-    border: 1px solid white;
+    border: 1px solid var(--foreground);
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
     height: 80px;
     .label {
-      border-right: 1px solid white;
+      border-right: 1px solid var(--foreground);
       width: 30%;
       height: 100%;
       display: flex;
@@ -141,7 +142,7 @@
     }
     .value-container {
       width: 50%;
-      border-right: 1px solid white;
+      border-right: 1px solid var(--foreground);
       height: 100%;
       display: flex;
       align-items: center;

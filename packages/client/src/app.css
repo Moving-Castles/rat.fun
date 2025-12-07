@@ -1,58 +1,115 @@
 /* @import url("./public/fonts/index.css"); */
 
 :root {
-  /* Colors */
+  /* * * * * * * * * * * * * *
+  * Colors
+  * * * * * * * * * * * * * */
+
+  /* Colors: Base */
   --black: #000000;
   --white: #ffffff;
-  /* --white: #dcdccb; */
 
+  /* Background */
   --background: var(--black);
   --foreground: var(--white);
 
+  /* Background: Semi transparent */
+  --background-light-transparent: rgba(0, 0, 0, 0.2);
   --background-semi-transparent: rgba(0, 0, 0, 0.6);
   --background-dark-transparent: rgba(0, 0, 0, 0.8);
 
-  --color-grey-light: #999;
-  --color-grey-mid: #666;
-  --color-grey-dark: #333;
-  --color-grey-darker: #222;
+  /* Foreground: Semi transparent */
+  --foreground-light-transparent: rgba(255, 255, 255, 0.2);
+  --foreground-semi-transparent: rgba(255, 255, 255, 0.6);
+  --foreground-dark-transparent: rgba(255, 255, 255, 0.8);
 
-  /* --color-alert: rgb(255, 69, 0); */
-  --color-alert: rgb(104, 104, 103);
-  /* --color-alert-priority: rgb(255, 128, 0); */
+  /* Colors: Greys */
+  --color-grey-lighter: rgb(195, 195, 195);
+  --color-grey-light: rgb(153, 153, 153);
+  --color-grey-mid: rgb(102, 102, 102);
+  --color-grey-dark: rgb(51, 51, 51);
+  --color-grey-darker: rgb(34, 34, 34);
 
-  --color-alert-priority: rgb(146, 146, 146);
-  --color-alert-priority-muted: rgb(98, 98, 98);
-  --color-alert-priority-light: rgb(195, 195, 195);
+  /* Colors: Good, Neutral and Bad */
+  --color-bad: red;
+  --color-neutral: yellow;
+  --color-good: green;
 
-  --color-button: rgb(130, 130, 130);
+  --color-bad-light: rgb(209, 209, 209);
+  --color-bad-muted: rgb(145, 145, 145);
 
-  --color-secondary: rgb(141, 141, 141);
-  --color-success: rgb(112, 112, 112);
-  --color-value: rgb(200, 200, 200);
-  --color-item: rgb(145, 145, 145);
-  --color-value-up: var(--color-success);
-  --color-value-down: var(--color-death);
+  --color-good-light: rgb(209, 209, 209);
+  --color-good-muted: rgb(145, 145, 145);
 
-  --color-death-muted: rgb(145, 145, 145);
-  --color-death: rgb(94, 94, 94);
-  --color-death-light: rgb(209, 209, 209);
+  --color-up: var(--color-good);
+  --color-down: var(--color-bad);
+  --color-value-up: var(--color-good);
+  --color-value-down: var(--color-bad);
 
-  --game-window-width: calc(min(100vw, 1920px) - 30px);
-  --game-window-height: calc(100vh - 30px);
-  --game-window-main-height: calc(var(--game-window-height) - 60px);
+  --color-death: var(--color-bad);
 
-  --color-up: #78ee72;
-  --color-down: red;
+  /* Colors: Log text */
+  --color-log-text-item: yellow;
+  --color-log-text-quote: pink;
+  --color-log-text-system: orangered;
+  --color-log-text-balance: green;
 
-  --color-item-add: #a800f0;
-  --color-item-remove: #f0b000;
-  --color-balance-add: rgb(135, 255, 135);
-  --color-balance-remove: #cc002c;
+  /* Colors: Inventory */
+  --color-inventory-item-reverse-side: rgba(255, 238, 83, 0.95);
+  --color-inventory-back: var(--color-inventory-item-reverse-side);
+  --color-inventory-item-background: rgba(200, 200, 200, 0.9);
+
+  /* Colors: Border */
+  --color-border: #8a6572;
+
+  /* Color: Special */
+  --color-total-value: gold;
+  --color-restricted-trip-folder: rgb(222, 222, 50);
+
+  /* Color: Popular Alert */
+  --color-popular-alert: rgb(255, 215, 0);
+  --color-popular-alert-animation-100: rgb(255, 215, 0);
+  --color-popular-alert-animation-33: rgb(255, 140, 66);
+  --color-popular-alert-animation-66: rgb(255, 99, 71);
+
+  /* Color: Risk Meter */
+  --color-risk-meter-unclear: var(--foreground-light-transparent);
+  --color-risk-meter-low: lightgreen;
+  --color-risk-meter-mid: yellow;
+  --color-risk-meter-hi: pink;
+  --color-risk-meter-nitemare: red;
+
+  /* Color: Health Bar */
+  --color-health-bar-low: rgb(255, 66, 66);
+  --color-health-bar-mid: rgb(255, 126, 21);
+  --color-health-bar-hi: rgb(129, 255, 255);
+  --color-health-bar-full: rgb(135, 255, 135);
+
+  /* Color: Toasts */
+  --color-toast-error: var(--color-bad);
+  --color-toast-warning: yellow;
+  --color-toast-info: var(--color-grey-mid);
+  --color-toast-player-notification: var(--color-up);
+  --color-toast-trip-notification: var(--color-up);
+
+  /* Color: Graph */
+  --color-graph-line: var(--color-grey-light);
+  --color-graph-baseline: var(--color-grey-mid);
+  --color-graph-up: var(--color-good);
+  --color-graph-down: var(--color-bad);
 
   /* * * * * * * * * * * * * *
   * Layout
   * * * * * * * * * * * * * */
+
+  /* Layout: Border */
+  --default-border-style: 1px solid var(--color-border);
+  --dashed-border-style: 1px dashed var(--color-border);
+
+  /* Layout: Global game window */
+  --game-window-width: calc(min(100vw, 1920px) - 30px);
+  --game-window-height: calc(100vh - 30px);
+  --game-window-main-height: calc(var(--game-window-height) - 60px);
 
   /* Layout: Game window */
   --game-center-bar-width: 90px;
@@ -91,22 +148,6 @@
 
   /* Border */
   /* --color-border: #637263; */
-  --color-border: #8a6572;
-  --default-border-style: 1px solid var(--color-border);
-  --dashed-border-style: 1px dashed var(--color-border);
-
-  /* Typography */
-  --typewriter-font-stack: "Workbench", monospace;
-  --button-font-stack: "Michroma", sans-serif;
-  --special-font-stack: "Xanh Mono", monospace;
-  --admin-font-stack: "Workbench", monospace;
-  --font-size-very-small: 9px;
-  --font-size-small: 12px;
-  --font-size-normal: 18px;
-  --font-size-medium: 20px;
-  --font-size-large: 26px;
-  --font-size-extra-large: 48px;
-  --font-size-super-large: 64px;
 
   /** Layers */
   --z-background: 0;
@@ -118,6 +159,22 @@
   --z-top: 50;
   --z-modal: 100;
   --z-debug: 66666;
+
+  /* * * * * * * * * * * * * *
+  * Typography
+  * * * * * * * * * * * * * */
+
+  --typewriter-font-stack: "Workbench", monospace;
+  --button-font-stack: "Michroma", sans-serif;
+  --special-font-stack: "Xanh Mono", monospace;
+  --admin-font-stack: "Workbench", monospace;
+  --font-size-very-small: 9px;
+  --font-size-small: 12px;
+  --font-size-normal: 18px;
+  --font-size-medium: 20px;
+  --font-size-large: 26px;
+  --font-size-extra-large: 48px;
+  --font-size-super-large: 64px;
 }
 
 @media (max-width: 800px) {
@@ -146,8 +203,8 @@ body {
 
 body,
 html {
-  background: black;
-  color: white;
+  background: var(--background);
+  color: var(--foreground);
   font-family: var(--typewriter-font-stack);
   font-size: var(--font-size-normal);
   margin: 0;

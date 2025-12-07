@@ -67,7 +67,7 @@
 <style lang="scss">
   .deploy-rat {
     text-align: center;
-    color: var(--white);
+    color: var(--foreground);
     width: 100%;
     height: 100%;
     overflow: visible;

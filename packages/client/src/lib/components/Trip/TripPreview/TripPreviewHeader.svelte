@@ -175,7 +175,7 @@
           width: 280px;
           mix-blend-mode: screen;
           border-radius: 20px;
-          border: 5px solid rgba(255, 255, 255, 0.2);
+          border: 5px solid var(--foreground-light-transparent);
           overflow: hidden;
           cursor: pointer;
 

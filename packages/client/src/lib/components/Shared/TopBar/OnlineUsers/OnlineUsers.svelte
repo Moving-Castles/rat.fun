@@ -103,7 +103,7 @@
       font-size: var(--font-size-small);
 
       &:hover {
-        background: var(--background-hover);
+        background: var(--color-grey-darker);
       }
 
       .indicator {

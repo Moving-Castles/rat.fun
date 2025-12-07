@@ -343,7 +343,7 @@
         display: flex;
         flex-direction: column;
         overflow: hidden;
-        background: #222;
+        background: var(--color-grey-darker);
       }
     }
 

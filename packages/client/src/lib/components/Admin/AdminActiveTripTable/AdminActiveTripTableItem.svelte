@@ -108,8 +108,8 @@
     td {
       vertical-align: middle;
       line-height: 24px;
-      border-bottom: 1px solid rgb(59, 59, 59);
-      border-right: 1px dashed rgb(59, 59, 59);
+      border-bottom: 1px solid var(--color-grey-dark);
+      border-right: 1px dashed var(--color-grey-dark);
 
       @media (max-width: 800px) {
         line-height: 36px;
@@ -136,7 +136,7 @@
 
     &.focus {
       cursor: pointer;
-      background-color: rgb(59, 59, 59);
+      background-color: var(--color-grey-dark);
     }
 
     td {
@@ -200,7 +200,7 @@
     }
 
     .grey {
-      color: grey;
+      color: var(--color-grey-light);
     }
   }
 </style>

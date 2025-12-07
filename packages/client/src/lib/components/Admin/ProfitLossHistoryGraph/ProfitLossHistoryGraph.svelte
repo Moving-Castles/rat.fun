@@ -431,8 +431,8 @@
 
       &.time-option {
         &.active {
-          background: black;
-          color: white;
+          background: var(--background);
+          color: var(--foreground);
         }
       }
 

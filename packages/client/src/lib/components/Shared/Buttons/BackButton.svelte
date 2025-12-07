@@ -47,18 +47,14 @@
   button {
     width: 100%;
     height: 100%;
-    background: var(--color-alert-priority);
+    background: var(--color-grey-light);
     border: none;
     border-style: outset;
     border-width: 10px;
-    border-color: rgba(0, 0, 0, 0.3);
-
-    &.red {
-      background: var(--color-death);
-    }
+    border-color: var(--background-light-transparent);
 
     .button-text {
-      color: rgb(54, 54, 54);
+      color: var(--color-grey-dark);
       height: 80%;
       display: flex;
       flex-flow: row nowrap;
@@ -68,11 +64,11 @@
     }
 
     &:hover {
-      background: var(--color-alert-priority-light);
+      background: var(--color-grey-lighter);
     }
 
     &:active {
-      background: var(--color-alert-priority-muted);
+      background: var(--color-grey-mid);
       border-style: inset;
       transform: translateY(2px);
       border-width: 10px;

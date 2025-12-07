@@ -103,7 +103,7 @@
       timeline.to(
         valueElement,
         {
-          color: "rgba(255, 255, 255, 1)",
+          color: "var(--foreground)",
           filter: "drop-shadow(0px 0px 6px #ffffff)",
           duration: 0.3,
           ease: "power2.out"
@@ -115,7 +115,7 @@
       timeline.to(
         valueElement,
         {
-          color: "rgba(255, 255, 255, 1)",
+          color: "var(--foreground)",
           filter: "drop-shadow(0px 0px 6px #ffffff)",
           duration: 0.5
         },
@@ -126,7 +126,7 @@
       timeline.to(
         valueElement,
         {
-          color: "rgba(255, 255, 255, 0.7)",
+          color: "var(--foreground-light-transparent)",
           filter: "drop-shadow(0px 0px 0px #ffffff)",
           duration: 0.5,
           ease: "power2.out"
@@ -210,7 +210,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      color: white;
+      color: var(--foreground);
       display: flex;
       flex-direction: column;
       overflow: visible; // Allow value to overflow during scale
@@ -222,7 +222,7 @@
         align-items: center;
         font-size: 72px;
         line-height: 72px;
-        color: rgba(255, 255, 255, 0.7);
+        color: var(--foreground-light-transparent);
         overflow: visible; // Allow scaled text to overflow
         position: relative;
         z-index: 10; // Ensure it appears above other elements

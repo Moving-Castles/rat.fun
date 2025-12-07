@@ -25,7 +25,7 @@
     .avatar {
       width: 40px;
       height: 40px;
-      border: 1px solid var(--color-value);
+      border: 1px solid var(--color-grey-light);
       border-radius: 50%;
       overflow: hidden;
 

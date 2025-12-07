@@ -116,7 +116,7 @@
 
   .timestamp {
     display: inline-block;
-    background: var(--color-alert-priority);
+    background: var(--color-grey-light);
     padding: 5px;
     color: var(--background);
     font-size: var(--font-size-normal);
@@ -152,18 +152,18 @@
   }
 
   .balance-outcome {
-    background: var(--color-value);
+    background: var(--color-good);
 
     &.negative {
-      background: var(--color-death);
+      background: var(--color-bad);
     }
   }
 
   .item-outcome {
-    background: var(--color-success);
+    background: var(--color-good);
 
     &.negative {
-      background: var(--color-death);
+      background: var(--color-bad);
     }
   }
 

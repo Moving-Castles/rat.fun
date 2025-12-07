@@ -67,7 +67,7 @@
       timeline.to(
         containerElement,
         {
-          backgroundColor: valueChange > 0 ? "green" : "red",
+          backgroundColor: valueChange > 0 ? "var(--color-good)" : "var(--color-bad)",
           duration: 0.2,
           ease: "power2.out"
         },
@@ -107,7 +107,7 @@
     font-size: 8dvw;
     font-family: var(--special-font-stack);
     color: var(--background);
-    background: rgba(200, 200, 200, 0.5);
+    background: var(--color-grey-light);
     border-radius: 10px;
     user-select: none;
     display: flex;

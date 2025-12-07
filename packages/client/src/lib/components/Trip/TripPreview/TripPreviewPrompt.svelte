@@ -23,7 +23,7 @@
     overflow-wrap: anywhere; /* Break anywhere if necessary to prevent overflow */
     width: 100%;
     font-family: var(--special-font-stack);
-    background: rgba(0, 0, 0, 0.8);
+    background: var(--background-dark-transparent);
     height: 100%;
 
     .content {

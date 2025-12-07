@@ -49,7 +49,6 @@
   } from "$lib/components/Admin"
   import { makeHref } from "$lib/components/Admin/helpers"
   import { SmallButton, SignedNumber } from "$lib/components/Shared"
-  import BigButton from "../Shared/Buttons/BigButton.svelte"
 
   let showCreateTripModal = $state(false)
   let savedTripDescription = $state<string>("")
@@ -70,6 +69,8 @@
   // Track keyboard navigation to prevent pointer interference
   let keyboardNavigating = $state(false)
   let keyboardNavTimeout: ReturnType<typeof setTimeout> | null = null
+  // Track loading state for initial event selection
+  let isLoadingInitialEvent = $state(true)
 
   // Memoized lookups for static content to avoid repeated find/filter operations
   let tripContentMap = $derived(new Map($staticContent?.trips?.map(t => [t._id, t]) || []))
@@ -313,6 +314,7 @@
 
     previousView = currentView
   })
+
   onMount(() => {
     backgroundMusic.stop()
     backgroundMusic.play({ category: "ratfunMusic", id: "admin", loop: true })
@@ -326,15 +328,25 @@
     // Defer graph data loading to avoid blocking initial render
     setTimeout(() => {
       shouldLoadGraphData = true
-
-      // Initialize selectedEvent to first visit/death event after data loads
-      setTimeout(() => {
-        if (allVisitsData.length > 0) {
-          const firstEvent = allVisitsData[0]
-          selectedEvent.set(firstEvent.index)
-        }
-      }, 100)
     }, 50)
+
+    // Poll for data availability and initialize selection to latest event
+    const initSelectionInterval = setInterval(() => {
+      if ($player?.masterKey && shouldLoadGraphData && allVisitsData.length > 0) {
+        const latestEvent = allVisitsData[0]
+        selectedEvent.set(latestEvent.index)
+        focusEvent.set(latestEvent.index)
+        focusTrip.set(latestEvent.tripId)
+        isLoadingInitialEvent = false
+        clearInterval(initSelectionInterval)
+      }
+    }, 100)
+
+    // Clean up interval after 5 seconds max
+    setTimeout(() => {
+      clearInterval(initSelectionInterval)
+      isLoadingInitialEvent = false
+    }, 5000)
   })
 
   onDestroy(() => {
@@ -442,7 +454,7 @@
           </div>
         </div>
         {#if $phoneAdminProfitSubView === "graph"}
-          <div bind:clientHeight style="flex: 1; background: #222;">
+          <div class="phone-view-profit-loss-graph" bind:clientHeight>
             <ProfitLossHistoryGraph {graphData} height={clientHeight} />
           </div>
         {:else}
@@ -532,8 +544,12 @@
       <!-- Divider -->
       <div class="admin-divider warning-mute"></div>
       <!-- Past trips -->
-      <div class="flashback-container">
-        {#if effectiveEvent}
+      <div
+        class="flashback-container"
+        class:flashback-empty={!effectiveEvent ||
+          (effectiveEvent.eventType !== "trip_visit" && effectiveEvent.eventType !== "trip_death")}
+      >
+        {#if effectiveEvent && (effectiveEvent.eventType === "trip_visit" || effectiveEvent.eventType === "trip_death")}
           {#key effectiveEvent?.meta?._id}
             <AdminTripEventTicker
               next={() => next(true, page.route.id?.includes("[tripId]"))}
@@ -543,20 +559,20 @@
               event={effectiveEvent}
             />
           {/key}
-        {/if}
 
-        <div class="full">
-          {#key effectiveEvent?.meta?._id}
-            <AdminTripEventIntrospection event={effectiveEvent} />
-          {/key}
-        </div>
+          <div class="full">
+            {#key effectiveEvent?.meta?._id}
+              <AdminTripEventIntrospection event={effectiveEvent} />
+            {/key}
+          </div>
 
-        {#if effectiveEvent?.eventType === TRIP_EVENT_TYPE.DEATH || effectiveEvent?.eventType === TRIP_EVENT_TYPE.VISIT}
-          <button class="small-button" onclick={go}
-            >{UI_STRINGS.toTrip.toUpperCase()}{effectiveEvent.meta.tripIndex}</button
-          >
+          <SmallButton
+            text={UI_STRINGS.toTrip.toUpperCase() + effectiveEvent.meta.tripIndex}
+            onclick={go}
+          />
+        {:else}
+          <p class="empty-message">{isLoadingInitialEvent ? "LOADING..." : "NO EVENTS"}</p>
         {/if}
-        <!-- Show flashback here for the LAST OPENED OUTCOME -->
       </div>
     </div>
   {/if}
@@ -671,7 +687,7 @@
       .p-l-graph {
         height: 100%;
         width: 100%;
-        background: #222;
+        background: var(--color-grey-darker);
         text-align: center;
         display: flex;
         justify-content: center;
@@ -707,14 +723,25 @@
       display: grid;
       height: 100%;
       grid-template-rows: 30px 1fr 60px;
+
+      &.flashback-empty {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+
+    .empty-message {
+      filter: drop-shadow(0px 0px 2px var(--foreground));
+      opacity: 0.5;
     }
 
     .admin-divider {
       width: 50px;
       background: repeating-linear-gradient(
         45deg,
-        #000000,
-        #000000 20px,
+        var(--background),
+        var(--background) 20px,
         var(--color-grey-dark) 20px,
         var(--color-grey-dark) 40px
       );
@@ -752,32 +779,13 @@
     }
   }
 
-  .small-button {
-    height: 100%;
-    background: var(--color-alert-priority);
-    width: 100%;
-    border: none;
-    display: block;
-    border-width: 10px;
-    border-style: inset;
-    border-color: rgba(0, 0, 0, 0.3);
-
-    &:hover {
-      background: var(--color-alert-priority-light);
-    }
-
-    &:active {
-      background: var(--color-alert-priority-muted);
-      border-style: inset;
-      transform: translateY(2px);
-      border-width: 10px;
-      position: relative;
-      top: -2px;
-    }
-  }
-
   .full {
     height: 100%;
     overflow-y: scroll;
+  }
+
+  .phone-view-profit-loss-graph {
+    height: 100%;
+    background: var(--color-grey-darker);
   }
 </style>

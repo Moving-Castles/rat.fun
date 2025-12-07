@@ -67,7 +67,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.9);
+    background: var(--background-dark-transparent);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -86,7 +86,7 @@
     h2 {
       font-size: 24px;
       margin-bottom: 20px;
-      color: var(--color-white);
+      color: var(--foreground);
     }
 
     p {
@@ -99,19 +99,19 @@
       font-size: 18px;
       font-weight: bold;
       margin-bottom: 20px;
-      color: var(--color-white);
+      color: var(--foreground);
     }
 
     .insufficient-balance {
       font-size: 14px;
-      color: var(--color-error);
+      color: var(--color-bad);
       margin-bottom: 20px;
     }
 
     .loading-spinner {
       font-size: 32px;
       margin: 30px 0;
-      color: var(--color-white);
+      color: var(--foreground);
     }
   }
 

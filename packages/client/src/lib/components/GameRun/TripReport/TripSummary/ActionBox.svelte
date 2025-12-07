@@ -142,8 +142,8 @@
       margin-bottom: 20px;
 
       &.dead {
-        color: black;
-        background: red;
+        color: var(--background);
+        background: var(--color-death);
       }
 
       @media (max-width: 768px) {

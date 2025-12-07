@@ -253,8 +253,8 @@
     right: 50%;
     transform: translateX(50%);
     z-index: 10;
-    background: rgba(255, 255, 255, 0.8);
-    border: 2px solid black;
+    background: var(--foreground-dark-transparent);
+    border: 2px solid var(--background);
     padding: 10px;
     width: 600px;
     max-width: 90dvw;

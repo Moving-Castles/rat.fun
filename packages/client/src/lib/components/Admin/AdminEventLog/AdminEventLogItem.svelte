@@ -29,7 +29,7 @@
     <span class="handle">@{point.meta?.playerName}</span> RAT SURVIVED #{point.meta?.tripIndex}
   </span>
   <div class:focus class:selected class="event-valuechange">
-    <SignedNumber neutralColor="rgba(255, 255, 0, 1);" value={point.valueChange} />
+    <SignedNumber neutralColor="var(--color-neutral);" value={point.valueChange} />
   </div>
 {:else if point.eventType === "trip_liquidated"}
   <span class:selected class:focus class="event-message prio-2">
@@ -43,14 +43,14 @@
     <!-- {point.meta.tripCreationCost} -->
   </span>
   <div class:focus class:selected class="event-valuechange">
-    <SignedNumber neutralColor="rgba(255, 255, 0, 1);" hideZero value={point.valueChange} />
+    <SignedNumber neutralColor="var(--color-neutral);" hideZero value={point.valueChange} />
   </div>
 {:else if point.eventType === "trip_death"}
   <span class:selected class:focus class="event-message">
     <span class="handle">@{point.meta?.playerName}</span> RAT DIED, #{point.meta?.tripIndex}
   </span>
   <div class:focus class:selected class="event-valuechange">
-    <SignedNumber neutralColor="rgba(255, 255, 0, 1);" value={point.valueChange} />
+    <SignedNumber neutralColor="var(--color-neutral);" value={point.valueChange} />
   </div>
 {:else if point.eventType === "trip_depleted"}
   <span class:selected class:focus class="event-message prio-2">
@@ -68,10 +68,10 @@
     text-align: right;
 
     &.selected {
-      background: var(--black);
+      background: var(--background);
     }
     &.focus {
-      background: var(--black);
+      background: var(--background);
     }
   }
 </style>

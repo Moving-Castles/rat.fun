@@ -37,8 +37,9 @@
   .signed-number {
     text-align: right;
     &.neutral {
-      color: var(--color-neutral);
+      color: var(--color-grey-light);
     }
+
     &.up {
       color: var(--color-up);
     }

@@ -200,9 +200,8 @@
 
   .new-trips-button {
     width: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
-    background-color: var(--color-alert-priority);
-    color: var(--black);
+    background-color: var(--background-dark-transparent);
+    color: var(--background);
     height: 3rem;
     border: none;
     outline: none;
@@ -242,7 +241,7 @@
     align-items: center;
 
     div {
-      background-color: var(--color-death);
+      background-color: var(--color-bad);
       padding: 10px;
       color: var(--background);
     }

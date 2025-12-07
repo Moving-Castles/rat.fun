@@ -65,7 +65,7 @@
     width: 100dvw;
     color: var(--foreground);
     font-size: var(--font-size-normal);
-    background: rgba(0, 0, 0, 0.1);
+    background: var(--background-light-transparent);
     user-select: none;
 
     @media (max-width: 800px) {
@@ -88,7 +88,7 @@
   }
 
   .modal-backdrop {
-    background: rgba(0, 0, 0, 0.8);
+    background: var(--background-dark-transparent);
     position: fixed;
     inset: 0;
     display: flex;
@@ -99,7 +99,7 @@
     animation: fadeIn 0.3s ease-out;
 
     @media (max-width: 800px) {
-      background: rgba(0, 0, 0, 0.9);
+      background: var(--background-dark-transparent);
     }
   }
 

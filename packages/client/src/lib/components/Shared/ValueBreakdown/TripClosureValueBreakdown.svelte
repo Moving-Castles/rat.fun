@@ -38,7 +38,7 @@
     margin-top: 20px;
     text-align: left;
     font-size: var(--font-size-normal);
-    background: rgba(0, 0, 0, 0.8);
+    background: var(--background-dark-transparent);
     padding: 15px;
     color: var(--foreground);
   }
@@ -51,19 +51,19 @@
   }
 
   .value {
-    background: var(--color-value);
+    background: var(--color-good);
     color: var(--black);
     padding: 3px 8px;
     border-radius: 3px;
     font-weight: bold;
 
     &.negative {
-      background: var(--color-death);
+      background: var(--color-bad);
       color: var(--background);
     }
 
     &.payout {
-      background: var(--color-success);
+      background: var(--color-good);
       color: var(--black);
     }
   }

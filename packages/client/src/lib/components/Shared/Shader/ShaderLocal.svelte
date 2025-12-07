@@ -47,7 +47,7 @@
     width: 100%;
     height: 100%;
     overflow: hidden;
-    background: #000;
+    background: var(--background);
 
     .shader-canvas {
       width: 100%;

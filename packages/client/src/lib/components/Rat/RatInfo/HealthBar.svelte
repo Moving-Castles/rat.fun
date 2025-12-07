@@ -16,10 +16,10 @@
   // Health 76-> => 4
   const getHealthColor = (health: number): string => {
     const level = Math.floor(health / 25)
-    if (level === 0) return "rgb(255, 66, 66)" // Red
-    if (level === 1) return "rgb(255, 126, 21)" // Orange
-    if (level === 2) return "rgb(129, 255, 255)" // Cyan
-    return "rgb(135, 255, 135)" // Green
+    if (level === 0) return "var(--color-health-bar-low)" // Red
+    if (level === 1) return "var(--color-health-bar-mid)" // Orange
+    if (level === 2) return "var(--color-health-bar-hi)" // Cyan
+    return "var(--color-health-bar-full)" // Green
   }
 
   let oldHealthColor = $derived(getHealthColor(oldHealth))
@@ -109,7 +109,7 @@
       left: 10px;
       transform: translateY(-50%);
       z-index: 2;
-      color: black;
+      color: var(--background);
       pointer-events: none;
     }
 

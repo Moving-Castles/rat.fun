@@ -128,7 +128,7 @@
   .trip {
     height: 100%;
     width: 100%;
-    color: var(--white);
+    color: var(--foreground);
     z-index: var(--z-high);
     font-size: var(--font-size-normal);
     overflow-y: auto;

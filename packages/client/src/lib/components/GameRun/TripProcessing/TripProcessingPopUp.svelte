@@ -30,7 +30,7 @@
     left: 0;
     width: 100dvw;
     height: 100dvh;
-    color: black;
+    color: var(--background);
     display: flex;
     flex-flow: column nowrap;
     justify-content: center;

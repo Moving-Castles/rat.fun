@@ -64,7 +64,7 @@
     position: relative;
 
     .loading {
-      background: black;
+      background: var(--background);
       padding: 10px;
     }
   }

@@ -89,12 +89,12 @@
     }
 
     .highlight {
-      background: var(--color-value);
+      background: var(--foreground-light-transparent);
       padding: 2px 4px;
     }
 
     .warning {
-      color: red;
+      color: var(--color-bad);
     }
   }
 
