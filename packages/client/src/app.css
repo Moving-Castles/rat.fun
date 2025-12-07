@@ -342,6 +342,7 @@ button {
   max-width: 100%;
   overflow-wrap: break-word;
   width: 100%;
+  white-space: pre-wrap;
 }
 
 .terminal-line--loader {

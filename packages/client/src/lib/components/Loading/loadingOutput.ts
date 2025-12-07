@@ -1,13 +1,14 @@
 import type { TerminalOutputUnit } from "$lib/modules/terminal-typer/types"
 import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
+import { asciiArtOutput } from "$lib/components/Loading/asciiArtOutput"
 
 export function generateLoadingOutput() {
   const tripSetupOutput: TerminalOutputUnit[] = [
     {
       type: "text",
       content: UI_STRINGS.loadingCompany,
-      color: "white",
-      backgroundColor: "black",
+      color: "pink",
+      backgroundColor: "purple",
       duration: 0,
       delayAfter: 100
     },
@@ -70,11 +71,11 @@ export function generateLoadingOutput() {
       type: "loader",
       content: "",
       color: "orange",
-      duration: 20000,
+      duration: 200000,
       typeSpeed: 20,
       backgroundColor: "green",
       loaderCharacters: "*"
     }
   ]
-  return tripSetupOutput
+  return [...asciiArtOutput, ...tripSetupOutput]
 }

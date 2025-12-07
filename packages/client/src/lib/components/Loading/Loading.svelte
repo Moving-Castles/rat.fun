@@ -222,6 +222,7 @@
       max-width: 800px;
       text-align: left;
       padding: 20px;
+      padding-top: 0;
       overflow-x: hidden;
       overflow-wrap: break-word;
 
