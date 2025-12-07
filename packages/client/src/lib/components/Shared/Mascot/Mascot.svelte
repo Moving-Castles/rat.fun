@@ -10,18 +10,24 @@
     entranceOn = false,
     bigDanceOn = false,
     smallDanceOn = false,
+    headBobOn = false,
     text = [],
+    smallText = false,
     isGameMascot = false,
     closeTextOnClick = false,
-    finishTextOnClick = false
+    finishTextOnClick = false,
+    autoHideAfter = 0
   }: {
     entranceOn?: boolean
     bigDanceOn?: boolean
     smallDanceOn?: boolean
+    headBobOn?: boolean
     text?: TerminalOutputUnit[]
+    smallText?: boolean
     isGameMascot?: boolean
     closeTextOnClick?: boolean
     finishTextOnClick?: boolean
+    autoHideAfter?: number
   } = $props()
 
   let isAnimating = $state(false)
@@ -31,6 +37,7 @@
   const enterTimeline = gsap.timeline({ paused: true })
   const bigDanceTimeline = gsap.timeline({ repeat: -1, yoyo: true })
   const smallDanceTimeline = gsap.timeline({ repeat: -1, yoyo: true })
+  const headBobTimeline = gsap.timeline({ repeat: -1, yoyo: true })
 
   // Elements
   let mascotElement: HTMLDivElement | null = $state(null)
@@ -102,6 +109,16 @@
       setupBigDanceTimeline()
     } else if (smallDanceOn) {
       setupSmallDanceTimeline()
+    } else if (headBobOn) {
+      setupHeadBobTimeline()
+    }
+
+    // Auto-hide bubble after specified time
+    if (autoHideAfter > 0) {
+      setTimeout(() => {
+        typerController?.stop()
+        showBubble = false
+      }, autoHideAfter)
     }
   })
 
@@ -176,6 +193,23 @@
     smallDanceTimeline.play()
   }
 
+  const setupHeadBobTimeline = () => {
+    // Head only
+    headBobTimeline.to(layer3Element, {
+      rotation: -2,
+      duration: 0.5,
+      ease: "power2.inOut"
+    })
+
+    headBobTimeline.to(layer3Element, {
+      rotation: 2,
+      duration: 0.5,
+      ease: "power2.inOut"
+    })
+
+    headBobTimeline.play()
+  }
+
   function handleClick() {
     if (closeTextOnClick) {
       typerController?.stop()
@@ -208,6 +242,7 @@
   {#if text.length > 0 && showBubble}
     <div
       class="bubble"
+      class:small-text={smallText}
       out:fade={{ duration: 200 }}
       class:isGameMascot
       bind:this={bubbleElement}
@@ -240,6 +275,7 @@
     width: 100%;
     height: 100%;
     aspect-ratio: 1/1;
+    pointer-events: none;
 
     &.clickable {
       pointer-events: auto;
@@ -253,20 +289,25 @@
     right: 50%;
     transform: translateX(50%);
     z-index: 10;
-    background: var(--foreground-dark-transparent);
-    border: 2px solid var(--background);
     padding: 10px;
-    width: 600px;
+    width: var(--spawn-inner-width);
     max-width: 90dvw;
     pointer-events: none;
-    font-size: var(--font-size-normal);
-    font-family: var(--special-font-stack);
+    font-size: var(--font-size-mascot);
+    font-family: var(--mascot-font-stack);
+    color: var(--foreground);
     text-align: left;
+    line-height: 1.4em;
+
+    &.small-text {
+      font-size: 24px;
+    }
 
     &.isGameMascot {
-      width: 400px;
-      top: 40px;
-      right: 60%;
+      width: 60dvw;
+      top: 00px;
+      right: 20px;
+      line-height: 1.2em;
     }
   }
 
@@ -311,17 +352,22 @@
 
   @media (max-width: 800px) {
     .bubble {
+      top: 80px;
       position: fixed;
       left: 50%;
       right: auto;
       transform: translateX(-50%);
-      width: calc(100dvw - 60px);
-      max-width: calc(100dvw - 60px);
+      width: calc(100dvw - 40px);
+      max-width: calc(100dvw - 40px);
       padding: 12px 16px;
       border-width: 2px;
-      font-size: var(--font-size-normal);
+
+      &.small-text {
+        font-size: 18px;
+      }
 
       &.isGameMascot {
+        width: 90dvw;
         top: 100px;
         right: auto;
       }

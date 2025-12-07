@@ -10,7 +10,7 @@
   let { children }: { children?: any } = $props()
 </script>
 
-<SEO prependTitle="ADMIN" />
+<SEO prependTitle="TRIPS LAB" />
 
 <Admin />
 

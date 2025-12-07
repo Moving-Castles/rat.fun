@@ -28,6 +28,7 @@ export default defineConfig(() => ({
     "shaders/index": "./src/shaders/index.ts",
     "shaders/black/index": "./src/shaders/black/index.ts",
     "shaders/clouds/index": "./src/shaders/clouds/index.ts",
+    "shaders/clouds-bw/index": "./src/shaders/clouds-bw/index.ts",
     "shaders/magic/index": "./src/shaders/magic/index.ts",
     "shaders/plasma/index": "./src/shaders/plasma/index.ts",
     "shaders/plasma-lamp/index": "./src/shaders/plasma-lamp/index.ts",

@@ -31,7 +31,8 @@ async function typeUnit(
   const typeSpeed = unit.typeSpeed ?? DEFAULT_TYPE_SPEED
   const delayAfter = unit.delayAfter ?? DEFAULT_DELAY_AFTER
   const sound = unit.sound ?? { category: "ratfunUI", id: "type" }
-  const onChar = unit.onChar
+  const onType = unit.onType
+  const typeMode = unit.typeMode ?? "char"
 
   if (unit.type === "text") {
     await typeText(
@@ -43,7 +44,8 @@ async function typeUnit(
       unit.duration,
       isStopped,
       sound,
-      onChar
+      typeMode,
+      onType
     )
     if (!isStopped()) await sleep(delayAfter)
   } else if (unit.type === "loader") {
@@ -57,7 +59,7 @@ async function typeUnit(
       unit.loaderCharacters ?? "",
       isStopped,
       sound,
-      onChar
+      onType
     )
     if (!isStopped()) await sleep(delayAfter)
   }
@@ -72,7 +74,8 @@ async function typeText(
   duration: number | undefined,
   isStopped: () => boolean,
   sound: { category: string; id: string },
-  onChar?: (char: string, index: number) => void
+  typeMode: "char" | "word",
+  onType?: (text: string, index: number) => void
 ) {
   // Start new line
   addLine(targetElement, "text")
@@ -80,18 +83,46 @@ async function typeText(
   // If duration is 0, output everything at once
   if (duration === 0) {
     addTextToLine(targetElement, content, color, backgroundColor)
-    playSound(sound)
+    if (onType) {
+      onType("", 0)
+    } else {
+      playSound(sound)
+    }
     return
   }
 
-  let index = 0
-  for (const char of content) {
-    if (isStopped()) break
-    addChar(targetElement, char, color, backgroundColor)
-    playSound(sound)
-    onChar?.(char, index)
-    index++
-    await sleep(typeSpeed)
+  if (typeMode === "word") {
+    // Split by spaces but keep the spaces attached to words
+    const words = content.split(/(\s+)/)
+    let index = 0
+    for (const word of words) {
+      if (isStopped()) break
+      if (word.length === 0) continue
+      addTextToLine(targetElement, word, color, backgroundColor)
+      // Only trigger sound/callback for non-whitespace words
+      if (word.trim().length > 0) {
+        if (onType) {
+          onType(word, index)
+        } else {
+          playSound(sound)
+        }
+        index++
+        await sleep(typeSpeed)
+      }
+    }
+  } else {
+    let index = 0
+    for (const char of content) {
+      if (isStopped()) break
+      addChar(targetElement, char, color, backgroundColor)
+      if (onType) {
+        onType(char, index)
+      } else {
+        playSound(sound)
+      }
+      index++
+      await sleep(typeSpeed)
+    }
   }
 }
 
@@ -105,14 +136,18 @@ async function typeLoader(
   loaderCharacters: string,
   isStopped: () => boolean,
   sound: { category: string; id: string },
-  onChar?: (char: string, index: number) => void
+  onType?: (text: string, index: number) => void
 ) {
   // Start new line
   addLine(targetElement, "loader")
 
   // Output the content all at once
   addTextToLine(targetElement, content, color, backgroundColor)
-  playSound(sound)
+  if (onType) {
+    onType("", 0)
+  } else {
+    playSound(sound)
+  }
 
   // If duration is 0, output everything at once
   if (duration === 0) {
@@ -142,8 +177,11 @@ async function typeLoader(
       if (isStopped()) return
       currentLoaderContent += char
       addChar(targetElement, char, color, backgroundColor)
-      playSound(sound)
-      onChar?.(char, index)
+      if (onType) {
+        onType(char, index)
+      } else {
+        playSound(sound)
+      }
       index++
       await sleep(typeSpeed)
 

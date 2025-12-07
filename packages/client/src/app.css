@@ -115,6 +115,8 @@
   --button-font-stack: "Michroma", sans-serif;
   --special-font-stack: "Xanh Mono", monospace;
   --admin-font-stack: var(--typewriter-font-stack);
+  /* --mascot-font-stack: "Henny Penny", cursive; */
+  --mascot-font-stack: "Rock Salt", cursive;
 
   /* Typography: Font sizes */
   --font-size-very-small: 9px;
@@ -122,6 +124,7 @@
   --font-size-normal: 18px;
   --font-size-medium: 20px;
   --font-size-large: 26px;
+  --font-size-mascot: 36px;
   --font-size-extra-large: 48px;
   --font-size-super-large: 64px;
   --font-size-ultra: 228px;
@@ -168,7 +171,7 @@
   --spawn-mascot-size: 400px;
   --spawn-mascot-margin-bottom: 20px;
   --spawn-button-height: 140px;
-  --spawn-inner-width: 600px;
+  --spawn-inner-width: 700px;
 
   /* Sizing */
   --default-padding: 14px;
@@ -194,6 +197,7 @@
   :root {
     --game-window-width: calc(100vw - 15px);
     --game-window-height: calc(100vh - 15px);
+    --font-size-mascot: 24px;
   }
 }
 
@@ -357,4 +361,22 @@ button {
   display: inline;
   word-break: break-all;
   overflow-wrap: anywhere;
+}
+
+.bubble .terminal-line {
+  margin-bottom: 0.5em;
+}
+
+@media (max-width: 800px) {
+  .bubble .terminal-line {
+    background: var(--background-semi-transparent);
+  }
+}
+
+.bubble .terminal-line span {
+  text-shadow:
+    2px 2px 0px black,
+    -2px -2px 0px black,
+    2px -2px 0px black,
+    -2px 2px 0px black;
 }

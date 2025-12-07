@@ -45,7 +45,13 @@
 <div class="deploy-rat">
   <div class="inner-container">
     <div class="mascot-container">
-      <Mascot smallDanceOn={true} text={mascotText} closeTextOnClick={true} isGameMascot={true} />
+      <Mascot
+        autoHideAfter={6000}
+        smallDanceOn={true}
+        text={mascotText}
+        closeTextOnClick={true}
+        isGameMascot={true}
+      />
     </div>
     <div class="button-container">
       {#if $player}
@@ -97,8 +103,8 @@
         position: relative;
 
         @media (max-width: 800px) {
-          width: 300px;
-          height: 300px;
+          width: 360px;
+          height: 360px;
         }
       }
 

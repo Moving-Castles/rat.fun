@@ -1,58 +1,81 @@
 import type { TerminalOutputUnit } from "$lib/modules/terminal-typer/types"
 import { playSound, randomPitch } from "$lib/modules/sound"
 
-function onChar() {
+function onType() {
   playSound({ category: "ratfunUI", id: "chirp", pitch: randomPitch() })
 }
 
 export const ruleOverviewMascotText: TerminalOutputUnit[] = [
   {
     type: "text",
-    content: "Buy one of our organically grown rats with $RAT tokens.",
-    color: "black",
+    content: "Simple...",
+    typeMode: "word",
+    typeSpeed: 100,
+    color: "var(--foreground)",
     backgroundColor: "transparent",
-    onChar
+    onType
   },
   {
     type: "text",
-    content: "Drug them up to the brim of their skull.",
-    color: "black",
+    content: "1. Buy a rat with $RAT tokens",
+    typeMode: "word",
+    typeSpeed: 100,
+    color: "var(--foreground)",
     backgroundColor: "transparent",
-    onChar
+    onType
   },
   {
     type: "text",
-    content: "Send them tripping.",
-    color: "black",
+    content: "2. Drug it out of its skull",
+    typeMode: "word",
+    typeSpeed: 100,
+    color: "var(--foreground)",
     backgroundColor: "transparent",
-    onChar
+    onType
   },
   {
     type: "text",
-    content: "Fingercrossed they survive.",
-    color: "black",
+    content: "3. Send it tripping",
+    typeMode: "word",
+    typeSpeed: 100,
+    color: "var(--foreground)",
     backgroundColor: "transparent",
-    onChar
+    onType
   },
   {
     type: "text",
-    content: "Retrieve any PSYCHO OBJECTS (We resell those to various military partners)",
-    color: "black",
+    content: "4. Fingercrossed it survive",
+    typeMode: "word",
+    typeSpeed: 100,
+    color: "var(--foreground)",
     backgroundColor: "transparent",
-    onChar
+    onType
   },
   {
     type: "text",
-    content: "Cash out $RAT tokens.",
-    color: "black",
+    content: "5. Get PSYCHO OBJECTS",
+    typeMode: "word",
+    typeSpeed: 100,
+    color: "var(--foreground)",
     backgroundColor: "transparent",
-    onChar
+    onType
   },
   {
     type: "text",
-    content: "Repeat.",
-    color: "black",
+    content: "6. Cash out $RAT tokens",
+    typeMode: "word",
+    typeSpeed: 100,
+    color: "var(--foreground)",
     backgroundColor: "transparent",
-    onChar
+    onType
+  },
+  {
+    type: "text",
+    content: "7. Repeat forever",
+    typeMode: "word",
+    typeSpeed: 100,
+    color: "var(--foreground)",
+    backgroundColor: "transparent",
+    onType
   }
 ]

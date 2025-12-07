@@ -10,5 +10,6 @@ export type TerminalOutputUnit = {
   color: string
   backgroundColor: string
   sound?: PlaySoundConfig
-  onChar?: (char: string, index: number) => void
+  typeMode?: "char" | "word"
+  onType?: (text: string, index: number) => void
 }

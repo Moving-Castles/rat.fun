@@ -78,7 +78,9 @@
     font-size: var(--font-size-large);
     padding: 15px;
     width: 100%;
-    line-height: 1.2em;
+    line-height: 1.1em;
+    background: var(--color-grey-lighter);
+    border: 1px solid var(--color-border);
 
     p {
       margin: 0 0 10px 0;
@@ -96,10 +98,10 @@
     .warning {
       color: var(--color-bad);
     }
-  }
 
-  .tutorial-btn-container {
-    margin-top: 10px;
-    height: 60px;
+    .tutorial-btn-container {
+      margin-top: 16px;
+      height: 60px;
+    }
   }
 </style>

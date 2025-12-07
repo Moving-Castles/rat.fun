@@ -228,6 +228,7 @@
 </script>
 
 <div class="deploying-rat">
+  <div class="header">Select your RAT</div>
   <div class="slot-container">
     <div class="slot-box">
       <div class="slot-display" class:locked={slot0Stopped}>{firstNameDisplay}</div>
@@ -279,6 +280,17 @@
     width: 100%;
     background-image: url("/images/texture-2.png");
 
+    .header {
+      font-size: var(--font-size-large);
+      font-family: var(--special-font-stack);
+      color: var(--background);
+      margin-bottom: 10px;
+      background: var(--foreground-semi-transparent);
+      padding: 10px;
+      width: 100%;
+      text-align: center;
+    }
+
     .slot-container {
       display: flex;
       width: 100%;
@@ -289,11 +301,11 @@
         flex-direction: column;
         align-items: center;
         padding: 0.5rem;
-        gap: 0.5rem;
+        gap: 20px;
 
         @media (max-width: 800px) {
           padding: 0.25rem;
-          gap: 0.25rem;
+          gap: 20px;
         }
 
         .slot-display {

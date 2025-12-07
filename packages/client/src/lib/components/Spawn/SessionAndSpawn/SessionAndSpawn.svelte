@@ -87,7 +87,12 @@
 <div class="outer-container">
   <div class="inner-container">
     <div class="mascot-container" bind:this={mascotElement}>
-      <Mascot text={sessionAndSpawnMascotText} finishTextOnClick={true} />
+      <Mascot
+        headBobOn={true}
+        smallText={true}
+        text={sessionAndSpawnMascotText}
+        finishTextOnClick={true}
+      />
     </div>
 
     <!-- FORM -->
@@ -95,7 +100,7 @@
       <!-- INPUT -->
       <input
         type="text"
-        placeholder="SIGN YOUR NAME"
+        placeholder="SIGN OPERATOR ID"
         bind:value={name}
         bind:this={inputElement}
         onkeydown={e => {

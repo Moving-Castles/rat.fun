@@ -176,6 +176,9 @@
         font-family: var(--special-font-stack);
         line-height: 1.1em;
 
+        @media (max-width: 768px) {
+          font-size: var(--font-size-normal);
+        }
         p {
           margin: 0;
           margin-bottom: 0.5em;

@@ -2,7 +2,6 @@
   import { onMount } from "svelte"
   import gsap from "gsap"
   import { getDrawbridge, type ConnectorInfo, drawbridgeError } from "$lib/modules/drawbridge"
-  import { debugInfo } from "$lib/modules/drawbridge/getConnectors"
   import { isPhone } from "$lib/modules/ui/state.svelte"
   import { BigButton, Mascot } from "$lib/components/Shared"
   import { spawnState, determineNextState } from "$lib/components/Spawn/state.svelte"
@@ -217,7 +216,7 @@
 <div class="outer-container">
   <div class="inner-container">
     <div class="mascot-container" bind:this={mascotElement}>
-      <Mascot text={connectWalletFormMascotText} finishTextOnClick={true} />
+      <Mascot headBobOn={true} text={connectWalletFormMascotText} finishTextOnClick={true} />
     </div>
 
     <div class="button-container" bind:this={buttonElement}>

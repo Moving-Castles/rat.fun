@@ -41,7 +41,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: var(--foreground);
+    background: var(--color-grey-light);
     color: var(--background);
     text-align: left;
     padding: 2px 6px;

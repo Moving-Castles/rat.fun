@@ -1,6 +1,7 @@
 // Re-export all shaders
 export { black } from "./black"
 export { clouds } from "./clouds"
+export { cloudsBw } from "./clouds-bw"
 export { magic } from "./magic"
 export { plasma } from "./plasma"
 export { plasmaLamp } from "./plasma-lamp"
@@ -14,6 +15,7 @@ export { vortex } from "./vortex"
 // Convenience object with all shaders
 import { black } from "./black"
 import { clouds } from "./clouds"
+import { cloudsBw } from "./clouds-bw"
 import { magic } from "./magic"
 import { plasma } from "./plasma"
 import { plasmaLamp } from "./plasma-lamp"
@@ -27,6 +29,7 @@ import { vortex } from "./vortex"
 export const shaders = {
   black,
   clouds,
+  cloudsBw,
   magic,
   plasma,
   plasmaLamp,

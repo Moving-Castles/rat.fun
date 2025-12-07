@@ -1,7 +1,7 @@
 import type { TerminalOutputUnit } from "$lib/modules/terminal-typer/types"
 import { playSound, randomPitch } from "$lib/modules/sound"
 
-function onChar() {
+function onType() {
   playSound({ category: "ratfunUI", id: "chirp", pitch: randomPitch() })
 }
 
@@ -11,13 +11,13 @@ export const sessionMascotText: TerminalOutputUnit[] = [
     content: "Welcome back operator!",
     color: "black",
     backgroundColor: "transparent",
-    onChar
+    onType
   },
   {
     type: "text",
     content: "Retrieve your account below",
     color: "black",
     backgroundColor: "transparent",
-    onChar
+    onType
   }
 ]

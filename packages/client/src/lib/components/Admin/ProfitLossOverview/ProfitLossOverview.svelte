@@ -211,11 +211,8 @@
 
   .upText {
     color: var(--color-up);
-
-    &.glow {
-      filter: drop-shadow(0px 0px 2px var(--color-up));
-    }
   }
+
   p {
     position: absolute;
     top: 10px;

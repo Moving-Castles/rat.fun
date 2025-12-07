@@ -73,7 +73,7 @@
     // (when already spawned we pass through quickly and music might start unnecessarily)
     await new Promise(resolve => setTimeout(resolve, 500))
     if ($UIState === UI.SPAWNING) {
-      shaderManager.setShader("black")
+      shaderManager.setShader("cloudsBw")
       backgroundMusic.play({
         category: "ratfunMusic",
         id: "spawn",
