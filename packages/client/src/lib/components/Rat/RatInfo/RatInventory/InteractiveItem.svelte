@@ -1,8 +1,6 @@
 <script lang="ts">
   import { playSound } from "$lib/modules/sound"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
-  import { Tooltip } from "$lib/components/Shared"
-  import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
 
   let {
     item,
@@ -28,60 +26,80 @@
   }
 </script>
 
-<Tooltip content={UI_STRINGS.itemExplanation}>
-  <div
-    class="inventory-item {getRarityClass(item.value)} index-{index}"
-    class:disabled={busy}
-    role="button"
-    tabindex="0"
-    onmouseenter={onMouseEnter}
-  >
-    <div class="inner">
-      <!-- NAME -->
+<div
+  class="inventory-item-wrapper {getRarityClass(item.value)} index-{index}"
+  class:disabled={busy}
+  role="button"
+  tabindex="0"
+  onmouseenter={onMouseEnter}
+>
+  <div class="inventory-item">
+    <div class="item-front">
       <div class="name">{item.name}</div>
-      <!-- VALUE -->
-      <span class="value">{item.value} {CURRENCY_SYMBOL}</span>
+    </div>
+    <div class="item-back">
+      <div class="value">{Number(item.value)} {CURRENCY_SYMBOL}</div>
     </div>
   </div>
-</Tooltip>
+</div>
 
 <style lang="scss">
-  .inventory-item {
+  .inventory-item-wrapper {
     font-size: var(--font-size-large);
     font-family: var(--special-font-stack);
-    display: flex;
-    background: var(--color-inventory-item-background);
-    color: var(--background);
-    padding: 5px;
-    justify-content: center;
-    align-items: center;
-    outline: none;
     width: 100%;
     height: 100%;
     position: relative;
-    overflow: hidden;
-    border: 10px inset var(--background-semi-transparent);
-    transition: transform 0.2s ease;
-    border-radius: 10px;
+    perspective: 1000px;
     user-select: none;
 
     &.disabled {
       opacity: 0.5;
       cursor: not-allowed;
     }
+  }
 
-    &:hover {
-      transform: translateY(-5px);
-    }
+  .inventory-item {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.3s ease;
 
-    .value {
-      font-family: var(--typewriter-font-stack);
-      font-size: var(--font-size-normal);
-      // color: green;
+    .inventory-item-wrapper:hover & {
+      transform: rotateY(180deg);
     }
   }
 
-  .inner {
+  .item-front,
+  .item-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--color-inventory-item-background);
+    color: var(--background);
+    padding: 5px;
+    border: 8px inset var(--background-semi-transparent);
+    outline: none;
+    box-shadow: 0 2px 8px var(--background-light-transparent);
+  }
+
+  .item-front {
+    z-index: 2;
+    transform: rotateY(0deg);
+  }
+
+  .item-back {
+    transform: rotateY(180deg);
+    background: var(--color-inventory-item-reverse-side);
+  }
+
+  .name,
+  .value {
     text-align: center;
   }
 </style>

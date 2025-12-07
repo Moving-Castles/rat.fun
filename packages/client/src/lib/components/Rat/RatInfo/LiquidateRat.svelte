@@ -81,7 +81,7 @@
           ease: "power2.inOut",
           onUpdate: () => {
             if (valueElement) {
-              valueElement.textContent = `${Math.floor(counterObj.value)} ${CURRENCY_SYMBOL}`
+              valueElement.textContent = `${Math.floor(counterObj.value)}${CURRENCY_SYMBOL}`
             }
           }
         },
@@ -184,11 +184,6 @@
 
 <div class="liquidate-rat">
   {#if displayRat}
-    <div class="total-value" bind:this={totalValueContainer}>
-      <div class="value">
-        <span bind:this={valueElement}>{oldValue} {CURRENCY_SYMBOL}</span>
-      </div>
-    </div>
     <div class="action" bind:this={actionContainer}>
       <BigButton
         text={UI_STRINGS.liquidateRatButtonText($ratTotalValue)}
@@ -205,36 +200,9 @@
     height: 100%;
     display: flex;
     background-image: url("/images/texture-5.png");
-    .total-value {
-      width: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: var(--foreground);
-      display: flex;
-      flex-direction: column;
-      overflow: visible; // Allow value to overflow during scale
-
-      .value {
-        margin-top: 8px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 72px;
-        line-height: 72px;
-        color: var(--foreground-light-transparent);
-        overflow: visible; // Allow scaled text to overflow
-        position: relative;
-        z-index: 10; // Ensure it appears above other elements
-
-        @media (max-width: 800px) {
-          font-size: 48px;
-        }
-      }
-    }
 
     .action {
-      width: 50%;
+      width: 100%;
       padding: 5px;
     }
   }

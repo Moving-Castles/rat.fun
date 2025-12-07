@@ -3,7 +3,6 @@
   import { rat } from "$lib/modules/state/stores"
   import { frozenRat, resetFrozenState } from "$lib/components/GameRun/state.svelte"
   import { RatStats, RatInventory, LiquidateRat } from "$lib/components/Rat"
-  import LiquidateRat2 from "$lib/components/Rat/RatInfo/LiquidateRat2.svelte"
   import { gsap } from "gsap"
 
   // Always use current rat state for displayRat
@@ -120,7 +119,7 @@
   </div>
   <!-- Liquidate -->
   <div class="rat-liquidate-container" data-tutorial="cash-out">
-    <LiquidateRat2 {displayRat} {oldRat} {newRat} onTimeline={addLiquidateTimeline} />
+    <LiquidateRat {displayRat} {oldRat} {newRat} onTimeline={addLiquidateTimeline} />
   </div>
 </div>
 

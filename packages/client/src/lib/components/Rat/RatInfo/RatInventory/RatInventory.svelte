@@ -3,10 +3,9 @@
   import { gsap } from "gsap"
   import { playSound } from "$lib/modules/sound"
 
-  import InteractiveItem from "$lib/components/Rat/RatInfo/RatInventory/InteractiveItem.svelte"
-  import InteractiveItem2 from "$lib/components/Rat/RatInfo/RatInventory/InteractiveItem2.svelte"
-  import EmptySlot from "$lib/components/Rat/RatInfo/RatInventory/EmptySlot.svelte"
   import InventoryHeader from "$lib/components/Rat/RatInfo/RatInventory/InventoryHeader.svelte"
+  import InteractiveItem from "$lib/components/Rat/RatInfo/RatInventory/InteractiveItem.svelte"
+  import EmptySlot from "$lib/components/Rat/RatInfo/RatInventory/EmptySlot.svelte"
 
   let {
     displayRat,
@@ -269,7 +268,7 @@
           <!-- Render item on top if present -->
           {#if slot.item}
             <div class="slot-item">
-              <InteractiveItem2 item={slot.item} index={slot.originalIndex} />
+              <InteractiveItem item={slot.item} index={slot.originalIndex} />
             </div>
           {/if}
         </div>
