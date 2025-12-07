@@ -103,6 +103,7 @@
     flex: 1;
     overflow-y: auto;
     padding-top: 8px;
+    padding-bottom: 40px;
   }
 
   .log-item {
@@ -131,6 +132,8 @@
     max-width: 100%;
     font-family: var(--special-font-stack);
     font-size: var(--font-size-normal);
+    background: var(--color-grey-dark);
+    color: var(--foreground);
   }
 
   .outcome-list {

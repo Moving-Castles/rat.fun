@@ -46,7 +46,7 @@
   <div class="inner-container">
     <div class="mascot-container">
       <Mascot
-        autoHideAfter={6000}
+        autoHideAfter={10000}
         smallDanceOn={true}
         text={mascotText}
         closeTextOnClick={true}

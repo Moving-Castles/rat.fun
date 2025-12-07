@@ -114,10 +114,19 @@
     border-collapse: collapse;
     position: relative;
 
-    th {
+    thead {
       position: sticky;
-      top: 0;
-      background: var(--background);
+      top: -2px;
+      background: var(--color-grey-darker);
+    }
+
+    th {
+      font-size: var(--font-size-small);
+      border-top: 1px solid var(--color-grey-dark);
+      border-bottom: 1px solid var(--color-grey-dark);
+      border-right: 1px dashed var(--color-grey-dark);
+      height: 24px;
+      padding-right: 1ch;
     }
   }
 

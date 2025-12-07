@@ -24,7 +24,7 @@ function textLine(content: string): TerminalOutputUnit {
 // ===========================================
 
 export const NEW_PLAYER_MESSAGE: MascotMessageData = {
-  text: [textLine("welcome XXX"), textLine("something something"), textLine("buy rat ")]
+  text: [textLine("Make the loveless RAT.FUN Psychic Instruments LLC proud, OpErrAtorr!")]
 }
 
 export const FIRST_DEATH_MESSAGE: MascotMessageData = {
@@ -37,11 +37,10 @@ export const FIRST_DEATH_MESSAGE: MascotMessageData = {
 
 export const FIRST_CASHOUT_MESSAGE: MascotMessageData = {
   text: [
-    textLine("good good OPERATOR yes!"),
-    textLine("you kill rat get money yes"),
-    textLine("this how game work yes"),
-    textLine("company proud yes"),
-    textLine("buy new rat continue yes?")
+    textLine("Ah, OpeRatoRR! "),
+    textLine("Cash out enough rats OpearatoR!"),
+    textLine("We’ll reach the shores of the Walled State of Kowloon opeertor!"),
+    textLine("The dark beaches of the Sexc-Hell Islands OpeRatoRR!")
   ]
 }
 

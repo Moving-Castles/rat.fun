@@ -228,7 +228,13 @@
 </script>
 
 <div class="deploying-rat">
-  <div class="header">Select your RAT</div>
+  <div class="header">
+    {#if waitingForDeployment}
+      <span in:fade={{ duration: 200 }}>{UI_STRINGS.gettingRat}<SmallSpinner soundOn /></span>
+    {:else}
+      Select your RAT
+    {/if}
+  </div>
   <div class="slot-container">
     <div class="slot-box">
       <div class="slot-display" class:locked={slot0Stopped}>{firstNameDisplay}</div>
@@ -260,13 +266,6 @@
       />
     </div>
   </div>
-
-  {#if waitingForDeployment}
-    <div class="getting-rat-message" in:fade={{ duration: 200 }}>
-      {UI_STRINGS.gettingRat}
-      <SmallSpinner soundOn />
-    </div>
-  {/if}
 </div>
 
 <style lang="scss">
@@ -330,17 +329,6 @@
           }
         }
       }
-    }
-
-    .getting-rat-message {
-      position: absolute;
-      bottom: 20%;
-      left: 50%;
-      transform: translateX(-50%);
-      padding: 10px;
-      font-size: var(--font-size-normal);
-      color: var(--background);
-      background: var(--foreground);
     }
   }
 </style>

@@ -41,15 +41,31 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: var(--color-grey-light);
-    color: var(--background);
+    background: var(--background);
+    color: var(--foreground);
     text-align: left;
     padding: 2px 6px;
     font-size: var(--font-size-small);
+    border-bottom: 1px solid var(--color-grey-dark);
+    border-top: 1px solid var(--color-grey-dark);
+    user-select: none;
+    height: 40px;
   }
 
   .buttons {
     display: flex;
+    padding: 5px;
     gap: 8px;
+
+    button {
+      padding-inline: 7px;
+      background: var(--color-grey-mid);
+      color: var(--foreground);
+
+      &:disabled {
+        opacity: 0.5;
+        pointer-events: none;
+      }
+    }
   }
 </style>

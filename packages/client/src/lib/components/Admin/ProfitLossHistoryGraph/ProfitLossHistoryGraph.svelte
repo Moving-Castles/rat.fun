@@ -157,13 +157,6 @@
 </script>
 
 <div class="profit-loss-graph">
-  <div class="y-axis">
-    <!-- <small class="label">Value</small> -->
-  </div>
-  <div class="x-axis">
-    <!-- <small class="label">Time</small> -->
-  </div>
-
   {#if isEmpty}
     <div style:height="{height}px" class="no-data">
       <span>{UI_STRINGS.noData.toUpperCase()}</span>
@@ -457,24 +450,6 @@
     background-image:
       linear-gradient(to right, var(--color-grey-dark) 1px, transparent 1px),
       linear-gradient(to bottom, var(--color-grey-dark) 1px, transparent 1px);
-  }
-
-  .y-axis {
-    writing-mode: vertical-rl;
-    transform: rotate(180deg);
-    border-right: 1px solid var(--color-grey-mid);
-    width: 30px;
-    height: 100%;
-    position: absolute;
-  }
-
-  .x-axis {
-    border-bottom: 1px solid var(--color-grey-mid);
-    width: 100%;
-    height: 30px;
-    position: absolute;
-    bottom: 0;
-    z-index: var(--z-base);
   }
 
   .graph {

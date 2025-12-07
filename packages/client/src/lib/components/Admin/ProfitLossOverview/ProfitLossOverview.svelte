@@ -225,9 +225,10 @@
 
   .percentage {
     position: absolute;
-    top: 1rem;
-    right: 1rem;
+    top: 10px;
+    right: 10px;
     display: inline-block;
+    font-size: var(--font-size-small);
   }
 
   .profit-amount {

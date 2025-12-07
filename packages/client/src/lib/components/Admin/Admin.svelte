@@ -515,7 +515,9 @@
               class="toggle"
               class:secondary={$adminTripsSubView === "past"}
               onclick={() => adminTripsSubView.set("active")}>{UI_STRINGS.activeTrips}</button
-            ><button
+            >
+            <div class="toggle-divider">/</div>
+            <button
               type="button"
               class="toggle"
               class:secondary={$adminTripsSubView === "active"}
@@ -728,7 +730,7 @@
       width: calc(50% - 20px);
       display: grid;
       height: 100%;
-      grid-template-rows: 30px 1fr 60px;
+      grid-template-rows: 40px 1fr 60px;
 
       &.flashback-empty {
         display: flex;
@@ -752,15 +754,21 @@
         var(--color-grey-dark) 40px
       );
       opacity: 0.8;
+      border-right: 1px solid var(--color-grey-dark);
+      border-left: 1px solid var(--color-grey-dark);
     }
 
     .table-summary {
+      height: 40px;
       padding: 10px;
       display: flex;
       justify-content: space-between;
       font-size: var(--font-size-normal);
       font-family: var(--special-font-stack);
+      background: var(--background);
+      color: var(--foreground);
       cursor: pointer;
+      user-select: none;
     }
   }
 
@@ -778,6 +786,7 @@
       padding: 0;
       font: inherit;
       cursor: pointer;
+      color: var(--foreground);
 
       &:hover {
         text-decoration: underline;
@@ -793,5 +802,9 @@
   .phone-view-profit-loss-graph {
     height: 100%;
     background: var(--color-grey-darker);
+  }
+
+  .toggle-divider {
+    color: var(--foreground);
   }
 </style>
