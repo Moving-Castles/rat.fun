@@ -1,35 +1,27 @@
 <script lang="ts">
   import { phoneActiveGameView } from "$lib/modules/ui/state.svelte"
-  import { BigButton } from "$lib/components/Shared"
+  import { SlideToggle } from "$lib/components/Shared"
   import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
 
-  let { targetView }: { targetView: "ratbox" | "triplisting" } = $props()
-
-  function switchView() {
-    phoneActiveGameView.set(targetView)
-  }
-
-  const buttonText = $derived(
-    targetView === "ratbox"
-      ? `← ${UI_STRINGS.rat.toUpperCase()}`
-      : `${UI_STRINGS.trips.toUpperCase()} →`
-  )
+  const options = [
+    { value: "ratbox", label: UI_STRINGS.rat.toUpperCase() },
+    { value: "triplisting", label: UI_STRINGS.trips.toUpperCase() }
+  ]
 </script>
 
-<div
-  class="phone-view-button-container"
-  data-tutorial={targetView === "triplisting" ? "phone-trip-button" : undefined}
->
-  <BigButton text={buttonText} onclick={switchView} />
+<div class="phone-view-button-container" data-tutorial="phone-trip-button">
+  <SlideToggle
+    {options}
+    value={$phoneActiveGameView}
+    onchange={v => phoneActiveGameView.set(v as "ratbox" | "triplisting")}
+    height={70}
+  />
 </div>
 
 <style lang="scss">
   .phone-view-button-container {
-    height: 120px;
     width: 100%;
     border-top: var(--default-border-style);
-    background: var(--background-semi-transparent);
-    padding: 10px;
     flex-shrink: 0;
   }
 </style>

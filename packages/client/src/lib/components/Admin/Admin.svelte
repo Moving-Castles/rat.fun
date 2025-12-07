@@ -48,7 +48,7 @@
     AdminTripEventTicker
   } from "$lib/components/Admin"
   import { makeHref } from "$lib/components/Admin/helpers"
-  import { SmallButton, SignedNumber } from "$lib/components/Shared"
+  import { SmallButton, SignedNumber, SlideToggle } from "$lib/components/Shared"
 
   let showCreateTripModal = $state(false)
   let savedTripDescription = $state<string>("")
@@ -373,29 +373,15 @@
 
   {#if $isPhone}
     <!-- Phone Navigation -->
-    <div class="phone-nav">
-      <div class="nav-button-wrapper">
-        <SmallButton
-          text={UI_STRINGS.home.toUpperCase()}
-          onclick={() => phoneActiveAdminView.set("home")}
-          disabled={$phoneActiveAdminView === "home"}
-        />
-      </div>
-      <div class="nav-button-wrapper">
-        <SmallButton
-          text={UI_STRINGS.trips.toUpperCase()}
-          onclick={() => phoneActiveAdminView.set("trips")}
-          disabled={$phoneActiveAdminView === "trips"}
-        />
-      </div>
-      <div class="nav-button-wrapper">
-        <SmallButton
-          text={UI_STRINGS.profit.toUpperCase()}
-          onclick={() => phoneActiveAdminView.set("profit")}
-          disabled={$phoneActiveAdminView === "profit"}
-        />
-      </div>
-    </div>
+    <SlideToggle
+      options={[
+        { value: "home", label: UI_STRINGS.home.toUpperCase() },
+        { value: "trips", label: UI_STRINGS.trips.toUpperCase() },
+        { value: "profit", label: UI_STRINGS.profit.toUpperCase() }
+      ]}
+      value={$phoneActiveAdminView}
+      onchange={v => phoneActiveAdminView.set(v as "home" | "trips" | "profit")}
+    />
 
     <!-- Phone Views -->
     {#if $phoneActiveAdminView === "home"}
@@ -409,22 +395,14 @@
       </div>
     {:else if $phoneActiveAdminView === "trips"}
       <div class="phone-view">
-        <div class="phone-sub-nav">
-          <div class="sub-nav-button-wrapper">
-            <SmallButton
-              text={UI_STRINGS.active.toUpperCase()}
-              onclick={() => adminTripsSubView.set("active")}
-              disabled={$adminTripsSubView === "active"}
-            />
-          </div>
-          <div class="sub-nav-button-wrapper">
-            <SmallButton
-              text={UI_STRINGS.past.toUpperCase()}
-              onclick={() => adminTripsSubView.set("past")}
-              disabled={$adminTripsSubView === "past"}
-            />
-          </div>
-        </div>
+        <SlideToggle
+          options={[
+            { value: "active", label: UI_STRINGS.active.toUpperCase() },
+            { value: "past", label: UI_STRINGS.past.toUpperCase() }
+          ]}
+          value={$adminTripsSubView}
+          onchange={v => adminTripsSubView.set(v as "active" | "past")}
+        />
         {#if $adminTripsSubView === "active"}
           <AdminActiveTripTable
             {pendingTrip}
@@ -443,22 +421,14 @@
       </div>
     {:else if $phoneActiveAdminView === "profit"}
       <div class="phone-view">
-        <div class="phone-sub-nav">
-          <div class="sub-nav-button-wrapper">
-            <SmallButton
-              text={UI_STRINGS.graph.toUpperCase()}
-              onclick={() => phoneAdminProfitSubView.set("graph")}
-              disabled={$phoneAdminProfitSubView === "graph"}
-            />
-          </div>
-          <div class="sub-nav-button-wrapper">
-            <SmallButton
-              text={UI_STRINGS.log.toUpperCase()}
-              onclick={() => phoneAdminProfitSubView.set("log")}
-              disabled={$phoneAdminProfitSubView === "log"}
-            />
-          </div>
-        </div>
+        <SlideToggle
+          options={[
+            { value: "graph", label: UI_STRINGS.graph.toUpperCase() },
+            { value: "log", label: UI_STRINGS.log.toUpperCase() }
+          ]}
+          value={$phoneAdminProfitSubView}
+          onchange={v => phoneAdminProfitSubView.set(v as "graph" | "log")}
+        />
         {#if $phoneAdminProfitSubView === "graph"}
           <div class="phone-view-profit-loss-graph" bind:clientHeight>
             <ProfitLossHistoryGraph {graphData} height={clientHeight} />
@@ -625,40 +595,6 @@
 
     @media (max-width: 800px) {
       width: 100%;
-    }
-
-    .phone-nav {
-      display: flex;
-      border-bottom: var(--default-border-style);
-      background: var(--background-semi-transparent);
-      flex-shrink: 0;
-
-      .nav-button-wrapper {
-        flex: 0 0 33.333%;
-        width: 33.333%;
-        height: 60px;
-
-        :global(button) {
-          border-radius: 0;
-        }
-      }
-    }
-
-    .phone-sub-nav {
-      display: flex;
-      border-bottom: var(--default-border-style);
-      background: var(--background-semi-transparent);
-      flex-shrink: 0;
-
-      .sub-nav-button-wrapper {
-        flex: 0 0 50%;
-        width: 50%;
-        height: 50px;
-
-        :global(button) {
-          border-radius: 0;
-        }
-      }
     }
 
     .phone-view {

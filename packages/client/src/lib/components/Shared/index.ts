@@ -38,6 +38,7 @@ export { default as ModeSwitchButton } from "./Buttons/ModeSwitchButton.svelte"
 
 /* Layout Components */
 export { default as CenterBar } from "./CenterBar/CenterBar.svelte"
+export { default as SlideToggle } from "./SlideToggle/SlideToggle.svelte"
 export { default as CharacterCounter } from "./CharacterCounter/CharacterCounter.svelte"
 export { default as NoImage } from "./NoImage/NoImage.svelte"
 export { default as PhoneGameViewButton } from "./PhoneGameViewButton/PhoneGameViewButton.svelte"

@@ -12,7 +12,7 @@
     <!-- Grid position 1  -->
     <RatBox />
     {#if $isPhone && ratState.state.current === RAT_BOX_STATE.HAS_RAT}
-      <PhoneGameViewButton targetView="triplisting" />
+      <PhoneGameViewButton />
     {/if}
   </div>
 {/if}
@@ -26,7 +26,7 @@
     <div class="triplisting-container">
       {@render children?.()}
       {#if $isPhone}
-        <PhoneGameViewButton targetView="ratbox" />
+        <PhoneGameViewButton />
       {/if}
     </div>
   </div>
