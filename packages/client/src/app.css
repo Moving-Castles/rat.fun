@@ -115,10 +115,8 @@
 
   /* Typography: Font stacks */
   --typewriter-font-stack: "Workbench", monospace;
-  --button-font-stack: "Michroma", sans-serif;
   --special-font-stack: "Xanh Mono", monospace;
   --admin-font-stack: var(--typewriter-font-stack);
-  /* --mascot-font-stack: "Henny Penny", cursive; */
   --mascot-font-stack: "Rock Salt", cursive;
 
   /* Typography: Font sizes */

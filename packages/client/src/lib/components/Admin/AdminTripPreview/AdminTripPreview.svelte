@@ -20,7 +20,7 @@
   import LiquidateTrip from "$lib/components/Admin/AdminTripPreview/LiquidateTrip.svelte"
   import AdminEventLog from "$lib/components/Admin/AdminEventLog/AdminEventLog.svelte"
 
-  import { BackButton, SmallButton } from "$lib/components/Shared"
+  import { BackButton, SlideToggle } from "$lib/components/Shared"
 
   let {
     tripId,
@@ -156,22 +156,14 @@
       <div class="full">
         <AdminTripPreviewHeader {sanityTripContent} {trip} />
       </div>
-      <div class="phone-sub-nav">
-        <div class="sub-nav-button-wrapper">
-          <SmallButton
-            text={UI_STRINGS.graph.toUpperCase()}
-            onclick={() => (phoneTripView = "graph")}
-            disabled={phoneTripView === "graph"}
-          />
-        </div>
-        <div class="sub-nav-button-wrapper">
-          <SmallButton
-            text={UI_STRINGS.log.toUpperCase()}
-            onclick={() => (phoneTripView = "log")}
-            disabled={phoneTripView === "log"}
-          />
-        </div>
-      </div>
+      <SlideToggle
+        options={[
+          { value: "graph", label: UI_STRINGS.graph.toUpperCase() },
+          { value: "log", label: UI_STRINGS.log.toUpperCase() }
+        ]}
+        value={phoneTripView}
+        onchange={v => (phoneTripView = v as "graph" | "log")}
+      />
       {#if phoneTripView === "graph"}
         <div bind:clientHeight class="phone-view">
           <TripProfitLossGraph
@@ -319,23 +311,6 @@
 
       .full {
         flex-shrink: 0;
-      }
-
-      .phone-sub-nav {
-        display: flex;
-        border-bottom: var(--default-border-style);
-        background: var(--background-semi-transparent);
-        flex-shrink: 0;
-
-        .sub-nav-button-wrapper {
-          flex: 0 0 50%;
-          width: 50%;
-          height: 50px;
-
-          :global(button) {
-            border-radius: 0;
-          }
-        }
       }
 
       .phone-view {
