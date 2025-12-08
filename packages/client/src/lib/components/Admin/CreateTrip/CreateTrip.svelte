@@ -16,6 +16,7 @@
   import { TripFolders } from "$lib/components/Trip"
   import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
   import { playerIsWhitelisted } from "$lib/modules/state/stores"
+  import { nope } from "$lib/modules/moderation"
 
   let {
     ondone,
@@ -57,6 +58,9 @@
   let invalidTripDescriptionLength = $derived(
     tripDescription.length < 1 || tripDescription.length > $gameConfig.maxTripPromptLength
   )
+  let tripDescriptionIncludesFoulLanguage = $derived(
+    nope.some(term => tripDescription.toLowerCase().includes(term))
+  )
 
   let tripCreationCost = $state(DEFAULT_SUGGESTED_TRIP_CREATION_COST)
 
@@ -78,6 +82,7 @@
   // - Trip creation cost is less than minimum
   // - Player has insufficient balance
   // - No folder is selected
+  // - Trip contains offensive terms
   const disabled = $derived(
     invalidTripDescriptionLength ||
       busy.CreateTrip.current !== 0 ||
@@ -85,7 +90,8 @@
       !$minRatValueToEnter ||
       flooredTripCreationCost < MIN_TRIP_CREATION_COST ||
       $playerERC20Balance < flooredTripCreationCost ||
-      !selectedFolderId
+      !selectedFolderId ||
+      tripDescriptionIncludesFoulLanguage
   )
 
   const placeholder = `Describe the TRIP your rat will embark onto.\nDuring a TRIP rats might materialise PSYCHO OBJECTS, transferring some of your TRIP’s tokens to themselves.\nHowever, shall a TRIP be too heroic and kill the rat, YOU will collect its total value.`

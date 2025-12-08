@@ -9,19 +9,6 @@
   let { trip, sanityTripContent }: { trip: Trip; sanityTripContent: SanityTrip } = $props()
 
   let maxValuePerWin = getTripMaxValuePerWin(trip.tripCreationCost, trip.balance)
-
-  let backgroundImageUrl = $derived.by(() => {
-    if (sanityTripContent?.image) {
-      const result = urlFor(sanityTripContent?.image)
-      if (result == "") {
-        return ""
-      } else {
-        return result.width(200).height(200).auto("format").url()
-      }
-    } else {
-      return ""
-    }
-  })
 </script>
 
 <div class="trip-preview-header">
@@ -30,7 +17,7 @@
   <!-- svelte-ignore a11y_no_static_element_interactions -->
   {#key $lastUpdated}
     {#if sanityTripContent?.image?.asset}
-      <img class="background-image" src={backgroundImageUrl} alt={`trip #${trip.index}`} />
+      <!-- <img class="background-image" src={backgroundImageUrl} alt={`trip #${trip.index}`} /> -->
     {/if}
   {/key}
   <!-- INFO -->
@@ -92,6 +79,7 @@
     display: flex;
     flex-direction: column-reverse;
     overflow: hidden;
+    height: 100%;
 
     @media screen and (min-width: 800px) {
       flex-direction: row;
@@ -104,7 +92,6 @@
       width: 400px;
       aspect-ratio: 1/1;
       object-fit: contain;
-      filter: grayscale(100%) contrast(20) opacity(0.2);
       mix-blend-mode: screen;
       transition: filter 5s ease;
       z-index: -1; // ???
@@ -134,6 +121,8 @@
       display: flex;
       width: 100%;
       flex-direction: row;
+      height: 100%;
+      border-bottom: var(--default-border-style);
 
       @media screen and (min-width: 800px) {
         width: 300px;

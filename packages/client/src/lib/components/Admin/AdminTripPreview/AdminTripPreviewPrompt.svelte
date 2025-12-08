@@ -1,30 +1,27 @@
 <script lang="ts">
+  import { ResizableText } from "$lib/components/Shared"
   import { renderSafeString } from "$lib/modules/utils"
   const { trip }: { trip: Trip } = $props()
-
-  function getPromptLengthClass(prompt: string) {
-    const length = prompt.length
-    if (length > 200) return "extra-long"
-    if (length > 100) return "long"
-    if (length > 50) return "medium"
-    return "short"
-  }
 </script>
 
 <div class="trip-preview-prompt">
-  <div class="content {getPromptLengthClass(trip.prompt)}">
+  <!-- <div class="content"> -->
+  <ResizableText options={{ maxFontPixels: 60 }}>
     {renderSafeString(trip.prompt)}
-  </div>
+  </ResizableText>
+  <!-- </div> -->
 </div>
 
 <style lang="scss">
   .trip-preview-prompt {
-    border-bottom: 1px solid var(--color-grey-mid);
+    border-bottom: var(--default-border-style);
     word-break: break-word; /* Break long words if needed */
     overflow-wrap: anywhere; /* Break anywhere if necessary to prevent overflow */
     width: 100%;
     font-family: var(--special-font-stack);
     height: 100%;
+    line-height: 1;
+    padding: 8px 20px 40px 8px;
 
     .content {
       max-width: 55ch;

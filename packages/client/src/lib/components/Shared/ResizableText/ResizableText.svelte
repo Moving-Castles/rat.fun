@@ -1,9 +1,10 @@
 <script lang="ts">
   let { children, options = {} } = $props()
+  const DEFAULTS = { maxFontPixels: 40 }
   import { resizeTextAttachment } from "$lib/modules/ui"
 </script>
 
-<div {@attach element => resizeTextAttachment(element, options)} class="parent">
+<div {@attach element => resizeTextAttachment(element, { ...DEFAULTS, ...options })} class="parent">
   <span>
     {@render children()}
   </span>

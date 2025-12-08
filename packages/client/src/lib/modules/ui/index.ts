@@ -1,4 +1,5 @@
 import TextFill from "textfilljs"
+// options: https://www.npmjs.com/package/textfilljs
 
 export const resizeTextAttachment = (element: HTMLElement, options: any) => {
   const fit = () => {

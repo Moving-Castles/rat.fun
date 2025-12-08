@@ -51,7 +51,7 @@
       <div class="content {$portfolioClass}">
         <Tooltip content={UI_STRINGS.activeProfit}>
           <div class="profit-amount">
-            <ResizableText options={{ widthOnly: true }}>
+            <ResizableText options={{ widthOnly: true, maxFontPixels: 80 }}>
               <span class="symbol-explicit">{$plSymbolExplicit}</span>{Math.abs(
                 Math.floor(tweenedProfitLoss.current)
               )}

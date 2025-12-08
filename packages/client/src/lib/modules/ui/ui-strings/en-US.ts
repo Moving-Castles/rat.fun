@@ -60,6 +60,7 @@ export const enUS = {
   debug: "Debug",
   deployed: "deployed",
   depleted: "Depleted",
+  depletion: "Depletion",
   destroyedTrip: "destroyed TRIP",
   died: "DIED",
   dieFromTrip: "die from TRIP #",
