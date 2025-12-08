@@ -343,9 +343,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: var(--yellow);
-    background-color: var(--yellow);
+    background: var(--color-bad);
     color: var(--background);
     text-transform: uppercase;
+    font-family: var(--special-font-stack);
+    font-size: var(--font-size-large);
   }
 </style>
