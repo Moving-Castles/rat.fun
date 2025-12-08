@@ -4,6 +4,13 @@ import type { PendingMascotMessage } from "./types"
 // Store for pending mascot message
 export const pendingMascotMessage = writable<PendingMascotMessage | null>(null)
 
+// Store for the name of the last dead rat (in-memory only, no persistence)
+export const lastDeadRatName = writable<string | null>(null)
+
+export function setLastDeadRatName(name: string) {
+  lastDeadRatName.set(name)
+}
+
 // Helper functions
 export function setPendingMascotMessage(msg: PendingMascotMessage) {
   pendingMascotMessage.set(msg)

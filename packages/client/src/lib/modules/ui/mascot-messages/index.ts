@@ -18,6 +18,8 @@ export {
   pendingMascotMessage,
   setPendingMascotMessage,
   clearPendingMascotMessage,
+  lastDeadRatName,
+  setLastDeadRatName,
   isNewPlayerShown,
   setNewPlayerShown,
   isFirstDeathShown,
@@ -29,6 +31,27 @@ export {
 } from "./store"
 
 /**
+ * Substitute placeholders in message text with actual values
+ */
+function substitutePlaceholders(
+  message: MascotMessageData,
+  deadRatCount?: number | string,
+  deadRatName?: string
+): MascotMessageData {
+  const countValue = deadRatCount ?? "Many"
+  const nameValue = deadRatName ?? "Rat"
+
+  return {
+    text: message.text.map(unit => ({
+      ...unit,
+      content: unit.content
+        .replace(/{DEAD_RAT_COUNT}/g, String(countValue))
+        .replace(/{DEAD_RAT_NAME}/g, nameValue)
+    }))
+  }
+}
+
+/**
  * Get the appropriate mascot message data based on the pending message type
  */
 export function getMascotMessage(pending: PendingMascotMessage): MascotMessageData {
@@ -37,10 +60,12 @@ export function getMascotMessage(pending: PendingMascotMessage): MascotMessageDa
       return NEW_PLAYER_MESSAGE
 
     case "first_death":
-      return FIRST_DEATH_MESSAGE
+      return substitutePlaceholders(FIRST_DEATH_MESSAGE, undefined, pending.deadRatName)
 
-    case "death_trip":
-      return getRandomMessage(DEATH__TRIP_MESSAGES)
+    case "death_trip": {
+      const message = getRandomMessage(DEATH__TRIP_MESSAGES)
+      return substitutePlaceholders(message, pending.deadRatCount, pending.deadRatName)
+    }
 
     case "death_cashout":
       return getRandomMessage(DEATH__CASHOUT_MESSAGES)

@@ -13,8 +13,10 @@
   import {
     setPendingMascotMessage,
     isFirstDeathShown,
-    setFirstDeathShown
+    setFirstDeathShown,
+    setLastDeadRatName
   } from "$lib/modules/ui/mascot-messages"
+  import { player } from "$lib/modules/state/stores"
 
   let {
     result,
@@ -69,12 +71,21 @@
     resetProcessingState()
 
     if (ratDead) {
+      // Store the dead rat's name for mascot messages
+      const deadRatName = frozenRat?.name
+      if (deadRatName) {
+        setLastDeadRatName(deadRatName)
+      }
+
+      // Get dead rat count from player's pastRats
+      const deadRatCount = $player?.pastRats?.length
+
       // Set death message - first death or subsequent
       if (!isFirstDeathShown()) {
-        setPendingMascotMessage({ type: "first_death" })
+        setPendingMascotMessage({ type: "first_death", deadRatName })
         setFirstDeathShown()
       } else {
-        setPendingMascotMessage({ type: "death_trip" })
+        setPendingMascotMessage({ type: "death_trip", deadRatCount, deadRatName })
       }
 
       // Rat died - reset folder selection and frozen state
