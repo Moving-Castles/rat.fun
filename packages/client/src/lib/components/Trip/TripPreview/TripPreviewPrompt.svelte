@@ -18,6 +18,10 @@
     width: 100%;
     font-family: var(--special-font-stack);
     height: 100%;
-    padding: 8px 20px 60px;
+    padding: 8px 8px 20px;
+
+    @media screen and (min-width: 800px) {
+      padding: 8px 20px 60px;
+    }
   }
 </style>

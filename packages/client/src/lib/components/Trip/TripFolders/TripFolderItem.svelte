@@ -89,9 +89,11 @@
       }
       transition: transform 0.1s ease-in-out;
 
-      &:hover {
-        border-color: var(--background-light-transparent);
-        transform: scale(0.97);
+      @media (min-width: 800px) {
+        &:hover {
+          border-color: var(--background-light-transparent);
+          transform: scale(0.97);
+        }
       }
 
       &:active {

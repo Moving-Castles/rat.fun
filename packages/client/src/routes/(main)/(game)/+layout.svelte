@@ -1,10 +1,22 @@
 <script lang="ts">
+  import { onMount, onDestroy } from "svelte"
   import { CenterBar, PhoneGameViewButton } from "$lib/components/Shared"
   import RatBox from "$lib/components/Rat/RatBox.svelte"
   import { phoneActiveGameView, isPhone } from "$lib/modules/ui/state.svelte"
   import { ratState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
+  import { backgroundMusic } from "$lib/modules/sound/stores"
 
   let { children } = $props()
+
+  onMount(() => {
+    // Start background music at layout level so it persists across view switches
+    backgroundMusic.play({ category: "ratfunMusic", id: "main", loop: true })
+  })
+
+  onDestroy(() => {
+    // Stop background music when leaving the game entirely
+    backgroundMusic.stop()
+  })
 </script>
 
 {#if $isPhone}

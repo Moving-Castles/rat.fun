@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, onDestroy } from "svelte"
+  import { onMount } from "svelte"
   import {
     playerHasTokens,
     tokenAllowanceApproved,
@@ -17,13 +17,11 @@
     PastTripList
   } from "$lib/components/Rat"
   import { RAT_BOX_STATE, ratState } from "$lib/components/Rat/state.svelte"
-  import { backgroundMusic } from "$lib/modules/sound/stores"
   import { playerERC20Balance } from "$lib/modules/erc20Listener/stores"
   import { TutorialPopup } from "$lib/modules/ui/tutorial-messages"
 
   onMount(async () => {
     shaderManager.setShader("clouds", true)
-    backgroundMusic.play({ category: "ratfunMusic", id: "main", loop: true })
 
     if ($playerERC20Balance === 0) {
       // Wait for erc20 balance to be updated
@@ -97,11 +95,6 @@
     ) {
       ratState.state.transitionTo(RAT_BOX_STATE.NO_RAT)
     }
-  })
-
-  onDestroy(() => {
-    // Stop background music
-    backgroundMusic.stop()
   })
 </script>
 

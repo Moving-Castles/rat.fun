@@ -10,8 +10,8 @@
       name: "BASE"
     },
     metamask: {
-      ios: "https://metamask.app.link/dapp/rat.fun",
-      android: "https://metamask.app.link/dapp/rat.fun",
+      ios: "https://link.metamask.io/dapp/rat.fun",
+      android: "https://link.metamask.io/dapp/rat.fun",
       name: "MetaMask"
     },
     phantom: {

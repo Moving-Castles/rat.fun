@@ -158,11 +158,14 @@ export class ShaderManager {
         // On mobile, pause after first frame unless continuous rendering is forced
         if (this.isPhone() && !this.forceContinuousRendering && this._renderer) {
           // Wait for first frame to render, then pause
-          setTimeout(() => {
-            if (this._renderer && !this.forceContinuousRendering) {
-              this._renderer.pause()
-            }
-          }, 100)
+          // Use double requestAnimationFrame to ensure the frame is actually painted
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              if (this._renderer && !this.forceContinuousRendering) {
+                this._renderer.pause()
+              }
+            })
+          })
         }
       } catch (error) {
         // Error already logged to Sentry in initializeRenderer
