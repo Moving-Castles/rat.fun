@@ -51,7 +51,11 @@
         white-space: nowrap;
         overflow: hidden;
         width: auto;
-        font-size: var(--font-size-normal);
+        font-size: var(--font-size-small);
+
+        @media screen and (min-width: 800px) {
+          font-size: var(--font-size-normal);
+        }
 
         .inventory-header-count {
           opacity: 0.7;

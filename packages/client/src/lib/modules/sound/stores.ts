@@ -90,6 +90,24 @@ class BackgroundMusicManager {
   }
 
   /**
+   * Pauses the currently playing background music track.
+   */
+  pause(): void {
+    if (this.currentHowl && this.currentSoundId !== undefined) {
+      this.currentHowl.pause(this.currentSoundId)
+    }
+  }
+
+  /**
+   * Unpauses the currently paused background music track.
+   */
+  unpause(): void {
+    if (this.currentHowl && this.currentSoundId !== undefined) {
+      this.currentHowl.play(this.currentSoundId)
+    }
+  }
+
+  /**
    * Resumes the intended music track if music is enabled and a track was previously set.
    */
   resume(): void {

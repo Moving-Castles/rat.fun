@@ -1,6 +1,8 @@
 <script lang="ts">
   import { playSound } from "$lib/modules/sound"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
+  import { ResizableText } from "$lib/components/Shared"
+  import { isPhone } from "$lib/modules/ui/state.svelte"
 
   let {
     item,
@@ -35,7 +37,13 @@
 >
   <div class="inventory-item">
     <div class="item-front">
-      <div class="name">{item.name}</div>
+      {#if $isPhone}
+        <ResizableText>
+          {item.name}
+        </ResizableText>
+      {:else}
+        <div class="name">{item.name}</div>
+      {/if}
     </div>
     <div class="item-back">
       <div class="value">{Number(item.value)} {CURRENCY_SYMBOL}</div>

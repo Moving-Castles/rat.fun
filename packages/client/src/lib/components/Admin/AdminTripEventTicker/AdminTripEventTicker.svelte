@@ -19,20 +19,24 @@
     </Tooltip>
   </div>
   <div class="title">
-    {#if event.eventType === TRIP_EVENT_TYPE.VISIT}
-      <span class="summary">
-        {event.meta.playerName} sent {event.meta.ratName} to trip #{event.meta.tripIndex}
-      </span>
-    {:else if event.eventType === TRIP_EVENT_TYPE.DEATH}
-      <span class="summary">
-        {event.meta.playerName} let {event.meta.ratName} die in trip #{event.meta.tripIndex}
-      </span>
+    {#if event}
+      {#if event.eventType === TRIP_EVENT_TYPE.VISIT}
+        <span class="summary">
+          {event.meta.playerName} sent {event.meta.ratName} to trip #{event.meta.tripIndex}
+        </span>
+      {:else if event.eventType === TRIP_EVENT_TYPE.DEATH}
+        <span class="summary">
+          {event.meta.playerName} let {event.meta.ratName} die in trip #{event.meta.tripIndex}
+        </span>
+      {/if}
     {/if}
   </div>
-  {#if event.eventType === TRIP_EVENT_TYPE.DEATH || event.eventType === TRIP_EVENT_TYPE.VISIT}
-    <span class="number">
-      <SignedNumber value={event.valueChange} />
-    </span>
+  {#if event}
+    {#if event.eventType === TRIP_EVENT_TYPE.DEATH || event.eventType === TRIP_EVENT_TYPE.VISIT}
+      <span class="number">
+        <SignedNumber value={event.valueChange} />
+      </span>
+    {/if}
   {/if}
 </div>
 
