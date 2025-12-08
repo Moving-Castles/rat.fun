@@ -3,3 +3,4 @@ export { default as ConnectWalletForm } from "./ConnectWalletForm/ConnectWalletF
 export { default as NotStarted } from "./NotStarted/NotStarted.svelte"
 export { default as Ended } from "./Ended/Ended.svelte"
 export { default as Error } from "./Error/Error.svelte"
+export { default as CountryBlocked } from "./CountryBlocked/CountryBlocked.svelte"
