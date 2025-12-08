@@ -149,6 +149,10 @@
     .cell-index {
       text-align: center;
       width: 40px;
+
+      @media (max-width: 800px) {
+        display: none;
+      }
     }
 
     .cell-prompt {
@@ -163,12 +167,20 @@
     .cell-kills {
       text-align: right;
       width: 60px;
+
+      @media (max-width: 800px) {
+        display: none;
+      }
     }
 
     .cell-balance {
       width: 120px;
       text-align: right;
       width: 80px;
+
+      @media (max-width: 800px) {
+        display: none;
+      }
     }
 
     .cell-profit {

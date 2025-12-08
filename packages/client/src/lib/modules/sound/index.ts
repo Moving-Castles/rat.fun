@@ -1,6 +1,8 @@
 import { Howl } from "howler"
+import { get } from "svelte/store"
 import { soundLibrary } from "$lib/modules/sound/sound-library"
 import type { SoundAssets, PlaySoundConfig } from "./types"
+import { backgroundMusic } from "$lib/modules/sound/stores"
 
 export type { PlaySoundConfig }
 
@@ -37,6 +39,12 @@ export function initSound(): void {
   preloadSoundLibrary(soundLibrary.ratfunUI)
   preloadSoundLibrary(soundLibrary.ratfunMusic)
   preloadSoundLibrary(soundLibrary.ratfunTransitions)
+
+  document.addEventListener("visibilitychange", handleVisibilityChange)
+}
+
+export function cleanupSound(): void {
+  document.removeEventListener("visibilitychange", handleVisibilityChange)
 }
 
 /**
@@ -102,4 +110,13 @@ export function randomPitch(): number {
 
 export const typeHit = () => {
   playSound({ category: "ratfunUI", id: "type" })
+}
+
+export function handleVisibilityChange() {
+  if (document.hidden) {
+    console.log("hidden")
+    backgroundMusic.pause()
+  } else {
+    backgroundMusic.unpause()
+  }
 }

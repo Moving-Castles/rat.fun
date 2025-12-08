@@ -20,7 +20,7 @@
     height: 100%;
     padding: 0;
     width: 100%;
-    color: var(--foreground);
+    color: var(--white);
     border-right: var(--default-border-style);
     border-left: var(--default-border-style);
     display: flex;
@@ -41,7 +41,8 @@
       padding-top: 2px;
       padding-bottom: 2px;
       width: 100%;
-      border-bottom: var(--default-border-style);
+      color: var(--color-grey-lighter);
+      border-bottom: 1px solid var(--color-grey-lighter);
       opacity: 0.5;
     }
 

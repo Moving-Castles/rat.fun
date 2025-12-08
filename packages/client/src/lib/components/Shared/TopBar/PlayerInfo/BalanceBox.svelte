@@ -117,7 +117,8 @@
       padding-top: 2px;
       padding-bottom: 2px;
       width: 100%;
-      border-bottom: var(--default-border-style);
+      color: var(--color-grey-light);
+      border-bottom: 1px solid var(--color-grey-light);
     }
 
     .content {

@@ -445,16 +445,18 @@
       </div>
     {:else if $phoneActiveAdminView === "events"}
       <div class="phone-view phone-view-events">
+        {#key effectiveEvent?.meta?._id}
+          <AdminTripEventTicker
+            next={() => next(true, false)}
+            nextEnabled={$selectedEvent > 0}
+            previous={() => previous(true, false)}
+            previousEnabled={$selectedEvent < graphData.length - 1}
+            event={effectiveEvent}
+          />
+        {/key}
+
         {#if effectiveEvent && (effectiveEvent.eventType === "trip_visit" || effectiveEvent.eventType === "trip_death")}
           {#key effectiveEvent?.meta?._id}
-            <AdminTripEventTicker
-              next={() => next(true, false)}
-              nextEnabled={$selectedEvent > 0}
-              previous={() => previous(true, false)}
-              previousEnabled={$selectedEvent < graphData.length - 1}
-              event={effectiveEvent}
-            />
-
             <div class="phone-introspection-scroll">
               {#key effectiveEvent?.meta?._id}
                 <AdminTripEventIntrospection event={effectiveEvent} />
@@ -471,7 +473,11 @@
             </div>
           {/key}
         {:else}
-          <p class="empty-message">{isLoadingInitialEvent ? "LOADING..." : "NO EVENTS"}</p>
+          <div class="ticker-placeholder"></div>
+          <div class="phone-introspection-scroll">
+            <p class="empty-message">{isLoadingInitialEvent ? "LOADING..." : "NO EVENTS"}</p>
+          </div>
+          <div class="phone-event-button-container"></div>
         {/if}
       </div>
     {/if}
@@ -555,21 +561,18 @@
       <!-- Divider -->
       <div class="admin-divider warning-mute"></div>
       <!-- Past trips -->
-      <div
-        class="flashback-container"
-        class:flashback-empty={!effectiveEvent ||
-          (effectiveEvent.eventType !== "trip_visit" && effectiveEvent.eventType !== "trip_death")}
-      >
+      <div class="flashback-container">
+        {#key effectiveEvent?.meta?._id}
+          <AdminTripEventTicker
+            next={() => next(true, page.route.id?.includes("[tripId]"))}
+            nextEnabled={$selectedEvent > 0}
+            previous={() => previous(true, page.route.id?.includes("[tripId]"))}
+            previousEnabled={$selectedEvent < graphData.length - 1}
+            event={effectiveEvent}
+          />
+        {/key}
         {#if effectiveEvent && (effectiveEvent.eventType === "trip_visit" || effectiveEvent.eventType === "trip_death")}
           {#key effectiveEvent?.meta?._id}
-            <AdminTripEventTicker
-              next={() => next(true, page.route.id?.includes("[tripId]"))}
-              nextEnabled={$selectedEvent > 0}
-              previous={() => previous(true, page.route.id?.includes("[tripId]"))}
-              previousEnabled={$selectedEvent < graphData.length - 1}
-              event={effectiveEvent}
-            />
-
             <div class="full">
               {#key effectiveEvent?.meta?._id}
                 <AdminTripEventIntrospection event={effectiveEvent} />
@@ -584,7 +587,9 @@
             />
           {/key}
         {:else}
-          <p class="empty-message">{isLoadingInitialEvent ? "LOADING..." : "NO EVENTS"}</p>
+          <div class="full big-row">
+            <p class="empty-message">{isLoadingInitialEvent ? "LOADING..." : "NO EVENTS"}</p>
+          </div>
         {/if}
       </div>
     </div>
@@ -702,17 +707,27 @@
       display: grid;
       height: 100%;
       grid-template-rows: 40px 1fr 60px;
+    }
 
-      &.flashback-empty {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
+    .ticker-placeholder {
+      height: 40px;
+      border-bottom: 1px solid var(--color-grey-dark);
+      border-top: 1px solid var(--color-grey-dark);
+    }
+
+    .button-placeholder {
+      height: 60px;
     }
 
     .empty-message {
       filter: drop-shadow(0px 0px 2px var(--foreground));
       opacity: 0.5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      margin: 0;
+      grid-row: 2 / 4;
     }
 
     .admin-divider {
@@ -770,6 +785,10 @@
     overflow-y: scroll;
   }
 
+  .big-row {
+    grid-row: 2 / 4;
+  }
+
   .phone-view-profit-loss-graph {
     height: 100%;
     background: var(--color-grey-darker);
@@ -785,12 +804,6 @@
     display: grid;
     grid-template-rows: 40px 1fr 60px;
     gap: 0;
-
-    &:has(.empty-message) {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
   }
 
   .phone-introspection-scroll {

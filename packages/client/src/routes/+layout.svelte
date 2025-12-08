@@ -5,7 +5,7 @@
   import "tippy.js/dist/backdrop.css"
   import "tippy.js/animations/shift-away.css"
 
-  import { initSound } from "$lib/modules/sound"
+  import { initSound, cleanupSound } from "$lib/modules/sound"
   import { initializeSentry } from "$lib/modules/error-handling"
   import { browser } from "$app/environment"
   import { onMount, onDestroy } from "svelte"
@@ -132,6 +132,7 @@
   onDestroy(() => {
     // Clean up drawbridge
     cleanupDrawbridge()
+    cleanupSound()
 
     // Clean up global shader manager when the app unmounts
     shaderManager.destroy()
