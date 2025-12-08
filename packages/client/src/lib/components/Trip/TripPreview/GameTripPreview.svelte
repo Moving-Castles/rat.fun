@@ -204,6 +204,8 @@
       overflow-y: auto;
       overflow-x: hidden;
       min-height: 0;
+      line-height: 1.5em;
+      background: var(--background);
     }
 
     .trip-bottom {

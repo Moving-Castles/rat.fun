@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { TripFolder } from "@sanity-types"
+  import type { Snippet } from "svelte"
   import TripFolderItem from "./TripFolderItem.svelte"
 
   let {
@@ -15,7 +16,7 @@
     onselect: (str: string) => void
     showCounts?: boolean
     disabled?: boolean
-    children
+    children?: Snippet
   } = $props()
 </script>
 

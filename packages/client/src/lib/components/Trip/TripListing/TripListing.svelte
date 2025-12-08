@@ -164,7 +164,7 @@
                 sortFunction = entriesChronologically
                 updateTrips()
               }}
-              class="new-trips-button flash-fast-thrice"
+              class="new-trips-button"
             >
               {tripList.length - activeList.length} new trips added
             </button>
@@ -203,7 +203,7 @@
 
   .new-trips-button {
     width: 100%;
-    background-color: var(--background-dark-transparent);
+    background-color: var(--color-good);
     color: var(--background);
     height: 3rem;
     border: none;
