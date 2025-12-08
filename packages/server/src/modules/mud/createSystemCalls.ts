@@ -79,7 +79,7 @@ export function createSystemCalls(network: SetupNetworkResult) {
       // Get trip count before sending transaction
       const initialTripCount = rat.tripCount
 
-      const args = createOutcomeCallArgs(rat, trip, outcome, logger, outcomeId)
+      const args = createOutcomeCallArgs(rat, trip, outcome, logger)
 
       // Get gas parameters with caps and priority boost
       const feeData = await network.publicClient.estimateFeesPerGas()
@@ -103,7 +103,6 @@ export function createSystemCalls(network: SetupNetworkResult) {
           rat,
           newOnChainData.rat,
           logger,
-          trip,
           newOnChainData.trip as Trip,
           outcomeId
         )

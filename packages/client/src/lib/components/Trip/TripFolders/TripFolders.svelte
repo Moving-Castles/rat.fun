@@ -46,7 +46,6 @@
     justify-items: stretch;
     align-items: stretch;
     align-content: start;
-    padding: 10px;
     gap: 10px;
     overflow-x: hidden;
   }

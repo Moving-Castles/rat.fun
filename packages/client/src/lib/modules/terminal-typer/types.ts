@@ -1,15 +1,1 @@
-import type { PlaySoundConfig } from "$lib/modules/sound"
-
-export type TerminalOutputUnit = {
-  type: "text" | "loader"
-  content: string
-  loaderCharacters?: string
-  duration?: number
-  typeSpeed?: number
-  delayAfter?: number
-  color: string
-  backgroundColor: string
-  sound?: PlaySoundConfig
-  typeMode?: "char" | "word"
-  onType?: (text: string, index: number) => void
-}
+export type { TerminalOutputUnit } from "@ratfun/shared-ui/terminal-typer"

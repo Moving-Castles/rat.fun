@@ -117,6 +117,22 @@ export default {
       ]
     },
     {
+      title: "Items lost on death",
+      name: "itemsLostOnDeath",
+      type: "array",
+      readOnly: true,
+      of: [
+        {
+          type: "object",
+          fields: [
+            { type: "string", name: "name" },
+            { type: "number", name: "value" },
+            { type: "string", name: "id" }
+          ]
+        }
+      ]
+    },
+    {
       title: "Trip value (old)",
       description: "The value of the trip before the visit",
       name: "oldTripValue",

@@ -97,16 +97,6 @@
       flex-direction: row;
     }
 
-    .watermark {
-      position: absolute;
-      font-size: var(--font-size-super-large);
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%) rotate(-10deg);
-      pointer-events: none;
-      opacity: 0.2;
-    }
-
     .background-image {
       position: absolute;
       top: 0;

@@ -234,7 +234,7 @@
             height: 100%;
             max-height: 200px;
             padding-top: 5px;
-            padding-bottom: 15px;
+            padding-bottom: 40px;
             word-break: break-word;
             overflow-wrap: anywhere;
             font-family: var(--special-font-stack);

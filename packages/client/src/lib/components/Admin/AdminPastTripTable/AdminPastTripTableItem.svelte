@@ -1,5 +1,6 @@
 <script lang="ts">
   import { SignedNumber, Tooltip } from "$lib/components/Shared"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
   import { goto } from "$app/navigation"
   import { playSound } from "$lib/modules/sound"
 
@@ -54,9 +55,9 @@
   </td>
   <td class="cell-liquidated">
     {#if trip.liquidated}
-      Liquidation
+      {UI_STRINGS.liquidated.toLowerCase()}
     {:else}
-      Depletion
+      {UI_STRINGS.depleted.toLowerCase()}
     {/if}
   </td>
 </tr>

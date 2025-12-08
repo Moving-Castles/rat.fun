@@ -35,6 +35,8 @@
   let textareaElement: HTMLTextAreaElement | null = $state(null)
   let selectedFolderId: string = $state(savedFolderId ?? "")
   let currentStep: "folder" | "details" = $state(savedFolderId ? "details" : "folder")
+  let sliderStep = $derived(Number($playerERC20Balance) > 1000 ? 50 : 10)
+  let sliderMax = $derived(Math.floor($playerERC20Balance / sliderStep) * sliderStep)
 
   // Get available folders: all non-restricted, plus restricted if user is whitelisted
   let availableFolders = $derived(
@@ -163,6 +165,9 @@
         {#if currentStep === "folder"}
           <!-- STEP 1: FOLDER SELECTION -->
           <div class="folder-selection">
+            <div class="instructions">
+              <span class="highlight">Trip Category</span>
+            </div>
             <TripFolders
               onselect={folderId => {
                 selectedFolderId = folderId
@@ -171,11 +176,7 @@
               folders={availableFolders}
               {foldersCounts}
               showCounts={false}
-            >
-              <div class="instructions">
-                <span class="">{UI_STRINGS.selectFolder}</span>
-              </div>
-            </TripFolders>
+            ></TripFolders>
           </div>
         {:else}
           <div class="controls">
@@ -218,7 +219,7 @@
             <div class="slider-group">
               <div class="slider-header">
                 <label for="trip-creation-cost-slider">
-                  <span class="highlight">Creation Cost</span>
+                  <span class="highlight">Trip Creation Cost</span>
                 </label>
                 <input
                   class="cost-display"
@@ -245,14 +246,14 @@
                   type="range"
                   id="trip-creation-cost-slider"
                   class="cost-slider"
-                  step={Math.floor($playerERC20Balance / 40)}
+                  step={sliderStep}
                   min={Math.min($playerERC20Balance, MIN_TRIP_CREATION_COST)}
-                  max={$playerERC20Balance}
+                  max={sliderMax}
                   oninput={typeHit}
                   bind:value={tripCreationCost}
                 />
                 <div class="slider-label">
-                  <span class="slider-max">{$playerERC20Balance}</span>
+                  <span class="slider-max">{sliderMax}</span>
                 </div>
               </div>
             </div>
@@ -342,14 +343,14 @@
             type="range"
             id="trip-creation-cost-slider"
             class="cost-slider"
-            step={Math.floor($playerERC20Balance / 40)}
+            step={sliderStep}
             min={Math.min($playerERC20Balance, MIN_TRIP_CREATION_COST)}
-            max={$playerERC20Balance}
+            max={sliderMax}
             oninput={typeHit}
             bind:value={tripCreationCost}
           />
           <div class="slider-label">
-            <span class="slider-max">{$playerERC20Balance} {CURRENCY_SYMBOL}</span>
+            <span class="slider-max">{sliderMax} {CURRENCY_SYMBOL}</span>
           </div>
         </div>
       </div>
@@ -405,8 +406,11 @@
 
   .instructions {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
+    margin-bottom: 10px;
+    font-family: var(--typewriter-font-stack);
+    font-size: var(--font-size-normal);
   }
 
   .modal-content {
@@ -421,7 +425,7 @@
   }
 
   .select-folder-button {
-    font-size: var(--font-size-large);
+    font-size: var(--font-size-medium);
     white-space: nowrap;
     font-family: var(--special-font-stack);
     line-height: 32px;
@@ -549,12 +553,12 @@
     .slider-container {
       display: flex;
       gap: 8px;
-      justify-content: start;
+      justify-content: space-between;
       align-items: center;
       padding: 20px 0;
 
       .cost-slider {
-        width: 100%;
+        width: 400px;
         height: 8px;
         background: var(--background);
         border: 1px solid var(--foreground);

@@ -193,6 +193,12 @@ export type Outcome = {
     id?: string
     _key: string
   }>
+  itemsLostOnDeath?: Array<{
+    name?: string
+    value?: number
+    id?: string
+    _key: string
+  }>
   oldTripValue?: number
   tripValueChange?: number
   tripValue?: number

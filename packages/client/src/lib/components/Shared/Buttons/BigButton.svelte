@@ -2,7 +2,7 @@
   import { playSound } from "$lib/modules/sound"
   import { Tooltip } from "$lib/components/Shared"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
-  import { ShaderLocal } from "$lib/components/Shared"
+  import { ShaderLocal, ResizableText } from "$lib/components/Shared"
   import { shaders } from "$lib/modules/webgl/shaders/index.svelte"
 
   export type BigButtonType =

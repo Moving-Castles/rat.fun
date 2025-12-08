@@ -46,7 +46,7 @@
     <div class="profit-inner">
       <p>{UI_STRINGS.activeProfit}</p>
       <div class="percentage {$portfolioClass}">
-        ({$plSymbolExplicit}{(100 - tweenedActiveProfit.current * 100).toFixed(2)}%)
+        ({$plSymbolExplicit}{Math.abs((100 - tweenedActiveProfit.current * 100).toFixed(2))}%)
       </div>
       <div class="content {$portfolioClass}">
         <Tooltip content={UI_STRINGS.activeProfit}>
@@ -237,9 +237,9 @@
     display: flex;
 
     .symbol-explicit {
-      position: absolute;
-      left: 0;
-      transform: translate(-100%, 0);
+      // position: absolute;
+      // left: 0;
+      // transform: translate(-100%, 0);
     }
 
     @media screen and (min-width: 1024px) {

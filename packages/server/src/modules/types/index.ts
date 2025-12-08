@@ -89,6 +89,7 @@ export type CorrectionReturnValue = {
 export type OutcomeReturnValue = {
   id?: string
   itemChanges: ItemChange[]
+  itemsLostOnDeath?: ItemLostOnDeath[]
   balanceTransfers: BalanceTransfer[]
   debuggingInfo?: DebuggingInfo
 }
@@ -99,6 +100,12 @@ export type ItemChange = {
   name: string
   value: number
   id?: string // Is only set if type == "remove"
+}
+
+export type ItemLostOnDeath = {
+  name: string
+  value: number
+  id: string
 }
 
 export type BalanceTransfer = {

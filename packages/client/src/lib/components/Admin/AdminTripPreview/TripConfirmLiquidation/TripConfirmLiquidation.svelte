@@ -34,7 +34,7 @@
 <div class="confirm-liquidation">
   {#if liquidating}
     <div class="loading">
-      Liquidating TRIP <SmallSpinner soundOn />
+      Cashing out TRIP <SmallSpinner soundOn />
     </div>
   {:else}
     <div class="confirm-liquidation-content">
@@ -134,6 +134,7 @@
 
     .loading {
       background: var(--foreground);
+      color: black;
       padding: 10px;
     }
   }

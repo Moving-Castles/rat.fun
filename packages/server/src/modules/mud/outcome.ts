@@ -50,8 +50,7 @@ export function createOutcomeCallArgs(
   rat: Rat,
   trip: Trip,
   outcome: OutcomeReturnValue,
-  logger: TripLogger,
-  outcomeId?: string
+  logger: TripLogger
 ) {
   logger.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
   logger.log("📦 createOutcomeCallArgs - Formatting LLM outcome for contract")
@@ -210,12 +209,12 @@ export function updateOutcome(
   oldRat: Rat,
   newRat: Rat,
   logger: TripLogger,
-  oldTrip?: Trip,
   newTrip?: Trip,
   outcomeId?: string
 ): OutcomeReturnValue {
   // Deep clone the LLM outcome to avoid mutating the original
   const newOutcome = JSON.parse(JSON.stringify(llmOutcome)) as OutcomeReturnValue
+  newOutcome.itemsLostOnDeath = []
 
   // * * * * * * * * * * * * * * * * * *
   // Defensive null checks and array safety
@@ -295,7 +294,20 @@ export function updateOutcome(
   if (ratDied) {
     // On death, items stay in inventory but we don't process new item changes
     // The client doesn't need to see items "removed" because they physically stayed
+    // However, we record the items lost for the sanity outcome document
     logger.log("__ Skipping item change detection - rat died, items frozen")
+    logger.log("__ Recording items lost on death for outcome document:")
+    for (const item of oldInventory) {
+      logger.log(`__   - ${item.name} (value: ${item.value}, id: ${item.id})`)
+      newOutcome.itemsLostOnDeath.push({
+        name: item.name,
+        value: item.value ?? 0,
+        id: item.id
+      })
+    }
+    if (oldInventory.length === 0) {
+      logger.log("__   (no items in inventory)")
+    }
   } else {
     // Normal case: compare inventories to detect actual changes
 
