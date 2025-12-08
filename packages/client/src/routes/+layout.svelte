@@ -29,6 +29,7 @@
   // Components
   import Spawn from "$lib/components/Spawn/Spawn.svelte"
   import Loading from "$lib/components/Loading/Loading.svelte"
+  import TouristTrip from "$lib/components/TouristTrip/TouristTrip.svelte"
   import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
   import { ShaderGlobal, Lightbox, Toasts, ManageAllowanceModal } from "$lib/components/Shared"
   import { allowanceModalState, closeAllowanceModal } from "$lib/modules/ui/allowance-modal.svelte"
@@ -47,6 +48,15 @@
     setPlayerIdStore(playerId)
     // Loading done. Set the UI state to spawning
     UIState.set(UI.SPAWNING)
+  }
+
+  // Called when loading completes on a trip page without full auth (tourist mode)
+  const loadedAsTourist = async () => {
+    console.log("[+layout] loadedAsTourist() called")
+    // Get content from CMS (needed for trip data)
+    initStaticContent($publicNetwork.worldAddress)
+    // Skip spawn flow, go directly to tourist view
+    UIState.set(UI.TOURIST)
   }
 
   const spawned = () => {
@@ -132,7 +142,9 @@
 
 <div class="bg">
   {#if $UIState === UI.LOADING}
-    <Loading environment={$environmentStore} {loaded} />
+    <Loading environment={$environmentStore} {loaded} {loadedAsTourist} />
+  {:else if $UIState === UI.TOURIST}
+    <TouristTrip />
   {:else if $UIState === UI.SPAWNING}
     <Spawn {spawned} />
   {:else}
