@@ -25,12 +25,6 @@
 </script>
 
 <div class="trip-preview-header">
-  <!-- Depleted / Liquidated -->
-  {#if Number(trip.balance) === 0 && trip.liquidationBlock}
-    <div class="watermark">Liquidated</div>
-  {:else if Number(trip.balance) === 0}
-    <div class="watermark">Depleted</div>
-  {/if}
   <!-- IMAGE -->
   <!-- svelte-ignore a11y_click_events_have_key_events -->
   <!-- svelte-ignore a11y_no_static_element_interactions -->

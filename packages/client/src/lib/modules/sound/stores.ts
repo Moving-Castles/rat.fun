@@ -18,7 +18,8 @@ class BackgroundMusicManager {
     this.intendedConfig = config
 
     // Check if music is enabled before playing
-    if (!musicEnabled.current) {
+    // EXCEPTION for trip processing "music"
+    if (!musicEnabled.current && !config.id.toLowerCase().includes("processing")) {
       return
     }
 

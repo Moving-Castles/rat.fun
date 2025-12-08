@@ -33,6 +33,7 @@
 
   onMount(() => {
     playSound({ category: "ratfunTransitions", id: "tripProcessingEnter" })
+    // playSound({ category: "ratfunMusic", id: "tripProcessing" })
     backgroundMusic.play({ category: "ratfunMusic", id: "tripProcessing" })
 
     // Enable continuous rendering for trip processing animation

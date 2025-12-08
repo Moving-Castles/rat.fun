@@ -58,6 +58,7 @@ export const enUS = {
   currentRat: "Current Rat",
   debug: "Debug",
   deployed: "deployed",
+  depleted: "Depleted",
   destroyedTrip: "destroyed TRIP",
   died: "DIED",
   dieFromTrip: "die from TRIP #",

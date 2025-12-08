@@ -214,8 +214,10 @@
       <div class="full">
         {#if showLiquidateButton}
           <LiquidateTrip onclick={() => (liquidating = true)} {trip} />
-        {:else}
-          <h1>Liquidated</h1>
+        {:else if Number(trip.balance) === 0 && trip.liquidationBlock}
+          <div class="depleted-liquidated">{UI_STRINGS.liquidated}</div>
+        {:else if Number(trip.balance) === 0}
+          <div class="depleted-liquidated">{UI_STRINGS.depleted}</div>
         {/if}
       </div>
     </div>
@@ -264,11 +266,15 @@
           }}
         />
       </div>
-      {#if showLiquidateButton}
-        <div class="full">
+      <div class="full">
+        {#if showLiquidateButton}
           <LiquidateTrip onclick={() => (liquidating = true)} {trip} />
-        </div>
-      {/if}
+        {:else if Number(trip.balance) === 0 && trip.liquidationBlock}
+          <div class="depleted-liquidated">{UI_STRINGS.liquidated}</div>
+        {:else if Number(trip.balance) === 0}
+          <div class="depleted-liquidated">{UI_STRINGS.depleted}</div>
+        {/if}
+      </div>
     </div>
   {/if}
 {:else}
@@ -354,5 +360,17 @@
       top: 0;
       z-index: var(--z-base);
     }
+  }
+
+  .depleted-liquidated {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--yellow);
+    background-color: var(--yellow);
+    color: var(--background);
+    text-transform: uppercase;
   }
 </style>

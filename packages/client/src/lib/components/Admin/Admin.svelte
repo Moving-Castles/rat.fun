@@ -239,12 +239,16 @@
     }
   }
 
-  const commit = () => {
-    $selectedEvent = $focusEvent
+  const commit = (index?: number) => {
+    if (index) {
+      $selectedEvent = index
+    } else {
+      $selectedEvent = $focusEvent
+    }
   }
 
   const go = () => {
-    const event = graphData[$focusEvent]
+    const event = graphData[$selectedEvent]
     if (!event || event.eventType === TRIP_EVENT_TYPE.BASELINE) {
       return
     }
@@ -536,18 +540,20 @@
               previousEnabled={$selectedEvent < graphData.length - 1}
               event={effectiveEvent}
             />
+
+            <div class="full">
+              {#key effectiveEvent?.meta?._id}
+                <AdminTripEventIntrospection event={effectiveEvent} />
+              {/key}
+            </div>
+
+            <SmallButton
+              text={UI_STRINGS.toTrip.toUpperCase() + effectiveEvent.meta.tripIndex}
+              onclick={() => {
+                go()
+              }}
+            />
           {/key}
-
-          <div class="full">
-            {#key effectiveEvent?.meta?._id}
-              <AdminTripEventIntrospection event={effectiveEvent} />
-            {/key}
-          </div>
-
-          <SmallButton
-            text={UI_STRINGS.toTrip.toUpperCase() + effectiveEvent.meta.tripIndex}
-            onclick={go}
-          />
         {:else}
           <p class="empty-message">{isLoadingInitialEvent ? "LOADING..." : "NO EVENTS"}</p>
         {/if}
