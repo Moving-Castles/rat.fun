@@ -101,22 +101,22 @@
         selectOption(options[tappedIndex].value)
       }
     } else {
-      // It was a drag - snap to whichever option we're 20%+ into
+      // It was a drag - 20% threshold to move to adjacent options
       if (railElement) {
         const rect = railElement.getBoundingClientRect()
         const optionWidth = rect.width / options.length
-        const currentPosition = activeIndex * optionWidth + dragOffset
+        const dragInOptions = dragOffset / optionWidth
 
-        // Calculate which option boundary we've crossed (with 20% threshold)
-        const positionInOptions = currentPosition / optionWidth
-        const baseIndex = Math.floor(positionInOptions)
-        const fraction = positionInOptions - baseIndex
-
+        // 20% threshold: need to drag 20% of option width to trigger move
         let targetIndex: number
-        if (fraction >= 0.2) {
-          targetIndex = baseIndex + 1
+        if (dragInOptions >= 0.2) {
+          // Dragging right: move forward by how many 20% thresholds we've crossed
+          targetIndex = activeIndex + Math.floor(dragInOptions + 0.8)
+        } else if (dragInOptions <= -0.2) {
+          // Dragging left: move backward
+          targetIndex = activeIndex + Math.ceil(dragInOptions - 0.8)
         } else {
-          targetIndex = baseIndex
+          targetIndex = activeIndex
         }
         targetIndex = Math.max(0, Math.min(options.length - 1, targetIndex))
 
@@ -166,22 +166,22 @@
         selectOption(options[tappedIndex].value)
       }
     } else {
-      // It was a drag - snap to whichever option we're 20%+ into
+      // It was a drag - 20% threshold to move to adjacent options
       if (railElement) {
         const rect = railElement.getBoundingClientRect()
         const optionWidth = rect.width / options.length
-        const currentPosition = activeIndex * optionWidth + dragOffset
+        const dragInOptions = dragOffset / optionWidth
 
-        // Calculate which option boundary we've crossed (with 20% threshold)
-        const positionInOptions = currentPosition / optionWidth
-        const baseIndex = Math.floor(positionInOptions)
-        const fraction = positionInOptions - baseIndex
-
+        // 20% threshold: need to drag 20% of option width to trigger move
         let targetIndex: number
-        if (fraction >= 0.2) {
-          targetIndex = baseIndex + 1
+        if (dragInOptions >= 0.2) {
+          // Dragging right: move forward by how many 20% thresholds we've crossed
+          targetIndex = activeIndex + Math.floor(dragInOptions + 0.8)
+        } else if (dragInOptions <= -0.2) {
+          // Dragging left: move backward
+          targetIndex = activeIndex + Math.ceil(dragInOptions - 0.8)
         } else {
-          targetIndex = baseIndex
+          targetIndex = activeIndex
         }
         targetIndex = Math.max(0, Math.min(options.length - 1, targetIndex))
 
@@ -257,6 +257,7 @@
     width: 100%;
     background: var(--background-semi-transparent);
     border-bottom: var(--default-border-style);
+    flex-shrink: 0;
     overflow: hidden;
     user-select: none;
     -webkit-user-select: none;

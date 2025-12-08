@@ -7,44 +7,60 @@
   let { children } = $props()
 </script>
 
-{#if !$isPhone || $phoneActiveGameView === "ratbox"}
-  <div class="ratbox-container">
-    <!-- Grid position 1  -->
-    <RatBox />
-    {#if $isPhone && ratState.state.current === RAT_BOX_STATE.HAS_RAT}
+{#if $isPhone}
+  <!-- Phone Layout: single container with persistent toggle -->
+  <div class="phone-game-container">
+    <div class="phone-game-content">
+      {#if $phoneActiveGameView === "ratbox"}
+        <RatBox />
+      {:else}
+        <div class="triplisting-container">
+          {@render children?.()}
+        </div>
+      {/if}
+    </div>
+    {#if ratState.state.current === RAT_BOX_STATE.HAS_RAT}
       <PhoneGameViewButton />
     {/if}
   </div>
-{/if}
-<!-- Grid position 2 -->
-{#if !$isPhone}
+{:else}
+  <!-- Desktop Layout -->
+  <div class="ratbox-container">
+    <RatBox />
+  </div>
   <CenterBar />
-{/if}
-{#if !$isPhone || $phoneActiveGameView === "triplisting"}
-  <!-- Grid position 3 -->
   <div class="right-column">
     <div class="triplisting-container">
       {@render children?.()}
-      {#if $isPhone}
-        <PhoneGameViewButton />
-      {/if}
     </div>
   </div>
 {/if}
 
 <style lang="scss">
+  .phone-game-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+  }
+
+  .phone-game-content {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+
+    > :global(*) {
+      flex: 1;
+      min-height: 0;
+    }
+  }
+
   .ratbox-container {
     height: 100%;
     width: var(--game-column-width);
     flex: 0 0 var(--game-column-width);
-
-    @media (max-width: 800px) {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-      width: 100%;
-      flex: 1 1 auto;
-    }
   }
 
   .right-column {
@@ -55,20 +71,11 @@
     background-size: 200px;
     width: var(--game-column-width);
     flex: 0 0 var(--game-column-width);
-
-    @media (max-width: 800px) {
-      width: 100%;
-      flex: 1 1 auto;
-    }
   }
 
   .triplisting-container {
     height: 100%;
-    @media (max-width: 800px) {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-      width: 100%;
-    }
+    display: flex;
+    flex-direction: column;
   }
 </style>
