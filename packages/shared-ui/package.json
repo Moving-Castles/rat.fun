@@ -7,9 +7,12 @@
   "exports": {
     ".": "./src/index.ts",
     "./Marquee": "./src/Marquee/index.ts",
-    "./Checkbox": "./src/Checkbox/index.ts"
+    "./Checkbox": "./src/Checkbox/index.ts",
+    "./Mascot": "./src/Mascot/index.ts",
+    "./terminal-typer": "./src/terminal-typer/index.ts"
   },
   "peerDependencies": {
-    "svelte": "^5.0.0"
+    "svelte": "^5.0.0",
+    "gsap": "^3.0.0"
   }
 }

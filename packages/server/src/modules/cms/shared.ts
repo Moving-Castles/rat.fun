@@ -46,6 +46,20 @@ export function createItemChanges(itemChanges: OutcomeReturnValue["itemChanges"]
 }
 
 /**
+ * Helper function to create items lost on death entries
+ */
+export function createItemsLostOnDeath(
+  itemsLostOnDeath: NonNullable<OutcomeReturnValue["itemsLostOnDeath"]>
+) {
+  return itemsLostOnDeath.map(item => ({
+    _key: uuidv4(),
+    name: item.name,
+    value: item.value,
+    id: item.id
+  }))
+}
+
+/**
  * Create a base outcome document structure with all common fields (public-safe, no sensitive data)
  */
 export function createBaseOutcomeDocument(
@@ -102,6 +116,10 @@ export function createBaseOutcomeDocument(
 
   if (outcome.itemChanges && outcome.itemChanges.length > 0) {
     baseDoc.itemChanges = createItemChanges(outcome.itemChanges)
+  }
+
+  if (outcome.itemsLostOnDeath && outcome.itemsLostOnDeath.length > 0) {
+    baseDoc.itemsLostOnDeath = createItemsLostOnDeath(outcome.itemsLostOnDeath)
   }
 
   return baseDoc
