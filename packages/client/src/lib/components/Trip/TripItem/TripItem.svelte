@@ -6,7 +6,7 @@
   import { renderSafeString } from "$lib/modules/utils"
   import { staticContent } from "$lib/modules/content"
   import { playSound } from "$lib/modules/sound"
-  import { NoImage } from "$lib/components/Shared"
+  import { NoImage, ResizableText } from "$lib/components/Shared"
   import PopularAlert from "$lib/components/Trip/TripItem/TripItemStats/PopularAlert.svelte"
   import TripItemStats from "./TripItemStats/TripItemStats.svelte"
 
@@ -39,14 +39,6 @@
       return false
     }
   })
-
-  function getPromptLengthClass(prompt: string) {
-    const length = prompt.length
-    if (length > 200) return "extra-long"
-    if (length > 100) return "long"
-    if (length > 50) return "medium"
-    return "short"
-  }
 
   const onmousedown = () => {
     playSound({ category: "ratfunUI", id: "smallButtonDown" })
@@ -94,10 +86,10 @@
         @{getTripOwnerName(trip)}
       </div>
       <!-- PROMPT -->
-      <div class="trip-prompt {getPromptLengthClass(trip.prompt)}">
-        <div class="content">
+      <div class="trip-prompt">
+        <ResizableText>
           {renderSafeString(trip.prompt)}
-        </div>
+        </ResizableText>
       </div>
     </div>
 
@@ -239,7 +231,10 @@
           }
           .trip-prompt {
             width: 100%;
+            height: 100%;
+            max-height: 200px;
             padding-top: 5px;
+            padding-bottom: 15px;
             word-break: break-word;
             overflow-wrap: anywhere;
             font-family: var(--special-font-stack);

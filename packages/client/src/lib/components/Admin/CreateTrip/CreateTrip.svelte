@@ -2,7 +2,7 @@
   import { gameConfig } from "$lib/modules/state/stores"
   import { playerERC20Balance } from "$lib/modules/erc20Listener/stores"
   import { getTripMaxValuePerWin, getTripMinRatValueToEnter } from "$lib/modules/state/utils"
-  import { CharacterCounter, BigButton } from "$lib/components/Shared"
+  import { CharacterCounter, BigButton, BackButton } from "$lib/components/Shared"
   import { playerERC20Allowance } from "$lib/modules/erc20Listener/stores"
   import { openAllowanceModal } from "$lib/modules/ui/allowance-modal.svelte"
   import { busy, sendCreateTrip } from "$lib/modules/action-manager/index.svelte"
@@ -163,11 +163,6 @@
         {#if currentStep === "folder"}
           <!-- STEP 1: FOLDER SELECTION -->
           <div class="folder-selection">
-            <div class="form-group">
-              <div>
-                <span class="highlight">{UI_STRINGS.selectFolder}</span>
-              </div>
-            </div>
             <TripFolders
               onselect={folderId => {
                 selectedFolderId = folderId
@@ -176,23 +171,13 @@
               folders={availableFolders}
               {foldersCounts}
               showCounts={false}
-            />
+            >
+              <div class="instructions">
+                <span class="">{UI_STRINGS.selectFolder}</span>
+              </div>
+            </TripFolders>
           </div>
         {:else}
-          <!-- STEP 2: TRIP DETAILS -->
-          <div class="trip-header">
-            <div class="header-text">
-              {UI_STRINGS.creatingTripIn}: <span class="folder-name">{selectedFolderTitle}</span>
-            </div>
-            <button
-              class="back-link"
-              onclick={() => {
-                currentStep = "folder"
-              }}
-            >
-              {UI_STRINGS.back}
-            </button>
-          </div>
           <div class="controls">
             <!-- TRIP DESCRIPTION -->
             <div class="form-group">
@@ -212,12 +197,27 @@
                 bind:value={tripDescription}
                 bind:this={textareaElement}
               ></textarea>
+
+              <label class="folder-select">
+                <span class="highlight centered">Trip Category</span>
+              </label>
+              <div class="">
+                <button
+                  onclick={() => {
+                    currentStep = "folder"
+                  }}
+                  class="select-folder-button"
+                  >{selectedFolderTitle} <span class="big">×</span></button
+                >
+              </div>
             </div>
 
             <!-- TRIP CREATION COST SLIDER -->
             <div class="slider-group">
               <label for="trip-creation-cost-slider">
-                <span class="highlight">TRIP CREATION COST</span>
+                <span class="highlight">Creation Cost</span>
+              </label>
+              <div class="slider-container">
                 <input
                   class="cost-display"
                   onblur={e => {
@@ -232,8 +232,11 @@
                   bind:value={tripCreationCost}
                   type="number"
                 />
-              </label>
-              <div class="slider-container">
+                <div class="slider-label">
+                  <span class="slider-min">
+                    {Math.min($playerERC20Balance, MIN_TRIP_CREATION_COST)}
+                  </span>
+                </div>
                 <input
                   type="range"
                   id="trip-creation-cost-slider"
@@ -246,12 +249,8 @@
                   }}
                   bind:value={tripCreationCost}
                 />
-                <div class="slider-labels">
-                  <span class="slider-min">
-                    {Math.min($playerERC20Balance, MIN_TRIP_CREATION_COST)}
-                    {CURRENCY_SYMBOL}
-                  </span>
-                  <span class="slider-max">{$playerERC20Balance}{CURRENCY_SYMBOL}</span>
+                <div class="slider-label">
+                  <span class="slider-max">{$playerERC20Balance}</span>
                 </div>
               </div>
             </div>
@@ -298,7 +297,7 @@
         <textarea
           disabled={busy.CreateTrip.current !== 0}
           id="trip-description"
-          rows={$isPhone ? 3 : 10}
+          rows={$isPhone ? 3 : 6}
           {placeholder}
           oninput={typeHit}
           bind:value={tripDescription}
@@ -326,6 +325,11 @@
           />
         </label>
         <div class="slider-container">
+          <div class="slider-label">
+            <span class="slider-min"
+              >{Math.min($playerERC20Balance, MIN_TRIP_CREATION_COST)} {CURRENCY_SYMBOL}
+            </span>
+          </div>
           <input
             type="range"
             id="trip-creation-cost-slider"
@@ -335,11 +339,7 @@
             max={$playerERC20Balance}
             bind:value={tripCreationCost}
           />
-          <div class="slider-labels">
-            <span class="slider-min"
-              >{Math.min($playerERC20Balance, MIN_TRIP_CREATION_COST)} {CURRENCY_SYMBOL}
-            </span>
-
+          <div class="slider-label">
             <span class="slider-max">{$playerERC20Balance} {CURRENCY_SYMBOL}</span>
           </div>
         </div>
@@ -384,6 +384,22 @@
     -moz-appearance: textfield; /* Firefox */
   }
 
+  .folder-select {
+    width: 100%;
+    // height: 30px;
+    display: flex;
+    // background: red;
+    justify-content: start;
+    flex-flow: row nowrap;
+    align-items: center;
+  }
+
+  .instructions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
   .modal-content {
     height: 700px;
     max-height: 90dvh;
@@ -392,6 +408,29 @@
       height: 100dvh;
       max-height: 80dvh;
       width: 100dvw;
+    }
+  }
+
+  .trip-description {
+    display: flex;
+    font-family: var(--special-font-stack);
+  }
+
+  .select-folder-button {
+    font-size: var(--font-size-large);
+    white-space: nowrap;
+    font-family: var(--special-font-stack);
+    line-height: 24px;
+    line-height: 32px;
+    display: flex;
+    gap: 4px;
+    align-items: center;
+
+    .big {
+      font-size: var(--font-size-mascot);
+      line-height: 20px;
+      display: block;
+      transform: translateY(-2px);
     }
   }
 
@@ -417,6 +456,9 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      width: 1;
+      font-size: var(--font-size-medium);
+      font-family: var(--special-font-stack);
 
       > :global(.tiles) {
         flex: 1;
@@ -432,21 +474,6 @@
       margin-bottom: 8px;
       font-family: var(--typewriter-font-stack);
       font-size: var(--font-size-normal);
-
-      .back-link {
-        background: none;
-        border: none;
-        color: var(--foreground);
-        text-decoration: underline;
-        cursor: pointer;
-        font-family: var(--typewriter-font-stack);
-        font-size: var(--font-size-normal);
-        padding: 0;
-
-        &:hover {
-          opacity: 0.7;
-        }
-      }
     }
 
     .controls {
@@ -456,8 +483,25 @@
       flex-flow: column nowrap;
     }
 
+    .inner {
+      display: flex;
+      gap: 12px;
+    }
+
+    .back {
+      height: 60px;
+    }
+
+    .highlight {
+      background: var(--color-grey-mid);
+      padding: 5px;
+      color: var(--background);
+    }
+
     .form-group {
-      display: block;
+      display: flex;
+      flex-flow: column nowrap;
+      gap: 8px;
       width: 100%;
 
       label {
@@ -466,12 +510,6 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-
-        .highlight {
-          background: var(--color-grey-mid);
-          padding: 5px;
-          color: var(--background);
-        }
       }
 
       textarea {
@@ -479,8 +517,8 @@
         padding: 5px;
         border: none;
         background: var(--foreground);
-        font-family: var(--typewriter-font-stack);
-        font-size: var(--font-size-normal);
+        font-family: var(--special-font-stack);
+        font-size: var(--font-size-medium);
         border-radius: 0;
         resize: none;
         outline-color: var(--color-grey-light);
@@ -494,12 +532,12 @@
 
       .cost-display {
         background: var(--foreground);
-        padding: 5px;
         color: var(--background);
-        font-family: var(--typewriter-font-stack);
+        font-family: var(--special-font-stack);
+        font-size: var(--font-size-large);
         border: none;
-        width: 60px;
-        text-align: right;
+        width: 100px;
+        text-align: center;
         border: none;
         outline: none;
         &:focus {
@@ -511,7 +549,10 @@
 
     .slider-container {
       width: 100%;
-      margin-top: 10px;
+      // margin-top: 10px;
+      display: flex;
+      justify-content: start;
+      align-items: center;
 
       .cost-slider {
         width: 100%;
@@ -527,7 +568,7 @@
           -webkit-appearance: none;
           appearance: none;
           width: 20px;
-          height: 20px;
+          height: 40px;
           background: var(--color-grey-mid);
           border: 2px solid var(--background);
           cursor: pointer;
@@ -554,12 +595,12 @@
         }
       }
 
-      .slider-labels {
+      .slider-label {
         display: flex;
         justify-content: space-between;
-        margin-top: 5px;
-        font-family: var(--typewriter-font-stack);
-        font-size: var(--font-size-small);
+        // margin-top: 5px;
+        font-family: var(--special-font-stack);
+        font-size: var(--font-size-large);
         color: var(--foreground);
       }
     }
@@ -567,7 +608,7 @@
     .calculated-values {
       display: flex;
       gap: 0;
-      margin-bottom: 1rem;
+      // margin-bottom: 1rem;
 
       .value-box {
         flex: 1;
@@ -579,7 +620,7 @@
           font-family: var(--typewriter-font-stack);
           font-size: var(--font-size-small);
           color: var(--color-grey-light);
-          margin-bottom: 5px;
+          // margin-bottom: 5px;
         }
 
         .value-amount {

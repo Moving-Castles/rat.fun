@@ -4,7 +4,7 @@
   import { Tween } from "svelte/motion"
   import { busy } from "$lib/modules/action-manager/index.svelte"
   import { playSound } from "$lib/modules/sound"
-  import { Tooltip, BigButton } from "$lib/components/Shared"
+  import { Tooltip, BigButton, ResizableText } from "$lib/components/Shared"
   import { balance, investment, profitLoss, portfolioClass } from "$lib/modules/state/stores"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
@@ -51,13 +51,12 @@
       <div class="content {$portfolioClass}">
         <Tooltip content={UI_STRINGS.activeProfit}>
           <div class="profit-amount">
-            <span class="symbol-explicit">{$plSymbolExplicit}</span>
-            <span class="profit-amount-value">
-              {Math.abs(Math.floor(tweenedProfitLoss.current))}
-            </span>
-            <span class="currency-symbol">
+            <ResizableText options={{ widthOnly: true }}>
+              <span class="symbol-explicit">{$plSymbolExplicit}</span>{Math.abs(
+                Math.floor(tweenedProfitLoss.current)
+              )}
               {CURRENCY_SYMBOL}
-            </span>
+            </ResizableText>
           </div>
         </Tooltip>
       </div>
@@ -68,23 +67,19 @@
     <div class="portfolio-box">
       <p>{UI_STRINGS.invested}</p>
       <div class="portfolio-amount">
-        <div class="portfolio-amount-inner">
-          <span class="portfolio-amount-value">{$investment}</span>
-          <span class="currency-symbol">
-            {CURRENCY_SYMBOL}
-          </span>
-        </div>
+        <ResizableText options={{ widthOnly: true }}>
+          {$investment}
+          {CURRENCY_SYMBOL}
+        </ResizableText>
       </div>
     </div>
     <div class="portfolio-box">
       <p>{UI_STRINGS.portfolio}</p>
       <div class="portfolio-amount">
-        <div class="portfolio-amount-inner">
-          <span class="portfolio-amount-value">{$balance}</span>
-          <span class="currency-symbol">
-            {CURRENCY_SYMBOL}
-          </span>
-        </div>
+        <ResizableText options={{ widthOnly: true }}>
+          {$balance}
+          {CURRENCY_SYMBOL}
+        </ResizableText>
       </div>
     </div>
   </div>
@@ -117,7 +112,6 @@
 
       .profit-inner {
         background: var(--background-semi-transparent);
-        padding: 1rem;
         position: relative;
         overflow: hidden;
         height: 100%;
@@ -155,6 +149,8 @@
           }
         }
         .content {
+          width: 100%;
+          padding: 1rem;
           position: relative;
           display: flex;
           z-index: var(--z-base);
@@ -264,6 +260,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 12px;
 
     .portfolio-amount-inner {
       display: flex;

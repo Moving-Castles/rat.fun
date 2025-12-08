@@ -48,7 +48,7 @@ export const enUS = {
     `Are you sure you want to CASH OUT TRIP #${index}?`,
   cost: "Cost:",
   createdTrip: "created TRIP",
-  creatingTripIn: "Filing TRIP under:",
+  creatingTripIn: "Filing TRIP under",
   creationBlock: "Create @",
   creationCost: "Creation Cost",
   createTrip: "Create Trip",
