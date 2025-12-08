@@ -23,5 +23,5 @@ cd ./build
 
 echo "deploying to base mainnet $BASE_CLIENT_ID"
 # Deploy for Base mainnet
-netlify deploy --dir=. --prod --auth=$NETLIFY_AUTH_TOKEN --no-build --site $BASE_CLIENT_ID
+netlify deploy --dir=. --prod --auth=$NETLIFY_AUTH_TOKEN --site $BASE_CLIENT_ID
 echo "done"

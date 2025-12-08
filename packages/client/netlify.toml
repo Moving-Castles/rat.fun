@@ -1,3 +1,7 @@
+[build]
+  command = "# skip - already built locally"
+  publish = "."
+
 [[edge_functions]]
   function = "trip-seo"
   path = "/*"
