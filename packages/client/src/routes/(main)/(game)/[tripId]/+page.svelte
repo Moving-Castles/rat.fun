@@ -7,10 +7,12 @@
   let { data } = $props()
 
   let trip = $derived($trips[data.tripId])
+  let sanityTrip = $derived(data.tripContent)
 </script>
 
-<TripSEO trip={data.tripContent} />
+<TripSEO trip={sanityTrip} />
 
-{#if trip && data.tripContent}
-  <GameTripPreview {trip} tripId={data.tripId as Hex} sanityTripContent={data.tripContent} />
+{#if sanityTrip || trip}
+  <!-- GameTripPreview handles both cases: with chain data and without -->
+  <GameTripPreview {trip} tripId={data.tripId as Hex} sanityTripContent={sanityTrip} />
 {/if}

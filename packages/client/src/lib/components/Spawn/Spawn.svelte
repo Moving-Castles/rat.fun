@@ -1,7 +1,5 @@
 <script lang="ts">
   import { onDestroy, onMount } from "svelte"
-  import { page } from "$app/state"
-  import { fade } from "svelte/transition"
 
   import { UIState } from "$lib/modules/ui/state.svelte"
   import { UI } from "$lib/modules/ui/enums"
@@ -41,12 +39,6 @@
     const context = await buildFlowContext()
 
     console.log("[Spawn] Flow context:", context)
-
-    // Special case: if we're on a trip page without spawn param, skip the flow
-    if (page.route.id === "/(main)/(game)/[tripId]" && !page.url.searchParams.has("spawn")) {
-      console.log("[Spawn] On trip page without spawn param → EXIT_FLOW")
-      return SPAWN_STATE.EXIT_FLOW
-    }
 
     const nextState = determineNextState(context)
     console.log("[Spawn] Initial state:", nextState)

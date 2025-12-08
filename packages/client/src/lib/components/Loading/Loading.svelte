@@ -21,11 +21,16 @@
 
   const {
     environment,
-    loaded = () => {}
+    loaded = () => {},
+    loadedAsTourist = () => {}
   }: {
     environment: ENVIRONMENT
     loaded: () => void
+    loadedAsTourist: () => void
   } = $props()
+
+  // Check if we're on a trip page route
+  const isOnTripPage = () => page.route.id === "/(main)/(game)/[tripId]"
 
   let typer = $state<{ stop: () => void }>()
 
@@ -164,18 +169,42 @@
       // We initialize entities here (with player filtering) so the game state
       // is ready. Wallet network and ERC20 listener will be initialized after
       // session setup in Spawn.
+      //
+      // EXCEPTION: If on trip page, show tourist view instead of Spawn.
       console.log("[Loading] Scenario B: Wallet connected, no session")
       console.log("[Loading] Address:", drawbridgeState.userAddress)
 
       const playerId = addressToId(drawbridgeState.userAddress)
       await initEntities({ activePlayerId: playerId })
+
+      if (isOnTripPage()) {
+        console.log("[Loading] On trip page → tourist mode")
+        if (typer?.stop) typer.stop()
+        await animateOut()
+        loadedAsTourist()
+        return
+      }
     } else {
       // -----------------------------------------------------------------------
       // SCENARIO C: No wallet connected
       // -----------------------------------------------------------------------
       // New user or cleared localStorage. Everything will be initialized
       // in the Spawn flow after they connect wallet and set up session.
+      //
+      // EXCEPTION: If on trip page, show tourist view instead of Spawn.
+      // Initialize entities without player filtering so all trips are visible.
       console.log("[Loading] Scenario C: No wallet connected")
+
+      if (isOnTripPage()) {
+        console.log("[Loading] On trip page → tourist mode")
+        // Initialize entities without player ID - syncs ALL entities (no filtering)
+        // This should be optimized...
+        await initEntities()
+        if (typer?.stop) typer.stop()
+        await animateOut()
+        loadedAsTourist()
+        return
+      }
     }
 
     // -------------------------------------------------------------------------
