@@ -37,6 +37,7 @@ export const enUS = {
   buySomeTokens: `Buy some ${CURRENCY_SYMBOL}`,
   buyTokens: (amount: number): string => `Buy ${amount} ${CURRENCY_SYMBOL} for 0.001ETH`,
   cancel: "Abort",
+  category: "Category",
   causeOfDeathShort: "CoD",
   confirm: "Confirm",
   confirmLiquidationMessage: (name: string): string =>
