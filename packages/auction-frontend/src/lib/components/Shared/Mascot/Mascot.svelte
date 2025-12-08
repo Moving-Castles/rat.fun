@@ -9,6 +9,7 @@
     headBobOn = false,
     text = [],
     smallText = false,
+    hugeText = false,
     isGameMascot = false,
     closeTextOnClick = false,
     finishTextOnClick = false,
@@ -20,6 +21,7 @@
     headBobOn?: boolean
     text?: TerminalOutputUnit[]
     smallText?: boolean
+    hugeText?: boolean
     isGameMascot?: boolean
     closeTextOnClick?: boolean
     finishTextOnClick?: boolean
@@ -39,6 +41,7 @@
   {headBobOn}
   {text}
   {smallText}
+  {hugeText}
   {isGameMascot}
   {closeTextOnClick}
   {finishTextOnClick}

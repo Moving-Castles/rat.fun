@@ -49,7 +49,7 @@
   button {
     width: 100%;
     height: 100%;
-    background: var(--color-alert-priority);
+    background: var(--color-grey-light);
     border: none;
     border-style: outset;
     border-width: 10px;
@@ -80,7 +80,6 @@
         font-size: var(--font-size-normal);
       }
     }
-
     .canvas-container {
       position: absolute;
       top: 0;
@@ -95,12 +94,12 @@
     }
 
     &:hover {
-      background: var(--color-alert-priority-light);
+      background: var(--color-grey-lighter);
     }
 
     &:active {
       border-style: inset;
-      background: var(--color-alert-priority-muted);
+      background: var(--color-grey-mid);
       transform: translateY(2px);
       position: relative;
       color: white;

@@ -11,6 +11,7 @@
     headBobOn = false,
     text = [],
     smallText = false,
+    hugeText = false,
     isGameMascot = false,
     closeTextOnClick = false,
     finishTextOnClick = false,
@@ -23,6 +24,7 @@
     headBobOn?: boolean
     text?: TerminalOutputUnit[]
     smallText?: boolean
+    hugeText?: boolean
     isGameMascot?: boolean
     closeTextOnClick?: boolean
     finishTextOnClick?: boolean
@@ -243,6 +245,7 @@
     <div
       class="bubble"
       class:small-text={smallText}
+      class:huge-text={hugeText}
       out:fade={{ duration: 200 }}
       class:isGameMascot
       bind:this={bubbleElement}
@@ -301,6 +304,11 @@
 
     &.small-text {
       font-size: 24px;
+    }
+
+    &.huge-text {
+      font-size: calc(var(--font-size-ultra) * 0.5);
+      text-align: center;
     }
 
     &.isGameMascot {
@@ -364,6 +372,11 @@
 
       &.small-text {
         font-size: 18px;
+      }
+
+      &.huge-text {
+        font-size: calc(var(--font-size-ultra) * 0.25);
+        text-align: center;
       }
 
       &.isGameMascot {

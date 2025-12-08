@@ -39,7 +39,7 @@
     height: 100dvh;
     overflow: hidden;
     z-index: var(--z-background);
-    background: #000;
+    background: var(--background);
   }
 
   .shader-canvas {

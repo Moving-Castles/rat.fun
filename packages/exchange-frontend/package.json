@@ -35,6 +35,7 @@
   },
   "dependencies": {
     "@ratfun/common": "workspace:*",
+    "@ratfun/shared-ui": "workspace:*",
     "@ratfun/webgl": "workspace:*",
     "@sentry/sveltekit": "^10.27.0",
     "@wagmi/core": "2.22.1",

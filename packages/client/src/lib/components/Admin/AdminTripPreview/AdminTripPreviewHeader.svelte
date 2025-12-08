@@ -85,20 +85,6 @@
       flex-direction: row;
     }
 
-    .background-image {
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 400px;
-      aspect-ratio: 1/1;
-      object-fit: contain;
-      mix-blend-mode: screen;
-      transition: filter 5s ease;
-      z-index: -1; // ???
-      mask-image: radial-gradient(circle at top right, black 50%, transparent 70%);
-      -webkit-mask-image: radial-gradient(circle at top right, black 50%, transparent 70%);
-    }
-
     .prompt {
       width: 100%;
       @media screen and (min-width: 800px) {

@@ -40,7 +40,7 @@
       font-size: var(--font-size-normal);
       font-family: var(--typewriter-font-stack);
       color: black;
-      background: orangered;
+      background: var(--color-bad);
       padding: 20px;
 
       p {

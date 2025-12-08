@@ -17,11 +17,51 @@
     ConnectWalletForm,
     NotStarted,
     Ended,
-    Error as ErrorComponent
+    Error as ErrorComponent,
+    CountryBlocked
   } from "$lib/components/Auction"
+
+  // Countries blocked from participating in the auction
+  const BLOCKED_COUNTRIES = ["CU", "IR", "KP", "RU", "BY"]
   import WalletInfo from "$lib/components/WalletInfo/WalletInfo.svelte"
 
   const isTestAuction = PUBLIC_TEST_AUCTION === "true"
+
+  /**
+   * Get country code from user's IP using Cloudflare trace
+   * Returns null if unable to determine
+   */
+  async function getCountryCodeFromIP(): Promise<string | null> {
+    try {
+      const response = await fetch("https://www.cloudflare.com/cdn-cgi/trace")
+      const text = await response.text()
+      const countryLine = text.split("\n").find(line => line.startsWith("loc="))
+      const countryCode = countryLine?.split("=")[1]?.trim()
+
+      if (countryCode && countryCode.length === 2) {
+        console.log("[Auction] Detected country from IP:", countryCode)
+        return countryCode
+      }
+
+      console.warn("[Auction] Invalid country code format")
+      return null
+    } catch (error) {
+      console.error("[Auction] Failed to fetch country from IP:", error)
+      return null
+    }
+  }
+
+  /**
+   * Check if the user's country is blocked
+   */
+  async function checkCountryBlocked(): Promise<boolean> {
+    const countryCode = await getCountryCodeFromIP()
+    if (countryCode && BLOCKED_COUNTRIES.includes(countryCode)) {
+      console.log("[Auction] Country blocked:", countryCode)
+      return true
+    }
+    return false
+  }
 
   let auctionParams = $state({} as AuctionParams)
 
@@ -86,6 +126,11 @@
         return
       }
 
+      if (auctionState?.state?.current === AUCTION_STATE.COUNTRY_BLOCKED) {
+        // Nothing to do, country is blocked
+        return
+      }
+
       setupAndGoToSwap($publicClient, $userAddress)
     }
   })
@@ -96,6 +141,13 @@
 
     // Reset state to INIT
     auctionState.state.reset()
+
+    // Check if user's country is blocked (early check)
+    const isBlocked = await checkCountryBlocked()
+    if (isBlocked) {
+      auctionState.state.transitionTo(AUCTION_STATE.COUNTRY_BLOCKED)
+      return
+    }
 
     const client = $publicClient
     const config = $networkConfig
@@ -163,7 +215,9 @@
 
 <div class="auction-container">
   <div class="auction-inner">
-    {#if auctionState.state.current === AUCTION_STATE.CONNECT_WALLET}
+    {#if auctionState.state.current === AUCTION_STATE.COUNTRY_BLOCKED}
+      <CountryBlocked />
+    {:else if auctionState.state.current === AUCTION_STATE.CONNECT_WALLET}
       <ConnectWalletForm />
     {:else if auctionState.state.current === AUCTION_STATE.SWAP}
       <Swap {auctionParams} />
@@ -183,7 +237,7 @@
     top: 0;
     right: 0;
     right: 0;
-    background: red;
+    background: var(--color-bad);
     color: white;
     text-align: center;
     padding: 8px;

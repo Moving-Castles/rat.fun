@@ -130,7 +130,7 @@
       transition: all 0.2s ease;
 
       &:hover {
-        background: rgba(0, 0, 0, 0.9);
+        background: var(--background-dark-transparent);
       }
 
       .address {

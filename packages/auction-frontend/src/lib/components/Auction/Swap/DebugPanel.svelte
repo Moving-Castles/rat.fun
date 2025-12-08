@@ -158,7 +158,7 @@
     right: 10px;
     width: 32px;
     height: 32px;
-    background: rgba(0, 0, 0, 0.8);
+    background: var(--background-dark-transparent);
     color: #0f0;
     border: 1px solid #0f0;
     border-radius: 4px;

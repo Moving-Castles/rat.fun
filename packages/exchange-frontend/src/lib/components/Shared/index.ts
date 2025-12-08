@@ -1,10 +1,9 @@
 /* Buttons */
 export { default as BigButton } from "./Buttons/BigButton.svelte"
 export { default as SmallButton } from "./Buttons/SmallButton.svelte"
-export { default as BackButton } from "./Buttons/BackButton.svelte"
 
 /* Graphics */
-export { default as X } from "./Graphics/X.svelte"
+export { X } from "@ratfun/shared-ui/Graphics"
 
 /* Shader */
 export { default as ShaderGlobal } from "./Shader/ShaderGlobal.svelte"

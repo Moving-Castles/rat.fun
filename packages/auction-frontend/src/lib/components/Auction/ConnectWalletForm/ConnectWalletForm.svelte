@@ -3,6 +3,25 @@
   import gsap from "gsap"
   import { getDrawbridge, type ConnectorInfo } from "$lib/modules/drawbridge"
   import BigButton from "$lib/components/Shared/Buttons/BigButton.svelte"
+  import Mascot from "$lib/components/Shared/Mascot/Mascot.svelte"
+  import type { TerminalOutputUnit } from "@ratfun/shared-ui/Mascot"
+  import { playSound, randomPitch } from "$lib/modules/sound"
+
+  function onType() {
+    playSound("ratfunUI", "chirp", false, false, randomPitch())
+  }
+
+  const mascotText: TerminalOutputUnit[] = [
+    {
+      type: "text",
+      content: "BUY $RAT",
+      typeSpeed: 40,
+      typeMode: "char",
+      color: "var(--foreground)",
+      backgroundColor: "transparent",
+      onType
+    }
+  ]
 
   let buttonElement: HTMLDivElement | null = $state(null)
   let showWalletSelect = $state(false)
@@ -97,9 +116,8 @@
 
 <div class="outer-container">
   <div class="inner-container">
-    <div class="text-container">
-      <h1>$RAT SALE</h1>
-      <p>some text here</p>
+    <div class="mascot-container">
+      <Mascot headBobOn={true} text={mascotText} hugeText={true} bigDanceOn={true} />
     </div>
     <div class="button-container" bind:this={buttonElement}>
       {#if connecting}
@@ -153,16 +171,11 @@
       width: 800px;
       max-width: 90dvw;
 
-      .text-container {
-        width: 100%;
-        text-align: center;
+      .mascot-container {
+        width: 400px;
+        height: 400px;
         margin-bottom: 20px;
-        background: rgba(0, 0, 0, 0.5);
-        color: white;
-        font-family: var(--special-font-stack);
-        h1 {
-          font-size: 48px;
-        }
+        pointer-events: none;
       }
 
       .button-container {
@@ -176,7 +189,7 @@
   .wallet-modal {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.8);
+    background: var(--background-dark-transparent);
     z-index: 9999;
     display: flex;
     align-items: center;

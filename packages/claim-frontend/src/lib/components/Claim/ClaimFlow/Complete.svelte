@@ -52,7 +52,7 @@
       font-size: var(--font-size-normal);
       font-family: var(--typewriter-font-stack);
       color: black;
-      background: lightgreen;
+      background: var(--color-good);
       padding: 20px;
 
       p {

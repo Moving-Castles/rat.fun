@@ -61,17 +61,17 @@
     }
 
     &.toast-error {
-      border-color: var(--color-alert-priority);
+      border-color: var(--color-grey-light);
       background: var(--background);
     }
 
     &.toast-success {
-      border-color: var(--color-success);
+      border-color: var(--color-good);
       background: var(--background);
     }
 
     &.toast-warning {
-      border-color: var(--color-alert);
+      border-color: var(--color-neutral);
       background: var(--background);
     }
 

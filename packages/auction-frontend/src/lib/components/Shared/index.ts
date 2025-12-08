@@ -1,13 +1,12 @@
 /* Buttons */
 export { default as BigButton } from "./Buttons/BigButton.svelte"
 export { default as SmallButton } from "./Buttons/SmallButton.svelte"
-export { default as BackButton } from "./Buttons/BackButton.svelte"
 
 /* Inputs */
 export { Checkbox } from "@ratfun/shared-ui/Checkbox"
 
 /* Graphics */
-export { default as X } from "./Graphics/X.svelte"
+export { X } from "@ratfun/shared-ui/Graphics"
 
 /* Mascot */
 export { default as Mascot } from "./Mascot/Mascot.svelte"

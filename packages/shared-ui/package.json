@@ -6,13 +6,27 @@
   "svelte": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts",
+    "./app.css": "./src/app.css",
+    "./Buttons": "./src/Buttons/index.ts",
+    "./Graphics": "./src/Graphics/index.ts",
+    "./Loaders": "./src/Loaders/index.ts",
     "./Marquee": "./src/Marquee/index.ts",
     "./Checkbox": "./src/Checkbox/index.ts",
     "./Mascot": "./src/Mascot/index.ts",
+    "./Tooltip": "./src/Tooltip/index.ts",
+    "./Toasts": "./src/Toasts/index.ts",
     "./terminal-typer": "./src/terminal-typer/index.ts"
+  },
+  "devDependencies": {
+    "svelte": "^5.0.0",
+    "gsap": "^3.0.0",
+    "svelte-tippy": "^1.3.2",
+    "tippy.js": "^6.3.7"
   },
   "peerDependencies": {
     "svelte": "^5.0.0",
-    "gsap": "^3.0.0"
+    "gsap": "^3.0.0",
+    "svelte-tippy": "^1.0.0",
+    "tippy.js": "^6.0.0"
   }
 }

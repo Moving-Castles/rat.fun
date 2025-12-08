@@ -17,14 +17,6 @@
   --color-grey-dark: #333;
   --color-grey-darker: #222;
 
-  /* --color-alert: rgb(255, 69, 0); */
-  --color-alert: rgb(104, 104, 103);
-  /* --color-alert-priority: rgb(255, 128, 0); */
-
-  --color-alert-priority: rgb(146, 146, 146);
-  --color-alert-priority-muted: rgb(98, 98, 98);
-  --color-alert-priority-light: rgb(195, 195, 195);
-
   --color-button: rgb(130, 130, 130);
 
   --color-secondary: rgb(141, 141, 141);

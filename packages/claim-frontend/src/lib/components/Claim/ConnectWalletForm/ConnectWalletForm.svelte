@@ -168,7 +168,7 @@
         width: 100%;
         text-align: center;
         margin-bottom: 10px;
-        background: white;
+        background: var(--foreground);
         color: black;
         padding: 10px;
         text-align: left;
@@ -190,7 +190,7 @@
         width: 100%;
         text-align: center;
         margin-bottom: 10px;
-        background: white;
+        background: var(--foreground);
         color: black;
         padding: 10px;
         text-align: left;
@@ -209,7 +209,7 @@
   .wallet-modal {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.8);
+    background: var(--background-dark-transparent);
     z-index: 9999;
     display: flex;
     align-items: center;

@@ -5,7 +5,7 @@ export { default as LockButton } from "./Buttons/LockButton.svelte"
 export { default as BackButton } from "./Buttons/BackButton.svelte"
 
 /* Graphics */
-export { default as X } from "./Graphics/X.svelte"
+export { X } from "@ratfun/shared-ui/Graphics"
 
 /* Mascot */
 export { default as Mascot } from "./Mascot/Mascot.svelte"

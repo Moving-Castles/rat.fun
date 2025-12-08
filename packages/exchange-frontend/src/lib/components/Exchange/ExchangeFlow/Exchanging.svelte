@@ -22,7 +22,7 @@
       font-size: var(--font-size-normal);
       font-family: var(--typewriter-font-stack);
       color: black;
-      background: orangered;
+      background: var(--color-good);
       padding: 10px 20px;
       display: flex;
       align-items: center;

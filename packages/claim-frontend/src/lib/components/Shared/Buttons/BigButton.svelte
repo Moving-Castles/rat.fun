@@ -49,11 +49,11 @@
   button {
     width: 100%;
     height: 100%;
-    background: var(--color-alert-priority);
+    background: var(--color-grey-light);
     border: none;
     border-style: outset;
     border-width: 10px;
-    border-color: rgba(0, 0, 0, 0.3);
+    border-color: var(--background-light-transparent);
     position: relative;
     display: flex;
     flex-flow: column nowrap;
@@ -91,12 +91,12 @@
     }
 
     &:hover {
-      background: var(--color-alert-priority-light);
+      background: var(--color-grey-lighter);
     }
 
     &:active {
       border-style: inset;
-      background: var(--color-alert-priority-muted);
+      background: var(--color-grey-mid);
       transform: translateY(2px);
       position: relative;
       color: white;

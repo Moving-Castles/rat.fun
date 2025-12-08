@@ -1,6 +1,7 @@
 <script lang="ts">
+  import { SmallButton as BaseSmallButton } from "@ratfun/shared-ui/Buttons"
   import { playSound } from "$lib/modules/sound"
-  import { Tooltip } from "$lib/components/Shared"
+  import { isPhone } from "$lib/modules/ui/state.svelte"
 
   let {
     text,
@@ -20,79 +21,24 @@
     onclick?: (e: MouseEvent) => void
   } = $props()
 
-  const onmousedown = () => {
+  const handleMousedown = () => {
     playSound("ratfunUI", "smallButtonDown")
   }
 
-  const onmouseupHandler = (e: MouseEvent) => {
-    if (!disabled) {
-      playSound("ratfunUI", "smallButtonUp")
-      onmouseup?.(e)
-      onclick?.(e)
-    }
+  const handleMouseup = (e: MouseEvent) => {
+    playSound("ratfunUI", "smallButtonUp")
+    onmouseup?.(e)
   }
 </script>
 
-<Tooltip content={tippyText}>
-  <button class={extraClass} class:disabled onmouseup={onmouseupHandler} {onmousedown}>
-    <span class="button-text">{text}</span>
-    {#if cost}
-      <span class="button-cost">({cost})</span>
-    {/if}
-  </button>
-</Tooltip>
-
-<style lang="scss">
-  button {
-    width: 100%;
-    height: 100%;
-    background: var(--color-alert-priority);
-    border: none;
-    border-style: outset;
-    border-width: 4px;
-    border-color: rgba(0, 0, 0, 0.5);
-
-    &.red {
-      background: var(--color-death);
-    }
-
-    .button-text {
-      font-size: var(--font-size-normal);
-      font-family: var(--special-font-stack);
-      line-height: 1em;
-      color: black;
-    }
-
-    .button-cost {
-      font-size: var(--font-size-normal);
-    }
-
-    &:hover {
-      background: var(--color-alert-priority-light);
-
-      &.red {
-        background: var(--color-death-light);
-      }
-    }
-
-    &:active {
-      background: var(--color-alert-priority-muted);
-      border-style: inset;
-      transform: translateY(2px);
-      border-width: 4px;
-      position: relative;
-      top: -2px;
-      color: white;
-
-      &.red {
-        background: var(--color-death-muted);
-      }
-    }
-
-    &.disabled {
-      pointer-events: none;
-      opacity: 0.5;
-      cursor: default;
-    }
-  }
-</style>
+<BaseSmallButton
+  {text}
+  {cost}
+  {tippyText}
+  {disabled}
+  {extraClass}
+  isPhone={$isPhone}
+  onmousedown={handleMousedown}
+  onmouseup={handleMouseup}
+  {onclick}
+/>

@@ -1,0 +1,384 @@
+/* @import url("./public/fonts/index.css"); */
+
+:root {
+  /* - - - - - - - - - - - - - */
+  /* - - - - - - - - - - - - - */
+  /* - - - - - - - - - - - - - */
+  /* CSS VARIABLES             */
+  /* - - - - - - - - - - - - - */
+  /* - - - - - - - - - - - - - */
+  /* - - - - - - - - - - - - - */
+
+  /* * * * * * * * * * * * * *
+  * Colors
+  * * * * * * * * * * * * * */
+
+  /* Colors: Base */
+  --black: #000000;
+  --white: #ffffff;
+  --green: rgb(51, 195, 99);
+  --yellow: rgb(234, 234, 51);
+  --red: rgb(246, 79, 42);
+
+  /* Background */
+  --background: var(--black);
+  --foreground: var(--white);
+
+  /* Background: Semi transparent */
+  --background-light-transparent: rgba(0, 0, 0, 0.2);
+  --background-semi-transparent: rgba(0, 0, 0, 0.6);
+  --background-dark-transparent: rgba(0, 0, 0, 0.8);
+
+  /* Foreground: Semi transparent */
+  --foreground-light-transparent: rgba(255, 255, 255, 0.2);
+  --foreground-semi-transparent: rgba(255, 255, 255, 0.6);
+  --foreground-dark-transparent: rgba(255, 255, 255, 0.8);
+
+  /* Colors: Greys */
+  --color-grey-lighter: rgb(195, 195, 195);
+  --color-grey-light: rgb(153, 153, 153);
+  --color-grey-mid: rgb(102, 102, 102);
+  --color-grey-dark: rgb(51, 51, 51);
+  --color-grey-darker: rgb(34, 34, 34);
+
+  /* Colors: Good, Neutral and Bad */
+  --color-bad: var(--red);
+  --color-neutral: var(--yellow);
+  --color-good: var(--green);
+
+  --color-bad-light: rgb(209, 209, 209);
+  --color-bad-muted: rgb(145, 145, 145);
+
+  --color-good-light: rgb(209, 209, 209);
+  --color-good-muted: rgb(145, 145, 145);
+
+  --color-up: var(--color-good);
+  --color-down: var(--color-bad);
+  --color-value-up: var(--color-good);
+  --color-value-down: var(--color-bad);
+
+  --color-death: var(--color-bad);
+
+  /* Colors: Log text */
+  --color-log-text-item: var(--yellow);
+  --color-log-text-quote: pink;
+  --color-log-text-system: orangered;
+  --color-log-text-balance: var(--green);
+
+  /* Colors: Inventory */
+  --color-inventory-item-reverse-side: rgba(255, 238, 83, 0.95);
+  --color-inventory-back: var(--color-inventory-item-reverse-side);
+  --color-inventory-item-background: rgba(200, 200, 200, 0.9);
+
+  /* Colors: Border */
+  --color-border: #8a6572;
+
+  /* Color: Special */
+  --color-total-value: gold;
+  --color-restricted-trip-folder: rgb(222, 222, 50);
+
+  /* Color: Popular Alert */
+  --color-popular-alert: rgb(255, 215, 0);
+  --color-popular-alert-animation-100: rgb(255, 215, 0);
+  --color-popular-alert-animation-33: rgb(255, 140, 66);
+  --color-popular-alert-animation-66: rgb(255, 99, 71);
+
+  /* Color: Risk Meter */
+  --color-risk-meter-unclear: var(--foreground-light-transparent);
+  --color-risk-meter-low: var(--green);
+  --color-risk-meter-mid: var(--yellow);
+  --color-risk-meter-hi: pink;
+  --color-risk-meter-nitemare: var(--red);
+
+  /* Color: Health Bar */
+  --color-health-bar-low: var(--red);
+  --color-health-bar-mid: rgb(255, 126, 21);
+  --color-health-bar-hi: rgb(129, 255, 255);
+  --color-health-bar-full: var(--green);
+
+  /* Color: Toasts */
+  --color-toast-error: var(--color-bad);
+  --color-toast-warning: var(--yellow);
+  --color-toast-info: var(--color-grey-mid);
+  --color-toast-player-notification: var(--color-up);
+  --color-toast-trip-notification: var(--color-up);
+
+  /* Color: Graph */
+  --color-graph-line: var(--color-grey-light);
+  --color-graph-baseline: var(--color-grey-mid);
+  --color-graph-up: var(--color-good);
+  --color-graph-down: var(--color-bad);
+
+  /* * * * * * * * * * * * * *
+  * Typography
+  * * * * * * * * * * * * * */
+
+  /* Typography: Font stacks */
+  --typewriter-font-stack: "Workbench", monospace;
+  --special-font-stack: "Xanh Mono", monospace;
+  --admin-font-stack: var(--typewriter-font-stack);
+  --mascot-font-stack: "Rock Salt", cursive;
+
+  /* Typography: Font sizes */
+  --font-size-very-small: 9px;
+  --font-size-small: 12px;
+  --font-size-normal: 18px;
+  --font-size-medium: 20px;
+  --font-size-large: 26px;
+  --font-size-mascot: 36px;
+  --font-size-extra-large: 48px;
+  --font-size-super-large: 64px;
+  --font-size-ultra: 228px;
+
+  /* * * * * * * * * * * * * *
+  * Layout
+  * * * * * * * * * * * * * */
+
+  /* Layout: Global game window */
+  --game-window-width: calc(min(100vw, 1920px) - 30px);
+  --game-window-height: calc(100vh - 30px);
+  --game-window-main-height: calc(var(--game-window-height) - 60px);
+
+  /* Layout: Border */
+  --default-border-style: 1px solid var(--color-border);
+  --dashed-border-style: 1px dashed var(--color-border);
+
+  /* Layout: Game window */
+  --game-center-bar-width: 90px;
+  --game-center-bar-phone-height: 60px;
+  --game-column-width: calc(50% - var(--game-center-bar-width) / 2);
+
+  /* Layout: Your Rat */
+  --liquidate-rat-height: 100px;
+  --rat-main-info-height: 160px;
+
+  /* Layout: Top Bar */
+  --top-bar-height: 60px;
+
+  /* Layout: Your Trips */
+  --world-prompt-box-height: 80px;
+  --mode-switch-height: 60px;
+  --create-trip-button-height: 80px;
+
+  /* Layout: Trip Item */
+  --trip-item-height: 260px;
+  --trip-item-padding: 10px;
+  --trip-item-image-height: 240px;
+
+  /* Layout: Trip Result */
+  --info-box-height: 260px;
+
+  /* Layout: Spawn */
+  --spawn-mascot-size: 400px;
+  --spawn-mascot-margin-bottom: 20px;
+  --spawn-button-height: 140px;
+  --spawn-inner-width: 700px;
+
+  /* Sizing */
+  --default-padding: 14px;
+  --tab-bar-height: 90px;
+
+  /** Layers */
+  --z-background: 0;
+  --z-sub: 5;
+  --z-sub-top: 10;
+  --z-base: 20;
+  --z-mid: 30;
+  --z-high: 40;
+  --z-top: 50;
+  --z-modal: 100;
+  --z-debug: 66666;
+}
+
+/* * * * * * * * * * * * * *
+  * Phone overrides
+  * * * * * * * * * * * * * */
+
+@media (max-width: 800px) {
+  :root {
+    --game-window-width: calc(100vw - 15px);
+    --game-window-height: calc(100vh - 15px);
+    --font-size-mascot: 24px;
+  }
+}
+
+/* - - - - - - - - - - - - - */
+/* - - - - - - - - - - - - - */
+/* - - - - - - - - - - - - - */
+/* GLOBAL STYLES             */
+/* - - - - - - - - - - - - - */
+/* - - - - - - - - - - - - - */
+/* - - - - - - - - - - - - - */
+
+/* Resets and base styles */
+
+* {
+  box-sizing: border-box;
+  border-color: var(--foreground);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  overscroll-behavior-y: none;
+  /* user-select: none; */
+  -webkit-tap-highlight-color: transparent; /* Remove touch overlay */
+  -webkit-touch-callout: none; /* Disable callout on iOS */
+}
+
+body,
+html {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--typewriter-font-stack);
+  font-size: var(--font-size-normal);
+  margin: 0;
+  padding: 0;
+  overscroll-behavior-y: none;
+  letter-spacing: 0px;
+}
+
+hr {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: normal;
+}
+
+a {
+  text-decoration: none;
+}
+
+button {
+  font-family: var(--typewriter-font-stack);
+  cursor: pointer;
+  user-select: none;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+/* Tooltips */
+
+.tooltip-value {
+  background: var(--color-value);
+  color: var(--black);
+  padding: 2px;
+}
+
+.tooltip-value-positive {
+  background: var(--color-value-up);
+  color: var(--black);
+  padding: 2px;
+}
+
+.tooltip-value-negative {
+  background: var(--color-value-down);
+  color: var(--black);
+  padding: 2px;
+}
+
+.tippy-content {
+  font-size: var(--font-size-normal);
+  line-height: 1.1em;
+  border-radius: 0;
+  background: rgba(190, 190, 190, 0.8);
+  color: black;
+  border: 1px solid var(--color-border);
+}
+
+/* Tutorial tippy theme */
+.tippy-box[data-theme~="tutorial"] {
+  background: rgba(255, 255, 255, 0.95);
+  color: black;
+  border: 2px solid black;
+  border-radius: 0;
+  padding: 0;
+}
+
+.tippy-box[data-theme~="tutorial"] .tippy-content {
+  padding: 0;
+  background: transparent;
+  border: none;
+}
+
+.tippy-box[data-theme~="tutorial"] .tippy-arrow {
+  color: black;
+}
+
+/* Tutorial highlight effect for target element */
+[data-tutorial-highlight] {
+  position: relative;
+  z-index: 100;
+  pointer-events: none;
+}
+
+/* Ensure tutorial popup is above overlay and clickable */
+.tippy-box[data-theme~="tutorial"] {
+  z-index: 101;
+  pointer-events: auto;
+}
+
+/* Animations */
+
+.flash-fast-thrice {
+  animation: strobe 120ms steps(1, end) 3;
+}
+
+@keyframes strobe {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Terminal */
+
+.terminal-line {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  width: 100%;
+  white-space: pre-wrap;
+}
+
+.terminal-line--loader {
+  display: block;
+  word-break: break-all;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+  -webkit-line-break: after-white-space;
+  line-break: after-white-space;
+  max-width: 100%;
+  width: 100%;
+  overflow: hidden;
+  white-space: normal;
+}
+
+.terminal-line--loader span {
+  display: inline;
+  word-break: break-all;
+  overflow-wrap: anywhere;
+}
+
+.bubble .terminal-line {
+  margin-bottom: 0.5em;
+}
+
+@media (max-width: 800px) {
+  .bubble .terminal-line {
+    background: var(--background-semi-transparent);
+  }
+}
+
+.bubble .terminal-line span {
+  text-shadow:
+    2px 2px 0px black,
+    -2px -2px 0px black,
+    2px -2px 0px black,
+    -2px 2px 0px black;
+}

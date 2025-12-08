@@ -196,7 +196,7 @@
       color: white;
 
       &.highlight {
-        color: #0f0;
+        color: var(--color-good);
       }
     }
   }

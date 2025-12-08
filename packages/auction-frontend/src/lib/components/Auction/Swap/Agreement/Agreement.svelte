@@ -116,11 +116,11 @@
     color: white;
 
     a {
-      color: var(--color-alert-priority);
+      color: var(--color-grey-light);
       text-decoration: underline;
 
       &:hover {
-        color: var(--color-alert-priority-light);
+        color: var(--color-grey-lighter);
       }
     }
   }

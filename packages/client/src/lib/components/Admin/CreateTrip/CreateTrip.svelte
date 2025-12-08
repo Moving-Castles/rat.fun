@@ -206,9 +206,7 @@
               ></textarea>
 
               <div class="folder-select">
-                <label>
-                  <span class="highlight">Trip Category</span>
-                </label>
+                <span class="highlight">Trip Category</span>
                 <div>
                   <button
                     onclick={() => {
@@ -476,17 +474,6 @@
       > :global(.tiles) {
         flex: 1;
       }
-    }
-
-    .trip-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem 0;
-      border-bottom: 1px solid var(--color-grey-mid);
-      margin-bottom: 8px;
-      font-family: var(--typewriter-font-stack);
-      font-size: var(--font-size-normal);
     }
 
     .controls {

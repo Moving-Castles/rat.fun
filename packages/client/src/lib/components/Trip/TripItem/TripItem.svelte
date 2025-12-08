@@ -249,33 +249,6 @@
               overflow: visible;
               text-overflow: unset;
             }
-            @media (min-width: 800px) {
-              padding-bottom: 40px;
-            }
-
-            &.short {
-              font-size: var(--font-size-large);
-            }
-
-            &.medium {
-              font-size: var(--font-size-large);
-            }
-
-            &.long {
-              font-size: var(--font-size-normal);
-            }
-
-            &.extra-long {
-              font-size: var(--font-size-normal);
-            }
-
-            .content {
-              max-width: 55ch;
-
-              @media (max-width: 800px) {
-                max-width: 100%;
-              }
-            }
           }
 
           .trip-creator {
@@ -306,10 +279,6 @@
             padding-left: 0;
             order: 3;
           }
-        }
-
-        .small {
-          font-size: var(--font-size-small);
         }
       }
     }

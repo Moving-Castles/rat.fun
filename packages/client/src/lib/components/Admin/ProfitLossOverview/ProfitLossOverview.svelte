@@ -238,19 +238,8 @@
     position: relative;
     display: flex;
 
-    .symbol-explicit {
-      // position: absolute;
-      // left: 0;
-      // transform: translate(-100%, 0);
-    }
-
     @media screen and (min-width: 1024px) {
       font-size: var(--font-size-super-large);
-    }
-
-    .profit-amount-value {
-      margin-right: 2px;
-      position: relative;
     }
   }
 
@@ -263,15 +252,5 @@
     justify-content: center;
     align-items: center;
     padding: 12px;
-
-    .portfolio-amount-inner {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      .portfolio-amount-value {
-        margin-right: 5px;
-      }
-    }
   }
 </style>
