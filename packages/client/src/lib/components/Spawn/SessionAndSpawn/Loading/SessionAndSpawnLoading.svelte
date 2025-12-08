@@ -16,7 +16,7 @@
   import { addressToId } from "$lib/modules/utils"
 
   let error = $state<string | null>(null)
-  let status = $state<string>("Setting up slop machine")
+  let status = $state<string>("Setting up Slop Machine")
 
   async function executeSessionAndSpawn() {
     const name = spawnState.data.playerName
@@ -35,7 +35,7 @@
        * - - - - - - - - - - - - - */
 
       console.log("[SessionAndSpawnLoading] Step 1: Setting up slop machine")
-      status = "Setting up slop machine"
+      status = "Setting up Slop Machine"
 
       const drawbridge = getDrawbridge()
       await drawbridge.setupSession()

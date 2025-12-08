@@ -4,7 +4,7 @@
   let tripCount = $derived(Object.keys($nonDepletedTrips).length)
 </script>
 
-<div class="container">
+<div class="no-rat-listing-container">
   <div class="message">
     <div class="count">{tripCount} Trips available</div>
     <div class="instruction">Buy a rat to access</div>
@@ -12,7 +12,7 @@
 </div>
 
 <style lang="scss">
-  .container {
+  .no-rat-listing-container {
     width: 100%;
     height: calc(100% - 60px);
     display: flex;
@@ -27,7 +27,8 @@
   }
 
   .count {
-    font-size: var(--font-size-large);
+    font-size: var(--font-size-extra-large);
+    font-family: var(--special-font-stack);
     margin-bottom: 10px;
   }
 

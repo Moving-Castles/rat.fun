@@ -103,8 +103,8 @@
         position: relative;
 
         @media (max-width: 800px) {
-          width: 360px;
-          height: 360px;
+          width: 300px;
+          height: 300px;
         }
       }
 

@@ -46,9 +46,9 @@ export const FIRST_CASHOUT_MESSAGE: MascotMessageData = {
 
 export const BIGWIN_MESSAGE: MascotMessageData = {
   text: [
-    textLine("excellent work OPERATOR yes"),
-    textLine("big payout yes"),
-    textLine("company impressed yes"),
+    textLine("excellent work OPERATOR"),
+    textLine("big payout"),
+    textLine("company impressed"),
     textLine("reinvest in new rat yes?")
   ]
 }
@@ -104,7 +104,7 @@ export const DEATH__TRIP_MESSAGES: MascotMessageData[] = [
   {
     text: [
       textLine(
-        "All OpeRatoRRs' miseries derive from not being able to sit quietly in a slop machine alone. BUY RAT! Feel something!"
+        "All OpeRatoRRs' miseries derive from not being able to sit quietly in a Slop Machine alone. BUY RAT! Feel something!"
       )
     ]
   },
@@ -192,12 +192,12 @@ export const DEATH__TRIP_MESSAGES: MascotMessageData[] = [
   {
     text: [
       textLine(
-        "Ah, the death engine! The game of skill opeartor! Strategy, the slop machine is delicate!"
+        "Ah, the death engine! The game of skill opeartor! Strategy, the Slop Machine is delicate!"
       )
     ]
   },
   {
-    text: [textLine("Your eyes are red oppppERATOR! Talk to the slop machine! Hear!")]
+    text: [textLine("Your eyes are red oppppERATOR! Talk to the Slop Machine! Hear!")]
   },
   {
     text: [textLine("Sad. BUY RAT!")]
@@ -245,7 +245,7 @@ export const DEATH__CASHOUT_MESSAGES: MascotMessageData[] = [
   {
     text: [
       textLine(
-        "All OpeRatoRRs' miseries derive from not being able to sit quietly in a slop machine alone. BUY RAT! Feel something!"
+        "All OpeRatoRRs' miseries derive from not being able to sit quietly in a Slop Machine alone. BUY RAT! Feel something!"
       )
     ]
   },
@@ -333,12 +333,12 @@ export const DEATH__CASHOUT_MESSAGES: MascotMessageData[] = [
   {
     text: [
       textLine(
-        "Ah, the death engine! The game of skill opeartor! Strategy, the slop machine is delicate!"
+        "Ah, the death engine! The game of skill opeartor! Strategy, the Slop Machine is delicate!"
       )
     ]
   },
   {
-    text: [textLine("Your eyes are red oppppERATOR! Talk to the slop machine! Hear!")]
+    text: [textLine("Your eyes are red oppppERATOR! Talk to the Slop Machine! Hear!")]
   },
   {
     text: [textLine("Sad. BUY RAT!")]

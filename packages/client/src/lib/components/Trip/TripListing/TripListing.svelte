@@ -14,7 +14,7 @@
   import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
 
   import { TripItem, TripFolders, NoRatListing } from "$lib/components/Trip"
-  import { BackButton } from "$lib/components/Shared"
+  import { BackButton, SmallSpinner } from "$lib/components/Shared"
   import TripHeader from "./TripHeader.svelte"
 
   // Show NoRatListing when player has no rat OR when rat is being deployed
@@ -136,13 +136,16 @@
         folders={sortedFolders}
         {foldersCounts}
       />
+    {:else}
+      <div class="loading-container">
+        <span>Loading trips <SmallSpinner /></span>
+      </div>
     {/if}
   {:else}
     <div class="back-button-container">
       <BackButton onclick={() => ($selectedFolderId = "")} />
     </div>
     {#if $selectedFolderId !== ""}
-      {@const i = $staticContent.tripFolders.findIndex(({ _id }) => _id === $selectedFolderId)}
       {@const folderTitle =
         $staticContent.tripFolders.find(({ _id }) => _id == $selectedFolderId)?.title ?? ""}
       <TripHeader
@@ -244,6 +247,19 @@
       background-color: var(--color-bad);
       padding: 10px;
       color: var(--background);
+    }
+  }
+
+  .loading-container {
+    height: calc(100% - 60px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    span {
+      background-color: var(--background-semi-transparent);
+      padding: 10px;
+      color: var(--foreground);
     }
   }
 </style>

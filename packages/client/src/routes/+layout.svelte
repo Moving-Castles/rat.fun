@@ -24,6 +24,7 @@
   import { initOffChainSync, disconnectOffChainSync } from "$lib/modules/off-chain-sync"
   import { resetEntitiesInitialization } from "$lib/modules/chain-sync"
   import { initErc20Listener } from "$lib/modules/erc20Listener"
+  import { externalAddressesConfig } from "$lib/modules/state/stores"
 
   // Components
   import Spawn from "$lib/components/Spawn/Spawn.svelte"
@@ -34,6 +35,8 @@
   import { sdk } from "@farcaster/miniapp-sdk"
 
   let { children }: LayoutProps = $props()
+
+  $inspect($externalAddressesConfig)
 
   // Called when loading is complete
   const loaded = () => {

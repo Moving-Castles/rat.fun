@@ -16,6 +16,9 @@
   /* Colors: Base */
   --black: #000000;
   --white: #ffffff;
+  --green: rgb(51, 195, 99);
+  --yellow: rgb(234, 234, 51);
+  --red: rgb(246, 79, 42);
 
   /* Background */
   --background: var(--black);
@@ -39,9 +42,9 @@
   --color-grey-darker: rgb(34, 34, 34);
 
   /* Colors: Good, Neutral and Bad */
-  --color-bad: red;
-  --color-neutral: yellow;
-  --color-good: green;
+  --color-bad: var(--red);
+  --color-neutral: var(--yellow);
+  --color-good: var(--green);
 
   --color-bad-light: rgb(209, 209, 209);
   --color-bad-muted: rgb(145, 145, 145);
@@ -57,10 +60,10 @@
   --color-death: var(--color-bad);
 
   /* Colors: Log text */
-  --color-log-text-item: yellow;
+  --color-log-text-item: var(--yellow);
   --color-log-text-quote: pink;
   --color-log-text-system: orangered;
-  --color-log-text-balance: green;
+  --color-log-text-balance: var(--green);
 
   /* Colors: Inventory */
   --color-inventory-item-reverse-side: rgba(255, 238, 83, 0.95);
@@ -82,20 +85,20 @@
 
   /* Color: Risk Meter */
   --color-risk-meter-unclear: var(--foreground-light-transparent);
-  --color-risk-meter-low: lightgreen;
-  --color-risk-meter-mid: yellow;
+  --color-risk-meter-low: var(--green);
+  --color-risk-meter-mid: var(--yellow);
   --color-risk-meter-hi: pink;
-  --color-risk-meter-nitemare: red;
+  --color-risk-meter-nitemare: var(--red);
 
   /* Color: Health Bar */
-  --color-health-bar-low: rgb(255, 66, 66);
+  --color-health-bar-low: var(--red);
   --color-health-bar-mid: rgb(255, 126, 21);
   --color-health-bar-hi: rgb(129, 255, 255);
-  --color-health-bar-full: rgb(135, 255, 135);
+  --color-health-bar-full: var(--green);
 
   /* Color: Toasts */
   --color-toast-error: var(--color-bad);
-  --color-toast-warning: yellow;
+  --color-toast-warning: var(--yellow);
   --color-toast-info: var(--color-grey-mid);
   --color-toast-player-notification: var(--color-up);
   --color-toast-trip-notification: var(--color-up);
