@@ -16,6 +16,12 @@
 
 ---
 
+### Game Pool
+
+0x6499C747a5De048a2D747f9F01bE7ec47d9fE3C2
+
+---
+
 ### Exchange (ERC20EquivalentExchange.sol)
 
 0x752c792eb9BF02A2d64558c331ec8333cf40d5d0
