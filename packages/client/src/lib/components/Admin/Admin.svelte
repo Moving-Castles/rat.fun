@@ -63,7 +63,7 @@
   let pastTripsSortDirection = $state<"asc" | "desc">("asc")
   let pastTripsSortFunction = $state(sortFunctions.entriesChronologically)
   // Track previous view to detect when switching away from trips/profit
-  let previousView = $state<"home" | "trips" | "profit">("home")
+  let previousView = $state<"home" | "trips" | "profit" | "events">("home")
   // Track tablet view toggle (800px-1024px) between graph and log
   let tabletProfitView = $state<"graph" | "log">("graph")
   // Track keyboard navigation to prevent pointer interference

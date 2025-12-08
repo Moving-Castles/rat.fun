@@ -47,7 +47,7 @@
       <p>{UI_STRINGS.activeProfit}</p>
       <div class="percentage {$portfolioClass}">
         {#if !isNaN(tweenedActiveProfit.current)}
-          ({$plSymbolExplicit}{Math.abs((100 - tweenedActiveProfit.current * 100).toFixed(2))}%)
+          ({$plSymbolExplicit}{Math.abs(100 - tweenedActiveProfit.current * 100).toFixed(2)}%)
         {/if}
       </div>
       <div class="content {$portfolioClass}">
