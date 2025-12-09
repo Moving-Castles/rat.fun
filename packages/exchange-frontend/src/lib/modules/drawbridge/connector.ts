@@ -21,7 +21,7 @@ type WriteContractArgs = {
   address: Hex
   abi: unknown
   functionName: string
-  args?: unknown[]
+  args?: readonly unknown[] | unknown[]
   gas?: bigint
   value?: bigint
 }
