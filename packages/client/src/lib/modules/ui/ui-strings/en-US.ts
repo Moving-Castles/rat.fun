@@ -251,6 +251,7 @@ export const enUS = {
   tripReportEnd: "REMOTE VIEWING SESSION: TERMINATED",
   balanceLabel: "Balance",
   dead: "DEAD",
+  ratIsDead: "Rat is dead",
   // Spawn error messages
   somethingWentWrong: "Something went wrong",
   errorOccurred: "An error occurred during the spawn process. Please try again.",

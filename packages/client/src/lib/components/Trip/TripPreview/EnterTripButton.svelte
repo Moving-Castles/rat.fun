@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Hex } from "viem"
-  import { player, ratTotalValue } from "$lib/modules/state/stores"
+  import { player, ratTotalValue, playerHasLiveRat } from "$lib/modules/state/stores"
   import { playerERC20Allowance } from "$lib/modules/erc20Listener/stores"
   import { getTripMinRatValueToEnter } from "$lib/modules/state/utils"
   import { goto } from "$app/navigation"
@@ -30,7 +30,9 @@
 </script>
 
 <div class="trip-enter">
-  {#if Number($minRatValueToEnter) > Number($ratTotalValue)}
+  {#if !$playerHasLiveRat}
+    <BigButton disabled={true} text={UI_STRINGS.ratIsDead} onclick={onClick} />
+  {:else if Number($minRatValueToEnter) > Number($ratTotalValue)}
     <BigButton
       disabled={true}
       text={UI_STRINGS.minRatValueWarning(Number($minRatValueToEnter))}
