@@ -16,5 +16,7 @@ interface ITripSystem {
     string memory _prompt
   ) external returns (bytes32 newTripId);
 
+  function ratfun__addTripBalance(bytes32 _tripId, uint256 _amount) external;
+
   function ratfun__closeTrip(bytes32 _tripId) external;
 }

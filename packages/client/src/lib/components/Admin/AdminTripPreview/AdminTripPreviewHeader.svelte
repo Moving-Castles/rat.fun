@@ -1,14 +1,28 @@
 <script lang="ts">
   import { getTripMaxValuePerWin, getTripOwnerName } from "$lib/modules/state/utils"
+  import { playerIsWhitelisted } from "$lib/modules/state/stores"
   import { lastUpdated } from "$lib/modules/content"
   import { urlFor } from "$lib/modules/content/sanity"
   import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
   import type { Trip as SanityTrip } from "@sanity-types"
   import AdminTripPreviewPrompt from "./AdminTripPreviewPrompt.svelte"
 
-  let { trip, sanityTripContent }: { trip: Trip; sanityTripContent: SanityTrip } = $props()
+  let {
+    trip,
+    sanityTripContent,
+    onAddBalance
+  }: {
+    trip: Trip
+    sanityTripContent: SanityTrip
+    onAddBalance?: () => void
+  } = $props()
 
   let maxValuePerWin = getTripMaxValuePerWin(trip.tripCreationCost, trip.balance)
+
+  // Show add balance button if trip is not liquidated, callback is provided, and player is whitelisted
+  const showAddBalanceButton = $derived(
+    !trip.liquidationBlock && onAddBalance && $playerIsWhitelisted
+  )
 </script>
 
 <div class="trip-preview-header">
@@ -60,7 +74,14 @@
     {#if !trip.liquidationBlock}
       <div class="row balance" class:depleted={Number(trip.balance) == 0}>
         <div class="label">{UI_STRINGS.balance}</div>
-        <div class="value">{trip.balance}</div>
+        <div class="value-with-action">
+          <span class="value">{trip.balance}</span>
+          {#if showAddBalanceButton}
+            <button class="add-balance-button" onclick={onAddBalance} title={UI_STRINGS.addBalance}>
+              +
+            </button>
+          {/if}
+        </div>
       </div>
     {/if}
   </div>
@@ -138,6 +159,36 @@
         .value {
           font-family: var(--special-font-stack);
           font-size: var(--font-size-normal);
+        }
+
+        .value-with-action {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+
+          .value {
+            font-family: var(--special-font-stack);
+            font-size: var(--font-size-normal);
+          }
+        }
+
+        .add-balance-button {
+          background: var(--color-grey-mid);
+          color: var(--foreground);
+          border: none;
+          width: 24px;
+          height: 24px;
+          font-family: var(--special-font-stack);
+          font-size: var(--font-size-normal);
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          &:hover {
+            background: var(--color-grey-light);
+            color: var(--background);
+          }
         }
 
         &.index {

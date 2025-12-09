@@ -10,6 +10,7 @@ export { sendEnterTrip } from "./actions/sendEnterTrip"
 export { sendCreateTrip } from "./actions/sendCreateTrip"
 export { sendLiquidateRat } from "./actions/sendLiquidateRat"
 export { sendLiquidateTrip } from "./actions/sendLiquidateTrip"
+export { sendAddTripBalance } from "./actions/sendAddTripBalance"
 export { sendBuyWithEth } from "./actions/sendBuyWithEth"
 export { sendUnlockAdmin } from "./actions/sendUnlockAdmin"
 
@@ -20,6 +21,7 @@ const DEFAULT_TIMINGS = {
   CreateTrip: 4000,
   EnterTrip: 4000,
   CloseTrip: 4000,
+  AddTripBalance: 4000,
   CreateRat: 4000,
   LiquidateRat: 4000,
   LiquidateTrip: 4000,
@@ -34,6 +36,7 @@ export const busy = $state({
   CreateTrip: new Tween(0, { duration: DEFAULT_TIMINGS.CreateTrip, easing }),
   EnterTrip: new Tween(0, { duration: DEFAULT_TIMINGS.EnterTrip, easing }),
   CloseTrip: new Tween(0, { duration: DEFAULT_TIMINGS.CloseTrip, easing }),
+  AddTripBalance: new Tween(0, { duration: DEFAULT_TIMINGS.AddTripBalance, easing }),
   CreateRat: new Tween(0, { duration: DEFAULT_TIMINGS.CreateRat, easing }),
   LiquidateRat: new Tween(0, { duration: DEFAULT_TIMINGS.LiquidateRat, easing }),
   LiquidateTrip: new Tween(0, { duration: DEFAULT_TIMINGS.LiquidateTrip, easing }),

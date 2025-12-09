@@ -363,4 +363,188 @@ contract TripSystemTest is BaseTest {
     world.ratfun__closeTrip(tripId);
     vm.stopPrank();
   }
+
+  function testAddTripBalance() public {
+    uint256 initialBalance = setInitialBalance(alice);
+    // As alice
+    vm.startPrank(alice);
+    bytes32 playerId = world.ratfun__spawn("alice");
+    approveGamePool(type(uint256).max);
+    vm.stopPrank();
+
+    // As admin - create trip
+    prankAdmin();
+    bytes32 tripId = world.ratfun__createTrip(playerId, bytes32(0), TRIP_INITIAL_BALANCE, "A test trip");
+    vm.stopPrank();
+
+    // Check initial balances
+    uint256 playerBalanceAfterCreate = LibWorld.erc20().balanceOf(alice);
+    assertEq(Balance.get(tripId), TRIP_INITIAL_BALANCE);
+    assertEq(playerBalanceAfterCreate, initialBalance - TRIP_INITIAL_BALANCE * 10 ** LibWorld.erc20().decimals());
+
+    // Add balance to trip
+    uint256 amountToAdd = 500;
+    vm.startPrank(alice);
+    startGasReport("Add trip balance");
+    world.ratfun__addTripBalance(tripId, amountToAdd);
+    endGasReport();
+    vm.stopPrank();
+
+    // Check trip balance increased
+    assertEq(Balance.get(tripId), TRIP_INITIAL_BALANCE + amountToAdd);
+
+    // Check player balance decreased
+    assertEq(
+      LibWorld.erc20().balanceOf(alice),
+      playerBalanceAfterCreate - amountToAdd * 10 ** LibWorld.erc20().decimals()
+    );
+
+    // Check that TripCreationCost is unchanged
+    assertEq(TripCreationCost.get(tripId), TRIP_INITIAL_BALANCE);
+  }
+
+  function testAddTripBalanceRevertNotOwner() public {
+    setInitialBalance(alice);
+    vm.startPrank(alice);
+    bytes32 aliceId = world.ratfun__spawn("alice");
+    approveGamePool(type(uint256).max);
+    vm.stopPrank();
+
+    setInitialBalance(bob);
+    vm.startPrank(bob);
+    world.ratfun__spawn("bob");
+    approveGamePool(type(uint256).max);
+    vm.stopPrank();
+
+    // As admin - create trip owned by alice
+    prankAdmin();
+    bytes32 tripId = world.ratfun__createTrip(aliceId, bytes32(0), TRIP_INITIAL_BALANCE, "A test trip");
+    vm.stopPrank();
+
+    // Bob tries to add balance to alice's trip
+    vm.startPrank(bob);
+    vm.expectRevert("not owner");
+    world.ratfun__addTripBalance(tripId, 500);
+    vm.stopPrank();
+  }
+
+  function testAddTripBalanceRevertTripClosed() public {
+    setInitialBalance(alice);
+    vm.startPrank(alice);
+    bytes32 playerId = world.ratfun__spawn("alice");
+    approveGamePool(type(uint256).max);
+    vm.stopPrank();
+
+    // As admin - create trip
+    prankAdmin();
+    bytes32 tripId = world.ratfun__createTrip(playerId, bytes32(0), TRIP_INITIAL_BALANCE, "A test trip");
+    vm.stopPrank();
+
+    // Wait for cooldown and close trip
+    vm.roll(block.number + GameConfig.getCooldownCloseTrip() + 1);
+    vm.startPrank(alice);
+    world.ratfun__closeTrip(tripId);
+
+    // Try to add balance to closed trip (balance is 0)
+    vm.expectRevert("trip is dead");
+    world.ratfun__addTripBalance(tripId, 500);
+    vm.stopPrank();
+  }
+
+  function testAddTripBalanceRevertAmountZero() public {
+    setInitialBalance(alice);
+    vm.startPrank(alice);
+    bytes32 playerId = world.ratfun__spawn("alice");
+    approveGamePool(type(uint256).max);
+    vm.stopPrank();
+
+    // As admin - create trip
+    prankAdmin();
+    bytes32 tripId = world.ratfun__createTrip(playerId, bytes32(0), TRIP_INITIAL_BALANCE, "A test trip");
+    vm.stopPrank();
+
+    // Try to add 0 balance
+    vm.startPrank(alice);
+    vm.expectRevert("amount must be positive");
+    world.ratfun__addTripBalance(tripId, 0);
+    vm.stopPrank();
+  }
+
+  function testAddTripBalanceRevertTripDepleted() public {
+    setInitialBalance(alice);
+    vm.startPrank(alice);
+    bytes32 aliceId = world.ratfun__spawn("alice");
+    approveGamePool(type(uint256).max);
+    bytes32 ratId = world.ratfun__createRat("roger");
+    vm.stopPrank();
+
+    // As admin - create trip and drain it
+    prankAdmin();
+    bytes32 tripId = world.ratfun__createTrip(aliceId, bytes32(0), 1000, "test trip");
+    // Drain the trip completely
+    world.ratfun__applyOutcome(ratId, tripId, 250, new bytes32[](0), new Item[](0));
+    world.ratfun__applyOutcome(ratId, tripId, 250, new bytes32[](0), new Item[](0));
+    world.ratfun__applyOutcome(ratId, tripId, 250, new bytes32[](0), new Item[](0));
+    world.ratfun__applyOutcome(ratId, tripId, 250, new bytes32[](0), new Item[](0));
+    vm.stopPrank();
+
+    // Verify trip is depleted but not liquidated
+    assertEq(Balance.get(tripId), 0);
+    assertEq(Liquidated.get(tripId), false);
+
+    // Try to add balance to depleted trip
+    vm.startPrank(alice);
+    vm.expectRevert("trip is dead");
+    world.ratfun__addTripBalance(tripId, 500);
+    vm.stopPrank();
+  }
+
+  function testAddTripBalanceRevertNotTrip() public {
+    setInitialBalance(alice);
+    vm.startPrank(alice);
+    world.ratfun__spawn("alice");
+    approveGamePool(type(uint256).max);
+    // Create a rat - rats are owned by the player, so alice will own this rat
+    bytes32 ratId = world.ratfun__createRat("ratty");
+    vm.stopPrank();
+
+    // Try to add balance to a rat entity (not a trip)
+    // The ownership check passes (rat is owned by alice's playerId)
+    // Then the entity type check should fail (rat is ENTITY_TYPE.RAT, not TRIP)
+    vm.startPrank(alice);
+    vm.expectRevert("not a trip");
+    world.ratfun__addTripBalance(ratId, 500);
+    vm.stopPrank();
+  }
+
+  function testAddTripBalanceAffectsMaxValuePerWin() public {
+    setInitialBalance(alice);
+    vm.startPrank(alice);
+    bytes32 playerId = world.ratfun__spawn("alice");
+    approveGamePool(type(uint256).max);
+    vm.stopPrank();
+
+    // As admin - create trip with balance 1000
+    prankAdmin();
+    bytes32 tripId = world.ratfun__createTrip(playerId, bytes32(0), 1000, "A test trip");
+
+    // maxValuePerWin = min(25% * max(1000, 1000), 1000) = 250
+    GamePercentagesConfig.setMaxValuePerWin(25);
+    assertEq(LibTrip.getMaxValuePerWin(tripId), 250);
+    vm.stopPrank();
+
+    // Add 1000 more balance (total: 2000)
+    vm.startPrank(alice);
+    world.ratfun__addTripBalance(tripId, 1000);
+    vm.stopPrank();
+
+    // maxValuePerWin = min(25% * max(1000, 2000), 2000) = min(500, 2000) = 500
+    assertEq(LibTrip.getMaxValuePerWin(tripId), 500);
+
+    // TripCreationCost should still be 1000
+    assertEq(TripCreationCost.get(tripId), 1000);
+
+    // minRatValueToEnter should still be based on creation cost (10% of 1000 = 100)
+    assertEq(LibTrip.getMinRatValueToEnter(tripId), 100);
+  }
 }

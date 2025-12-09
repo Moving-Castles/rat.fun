@@ -26,6 +26,7 @@ contract DeployTripSystem is Script {
     console.log("TripSystem address: ", address(tripSystem));
 
     IWorld(worldAddress).registerSystem(systemResource, tripSystem, true);
+    IWorld(worldAddress).registerFunctionSelector(systemResource, "addTripBalance(bytes32,uint256)");
 
     vm.stopBroadcast();
   }

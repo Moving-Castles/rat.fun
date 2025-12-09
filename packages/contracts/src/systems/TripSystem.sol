@@ -57,6 +57,24 @@ contract TripSystem is System {
   }
 
   /**
+   * @notice Add balance to an existing trip
+   * @dev Only trip owner can call this function
+   * @param _tripId The id of the trip
+   * @param _amount The amount to add to the trip balance
+   */
+  function addTripBalance(bytes32 _tripId, uint256 _amount) public {
+    bytes32 playerId = LibUtils.addressToEntityKey(_msgSender());
+    require(Owner.get(_tripId) == playerId, "not owner");
+    require(EntityType.get(_tripId) == ENTITY_TYPE.TRIP, "not a trip");
+    require(Balance.get(_tripId) > 0, "trip is dead");
+    require(_amount > 0, "amount must be positive");
+
+    Balance.set(_tripId, Balance.get(_tripId) + _amount);
+
+    LibWorld.gamePool().depositTokens(_msgSender(), _amount * 10 ** LibWorld.erc20().decimals());
+  }
+
+  /**
    * @notice Close a trip
    * @param _tripId The id of the trip to close
    */

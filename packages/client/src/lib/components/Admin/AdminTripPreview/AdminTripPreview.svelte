@@ -19,6 +19,7 @@
   import TripConfirmLiquidation from "$lib/components/Admin/AdminTripPreview/TripConfirmLiquidation/TripConfirmLiquidation.svelte"
   import LiquidateTrip from "$lib/components/Admin/AdminTripPreview/LiquidateTrip.svelte"
   import AdminEventLog from "$lib/components/Admin/AdminEventLog/AdminEventLog.svelte"
+  import AddTripBalanceModal from "$lib/components/Admin/AdminTripPreview/AddTripBalanceModal/AddTripBalanceModal.svelte"
 
   import { BackButton, SlideToggle } from "$lib/components/Shared"
 
@@ -42,6 +43,9 @@
 
   // Phone sub-view toggle
   let phoneTripView = $state<"graph" | "log">("graph")
+
+  // Add balance modal state
+  let showAddBalanceModal = $state(false)
 
   // Track keyboard navigation to prevent pointer interference
   let keyboardNavigating = $state(false)
@@ -75,6 +79,10 @@
 
   // Keyboard navigation for this trip's events
   const handleKeypress = (e: KeyboardEvent) => {
+    // Skip if modal is open or not an arrow key
+    if (showAddBalanceModal) return
+    if (!["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.key)) return
+
     e.preventDefault()
 
     if (!allVisitsData.length) return
@@ -154,7 +162,11 @@
         <BackButton onclick={onBackButtonClick} />
       </div>
       <div class="full">
-        <AdminTripPreviewHeader {sanityTripContent} {trip} />
+        <AdminTripPreviewHeader
+          {sanityTripContent}
+          {trip}
+          onAddBalance={() => (showAddBalanceModal = true)}
+        />
       </div>
       <SlideToggle
         options={[
@@ -220,7 +232,11 @@
         <BackButton onclick={onBackButtonClick} />
       </div>
       <div class="full">
-        <AdminTripPreviewHeader {sanityTripContent} {trip} />
+        <AdminTripPreviewHeader
+          {sanityTripContent}
+          {trip}
+          onAddBalance={() => (showAddBalanceModal = true)}
+        />
       </div>
       <div class="left">
         <TripProfitLossGraph
@@ -282,6 +298,10 @@
       liquidating = false
     }}
   />
+{/if}
+
+{#if showAddBalanceModal}
+  <AddTripBalanceModal {tripId} onclose={() => (showAddBalanceModal = false)} />
 {/if}
 
 <style lang="scss">

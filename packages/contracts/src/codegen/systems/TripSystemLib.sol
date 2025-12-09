@@ -47,6 +47,10 @@ library TripSystemLib {
     return CallWrapper(self.toResourceId(), address(0)).createTrip(_playerId, _tripId, _tripCreationCost, _prompt);
   }
 
+  function addTripBalance(TripSystemType self, bytes32 _tripId, uint256 _amount) internal {
+    return CallWrapper(self.toResourceId(), address(0)).addTripBalance(_tripId, _amount);
+  }
+
   function closeTrip(TripSystemType self, bytes32 _tripId) internal {
     return CallWrapper(self.toResourceId(), address(0)).closeTrip(_tripId);
   }
@@ -73,6 +77,16 @@ library TripSystemLib {
     if (result.length != 0) {
       return abi.decode(result, (bytes32));
     }
+  }
+
+  function addTripBalance(CallWrapper memory self, bytes32 _tripId, uint256 _amount) internal {
+    // if the contract calling this function is a root system, it should use `callAsRoot`
+    if (address(_world()) == address(this)) revert TripSystemLib_CallingFromRootSystem();
+
+    bytes memory systemCall = abi.encodeCall(_addTripBalance_bytes32_uint256.addTripBalance, (_tripId, _amount));
+    self.from == address(0)
+      ? _world().call(self.systemId, systemCall)
+      : _world().callFrom(self.from, self.systemId, systemCall);
   }
 
   function closeTrip(CallWrapper memory self, bytes32 _tripId) internal {
@@ -102,6 +116,11 @@ library TripSystemLib {
     if (result.length != 0) {
       return abi.decode(result, (bytes32));
     }
+  }
+
+  function addTripBalance(RootCallWrapper memory self, bytes32 _tripId, uint256 _amount) internal {
+    bytes memory systemCall = abi.encodeCall(_addTripBalance_bytes32_uint256.addTripBalance, (_tripId, _amount));
+    SystemCall.callWithHooksOrRevert(self.from, self.systemId, systemCall, msg.value);
   }
 
   function closeTrip(RootCallWrapper memory self, bytes32 _tripId) internal {
@@ -149,6 +168,10 @@ library TripSystemLib {
 
 interface _createTrip_bytes32_bytes32_uint256_string {
   function createTrip(bytes32 _playerId, bytes32 _tripId, uint256 _tripCreationCost, string memory _prompt) external;
+}
+
+interface _addTripBalance_bytes32_uint256 {
+  function addTripBalance(bytes32 _tripId, uint256 _amount) external;
 }
 
 interface _closeTrip_bytes32 {

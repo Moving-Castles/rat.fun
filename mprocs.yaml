@@ -1,7 +1,7 @@
 procs:
-  # client:
-  #   cwd: packages/client
-  #   shell: pnpm run dev
+  client:
+    cwd: packages/client
+    shell: pnpm run dev
   # dashboard:
   #   cwd: packages/dashboard
   #   shell: pnpm run dev

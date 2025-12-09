@@ -1,12 +1,17 @@
 import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
 
 export const enUS = {
+  addBalance: "Add Balance",
+  addTripBalance: "Add Trip Balance",
+  addTripBalanceDescription: "Add tokens to increase the trip balance.",
+  addingTripBalance: "Adding balance...",
   address: "Address",
   admin: "TRIPS LAB",
   adminInstruction: (price: number) =>
     `Unlock access to our rat-a-licious TRIPS LAB for ${price} ${CURRENCY_SYMBOL}.<br>Lets you create bespoke TRIPS through a Bloomberg-style terminal for the mentally deranged.<br>Results may vary.`,
   action: "Action",
   all: "All",
+  amountToAdd: "Amount to add",
   activeProfit: "Active profit",
   adminUnlocked: "Admin unlocked",
   adminUnlockedMessage: "You unlocked the TRIPS LAB",
@@ -115,6 +120,7 @@ export const enUS = {
   musicOff: "Music: OFF",
   minRatValueToTrip: "MIN RISK",
   minRatValueWarning: (value: number): string => `Rat value too low (at least ${value})`,
+  minimumAmount: (value: number): string => `Minimum amount is ${value}`,
   moveOn: "MOVE ON",
   name: "Name",
   nameCannotBeEmpty: "Name cannot be empty",
@@ -217,6 +223,7 @@ export const enUS = {
   youCreatedTrip: (index: number): string => `You created TRIP #${index}`,
   youIndication: "This is you",
   youLiquidatedTrip: (index: number): string => `You CASHED OUT TRIP #${index}`,
+  yourBalance: "Your balance",
   yourName: "YOUR NAME",
   youWillRecover: "You will recover",
   allIsFine: "ALL IS FINE.\n JUST ONE MOMENT.\n WE VALUE YOUR PATIENCE.",
