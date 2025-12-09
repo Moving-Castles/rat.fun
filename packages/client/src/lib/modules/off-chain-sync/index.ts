@@ -127,11 +127,20 @@ export async function initOffChainSync(environment: ENVIRONMENT, playerId: strin
 
   socket.onclose = event => {
     websocketConnected.set(false)
-    // Only attempt reconnect if not a deliberate close (code 4001 = auth failure)
-    if (event.code !== 4001) {
-      attemptReconnect()
-    } else {
+
+    // Handle different close scenarios
+    if (event.code === 4001) {
+      // Log auth failures to Sentry (no toast - WebSocketError is silent)
       errorHandler(new WebSocketError(`WebSocket authentication failed: ${event.reason}`))
+
+      // Stale timestamp can be retried with fresh signature (common when browser was backgrounded)
+      if (event.reason?.includes("Stale request timestamp")) {
+        attemptReconnect()
+      }
+      // Other auth failures (invalid signature, etc.) - don't retry
+    } else {
+      // Non-auth failures - attempt reconnect
+      attemptReconnect()
     }
   }
 
