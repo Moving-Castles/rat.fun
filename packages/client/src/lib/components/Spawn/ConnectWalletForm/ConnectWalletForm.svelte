@@ -122,8 +122,9 @@
       return
     }
 
-    // If only one connector available, auto-connect to it
-    if (availableConnectors.length === 1) {
+    // If only one connector available, auto-connect to it (but not on mobile
+    // where wallet interactions are more fragile and can fail with -32002 errors)
+    if (availableConnectors.length === 1 && !$isPhone) {
       console.log("[ConnectWalletForm] Only one connector available, auto-connecting")
       connectWallet(availableConnectors[0].id)
       return
