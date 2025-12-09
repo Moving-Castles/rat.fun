@@ -228,8 +228,10 @@ export async function writeOutcomeToCMS(
     // Create the outcome document in public Sanity
     const outcomeDoc = (await publicSanityClient.create(baseOutcomeDoc)) as OutcomeDoc
 
-    // Update statistics
-    updateStatistics(worldAddress, ratValueChange, tripValueChange)
+    // Update statistics (fire-and-forget, non-critical)
+    updateStatistics(worldAddress, ratValueChange, tripValueChange).catch(err => {
+      console.error("Failed to update statistics (non-critical):", err)
+    })
 
     return outcomeDoc
   } catch (error) {
