@@ -166,6 +166,12 @@ export async function setupNetwork(
   }
 }
 
+// Retry configuration for Alchemy RPC rate limits (429 errors)
+const HTTP_RETRY_CONFIG = {
+  retryCount: 5,
+  retryDelay: 1000 // Base delay in ms, viem uses exponential backoff
+} as const
+
 function chainTransport(rpcUrls: Chain["rpcUrls"][string]): Transport {
   const webSocketUrl = rpcUrls?.webSocket?.[0]
   const httpUrl = rpcUrls?.http[0]
@@ -180,12 +186,13 @@ function chainTransport(rpcUrls: Chain["rpcUrls"][string]): Transport {
     console.log("   WebSocket URL:", webSocketUrl)
     console.log("   Fallback HTTP:", httpUrl || "none")
     transport = httpUrl
-      ? fallback([webSocket(webSocketUrl), http(httpUrl)])
+      ? fallback([webSocket(webSocketUrl), http(httpUrl, HTTP_RETRY_CONFIG)])
       : webSocket(webSocketUrl)
   } else {
     console.log("🔌 [MUD Transport] Using HTTP POLLING transport")
     console.log("   HTTP URL:", httpUrl)
-    transport = http(httpUrl)
+    console.log("   Retry config:", HTTP_RETRY_CONFIG)
+    transport = http(httpUrl, HTTP_RETRY_CONFIG)
   }
 
   return transport

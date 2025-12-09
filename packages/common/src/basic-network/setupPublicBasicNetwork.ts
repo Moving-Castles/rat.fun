@@ -11,6 +11,12 @@ import {
 import { transportObserver } from "@latticexyz/common"
 import { BasicNetworkConfig, ChainRpcUrls } from "./getBasicNetworkConfig"
 
+// Retry configuration for Alchemy RPC rate limits (429 errors)
+const HTTP_RETRY_CONFIG = {
+  retryCount: 5,
+  retryDelay: 1000 // Base delay in ms, viem uses exponential backoff
+} as const
+
 export type SetupPublicBasicNetworkResult = {
   config: BasicNetworkConfig
   transport: Transport
@@ -49,6 +55,7 @@ function chainTransport(rpcUrls: ChainRpcUrls, devMode: boolean): Transport {
   const httpUrls = rpcUrls.http
 
   console.log("  WebSocket RPC:", webSocketUrl || "not configured")
+  console.log("  HTTP retry config:", HTTP_RETRY_CONFIG)
 
   // Add WebSocket transport if WebSocket URL is available
   if (webSocketUrl) {
@@ -65,7 +72,7 @@ function chainTransport(rpcUrls: ChainRpcUrls, devMode: boolean): Transport {
   // Always add HTTP transport as fallback
   for (const httpUrl of httpUrls) {
     console.log("  HTTP RPC:", httpUrl)
-    transports.push(http(httpUrl))
+    transports.push(http(httpUrl, HTTP_RETRY_CONFIG))
     console.log("  HTTP transport added" + (transports.length > 1 ? " (fallback)" : " (primary)"))
   }
 
