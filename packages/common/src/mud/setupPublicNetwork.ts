@@ -25,6 +25,46 @@ import mudConfig from "contracts/mud.config"
 
 type recsSyncResult = SyncToRecsResult<typeof mudConfig, {}>
 
+/**
+ * Attempts to sync using the primary indexer URL, then falls back to the
+ * fallback indexer URL if provided, and finally falls back to RPC sync.
+ */
+async function syncWithFallback(
+  baseConfig: {
+    world: World
+    config: typeof mudConfig
+    address: Hex
+    publicClient: PublicClient<Transport, Chain>
+    startBlock: bigint
+  },
+  primaryIndexerUrl?: string,
+  fallbackIndexerUrl?: string
+): Promise<recsSyncResult> {
+  // Try primary indexer if available
+  if (primaryIndexerUrl) {
+    try {
+      console.log("[Chain Sync] Attempting sync with primary indexer:", primaryIndexerUrl)
+      return await syncToRecs({ ...baseConfig, indexerUrl: primaryIndexerUrl })
+    } catch (error) {
+      console.warn("[Chain Sync] Primary indexer failed:", error)
+    }
+  }
+
+  // Try fallback indexer if available
+  if (fallbackIndexerUrl) {
+    try {
+      console.log("[Chain Sync] Attempting sync with fallback indexer:", fallbackIndexerUrl)
+      return await syncToRecs({ ...baseConfig, indexerUrl: fallbackIndexerUrl })
+    } catch (error) {
+      console.warn("[Chain Sync] Fallback indexer failed:", error)
+    }
+  }
+
+  // Fall back to RPC sync (no indexer URL)
+  console.log("[Chain Sync] Falling back to RPC sync")
+  return await syncToRecs({ ...baseConfig, indexerUrl: undefined })
+}
+
 export type SetupPublicNetworkResult = {
   config: NetworkConfig
   transport: Transport
@@ -46,13 +86,12 @@ export async function setupPublicNetwork(
   const basicNetwork = await setupPublicBasicNetwork(networkConfig, devMode)
   publicClient ??= basicNetwork.publicClient
 
-  const resolvedConfig = {
+  const baseConfig = {
     world,
     config: mudConfig,
     address: networkConfig.worldAddress as Hex,
     publicClient,
-    startBlock: BigInt(networkConfig.initialBlockNumber),
-    indexerUrl: networkConfig.indexerUrl
+    startBlock: BigInt(networkConfig.initialBlockNumber)
   }
 
   /*
@@ -60,9 +99,14 @@ export async function setupPublicNetwork(
    * Uses the MUD indexer if available, otherwise falls back
    * to the viem publicClient to make RPC calls to fetch MUD
    * events from the chain.
+   *
+   * Supports fallback indexer URL: tries primary, then fallback, then RPC.
    */
-  const { components, latestBlock$, storedBlockLogs$, waitForTransaction } =
-    await syncToRecs(resolvedConfig)
+  const { components, latestBlock$, storedBlockLogs$, waitForTransaction } = await syncWithFallback(
+    baseConfig,
+    networkConfig.indexerUrl,
+    networkConfig.fallbackIndexerUrl
+  )
 
   // Allows us to to only listen to the game specific tables
   const tableKeys = [

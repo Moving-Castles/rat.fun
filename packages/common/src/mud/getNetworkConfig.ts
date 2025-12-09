@@ -23,12 +23,19 @@ export interface NetworkConfig {
   initialBlockNumber: number
   chain: MUDChain
   indexerUrl?: string
+  fallbackIndexerUrl?: string
+}
+
+export interface IndexerUrlConfig {
+  indexerUrl?: string
+  fallbackIndexerUrl?: string
 }
 
 export function getNetworkConfig(
   environment: ENVIRONMENT,
   url: URL,
-  overrideDefaultRpcUrls: ChainRpcUrls | null = null
+  overrideDefaultRpcUrls: ChainRpcUrls | null = null,
+  overrideIndexerUrls: IndexerUrlConfig | null = null
 ): NetworkConfig {
   // Use provided URL or fallback to empty search params for SSR
   const searchParams = url?.searchParams
@@ -66,9 +73,13 @@ export function getNetworkConfig(
     ? Number(searchParams.get("initialBlockNumber"))
     : (world?.blockNumber ?? -1) // -1 will attempt to find the block number from RPC
 
-  let indexerUrl = chain.indexerUrl
+  // Use override indexer URLs if provided, otherwise use chain defaults
+  let indexerUrl = overrideIndexerUrls?.indexerUrl ?? chain.indexerUrl
+  let fallbackIndexerUrl = overrideIndexerUrls?.fallbackIndexerUrl
+
   if (searchParams?.has("disableIndexer")) {
     indexerUrl = undefined
+    fallbackIndexerUrl = undefined
   }
 
   return {
@@ -84,6 +95,7 @@ export function getNetworkConfig(
     worldAddress,
     initialBlockNumber,
     chain,
-    indexerUrl
+    indexerUrl,
+    fallbackIndexerUrl
   }
 }

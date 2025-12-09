@@ -1,8 +1,14 @@
 import type { Hex } from "viem"
 import { ENVIRONMENT } from "@ratfun/common/basic-network"
-import { getNetworkConfig, setupPublicNetwork, SetupPublicNetworkResult } from "@ratfun/common/mud"
+import {
+  getNetworkConfig,
+  setupPublicNetwork,
+  SetupPublicNetworkResult,
+  IndexerUrlConfig
+} from "@ratfun/common/mud"
 import { waitForChainSync } from "$lib/modules/chain-sync"
 import { publicNetwork, ready, initBlockListener } from "$lib/modules/network"
+import { env } from "$env/dynamic/public"
 
 interface InitPublicNetworkOptions {
   environment: ENVIRONMENT
@@ -13,6 +19,33 @@ interface InitPublicNetworkResult {
   publicClient: SetupPublicNetworkResult["publicClient"]
   transport: SetupPublicNetworkResult["transport"]
   worldAddress: Hex
+}
+
+/**
+ * Get indexer URL configuration based on the current environment.
+ * Environment variables override chain defaults when set.
+ */
+function getIndexerUrlConfig(environment: ENVIRONMENT): IndexerUrlConfig | null {
+  switch (environment) {
+    case ENVIRONMENT.BASE:
+      if (env.PUBLIC_BASE_INDEXER_URL || env.PUBLIC_BASE_FALLBACK_INDEXER_URL) {
+        return {
+          indexerUrl: env.PUBLIC_BASE_INDEXER_URL || undefined,
+          fallbackIndexerUrl: env.PUBLIC_BASE_FALLBACK_INDEXER_URL || undefined
+        }
+      }
+      return null
+    case ENVIRONMENT.BASE_SEPOLIA:
+      if (env.PUBLIC_BASE_SEPOLIA_INDEXER_URL || env.PUBLIC_BASE_SEPOLIA_FALLBACK_INDEXER_URL) {
+        return {
+          indexerUrl: env.PUBLIC_BASE_SEPOLIA_INDEXER_URL || undefined,
+          fallbackIndexerUrl: env.PUBLIC_BASE_SEPOLIA_FALLBACK_INDEXER_URL || undefined
+        }
+      }
+      return null
+    default:
+      return null
+  }
 }
 
 /**
@@ -30,7 +63,8 @@ export async function initPublicNetwork(
   const { environment, url } = options
 
   // Setup MUD layer and store reference
-  const networkConfig = getNetworkConfig(environment, url)
+  const indexerUrlConfig = getIndexerUrlConfig(environment)
+  const networkConfig = getNetworkConfig(environment, url, null, indexerUrlConfig)
   const mudLayer = await setupPublicNetwork(networkConfig, import.meta.env.DEV)
   publicNetwork.set(mudLayer)
 
