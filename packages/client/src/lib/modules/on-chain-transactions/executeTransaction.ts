@@ -74,8 +74,12 @@ export async function executeTransaction(
 
 export async function waitForTransactionReceiptSuccess(tx: Hex) {
   // Wait for transaction to be executed
+  // Use longer polling interval and more retries to handle RPC rate limits
   const receipt = await get(publicNetwork).publicClient.waitForTransactionReceipt({
-    hash: tx
+    hash: tx,
+    pollingInterval: 4_000, // 4 seconds between polls (default is 4s, but be explicit)
+    retryCount: 10, // More retries for rate limit recovery
+    retryDelay: 2_000 // 2 second base delay between retries
   })
   if (receipt) {
     if (receipt.status == "success") {
