@@ -1,10 +1,24 @@
-import { Howl } from "howler"
+import { Howl, Howler } from "howler"
 import { get } from "svelte/store"
 import { soundLibrary } from "$lib/modules/sound/sound-library"
 import type { SoundAssets, PlaySoundConfig } from "./types"
 import { backgroundMusic } from "$lib/modules/sound/stores"
 
 export type { PlaySoundConfig }
+
+/**
+ * Attempts to resume the Web Audio API AudioContext if it's suspended.
+ * This is required on iOS where AudioContext starts suspended and must be
+ * resumed after a user gesture.
+ */
+function tryResumeAudioContext(): void {
+  const ctx = Howler.ctx
+  if (ctx && ctx.state === "suspended") {
+    ctx.resume().catch(() => {
+      // Silently ignore - context will resume on next user gesture
+    })
+  }
+}
 
 /**
  * Preloads a sound library by creating Howl instances for each sound.
@@ -78,6 +92,14 @@ export function playSound(config: PlaySoundConfig): Howl | undefined {
     return undefined
   }
 
+  // Don't play sounds that are still loading to avoid Howler.js recursion bugs
+  if (sound.state() === "loading") {
+    return undefined
+  }
+
+  // Try to resume AudioContext if suspended (iOS requirement)
+  tryResumeAudioContext()
+
   // Set volume
   if (volume !== undefined) {
     sound.volume(volume)
@@ -89,8 +111,13 @@ export function playSound(config: PlaySoundConfig): Howl | undefined {
   // Set pitch
   sound.rate(pitch)
 
-  // Play sound
-  sound.play()
+  // Play sound - wrapped in try-catch for iOS AudioContext errors
+  try {
+    sound.play()
+  } catch {
+    // Silently fail - audio will work after user interaction
+    return undefined
+  }
 
   if (fadeIn) {
     const FADE_TIME = 2000
