@@ -57,7 +57,7 @@ export async function initializeDrawbridge(config: DrawbridgeInitConfig): Promis
     pollingInterval: 2000,
     appName: "RAT.FUN",
     ethPriceUSD: 2800, // $2,800
-    logging: false // Disable drawbridge console logging
+    logging: true // Disable drawbridge console logging
   })
 
   // Initialize (await reconnection, setup account watcher)
