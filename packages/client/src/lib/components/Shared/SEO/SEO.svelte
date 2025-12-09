@@ -4,12 +4,12 @@
     prependTitle = "",
     url = "https://rat.fun",
     title = defaultTitle,
-    description = "",
+    description = "RAT.FUN is a game about having fun and drugging rats",
     imageAlt = "rat.fun",
-    imageUrl = "/images/meta.png",
+    imageUrl = "/images/product/hero.png",
     language = "en-us",
     imageWidth = "1200",
-    imageHeight = "600"
+    imageHeight = "630"
   }: Record<string, string> = $props()
 
   let finalTitle = $derived(prependTitle ? `${prependTitle} | ${title}` : title)

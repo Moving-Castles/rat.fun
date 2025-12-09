@@ -1,30 +1,30 @@
 {
   "accountAssociation": {
-    "header": "eyJmaWQiOjE0NzM1NzUsInR5cGUiOiJjdXN0b2R5Iiwia2V5IjoiMHg2QzYyOWFCZDQ4RjI1ZkVkMDc2OTdFN0RkRkZhRjYyMjljRDQ0NTIxIn0",
+    "header": "eyJmaWQiOjE1ODI4OTUsInR5cGUiOiJjdXN0b2R5Iiwia2V5IjoiMHhkZUMwQjU4NzRmNjBFNUZlZTI1NUMwMTk4MzMzNWZGOTczRUVlNzcxIn0",
     "payload": "eyJkb21haW4iOiJyYXQuZnVuIn0",
-    "signature": "eUyClm2ydnXQQrhVXCfltUkwHEG8nA1vC12R6M5iWjFj0owG378gAZ+1qPIrIlSzdrACc1Fdy79iMugCSLDbLxw="
+    "signature": "V3wb3nEw8X1N7GlAMkN5+6YvT1aDk/e7h5zpLS7Y2o1nWwi8Joz+ZJF6lKJvZtyRRAEHdn5nIvoAQCIkDcdxLRw="
   },
   "baseBuilder": { "ownerAddress": "0x9Ed924Ec5632DF0C704E368c95c01256Ed7a0e29" },
   "miniapp": {
-    "version": "1",
+    "version": "2",
     "name": "rat.fun",
     "homeUrl": "https://rat.fun",
     "iconUrl": "https://rat.fun/images/product/icon.png",
     "splashImageUrl": "https://rat.fun/images/product/splash.png",
     "splashBackgroundColor": "#000000",
     "subtitle": "",
-    "description": "",
+    "description": "RAT.FUN is a game about having fun and drugging rats.",
     "screenshotUrls": [
-      "https://rat.fun/images/product/s1.png",
-      "https://rat.fun/images/product/s2.png",
-      "https://rat.fun/images/product/s3.png"
+      "https://rat.fun/images/product/rat-fun-screen-1.png",
+      "https://rat.fun/images/product/rat-fun-screen-2.png",
+      "https://rat.fun/images/product/rat-fun-screen-3.png"
     ],
     "primaryCategory": "games",
     "tags": [],
     "heroImageUrl": "https://rat.fun/images/product/hero.png",
     "tagline": "",
-    "ogTitle": "",
-    "ogDescription": "",
+    "ogTitle": "RAT.FUN",
+    "ogDescription": "RAT.FUN is a game about having fun and drugging rats.",
     "ogImageUrl": "https://rat.fun/images/product/hero.png",
     "noindex": true
   }
