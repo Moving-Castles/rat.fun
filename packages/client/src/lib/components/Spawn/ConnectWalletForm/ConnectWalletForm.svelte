@@ -17,20 +17,16 @@
   import NoWalletsModal from "./NoWalletsModal.svelte"
   import WalletSelectModal from "./WalletSelectModal.svelte"
   import DeepLinkSelectModal from "./DeepLinkSelectModal.svelte"
-  import DebugPanel from "./DebugPanel.svelte"
-
   let mascotElement: HTMLDivElement | null = $state(null)
   let buttonElement: HTMLDivElement | null = $state(null)
 
   let connecting = $state(false)
 
-  let showDebugPanel = $state(false)
   let showWalletSelect = $state(false)
   let showNoWalletsModal = $state(false)
   let showDeepLinkSelect = $state(false)
 
   let availableConnectors = $state<ConnectorInfo[]>([])
-  let allConnectors = $state<ConnectorInfo[]>([])
 
   const timeline = gsap.timeline()
 
@@ -143,12 +139,9 @@
       typeof window !== "undefined" && typeof window.ethereum !== "undefined"
 
     console.log("[ConnectWalletForm] Connector setup:", {
-      allConnectors: connectors.length,
+      connectors: connectors.length,
       hasInjectedProvider
     })
-
-    // Store all connectors for debug panel
-    allConnectors = connectors
 
     // Filter out generic "Injected" connector - only show specific wallets
     const filteredConnectors = connectors.filter(c => c.id !== "injected" && c.name !== "Injected")
@@ -238,8 +231,6 @@
     />
 
     <DeepLinkSelectModal bind:show={showDeepLinkSelect} />
-
-    <DebugPanel bind:show={showDebugPanel} {allConnectors} {availableConnectors} />
   </div>
 </div>
 

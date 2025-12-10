@@ -107,11 +107,11 @@ tx = await sendTransaction(wagmiConfig, {
 
 ## Key Files Modified
 
-| File                                                                          | Changes                                                      |
-| ----------------------------------------------------------------------------- | ------------------------------------------------------------ |
-| `packages/client/src/lib/modules/drawbridge/getConnectors.ts`                 | Added Farcaster MiniApp detection and official connector     |
-| `packages/client/src/lib/modules/drawbridge/connector.ts`                     | Made chain switching resilient, added `getWagmiConfig()`     |
-| `packages/client/src/lib/modules/on-chain-transactions/executeTransaction.ts` | Use wagmi `sendTransaction` instead of viem `writeContract`  |
+| File                                                                          | Changes                                                     |
+| ----------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| `packages/client/src/lib/modules/drawbridge/getConnectors.ts`                 | Added Farcaster MiniApp detection and official connector    |
+| `packages/client/src/lib/modules/drawbridge/connector.ts`                     | Made chain switching resilient, added `getWagmiConfig()`    |
+| `packages/client/src/lib/modules/on-chain-transactions/executeTransaction.ts` | Use wagmi `sendTransaction` instead of viem `writeContract` |
 
 ---
 
