@@ -2,7 +2,7 @@
   import { playSound } from "$lib/modules/sound"
   import { Tooltip } from "$lib/components/Shared"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
-  import { ShaderLocal, ResizableText } from "$lib/components/Shared"
+  import { ShaderLocal } from "$lib/components/Shared"
   import { shaders } from "$lib/modules/webgl/shaders/index.svelte"
 
   export type BigButtonType =
@@ -93,6 +93,10 @@
         font-size: var(--font-size-extra-large);
         font-family: var(--special-font-stack);
         line-height: 1em;
+
+        @media (max-width: 800px) {
+          font-size: var(--font-size-extra-large-phone);
+        }
       }
 
       .button-cost {
