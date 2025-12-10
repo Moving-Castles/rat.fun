@@ -9,6 +9,11 @@
       android: "https://go.cb-w.com/dapp?cb_url=https%3A%2F%2Frat.fun",
       name: "BASE"
     },
+    farcaster: {
+      ios: "https://farcaster.xyz/miniapps/019a831d-c396-2146-8c71-b7bf33422d59/rat-fun",
+      android: "https://farcaster.xyz/miniapps/019a831d-c396-2146-8c71-b7bf33422d59/rat-fun",
+      name: "Farcaster"
+    },
     metamask: {
       ios: "https://link.metamask.io/dapp/rat.fun",
       android: "https://link.metamask.io/dapp/rat.fun",
