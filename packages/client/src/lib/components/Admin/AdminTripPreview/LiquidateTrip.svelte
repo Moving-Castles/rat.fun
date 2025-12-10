@@ -30,7 +30,7 @@
 
 <style lang="scss">
   .liquidate-trip {
-    height: 80px;
+    height: 120px;
     display: flex;
 
     .action {

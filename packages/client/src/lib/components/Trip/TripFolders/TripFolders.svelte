@@ -38,9 +38,9 @@
 
 <style lang="scss">
   .tiles {
-    width: 100%;
+    width: calc(100% - 20px);
     max-width: 100%;
-    height: calc(100% - 60px);
+    height: calc(100% - 80px);
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-auto-rows: minmax(0, 1fr);
@@ -49,12 +49,13 @@
     align-content: start;
     gap: 10px;
     overflow-x: hidden;
+    margin: 10px;
   }
 
   @media (max-width: 480px) {
     .tiles {
       grid-template-columns: 1fr;
-      grid-auto-rows: 80px;
+      grid-auto-rows: 100px;
       height: auto;
       min-height: calc(100% - 60px);
     }

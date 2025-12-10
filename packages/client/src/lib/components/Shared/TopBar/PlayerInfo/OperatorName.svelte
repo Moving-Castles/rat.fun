@@ -41,9 +41,8 @@
       padding-top: 2px;
       padding-bottom: 2px;
       width: 100%;
-      color: var(--color-grey-lighter);
-      border-bottom: 1px solid var(--color-grey-lighter);
-      opacity: 0.5;
+      color: var(--color-grey-light);
+      border-bottom: 1px solid var(--color-border);
     }
 
     .content {

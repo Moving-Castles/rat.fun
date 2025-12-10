@@ -164,7 +164,7 @@
       <div class="full">
         <AdminTripPreviewHeader
           {sanityTripContent}
-          {trip}
+          {tripId}
           onAddBalance={() => (showAddBalanceModal = true)}
         />
       </div>
@@ -234,7 +234,7 @@
       <div class="full">
         <AdminTripPreviewHeader
           {sanityTripContent}
-          {trip}
+          {tripId}
           onAddBalance={() => (showAddBalanceModal = true)}
         />
       </div>
@@ -316,7 +316,7 @@
     &:not(.phone) {
       display: grid;
       grid-template-columns: repeat(12, 1fr);
-      grid-template-rows: 60px 200px calc(var(--game-window-main-height) - 340px) auto;
+      grid-template-rows: 60px 200px calc(var(--game-window-main-height) - 380px) 120px;
       grid-auto-rows: 1fr;
 
       .left {

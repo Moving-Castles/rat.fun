@@ -289,8 +289,8 @@
   .bubble {
     position: absolute;
     top: -60px;
-    right: 50%;
-    transform: translateX(50%);
+    left: 50%;
+    transform: translateX(-50%);
     z-index: 10;
     padding: 10px;
     width: 900px;
@@ -302,20 +302,46 @@
     text-align: left;
     line-height: 1.4em;
 
+    @media (max-width: 800px) {
+      top: 80px;
+      position: fixed;
+      width: calc(100dvw - 40px);
+      max-width: calc(100dvw - 40px);
+      padding: 12px 16px;
+    }
+
     &.small-text {
       font-size: 24px;
+
+      @media (max-width: 800px) {
+        font-size: 18px;
+      }
     }
 
     &.huge-text {
       font-size: calc(var(--font-size-ultra) * 0.5);
       text-align: center;
+
+      @media (max-width: 800px) {
+        font-size: calc(var(--font-size-ultra) * 0.25);
+      }
     }
 
     &.isGameMascot {
+      left: 100%;
       width: 60dvw;
-      top: 00px;
-      right: 20px;
+      top: 0px;
       line-height: 1.2em;
+
+      @media (max-width: 800px) {
+        left: 50%;
+        width: 90dvw;
+        top: 100px;
+      }
+
+      @media (min-width: 1800px) {
+        left: 200%;
+      }
     }
   }
 
@@ -354,35 +380,6 @@
         width: 100%;
         height: 100%;
         object-fit: contain;
-      }
-    }
-  }
-
-  @media (max-width: 800px) {
-    .bubble {
-      top: 80px;
-      position: fixed;
-      left: 50%;
-      right: auto;
-      transform: translateX(-50%);
-      width: calc(100dvw - 40px);
-      max-width: calc(100dvw - 40px);
-      padding: 12px 16px;
-      border-width: 2px;
-
-      &.small-text {
-        font-size: 18px;
-      }
-
-      &.huge-text {
-        font-size: calc(var(--font-size-ultra) * 0.25);
-        text-align: center;
-      }
-
-      &.isGameMascot {
-        width: 90dvw;
-        top: 100px;
-        right: auto;
       }
     }
   }

@@ -51,8 +51,11 @@
     align-items: center;
     justify-content: center;
 
+    @media (min-width: 1800px) {
+      font-size: var(--font-size-ultra);
+    }
+
     .value {
-      font-size: 10dvw;
       margin-right: 5px;
     }
 

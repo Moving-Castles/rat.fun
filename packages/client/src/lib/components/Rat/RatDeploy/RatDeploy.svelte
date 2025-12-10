@@ -45,13 +45,7 @@
 <div class="deploy-rat">
   <div class="inner-container">
     <div class="mascot-container">
-      <Mascot
-        autoHideAfter={10000}
-        smallDanceOn={true}
-        text={mascotText}
-        closeTextOnClick={true}
-        isGameMascot={true}
-      />
+      <Mascot smallDanceOn={true} text={mascotText} closeTextOnClick={true} isGameMascot={true} />
     </div>
     <div class="button-container">
       {#if $player}
