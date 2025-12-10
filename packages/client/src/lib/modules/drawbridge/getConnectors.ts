@@ -1,5 +1,7 @@
 import { CreateConnectorFn } from "@wagmi/core"
 import { injected, safe } from "wagmi/connectors"
+import { farcasterMiniApp } from "@farcaster/miniapp-wagmi-connector"
+import { sdk } from "@farcaster/miniapp-sdk"
 
 // Debug state for visible debugging (no console in mobile browsers)
 export const debugInfo = {
@@ -11,7 +13,8 @@ export const debugInfo = {
   connectorsCount: 0,
   timestamp: "",
   isBaseApp: false,
-  isCoinbaseWallet: false
+  isCoinbaseWallet: false,
+  isFarcasterMiniApp: false
 }
 
 /**
@@ -89,16 +92,60 @@ export function getConnectors(): CreateConnectorFn[] {
     }
   }
 
-  // ALWAYS include injected connector - works for:
-  // 1. Desktop browser extensions (MetaMask, Rainbow, etc.)
-  // 2. Mobile wallet in-app browsers (MetaMask mobile, Coinbase mobile)
-  //    - These wallets inject window.ethereum in their browser
-  // 3. Farcaster Mini App (if user's wallet is connected)
-  connectors.push(injected())
+  // Check if we're in a Farcaster Mini App context
+  // Detection methods:
+  // 1. Check if the Farcaster SDK is available and has the wallet provider
+  // 2. Check for Farcaster-specific window properties or referrer
+  // 3. Check if window.ethereum has Farcaster-specific properties
+  let isFarcasterContext = false
+
+  if (typeof window !== "undefined") {
+    // Method 1: Check if SDK wallet provider is available (most reliable)
+    try {
+      const provider = sdk?.wallet?.getEthereumProvider?.()
+      isFarcasterContext = provider !== undefined && provider !== null
+    } catch {
+      // SDK not ready or not in Farcaster context
+    }
+
+    // Method 2: Check referrer for Farcaster domains
+    if (!isFarcasterContext) {
+      const referrer = document.referrer || ""
+      isFarcasterContext =
+        referrer.includes("farcaster.xyz") ||
+        referrer.includes("warpcast.com") ||
+        referrer.includes("far.quest")
+    }
+
+    // Method 3: Check window.ethereum for Farcaster wallet indicators
+    if (!isFarcasterContext && window.ethereum) {
+      const eth = window.ethereum as any
+      // Farcaster's wallet may identify itself
+      isFarcasterContext =
+        eth.isFarcaster === true || eth.isWarpcast === true || eth._isFarcasterWallet === true
+    }
+  }
+
+  debugInfo.isFarcasterMiniApp = isFarcasterContext
+
+  if (isFarcasterContext) {
+    // Use official Farcaster MiniApp connector for proper wallet integration
+    // This handles the Farcaster embedded wallet's specific requirements
+    console.log(
+      "[getConnectors] Detected Farcaster MiniApp context, using farcasterMiniApp connector"
+    )
+    connectors.push(farcasterMiniApp())
+  } else {
+    // Standard injected connector - works for:
+    // 1. Desktop browser extensions (MetaMask, Rainbow, etc.)
+    // 2. Mobile wallet in-app browsers (MetaMask mobile, Coinbase mobile)
+    //    - These wallets inject window.ethereum in their browser
+    connectors.push(injected())
+  }
 
   // This is where we ideally should handle case #3 (normal mobile browsers)
   // WalletConnect is problematic, but might be the only option
-  if (typeof window !== "undefined") {
+  if (typeof window !== "undefined" && !isFarcasterContext) {
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
       navigator.userAgent
     )

@@ -1,13 +1,21 @@
 import { get } from "svelte/store"
 import { publicNetwork } from "$lib/modules/network"
 import { addChain, switchChain } from "viem/actions"
-import { getAccount, getChainId, getConnectorClient } from "@wagmi/core"
+import { getAccount, getChainId, getConnectorClient, type Config } from "@wagmi/core"
 import {
   ensureWriteContract,
   getChain,
   WalletTransactionClient
 } from "@ratfun/common/basic-network"
 import { getDrawbridge } from "$lib/modules/drawbridge"
+
+/**
+ * Returns the wagmi config from drawbridge
+ */
+export function getWagmiConfig(): Config {
+  const drawbridge = getDrawbridge()
+  return drawbridge.getWagmiConfig()
+}
 
 /**
  * Returns the wallet connector client from wagmi
@@ -42,12 +50,37 @@ export async function prepareConnectorClientForTransaction(): Promise<WalletTran
 
   // User's wallet may switch between different chains, ensure the current chain is correct
   const expectedChainId = get(publicNetwork).config.chain.id
-  if (getChainId(wagmiConfig) !== expectedChainId) {
+  const currentChainId = getChainId(wagmiConfig)
+
+  if (currentChainId !== expectedChainId) {
+    console.log(
+      `[connector] Chain mismatch: current=${currentChainId}, expected=${expectedChainId}, attempting switch`
+    )
     try {
       await switchChain(connectorClient, { id: expectedChainId })
-    } catch {
-      await addChain(connectorClient, { chain: getChain(expectedChainId) })
-      await switchChain(connectorClient, { id: expectedChainId })
+    } catch (switchError) {
+      // Some wallets (e.g. Farcaster MiniApp) don't support wallet_switchEthereumChain
+      // or wallet_addEthereumChain. Log and continue - the transaction may still work
+      // if the wallet is already on the correct chain internally.
+      console.warn(
+        "[connector] Chain switch failed (wallet may not support this method):",
+        switchError
+      )
+
+      // Only try addChain if it's not an UnsupportedProviderMethodError
+      const isUnsupportedMethod =
+        switchError instanceof Error &&
+        (switchError.name === "UnsupportedProviderMethodError" ||
+          switchError.message?.includes("does not support"))
+
+      if (!isUnsupportedMethod) {
+        try {
+          await addChain(connectorClient, { chain: getChain(expectedChainId) })
+          await switchChain(connectorClient, { id: expectedChainId })
+        } catch (addChainError) {
+          console.warn("[connector] Add chain also failed:", addChainError)
+        }
+      }
     }
 
     // manually update the connector and its chain id
