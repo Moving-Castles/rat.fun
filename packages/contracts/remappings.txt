@@ -2,3 +2,4 @@ forge-std/=node_modules/forge-std/src/
 @latticexyz/=node_modules/@latticexyz/
 @openzeppelin/=node_modules/@openzeppelin/
 @chainlink/=node_modules/@chainlink/
+@dk1a/=node_modules/@dk1a/
