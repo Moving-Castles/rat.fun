@@ -24,6 +24,7 @@ type ClientsUpdateMessage = {
 }
 
 const MAX_RECONNECTION_DELAY = 30000 // Maximum delay of 30 seconds
+const TOAST_RATE_LIMIT_MS = 60000 // Only show one connection toast per user per minute
 
 let socket: WebSocket | null = null
 let reconnectAttempts = 0
@@ -33,6 +34,9 @@ let reconnectTimeout: ReturnType<typeof setTimeout> | null = null
 let currentEnvironment: ENVIRONMENT | null = null
 let currentPlayerId: string | null = null
 let hasReceivedInitialClientList = false
+
+// Track last toast time per player to rate limit notifications
+const lastToastTimeByPlayer = new Map<string, number>()
 
 export async function initOffChainSync(environment: ENVIRONMENT, playerId: string) {
   // Store for reconnection
@@ -110,12 +114,18 @@ export async function initOffChainSync(environment: ENVIRONMENT, playerId: strin
         playerNotificationsEnabled.current &&
         !areNotificationsSuppressed()
       ) {
+        const now = Date.now()
         for (const player of onlinePlayersList) {
           if (!previousIds.has(player.id) && player.id !== currentPlayerId) {
-            toastManager.add({
-              message: `${player.name} joined`,
-              type: TOAST_TYPE.PLAYER_NOTIFICATION
-            })
+            // Rate limit: only show one toast per player per minute
+            const lastToastTime = lastToastTimeByPlayer.get(player.id) ?? 0
+            if (now - lastToastTime >= TOAST_RATE_LIMIT_MS) {
+              lastToastTimeByPlayer.set(player.id, now)
+              toastManager.add({
+                message: `${player.name} joined`,
+                type: TOAST_TYPE.PLAYER_NOTIFICATION
+              })
+            }
           }
         }
       }
@@ -185,4 +195,5 @@ export function disconnectOffChainSync() {
 
   websocketConnected.set(false)
   onlinePlayers.set([])
+  lastToastTimeByPlayer.clear()
 }

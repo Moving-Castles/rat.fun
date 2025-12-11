@@ -97,11 +97,19 @@
     &.toast-player-notification {
       font-size: var(--font-size-normal);
       border-color: var(--color-toast-player-notification);
+
+      @media (max-width: 768px) {
+        font-size: var(--font-size-small);
+      }
     }
 
     &.toast-trip-notification {
       font-size: var(--font-size-normal);
       border-color: var(--color-toast-trip-notification);
+
+      @media (max-width: 768px) {
+        font-size: var(--font-size-small);
+      }
     }
   }
 
