@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "@account-abstraction/contracts": "^0.7.0",
+    "@dk1a/world-module-callwithsignature-alt": "^0.1.0",
     "@latticexyz/common": "2.2.23",
     "@latticexyz/store": "2.2.23",
     "@latticexyz/world": "2.2.23",

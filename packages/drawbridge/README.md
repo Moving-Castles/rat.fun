@@ -246,7 +246,7 @@ Drawbridge handles both wallet types, but the delegation registration differs:
 ### EOA Wallets (MetaMask, etc.)
 
 - User signs an EIP-712 message (free)
-- Session account submits to World.callWithSignature()
+- Session account submits to World.callWithSignature() or World.callWithSignatureAlt()
 - Gasless for user
 
 ### Smart Accounts (Coinbase Smart Wallet, etc.)

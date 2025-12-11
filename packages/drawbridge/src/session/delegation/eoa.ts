@@ -21,7 +21,7 @@ export type SetupSessionEOAParams = SetupSessionBaseParams & {
  * EOA Flow (CallWithSignature Pattern):
  * 1. User signs an EIP-712 message off-chain (free, no gas)
  * 2. Session account submits the signature + call to World
- * 3. World.callWithSignature() validates the signature
+ * 3. World.callWithSignature() or World.callWithSignatureAlt() validates the signature
  * 4. If valid, World registers delegation as the user
  * 5. Deploy session account
  *
@@ -51,7 +51,8 @@ export async function setupSessionEOA({
       abi: IBaseWorldAbi,
       functionName: "registerDelegation",
       args: [sessionAddress, unlimitedDelegationControlId, "0x"]
-    })
+    }),
+    altDomain: true
   })
 
   const receipt = await getAction(

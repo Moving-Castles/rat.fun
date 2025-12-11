@@ -3,6 +3,7 @@ import { writeContract as viem_writeContract } from "viem/actions"
 import { getAction } from "viem/utils"
 import { SignCallOptions, signCall } from "./eip712-signing"
 import CallWithSignatureAbi from "@latticexyz/world-module-callwithsignature/out/CallWithSignatureSystem.sol/CallWithSignatureSystem.abi.json"
+import CallWithSignatureAltAbi from "@dk1a/world-module-callwithsignature-alt/out/CallWithSignatureSystem.sol/CallWithSignatureSystem.abi.json"
 import { ConnectedClient } from "../../types"
 import { logger } from "../../logger"
 
@@ -38,7 +39,8 @@ export async function callWithSignature<chain extends Chain = Chain>({
     userAddress: opts.userClient.account.address,
     sessionAddress: sessionClient.account.address,
     worldAddress: opts.worldAddress,
-    systemId: opts.systemId
+    systemId: opts.systemId,
+    altDomain: opts.altDomain
   })
 
   logger.log("[drawbridge] callWithSignature: requesting user signature...")
@@ -58,8 +60,8 @@ export async function callWithSignature<chain extends Chain = Chain>({
     "writeContract"
   )({
     address: opts.worldAddress,
-    abi: CallWithSignatureAbi,
-    functionName: "callWithSignature",
+    abi: opts.altDomain ? CallWithSignatureAltAbi : CallWithSignatureAbi,
+    functionName: opts.altDomain ? "callWithSignatureAlt" : "callWithSignature",
     args: [opts.userClient.account.address, opts.systemId, opts.callData, signature]
   } as never)
 
