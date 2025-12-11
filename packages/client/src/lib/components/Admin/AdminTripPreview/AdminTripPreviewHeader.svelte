@@ -38,13 +38,8 @@
     // Show add balance button if:
     // - trip is not liquidated
     // - callback is provided
-    // - player is whitelisted
     // - trip has a balance
-    trip &&
-      !trip.liquidationBlock &&
-      onAddBalance &&
-      $playerIsWhitelisted &&
-      Number(trip.balance) > 0
+    trip && !trip.liquidationBlock && onAddBalance && Number(trip.balance) > 0
   )
 </script>
 
