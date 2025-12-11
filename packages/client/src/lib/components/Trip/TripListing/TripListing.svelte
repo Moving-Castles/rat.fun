@@ -216,7 +216,7 @@
     position: sticky;
     height: 60px;
     top: 0;
-    z-index: 21;
+    z-index: var(--z-high);
     display: flex;
     justify-content: center;
     align-items: center;

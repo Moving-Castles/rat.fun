@@ -56,7 +56,6 @@
 <a
   href="/{tripId}"
   class="trip-listing-item"
-  class:disabled={Number(trip.balance) == 0 || disabled}
   class:not-clickable={disabled}
   {onmouseup}
   {onmousedown}
@@ -68,7 +67,7 @@
     </div>
   {/if}
   <!-- COLUMN LEFT -->
-  <div class="column left">
+  <div class="column left" class:disabled>
     <div class="trip-image">
       {#if tripImageUrl}
         <img src={tripImageUrl} alt={`trip #${trip.index}`} />
@@ -79,7 +78,7 @@
     </div>
   </div>
   <!-- COLUMN RIGHT -->
-  <div class="column right">
+  <div class="column right" class:disabled>
     <div class="main-info">
       <!-- CREATOR -->
       <div class="trip-creator">
@@ -128,10 +127,6 @@
       padding: var(--trip-item-padding);
     }
 
-    &.disabled {
-      opacity: 0.7;
-    }
-
     &.not-clickable {
       pointer-events: none;
       cursor: default;
@@ -151,7 +146,7 @@
     .overlay {
       position: absolute;
       inset: 0;
-      background: var(--background-dark-transparent);
+      background: rgba(0, 0, 0, 0.4);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -164,8 +159,10 @@
         color: var(--foreground);
         text-align: center;
         padding: 20px;
-        background: var(--color-grey-dark);
+        background: var(--color-bad);
         color: var(--background);
+        opacity: 0.85;
+        border: var(--color-grey-dark);
       }
     }
 
