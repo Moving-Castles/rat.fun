@@ -192,6 +192,8 @@
   })
 </script>
 
+<div class="sold-banner">50% of total sold</div>
+
 <div class="swap-container">
   {#if swapState.state.current === SWAP_STATE.AGREEMENT}
     <Agreement />
@@ -206,6 +208,24 @@
 </div>
 
 <style lang="scss">
+  .sold-banner {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 700px;
+    max-width: 90dvw;
+    background: var(--color-good);
+    color: var(--background);
+    text-align: center;
+    padding: 10px;
+    font-family: var(--special-font-stack);
+    font-size: var(--font-size-normal);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    z-index: var(--z-top);
+  }
+
   .swap-container {
     display: flex;
     flex-flow: column nowrap;
