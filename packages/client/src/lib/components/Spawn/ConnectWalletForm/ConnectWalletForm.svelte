@@ -7,6 +7,7 @@
   import { spawnState, determineNextState } from "$lib/components/Spawn/state.svelte"
   import { buildFlowContext } from "$lib/components/Spawn/flowContext"
   import { errorHandler } from "$lib/modules/error-handling"
+  import { isUserRejectionError } from "$lib/modules/error-handling/utils"
   import { publicNetwork } from "$lib/modules/network"
   import { setupWalletNetwork } from "@ratfun/common/mud"
   import { initWalletNetwork } from "$lib/initWalletNetwork"
@@ -92,7 +93,12 @@
       spawnState.state.transitionTo(nextState)
     } catch (error) {
       console.error("[ConnectWalletForm] Connection failed:", error)
-      errorHandler(error, "Failed to connect wallet")
+      // Check if user rejected - still log to Sentry but toast is suppressed
+      if (isUserRejectionError(error)) {
+        errorHandler(error, "Wallet connection rejected by user")
+      } else {
+        errorHandler(error, "Failed to connect wallet")
+      }
     } finally {
       connecting = false
     }

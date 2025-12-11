@@ -106,9 +106,9 @@
     &.game-mode {
       background: radial-gradient(
         circle,
-        rgba(255, 0, 0, 0.7),
-        rgba(0, 255, 42, 0.7),
-        rgba(230, 0, 255, 0.7)
+        rgba(255, 0, 0, 1),
+        rgba(0, 255, 42, 1),
+        rgba(230, 0, 255, 1)
       );
       animation: backgroundCycle 12s infinite;
       filter: hue-rotate(0deg);
@@ -117,9 +117,9 @@
         filter: hue-rotate(0deg) brightness(2);
         background: radial-gradient(
           circle,
-          rgba(255, 0, 0, 1),
-          rgba(0, 255, 42, 1),
-          rgba(230, 0, 255, 1)
+          rgba(255, 0, 0, 0.7),
+          rgba(0, 255, 42, 0.7),
+          rgba(230, 0, 255, 0.7)
         );
       }
 

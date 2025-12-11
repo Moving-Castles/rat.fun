@@ -6,8 +6,12 @@
   import { waitForPropertyChangeFrom } from "$lib/modules/state/utils"
   import { spawnState, SPAWN_STATE } from "$lib/components/Spawn/state.svelte"
   import { SmallSpinner } from "$lib/components/Shared"
+  import { errorHandler } from "$lib/modules/error-handling"
+  import { isUserRejectionError } from "$lib/modules/error-handling/utils"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
 
   let error = $state<string | null>(null)
+  let isUserRejection = $state(false)
   let spawning = $state(true)
   let loadingText = $state<string>("Connecting Operator")
 
@@ -37,8 +41,19 @@
       spawnState.state.transitionTo(SPAWN_STATE.DONE)
     } catch (err) {
       console.error("[Spawning] Spawn failed:", err)
-      error = err instanceof Error ? err.message : "Spawn failed"
       spawning = false
+
+      // Check if user rejected the transaction
+      if (isUserRejectionError(err)) {
+        isUserRejection = true
+        error = UI_STRINGS.userRejectedSpawn
+        // Log to Sentry but don't show toast (already suppressed by SILENT_TOAST_ERRORS)
+        errorHandler(err, "Spawn rejected by user")
+      } else {
+        error = err instanceof Error ? err.message : "Spawn failed"
+        // Send to Sentry and show user-friendly toast
+        errorHandler(err, "Spawn failed")
+      }
 
       // Wait a moment to show error, then go back to form
       setTimeout(() => {
@@ -56,7 +71,12 @@
 <div class="outer-container">
   <div class="inner-container">
     {#if error}
-      <div class="message error" in:fade={{ duration: 200 }}>
+      <div
+        class="message"
+        class:error={!isUserRejection}
+        class:info={isUserRejection}
+        in:fade={{ duration: 200 }}
+      >
         {error}
       </div>
     {:else if spawning}
@@ -96,6 +116,11 @@
 
         &.error {
           background: var(--color-bad);
+          color: var(--background);
+        }
+
+        &.info {
+          background: var(--foreground);
           color: var(--background);
         }
       }

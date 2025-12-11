@@ -47,8 +47,6 @@
 
   let { children }: LayoutProps = $props()
 
-  $inspect($externalAddressesConfig)
-
   // Called when loading is complete
   const loaded = () => {
     // Get content from CMS

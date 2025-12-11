@@ -8,6 +8,8 @@
   import { spawnState, SPAWN_STATE } from "$lib/components/Spawn/state.svelte"
   import { SmallSpinner } from "$lib/components/Shared"
   import { errorHandler } from "$lib/modules/error-handling"
+  import { isUserRejectionError } from "$lib/modules/error-handling/utils"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
   import { publicNetwork } from "$lib/modules/network"
   import { setupWalletNetwork } from "@ratfun/common/mud"
   import { initWalletNetwork } from "$lib/initWalletNetwork"
@@ -16,6 +18,7 @@
   import { addressToId } from "$lib/modules/utils"
 
   let error = $state<string | null>(null)
+  let isUserRejection = $state(false)
   let status = $state<string>("Setting up Slop Machine")
 
   async function executeSessionAndSpawn() {
@@ -96,10 +99,18 @@
       spawnState.state.transitionTo(SPAWN_STATE.DONE)
     } catch (err) {
       console.error("[SessionAndSpawnLoading] Failed:", err)
-      error = err instanceof Error ? err.message : "Setup failed"
 
-      // Send to Sentry and show user-friendly toast
-      errorHandler(err, "Setup failed")
+      // Check if user rejected the transaction
+      if (isUserRejectionError(err)) {
+        isUserRejection = true
+        error = UI_STRINGS.userRejectedTransaction
+        // Log to Sentry but don't show toast (already suppressed by SILENT_TOAST_ERRORS)
+        errorHandler(err, "Setup rejected by user")
+      } else {
+        error = err instanceof Error ? err.message : "Setup failed"
+        // Send to Sentry and show user-friendly toast
+        errorHandler(err, "Setup failed")
+      }
 
       // Wait a moment to show error, then go back to form
       setTimeout(() => {
@@ -117,7 +128,12 @@
 <div class="outer-container">
   <div class="inner-container">
     {#if error}
-      <div class="message error" in:fade={{ duration: 200 }}>
+      <div
+        class="message"
+        class:error={!isUserRejection}
+        class:info={isUserRejection}
+        in:fade={{ duration: 200 }}
+      >
         {error}
       </div>
     {:else}
@@ -157,6 +173,11 @@
 
         &.error {
           background: var(--color-bad);
+          color: var(--background);
+        }
+
+        &.info {
+          background: var(--foreground);
           color: var(--background);
         }
       }

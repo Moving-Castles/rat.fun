@@ -296,5 +296,10 @@ export const enUS = {
     "Pump your rats with drugs and send them tripping, then cash out tokens by exploiting their success.",
   introductionStep5: "I can feel your dopamine injectors tingling! What are you waiting for?",
   introductionButtonOk: "OK",
-  introductionButtonReady: "I AM OPERATOR"
+  introductionButtonReady: "I AM OPERATOR",
+  // User rejection messages
+  userRejectedAllowance: "You need to approve the allowance to proceed",
+  userRejectedSession: "You need to complete the session setup to proceed",
+  userRejectedSpawn: "You need to sign the transaction to proceed",
+  userRejectedTransaction: "You need to complete this step to proceed"
 } as const

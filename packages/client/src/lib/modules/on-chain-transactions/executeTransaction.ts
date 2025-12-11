@@ -12,6 +12,7 @@ import {
   getWagmiConfig
 } from "$lib/modules/drawbridge/connector"
 import { errorHandler } from "$lib/modules/error-handling"
+import { isUserRejectionError } from "$lib/modules/error-handling/utils"
 import { refetchAllowance } from "$lib/modules/erc20Listener"
 import { TransactionError } from "@ratfun/common/error-handling"
 
@@ -123,6 +124,10 @@ export async function executeTransaction(
 
     return receipt
   } catch (e: unknown) {
+    // Re-throw user rejection errors so callers can handle them with appropriate UI
+    if (isUserRejectionError(e)) {
+      throw e
+    }
     errorHandler(e)
     return false
   }

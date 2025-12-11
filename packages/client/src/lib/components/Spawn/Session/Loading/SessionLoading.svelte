@@ -6,6 +6,8 @@
   import { buildFlowContextSync, checkHasAllowance } from "$lib/components/Spawn/flowContext"
   import { SmallSpinner } from "$lib/components/Shared"
   import { errorHandler } from "$lib/modules/error-handling"
+  import { isUserRejectionError } from "$lib/modules/error-handling/utils"
+  import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
   import { publicNetwork } from "$lib/modules/network"
   import { setupWalletNetwork } from "@ratfun/common/mud"
   import { initWalletNetwork } from "$lib/initWalletNetwork"
@@ -14,6 +16,7 @@
   import { addressToId } from "$lib/modules/utils"
 
   let error = $state<string | null>(null)
+  let isUserRejection = $state(false)
   let loadingText = $state<string>("Setting up session")
 
   async function executeSessionSetup() {
@@ -74,10 +77,18 @@
       }, 10000)
     } catch (err) {
       console.error("[SessionLoading] Session setup failed:", err)
-      error = err instanceof Error ? err.message : "Session setup failed"
 
-      // Send to Sentry and show user-friendly toast
-      errorHandler(err, "Session setup failed")
+      // Check if user rejected the transaction
+      if (isUserRejectionError(err)) {
+        isUserRejection = true
+        error = UI_STRINGS.userRejectedSession
+        // Log to Sentry but don't show toast (already suppressed by SILENT_TOAST_ERRORS)
+        errorHandler(err, "Session setup rejected by user")
+      } else {
+        error = err instanceof Error ? err.message : "Session setup failed"
+        // Send to Sentry and show user-friendly toast
+        errorHandler(err, "Session setup failed")
+      }
 
       // Wait a moment to show error, then go back to setup screen
       setTimeout(() => {
@@ -95,7 +106,12 @@
 <div class="outer-container">
   <div class="inner-container">
     {#if error}
-      <div class="message error" in:fade={{ duration: 200 }}>
+      <div
+        class="message"
+        class:error={!isUserRejection}
+        class:info={isUserRejection}
+        in:fade={{ duration: 200 }}
+      >
         {error}
       </div>
     {:else}
@@ -134,6 +150,11 @@
 
         &.error {
           background: var(--color-bad);
+          color: var(--background);
+        }
+
+        &.info {
+          background: var(--foreground);
           color: var(--background);
         }
       }

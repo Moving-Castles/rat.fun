@@ -106,6 +106,11 @@
   }
 
   const setupAndGoToSwap = (publicClient: PublicClient, userAddress: Hex) => {
+    // Guard: auctionParams must be properly initialized before we can proceed
+    if (!auctionParams?.token) {
+      console.warn("[Auction] setupAndGoToSwap called before auctionParams initialized")
+      return
+    }
     const tokenCurrency = getTokenCurrency(auctionParams)
     initBalanceListeners(publicClient, userAddress, tokenCurrency)
     auctionState.state.transitionTo(AUCTION_STATE.SWAP)

@@ -6,6 +6,7 @@
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
   import { errorHandler } from "$lib/modules/error-handling"
+  import { isUserRejectionError } from "$lib/modules/error-handling/utils"
 
   let {
     onclose,
@@ -24,6 +25,9 @@
 
   // Determine if we're in a busy state
   const isBusy = $derived(busy.Approve.current !== 0 || isSettingAllowance)
+
+  // User rejection message (shown when user cancels the transaction)
+  let userRejectionMessage = $state<string | null>(null)
 
   // Display value for the input (shows "MAX" when at max)
   const displayValue = $derived(allowanceValue >= MAX_SLIDER_VALUE ? "MAX" : String(allowanceValue))
@@ -59,12 +63,18 @@
 
   const handleSetAllowance = async () => {
     isSettingAllowance = true
+    userRejectionMessage = null
     try {
       await sendApprove(BigInt(Math.floor(allowanceValue)))
       await refetchAllowance()
       onclose()
     } catch (error) {
-      errorHandler(error)
+      if (isUserRejectionError(error)) {
+        userRejectionMessage = UI_STRINGS.userRejectedAllowance
+        errorHandler(error, "Allowance approval rejected by user")
+      } else {
+        errorHandler(error)
+      }
     } finally {
       isSettingAllowance = false
     }
@@ -72,13 +82,19 @@
 
   const handleRevokeAllowance = async () => {
     isSettingAllowance = true
+    userRejectionMessage = null
     try {
       // Revoke by setting allowance to 0
       await sendApprove(0n)
       await refetchAllowance()
       onclose()
     } catch (error) {
-      errorHandler(error)
+      if (isUserRejectionError(error)) {
+        userRejectionMessage = UI_STRINGS.userRejectedAllowance
+        errorHandler(error, "Allowance revocation rejected by user")
+      } else {
+        errorHandler(error)
+      }
     } finally {
       isSettingAllowance = false
     }
@@ -113,6 +129,12 @@
         {#if warningMessage}
           <div class="warning-message">
             {warningMessage}
+          </div>
+        {/if}
+
+        {#if userRejectionMessage}
+          <div class="info-message">
+            {userRejectionMessage}
           </div>
         {/if}
 
@@ -240,6 +262,15 @@
     .warning-message {
       background: var(--color-error);
       color: var(--color-white);
+      padding: 10px 15px;
+      font-family: var(--typewriter-font-stack);
+      font-size: var(--font-size-normal);
+      text-align: center;
+    }
+
+    .info-message {
+      background: var(--foreground);
+      color: var(--background);
       padding: 10px 15px;
       font-family: var(--typewriter-font-stack);
       font-size: var(--font-size-normal);

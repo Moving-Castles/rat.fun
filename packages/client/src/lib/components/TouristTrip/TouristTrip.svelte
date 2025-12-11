@@ -26,10 +26,6 @@
   let chainTrip = $derived($trips[tripId])
   let hasChainData = $derived(!!chainTrip)
 
-  $inspect("[TouristTrip] tripId:", tripId)
-  $inspect("[TouristTrip] trips:", $trips)
-  $inspect("[TouristTrip] chainTrip:", chainTrip)
-
   let sanityTrip = $state<SanityTrip | null>(null)
   let loading = $state(true)
   let error = $state<string | null>(null)

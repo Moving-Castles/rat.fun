@@ -87,6 +87,15 @@ export function parseViemError(error: BaseError): ExpectedError {
   // Transaction execution errors (reverts, etc.)
   if (error.name === "TransactionExecutionError" || error.name === "UserOperationExecutionError") {
     const cause = error.cause as any
+
+    // Check if the cause is a user rejection (wrapped in TransactionExecutionError)
+    if (cause?.name === "UserRejectedRequestError") {
+      return new UserRejectedTransactionError(
+        cause.shortMessage || "User rejected the transaction",
+        error
+      )
+    }
+
     let revertReason = cause?.reason || cause?.shortMessage
 
     // Try to decode revert data if present
