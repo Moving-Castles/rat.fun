@@ -4,15 +4,17 @@ import worldConfig, { systemsConfig } from '@latticexyz/world/mud.config';
 import { generatePrivateKey, privateKeyToAccount } from 'viem/accounts';
 import { toSimpleSmartAccount } from 'permissionless/accounts';
 import { smartAccountActions } from 'permissionless';
-import { callFrom, sendUserOperationFrom } from '@latticexyz/world/internal';
+import { sendUserOperationFrom, callFrom } from '@latticexyz/world/internal';
 import { createBundlerClient as createBundlerClient$1, sendUserOperation, waitForUserOperationReceipt } from 'viem/account-abstraction';
-import { getRecord } from '@latticexyz/store/internal';
 import { getAction } from 'viem/utils';
-import { waitForTransactionReceipt, getCode, sendTransaction, writeContract, signTypedData } from 'viem/actions';
+import { writeContract, waitForTransactionReceipt, getCode, sendTransaction, signTypedData } from 'viem/actions';
+import { getRecord } from '@latticexyz/store/internal';
 import IBaseWorldAbi from '@latticexyz/world/out/IBaseWorld.sol/IBaseWorld.abi.json';
 import { callWithSignatureTypes } from '@latticexyz/world-module-callwithsignature/internal';
 import moduleConfig from '@latticexyz/world-module-callwithsignature/mud.config';
+import moduleConfigAlt from '@dk1a/world-module-callwithsignature-alt/mud.config';
 import CallWithSignatureAbi from '@latticexyz/world-module-callwithsignature/out/CallWithSignatureSystem.sol/CallWithSignatureSystem.abi.json';
+import CallWithSignatureAltAbi from '@dk1a/world-module-callwithsignature-alt/out/CallWithSignatureSystem.sol/CallWithSignatureSystem.abi.json';
 import { getConnectorClient, createConfig, createStorage, reconnect, getAccount, watchAccount, getConnectors, connect, disconnect } from '@wagmi/core';
 
 // src/types/state.ts
@@ -517,6 +519,17 @@ function applyFeeCap(userOp, ethPriceUSD) {
     });
   }
 }
+function callFromWithAlt(params) {
+  return (client) => ({
+    async writeContract(writeArgs) {
+      const _writeContract = getAction(client, writeContract, "writeContract");
+      if (writeArgs.functionName === "callWithSignatureAlt") {
+        return _writeContract(writeArgs);
+      }
+      return callFrom(params)(client).writeContract(writeArgs);
+    }
+  });
+}
 
 // src/session/core/client.ts
 async function getSessionClient({
@@ -542,7 +555,7 @@ async function getSessionClient({
     paymaster: paymasterOverride
   });
   const sessionClient = bundlerClient.extend(smartAccountActions).extend(
-    callFrom({
+    callFromWithAlt({
       worldAddress,
       delegatorAddress: userAddress,
       publicClient
@@ -797,7 +810,8 @@ async function signCall({
   systemId,
   callData,
   nonce: initialNonce,
-  client
+  client,
+  altDomain
 }) {
   logger.log("[drawbridge] signCall starting:", {
     userAddress: userClient.account.address,
@@ -811,14 +825,19 @@ async function signCall({
   });
   const nonce = initialNonce ?? (client ? (await getRecord(client, {
     address: worldAddress,
-    table: moduleConfig.tables.CallWithSignatureNonces,
+    table: altDomain ? moduleConfigAlt.tables.AltCallWithSignatureNonces : moduleConfig.tables.CallWithSignatureNonces,
     key: { signer: userClient.account.address },
     blockTag: "pending"
   })).nonce : 0n);
   logger.log("[drawbridge] signCall nonce fetched:", { nonce: nonce.toString() });
   const { namespace: systemNamespace, name: systemName } = hexToResource(systemId);
   logger.log("[drawbridge] signCall system parsed:", { systemNamespace, systemName });
-  const domain = {
+  const domain = altDomain ? {
+    name: "CallWithSignatureAlt",
+    version: "1",
+    chainId: userClient.chain.id,
+    verifyingContract: worldAddress
+  } : {
     verifyingContract: worldAddress,
     salt: toHex(userClient.chain.id, { size: 32 })
   };
@@ -840,27 +859,36 @@ async function signCall({
       nonce: nonce.toString()
     }
   });
-  logger.log("[drawbridge] EIP-712 raw structure:", JSON.stringify({
-    types: {
-      EIP712Domain: [
-        { name: "verifyingContract", type: "address" },
-        { name: "salt", type: "bytes32" }
-      ],
-      ...callWithSignatureTypes
-    },
-    primaryType: "Call",
-    domain: {
-      verifyingContract: worldAddress,
-      salt: toHex(userClient.chain.id, { size: 32 })
-    },
-    message: {
-      signer: userClient.account.address,
-      systemNamespace,
-      systemName,
-      callData,
-      nonce: nonce.toString()
-    }
-  }, null, 2));
+  logger.log(
+    "[drawbridge] EIP-712 raw structure:",
+    JSON.stringify(
+      {
+        types: {
+          EIP712Domain: altDomain ? [
+            { name: "name", type: "string" },
+            { name: "version", type: "string" },
+            { name: "chainId", type: "uint256" },
+            { name: "verifyingContract", type: "address" }
+          ] : [
+            { name: "verifyingContract", type: "address" },
+            { name: "salt", type: "bytes32" }
+          ],
+          ...callWithSignatureTypes
+        },
+        primaryType: "Call",
+        domain,
+        message: {
+          signer: userClient.account.address,
+          systemNamespace,
+          systemName,
+          callData,
+          nonce: nonce.toString()
+        }
+      },
+      null,
+      2
+    )
+  );
   logger.log("[drawbridge] signTypedData exact values:", {
     nonceType: typeof nonce,
     nonceValue: nonce,
@@ -871,7 +899,12 @@ async function signCall({
   });
   const typedDataForRpc = {
     types: {
-      EIP712Domain: [
+      EIP712Domain: altDomain ? [
+        { name: "name", type: "string" },
+        { name: "version", type: "string" },
+        { name: "chainId", type: "uint256" },
+        { name: "verifyingContract", type: "address" }
+      ] : [
         { name: "verifyingContract", type: "address" },
         { name: "salt", type: "bytes32" }
       ],
@@ -923,7 +956,8 @@ async function callWithSignature({
     userAddress: opts.userClient.account.address,
     sessionAddress: sessionClient.account.address,
     worldAddress: opts.worldAddress,
-    systemId: opts.systemId
+    systemId: opts.systemId,
+    altDomain: opts.altDomain
   });
   logger.log("[drawbridge] callWithSignature: requesting user signature...");
   const signature = await signCall(opts);
@@ -935,8 +969,8 @@ async function callWithSignature({
     "writeContract"
   )({
     address: opts.worldAddress,
-    abi: CallWithSignatureAbi,
-    functionName: "callWithSignature",
+    abi: opts.altDomain ? CallWithSignatureAltAbi : CallWithSignatureAbi,
+    functionName: opts.altDomain ? "callWithSignatureAlt" : "callWithSignature",
     args: [opts.userClient.account.address, opts.systemId, opts.callData, signature]
   });
   logger.log("[drawbridge] callWithSignature: transaction submitted:", { hash });
@@ -965,7 +999,8 @@ async function setupSessionEOA({
       abi: IBaseWorldAbi,
       functionName: "registerDelegation",
       args: [sessionAddress, unlimitedDelegationControlId, "0x"]
-    })
+    }),
+    altDomain: false
   });
   const receipt = await getAction(
     publicClient,

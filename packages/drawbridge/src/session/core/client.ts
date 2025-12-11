@@ -1,12 +1,13 @@
 import { Address, LocalAccount } from "viem"
 import { smartAccountActions } from "permissionless"
-import { callFrom, sendUserOperationFrom } from "@latticexyz/world/internal"
+import { sendUserOperationFrom } from "@latticexyz/world/internal"
 import type { PaymasterClient } from "viem/account-abstraction"
 import { createBundlerClient } from "../../bundler/client"
 import { SessionClient, PublicClient } from "../../types"
 import { SmartAccount } from "viem/account-abstraction"
 import { getBundlerTransport } from "../../bundler/transport"
 import { logger } from "../../logger"
+import { callFromWithAlt } from "./callFromWithAlt"
 
 /**
  * Create session client with MUD World extensions
@@ -67,7 +68,7 @@ export async function getSessionClient({
     // Extend with MUD World delegation routing
     // This intercepts writeContract calls and routes them through World.callFrom()
     .extend(
-      callFrom({
+      callFromWithAlt({
         worldAddress,
         delegatorAddress: userAddress,
         publicClient

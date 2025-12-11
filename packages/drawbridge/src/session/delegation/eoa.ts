@@ -52,7 +52,7 @@ export async function setupSessionEOA({
       functionName: "registerDelegation",
       args: [sessionAddress, unlimitedDelegationControlId, "0x"]
     }),
-    altDomain: true
+    altDomain: false
   })
 
   const receipt = await getAction(

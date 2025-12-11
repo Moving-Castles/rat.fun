@@ -128,17 +128,19 @@ export async function signCall<chain extends Chain = Chain>({
     JSON.stringify(
       {
         types: {
-          EIP712Domain: [
+          EIP712Domain: altDomain ? [
+            { name: "name", type: "string" },
+            { name: "version", type: "string" },
+            { name: "chainId", type: "uint256" },
+            { name: "verifyingContract", type: "address" }
+          ] : [
             { name: "verifyingContract", type: "address" },
             { name: "salt", type: "bytes32" }
           ],
           ...callWithSignatureTypes
         },
         primaryType: "Call",
-        domain: {
-          verifyingContract: worldAddress,
-          salt: toHex(userClient.chain.id, { size: 32 })
-        },
+        domain,
         message: {
           signer: userClient.account.address,
           systemNamespace,
@@ -169,7 +171,12 @@ export async function signCall<chain extends Chain = Chain>({
   // This matches the JSON-RPC format: eth_signTypedData_v4(address, typedData)
   const typedDataForRpc = {
     types: {
-      EIP712Domain: [
+      EIP712Domain: altDomain ? [
+        { name: "name", type: "string" },
+        { name: "version", type: "string" },
+        { name: "chainId", type: "uint256" },
+        { name: "verifyingContract", type: "address" }
+      ] : [
         { name: "verifyingContract", type: "address" },
         { name: "salt", type: "bytes32" }
       ],
