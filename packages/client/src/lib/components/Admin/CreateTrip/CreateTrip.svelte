@@ -94,7 +94,7 @@
       tripDescriptionIncludesFoulLanguage
   )
 
-  const placeholder = `Describe the TRIP your rat will embark onto.\nDuring a TRIP rats might materialise PSYCHO OBJECTS, transferring some of your TRIP’s tokens to themselves.\nHowever, shall a TRIP be too heroic and kill the rat, YOU will collect its total value.`
+  const placeholder = `Describe the TRIP and what awaits the RAT. Death traps, shopping dungeons and unadulterated gambling are just a few ideas on how to squeeze value out of other RATS. Think beyond silicon.\n\nYou can use TRIPS to generate PSYCHO OBJECTS for your own RAT. But remember: other OPERATORS are watching.`
 
   async function onClick() {
     // Check allowance before proceeding
