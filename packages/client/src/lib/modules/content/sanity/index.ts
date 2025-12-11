@@ -14,7 +14,8 @@ export const client = createClient({
   apiVersion: "2025-06-01",
   // CDN is used for fetch() calls for better performance.
   // Listeners (.listen()) automatically bypass CDN and use the live API.
-  useCdn: true
+  // useCdn: true
+  useCdn: false
 })
 
 const builder = imageUrlBuilder(client)

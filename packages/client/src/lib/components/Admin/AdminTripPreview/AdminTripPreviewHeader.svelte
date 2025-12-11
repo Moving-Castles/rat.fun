@@ -8,6 +8,7 @@
   import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
   import type { Trip as SanityTrip } from "@sanity-types"
   import AdminTripPreviewPrompt from "./AdminTripPreviewPrompt.svelte"
+  import { SmallButton } from "$lib/components/Shared"
 
   let {
     tripId,
@@ -33,9 +34,17 @@
     trip ? getTripMaxValuePerWin(trip.tripCreationCost, trip.balance) : undefined
   )
 
-  // Show add balance button if trip is not liquidated, callback is provided, and player is whitelisted
   const showAddBalanceButton = $derived(
-    trip && !trip.liquidationBlock && onAddBalance && $playerIsWhitelisted
+    // Show add balance button if:
+    // - trip is not liquidated
+    // - callback is provided
+    // - player is whitelisted
+    // - trip has a balance
+    trip &&
+      !trip.liquidationBlock &&
+      onAddBalance &&
+      $playerIsWhitelisted &&
+      Number(trip.balance) > 0
   )
 </script>
 
@@ -92,13 +101,7 @@
           <div class="value-with-action">
             <span class="value">{trip.balance}</span>
             {#if showAddBalanceButton}
-              <button
-                class="add-balance-button"
-                onclick={onAddBalance}
-                title={UI_STRINGS.addBalance}
-              >
-                + Add {CURRENCY_SYMBOL}
-              </button>
+              <SmallButton text={`+ Add ${CURRENCY_SYMBOL}`} onclick={onAddBalance} />
             {/if}
           </div>
         </div>
@@ -189,26 +192,6 @@
           .value {
             font-family: var(--special-font-stack);
             font-size: var(--font-size-normal);
-          }
-        }
-
-        .add-balance-button {
-          background: var(--color-good);
-          color: var(--background);
-          border: none;
-          width: auto;
-          height: 24px;
-          font-family: var(--special-font-stack);
-          font-size: var(--font-size-normal);
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin-right: 0;
-
-          &:hover {
-            background: var(--color-grey-light);
-            color: var(--background);
           }
         }
 
