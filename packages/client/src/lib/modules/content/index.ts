@@ -133,17 +133,8 @@ export async function initTrips(worldAddress: string, tripIds: string[]) {
     trips: trips ?? []
   }))
 
-  // Subscribe to changes to trips in sanity DB
-  // Filter in the handler to only process trips we care about
+  // Subscribe to changes to all trips in sanity DB
   tripsSubscription = client.listen(queries.trips, { worldAddress }).subscribe(update => {
-    // For new trips, only add if it's in our tripIds list
-    // (This handles the case where another player creates a trip)
-    if (update.transition === "appear" && update.result) {
-      if (!tripIds.includes(update.result._id as string)) {
-        return
-      }
-    }
-
     staticContent.update(content => ({
       ...content,
       trips: handleSanityUpdate<SanityTrip>(update, content.trips, (item, id) => item._id === id)
@@ -191,18 +182,14 @@ export async function initPlayerOutcomes(worldAddress: string, playerTripIds: st
   // Mark initial outcomes as received so we only notify for new ones
   markInitialOutcomesReceived()
 
-  // Subscribe to changes to outcomes for player's trips
-  // We use the full outcomes query but filter in the handler based on tripIds
+  // Subscribe to changes to all outcomes
   outcomesSubscription = client.listen(queries.outcomes, { worldAddress }).subscribe(update => {
-    // Only process outcomes for player's trips
-    if (update.result && !playerTripIds.includes(update.result.tripId as string)) {
-      return
-    }
-
-    // Handle new outcome notifications
+    // Handle new outcome notifications (only for player's trips)
     if (update.transition === "appear" && update.result) {
-      const currentContent = get(staticContent)
-      handleNewOutcome(update.result as SanityOutcome, currentContent.trips)
+      if (playerTripIds.includes(update.result.tripId as string)) {
+        const currentContent = get(staticContent)
+        handleNewOutcome(update.result as SanityOutcome, currentContent.trips)
+      }
     }
 
     staticContent.update(content => ({
