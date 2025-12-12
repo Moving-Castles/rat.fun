@@ -83,6 +83,12 @@
     }
 
     // 2. Check country code requirement
+    console.log(
+      "[Swap] determineInitialState - savedCountryCode:",
+      JSON.stringify(swapState.data.savedCountryCode),
+      "truthy:",
+      !!swapState.data.savedCountryCode
+    )
     if (!swapState.data.savedCountryCode) {
       return SWAP_STATE.AGREEMENT
     }
@@ -171,6 +177,14 @@
     const countryCode = await buyLimitGetCountryCode(
       adaptedClient,
       auctionParams.token.address,
+      $userAddress
+    )
+    console.log(
+      "[Swap] Country code from contract:",
+      JSON.stringify(countryCode),
+      "length:",
+      countryCode?.length,
+      "for user:",
       $userAddress
     )
     swapState.data.setSavedCountryCode(countryCode)
