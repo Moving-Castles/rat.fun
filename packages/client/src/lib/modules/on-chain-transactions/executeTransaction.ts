@@ -1,20 +1,17 @@
 import type { Hex, TransactionReceipt } from "viem"
-import type { WalletTransactionClient } from "@ratfun/common/mud"
-import { get } from "svelte/store"
-
-import { publicNetwork, walletNetwork } from "$lib/modules/network"
 import { erc20Abi, encodeFunctionData } from "viem"
 import { sendTransaction, getAccount } from "@wagmi/core"
+import { get } from "svelte/store"
+import type { WalletTransactionClient } from "@ratfun/common/basic-network"
+import { TransactionError } from "@ratfun/common/error-handling"
+
+import { publicNetwork, walletNetwork } from "$lib/modules/network"
 import { externalAddressesConfig } from "$lib/modules/state/stores"
-import { WorldFunctions } from "./index"
-import {
-  prepareConnectorClientForTransaction,
-  getWagmiConfig
-} from "$lib/modules/drawbridge/connector"
+import { getDrawbridge } from "$lib/modules/drawbridge"
 import { errorHandler } from "$lib/modules/error-handling"
 import { isUserRejectionError } from "$lib/modules/error-handling/utils"
 import { refetchAllowance } from "$lib/modules/erc20Listener"
-import { TransactionError } from "@ratfun/common/error-handling"
+import { WorldFunctions } from "./index"
 
 type ExecuteTransactionOptions = {
   useConnectorClient?: boolean
@@ -40,7 +37,7 @@ export async function executeTransaction(
       if (params.length === 2) {
         // For approve, use wagmi's sendTransaction directly to avoid viem's writeContract
         // which calls unsupported RPC methods on Farcaster/Privy embedded wallets.
-        const wagmiConfig = getWagmiConfig()
+        const wagmiConfig = getDrawbridge().getWagmiConfig()
         const account = getAccount(wagmiConfig)
 
         if (!account.address) {
@@ -101,7 +98,7 @@ export async function executeTransaction(
     } else {
       // For non-approve transactions, use the prepared wallet client with writeContract
       const client: WalletTransactionClient = useConnectorClient
-        ? await prepareConnectorClientForTransaction()
+        ? await getDrawbridge().getConnectorClient()
         : get(walletNetwork).walletClient
 
       const worldContract = get(walletNetwork).worldContract

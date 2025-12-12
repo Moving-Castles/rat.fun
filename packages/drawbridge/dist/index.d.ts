@@ -1,4 +1,4 @@
-import { Client, Transport, Chain, PublicActions, Address, LocalAccount, Account } from 'viem';
+import { Client, Transport, Chain, PublicActions, Address, LocalAccount, Account, WalletActions } from 'viem';
 import { SmartAccount, PaymasterClient } from 'viem/account-abstraction';
 import { CreateConnectorFn, Config } from '@wagmi/core';
 
@@ -7,6 +7,11 @@ import { CreateConnectorFn, Config } from '@wagmi/core';
  * Used for all read operations (getBalance, readContract, etc.)
  */
 type PublicClient = Client<Transport, Chain, undefined, undefined, PublicActions<Transport, Chain>>;
+/**
+ * A viem client with an account (connected wallet).
+ * Used for wallet operations like signing.
+ */
+type ConnectorClient = Client<Transport, Chain, Account, undefined, Pick<WalletActions<Chain, Account>, "writeContract" | "sendTransaction">>;
 /**
  * A connected wallet client with account.
  * Generic over chain to support various chain configurations.
@@ -221,7 +226,6 @@ declare class Drawbridge {
     private state;
     private listeners;
     private wagmiConfig;
-    private _publicClient;
     private accountWatcherCleanup;
     private isConnecting;
     private isDisconnecting;
@@ -305,6 +309,7 @@ declare class Drawbridge {
      * 2. Account watcher will automatically clear drawbridge state
      */
     disconnectWallet(): Promise<void>;
+    getConnectorClient(): Promise<ConnectorClient>;
     /**
      * Check if session is ready to use
      *
@@ -364,10 +369,9 @@ declare class Drawbridge {
      * - Waiting for transaction receipts
      * - Any other read-only operations
      *
-     * The client is created once in the constructor with the configured
-     * transport (WebSocket + HTTP fallback) and polling interval.
+     * The client is set once in the constructor from the config.
      */
     getPublicClient(): PublicClient;
 }
 
-export { type ConnectedClient, type ConnectorInfo, Drawbridge, type DrawbridgeConfig, type DrawbridgeState, DrawbridgeStatus, type PrerequisiteStatus, type PublicClient, type SessionClient };
+export { type ConnectedClient, type ConnectorClient, type ConnectorInfo, Drawbridge, type DrawbridgeConfig, type DrawbridgeState, DrawbridgeStatus, type PrerequisiteStatus, type PublicClient, type SessionClient };

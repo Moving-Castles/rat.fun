@@ -117,9 +117,9 @@ if (result.reconnected) {
 }
 ```
 
-#### `connectWallet(wagmiConfig, connectorId, chainId?)`
+#### `attemptConnectWalletToChain(wagmiConfig, connectorId, chainId?)`
 
-Connect to a specific wallet connector.
+Connect to a specific wallet connector and chain if not already connected.
 
 **Parameters:**
 
@@ -134,15 +134,9 @@ Connect to a specific wallet connector.
 **Example:**
 
 ```typescript
-import { connectWallet } from "./connection"
+import { attemptConnectWalletToChain } from "./connection"
 
-try {
-  await connectWallet(wagmiConfig, "injected", 8453)
-} catch (err) {
-  if (err.name === "ConnectorAlreadyConnectedError") {
-    console.log("Already connected")
-  }
-}
+await attemptConnectWalletToChain(wagmiConfig, "injected", 8453)
 ```
 
 #### `disconnectWallet(wagmiConfig)`
@@ -160,34 +154,6 @@ Disconnect currently connected wallet.
 import { disconnectWallet } from "./connection"
 
 await disconnectWallet(wagmiConfig)
-```
-
-#### `getCurrentAccount(wagmiConfig)`
-
-Get current account state.
-
-**Returns:**
-
-```typescript
-{
-  isConnected: boolean
-  address?: Address
-  connector?: Connector
-  chain?: Chain
-  // ... other wagmi account properties
-}
-```
-
-**Example:**
-
-```typescript
-import { getCurrentAccount } from "./connection"
-
-const account = getCurrentAccount(wagmiConfig)
-if (account.isConnected) {
-  console.log("Address:", account.address)
-  console.log("Chain:", account.chain?.id)
-}
 ```
 
 #### `getAvailableConnectors(wagmiConfig)`
@@ -259,19 +225,13 @@ if (result.reconnected) {
 
 ```typescript
 const connectors = getAvailableConnectors(wagmiConfig)
-await connectWallet(wagmiConfig, connectors[0].id)
+await attemptConnectWalletToChain(wagmiConfig, connectors[0].id, chainId)
 ```
 
 ### 5. Disconnect (user action)
 
 ```typescript
 await disconnectWallet(wagmiConfig)
-```
-
-### 6. Check Current State (anytime)
-
-```typescript
-const account = getCurrentAccount(wagmiConfig)
 ```
 
 ---

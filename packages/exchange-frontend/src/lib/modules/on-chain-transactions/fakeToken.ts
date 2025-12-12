@@ -1,7 +1,7 @@
 import { erc20Abi, type Hex, type TransactionReceipt } from "viem"
 import { get } from "svelte/store"
 import { ERC20EquivalentExchangeAbi } from "contracts/externalAbis"
-import { prepareConnectorClientForTransaction } from "$lib/modules/drawbridge/connector"
+import { getDrawbridge, userAddress } from "$lib/modules/drawbridge"
 import { errorHandler } from "$lib/modules/error-handling"
 import { getPublicClient } from "$lib/network"
 import {
@@ -11,7 +11,6 @@ import {
 } from "$env/static/public"
 import { TransactionError } from "$lib/modules/error-handling"
 import { simulateContract } from "viem/actions"
-import { userAddress } from "../drawbridge"
 
 // Contract addresses from environment
 export const fakeRatTokenAddress = PUBLIC_FAKE_RAT_TOKEN_ADDRESS as Hex
@@ -47,7 +46,7 @@ export async function approveFakeTokenForExchange(
   const scaledAmount = BigInt(amount) * 10n ** 18n
 
   try {
-    const client = await prepareConnectorClientForTransaction()
+    const client = await getDrawbridge().getConnectorClient()
 
     const tx = await client.writeContract({
       address: fakeRatTokenAddress,
@@ -71,7 +70,7 @@ export async function exchangeFakeToken(amount: number): Promise<TransactionRece
   const scaledAmount = BigInt(amount) * 10n ** 18n
 
   try {
-    const client = await prepareConnectorClientForTransaction()
+    const client = await getDrawbridge().getConnectorClient()
 
     // Explicit simulation helps with errors and querying up-to-date approval
     const { request } = await simulateContract(getPublicClient(), {

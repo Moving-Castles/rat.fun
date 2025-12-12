@@ -1,3 +1,4 @@
+import { transactionQueue } from '@latticexyz/common/actions';
 import { resourceToHex, hexToResource } from '@latticexyz/common';
 import { parseAbi, isHex, http, encodeFunctionData, parseEther, formatEther, formatGwei, zeroAddress, toHex } from 'viem';
 import worldConfig, { systemsConfig } from '@latticexyz/world/mud.config';
@@ -15,7 +16,9 @@ import moduleConfig from '@latticexyz/world-module-callwithsignature/mud.config'
 import moduleConfigAlt from '@dk1a/world-module-callwithsignature-alt/mud.config';
 import CallWithSignatureAbi from '@latticexyz/world-module-callwithsignature/out/CallWithSignatureSystem.sol/CallWithSignatureSystem.abi.json';
 import CallWithSignatureAltAbi from '@dk1a/world-module-callwithsignature-alt/out/CallWithSignatureSystem.sol/CallWithSignatureSystem.abi.json';
-import { getConnectorClient, createConfig, createStorage, reconnect, getAccount, watchAccount, getConnectors, connect, disconnect } from '@wagmi/core';
+import { getAccount, getConnectorClient, createConfig, createStorage, reconnect, watchAccount, getConnectors, connect, disconnect, switchChain } from '@wagmi/core';
+
+// src/Drawbridge.ts
 
 // src/types/state.ts
 var DrawbridgeStatus = /* @__PURE__ */ ((DrawbridgeStatus2) => {
@@ -1114,18 +1117,48 @@ async function attemptReconnect(wagmiConfig) {
     return { reconnected: false };
   }
 }
-async function connectWallet(wagmiConfig, connectorId, chainId) {
+async function attemptSwitchChain(wagmiConfig, chainId) {
+  try {
+    await switchChain(wagmiConfig, { chainId });
+    logger.log("[wallet] Chain switch successful");
+  } catch (switchError) {
+    const isUnsupportedMethod = switchError instanceof Error && (switchError.name === "SwitchChainNotSupportedError" || switchError.name === "UnsupportedProviderMethodError" || switchError.message?.includes("does not support"));
+    if (isUnsupportedMethod) {
+      logger.warn(
+        "[wallet] Chain switch failed - wallet does not support this method:",
+        switchError
+      );
+    } else {
+      logger.error("[wallet] Chain switch error:", switchError);
+      throw switchError;
+    }
+  }
+}
+async function attemptConnectWalletToChain(wagmiConfig, connectorId, chainId) {
   const connectors = getConnectors(wagmiConfig);
   const connector = connectors.find((c) => c.id === connectorId);
   if (!connector) {
     throw new Error(`Connector not found: ${connectorId}`);
   }
   logger.log("[wallet] Connecting to wallet:", connectorId);
-  await connect(wagmiConfig, {
-    connector,
-    chainId
-  });
-  logger.log("[wallet] Connection initiated");
+  try {
+    const account = getAccount(wagmiConfig);
+    if (account.isConnected && account.connector?.uid === connector.uid) {
+      const currentChainId = await connector.getChainId();
+      if (currentChainId === chainId) {
+        logger.log("[wallet] Already connected to requested chain");
+        return;
+      }
+      logger.log("[wallet] Switching connector chain to:", chainId);
+      await attemptSwitchChain(wagmiConfig, chainId);
+    } else {
+      await connect(wagmiConfig, { connector, chainId });
+      logger.log("[wallet] Connection initiated");
+    }
+  } catch (err) {
+    logger.error("[wallet] Connect error:", err);
+    throw err;
+  }
 }
 async function disconnectWallet(wagmiConfig) {
   logger.log("[wallet] Disconnecting...");
@@ -1160,7 +1193,6 @@ var Drawbridge = class {
       error: null
     };
     const chain = config.publicClient.chain;
-    this._publicClient = config.publicClient;
     logger.log("[drawbridge] Public client created for chain:", chain.name);
     this.wagmiConfig = createWalletConfig({
       chains: [chain],
@@ -1306,23 +1338,18 @@ var Drawbridge = class {
    * Called when wagmi detects a connected account
    */
   async handleWalletConnection() {
-    let userClient;
-    try {
-      userClient = await getConnectorClient(this.wagmiConfig);
-    } catch (err) {
-      logger.log("[drawbridge] Could not get connector client");
-      return;
-    }
-    if (!userClient.account || !userClient.chain) {
+    const account = getAccount(this.wagmiConfig);
+    if (!account.isConnected || !account.address || !account.chain) {
       logger.log("[drawbridge] Wallet client missing account or chain");
       return;
     }
-    const userAddress = userClient.account.address;
+    const userAddress = account.address;
     logger.log("[drawbridge] Wallet connected:", userAddress);
     const expectedChainId = this.config.publicClient.chain.id;
-    if (userClient.chain.id !== expectedChainId) {
+    const currentChainId = await account.connector?.getChainId();
+    if (currentChainId !== expectedChainId) {
       const error = new Error(
-        `Chain mismatch: wallet on chain ${userClient.chain.id}, expected ${expectedChainId}`
+        `Chain mismatch: wallet on chain ${currentChainId}, expected ${expectedChainId}`
       );
       logger.error("[drawbridge]", error.message);
       throw error;
@@ -1342,19 +1369,19 @@ var Drawbridge = class {
     logger.log("[drawbridge] Setting up session for address:", userAddress);
     const signer = getSessionSigner(userAddress);
     logger.log("[drawbridge] About to create session account with publicClient:", {
-      chainId: this._publicClient.chain?.id,
-      chainName: this._publicClient.chain?.name,
+      chainId: this.config.publicClient.chain?.id,
+      chainName: this.config.publicClient.chain?.name,
       userAddress,
       timestamp: (/* @__PURE__ */ new Date()).toISOString()
     });
-    const { account } = await getSessionAccount({
-      publicClient: this._publicClient,
+    const { account: sessionAccount } = await getSessionAccount({
+      publicClient: this.config.publicClient,
       userAddress
     });
     const sessionClient = await getSessionClient({
-      publicClient: this._publicClient,
+      publicClient: this.config.publicClient,
       userAddress,
-      sessionAccount: account,
+      sessionAccount,
       sessionSigner: signer,
       worldAddress: this.config.worldAddress,
       paymasterOverride: this.config.paymasterClient,
@@ -1363,10 +1390,10 @@ var Drawbridge = class {
     let hasDelegation = false;
     try {
       hasDelegation = await checkDelegation({
-        client: this._publicClient,
+        client: this.config.publicClient,
         worldAddress: this.config.worldAddress,
         userAddress,
-        sessionAddress: account.address
+        sessionAddress: sessionAccount.address
       });
     } catch (err) {
       logger.error("[drawbridge] Failed to check delegation:", err);
@@ -1412,12 +1439,8 @@ var Drawbridge = class {
     logger.log("[drawbridge] Connecting to wallet:", connectorId);
     this.updateState({ status: "connecting" /* CONNECTING */ });
     try {
-      await connectWallet(this.wagmiConfig, connectorId, this._publicClient.chain.id);
+      await attemptConnectWalletToChain(this.wagmiConfig, connectorId, this.config.publicClient.chain.id);
     } catch (err) {
-      if (err instanceof Error && err.name === "ConnectorAlreadyConnectedError") {
-        logger.log("[drawbridge] Already connected");
-        return;
-      }
       this.updateState({ status: "disconnected" /* DISCONNECTED */ });
       throw err;
     }
@@ -1445,6 +1468,22 @@ var Drawbridge = class {
     }
     logger.log("[drawbridge] Disconnect complete");
   }
+  async getConnectorClient() {
+    const account = getAccount(this.wagmiConfig);
+    if (!account.isConnected) {
+      throw new Error("Not connected.");
+    }
+    const expectedChainId = this.config.publicClient.chain.id;
+    const currentChainId = await account.connector?.getChainId();
+    if (currentChainId !== expectedChainId) {
+      console.log(
+        `[drawbridge] Chain mismatch: current=${currentChainId}, expected=${expectedChainId}, attempting switch`
+      );
+      await attemptSwitchChain(this.wagmiConfig, expectedChainId);
+    }
+    const connectorClient = await getConnectorClient(this.wagmiConfig);
+    return connectorClient.extend(transactionQueue({ publicClient: this.config.publicClient }));
+  }
   /**
    * Check if session is ready to use
    *
@@ -1458,7 +1497,7 @@ var Drawbridge = class {
       return { hasDelegation: false, isReady: false };
     }
     const hasDelegation = await checkDelegation({
-      client: this._publicClient,
+      client: this.config.publicClient,
       worldAddress: this.config.worldAddress,
       userAddress: this.state.userAddress,
       sessionAddress: this.state.sessionAddress
@@ -1489,10 +1528,10 @@ var Drawbridge = class {
     }
     logger.log("[drawbridge] Setting up session (registering delegation)...");
     this.updateState({ status: "setting_up_session" /* SETTING_UP_SESSION */ });
-    const userClient = await getConnectorClient(this.wagmiConfig);
+    const userClient = await this.getConnectorClient();
     try {
       await setupSession({
-        publicClient: this._publicClient,
+        publicClient: this.config.publicClient,
         userClient,
         sessionClient: this.state.sessionClient,
         worldAddress: this.config.worldAddress,
@@ -1571,11 +1610,10 @@ var Drawbridge = class {
    * - Waiting for transaction receipts
    * - Any other read-only operations
    *
-   * The client is created once in the constructor with the configured
-   * transport (WebSocket + HTTP fallback) and polling interval.
+   * The client is set once in the constructor from the config.
    */
   getPublicClient() {
-    return this._publicClient;
+    return this.config.publicClient;
   }
 };
 

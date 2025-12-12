@@ -1,4 +1,4 @@
-import { Hex, WalletClient, Chain, Account, Transport, Client } from "viem"
+import { WalletClient, Chain, Account, Transport, Client, WalletActions } from "viem"
 import type { SmartAccount } from "viem/account-abstraction"
 import { encodeEntity } from "@latticexyz/store-sync/recs"
 import { transactionQueue } from "@latticexyz/common/actions"
@@ -8,18 +8,13 @@ type WalletClientInput =
   | Client<Transport, Chain, Account>
   | Client<Transport, Chain, SmartAccount>
 
-type WriteContractArgs = {
-  address: Hex
-  abi: unknown
-  functionName: string
-  args?: unknown[]
-  gas?: bigint
-  value?: bigint
-}
-
-export type WalletTransactionClient = WalletClientInput & {
-  writeContract: (args: WriteContractArgs) => Promise<Hex>
-}
+export type WalletTransactionClient = Client<
+  Transport,
+  Chain,
+  Account | SmartAccount,
+  undefined,
+  Pick<WalletActions<Chain, Account>, "writeContract">
+>
 
 /**
  * Ensure the provided viem client exposes a `writeContract` helper.

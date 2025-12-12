@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { userAddress } from "$lib/modules/drawbridge"
+  import { getDrawbridge, userAddress } from "$lib/modules/drawbridge"
+  import { addRatTokenToWallet } from "$lib/modules/drawbridge/connector"
   import { shortenAddress } from "$lib/modules/utils"
-  import { disconnectWallet, addRatTokenToWallet } from "$lib/modules/drawbridge/connector"
   import { SmallButton } from "$lib/components/Shared"
   import { tokenBalances, balanceListeners } from "$lib/modules/balances"
   import { swapState } from "$lib/components/Auction/Swap/state.svelte"
@@ -25,7 +25,7 @@
   }
 
   async function handleDisconnect() {
-    await disconnectWallet()
+    await getDrawbridge().disconnectWallet()
     showDropdown = false
     // Reload the page to reset state
     window.location.reload()

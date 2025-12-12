@@ -5,7 +5,7 @@ import type { SessionClient } from "drawbridge"
 import { SignedRequest, SignedRequestInfo } from "@server/modules/types"
 import { stringifyRequestForSignature } from "@server/modules/signature/stringifyRequestForSignature"
 import { walletNetwork } from "$lib/modules/network"
-import { getEstablishedConnectorClient } from "$lib/modules/drawbridge/connector"
+import { getDrawbridge } from "$lib/modules/drawbridge"
 
 export async function signRequest<T>(data: T): Promise<SignedRequest<T>> {
   const client = get(walletNetwork).walletClient
@@ -13,7 +13,7 @@ export async function signRequest<T>(data: T): Promise<SignedRequest<T>> {
   const info: SignedRequestInfo = {
     timestamp: Date.now(),
     nonce: Math.floor(Math.random() * 1e12),
-    calledFrom: await getCalledFrom()
+    calledFrom: getCalledFrom()
   }
 
   let signature: Hex
@@ -36,13 +36,9 @@ export async function signRequest<T>(data: T): Promise<SignedRequest<T>> {
   }
 }
 
-async function getCalledFrom(): Promise<Hex | null> {
+function getCalledFrom(): Hex | null {
   try {
-    const connectorClient = await getEstablishedConnectorClient()
-    if (!connectorClient) {
-      return null
-    }
-    return connectorClient.account.address
+    return getDrawbridge().userAddress
   } catch {
     return null
   }

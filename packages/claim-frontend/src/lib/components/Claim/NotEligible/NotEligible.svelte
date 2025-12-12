@@ -1,10 +1,10 @@
 <script lang="ts">
   import { BigButton } from "$lib/components/Shared"
-  import { disconnectWallet } from "$lib/modules/drawbridge/connector"
+  import { getDrawbridge } from "$lib/modules/drawbridge"
   import { claimState, CLAIM_STATE } from "../state.svelte"
 
   async function handleTryAnotherWallet() {
-    await disconnectWallet()
+    await getDrawbridge().disconnectWallet()
     claimState.state.transitionTo(CLAIM_STATE.CONNECT_WALLET)
   }
 </script>

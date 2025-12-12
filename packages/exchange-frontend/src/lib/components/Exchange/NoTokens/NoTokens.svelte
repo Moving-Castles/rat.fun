@@ -1,7 +1,7 @@
 <script lang="ts">
   import { exchangeState, EXCHANGE_STATE } from "$lib/components/Exchange/state.svelte"
   import { fakeRatTokenBalance } from "$lib/modules/erc20Listener/stores"
-  import { disconnectWallet } from "$lib/modules/drawbridge/connector"
+  import { getDrawbridge } from "$lib/modules/drawbridge"
   import { BigButton } from "$lib/components/Shared"
 
   // Watch for balance changes - if user receives tokens, transition to exchange
@@ -12,7 +12,7 @@
   })
 
   async function handleTryAnotherWallet() {
-    await disconnectWallet()
+    await getDrawbridge().disconnectWallet()
     exchangeState.state.transitionTo(EXCHANGE_STATE.CONNECT_WALLET)
   }
 </script>
