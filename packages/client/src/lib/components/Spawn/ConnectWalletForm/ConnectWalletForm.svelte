@@ -59,9 +59,11 @@
       connecting = true
 
       const drawbridge = getDrawbridge()
+      console.log("[ConnectWalletForm] Got drawbridge, calling connectWallet...")
       await drawbridge.connectWallet(connectorId)
 
       console.log("[ConnectWalletForm] Wallet connected successfully")
+      console.log("[ConnectWalletForm] Drawbridge state after connect:", drawbridge.getState())
 
       // Wait briefly for stores to update after wallet connection
       await new Promise(resolve => setTimeout(resolve, 500))
@@ -93,6 +95,9 @@
       spawnState.state.transitionTo(nextState)
     } catch (error) {
       console.error("[ConnectWalletForm] Connection failed:", error)
+      console.error("[ConnectWalletForm] Error type:", (error as any)?.constructor?.name)
+      console.error("[ConnectWalletForm] Error code:", (error as any)?.code)
+      console.error("[ConnectWalletForm] Error details:", (error as any)?.details)
       // Check if user rejected - still log to Sentry but toast is suppressed
       if (isUserRejectionError(error)) {
         errorHandler(error, "Wallet connection rejected by user")
@@ -100,6 +105,7 @@
         errorHandler(error, "Failed to connect wallet")
       }
     } finally {
+      console.log("[ConnectWalletForm] connectWallet finished (finally block)")
       connecting = false
     }
   }

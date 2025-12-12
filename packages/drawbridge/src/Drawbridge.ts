@@ -7,7 +7,7 @@ import { getSessionClient } from "./session/core/client"
 import { checkDelegation } from "./session/delegation/check"
 import { setupSession, type SetupSessionStatus } from "./session/delegation/setup"
 import { sessionStorage } from "./session/core/storage"
-import { getConnectorClient, type Config, type CreateConnectorFn } from "@wagmi/core"
+import { getConnectorClient, getAccount, type Config, type CreateConnectorFn } from "@wagmi/core"
 import {
   createWalletConfig,
   setupAccountWatcher,
@@ -363,12 +363,27 @@ export class Drawbridge {
     try {
       userClient = await getConnectorClient(this.wagmiConfig)
     } catch (err) {
-      logger.log("[drawbridge] Could not get connector client")
+      logger.error("[drawbridge] Could not get connector client:", err)
       return
     }
 
+    logger.log("[drawbridge] Got connector client:", {
+      hasAccount: !!userClient.account,
+      hasChain: !!userClient.chain,
+      account: userClient.account?.address,
+      chain: userClient.chain?.id
+    })
+
     if (!userClient.account || !userClient.chain) {
-      logger.log("[drawbridge] Wallet client missing account or chain")
+      logger.log("[drawbridge] Wallet client missing account or chain, checking wagmi account...")
+      // Try to get account info directly from wagmi
+      const wagmiAccount = getAccount(this.wagmiConfig)
+      logger.log("[drawbridge] Wagmi account state:", {
+        isConnected: wagmiAccount.isConnected,
+        address: wagmiAccount.address,
+        chainId: wagmiAccount.chainId,
+        connector: wagmiAccount.connector?.id
+      })
       return
     }
 
@@ -500,9 +515,25 @@ export class Drawbridge {
     try {
       await walletConnect(this.wagmiConfig, connectorId, this._publicClient.chain.id)
     } catch (err) {
-      // If already connected, that's fine
+      // If already connected, manually trigger the connection handler
+      // since watchAccount won't fire for an already-connected state
       if (err instanceof Error && err.name === "ConnectorAlreadyConnectedError") {
-        logger.log("[drawbridge] Already connected")
+        logger.log("[drawbridge] Already connected, triggering connection handler manually")
+        const account = getAccount(this.wagmiConfig)
+        if (account.isConnected && account.address) {
+          // Temporarily allow re-entry for this case
+          this.isConnecting = false
+          try {
+            this.isConnecting = true
+            await this.handleWalletConnection()
+          } finally {
+            this.isConnecting = false
+          }
+        } else {
+          // Weird state - connected error but no account, reset
+          logger.warn("[drawbridge] Already connected error but no account found")
+          this.updateState({ status: DrawbridgeStatus.DISCONNECTED })
+        }
         return
       }
       // Reset to DISCONNECTED on error

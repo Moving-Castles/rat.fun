@@ -15,7 +15,7 @@ import moduleConfig from '@latticexyz/world-module-callwithsignature/mud.config'
 import moduleConfigAlt from '@dk1a/world-module-callwithsignature-alt/mud.config';
 import CallWithSignatureAbi from '@latticexyz/world-module-callwithsignature/out/CallWithSignatureSystem.sol/CallWithSignatureSystem.abi.json';
 import CallWithSignatureAltAbi from '@dk1a/world-module-callwithsignature-alt/out/CallWithSignatureSystem.sol/CallWithSignatureSystem.abi.json';
-import { getConnectorClient, createConfig, createStorage, reconnect, getAccount, watchAccount, getConnectors, connect, disconnect } from '@wagmi/core';
+import { getConnectorClient, getAccount, createConfig, createStorage, reconnect, watchAccount, getConnectors, connect, disconnect } from '@wagmi/core';
 
 // src/types/state.ts
 var DrawbridgeStatus = /* @__PURE__ */ ((DrawbridgeStatus2) => {
@@ -1116,16 +1116,34 @@ async function attemptReconnect(wagmiConfig) {
 }
 async function connectWallet(wagmiConfig, connectorId, chainId) {
   const connectors = getConnectors(wagmiConfig);
+  logger.log(
+    "[wallet] Available connectors:",
+    connectors.map((c) => ({ id: c.id, name: c.name }))
+  );
   const connector = connectors.find((c) => c.id === connectorId);
   if (!connector) {
     throw new Error(`Connector not found: ${connectorId}`);
   }
   logger.log("[wallet] Connecting to wallet:", connectorId);
-  await connect(wagmiConfig, {
-    connector,
-    chainId
+  logger.log("[wallet] Connector details:", {
+    id: connector.id,
+    name: connector.name,
+    type: connector.type
   });
-  logger.log("[wallet] Connection initiated");
+  logger.log("[wallet] Chain ID:", chainId);
+  try {
+    const result = await connect(wagmiConfig, {
+      connector,
+      chainId
+    });
+    logger.log("[wallet] Connection result:", result);
+    logger.log("[wallet] Connection initiated");
+  } catch (err) {
+    logger.error("[wallet] Connection error:", err);
+    logger.error("[wallet] Error name:", err?.name);
+    logger.error("[wallet] Error message:", err?.message);
+    throw err;
+  }
 }
 async function disconnectWallet(wagmiConfig) {
   logger.log("[wallet] Disconnecting...");
@@ -1310,11 +1328,24 @@ var Drawbridge = class {
     try {
       userClient = await getConnectorClient(this.wagmiConfig);
     } catch (err) {
-      logger.log("[drawbridge] Could not get connector client");
+      logger.error("[drawbridge] Could not get connector client:", err);
       return;
     }
+    logger.log("[drawbridge] Got connector client:", {
+      hasAccount: !!userClient.account,
+      hasChain: !!userClient.chain,
+      account: userClient.account?.address,
+      chain: userClient.chain?.id
+    });
     if (!userClient.account || !userClient.chain) {
-      logger.log("[drawbridge] Wallet client missing account or chain");
+      logger.log("[drawbridge] Wallet client missing account or chain, checking wagmi account...");
+      const wagmiAccount = getAccount(this.wagmiConfig);
+      logger.log("[drawbridge] Wagmi account state:", {
+        isConnected: wagmiAccount.isConnected,
+        address: wagmiAccount.address,
+        chainId: wagmiAccount.chainId,
+        connector: wagmiAccount.connector?.id
+      });
       return;
     }
     const userAddress = userClient.account.address;
@@ -1415,7 +1446,20 @@ var Drawbridge = class {
       await connectWallet(this.wagmiConfig, connectorId, this._publicClient.chain.id);
     } catch (err) {
       if (err instanceof Error && err.name === "ConnectorAlreadyConnectedError") {
-        logger.log("[drawbridge] Already connected");
+        logger.log("[drawbridge] Already connected, triggering connection handler manually");
+        const account = getAccount(this.wagmiConfig);
+        if (account.isConnected && account.address) {
+          this.isConnecting = false;
+          try {
+            this.isConnecting = true;
+            await this.handleWalletConnection();
+          } finally {
+            this.isConnecting = false;
+          }
+        } else {
+          logger.warn("[drawbridge] Already connected error but no account found");
+          this.updateState({ status: "disconnected" /* DISCONNECTED */ });
+        }
         return;
       }
       this.updateState({ status: "disconnected" /* DISCONNECTED */ });

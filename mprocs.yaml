@@ -1,7 +1,7 @@
 procs:
-  client:
-    cwd: packages/client
-    shell: pnpm run dev
+  # client:
+  #   cwd: packages/client
+  #   shell: pnpm run dev
   # dashboard:
   #   cwd: packages/dashboard
   #   shell: pnpm run dev
@@ -11,15 +11,15 @@ procs:
   # claim-frontend:
   #   cwd: packages/claim-frontend
   #   shell: pnpm dev
-  # auction-frontend:
-  #   cwd: packages/auction-frontend
-  #   shell: pnpm dev
+  auction-frontend:
+    cwd: packages/auction-frontend
+    shell: pnpm dev
   # webgl:
   #   cwd: packages/webgl
   #   shell: pnpm dev
-  contracts:
-    cwd: packages/contracts
-    shell: pnpm mud dev-contracts --rpc http://127.0.0.1:8545
+  # contracts:
+  #   cwd: packages/contracts
+  #   shell: pnpm mud dev-contracts --rpc http://127.0.0.1:8545
   # server:
   #   cwd: packages/server
   #   shell: pnpm dev
@@ -35,9 +35,9 @@ procs:
   # cms-private:
   #   cwd: packages/cms-private
   #   shell: pnpm dev
-  anvil:
-    cwd: packages/contracts
-    shell: anvil --base-fee 0 --block-time 2
+  # anvil:
+  #   cwd: packages/contracts
+  #   shell: anvil --base-fee 0 --block-time 2
   # indexer:
   #   cwd: packages/contracts
   #   shell: shx rm -rf $SQLITE_FILENAME && pnpm sqlite-indexer

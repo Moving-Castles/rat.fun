@@ -82,6 +82,11 @@ export async function connectWallet(
   chainId?: number
 ): Promise<void> {
   const connectors = getConnectors(wagmiConfig)
+  logger.log(
+    "[wallet] Available connectors:",
+    connectors.map(c => ({ id: c.id, name: c.name }))
+  )
+
   const connector = connectors.find(c => c.id === connectorId)
 
   if (!connector) {
@@ -89,13 +94,26 @@ export async function connectWallet(
   }
 
   logger.log("[wallet] Connecting to wallet:", connectorId)
-
-  await connect(wagmiConfig, {
-    connector,
-    chainId
+  logger.log("[wallet] Connector details:", {
+    id: connector.id,
+    name: connector.name,
+    type: connector.type
   })
+  logger.log("[wallet] Chain ID:", chainId)
 
-  logger.log("[wallet] Connection initiated")
+  try {
+    const result = await connect(wagmiConfig, {
+      connector,
+      chainId
+    })
+    logger.log("[wallet] Connection result:", result)
+    logger.log("[wallet] Connection initiated")
+  } catch (err) {
+    logger.error("[wallet] Connection error:", err)
+    logger.error("[wallet] Error name:", (err as Error)?.name)
+    logger.error("[wallet] Error message:", (err as Error)?.message)
+    throw err
+  }
 }
 
 /**
