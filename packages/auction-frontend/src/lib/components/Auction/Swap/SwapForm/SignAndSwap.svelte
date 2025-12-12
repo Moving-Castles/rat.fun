@@ -227,6 +227,7 @@
 <div class="button-container">
   <BigButton
     disabled={!swapState.data.amountIn ||
+      swapState.data.amountOut === undefined ||
       isProcessing ||
       !waiveWithdrawal ||
       isAmountExceedsBalance() ||
