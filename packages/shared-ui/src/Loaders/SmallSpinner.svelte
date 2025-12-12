@@ -32,6 +32,6 @@
 <style>
   .spinner {
     display: inline-block;
-    font-family: var(--typewriter-font-stack);
+    font-family: inherit;
   }
 </style>
