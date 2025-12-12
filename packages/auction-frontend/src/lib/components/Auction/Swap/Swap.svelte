@@ -21,6 +21,7 @@
     getEurcToEthRate,
     decodeQuoterError
   } from "$lib/modules/swap-router"
+  import { getSoldPercentage } from "$lib/modules/sold-percentage"
 
   import { SwapForm, Agreement, SignAndSwap, SwapComplete } from "./index"
 
@@ -29,6 +30,9 @@
   }: {
     auctionParams: AuctionParams
   } = $props()
+
+  // Sold percentage (calculated once on mount, needs $state for template binding)
+  let soldPercentage = $state<number | null>(null)
 
   /**
    * Select the best default currency based on balances
@@ -104,6 +108,11 @@
     }
 
     const adaptedClient = asPublicClient(client)
+
+    // Calculate sold percentage (fire and forget, non-blocking)
+    getSoldPercentage(adaptedClient, auctionParams).then(percentage => {
+      soldPercentage = percentage
+    })
 
     // Initialize quoter
     const quoter = new CustomQuoter(adaptedClient, config.chainId, auctionParams)
@@ -192,7 +201,14 @@
   })
 </script>
 
-<div class="sold-banner">50% of total sold</div>
+{#if soldPercentage !== null}
+  <div class="sold-banner">
+    <span class="sold-text">{soldPercentage.toFixed(1)}% of total sold</span>
+    <div class="progress-bar">
+      <div class="progress-fill" style="width: {soldPercentage}%"></div>
+    </div>
+  </div>
+{/if}
 
 <div class="swap-container">
   {#if swapState.state.current === SWAP_STATE.AGREEMENT}
@@ -215,15 +231,30 @@
     transform: translateX(-50%);
     width: 700px;
     max-width: 90dvw;
-    background: var(--color-good);
-    color: var(--background);
-    text-align: center;
+    display: flex;
+    align-items: center;
+    gap: 10px;
     padding: 10px;
-    font-family: var(--special-font-stack);
-    font-size: var(--font-size-normal);
-    text-transform: uppercase;
-    letter-spacing: 1px;
     z-index: var(--z-top);
+
+    .sold-text {
+      font-family: var(--special-font-stack);
+      font-size: var(--font-size-normal);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      white-space: nowrap;
+    }
+
+    .progress-bar {
+      flex: 1;
+      height: 10px;
+      background: var(--color-grey-mid);
+
+      .progress-fill {
+        height: 100%;
+        background: var(--color-good);
+      }
+    }
   }
 
   .swap-container {
