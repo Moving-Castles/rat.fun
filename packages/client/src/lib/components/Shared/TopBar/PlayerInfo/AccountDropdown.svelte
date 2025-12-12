@@ -12,11 +12,11 @@
 </script>
 
 <div class="account-dropdown" out:fade={{ duration: 200 }}>
-  <!-- {#if import.meta.env.DEV} -->
-  <div class="debug-button">
-    <button onclick={toggleDebug}>{UI_STRINGS.debug}</button>
-  </div>
-  <!-- {/if} -->
+  {#if window.location.hostname === "testing-rat-fun.netlify.app"}
+    <div class="debug-button">
+      <button onclick={toggleDebug}>{UI_STRINGS.debug}</button>
+    </div>
+  {/if}
   {#if showDebug}
     <DebugDropdownContent />
   {:else}
