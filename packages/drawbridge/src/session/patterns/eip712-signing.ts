@@ -93,12 +93,12 @@ export async function signCall<chain extends Chain = Chain>({
   logger.log("[drawbridge] signCall system parsed:", { systemNamespace, systemName })
 
   // Build domain and message for logging
-  // Note: chainId should be a bigint for proper EIP-712 encoding
+  // Note: chainId as number - some wallets (Farcaster) can't parse bigint/hex format
   const domain = altDomain
     ? {
         name: "CallWithSignatureAlt",
         version: "1",
-        chainId: BigInt(userClient.chain.id),
+        chainId: userClient.chain.id,
         verifyingContract: worldAddress
       }
     : {
@@ -108,8 +108,8 @@ export async function signCall<chain extends Chain = Chain>({
 
   logger.log("[drawbridge] domain constructed:", {
     altDomain,
-    chainIdType: altDomain ? "bigint" : "N/A",
-    chainIdValue: altDomain ? userClient.chain.id.toString() : "N/A (using salt)"
+    chainIdType: altDomain ? "number" : "N/A",
+    chainIdValue: altDomain ? userClient.chain.id : "N/A (using salt)"
   })
 
   const message = {
@@ -134,8 +134,6 @@ export async function signCall<chain extends Chain = Chain>({
 
   // Log the raw EIP-712 structure that will be sent to the wallet
   // This helps debug wallet compatibility issues
-  // Use a replacer function to handle bigint serialization
-  const domainForLog = altDomain ? { ...domain, chainId: userClient.chain.id.toString() } : domain
   logger.log(
     "[drawbridge] EIP-712 raw structure:",
     JSON.stringify(
@@ -155,7 +153,7 @@ export async function signCall<chain extends Chain = Chain>({
           ...callWithSignatureTypes
         },
         primaryType: "Call",
-        domain: domainForLog,
+        domain,
         message: {
           signer: userClient.account.address,
           systemNamespace,
@@ -200,7 +198,7 @@ export async function signCall<chain extends Chain = Chain>({
       ...callWithSignatureTypes
     },
     primaryType: "Call" as const,
-    domain: domainForLog,
+    domain,
     message: {
       ...message,
       // Convert bigint to hex string for JSON-RPC (how viem serializes uint256)

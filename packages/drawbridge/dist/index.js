@@ -835,7 +835,7 @@ async function signCall({
   const domain = altDomain ? {
     name: "CallWithSignatureAlt",
     version: "1",
-    chainId: BigInt(userClient.chain.id),
+    chainId: userClient.chain.id,
     verifyingContract: worldAddress
   } : {
     verifyingContract: worldAddress,
@@ -843,8 +843,8 @@ async function signCall({
   };
   logger.log("[drawbridge] domain constructed:", {
     altDomain,
-    chainIdType: altDomain ? "bigint" : "N/A",
-    chainIdValue: altDomain ? userClient.chain.id.toString() : "N/A (using salt)"
+    chainIdType: altDomain ? "number" : "N/A",
+    chainIdValue: altDomain ? userClient.chain.id : "N/A (using salt)"
   });
   const message = {
     signer: userClient.account.address,
@@ -864,7 +864,6 @@ async function signCall({
       nonce: nonce.toString()
     }
   });
-  const domainForLog = altDomain ? { ...domain, chainId: userClient.chain.id.toString() } : domain;
   logger.log(
     "[drawbridge] EIP-712 raw structure:",
     JSON.stringify(
@@ -882,7 +881,7 @@ async function signCall({
           ...callWithSignatureTypes
         },
         primaryType: "Call",
-        domain: domainForLog,
+        domain,
         message: {
           signer: userClient.account.address,
           systemNamespace,
@@ -917,7 +916,7 @@ async function signCall({
       ...callWithSignatureTypes
     },
     primaryType: "Call",
-    domain: domainForLog,
+    domain,
     message: {
       ...message,
       // Convert bigint to hex string for JSON-RPC (how viem serializes uint256)
