@@ -1,5 +1,5 @@
 import { AuctionParams, getPoolKey, Permit2PermitData } from "doppler"
-import { Hex, maxUint128, zeroAddress } from "viem"
+import { Client, Hex, maxUint128, zeroAddress } from "viem"
 import { simulateContract } from "viem/actions"
 import { prepareConnectorClientForTransaction } from "../drawbridge/connector"
 import { deltaRouterAddress, wethCurrency, getAerodromePath } from "./currency"
@@ -72,7 +72,7 @@ export async function swapExactIn(
   if (DEBUG_SIMULATE_SWAP) {
     try {
       console.log("[swapExactIn] Simulating swap...")
-      await simulateContract(client, {
+      await simulateContract(client as Client, {
         address: deltaRouterAddress,
         abi: deltaRouterAbi,
         functionName: "execute",
