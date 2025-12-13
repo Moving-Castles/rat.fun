@@ -1,5 +1,6 @@
 <script lang="ts">
   import { tick } from "svelte"
+  import { fade } from "svelte/transition"
   import { filteredMessages } from "../state.svelte"
   import FeedMessage from "./FeedMessage.svelte"
 
@@ -76,9 +77,11 @@
       <span>No messages yet</span>
     </div>
   {:else}
-    {#each $filteredMessages as message (message.id)}
-      <FeedMessage {message} />
-    {/each}
+    <div class="messages-list" in:fade|global={{ duration: 300 }}>
+      {#each $filteredMessages as message (message.id)}
+        <FeedMessage {message} />
+      {/each}
+    </div>
   {/if}
 
   {#if hasUnseenMessages}
@@ -92,6 +95,11 @@
     overflow-y: auto;
     position: relative;
     min-height: 0;
+  }
+
+  .messages-list {
+    display: flex;
+    flex-direction: column;
   }
 
   .empty-state {

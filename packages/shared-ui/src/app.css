@@ -139,7 +139,7 @@
   /* Layout: Global game window */
   --game-window-width: calc(min(100vw, 1920px) - 30px);
   --game-window-height: calc(100vh - 30px);
-  --game-window-main-height: calc(var(--game-window-height) - 60px);
+  --game-window-main-height: calc(var(--game-window-height) - 62px); /* 60px topbar + 2px border */
 
   /* Layout: Border */
   --default-border-style: 1px solid var(--color-border);

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import LeaderboardToggle from "./LeaderboardToggle.svelte"
+  import { SlideToggle } from "$lib/components/Shared"
 
   let {
     title,
@@ -20,7 +20,14 @@
   <div class="section-header">
     <span class="section-title">{title}</span>
     {#if toggleOptions && toggleValue && onToggleChange}
-      <LeaderboardToggle options={toggleOptions} value={toggleValue} onchange={onToggleChange} />
+      <div class="toggle-wrapper">
+        <SlideToggle
+          options={toggleOptions}
+          value={toggleValue}
+          onchange={onToggleChange}
+          compact
+        />
+      </div>
     {/if}
   </div>
   <div class="section-content">
@@ -54,9 +61,14 @@
 
   .section-title {
     font-family: var(--special-font-stack);
-    font-size: var(--font-size-small);
+    font-size: var(--font-size-normal);
     text-transform: uppercase;
     letter-spacing: 0.05em;
+  }
+
+  .toggle-wrapper {
+    width: 260px;
+    flex-shrink: 0;
   }
 
   .section-content {

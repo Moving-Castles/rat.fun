@@ -1,7 +1,7 @@
 <script lang="ts">
   import { playSound } from "$lib/modules/sound"
   import { Tooltip } from "$lib/components/Shared"
-  import { onlinePlayers } from "$lib/modules/off-chain-sync/stores"
+  import { onlinePlayers, websocketConnected } from "$lib/modules/off-chain-sync/stores"
 
   let {
     isActive,
@@ -29,6 +29,7 @@
 
 <Tooltip content={tippyText}>
   <button class:disabled class:active={isActive} {onmouseup} {onmousedown}>
+    <span class="indicator" class:connected={$websocketConnected}></span>
     <span class="button-text">OPERATOR FEED ({onlineCount})</span>
   </button>
 </Tooltip>
@@ -44,10 +45,23 @@
     border-color: var(--background-light-transparent);
     position: relative;
     display: flex;
-    flex-flow: column nowrap;
+    flex-flow: row nowrap;
     align-items: center;
     justify-content: center;
+    gap: 8px;
     cursor: pointer;
+
+    .indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--color-down);
+      transition: background 0.2s ease;
+
+      &.connected {
+        background: var(--color-up);
+      }
+    }
 
     .button-text {
       font-size: var(--font-size-small);

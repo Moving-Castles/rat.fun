@@ -217,16 +217,18 @@
   .online-dropdown {
     position: absolute;
     top: 100%;
+    user-select: none;
     right: 0;
     background-color: var(--background-dark-transparent);
     color: var(--white);
-    padding: 12px;
+    padding: 10px;
+    padding-bottom: 0;
     line-height: 1.3em;
     z-index: 2000;
     display: flex;
     flex-flow: column nowrap;
     gap: 8px;
-    font-size: var(--font-size-normal);
+    font-size: var(--font-size-small);
     font-family: var(--special-font-stack);
     border: 1px solid var(--color-border);
     min-width: 200px;

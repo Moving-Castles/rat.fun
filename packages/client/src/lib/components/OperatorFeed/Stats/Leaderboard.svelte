@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { fade } from "svelte/transition"
   import {
     ratLeaderboard,
     killsLeaderboard,
@@ -28,7 +29,7 @@
   }
 </script>
 
-<div class="leaderboard">
+<div class="leaderboard" in:fade|global={{ duration: 300 }}>
   <LeaderboardSection
     title="Most Valuable Rat"
     toggleOptions={ratModeOptions}

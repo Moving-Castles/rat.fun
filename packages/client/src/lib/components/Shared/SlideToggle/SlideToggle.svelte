@@ -11,13 +11,15 @@
     value,
     onchange,
     disabled = false,
-    height = 60
+    height = 60,
+    compact = false
   }: {
     options: Option[]
     value: string
     onchange: (value: string) => void
     disabled?: boolean
     height?: number
+    compact?: boolean
   } = $props()
 
   let railElement: HTMLDivElement | null = $state(null)
@@ -210,6 +212,7 @@
   class:disabled
   class:dragging={isDragging}
   class:settling={isSettling}
+  class:compact
   style="height: {height}px"
   bind:this={railElement}
 >
@@ -267,6 +270,10 @@
       opacity: 0.5;
       pointer-events: none;
     }
+
+    &.compact {
+      border-bottom: none;
+    }
   }
 
   .option {
@@ -286,6 +293,10 @@
       color: var(--foreground);
       opacity: 0.4;
       transition: opacity 0.15s ease;
+
+      .compact & {
+        font-size: var(--font-size-normal);
+      }
     }
 
     &.active .option-label {
@@ -330,6 +341,10 @@
       font-family: var(--special-font-stack);
       color: var(--background);
       pointer-events: none;
+
+      .compact & {
+        font-size: var(--font-size-normal);
+      }
     }
 
     &:active {

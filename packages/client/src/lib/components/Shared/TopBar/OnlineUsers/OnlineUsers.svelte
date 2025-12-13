@@ -24,7 +24,7 @@
 
 <style lang="scss">
   .operator-feed-button {
-    width: 120px;
+    width: 160px;
     height: 100%;
 
     @media (max-width: 800px) {
