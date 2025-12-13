@@ -2,9 +2,8 @@
   import { get } from "svelte/store"
   import { formatUnits } from "viem"
   import { BigButton } from "$lib/components/Shared"
-  import { prepareConnectorClientForTransaction } from "$lib/modules/drawbridge/connector"
   import { ERC20AirdropMerkleProofAbi } from "contracts/externalAbis"
-  import { userAddress } from "$lib/modules/drawbridge"
+  import { getDrawbridge, userAddress } from "$lib/modules/drawbridge"
   import { networkConfig } from "$lib/network"
   import { claimFlowState, CLAIM_FLOW_STATE } from "./state.svelte"
   import { waitForTransactionReceiptSuccess } from "$lib/modules/on-chain-transactions"
@@ -23,7 +22,7 @@
     claimFlowState.state.transitionTo(CLAIM_FLOW_STATE.CLAIMING)
 
     try {
-      const client = await prepareConnectorClientForTransaction()
+      const client = await getDrawbridge().getConnectorClient()
       const txHash = await client.writeContract({
         address: config.airdropContractAddress,
         abi: ERC20AirdropMerkleProofAbi,

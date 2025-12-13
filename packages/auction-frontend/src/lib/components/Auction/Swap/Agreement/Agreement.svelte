@@ -1,8 +1,7 @@
 <script lang="ts">
   import { buyLimitSetCountryCode } from "doppler"
   import { BigButton, Checkbox } from "$lib/components/Shared"
-  import { prepareConnectorClientForTransaction } from "$lib/modules/drawbridge/connector"
-  import { userAddress } from "$lib/modules/drawbridge"
+  import { getDrawbridge, userAddress } from "$lib/modules/drawbridge"
   import { publicClient as publicClientStore } from "$lib/network"
   import { asPublicClient, asWalletClient } from "$lib/utils/clientAdapter"
   import { swapState, SWAP_STATE } from "../state.svelte"
@@ -46,7 +45,7 @@
       // Get country code from IP
       const countryCode = await getCountryCodeFromIP()
 
-      const client = await prepareConnectorClientForTransaction()
+      const client = await getDrawbridge().getConnectorClient()
       const txHash = await buyLimitSetCountryCode(
         asWalletClient(client),
         auctionParams.token.address,

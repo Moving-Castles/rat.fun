@@ -1,7 +1,7 @@
 import { AuctionParams, getPoolKey, Permit2PermitData } from "doppler"
 import { Client, Hex, maxUint128, zeroAddress } from "viem"
 import { simulateContract } from "viem/actions"
-import { prepareConnectorClientForTransaction } from "../drawbridge/connector"
+import { getDrawbridge } from "$lib/modules/drawbridge"
 import { deltaRouterAddress, wethCurrency, getAerodromePath } from "./currency"
 import { ActionConstants, V4ActionType, V4DeltaActionBuilder } from "./V4DeltaActionBuilder"
 import { deltaRouterAbi } from "./deltaRouterAbi"
@@ -17,7 +17,7 @@ export async function swapExactIn(
   permit?: Permit2PermitData,
   permitSignature?: Hex
 ) {
-  const client = await prepareConnectorClientForTransaction()
+  const client = await getDrawbridge().getConnectorClient()
 
   let value = 0n
   const actionBuilder = new V4DeltaActionBuilder()
@@ -104,7 +104,7 @@ export async function swapExactOut(
   permit?: Permit2PermitData,
   permitSignature?: Hex
 ) {
-  const client = await prepareConnectorClientForTransaction()
+  const client = await getDrawbridge().getConnectorClient()
 
   let value = 0n
   const actionBuilder = new V4DeltaActionBuilder()

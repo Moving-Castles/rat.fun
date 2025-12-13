@@ -1,5 +1,13 @@
 import { Address } from "viem"
-import { reconnect, connect, disconnect, getConnectors, getAccount, type Config } from "@wagmi/core"
+import {
+  reconnect,
+  connect,
+  disconnect,
+  getConnectors,
+  getAccount,
+  type Config,
+  switchChain
+} from "@wagmi/core"
 import { logger } from "../logger"
 
 /**
@@ -54,32 +62,49 @@ export async function attemptReconnect(wagmiConfig: Config): Promise<ReconnectRe
   }
 }
 
+export async function attemptSwitchChain(wagmiConfig: Config, chainId: number): Promise<void> {
+  try {
+    await switchChain(wagmiConfig, { chainId })
+    logger.log("[wallet] Chain switch successful")
+  } catch (switchError) {
+    // Some wallets (e.g. Farcaster MiniApp) don't support wallet_switchEthereumChain
+    // or wallet_addEthereumChain. Log and continue - the transaction may still work
+    // if the wallet is already on the correct chain internally.
+    const isUnsupportedMethod =
+      switchError instanceof Error &&
+      (switchError.name === "SwitchChainNotSupportedError" ||
+        switchError.name === "UnsupportedProviderMethodError" ||
+        switchError.message?.includes("does not support"))
+    if (isUnsupportedMethod) {
+      logger.warn(
+        "[wallet] Chain switch failed - wallet does not support this method:",
+        switchError
+      )
+    } else {
+      logger.error("[wallet] Chain switch error:", switchError)
+      throw switchError
+    }
+  }
+}
+
 /**
  * Connect to a wallet by connector ID
  *
  * @param wagmiConfig Wagmi configuration instance
  * @param connectorId Connector ID to connect to
- * @param chainId Optional chain ID to connect on
+ * @param chainId Chain ID to connect on
  * @throws If connector not found or connection fails
  *
  * @example
  * ```typescript
- * try {
- *   await connectWallet(wagmiConfig, "injected", 8453)
- *   console.log("Connected successfully")
- * } catch (err) {
- *   if (err.name === "ConnectorAlreadyConnectedError") {
- *     console.log("Already connected")
- *   } else {
- *     console.error("Connection failed:", err)
- *   }
- * }
+ * await attemptConnectWalletToChain(wagmiConfig, "injected", 8453)
+ * console.log("Connected successfully")
  * ```
  */
-export async function connectWallet(
+export async function attemptConnectWalletToChain(
   wagmiConfig: Config,
   connectorId: string,
-  chainId?: number
+  chainId: number
 ): Promise<void> {
   const connectors = getConnectors(wagmiConfig)
   logger.log(
@@ -94,24 +119,28 @@ export async function connectWallet(
   }
 
   logger.log("[wallet] Connecting to wallet:", connectorId)
-  logger.log("[wallet] Connector details:", {
-    id: connector.id,
-    name: connector.name,
-    type: connector.type
-  })
-  logger.log("[wallet] Chain ID:", chainId)
 
   try {
-    const result = await connect(wagmiConfig, {
-      connector,
-      chainId
-    })
-    logger.log("[wallet] Connection result:", result)
-    logger.log("[wallet] Connection initiated")
+    const account = getAccount(wagmiConfig)
+
+    if (account.isConnected && account.connector?.uid === connector.uid) {
+      // If already connected with this connector - check chain
+      const currentChainId = await connector.getChainId()
+      // If already on requested chain, no action needed
+      if (currentChainId === chainId) {
+        logger.log("[wallet] Already connected to requested chain")
+        return
+      }
+      // Attempt to switch to requested chain
+      logger.log("[wallet] Switching connector chain to:", chainId)
+      await attemptSwitchChain(wagmiConfig, chainId)
+    } else {
+      // Not currently connected with this connector — proceed to connect
+      await connect(wagmiConfig, { connector, chainId })
+      logger.log("[wallet] Connection initiated")
+    }
   } catch (err) {
-    logger.error("[wallet] Connection error:", err)
-    logger.error("[wallet] Error name:", (err as Error)?.name)
-    logger.error("[wallet] Error message:", (err as Error)?.message)
+    logger.error("[wallet] Connect error:", err)
     throw err
   }
 }
@@ -139,24 +168,6 @@ export async function disconnectWallet(wagmiConfig: Config): Promise<void> {
     logger.error("[wallet] Disconnect error:", err)
     throw err
   }
-}
-
-/**
- * Get current account information
- *
- * @param wagmiConfig Wagmi configuration instance
- * @returns Current account state
- *
- * @example
- * ```typescript
- * const account = getCurrentAccount(wagmiConfig)
- * if (account.isConnected) {
- *   console.log("Connected:", account.address)
- * }
- * ```
- */
-export function getCurrentAccount(wagmiConfig: Config) {
-  return getAccount(wagmiConfig)
 }
 
 /**

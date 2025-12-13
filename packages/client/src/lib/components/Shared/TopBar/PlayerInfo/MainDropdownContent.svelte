@@ -3,7 +3,7 @@
   import { playerERC20Balance } from "$lib/modules/erc20Listener/stores"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import { shortenAddress } from "$lib/modules/utils"
-  import { disconnectWallet } from "$lib/modules/drawbridge/connector"
+  import { getDrawbridge } from "$lib/modules/drawbridge"
   import { UIState } from "$lib/modules/ui/state.svelte"
   import { UI } from "$lib/modules/ui/enums"
   import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
@@ -66,7 +66,7 @@
     <SmallButton
       tippyText={UI_STRINGS.disconnectWallet}
       onclick={async () => {
-        await disconnectWallet()
+        await getDrawbridge().disconnectWallet()
         UIState.set(UI.SPAWNING)
       }}
       text={UI_STRINGS.disconnectWallet}

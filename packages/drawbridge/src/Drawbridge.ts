@@ -1,20 +1,22 @@
-import { Address, Chain, Client, Transport, createPublicClient } from "viem"
+import { Address, Transport } from "viem"
 import type { PaymasterClient } from "viem/account-abstraction"
-import { SessionClient, DrawbridgeStatus, PublicClient } from "./types"
+import { transactionQueue } from "@latticexyz/common/actions"
+import { SessionClient, DrawbridgeStatus, PublicClient, ConnectorClient } from "./types"
 import { getSessionSigner } from "./session/core/signer"
 import { getSessionAccount } from "./session/core/account"
 import { getSessionClient } from "./session/core/client"
 import { checkDelegation } from "./session/delegation/check"
 import { setupSession, type SetupSessionStatus } from "./session/delegation/setup"
 import { sessionStorage } from "./session/core/storage"
-import { getConnectorClient, getAccount, type Config, type CreateConnectorFn } from "@wagmi/core"
+import { getAccount, getConnectorClient, type Config, type CreateConnectorFn } from "@wagmi/core"
 import {
   createWalletConfig,
   setupAccountWatcher,
   attemptReconnect,
-  connectWallet as walletConnect,
+  attemptConnectWalletToChain,
   disconnectWallet as walletDisconnect,
-  getAvailableConnectors as walletGetAvailableConnectors
+  getAvailableConnectors as walletGetAvailableConnectors,
+  attemptSwitchChain
 } from "./wallet"
 import { logger, setLoggingEnabled } from "./logger"
 
@@ -148,7 +150,6 @@ export class Drawbridge {
   private state: DrawbridgeState
   private listeners = new Set<StateListener>()
   private wagmiConfig: Config
-  private _publicClient: PublicClient
   private accountWatcherCleanup: (() => void) | null = null
   private isConnecting = false
   private isDisconnecting = false
@@ -172,9 +173,6 @@ export class Drawbridge {
 
     // Get the chain from public client
     const chain = config.publicClient.chain
-
-    // Set the public client from config
-    this._publicClient = config.publicClient
 
     logger.log("[drawbridge] Public client created for chain:", chain.name)
 
@@ -358,43 +356,24 @@ export class Drawbridge {
    * Called when wagmi detects a connected account
    */
   private async handleWalletConnection(): Promise<void> {
-    // Get wallet client from wagmi
-    let userClient: Client
-    try {
-      userClient = await getConnectorClient(this.wagmiConfig)
-    } catch (err) {
-      logger.error("[drawbridge] Could not get connector client:", err)
+    // Get account state from wagmi directly (more reliable than getConnectorClient during connection)
+    const account = getAccount(this.wagmiConfig)
+
+    if (!account.isConnected || !account.address || !account.chain) {
+      logger.log("[drawbridge] Wallet client missing account or chain")
       return
     }
 
-    logger.log("[drawbridge] Got connector client:", {
-      hasAccount: !!userClient.account,
-      hasChain: !!userClient.chain,
-      account: userClient.account?.address,
-      chain: userClient.chain?.id
-    })
-
-    if (!userClient.account || !userClient.chain) {
-      logger.log("[drawbridge] Wallet client missing account or chain, checking wagmi account...")
-      // Try to get account info directly from wagmi
-      const wagmiAccount = getAccount(this.wagmiConfig)
-      logger.log("[drawbridge] Wagmi account state:", {
-        isConnected: wagmiAccount.isConnected,
-        address: wagmiAccount.address,
-        chainId: wagmiAccount.chainId,
-        connector: wagmiAccount.connector?.id
-      })
-      return
-    }
-
-    const userAddress = userClient.account.address
+    const userAddress = account.address
     logger.log("[drawbridge] Wallet connected:", userAddress)
 
+    // TODO chain validation should not be necessary here? (unclear regarding callWithSignatureAlt or smart accounts)
     // Validate wallet is on the correct chain
     const expectedChainId = this.config.publicClient.chain.id
-    if (userClient.chain.id !== expectedChainId) {
+    const currentChainId = await account.connector?.getChainId()
+    if (currentChainId !== expectedChainId) {
       const error = new Error(
-        `Chain mismatch: wallet on chain ${userClient.chain.id}, expected ${expectedChainId}`
+        `Chain mismatch: wallet on chain ${currentChainId}, expected ${expectedChainId}`
       )
       logger.error("[drawbridge]", error.message)
       throw error
@@ -423,25 +402,25 @@ export class Drawbridge {
 
     // DEBUG: Log details before creating session account
     logger.log("[drawbridge] About to create session account with publicClient:", {
-      chainId: this._publicClient.chain?.id,
-      chainName: this._publicClient.chain?.name,
+      chainId: this.config.publicClient.chain?.id,
+      chainName: this.config.publicClient.chain?.name,
       userAddress,
       timestamp: new Date().toISOString()
     })
 
     // Create ERC-4337 SimpleAccount smart wallet
     // Uses the dedicated publicClient for all chain reads
-    const { account } = await getSessionAccount({
-      publicClient: this._publicClient,
+    const { account: sessionAccount } = await getSessionAccount({
+      publicClient: this.config.publicClient,
       userAddress
     })
 
     // Create session client with MUD World callFrom/sendUserOperationFrom extensions
     // Uses the dedicated publicClient for MUD extension reads
     const sessionClient = await getSessionClient({
-      publicClient: this._publicClient,
+      publicClient: this.config.publicClient,
       userAddress,
-      sessionAccount: account,
+      sessionAccount,
       sessionSigner: signer,
       worldAddress: this.config.worldAddress!,
       paymasterOverride: this.config.paymasterClient,
@@ -453,10 +432,10 @@ export class Drawbridge {
     let hasDelegation = false
     try {
       hasDelegation = await checkDelegation({
-        client: this._publicClient,
+        client: this.config.publicClient,
         worldAddress: this.config.worldAddress!,
         userAddress,
-        sessionAddress: account.address
+        sessionAddress: sessionAccount.address
       })
     } catch (err) {
       logger.error("[drawbridge] Failed to check delegation:", err)
@@ -513,29 +492,12 @@ export class Drawbridge {
     this.updateState({ status: DrawbridgeStatus.CONNECTING })
 
     try {
-      await walletConnect(this.wagmiConfig, connectorId, this._publicClient.chain.id)
+      await attemptConnectWalletToChain(
+        this.wagmiConfig,
+        connectorId,
+        this.config.publicClient.chain.id
+      )
     } catch (err) {
-      // If already connected, manually trigger the connection handler
-      // since watchAccount won't fire for an already-connected state
-      if (err instanceof Error && err.name === "ConnectorAlreadyConnectedError") {
-        logger.log("[drawbridge] Already connected, triggering connection handler manually")
-        const account = getAccount(this.wagmiConfig)
-        if (account.isConnected && account.address) {
-          // Temporarily allow re-entry for this case
-          this.isConnecting = false
-          try {
-            this.isConnecting = true
-            await this.handleWalletConnection()
-          } finally {
-            this.isConnecting = false
-          }
-        } else {
-          // Weird state - connected error but no account, reset
-          logger.warn("[drawbridge] Already connected error but no account found")
-          this.updateState({ status: DrawbridgeStatus.DISCONNECTED })
-        }
-        return
-      }
       // Reset to DISCONNECTED on error
       this.updateState({ status: DrawbridgeStatus.DISCONNECTED })
       throw err
@@ -570,6 +532,28 @@ export class Drawbridge {
     logger.log("[drawbridge] Disconnect complete")
   }
 
+  async getConnectorClient(): Promise<ConnectorClient> {
+    const account = getAccount(this.wagmiConfig)
+    if (!account.isConnected) {
+      throw new Error("Not connected.")
+    }
+    // User's wallet may switch between different chains, ensure the current chain is correct
+    const expectedChainId = this.config.publicClient.chain.id
+    const currentChainId = await account.connector?.getChainId()
+    if (currentChainId !== expectedChainId) {
+      console.log(
+        `[drawbridge] Chain mismatch: current=${currentChainId}, expected=${expectedChainId}, attempting switch`
+      )
+      await attemptSwitchChain(this.wagmiConfig, expectedChainId)
+    }
+
+    // Get connected wallet client from wagmi
+    const connectorClient = await getConnectorClient(this.wagmiConfig)
+    // Extend with writeContract and sendTransaction via MUD transactionQueue
+    // The publicClient will be used in place of the wallet client for making public action calls
+    return connectorClient.extend(transactionQueue({ publicClient: this.config.publicClient }))
+  }
+
   /**
    * Check if session is ready to use
    *
@@ -584,7 +568,7 @@ export class Drawbridge {
     }
 
     const hasDelegation = await checkDelegation({
-      client: this._publicClient,
+      client: this.config.publicClient,
       worldAddress: this.config.worldAddress!,
       userAddress: this.state.userAddress!,
       sessionAddress: this.state.sessionAddress!
@@ -624,11 +608,11 @@ export class Drawbridge {
     this.updateState({ status: DrawbridgeStatus.SETTING_UP_SESSION })
 
     // Get current wallet client from wagmi
-    const userClient = await getConnectorClient(this.wagmiConfig)
+    const userClient = await this.getConnectorClient()
 
     try {
       await setupSession({
-        publicClient: this._publicClient,
+        publicClient: this.config.publicClient,
         userClient,
         sessionClient: this.state.sessionClient,
         worldAddress: this.config.worldAddress!,
@@ -724,10 +708,9 @@ export class Drawbridge {
    * - Waiting for transaction receipts
    * - Any other read-only operations
    *
-   * The client is created once in the constructor with the configured
-   * transport (WebSocket + HTTP fallback) and polling interval.
+   * The client is set once in the constructor from the config.
    */
   getPublicClient(): PublicClient {
-    return this._publicClient
+    return this.config.publicClient
   }
 }

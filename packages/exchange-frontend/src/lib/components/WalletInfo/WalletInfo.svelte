@@ -4,9 +4,9 @@
     fakeRatTokenBalance,
     exchangeRatBalance
   } from "$lib/modules/erc20Listener/stores"
-  import { userAddress } from "$lib/modules/drawbridge"
+  import { getDrawbridge, userAddress } from "$lib/modules/drawbridge"
   import { shortenAddress } from "$lib/modules/utils"
-  import { disconnectWallet, addRatTokenToWallet } from "$lib/modules/drawbridge/connector"
+  import { addRatTokenToWallet } from "$lib/modules/drawbridge/connector"
   import { SmallButton } from "$lib/components/Shared"
 
   let showDropdown = $state(false)
@@ -28,7 +28,7 @@
   }
 
   async function handleDisconnect() {
-    await disconnectWallet()
+    await getDrawbridge().disconnectWallet()
     showDropdown = false
     // Reload the page to reset state
     window.location.reload()

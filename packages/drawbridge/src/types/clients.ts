@@ -1,4 +1,13 @@
-import { Client, Chain, Transport, Account, Address, LocalAccount, PublicActions } from "viem"
+import {
+  Client,
+  Chain,
+  Transport,
+  Account,
+  Address,
+  LocalAccount,
+  PublicActions,
+  WalletActions
+} from "viem"
 import { SmartAccount } from "viem/account-abstraction"
 
 /**
@@ -17,7 +26,13 @@ export type PublicClient = Client<
  * A viem client with an account (connected wallet).
  * Used for wallet operations like signing.
  */
-export type WalletClient = Client<Transport, Chain, Account>
+export type ConnectorClient = Client<
+  Transport,
+  Chain,
+  Account,
+  undefined,
+  Pick<WalletActions<Chain, Account>, "writeContract" | "sendTransaction">
+>
 
 /**
  * A connected wallet client with account.

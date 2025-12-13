@@ -1,6 +1,6 @@
 import { erc20Abi, maxUint256, type TransactionReceipt } from "viem"
 import { ERC20EquivalentExchangeAbi } from "contracts/externalAbis"
-import { prepareConnectorClientForTransaction } from "$lib/modules/drawbridge/connector"
+import { getDrawbridge } from "$lib/modules/drawbridge"
 import { errorHandler } from "$lib/modules/error-handling"
 import { waitForTransactionReceiptSuccess } from "./executeTransaction"
 
@@ -18,7 +18,7 @@ export async function approveMaxFakeTokenForExchange(): Promise<TransactionRecei
 
   try {
     // Prepare the action's client
-    const client = await prepareConnectorClientForTransaction()
+    const client = await getDrawbridge().getConnectorClient()
 
     const tx = await client.writeContract({
       address: fakeTokenErc20Address,
@@ -43,7 +43,7 @@ export async function exchangeFakeToken(amount: number): Promise<TransactionRece
 
   try {
     // Prepare the action's client
-    const client = await prepareConnectorClientForTransaction()
+    const client = await getDrawbridge().getConnectorClient()
 
     const tx = await client.writeContract({
       address: fakeTokenExchangeAddress,
