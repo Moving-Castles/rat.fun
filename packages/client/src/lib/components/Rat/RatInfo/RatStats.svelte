@@ -171,7 +171,7 @@
           padding-inline: 10px;
           color: var(--foreground);
           font-size: var(--font-size-normal);
-          cursor: pointer;
+          pointer-events: none;
 
           @media (max-width: 800px) {
             display: none;
