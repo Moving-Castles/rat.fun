@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# Abort if not on main branch
+CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+if [ "$CURRENT_BRANCH" != "main" ]; then
+    echo "Error: Must be on main branch to deploy. Currently on: $CURRENT_BRANCH"
+    exit 1
+fi
+
 # Load environment variables
 source ../.env
 
