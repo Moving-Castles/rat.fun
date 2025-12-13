@@ -31,7 +31,6 @@ export function handleNewTrip(trip: SanityTrip) {
   if (!hasReceivedInitialTrips) return
 
   const ownerName = trip.ownerName ?? "Unknown"
-  const tripTitle = trip.title || `Trip #${trip.index ?? 0}`
 
   // Add to operator feed
   addFeedMessage({
@@ -39,7 +38,8 @@ export function handleNewTrip(trip: SanityTrip) {
     type: FEED_MESSAGE_TYPE.NEW_TRIP,
     timestamp: Date.now(),
     tripId: trip._id,
-    tripTitle,
+    tripIndex: trip.index ?? 0,
+    tripPrompt: trip.prompt ?? "",
     creatorName: ownerName
   })
 

@@ -21,18 +21,21 @@ export type ChatMessage = BaseFeedMessage & {
 export type NewTripMessage = BaseFeedMessage & {
   type: FEED_MESSAGE_TYPE.NEW_TRIP
   tripId: string
-  tripTitle: string
+  tripIndex: number
+  tripPrompt: string
   creatorName: string
 }
 
 export type NewOutcomeMessage = BaseFeedMessage & {
   type: FEED_MESSAGE_TYPE.NEW_OUTCOME
   tripId: string
-  tripTitle: string
+  tripIndex: number
   ratName: string
-  playerName: string
   result: "survived" | "died"
-  valueChange: number
+  ratOwnerName: string
+  ratOwnerValueChange: number
+  tripCreatorName: string
+  tripCreatorValueChange: number
 }
 
 export type PlayerJoinedMessage = BaseFeedMessage & {

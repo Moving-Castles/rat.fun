@@ -45,7 +45,7 @@ type ChatHistoryMessage = {
 type ServerMessage = ClientsUpdateMessage | ChatBroadcastMessage | ChatHistoryMessage
 
 const MAX_RECONNECTION_DELAY = 30000 // Maximum delay of 30 seconds
-const TOAST_RATE_LIMIT_MS = 60000 // Only show one connection toast per user per minute
+const TOAST_RATE_LIMIT_MS = 60000 * 5 // Only show one connection toast per user per 5 minutes
 
 let socket: WebSocket | null = null
 let reconnectAttempts = 0

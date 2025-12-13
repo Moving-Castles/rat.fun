@@ -208,17 +208,18 @@ export async function initPlayerOutcomes(worldAddress: string, playerTripIds: st
 
       // Add to operator feed for ALL outcomes
       const ratDied = outcome.ratValue === 0
-      const tripValueChange = outcome.tripValueChange ?? 0
       addFeedMessage({
         id: `outcome-${outcome._id}-${Date.now()}`,
         type: FEED_MESSAGE_TYPE.NEW_OUTCOME,
         timestamp: Date.now(),
         tripId: outcome.tripId ?? "",
-        tripTitle: trip?.title || `Trip #${trip?.index ?? 0}`,
+        tripIndex: outcome.tripIndex ?? trip?.index ?? 0,
         ratName: outcome.ratName ?? "Unknown Rat",
-        playerName: outcome.playerName ?? "Unknown Player",
         result: ratDied ? "died" : "survived",
-        valueChange: tripValueChange
+        ratOwnerName: outcome.playerName ?? "Unknown Player",
+        ratOwnerValueChange: outcome.ratValueChange ?? 0,
+        tripCreatorName: trip?.ownerName ?? "Unknown Creator",
+        tripCreatorValueChange: outcome.tripValueChange ?? 0
       })
 
       // Toast notifications only for player's trips
