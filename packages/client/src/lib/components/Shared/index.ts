@@ -35,6 +35,7 @@ export { default as SmallSpinner } from "./Loaders/SmallSpinner.svelte"
 /* Topbar */
 export { default as TopBar } from "./TopBar/TopBar.svelte"
 export { default as ModeSwitchButton } from "./Buttons/ModeSwitchButton.svelte"
+export { default as OperatorFeedButton } from "./Buttons/OperatorFeedButton.svelte"
 
 /* Layout Components */
 export { default as CenterBar } from "./CenterBar/CenterBar.svelte"

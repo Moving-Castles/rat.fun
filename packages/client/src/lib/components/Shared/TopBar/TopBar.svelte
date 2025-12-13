@@ -32,6 +32,7 @@
     display: flex;
     justify-content: space-between;
     height: var(--top-bar-height);
+    flex-shrink: 0;
     background: var(--background-semi-transparent);
     user-select: none;
     overflow-y: hidden;

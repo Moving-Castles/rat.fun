@@ -53,6 +53,35 @@ export type ClientsUpdateMessage = {
   timestamp: number
 }
 
+export type ChatBroadcastMessage = {
+  id: string
+  topic: "chat__message"
+  playerId: string
+  playerName: string
+  content: string
+  timestamp: number
+}
+
+export type ChatHistoryMessage = {
+  id: string
+  topic: "chat__history"
+  messages: Omit<ChatBroadcastMessage, "topic">[]
+  timestamp: number
+}
+
+export type ErrorMessage = {
+  topic: "error"
+  code: string
+  message: string
+  timestamp: number
+}
+
+export type ServerMessage =
+  | ClientsUpdateMessage
+  | ChatBroadcastMessage
+  | ChatHistoryMessage
+  | ErrorMessage
+
 export interface WebSocketInterface {
   send: (data: string) => void
 }

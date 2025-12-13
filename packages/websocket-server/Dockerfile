@@ -37,6 +37,9 @@ RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001
 # Install only production dependencies for websocket-server
 RUN pnpm install --prod --ignore-scripts --filter websocket-server...
 
+# Change ownership of all files to nodejs user
+RUN chown -R nodejs:nodejs /app
+
 USER nodejs
 
 EXPOSE 3232

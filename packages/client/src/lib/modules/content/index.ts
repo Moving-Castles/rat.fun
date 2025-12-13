@@ -19,6 +19,8 @@ import {
   markInitialTripsReceived,
   handleNewTrip
 } from "./new-trip-notifications"
+import { addFeedMessage } from "$lib/components/OperatorFeed/state.svelte"
+import { FEED_MESSAGE_TYPE } from "$lib/components/OperatorFeed/Feed/types"
 
 export { setPlayerIdStore }
 
@@ -198,11 +200,30 @@ export async function initPlayerOutcomes(worldAddress: string, playerTripIds: st
 
   // Subscribe to changes to all outcomes
   outcomesSubscription = client.listen(queries.outcomes, { worldAddress }).subscribe(update => {
-    // Handle new outcome notifications (only for player's trips)
+    // Handle new outcome
     if (update.transition === "appear" && update.result) {
-      if (playerTripIds.includes(update.result.tripId as string)) {
-        const currentContent = get(staticContent)
-        handleNewOutcome(update.result as SanityOutcome, currentContent.trips)
+      const outcome = update.result as SanityOutcome
+      const currentContent = get(staticContent)
+      const trip = currentContent.trips.find(t => t._id === outcome.tripId)
+
+      // Add to operator feed for ALL outcomes
+      const ratDied = outcome.ratValue === 0
+      const tripValueChange = outcome.tripValueChange ?? 0
+      addFeedMessage({
+        id: `outcome-${outcome._id}-${Date.now()}`,
+        type: FEED_MESSAGE_TYPE.NEW_OUTCOME,
+        timestamp: Date.now(),
+        tripId: outcome.tripId ?? "",
+        tripTitle: trip?.title || `Trip #${trip?.index ?? 0}`,
+        ratName: outcome.ratName ?? "Unknown Rat",
+        playerName: outcome.playerName ?? "Unknown Player",
+        result: ratDied ? "died" : "survived",
+        valueChange: tripValueChange
+      })
+
+      // Toast notifications only for player's trips
+      if (playerTripIds.includes(outcome.tripId as string)) {
+        handleNewOutcome(outcome, currentContent.trips)
       }
     }
 

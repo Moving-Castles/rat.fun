@@ -54,3 +54,25 @@ export class PlayerIdMismatchError extends SignatureError {
     super("PLAYER_ID_MISMATCH_ERROR", "Player ID mismatch", message)
   }
 }
+
+// ============================================================================
+// Chat Errors
+// ============================================================================
+
+export class ChatError extends AppError {
+  constructor(code: string = "CHAT_ERROR", errorType: string = "Chat error", message: string) {
+    super(code, errorType, message)
+  }
+}
+
+export class RateLimitError extends ChatError {
+  constructor(message: string = "Rate limited") {
+    super("RATE_LIMIT_ERROR", "Rate limited", message)
+  }
+}
+
+export class ValidationError extends ChatError {
+  constructor(message: string = "Validation failed") {
+    super("VALIDATION_ERROR", "Validation error", message)
+  }
+}

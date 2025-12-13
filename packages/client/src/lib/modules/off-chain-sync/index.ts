@@ -15,6 +15,9 @@ import {
   playerNotificationsEnabled,
   areNotificationsSuppressed
 } from "$lib/modules/ui/notification-settings"
+import { setSocket, sendPlayerName } from "./chat"
+import { addFeedMessage, addFeedMessages } from "$lib/components/OperatorFeed/state.svelte"
+import { FEED_MESSAGE_TYPE } from "$lib/components/OperatorFeed/Feed/types"
 
 type ClientsUpdateMessage = {
   id: string
@@ -22,6 +25,24 @@ type ClientsUpdateMessage = {
   message: string[]
   timestamp: number
 }
+
+type ChatBroadcastMessage = {
+  id: string
+  topic: "chat__message"
+  playerId: string
+  playerName: string
+  content: string
+  timestamp: number
+}
+
+type ChatHistoryMessage = {
+  id: string
+  topic: "chat__history"
+  messages: Omit<ChatBroadcastMessage, "topic">[]
+  timestamp: number
+}
+
+type ServerMessage = ClientsUpdateMessage | ChatBroadcastMessage | ChatHistoryMessage
 
 const MAX_RECONNECTION_DELAY = 30000 // Maximum delay of 30 seconds
 const TOAST_RATE_LIMIT_MS = 60000 // Only show one connection toast per user per minute
@@ -90,41 +111,86 @@ export async function initOffChainSync(environment: ENVIRONMENT, playerId: strin
   socket.onopen = () => {
     websocketConnected.set(true)
     reconnectAttempts = 0 // Reset attempts on successful connection
+
+    // Set socket reference for chat module
+    setSocket(socket)
+
+    // Send player name to server if available
+    const currentPlayers = get(players)
+    const playerData = currentPlayers[playerId]
+    if (playerData?.name) {
+      sendPlayerName(playerData.name)
+    }
   }
 
   socket.onmessage = (message: MessageEvent<string>) => {
-    const messageContent = JSON.parse(message.data) as ClientsUpdateMessage
+    const messageContent = JSON.parse(message.data) as ServerMessage
+
+    // Handle chat history (received on connection)
+    if (messageContent.topic === "chat__history") {
+      const historyMessage = messageContent as ChatHistoryMessage
+      const feedMessages = historyMessage.messages.map(msg => ({
+        id: msg.id,
+        type: FEED_MESSAGE_TYPE.CHAT as const,
+        timestamp: msg.timestamp,
+        playerId: msg.playerId,
+        playerName: msg.playerName,
+        content: msg.content
+      }))
+      addFeedMessages(feedMessages)
+    }
+
+    // Handle new chat message
+    if (messageContent.topic === "chat__message") {
+      const chatMessage = messageContent as ChatBroadcastMessage
+      addFeedMessage({
+        id: chatMessage.id,
+        type: FEED_MESSAGE_TYPE.CHAT,
+        timestamp: chatMessage.timestamp,
+        playerId: chatMessage.playerId,
+        playerName: chatMessage.playerName,
+        content: chatMessage.content
+      })
+    }
 
     // Update client list when players connect/disconnect
     if (messageContent.topic === "clients__update") {
+      const clientsMessage = messageContent as ClientsUpdateMessage
       const currentPlayers = get(players)
       const previousOnlinePlayers = get(onlinePlayers)
       const previousIds = new Set(previousOnlinePlayers.map(p => p.id))
 
-      const onlinePlayersList = messageContent.message
-        .map(playerId => ({
-          id: playerId,
-          name: currentPlayers[playerId]?.name ?? shortenAddress(playerId)
+      const onlinePlayersList = clientsMessage.message
+        .map(id => ({
+          id,
+          name: currentPlayers[id]?.name ?? shortenAddress(id)
         }))
         .sort((a, b) => a.name.localeCompare(b.name))
 
-      // Show toast for new players joining (not for yourself, not on initial load, if enabled, not suppressed)
-      if (
-        hasReceivedInitialClientList &&
-        playerNotificationsEnabled.current &&
-        !areNotificationsSuppressed()
-      ) {
+      // Show toast and feed message for new players joining
+      if (hasReceivedInitialClientList) {
         const now = Date.now()
         for (const player of onlinePlayersList) {
           if (!previousIds.has(player.id) && player.id !== currentPlayerId) {
-            // Rate limit: only show one toast per player per minute
-            const lastToastTime = lastToastTimeByPlayer.get(player.id) ?? 0
-            if (now - lastToastTime >= TOAST_RATE_LIMIT_MS) {
-              lastToastTimeByPlayer.set(player.id, now)
-              toastManager.add({
-                message: `${player.name} joined`,
-                type: TOAST_TYPE.PLAYER_NOTIFICATION
-              })
+            // Add to feed
+            addFeedMessage({
+              id: `player-join-${player.id}-${now}`,
+              type: FEED_MESSAGE_TYPE.PLAYER_JOINED,
+              timestamp: now,
+              playerId: player.id,
+              playerName: player.name
+            })
+
+            // Show toast (rate limited)
+            if (playerNotificationsEnabled.current && !areNotificationsSuppressed()) {
+              const lastToastTime = lastToastTimeByPlayer.get(player.id) ?? 0
+              if (now - lastToastTime >= TOAST_RATE_LIMIT_MS) {
+                lastToastTimeByPlayer.set(player.id, now)
+                toastManager.add({
+                  message: `${player.name} joined`,
+                  type: TOAST_TYPE.PLAYER_NOTIFICATION
+                })
+              }
             }
           }
         }
@@ -192,6 +258,9 @@ export function disconnectOffChainSync() {
     socket.close()
     socket = null
   }
+
+  // Clear socket reference in chat module
+  setSocket(null)
 
   websocketConnected.set(false)
   onlinePlayers.set([])
