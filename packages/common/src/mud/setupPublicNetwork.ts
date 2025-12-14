@@ -78,10 +78,20 @@ export type SetupPublicNetworkResult = {
   tableKeys: string[]
 }
 
+/**
+ * Optional initial block logs for skipping indexer hydration.
+ * When provided, MUD will skip fetching from indexer and start live sync from this block.
+ */
+export type InitialBlockLogs = {
+  blockNumber: bigint
+  logs: readonly []
+}
+
 export async function setupPublicNetwork(
   networkConfig: NetworkConfig,
   devMode: boolean,
-  publicClient?: PublicClient<Transport, Chain>
+  publicClient?: PublicClient<Transport, Chain>,
+  initialBlockLogs?: InitialBlockLogs
 ): Promise<SetupPublicNetworkResult> {
   const basicNetwork = await setupPublicBasicNetwork(networkConfig, devMode)
   publicClient ??= basicNetwork.publicClient
@@ -100,13 +110,32 @@ export async function setupPublicNetwork(
    * to the viem publicClient to make RPC calls to fetch MUD
    * events from the chain.
    *
-   * Supports fallback indexer URL: tries primary, then fallback, then RPC.
+   * If initialBlockLogs is provided, skip indexer hydration and start
+   * live sync from that block (used for server-side hydration).
    */
-  const { components, latestBlock$, storedBlockLogs$, waitForTransaction } = await syncWithFallback(
-    baseConfig,
-    networkConfig.indexerUrl,
-    networkConfig.fallbackIndexerUrl
-  )
+  let syncResult: recsSyncResult
+
+  if (initialBlockLogs) {
+    // Skip indexer - use server-provided data instead
+    console.log(
+      "[Chain Sync] Skipping indexer, using server hydration from block:",
+      initialBlockLogs.blockNumber.toString()
+    )
+    syncResult = await syncToRecs({
+      ...baseConfig,
+      initialBlockLogs,
+      indexerUrl: undefined
+    })
+  } else {
+    // Normal flow: try indexers with fallback
+    syncResult = await syncWithFallback(
+      baseConfig,
+      networkConfig.indexerUrl,
+      networkConfig.fallbackIndexerUrl
+    )
+  }
+
+  const { components, latestBlock$, storedBlockLogs$, waitForTransaction } = syncResult
 
   // Allows us to to only listen to the game specific tables
   const tableKeys = [

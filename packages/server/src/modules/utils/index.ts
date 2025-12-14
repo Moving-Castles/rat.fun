@@ -5,7 +5,7 @@ import { Hex, isHex } from "viem"
  * @param value The value to check
  * @returns True if valid bytes32 hex string
  */
-export function isValidBytes32(value: any): value is Hex {
+export function isValidBytes32(value: unknown): value is Hex {
   return isHex(value) && value.length === 66
 }
 

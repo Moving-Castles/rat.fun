@@ -40,7 +40,7 @@ export function initializeSentry(): void {
 /**
  * Capture an error with additional context
  */
-export function captureError(error: Error, context?: Record<string, any>): void {
+export function captureError(error: Error, context?: Record<string, unknown>): void {
   if (context) {
     Sentry.withScope((scope: Sentry.Scope) => {
       Object.entries(context).forEach(([key, value]) => {
@@ -59,7 +59,7 @@ export function captureError(error: Error, context?: Record<string, any>): void 
 export function captureMessage(
   message: string,
   level: Sentry.SeverityLevel = "error",
-  context?: Record<string, any>
+  context?: Record<string, unknown>
 ): void {
   if (context) {
     Sentry.withScope((scope: Sentry.Scope) => {
@@ -90,7 +90,7 @@ export function setTag(key: string, value: string): void {
 /**
  * Set extra context for Sentry
  */
-export function setExtra(key: string, value: any): void {
+export function setExtra(key: string, value: unknown): void {
   Sentry.setExtra(key, value)
 }
 

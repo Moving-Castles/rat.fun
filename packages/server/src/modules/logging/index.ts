@@ -52,7 +52,7 @@ export class TripLogger {
    * Log a message (accepts multiple arguments like console.log)
    * @param args - The arguments to log
    */
-  log(...args: any[]) {
+  log(...args: unknown[]) {
     // Format the message by stringifying all arguments
     const message = args
       .map(arg => {

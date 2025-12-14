@@ -11,14 +11,14 @@ export const privateSanityClient = createClient({
   useCdn: false // `false` if you want to ensure fresh data
 })
 
-export const loadDataPrivateSanity = async (query: string, params: any) => {
+export const loadDataPrivateSanity = async (query: string, params: Record<string, unknown>) => {
   try {
     const res = await privateSanityClient.fetch(query, params)
     if (res === null) {
       return Promise.reject(new Error("404"))
     }
     return res
-  } catch (err) {
+  } catch {
     return Promise.reject(new Error("404"))
   }
 }

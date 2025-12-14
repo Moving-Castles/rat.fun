@@ -204,6 +204,26 @@ export async function initEntities(options: InitEntitiesOptions = {}) {
 
   // Filter to only game-specific tables (excludes MUD system tables)
   const tableKeys = get(publicNetwork).tableKeys
+
+  // Check if entities were already populated by server hydration
+  // In this case, skip MUD component processing and just set up live update systems
+  const existingEntities = get(entities)
+  if (Object.keys(existingEntities).length > 0) {
+    console.log(
+      "[initEntities] Entities already populated (server hydration), setting up live systems only"
+    )
+
+    // Create systems to listen to changes on game-specific tables
+    for (const componentKey of tableKeys) {
+      createComponentSystem(componentKey)
+    }
+
+    // Mark as initialized for this player
+    initializedForPlayer = activePlayerId
+    console.log("[initEntities] Live systems ready for player:", activePlayerId)
+    return
+  }
+
   const filteredComponents = filterObjectByKey(get(publicNetwork).components, tableKeys)
 
   // Build filter context (needs player's rat and inventory info)

@@ -4,7 +4,7 @@ import { getLatestBlockNumber } from "@modules/mud/getOnchainData"
 import { network } from "@modules/mud/initMud"
 import { getNetworkConfig } from "@modules/mud/getNetworkConfig"
 
-async function routes(fastify: FastifyInstance, options: object) {
+async function routes(fastify: FastifyInstance, _options: object) {
   fastify.get("/healthz", async (request, reply) => {
     const health = {
       status: "healthy",
@@ -61,7 +61,7 @@ async function routes(fastify: FastifyInstance, options: object) {
         const rpcUrl = networkConfig.chain.rpcUrls.default.http[0]
         health.services.blockchain.rpc_url = rpcUrl
       }
-    } catch (error) {
+    } catch {
       // If we can't get the RPC URL, we'll leave it as null
       // This shouldn't affect the overall health status
     }

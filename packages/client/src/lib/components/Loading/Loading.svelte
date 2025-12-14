@@ -19,6 +19,36 @@
   import { initializeDrawbridge, getDrawbridge } from "$lib/modules/drawbridge"
   import { initWalletNetwork } from "$lib/initWalletNetwork"
 
+  /**
+   * Peek at localStorage for a stored wallet address.
+   * This allows server hydration to work on returning users before full drawbridge init.
+   * Returns undefined if no stored address found.
+   */
+  function peekStoredUserAddress(): string | undefined {
+    if (typeof window === "undefined") return undefined
+
+    try {
+      // Wagmi stores state in localStorage under 'wagmi.store'
+      const wagmiStore = localStorage.getItem("wagmi.store")
+      if (!wagmiStore) return undefined
+
+      const parsed = JSON.parse(wagmiStore)
+      // Wagmi stores connections as an array, get the first connected account
+      const connections = parsed?.state?.connections?.value
+      if (!connections || !Array.isArray(connections)) return undefined
+
+      for (const connection of connections) {
+        if (connection.accounts && connection.accounts.length > 0) {
+          return connection.accounts[0]
+        }
+      }
+    } catch {
+      // Ignore parse errors
+    }
+
+    return undefined
+  }
+
   const {
     environment,
     loaded = () => {},
@@ -104,11 +134,18 @@
     // Step 1: Initialize public network (MUD sync)
     // -------------------------------------------------------------------------
     // Sets up MUD layer and waits for chain sync to complete.
+    // If a stored wallet address is found, attempts server hydration first.
     // Returns publicClient and transport for reuse by drawbridge.
-    console.log("[Loading] Initializing public network...")
-    const { publicClient, transport, worldAddress } = await initPublicNetwork({
+    const storedAddress = peekStoredUserAddress()
+    console.log(
+      "[Loading] Initializing public network...",
+      storedAddress ? `(found stored address: ${storedAddress})` : "(no stored address)"
+    )
+
+    const { publicClient, transport, worldAddress, usedServerHydration } = await initPublicNetwork({
       environment,
-      url: page.url
+      url: page.url,
+      userAddress: storedAddress
     })
 
     // -------------------------------------------------------------------------

@@ -36,104 +36,100 @@ async function routes(fastify: FastifyInstance) {
     "/trip/create",
     opts,
     async (request: FastifyRequest<{ Body: SignedRequest<CreateTripRequestBody> }>, reply) => {
-      try {
-        const { tripPrompt, tripCreationCost, folderId } = request.body.data
+      const { tripPrompt, tripCreationCost, folderId } = request.body.data
 
-        // Recover player address from signature and convert to MUD bytes32 format
-        const { callerAddress, playerId } = await verifyRequest(request.body)
+      // Recover player address from signature and convert to MUD bytes32 format
+      const { callerAddress, playerId } = await verifyRequest(request.body)
 
-        // * * * * * * * * * * * * * * * * * *
-        // Get onchain data
-        // * * * * * * * * * * * * * * * * * *
+      // * * * * * * * * * * * * * * * * * *
+      // Get onchain data
+      // * * * * * * * * * * * * * * * * * *
 
-        const { gameConfig, player } = await getCreateTripData(playerId)
+      const { gameConfig, player } = await getCreateTripData(playerId)
 
-        // * * * * * * * * * * * * * * * * * *
-        // Validate data
-        // * * * * * * * * * * * * * * * * * *
+      // * * * * * * * * * * * * * * * * * *
+      // Validate data
+      // * * * * * * * * * * * * * * * * * *
 
-        validateInputData(gameConfig, player, tripPrompt, tripCreationCost)
+      validateInputData(gameConfig, player, tripPrompt, tripCreationCost)
 
-        // Validate trip folder with user address for whitelist checking
-        await validateTripFolder(folderId, callerAddress)
+      // Validate trip folder with user address for whitelist checking
+      await validateTripFolder(folderId, callerAddress)
 
-        // * * * * * * * * * * * * * * * * * *
-        // Generate unique trip ID
-        // * * * * * * * * * * * * * * * * * *
+      // * * * * * * * * * * * * * * * * * *
+      // Generate unique trip ID
+      // * * * * * * * * * * * * * * * * * *
 
-        // Doing it onchain does not allow us to use it to connect the trip to the image
-        const tripId = generateRandomBytes32()
+      // Doing it onchain does not allow us to use it to connect the trip to the image
+      const tripId = generateRandomBytes32()
 
-        // * * * * * * * * * * * * * * * * * *
-        // Create trip onchain
-        // * * * * * * * * * * * * * * * * * *
+      // * * * * * * * * * * * * * * * * * *
+      // Create trip onchain
+      // * * * * * * * * * * * * * * * * * *
 
-        console.time("–– Chain call")
-        await systemCalls.createTrip(playerId, tripId, tripCreationCost, tripPrompt)
-        console.timeEnd("–– Chain call")
+      console.time("–– Chain call")
+      await systemCalls.createTrip(playerId, tripId, tripCreationCost, tripPrompt)
+      console.timeEnd("–– Chain call")
 
-        // * * * * * * * * * * * * * * * * * *
-        // Write trip text data to CMS
-        // * * * * * * * * * * * * * * * * * *
+      // * * * * * * * * * * * * * * * * * *
+      // Write trip text data to CMS
+      // * * * * * * * * * * * * * * * * * *
 
-        console.time("–– CMS text write")
-        const resolvedNetwork = await network
-        const worldAddress = resolvedNetwork.worldContract?.address ?? "0x0"
-        const tripIndex = Number(getTripIndex(tripId))
-        await writeTripToCMS(worldAddress, tripIndex, tripId, tripPrompt, player, folderId)
-        console.timeEnd("–– CMS text write")
+      console.time("–– CMS text write")
+      const resolvedNetwork = await network
+      const worldAddress = resolvedNetwork.worldContract?.address ?? "0x0"
+      const tripIndex = Number(getTripIndex(tripId))
+      await writeTripToCMS(worldAddress, tripIndex, tripId, tripPrompt, player, folderId)
+      console.timeEnd("–– CMS text write")
 
-        // * * * * * * * * * * * * * * * * * *
-        // Background actions
-        // * * * * * * * * * * * * * * * * * *
+      // * * * * * * * * * * * * * * * * * *
+      // Background actions
+      // * * * * * * * * * * * * * * * * * *
 
-        const backgroundActions = async () => {
-          console.time("–– Background actions")
-          try {
-            // Get the image data with timeout (30 seconds)
-            const imageBuffer = await withTimeout(
-              generateImage(tripPrompt),
-              30000,
-              "Image generation timed out"
-            )
+      const backgroundActions = async () => {
+        console.time("–– Background actions")
+        try {
+          // Get the image data with timeout (30 seconds)
+          const imageBuffer = await withTimeout(
+            generateImage(tripPrompt),
+            30000,
+            "Image generation timed out"
+          )
 
-            // Update the trip document with the image
-            await updateTripWithImage(tripId, imageBuffer)
-          } catch (error) {
-            handleBackgroundError(error, "Trip Creation - Image Generation & CMS")
+          // Update the trip document with the image
+          await updateTripWithImage(tripId, imageBuffer)
+        } catch (error) {
+          handleBackgroundError(error, "Trip Creation - Image Generation & CMS")
 
-            // Read default trip image static folder
-            const defaultTripImagePath = path.resolve(
-              process.cwd(),
-              "static",
-              "assets",
-              "default-trip-image.png"
-            )
-            const defaultTripImage = fs.readFileSync(defaultTripImagePath)
+          // Read default trip image static folder
+          const defaultTripImagePath = path.resolve(
+            process.cwd(),
+            "static",
+            "assets",
+            "default-trip-image.png"
+          )
+          const defaultTripImage = fs.readFileSync(defaultTripImagePath)
 
-            // Update the trip document with the default image
-            await updateTripWithImage(tripId, defaultTripImage)
-          } finally {
-            console.timeEnd("–– Background actions")
-          }
+          // Update the trip document with the default image
+          await updateTripWithImage(tripId, defaultTripImage)
+        } finally {
+          console.timeEnd("–– Background actions")
         }
-
-        // Start the background process without awaiting (with overall timeout of 60 seconds)
-        withTimeout(backgroundActions(), 60000, "Background task timed out").catch(error => {
-          console.error("Background task failed or timed out:", error)
-        })
-
-        // * * * * * * * * * * * * * * * * * *
-        // Send response to client
-        // * * * * * * * * * * * * * * * * * *
-
-        reply.send({
-          success: true,
-          tripId
-        })
-      } catch (error) {
-        throw error
       }
+
+      // Start the background process without awaiting (with overall timeout of 60 seconds)
+      withTimeout(backgroundActions(), 60000, "Background task timed out").catch(error => {
+        console.error("Background task failed or timed out:", error)
+      })
+
+      // * * * * * * * * * * * * * * * * * *
+      // Send response to client
+      // * * * * * * * * * * * * * * * * * *
+
+      reply.send({
+        success: true,
+        tripId
+      })
     }
   )
 }

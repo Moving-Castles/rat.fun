@@ -50,7 +50,7 @@ export async function getNetworkConfig(chainId: number) {
   const envInitialBlock = process.env.INITIAL_BLOCK
   const initialBlockNumber = envInitialBlock
     ? BigInt(envInitialBlock)
-    : ((world as any)?.blockNumber ?? 0n)
+    : BigInt((world as { blockNumber?: number })?.blockNumber ?? 0)
 
   return {
     chainId,

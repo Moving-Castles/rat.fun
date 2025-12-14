@@ -29,16 +29,18 @@ export function getTripIndex(tripId: string) {
 
 export async function getLatestBlockNumber() {
   const { latestBlock$ } = network
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const observable$ = latestBlock$ as any
   return firstValueFrom(
-    latestBlock$.pipe(
+    observable$.pipe(
       timeout(10000), // 10 second timeout
-      catchError(error => {
+      catchError((error: unknown) => {
         // If timeout or other error occurs, return BigInt(0)
         console.warn("Failed to get latest block number:", error)
         return of({ number: BigInt(0) })
       })
     )
   ).then((block: unknown) => {
-    return ((block as any).number as bigint) ?? BigInt(0)
+    return ((block as { number?: bigint })?.number as bigint) ?? BigInt(0)
   })
 }

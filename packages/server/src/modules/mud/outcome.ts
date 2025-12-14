@@ -97,7 +97,7 @@ export function createOutcomeCallArgs(
   const itemsToRemoveLLM = outcome.itemChanges.filter(c => c.type === "remove")
 
   const itemsToRemoveFromRat: Hex[] = []
-  const invalidRemovals: Array<{ name: string; id: any }> = []
+  const invalidRemovals: Array<{ name: string; id: unknown }> = []
 
   if (itemsToRemoveLLM.length === 0) {
     logger.log("  ℹ️  No items to remove")
@@ -626,7 +626,7 @@ function scaleBalanceTransfers(
   }))
 
   // Fix rounding errors - adjust the largest absolute value transfer
-  let scaledSum = scaledTransfers.reduce((sum, t) => sum + t.amount, 0)
+  const scaledSum = scaledTransfers.reduce((sum, t) => sum + t.amount, 0)
   const roundingError = targetSum - scaledSum
 
   if (roundingError !== 0) {
