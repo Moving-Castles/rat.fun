@@ -19,13 +19,19 @@ export const selectedFolderId = writable("")
 // Track if we're on a phone-sized screen (max-width: 800px)
 export const isPhone = writable(false)
 
-// Initialize isPhone based on window size (browser only)
+// Track if we're on Firefox browser
+export const isFirefox = writable(false)
+
+// Initialize isPhone and isFirefox based on window size and user agent (browser only)
 if (typeof window !== "undefined") {
   const checkPhone = () => {
     isPhone.set(window.innerWidth <= 800)
   }
   checkPhone()
   window.addEventListener("resize", checkPhone)
+
+  // Check if Firefox
+  isFirefox.set(navigator.userAgent.toLowerCase().includes("firefox"))
 }
 
 // Phone view state - tracks which view is active on mobile game view (ratbox or triplisting)

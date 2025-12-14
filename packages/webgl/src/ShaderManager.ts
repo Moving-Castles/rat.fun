@@ -9,6 +9,8 @@ export interface ShaderManagerOptions {
   errorHandler: ErrorHandler
   /** Function that returns whether the current device is a phone */
   isPhone: () => boolean
+  /** Function that returns whether the current browser is Firefox */
+  isFirefox: () => boolean
 }
 
 export class ShaderManager {
@@ -28,10 +30,12 @@ export class ShaderManager {
   private forceContinuousRendering = false
   private errorHandler: ErrorHandler
   private isPhone: () => boolean
+  private isFirefox: () => boolean
 
   constructor(options: ShaderManagerOptions) {
     this.errorHandler = options.errorHandler
     this.isPhone = options.isPhone
+    this.isFirefox = options.isFirefox
   }
 
   /**
@@ -155,17 +159,13 @@ export class ShaderManager {
           this._canvas.style.display = "block"
         }
 
-        // On mobile, pause after first frame unless continuous rendering is forced
-        if (this.isPhone() && !this.forceContinuousRendering && this._renderer) {
-          // Wait for first frame to render, then pause
-          // Use double requestAnimationFrame to ensure the frame is actually painted
-          requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-              if (this._renderer && !this.forceContinuousRendering) {
-                this._renderer.pause()
-              }
-            })
-          })
+        // On mobile or Firefox, pause after first frame unless continuous rendering is forced
+        if ((this.isPhone() || this.isFirefox()) && !this.forceContinuousRendering && this._renderer) {
+          // Manually render the first frame immediately before pausing
+          // This ensures we get at least one frame painted
+          this._renderer.renderSingleFrame()
+          // Then pause to stop the animation loop
+          this._renderer.pause()
         }
       } catch (error) {
         // Error already logged to Sentry in initializeRenderer
@@ -195,11 +195,11 @@ export class ShaderManager {
   }
 
   /**
-   * Disable continuous rendering (revert to mobile optimization)
+   * Disable continuous rendering (revert to mobile/Firefox optimization)
    */
   disableContinuousRendering() {
     this.forceContinuousRendering = false
-    if (this.isPhone() && this._renderer) {
+    if ((this.isPhone() || this.isFirefox()) && this._renderer) {
       this._renderer.pause()
     }
   }

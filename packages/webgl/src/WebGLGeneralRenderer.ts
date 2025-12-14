@@ -353,10 +353,15 @@ export class WebGLGeneralRenderer implements WebGLRenderer {
    * If autoRender is enabled, schedules the next frame.
    */
   render(): void {
-    if (!this.gl || !this.program || this.contextLost || this.isPaused) {
+    if (!this.gl || !this.program || this.contextLost) {
       if (this.autoRender && !this.isPaused) {
         this.animationId = requestAnimationFrame(() => this.render())
       }
+      return
+    }
+
+    // If paused, don't render or schedule next frame
+    if (this.isPaused) {
       return
     }
 
