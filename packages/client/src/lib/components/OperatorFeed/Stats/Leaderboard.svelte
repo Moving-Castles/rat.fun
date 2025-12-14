@@ -1,11 +1,18 @@
 <script lang="ts">
+  import { onMount } from "svelte"
   import { fade } from "svelte/transition"
   import {
     ratLeaderboard,
     killsLeaderboard,
     tripLeaderboard,
     ratLeaderboardMode,
-    tripLeaderboardMode
+    tripLeaderboardMode,
+    ratLeaderboardLoading,
+    killsLeaderboardLoading,
+    tripLeaderboardLoading,
+    loadAllLeaderboards,
+    loadRatLeaderboard,
+    loadTripLeaderboard
   } from "../state.svelte"
   import LeaderboardSection from "./LeaderboardSection.svelte"
   import LeaderboardEntry from "./LeaderboardEntry.svelte"
@@ -22,11 +29,17 @@
 
   function handleRatModeChange(value: string) {
     ratLeaderboardMode.set(value as "alive" | "all_time")
+    loadRatLeaderboard()
   }
 
   function handleTripModeChange(value: string) {
     tripLeaderboardMode.set(value as "active" | "all_time")
+    loadTripLeaderboard()
   }
+
+  onMount(() => {
+    loadAllLeaderboards()
+  })
 </script>
 
 <div class="leaderboard" in:fade|global={{ duration: 300 }}>
@@ -36,7 +49,9 @@
     toggleValue={$ratLeaderboardMode}
     onToggleChange={handleRatModeChange}
   >
-    {#if $ratLeaderboard.length === 0}
+    {#if $ratLeaderboardLoading}
+      <div class="empty-state">Loading...</div>
+    {:else if $ratLeaderboard.length === 0}
       <div class="empty-state">No data available</div>
     {:else}
       {#each $ratLeaderboard as entry (entry.id)}
@@ -51,7 +66,9 @@
   </LeaderboardSection>
 
   <LeaderboardSection title="Most Rats Killed">
-    {#if $killsLeaderboard.length === 0}
+    {#if $killsLeaderboardLoading}
+      <div class="empty-state">Loading...</div>
+    {:else if $killsLeaderboard.length === 0}
       <div class="empty-state">No data available</div>
     {:else}
       {#each $killsLeaderboard as entry (entry.playerId)}
@@ -71,7 +88,9 @@
     toggleValue={$tripLeaderboardMode}
     onToggleChange={handleTripModeChange}
   >
-    {#if $tripLeaderboard.length === 0}
+    {#if $tripLeaderboardLoading}
+      <div class="empty-state">Loading...</div>
+    {:else if $tripLeaderboard.length === 0}
       <div class="empty-state">No data available</div>
     {:else}
       {#each $tripLeaderboard as entry (entry.tripId)}
