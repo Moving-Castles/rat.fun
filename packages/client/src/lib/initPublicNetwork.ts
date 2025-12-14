@@ -4,21 +4,31 @@ import {
   getNetworkConfig,
   setupPublicNetwork,
   SetupPublicNetworkResult,
-  IndexerUrlConfig
+  IndexerUrlConfig,
+  InitialBlockLogs
 } from "@ratfun/common/mud"
-import { waitForChainSync } from "$lib/modules/chain-sync"
-import { publicNetwork, ready, initBlockListener } from "$lib/modules/network"
+import { waitForChainSync, hydrateFromServer, getHydrationUrl } from "$lib/modules/chain-sync"
+import {
+  publicNetwork,
+  ready,
+  initBlockListener,
+  environment as envStore
+} from "$lib/modules/network"
+import { entities } from "$lib/modules/state/stores"
+import { addressToId } from "$lib/modules/utils"
 import { env } from "$env/dynamic/public"
 
 interface InitPublicNetworkOptions {
   environment: ENVIRONMENT
   url: URL
+  userAddress?: string // Optional - for server hydration
 }
 
 interface InitPublicNetworkResult {
   publicClient: SetupPublicNetworkResult["publicClient"]
   transport: SetupPublicNetworkResult["transport"]
   worldAddress: Hex
+  usedServerHydration: boolean
 }
 
 /**
@@ -52,23 +62,60 @@ function getIndexerUrlConfig(environment: ENVIRONMENT): IndexerUrlConfig | null 
  * Initialize the public network connection and wait for chain sync to complete.
  * Sets up MUD layer, waits for indexer sync, and starts block listener.
  *
+ * If userAddress is provided and a hydration server is configured, attempts
+ * server-side hydration first (skips indexer, loads filtered data directly).
+ *
  * Returns the publicClient and transport for use by other systems (e.g. drawbridge).
  *
  * @param options.environment - The environment to connect to
  * @param options.url - The URL (for query params like worldAddress)
+ * @param options.userAddress - Optional user address for server hydration
  */
 export async function initPublicNetwork(
   options: InitPublicNetworkOptions
 ): Promise<InitPublicNetworkResult> {
-  const { environment, url } = options
+  const { environment, url, userAddress } = options
 
-  // Setup MUD layer and store reference
+  let initialBlockLogs: InitialBlockLogs | undefined
+  let serverEntities: Entities | undefined
+
+  // Try server hydration if configured and user address provided
+  if (userAddress && getHydrationUrl(environment)) {
+    const playerId = addressToId(userAddress)
+    console.log("[initPublicNetwork] Attempting server hydration for player:", playerId)
+
+    const result = await hydrateFromServer(playerId, environment)
+
+    if (result) {
+      initialBlockLogs = { blockNumber: result.blockNumber, logs: [] as const }
+      serverEntities = result.entities
+      console.log(
+        "[initPublicNetwork] Server hydration succeeded, block:",
+        result.blockNumber.toString()
+      )
+    } else {
+      console.log("[initPublicNetwork] Server hydration failed, falling back to indexer")
+    }
+  }
+
+  // Setup MUD layer (with or without indexer skip)
   const indexerUrlConfig = getIndexerUrlConfig(environment)
   const networkConfig = getNetworkConfig(environment, url, null, indexerUrlConfig)
-  const mudLayer = await setupPublicNetwork(networkConfig, import.meta.env.DEV)
+  const mudLayer = await setupPublicNetwork(
+    networkConfig,
+    import.meta.env.DEV,
+    undefined,
+    initialBlockLogs
+  )
   publicNetwork.set(mudLayer)
 
-  // Wait for chain sync to complete (updates loading UI during sync)
+  // If server hydration succeeded, set entities store directly
+  if (serverEntities) {
+    console.log("[initPublicNetwork] Setting entities from server hydration")
+    entities.set(serverEntities)
+  }
+
+  // Wait for chain sync to complete (fast if we skipped indexer)
   await waitForChainSync()
 
   // Mark as ready (for any components that need to check sync status)
@@ -81,6 +128,7 @@ export async function initPublicNetwork(
   return {
     publicClient: mudLayer.publicClient,
     transport: mudLayer.transport,
-    worldAddress: mudLayer.worldAddress
+    worldAddress: mudLayer.worldAddress,
+    usedServerHydration: !!serverEntities
   }
 }

@@ -69,7 +69,7 @@ declare global {
     dead?: mudComponents["Dead"]
     inventory?: mudComponents["Inventory"]
     currentRat?: mudComponents["CurrentRat"]
-    pastRats: mudComponents["PastRats"]
+    pastRats?: mudComponents["PastRats"]
     owner?: mudComponents["Owner"]
     prompt?: mudComponents["Prompt"]
     index?: mudComponents["Index"]
@@ -82,12 +82,12 @@ declare global {
     liquidationTaxPercentage?: mudComponents["LiquidationTaxPercentage"]
     liquidationBlock?: mudComponents["LiquidationBlock"]
     masterKey?: mudComponents["MasterKey"]
-    // Gameconfig related fields
-    gameConfig: GameConfigObject
-    gamePercentagesConfig: GamePercentagesConfigObject
-    externalAddressesConfig: ExternalAddressesConfigObject
-    worldEvent: WorldEventObject
-    worldStats: WorldStatsObject
+    // Gameconfig related fields (only present on World entity)
+    gameConfig?: GameConfigObject
+    gamePercentagesConfig?: GamePercentagesConfigObject
+    externalAddressesConfig?: ExternalAddressesConfigObject
+    worldEvent?: WorldEventObject
+    worldStats?: WorldStatsObject
   }
 
   type Player = {

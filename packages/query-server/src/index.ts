@@ -5,6 +5,11 @@ import compress from "@fastify/compress"
 import healthz from "./routes/healthz.js"
 import rat from "./routes/rat.js"
 import status from "./routes/status.js"
+import player from "./routes/player.js"
+import trip from "./routes/trip.js"
+import item from "./routes/item.js"
+import leaderboards from "./routes/leaderboards.js"
+import hydration from "./routes/hydration.js"
 import { closePool } from "./db.js"
 
 // Validate required environment variables
@@ -38,6 +43,11 @@ fastify.register(cors, {
 // Register routes
 fastify.register(healthz)
 fastify.register(rat)
+fastify.register(player)
+fastify.register(trip)
+fastify.register(item)
+fastify.register(leaderboards)
+fastify.register(hydration)
 fastify.register(status)
 
 // Root endpoint

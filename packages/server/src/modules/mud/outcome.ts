@@ -626,7 +626,7 @@ function scaleBalanceTransfers(
   }))
 
   // Fix rounding errors - adjust the largest absolute value transfer
-  let scaledSum = scaledTransfers.reduce((sum, t) => sum + t.amount, 0)
+  const scaledSum = scaledTransfers.reduce((sum, t) => sum + t.amount, 0)
   const roundingError = targetSum - scaledSum
 
   if (roundingError !== 0) {

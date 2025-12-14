@@ -83,7 +83,7 @@ export async function callModel<T extends z.ZodTypeAny>(
             error
           )
         }
-      } catch (parseError) {
+      } catch {
         // If we can't parse the error, fall through to generic handling
       }
     }

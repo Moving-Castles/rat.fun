@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify"
 
-async function routes(fastify: FastifyInstance, options: object) {
-  fastify.get("/test/ping", async (request, reply) => {
+async function routes(fastify: FastifyInstance, _options: object) {
+  fastify.get("/test/ping", async (_request, _reply) => {
     return { message: "pong" }
   })
 }

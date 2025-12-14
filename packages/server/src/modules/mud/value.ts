@@ -83,7 +83,7 @@ export function calculateTotalRatValue(rat: Rat) {
 
   const balanceValue = Number(rat.balance ?? 0)
   const inventoryValue = (rat.inventory ?? []).reduce(
-    (acc, item) => acc + (Number(item?.value) ?? 0),
+    (acc, item) => acc + (Number(item?.value) || 0),
     0
   )
 

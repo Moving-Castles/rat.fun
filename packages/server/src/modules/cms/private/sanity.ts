@@ -18,7 +18,7 @@ export const loadDataPrivateSanity = async (query: string, params: any) => {
       return Promise.reject(new Error("404"))
     }
     return res
-  } catch (err) {
+  } catch {
     return Promise.reject(new Error("404"))
   }
 }

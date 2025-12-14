@@ -6,5 +6,5 @@ export default defineConfig(() => ({
   sourcemap: true,
   dts: true,
   clean: true,
-  entry: ["src/index.ts"]
+  entry: ["src/index.ts", "src/types.ts"]
 }))
