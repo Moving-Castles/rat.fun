@@ -54,8 +54,8 @@ export type SetupNetworkReturnType = {
   playerEntity: ReturnType<typeof encodeEntity>
   publicClient: PublicClient<Transport, Chain>
   walletClient: WalletClient<Transport, Chain, PrivateKeyAccount>
-  latestBlock$: any
-  storedBlockLogs$: any
+  latestBlock$: recsSyncResult["latestBlock$"]
+  storedBlockLogs$: recsSyncResult["storedBlockLogs$"]
   waitForTransaction: recsSyncResult["waitForTransaction"]
   worldContract: GetContractReturnType<
     typeof IWorldAbi,

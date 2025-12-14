@@ -187,7 +187,7 @@ export class OutcomeValidationError extends SystemCallError {
     code: string = "OUTCOME_VALIDATION_ERROR",
     errorType: string = "Outcome validation error",
     message: string,
-    public context?: Record<string, any>
+    public context?: Record<string, unknown>
   ) {
     super(code, errorType, message)
   }
@@ -200,7 +200,7 @@ export class BalanceTransferMismatchError extends OutcomeValidationError {
     public readonly actual: number,
     public readonly ratId: string,
     public readonly isSignFlip: boolean = false,
-    additionalContext?: Record<string, any>
+    additionalContext?: Record<string, unknown>
   ) {
     const code = isSignFlip ? "BALANCE_SIGN_FLIP_ERROR" : "BALANCE_TRANSFER_MISMATCH_ERROR"
     const errorType = isSignFlip ? "Critical balance sign flip" : "Balance transfer mismatch"

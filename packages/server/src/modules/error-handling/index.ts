@@ -155,7 +155,7 @@ export function errorHandler(error: FastifyError, request: FastifyRequest, reply
   ) {
     // Capture server errors in Sentry with error level
     // Include additional context for specific error types
-    let errorContext: Record<string, any> = sentryContext
+    let errorContext: Record<string, unknown> = sentryContext
 
     if (error instanceof OutcomeValidationError && error.context) {
       errorContext = { ...sentryContext, ...error.context }
@@ -210,7 +210,7 @@ export function errorHandler(error: FastifyError, request: FastifyRequest, reply
 export function handleBackgroundError(
   error: unknown,
   contextStr: string,
-  additionalContext?: Record<string, any>
+  additionalContext?: Record<string, unknown>
 ): void {
   const errorCode = error instanceof AppError ? error.code : "UNKNOWN_ERROR"
   const errorMessage = `${errorCode}: ${error instanceof Error ? error.message : String(error)}`
@@ -230,7 +230,7 @@ export function handleBackgroundError(
 
   // Capture background errors in Sentry
   if (error instanceof Error) {
-    let sentryContext: Record<string, any> = {
+    let sentryContext: Record<string, unknown> = {
       context: "background",
       backgroundContext: contextStr,
       errorCode,

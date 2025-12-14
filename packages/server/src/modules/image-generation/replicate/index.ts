@@ -39,7 +39,7 @@ export const generateImage = async (prompt: string) => {
   }
 
   try {
-    const output = await client.run(MODEL.SD as any, { input: INPUT.SD })
+    const output = await client.run(MODEL.SD as `${string}/${string}`, { input: INPUT.SD })
 
     if (!output) {
       throw new ReplicateError("No output received from Replicate")

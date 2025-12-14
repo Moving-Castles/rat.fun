@@ -97,7 +97,7 @@ export function createOutcomeCallArgs(
   const itemsToRemoveLLM = outcome.itemChanges.filter(c => c.type === "remove")
 
   const itemsToRemoveFromRat: Hex[] = []
-  const invalidRemovals: Array<{ name: string; id: any }> = []
+  const invalidRemovals: Array<{ name: string; id: unknown }> = []
 
   if (itemsToRemoveLLM.length === 0) {
     logger.log("  ℹ️  No items to remove")
