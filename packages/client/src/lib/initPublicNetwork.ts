@@ -7,7 +7,7 @@ import {
   IndexerUrlConfig,
   InitialBlockLogs
 } from "@ratfun/common/mud"
-import { waitForChainSync, hydrateFromServer, getHydrationUrl } from "$lib/modules/chain-sync"
+import { waitForChainSync, hydrateFromServer } from "$lib/modules/chain-sync"
 import {
   publicNetwork,
   ready,
@@ -79,8 +79,8 @@ export async function initPublicNetwork(
   let initialBlockLogs: InitialBlockLogs | undefined
   let serverEntities: Entities | undefined
 
-  // Try server hydration if configured and user address provided
-  if (userAddress && getHydrationUrl(environment)) {
+  // Try server hydration if user address provided (hydrateFromServer checks env config)
+  if (userAddress) {
     const playerId = addressToId(userAddress)
     console.log("[initPublicNetwork] Attempting server hydration for player:", playerId)
 

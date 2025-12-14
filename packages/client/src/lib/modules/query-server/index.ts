@@ -5,7 +5,7 @@
  */
 
 import { ENVIRONMENT } from "@ratfun/common/basic-network"
-import { getHydrationUrl } from "$lib/modules/chain-sync/hydrateFromServer"
+import { getQueryServerUrl } from "$lib/modules/chain-sync/hydrateFromServer"
 import type {
   RatLeaderboardEntry,
   TripLeaderboardEntry,
@@ -23,7 +23,7 @@ export async function fetchActiveRatLeaderboard(
   environment: ENVIRONMENT,
   limit?: number
 ): Promise<LeaderboardResponse<RatLeaderboardEntry> | null> {
-  const baseUrl = getHydrationUrl(environment)
+  const baseUrl = getQueryServerUrl(environment)
   if (!baseUrl) return null
 
   try {
@@ -52,7 +52,7 @@ export async function fetchAllTimeRatLeaderboard(
   environment: ENVIRONMENT,
   limit?: number
 ): Promise<LeaderboardResponse<RatLeaderboardEntry> | null> {
-  const baseUrl = getHydrationUrl(environment)
+  const baseUrl = getQueryServerUrl(environment)
   if (!baseUrl) return null
 
   try {
@@ -81,7 +81,7 @@ export async function fetchActiveTripLeaderboard(
   environment: ENVIRONMENT,
   limit?: number
 ): Promise<LeaderboardResponse<TripLeaderboardEntry> | null> {
-  const baseUrl = getHydrationUrl(environment)
+  const baseUrl = getQueryServerUrl(environment)
   if (!baseUrl) return null
 
   try {
@@ -110,7 +110,7 @@ export async function fetchAllTimeTripLeaderboard(
   environment: ENVIRONMENT,
   limit?: number
 ): Promise<LeaderboardResponse<TripLeaderboardEntry> | null> {
-  const baseUrl = getHydrationUrl(environment)
+  const baseUrl = getQueryServerUrl(environment)
   if (!baseUrl) return null
 
   try {
@@ -139,7 +139,7 @@ export async function fetchRatsKilledLeaderboard(
   environment: ENVIRONMENT,
   limit?: number
 ): Promise<LeaderboardResponse<RatsKilledEntry> | null> {
-  const baseUrl = getHydrationUrl(environment)
+  const baseUrl = getQueryServerUrl(environment)
   if (!baseUrl) return null
 
   try {

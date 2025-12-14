@@ -18,17 +18,24 @@ export interface ServerHydrationResult {
 }
 
 /**
- * Get hydration URL for current environment
+ * Get query server URL for current environment
  */
-export function getHydrationUrl(environment: ENVIRONMENT): string | null {
+export function getQueryServerUrl(environment: ENVIRONMENT): string | null {
   switch (environment) {
     case ENVIRONMENT.BASE:
-      return env.PUBLIC_BASE_HYDRATION_URL || null
+      return env.PUBLIC_BASE_QUERY_SERVER_URL || null
     case ENVIRONMENT.BASE_SEPOLIA:
-      return env.PUBLIC_BASE_SEPOLIA_HYDRATION_URL || null
+      return env.PUBLIC_BASE_SEPOLIA_QUERY_SERVER_URL || null
     default:
       return null
   }
+}
+
+/**
+ * Check if hydration from server is enabled
+ */
+export function shouldHydrateFromServer(): boolean {
+  return env.PUBLIC_HYDRATE_FROM_SERVER === "true"
 }
 
 /**
@@ -136,21 +143,33 @@ function transformResponse(response: HydrationResponse): Entities {
 
 /**
  * Attempt to hydrate from the server.
- * Returns null if hydration URL not configured or request fails.
+ * Returns null if hydration is disabled, not on BASE mainnet, URL not configured, or request fails.
+ * Note: Server hydration is only available on BASE mainnet.
  */
 export async function hydrateFromServer(
   playerId: string,
   environment: ENVIRONMENT
 ): Promise<ServerHydrationResult | null> {
-  const hydrationUrl = getHydrationUrl(environment)
-  if (!hydrationUrl) {
-    console.log("[hydrateFromServer] No hydration URL configured")
+  // Server hydration is only available on BASE mainnet
+  if (environment !== ENVIRONMENT.BASE) {
+    console.log("[hydrateFromServer] Server hydration only available on BASE mainnet")
+    return null
+  }
+
+  if (!shouldHydrateFromServer()) {
+    console.log("[hydrateFromServer] Server hydration is disabled")
+    return null
+  }
+
+  const queryServerUrl = getQueryServerUrl(environment)
+  if (!queryServerUrl) {
+    console.log("[hydrateFromServer] No query server URL configured")
     return null
   }
 
   try {
-    console.log("[hydrateFromServer] Fetching from:", hydrationUrl)
-    const response = await fetch(`${hydrationUrl}/api/hydration/${playerId}`, {
+    console.log("[hydrateFromServer] Fetching from:", queryServerUrl)
+    const response = await fetch(`${queryServerUrl}/api/hydration/${playerId}`, {
       signal: AbortSignal.timeout(10000) // 10s timeout
     })
 
