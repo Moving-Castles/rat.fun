@@ -38,11 +38,11 @@ const hydrationSchema = z.object({
 async function getCurrentBlockNumber(): Promise<string> {
   const schema = getSchemaName()
   // Query the MUD internal table that tracks the last synced block
-  const sql = `SELECT MAX("__lastUpdatedBlockNumber") as block FROM "${schema}"."__mudStoreTables"`
+  const sql = `SELECT MAX("block_number") as block_number FROM "mud"."config"`
 
   try {
-    const result = await query<{ block: string | null }>(sql, [])
-    return result.rows[0]?.block || "0"
+    const result = await query<{ block_number: string | null }>(sql, [])
+    return result.rows[0]?.block_number || "0"
   } catch (error) {
     console.error("Error fetching current block number:", error)
     return "0"
