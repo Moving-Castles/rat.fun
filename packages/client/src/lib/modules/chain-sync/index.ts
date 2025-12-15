@@ -12,5 +12,10 @@
 export { waitForChainSync } from "./waitForChainSync"
 export { createComponentSystem } from "./createComponentSystem"
 export { initEntities, isEntitiesInitialized, resetEntitiesInitialization } from "./initEntities"
-export { hydrateFromServer, getQueryServerUrl, shouldHydrateFromServer } from "./hydrateFromServer"
-export type { ServerHydrationResult } from "./hydrateFromServer"
+export {
+  hydrateFromServer,
+  fetchConfig,
+  getQueryServerUrl,
+  shouldHydrateFromServer
+} from "./hydrateFromServer"
+export type { ServerHydrationResult, ConfigResult } from "./hydrateFromServer"

@@ -117,6 +117,8 @@ export async function setupPublicNetwork(
 
   if (initialBlockLogs) {
     // Skip indexer - use server-provided data instead
+    // Note: indexerUrl must be `false` (not undefined) to prevent MUD from
+    // falling back to chain.indexerUrl for live subscriptions
     console.log(
       "[Chain Sync] Skipping indexer, using server hydration from block:",
       initialBlockLogs.blockNumber.toString()
@@ -124,7 +126,7 @@ export async function setupPublicNetwork(
     syncResult = await syncToRecs({
       ...baseConfig,
       initialBlockLogs,
-      indexerUrl: undefined
+      indexerUrl: false
     })
   } else {
     // Normal flow: try indexers with fallback

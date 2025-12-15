@@ -285,7 +285,7 @@ const hydration: FastifyPluginAsync = async fastify => {
         otherPlayers
       }
 
-      return reply.send(response)
+      return reply.header("Cache-Control", "no-store, no-cache, must-revalidate").send(response)
     }
   )
 }

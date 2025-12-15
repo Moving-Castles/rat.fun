@@ -10,6 +10,7 @@ import trip from "./routes/trip.js"
 import item from "./routes/item.js"
 import leaderboards from "./routes/leaderboards.js"
 import hydration from "./routes/hydration.js"
+import config from "./routes/config.js"
 import { closePool } from "./db.js"
 
 // Validate required environment variables
@@ -42,6 +43,7 @@ fastify.register(cors, {
 
 // Register routes
 fastify.register(healthz)
+fastify.register(config)
 fastify.register(rat)
 fastify.register(player)
 fastify.register(trip)

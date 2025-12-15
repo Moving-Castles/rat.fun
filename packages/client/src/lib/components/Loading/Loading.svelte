@@ -3,13 +3,14 @@
   import { page } from "$app/state"
   import { get } from "svelte/store"
   import { initPublicNetwork } from "$lib/initPublicNetwork"
-  import { initEntities } from "$lib/modules/chain-sync"
+  import { initEntities, hydrateFromServer } from "$lib/modules/chain-sync"
   import { terminalTyper } from "$lib/modules/terminal-typer/index"
   import { generateLoadingOutput } from "$lib/components/Loading/loadingOutput"
   import { playSound } from "$lib/modules/sound"
-  import { publicNetwork } from "$lib/modules/network"
+  import { publicNetwork, environment as envStore } from "$lib/modules/network"
   import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
   import { addressToId } from "$lib/modules/utils"
+  import { entities } from "$lib/modules/state/stores"
 
   import { gsap } from "gsap"
 
@@ -18,36 +19,6 @@
   import { ENVIRONMENT, WALLET_TYPE } from "@ratfun/common/basic-network"
   import { initializeDrawbridge, getDrawbridge } from "$lib/modules/drawbridge"
   import { initWalletNetwork } from "$lib/initWalletNetwork"
-
-  /**
-   * Peek at localStorage for a stored wallet address.
-   * This allows server hydration to work on returning users before full drawbridge init.
-   * Returns undefined if no stored address found.
-   */
-  function peekStoredUserAddress(): string | undefined {
-    if (typeof window === "undefined") return undefined
-
-    try {
-      // Wagmi stores state in localStorage under 'wagmi.store'
-      const wagmiStore = localStorage.getItem("wagmi.store")
-      if (!wagmiStore) return undefined
-
-      const parsed = JSON.parse(wagmiStore)
-      // Wagmi stores connections as an array, get the first connected account
-      const connections = parsed?.state?.connections?.value
-      if (!connections || !Array.isArray(connections)) return undefined
-
-      for (const connection of connections) {
-        if (connection.accounts && connection.accounts.length > 0) {
-          return connection.accounts[0]
-        }
-      }
-    } catch {
-      // Ignore parse errors
-    }
-
-    return undefined
-  }
 
   const {
     environment,
@@ -131,27 +102,22 @@
     }
 
     // -------------------------------------------------------------------------
-    // Step 1: Initialize public network (MUD sync)
+    // Step 1: Initialize public network (MUD sync + global config)
     // -------------------------------------------------------------------------
-    // Sets up MUD layer and waits for chain sync to complete.
-    // If a stored wallet address is found, attempts server hydration first.
+    // Sets up MUD layer and fetches global config from server (if enabled).
+    // Global config populates entities["0x"] with ExternalAddressesConfig, etc.
     // Returns publicClient and transport for reuse by drawbridge.
-    const storedAddress = peekStoredUserAddress()
-    console.log(
-      "[Loading] Initializing public network...",
-      storedAddress ? `(found stored address: ${storedAddress})` : "(no stored address)"
-    )
-
-    const { publicClient, transport, worldAddress, usedServerHydration } = await initPublicNetwork({
+    console.log("[Loading] Initializing public network...")
+    const { publicClient, transport, worldAddress, configFromServer } = await initPublicNetwork({
       environment,
-      url: page.url,
-      userAddress: storedAddress
+      url: page.url
     })
 
     // -------------------------------------------------------------------------
     // Step 2: Initialize drawbridge
     // -------------------------------------------------------------------------
     // Drawbridge manages wallet connection and session keys.
+    // It internally reads wagmi localStorage to restore previous connections.
     // Reuses the publicClient from MUD to avoid duplicate RPC polling.
     console.log("[Loading] Initializing drawbridge...")
     await initializeDrawbridge({
@@ -180,6 +146,7 @@
     const drawbridge = getDrawbridge()
     const drawbridgeState = drawbridge.getState()
     const network = get(publicNetwork)
+    const env = get(envStore)
 
     if (drawbridgeState.isReady && drawbridgeState.sessionClient && drawbridgeState.userAddress) {
       // -----------------------------------------------------------------------
@@ -193,8 +160,24 @@
       const wallet = setupWalletNetwork(network, drawbridgeState.sessionClient)
       initWalletNetwork(wallet, drawbridgeState.userAddress, WALLET_TYPE.DRAWBRIDGE)
 
-      // Initialize entities with player filtering
+      // Try server hydration for player-specific data
       const playerId = addressToId(drawbridgeState.userAddress)
+
+      if (configFromServer) {
+        // Server hydration enabled - fetch player data
+        const hydrationResult = await hydrateFromServer(playerId, env)
+
+        if (hydrationResult) {
+          // Merge server entities with existing (keep worldObject from config)
+          entities.update(current => ({
+            ...current,
+            ...hydrationResult.entities
+          }))
+          console.log("[Loading] Player hydration succeeded")
+        }
+      }
+
+      // Initialize entities with player filtering (sets up subscriptions)
       await initEntities({ activePlayerId: playerId })
     } else if (drawbridgeState.userAddress) {
       // -----------------------------------------------------------------------

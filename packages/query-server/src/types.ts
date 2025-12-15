@@ -69,6 +69,48 @@ export interface HydrationResponse {
   otherPlayers: OtherPlayer[]
 }
 
+// Global config types (singleton tables - stored at key 0x0...0)
+export interface GameConfigResponse {
+  adminAddress: string | null
+  adminId: string | null
+  ratCreationCost: string | null
+  maxInventorySize: number | null
+  maxTripPromptLength: number | null
+  cooldownCloseTrip: number | null
+  ratsKilledForAdminAccess: number | null
+}
+
+export interface GamePercentagesConfigResponse {
+  maxValuePerWin: number | null
+  minRatValueToEnter: number | null
+  taxationLiquidateRat: number | null
+  taxationCloseTrip: number | null
+}
+
+export interface WorldStatsResponse {
+  globalTripIndex: string | null
+  globalRatIndex: string | null
+  globalRatKillCount: string | null
+  lastKilledRatBlock: string | null
+}
+
+export interface ExternalAddressesConfigResponse {
+  erc20Address: string | null
+  gamePoolAddress: string | null
+  mainSaleAddress: string | null
+  serviceAddress: string | null
+  feeAddress: string | null
+}
+
+// Combined global configs for hydration
+export interface GlobalConfigsResponse {
+  blockNumber: string
+  gameConfig: GameConfigResponse
+  gamePercentagesConfig: GamePercentagesConfigResponse
+  worldStats: WorldStatsResponse
+  externalAddressesConfig: ExternalAddressesConfigResponse
+}
+
 // Leaderboard entry types
 export interface RatLeaderboardEntry {
   id: string

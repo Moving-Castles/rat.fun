@@ -126,6 +126,35 @@ export async function getEntityValues<T extends Record<string, unknown>>(
   return values as Partial<T>
 }
 
+// Query a singleton table (tables with key: [])
+// Returns the entire row as an object
+// Optional tableNameOverride for truncated table names in the MUD indexer
+export async function getSingletonTableRow<T extends Record<string, unknown>>(
+  tableName: string,
+  tableNameOverride?: string
+): Promise<T | null> {
+  const schema = getSchemaName()
+  // Use override if provided, otherwise convert tableName to snake_case
+  const snakeTableName = tableNameOverride ?? toSnakeCase(tableName)
+  const fullTableName = `${NAMESPACE}__${snakeTableName}`
+  const sql = `SELECT * FROM "${schema}"."${fullTableName}" LIMIT 1`
+
+  console.log(`[getSingletonTableRow] Querying: ${sql}`)
+
+  try {
+    const result = await query<T>(sql, [])
+    console.log(
+      `[getSingletonTableRow] ${tableName}: ${result.rows.length} rows, columns:`,
+      result.rows[0] ? Object.keys(result.rows[0]) : "none"
+    )
+    if (result.rows.length === 0) return null
+    return result.rows[0]
+  } catch (error) {
+    console.error(`[getSingletonTableRow] Error querying ${schema}.${fullTableName}:`, error)
+    return null
+  }
+}
+
 // Validation helpers
 export function isValidBytes32(id: string): boolean {
   return /^0x[a-fA-F0-9]{64}$/.test(id)
