@@ -1,13 +1,13 @@
 import { Command } from "commander"
 import { createPublicClient, http, Chain, parseUnits } from "viem"
+import { getChain } from "@ratfun/common/basic-network"
 import { readAuctionParams } from "../src/readAuctionParams"
 import { CustomQuoter } from "../src/CustomQuoter"
-import { validateChain } from "./utils/validateChain"
 
 // Set up command line options
 const program = new Command()
 program
-  .requiredOption("-c, --chain-id <CHAINID>", "Chain id", parseInt, 84532)
+  .requiredOption("-c, --chain-id <CHAINID>", "Chain id", (val: string) => parseInt(val), 84532)
   .requiredOption("-n, --amount <AMOUNT>", "Token amount, not multiplied by decimals")
   .option("-o, --out", "Specify exact out amount, instead of exact in")
   .parse(process.argv)
@@ -15,7 +15,7 @@ program
 const options = program.opts()
 
 const chainId: number = options.chainId
-const chain = validateChain(chainId)
+const chain = getChain(chainId)
 
 const isOut: boolean = options.out ?? false
 const amount: string = options.amount

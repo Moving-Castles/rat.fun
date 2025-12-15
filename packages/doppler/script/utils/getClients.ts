@@ -9,6 +9,7 @@ import {
   WalletClient
 } from "viem"
 import { DopplerSDK } from "@whetstone-research/doppler-sdk"
+import { setupPublicBasicNetwork } from "@ratfun/common/basic-network"
 
 export function getClients(
   account: Account,
@@ -19,21 +20,17 @@ export function getClients(
   sdk: DopplerSDK
 } {
   // Set up viem clients
-  const publicClient = createPublicClient({
-    chain,
-    transport: http()
-  })
-
+  const { publicClient, transport } = setupPublicBasicNetwork({ chainId: chain.id, chain }, true)
   const walletClient = createWalletClient({
     chain,
-    transport: http(),
+    transport,
     account
   })
 
   // Initialize the SDK
   const sdk = new DopplerSDK({
     publicClient,
-    walletClient: walletClient as any,
+    walletClient,
     chainId: chain.id
   })
 

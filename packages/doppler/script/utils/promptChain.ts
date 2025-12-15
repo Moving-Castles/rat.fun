@@ -1,5 +1,6 @@
 import { Command } from "commander"
-import { validateChain } from "./validateChain"
+import { getChain } from "@ratfun/common/basic-network"
+import { SupportedChain } from "@whetstone-research/doppler-sdk"
 
 // Set up command line options for chain-id only
 export function promptChain() {
@@ -11,6 +12,6 @@ export function promptChain() {
   const options = program.opts()
 
   const chainId: number = options.chainId
-  const chain = validateChain(chainId)
-  return chain
+  const chain = getChain(chainId)
+  return chain as SupportedChain
 }

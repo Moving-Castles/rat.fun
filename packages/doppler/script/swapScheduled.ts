@@ -2,10 +2,10 @@ import fs from "node:fs/promises"
 import { Hex } from "viem"
 import { privateKeyToAccount } from "viem/accounts"
 import dotenv from "dotenv"
+import { getChain } from "@ratfun/common/basic-network"
 import { getClients } from "./utils/getClients"
 import { readAuctionParams } from "../src/readAuctionParams"
 import { getTestNumeraireTokens } from "../src/getTestNumeraireTokens"
-import { validateChain } from "./utils/validateChain"
 import { swapWithLogs } from "./utils/swapWithLogs"
 
 dotenv.config()
@@ -15,7 +15,7 @@ const PRIVATE_KEY = process.env.PRIVATE_KEY as Hex
 const account = privateKeyToAccount(PRIVATE_KEY)
 
 const chainId: number = 84532
-const chain = validateChain(chainId)
+const chain = getChain(chainId)
 
 const { publicClient, walletClient } = getClients(account, chain)
 

@@ -29,6 +29,7 @@
     "viem": "2.39"
   },
   "devDependencies": {
+    "@ratfun/common": "workspace:*",
     "@types/node": "^24.7.2",
     "commander": "^14.0.2",
     "tsup": "^8.5.0",
