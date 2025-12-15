@@ -160,7 +160,7 @@ export const ratLeaderboardLoading = writable(false)
 export const killsLeaderboardLoading = writable(false)
 export const tripLeaderboardLoading = writable(false)
 
-const LEADERBOARD_LIMIT = 10
+const LEADERBOARD_LIMIT = 20
 
 /**
  * Load rat leaderboard data based on current mode

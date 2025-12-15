@@ -1,4 +1,3 @@
 export { default as Stats } from "./Stats.svelte"
 export { default as Leaderboard } from "./Leaderboard.svelte"
-export { default as LeaderboardSection } from "./LeaderboardSection.svelte"
 export { default as LeaderboardEntry } from "./LeaderboardEntry.svelte"
