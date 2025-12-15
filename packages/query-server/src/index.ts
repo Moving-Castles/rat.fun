@@ -10,6 +10,7 @@ import trip from "./routes/trip.js"
 import item from "./routes/item.js"
 import leaderboards from "./routes/leaderboards.js"
 import hydration from "./routes/hydration.js"
+import logs from "./routes/logs.js"
 import { closePool } from "./db.js"
 
 // Validate required environment variables
@@ -48,6 +49,7 @@ fastify.register(trip)
 fastify.register(item)
 fastify.register(leaderboards)
 fastify.register(hydration)
+fastify.register(logs)
 fastify.register(status)
 
 // Root endpoint

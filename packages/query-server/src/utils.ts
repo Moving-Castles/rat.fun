@@ -1,15 +1,19 @@
 import { query } from "./db.js"
-import { formatEther } from "viem"
+import { formatEther, Hex } from "viem"
 
 export const NAMESPACE = "ratfun"
 
-// Schema is the world address in lowercase
-export function getSchemaName(): string {
+export function getWorldAddress(): Hex {
   const worldAddress = process.env.WORLD_ADDRESS
   if (!worldAddress) {
     throw new Error("WORLD_ADDRESS environment variable is required")
   }
-  return worldAddress.toLowerCase()
+  return worldAddress.toLowerCase() as Hex
+}
+
+// Schema is the world address in lowercase
+export function getSchemaName(): string {
+  return getWorldAddress()
 }
 
 // Convert table name to snake_case (e.g., "TripCount" -> "trip_count")

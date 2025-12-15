@@ -7,6 +7,7 @@ import { Hex, PublicClient, Transport, Chain, Block } from "viem"
 import { Observable } from "rxjs"
 import { StorageAdapterBlock } from "@latticexyz/store-sync"
 import { syncToRecs, SyncToRecsResult } from "@latticexyz/store-sync/recs"
+import { getSnapshot } from "@latticexyz/store-sync/internal"
 import { World } from "@latticexyz/recs"
 
 import { setupPublicBasicNetwork } from "../basic-network"
@@ -38,8 +39,25 @@ async function syncWithFallback(
     startBlock: bigint
   },
   primaryIndexerUrl?: string,
-  fallbackIndexerUrl?: string
+  fallbackIndexerUrl?: string,
+  playerId?: Hex
 ): Promise<recsSyncResult> {
+  console.log('111')
+  const { initialBlockLogs } = await getSnapshot({
+    indexerUrl: "http://127.0.0.1:3001",
+    storeAddress: baseConfig.address,
+    filters: playerId ? [{ table: mudConfig.tables.ratfun__Name, key0: playerId }] : undefined,
+    chainId: baseConfig.publicClient.chain.id
+  })
+
+  const a = await syncToRecs({
+    ...baseConfig,
+    indexerUrl: false,
+    initialBlockLogs,
+    startBlock: initialBlockLogs.blockNumber
+  })
+  console.log('222')
+  return a
   // Try primary indexer if available
   if (primaryIndexerUrl) {
     try {
@@ -91,7 +109,8 @@ export async function setupPublicNetwork(
   networkConfig: NetworkConfig,
   devMode: boolean,
   publicClient?: PublicClient<Transport, Chain>,
-  initialBlockLogs?: InitialBlockLogs
+  initialBlockLogs?: InitialBlockLogs,
+  playerId?: Hex
 ): Promise<SetupPublicNetworkResult> {
   const basicNetwork = await setupPublicBasicNetwork(networkConfig, devMode)
   publicClient ??= basicNetwork.publicClient
@@ -131,7 +150,8 @@ export async function setupPublicNetwork(
     syncResult = await syncWithFallback(
       baseConfig,
       networkConfig.indexerUrl,
-      networkConfig.fallbackIndexerUrl
+      networkConfig.fallbackIndexerUrl,
+      playerId
     )
   }
 

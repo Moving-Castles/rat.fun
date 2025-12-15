@@ -105,7 +105,8 @@ export async function initPublicNetwork(
     networkConfig,
     import.meta.env.DEV,
     undefined,
-    initialBlockLogs
+    initialBlockLogs,
+    addressToId("0xea61b46ae53db45247afa83892efdb9475e7042c")
   )
   publicNetwork.set(mudLayer)
 

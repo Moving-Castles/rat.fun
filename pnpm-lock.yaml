@@ -947,6 +947,18 @@ importers:
       '@fastify/one-line-logger':
         specifier: ^2.0.2
         version: 2.0.2
+      '@latticexyz/common':
+        specifier: 2.2.23-94cac741be24bb5743f2f36235cc3bb40012417a
+        version: 2.2.23-94cac741be24bb5743f2f36235cc3bb40012417a(@aws-sdk/client-kms@3.828.0)(asn1.js@5.4.1)(typescript@5.9.3)(viem@2.39.0(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@4.1.13))(zod@4.1.13)
+      '@latticexyz/protocol-parser':
+        specifier: ^2.2.23
+        version: 2.2.23(@aws-sdk/client-kms@3.828.0)(asn1.js@5.4.1)(typescript@5.9.3)(viem@2.39.0(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@4.1.13))(zod@4.1.13)
+      '@latticexyz/store-sync':
+        specifier: 2.2.23-94cac741be24bb5743f2f36235cc3bb40012417a
+        version: 2.2.23-94cac741be24bb5743f2f36235cc3bb40012417a(@aws-sdk/client-kms@3.828.0)(@opentelemetry/api@1.9.0)(@tanstack/react-query@5.90.7(react@19.2.0))(@types/pg@8.15.6)(@types/react@19.2.6)(asn1.js@5.4.1)(better-sqlite3@12.4.1)(immer@10.2.0)(pg@8.16.0)(react@19.2.0)(typescript@5.9.3)(viem@2.39.0(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@4.1.13))(wagmi@2.19.4(@tanstack/query-core@5.90.7)(@tanstack/react-query@5.90.7(react@19.2.0))(@types/react@19.2.6)(bufferutil@4.0.9)(fastestsmallesttextencoderdecoder@1.0.22)(immer@10.2.0)(react@19.2.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(viem@2.39.0(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@4.1.13))(ws@8.18.3(bufferutil@4.0.9)(utf-8-validate@5.0.10))(zod@4.1.13))(ws@8.18.3(bufferutil@4.0.9)(utf-8-validate@5.0.10))
+      contracts:
+        specifier: workspace:*
+        version: link:../contracts
       dotenv:
         specifier: ^17.2.3
         version: 17.2.3
@@ -956,6 +968,9 @@ importers:
       pg:
         specifier: ^8.13.1
         version: 8.16.0
+      pg-format:
+        specifier: ^1.0.4
+        version: 1.0.4
       viem:
         specifier: 2.39.0
         version: 2.39.0(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@4.1.13)
@@ -3510,6 +3525,7 @@ packages:
   '@koa/router@12.0.2':
     resolution: {integrity: sha512-sYcHglGKTxGF+hQ6x67xDfkE9o+NhVlRHBqq6gLywaMc6CojK/5vFZByphdonKinYlMLkEkacm+HEse9HzwgTA==}
     engines: {node: '>= 12'}
+    deprecated: Please upgrade to v15 or higher. All reported bugs in this version are fixed in newer releases, dependencies have been updated, and security has been improved.
 
   '@latticexyz/abi-ts@2.2.23-94cac741be24bb5743f2f36235cc3bb40012417a':
     resolution: {integrity: sha512-v+W9KTOWQuHH9XBJA93UzdsQykpJQp0XQoA11XyUqP4DdMyBswAF4KG9V5CYBXNzd/i1i/WL/qpqqKUVy7Lk0Q==}
@@ -11479,6 +11495,10 @@ packages:
 
   pg-connection-string@2.9.0:
     resolution: {integrity: sha512-P2DEBKuvh5RClafLngkAuGe9OUlFV7ebu8w1kmaaOgPcpJd1RIFh7otETfI6hAR8YupOLFTY7nuvvIn7PLciUQ==}
+
+  pg-format@1.0.4:
+    resolution: {integrity: sha512-YyKEF78pEA6wwTAqOUaHIN/rWpfzzIuMh9KdAhc3rSLQ/7zkRFcCgYBAEGatDstLyZw4g0s9SNICmaTGnBVeyw==}
+    engines: {node: '>=4.0'}
 
   pg-int8@1.0.1:
     resolution: {integrity: sha512-WCtabS6t3c8SkpDBUlb1kjOs7l66xsGdKpIPZsg4wR+B3+u9UAum2odSsF9tnvxg80h4ZxLWMy4pRjOsFIqQpw==}
@@ -31788,6 +31808,8 @@ snapshots:
     optional: true
 
   pg-connection-string@2.9.0: {}
+
+  pg-format@1.0.4: {}
 
   pg-int8@1.0.1: {}
 

@@ -21,9 +21,7 @@ export function getPool(): pg.Pool {
       max: 10,
       idleTimeoutMillis: 30000,
       connectionTimeoutMillis: 5000,
-      ssl: {
-        rejectUnauthorized: false // Accept RDS certificate
-      }
+      ssl: false
     })
   }
   return pool
