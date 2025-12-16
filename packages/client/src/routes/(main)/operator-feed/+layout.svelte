@@ -90,8 +90,8 @@
 
   .feed-container {
     height: 100%;
-    width: var(--game-column-width);
-    flex: 0 0 var(--game-column-width);
+    flex: 2;
+    min-width: 0;
     display: flex;
     flex-direction: column;
 
@@ -107,8 +107,8 @@
     height: 100%;
     background-image: url("/images/texture-5.png");
     background-size: 200px;
-    width: var(--game-column-width);
-    flex: 0 0 var(--game-column-width);
+    flex: 1;
+    min-width: 0;
     display: flex;
     flex-direction: column;
   }
