@@ -15,7 +15,16 @@ export { initEntities, isEntitiesInitialized, resetEntitiesInitialization } from
 export {
   hydrateFromServer,
   fetchConfig,
+  fetchWorldStats,
+  fetchPlayers,
+  fetchTrips,
   getQueryServerUrl,
   shouldHydrateFromServer
 } from "./hydrateFromServer"
-export type { ServerHydrationResult, ConfigResult } from "./hydrateFromServer"
+export type {
+  ServerHydrationResult,
+  ConfigResult,
+  WorldStatsResult,
+  PlayersResult,
+  TripsResult
+} from "./hydrateFromServer"

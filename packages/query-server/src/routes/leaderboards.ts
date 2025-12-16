@@ -1,23 +1,12 @@
 import { FastifyPluginAsync } from "fastify"
 import { query } from "../db.js"
 import {
-  getSchemaName,
-  NAMESPACE,
+  getQualifiedTableName as t,
   byteaToHex,
   parsePaginationParams,
   ENTITY_TYPE
 } from "../utils.js"
 import type { RatLeaderboardEntry, TripLeaderboardEntry, RatsKilledEntry } from "../types.js"
-
-// Helper to get table name
-function t(tableName: string): string {
-  const schema = getSchemaName()
-  const snakeCase = tableName
-    .replace(/([A-Z])/g, "_$1")
-    .toLowerCase()
-    .replace(/^_/, "")
-  return `"${schema}"."${NAMESPACE}__${snakeCase}"`
-}
 
 const leaderboards: FastifyPluginAsync = async fastify => {
   // Active rats by total value (balance + inventory)

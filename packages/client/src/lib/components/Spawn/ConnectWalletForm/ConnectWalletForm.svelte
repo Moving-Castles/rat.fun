@@ -15,6 +15,7 @@
     initEntities,
     isEntitiesInitialized,
     hydrateFromServer,
+    fetchTrips,
     shouldHydrateFromServer
   } from "$lib/modules/chain-sync"
   import { entities } from "$lib/modules/state/stores"
@@ -77,6 +78,16 @@
               ...hydrationResult.entities
             }))
             console.log("[ConnectWalletForm] Player hydration from server succeeded")
+
+            // Fetch trips in background (non-blocking)
+            fetchTrips(playerId, $environment).then(tripsResult => {
+              if (tripsResult) {
+                entities.update(current => ({
+                  ...current,
+                  ...tripsResult.entities
+                }))
+              }
+            })
           }
         }
 

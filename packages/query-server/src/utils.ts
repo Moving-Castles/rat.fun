@@ -52,6 +52,13 @@ export function getFullTableName(tableName: string): string {
   return `${NAMESPACE}__${snakeTableName}`
 }
 
+// Get quoted table name for SQL queries (e.g., "schema"."ratfun__name")
+export function getQualifiedTableName(tableName: string): string {
+  const schema = getSchemaName()
+  const snakeTableName = toSnakeCase(tableName)
+  return `"${schema}"."${NAMESPACE}__${snakeTableName}"`
+}
+
 // Query a single value from a MUD table
 export async function getTableValue<T>(
   tableName: string,

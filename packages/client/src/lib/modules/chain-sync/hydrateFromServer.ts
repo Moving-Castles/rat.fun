@@ -9,7 +9,12 @@ import { env } from "$env/dynamic/public"
 import { ENVIRONMENT } from "@ratfun/common/basic-network"
 import { ENTITY_TYPE } from "contracts/enums"
 import { type Hex, type Address } from "viem"
-import type { HydrationResponse, GlobalConfigsResponse } from "query-server/types"
+import type {
+  HydrationResponse,
+  GlobalConfigsResponse,
+  PlayersEndpointResponse,
+  TripsEndpointResponse
+} from "query-server/types"
 
 // Client result type
 export interface ServerHydrationResult {
@@ -88,39 +93,12 @@ function transformResponse(response: HydrationResponse): Entities {
     }
   }
 
-  // Transform trips
-  for (const trip of response.trips) {
-    entities[trip.id] = {
-      entityType: ENTITY_TYPE.TRIP,
-      owner: (trip.owner as Hex) ?? undefined,
-      index: safeParseBigInt(trip.index),
-      balance: safeParseBigInt(trip.balance),
-      prompt: trip.prompt ?? undefined,
-      visitCount: safeParseBigInt(trip.visitCount),
-      killCount: safeParseBigInt(trip.killCount),
-      creationBlock: safeParseBigInt(trip.creationBlock),
-      lastVisitBlock: safeParseBigInt(trip.lastVisitBlock),
-      tripCreationCost: safeParseBigInt(trip.tripCreationCost),
-      liquidated: trip.liquidated,
-      liquidationValue: trip.liquidationValue ? safeParseBigInt(trip.liquidationValue) : undefined,
-      liquidationBlock: trip.liquidationBlock ? safeParseBigInt(trip.liquidationBlock) : undefined
-    }
-  }
-
   // Transform items
   for (const item of response.items) {
     entities[item.id] = {
       entityType: ENTITY_TYPE.ITEM,
       name: item.name ?? undefined,
       value: safeParseBigInt(item.value)
-    }
-  }
-
-  // Transform other players (minimal props only)
-  for (const other of response.otherPlayers) {
-    entities[other.id] = {
-      entityType: ENTITY_TYPE.PLAYER,
-      name: other.name ?? undefined
     }
   }
 
@@ -131,6 +109,21 @@ function transformResponse(response: HydrationResponse): Entities {
 export interface ConfigResult {
   blockNumber: bigint
   worldObject: WorldObject
+}
+
+// World stats result type
+export interface WorldStatsResult {
+  blockNumber: bigint
+  worldStats: WorldStatsObject
+}
+
+// Server world stats response type
+interface WorldStatsEndpointResponse {
+  blockNumber: string
+  globalTripIndex: string | null
+  globalRatIndex: string | null
+  globalRatKillCount: string | null
+  lastKilledRatBlock: string | null
 }
 
 /**
@@ -153,11 +146,12 @@ function transformConfigResponse(config: GlobalConfigsResponse): WorldObject {
       taxationLiquidateRat: Number(config.gamePercentagesConfig.taxationLiquidateRat) || 0,
       taxationCloseTrip: Number(config.gamePercentagesConfig.taxationCloseTrip) || 0
     },
+    // WorldStats is fetched separately via fetchWorldStats() - provide defaults
     worldStats: {
-      globalTripIndex: safeParseBigInt(config.worldStats.globalTripIndex),
-      globalRatIndex: safeParseBigInt(config.worldStats.globalRatIndex),
-      globalRatKillCount: safeParseBigInt(config.worldStats.globalRatKillCount),
-      lastKilledRatBlock: safeParseBigInt(config.worldStats.lastKilledRatBlock)
+      globalTripIndex: 0n,
+      globalRatIndex: 0n,
+      globalRatKillCount: 0n,
+      lastKilledRatBlock: 0n
     },
     externalAddressesConfig: {
       erc20Address: (config.externalAddressesConfig.erc20Address as Address) ?? undefined,
@@ -268,6 +262,169 @@ export async function hydrateFromServer(
   } catch (error) {
     const elapsed = (performance.now() - startTime).toFixed(0)
     console.warn(`[hydrateFromServer] Failed after ${elapsed}ms:`, error)
+    return null
+  }
+}
+
+/**
+ * Fetch world stats from server.
+ * Returns null if server hydration is disabled, URL not configured, or request fails.
+ * This is fetched separately from config because stats change frequently and shouldn't be cached.
+ */
+export async function fetchWorldStats(environment: ENVIRONMENT): Promise<WorldStatsResult | null> {
+  if (!shouldHydrateFromServer()) {
+    return null
+  }
+
+  const queryServerUrl = getQueryServerUrl(environment)
+  if (!queryServerUrl) {
+    return null
+  }
+
+  try {
+    const url = `${queryServerUrl}/api/world-stats`
+    const response = await fetch(url, {
+      signal: AbortSignal.timeout(5000),
+      cache: "no-store"
+    })
+
+    if (!response.ok) {
+      throw new Error(`Server returned ${response.status}`)
+    }
+
+    const data: WorldStatsEndpointResponse = await response.json()
+    const worldStats: WorldStatsObject = {
+      globalTripIndex: safeParseBigInt(data.globalTripIndex),
+      globalRatIndex: safeParseBigInt(data.globalRatIndex),
+      globalRatKillCount: safeParseBigInt(data.globalRatKillCount),
+      lastKilledRatBlock: safeParseBigInt(data.lastKilledRatBlock)
+    }
+    const blockNumber = safeParseBigInt(data.blockNumber)
+
+    console.log(`[fetchWorldStats] Success, block: ${blockNumber}`)
+    return { blockNumber, worldStats }
+  } catch (error) {
+    console.warn("[fetchWorldStats] Failed:", error)
+    return null
+  }
+}
+
+// Players result type
+export interface PlayersResult {
+  blockNumber: bigint
+  entities: Entities
+}
+
+/**
+ * Fetch all players from server.
+ * Returns null if server hydration is disabled, URL not configured, or request fails.
+ */
+export async function fetchPlayers(environment: ENVIRONMENT): Promise<PlayersResult | null> {
+  if (!shouldHydrateFromServer()) {
+    return null
+  }
+
+  const queryServerUrl = getQueryServerUrl(environment)
+  if (!queryServerUrl) {
+    return null
+  }
+
+  try {
+    const url = `${queryServerUrl}/api/players`
+    const response = await fetch(url, {
+      signal: AbortSignal.timeout(10000),
+      cache: "no-store"
+    })
+
+    if (!response.ok) {
+      throw new Error(`Server returned ${response.status}`)
+    }
+
+    const data: PlayersEndpointResponse = await response.json()
+    const entities: Entities = {}
+
+    // Transform players (minimal props only)
+    for (const player of data.players) {
+      entities[player.id] = {
+        entityType: ENTITY_TYPE.PLAYER,
+        name: player.name ?? undefined
+      }
+    }
+
+    const blockNumber = safeParseBigInt(data.blockNumber)
+    console.log(
+      `[fetchPlayers] Success, loaded ${data.players.length} players at block ${blockNumber}`
+    )
+    return { blockNumber, entities }
+  } catch (error) {
+    console.warn("[fetchPlayers] Failed:", error)
+    return null
+  }
+}
+
+// Trips result type
+export interface TripsResult {
+  blockNumber: bigint
+  entities: Entities
+}
+
+/**
+ * Fetch trips for a specific player from server.
+ * Returns null if server hydration is disabled, URL not configured, or request fails.
+ */
+export async function fetchTrips(
+  playerId: string,
+  environment: ENVIRONMENT
+): Promise<TripsResult | null> {
+  if (!shouldHydrateFromServer()) {
+    return null
+  }
+
+  const queryServerUrl = getQueryServerUrl(environment)
+  if (!queryServerUrl) {
+    return null
+  }
+
+  try {
+    const url = `${queryServerUrl}/api/trips/${playerId}`
+    const response = await fetch(url, {
+      signal: AbortSignal.timeout(10000),
+      cache: "no-store"
+    })
+
+    if (!response.ok) {
+      throw new Error(`Server returned ${response.status}`)
+    }
+
+    const data: TripsEndpointResponse = await response.json()
+    const entities: Entities = {}
+
+    // Transform trips
+    for (const trip of data.trips) {
+      entities[trip.id] = {
+        entityType: ENTITY_TYPE.TRIP,
+        owner: (trip.owner as Hex) ?? undefined,
+        index: safeParseBigInt(trip.index),
+        balance: safeParseBigInt(trip.balance),
+        prompt: trip.prompt ?? undefined,
+        visitCount: safeParseBigInt(trip.visitCount),
+        killCount: safeParseBigInt(trip.killCount),
+        creationBlock: safeParseBigInt(trip.creationBlock),
+        lastVisitBlock: safeParseBigInt(trip.lastVisitBlock),
+        tripCreationCost: safeParseBigInt(trip.tripCreationCost),
+        liquidated: trip.liquidated,
+        liquidationValue: trip.liquidationValue
+          ? safeParseBigInt(trip.liquidationValue)
+          : undefined,
+        liquidationBlock: trip.liquidationBlock ? safeParseBigInt(trip.liquidationBlock) : undefined
+      }
+    }
+
+    const blockNumber = safeParseBigInt(data.blockNumber)
+    console.log(`[fetchTrips] Success, loaded ${data.trips.length} trips at block ${blockNumber}`)
+    return { blockNumber, entities }
+  } catch (error) {
+    console.warn("[fetchTrips] Failed:", error)
     return null
   }
 }

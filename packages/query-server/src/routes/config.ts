@@ -4,7 +4,6 @@ import type {
   GlobalConfigsResponse,
   GameConfigResponse,
   GamePercentagesConfigResponse,
-  WorldStatsResponse,
   ExternalAddressesConfigResponse
 } from "../types.js"
 
@@ -27,13 +26,6 @@ type GamePercentagesRow = {
   taxation_close_trip: number | null
 }
 
-type WorldStatsRow = {
-  global_trip_index: string | null
-  global_rat_index: string | null
-  global_rat_kill_count: string | null
-  last_killed_rat_block: string | null
-}
-
 type ExternalAddressesRow = {
   erc20_address: Buffer | null
   game_pool_address: Buffer | null
@@ -44,21 +36,19 @@ type ExternalAddressesRow = {
 
 // Fetch all global configs (singleton tables)
 // Note: Some table names are truncated in the MUD indexer database
+// WorldStats is fetched separately via /api/world-stats (not cached)
 async function fetchGlobalConfigs(): Promise<Omit<GlobalConfigsResponse, "blockNumber">> {
-  const [gameConfigRow, gamePercentagesRow, worldStatsRow, externalAddressesRow] =
-    await Promise.all([
-      getSingletonTableRow<GameConfigRow>("GameConfig"),
-      // Truncated table name: game_percentages_c instead of game_percentages_config
-      getSingletonTableRow<GamePercentagesRow>("GamePercentagesC", "game_percentages_c"),
-      getSingletonTableRow<WorldStatsRow>("WorldStats"),
-      // Truncated table name: external_addresse instead of external_addresses_config
-      getSingletonTableRow<ExternalAddressesRow>("ExternalAddresse", "external_addresse")
-    ])
+  const [gameConfigRow, gamePercentagesRow, externalAddressesRow] = await Promise.all([
+    getSingletonTableRow<GameConfigRow>("GameConfig"),
+    // Truncated table name: game_percentages_c instead of game_percentages_config
+    getSingletonTableRow<GamePercentagesRow>("GamePercentagesC", "game_percentages_c"),
+    // Truncated table name: external_addresse instead of external_addresses_config
+    getSingletonTableRow<ExternalAddressesRow>("ExternalAddresse", "external_addresse")
+  ])
 
   // Debug logging
   console.log("[config] GameConfig row:", gameConfigRow)
   console.log("[config] GamePercentagesConfig row:", gamePercentagesRow)
-  console.log("[config] WorldStats row:", worldStatsRow)
   console.log("[config] ExternalAddressesConfig row:", externalAddressesRow)
 
   // Transform to response format (camelCase, hex addresses)
@@ -83,13 +73,6 @@ async function fetchGlobalConfigs(): Promise<Omit<GlobalConfigsResponse, "blockN
     taxationCloseTrip: gamePercentagesRow?.taxation_close_trip ?? null
   }
 
-  const worldStats: WorldStatsResponse = {
-    globalTripIndex: worldStatsRow?.global_trip_index ?? null,
-    globalRatIndex: worldStatsRow?.global_rat_index ?? null,
-    globalRatKillCount: worldStatsRow?.global_rat_kill_count ?? null,
-    lastKilledRatBlock: worldStatsRow?.last_killed_rat_block ?? null
-  }
-
   const externalAddressesConfig: ExternalAddressesConfigResponse = {
     erc20Address: externalAddressesRow?.erc20_address
       ? "0x" + externalAddressesRow.erc20_address.toString("hex")
@@ -111,7 +94,6 @@ async function fetchGlobalConfigs(): Promise<Omit<GlobalConfigsResponse, "blockN
   return {
     gameConfig,
     gamePercentagesConfig,
-    worldStats,
     externalAddressesConfig
   }
 }
@@ -122,8 +104,9 @@ const config: FastifyPluginAsync = async fastify => {
       fetchGlobalConfigs(),
       getLastSyncedBlockNumber()
     ])
+    // Cache for 1 hour - config values rarely change
     return reply
-      .header("Cache-Control", "public, max-age=300")
+      .header("Cache-Control", "public, max-age=3600")
       .send({ blockNumber, ...globalConfigs })
   })
 }

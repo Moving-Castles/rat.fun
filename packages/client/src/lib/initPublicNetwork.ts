@@ -7,7 +7,12 @@ import {
   IndexerUrlConfig,
   InitialBlockLogs
 } from "@ratfun/common/mud"
-import { waitForChainSync, fetchConfig } from "$lib/modules/chain-sync"
+import {
+  waitForChainSync,
+  fetchConfig,
+  fetchWorldStats,
+  fetchPlayers
+} from "$lib/modules/chain-sync"
 import { publicNetwork, ready, initBlockListener } from "$lib/modules/network"
 import { entities } from "$lib/modules/state/stores"
 import { WORLD_OBJECT_ID } from "$lib/modules/state/constants"
@@ -90,6 +95,35 @@ export async function initPublicNetwork(
       blockNumber: configResult.blockNumber,
       logs: [] as const
     }
+
+    // Fetch world stats in background (non-blocking)
+    // Stats are fetched separately since they change frequently and shouldn't be cached
+    fetchWorldStats(environment).then(statsResult => {
+      if (statsResult) {
+        entities.update(current => {
+          const currentWorldObject = current[WORLD_OBJECT_ID] as WorldObject | undefined
+          if (!currentWorldObject) return current
+          return {
+            ...current,
+            [WORLD_OBJECT_ID]: {
+              ...currentWorldObject,
+              worldStats: statsResult.worldStats
+            }
+          }
+        })
+      }
+    })
+
+    // Fetch all players in background (non-blocking)
+    // Players are fetched separately to not block initial load
+    fetchPlayers(environment).then(playersResult => {
+      if (playersResult) {
+        entities.update(current => ({
+          ...current,
+          ...playersResult.entities
+        }))
+      }
+    })
   } else {
     console.log("[initPublicNetwork] No server config, will sync from indexer")
   }

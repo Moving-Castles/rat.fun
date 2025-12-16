@@ -59,14 +59,24 @@ export interface OtherPlayer {
   name: string | null
 }
 
-// Hydration response (filtered data for a specific player)
+// Hydration response (core player data only - trips and players fetched separately)
 export interface HydrationResponse {
   blockNumber: string
   player: PlayerResponse
   currentRat: RatResponse | null
-  trips: TripResponse[]
   items: ItemResponse[]
-  otherPlayers: OtherPlayer[]
+}
+
+// Players endpoint response
+export interface PlayersEndpointResponse {
+  blockNumber: string
+  players: OtherPlayer[]
+}
+
+// Trips endpoint response
+export interface TripsEndpointResponse {
+  blockNumber: string
+  trips: TripResponse[]
 }
 
 // Global config types (singleton tables - stored at key 0x0...0)
@@ -94,6 +104,11 @@ export interface WorldStatsResponse {
   lastKilledRatBlock: string | null
 }
 
+// Standalone world-stats endpoint response
+export interface WorldStatsEndpointResponse extends WorldStatsResponse {
+  blockNumber: string
+}
+
 export interface ExternalAddressesConfigResponse {
   erc20Address: string | null
   gamePoolAddress: string | null
@@ -102,12 +117,11 @@ export interface ExternalAddressesConfigResponse {
   feeAddress: string | null
 }
 
-// Combined global configs for hydration
+// Combined global configs for hydration (static config only, worldStats is separate)
 export interface GlobalConfigsResponse {
   blockNumber: string
   gameConfig: GameConfigResponse
   gamePercentagesConfig: GamePercentagesConfigResponse
-  worldStats: WorldStatsResponse
   externalAddressesConfig: ExternalAddressesConfigResponse
 }
 

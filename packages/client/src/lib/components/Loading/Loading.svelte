@@ -3,7 +3,7 @@
   import { page } from "$app/state"
   import { get } from "svelte/store"
   import { initPublicNetwork } from "$lib/initPublicNetwork"
-  import { initEntities, hydrateFromServer } from "$lib/modules/chain-sync"
+  import { initEntities, hydrateFromServer, fetchTrips } from "$lib/modules/chain-sync"
   import { terminalTyper } from "$lib/modules/terminal-typer/index"
   import { generateLoadingOutput } from "$lib/components/Loading/loadingOutput"
   import { playSound } from "$lib/modules/sound"
@@ -174,6 +174,16 @@
             ...hydrationResult.entities
           }))
           console.log("[Loading] Player hydration succeeded")
+
+          // Fetch trips in background (non-blocking)
+          fetchTrips(playerId, env).then(tripsResult => {
+            if (tripsResult) {
+              entities.update(current => ({
+                ...current,
+                ...tripsResult.entities
+              }))
+            }
+          })
         }
       }
 

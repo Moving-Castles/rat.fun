@@ -11,6 +11,9 @@ import item from "./routes/item.js"
 import leaderboards from "./routes/leaderboards.js"
 import hydration from "./routes/hydration.js"
 import config from "./routes/config.js"
+import worldStats from "./routes/world-stats.js"
+import players from "./routes/players.js"
+import trips from "./routes/trips.js"
 import { closePool } from "./db.js"
 
 // Validate required environment variables
@@ -44,12 +47,15 @@ fastify.register(cors, {
 // Register routes
 fastify.register(healthz)
 fastify.register(config)
+fastify.register(worldStats)
 fastify.register(rat)
 fastify.register(player)
 fastify.register(trip)
 fastify.register(item)
 fastify.register(leaderboards)
 fastify.register(hydration)
+fastify.register(players)
+fastify.register(trips)
 fastify.register(status)
 
 // Root endpoint
