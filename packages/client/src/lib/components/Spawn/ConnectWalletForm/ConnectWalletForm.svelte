@@ -7,11 +7,17 @@
   import { spawnState, determineNextState } from "$lib/components/Spawn/state.svelte"
   import { buildFlowContext } from "$lib/components/Spawn/flowContext"
   import { errorHandler } from "$lib/modules/error-handling"
-  import { publicNetwork } from "$lib/modules/network"
+  import { publicNetwork, environment } from "$lib/modules/network"
   import { setupWalletNetwork } from "@ratfun/common/mud"
   import { initWalletNetwork } from "$lib/initWalletNetwork"
   import { WALLET_TYPE } from "@ratfun/common/basic-network"
-  import { initEntities, isEntitiesInitialized } from "$lib/modules/chain-sync"
+  import {
+    initEntities,
+    isEntitiesInitialized,
+    hydrateFromServer,
+    shouldHydrateFromServer
+  } from "$lib/modules/chain-sync"
+  import { entities } from "$lib/modules/state/stores"
   import { addressToId } from "$lib/modules/utils"
   import { connectWalletFormMascotText } from "./connectWalletFormMascotText"
   import {
@@ -43,22 +49,38 @@
       // Wait briefly for stores to update after wallet connection
       await new Promise(resolve => setTimeout(resolve, 500))
 
-      // Initialize wallet network if session is ready
-      // (returning user with existing session in localStorage)
       const drawbridge = getDrawbridge()
       const state = drawbridge.getState()
+
+      // Initialize wallet network if session is ready
+      // (returning user with existing session in localStorage)
       if (state.sessionClient && state.userAddress) {
         console.log("[ConnectWalletForm] Session ready, initializing wallet network")
         const walletNetwork = setupWalletNetwork($publicNetwork, state.sessionClient)
         initWalletNetwork(walletNetwork, state.userAddress, WALLET_TYPE.DRAWBRIDGE)
+      }
 
-        // Initialize entities if not already done (Scenario C users)
-        // This populates externalAddressesConfig needed for allowance check
-        if (!isEntitiesInitialized()) {
-          const playerId = addressToId(state.userAddress)
-          console.log("[ConnectWalletForm] Initializing entities for player:", playerId)
-          await initEntities({ activePlayerId: playerId })
+      // Initialize entities if not already done (Scenario C users)
+      // This populates externalAddressesConfig for allowance check and player entity for spawn check
+      // Must run even without session so isSpawned check works correctly
+      if (state.userAddress && !isEntitiesInitialized()) {
+        const playerId = addressToId(state.userAddress)
+        console.log("[ConnectWalletForm] Initializing entities for player:", playerId)
+
+        // If server hydration is enabled, fetch player data from server first
+        // (mirrors Loading.svelte Scenario A logic)
+        if (shouldHydrateFromServer()) {
+          const hydrationResult = await hydrateFromServer(playerId, $environment)
+          if (hydrationResult) {
+            entities.update(current => ({
+              ...current,
+              ...hydrationResult.entities
+            }))
+            console.log("[ConnectWalletForm] Player hydration from server succeeded")
+          }
         }
+
+        await initEntities({ activePlayerId: playerId })
       }
 
       // Determine next state based on current context
