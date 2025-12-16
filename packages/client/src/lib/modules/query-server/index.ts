@@ -9,26 +9,23 @@ import { getQueryServerUrl } from "$lib/modules/chain-sync/hydrateFromServer"
 import type {
   RatLeaderboardEntry,
   TripLeaderboardEntry,
-  RatsKilledEntry,
   LeaderboardResponse
 } from "query-server/types"
 
 // Re-export types for convenience
-export type { RatLeaderboardEntry, TripLeaderboardEntry, RatsKilledEntry, LeaderboardResponse }
+export type { RatLeaderboardEntry, TripLeaderboardEntry, LeaderboardResponse }
 
 /**
  * Fetch active rats leaderboard (by total value: balance + inventory)
  */
-export async function fetchActiveRatLeaderboard(
-  environment: ENVIRONMENT,
-  limit?: number
+export async function fetchActiveRatsLeaderboard(
+  environment: ENVIRONMENT
 ): Promise<LeaderboardResponse<RatLeaderboardEntry> | null> {
   const baseUrl = getQueryServerUrl(environment)
   if (!baseUrl) return null
 
   try {
-    const url = new URL("/api/leaderboard/rat-value/active", baseUrl)
-    if (limit) url.searchParams.set("limit", String(limit))
+    const url = new URL("/api/leaderboard/active-rats", baseUrl)
 
     const response = await fetch(url, {
       signal: AbortSignal.timeout(10000)
@@ -40,24 +37,22 @@ export async function fetchActiveRatLeaderboard(
 
     return await response.json()
   } catch (error) {
-    console.warn("[fetchActiveRatLeaderboard] Failed:", error)
+    console.warn("[fetchActiveRatsLeaderboard] Failed:", error)
     return null
   }
 }
 
 /**
- * Fetch all-time rats leaderboard (uses liquidation value for liquidated rats)
+ * Fetch cashed out rats leaderboard (by liquidation value)
  */
-export async function fetchAllTimeRatLeaderboard(
-  environment: ENVIRONMENT,
-  limit?: number
+export async function fetchCashedOutRatsLeaderboard(
+  environment: ENVIRONMENT
 ): Promise<LeaderboardResponse<RatLeaderboardEntry> | null> {
   const baseUrl = getQueryServerUrl(environment)
   if (!baseUrl) return null
 
   try {
-    const url = new URL("/api/leaderboard/rat-value/all-time", baseUrl)
-    if (limit) url.searchParams.set("limit", String(limit))
+    const url = new URL("/api/leaderboard/cashed-out-rats", baseUrl)
 
     const response = await fetch(url, {
       signal: AbortSignal.timeout(10000)
@@ -69,7 +64,7 @@ export async function fetchAllTimeRatLeaderboard(
 
     return await response.json()
   } catch (error) {
-    console.warn("[fetchAllTimeRatLeaderboard] Failed:", error)
+    console.warn("[fetchCashedOutRatsLeaderboard] Failed:", error)
     return null
   }
 }
@@ -77,16 +72,14 @@ export async function fetchAllTimeRatLeaderboard(
 /**
  * Fetch active trips leaderboard (by balance)
  */
-export async function fetchActiveTripLeaderboard(
-  environment: ENVIRONMENT,
-  limit?: number
+export async function fetchActiveTripsLeaderboard(
+  environment: ENVIRONMENT
 ): Promise<LeaderboardResponse<TripLeaderboardEntry> | null> {
   const baseUrl = getQueryServerUrl(environment)
   if (!baseUrl) return null
 
   try {
-    const url = new URL("/api/leaderboard/trip-value/active", baseUrl)
-    if (limit) url.searchParams.set("limit", String(limit))
+    const url = new URL("/api/leaderboard/active-trips", baseUrl)
 
     const response = await fetch(url, {
       signal: AbortSignal.timeout(10000)
@@ -98,24 +91,22 @@ export async function fetchActiveTripLeaderboard(
 
     return await response.json()
   } catch (error) {
-    console.warn("[fetchActiveTripLeaderboard] Failed:", error)
+    console.warn("[fetchActiveTripsLeaderboard] Failed:", error)
     return null
   }
 }
 
 /**
- * Fetch all-time trips leaderboard (uses liquidation value for liquidated trips)
+ * Fetch cashed out trips leaderboard (by liquidation value)
  */
-export async function fetchAllTimeTripLeaderboard(
-  environment: ENVIRONMENT,
-  limit?: number
+export async function fetchCashedOutTripsLeaderboard(
+  environment: ENVIRONMENT
 ): Promise<LeaderboardResponse<TripLeaderboardEntry> | null> {
   const baseUrl = getQueryServerUrl(environment)
   if (!baseUrl) return null
 
   try {
-    const url = new URL("/api/leaderboard/trip-value/all-time", baseUrl)
-    if (limit) url.searchParams.set("limit", String(limit))
+    const url = new URL("/api/leaderboard/cashed-out-trips", baseUrl)
 
     const response = await fetch(url, {
       signal: AbortSignal.timeout(10000)
@@ -127,36 +118,7 @@ export async function fetchAllTimeTripLeaderboard(
 
     return await response.json()
   } catch (error) {
-    console.warn("[fetchAllTimeTripLeaderboard] Failed:", error)
-    return null
-  }
-}
-
-/**
- * Fetch players ranked by rats killed (pastRats count)
- */
-export async function fetchRatsKilledLeaderboard(
-  environment: ENVIRONMENT,
-  limit?: number
-): Promise<LeaderboardResponse<RatsKilledEntry> | null> {
-  const baseUrl = getQueryServerUrl(environment)
-  if (!baseUrl) return null
-
-  try {
-    const url = new URL("/api/leaderboard/rats-killed", baseUrl)
-    if (limit) url.searchParams.set("limit", String(limit))
-
-    const response = await fetch(url, {
-      signal: AbortSignal.timeout(10000)
-    })
-
-    if (!response.ok) {
-      throw new Error(`Server returned ${response.status}`)
-    }
-
-    return await response.json()
-  } catch (error) {
-    console.warn("[fetchRatsKilledLeaderboard] Failed:", error)
+    console.warn("[fetchCashedOutTripsLeaderboard] Failed:", error)
     return null
   }
 }

@@ -3,11 +3,10 @@ import type { FeedMessage } from "./Feed/types"
 import { FEED_MESSAGE_TYPE } from "./Feed/types"
 import { environment } from "$lib/modules/network"
 import {
-  fetchActiveRatLeaderboard,
-  fetchAllTimeRatLeaderboard,
-  fetchActiveTripLeaderboard,
-  fetchAllTimeTripLeaderboard,
-  fetchRatsKilledLeaderboard
+  fetchActiveRatsLeaderboard,
+  fetchCashedOutRatsLeaderboard,
+  fetchActiveTripsLeaderboard,
+  fetchCashedOutTripsLeaderboard
 } from "$lib/modules/query-server"
 
 const MAX_MESSAGES = 200
@@ -115,27 +114,12 @@ export function clearFeedMessages() {
 // Phone view state for operator feed
 export const phoneActiveFeedView = writable<"feed" | "stats">("feed")
 
-// Leaderboard types (for display)
-export type RatLeaderboardEntry = {
+// Leaderboard entry type (simplified)
+export type LeaderboardEntry = {
   id: string
   name: string
   ownerName: string
   value: number
-  rank: number
-}
-
-export type KillsLeaderboardEntry = {
-  playerId: string
-  playerName: string
-  kills: number
-  rank: number
-}
-
-export type TripLeaderboardEntry = {
-  tripId: string
-  tripTitle: string
-  ownerName: string
-  balance: number
   rank: number
 }
 
@@ -147,38 +131,92 @@ function parseEthValue(ethString: string): number {
   return isNaN(value) ? 0 : Math.round(value * 100) / 100
 }
 
-// Leaderboard stores
-export const ratLeaderboard = writable<RatLeaderboardEntry[]>([])
-export const killsLeaderboard = writable<KillsLeaderboardEntry[]>([])
-export const tripLeaderboard = writable<TripLeaderboardEntry[]>([])
+// Leaderboard stores for each category
+export const activeRatsLeaderboard = writable<LeaderboardEntry[]>([])
+export const cashedOutRatsLeaderboard = writable<LeaderboardEntry[]>([])
+export const activeTripsLeaderboard = writable<LeaderboardEntry[]>([])
+export const cashedOutTripsLeaderboard = writable<LeaderboardEntry[]>([])
 
-export const ratLeaderboardMode = writable<"alive" | "all_time">("alive")
-export const tripLeaderboardMode = writable<"active" | "all_time">("active")
+// Loading state (only true on initial load)
+export const leaderboardsLoading = writable(false)
 
-// Loading states
-export const ratLeaderboardLoading = writable(false)
-export const killsLeaderboardLoading = writable(false)
-export const tripLeaderboardLoading = writable(false)
-
-const LEADERBOARD_LIMIT = 20
+// Polling state
+const LEADERBOARD_POLL_INTERVAL = 10000 // 10 seconds
+let leaderboardPollInterval: ReturnType<typeof setInterval> | null = null
+let hasLoadedOnce = false
 
 /**
- * Load rat leaderboard data based on current mode
+ * Check if two leaderboard arrays are equal
  */
-export async function loadRatLeaderboard() {
-  const env = get(environment)
-  const mode = get(ratLeaderboardMode)
+function entriesEqual(a: LeaderboardEntry[], b: LeaderboardEntry[]): boolean {
+  if (a.length !== b.length) return false
+  for (let i = 0; i < a.length; i++) {
+    if (a[i].id !== b[i].id || a[i].value !== b[i].value || a[i].name !== b[i].name) {
+      return false
+    }
+  }
+  return true
+}
 
-  ratLeaderboardLoading.set(true)
+/**
+ * Update store only if data has changed
+ */
+function updateIfChanged(
+  store: typeof activeRatsLeaderboard,
+  newEntries: LeaderboardEntry[]
+): void {
+  const current = get(store)
+  if (!entriesEqual(current, newEntries)) {
+    store.set(newEntries)
+  }
+}
+
+/**
+ * Start polling leaderboards
+ */
+export function startLeaderboardPolling() {
+  // Load immediately
+  loadAllLeaderboards()
+
+  // Set up polling
+  if (!leaderboardPollInterval) {
+    leaderboardPollInterval = setInterval(() => {
+      loadAllLeaderboards()
+    }, LEADERBOARD_POLL_INTERVAL)
+  }
+}
+
+/**
+ * Stop polling leaderboards
+ */
+export function stopLeaderboardPolling() {
+  if (leaderboardPollInterval) {
+    clearInterval(leaderboardPollInterval)
+    leaderboardPollInterval = null
+  }
+}
+
+/**
+ * Load all leaderboards
+ */
+export async function loadAllLeaderboards() {
+  const env = get(environment)
+
+  // Only show loading state on initial load
+  if (!hasLoadedOnce) {
+    leaderboardsLoading.set(true)
+  }
 
   try {
-    const response =
-      mode === "alive"
-        ? await fetchActiveRatLeaderboard(env, LEADERBOARD_LIMIT)
-        : await fetchAllTimeRatLeaderboard(env, LEADERBOARD_LIMIT)
+    const [activeRats, cashedOutRats, activeTrips, cashedOutTrips] = await Promise.all([
+      fetchActiveRatsLeaderboard(env),
+      fetchCashedOutRatsLeaderboard(env),
+      fetchActiveTripsLeaderboard(env),
+      fetchCashedOutTripsLeaderboard(env)
+    ])
 
-    if (response) {
-      const entries: RatLeaderboardEntry[] = response.entries.map((entry, index) => ({
+    if (activeRats) {
+      const entries = activeRats.entries.map((entry, index) => ({
         id: entry.id,
         name: entry.name || "Unnamed Rat",
         ownerName:
@@ -187,79 +225,52 @@ export async function loadRatLeaderboard() {
         value: parseEthValue(entry.totalValue),
         rank: index + 1
       }))
-      ratLeaderboard.set(entries)
+      updateIfChanged(activeRatsLeaderboard, entries)
     }
-  } catch (error) {
-    console.error("[loadRatLeaderboard] Error:", error)
-  } finally {
-    ratLeaderboardLoading.set(false)
-  }
-}
 
-/**
- * Load kills leaderboard data
- */
-export async function loadKillsLeaderboard() {
-  const env = get(environment)
-
-  killsLeaderboardLoading.set(true)
-
-  try {
-    const response = await fetchRatsKilledLeaderboard(env, LEADERBOARD_LIMIT)
-
-    if (response) {
-      const entries: KillsLeaderboardEntry[] = response.entries.map((entry, index) => ({
-        playerId: entry.id,
-        playerName: entry.name || `${entry.id.slice(0, 6)}...${entry.id.slice(-4)}`,
-        kills: entry.ratsKilled,
-        rank: index + 1
-      }))
-      killsLeaderboard.set(entries)
-    }
-  } catch (error) {
-    console.error("[loadKillsLeaderboard] Error:", error)
-  } finally {
-    killsLeaderboardLoading.set(false)
-  }
-}
-
-/**
- * Load trip leaderboard data based on current mode
- */
-export async function loadTripLeaderboard() {
-  const env = get(environment)
-  const mode = get(tripLeaderboardMode)
-
-  tripLeaderboardLoading.set(true)
-
-  try {
-    const response =
-      mode === "active"
-        ? await fetchActiveTripLeaderboard(env, LEADERBOARD_LIMIT)
-        : await fetchAllTimeTripLeaderboard(env, LEADERBOARD_LIMIT)
-
-    if (response) {
-      const entries: TripLeaderboardEntry[] = response.entries.map((entry, index) => ({
-        tripId: entry.id,
-        tripTitle: entry.prompt || "Unnamed Trip",
+    if (cashedOutRats) {
+      const entries = cashedOutRats.entries.map((entry, index) => ({
+        id: entry.id,
+        name: entry.name || "Unnamed Rat",
         ownerName:
           entry.ownerName ||
           (entry.owner ? `${entry.owner.slice(0, 6)}...${entry.owner.slice(-4)}` : "Unknown"),
-        balance: parseEthValue(entry.balance),
+        value: parseEthValue(entry.liquidationValue || "0"),
         rank: index + 1
       }))
-      tripLeaderboard.set(entries)
+      updateIfChanged(cashedOutRatsLeaderboard, entries)
     }
-  } catch (error) {
-    console.error("[loadTripLeaderboard] Error:", error)
-  } finally {
-    tripLeaderboardLoading.set(false)
-  }
-}
 
-/**
- * Load all leaderboards
- */
-export async function loadAllLeaderboards() {
-  await Promise.all([loadRatLeaderboard(), loadKillsLeaderboard(), loadTripLeaderboard()])
+    if (activeTrips) {
+      const entries = activeTrips.entries.map((entry, index) => ({
+        id: entry.id,
+        name: entry.prompt || "Unnamed Trip",
+        ownerName:
+          entry.ownerName ||
+          (entry.owner ? `${entry.owner.slice(0, 6)}...${entry.owner.slice(-4)}` : "Unknown"),
+        value: parseEthValue(entry.balance),
+        rank: index + 1
+      }))
+      updateIfChanged(activeTripsLeaderboard, entries)
+    }
+
+    if (cashedOutTrips) {
+      const entries = cashedOutTrips.entries.map((entry, index) => ({
+        id: entry.id,
+        name: entry.prompt || "Unnamed Trip",
+        ownerName:
+          entry.ownerName ||
+          (entry.owner ? `${entry.owner.slice(0, 6)}...${entry.owner.slice(-4)}` : "Unknown"),
+        value: parseEthValue(entry.balance),
+        rank: index + 1
+      }))
+      updateIfChanged(cashedOutTripsLeaderboard, entries)
+    }
+
+    hasLoadedOnce = true
+  } catch (error) {
+    console.error("[loadAllLeaderboards] Error:", error)
+  } finally {
+    leaderboardsLoading.set(false)
+  }
 }

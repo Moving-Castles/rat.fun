@@ -1,7 +1,17 @@
 <script lang="ts">
+  import { onMount, onDestroy } from "svelte"
   import { worldStats } from "$lib/modules/state/stores"
   import { blockNumber } from "$lib/modules/network"
-  import Leaderboard from "./Leaderboard.svelte"
+  import {
+    activeRatsLeaderboard,
+    cashedOutRatsLeaderboard,
+    activeTripsLeaderboard,
+    cashedOutTripsLeaderboard,
+    leaderboardsLoading,
+    startLeaderboardPolling,
+    stopLeaderboardPolling
+  } from "../state.svelte"
+  import LeaderboardSection from "./LeaderboardSection.svelte"
 
   // Calculate time since last rat death
   let timeSinceDeathText = $derived.by(() => {
@@ -20,33 +30,56 @@
     if (secondsDiff < 86400) return `${Math.floor(secondsDiff / 3600)}h`
     return `${Math.floor(secondsDiff / 86400)}d`
   })
+
+  onMount(() => {
+    startLeaderboardPolling()
+  })
+
+  onDestroy(() => {
+    stopLeaderboardPolling()
+  })
 </script>
 
 <div class="stats">
-  <div class="section-header">
-    <span class="title">Stats</span>
-  </div>
-
-  <div class="stats-grid">
-    <div class="stat-box">
+  <!-- Compact stats row -->
+  <div class="stats-row">
+    <div class="stat">
       <span class="stat-label">Trips</span>
       <span class="stat-value">{$worldStats?.globalTripIndex?.toString() ?? "—"}</span>
     </div>
-    <div class="stat-box">
-      <span class="stat-label">Dead rats</span>
+    <div class="stat">
+      <span class="stat-label">Dead</span>
       <span class="stat-value">{$worldStats?.globalRatKillCount?.toString() ?? "—"}</span>
     </div>
-    <div class="stat-box">
+    <div class="stat">
       <span class="stat-label">Last death</span>
       <span class="stat-value">{timeSinceDeathText}</span>
     </div>
   </div>
 
-  <div class="section-header">
-    <span class="title">Leaderboards</span>
+  <!-- Leaderboards -->
+  <div class="leaderboards-header">
+    <span>Leaderboards</span>
   </div>
 
-  <Leaderboard />
+  <div class="leaderboards-content">
+    {#if $leaderboardsLoading}
+      <div class="loading">Loading...</div>
+    {:else}
+      <LeaderboardSection title="Active Rats" entries={$activeRatsLeaderboard} />
+      <LeaderboardSection title="Active Trips" entries={$activeTripsLeaderboard} />
+      <LeaderboardSection
+        title="Cashed Out Rats"
+        entries={$cashedOutRatsLeaderboard}
+        showCurrency
+      />
+      <LeaderboardSection
+        title="Cashed Out Trips"
+        entries={$cashedOutTripsLeaderboard}
+        showCurrency
+      />
+    {/if}
+  </div>
 </div>
 
 <style lang="scss">
@@ -57,58 +90,48 @@
     background: var(--background);
   }
 
-  .section-header {
+  .stats-row {
     display: flex;
-    align-items: center;
-    padding: 12px 16px;
     border-bottom: var(--default-border-style);
-    background: var(--background);
-
-    @media (max-width: 800px) {
-      padding: 8px 12px;
-    }
+    padding: 8px 12px;
+    gap: 16px;
   }
 
-  .title {
-    font-family: var(--special-font-stack);
-    font-size: var(--font-size-normal);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    padding: 16px;
-    border-bottom: var(--default-border-style);
-
-    @media (max-width: 800px) {
-      gap: 8px;
-      padding: 12px;
-    }
-  }
-
-  .stat-box {
+  .stat {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 12px 8px;
-    border: 1px solid var(--color-grey-dark);
-    background: var(--background);
-    gap: 4px;
+    gap: 6px;
+    align-items: baseline;
   }
 
   .stat-label {
     font-size: var(--font-size-small);
     color: var(--color-grey-light);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
   }
 
   .stat-value {
+    font-family: var(--mono-font-stack);
+    font-size: var(--font-size-small);
+  }
+
+  .leaderboards-header {
+    padding: 10px 12px;
+    border-bottom: var(--default-border-style);
     font-family: var(--special-font-stack);
-    font-size: var(--font-size-large);
+    font-size: var(--font-size-normal);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .leaderboards-content {
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 20px;
+  }
+
+  .loading {
+    padding: 12px;
+    color: var(--color-grey-light);
+    font-size: var(--font-size-small);
   }
 </style>
