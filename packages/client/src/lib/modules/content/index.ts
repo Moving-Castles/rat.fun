@@ -1,4 +1,5 @@
 import { writable, get } from "svelte/store"
+import { tick } from "svelte"
 import { client, loadData } from "./sanity"
 import type {
   Trip as SanityTrip,
@@ -84,13 +85,19 @@ export async function initStaticContent(worldAddress: string) {
     totalDocuments
   })
 
-  staticContent.set({
+  // Use update instead of set to preserve any trips/outcomes that may have
+  // already been loaded (race condition: initTrips can complete before this)
+  staticContent.update(current => ({
+    ...current,
     ratImages: data.ratImages,
-    trips: [], // Trips loaded separately via initTrips()
-    outcomes: [], // Outcomes loaded separately via initPlayerOutcomes()
     tripFolders: data.tripFolders || [],
     tripFolderWhitelist: data.tripFolderWhitelist || []
-  })
+    // Don't touch trips/outcomes - they're loaded separately via initTrips()/initPlayerOutcomes()
+  }))
+
+  // Force Svelte to flush reactivity before continuing
+  await tick()
+  console.log("[CMS] Tick completed after static content update")
 
   // Subscribe to changes to trip folder list in sanity DB
   client.listen(queries.tripFolderList, {}).subscribe(update => {
@@ -136,25 +143,55 @@ export async function initTrips(worldAddress: string, tripIds: string[]) {
 
   console.log(`[CMS] Trips loaded in ${loadTime.toFixed(0)}ms: ${trips?.length ?? 0} trips`)
 
-  staticContent.update(content => ({
-    ...content,
-    trips: trips ?? []
-  }))
+  staticContent.update(content => {
+    console.log("[CMS] Updating staticContent.trips:", {
+      before: content.trips.length,
+      after: trips?.length ?? 0
+    })
+    return {
+      ...content,
+      trips: trips ?? []
+    }
+  })
+
+  // Force Svelte to flush reactivity before continuing
+  // This fixes a race condition where $derived values don't see store updates
+  await tick()
+  console.log("[CMS] Tick completed after trips update")
 
   // Mark initial trips as received so we only notify for new ones
   markInitialTripsReceived()
 
   // Subscribe to changes to all trips in sanity DB
+  console.log("[CMS] Setting up Sanity trips listener...")
   tripsSubscription = client.listen(queries.trips, { worldAddress }).subscribe(update => {
+    console.log("[CMS] Sanity trips listener event:", {
+      transition: update.transition,
+      hasResult: !!update.result,
+      resultId: update.result?._id
+    })
+
     // Handle new trip notifications
     if (update.transition === "appear" && update.result) {
       handleNewTrip(update.result as SanityTrip)
     }
 
-    staticContent.update(content => ({
-      ...content,
-      trips: handleSanityUpdate<SanityTrip>(update, content.trips, (item, id) => item._id === id)
-    }))
+    staticContent.update(content => {
+      const newTrips = handleSanityUpdate<SanityTrip>(
+        update,
+        content.trips,
+        (item, id) => item._id === id
+      )
+      console.log("[CMS] Sanity listener updating trips:", {
+        before: content.trips.length,
+        after: newTrips.length,
+        transition: update.transition
+      })
+      return {
+        ...content,
+        trips: newTrips
+      }
+    })
   })
 }
 
@@ -190,16 +227,32 @@ export async function initPlayerOutcomes(worldAddress: string, playerTripIds: st
     `[CMS] Player outcomes loaded in ${loadTime.toFixed(0)}ms: ${outcomes?.length ?? 0} outcomes for ${playerTripIds.length} trips`
   )
 
-  staticContent.update(content => ({
-    ...content,
-    outcomes: outcomes ?? []
-  }))
+  staticContent.update(content => {
+    console.log("[CMS] Updating staticContent.outcomes:", {
+      before: content.outcomes.length,
+      after: outcomes?.length ?? 0
+    })
+    return {
+      ...content,
+      outcomes: outcomes ?? []
+    }
+  })
+
+  // Force Svelte to flush reactivity before continuing
+  await tick()
+  console.log("[CMS] Tick completed after outcomes update")
 
   // Mark initial outcomes as received so we only notify for new ones
   markInitialOutcomesReceived()
 
   // Subscribe to changes to all outcomes
+  console.log("[CMS] Setting up Sanity outcomes listener...")
   outcomesSubscription = client.listen(queries.outcomes, { worldAddress }).subscribe(update => {
+    console.log("[CMS] Sanity outcomes listener event:", {
+      transition: update.transition,
+      hasResult: !!update.result,
+      resultId: update.result?._id
+    })
     // Handle new outcome
     if (update.transition === "appear" && update.result) {
       const outcome = update.result as SanityOutcome
@@ -265,14 +318,22 @@ export async function initPlayerOutcomes(worldAddress: string, playerTripIds: st
       }
     }
 
-    staticContent.update(content => ({
-      ...content,
-      outcomes: handleSanityUpdate<SanityOutcome>(
+    staticContent.update(content => {
+      const newOutcomes = handleSanityUpdate<SanityOutcome>(
         update,
         content.outcomes,
         (item, id) => item._id === id
       )
-    }))
+      console.log("[CMS] Sanity listener updating outcomes:", {
+        before: content.outcomes.length,
+        after: newOutcomes.length,
+        transition: update.transition
+      })
+      return {
+        ...content,
+        outcomes: newOutcomes
+      }
+    })
   })
 }
 

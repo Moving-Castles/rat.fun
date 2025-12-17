@@ -37,7 +37,11 @@
   )
 
   // Show ALL folders in their original order
-  let sortedFolders = $derived($staticContent.tripFolders)
+  let sortedFolders = $derived.by(() => {
+    const folders = $staticContent.tripFolders
+    console.log("[TripListing] Deriving sortedFolders:", { count: folders?.length ?? 0 })
+    return folders
+  })
 
   const updateTrips = () => {
     lastChecked = Number(get(blockNumber))
@@ -56,6 +60,13 @@
   // ???
   let tripList = $derived.by(() => {
     let entries = Object.entries($nonDepletedTrips)
+    // DEBUG: Log trip counts to diagnose rendering issue
+    console.log("[TripListing] Deriving tripList:", {
+      nonDepletedTripsCount: entries.length,
+      selectedFolder: $selectedFolderId,
+      staticContentTripsCount: $staticContent.trips.length,
+      tripFolderMapSize: tripFolderMap.size
+    })
     entries = filterByFolder(entries, $selectedFolderId)
     return entries.sort(sortFunction)
   })

@@ -141,24 +141,6 @@ export async function initPublicNetwork(
   )
   publicNetwork.set(mudLayer)
 
-  // Check for stale hydration data
-  if (configResult) {
-    try {
-      const currentBlock = await mudLayer.publicClient.getBlockNumber()
-      const hydrationBlock = configResult.blockNumber
-      const blocksBehind = currentBlock - hydrationBlock
-      if (blocksBehind > 10n) {
-        console.warn(
-          `[initPublicNetwork] Hydration data is ${blocksBehind} blocks behind (hydration: ${hydrationBlock}, current: ${currentBlock})`
-        )
-      } else {
-        console.log(`[initPublicNetwork] Hydration data is fresh (${blocksBehind} blocks behind)`)
-      }
-    } catch (error) {
-      console.warn("[initPublicNetwork] Could not check hydration staleness:", error)
-    }
-  }
-
   // Wait for chain sync to complete (instant if we skipped indexer)
   await waitForChainSync()
 

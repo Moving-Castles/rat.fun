@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, onDestroy } from "svelte"
+  import { onMount, onDestroy, tick } from "svelte"
   import { page } from "$app/state"
   import { get } from "svelte/store"
   import { initPublicNetwork } from "$lib/initPublicNetwork"
@@ -175,15 +175,40 @@
           }))
           console.log("[Loading] Player hydration succeeded")
 
-          // Fetch trips in background (non-blocking)
-          fetchTrips(playerId, env).then(tripsResult => {
-            if (tripsResult) {
-              entities.update(current => ({
-                ...current,
-                ...tripsResult.entities
-              }))
+          // Check for stale hydration data
+          try {
+            const currentBlock = await network.publicClient.getBlockNumber()
+            const hydrationBlock = hydrationResult.blockNumber
+            const blocksBehind = currentBlock - hydrationBlock
+            if (blocksBehind > 10n) {
+              console.warn(
+                `[Loading] Hydration data is ${blocksBehind} blocks behind (hydration: ${hydrationBlock}, current: ${currentBlock})`
+              )
+            } else {
+              console.log(`[Loading] Hydration data is fresh (${blocksBehind} blocks behind)`)
             }
-          })
+          } catch (error) {
+            console.warn("[Loading] Could not check hydration staleness:", error)
+          }
+
+          // Fetch trips - must complete before spawned() runs so trip IDs are available for CMS queries
+          const tripsResult = await fetchTrips(playerId, env)
+          if (tripsResult) {
+            console.log(
+              "[Loading] fetchTrips completed, updating entities store with",
+              Object.keys(tripsResult.entities).length,
+              "trips"
+            )
+            entities.update(current => ({
+              ...current,
+              ...tripsResult.entities
+            }))
+            // Flush reactivity so derived stores (trips, nonDepletedTrips, playerTrips) update
+            await tick()
+            console.log("[Loading] Entities store updated with trips, tick completed")
+          } else {
+            console.log("[Loading] fetchTrips completed but returned null")
+          }
         }
       }
 
