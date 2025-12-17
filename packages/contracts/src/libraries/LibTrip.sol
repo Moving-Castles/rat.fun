@@ -11,7 +11,10 @@ import {
   Balance,
   TripCreationCost,
   VisitCount,
-  CreationBlock
+  CreationBlock,
+  ChallengeTrip,
+  FixedMinValueToEnter,
+  OverrideMaxValuePerWinPercentage
 } from "../codegen/index.sol";
 import { LibUtils } from "./LibUtils.sol";
 import { ENTITY_TYPE } from "../codegen/common.sol";
@@ -53,17 +56,38 @@ library LibTrip {
     TripCreationCost.set(newTripId, _tripCreationCost);
   }
 
+  /**
+   * @notice Get the maximum value per win for a trip
+   * @param _tripId The id of the trip
+   * @return maxValuePerWin The maximum value per win for the trip
+   */
   function getMaxValuePerWin(bytes32 _tripId) internal view returns (uint256) {
     uint256 balance = Balance.get(_tripId);
     // Use balance or creation cost, whichever is higher
     uint256 costBalanceMax = LibUtils.max(TripCreationCost.get(_tripId), balance);
-    // Multiply by the configured percentage
-    uint256 result = (GamePercentagesConfig.getMaxValuePerWin() * costBalanceMax) / 100;
+    uint256 result;
+    if (ChallengeTrip.get(_tripId)) {
+      // Multiply by the override maximum value per win percentage
+      result = (OverrideMaxValuePerWinPercentage.get(_tripId) * costBalanceMax) / 100;
+    } else {
+      // Multiply by the configured percentage
+      result = (GamePercentagesConfig.getMaxValuePerWin() * costBalanceMax) / 100;
+    }
     // Cap to balance
     return LibUtils.min(result, balance);
   }
 
+  /**
+   * @notice Get the minimum value to enter a trip
+   * @param _tripId The id of the trip
+   * @return minValueToEnter The minimum value to enter the trip
+   */
   function getMinRatValueToEnter(bytes32 _tripId) internal view returns (uint256) {
+    // If the trip is a challenge trip, return the fixed minimum value to enter
+    if (ChallengeTrip.get(_tripId)) {
+      return FixedMinValueToEnter.get(_tripId);
+    }
+    // Otherwise, return the minimum value to enter as a percentage of the trip creation cost
     return (GamePercentagesConfig.getMinRatValueToEnter() * TripCreationCost.get(_tripId)) / 100;
   }
 }

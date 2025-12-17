@@ -12,6 +12,9 @@ import {
   LiquidationValue,
   LiquidationBlock,
   LiquidationTaxPercentage,
+  ChallengeTrip,
+  FixedMinValueToEnter,
+  OverrideMaxValuePerWinPercentage,
   ExternalAddressesConfig
 } from "../codegen/index.sol";
 import { LibTrip, LibUtils, LibWorld } from "../libraries/Libraries.sol";
@@ -32,6 +35,9 @@ contract TripSystem is System {
    * @param _playerId The id of the player creating the trip
    * @param _tripId The id of the trip
    * @param _tripCreationCost Custom trip creation cost
+   * @param _isChallengeTrip Whether the trip is a challenge trip
+   * @param _fixedMinValueToEnter The fixed minimum value to enter the trip
+   * @param _overrideMaxValuePerWinPercentage The override maximum value per win percentage
    * @param _prompt The prompt for the trip
    * @return newTripId The id of the new trip
    */
@@ -39,6 +45,9 @@ contract TripSystem is System {
     bytes32 _playerId,
     bytes32 _tripId,
     uint256 _tripCreationCost,
+    bool _isChallengeTrip,
+    uint256 _fixedMinValueToEnter,
+    uint256 _overrideMaxValuePerWinPercentage,
     string memory _prompt
   ) public onlyAdmin returns (bytes32 newTripId) {
     // Disallow trips with 0 value
@@ -46,7 +55,20 @@ contract TripSystem is System {
     // Trip id can be 0 (which generates a new id) or an unused entity id
     require(_tripId == bytes32(0) || EntityType.get(_tripId) == ENTITY_TYPE.NONE, "trip id already in use");
 
-    newTripId = LibTrip.createTrip(_playerId, _tripId, _tripCreationCost, _prompt);
+    if (_isChallengeTrip) {
+      require(_fixedMinValueToEnter > 0, "fixed min value to enter must be greater than 0");
+      require(_overrideMaxValuePerWinPercentage > 0, "override max value per win percentage must be greater than 0");
+      require(_overrideMaxValuePerWinPercentage <= 100, "override max value per win percentage must be at most 100");
+      newTripId = LibTrip.createTrip(_playerId, _tripId, _tripCreationCost, _prompt);
+      // Set challenge trip extensions
+      ChallengeTrip.set(newTripId, true);
+      FixedMinValueToEnter.set(newTripId, _fixedMinValueToEnter);
+      OverrideMaxValuePerWinPercentage.set(newTripId, _overrideMaxValuePerWinPercentage);
+    } else {
+      require(_fixedMinValueToEnter == 0, "fixed min value only for challenge trips");
+      require(_overrideMaxValuePerWinPercentage == 0, "override max value only for challenge trips");
+      newTripId = LibTrip.createTrip(_playerId, _tripId, _tripCreationCost, _prompt);
+    }
 
     // Deposit player tokens in pool
     // ERC-20 will check that player has sufficient balance, and approval for pool to transfer it

@@ -171,7 +171,7 @@ contract RatSystemTest is BaseTest {
     // Trip balance: 1000
     // Min value to enter trip: 10% of 1000 = 100
     // Max value per win: 25% of 1000 = 250
-    bytes32 tripId = world.ratfun__createTrip(bobId, bytes32(0), 1000, "test trip");
+    bytes32 tripId = world.ratfun__createTrip(bobId, bytes32(0), 1000, false, 0, 0, "test trip");
     // Only leave 1 health for the rat
     world.ratfun__applyOutcome(ratId, tripId, int256(RAT_CREATION_COST - 1) * -1, new bytes32[](0), new Item[](0));
     vm.stopPrank();

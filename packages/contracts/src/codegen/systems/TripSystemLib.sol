@@ -42,9 +42,21 @@ library TripSystemLib {
     bytes32 _playerId,
     bytes32 _tripId,
     uint256 _tripCreationCost,
+    bool _isChallengeTrip,
+    uint256 _fixedMinValueToEnter,
+    uint256 _overrideMaxValuePerWinPercentage,
     string memory _prompt
   ) internal returns (bytes32 newTripId) {
-    return CallWrapper(self.toResourceId(), address(0)).createTrip(_playerId, _tripId, _tripCreationCost, _prompt);
+    return
+      CallWrapper(self.toResourceId(), address(0)).createTrip(
+        _playerId,
+        _tripId,
+        _tripCreationCost,
+        _isChallengeTrip,
+        _fixedMinValueToEnter,
+        _overrideMaxValuePerWinPercentage,
+        _prompt
+      );
   }
 
   function addTripBalance(TripSystemType self, bytes32 _tripId, uint256 _amount) internal {
@@ -60,14 +72,25 @@ library TripSystemLib {
     bytes32 _playerId,
     bytes32 _tripId,
     uint256 _tripCreationCost,
+    bool _isChallengeTrip,
+    uint256 _fixedMinValueToEnter,
+    uint256 _overrideMaxValuePerWinPercentage,
     string memory _prompt
   ) internal returns (bytes32 newTripId) {
     // if the contract calling this function is a root system, it should use `callAsRoot`
     if (address(_world()) == address(this)) revert TripSystemLib_CallingFromRootSystem();
 
     bytes memory systemCall = abi.encodeCall(
-      _createTrip_bytes32_bytes32_uint256_string.createTrip,
-      (_playerId, _tripId, _tripCreationCost, _prompt)
+      _createTrip_bytes32_bytes32_uint256_bool_uint256_uint256_string.createTrip,
+      (
+        _playerId,
+        _tripId,
+        _tripCreationCost,
+        _isChallengeTrip,
+        _fixedMinValueToEnter,
+        _overrideMaxValuePerWinPercentage,
+        _prompt
+      )
     );
 
     bytes memory result = self.from == address(0)
@@ -104,11 +127,22 @@ library TripSystemLib {
     bytes32 _playerId,
     bytes32 _tripId,
     uint256 _tripCreationCost,
+    bool _isChallengeTrip,
+    uint256 _fixedMinValueToEnter,
+    uint256 _overrideMaxValuePerWinPercentage,
     string memory _prompt
   ) internal returns (bytes32 newTripId) {
     bytes memory systemCall = abi.encodeCall(
-      _createTrip_bytes32_bytes32_uint256_string.createTrip,
-      (_playerId, _tripId, _tripCreationCost, _prompt)
+      _createTrip_bytes32_bytes32_uint256_bool_uint256_uint256_string.createTrip,
+      (
+        _playerId,
+        _tripId,
+        _tripCreationCost,
+        _isChallengeTrip,
+        _fixedMinValueToEnter,
+        _overrideMaxValuePerWinPercentage,
+        _prompt
+      )
     );
 
     bytes memory result = SystemCall.callWithHooksOrRevert(self.from, self.systemId, systemCall, msg.value);
@@ -166,8 +200,16 @@ library TripSystemLib {
  * Each interface is uniquely named based on the function name and parameters to prevent collisions.
  */
 
-interface _createTrip_bytes32_bytes32_uint256_string {
-  function createTrip(bytes32 _playerId, bytes32 _tripId, uint256 _tripCreationCost, string memory _prompt) external;
+interface _createTrip_bytes32_bytes32_uint256_bool_uint256_uint256_string {
+  function createTrip(
+    bytes32 _playerId,
+    bytes32 _tripId,
+    uint256 _tripCreationCost,
+    bool _isChallengeTrip,
+    uint256 _fixedMinValueToEnter,
+    uint256 _overrideMaxValuePerWinPercentage,
+    string memory _prompt
+  ) external;
 }
 
 interface _addTripBalance_bytes32_uint256 {

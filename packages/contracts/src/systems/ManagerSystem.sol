@@ -12,7 +12,9 @@ import {
   TripCount,
   LastVisitBlock,
   TripCreationCost,
-  MasterKey
+  MasterKey,
+  ChallengeTrip,
+  ChallengeWinner
 } from "../codegen/index.sol";
 import { LibManager, LibRat, LibTrip } from "../libraries/Libraries.sol";
 import { ENTITY_TYPE } from "../codegen/common.sol";
@@ -95,6 +97,11 @@ contract ManagerSystem is System {
     tripBudget = LibManager.removeItemsFromRat(tripBudget, _ratId, _tripId, _itemsToRemoveFromRat);
     // As items always have positive value, this will always decrease the trip balance
     tripBudget = LibManager.addItemsToRat(tripBudget, _ratId, _tripId, _itemsToAddToRat);
+
+    // If the trip is a challenge trip and the trip balance is 0, set the winner
+    if (ChallengeTrip.get(_tripId) && Balance.get(_tripId) == 0) {
+      ChallengeWinner.set(_tripId, _ratId);
+    }
   }
 
   /**

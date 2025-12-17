@@ -97,7 +97,14 @@ export default defineWorld({
     // = = = = = = = = = =
     Prompt: "string",
     // = = = = = = = = = =
-    TripCreationCost: "uint256" // Initial balance of trip.
+    TripCreationCost: "uint256", // Initial balance of trip.
+    // = = = = = = = = = =
+    // Challenge trip extensions
+    // = = = = = = = = = =
+    ChallengeTrip: "bool", // Mark trip as a challenge trip
+    FixedMinValueToEnter: "uint256", // Fixed minimum value to enter the trip
+    OverrideMaxValuePerWinPercentage: "uint256", // Override maximum value per win percentage
+    ChallengeWinner: "bytes32" // Winner of the challenge trip
   },
   systems: {
     // DevSystem is conditionally deployed for local/test chains in PostDeploy

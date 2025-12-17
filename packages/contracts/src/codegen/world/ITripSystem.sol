@@ -13,6 +13,9 @@ interface ITripSystem {
     bytes32 _playerId,
     bytes32 _tripId,
     uint256 _tripCreationCost,
+    bool _isChallengeTrip,
+    uint256 _fixedMinValueToEnter,
+    uint256 _overrideMaxValuePerWinPercentage,
     string memory _prompt
   ) external returns (bytes32 newTripId);
 

@@ -36,7 +36,7 @@ contract ManagerSystemTest is BaseTest {
     vm.stopPrank();
 
     prankAdmin();
-    tripId = world.ratfun__createTrip(bobId, bytes32(0), TRIP_INITIAL_BALANCE, "test trip");
+    tripId = world.ratfun__createTrip(bobId, bytes32(0), TRIP_INITIAL_BALANCE, false, 0, 0, "test trip");
     vm.stopPrank();
   }
 

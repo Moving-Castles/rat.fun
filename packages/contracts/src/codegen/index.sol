@@ -30,3 +30,7 @@ import { KillCount } from "./tables/KillCount.sol";
 import { TripCount } from "./tables/TripCount.sol";
 import { Prompt } from "./tables/Prompt.sol";
 import { TripCreationCost } from "./tables/TripCreationCost.sol";
+import { ChallengeTrip } from "./tables/ChallengeTrip.sol";
+import { FixedMinValueToEnter } from "./tables/FixedMinValueToEnter.sol";
+import { OverrideMaxValuePerWinPercentage } from "./tables/OverrideMaxValuePerWinPercentage.sol";
+import { ChallengeWinner } from "./tables/ChallengeWinner.sol";
