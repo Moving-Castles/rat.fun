@@ -20,8 +20,9 @@ import {
   markInitialTripsReceived,
   handleNewTrip
 } from "./new-trip-notifications"
-import { addFeedMessage } from "$lib/components/OperatorFeed/state.svelte"
+import { addFeedMessage, addFeedMessages } from "$lib/components/OperatorFeed/state.svelte"
 import { FEED_MESSAGE_TYPE } from "$lib/components/OperatorFeed/Feed/types"
+import type { FeedMessage, FeedItem } from "$lib/components/OperatorFeed/Feed/types"
 
 export { setPlayerIdStore }
 
@@ -370,5 +371,137 @@ function handleSanityUpdate<T>(
 
     default:
       return contentArray
+  }
+}
+
+// --- FEED HISTORY TYPES ------------------------------------------------
+
+type RecentTripForFeed = {
+  _id: string
+  _createdAt: string
+  index: number
+  prompt: string
+  ownerName: string
+  creationCost: number
+}
+
+type RecentOutcomeForFeed = {
+  _id: string
+  _createdAt: string
+  tripId: string
+  tripIndex: number
+  ratName: string
+  playerName: string
+  ratValueChange: number
+  newRatBalance: number
+  inventoryOnEntrance?: Array<{ id?: string; name?: string; value?: number }>
+  itemChanges?: Array<{ id?: string; name?: string; value?: number; type?: string }>
+  itemsLostOnDeath?: Array<{ id?: string; name?: string; value?: number }>
+  tripPrompt: string
+}
+
+// --- FEED HISTORY FUNCTIONS --------------------------------------------
+
+/**
+ * Load recent trips and outcomes from CMS and add them to the operator feed.
+ * This populates the feed with the last 5 trips and last 5 outcomes on load.
+ *
+ * @param worldAddress - The world address to filter content by
+ */
+export async function loadFeedHistory(worldAddress: string) {
+  const startTime = performance.now()
+
+  try {
+    // Fetch recent trips and outcomes in parallel
+    const [recentTrips, recentOutcomes] = await Promise.all([
+      loadData(queries.recentTripsForFeed, { worldAddress }) as Promise<RecentTripForFeed[]>,
+      loadData(queries.recentOutcomesForFeed, { worldAddress }) as Promise<RecentOutcomeForFeed[]>
+    ])
+
+    const feedMessages: FeedMessage[] = []
+
+    // Convert trips to feed messages
+    if (recentTrips) {
+      for (const trip of recentTrips) {
+        feedMessages.push({
+          id: `trip-history-${trip._id}`,
+          type: FEED_MESSAGE_TYPE.NEW_TRIP,
+          timestamp: new Date(trip._createdAt).getTime(),
+          tripId: trip._id,
+          tripIndex: trip.index ?? 0,
+          tripPrompt: trip.prompt ?? "",
+          creatorName: trip.ownerName ?? "Unknown",
+          tripCreationCost: trip.creationCost ?? 0
+        })
+      }
+    }
+
+    // Convert outcomes to feed messages
+    if (recentOutcomes) {
+      for (const outcome of recentOutcomes) {
+        const ratDied = outcome.newRatBalance === 0
+
+        const itemsOnEntrance: FeedItem[] =
+          outcome.inventoryOnEntrance?.map(item => ({
+            id: item.id ?? "",
+            name: item.name ?? "",
+            value: item.value ?? 0
+          })) ?? []
+
+        const itemsGained: FeedItem[] =
+          outcome.itemChanges
+            ?.filter(item => item.type === "add")
+            .map(item => ({
+              id: item.id ?? "",
+              name: item.name ?? "",
+              value: item.value ?? 0
+            })) ?? []
+
+        const itemsLost: FeedItem[] =
+          outcome.itemChanges
+            ?.filter(item => item.type === "remove")
+            .map(item => ({
+              id: item.id ?? "",
+              name: item.name ?? "",
+              value: item.value ?? 0
+            })) ?? []
+
+        const itemsLostOnDeath: FeedItem[] =
+          outcome.itemsLostOnDeath?.map(item => ({
+            id: item.id ?? "",
+            name: item.name ?? "",
+            value: item.value ?? 0
+          })) ?? []
+
+        feedMessages.push({
+          id: `outcome-history-${outcome._id}`,
+          type: FEED_MESSAGE_TYPE.NEW_OUTCOME,
+          timestamp: new Date(outcome._createdAt).getTime(),
+          tripId: outcome.tripId ?? "",
+          tripIndex: outcome.tripIndex ?? 0,
+          tripPrompt: outcome.tripPrompt ?? "",
+          ratName: outcome.ratName ?? "Unknown Rat",
+          result: ratDied ? "died" : "survived",
+          ratOwnerName: outcome.playerName ?? "Unknown Player",
+          ratValueChange: outcome.ratValueChange ?? 0,
+          itemsOnEntrance,
+          itemsGained,
+          itemsLost,
+          itemsLostOnDeath
+        })
+      }
+    }
+
+    // Add all messages at once (sorted by timestamp in addFeedMessages)
+    if (feedMessages.length > 0) {
+      addFeedMessages(feedMessages)
+    }
+
+    const loadTime = performance.now() - startTime
+    console.log(
+      `[CMS] Feed history loaded in ${loadTime.toFixed(0)}ms: ${recentTrips?.length ?? 0} trips, ${recentOutcomes?.length ?? 0} outcomes`
+    )
+  } catch (error) {
+    console.error("[CMS] Error loading feed history:", error)
   }
 }

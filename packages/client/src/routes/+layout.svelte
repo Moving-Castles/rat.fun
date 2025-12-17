@@ -13,7 +13,8 @@
     initStaticContent,
     initTrips,
     initPlayerOutcomes,
-    setPlayerIdStore
+    setPlayerIdStore,
+    loadFeedHistory
   } from "$lib/modules/content"
   import { publicNetwork } from "$lib/modules/network"
   import { UIState, lightboxState } from "$lib/modules/ui/state.svelte"
@@ -91,6 +92,9 @@
     // Load trips and outcomes from CMS
     initTrips($publicNetwork.worldAddress, relevantTripIds)
     initPlayerOutcomes($publicNetwork.worldAddress, playerTripIds)
+
+    // Load recent trips/outcomes for operator feed history (non-blocking)
+    loadFeedHistory($publicNetwork.worldAddress)
 
     UIState.set(UI.READY)
   }

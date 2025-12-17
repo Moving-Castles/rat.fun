@@ -122,6 +122,40 @@ const singleOutcome = `*[_type == "outcome" && _id == $id][0] {
     "readableLog": array::join(log[]{"entry": timestamp + " => " + event}.entry, ", ")
   }`
 
+/**
+ * Recent trips for feed history (last N trips ordered by creation time)
+ * Params: $worldAddress
+ * Used for: Populating operator feed with recent trip creations on load
+ */
+const recentTripsForFeed = `*[_type == "trip" && worldAddress == $worldAddress] | order(_createdAt desc) [0...5] {
+  _id,
+  _createdAt,
+  index,
+  prompt,
+  ownerName,
+  creationCost
+}`
+
+/**
+ * Recent outcomes for feed history (last N outcomes ordered by creation time)
+ * Params: $worldAddress
+ * Used for: Populating operator feed with recent outcomes on load
+ */
+const recentOutcomesForFeed = `*[_type == "outcome" && worldAddress == $worldAddress] | order(_createdAt desc) [0...5] {
+  _id,
+  _createdAt,
+  tripId,
+  tripIndex,
+  ratName,
+  playerName,
+  ratValueChange,
+  newRatBalance,
+  inventoryOnEntrance,
+  itemChanges,
+  itemsLostOnDeath,
+  "tripPrompt": *[_type == "trip" && _id == ^.tripId][0].prompt
+}`
+
 // =============================================================================
 // COMPOSITE QUERIES
 // Combined queries for efficient initial data loading
@@ -182,6 +216,10 @@ export const queries = {
   outcomesForRat,
   singleTrip,
   singleOutcome,
+
+  // Feed history queries
+  recentTripsForFeed,
+  recentOutcomesForFeed,
 
   // Composite queries
   staticContent,
