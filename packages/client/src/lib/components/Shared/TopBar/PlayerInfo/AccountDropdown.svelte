@@ -3,6 +3,8 @@
   import MainDropdownContent from "./MainDropdownContent.svelte"
   import DebugDropdownContent from "./DebugDropdownContent.svelte"
   import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
+  import { environment } from "$lib/modules/network"
+  import { ENVIRONMENT } from "@ratfun/common/basic-network"
 
   let showDebug = $state(false)
 
@@ -12,7 +14,7 @@
 </script>
 
 <div class="account-dropdown" out:fade={{ duration: 200 }}>
-  {#if window.location.hostname === "testing-rat-fun.netlify.app"}
+  {#if window.location.hostname === "testing-rat-fun.netlify.app" || $environment === ENVIRONMENT.BASE_SEPOLIA}
     <div class="debug-button">
       <button onclick={toggleDebug}>{UI_STRINGS.debug}</button>
     </div>
