@@ -10,11 +10,11 @@
   let { children }: { children?: any } = $props()
 </script>
 
-<SEO prependTitle="TRIPS LAB" />
+<SEO prependTitle="TRIP LAB" />
 
 <Admin />
 
-{#if page.route.id !== "/(main)/trips-lab"}
+{#if page.route.id !== "/(main)/trip-lab"}
   <div in:fly|global={{ x: -800, opacity: 1, duration: 200 }} class="sidebar open">
     {@render children?.()}
   </div>

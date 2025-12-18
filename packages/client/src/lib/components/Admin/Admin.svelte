@@ -267,8 +267,8 @@
 
     e.preventDefault()
 
-    // Only handle keyboard events on main trips lab, not on nested trip view
-    if (page.route?.id?.includes("/trips-lab/[tripId]")) return
+    // Only handle keyboard events on main trip lab, not on nested trip view
+    if (page.route?.id?.includes("/trip-lab/[tripId]")) return
 
     if (!allVisitsData.length) return
 
@@ -355,7 +355,7 @@
   })
 
   onDestroy(() => {
-    // Reset all admin views when leaving trips lab
+    // Reset all admin views when leaving trip lab
     phoneActiveAdminView.set("home")
     adminTripsSubView.set("active")
     phoneAdminProfitSubView.set("graph")

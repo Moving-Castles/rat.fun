@@ -8,7 +8,7 @@
 
   import { Marquee } from "$lib/components/Shared"
 
-  const isAdminView = $derived(page.route?.id?.includes("/(main)/trips-lab") ?? false)
+  const isAdminView = $derived(page.route?.id?.includes("/(main)/trip-lab") ?? false)
 </script>
 
 <div class="top-bar">

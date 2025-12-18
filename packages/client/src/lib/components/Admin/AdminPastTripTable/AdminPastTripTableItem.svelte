@@ -24,7 +24,7 @@
 
   const onmousedown = () => {
     playSound({ category: "ratfunUI", id: "panelIn" })
-    goto("/trips-lab/" + id, { noScroll: false })
+    goto("/trip-lab/" + id, { noScroll: false })
   }
 </script>
 

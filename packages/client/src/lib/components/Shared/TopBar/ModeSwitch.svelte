@@ -14,7 +14,7 @@
   const enterAdmin = () => {
     playSound({ category: "ratfunTransitions", id: "adminEnter" })
     shaderManager.setShader("black")
-    goto("/trips-lab")
+    goto("/trip-lab")
   }
 
   const exitAdmin = () => {
