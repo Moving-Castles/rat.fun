@@ -1,8 +1,13 @@
 import type { TerminalOutputUnit } from "$lib/modules/terminal-typer/types"
 import { playSound, randomPitch } from "$lib/modules/sound"
+import { getRandomMascotSoundId } from "$lib/modules/sound/sound-library/ratfun-mascot"
 
 function onType() {
-  playSound({ category: "ratfunUI", id: "chirp", pitch: randomPitch() })
+  playSound({ category: "ratfunMascot", id: getRandomMascotSoundId(), pitch: randomPitch() })
+}
+
+function onSingleType() {
+  playSound({ category: "ratfunMascot", id: "mascot23", pitch: randomPitch() })
 }
 
 export const connectWalletFormMascotText: TerminalOutputUnit[] = [
@@ -13,7 +18,7 @@ export const connectWalletFormMascotText: TerminalOutputUnit[] = [
     typeMode: "char",
     color: "var(--foreground)",
     backgroundColor: "transparent",
-    onType
+    onType: onSingleType
   },
   {
     type: "text",

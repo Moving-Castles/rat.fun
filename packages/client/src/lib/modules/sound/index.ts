@@ -53,6 +53,7 @@ export function initSound(): void {
   preloadSoundLibrary(soundLibrary.ratfunUI)
   preloadSoundLibrary(soundLibrary.ratfunMusic)
   preloadSoundLibrary(soundLibrary.ratfunTransitions)
+  preloadSoundLibrary(soundLibrary.ratfunMascot)
 
   document.addEventListener("visibilitychange", handleVisibilityChange)
 }

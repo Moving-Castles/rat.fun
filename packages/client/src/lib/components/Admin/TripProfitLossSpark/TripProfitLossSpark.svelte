@@ -118,8 +118,7 @@
     height: 24px;
     position: relative;
     background-size: 11px 11px;
-    background-image:
-      linear-gradient(to right, var(--color-grey-dark) 1px, transparent 1px),
+    background-image: linear-gradient(to right, var(--color-grey-dark) 1px, transparent 1px),
       linear-gradient(to bottom, var(--color-grey-dark) 1px, transparent 1px);
   }
 

@@ -37,7 +37,8 @@
     },
     QUOTE: {
       className: "quote",
-      sound: () => playSound({ category: "ratfunUI", id: "chirp", pitch: randomPitch() }),
+      sound: () =>
+        playSound({ category: "ratfunUI", id: "chirp" pitch: randomPitch() }),
       soundMode: "each"
     },
     SYSTEM: {
