@@ -45,7 +45,7 @@
   button {
     width: 100%;
     height: 100%;
-    background: var(--color-grey-light);
+    background: var(--color-grey-darker);
     border: none;
     border-style: outset;
     border-width: 5px;
@@ -62,6 +62,7 @@
       width: 8px;
       height: 8px;
       border-radius: 50%;
+      margin-top: -3px;
       background: var(--color-down);
       transition: background 0.2s ease;
 
@@ -76,7 +77,7 @@
       line-height: 1em;
       z-index: 2;
       position: relative;
-      color: var(--color-grey-darker);
+      color: var(--color-grey-lighter);
     }
 
     .button-icon {
@@ -91,12 +92,11 @@
     }
 
     &:hover {
-      background: var(--color-grey-lighter);
+      background: var(--color-grey-dark);
     }
 
     &:active {
       border-style: inset;
-      background: var(--color-grey-mid);
       transform: translateY(2px);
       position: relative;
     }
