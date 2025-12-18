@@ -36,7 +36,41 @@
     )
   )
 
-  // Show ALL folders in their original order
+  // Separate restricted folders from regular folders
+  // Only show the first restricted folder at the top
+  let restrictedFolder = $derived.by(() => {
+    const folders = $staticContent.tripFolders
+    return folders.find(f => f.restricted)
+  })
+
+  // Regular folders (non-restricted)
+  let regularFolders = $derived.by(() => {
+    const folders = $staticContent.tripFolders
+    return folders.filter(f => !f.restricted)
+  })
+
+  // Find the challenge trip for the restricted folder
+  let challengeTripData = $derived.by(() => {
+    if (!restrictedFolder) return null
+
+    // Get all trips in the restricted folder
+    const allTrips = Object.entries($nonDepletedTrips)
+    const restrictedFolderTrips = allTrips.filter(([tripId, _]) => {
+      const tripFolderId = tripFolderMap.get(tripId)
+      return tripFolderId === restrictedFolder._id
+    })
+
+    // Find the first trip with challengeTrip flag
+    const challengeTrip = restrictedFolderTrips.find(([_, trip]) => trip.challengeTrip)
+    if (!challengeTrip) return null
+
+    return {
+      tripId: challengeTrip[0],
+      visitCount: Number(challengeTrip[1].visitCount ?? 0)
+    }
+  })
+
+  // Show ALL folders in their original order (for backward compat, keep this for counts)
   let sortedFolders = $derived.by(() => {
     const folders = $staticContent.tripFolders
     console.log("[TripListing] Deriving sortedFolders:", { count: folders?.length ?? 0 })
@@ -71,7 +105,10 @@
     return entries.sort(sortFunction)
   })
 
-  let foldersCounts = $derived(sortedFolders.map(fldr => filterByFolder(tripList, fldr._id).length))
+  // Count trips per regular folder (not restricted)
+  let foldersCounts = $derived(
+    regularFolders.map(fldr => filterByFolder(tripList, fldr._id).length)
+  )
 
   let activeList = $derived.by(() => {
     if (lastChecked > 0) {
@@ -147,11 +184,15 @@
     <NoRatListing />
   {:else if $selectedFolderId === ""}
     <TripHeader title={UI_STRINGS.tripHeader} />
-    {#if sortedFolders?.length ?? 0 > 0}
+    {#if (regularFolders?.length ?? 0) > 0 || restrictedFolder}
       <TripFolders
         onselect={(folderId: string) => ($selectedFolderId = folderId)}
-        folders={sortedFolders}
+        folders={regularFolders}
         {foldersCounts}
+        {restrictedFolder}
+        challengeTripId={challengeTripData?.tripId}
+        challengeTripAttempts={challengeTripData?.visitCount}
+        nextChallenge={$staticContent.nextChallenge}
       />
     {:else}
       <div class="loading-container">

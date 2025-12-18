@@ -34,6 +34,7 @@ export type StaticContent = {
   outcomes: SanityOutcome[]
   tripFolders: SanityTripFolder[]
   tripFolderWhitelist: string[]
+  nextChallenge: string | null
 }
 
 // --- STORES -----------------------------------------------------------
@@ -43,7 +44,8 @@ export const staticContent = writable<StaticContent>({
   outcomes: [] as SanityOutcome[],
   ratImages: {} as SanityRatImages,
   tripFolders: [] as SanityTripFolder[],
-  tripFolderWhitelist: [] as string[]
+  tripFolderWhitelist: [] as string[],
+  nextChallenge: null
 })
 
 export const lastUpdated = writable(performance.now())
@@ -92,7 +94,8 @@ export async function initStaticContent(worldAddress: string) {
     ...current,
     ratImages: data.ratImages,
     tripFolders: data.tripFolders || [],
-    tripFolderWhitelist: data.tripFolderWhitelist || []
+    tripFolderWhitelist: data.tripFolderWhitelist || [],
+    nextChallenge: data.nextChallenge || null
     // Don't touch trips/outcomes - they're loaded separately via initTrips()/initPlayerOutcomes()
   }))
 
@@ -106,8 +109,19 @@ export async function initStaticContent(worldAddress: string) {
     if (result && result.folders) {
       staticContent.update(content => ({
         ...content,
-        tripFolders: result.folders as SanityTripFolder[],
-        tripFolderWhitelist: result.whitelist || []
+        tripFolders: result.folders as SanityTripFolder[]
+      }))
+    }
+  })
+
+  // Subscribe to changes to challenge config in sanity DB
+  client.listen(queries.challenge, {}).subscribe(update => {
+    const { result } = update
+    if (result) {
+      staticContent.update(content => ({
+        ...content,
+        tripFolderWhitelist: (result.whitelist as string[]) || [],
+        nextChallenge: (result.nextChallenge as string) || null
       }))
     }
   })

@@ -27,12 +27,21 @@ const ratImages = '*[_id == "rat-images"][0]{ ... }'
 /**
  * Trip folder list configuration document
  * Contains:
- *   - whitelist: array of addresses with special folder access
+ *   - whitelist: (deprecated) array of addresses with special folder access
  *   - folders: array of trip folder references (dereferenced with ->)
  * Used for: Trip organization/categorization in UI
  */
 const tripFolderList =
   '*[_id == "trip-folder-list"][0]{ whitelist, folders[]->{ _id, title, description, image, restricted } }'
+
+/**
+ * Challenge configuration document
+ * Contains:
+ *   - whitelist: array of addresses allowed to create challenge trips
+ *   - nextChallenge: datetime of the next challenge trip
+ * Used for: Challenge trip access control and countdown display
+ */
+const challenge = '*[_id == "challenge"][0]{ whitelist, nextChallenge }'
 
 // =============================================================================
 // COLLECTION QUERIES (filtered by worldAddress)
@@ -170,7 +179,8 @@ const recentOutcomesForFeed = `*[_type == "outcome" && worldAddress == $worldAdd
  * The query fetches:
  *   - ratImages: singleton config for rat artwork
  *   - tripFolders: folder organization config
- *   - tripFolderWhitelist: addresses with folder access
+ *   - tripFolderWhitelist: addresses with folder access (from Challenge doc)
+ *   - nextChallenge: datetime of next challenge trip
  *
  * NOTE: Trips are loaded separately via initTrips() after spawn,
  * filtered to only active trips (balance > 0) + player's trips.
@@ -180,7 +190,8 @@ const recentOutcomesForFeed = `*[_type == "outcome" && worldAddress == $worldAdd
 const staticContent = `{
   "ratImages": ${ratImages},
   "tripFolders": ${tripFolderList}.folders,
-  "tripFolderWhitelist": ${tripFolderList}.whitelist
+  "tripFolderWhitelist": ${challenge}.whitelist,
+  "nextChallenge": ${challenge}.nextChallenge
 }`
 
 /**
@@ -194,7 +205,8 @@ const staticContentFull = `{
   "trips": ${trips},
   "outcomes": ${outcomes},
   "tripFolders": ${tripFolderList}.folders,
-  "tripFolderWhitelist": ${tripFolderList}.whitelist
+  "tripFolderWhitelist": ${challenge}.whitelist,
+  "nextChallenge": ${challenge}.nextChallenge
 }`
 
 // =============================================================================
@@ -205,6 +217,7 @@ export const queries = {
   // Singleton documents
   ratImages,
   tripFolderList,
+  challenge,
 
   // Collection queries (for subscriptions)
   trips,

@@ -29,9 +29,9 @@ procs:
   # websocket-server:
   #   cwd: packages/websocket-server
   #   shell: pnpm dev
-  # cms-public:
-  #   cwd: packages/cms-public
-  #   shell: pnpm dev
+  cms-public:
+    cwd: packages/cms-public
+    shell: pnpm dev
   # cms-private:
   #   cwd: packages/cms-private
   #   shell: pnpm dev

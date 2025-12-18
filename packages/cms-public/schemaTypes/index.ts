@@ -5,5 +5,15 @@ import RatImages from "./RatImages"
 import Stats from "./Stats"
 import TripFolder from "./TripFolder"
 import TripFolderList from "./TripFolderList"
+import Challenge from "./Challenge"
 
-export const schemaTypes = [Trip, Outcome, WorldEvent, RatImages, Stats, TripFolder, TripFolderList]
+export const schemaTypes = [
+  Trip,
+  Outcome,
+  WorldEvent,
+  RatImages,
+  Stats,
+  TripFolder,
+  TripFolderList,
+  Challenge
+]

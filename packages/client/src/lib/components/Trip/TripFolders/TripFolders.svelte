@@ -9,7 +9,11 @@
     onselect,
     showCounts = true,
     disabled = false,
-    children
+    children,
+    restrictedFolder,
+    challengeTripId,
+    challengeTripAttempts,
+    nextChallenge
   }: {
     folders: TripFolder[]
     foldersCounts: number[]
@@ -17,14 +21,33 @@
     showCounts?: boolean
     disabled?: boolean
     children?: Snippet
+    restrictedFolder?: TripFolder
+    challengeTripId?: string
+    challengeTripAttempts?: number
+    nextChallenge?: string | null
   } = $props()
 </script>
 
 <div class="tiles">
   {@render children?.()}
+  {#if restrictedFolder}
+    <TripFolderItem
+      listingIndex={0}
+      folder={restrictedFolder}
+      {showCounts}
+      {disabled}
+      wide={true}
+      {challengeTripId}
+      attemptCount={challengeTripAttempts}
+      {nextChallenge}
+      onclick={() => {
+        onselect(restrictedFolder._id)
+      }}
+    />
+  {/if}
   {#each folders as folder, i}
     <TripFolderItem
-      listingIndex={i}
+      listingIndex={restrictedFolder ? i + 1 : i}
       {folder}
       count={foldersCounts[i]}
       {showCounts}

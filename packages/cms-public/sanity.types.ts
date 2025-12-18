@@ -13,14 +13,25 @@
  */
 
 // Source: schema.json
+export type Challenge = {
+  _id: string
+  _type: "challenge"
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title: string
+  whitelist?: Array<string>
+  nextChallenge?: string
+}
+
 export type TripFolderList = {
   _id: string
   _type: "tripFolderList"
   _createdAt: string
   _updatedAt: string
   _rev: string
-  title?: string
-  folders?: Array<{
+  title: string
+  folders: Array<{
     _ref: string
     _type: "reference"
     _weak?: boolean
@@ -36,12 +47,12 @@ export type Statistics = {
   _createdAt: string
   _updatedAt: string
   _rev: string
-  title?: string
-  worldAddress?: string
-  ratTotalBalance?: number
-  tripTotalBalance?: number
-  totalBalance?: number
-  totalThroughput?: number
+  title: string
+  worldAddress: string
+  ratTotalBalance: number
+  tripTotalBalance: number
+  totalBalance: number
+  totalThroughput: number
 }
 
 export type RatImages = {
@@ -50,8 +61,8 @@ export type RatImages = {
   _createdAt: string
   _updatedAt: string
   _rev: string
-  title?: string
-  ratImages?: Array<{
+  title: string
+  ratImages: Array<{
     asset?: {
       _ref: string
       _type: "reference"
@@ -64,7 +75,7 @@ export type RatImages = {
     _type: "image"
     _key: string
   }>
-  ratBodies?: Array<{
+  ratBodies: Array<{
     asset?: {
       _ref: string
       _type: "reference"
@@ -77,7 +88,7 @@ export type RatImages = {
     _type: "image"
     _key: string
   }>
-  ratArms?: Array<{
+  ratArms: Array<{
     asset?: {
       _ref: string
       _type: "reference"
@@ -90,7 +101,7 @@ export type RatImages = {
     _type: "image"
     _key: string
   }>
-  ratHeads?: Array<{
+  ratHeads: Array<{
     asset?: {
       _ref: string
       _type: "reference"
@@ -103,7 +114,7 @@ export type RatImages = {
     _type: "image"
     _key: string
   }>
-  ratEars?: Array<{
+  ratEars: Array<{
     asset?: {
       _ref: string
       _type: "reference"
@@ -120,18 +131,18 @@ export type RatImages = {
 
 export type SanityImageCrop = {
   _type: "sanity.imageCrop"
-  top?: number
-  bottom?: number
-  left?: number
-  right?: number
+  top: number
+  bottom: number
+  left: number
+  right: number
 }
 
 export type SanityImageHotspot = {
   _type: "sanity.imageHotspot"
-  x?: number
-  y?: number
-  height?: number
-  width?: number
+  x: number
+  y: number
+  height: number
+  width: number
 }
 
 export type WorldEvent = {
@@ -140,10 +151,10 @@ export type WorldEvent = {
   _createdAt: string
   _updatedAt: string
   _rev: string
-  title?: string
-  worldAddress?: string
+  title: string
+  worldAddress: string
   publicationText?: string
-  activationDateTime?: string
+  activationDateTime: string
   activationText?: string
   duration?: number
   prompt?: string
@@ -167,14 +178,14 @@ export type Outcome = {
   _createdAt: string
   _updatedAt: string
   _rev: string
-  title?: string
-  worldAddress?: string
-  playerId?: string
-  playerName?: string
-  tripId?: string
-  tripIndex?: number
-  ratId?: string
-  ratName?: string
+  title: string
+  worldAddress: string
+  playerId: string
+  playerName: string
+  tripId: string
+  tripIndex: number
+  ratId: string
+  ratName: string
   log?: Array<{
     timestamp?: string
     event?: string
@@ -206,20 +217,20 @@ export type Outcome = {
     _key: string
   }>
   oldTripValue?: number
-  tripValueChange?: number
-  tripValue?: number
+  tripValueChange: number
+  tripValue: number
   oldRatValue?: number
-  ratValueChange?: number
-  ratValue?: number
+  ratValueChange: number
+  ratValue: number
   oldRatBalance?: number
   newRatBalance?: number
-  mainProcessingTime?: number
+  mainProcessingTime: number
   slug?: Slug
 }
 
 export type Slug = {
   _type: "slug"
-  current?: string
+  current: string
   source?: string
 }
 
@@ -229,14 +240,14 @@ export type Trip = {
   _createdAt: string
   _updatedAt: string
   _rev: string
-  title?: string
-  index?: number
-  worldAddress?: string
-  owner?: string
-  ownerName?: string
-  prompt?: string
+  title: string
+  index: number
+  worldAddress: string
+  owner: string
+  ownerName: string
+  prompt: string
   creationCost?: number
-  image?: {
+  image: {
     asset?: {
       _ref: string
       _type: "reference"
@@ -248,8 +259,8 @@ export type Trip = {
     crop?: SanityImageCrop
     _type: "image"
   }
-  kills?: number
-  visits?: number
+  kills: number
+  visits: number
   slug?: Slug
   folder?: {
     _ref: string
@@ -265,8 +276,8 @@ export type TripFolder = {
   _createdAt: string
   _updatedAt: string
   _rev: string
-  title?: string
-  restricted?: boolean
+  title: string
+  restricted: boolean
   description?: string
   image?: {
     asset?: {
@@ -303,9 +314,9 @@ export type SanityImagePalette = {
 
 export type SanityImageDimensions = {
   _type: "sanity.imageDimensions"
-  height?: number
-  width?: number
-  aspectRatio?: number
+  height: number
+  width: number
+  aspectRatio: number
 }
 
 export type SanityImageMetadata = {
@@ -379,6 +390,7 @@ export type Geopoint = {
 }
 
 export type AllSanitySchemaTypes =
+  | Challenge
   | TripFolderList
   | Statistics
   | RatImages

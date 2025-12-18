@@ -1,5 +1,14 @@
 // ICONS
-import { MdAirlines, MdStar, MdAutoGraph, MdEvent, MdChat, MdFolder, MdList } from "react-icons/md"
+import {
+  MdAirlines,
+  MdStar,
+  MdAutoGraph,
+  MdEvent,
+  MdChat,
+  MdFolder,
+  MdList,
+  MdFlag
+} from "react-icons/md"
 
 export default (S: any, context: any) =>
   S.list()
@@ -101,6 +110,10 @@ export default (S: any, context: any) =>
             .schemaType("tripFolderList")
             .documentId("trip-folder-list")
         ),
+      S.listItem()
+        .title("Challenge")
+        .icon(MdFlag)
+        .child(S.editor().id("challenge").schemaType("challenge").documentId("challenge")),
       S.divider(),
       S.listItem()
         .title("World Events")

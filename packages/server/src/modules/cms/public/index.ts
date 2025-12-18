@@ -14,28 +14,30 @@ import { publicSanityClient } from "@modules/cms/public/sanity"
 import { CMSError, CMSAPIError } from "@modules/error-handling/errors"
 import { createBaseOutcomeDocument } from "@modules/cms/shared"
 
-type NewTripDoc = Omit<TripDoc, "_createdAt" | "_updatedAt" | "_rev">
+type NewTripDoc = Omit<TripDoc, "_createdAt" | "_updatedAt" | "_rev" | "image" | "kills" | "visits">
 type ExpandedTripFolderListDoc = Omit<TripFolderListDoc, "folders"> & { folders: TripFolderDoc[] }
+
+type ChallengeDoc = {
+  whitelist?: string[]
+  nextChallenge?: string
+}
 
 /**
  * Check if a user is whitelisted for creating challenge trips.
- * Uses the same whitelist as restricted trip folders.
+ * Reads from the Challenge singleton document.
  * @param callerAddress - The caller address to check
  * @returns True if the user is whitelisted for challenge trips
  * @throws CMSAPIError if there's an error loading the whitelist
  */
 export const isWhitelistedForChallengeTrips = async (callerAddress: string): Promise<boolean> => {
   try {
-    const folderList = (await loadDataPublicSanity(
-      queries.tripFolderList,
-      {}
-    )) as ExpandedTripFolderListDoc
+    const challenge = (await loadDataPublicSanity(queries.challenge, {})) as ChallengeDoc
 
-    if (!folderList) {
+    if (!challenge) {
       return false
     }
 
-    const whitelist = folderList.whitelist || []
+    const whitelist = challenge.whitelist || []
     return whitelist.some((addr: string) => addr.toLowerCase() === callerAddress.toLowerCase())
   } catch (error) {
     // If it's already one of our custom errors, rethrow it
@@ -80,8 +82,9 @@ export const validateTripFolder = async (
     }
 
     if (folder.restricted) {
-      // Check if user is whitelisted
-      const whitelist = folderList.whitelist || []
+      // Check if user is whitelisted using Challenge document
+      const challenge = (await loadDataPublicSanity(queries.challenge, {})) as ChallengeDoc
+      const whitelist = challenge?.whitelist || []
       const isWhitelisted =
         callerAddress &&
         whitelist.some((addr: string) => addr.toLowerCase() === callerAddress.toLowerCase())
