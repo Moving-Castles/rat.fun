@@ -15,6 +15,11 @@ export type Trip = {
   prompt: string
   balance: number
   tripCreationCost: number
+  // Challenge trip fields
+  challengeTrip?: boolean
+  fixedMinValueToEnter?: number
+  overrideMaxValuePerWinPercentage?: number
+  challengeWinner?: string
 }
 
 export type Rat = {
@@ -155,6 +160,10 @@ export type CreateTripRequestBody = {
   tripPrompt: string
   tripCreationCost: number
   folderId: string
+  // Challenge trip fields
+  isChallengeTrip?: boolean
+  fixedMinValueToEnter?: number
+  overrideMaxValuePerWinPercentage?: number
 }
 
 /*

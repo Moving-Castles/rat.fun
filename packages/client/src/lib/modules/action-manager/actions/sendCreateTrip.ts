@@ -22,11 +22,17 @@ const DEFAULT_TIMING = 4000
  * @param tripPrompt The prompt for the trip
  * @param tripCreationCost The cost of the trip
  * @param folderId The ID of the trip folder category
+ * @param isChallengeTrip Whether this is a challenge trip
+ * @param fixedMinValueToEnter Fixed minimum rat value to enter (challenge trips only)
+ * @param overrideMaxValuePerWinPercentage Override max win percentage (challenge trips only)
  */
 export async function sendCreateTrip(
   tripPrompt: string,
   tripCreationCost: number,
-  folderId: string
+  folderId: string,
+  isChallengeTrip?: boolean,
+  fixedMinValueToEnter?: number,
+  overrideMaxValuePerWinPercentage?: number
 ) {
   const _externalAddressesConfig = get(externalAddressesConfig)
   const _playerERC20Allowance = get(playerERC20Allowance)
@@ -56,7 +62,13 @@ export async function sendCreateTrip(
     const requestBody: CreateTripRequestBody = {
       tripPrompt,
       tripCreationCost,
-      folderId
+      folderId,
+      // Challenge trip fields (only included if isChallengeTrip is true)
+      ...(isChallengeTrip && {
+        isChallengeTrip,
+        fixedMinValueToEnter,
+        overrideMaxValuePerWinPercentage
+      })
     }
 
     const signedRequest = await signRequest(requestBody)

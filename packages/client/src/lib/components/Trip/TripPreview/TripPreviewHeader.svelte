@@ -16,8 +16,17 @@
 
   let { trip, tripId }: { trip: Trip; tripId?: Hex } = $props()
 
-  const maxValuePerWin = getTripMaxValuePerWin(trip.tripCreationCost, trip.balance)
-  const minRatValueToEnter = getTripMinRatValueToEnter(trip.tripCreationCost)
+  const maxValuePerWin = getTripMaxValuePerWin(
+    trip.tripCreationCost,
+    trip.balance,
+    trip.challengeTrip,
+    trip.overrideMaxValuePerWinPercentage
+  )
+  const minRatValueToEnter = getTripMinRatValueToEnter(
+    trip.tripCreationCost,
+    trip.challengeTrip,
+    trip.fixedMinValueToEnter
+  )
 
   // Get trip content from staticContent store instead of props
   let tripContentFromStore = $derived(

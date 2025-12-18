@@ -47,7 +47,11 @@ export async function getEnterTripData(
       GameConfig,
       GamePercentagesConfig,
       TripCreationCost,
-      TripCount
+      TripCount,
+      ChallengeTrip,
+      FixedMinValueToEnter,
+      OverrideMaxValuePerWinPercentage,
+      ChallengeWinner
     } = network.components
 
     const result = {} as EnterTripData
@@ -154,13 +158,28 @@ export async function getEnterTripData(
       const tripIndex = Number(getComponentValue(Index, tripEntity)?.value ?? 0)
       const tripBalance = Number(getComponentValue(Balance, tripEntity)?.value ?? 0)
       const tripCreationCost = Number(getComponentValue(TripCreationCost, tripEntity)?.value ?? 0)
+      // Challenge trip fields
+      const isChallengeTrip = Boolean(getComponentValue(ChallengeTrip, tripEntity)?.value ?? false)
+      const fixedMinValueToEnter = Number(
+        getComponentValue(FixedMinValueToEnter, tripEntity)?.value ?? 0
+      )
+      const overrideMaxValuePerWinPercentage = Number(
+        getComponentValue(OverrideMaxValuePerWinPercentage, tripEntity)?.value ?? 0
+      )
+      const challengeWinner = (getComponentValue(ChallengeWinner, tripEntity)?.value ??
+        "") as string
 
       const trip = {
         id: tripId,
         prompt: tripPrompt,
         balance: tripBalance,
         tripCreationCost: tripCreationCost,
-        index: tripIndex
+        index: tripIndex,
+        // Challenge trip fields
+        challengeTrip: isChallengeTrip,
+        fixedMinValueToEnter: fixedMinValueToEnter || undefined,
+        overrideMaxValuePerWinPercentage: overrideMaxValuePerWinPercentage || undefined,
+        challengeWinner: challengeWinner || undefined
       }
 
       result.trip = trip

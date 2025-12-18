@@ -4,20 +4,33 @@ import { TripLogger } from "@modules/logging"
 export function getTripMaxValuePerWin(
   tripCreationCost: number,
   tripBalance: number,
-  gamePercentagesConfig: GamePercentagesConfig
+  gamePercentagesConfig: GamePercentagesConfig,
+  isChallengeTrip?: boolean,
+  overrideMaxValuePerWinPercentage?: number
 ): number {
   // Use balance or creation cost, whichever is higher
   const costBalanceMax = Math.max(tripCreationCost, tripBalance)
+  // Use override percentage for challenge trips, otherwise use global config
+  const percentage =
+    isChallengeTrip && overrideMaxValuePerWinPercentage
+      ? overrideMaxValuePerWinPercentage
+      : gamePercentagesConfig.maxValuePerWin
   // Multiply by the configured percentage
-  const result = Math.floor((gamePercentagesConfig.maxValuePerWin * costBalanceMax) / 100)
+  const result = Math.floor((percentage * costBalanceMax) / 100)
   // Cap to balance
   return Math.min(result, tripBalance)
 }
 
 export function getTripMinRatValueToEnter(
   tripCreationCost: number,
-  gamePercentagesConfig: GamePercentagesConfig
+  gamePercentagesConfig: GamePercentagesConfig,
+  isChallengeTrip?: boolean,
+  fixedMinValueToEnter?: number
 ): number {
+  // For challenge trips, use the fixed value instead of percentage-based calculation
+  if (isChallengeTrip && fixedMinValueToEnter) {
+    return fixedMinValueToEnter
+  }
   return Math.floor((tripCreationCost * gamePercentagesConfig.minRatValueToEnter) / 100)
 }
 

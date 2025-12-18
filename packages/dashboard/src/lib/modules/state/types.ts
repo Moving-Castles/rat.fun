@@ -142,6 +142,11 @@ declare global {
     liquidationValue?: mudComponents["LiquidationValue"]
     liquidationBlock?: mudComponents["LiquidationBlock"]
     liquidationTaxPercentage?: mudComponents["LiquidationTaxPercentage"]
+    // Challenge trip fields
+    challengeTrip?: mudComponents["ChallengeTrip"]
+    fixedMinValueToEnter?: mudComponents["FixedMinValueToEnter"]
+    overrideMaxValuePerWinPercentage?: mudComponents["OverrideMaxValuePerWinPercentage"]
+    challengeWinner?: mudComponents["ChallengeWinner"]
   }
 
   type Item = {

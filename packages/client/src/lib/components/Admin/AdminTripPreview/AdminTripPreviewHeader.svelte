@@ -2,7 +2,7 @@
   import type { Hex } from "viem"
   import { derived } from "svelte/store"
   import { getTripMaxValuePerWin, getTripOwnerName } from "$lib/modules/state/utils"
-  import { playerIsWhitelisted, entities } from "$lib/modules/state/stores"
+  import { entities } from "$lib/modules/state/stores"
   import { lastUpdated } from "$lib/modules/content"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
@@ -31,7 +31,14 @@
   let trip = $derived($tripStore)
 
   let maxValuePerWin = $derived(
-    trip ? getTripMaxValuePerWin(trip.tripCreationCost, trip.balance) : undefined
+    trip
+      ? getTripMaxValuePerWin(
+          trip.tripCreationCost,
+          trip.balance,
+          trip.challengeTrip,
+          trip.overrideMaxValuePerWinPercentage
+        )
+      : undefined
   )
 
   const showAddBalanceButton = $derived(

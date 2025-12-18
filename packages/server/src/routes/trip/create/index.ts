@@ -7,7 +7,12 @@ import path from "path"
 import { CreateTripRequestBody, SignedRequest } from "@modules/types"
 
 // CMS
-import { writeTripToCMS, updateTripWithImage, validateTripFolder } from "@modules/cms/public"
+import {
+  writeTripToCMS,
+  updateTripWithImage,
+  validateTripFolder,
+  isWhitelistedForChallengeTrips
+} from "@modules/cms/public"
 
 // MUD
 import { systemCalls, network } from "@modules/mud/initMud"
@@ -21,7 +26,7 @@ import { generateImage } from "@modules/image-generation/replicate"
 import { verifyRequest } from "@modules/signature"
 
 // Validation
-import { validateInputData } from "./validation"
+import { validateInputData, validateChallengeTripParams } from "./validation"
 
 // Utils
 import { generateRandomBytes32, withTimeout } from "@modules/utils"
@@ -36,7 +41,14 @@ async function routes(fastify: FastifyInstance) {
     "/trip/create",
     opts,
     async (request: FastifyRequest<{ Body: SignedRequest<CreateTripRequestBody> }>, reply) => {
-      const { tripPrompt, tripCreationCost, folderId } = request.body.data
+      const {
+        tripPrompt,
+        tripCreationCost,
+        folderId,
+        isChallengeTrip,
+        fixedMinValueToEnter,
+        overrideMaxValuePerWinPercentage
+      } = request.body.data
 
       // Recover player address from signature and convert to MUD bytes32 format
       const { callerAddress, playerId } = await verifyRequest(request.body)
@@ -56,6 +68,17 @@ async function routes(fastify: FastifyInstance) {
       // Validate trip folder with user address for whitelist checking
       await validateTripFolder(folderId, callerAddress)
 
+      // Check challenge trip whitelist and validate challenge trip params
+      const isWhitelisted = isChallengeTrip
+        ? await isWhitelistedForChallengeTrips(callerAddress)
+        : false
+      validateChallengeTripParams(
+        isChallengeTrip,
+        fixedMinValueToEnter,
+        overrideMaxValuePerWinPercentage,
+        isWhitelisted
+      )
+
       // * * * * * * * * * * * * * * * * * *
       // Generate unique trip ID
       // * * * * * * * * * * * * * * * * * *
@@ -68,7 +91,15 @@ async function routes(fastify: FastifyInstance) {
       // * * * * * * * * * * * * * * * * * *
 
       console.time("–– Chain call")
-      await systemCalls.createTrip(playerId, tripId, tripCreationCost, tripPrompt)
+      await systemCalls.createTrip(
+        playerId,
+        tripId,
+        tripCreationCost,
+        tripPrompt,
+        isChallengeTrip,
+        fixedMinValueToEnter,
+        overrideMaxValuePerWinPercentage
+      )
       console.timeEnd("–– Chain call")
 
       // * * * * * * * * * * * * * * * * * *

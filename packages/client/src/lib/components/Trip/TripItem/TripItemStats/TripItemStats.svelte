@@ -5,7 +5,12 @@
 
   let { trip }: { trip: Trip } = $props()
 
-  const maxValuePerWin = getTripMaxValuePerWin(trip.tripCreationCost, trip.balance)
+  const maxValuePerWin = getTripMaxValuePerWin(
+    trip.tripCreationCost,
+    trip.balance,
+    trip.challengeTrip,
+    trip.overrideMaxValuePerWinPercentage
+  )
 </script>
 
 <div class="meta-data">

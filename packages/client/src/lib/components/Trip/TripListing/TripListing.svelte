@@ -87,7 +87,13 @@
   let tripsWithEligibility = $derived.by((): TripWithEligibility[] => {
     return activeList.map(([tripId, trip]) => {
       // Check if rat value is high enough
-      const minRatValue = get(getTripMinRatValueToEnter(trip.tripCreationCost))
+      const minRatValue = get(
+        getTripMinRatValueToEnter(
+          trip.tripCreationCost,
+          trip.challengeTrip,
+          trip.fixedMinValueToEnter
+        )
+      )
       if ($ratTotalValue < minRatValue || !$playerHasLiveRat) {
         return [
           tripId,

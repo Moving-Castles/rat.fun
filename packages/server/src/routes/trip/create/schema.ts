@@ -6,7 +6,17 @@ export const schema = {
         type: "object",
         properties: {
           tripPrompt: { type: "string", description: "The prompt for the trip" },
-          tripCreationCost: { type: "number", description: "The creation cost for the trip" }
+          tripCreationCost: { type: "number", description: "The creation cost for the trip" },
+          // Challenge trip fields
+          isChallengeTrip: { type: "boolean", description: "Whether this is a challenge trip" },
+          fixedMinValueToEnter: {
+            type: "number",
+            description: "Fixed minimum rat value to enter (challenge trips only)"
+          },
+          overrideMaxValuePerWinPercentage: {
+            type: "number",
+            description: "Override max value per win percentage 1-100 (challenge trips only)"
+          }
         },
         required: ["tripPrompt", "tripCreationCost"]
       },

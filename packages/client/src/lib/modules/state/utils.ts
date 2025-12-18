@@ -118,20 +118,35 @@ export function getTripOwnerName(trip: Trip) {
 
 export function getTripMaxValuePerWin(
   tripCreationCost: number | bigint,
-  tripBalance: number | bigint
+  tripBalance: number | bigint,
+  isChallengeTrip?: boolean,
+  overrideMaxValuePerWinPercentage?: number | bigint
 ): Readable<number> {
   return derived(gamePercentagesConfig, $gamePercentagesConfig => {
     // Use balance or creation cost, whichever is higher
     const costBalanceMax = Math.max(Number(tripCreationCost), Number(tripBalance))
+    // Use override percentage for challenge trips, otherwise use global config
+    const percentage =
+      isChallengeTrip && overrideMaxValuePerWinPercentage
+        ? Number(overrideMaxValuePerWinPercentage)
+        : $gamePercentagesConfig.maxValuePerWin
     // Multiply by the configured percentage
-    const result = Math.floor(($gamePercentagesConfig.maxValuePerWin * costBalanceMax) / 100)
+    const result = Math.floor((percentage * costBalanceMax) / 100)
     // Cap to balance
     return Math.min(result, Number(tripBalance))
   })
 }
 
-export function getTripMinRatValueToEnter(tripCreationCost: number | bigint): Readable<number> {
+export function getTripMinRatValueToEnter(
+  tripCreationCost: number | bigint,
+  isChallengeTrip?: boolean,
+  fixedMinValueToEnter?: number | bigint
+): Readable<number> {
   return derived(gamePercentagesConfig, $gamePercentagesConfig => {
+    // For challenge trips, use the fixed value instead of percentage-based calculation
+    if (isChallengeTrip && fixedMinValueToEnter) {
+      return Number(fixedMinValueToEnter)
+    }
     // $gamePercentagesConfig.minRatValueToEnter is a percentage
     // Minimum rat value is that percentage of the trip creation cost
     return Math.floor((Number(tripCreationCost) * $gamePercentagesConfig.minRatValueToEnter) / 100)

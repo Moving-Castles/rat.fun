@@ -18,6 +18,40 @@ type NewTripDoc = Omit<TripDoc, "_createdAt" | "_updatedAt" | "_rev">
 type ExpandedTripFolderListDoc = Omit<TripFolderListDoc, "folders"> & { folders: TripFolderDoc[] }
 
 /**
+ * Check if a user is whitelisted for creating challenge trips.
+ * Uses the same whitelist as restricted trip folders.
+ * @param callerAddress - The caller address to check
+ * @returns True if the user is whitelisted for challenge trips
+ * @throws CMSAPIError if there's an error loading the whitelist
+ */
+export const isWhitelistedForChallengeTrips = async (callerAddress: string): Promise<boolean> => {
+  try {
+    const folderList = (await loadDataPublicSanity(
+      queries.tripFolderList,
+      {}
+    )) as ExpandedTripFolderListDoc
+
+    if (!folderList) {
+      return false
+    }
+
+    const whitelist = folderList.whitelist || []
+    return whitelist.some((addr: string) => addr.toLowerCase() === callerAddress.toLowerCase())
+  } catch (error) {
+    // If it's already one of our custom errors, rethrow it
+    if (error instanceof CMSError) {
+      throw error
+    }
+
+    // Otherwise, wrap it in our custom error
+    throw new CMSAPIError(
+      `Error checking challenge trip whitelist: ${error instanceof Error ? error.message : String(error)}`,
+      error
+    )
+  }
+}
+
+/**
  * Validate that a folder ID exists in the trip folder list and is not restricted,
  * or if restricted, that the user is whitelisted
  * @param folderId - The ID of the folder to validate

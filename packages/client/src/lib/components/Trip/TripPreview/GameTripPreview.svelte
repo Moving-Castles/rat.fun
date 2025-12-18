@@ -35,7 +35,13 @@
 
   // Only calculate these when we have chain data
   let minRatValueToEnter = $derived(
-    trip ? getTripMinRatValueToEnter(trip.tripCreationCost) : undefined
+    trip
+      ? getTripMinRatValueToEnter(
+          trip.tripCreationCost,
+          trip.challengeTrip,
+          trip.fixedMinValueToEnter
+        )
+      : undefined
   )
 
   let tripOutcomes = $state<Outcome[]>()

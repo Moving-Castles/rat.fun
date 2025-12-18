@@ -164,13 +164,19 @@ export function createSystemCalls(network: SetupNetworkResult) {
    * @param tripID - The ID of the trip to create
    * @param tripCreationCost - The cost of creating the trip
    * @param tripPrompt - The prompt for the trip
+   * @param isChallengeTrip - Whether this is a challenge trip
+   * @param fixedMinValueToEnter - Fixed minimum rat value to enter (challenge trips only)
+   * @param overrideMaxValuePerWinPercentage - Override max value per win percentage (challenge trips only)
    * @returns True if the trip was created successfully
    */
   const createTrip = async (
     playerId: Hex,
     tripID: Hex,
     tripCreationCost: number,
-    tripPrompt: string
+    tripPrompt: string,
+    isChallengeTrip?: boolean,
+    fixedMinValueToEnter?: number,
+    overrideMaxValuePerWinPercentage?: number
   ) => {
     try {
       // Get gas parameters with caps and priority boost
@@ -178,7 +184,15 @@ export function createSystemCalls(network: SetupNetworkResult) {
       const gasParams = await getGasParams(feeData)
 
       const tx = await network.worldContract.write.ratfun__createTrip(
-        [playerId, tripID, BigInt(tripCreationCost), tripPrompt],
+        [
+          playerId,
+          tripID,
+          BigInt(tripCreationCost),
+          isChallengeTrip ?? false,
+          BigInt(fixedMinValueToEnter ?? 0),
+          BigInt(overrideMaxValuePerWinPercentage ?? 0),
+          tripPrompt
+        ],
         gasParams
       )
 

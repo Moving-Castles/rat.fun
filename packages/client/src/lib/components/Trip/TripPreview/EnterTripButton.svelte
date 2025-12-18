@@ -11,7 +11,11 @@
 
   let { tripId, trip, disabled }: { tripId: Hex; trip: Trip; disabled: boolean } = $props()
 
-  let minRatValueToEnter = getTripMinRatValueToEnter(trip.tripCreationCost)
+  let minRatValueToEnter = getTripMinRatValueToEnter(
+    trip.tripCreationCost,
+    trip.challengeTrip,
+    trip.fixedMinValueToEnter
+  )
 
   // Check if user has enough allowance to enter the trip
   // Trip entry costs rat's value, so we check against rat total value

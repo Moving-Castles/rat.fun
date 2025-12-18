@@ -20,11 +20,16 @@ export async function constructEventMessages(
   // Trip
   messages.push({ role: "user", content: `TripDescription: ${trip.prompt}` })
 
+  // Is challenge
+  messages.push({ role: "user", content: `IsChallengeTrip: ${trip.challengeTrip}` })
+
   // Max value per win
   const maxValuePerWin = getTripMaxValuePerWin(
     trip.tripCreationCost,
     trip.balance,
-    gamePercentagesConfig
+    gamePercentagesConfig,
+    trip.challengeTrip,
+    trip.overrideMaxValuePerWinPercentage
   )
   messages.push({
     role: "user",

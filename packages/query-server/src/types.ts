@@ -51,6 +51,11 @@ export interface TripResponse {
   liquidated: boolean
   liquidationValue: string | null
   liquidationBlock: string | null
+  // Challenge trip fields
+  challengeTrip: boolean
+  fixedMinValueToEnter: string | null
+  overrideMaxValuePerWinPercentage: string | null
+  challengeWinner: string | null
 }
 
 // Minimal player info for other players in hydration

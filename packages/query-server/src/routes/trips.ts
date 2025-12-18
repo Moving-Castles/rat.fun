@@ -49,7 +49,12 @@ async function fetchTripsForPlayer(playerId: string): Promise<TripResponse[]> {
           tripCreationCost,
           liquidated,
           liquidationValue,
-          liquidationBlock
+          liquidationBlock,
+          // Challenge trip fields
+          challengeTrip,
+          fixedMinValueToEnter,
+          overrideMaxValuePerWinPercentage,
+          challengeWinnerBuffer
         ] = await Promise.all([
           getTableValue<Buffer>("Owner", tripId),
           getTableValue<string>("Index", tripId),
@@ -62,7 +67,12 @@ async function fetchTripsForPlayer(playerId: string): Promise<TripResponse[]> {
           getTableValue<string>("TripCreationCost", tripId),
           getTableValue<boolean>("Liquidated", tripId),
           getTableValue<string>("LiquidationValue", tripId),
-          getTableValue<string>("LiquidationBlock", tripId)
+          getTableValue<string>("LiquidationBlock", tripId),
+          // Challenge trip fields
+          getTableValue<boolean>("ChallengeTrip", tripId),
+          getTableValue<string>("FixedMinValueToEnter", tripId),
+          getTableValue<string>("OverrideMaxValuePerWinPercentage", tripId),
+          getTableValue<Buffer>("ChallengeWinner", tripId)
         ])
 
         return {
@@ -78,7 +88,12 @@ async function fetchTripsForPlayer(playerId: string): Promise<TripResponse[]> {
           tripCreationCost: formatBalance(tripCreationCost),
           liquidated: liquidated ?? false,
           liquidationValue: formatBalance(liquidationValue),
-          liquidationBlock
+          liquidationBlock,
+          // Challenge trip fields
+          challengeTrip: challengeTrip ?? false,
+          fixedMinValueToEnter: formatBalance(fixedMinValueToEnter),
+          overrideMaxValuePerWinPercentage: overrideMaxValuePerWinPercentage ?? null,
+          challengeWinner: byteaToHex(challengeWinnerBuffer)
         } as TripResponse
       })
     )

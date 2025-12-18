@@ -24,7 +24,13 @@ export function validateInputData(
   }
 
   // Check that the rat has enough value to enter the trip
-  if (rat.totalValue < getTripMinRatValueToEnter(trip.tripCreationCost, gamePercentagesConfig)) {
+  const minValueToEnter = getTripMinRatValueToEnter(
+    trip.tripCreationCost,
+    gamePercentagesConfig,
+    trip.challengeTrip,
+    trip.fixedMinValueToEnter
+  )
+  if (rat.totalValue < minValueToEnter) {
     throw new RatValueError()
   }
 

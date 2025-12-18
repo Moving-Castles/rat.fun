@@ -22,6 +22,11 @@ interface TripInfo {
   liquidated: boolean
   liquidationValue: string | null
   liquidationBlock: string | null
+  // Challenge trip fields
+  challengeTrip: boolean
+  fixedMinValueToEnter: string | null
+  overrideMaxValuePerWinPercentage: string | null
+  challengeWinner: string | null
 }
 
 const trip: FastifyPluginAsync = async fastify => {
@@ -50,7 +55,12 @@ const trip: FastifyPluginAsync = async fastify => {
       tripCreationCost,
       liquidated,
       liquidationValue,
-      liquidationBlock
+      liquidationBlock,
+      // Challenge trip fields
+      challengeTrip,
+      fixedMinValueToEnter,
+      overrideMaxValuePerWinPercentage,
+      challengeWinnerBuffer
     ] = await Promise.all([
       getTableValue<number>("EntityType", id),
       getTableValue<Buffer>("Owner", id),
@@ -64,7 +74,12 @@ const trip: FastifyPluginAsync = async fastify => {
       getTableValue<string>("TripCreationCost", id),
       getTableValue<boolean>("Liquidated", id),
       getTableValue<string>("LiquidationValue", id),
-      getTableValue<string>("LiquidationBlock", id)
+      getTableValue<string>("LiquidationBlock", id),
+      // Challenge trip fields
+      getTableValue<boolean>("ChallengeTrip", id),
+      getTableValue<string>("FixedMinValueToEnter", id),
+      getTableValue<string>("OverrideMaxValuePerWinPercentage", id),
+      getTableValue<Buffer>("ChallengeWinner", id)
     ])
 
     // Check if this entity exists (has at least a prompt or creationBlock)
@@ -100,7 +115,12 @@ const trip: FastifyPluginAsync = async fastify => {
       tripCreationCost: formatBalance(tripCreationCost),
       liquidated: liquidated ?? false,
       liquidationValue: formatBalance(liquidationValue),
-      liquidationBlock
+      liquidationBlock,
+      // Challenge trip fields
+      challengeTrip: challengeTrip ?? false,
+      fixedMinValueToEnter: formatBalance(fixedMinValueToEnter),
+      overrideMaxValuePerWinPercentage: overrideMaxValuePerWinPercentage ?? null,
+      challengeWinner: byteaToHex(challengeWinnerBuffer)
     }
 
     return reply.send(tripInfo)
