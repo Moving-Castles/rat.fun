@@ -67,7 +67,7 @@
   )
 
   const onBackButtonClick = () => {
-    goto("/trips-lab")
+    goto("/trip-lab")
   }
 
   const commit = () => {
@@ -168,14 +168,16 @@
           onAddBalance={() => (showAddBalanceModal = true)}
         />
       </div>
-      <SlideToggle
-        options={[
-          { value: "graph", label: UI_STRINGS.graph.toUpperCase() },
-          { value: "log", label: UI_STRINGS.log.toUpperCase() }
-        ]}
-        value={phoneTripView}
-        onchange={v => (phoneTripView = v as "graph" | "log")}
-      />
+      <div class="phone-sub-toggle">
+        <SlideToggle
+          options={[
+            { value: "graph", label: UI_STRINGS.graph.toUpperCase() },
+            { value: "log", label: UI_STRINGS.log.toUpperCase() }
+          ]}
+          value={phoneTripView}
+          onchange={v => (phoneTripView = v as "graph" | "log")}
+        />
+      </div>
       {#if phoneTripView === "graph"}
         <div bind:clientHeight class="phone-view">
           <TripProfitLossGraph
@@ -291,7 +293,7 @@
     {trip}
     tripContent={sanityTripContent}
     onDone={async () => {
-      await goto("/trips-lab")
+      await goto("/trip-lab")
       liquidating = false
     }}
     onAbort={() => {
@@ -336,6 +338,11 @@
       flex-direction: column;
 
       .full {
+        flex-shrink: 0;
+      }
+
+      .phone-sub-toggle {
+        height: var(--phone-slide-toggle-height);
         flex-shrink: 0;
       }
 

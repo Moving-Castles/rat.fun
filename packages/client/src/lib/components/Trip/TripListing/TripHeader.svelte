@@ -39,6 +39,11 @@
     text-align: center;
     background: var(--color-grey-dark);
 
+    @media screen and (max-width: 800px) {
+      height: var(--top-bar-height-phone);
+      line-height: var(--top-bar-height-phone);
+    }
+
     &.with-back-button {
       top: 60px;
     }

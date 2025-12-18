@@ -14,14 +14,13 @@
     {options}
     value={$phoneActiveGameView}
     onchange={v => phoneActiveGameView.set(v as "ratbox" | "triplisting")}
-    height={70}
   />
 </div>
 
 <style lang="scss">
   .phone-view-button-container {
     width: 100%;
-    border-top: var(--default-border-style);
+    height: var(--phone-slide-toggle-height);
     flex-shrink: 0;
   }
 </style>

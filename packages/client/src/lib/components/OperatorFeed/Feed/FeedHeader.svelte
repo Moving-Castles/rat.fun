@@ -105,6 +105,10 @@
     position: sticky;
     top: 0;
     z-index: var(--z-high);
+
+    @media (max-width: 800px) {
+      display: none;
+    }
   }
 
   .title {

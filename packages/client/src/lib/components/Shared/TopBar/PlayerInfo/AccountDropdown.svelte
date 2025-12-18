@@ -27,7 +27,6 @@
 <style lang="scss">
   .account-dropdown {
     position: fixed;
-    top: 58px;
     left: 0;
     background-color: var(--background-dark-transparent);
     color: var(--foreground);
@@ -43,8 +42,11 @@
     z-index: 2000;
     border: 1px solid var(--color-border);
     width: 600px;
+    top: 60px;
+
     @media (max-width: 800px) {
       width: 100%;
+      top: 110px;
     }
 
     .debug-button {

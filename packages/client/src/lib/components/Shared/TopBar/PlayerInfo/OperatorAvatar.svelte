@@ -17,6 +17,7 @@
     display: flex;
     align-items: center;
     padding: 0 10px;
+    border-right: var(--default-border-style);
 
     @media (max-width: 800px) {
       display: none;

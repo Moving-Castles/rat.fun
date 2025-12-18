@@ -134,7 +134,7 @@
       border: none;
       color: var(--foreground);
       cursor: pointer;
-      font-size: var(--font-size-small);
+      font-size: var(--font-size-normal);
 
       &:hover {
         background: var(--color-grey-darker);

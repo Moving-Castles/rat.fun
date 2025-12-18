@@ -1,7 +1,7 @@
 <script lang="ts">
   import { playSound } from "$lib/modules/sound"
-  import { Tooltip } from "$lib/components/Shared"
-  import { onlinePlayers, websocketConnected } from "$lib/modules/off-chain-sync/stores"
+  import { Tooltip, X } from "$lib/components/Shared"
+  import { websocketConnected } from "$lib/modules/off-chain-sync/stores"
 
   let {
     isActive,
@@ -15,8 +15,6 @@
     onclick: () => void
   } = $props()
 
-  const onlineCount = $derived($onlinePlayers.length)
-
   const onmousedown = () => {
     playSound({ category: "ratfunUI", id: "bigButtonDown" })
   }
@@ -29,8 +27,17 @@
 
 <Tooltip content={tippyText}>
   <button class:disabled class:active={isActive} {onmouseup} {onmousedown}>
-    <span class="indicator" class:connected={$websocketConnected}></span>
-    <span class="button-text">OPERATOR FEED ({onlineCount})</span>
+    {#if isActive}
+      <div class="button-icon">
+        <X />
+        <X />
+        <X />
+        <X />
+      </div>
+    {:else}
+      <span class="indicator" class:connected={$websocketConnected}></span>
+      <span class="button-text">OPERATOR FEED</span>
+    {/if}
   </button>
 </Tooltip>
 
@@ -38,7 +45,7 @@
   button {
     width: 100%;
     height: 100%;
-    background: var(--color-grey-light);
+    background: var(--color-grey-darker);
     border: none;
     border-style: outset;
     border-width: 5px;
@@ -55,6 +62,7 @@
       width: 8px;
       height: 8px;
       border-radius: 50%;
+      margin-top: -3px;
       background: var(--color-down);
       transition: background 0.2s ease;
 
@@ -64,21 +72,31 @@
     }
 
     .button-text {
-      font-size: var(--font-size-small);
+      font-size: var(--font-size-normal);
       font-family: var(--typewriter-font-stack);
       line-height: 1em;
       z-index: 2;
       position: relative;
-      color: var(--color-grey-darker);
+      color: var(--color-grey-lighter);
+    }
+
+    .button-icon {
+      width: 100%;
+      height: 60%;
+      color: var(--color-grey-dark);
+      display: flex;
+      flex-flow: row nowrap;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
     }
 
     &:hover {
-      background: var(--color-grey-lighter);
+      background: var(--color-grey-dark);
     }
 
     &:active {
       border-style: inset;
-      background: var(--color-grey-mid);
       transform: translateY(2px);
       position: relative;
     }
@@ -90,8 +108,16 @@
     }
 
     &.active {
-      border-style: inset;
-      background: var(--color-grey-mid);
+      background: var(--color-grey-light);
+
+      &:hover {
+        background: var(--color-grey-lighter);
+      }
+
+      &:active {
+        border-style: inset;
+        background: var(--color-grey-mid);
+      }
     }
   }
 </style>

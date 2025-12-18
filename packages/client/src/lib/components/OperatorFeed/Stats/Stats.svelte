@@ -95,6 +95,7 @@
     border-bottom: var(--default-border-style);
     padding: 8px 12px;
     gap: 16px;
+    display: none;
   }
 
   .stat {

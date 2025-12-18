@@ -7,6 +7,7 @@ import { Hex, PublicClient, Transport, Chain, Block } from "viem"
 import { Observable } from "rxjs"
 import { StorageAdapterBlock } from "@latticexyz/store-sync"
 import { syncToRecs, SyncToRecsResult } from "@latticexyz/store-sync/recs"
+import { getSnapshot } from "@latticexyz/store-sync/internal"
 import { World } from "@latticexyz/recs"
 
 import { setupPublicBasicNetwork } from "../basic-network"
@@ -29,22 +30,28 @@ type recsSyncResult = SyncToRecsResult<typeof mudConfig, {}>
  * Attempts to sync using the primary indexer URL, then falls back to the
  * fallback indexer URL if provided, and finally falls back to RPC sync.
  */
-async function syncWithFallback(
+async function getSnapshotWithFallback(
   baseConfig: {
-    world: World
-    config: typeof mudConfig
-    address: Hex
-    publicClient: PublicClient<Transport, Chain>
+    storeAddress: Hex
+    chainId: number
     startBlock: bigint
   },
   primaryIndexerUrl?: string,
-  fallbackIndexerUrl?: string
-): Promise<recsSyncResult> {
+  fallbackIndexerUrl?: string,
+  defaultChainIndexerUrl?: string
+): Promise<StorageAdapterBlock | undefined> {
   // Try primary indexer if available
   if (primaryIndexerUrl) {
     try {
-      console.log("[Chain Sync] Attempting sync with primary indexer:", primaryIndexerUrl)
-      return await syncToRecs({ ...baseConfig, indexerUrl: primaryIndexerUrl })
+      console.log(
+        "[Chain Sync] Attempting to get snapshot with primary indexer:",
+        primaryIndexerUrl
+      )
+      const { initialBlockLogs } = await getSnapshot({
+        ...baseConfig,
+        indexerUrl: primaryIndexerUrl
+      })
+      return initialBlockLogs
     } catch (error) {
       console.warn("[Chain Sync] Primary indexer failed:", error)
     }
@@ -53,16 +60,38 @@ async function syncWithFallback(
   // Try fallback indexer if available
   if (fallbackIndexerUrl) {
     try {
-      console.log("[Chain Sync] Attempting sync with fallback indexer:", fallbackIndexerUrl)
-      return await syncToRecs({ ...baseConfig, indexerUrl: fallbackIndexerUrl })
+      console.log(
+        "[Chain Sync] Attempting to get snapshot with fallback indexer:",
+        fallbackIndexerUrl
+      )
+      const { initialBlockLogs } = await getSnapshot({
+        ...baseConfig,
+        indexerUrl: fallbackIndexerUrl
+      })
+      return initialBlockLogs
     } catch (error) {
       console.warn("[Chain Sync] Fallback indexer failed:", error)
     }
   }
 
-  // Fall back to RPC sync (no indexer URL)
-  console.log("[Chain Sync] Falling back to RPC sync")
-  return await syncToRecs({ ...baseConfig, indexerUrl: undefined })
+  // Try default chain indexer if available
+  if (defaultChainIndexerUrl) {
+    try {
+      console.log(
+        "[Chain Sync] Attempting to get snapshot with default chain indexer:",
+        defaultChainIndexerUrl
+      )
+      const { initialBlockLogs } = await getSnapshot({
+        ...baseConfig,
+        indexerUrl: defaultChainIndexerUrl
+      })
+      return initialBlockLogs
+    } catch (error) {
+      console.warn("[Chain Sync] Default chain indexer failed:", error)
+    }
+  }
+
+  return undefined
 }
 
 export type SetupPublicNetworkResult = {
@@ -78,31 +107,14 @@ export type SetupPublicNetworkResult = {
   tableKeys: string[]
 }
 
-/**
- * Optional initial block logs for skipping indexer hydration.
- * When provided, MUD will skip fetching from indexer and start live sync from this block.
- */
-export type InitialBlockLogs = {
-  blockNumber: bigint
-  logs: readonly []
-}
-
 export async function setupPublicNetwork(
   networkConfig: NetworkConfig,
   devMode: boolean,
   publicClient?: PublicClient<Transport, Chain>,
-  initialBlockLogs?: InitialBlockLogs
+  initialBlockLogs?: StorageAdapterBlock
 ): Promise<SetupPublicNetworkResult> {
   const basicNetwork = await setupPublicBasicNetwork(networkConfig, devMode)
   publicClient ??= basicNetwork.publicClient
-
-  const baseConfig = {
-    world,
-    config: mudConfig,
-    address: networkConfig.worldAddress as Hex,
-    publicClient,
-    startBlock: BigInt(networkConfig.initialBlockNumber)
-  }
 
   /*
    * Sync on-chain state into RECS and keeps our client in sync.
@@ -113,9 +125,20 @@ export async function setupPublicNetwork(
    * If initialBlockLogs is provided, skip indexer hydration and start
    * live sync from that block (used for server-side hydration).
    */
-  let syncResult: recsSyncResult
 
-  if (initialBlockLogs) {
+  if (!initialBlockLogs) {
+    // Normal flow: try indexers with fallback
+    initialBlockLogs = await getSnapshotWithFallback(
+      {
+        storeAddress: networkConfig.worldAddress,
+        chainId: networkConfig.chainId,
+        startBlock: BigInt(networkConfig.initialBlockNumber)
+      },
+      networkConfig.indexerUrl,
+      networkConfig.fallbackIndexerUrl,
+      networkConfig.chain.indexerUrl
+    )
+  } else {
     // Skip indexer - use server-provided data instead
     // Note: indexerUrl must be `false` (not undefined) to prevent MUD from
     // falling back to chain.indexerUrl for live subscriptions
@@ -123,21 +146,23 @@ export async function setupPublicNetwork(
       "[Chain Sync] Skipping indexer, using server hydration from block:",
       initialBlockLogs.blockNumber.toString()
     )
-    syncResult = await syncToRecs({
-      ...baseConfig,
-      initialBlockLogs,
-      indexerUrl: false
-    })
-  } else {
-    // Normal flow: try indexers with fallback
-    syncResult = await syncWithFallback(
-      baseConfig,
-      networkConfig.indexerUrl,
-      networkConfig.fallbackIndexerUrl
-    )
   }
 
-  const { components, latestBlock$, storedBlockLogs$, waitForTransaction } = syncResult
+  if (!initialBlockLogs) {
+    console.log("[Chain Sync] Indexer snapshot failed, falling back to RPC")
+  }
+
+  const { components, latestBlock$, storedBlockLogs$, waitForTransaction } = await syncToRecs({
+    world,
+    config: mudConfig,
+    address: networkConfig.worldAddress as Hex,
+    publicClient,
+    initialBlockLogs,
+    indexerUrl: false,
+    startBlock: initialBlockLogs
+      ? initialBlockLogs.blockNumber
+      : BigInt(networkConfig.initialBlockNumber)
+  })
 
   // Allows us to to only listen to the game specific tables
   const tableKeys = [

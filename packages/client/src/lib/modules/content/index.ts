@@ -307,6 +307,7 @@ export async function initPlayerOutcomes(worldAddress: string, playerTripIds: st
         result: ratDied ? "died" : "survived",
         ratOwnerName: outcome.playerName ?? "Unknown Player",
         ratValueChange: outcome.ratValueChange ?? 0,
+        ratBalanceChange: (outcome.newRatBalance ?? 0) - (outcome.oldRatBalance ?? 0),
         itemsOnEntrance,
         itemsGained,
         itemsLost,
@@ -393,6 +394,7 @@ type RecentOutcomeForFeed = {
   ratName: string
   playerName: string
   ratValueChange: number
+  oldRatBalance: number
   newRatBalance: number
   inventoryOnEntrance?: Array<{ id?: string; name?: string; value?: number }>
   itemChanges?: Array<{ id?: string; name?: string; value?: number; type?: string }>
@@ -484,6 +486,7 @@ export async function loadFeedHistory(worldAddress: string) {
           result: ratDied ? "died" : "survived",
           ratOwnerName: outcome.playerName ?? "Unknown Player",
           ratValueChange: outcome.ratValueChange ?? 0,
+          ratBalanceChange: (outcome.newRatBalance ?? 0) - (outcome.oldRatBalance ?? 0),
           itemsOnEntrance,
           itemsGained,
           itemsLost,

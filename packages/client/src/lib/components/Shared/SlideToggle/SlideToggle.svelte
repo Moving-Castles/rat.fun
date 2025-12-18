@@ -7,7 +7,8 @@
     value,
     onchange,
     disabled = false,
-    height = 60,
+    height,
+    secondary = false,
     compact = false
   }: {
     options: SlideToggleOption[]
@@ -15,6 +16,7 @@
     onchange: (value: string) => void
     disabled?: boolean
     height?: number
+    secondary?: boolean
     compact?: boolean
   } = $props()
 
@@ -23,4 +25,12 @@
   }
 </script>
 
-<BaseSlideToggle {options} {value} {onchange} {disabled} {height} onSelect={handleSelect} />
+<BaseSlideToggle
+  {options}
+  {value}
+  {onchange}
+  {disabled}
+  {height}
+  {secondary}
+  onSelect={handleSelect}
+/>

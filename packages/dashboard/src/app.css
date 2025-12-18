@@ -48,6 +48,7 @@
 
   /* Layout: Top Bar */
   --top-bar-height: 60px;
+  --top-bar-height-phone: 55px;
 
   /* Layout: Your Trips */
   --world-prompt-box-height: 80px;

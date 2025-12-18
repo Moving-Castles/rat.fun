@@ -69,7 +69,6 @@
   }
 
   .owner {
-    font-weight: 600;
     white-space: nowrap;
   }
 

@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { NewOutcomeMessage, FeedItem } from "./types"
   import { goto } from "$app/navigation"
-  import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
+  import { HEALTH_SYMBOL } from "$lib/modules/ui/constants"
 
   let { message }: { message: NewOutcomeMessage } = $props()
 
@@ -14,7 +14,7 @@
     return `${prefix}${value}`
   }
 
-  function truncatePrompt(prompt: string, maxLen = 40): string {
+  function truncatePrompt(prompt: string, maxLen = 60): string {
     if (prompt.length <= maxLen) return prompt
     return prompt.slice(0, maxLen) + "..."
   }
@@ -44,47 +44,55 @@
   }
 
   const allLostItems = $derived(getAllLostItems())
+  const hasBalanceChange = $derived(message.ratBalanceChange !== 0)
   const hasItems = $derived(
-    message.itemsOnEntrance.length > 0 || message.itemsGained.length > 0 || allLostItems.length > 0
+    hasBalanceChange ||
+      message.itemsOnEntrance.length > 0 ||
+      message.itemsGained.length > 0 ||
+      allLostItems.length > 0
   )
 </script>
 
 <button class="outcome" onclick={handleTripClick}>
   <div class="outcome-header">
-    <span class="marker">*</span>
+    <span class="marker">****</span>
     <span class="owner-name">{message.ratOwnerName}</span>
-    <span class="trip-index">#{message.tripIndex}</span>
-    <span class="rat-name">{message.ratName}</span>
-    <span
-      class="result"
-      class:survived={message.result === "survived"}
-      class:died={message.result === "died"}
-    >
-      {message.result === "survived" ? "SURVIVED" : "DIED"}
+    <span class="result">
+      {message.result === "survived" ? "RAT SURVIVED" : "RAT DIED"}
     </span>
     <span
       class="value-change"
-      class:positive={message.ratValueChange > 0}
+      class:positive={message.ratValueChange >= 0}
       class:negative={message.ratValueChange < 0}
     >
       {formatValueChange(message.ratValueChange)}
-      {CURRENCY_SYMBOL}
     </span>
+    <span class="trip-index">#{message.tripIndex}</span>
   </div>
 
   <div class="outcome-details">
-    <span class="trip-prompt">"{truncatePrompt(message.tripPrompt)}"</span>
+    <span class="trip-prompt">{truncatePrompt(message.tripPrompt)}</span>
 
     {#if hasItems}
       <div class="items">
+        {#if hasBalanceChange}
+          <span
+            class="item balance"
+            class:gained={message.ratBalanceChange > 0}
+            class:lost={message.ratBalanceChange < 0}
+          >
+            {HEALTH_SYMBOL}
+            {formatValueChange(message.ratBalanceChange)}
+          </span>
+        {/if}
         {#each message.itemsOnEntrance as item (item.id)}
-          <span class="item brought">{item.name}</span>
+          <span class="item brought">{item.name} ({item.value})</span>
         {/each}
         {#each message.itemsGained as item (item.id)}
-          <span class="item gained">{item.name}</span>
+          <span class="item gained">+ {item.name} ({item.value})</span>
         {/each}
         {#each allLostItems as item (item.id)}
-          <span class="item lost">{item.name}</span>
+          <span class="item lost">- {item.name} ({item.value})</span>
         {/each}
       </div>
     {/if}
@@ -115,33 +123,21 @@
 
   .marker {
     color: var(--color-grey-light);
+    margin-right: 1ch;
   }
 
   .owner-name {
-    color: var(--color-accent);
-    font-weight: 600;
+    color: var(--foreground);
   }
 
   .trip-index {
     font-family: var(--mono-font-stack);
-    color: var(--color-grey-light);
-  }
-
-  .rat-name {
-    font-weight: 600;
+    color: var(--foreground);
   }
 
   .result {
     text-transform: uppercase;
-    font-weight: 600;
-
-    &.survived {
-      color: var(--color-up);
-    }
-
-    &.died {
-      color: var(--color-down);
-    }
+    color: var(--color-grey-light);
   }
 
   .value-change {
@@ -157,21 +153,25 @@
   }
 
   .outcome-details {
-    padding-left: 12px;
     display: flex;
     flex-direction: column;
     gap: 4px;
   }
 
   .trip-prompt {
-    font-style: italic;
-    color: var(--color-grey-lighter);
+    display: block;
+    margin-left: 4ch;
+    padding-left: 1ch;
+    color: var(--color-grey-light);
+    border-left: 3px solid var(--color-grey-dark);
+    max-width: 75ch;
   }
 
   .items {
     display: flex;
     flex-wrap: wrap;
     gap: 4px;
+    margin-left: calc(5ch - 6px);
   }
 
   .item {

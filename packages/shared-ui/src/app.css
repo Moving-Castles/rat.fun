@@ -156,6 +156,10 @@
 
   /* Layout: Top Bar */
   --top-bar-height: 60px;
+  --top-bar-height-phone: 55px;
+  --top-bar-total-height-phone: calc(var(--top-bar-height-phone) * 2); /* Two rows on phone */
+  --phone-slide-toggle-height: 55px;
+  --phone-secondary-slide-toggle-height: 45px;
 
   /* Layout: Your Trips */
   --world-prompt-box-height: 80px;
@@ -221,7 +225,7 @@
   text-rendering: optimizeLegibility;
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
-  overscroll-behavior-y: none;
+  overscroll-behavior: none;
   /* user-select: none; */
   -webkit-tap-highlight-color: transparent; /* Remove touch overlay */
   -webkit-touch-callout: none; /* Disable callout on iOS */
@@ -235,7 +239,7 @@ html {
   font-size: var(--font-size-normal);
   margin: 0;
   padding: 0;
-  overscroll-behavior-y: none;
+  overscroll-behavior: none;
   letter-spacing: 0px;
 }
 

@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { NewTripMessage } from "./types"
   import { goto } from "$app/navigation"
-  import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
+  import { HEALTH_SYMBOL } from "$lib/modules/ui/constants"
 
   let { message }: { message: NewTripMessage } = $props()
 
@@ -17,10 +17,10 @@
     <span class="action">CREATED TRIP</span>
     <span class="trip-index">#{message.tripIndex}</span>
     {#if message.tripCreationCost > 0}
-      <span class="cost">({message.tripCreationCost} {CURRENCY_SYMBOL})</span>
+      <span class="cost">{HEALTH_SYMBOL}-{message.tripCreationCost}</span>
     {/if}
   </div>
-  <div class="trip-prompt">"{message.tripPrompt}"</div>
+  <div class="trip-prompt">{message.tripPrompt}</div>
 </button>
 
 <style lang="scss">
@@ -47,7 +47,7 @@
 
   .arrow {
     color: var(--color-good);
-    margin-right: 4px;
+    margin-right: 1ch;
   }
 
   .creator-name {
@@ -65,12 +65,16 @@
   }
 
   .cost {
-    color: var(--color-grey-light);
+    color: var(--color-down);
     font-family: var(--mono-font-stack);
   }
 
   .trip-prompt {
+    display: block;
+    margin-left: 4ch;
+    padding-left: 1ch;
     color: var(--color-grey-light);
-    border-right: 1px solid var(--color-grey-dark);
+    border-left: 3px solid var(--color-grey-dark);
+    max-width: 75ch;
   }
 </style>

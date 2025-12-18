@@ -5,7 +5,7 @@
 </script>
 
 <div class="message-content chat">
-  <span class="player-name">{message.playerName}:</span>
+  <span class="player-name">{message.playerName}</span>
   <span class="text">{message.content}</span>
 </div>
 
@@ -18,12 +18,14 @@
     align-items: baseline;
 
     .player-name {
-      font-weight: 600;
-      color: var(--color-accent);
+      color: var(--color-grey-light);
+
+      margin-right: 1ch;
     }
 
     .text {
       word-break: break-word;
+      color: var(--foreground);
     }
   }
 </style>

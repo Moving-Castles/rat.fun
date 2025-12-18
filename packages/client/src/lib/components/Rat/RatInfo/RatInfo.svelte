@@ -164,7 +164,7 @@
       overflow: visible; // Allow total value to overflow during scale animation
 
       @media (max-width: 800px) {
-        order: 2;
+        order: 3;
       }
     }
   }

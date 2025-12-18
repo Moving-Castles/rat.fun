@@ -38,6 +38,12 @@
     .main-content {
       position: relative;
       height: var(--game-window-main-height);
+
+      @media (max-width: 800px) {
+        height: calc(
+          var(--game-window-height) - var(--top-bar-total-height-phone) - 2px
+        ); /* 2px for borders */
+      }
     }
 
     .main-area-inner {

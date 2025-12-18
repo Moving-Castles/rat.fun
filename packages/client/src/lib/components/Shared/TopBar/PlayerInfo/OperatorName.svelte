@@ -22,7 +22,6 @@
     width: 100%;
     color: var(--white);
     border-right: var(--default-border-style);
-    border-left: var(--default-border-style);
     display: flex;
     flex-direction: column;
     min-width: 100px;

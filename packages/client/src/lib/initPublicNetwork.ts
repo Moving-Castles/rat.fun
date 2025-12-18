@@ -1,11 +1,11 @@
 import type { Hex } from "viem"
+import { StorageAdapterBlock } from "@latticexyz/store-sync"
 import { ENVIRONMENT } from "@ratfun/common/basic-network"
 import {
   getNetworkConfig,
   setupPublicNetwork,
   SetupPublicNetworkResult,
-  IndexerUrlConfig,
-  InitialBlockLogs
+  IndexerUrlConfig
 } from "@ratfun/common/mud"
 import {
   waitForChainSync,
@@ -81,7 +81,7 @@ export async function initPublicNetwork(
   console.log("[initPublicNetwork] Fetching global config...")
   const configResult = await fetchConfig(environment)
 
-  let initialBlockLogs: InitialBlockLogs | undefined
+  let initialBlockLogs: StorageAdapterBlock | undefined
 
   if (configResult) {
     console.log("[initPublicNetwork] Config fetched from server, will skip indexer")

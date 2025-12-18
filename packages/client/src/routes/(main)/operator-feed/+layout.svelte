@@ -85,6 +85,8 @@
   }
 
   .phone-toggle-container {
+    height: var(--phone-slide-toggle-height);
+    flex-shrink: 0;
     background: var(--background);
   }
 

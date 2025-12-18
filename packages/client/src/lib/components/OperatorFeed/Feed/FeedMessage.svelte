@@ -44,7 +44,7 @@
   }
 
   .timestamp {
-    color: var(--color-grey-light);
+    color: var(--color-grey-mid);
     font-family: var(--mono-font-stack);
     font-size: var(--font-size-tiny);
     flex-shrink: 0;

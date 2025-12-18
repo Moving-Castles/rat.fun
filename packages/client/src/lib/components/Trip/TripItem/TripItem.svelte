@@ -241,10 +241,9 @@
             line-height: 0.9em;
 
             @media (max-width: 800px) {
-              // padding: 10px;
               order: 2;
               overflow: visible;
-              text-overflow: unset;
+              height: 120px;
             }
           }
 

@@ -94,7 +94,7 @@
           height: 100%;
 
           @media (max-width: 800px) {
-            order: 2;
+            order: 3;
           }
         }
 

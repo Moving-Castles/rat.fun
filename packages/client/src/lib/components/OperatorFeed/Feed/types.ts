@@ -42,6 +42,8 @@ export type NewOutcomeMessage = BaseFeedMessage & {
   result: "survived" | "died"
   ratOwnerName: string
   ratValueChange: number
+  // Balance (health) change: newRatBalance - oldRatBalance
+  ratBalanceChange: number
   // Items the rat brought into the trip
   itemsOnEntrance: FeedItem[]
   // Items gained during the trip

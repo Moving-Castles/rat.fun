@@ -1,8 +1,9 @@
 <script lang="ts">
   import { onMount, tick } from "svelte"
-  import { CharacterCounter } from "$lib/components/Shared"
+  import { SmallButton } from "$lib/components/Shared"
   import { sendChatMessage } from "$lib/modules/off-chain-sync/chat"
   import { playSound } from "$lib/modules/sound"
+  import { isPhone } from "$lib/modules/ui/state.svelte"
 
   const MAX_LENGTH = 280
 
@@ -10,8 +11,12 @@
   let isSending = $state(false)
   let inputElement = $state<HTMLInputElement | null>(null)
 
+  const isOverLimit = $derived(message.length > MAX_LENGTH)
+
   onMount(() => {
-    inputElement?.focus()
+    if (!$isPhone) {
+      inputElement?.focus()
+    }
   })
 
   async function handleSend() {
@@ -48,17 +53,14 @@
     onkeydown={handleKeydown}
     placeholder="Type a message..."
     disabled={isSending}
-    maxlength={MAX_LENGTH}
+    class:over-limit={isOverLimit}
   />
-  <div class="input-actions">
-    <CharacterCounter currentLength={message.length} maxLength={MAX_LENGTH} />
-    <button
-      class="send-button"
+  <div class="send-button">
+    <SmallButton
+      text={isSending ? "..." : "Send"}
       onclick={handleSend}
-      disabled={isSending || !message.trim() || message.length > MAX_LENGTH}
-    >
-      {isSending ? "..." : "Send"}
-    </button>
+      disabled={isSending || !message.trim() || isOverLimit}
+    />
   </div>
 </div>
 
@@ -72,7 +74,7 @@
     background: var(--background);
 
     @media (max-width: 800px) {
-      padding: 8px 12px;
+      padding: 16px 12px;
     }
   }
 
@@ -82,7 +84,7 @@
     border: 1px solid var(--color-grey-mid);
     color: var(--foreground);
     padding: 8px 12px;
-    font-size: var(--font-size-small);
+    font-size: var(--font-size-normal);
     font-family: inherit;
 
     &::placeholder {
@@ -97,31 +99,16 @@
     &:disabled {
       opacity: 0.5;
     }
-  }
 
-  .input-actions {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    &.over-limit {
+      border-color: var(--color-down);
+      background: rgba(255, 0, 0, 0.1);
+    }
   }
 
   .send-button {
-    background: var(--foreground);
-    color: var(--background);
-    border: none;
-    padding: 8px 16px;
-    font-size: var(--font-size-small);
-    cursor: pointer;
-    text-transform: uppercase;
-    font-family: var(--special-font-stack);
-
-    &:hover:not(:disabled) {
-      opacity: 0.9;
-    }
-
-    &:disabled {
-      opacity: 0.3;
-      cursor: not-allowed;
-    }
+    width: 35%;
+    height: 100%;
+    flex-shrink: 0;
   }
 </style>

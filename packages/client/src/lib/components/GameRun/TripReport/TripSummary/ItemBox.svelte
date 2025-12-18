@@ -28,7 +28,7 @@
   // All items are removed if the rat is dead
   const removedItems = $derived(
     ratDead
-      ? (getRatInventory(frozenRat) ?? [])
+      ? getRatInventory(frozenRat) ?? []
       : result.itemChanges?.filter(item => item.type === "remove")
   )
 

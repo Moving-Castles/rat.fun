@@ -149,6 +149,7 @@ const recentOutcomesForFeed = `*[_type == "outcome" && worldAddress == $worldAdd
   ratName,
   playerName,
   ratValueChange,
+  oldRatBalance,
   newRatBalance,
   inventoryOnEntrance,
   itemChanges,

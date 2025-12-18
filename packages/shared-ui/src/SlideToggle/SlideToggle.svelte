@@ -9,7 +9,8 @@
     value,
     onchange,
     disabled = false,
-    height = 60,
+    height,
+    secondary = false,
     onSelect
   }: {
     options: SlideToggleOption[]
@@ -17,6 +18,8 @@
     onchange: (value: string) => void
     disabled?: boolean
     height?: number
+    /** Secondary style with smaller font and typewriter font */
+    secondary?: boolean
     /** Optional callback when an option is selected (for sound effects, etc.) */
     onSelect?: () => void
   } = $props()
@@ -211,7 +214,8 @@
   class:disabled
   class:dragging={isDragging}
   class:settling={isSettling}
-  style="height: {height}px"
+  class:secondary
+  style={height ? `height: ${height}px` : undefined}
   bind:this={railElement}
 >
   <!-- Background option labels (tappable) -->
@@ -256,6 +260,7 @@
     position: relative;
     display: flex;
     width: 100%;
+    height: 100%;
     background: var(--background-semi-transparent);
     border-bottom: var(--default-border-style);
     flex-shrink: 0;
@@ -267,6 +272,14 @@
     &.disabled {
       opacity: 0.5;
       pointer-events: none;
+    }
+
+    &.secondary {
+      .option .option-label,
+      .marker .marker-label {
+        font-size: var(--font-size-normal);
+        font-family: var(--typewriter-font-stack);
+      }
     }
   }
 

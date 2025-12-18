@@ -22,6 +22,9 @@
 {#if $isPhone}
   <!-- Phone Layout: single container with persistent toggle -->
   <div class="phone-game-container">
+    {#if ratState.state.current === RAT_BOX_STATE.HAS_RAT}
+      <PhoneGameViewButton />
+    {/if}
     <div class="phone-game-content">
       {#if $phoneActiveGameView === "ratbox"}
         <RatBox />
@@ -31,9 +34,6 @@
         </div>
       {/if}
     </div>
-    {#if ratState.state.current === RAT_BOX_STATE.HAS_RAT}
-      <PhoneGameViewButton />
-    {/if}
   </div>
 {:else}
   <!-- Desktop Layout -->
@@ -66,6 +66,11 @@
     > :global(*) {
       flex: 1;
       min-height: 0;
+    }
+
+    .triplisting-container {
+      background-image: url("/images/texture-5.png");
+      background-size: 200px;
     }
   }
 

@@ -49,7 +49,7 @@
 {:else if step === 4}
   <div class="tutorial-box">
     <p>
-      You can unlock access to the <span class="highlight">TRIPS LAB</span> and experiment by making
+      You can unlock access to the <span class="highlight">TRIP LAB</span> and experiment by making
       bespoke <span class="highlight">TRIPS</span>.
     </p>
     <p>You invest $RAT tokens in TRIPS.</p>

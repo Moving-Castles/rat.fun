@@ -1,9 +1,10 @@
 import type { MascotMessageData } from "./types"
 import type { TerminalOutputUnit } from "$lib/modules/terminal-typer/types"
 import { playSound, randomPitch } from "$lib/modules/sound"
+import { getRandomMascotSoundId } from "$lib/modules/sound/sound-library/ratfun-mascot"
 
 function onType() {
-  playSound({ category: "ratfunUI", id: "chirp", pitch: randomPitch() })
+  playSound({ category: "ratfunMascot", id: getRandomMascotSoundId(), pitch: randomPitch() })
 }
 
 // Helper to create simple text units

@@ -267,8 +267,8 @@
 
     e.preventDefault()
 
-    // Only handle keyboard events on main trips lab, not on nested trip view
-    if (page.route?.id?.includes("/trips-lab/[tripId]")) return
+    // Only handle keyboard events on main trip lab, not on nested trip view
+    if (page.route?.id?.includes("/trip-lab/[tripId]")) return
 
     if (!allVisitsData.length) return
 
@@ -355,7 +355,7 @@
   })
 
   onDestroy(() => {
-    // Reset all admin views when leaving trips lab
+    // Reset all admin views when leaving trip lab
     phoneActiveAdminView.set("home")
     adminTripsSubView.set("active")
     phoneAdminProfitSubView.set("graph")
@@ -372,16 +372,18 @@
 
   {#if $isPhone}
     <!-- Phone Navigation -->
-    <SlideToggle
-      options={[
-        { value: "home", label: UI_STRINGS.home.toUpperCase() },
-        { value: "trips", label: UI_STRINGS.trips.toUpperCase() },
-        { value: "profit", label: UI_STRINGS.profit.toUpperCase() }
-        // { value: "events", label: UI_STRINGS.events.toUpperCase() }
-      ]}
-      value={$phoneActiveAdminView}
-      onchange={v => phoneActiveAdminView.set(v as "home" | "trips" | "profit" | "events")}
-    />
+    <div class="phone-nav-toggle">
+      <SlideToggle
+        options={[
+          { value: "home", label: UI_STRINGS.home.toUpperCase() },
+          { value: "trips", label: UI_STRINGS.trips.toUpperCase() },
+          { value: "profit", label: UI_STRINGS.profit.toUpperCase() }
+          // { value: "events", label: UI_STRINGS.events.toUpperCase() }
+        ]}
+        value={$phoneActiveAdminView}
+        onchange={v => phoneActiveAdminView.set(v as "home" | "trips" | "profit" | "events")}
+      />
+    </div>
 
     <!-- Phone Views -->
     {#if $phoneActiveAdminView === "home"}
@@ -395,14 +397,17 @@
       </div>
     {:else if $phoneActiveAdminView === "trips"}
       <div class="phone-view">
-        <SlideToggle
-          options={[
-            { value: "active", label: UI_STRINGS.active.toUpperCase() },
-            { value: "past", label: UI_STRINGS.past.toUpperCase() }
-          ]}
-          value={$adminTripsSubView}
-          onchange={v => adminTripsSubView.set(v as "active" | "past")}
-        />
+        <div class="phone-sub-toggle">
+          <SlideToggle
+            options={[
+              { value: "active", label: UI_STRINGS.active.toUpperCase() },
+              { value: "past", label: UI_STRINGS.past.toUpperCase() }
+            ]}
+            secondary={true}
+            value={$adminTripsSubView}
+            onchange={v => adminTripsSubView.set(v as "active" | "past")}
+          />
+        </div>
         {#if $adminTripsSubView === "active"}
           <AdminActiveTripTable
             {pendingTrip}
@@ -421,14 +426,17 @@
       </div>
     {:else if $phoneActiveAdminView === "profit"}
       <div class="phone-view">
-        <SlideToggle
-          options={[
-            { value: "graph", label: UI_STRINGS.graph.toUpperCase() },
-            { value: "log", label: UI_STRINGS.log.toUpperCase() }
-          ]}
-          value={$phoneAdminProfitSubView}
-          onchange={v => phoneAdminProfitSubView.set(v as "graph" | "log")}
-        />
+        <div class="phone-sub-toggle">
+          <SlideToggle
+            options={[
+              { value: "graph", label: UI_STRINGS.graph.toUpperCase() },
+              { value: "log", label: UI_STRINGS.log.toUpperCase() }
+            ]}
+            secondary={true}
+            value={$phoneAdminProfitSubView}
+            onchange={v => phoneAdminProfitSubView.set(v as "graph" | "log")}
+          />
+        </div>
         {#if $phoneAdminProfitSubView === "graph"}
           <div class="phone-view-profit-loss-graph" bind:clientHeight>
             <ProfitLossHistoryGraph {graphData} height={clientHeight} />
@@ -635,6 +643,17 @@
 
     @media (max-width: 800px) {
       width: 100%;
+      height: calc(var(--game-window-height) - var(--top-bar-total-height-phone) - 2px);
+    }
+
+    .phone-nav-toggle {
+      height: var(--phone-slide-toggle-height);
+      flex-shrink: 0;
+    }
+
+    .phone-sub-toggle {
+      height: var(--phone-secondary-slide-toggle-height);
+      flex-shrink: 0;
     }
 
     .phone-view {
