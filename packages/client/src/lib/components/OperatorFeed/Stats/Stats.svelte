@@ -7,11 +7,13 @@
     cashedOutRatsLeaderboard,
     activeTripsLeaderboard,
     cashedOutTripsLeaderboard,
+    challengeWinnersLeaderboard,
     leaderboardsLoading,
     startLeaderboardPolling,
     stopLeaderboardPolling
   } from "../state.svelte"
   import LeaderboardSection from "./LeaderboardSection.svelte"
+  import ChallengeWinnersSection from "./ChallengeWinnersSection.svelte"
 
   // Calculate time since last rat death
   let timeSinceDeathText = $derived.by(() => {
@@ -66,6 +68,7 @@
     {#if $leaderboardsLoading}
       <div class="loading">Loading...</div>
     {:else}
+      <ChallengeWinnersSection entries={$challengeWinnersLeaderboard} />
       <LeaderboardSection title="Active Rats" entries={$activeRatsLeaderboard} />
       <LeaderboardSection title="Active Trips" entries={$activeTripsLeaderboard} />
       <LeaderboardSection

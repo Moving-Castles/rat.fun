@@ -52,10 +52,19 @@ export function getFullTableName(tableName: string): string {
   return `${NAMESPACE}__${snakeTableName}`
 }
 
+// MUD truncates table names to 16 characters
+// This map provides the truncated name for tables that exceed 16 chars
+const TRUNCATED_TABLE_NAMES: Record<string, string> = {
+  FixedMinValueToEnter: "FixedMinValueToE",
+  OverrideMaxValuePerWinPercentage: "OverrideMaxValue"
+}
+
 // Get quoted table name for SQL queries (e.g., "schema"."ratfun__name")
 export function getQualifiedTableName(tableName: string): string {
   const schema = getSchemaName()
-  const snakeTableName = toSnakeCase(tableName)
+  // Use truncated name if available, otherwise use original
+  const actualTableName = TRUNCATED_TABLE_NAMES[tableName] ?? tableName
+  const snakeTableName = toSnakeCase(actualTableName)
   return `"${schema}"."${NAMESPACE}__${snakeTableName}"`
 }
 
@@ -66,7 +75,9 @@ export async function getTableValue<T>(
   column: string = "value"
 ): Promise<T | null> {
   const schema = getSchemaName()
-  const fullTableName = getFullTableName(tableName)
+  // Use truncated name if available, otherwise use original
+  const actualTableName = TRUNCATED_TABLE_NAMES[tableName] ?? tableName
+  const fullTableName = getFullTableName(actualTableName)
   const sql = `SELECT "${column}" FROM "${schema}"."${fullTableName}" WHERE "id" = $1 LIMIT 1`
 
   try {

@@ -416,7 +416,18 @@ export async function fetchTrips(
         liquidationValue: trip.liquidationValue
           ? safeParseBigInt(trip.liquidationValue)
           : undefined,
-        liquidationBlock: trip.liquidationBlock ? safeParseBigInt(trip.liquidationBlock) : undefined
+        liquidationBlock: trip.liquidationBlock
+          ? safeParseBigInt(trip.liquidationBlock)
+          : undefined,
+        // Challenge trip fields
+        challengeTrip: trip.challengeTrip,
+        fixedMinValueToEnter: trip.fixedMinValueToEnter
+          ? safeParseBigInt(trip.fixedMinValueToEnter)
+          : undefined,
+        overrideMaxValuePerWinPercentage: trip.overrideMaxValuePerWinPercentage
+          ? safeParseBigInt(trip.overrideMaxValuePerWinPercentage)
+          : undefined,
+        challengeWinner: (trip.challengeWinner as Hex) ?? undefined
       }
     }
 

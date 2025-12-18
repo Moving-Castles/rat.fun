@@ -6,7 +6,8 @@ import {
   fetchActiveRatsLeaderboard,
   fetchCashedOutRatsLeaderboard,
   fetchActiveTripsLeaderboard,
-  fetchCashedOutTripsLeaderboard
+  fetchCashedOutTripsLeaderboard,
+  fetchChallengeWinners
 } from "$lib/modules/query-server"
 
 const MAX_MESSAGES = 200
@@ -118,6 +119,14 @@ export type LeaderboardEntry = {
   rank: number
 }
 
+// Challenge winner entry type (simplified for display)
+export type ChallengeWinnerDisplayEntry = {
+  id: string
+  name: string
+  wins: number
+  rank: number
+}
+
 /**
  * Parse ETH string to number, rounding to 2 decimal places
  */
@@ -131,6 +140,7 @@ export const activeRatsLeaderboard = writable<LeaderboardEntry[]>([])
 export const cashedOutRatsLeaderboard = writable<LeaderboardEntry[]>([])
 export const activeTripsLeaderboard = writable<LeaderboardEntry[]>([])
 export const cashedOutTripsLeaderboard = writable<LeaderboardEntry[]>([])
+export const challengeWinnersLeaderboard = writable<ChallengeWinnerDisplayEntry[]>([])
 
 // Loading state (only true on initial load)
 export const leaderboardsLoading = writable(false)
@@ -147,6 +157,22 @@ function entriesEqual(a: LeaderboardEntry[], b: LeaderboardEntry[]): boolean {
   if (a.length !== b.length) return false
   for (let i = 0; i < a.length; i++) {
     if (a[i].id !== b[i].id || a[i].value !== b[i].value || a[i].name !== b[i].name) {
+      return false
+    }
+  }
+  return true
+}
+
+/**
+ * Check if two challenge winner arrays are equal
+ */
+function challengeEntriesEqual(
+  a: ChallengeWinnerDisplayEntry[],
+  b: ChallengeWinnerDisplayEntry[]
+): boolean {
+  if (a.length !== b.length) return false
+  for (let i = 0; i < a.length; i++) {
+    if (a[i].id !== b[i].id || a[i].wins !== b[i].wins || a[i].name !== b[i].name) {
       return false
     }
   }
@@ -203,12 +229,14 @@ export async function loadAllLeaderboards() {
   }
 
   try {
-    const [activeRats, cashedOutRats, activeTrips, cashedOutTrips] = await Promise.all([
-      fetchActiveRatsLeaderboard(env),
-      fetchCashedOutRatsLeaderboard(env),
-      fetchActiveTripsLeaderboard(env),
-      fetchCashedOutTripsLeaderboard(env)
-    ])
+    const [activeRats, cashedOutRats, activeTrips, cashedOutTrips, challengeWinners] =
+      await Promise.all([
+        fetchActiveRatsLeaderboard(env),
+        fetchCashedOutRatsLeaderboard(env),
+        fetchActiveTripsLeaderboard(env),
+        fetchCashedOutTripsLeaderboard(env),
+        fetchChallengeWinners(env)
+      ])
 
     if (activeRats) {
       const entries = activeRats.entries.map((entry, index) => ({
@@ -260,6 +288,21 @@ export async function loadAllLeaderboards() {
         rank: index + 1
       }))
       updateIfChanged(cashedOutTripsLeaderboard, entries)
+    }
+
+    if (challengeWinners) {
+      const entries: ChallengeWinnerDisplayEntry[] = challengeWinners.entries.map(
+        (entry, index) => ({
+          id: entry.player.id,
+          name: entry.player.name || "Unknown",
+          wins: entry.challengesWon,
+          rank: index + 1
+        })
+      )
+      const current = get(challengeWinnersLeaderboard)
+      if (!challengeEntriesEqual(current, entries)) {
+        challengeWinnersLeaderboard.set(entries)
+      }
     }
 
     hasLoadedOnce = true

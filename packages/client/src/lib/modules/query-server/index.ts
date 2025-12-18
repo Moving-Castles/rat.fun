@@ -9,11 +9,26 @@ import { getQueryServerUrl } from "$lib/modules/chain-sync/hydrateFromServer"
 import type {
   RatLeaderboardEntry,
   TripLeaderboardEntry,
-  LeaderboardResponse
+  LeaderboardResponse,
+  ChallengeWinnerEntry,
+  ChallengeResponse
 } from "query-server/types"
 
 // Re-export types for convenience
-export type { RatLeaderboardEntry, TripLeaderboardEntry, LeaderboardResponse }
+export type {
+  RatLeaderboardEntry,
+  TripLeaderboardEntry,
+  LeaderboardResponse,
+  ChallengeWinnerEntry,
+  ChallengeResponse
+}
+
+// Challenge winners response type
+export type ChallengeWinnersResponse = {
+  blockNumber: string
+  count: number
+  entries: ChallengeWinnerEntry[]
+}
 
 /**
  * Fetch active rats leaderboard (by total value: balance + inventory)
@@ -119,6 +134,66 @@ export async function fetchCashedOutTripsLeaderboard(
     return await response.json()
   } catch (error) {
     console.warn("[fetchCashedOutTripsLeaderboard] Failed:", error)
+    return null
+  }
+}
+
+/**
+ * Fetch challenge winners leaderboard
+ */
+export async function fetchChallengeWinners(
+  environment: ENVIRONMENT
+): Promise<ChallengeWinnersResponse | null> {
+  const baseUrl = getQueryServerUrl(environment)
+  if (!baseUrl) return null
+
+  try {
+    const url = new URL("/api/leaderboard/challenge-winners", baseUrl)
+
+    const response = await fetch(url, {
+      signal: AbortSignal.timeout(10000)
+    })
+
+    if (!response.ok) {
+      throw new Error(`Server returned ${response.status}`)
+    }
+
+    return await response.json()
+  } catch (error) {
+    console.warn("[fetchChallengeWinners] Failed:", error)
+    return null
+  }
+}
+
+// Active challenge response type
+export type ActiveChallengeResponse = {
+  active: boolean
+  challenge: ChallengeResponse | null
+}
+
+/**
+ * Fetch active challenge trip
+ */
+export async function fetchActiveChallenge(
+  environment: ENVIRONMENT
+): Promise<ActiveChallengeResponse | null> {
+  const baseUrl = getQueryServerUrl(environment)
+  if (!baseUrl) return null
+
+  try {
+    const url = new URL("/api/active-challenge", baseUrl)
+
+    const response = await fetch(url, {
+      signal: AbortSignal.timeout(10000)
+    })
+
+    if (!response.ok) {
+      throw new Error(`Server returned ${response.status}`)
+    }
+
+    return await response.json()
+  } catch (error) {
+    console.warn("[fetchActiveChallenge] Failed:", error)
     return null
   }
 }

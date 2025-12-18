@@ -1,7 +1,5 @@
 <script lang="ts">
   import { fade } from "svelte/transition"
-  import { goto } from "$app/navigation"
-  import { onMount } from "svelte"
   import type { TripFolder } from "@sanity-types"
   import { playSound } from "$lib/modules/sound"
   import { Tooltip } from "$lib/components/Shared"
@@ -13,11 +11,7 @@
     count,
     showCounts = true,
     onclick,
-    disabled: disabledProp = false,
-    wide = false,
-    challengeTripId,
-    attemptCount,
-    nextChallenge
+    disabled: disabledProp = false
   }: {
     listingIndex: number
     folder?: TripFolder
@@ -25,88 +19,12 @@
     showCounts?: boolean
     onclick: () => void
     disabled?: boolean
-    wide?: boolean
-    challengeTripId?: string
-    attemptCount?: number
-    nextChallenge?: string | null
   } = $props()
 
-  // For challenge trips, use attemptCount; otherwise use regular count
-  let displayCount = $derived(attemptCount !== undefined ? attemptCount : count)
-  let isChallenge = $derived(challengeTripId !== undefined)
-  let isRestricted = $derived(folder?.restricted ?? false)
-
-  // Show countdown when restricted folder has no active challenge trip but has nextChallenge
-  let showCountdown = $derived(isRestricted && !challengeTripId && !!nextChallenge)
-
-  // Countdown state
-  let countdownText = $state("")
-  let countdownInterval: ReturnType<typeof setInterval> | null = null
-
-  function updateCountdown() {
-    if (!nextChallenge) {
-      countdownText = ""
-      return
-    }
-
-    const now = new Date().getTime()
-    const target = new Date(nextChallenge).getTime()
-    const diff = target - now
-
-    if (diff <= 0) {
-      countdownText = "Starting soon..."
-      return
-    }
-
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24))
-    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
-    const seconds = Math.floor((diff % (1000 * 60)) / 1000)
-
-    if (days > 0) {
-      countdownText = `${days}d ${hours}h ${minutes}m`
-    } else if (hours > 0) {
-      countdownText = `${hours}h ${minutes}m ${seconds}s`
-    } else if (minutes > 0) {
-      countdownText = `${minutes}m ${seconds}s`
-    } else {
-      countdownText = `${seconds}s`
-    }
-  }
-
-  $effect(() => {
-    if (showCountdown) {
-      updateCountdown()
-      countdownInterval = setInterval(updateCountdown, 1000)
-    } else if (countdownInterval) {
-      clearInterval(countdownInterval)
-      countdownInterval = null
-    }
-
-    return () => {
-      if (countdownInterval) {
-        clearInterval(countdownInterval)
-      }
-    }
-  })
-
-  // showCount == false indicates that we are in create trip modal
-  // Challenge trips are never disabled due to count
-  // Countdown tiles are disabled (informational only, nothing to navigate to)
-  let disabled = $derived(
-    disabledProp || showCountdown || (!isChallenge && showCounts && count === 0)
-  )
+  let disabled = $derived(disabledProp || (showCounts && count === 0))
 
   let title = folder?.title ?? ""
   let tooltip = $derived(folder?.title?.includes("EGO"))
-
-  const handleClick = () => {
-    if (challengeTripId) {
-      goto(`/${challengeTripId}`)
-    } else {
-      onclick()
-    }
-  }
 
   const onmousedown = () => {
     playSound({ category: "ratfunUI", id: "smallButtonDown" })
@@ -117,33 +35,17 @@
   }
 </script>
 
-<div class="tile" class:wide in:fade|global={{ duration: 100, delay: listingIndex * 30 }}>
+<div class="tile" in:fade|global={{ duration: 100, delay: listingIndex * 30 }}>
   <Tooltip content={tooltip ? UI_STRINGS.egoDeathExplanation : ""}>
-    <button
-      class:disabled
-      class:restricted={isRestricted}
-      class:countdown={showCountdown}
-      onclick={handleClick}
-      {onmouseup}
-      {onmousedown}
-    >
+    <button class:disabled {onclick} {onmouseup} {onmousedown}>
       <div class="title">
         {title}
-        <span class="count">
-          {#if showCountdown}
+        {#if showCounts}
+          <span class="count">
             <br />
-            <span class="countdown-label">Next challenge in</span>
-            <br />
-            <span class="countdown-time">{countdownText}</span>
-          {:else if showCounts}
-            <br />
-            {#if isChallenge}
-              {displayCount ?? 0} attempt{displayCount === 1 ? "" : "s"}
-            {:else}
-              {displayCount ?? 0} trip{displayCount === 1 ? "" : "s"}
-            {/if}
-          {/if}
-        </span>
+            {count ?? 0} trip{count === 1 ? "" : "s"}
+          </span>
+        {/if}
       </div>
     </button>
   </Tooltip>
@@ -155,10 +57,6 @@
     justify-content: center;
     align-items: center;
     text-align: center;
-
-    &.wide {
-      grid-column: span 2;
-    }
 
     button {
       width: 100%;
@@ -185,16 +83,6 @@
 
         .count {
           font-size: var(--font-size-normal);
-
-          .countdown-label {
-            font-size: var(--font-size-small);
-            opacity: 0.8;
-          }
-
-          .countdown-time {
-            font-size: var(--font-size-large);
-            font-weight: bold;
-          }
         }
       }
       transition: transform 0.1s ease-in-out;
@@ -213,14 +101,9 @@
 
       background: var(--color-grey-lighter);
 
-      &.restricted {
-        background: var(--color-restricted-trip-folder);
-      }
-
       &.disabled {
         opacity: 0.5;
         pointer-events: none;
-        // filter: grayscale(100%);
       }
     }
   }

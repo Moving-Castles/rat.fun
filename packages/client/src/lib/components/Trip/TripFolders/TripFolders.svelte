@@ -2,6 +2,7 @@
   import type { TripFolder } from "@sanity-types"
   import type { Snippet } from "svelte"
   import TripFolderItem from "./TripFolderItem.svelte"
+  import ChallengeFolderItem from "./ChallengeFolderItem.svelte"
 
   let {
     folders,
@@ -31,18 +32,12 @@
 <div class="tiles">
   {@render children?.()}
   {#if restrictedFolder}
-    <TripFolderItem
+    <ChallengeFolderItem
       listingIndex={0}
       folder={restrictedFolder}
-      {showCounts}
-      {disabled}
-      wide={true}
       {challengeTripId}
       attemptCount={challengeTripAttempts}
       {nextChallenge}
-      onclick={() => {
-        onselect(restrictedFolder._id)
-      }}
     />
   {/if}
   {#each folders as folder, i}

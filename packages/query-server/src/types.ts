@@ -168,3 +168,32 @@ export interface LeaderboardResponse<T> {
   entries: T[]
   limit: number
 }
+
+// Challenge trip response with owner name and expanded winner
+export interface ChallengeResponse {
+  id: string
+  owner: string | null
+  ownerName: string | null
+  index: string | null
+  balance: string | null
+  prompt: string | null
+  visitCount: string | null
+  killCount: string | null
+  creationBlock: string | null
+  lastVisitBlock: string | null
+  tripCreationCost: string | null
+  liquidated: boolean
+  liquidationValue: string | null
+  liquidationBlock: string | null
+  fixedMinValueToEnter: string | null
+  overrideMaxValuePerWinPercentage: string | null
+  challengeWinner: string | null
+  winner: PlayerResponse | null
+}
+
+// Challenge winner leaderboard entry
+export interface ChallengeWinnerEntry {
+  player: PlayerResponse
+  challengesWon: number
+  challenges: ChallengeResponse[]
+}

@@ -49,19 +49,13 @@
     return folders.filter(f => !f.restricted)
   })
 
-  // Find the challenge trip for the restricted folder
+  // Find any active challenge trip (has challengeTrip flag and balance > 0)
   let challengeTripData = $derived.by(() => {
     if (!restrictedFolder) return null
 
-    // Get all trips in the restricted folder
+    // Find the first trip with challengeTrip flag from all non-depleted trips
     const allTrips = Object.entries($nonDepletedTrips)
-    const restrictedFolderTrips = allTrips.filter(([tripId, _]) => {
-      const tripFolderId = tripFolderMap.get(tripId)
-      return tripFolderId === restrictedFolder._id
-    })
-
-    // Find the first trip with challengeTrip flag
-    const challengeTrip = restrictedFolderTrips.find(([_, trip]) => trip.challengeTrip)
+    const challengeTrip = allTrips.find(([_, trip]) => trip.challengeTrip)
     if (!challengeTrip) return null
 
     return {
