@@ -689,8 +689,8 @@ contract TripSystemTest is BaseTest {
     // Verify trip balance is 0
     assertEq(Balance.get(tripId), 0);
 
-    // Verify winner is set
-    assertEq(ChallengeWinner.get(tripId), ratId);
+    // Verify winner is set to the player ID (owner of the rat), not the rat ID
+    assertEq(ChallengeWinner.get(tripId), aliceId);
   }
 
   function testChallengeTripCannotBeReopened() public {
@@ -717,8 +717,8 @@ contract TripSystemTest is BaseTest {
     world.ratfun__applyOutcome(ratId, tripId, 1000, new bytes32[](0), new Item[](0));
     vm.stopPrank();
 
-    // Verify winner is set and balance is 0
-    assertEq(ChallengeWinner.get(tripId), ratId);
+    // Verify winner is set to player ID (owner of rat) and balance is 0
+    assertEq(ChallengeWinner.get(tripId), aliceId);
     assertEq(Balance.get(tripId), 0);
 
     // Owner tries to top up the depleted challenge trip - should fail
@@ -728,7 +728,7 @@ contract TripSystemTest is BaseTest {
     vm.stopPrank();
 
     // Winner remains unchanged
-    assertEq(ChallengeWinner.get(tripId), ratId);
+    assertEq(ChallengeWinner.get(tripId), aliceId);
   }
 
   function testRevertCreateChallengeTripWithZeroFixedMinValue() public {

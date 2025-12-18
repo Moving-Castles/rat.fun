@@ -14,7 +14,8 @@ import {
   TripCreationCost,
   MasterKey,
   ChallengeTrip,
-  ChallengeWinner
+  ChallengeWinner,
+  Owner
 } from "../codegen/index.sol";
 import { LibManager, LibRat, LibTrip } from "../libraries/Libraries.sol";
 import { ENTITY_TYPE } from "../codegen/common.sol";
@@ -98,9 +99,9 @@ contract ManagerSystem is System {
     // As items always have positive value, this will always decrease the trip balance
     tripBudget = LibManager.addItemsToRat(tripBudget, _ratId, _tripId, _itemsToAddToRat);
 
-    // If the trip is a challenge trip and the trip balance is 0, set the winner
+    // If the trip is a challenge trip and the trip balance is 0, set the winner (player ID)
     if (ChallengeTrip.get(_tripId) && Balance.get(_tripId) == 0) {
-      ChallengeWinner.set(_tripId, _ratId);
+      ChallengeWinner.set(_tripId, Owner.get(_ratId));
     }
   }
 
