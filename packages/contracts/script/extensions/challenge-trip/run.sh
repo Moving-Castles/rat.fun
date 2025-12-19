@@ -60,8 +60,29 @@ MAINNET_MANAGER_SYSTEM_ADDRESS=0xf5252c4C4c06b7CbB542B6457883C3c14C65EeDE
 # # # # # # # # # # # #
 # Use this to register the new createTrip signature (7 params with challenge trip support)
 
-forge script ./RegisterCreateTripSelector.s.sol \
-  --sig 'run(address)' \
-  $MAINNET_WORLD_ADDRESS \
-  --rpc-url $MAINNET_RPC_URL \
-  --broadcast -vvv
+# forge script ./RegisterCreateTripSelector.s.sol \
+#   --sig 'run(address)' \
+#   $MAINNET_WORLD_ADDRESS \
+#   --rpc-url $MAINNET_RPC_URL \
+#   --broadcast -vvv
+
+# # # # # # # # # # # #
+# VERIFY DEPLOYMENT STATE
+# # # # # # # # # # # #
+# Run this to check tables, systems, and function selectors
+
+forge script ./VerifyDeployment.s.sol --sig 'run(address)' $MAINNET_WORLD_ADDRESS --rpc-url $MAINNET_RPC_URL -vvv
+
+# # # # # # # # # # # #
+# REDEPLOY MANAGER SYSTEM
+# # # # # # # # # # # #
+# Deploy new ManagerSystem and register it (replaces existing)
+
+# forge script ./RedeployManagerSystem.s.sol --sig 'run(address)' $MAINNET_WORLD_ADDRESS --rpc-url $MAINNET_RPC_URL --broadcast -vvv
+
+# # # # # # # # # # # #
+# REGISTER MANAGER SYSTEM FUNCTION SELECTORS
+# # # # # # # # # # # #
+# Use this if ManagerSystem was registered but function selectors are missing
+
+# forge script ./RegisterManagerSystemSelectors.s.sol --sig 'run(address)' $MAINNET_WORLD_ADDRESS --rpc-url $MAINNET_RPC_URL --broadcast -vvv
