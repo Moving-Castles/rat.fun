@@ -11,7 +11,8 @@
     count,
     showCounts = true,
     onclick,
-    disabled: disabledProp = false
+    disabled: disabledProp = false,
+    restricted = false
   }: {
     listingIndex: number
     folder?: TripFolder
@@ -19,6 +20,7 @@
     showCounts?: boolean
     onclick: () => void
     disabled?: boolean
+    restricted?: boolean
   } = $props()
 
   let disabled = $derived(disabledProp || (showCounts && count === 0))
@@ -37,7 +39,7 @@
 
 <div class="tile" in:fade|global={{ duration: 100, delay: listingIndex * 30 }}>
   <Tooltip content={tooltip ? UI_STRINGS.egoDeathExplanation : ""}>
-    <button class:disabled {onclick} {onmouseup} {onmousedown}>
+    <button class:disabled class:restricted {onclick} {onmouseup} {onmousedown}>
       <div class="title">
         {title}
         {#if showCounts}
@@ -100,6 +102,10 @@
       }
 
       background: var(--color-grey-lighter);
+
+      &.restricted {
+        background: var(--color-restricted-trip-folder);
+      }
 
       &.disabled {
         opacity: 0.5;

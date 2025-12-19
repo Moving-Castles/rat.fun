@@ -13,5 +13,15 @@ export const FEATURES = {
    * When disabled, the feed takes full width.
    * Set to true once data loading strategy is implemented.
    */
-  ENABLE_LEADERBOARD: true
+  ENABLE_LEADERBOARD: true,
+
+  /**
+   * Enable challenge trip functionality:
+   * - Challenge folder item with countdown timer
+   * - Challenge title display
+   * - Challenge winner leaderboard
+   *
+   * When disabled, restricted folders are shown as regular folder items.
+   */
+  ENABLE_CHALLENGE_TRIPS: false
 }

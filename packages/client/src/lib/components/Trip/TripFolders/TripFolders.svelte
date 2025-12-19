@@ -3,6 +3,7 @@
   import type { Snippet } from "svelte"
   import TripFolderItem from "./TripFolderItem.svelte"
   import ChallengeFolderItem from "./ChallengeFolderItem.svelte"
+  import { FEATURES } from "$lib/config/features"
 
   let {
     folders,
@@ -12,6 +13,7 @@
     disabled = false,
     children,
     restrictedFolder,
+    restrictedFolderCount,
     challengeTripId,
     challengeTripAttempts,
     dailyChallengeTime,
@@ -24,6 +26,7 @@
     disabled?: boolean
     children?: Snippet
     restrictedFolder?: TripFolder
+    restrictedFolderCount?: number
     challengeTripId?: string
     challengeTripAttempts?: number
     dailyChallengeTime?: string | null
@@ -34,14 +37,28 @@
 <div class="tiles">
   {@render children?.()}
   {#if restrictedFolder}
-    <ChallengeFolderItem
-      listingIndex={0}
-      folder={restrictedFolder}
-      {challengeTripId}
-      attemptCount={challengeTripAttempts}
-      {dailyChallengeTime}
-      {challengeTitle}
-    />
+    {#if FEATURES.ENABLE_CHALLENGE_TRIPS}
+      <ChallengeFolderItem
+        listingIndex={0}
+        folder={restrictedFolder}
+        {challengeTripId}
+        attemptCount={challengeTripAttempts}
+        {dailyChallengeTime}
+        {challengeTitle}
+      />
+    {:else}
+      <TripFolderItem
+        listingIndex={0}
+        folder={restrictedFolder}
+        count={restrictedFolderCount ?? 0}
+        {showCounts}
+        {disabled}
+        restricted={true}
+        onclick={() => {
+          onselect(restrictedFolder._id)
+        }}
+      />
+    {/if}
   {/if}
   {#each folders as folder, i}
     <TripFolderItem

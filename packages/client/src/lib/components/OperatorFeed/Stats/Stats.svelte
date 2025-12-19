@@ -2,6 +2,7 @@
   import { onMount, onDestroy } from "svelte"
   import { worldStats } from "$lib/modules/state/stores"
   import { blockNumber } from "$lib/modules/network"
+  import { FEATURES } from "$lib/config/features"
   import {
     activeRatsLeaderboard,
     cashedOutRatsLeaderboard,
@@ -68,7 +69,9 @@
     {#if $leaderboardsLoading}
       <div class="loading">Loading...</div>
     {:else}
-      <ChallengeWinnersSection entries={$challengeWinnersLeaderboard} />
+      {#if FEATURES.ENABLE_CHALLENGE_TRIPS}
+        <ChallengeWinnersSection entries={$challengeWinnersLeaderboard} />
+      {/if}
       <LeaderboardSection title="Active Rats" entries={$activeRatsLeaderboard} />
       <LeaderboardSection title="Active Trips" entries={$activeTripsLeaderboard} />
       <LeaderboardSection

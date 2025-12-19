@@ -104,6 +104,13 @@
     regularFolders.map(fldr => filterByFolder(tripList, fldr._id).length)
   )
 
+  // Count trips in restricted folder (for when challenge trips feature is disabled)
+  let restrictedFolderCount = $derived(
+    restrictedFolder
+      ? filterByFolder(Object.entries($nonDepletedTrips), restrictedFolder._id).length
+      : 0
+  )
+
   let activeList = $derived.by(() => {
     if (lastChecked > 0) {
       return tripList.filter(r => Number(r[1].creationBlock) <= lastChecked)
@@ -184,6 +191,7 @@
         folders={regularFolders}
         {foldersCounts}
         {restrictedFolder}
+        {restrictedFolderCount}
         challengeTripId={challengeTripData?.tripId}
         challengeTripAttempts={challengeTripData?.visitCount}
         dailyChallengeTime={$staticContent.dailyChallengeTime}
