@@ -33,6 +33,8 @@ export async function sendEnterTrip(tripId: string, ratId: string) {
       url = `https://${PUBLIC_BASE_SEPOLIA_SERVER_HOST}/trip/enter`
       break
     case ENVIRONMENT.BASE:
+      // FOR DEBUGGING: use local server
+      // url = `http://localhost:3131/trip/enter`
       url = `https://${PUBLIC_BASE_SERVER_HOST}/trip/enter`
       break
     default:

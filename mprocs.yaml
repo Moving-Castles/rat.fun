@@ -20,18 +20,18 @@ procs:
   # contracts:
   #   cwd: packages/contracts
   #   shell: pnpm mud dev-contracts --rpc http://127.0.0.1:8545
-  # server:
-  #   cwd: packages/server
-  #   shell: pnpm dev
+  server:
+    cwd: packages/server
+    shell: pnpm dev
   # common:
   #   cwd: packages/common
   #   shell: pnpm dev
   # websocket-server:
   #   cwd: packages/websocket-server
   #   shell: pnpm dev
-  cms-public:
-    cwd: packages/cms-public
-    shell: pnpm dev
+  # cms-public:
+  #   cwd: packages/cms-public
+  #   shell: pnpm dev
   # cms-private:
   #   cwd: packages/cms-private
   #   shell: pnpm dev

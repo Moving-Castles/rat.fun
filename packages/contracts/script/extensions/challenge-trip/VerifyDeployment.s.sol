@@ -103,7 +103,9 @@ contract VerifyDeployment is Script {
     console.log("--- FUNCTION SELECTORS ---");
 
     // Check applyOutcome selector (0x674fcbf9)
-    bytes4 applyOutcomeSelector = bytes4(keccak256("ratfun__applyOutcome(bytes32,bytes32,int256,bytes32[],(string,uint256)[])"));
+    bytes4 applyOutcomeSelector = bytes4(
+      keccak256("ratfun__applyOutcome(bytes32,bytes32,int256,bytes32[],(string,uint256)[])")
+    );
     (ResourceId applyOutcomeSystemId, bytes4 applyOutcomeSystemSelector) = FunctionSelectors.get(applyOutcomeSelector);
     console.log("ratfun__applyOutcome:");
     console.log("  World selector:", vm.toString(applyOutcomeSelector));
@@ -113,7 +115,9 @@ contract VerifyDeployment is Script {
     console.log("  Registered:", ResourceId.unwrap(applyOutcomeSystemId) != bytes32(0));
 
     // Check createTrip selector (new 7-param version)
-    bytes4 createTripSelector = bytes4(keccak256("ratfun__createTrip(bytes32,bytes32,uint256,bool,uint256,uint256,string)"));
+    bytes4 createTripSelector = bytes4(
+      keccak256("ratfun__createTrip(bytes32,bytes32,uint256,bool,uint256,uint256,string)")
+    );
     (ResourceId createTripSystemId, bytes4 createTripSystemSelector) = FunctionSelectors.get(createTripSelector);
     console.log("ratfun__createTrip (7 params):");
     console.log("  World selector:", vm.toString(createTripSelector));

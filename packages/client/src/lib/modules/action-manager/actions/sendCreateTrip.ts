@@ -53,6 +53,8 @@ export async function sendCreateTrip(
         url = `https://${PUBLIC_BASE_SEPOLIA_SERVER_HOST}/trip/create`
         break
       case ENVIRONMENT.BASE:
+        // FOR DEBUGGING: use local server
+        // url = `http://localhost:3131/trip/create`
         url = `https://${PUBLIC_BASE_SERVER_HOST}/trip/create`
         break
       default:

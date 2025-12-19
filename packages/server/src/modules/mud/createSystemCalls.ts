@@ -3,7 +3,7 @@
  * for changes in the World state (using the System contracts).
  */
 
-import { Hex, parseGwei } from "viem"
+import { Hex, parseGwei, BaseError, ContractFunctionRevertedError } from "viem"
 import { OutcomeReturnValue } from "@modules/types"
 import { SetupNetworkResult } from "./setupNetwork"
 import { Rat, Trip } from "@modules/types"
@@ -18,6 +18,45 @@ import {
 import { TripLogger } from "@modules/logging"
 
 export type SystemCalls = ReturnType<typeof createSystemCalls>
+
+/**
+ * Extract revert reason from viem errors
+ */
+function extractRevertReason(error: unknown): string {
+  if (error instanceof BaseError) {
+    // Check for ContractFunctionRevertedError which contains the revert reason
+    const revertError = error.walk(err => err instanceof ContractFunctionRevertedError)
+    if (revertError instanceof ContractFunctionRevertedError) {
+      const errorName = revertError.data?.errorName
+      const args = revertError.data?.args
+      if (errorName) {
+        return `${errorName}${args ? `(${JSON.stringify(args)})` : ""}`
+      }
+      // Try to get the reason from the error message
+      if (revertError.reason) {
+        return revertError.reason
+      }
+    }
+    // Try to extract from shortMessage or message
+    if (error.shortMessage) {
+      return error.shortMessage
+    }
+  }
+  if (error instanceof Error) {
+    // Try to parse revert reason from error message
+    const match = error.message.match(/reverted with reason string '([^']+)'/)
+    if (match) {
+      return match[1]
+    }
+    // Check for common revert patterns
+    const revertMatch = error.message.match(/execution reverted:?\s*(.+?)(?:\n|$)/i)
+    if (revertMatch) {
+      return revertMatch[1].trim()
+    }
+    return error.message
+  }
+  return String(error)
+}
 
 /**
  * Gas configuration for server transactions
@@ -81,12 +120,40 @@ export function createSystemCalls(network: SetupNetworkResult) {
 
       const args = createOutcomeCallArgs(rat, trip, outcome, logger)
 
+      // Log call arguments for debugging
+      logger.log(`__ applyOutcome args:`)
+      logger.log(`__   ratId: ${args[0]}`)
+      logger.log(`__   tripId: ${args[1]}`)
+      logger.log(`__   balanceTransfer: ${args[2]}`)
+      logger.log(`__   itemsToRemove: ${JSON.stringify(args[3])}`)
+      logger.log(`__   itemsToAdd: ${JSON.stringify(args[4])}`)
+      logger.log(`__   rat.totalValue: ${rat.totalValue}`)
+      logger.log(`__   trip.challengeTrip: ${trip.challengeTrip}`)
+      logger.log(`__   trip.fixedMinValueToEnter: ${trip.fixedMinValueToEnter}`)
+      logger.log(`__   trip.balance: ${trip.balance}`)
+
       // Get gas parameters with caps and priority boost
       const feeData = await network.publicClient.estimateFeesPerGas()
       const gasParams = await getGasParams(feeData)
+      logger.log(
+        `__ Gas params: maxFee=${gasParams.maxFeePerGas}, priorityFee=${gasParams.maxPriorityFeePerGas}, limit=${gasParams.gas}`
+      )
 
+      // Send transaction
+      logger.log(`__ Sending transaction...`)
       const tx = await network.worldContract.write.ratfun__applyOutcome(args, gasParams)
-      await network.waitForTransaction(tx)
+      logger.log(`__ Transaction submitted: ${tx}`)
+
+      const receipt = await network.waitForTransaction(tx)
+      logger.log(
+        `__ Transaction receipt - status: ${receipt.status}, blockNumber: ${receipt.blockNumber}`
+      )
+
+      if (receipt.status === "reverted") {
+        throw new ContractCallError(
+          `Transaction reverted on-chain. Hash: ${tx}, Block: ${receipt.blockNumber}`
+        )
+      }
 
       // Suggested outcomes were sent to the chain
       // We get the new onchain state and update the outcome with the actual changes
@@ -150,11 +217,12 @@ export function createSystemCalls(network: SetupNetworkResult) {
         throw error
       }
 
+      // Extract and log revert reason for debugging
+      const revertReason = extractRevertReason(error)
+      logger.log(`__ applyOutcome ERROR: ${revertReason}`)
+
       // Otherwise, wrap it in our custom error
-      throw new ContractCallError(
-        `Error applying outcome: ${error instanceof Error ? error.message : String(error)}`,
-        error
-      )
+      throw new ContractCallError(`Error applying outcome: ${revertReason}`, error)
     }
   }
 
@@ -179,10 +247,24 @@ export function createSystemCalls(network: SetupNetworkResult) {
     overrideMaxValuePerWinPercentage?: number
   ) => {
     try {
+      // Log call arguments
+      console.log(`__ createTrip args:`)
+      console.log(`__   playerId: ${playerId}`)
+      console.log(`__   tripID: ${tripID}`)
+      console.log(`__   tripCreationCost: ${tripCreationCost}`)
+      console.log(`__   isChallengeTrip: ${isChallengeTrip}`)
+      console.log(`__   fixedMinValueToEnter: ${fixedMinValueToEnter}`)
+      console.log(`__   overrideMaxValuePerWinPercentage: ${overrideMaxValuePerWinPercentage}`)
+      console.log(`__   tripPrompt: ${tripPrompt.substring(0, 100)}...`)
+
       // Get gas parameters with caps and priority boost
       const feeData = await network.publicClient.estimateFeesPerGas()
       const gasParams = await getGasParams(feeData)
+      console.log(
+        `__ Gas params: maxFee=${gasParams.maxFeePerGas}, priorityFee=${gasParams.maxPriorityFeePerGas}, limit=${gasParams.gas}`
+      )
 
+      console.log(`__ Sending createTrip transaction...`)
       const tx = await network.worldContract.write.ratfun__createTrip(
         [
           playerId,
@@ -195,8 +277,18 @@ export function createSystemCalls(network: SetupNetworkResult) {
         ],
         gasParams
       )
+      console.log(`__ Transaction submitted: ${tx}`)
 
-      await network.waitForTransaction(tx)
+      const receipt = await network.waitForTransaction(tx)
+      console.log(
+        `__ Transaction receipt - status: ${receipt.status}, blockNumber: ${receipt.blockNumber}`
+      )
+
+      if (receipt.status === "reverted") {
+        throw new ContractCallError(
+          `createTrip reverted on-chain. Hash: ${tx}, Block: ${receipt.blockNumber}`
+        )
+      }
 
       return true
     } catch (error) {
@@ -205,11 +297,12 @@ export function createSystemCalls(network: SetupNetworkResult) {
         throw error
       }
 
+      // Extract and log revert reason for debugging
+      const revertReason = extractRevertReason(error)
+      console.log(`__ createTrip ERROR: ${revertReason}`)
+
       // Otherwise, wrap it in our custom error
-      throw new ContractCallError(
-        `Error creating trip: ${error instanceof Error ? error.message : String(error)}`,
-        error
-      )
+      throw new ContractCallError(`Error creating trip: ${revertReason}`, error)
     }
   }
 
