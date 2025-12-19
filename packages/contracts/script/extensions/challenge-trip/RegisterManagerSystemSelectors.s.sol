@@ -35,58 +35,31 @@ contract RegisterManagerSystemSelectors is Script {
     console.log("applyOutcome function selector registered!");
 
     // Register other ManagerSystem functions that may be missing
-    IWorld(worldAddress).registerFunctionSelector(
-      managerSystemResource,
-      "giveMasterKey(bytes32)"
-    );
+    IWorld(worldAddress).registerFunctionSelector(managerSystemResource, "giveMasterKey(bytes32)");
     console.log("giveMasterKey function selector registered!");
 
-    IWorld(worldAddress).registerFunctionSelector(
-      managerSystemResource,
-      "setWorldEvent(string,string,string,uint256)"
-    );
+    IWorld(worldAddress).registerFunctionSelector(managerSystemResource, "setWorldEvent(string,string,string,uint256)");
     console.log("setWorldEvent function selector registered!");
 
-    IWorld(worldAddress).registerFunctionSelector(
-      managerSystemResource,
-      "removeWorldEvent()"
-    );
+    IWorld(worldAddress).registerFunctionSelector(managerSystemResource, "removeWorldEvent()");
     console.log("removeWorldEvent function selector registered!");
 
-    IWorld(worldAddress).registerFunctionSelector(
-      managerSystemResource,
-      "setCooldownCloseTrip(uint32)"
-    );
+    IWorld(worldAddress).registerFunctionSelector(managerSystemResource, "setCooldownCloseTrip(uint32)");
     console.log("setCooldownCloseTrip function selector registered!");
 
-    IWorld(worldAddress).registerFunctionSelector(
-      managerSystemResource,
-      "setRatsKilledForAdminAccess(uint32)"
-    );
+    IWorld(worldAddress).registerFunctionSelector(managerSystemResource, "setRatsKilledForAdminAccess(uint32)");
     console.log("setRatsKilledForAdminAccess function selector registered!");
 
-    IWorld(worldAddress).registerFunctionSelector(
-      managerSystemResource,
-      "setMaxValuePerWin(uint32)"
-    );
+    IWorld(worldAddress).registerFunctionSelector(managerSystemResource, "setMaxValuePerWin(uint32)");
     console.log("setMaxValuePerWin function selector registered!");
 
-    IWorld(worldAddress).registerFunctionSelector(
-      managerSystemResource,
-      "setMinRatValueToEnter(uint32)"
-    );
+    IWorld(worldAddress).registerFunctionSelector(managerSystemResource, "setMinRatValueToEnter(uint32)");
     console.log("setMinRatValueToEnter function selector registered!");
 
-    IWorld(worldAddress).registerFunctionSelector(
-      managerSystemResource,
-      "setTaxationLiquidateRat(uint32)"
-    );
+    IWorld(worldAddress).registerFunctionSelector(managerSystemResource, "setTaxationLiquidateRat(uint32)");
     console.log("setTaxationLiquidateRat function selector registered!");
 
-    IWorld(worldAddress).registerFunctionSelector(
-      managerSystemResource,
-      "setTaxationCloseTrip(uint32)"
-    );
+    IWorld(worldAddress).registerFunctionSelector(managerSystemResource, "setTaxationCloseTrip(uint32)");
     console.log("setTaxationCloseTrip function selector registered!");
 
     vm.stopBroadcast();

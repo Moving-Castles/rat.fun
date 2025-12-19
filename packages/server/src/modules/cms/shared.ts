@@ -94,7 +94,7 @@ export function createBaseOutcomeDocument(
   const oldRatValue = calculateTotalRatValue(rat)
   const oldRatBalance = rat.balance
 
-  const baseDoc: NewPublicOutcomeDoc = {
+  const baseDoc: NewPublicOutcomeDoc & { challenge?: boolean } = {
     _type: "outcome",
     title: outcomeId,
     _id: outcomeId,
@@ -118,7 +118,8 @@ export function createBaseOutcomeDocument(
     slug: {
       _type: "slug",
       current: outcomeId
-    }
+    },
+    challenge: trip.challengeTrip === true
   }
 
   // Add optional fields if they exist

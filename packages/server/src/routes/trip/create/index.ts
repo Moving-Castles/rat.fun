@@ -117,7 +117,8 @@ async function routes(fastify: FastifyInstance) {
         tripPrompt,
         player,
         folderId,
-        tripCreationCost
+        tripCreationCost,
+        isChallengeTrip
       )
       console.timeEnd("–– CMS text write")
 

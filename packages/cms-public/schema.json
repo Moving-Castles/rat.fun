@@ -1327,6 +1327,13 @@
           "name": "slug"
         },
         "optional": true
+      },
+      "challenge": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
+        },
+        "optional": true
       }
     }
   },
@@ -1562,6 +1569,13 @@
             }
           },
           "dereferencesTo": "tripFolder"
+        },
+        "optional": true
+      },
+      "challenge": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
         },
         "optional": true
       }

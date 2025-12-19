@@ -227,6 +227,7 @@ export type Outcome = {
   newRatBalance?: number
   mainProcessingTime: number
   slug?: Slug
+  challenge?: boolean
 }
 
 export type Slug = {
@@ -269,6 +270,7 @@ export type Trip = {
     _weak?: boolean
     [internalGroqTypeReferenceTo]?: "tripFolder"
   }
+  challenge?: boolean
 }
 
 export type TripFolder = {

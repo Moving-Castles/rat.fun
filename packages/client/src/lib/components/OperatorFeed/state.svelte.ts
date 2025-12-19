@@ -1,5 +1,5 @@
 import { writable, derived, get } from "svelte/store"
-import type { FeedMessage } from "./Feed/types"
+import type { FeedMessage, NewTripMessage, NewOutcomeMessage } from "./Feed/types"
 import { FEED_MESSAGE_TYPE } from "./Feed/types"
 import { environment } from "$lib/modules/network"
 import {
@@ -9,6 +9,7 @@ import {
   fetchCashedOutTripsLeaderboard,
   fetchChallengeWinners
 } from "$lib/modules/query-server"
+import { FEATURES } from "$lib/config/features"
 
 const MAX_MESSAGES = 200
 
@@ -21,14 +22,31 @@ export const activeFilters = writable<Set<FEED_MESSAGE_TYPE>>(
   new Set([FEED_MESSAGE_TYPE.CHAT, FEED_MESSAGE_TYPE.NEW_TRIP, FEED_MESSAGE_TYPE.NEW_OUTCOME])
 )
 
+// Helper to check if a message is a challenge message
+function isChallengeMessage(m: FeedMessage): boolean {
+  if (m.type === FEED_MESSAGE_TYPE.NEW_TRIP) {
+    return (m as NewTripMessage).isChallenge === true
+  }
+  if (m.type === FEED_MESSAGE_TYPE.NEW_OUTCOME) {
+    return (m as NewOutcomeMessage).isChallenge === true
+  }
+  return false
+}
+
 // Filtered messages based on active filters
 export const filteredMessages = derived([feedMessages, activeFilters], ([$messages, $filters]) => {
-  // If all filters are active, show all
-  if ($filters.size === 3) return $messages
   // If no filters active, show nothing
   if ($filters.size === 0) return []
-  // Filter by active types
-  return $messages.filter(m => $filters.has(m.type))
+
+  // Start with messages filtered by type
+  let filtered = $filters.size === 3 ? $messages : $messages.filter(m => $filters.has(m.type))
+
+  // Filter out challenge messages when feature is disabled
+  if (!FEATURES.ENABLE_CHALLENGE_TRIPS) {
+    filtered = filtered.filter(m => !isChallengeMessage(m))
+  }
+
+  return filtered
 })
 
 /**

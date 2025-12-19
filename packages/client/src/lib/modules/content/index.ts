@@ -329,7 +329,8 @@ export async function initPlayerOutcomes(worldAddress: string, playerTripIds: st
         itemsOnEntrance,
         itemsGained,
         itemsLost,
-        itemsLostOnDeath
+        itemsLostOnDeath,
+        isChallenge: (outcome as SanityOutcome & { challenge?: boolean }).challenge === true
       })
 
       // Toast notifications only for player's trips
@@ -402,6 +403,7 @@ type RecentTripForFeed = {
   prompt: string
   ownerName: string
   creationCost: number
+  challenge?: boolean
 }
 
 type RecentOutcomeForFeed = {
@@ -418,6 +420,7 @@ type RecentOutcomeForFeed = {
   itemChanges?: Array<{ id?: string; name?: string; value?: number; type?: string }>
   itemsLostOnDeath?: Array<{ id?: string; name?: string; value?: number }>
   tripPrompt: string
+  challenge?: boolean
 }
 
 // --- FEED HISTORY FUNCTIONS --------------------------------------------
@@ -451,7 +454,8 @@ export async function loadFeedHistory(worldAddress: string) {
           tripIndex: trip.index ?? 0,
           tripPrompt: trip.prompt ?? "",
           creatorName: trip.ownerName ?? "Unknown",
-          tripCreationCost: trip.creationCost ?? 0
+          tripCreationCost: trip.creationCost ?? 0,
+          isChallenge: trip.challenge === true
         })
       }
     }
@@ -508,7 +512,8 @@ export async function loadFeedHistory(worldAddress: string) {
           itemsOnEntrance,
           itemsGained,
           itemsLost,
-          itemsLostOnDeath
+          itemsLostOnDeath,
+          isChallenge: outcome.challenge === true
         })
       }
     }

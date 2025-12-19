@@ -122,6 +122,7 @@ export const validateTripFolder = async (
  * @param player - The player who created the trip
  * @param folderId - The ID of the trip folder category
  * @param creationCost - The cost paid to create the trip
+ * @param isChallengeTrip - Whether this is a challenge trip
  * @returns The trip document
  */
 export async function writeTripToCMS(
@@ -131,11 +132,12 @@ export async function writeTripToCMS(
   prompt: string,
   player: Player,
   folderId: string,
-  creationCost: number
+  creationCost: number,
+  isChallengeTrip?: boolean
 ): Promise<TripDoc> {
   try {
     // Create the trip document without image reference
-    const newTripDoc: NewTripDoc = {
+    const newTripDoc: NewTripDoc & { challenge?: boolean } = {
       _type: "trip",
       title: tripID,
       _id: tripID,
@@ -152,7 +154,8 @@ export async function writeTripToCMS(
       folder: {
         _type: "reference",
         _ref: folderId
-      }
+      },
+      challenge: isChallengeTrip === true
     }
 
     // Create the trip document in Sanity

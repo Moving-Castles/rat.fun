@@ -143,7 +143,8 @@ const recentTripsForFeed = `*[_type == "trip" && worldAddress == $worldAddress] 
   index,
   prompt,
   ownerName,
-  creationCost
+  creationCost,
+  challenge
 }`
 
 /**
@@ -164,7 +165,8 @@ const recentOutcomesForFeed = `*[_type == "outcome" && worldAddress == $worldAdd
   inventoryOnEntrance,
   itemChanges,
   itemsLostOnDeath,
-  "tripPrompt": *[_type == "trip" && _id == ^.tripId][0].prompt
+  "tripPrompt": *[_type == "trip" && _id == ^.tripId][0].prompt,
+  challenge
 }`
 
 // =============================================================================

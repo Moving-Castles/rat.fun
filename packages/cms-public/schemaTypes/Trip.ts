@@ -88,6 +88,13 @@ export default {
       type: "reference",
       to: [{ type: "tripFolder" }]
       // readOnly: true
+    },
+    {
+      title: "Challenge",
+      description: "Whether this is a challenge trip",
+      name: "challenge",
+      type: "boolean",
+      readOnly: true
     }
   ]
 }

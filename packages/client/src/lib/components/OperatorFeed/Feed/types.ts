@@ -24,6 +24,7 @@ export type NewTripMessage = BaseFeedMessage & {
   tripPrompt: string
   creatorName: string
   tripCreationCost: number
+  isChallenge?: boolean
 }
 
 // Item info for outcome messages
@@ -52,6 +53,7 @@ export type NewOutcomeMessage = BaseFeedMessage & {
   itemsLost: FeedItem[]
   // Items lost on death (only if rat died)
   itemsLostOnDeath: FeedItem[]
+  isChallenge?: boolean
 }
 
 export type FeedMessage = ChatMessage | NewTripMessage | NewOutcomeMessage

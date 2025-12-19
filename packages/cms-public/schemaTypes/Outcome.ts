@@ -223,6 +223,13 @@ export default {
         source: "title",
         slugify: (input: string) => input.toLowerCase().replace(/ /g, "-")
       }
+    },
+    {
+      title: "Challenge",
+      description: "Whether this outcome is from a challenge trip",
+      name: "challenge",
+      type: "boolean",
+      readOnly: true
     }
   ]
 }
