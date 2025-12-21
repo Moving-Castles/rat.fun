@@ -64,7 +64,9 @@
       <Tooltip
         content="WARNING! When you enter a trip you risk your RAT's health and PSYCHO OBJECTS"
       >
-        <div class="inner">{$rat.balance}{CURRENCY_SYMBOL}</div>
+        <div class="inner">
+          {$rat.balance}<span class="currency-symbol">{CURRENCY_SYMBOL}</span>
+        </div>
       </Tooltip>
     </div>
   </div>
@@ -73,7 +75,9 @@
     <div class="meta">REWARD</div>
     <div class="meta-data-item max-win" class:low-balance={isLowBalance(trip, maxValuePerWin)}>
       <Tooltip content="Max reward your RAT might get from surviving this TRIP">
-        <div class="inner">{maxValuePerWin}{CURRENCY_SYMBOL}</div>
+        <div class="inner">
+          {maxValuePerWin}<span class="currency-symbol">{CURRENCY_SYMBOL}</span>
+        </div>
       </Tooltip>
     </div>
   </div>
@@ -96,14 +100,14 @@
   }
   .meta {
     font-size: var(--font-size-small);
-    color: var(--color-grey-mid);
+    color: var(--color-grey-lighter);
     margin: 2px 0 5px;
     width: 100%;
     margin-bottom: 5px;
   }
 
   .meta-data-item {
-    background: var(--foreground-light-transparent);
+    background: var(--foreground-semi-transparent);
     color: var(--background);
     margin-bottom: 4px;
     border-radius: 4px;
@@ -114,6 +118,10 @@
     justify-content: center;
     position: relative;
     margin-bottom: 10px;
+
+    // .currency-symbol {
+    //   color: var(--color-grey-mid);
+    // }
 
     &.low-balance {
       background: var(--color-bad);
