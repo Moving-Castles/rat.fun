@@ -5,8 +5,12 @@
   import type { EnterTripReturnValue } from "@server/modules/types"
   import { gsap } from "gsap"
   import { typeHit } from "$lib/modules/sound"
-  import { HEALTH_SYMBOL } from "$lib/modules/ui/constants"
   import { mergeLog } from "$lib/components/GameRun/TripReport/Log"
+  import {
+    LogTextStatic,
+    LogOutcomeHealthStatic,
+    LogOutcomeItemStatic
+  } from "$lib/components/GameRun"
 
   let { result }: { result: Outcome } = $props()
   let timeline = $state(gsap.timeline())
@@ -49,28 +53,21 @@
         {#each mergedLog as entry, i}
           <div class="log-item" bind:this={logEntryElements[i]}>
             <div class="timestamp">{entry.timestamp}</div>
-            <div class="log-text">{entry.event}</div>
+            <LogTextStatic text={entry.event} />
 
             {#if entry.balanceTransfer || entry.itemChanges}
               <div class="outcome-list">
                 {#if entry.balanceTransfer}
-                  <div
-                    class="outcome balance-outcome"
-                    class:negative={entry.balanceTransfer.amount < 0}
-                  >
-                    <span class="heart">{HEALTH_SYMBOL}</span>
-                    <span class="value"
-                      >{entry.balanceTransfer.amount > 0 ? "+" : ""}{entry.balanceTransfer
-                        .amount}</span
-                    >
-                  </div>
+                  <LogOutcomeHealthStatic value={entry.balanceTransfer.amount} />
                 {/if}
 
                 {#if entry.itemChanges}
                   {#each entry.itemChanges as itemChange}
-                    <div class="outcome item-outcome" class:negative={itemChange.type === "remove"}>
-                      <span class="value">{itemChange.name} (${itemChange.value})</span>
-                    </div>
+                    <LogOutcomeItemStatic
+                      name={itemChange.name}
+                      value={itemChange.value}
+                      action={itemChange.type}
+                    />
                   {/each}
                 {/if}
               </div>
@@ -124,54 +121,13 @@
     margin-right: 10px;
   }
 
-  .log-text {
-    display: inline-block;
-    background: var(--color-grey-light);
-    padding: 5px;
-    color: var(--background);
-    max-width: 100%;
-    font-family: var(--special-font-stack);
-    font-size: var(--font-size-normal);
-    background: var(--color-grey-dark);
-    color: var(--foreground);
-  }
-
   .outcome-list {
     margin-left: 10px;
     display: flex;
     flex-direction: row;
     gap: 5px;
     flex-wrap: wrap;
-  }
-
-  .outcome {
-    color: var(--background);
-    font-size: var(--font-size-normal);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    // padding-inline: 10px;
-    white-space: nowrap;
-  }
-
-  .balance-outcome {
-    background: var(--color-good);
-
-    &.negative {
-      background: var(--color-bad);
-    }
-  }
-
-  .item-outcome {
-    background: var(--color-good);
-
-    &.negative {
-      background: var(--color-bad);
-    }
-  }
-
-  .heart {
-    display: inline-block;
-    margin-right: 5px;
+    // Height matches LogTextStatic: font-size-normal * line-height(1.4) + padding(10px)
+    height: calc(var(--font-size-normal) * 1.4 + 10px);
   }
 </style>

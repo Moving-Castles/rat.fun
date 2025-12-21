@@ -23,5 +23,5 @@ export const FEATURES = {
    *
    * When disabled, restricted folders are shown as regular folder items.
    */
-  ENABLE_CHALLENGE_TRIPS: true
+  ENABLE_CHALLENGE_TRIPS: false
 }

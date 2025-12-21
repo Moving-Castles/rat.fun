@@ -3,6 +3,7 @@
   import { gsap } from "gsap"
   import { typeHit, playSound, randomPitch } from "$lib/modules/sound"
   import { parseLogText } from "./parseLogText"
+  import { KNOWN_TAGS, TAG_CLASS_MAP, type KnownTag } from "./logTextConfig"
 
   let {
     logEntry,
@@ -20,7 +21,7 @@
   // Timeline
   const timeline = gsap.timeline()
 
-  // Tag configuration system
+  // Tag configuration system (extends shared config with sound settings)
   type SoundMode = "each" | "first"
 
   type TagConfig = {
@@ -29,24 +30,24 @@
     soundMode: SoundMode
   }
 
-  const TAG_CONFIG: Record<string, TagConfig> = {
+  const TAG_CONFIG: Record<KnownTag, TagConfig> = {
     ITEM: {
-      className: "item-ref",
+      className: TAG_CLASS_MAP.ITEM,
       sound: () => playSound({ category: "ratfunUI", id: "itemPositive" }),
       soundMode: "first"
     },
     QUOTE: {
-      className: "quote",
+      className: TAG_CLASS_MAP.QUOTE,
       sound: () => playSound({ category: "ratfunUI", id: "chirp", pitch: randomPitch() }),
       soundMode: "each"
     },
     SYSTEM: {
-      className: "system-message",
+      className: TAG_CLASS_MAP.SYSTEM,
       sound: () => typeHit(),
       soundMode: "each"
     },
     BALANCE: {
-      className: "balance-message",
+      className: TAG_CLASS_MAP.BALANCE,
       sound: () => typeHit(),
       soundMode: "each"
     }
@@ -58,8 +59,6 @@
     soundMode: "each"
   }
 
-  const KNOWN_TAGS = Object.keys(TAG_CONFIG)
-
   // Current typing state
   let currentSegmentIndex = $state(0)
   let currentCharIndex = $state(0)
@@ -68,12 +67,12 @@
   const handleCharacter = () => {
     if (!logTextElement) return
 
-    const segments = parseLogText(logEntry.event, KNOWN_TAGS)
+    const segments = parseLogText(logEntry.event, [...KNOWN_TAGS])
     if (currentSegmentIndex >= segments.length) return
 
     const segment = segments[currentSegmentIndex]
     const char = segment.text[currentCharIndex]
-    const config = segment.type === "plain" ? PLAIN_CONFIG : TAG_CONFIG[segment.type]
+    const config = segment.type === "plain" ? PLAIN_CONFIG : TAG_CONFIG[segment.type as KnownTag]
 
     // Find or create the current segment span
     let segmentSpan = logTextElement.children[currentSegmentIndex] as HTMLSpanElement
@@ -127,7 +126,7 @@
     })
 
     // Calculate total characters across all segments
-    const segments = parseLogText(logEntry.event, KNOWN_TAGS)
+    const segments = parseLogText(logEntry.event, [...KNOWN_TAGS])
     const totalChars = segments.reduce((sum, seg) => sum + seg.text.length, 0)
 
     // Add a call for each character
