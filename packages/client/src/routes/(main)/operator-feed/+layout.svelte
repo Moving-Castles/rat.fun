@@ -139,7 +139,7 @@
     top: 0;
     bottom: 0;
     right: 0;
-    background: black;
+    background: var(--background);
     z-index: 999;
     border-left: var(--default-border-style);
     display: grid;
@@ -239,7 +239,7 @@
     width: 100%;
     font-family: var(--special-font-stack);
     height: 200px;
-    background: white;
+    background: var(--color-grey-lighter);
     color: black;
     line-height: 1;
     padding: 8px 20px 20px 8px;

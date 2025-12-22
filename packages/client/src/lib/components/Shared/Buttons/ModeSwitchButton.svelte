@@ -12,7 +12,6 @@
     isAdminView: boolean
     tippyText?: string
     disabled?: boolean
-    id?: string
     onclick: () => void
   } = $props()
 
@@ -125,6 +124,13 @@
 
       &:active {
         filter: hue-rotate(0deg) brightness(0.9);
+      }
+    }
+
+    @media (max-width: 800px) {
+      border-width: 30px;
+      .button-text {
+        font-size: var(--font-size-large);
       }
     }
   }

@@ -120,7 +120,6 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        background: red;
 
         .unit {
           top: 50%;

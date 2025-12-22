@@ -119,5 +119,17 @@
         background: var(--color-grey-mid);
       }
     }
+
+    @media (max-width: 800px) {
+      border-width: 30px;
+
+      .indicator {
+        display: none;
+      }
+
+      .button-text {
+        font-size: var(--font-size-large);
+      }
+    }
   }
 </style>
