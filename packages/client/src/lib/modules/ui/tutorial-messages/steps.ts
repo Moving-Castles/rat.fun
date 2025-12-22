@@ -25,7 +25,11 @@ export const TUTORIAL_STEPS: Record<TutorialStep, TutorialStepConfig> = {
   },
   4: {
     target: "[data-tutorial='mode-switch']",
-    placement: "bottom"
+    placement: "bottom",
+    mobile: {
+      target: "[data-tutorial='phone-menu-button']",
+      placement: "bottom"
+    }
   },
   5: {
     target: "[data-tutorial='cash-out']",

@@ -1,5 +1,6 @@
 <script lang="ts">
   import { SmallButton } from "$lib/components/Shared"
+  import { isPhone } from "$lib/modules/ui/state.svelte"
   import type { TutorialStep } from "./types"
 
   let {
@@ -49,7 +50,12 @@
 {:else if step === 4}
   <div class="tutorial-box">
     <p>
-      You can unlock access to the <span class="highlight">TRIP LAB</span> and experiment by making
+      {#if $isPhone}
+        Here, you can unlock access to the <span class="highlight">TRIP LAB</span> and experiment by
+        making
+      {:else}
+        You can unlock access to the <span class="highlight">TRIP LAB</span> and experiment by making
+      {/if}
       bespoke <span class="highlight">TRIPS</span>.
     </p>
     <p>You invest $RAT tokens in TRIPS.</p>
@@ -75,12 +81,16 @@
 <style lang="scss">
   .tutorial-box {
     font-family: var(--special-font-stack);
-    font-size: var(--font-size-large);
     padding: 15px;
     width: 100%;
     line-height: 1.1em;
     background: var(--color-grey-lighter);
     border: 1px solid var(--color-border);
+    font-size: var(--font-size-medium);
+
+    @media screen and (min-width: 800px) {
+      font-size: var(--font-size-large);
+    }
 
     p {
       margin: 0 0 10px 0;

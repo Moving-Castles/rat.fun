@@ -59,6 +59,10 @@
     }
   })
 
+  const onClickMessage = message => {
+    console.log("msg, ", message)
+  }
+
   function scrollToBottom() {
     hasUnseenMessages = false
     isAtBottom = true
@@ -79,7 +83,7 @@
   {:else}
     <div class="messages-list" in:fade|global={{ duration: 300 }}>
       {#each $filteredMessages as message (message.id)}
-        <FeedMessage {message} />
+        <FeedMessage onclick={() => onClickMessage(message)} {message} />
       {/each}
     </div>
   {/if}

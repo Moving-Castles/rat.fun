@@ -5,6 +5,7 @@
   import OperatorAvatar from "./OperatorAvatar.svelte"
   import OperatorName from "./OperatorName.svelte"
   import BalanceBox from "./BalanceBox.svelte"
+  import { phoneShowMenu } from "$lib/modules/ui/state.svelte"
 
   let showAccountDropdown = $state(false)
   let dropdownElement = $state<HTMLElement | undefined>(undefined)
@@ -19,6 +20,7 @@
   }
 
   function toggleAccountStats() {
+    $phoneShowMenu = false
     showAccountDropdown = !showAccountDropdown
   }
 

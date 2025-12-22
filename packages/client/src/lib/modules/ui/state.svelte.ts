@@ -26,6 +26,9 @@ export const isFirefox = writable(false)
 // True on phones OR Firefox (both have slow shader rendering)
 export const singleFrameRender = writable(false)
 
+// Phone show full menu
+export const phoneShowMenu = writable(false)
+
 // Initialize browser checks (browser only)
 if (typeof window !== "undefined") {
   // Check if Firefox

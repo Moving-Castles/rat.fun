@@ -1,6 +1,12 @@
 import { writable } from "svelte/store"
 import type { PendingMascotMessage } from "./types"
 
+// localStorage keys
+const NEW_PLAYER_SHOWN_KEY = "ratfun_new_player_shown"
+const FIRST_DEATH_SHOWN_KEY = "ratfun_first_death_shown"
+const FIRST_CASHOUT_SHOWN_KEY = "ratfun_first_cashout_shown"
+const ADMIN_UNLOCK_SHOWN_KEY = "ratfun_admin_unlock_shown"
+
 // Store for pending mascot message
 export const pendingMascotMessage = writable<PendingMascotMessage | null>(null)
 
@@ -19,12 +25,6 @@ export function setPendingMascotMessage(msg: PendingMascotMessage) {
 export function clearPendingMascotMessage() {
   pendingMascotMessage.set(null)
 }
-
-// localStorage keys
-const NEW_PLAYER_SHOWN_KEY = "ratfun_new_player_shown"
-const FIRST_DEATH_SHOWN_KEY = "ratfun_first_death_shown"
-const FIRST_CASHOUT_SHOWN_KEY = "ratfun_first_cashout_shown"
-const ADMIN_UNLOCK_SHOWN_KEY = "ratfun_admin_unlock_shown"
 
 // localStorage helpers
 export function isNewPlayerShown(): boolean {

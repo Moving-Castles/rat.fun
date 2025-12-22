@@ -11,7 +11,7 @@ import {
 } from "$lib/modules/query-server"
 import { FEATURES } from "$lib/config/features"
 
-const MAX_MESSAGES = 200
+const MAX_MESSAGES = 3
 
 // Feed messages store
 export const feedMessages = writable<FeedMessage[]>([])

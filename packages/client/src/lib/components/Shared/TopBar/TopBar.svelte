@@ -2,41 +2,68 @@
   import { page } from "$app/state"
   import { goto } from "$app/navigation"
   import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
+  import { phoneShowMenu } from "$lib/modules/ui/state.svelte"
   import { FEATURES } from "$lib/config/features"
 
   import PlayerInfo from "./PlayerInfo/PlayerInfo.svelte"
   import ModeSwitch from "./ModeSwitch.svelte"
   import OnlineUsers from "./OnlineUsers/OnlineUsers.svelte"
 
-  import { Marquee, OperatorFeedButton } from "$lib/components/Shared"
+  import { Marquee, OperatorFeedButton, BackButton, ModeSwitchButton } from "$lib/components/Shared"
 
   const isAdminView = $derived(page.route?.id?.includes("/(main)/trip-lab") ?? false)
   const isOnOperatorFeed = $derived(page.url?.pathname === "/operator-feed")
 
+  function handleHomeClick() {
+    $phoneShowMenu = false
+    goto("/")
+  }
   function handleOperatorFeedClick() {
+    $phoneShowMenu = false
     if (isOnOperatorFeed) {
       goto("/")
     } else {
       goto("/operator-feed")
     }
   }
+  function handleTripLabClick() {
+    $phoneShowMenu = false
+    if (isAdminView) {
+      goto("/")
+    } else {
+      goto("/trip-lab")
+    }
+  }
 </script>
 
 <div class="top-bar-wrapper">
   <!-- Phone layout: two rows -->
-  <div class="phone-row phone-row-1">
-    <ModeSwitch {isAdminView} />
-  </div>
+  <!-- <div class="phone-row phone-row-1">
+    
+  </div> -->
   <div class="phone-row phone-row-2">
     <PlayerInfo />
-    {#if FEATURES.ENABLE_OPERATOR_FEED}
-      <div class="operator-feed-button-phone">
-        <OperatorFeedButton
-          isActive={isOnOperatorFeed}
-          tippyText={isOnOperatorFeed ? "Back to game" : "Operator Feed"}
-          onclick={handleOperatorFeedClick}
-        />
-      </div>
+    {#if !$phoneShowMenu}
+      <button
+        class="phone-menu-toggle"
+        data-tutorial="phone-menu-button"
+        onclick={(e) => {
+          e.stopPropagation()
+          console.log("click")
+          $phoneShowMenu = true
+        }}
+      >
+        MENU
+      </button>
+    {:else}
+      <BackButton
+        small={true}
+        onclick={(e) => {
+          e.stopPropagation()
+          console.log("click back")
+          $phoneShowMenu = false
+        }}
+      />
     {/if}
   </div>
 
@@ -55,10 +82,76 @@
   </div>
 </div>
 
+<!-- Mobile menu: all options -->
+{#if $phoneShowMenu}
+  <div class="menu-mobile">
+    <button onclick={handleHomeClick}> RAT & TRIPS </button>
+    {#if FEATURES.ENABLE_OPERATOR_FEED}
+      <div class="operator-feed-button-phone">
+        <OperatorFeedButton
+          isActive={false}
+          tippyText={"Operator Feed"}
+          onclick={handleOperatorFeedClick}
+        />
+        <ModeSwitchButton isAdminView={false} onclick={handleTripLabClick} />
+      </div>
+    {/if}
+  </div>
+{/if}
+
 <style lang="scss">
   .top-bar-wrapper {
     width: 100%;
     grid-column: 1 / span 3;
+  }
+
+  .phone-menu-toggle {
+    width: 100%;
+    height: 100%;
+    color: var(--color-grey-light);
+    background: var(--background);
+    border: none;
+    border-style: outset;
+    border-width: 5px;
+    border-color: var(--background-light-transparent);
+    position: relative;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-size-large);
+    font-family: var(--special-font-stack);
+    line-height: 1em;
+    z-index: 2;
+    position: relative;
+  }
+
+  .menu-mobile {
+    position: fixed;
+    top: var(--top-bar-height-phone);
+    left: 0;
+    width: 100%;
+    height: calc(var(--game-window-height) - var(--top-bar-height-phone));
+    width: var(--game-window-width);
+    background: black;
+    grid-column: 1 / span 3;
+    grid-row: 2 / span 1000;
+    z-index: 99;
+    display: grid;
+    grid-template-rows: repeat(3, 33.33%);
+
+    button {
+      border-style: outset;
+      border-width: 30px;
+    }
+
+    * {
+      font-size: 20px;
+    }
+
+    @media screen and (min-width: 800px) {
+      display: none;
+    }
   }
 
   // Phone rows - hidden on desktop

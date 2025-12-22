@@ -5,7 +5,7 @@
   import NewTripMessage from "./NewTripMessage.svelte"
   import NewOutcomeMessage from "./NewOutcomeMessage.svelte"
 
-  let { message }: { message: FeedMessage } = $props()
+  let { message, onclick }: { message: FeedMessage; onclick: () => void } = $props()
 
   function formatTime(timestamp: number): string {
     const date = new Date(timestamp)
@@ -13,7 +13,9 @@
   }
 </script>
 
-<div class="feed-message {message.type}">
+<!-- svelte-ignore a11y_click_events_have_key_events -->
+<!-- svelte-ignore a11y_no_static_element_interactions -->
+<div {onclick} class="feed-message {message.type}">
   <span class="timestamp">{formatTime(message.timestamp)}</span>
 
   {#if message.type === FEED_MESSAGE_TYPE.CHAT}

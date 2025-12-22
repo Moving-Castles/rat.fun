@@ -7,15 +7,17 @@
     tippyText,
     disabled = false,
     extraClass = "",
+    small = false,
     onclick
   }: {
     tippyText?: string
     disabled?: boolean
     extraClass?: string
+    small?: boolean
     onclick?: (e: MouseEvent) => void
   } = $props()
 
-  const onpointerup = (e: MouseEvent) => {
+  const onclickHandler = (e: MouseEvent) => {
     playSound({ category: "ratfunUI", id: "boing" })
     onclick?.(e)
   }
@@ -26,19 +28,21 @@
 </script>
 
 <Tooltip content={tippyText}>
-  <button class={extraClass} class:disabled {onpointerdown} {onpointerup}>
+  <button class={extraClass} class:disabled {onpointerdown} onclick={onclickHandler}>
     <div class="button-text">
       <X />
       <X />
       <X />
-      <X />
-      <X />
-      <X />
-      <X />
-      <X />
-      <X />
-      <X />
-      <X />
+      {#if !small}
+        <X />
+        <X />
+        <X />
+        <X />
+        <X />
+        <X />
+        <X />
+        <X />
+      {/if}
     </div>
   </button>
 </Tooltip>

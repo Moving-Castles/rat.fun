@@ -157,7 +157,7 @@
   /* Layout: Top Bar */
   --top-bar-height: 60px;
   --top-bar-height-phone: 55px;
-  --top-bar-total-height-phone: calc(var(--top-bar-height-phone) * 2); /* Two rows on phone */
+  --top-bar-total-height-phone: calc(var(--top-bar-height-phone)); /* Two rows on phone */
   --phone-slide-toggle-height: 55px;
   --phone-secondary-slide-toggle-height: 45px;
 
