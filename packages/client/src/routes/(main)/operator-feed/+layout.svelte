@@ -5,7 +5,8 @@
     SlideToggle,
     BackButton,
     OutcomeLog,
-    SmallButton
+    SmallButton,
+    ResizableText
   } from "$lib/components/Shared"
   import { SmallSpinner } from "@ratfun/shared-ui/Loaders"
   import { isPhone, operatorFeedPreviewOutcome } from "$lib/modules/ui/state.svelte"
@@ -42,6 +43,8 @@
       $operatorFeedPreviewOutcome = ""
     }
   }
+
+  $inspect($operatorFeedPreviewOutcome)
 
   // Get the selected outcome from staticContent
   let selectedOutcomePromise = $derived(
@@ -100,12 +103,21 @@
     <div class="content">
       {#key $operatorFeedPreviewOutcome}
         {#await selectedOutcomePromise}
-          <SmallSpinner />
+          <div class="outcome-loading">
+            <SmallSpinner />
+          </div>
         {:then selectedOutcome}
           <div class="outcome-view">
-            <OutcomeLog outcome={selectedOutcome} />
+            <div class="inner">
+              <div class="trip-prompt">
+                <ResizableText options={{ maxFontPixels: 60 }}>
+                  {selectedOutcome.tripPrompt}
+                </ResizableText>
+              </div>
+              <OutcomeLog outcome={selectedOutcome} />
+            </div>
             <SmallButton
-              text={UI_STRINGS.toTrip.toUpperCase() + selectedOutcome.tripIndex}
+              text={"Open trip #" + selectedOutcome.tripIndex}
               onclick={() => {
                 goto(`/${selectedOutcome.tripId}`)
               }}
@@ -147,6 +159,12 @@
         height: 100%;
         display: grid;
         grid-template-rows: 1fr 60px;
+
+        .inner {
+          height: 100%;
+          display: grid;
+          grid-template-rows: 200px 1fr;
+        }
       }
     }
 
@@ -198,6 +216,14 @@
     }
   }
 
+  .outcome-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+  }
+
   .stats-container {
     position: relative;
     overflow: visible;
@@ -208,5 +234,18 @@
     min-width: 0;
     display: flex;
     flex-direction: column;
+  }
+
+  .trip-prompt {
+    border-bottom: var(--default-border-style);
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    width: 100%;
+    font-family: var(--special-font-stack);
+    height: 200px;
+    background: white;
+    color: black;
+    line-height: 1;
+    padding: 8px 20px 20px 8px;
   }
 </style>

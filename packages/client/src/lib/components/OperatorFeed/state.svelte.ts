@@ -12,9 +12,14 @@ import {
 import { FEATURES } from "$lib/config/features"
 
 const MAX_MESSAGES = 200
+const INITIAL_MESSAGES_TO_DISPLAY = 10
+const LOAD_MORE_BATCH_SIZE = 20
 
 // Feed messages store
 export const feedMessages = writable<FeedMessage[]>([])
+
+// Number of messages to display (for lazy loading)
+export const displayedMessageCount = writable<number>(INITIAL_MESSAGES_TO_DISPLAY)
 
 // Active filters - when empty, all types are shown
 // When populated, only checked types are shown
@@ -48,6 +53,23 @@ export const filteredMessages = derived([feedMessages, activeFilters], ([$messag
 
   return filtered
 })
+
+// Visible messages (limited by displayedMessageCount for lazy loading)
+export const visibleMessages = derived(
+  [filteredMessages, displayedMessageCount],
+  ([$filtered, $count]) => {
+    // Show the most recent N messages
+    return $filtered.slice(-$count)
+  }
+)
+
+// Check if there are more messages to load
+export const hasMoreMessages = derived(
+  [filteredMessages, displayedMessageCount],
+  ([$filtered, $count]) => {
+    return $filtered.length > $count
+  }
+)
 
 /**
  * Add a message to the feed
@@ -123,6 +145,20 @@ export function setFilter(type: FEED_MESSAGE_TYPE, enabled: boolean) {
  */
 export function clearFeedMessages() {
   feedMessages.set([])
+}
+
+/**
+ * Load more messages (increase the displayed count)
+ */
+export function loadMoreMessages() {
+  displayedMessageCount.update(count => count + LOAD_MORE_BATCH_SIZE)
+}
+
+/**
+ * Reset displayed message count to initial value
+ */
+export function resetDisplayedMessageCount() {
+  displayedMessageCount.set(INITIAL_MESSAGES_TO_DISPLAY)
 }
 
 // Phone view state for operator feed

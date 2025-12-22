@@ -129,7 +129,8 @@ const singleTrip = `*[_type == "trip" && _id == $id && worldAddress == $worldAdd
  */
 const singleOutcome = `*[_type == "outcome" && _id == $id][0] {
     ...,
-    "readableLog": array::join(log[]{"entry": timestamp + " => " + event}.entry, ", ")
+    "readableLog": array::join(log[]{"entry": timestamp + " => " + event}.entry, ", "),
+    "tripPrompt": *[_type == "trip" && _id == ^.tripId][0].prompt
   }`
 
 /**

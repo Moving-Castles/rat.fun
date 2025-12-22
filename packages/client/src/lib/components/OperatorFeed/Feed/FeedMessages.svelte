@@ -1,13 +1,14 @@
 <script lang="ts">
   import { tick } from "svelte"
   import { fade } from "svelte/transition"
-  import { filteredMessages } from "../state.svelte"
+  import { visibleMessages, hasMoreMessages, loadMoreMessages } from "../state.svelte"
   import FeedMessage from "./FeedMessage.svelte"
 
   let scrollContainer = $state<HTMLDivElement | null>(null)
   let isAtBottom = $state(true)
   let hasUnseenMessages = $state(false)
   let previousMessageCount = $state(0)
+  let isLoadingMore = $state(false)
 
   // Check if user is near bottom of scroll
   function isNearBottom(): boolean {
@@ -17,19 +18,46 @@
     return scrollHeight - scrollTop - clientHeight < threshold
   }
 
+  // Check if user is near top of scroll
+  function isNearTop(): boolean {
+    if (!scrollContainer) return false
+    const threshold = 100 // pixels from top
+    return scrollContainer.scrollTop < threshold
+  }
+
   // Handle scroll events to detect user scrolling up
-  function handleScroll() {
+  async function handleScroll() {
     const atBottom = isNearBottom()
     isAtBottom = atBottom
     // Clear unseen messages when user scrolls to bottom
     if (atBottom) {
       hasUnseenMessages = false
     }
+
+    // Load more messages when scrolling near the top
+    if (isNearTop() && $hasMoreMessages && !isLoadingMore) {
+      isLoadingMore = true
+      // Save current scroll position
+      const previousScrollHeight = scrollContainer?.scrollHeight || 0
+
+      // Load more messages
+      loadMoreMessages()
+
+      // Wait for DOM to update, then restore scroll position
+      await tick()
+      if (scrollContainer) {
+        const newScrollHeight = scrollContainer.scrollHeight
+        const heightDifference = newScrollHeight - previousScrollHeight
+        scrollContainer.scrollTop += heightDifference
+      }
+
+      isLoadingMore = false
+    }
   }
 
   // Auto-scroll when new messages arrive (only if already at bottom)
   $effect(() => {
-    const currentCount = $filteredMessages.length
+    const currentCount = $visibleMessages.length
     if (currentCount > previousMessageCount) {
       if (isAtBottom) {
         tick().then(() => {
@@ -50,7 +78,7 @@
 
   // Initial scroll to bottom on mount
   $effect(() => {
-    if (scrollContainer && $filteredMessages.length > 0) {
+    if (scrollContainer && $visibleMessages.length > 0) {
       tick().then(() => {
         if (scrollContainer) {
           scrollContainer.scrollTop = scrollContainer.scrollHeight
@@ -76,13 +104,22 @@
 </script>
 
 <div class="feed-messages" bind:this={scrollContainer} onscroll={handleScroll}>
-  {#if $filteredMessages.length === 0}
+  {#if $visibleMessages.length === 0}
     <div class="empty-state">
       <span>No messages yet</span>
     </div>
   {:else}
     <div class="messages-list" in:fade|global={{ duration: 300 }}>
-      {#each $filteredMessages as message (message.id)}
+      {#if $hasMoreMessages}
+        <div class="load-more-indicator">
+          {#if isLoadingMore}
+            <span>Loading...</span>
+          {:else}
+            <span>Scroll up to load more</span>
+          {/if}
+        </div>
+      {/if}
+      {#each $visibleMessages as message (message.id)}
         <FeedMessage onclick={() => onClickMessage(message)} {message} />
       {/each}
     </div>
@@ -104,6 +141,14 @@
   .messages-list {
     display: flex;
     flex-direction: column;
+  }
+
+  .load-more-indicator {
+    display: flex;
+    justify-content: center;
+    padding: 12px;
+    opacity: 0.6;
+    font-size: var(--font-size-small);
   }
 
   .empty-state {
