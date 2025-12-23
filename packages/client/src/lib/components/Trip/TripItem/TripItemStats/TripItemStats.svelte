@@ -25,12 +25,14 @@
     user-select: none;
     display: flex;
     padding: 8px 8px 0 8px;
-    gap: 12px;
-    // justify-content: space-between;
 
     @media (min-width: 800px) {
       justify-content: flex-start;
       flex-direction: column;
+    }
+
+    @media (max-width: 800px) {
+      gap: 12px;
     }
   }
 </style>

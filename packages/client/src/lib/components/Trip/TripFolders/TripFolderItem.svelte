@@ -64,7 +64,7 @@
       width: 100%;
       height: 100%;
       font-family: var(--special-font-stack);
-      font-size: var(--font-size-large);
+      font-size: var(--font-size-medium);
 
       border-style: outset;
       border-width: 10px;
@@ -104,11 +104,12 @@
 
       .count {
         font-size: var(--font-size-normal);
-        background: var(--color-grey-light);
-        padding: 2px;
+        color: var(--color-grey-light);
+        background: var(--color-grey-dark);
+        padding: 4px;
         border-radius: 4px;
         z-index: 1;
-        margin-top: 10px;
+        margin-top: 5px;
       }
 
       transition: transform 0.1s ease-in-out;

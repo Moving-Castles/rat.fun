@@ -91,9 +91,10 @@
 
     @media (max-width: 800px) {
       grid-template-columns: 1fr;
-      grid-auto-rows: 100px;
+      grid-auto-rows: 120px;
       height: auto;
       min-height: calc(100% - 60px);
+      gap: 5px;
     }
   }
 </style>

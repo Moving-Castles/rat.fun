@@ -58,30 +58,28 @@
 </script>
 
 <div class="group">
-  <div class="group">
-    <div class="meta">RISK</div>
-    <div class="meta-data-item max-risk">
-      <Tooltip
-        content="WARNING! When you enter a trip you risk your RAT's health and PSYCHO OBJECTS"
-      >
-        <div class="inner">
-          {$rat.balance}<span class="currency-symbol">{CURRENCY_SYMBOL}</span>
-        </div>
-      </Tooltip>
-    </div>
+  <div class="meta">RISK</div>
+  <div class="meta-data-item max-risk">
+    <Tooltip content="WARNING! When you enter a trip you risk your RAT's health and PSYCHO OBJECTS">
+      <div class="inner">
+        {$rat.balance}<span class="currency-symbol">{CURRENCY_SYMBOL}</span>
+      </div>
+    </Tooltip>
   </div>
+</div>
 
-  <div class="group">
-    <div class="meta">REWARD</div>
-    <div class="meta-data-item max-win" class:low-balance={isLowBalance(trip, maxValuePerWin)}>
-      <Tooltip content="Max reward your RAT might get from surviving this TRIP">
-        <div class="inner">
-          {maxValuePerWin}<span class="currency-symbol">{CURRENCY_SYMBOL}</span>
-        </div>
-      </Tooltip>
-    </div>
+<div class="group">
+  <div class="meta">REWARD</div>
+  <div class="meta-data-item max-win" class:low-balance={isLowBalance(trip, maxValuePerWin)}>
+    <Tooltip content="Max reward your RAT might get from surviving this TRIP">
+      <div class="inner">
+        {maxValuePerWin}<span class="currency-symbol">{CURRENCY_SYMBOL}</span>
+      </div>
+    </Tooltip>
   </div>
+</div>
 
+<div class="group">
   <div class="meta">SURVIVAL</div>
   <div class="meta-data-item survival-meter {survivalData.category}">
     <Tooltip content="How many RATS have survived this trip so far. Results may vary">
@@ -119,9 +117,11 @@
     position: relative;
     margin-bottom: 10px;
 
-    // .currency-symbol {
-    //   color: var(--color-grey-mid);
-    // }
+    &:hover {
+      @media (min-width: 800px) {
+        transform: scale(1.1);
+      }
+    }
 
     &.low-balance {
       background: var(--color-bad);

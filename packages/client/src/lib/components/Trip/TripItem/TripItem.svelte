@@ -248,7 +248,7 @@
           }
 
           .trip-creator {
-            font-size: var(--font-size-small);
+            font-size: var(--font-size-normal);
             color: var(--color-grey-mid);
             margin-bottom: 5px;
             width: 100%;
