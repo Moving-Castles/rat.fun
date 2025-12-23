@@ -37,7 +37,7 @@
 
   // Challenge trip parameters (for restricted folders)
   let fixedMinValueToEnter = $state(100)
-  let overrideMaxValuePerWinPercentage = $state(50)
+  let overrideMaxValuePerWinPercentage = $state(100)
 
   // Floor the trip creation cost to ensure it's an integer
   let flooredTripCreationCost = $derived(Math.floor(tripCreationCost))

@@ -20,5 +20,10 @@ export const ratfunTransitions: SoundAssets = {
     src: "/sounds/ratfun/transitions/tripProcessing_enter.mp3",
     author: "leo",
     volume: 1
+  },
+  triportrapPreviewEnter: {
+    src: "/sounds/ratfun/transitions/triportrap_enter.mp3",
+    author: "leo",
+    volume: 1
   }
 }

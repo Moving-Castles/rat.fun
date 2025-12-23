@@ -37,5 +37,15 @@ export const ratfunMusic: SoundAssets = {
     src: "/sounds/ratfun/music/death.mp3",
     author: "leo",
     volume: 0.7
+  },
+  triportrapPreview: {
+    src: "/sounds/ratfun/music/triportrap-preview.mp3",
+    author: "leo",
+    volume: BASE_MUSIC_VOLUME
+  },
+  triportrapProcessing: {
+    src: "/sounds/ratfun/music/triportrap-processing.mp3",
+    author: "leo",
+    volume: BASE_MUSIC_VOLUME
   }
 }

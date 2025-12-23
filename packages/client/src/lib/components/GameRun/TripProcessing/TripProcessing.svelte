@@ -8,17 +8,22 @@
 
   const {
     onComplete,
+    isChallengeTrip = false,
     result,
     seed1,
     seed2
   }: {
     onComplete: () => void
+    isChallengeTrip: boolean
     result: EnterTripReturnValue | null
     seed1: number
     seed2: number
   } = $props()
 
   const MINIMUM_DURATION = 8000
+
+  $inspect("isChallengeTrip", isChallengeTrip)
+  const musicId = isChallengeTrip ? "triportrapProcessing" : "tripProcessing"
 
   // Timer state
   let timeElapsed = $state(0)
@@ -33,8 +38,7 @@
 
   onMount(() => {
     playSound({ category: "ratfunTransitions", id: "tripProcessingEnter" })
-    // playSound({ category: "ratfunMusic", id: "tripProcessing" })
-    backgroundMusic.play({ category: "ratfunMusic", id: "tripProcessing" })
+    backgroundMusic.play({ category: "ratfunMusic", id: musicId })
 
     // Enable continuous rendering for trip processing animation
     shaderManager.enableContinuousRendering()

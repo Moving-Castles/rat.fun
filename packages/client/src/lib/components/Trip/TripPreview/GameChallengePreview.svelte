@@ -2,9 +2,9 @@
   import type { Hex } from "viem"
   import type { Outcome } from "@sanity-types"
   import type { Trip as SanityTrip } from "@sanity-types"
-  import { goto } from "$app/navigation"
 
-  import { onMount } from "svelte"
+  import { onMount, onDestroy } from "svelte"
+  import { goto } from "$app/navigation"
   import { staticContent } from "$lib/modules/content"
   import { ratTotalValue, playerHasLiveRat } from "$lib/modules/state/stores"
   import { busy } from "$lib/modules/action-manager/index.svelte"
@@ -14,6 +14,8 @@
   import { renderSafeString } from "$lib/modules/utils"
   import { isPhone } from "$lib/modules/ui/state.svelte"
   import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
+  import { playSound } from "$lib/modules/sound"
+  import { backgroundMusic } from "$lib/modules/sound/stores"
 
   import {
     TripPreviewHeader,
@@ -93,10 +95,20 @@
   onMount(() => {
     const outcomes = $staticContent?.outcomes?.filter(o => o.tripId == tripId) || []
 
+    playSound({ category: "ratfunTransitions", id: "triportrapPreviewEnter", volume: 0.1 })
+
+    backgroundMusic.stop()
+    backgroundMusic.play({ category: "ratfunMusic", id: "triportrapPreview", loop: true })
+
     // Sort the outcomes in order of creation
     tripOutcomes = outcomes.sort((a, b) => {
       return new Date(a._createdAt).getTime() - new Date(b._createdAt).getTime()
     })
+  })
+
+  onDestroy(() => {
+    backgroundMusic.stop()
+    backgroundMusic.play({ category: "ratfunMusic", id: "main", loop: true })
   })
 </script>
 

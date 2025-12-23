@@ -41,6 +41,8 @@
   // Get static trip content from cms
   let staticTripContent = $derived($staticContent.trips.find(r => r._id == (tripId ?? "")))
 
+  const trip = $derived($trips[tripId])
+
   // Process the trip
   const processTripEntry = async () => {
     try {
@@ -72,8 +74,6 @@
     // Clean the URL
     replaceState(`/${tripId}/tripping`, {})
 
-    const trip = $trips[tripId]
-
     // Freeze the rat and trip to be able to gradually update their values without reactivity
     // from on-chain changes.
     freezeObjects($rat, trip, tripId)
@@ -104,6 +104,7 @@
   <!-- ### 2. TRIP PROCESSING ### -->
   {#if tripResultState.state === TRIP_STATE.PROCESSING}
     <TripProcessing
+      isChallengeTrip={trip?.challengeTrip ?? false}
       {result}
       {seed1}
       {seed2}

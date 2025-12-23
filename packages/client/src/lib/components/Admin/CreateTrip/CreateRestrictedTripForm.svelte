@@ -13,7 +13,7 @@
     tripDescription = $bindable(""),
     tripCreationCost = $bindable(DEFAULT_SUGGESTED_TRIP_CREATION_COST),
     fixedMinValueToEnter = $bindable(100),
-    overrideMaxValuePerWinPercentage = $bindable(50),
+    overrideMaxValuePerWinPercentage = $bindable(100),
     textareaElement = $bindable<HTMLTextAreaElement | null>(null),
     selectedFolderTitle,
     onFolderSelect,
