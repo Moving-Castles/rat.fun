@@ -69,6 +69,8 @@
   // Track keyboard navigation to prevent pointer interference
   let keyboardNavigating = $state(false)
   let keyboardNavTimeout: ReturnType<typeof setTimeout> | null = null
+  // Track init selection interval for cleanup
+  let initSelectionInterval: ReturnType<typeof setInterval> | null = null
   // Track loading state for initial event selection
   let isLoadingInitialEvent = $state(true)
 
@@ -336,25 +338,28 @@
     }, 50)
 
     // Poll for data availability and initialize selection to latest event
-    const initSelectionInterval = setInterval(() => {
+    initSelectionInterval = setInterval(() => {
       if ($player?.masterKey && shouldLoadGraphData && allVisitsData.length > 0) {
         const latestEvent = allVisitsData[0]
         selectedEvent.set(latestEvent.index)
         focusEvent.set(latestEvent.index)
         focusTrip.set(latestEvent.tripId)
         isLoadingInitialEvent = false
-        clearInterval(initSelectionInterval)
+        if (initSelectionInterval) clearInterval(initSelectionInterval)
       }
     }, 100)
 
     // Clean up interval after 5 seconds max
     setTimeout(() => {
-      clearInterval(initSelectionInterval)
+      if (initSelectionInterval) clearInterval(initSelectionInterval)
       isLoadingInitialEvent = false
     }, 5000)
   })
 
   onDestroy(() => {
+    // Clear any pending timers
+    if (keyboardNavTimeout) clearTimeout(keyboardNavTimeout)
+    if (initSelectionInterval) clearInterval(initSelectionInterval)
     // Reset all admin views when leaving trip lab
     phoneActiveAdminView.set("home")
     adminTripsSubView.set("active")

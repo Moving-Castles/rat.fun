@@ -60,6 +60,7 @@
   })
 
   onDestroy(async () => {
+    if (timerInterval) clearInterval(timerInterval)
     backgroundMusic.stop()
     // Disable continuous rendering when trip processing ends
     shaderManager.disableContinuousRendering()

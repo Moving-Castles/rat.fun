@@ -5,7 +5,7 @@
   import { TRIP_EVENT_TYPE } from "$lib/components/Admin/enums"
   import type { TripEvent } from "$lib/components/Admin/types"
   import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
-  import { onMount } from "svelte"
+  import { onMount, onDestroy } from "svelte"
   import { staticContent } from "$lib/modules/content"
   import { page } from "$app/state"
   import { goto } from "$app/navigation"
@@ -149,6 +149,10 @@
     tripOutcomes = outcomes.sort((a, b) => {
       return new Date(a._createdAt).getTime() - new Date(b._createdAt).getTime()
     })
+  })
+
+  onDestroy(() => {
+    if (keyboardNavTimeout) clearTimeout(keyboardNavTimeout)
   })
 </script>
 
