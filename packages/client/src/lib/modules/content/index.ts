@@ -54,9 +54,11 @@ export const lastUpdated = writable(performance.now())
 
 // --- API --------------------------------------------------------------
 
-// Track subscriptions to avoid duplicates
+// Track subscriptions to avoid duplicates and enable cleanup
 let tripsSubscription: { unsubscribe: () => void } | null = null
 let outcomesSubscription: { unsubscribe: () => void } | null = null
+let tripFolderListSubscription: { unsubscribe: () => void } | null = null
+let challengeSubscription: { unsubscribe: () => void } | null = null
 
 /**
  * Initialize static content from CMS (config only - no trips or outcomes).
@@ -106,8 +108,18 @@ export async function initStaticContent(worldAddress: string) {
   await tick()
   console.log("[CMS] Tick completed after static content update")
 
+  // Clean up existing subscriptions before creating new ones
+  if (tripFolderListSubscription) {
+    tripFolderListSubscription.unsubscribe()
+    tripFolderListSubscription = null
+  }
+  if (challengeSubscription) {
+    challengeSubscription.unsubscribe()
+    challengeSubscription = null
+  }
+
   // Subscribe to changes to trip folder list in sanity DB
-  client.listen(queries.tripFolderList, {}).subscribe(update => {
+  tripFolderListSubscription = client.listen(queries.tripFolderList, {}).subscribe(update => {
     const { result } = update
     if (result && result.folders) {
       staticContent.update(content => ({
@@ -118,7 +130,7 @@ export async function initStaticContent(worldAddress: string) {
   })
 
   // Subscribe to changes to challenge config in sanity DB
-  client.listen(queries.challenge, {}).subscribe(update => {
+  challengeSubscription = client.listen(queries.challenge, {}).subscribe(update => {
     const { result } = update
     if (result) {
       staticContent.update(content => ({

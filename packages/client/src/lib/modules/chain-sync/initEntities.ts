@@ -177,6 +177,9 @@ export type InitEntitiesOptions = {
 // Track initialization state to prevent duplicate calls
 let initializedForPlayer: string | null = null
 
+// Store component system unsubscribe functions for cleanup
+let componentSystemUnsubscribes: (() => void)[] = []
+
 /**
  * Check if entities have been initialized for a specific player.
  */
@@ -187,8 +190,15 @@ export function isEntitiesInitialized(playerId?: string | null): boolean {
 
 /**
  * Reset initialization state (for wallet disconnect/reconnect scenarios).
+ * Also cleans up any active component system subscriptions.
  */
 export function resetEntitiesInitialization(): void {
+  // Clean up all component system subscriptions
+  for (const unsubscribe of componentSystemUnsubscribes) {
+    unsubscribe()
+  }
+  componentSystemUnsubscribes = []
+
   initializedForPlayer = null
   // console.log("[initEntities] Reset - will reinitialize on next call")
 }
@@ -215,7 +225,8 @@ export async function initEntities(options: InitEntitiesOptions = {}) {
 
     // Create systems to listen to changes on game-specific tables
     for (const componentKey of tableKeys) {
-      createComponentSystem(componentKey)
+      const unsubscribe = createComponentSystem(componentKey)
+      componentSystemUnsubscribes.push(unsubscribe)
     }
 
     // Mark as initialized for this player
@@ -332,7 +343,8 @@ export async function initEntities(options: InitEntitiesOptions = {}) {
 
   // Create systems to listen to changes to game specific tables
   for (const componentKey of get(publicNetwork).tableKeys) {
-    createComponentSystem(componentKey)
+    const unsubscribe = createComponentSystem(componentKey)
+    componentSystemUnsubscribes.push(unsubscribe)
   }
 
   // Mark as initialized for this player

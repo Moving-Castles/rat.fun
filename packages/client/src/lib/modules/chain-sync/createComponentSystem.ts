@@ -8,10 +8,11 @@ import { deepEqual } from "@wagmi/core"
 /**
  * Creates a reactive subscription for a single MUD component.
  * Listens to the component's update$ observable and syncs changes to the entities store.
+ * Returns an unsubscribe function that should be called during cleanup.
  */
-export function createComponentSystem(componentKey: string) {
+export function createComponentSystem(componentKey: string): () => void {
   const components = get(publicNetwork).components as Record<string, Component>
-  components[componentKey].update$.subscribe((update: ComponentUpdate) => {
+  const subscription = components[componentKey].update$.subscribe((update: ComponentUpdate) => {
     const [nextValue, prevValue] = update.value
     const entityID = update.entity as string
 
@@ -47,4 +48,7 @@ export function createComponentSystem(componentKey: string) {
       return value
     })
   })
+
+  // Return unsubscribe function for cleanup
+  return () => subscription.unsubscribe()
 }

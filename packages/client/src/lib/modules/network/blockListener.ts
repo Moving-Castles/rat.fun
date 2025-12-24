@@ -3,10 +3,17 @@ import { publicNetwork, blockNumber } from "./index"
 import { errorHandler, BlockTimeoutError } from "$lib/modules/error-handling"
 
 let blockTimeout: number
+let blockSubscription: { unsubscribe: () => void } | null = null
 const TIMEOUT = 60000
 
 export function initBlockListener() {
-  get(publicNetwork).latestBlock$.subscribe({
+  // Clean up existing subscription before creating a new one
+  if (blockSubscription) {
+    blockSubscription.unsubscribe()
+    blockSubscription = null
+  }
+
+  blockSubscription = get(publicNetwork).latestBlock$.subscribe({
     next: block => {
       // Guard against undefined block (can happen during RPC issues)
       if (!block?.number) return
@@ -23,4 +30,16 @@ export function initBlockListener() {
       console.warn("[BlockListener] Error in block observable:", err)
     }
   })
+}
+
+/**
+ * Clean up the block listener subscription.
+ * Should be called when disconnecting wallet or cleaning up resources.
+ */
+export function cleanupBlockListener() {
+  if (blockSubscription) {
+    blockSubscription.unsubscribe()
+    blockSubscription = null
+  }
+  clearTimeout(blockTimeout)
 }
