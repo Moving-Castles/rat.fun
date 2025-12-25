@@ -246,9 +246,7 @@
     {onmousedown}
   >
     <div class="title">
-      {#if challengeTitle}
-        <div class="challenge-title">{challengeTitle}</div>
-      {/if}
+      <div class="challenge-title">{challengeTitle ?? "TRIP OR TRAP?"}</div>
       <div class="count">
         {#if displayState === "active"}
           {attemptCount ?? 0} attempt{attemptCount === 1 ? "" : "s"}
