@@ -6,7 +6,7 @@
   import { getTodayCETTime, getNextCETTime, formatCountdown } from "$lib/modules/utils"
 
   const GRACE_PERIOD_MS = 30 * 60 * 1000 // 30 minutes
-  const WINNER_DISPLAY_DURATION_MS = 20 * 60 * 1000 // 20 minutes
+  const WINNER_DISPLAY_DURATION_MS = 10 * 60 * 1000 // 10 minutes
 
   let {
     listingIndex,
@@ -47,7 +47,7 @@
       return
     }
 
-    // Priority 2: Recent winner - show "Won by X" for 1 hour
+    // Priority 2: Recent winner - show "Won by X" for 10 minutes
     if (lastWinnerName && lastWinTimestamp) {
       const timeSinceWin = now - lastWinTimestamp
       if (timeSinceWin < WINNER_DISPLAY_DURATION_MS) {

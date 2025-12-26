@@ -34,57 +34,25 @@
   let scrollContainer = $state<HTMLDivElement | null>(null)
 
   // Last completed challenge winner state
-  let lastWinnerName = $state<string | null>(null)
-  let lastWinTimestamp = $state<number | null>(null)
+  // Calculate win timestamp from block difference (Base block time ~2 seconds)
+  const BLOCK_TIME_MS = 2000
 
-  // LocalStorage key for tracking winner
-  const WINNER_STORAGE_KEY = "lastChallengeWinner"
+  let lastWinnerName = $derived($lastChallengeWinner?.winnerName ?? null)
 
-  // Load stored winner data from localStorage
-  function loadStoredWinner(): { odId: string; timestamp: number } | null {
-    try {
-      const stored = localStorage.getItem(WINNER_STORAGE_KEY)
-      if (stored) {
-        return JSON.parse(stored)
-      }
-    } catch {
-      // Ignore localStorage errors
-    }
-    return null
-  }
-
-  // Save winner data to localStorage
-  function saveWinner(winnerId: string, timestamp: number) {
-    try {
-      localStorage.setItem(WINNER_STORAGE_KEY, JSON.stringify({ odId: winnerId, timestamp }))
-    } catch {
-      // Ignore localStorage errors
-    }
-  }
-
-  // Track winner changes reactively from MUD state
-  $effect(() => {
+  // Calculate approximate win timestamp from block number difference
+  let lastWinTimestamp = $derived.by(() => {
     const winner = $lastChallengeWinner
-    if (!winner) {
-      lastWinnerName = null
-      lastWinTimestamp = null
-      return
-    }
+    if (!winner || !winner.lastVisitBlock) return null
 
-    // Check if this is a new winner or the same one we've seen before
-    const stored = loadStoredWinner()
+    const currentBlock = Number($blockNumber)
+    if (!currentBlock) return null
 
-    if (stored && stored.odId === winner.odId) {
-      // Same winner - use stored timestamp
-      lastWinnerName = winner.winnerName
-      lastWinTimestamp = stored.timestamp
-    } else {
-      // New winner - use current time and store it
-      const now = Date.now()
-      lastWinnerName = winner.winnerName
-      lastWinTimestamp = now
-      saveWinner(winner.odId, now)
-    }
+    // Calculate how long ago the win happened based on block difference
+    const blocksSinceWin = currentBlock - winner.lastVisitBlock
+    const msSinceWin = blocksSinceWin * BLOCK_TIME_MS
+
+    // Return the approximate timestamp when the challenge was won
+    return Date.now() - msSinceWin
   })
 
   // Build trip folder map from staticContent

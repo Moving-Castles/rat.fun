@@ -250,6 +250,7 @@ export const lastChallengeWinner = derived([trips, players], ([$trips, $players]
   return {
     odId: trip.challengeWinner as string,
     tripId,
-    winnerName: winnerPlayer?.name || "Unknown"
+    winnerName: winnerPlayer?.name || "Unknown",
+    lastVisitBlock: Number(trip.lastVisitBlock ?? 0)
   }
 })
