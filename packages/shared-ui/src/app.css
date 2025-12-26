@@ -86,9 +86,11 @@
 
   /* Color: Risk Meter */
   --color-risk-meter-unclear: var(--foreground-light-transparent);
-  --color-risk-meter-low: var(--green);
+  --color-risk-meter-hi: var(--green);
+
   --color-risk-meter-mid: var(--yellow);
-  --color-risk-meter-hi: pink;
+  --color-risk-meter-low: rgb(144, 102, 109);
+
   --color-risk-meter-nitemare: var(--red);
 
   /* Color: Health Bar */

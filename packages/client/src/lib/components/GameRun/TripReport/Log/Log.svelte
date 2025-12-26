@@ -44,6 +44,14 @@
     logTimeline.add(timeline)
     receivedTimelines++
 
+    // Scroll parent container to bottom only if content overflows
+    logTimeline.add(() => {
+      const parent = logElement?.parentElement
+      if (parent && parent.scrollHeight > parent.clientHeight) {
+        parent.scrollTop = parent.scrollHeight
+      }
+    })
+
     if (receivedTimelines === totalItems) {
       // All log items + START added, now manually add END status animation
       if (endStatusContainer) {

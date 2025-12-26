@@ -80,7 +80,10 @@
 <div class="log-inventory">
   <div class="inventory-content">
     <div class="group">
-      <div class="label" bind:this={labelElement1}>Subject: {frozenRat?.name}</div>
+      <div class="label" bind:this={labelElement1}>Subject:</div>
+      <div class="name">{frozenRat?.name}</div>
+    </div>
+    <div class="group">
       <div class="label" bind:this={labelElement2}>Inventory:</div>
       {#if hasItems}
         {#each inventoryItems as item, i}
@@ -100,13 +103,17 @@
     display: flex;
     margin-bottom: 0.5em;
     line-height: 1.2em;
-    font-size: var(--font-size-normal);
+    font-size: var(--font-size-small);
 
     .inventory-content {
-      display: flex;
-      flex-wrap: wrap;
       color: var(--foreground);
       font-family: var(--typewriter-font-stack);
+
+      .group {
+        display: flex;
+        flex-flow: row nowrap;
+        margin-bottom: 5px;
+      }
 
       .label {
         opacity: 0;
@@ -120,6 +127,13 @@
         padding: 5px;
         color: var(--background);
         background: var(--color-inventory-back);
+        margin-right: 0.5em;
+      }
+
+      .name {
+        padding: 5px;
+        color: var(--background);
+        background: var(--color-grey-light);
         margin-right: 0.5em;
       }
 
