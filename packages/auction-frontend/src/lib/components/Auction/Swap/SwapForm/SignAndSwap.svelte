@@ -13,7 +13,9 @@
     deltaRouterAddress,
     swapExactIn,
     isPermit2Required,
-    swapExactOut
+    swapExactOut,
+    quoteExactIn,
+    quoteExactOut
   } from "$lib/modules/swap-router"
   import { signTypedData } from "viem/actions"
   import { asPublicClient, asWalletClient } from "$lib/utils/clientAdapter"
@@ -156,17 +158,49 @@
       }
 
       // * * * * * * * * * * * * * * * * * * * * * * * * *
-      // Step 2: Execute swap (on-chain)
+      // Step 3: Re-quote to get fresh price
       // * * * * * * * * * * * * * * * * * * * * * * * * *
 
-      console.log("[SignAndSwap] Step 3: Executing swap...")
+      console.log("[SignAndSwap] Step 3: Re-quoting for fresh price...")
+      processingStep = "Getting fresh quote..."
+
+      let freshAmountOut: bigint
+      let freshAmountIn: bigint
+
+      if (isExactOut) {
+        // For exact out, re-quote to get fresh amountIn
+        const freshQuote = await quoteExactOut(fromCurrency.address, auctionParams, amountOut)
+        freshAmountIn = freshQuote.amountInInitial
+        freshAmountOut = amountOut // This stays fixed for exact out
+
+        const quoteDrift = Number(freshAmountIn - amountIn) / Number(amountIn)
+        console.log(
+          `[SignAndSwap] Fresh quote: ${freshAmountIn} ${fromCurrency.symbol} (was ${amountIn}, drift: ${(quoteDrift * 100).toFixed(2)}%)`
+        )
+      } else {
+        // For exact in, re-quote to get fresh amountOut
+        const freshQuote = await quoteExactIn(fromCurrency.address, auctionParams, amountIn)
+        freshAmountOut = freshQuote.amountOutFinal
+        freshAmountIn = amountIn // This stays fixed for exact in
+
+        const quoteDrift = Number(freshAmountOut - amountOut) / Number(amountOut)
+        console.log(
+          `[SignAndSwap] Fresh quote: ${freshAmountOut} RAT (was ${amountOut}, drift: ${(quoteDrift * 100).toFixed(2)}%)`
+        )
+      }
+
+      // * * * * * * * * * * * * * * * * * * * * * * * * *
+      // Step 4: Execute swap (on-chain)
+      // * * * * * * * * * * * * * * * * * * * * * * * * *
+
+      console.log("[SignAndSwap] Step 4: Executing swap...")
       processingStep = "Confirm transaction"
 
-      // DEBUG: Log the swap parameters before sending
+      // Log the swap parameters before sending
       console.log("[SignAndSwap] Swap params:", {
         fromCurrency: fromCurrency.symbol,
-        amountIn: amountIn.toString(),
-        amountOut: amountOut.toString(),
+        amountIn: freshAmountIn.toString(),
+        amountOut: freshAmountOut.toString(),
         isExactOut,
         permit: swapState.data.permit,
         permitSignature: swapState.data.permitSignature
@@ -177,8 +211,8 @@
         txHash = await swapExactOut(
           fromCurrency.address,
           auctionParams,
-          amountOut,
-          withSlippage(amountIn, false),
+          freshAmountOut,
+          withSlippage(freshAmountIn, false),
           swapState.data.permit,
           swapState.data.permitSignature
         )
@@ -186,8 +220,8 @@
         txHash = await swapExactIn(
           fromCurrency.address,
           auctionParams,
-          amountIn,
-          withSlippage(amountOut, true),
+          freshAmountIn,
+          withSlippage(freshAmountOut, true),
           swapState.data.permit,
           swapState.data.permitSignature
         )
