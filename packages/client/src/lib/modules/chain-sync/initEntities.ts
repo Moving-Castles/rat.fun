@@ -233,6 +233,12 @@ export async function initEntities(options: InitEntitiesOptions = {}) {
     // Mark as initialized for this player
     initializedForPlayer = activePlayerId
     console.log("[initEntities] Live systems ready for player:", activePlayerId)
+
+    // CRITICAL: Flush reactivity so derived stores (trips, playerTrips, nonDepletedTrips)
+    // update before spawned() reads from them
+    console.log("[initEntities] Calling tick() to flush derived stores (server hydration path)")
+    await tick()
+    console.log("[initEntities] tick() completed (server hydration path)")
     return
   }
 

@@ -74,56 +74,113 @@
     // Initialize ERC20 listener (centralized here for all scenarios)
     initErc20Listener()
 
-    // CRITICAL: Wait for Svelte reactivity to propagate before reading derived stores.
-    // The entities store may have been updated, but derived stores (trips, playerTrips,
-    // nonDepletedTrips) need a tick to recompute. Without this, we may read stale/empty
-    // values and make CMS queries with no trip IDs.
-    await tick()
+    // =========================================================================
+    // ROBUST STORE READINESS CHECK
+    // =========================================================================
+    // We need to ensure derived stores have recomputed before reading from them.
+    // Race conditions can occur when:
+    // 1. playerAddress was just set but playerId hasn't derived yet
+    // 2. entities were updated but trips/playerTrips haven't derived yet
+    // 3. tick() was called but derived stores are still computing
+    //
+    // We use a retry loop with comprehensive validation to guarantee readiness.
+    // =========================================================================
 
-    // Get trip IDs from on-chain state
-    const playerTripIds = Object.keys(get(playerTrips)) // Player's own trips
-    const activeTripIds = Object.keys(get(nonDepletedTrips)) // Trips with balance > 0
+    const MAX_RETRIES = 10
+    const RETRY_DELAY_MS = 20
+    const ZERO_PLAYER_ID = "0x0000000000000000000000000000000000000000000000000000000000000000"
 
-    // Combine and deduplicate: active trips + player's trips
-    const relevantTripIds = [...new Set([...activeTripIds, ...playerTripIds])]
+    let finalPlayerTripIds: string[] = []
+    let finalActiveTripIds: string[] = []
+    let finalRelevantTripIds: string[] = []
+    let storesReady = false
 
-    // Validation: Check for potential race condition
-    const tripsInStore = Object.keys(get(trips)).length
-    if (tripsInStore > 0 && relevantTripIds.length === 0) {
-      console.warn(
-        "[+layout] RACE CONDITION DETECTED: trips store has data but derived stores are empty"
-      )
-      // Wait another tick and retry
+    for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+      // Flush Svelte reactivity
       await tick()
-      const retryPlayerTripIds = Object.keys(get(playerTrips))
-      const retryActiveTripIds = Object.keys(get(nonDepletedTrips))
-      const retryRelevantTripIds = [...new Set([...retryActiveTripIds, ...retryPlayerTripIds])]
-      console.log("[+layout] After retry:", {
-        playerTripIds: retryPlayerTripIds.length,
-        activeTripIds: retryActiveTripIds.length,
-        relevantTripIds: retryRelevantTripIds.length
+
+      // Read current store values
+      const currentPlayerId = get(playerId)
+      const currentTrips = get(trips)
+      const currentPlayerTrips = get(playerTrips)
+      const currentNonDepletedTrips = get(nonDepletedTrips)
+
+      const tripsCount = Object.keys(currentTrips).length
+      const playerTripsCount = Object.keys(currentPlayerTrips).length
+      const nonDepletedTripsCount = Object.keys(currentNonDepletedTrips).length
+      const isPlayerIdValid = currentPlayerId !== ZERO_PLAYER_ID
+
+      console.log(`[+layout] Store readiness check (attempt ${attempt}/${MAX_RETRIES}):`, {
+        playerId: currentPlayerId.slice(0, 10) + "...",
+        isPlayerIdValid,
+        tripsCount,
+        playerTripsCount,
+        nonDepletedTripsCount
       })
-      // Use retried values if they're better
-      if (retryRelevantTripIds.length > 0) {
-        initTrips($publicNetwork.worldAddress, retryRelevantTripIds)
-        initPlayerOutcomes($publicNetwork.worldAddress, retryPlayerTripIds)
-        loadFeedHistory($publicNetwork.worldAddress)
-        UIState.set(UI.READY)
-        return
+
+      // Check if stores are in a valid state
+      // Valid states:
+      // 1. playerId is valid AND we have trips data (normal case)
+      // 2. playerId is valid AND trips is empty (new player with no trips - valid)
+      // Invalid states:
+      // 1. playerId is still the zero address (playerAddress hasn't propagated)
+      // 2. trips has data but playerTrips is empty when it shouldn't be
+
+      if (!isPlayerIdValid) {
+        console.warn(`[+layout] playerId not ready (attempt ${attempt}), waiting...`)
+        if (attempt < MAX_RETRIES) {
+          await new Promise(r => setTimeout(r, RETRY_DELAY_MS))
+          continue
+        }
       }
+
+      // playerId is valid - now check if derived stores have caught up
+      // If we have trips but playerTrips is empty, the derived store may not have recomputed
+      if (tripsCount > 0 && playerTripsCount === 0 && nonDepletedTripsCount === 0) {
+        console.warn(
+          `[+layout] Potential race: trips=${tripsCount} but derived stores empty (attempt ${attempt})`
+        )
+        if (attempt < MAX_RETRIES) {
+          await new Promise(r => setTimeout(r, RETRY_DELAY_MS))
+          continue
+        }
+      }
+
+      // Stores appear ready
+      finalPlayerTripIds = Object.keys(currentPlayerTrips)
+      finalActiveTripIds = Object.keys(currentNonDepletedTrips)
+      finalRelevantTripIds = [...new Set([...finalActiveTripIds, ...finalPlayerTripIds])]
+      storesReady = true
+
+      console.log(`[+layout] Stores ready after ${attempt} attempt(s):`, {
+        playerTripIds: finalPlayerTripIds.length,
+        activeTripIds: finalActiveTripIds.length,
+        relevantTripIds: finalRelevantTripIds.length
+      })
+      break
     }
 
-    // DEBUG: Log trip counts to diagnose race condition
-    console.log("[+layout] Trip IDs for CMS query:", {
-      playerTripIds: playerTripIds.length,
-      activeTripIds: activeTripIds.length,
-      relevantTripIds: relevantTripIds.length,
-      tripsInStore
+    if (!storesReady) {
+      console.error(
+        "[+layout] CRITICAL: Stores not ready after max retries. Proceeding with current values."
+      )
+      // Use whatever we have
+      finalPlayerTripIds = Object.keys(get(playerTrips))
+      finalActiveTripIds = Object.keys(get(nonDepletedTrips))
+      finalRelevantTripIds = [...new Set([...finalActiveTripIds, ...finalPlayerTripIds])]
+    }
+
+    // Final validation log
+    console.log("[+layout] Final trip IDs for CMS query:", {
+      playerTripIds: finalPlayerTripIds.length,
+      activeTripIds: finalActiveTripIds.length,
+      relevantTripIds: finalRelevantTripIds.length,
+      storesReady
     })
 
     // Load trips and outcomes from CMS
-    initTrips($publicNetwork.worldAddress, relevantTripIds)
-    initPlayerOutcomes($publicNetwork.worldAddress, playerTripIds)
+    initTrips($publicNetwork.worldAddress, finalRelevantTripIds)
+    initPlayerOutcomes($publicNetwork.worldAddress, finalPlayerTripIds)
 
     // Load recent trips/outcomes for operator feed history (non-blocking)
     loadFeedHistory($publicNetwork.worldAddress)

@@ -160,6 +160,11 @@
       const wallet = setupWalletNetwork(network, drawbridgeState.sessionClient)
       initWalletNetwork(wallet, drawbridgeState.userAddress, WALLET_TYPE.DRAWBRIDGE)
 
+      // CRITICAL: Flush reactivity so playerId derived store updates
+      console.log("[Loading] initWalletNetwork complete, calling tick() to flush playerId")
+      await tick()
+      console.log("[Loading] tick() after initWalletNetwork complete")
+
       // Try server hydration for player-specific data
       const playerId = addressToId(drawbridgeState.userAddress)
 
