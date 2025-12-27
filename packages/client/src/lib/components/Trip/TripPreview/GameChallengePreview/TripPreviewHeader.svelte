@@ -179,6 +179,10 @@
         .value {
           font-family: var(--special-font-stack);
           font-size: var(--font-size-large);
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
+          max-width: 70%;
         }
 
         &.index {
