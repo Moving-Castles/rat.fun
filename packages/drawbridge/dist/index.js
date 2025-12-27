@@ -998,7 +998,7 @@ async function setupSessionEOA({
   logger.log("[drawbridge] EOA setup:", { userAddress });
   onStatus?.({ type: "registering_delegation", message: "Setting up session..." });
   const hash = await callWithSignature({
-    client: sessionClient,
+    client: publicClient,
     userClient,
     sessionClient,
     worldAddress,

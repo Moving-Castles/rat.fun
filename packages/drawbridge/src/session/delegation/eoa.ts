@@ -42,7 +42,7 @@ export async function setupSessionEOA({
   onStatus?.({ type: "registering_delegation", message: "Setting up session..." })
 
   const hash = await callWithSignature({
-    client: sessionClient,
+    client: publicClient,
     userClient,
     sessionClient,
     worldAddress,
