@@ -250,6 +250,7 @@
     gap: 10px;
     padding: 10px;
     z-index: var(--z-top);
+    display: none;
 
     .sold-text {
       font-family: var(--special-font-stack);
