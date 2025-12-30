@@ -1,45 +1,32 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-    />
-    <link rel="icon" type="image/x-icon" href="/images/favicon.png" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Workbench&family=Xanh+Mono:ital@0;1&display=swap"
-      rel="stylesheet"
-    />
-    <link href="https://fonts.googleapis.com/css2?family=Rock+Salt&display=swap" rel="stylesheet" />
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <link rel="icon" type="image/x-icon" href="/images/favicon.png" />
 
-    <title>RAT.FUN</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Workbench&family=Xanh+Mono:ital@0;1&display=swap"
+    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Rock+Salt&display=swap" rel="stylesheet" />
 
-    <meta name="application-name" content="RAT.FUN" />
-    <meta name="apple-mobile-web-app-title" content="RAT.FUN" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-    <meta name="apple-touch-fullscreen" content="yes" />
-    <link rel="apple-touch-icon" href="/images/favicon.png" />
+  <title>RAT.FUN</title>
 
-    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-    <script>
-      if (window.location.hostname === "testing-rat-fun.netlify.app") {
-        eruda.init()
-      }
-    </script>
+  <meta name="application-name" content="RAT.FUN" />
+  <meta name="apple-mobile-web-app-title" content="RAT.FUN" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <meta name="apple-touch-fullscreen" content="yes" />
+  <link rel="apple-touch-icon" href="/images/favicon.png" />
 
-    <!-- Base -->
-    <meta name="base:app_id" content="69386cb8337e2d0b1b36f26f" />
+  <!-- Base -->
+  <meta name="base:app_id" content="69386cb8337e2d0b1b36f26f" />
 
-    <!-- Farcaster -->
-    <meta
-      name="fc:miniapp"
-      content='{
+  <!-- Farcaster -->
+  <meta name="fc:miniapp" content='{
       "version":"next",
       "imageUrl":"https://rat.fun/images/product/icon.png",
       "button":{
@@ -50,50 +37,41 @@
           "url":"https://rat.fun"
         }
       }
-    }'
-    />
+    }' />
 
-    <!-- Fallback SEO meta tags -->
-    <meta name="description" content="RAT.FUN is a game about having fun and drugging rats" />
-    <meta
-      name="robots"
-      content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
-    />
+  <!-- Fallback SEO meta tags -->
+  <meta name="description" content="RAT.FUN is a game about having fun and drugging rats" />
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
 
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="RAT.FUN" />
-    <meta
-      name="twitter:description"
-      content="RAT.FUN is a game about having fun and drugging rats"
-    />
-    <meta name="twitter:image" content="https://rat.fun/images/product/hero.png" />
-    <meta name="twitter:creator" content="@movingcastles_" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="RAT.FUN" />
+  <meta name="twitter:description" content="RAT.FUN is a game about having fun and drugging rats" />
+  <meta name="twitter:image" content="https://rat.fun/images/product/hero.png" />
+  <meta name="twitter:creator" content="@movingcastles_" />
 
-    <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="RAT.FUN" />
-    <meta property="og:locale" content="en-us" />
-    <meta property="og:url" content="https://rat.fun" />
-    <meta property="og:title" content="RAT.FUN" />
-    <meta
-      property="og:description"
-      content="RAT.FUN is a game about having fun and drugging rats"
-    />
-    <meta property="og:image" content="https://rat.fun/images/product/hero.png" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="rat.fun" />
-    <meta property="og:image:type" content="image/png" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="RAT.FUN" />
+  <meta property="og:locale" content="en-us" />
+  <meta property="og:url" content="https://rat.fun" />
+  <meta property="og:title" content="RAT.FUN" />
+  <meta property="og:description" content="RAT.FUN is a game about having fun and drugging rats" />
+  <meta property="og:image" content="https://rat.fun/images/product/hero.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="rat.fun" />
+  <meta property="og:image:type" content="image/png" />
 
-    <style>
-      body,
-      html {
-        background: black;
-      }
-    </style>
-    %sveltekit.head%
-  </head>
+  <style>
+    body,
+    html {
+      background: black;
+    }
+  </style>
+  %sveltekit.head%
+</head>
 
-  <body data-sveltekit-preload-data="hover">
-    <div id="sveltekit-app" style="display: contents">%sveltekit.body%</div>
-  </body>
+<body data-sveltekit-preload-data="hover">
+  <div id="sveltekit-app" style="display: contents">%sveltekit.body%</div>
+</body>
+
 </html>
