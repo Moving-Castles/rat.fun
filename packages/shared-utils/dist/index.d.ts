@@ -168,15 +168,18 @@ declare function clickToCopy(node: HTMLElement, text: string): {
  */
 declare function hasExtensionSupport(): boolean;
 /**
- * Get the CET/CEST offset in minutes for a given date
- */
-declare function getCETOffset(date: Date): number;
-/**
- * Calculate today's CET time (not rolling to next day)
+ * Calculate today's CET/CEST time (not rolling to next day).
+ * Correctly handles DST transitions using date-fns-tz.
+ * @param timeStr Time in HH:MM format (e.g., "16:00")
+ * @returns Date object representing that time in Berlin timezone, converted to UTC
  */
 declare function getTodayCETTime(timeStr: string): Date;
 /**
- * Calculate the next occurrence of a CET time
+ * Calculate the next occurrence of a CET/CEST time.
+ * If the time has already passed today in Berlin, returns tomorrow's time.
+ * Correctly handles DST transitions using date-fns-tz.
+ * @param timeStr Time in HH:MM format (e.g., "16:00")
+ * @returns Date object representing the next occurrence of that time in Berlin timezone
  */
 declare function getNextCETTime(timeStr: string): Date;
 /**
@@ -207,4 +210,4 @@ declare function hexToFourParts(hexString: string): [number, number, number, num
  */
 declare function hashToIndices(addressHash: string, lengths: [number, number, number, number]): [number, number, number, number];
 
-export { JSONParseError, addressToColor, addressToId, addressToNumber, blockNumberToTimestamp, blocksToReadableTime, blocksToSeconds, clamp, clickToCopy, filterObjectByKey, formatCountdown, formatDate, getCETOffset, getNextCETTime, getRandomElement, getRandomInt, getRandomNumber, getRandomUint256, getRandomUint32, getTodayCETTime, getUniqueValues, hasExtensionSupport, hashToIndices, hexToFourParts, hexToString, idToAddress, invlerp, lerp, millisUntil, mod, padToUint256, padWithZero, parseJSONFromContent, pickByIndex, range, removePrivateKeys, renderSafeString, shortenAddress, sleep, stepsEasing, stringToHex, timeSince, timeUntil, toCamelCase, truncateString };
+export { JSONParseError, addressToColor, addressToId, addressToNumber, blockNumberToTimestamp, blocksToReadableTime, blocksToSeconds, clamp, clickToCopy, filterObjectByKey, formatCountdown, formatDate, getNextCETTime, getRandomElement, getRandomInt, getRandomNumber, getRandomUint256, getRandomUint32, getTodayCETTime, getUniqueValues, hasExtensionSupport, hashToIndices, hexToFourParts, hexToString, idToAddress, invlerp, lerp, millisUntil, mod, padToUint256, padWithZero, parseJSONFromContent, pickByIndex, range, removePrivateKeys, renderSafeString, shortenAddress, sleep, stepsEasing, stringToHex, timeSince, timeUntil, toCamelCase, truncateString };

@@ -4,6 +4,7 @@
  */
 
 import type { Hex } from "viem"
+import { fromZonedTime, toZonedTime } from "date-fns-tz"
 
 // ============================================================================
 // String Utilities
@@ -551,82 +552,60 @@ export function hasExtensionSupport(): boolean {
 // CET Timezone Utilities
 // ============================================================================
 
-/**
- * Get the CET/CEST offset in minutes for a given date
- */
-export function getCETOffset(date: Date): number {
-  const cetStr = date.toLocaleString("en-US", {
-    timeZone: "Europe/Berlin",
-    hour12: false,
-    hour: "2-digit",
-    minute: "2-digit"
-  })
-  const utcStr = date.toLocaleString("en-US", {
-    timeZone: "UTC",
-    hour12: false,
-    hour: "2-digit",
-    minute: "2-digit"
-  })
-
-  const [cetHour, cetMin] = cetStr.split(":").map(Number)
-  const [utcHour, utcMin] = utcStr.split(":").map(Number)
-
-  let diffMinutes = (cetHour - utcHour) * 60 + (cetMin - utcMin)
-
-  if (diffMinutes < -12 * 60) diffMinutes += 24 * 60
-  if (diffMinutes > 12 * 60) diffMinutes -= 24 * 60
-
-  return diffMinutes
-}
+const BERLIN_TZ = "Europe/Berlin"
 
 /**
- * Calculate today's CET time (not rolling to next day)
+ * Calculate today's CET/CEST time (not rolling to next day).
+ * Correctly handles DST transitions using date-fns-tz.
+ * @param timeStr Time in HH:MM format (e.g., "16:00")
+ * @returns Date object representing that time in Berlin timezone, converted to UTC
  */
 export function getTodayCETTime(timeStr: string): Date {
   const now = new Date()
 
-  const cetFormatter = new Intl.DateTimeFormat("en-CA", {
-    timeZone: "Europe/Berlin",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit"
-  })
-  const cetDateStr = cetFormatter.format(now)
+  // Get today's date in Berlin timezone
+  const berlinNow = toZonedTime(now, BERLIN_TZ)
 
-  const targetDateStr = `${cetDateStr}T${timeStr.padStart(5, "0")}:00Z`
-  const asUtc = new Date(targetDateStr)
+  // Parse the time string
+  const [hours, minutes] = timeStr.padStart(5, "0").split(":").map(Number)
 
-  const cetOffset = getCETOffset(now)
-  const utcMs = asUtc.getTime() - cetOffset * 60 * 1000
+  // Create a date object representing the target time in Berlin
+  const targetInBerlin = new Date(berlinNow)
+  targetInBerlin.setHours(hours, minutes, 0, 0)
 
-  return new Date(utcMs)
+  // Convert from Berlin time to UTC - this handles DST correctly
+  return fromZonedTime(targetInBerlin, BERLIN_TZ)
 }
 
 /**
- * Calculate the next occurrence of a CET time
+ * Calculate the next occurrence of a CET/CEST time.
+ * If the time has already passed today in Berlin, returns tomorrow's time.
+ * Correctly handles DST transitions using date-fns-tz.
+ * @param timeStr Time in HH:MM format (e.g., "16:00")
+ * @returns Date object representing the next occurrence of that time in Berlin timezone
  */
 export function getNextCETTime(timeStr: string): Date {
   const now = new Date()
+  const todayTarget = getTodayCETTime(timeStr)
 
-  const cetFormatter = new Intl.DateTimeFormat("en-CA", {
-    timeZone: "Europe/Berlin",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit"
-  })
-  const cetDateStr = cetFormatter.format(now)
-
-  const targetDateStr = `${cetDateStr}T${timeStr.padStart(5, "0")}:00Z`
-  const asUtc = new Date(targetDateStr)
-
-  const cetOffset = getCETOffset(now)
-  const utcMs = asUtc.getTime() - cetOffset * 60 * 1000
-
-  if (utcMs <= now.getTime()) {
-    return new Date(utcMs + 24 * 60 * 60 * 1000)
+  // If the time hasn't passed yet today, return today's time
+  if (todayTarget.getTime() > now.getTime()) {
+    return todayTarget
   }
 
-  return new Date(utcMs)
+  // Time has passed, calculate tomorrow's time
+  const berlinNow = toZonedTime(now, BERLIN_TZ)
+
+  // Parse the time string
+  const [hours, minutes] = timeStr.padStart(5, "0").split(":").map(Number)
+
+  // Create tomorrow's date in Berlin timezone
+  const tomorrowInBerlin = new Date(berlinNow)
+  tomorrowInBerlin.setDate(tomorrowInBerlin.getDate() + 1)
+  tomorrowInBerlin.setHours(hours, minutes, 0, 0)
+
+  // Convert from Berlin time to UTC - this handles DST correctly
+  return fromZonedTime(tomorrowInBerlin, BERLIN_TZ)
 }
 
 /**

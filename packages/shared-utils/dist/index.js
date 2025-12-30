@@ -1,4 +1,5 @@
 // src/index.ts
+import { fromZonedTime, toZonedTime } from "date-fns-tz";
 function toCamelCase(s) {
   return s.replace(/([-_][a-z])/gi, ($1) => $1.toUpperCase().replace("-", "").replace("_", "")).replace(/^./, (str) => str.toLowerCase());
 }
@@ -271,58 +272,27 @@ function hasExtensionSupport() {
   }
   return true;
 }
-function getCETOffset(date) {
-  const cetStr = date.toLocaleString("en-US", {
-    timeZone: "Europe/Berlin",
-    hour12: false,
-    hour: "2-digit",
-    minute: "2-digit"
-  });
-  const utcStr = date.toLocaleString("en-US", {
-    timeZone: "UTC",
-    hour12: false,
-    hour: "2-digit",
-    minute: "2-digit"
-  });
-  const [cetHour, cetMin] = cetStr.split(":").map(Number);
-  const [utcHour, utcMin] = utcStr.split(":").map(Number);
-  let diffMinutes = (cetHour - utcHour) * 60 + (cetMin - utcMin);
-  if (diffMinutes < -12 * 60) diffMinutes += 24 * 60;
-  if (diffMinutes > 12 * 60) diffMinutes -= 24 * 60;
-  return diffMinutes;
-}
+var BERLIN_TZ = "Europe/Berlin";
 function getTodayCETTime(timeStr) {
   const now = /* @__PURE__ */ new Date();
-  const cetFormatter = new Intl.DateTimeFormat("en-CA", {
-    timeZone: "Europe/Berlin",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit"
-  });
-  const cetDateStr = cetFormatter.format(now);
-  const targetDateStr = `${cetDateStr}T${timeStr.padStart(5, "0")}:00Z`;
-  const asUtc = new Date(targetDateStr);
-  const cetOffset = getCETOffset(now);
-  const utcMs = asUtc.getTime() - cetOffset * 60 * 1e3;
-  return new Date(utcMs);
+  const berlinNow = toZonedTime(now, BERLIN_TZ);
+  const [hours, minutes] = timeStr.padStart(5, "0").split(":").map(Number);
+  const targetInBerlin = new Date(berlinNow);
+  targetInBerlin.setHours(hours, minutes, 0, 0);
+  return fromZonedTime(targetInBerlin, BERLIN_TZ);
 }
 function getNextCETTime(timeStr) {
   const now = /* @__PURE__ */ new Date();
-  const cetFormatter = new Intl.DateTimeFormat("en-CA", {
-    timeZone: "Europe/Berlin",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit"
-  });
-  const cetDateStr = cetFormatter.format(now);
-  const targetDateStr = `${cetDateStr}T${timeStr.padStart(5, "0")}:00Z`;
-  const asUtc = new Date(targetDateStr);
-  const cetOffset = getCETOffset(now);
-  const utcMs = asUtc.getTime() - cetOffset * 60 * 1e3;
-  if (utcMs <= now.getTime()) {
-    return new Date(utcMs + 24 * 60 * 60 * 1e3);
+  const todayTarget = getTodayCETTime(timeStr);
+  if (todayTarget.getTime() > now.getTime()) {
+    return todayTarget;
   }
-  return new Date(utcMs);
+  const berlinNow = toZonedTime(now, BERLIN_TZ);
+  const [hours, minutes] = timeStr.padStart(5, "0").split(":").map(Number);
+  const tomorrowInBerlin = new Date(berlinNow);
+  tomorrowInBerlin.setDate(tomorrowInBerlin.getDate() + 1);
+  tomorrowInBerlin.setHours(hours, minutes, 0, 0);
+  return fromZonedTime(tomorrowInBerlin, BERLIN_TZ);
 }
 function formatCountdown(diff) {
   if (diff <= 0) return "";
@@ -377,7 +347,6 @@ export {
   filterObjectByKey,
   formatCountdown,
   formatDate,
-  getCETOffset,
   getNextCETTime,
   getRandomElement,
   getRandomInt,
