@@ -3,6 +3,7 @@
   import { fade } from "svelte/transition"
   import { visibleMessages, hasMoreMessages, loadMoreMessages } from "../state.svelte"
   import FeedMessage from "./FeedMessage.svelte"
+  import type { FeedMessage as FeedMessageType } from "./types"
 
   let scrollContainer = $state<HTMLDivElement | null>(null)
   let isAtBottom = $state(true)
@@ -87,7 +88,7 @@
     }
   })
 
-  const onClickMessage = message => {
+  const onClickMessage = (message: FeedMessageType) => {
     console.log("msg, ", message)
   }
 

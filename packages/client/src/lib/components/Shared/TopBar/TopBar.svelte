@@ -170,17 +170,8 @@
     }
   }
 
-  .phone-row-1 {
-    border-bottom: var(--default-border-style);
-  }
-
   .phone-row-2 {
     border-bottom: var(--default-border-style);
-
-    .operator-feed-button-phone {
-      flex: 1;
-      height: 100%;
-    }
   }
 
   .top-bar {

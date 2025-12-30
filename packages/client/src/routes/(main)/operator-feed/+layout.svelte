@@ -38,7 +38,7 @@
     phoneActiveFeedView.set(value as "feed" | "stats")
   }
 
-  const onkeydown = e => {
+  const onkeydown = (e: KeyboardEvent) => {
     if (e.key === "Escape") {
       $operatorFeedPreviewOutcome = ""
     }
@@ -166,10 +166,6 @@
           grid-template-rows: 200px 1fr;
         }
       }
-    }
-
-    .more {
-      height: 60px;
     }
   }
   .phone-feed-container {
