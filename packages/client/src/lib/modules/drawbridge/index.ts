@@ -131,16 +131,22 @@ export const drawbridgeState = readable<DrawbridgeState>(
     error: null
   },
   set => {
+    let interval: ReturnType<typeof setInterval> | null = null
+    let unsubscribe: (() => void) | null = null
+
     // Subscribe when Drawbridge becomes available
-    const interval = setInterval(() => {
+    interval = setInterval(() => {
       if (drawbridgeInstance) {
-        clearInterval(interval)
-        const unsubscribe = drawbridgeInstance.subscribe(set)
-        return unsubscribe
+        if (interval) clearInterval(interval)
+        interval = null
+        unsubscribe = drawbridgeInstance.subscribe(set)
       }
     }, 100)
 
-    return () => clearInterval(interval)
+    return () => {
+      if (interval) clearInterval(interval)
+      if (unsubscribe) unsubscribe()
+    }
   }
 )
 
