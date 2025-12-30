@@ -136,12 +136,23 @@ export async function initPublicNetwork(
   const indexerStartTime = !configResult ? performance.now() : null
   const indexerUrlConfig = getIndexerUrlConfig(environment)
   const networkConfig = getNetworkConfig(environment, url, null, indexerUrlConfig)
-  const mudLayer = await setupPublicNetwork(
-    networkConfig,
-    import.meta.env.DEV,
-    undefined, // publicClient
-    initialBlockLogs // skip indexer when set
-  )
+
+  // Timeout for setupPublicNetwork to prevent Firefox hanging on refresh
+  const NETWORK_SETUP_TIMEOUT_MS = 30000
+  const mudLayer = await Promise.race([
+    setupPublicNetwork(
+      networkConfig,
+      import.meta.env.DEV,
+      undefined, // publicClient
+      initialBlockLogs // skip indexer when set
+    ),
+    new Promise<never>((_, reject) =>
+      setTimeout(() => {
+        logger.error(`Network setup timeout after ${NETWORK_SETUP_TIMEOUT_MS}ms`)
+        reject(new Error(`Network setup timeout after ${NETWORK_SETUP_TIMEOUT_MS}ms`))
+      }, NETWORK_SETUP_TIMEOUT_MS)
+    )
+  ])
   publicNetwork.set(mudLayer)
 
   // Wait for chain sync to complete (instant if we skipped indexer)
