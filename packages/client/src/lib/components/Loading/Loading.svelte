@@ -300,7 +300,7 @@
 
 <div class="loading" bind:this={loadingElement}>
   <div class="mc-logo" bind:this={logoElement}>
-    <img src="/images/logo.png" alt={UI_STRINGS.authorFullTitle} />
+    <enhanced:img src="../../../../static/images/logo.png" alt={UI_STRINGS.authorFullTitle} />
   </div>
   <div class="terminal-box" bind:this={terminalBoxElement}></div>
 </div>

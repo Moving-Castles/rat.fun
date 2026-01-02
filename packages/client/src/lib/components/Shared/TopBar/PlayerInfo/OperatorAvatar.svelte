@@ -6,7 +6,11 @@
 <div class="operator-avatar">
   <Tooltip content={UI_STRINGS.youIndication}>
     <div class="avatar">
-      <img src="/images/pfp.png" alt={UI_STRINGS.you} draggable={false} />
+      <enhanced:img
+        src="../../../../../../static/images/pfp.png"
+        alt={UI_STRINGS.you}
+        draggable={false}
+      />
     </div>
   </Tooltip>
 </div>

@@ -184,23 +184,43 @@
   <div class="logo" bind:this={logoElement}>
     <!-- LAYER 5-->
     <div class="layer layer-5" bind:this={layer5Element}>
-      <img src="/images/logo/logo-layer-5.png" draggable={false} alt="RAT.FUN" />
+      <enhanced:img
+        src="../../../../../static/images/logo/logo-layer-5.png"
+        draggable={false}
+        alt="RAT.FUN"
+      />
     </div>
     <!-- LAYER 4-->
     <div class="layer layer-4" bind:this={layer4Element}>
-      <img src="/images/logo/logo-layer-4.png" draggable={false} alt="RAT.FUN" />
+      <enhanced:img
+        src="../../../../../static/images/logo/logo-layer-4.png"
+        draggable={false}
+        alt="RAT.FUN"
+      />
     </div>
     <!-- LAYER 3-->
     <div class="layer layer-3" bind:this={layer3Element}>
-      <img src="/images/logo/logo-layer-3.png" draggable={false} alt="RAT.FUN" />
+      <enhanced:img
+        src="../../../../../static/images/logo/logo-layer-3.png"
+        draggable={false}
+        alt="RAT.FUN"
+      />
     </div>
     <!-- LAYER 2-->
     <div class="layer layer-2" bind:this={layer2Element}>
-      <img src="/images/logo/logo-layer-2.png" draggable={false} alt="RAT.FUN" />
+      <enhanced:img
+        src="../../../../../static/images/logo/logo-layer-2.png"
+        draggable={false}
+        alt="RAT.FUN"
+      />
     </div>
     <!-- LAYER 1 -->
     <div class="layer layer-1" bind:this={layer1Element}>
-      <img src="/images/logo/logo-layer-1.png" draggable={false} alt="RAT.FUN" />
+      <enhanced:img
+        src="../../../../../static/images/logo/logo-layer-1.png"
+        draggable={false}
+        alt="RAT.FUN"
+      />
     </div>
   </div>
   <!-- TARGET BUTTON -->

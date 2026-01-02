@@ -70,7 +70,7 @@
   <div class="column left" class:disabled>
     <div class="trip-image">
       {#if tripImageUrl}
-        <img src={tripImageUrl} alt={`trip #${trip.index}`} />
+        <enhanced:img src={tripImageUrl} alt={`trip #${trip.index}`} />
       {:else}
         <NoImage />
       {/if}

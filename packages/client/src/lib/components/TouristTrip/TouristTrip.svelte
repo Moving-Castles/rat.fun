@@ -105,7 +105,7 @@
             <div class="column left">
               <div class="trip-image">
                 {#if tripImageUrl}
-                  <img src={tripImageUrl} alt={`trip #${tripIndex}`} />
+                  <enhanced:img src={tripImageUrl} alt={`trip #${tripIndex}`} />
                 {:else}
                   <NoImage />
                 {/if}
