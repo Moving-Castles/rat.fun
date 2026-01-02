@@ -39,10 +39,10 @@
 </script>
 
 <div class="shader-container" in:fade={{ duration: 300 }}>
-  {#if !initFailed}
+  {#if !initFailed && !$singleFrameRender}
     <canvas bind:this={canvasElement} class="shader-canvas"></canvas>
   {:else}
-    <img src="/images/shaders/{shaderKey}.png" alt="shader fallback" />
+    <img class="shader-fallback" src="/images/shaders/{shaderKey}.png" alt="shader fallback" />
   {/if}
 </div>
 
@@ -53,7 +53,8 @@
     overflow: hidden;
     background: var(--background);
 
-    .shader-canvas {
+    .shader-canvas,
+    .shader-fallback {
       width: 100%;
       height: 100%;
       object-fit: cover;

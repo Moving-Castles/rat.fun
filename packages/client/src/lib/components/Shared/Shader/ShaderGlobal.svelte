@@ -1,21 +1,22 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte"
-  import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
+  import { shaderManager, shaderState } from "$lib/modules/webgl/shaders/index.svelte"
+  import { singleFrameRender } from "$lib/modules/ui/state.svelte"
 
   let canvas = $state<HTMLCanvasElement>()
+  let initFailed = $state(false)
 
   onMount(() => {
-    // Always ensure the global shaderManager has our canvas
     if (canvas) {
-      // Set the canvas on the global shaderManager
-      shaderManager.canvas = canvas
-
-      // If shaders were previously disabled due to context exhaustion,
-      // the canvas might be hidden. Try to restore it.
-      if (shaderManager.isContextExhausted && canvas) {
-        console.log(
-          "[ShaderGlobal] Context was exhausted, canvas will remain hidden until recovery"
-        )
+      try {
+        shaderManager.canvas = canvas
+        initFailed = false
+      } catch (error) {
+        initFailed = true
+        // Hide canvas to show CSS black background
+        if (canvas) {
+          canvas.style.display = "none"
+        }
       }
     }
   })
@@ -23,11 +24,22 @@
   onDestroy(() => {
     // Don't destroy the global shader manager here as it's shared across the app
     // The global shader manager should persist for the lifetime of the app
+    // Instead, this manager should be destroyed by the root layout.
   })
 </script>
 
 <div class="shader-container">
-  <canvas bind:this={canvas} class="shader-canvas"></canvas>
+  {#if !initFailed || ($singleFrameRender && shaderManager.currentShaderKey?.includes("tripProcessing"))}
+    <canvas bind:this={canvas} class="shader-canvas"></canvas>
+  {:else if shaderState.currentShaderKey}
+    {#key shaderState.currentShaderKey}
+      <img
+        class="shader-fallback"
+        src="/images/shaders/{shaderState.currentShaderKey}.png"
+        alt="shader fallback"
+      />
+    {/key}
+  {/if}
 </div>
 
 <style lang="scss">
@@ -42,7 +54,8 @@
     background: var(--background);
   }
 
-  .shader-canvas {
+  .shader-canvas,
+  .shader-fallback {
     display: block;
     object-fit: cover;
     width: 100%;
