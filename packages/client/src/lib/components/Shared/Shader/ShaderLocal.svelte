@@ -42,11 +42,7 @@
   {#if !initFailed && !$singleFrameRender}
     <canvas bind:this={canvasElement} class="shader-canvas"></canvas>
   {:else}
-    <img
-      class="shader-fallback"
-      src="/images/shaders/{shaderKey}.png"
-      alt="shader fallback"
-    />
+    <img class="shader-fallback" src="/images/shaders/{shaderKey}.png" alt="shader fallback" />
   {/if}
 </div>
 

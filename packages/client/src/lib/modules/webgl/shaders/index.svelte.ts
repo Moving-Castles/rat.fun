@@ -19,7 +19,7 @@ class ReactiveShaderState {
 
   constructor() {
     // Subscribe to shader changes from the manager
-    shaderManager.onShaderChange((key) => {
+    shaderManager.onShaderChange(key => {
       this.currentShaderKey = key
     })
   }

@@ -40,20 +40,20 @@
   })
 
   // Preset sizes
-  const presets = [
+  const presets = $derived([
     { name: "Mobile", width: 375, height: 667 },
     { name: "Tablet", width: 768, height: 1024 },
     { name: "Desktop", width: 1920, height: 1080 },
     { name: "Square", width: 800, height: 800 },
     { name: "Custom", width: canvasWidth, height: canvasHeight }
-  ]
+  ])
 
   let selectedPreset = $state("Custom")
 
   // Apply preset
   function applyPreset(presetName: string) {
     selectedPreset = presetName
-    const preset = presets.find((p) => p.name === presetName)
+    const preset = presets.find(p => p.name === presetName)
     if (preset) {
       canvasWidth = preset.width
       canvasHeight = preset.height
@@ -124,7 +124,7 @@
         parsedValue = parseFloat(uniformValue)
       } else {
         // vec2, vec3, vec4
-        parsedValue = uniformValue.split(",").map((v) => parseFloat(v.trim()))
+        parsedValue = uniformValue.split(",").map(v => parseFloat(v.trim()))
       }
 
       customUniforms[uniformName] = {
@@ -228,7 +228,6 @@
         onkeydown={handleKeydown}
         placeholder="Password"
         class:error={passwordError}
-        autofocus
       />
       {#if passwordError}
         <p class="error-message">Incorrect password</p>
@@ -243,10 +242,7 @@
     <div class="controls">
       <div class="control-group">
         <label for="shader-select">Shader:</label>
-        <select
-          id="shader-select"
-          bind:value={selectedShader}
-        >
+        <select id="shader-select" bind:value={selectedShader}>
           {#each shaderKeys as key}
             <option value={key}>{key}</option>
           {/each}
@@ -320,11 +316,7 @@
         <h2>Custom Uniforms</h2>
 
         <div class="uniform-form">
-          <input
-            type="text"
-            bind:value={uniformName}
-            placeholder="Uniform name (e.g., u_color)"
-          />
+          <input type="text" bind:value={uniformName} placeholder="Uniform name (e.g., u_color)" />
           <select bind:value={uniformType}>
             <option value="float">float</option>
             <option value="vec2">vec2</option>

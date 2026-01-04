@@ -262,7 +262,7 @@
         border: 5px solid var(--foreground-light-transparent);
         overflow: hidden;
 
-        img {
+        :global(img) {
           display: block;
           width: 100%;
           height: 100%;
