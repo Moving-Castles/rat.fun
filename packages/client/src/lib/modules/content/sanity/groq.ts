@@ -39,10 +39,12 @@ const tripFolderList =
  * Contains:
  *   - whitelist: array of addresses allowed to create challenge trips
  *   - dailyChallengeTime: time in CET when daily challenge becomes available (e.g. "14:00")
+ *   - nextChallengeDay: number of days from today when next challenge occurs (1 = tomorrow)
  *   - challengeTitle: optional title for the current/upcoming challenge
  * Used for: Challenge trip access control and countdown display
  */
-const challenge = '*[_id == "challenge"][0]{ whitelist, dailyChallengeTime, challengeTitle }'
+const challenge =
+  '*[_id == "challenge"][0]{ whitelist, dailyChallengeTime, nextChallengeDay, challengeTitle }'
 
 // =============================================================================
 // COLLECTION QUERIES (filtered by worldAddress)
@@ -185,6 +187,7 @@ const recentOutcomesForFeed = `*[_type == "outcome" && worldAddress == $worldAdd
  *   - tripFolders: folder organization config
  *   - tripFolderWhitelist: addresses with folder access (from Challenge doc)
  *   - dailyChallengeTime: time in CET when daily challenge becomes available
+ *   - nextChallengeDay: number of days from today when next challenge occurs (1 = tomorrow)
  *   - challengeTitle: optional title for the current/upcoming challenge
  *
  * NOTE: Trips are loaded separately via initTrips() after spawn,
@@ -197,6 +200,7 @@ const staticContent = `{
   "tripFolders": ${tripFolderList}.folders,
   "tripFolderWhitelist": ${challenge}.whitelist,
   "dailyChallengeTime": ${challenge}.dailyChallengeTime,
+  "nextChallengeDay": ${challenge}.nextChallengeDay,
   "challengeTitle": ${challenge}.challengeTitle
 }`
 
@@ -213,6 +217,7 @@ const staticContentFull = `{
   "tripFolders": ${tripFolderList}.folders,
   "tripFolderWhitelist": ${challenge}.whitelist,
   "dailyChallengeTime": ${challenge}.dailyChallengeTime,
+  "nextChallengeDay": ${challenge}.nextChallengeDay,
   "challengeTitle": ${challenge}.challengeTitle
 }`
 

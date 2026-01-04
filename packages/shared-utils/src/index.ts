@@ -609,6 +609,30 @@ export function getNextCETTime(timeStr: string): Date {
 }
 
 /**
+ * Calculate a specific CET/CEST time N days from today.
+ * Useful for scheduling events a specific number of days in the future.
+ * Correctly handles DST transitions using date-fns-tz.
+ * @param timeStr Time in HH:MM format (e.g., "16:00")
+ * @param daysFromToday Number of days from today (1 = tomorrow, 2 = day after tomorrow, etc.)
+ * @returns Date object representing that time in Berlin timezone on the target day
+ */
+export function getTargetCETTime(timeStr: string, daysFromToday: number): Date {
+  const now = new Date()
+  const berlinNow = toZonedTime(now, BERLIN_TZ)
+
+  // Parse the time string
+  const [hours, minutes] = timeStr.padStart(5, "0").split(":").map(Number)
+
+  // Create target date in Berlin timezone
+  const targetInBerlin = new Date(berlinNow)
+  targetInBerlin.setDate(targetInBerlin.getDate() + daysFromToday)
+  targetInBerlin.setHours(hours, minutes, 0, 0)
+
+  // Convert from Berlin time to UTC - this handles DST correctly
+  return fromZonedTime(targetInBerlin, BERLIN_TZ)
+}
+
+/**
  * Format a countdown diff (in ms) to a human-readable string
  */
 export function formatCountdown(diff: number): string {

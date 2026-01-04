@@ -58,6 +58,13 @@
         },
         "optional": true
       },
+      "nextChallengeDay": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "number"
+        },
+        "optional": true
+      },
       "challengeTitle": {
         "type": "objectAttribute",
         "value": {

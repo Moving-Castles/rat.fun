@@ -3,7 +3,7 @@
   import { goto } from "$app/navigation"
   import type { TripFolder } from "@sanity-types"
   import { playSound } from "$lib/modules/sound"
-  import { getTodayCETTime, getNextCETTime, formatCountdown } from "@ratfun/shared-utils"
+  import { getTodayCETTime, getTargetCETTime, formatCountdown } from "@ratfun/shared-utils"
 
   const GRACE_PERIOD_MS = 10 * 60 * 1000 // 10 minutes
   const WINNER_DISPLAY_DURATION_MS = 15 * 60 * 1000 // 15 minutes
@@ -14,6 +14,7 @@
     challengeTripId,
     attemptCount,
     dailyChallengeTime,
+    nextChallengeDay,
     challengeTitle,
     lastWinnerName,
     lastWinTimestamp
@@ -23,6 +24,7 @@
     challengeTripId?: string
     attemptCount?: number
     dailyChallengeTime?: string | null
+    nextChallengeDay?: number | null // Days from today (1 = tomorrow)
     challengeTitle?: string | null
     lastWinnerName?: string | null
     lastWinTimestamp?: number | null // Unix timestamp in ms
@@ -64,7 +66,26 @@
       return
     }
 
-    // Priority 4: Check if we're in grace period or countdown
+    // If nextChallengeDay is set and > 1, show countdown to that specific day
+    // (values of 0, 1, null, undefined all mean "tomorrow or today" - original behavior)
+    const targetDays = nextChallengeDay && nextChallengeDay > 1 ? nextChallengeDay : null
+
+    if (targetDays !== null) {
+      // Fixed target day in the future - just show countdown
+      displayState = "countdown"
+      const target = getTargetCETTime(dailyChallengeTime, targetDays).getTime()
+      const diff = target - now
+
+      if (diff <= 0) {
+        countdownText = "Starting soon..."
+        return
+      }
+
+      countdownText = formatCountdown(diff)
+      return
+    }
+
+    // Original behavior: Check if we're in grace period or countdown to tomorrow
     const todayTarget = getTodayCETTime(dailyChallengeTime).getTime()
     const timeSinceTarget = now - todayTarget
 
@@ -76,12 +97,12 @@
         countdownText = "Starting soon..."
         return
       }
-      // Grace period expired - show countdown to next day
+      // Grace period expired - show countdown to tomorrow
     }
 
-    // Show countdown to next occurrence
+    // Show countdown to tomorrow (1 day from today)
     displayState = "countdown"
-    const target = getNextCETTime(dailyChallengeTime).getTime()
+    const target = getTargetCETTime(dailyChallengeTime, 1).getTime()
     const diff = target - now
 
     if (diff <= 0) {

@@ -230,6 +230,7 @@
         challengeTripId={challengeTripData?.tripId}
         challengeTripAttempts={challengeTripData?.visitCount}
         dailyChallengeTime={$staticContent.dailyChallengeTime}
+        nextChallengeDay={$staticContent.nextChallengeDay}
         challengeTitle={$staticContent.challengeTitle}
         {lastWinnerName}
         {lastWinTimestamp}

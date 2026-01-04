@@ -38,6 +38,7 @@ export type StaticContent = {
   tripFolders: SanityTripFolder[]
   tripFolderWhitelist: string[]
   dailyChallengeTime: string | null // Time in CET format (e.g. "14:00")
+  nextChallengeDay: number | null // Days from today when next challenge occurs (1 = tomorrow)
   challengeTitle: string | null // Optional title for the current/upcoming challenge
 }
 
@@ -50,6 +51,7 @@ export const staticContent = writable<StaticContent>({
   tripFolders: [] as SanityTripFolder[],
   tripFolderWhitelist: [] as string[],
   dailyChallengeTime: null,
+  nextChallengeDay: null,
   challengeTitle: null
 })
 
@@ -103,6 +105,7 @@ export async function initStaticContent(worldAddress: string) {
     tripFolders: data.tripFolders || [],
     tripFolderWhitelist: data.tripFolderWhitelist || [],
     dailyChallengeTime: data.dailyChallengeTime || null,
+    nextChallengeDay: data.nextChallengeDay ?? null,
     challengeTitle: data.challengeTitle || null
     // Don't touch trips/outcomes - they're loaded separately via initTrips()/initPlayerOutcomes()
   }))
@@ -140,6 +143,7 @@ export async function initStaticContent(worldAddress: string) {
         ...content,
         tripFolderWhitelist: (result.whitelist as string[]) || [],
         dailyChallengeTime: (result.dailyChallengeTime as string) || null,
+        nextChallengeDay: (result.nextChallengeDay as number) ?? null,
         challengeTitle: (result.challengeTitle as string) || null
       }))
     }
