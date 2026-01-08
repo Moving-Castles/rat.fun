@@ -39,56 +39,56 @@
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "worldAddress": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "playerId": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "playerName": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "tripId": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "tripIndex": {
         "type": "objectAttribute",
         "value": {
           "type": "number"
         },
-        "optional": true
+        "optional": false
       },
       "ratId": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "ratName": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "log": {
         "type": "objectAttribute",
@@ -266,6 +266,50 @@
         },
         "optional": true
       },
+      "inventoryOnEntrance": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "array",
+          "of": {
+            "type": "object",
+            "attributes": {
+              "name": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                },
+                "optional": true
+              },
+              "value": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "number"
+                },
+                "optional": true
+              },
+              "id": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                },
+                "optional": true
+              }
+            },
+            "rest": {
+              "type": "object",
+              "attributes": {
+                "_key": {
+                  "type": "objectAttribute",
+                  "value": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "optional": true
+      },
       "oldTripValue": {
         "type": "objectAttribute",
         "value": {
@@ -278,14 +322,14 @@
         "value": {
           "type": "number"
         },
-        "optional": true
+        "optional": false
       },
       "tripValue": {
         "type": "objectAttribute",
         "value": {
           "type": "number"
         },
-        "optional": true
+        "optional": false
       },
       "oldRatValue": {
         "type": "objectAttribute",
@@ -299,14 +343,14 @@
         "value": {
           "type": "number"
         },
-        "optional": true
+        "optional": false
       },
       "ratValue": {
         "type": "objectAttribute",
         "value": {
           "type": "number"
         },
-        "optional": true
+        "optional": false
       },
       "oldRatBalance": {
         "type": "objectAttribute",
@@ -341,7 +385,7 @@
         "value": {
           "type": "number"
         },
-        "optional": true
+        "optional": false
       },
       "slug": {
         "type": "objectAttribute",
@@ -371,7 +415,7 @@
           "value": {
             "type": "string"
           },
-          "optional": true
+          "optional": false
         },
         "source": {
           "type": "objectAttribute",
@@ -423,7 +467,7 @@
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "eventPromptA": {
         "type": "objectAttribute",
@@ -453,7 +497,7 @@
           },
           "dereferencesTo": "prompt"
         },
-        "optional": true
+        "optional": false
       },
       "eventPromptB": {
         "type": "objectAttribute",
@@ -483,7 +527,7 @@
           },
           "dereferencesTo": "prompt"
         },
-        "optional": true
+        "optional": false
       },
       "correctionPromptA": {
         "type": "objectAttribute",
@@ -513,7 +557,7 @@
           },
           "dereferencesTo": "prompt"
         },
-        "optional": true
+        "optional": false
       },
       "correctionPromptB": {
         "type": "objectAttribute",
@@ -543,7 +587,7 @@
           },
           "dereferencesTo": "prompt"
         },
-        "optional": true
+        "optional": false
       }
     }
   },
@@ -587,7 +631,7 @@
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "activeEventPrompt": {
         "type": "objectAttribute",
@@ -617,7 +661,7 @@
           },
           "dereferencesTo": "prompt"
         },
-        "optional": true
+        "optional": false
       },
       "activeCorrectionPrompt": {
         "type": "objectAttribute",
@@ -647,7 +691,7 @@
           },
           "dereferencesTo": "prompt"
         },
-        "optional": true
+        "optional": false
       }
     }
   },
@@ -691,7 +735,7 @@
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "prompt": {
         "type": "objectAttribute",
@@ -899,21 +943,21 @@
           "value": {
             "type": "number"
           },
-          "optional": true
+          "optional": false
         },
         "width": {
           "type": "objectAttribute",
           "value": {
             "type": "number"
           },
-          "optional": true
+          "optional": false
         },
         "aspectRatio": {
           "type": "objectAttribute",
           "value": {
             "type": "number"
           },
-          "optional": true
+          "optional": false
         }
       }
     }
@@ -1004,28 +1048,28 @@
           "value": {
             "type": "number"
           },
-          "optional": true
+          "optional": false
         },
         "y": {
           "type": "objectAttribute",
           "value": {
             "type": "number"
           },
-          "optional": true
+          "optional": false
         },
         "height": {
           "type": "objectAttribute",
           "value": {
             "type": "number"
           },
-          "optional": true
+          "optional": false
         },
         "width": {
           "type": "objectAttribute",
           "value": {
             "type": "number"
           },
-          "optional": true
+          "optional": false
         }
       }
     }
@@ -1048,28 +1092,28 @@
           "value": {
             "type": "number"
           },
-          "optional": true
+          "optional": false
         },
         "bottom": {
           "type": "objectAttribute",
           "value": {
             "type": "number"
           },
-          "optional": true
+          "optional": false
         },
         "left": {
           "type": "objectAttribute",
           "value": {
             "type": "number"
           },
-          "optional": true
+          "optional": false
         },
         "right": {
           "type": "objectAttribute",
           "value": {
             "type": "number"
           },
-          "optional": true
+          "optional": false
         }
       }
     }

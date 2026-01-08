@@ -19,14 +19,14 @@ export type Outcome = {
   _createdAt: string
   _updatedAt: string
   _rev: string
-  title?: string
-  worldAddress?: string
-  playerId?: string
-  playerName?: string
-  tripId?: string
-  tripIndex?: number
-  ratId?: string
-  ratName?: string
+  title: string
+  worldAddress: string
+  playerId: string
+  playerName: string
+  tripId: string
+  tripIndex: number
+  ratId: string
+  ratName: string
   log?: Array<{
     timestamp?: string
     event?: string
@@ -58,22 +58,22 @@ export type Outcome = {
     _key: string
   }>
   oldTripValue?: number
-  tripValueChange?: number
-  tripValue?: number
+  tripValueChange: number
+  tripValue: number
   oldRatValue?: number
-  ratValueChange?: number
-  ratValue?: number
+  ratValueChange: number
+  ratValue: number
   oldRatBalance?: number
   newRatBalance?: number
   debuggingInfo?: string
   logOutput?: string
-  mainProcessingTime?: number
+  mainProcessingTime: number
   slug?: Slug
 }
 
 export type Slug = {
   _type: "slug"
-  current?: string
+  current: string
   source?: string
 }
 
@@ -83,26 +83,26 @@ export type TestPrompts = {
   _createdAt: string
   _updatedAt: string
   _rev: string
-  title?: string
-  eventPromptA?: {
+  title: string
+  eventPromptA: {
     _ref: string
     _type: "reference"
     _weak?: boolean
     [internalGroqTypeReferenceTo]?: "prompt"
   }
-  eventPromptB?: {
+  eventPromptB: {
     _ref: string
     _type: "reference"
     _weak?: boolean
     [internalGroqTypeReferenceTo]?: "prompt"
   }
-  correctionPromptA?: {
+  correctionPromptA: {
     _ref: string
     _type: "reference"
     _weak?: boolean
     [internalGroqTypeReferenceTo]?: "prompt"
   }
-  correctionPromptB?: {
+  correctionPromptB: {
     _ref: string
     _type: "reference"
     _weak?: boolean
@@ -116,14 +116,14 @@ export type ActivePrompts = {
   _createdAt: string
   _updatedAt: string
   _rev: string
-  title?: string
-  activeEventPrompt?: {
+  title: string
+  activeEventPrompt: {
     _ref: string
     _type: "reference"
     _weak?: boolean
     [internalGroqTypeReferenceTo]?: "prompt"
   }
-  activeCorrectionPrompt?: {
+  activeCorrectionPrompt: {
     _ref: string
     _type: "reference"
     _weak?: boolean
@@ -137,7 +137,7 @@ export type Prompt = {
   _createdAt: string
   _updatedAt: string
   _rev: string
-  title?: string
+  title: string
   prompt?: Markdown
   returnFormat?: Code
 }
@@ -173,9 +173,9 @@ export type SanityImagePalette = {
 
 export type SanityImageDimensions = {
   _type: "sanity.imageDimensions"
-  height?: number
-  width?: number
-  aspectRatio?: number
+  height: number
+  width: number
+  aspectRatio: number
 }
 
 export type SanityImageMetadata = {
@@ -191,18 +191,18 @@ export type SanityImageMetadata = {
 
 export type SanityImageHotspot = {
   _type: "sanity.imageHotspot"
-  x?: number
-  y?: number
-  height?: number
-  width?: number
+  x: number
+  y: number
+  height: number
+  width: number
 }
 
 export type SanityImageCrop = {
   _type: "sanity.imageCrop"
-  top?: number
-  bottom?: number
-  left?: number
-  right?: number
+  top: number
+  bottom: number
+  left: number
+  right: number
 }
 
 export type SanityFileAsset = {

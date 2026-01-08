@@ -124,14 +124,22 @@ async function routes(fastify: FastifyInstance) {
         // Call event model
         // * * * * * * * * * * * * * * * * * *
 
+        // Use challenge model for challenge trips
+        const eventModel = trip.challengeTrip
+          ? process.env.CHALLENGE_MODEL!
+          : process.env.EVENT_MODEL!
+        const eventTemperature = trip.challengeTrip
+          ? Number(process.env.CHALLENGE_TEMPERATURE)
+          : Number(process.env.EVENT_TEMPERATURE)
+
         const eventLLMStart = performance.now()
-        logger.log("Calling event LLM...")
+        logger.log(`Calling event LLM (model: ${eventModel})...`)
         const eventResults = await callModel(
           llmClient,
           eventMessages,
           combinedSystemPrompt,
-          process.env.EVENT_MODEL!,
-          Number(process.env.EVENT_TEMPERATURE),
+          eventModel,
+          eventTemperature,
           EventsReturnValueSchema
         )
         logger.log(`✓ Event LLM completed (${Math.round(performance.now() - eventLLMStart)}ms)`)

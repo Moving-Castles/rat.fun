@@ -16,7 +16,9 @@ const requiredEnvVars = [
   "EVENT_MODEL",
   "EVENT_TEMPERATURE",
   "CORRECTION_MODEL",
-  "CORRECTION_TEMPERATURE"
+  "CORRECTION_TEMPERATURE",
+  "CHALLENGE_MODEL",
+  "CHALLENGE_TEMPERATURE"
 ] as const
 
 for (const envVar of requiredEnvVars) {

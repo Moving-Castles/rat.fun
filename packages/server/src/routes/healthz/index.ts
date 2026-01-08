@@ -16,6 +16,12 @@ async function routes(fastify: FastifyInstance, _options: object) {
           model: process.env.EVENT_MODEL || "unknown",
           temperature: process.env.EVENT_TEMPERATURE ? Number(process.env.EVENT_TEMPERATURE) : null
         },
+        challenge: {
+          model: process.env.CHALLENGE_MODEL || "unknown",
+          temperature: process.env.CHALLENGE_TEMPERATURE
+            ? Number(process.env.CHALLENGE_TEMPERATURE)
+            : null
+        },
         correction: {
           model: process.env.CORRECTION_MODEL || "unknown",
           temperature: process.env.CORRECTION_TEMPERATURE
