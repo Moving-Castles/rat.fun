@@ -5,7 +5,7 @@
   import { processingRat } from "$lib/components/GameRun/state.svelte"
   import { HEALTH_SYMBOL } from "$lib/modules/ui/constants"
   import { backgroundMusic } from "$lib/modules/sound/stores"
-  import { addEasedCountAnimation } from "$lib/modules/animations"
+  import { addEasedCountAnimation, triggerScreenShake } from "$lib/modules/animations"
   import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
 
   let {
@@ -70,10 +70,20 @@
     })
 
     // Count using absolute value (no sign)
+    const absValue = Math.abs(value)
     addEasedCountAnimation({
       timeline,
       valueElement,
-      value: Math.abs(value)
+      value: absValue,
+      // Trigger shake when counter reaches 1000
+      threshold: 1000,
+      onThresholdReached: (remainingDuration) => {
+        // Scale intensity based on value size
+        // 1000-5000: 0.5 intensity
+        // 5000+: 1.0 intensity (max)
+        const intensity = absValue > 5000 ? 1.0 : 0.5
+        triggerScreenShake(intensity, remainingDuration)
+      }
     })
 
     // Reveal heart symbol, sign, and background color

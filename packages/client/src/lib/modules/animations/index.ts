@@ -184,6 +184,12 @@ export interface EasedCountAnimationConfig {
   endPitch?: number
   /** Whether to play counter tick sounds */
   playTickSound?: boolean
+  /** Maximum duration for the animation in seconds (default: 15) */
+  maxDuration?: number
+  /** Threshold value to trigger callback (e.g., 1000) */
+  threshold?: number
+  /** Callback when counter reaches threshold, receives remaining duration in seconds */
+  onThresholdReached?: (remainingDuration: number) => void
 }
 
 /**
@@ -221,7 +227,10 @@ export function addEasedCountAnimation(config: EasedCountAnimationConfig): void 
     easing = (t: number) => t, // Default to linear
     startPitch = 0.8,
     endPitch = 2.0,
-    playTickSound = true
+    playTickSound = true,
+    maxDuration = 15,
+    threshold,
+    onThresholdReached
   } = config
 
   const isNegative = value < 0
@@ -229,33 +238,178 @@ export function addEasedCountAnimation(config: EasedCountAnimationConfig): void 
 
   if (absValue === 0) return
 
+  // Determine sampling strategy based on value size
+  // - <500: No sampling, natural duration
+  // - 500-10,000: No sampling, but scale to use full maxDuration for dramatic effect
+  // - >10,000: Sample every 100 for performance
+  const sampleInterval = absValue > 10000 ? 100 : 1
+  const effectiveCount = Math.floor(absValue / sampleInterval)
+
+  // Calculate estimated duration with current delays
+  const averageDelay = (startDelay + endDelay) / 2
+  const estimatedDuration = effectiveCount * averageDelay
+
+  // Scale delays based on strategy
+  let scaledStartDelay = startDelay
+  let scaledEndDelay = endDelay
+
+  if (absValue >= 500) {
+    // For big wins (500+), always scale to use full maxDuration for impact
+    const scaleFactor = maxDuration / estimatedDuration
+    scaledStartDelay = startDelay * scaleFactor
+    scaledEndDelay = endDelay * scaleFactor
+  } else if (estimatedDuration > maxDuration) {
+    // For smaller values, only scale if they would exceed maxDuration
+    const scaleFactor = maxDuration / estimatedDuration
+    scaledStartDelay = startDelay * scaleFactor
+    scaledEndDelay = endDelay * scaleFactor
+  }
+
+  // For very large values, reduce sound frequency to avoid audio spam
+  const soundInterval = absValue > 10000 ? 10 : 1
+
+  // Track accumulated time for threshold callback
+  let accumulatedTime = 0
+  let thresholdTriggered = false
+
   // Count update helper
-  const updateCountValue = (count: number, pitch: number) => {
+  const updateCountValue = (count: number, pitch: number, shouldPlaySound: boolean) => {
     const displayValue = isNegative ? -count : count
     valueElement.textContent = String(displayValue)
 
-    if (playTickSound) {
+    if (playTickSound && shouldPlaySound) {
       playSound({ category: "ratfunUI", id: "counterTick", pitch })
     }
   }
 
-  // Build timeline with eased delays
-  for (let i = 1; i <= absValue; i++) {
+  // Build timeline with eased delays and sampling
+  for (let i = 1; i <= effectiveCount; i++) {
+    const currentCount = i * sampleInterval
+
     // Calculate progress through the count (0 to 1)
-    const progress = absValue === 1 ? 1 : (i - 1) / (absValue - 1)
+    const progress = effectiveCount === 1 ? 1 : (i - 1) / (effectiveCount - 1)
 
     // Apply easing to progress
     const easedProgress = easing(progress)
 
-    // Interpolate delay based on eased progress
-    const currentDelay = startDelay + (endDelay - startDelay) * easedProgress
+    // Interpolate delay based on eased progress (using scaled delays)
+    const currentDelay = scaledStartDelay + (scaledEndDelay - scaledStartDelay) * easedProgress
 
     // Interpolate pitch based on eased progress
     const currentPitch = startPitch + (endPitch - startPitch) * easedProgress
 
+    // Determine if sound should play this step
+    const shouldPlaySound = i % soundInterval === 0
+
     // Determine position
     const position = i === 1 ? ">-0.05" : `+=${currentDelay}`
 
-    timeline.call(updateCountValue, [i, currentPitch], position)
+    // Add to accumulated time
+    if (i > 1) {
+      accumulatedTime += currentDelay
+    }
+
+    // Check if we've reached the threshold
+    if (threshold && onThresholdReached && !thresholdTriggered && currentCount >= threshold) {
+      // Calculate remaining duration from threshold to end
+      const remainingSteps = effectiveCount - i
+      let remainingDuration = 0
+
+      // Sum up remaining delays
+      for (let j = i + 1; j <= effectiveCount; j++) {
+        const futureProgress = effectiveCount === 1 ? 1 : (j - 1) / (effectiveCount - 1)
+        const futureEasedProgress = easing(futureProgress)
+        const futureDelay =
+          scaledStartDelay + (scaledEndDelay - scaledStartDelay) * futureEasedProgress
+        remainingDuration += futureDelay
+      }
+
+      // Trigger callback at this position in timeline
+      timeline.call(() => onThresholdReached(remainingDuration), [], position)
+      thresholdTriggered = true
+    }
+
+    timeline.call(updateCountValue, [currentCount, currentPitch, shouldPlaySound], position)
   }
+}
+
+/**
+ * Triggers a screen shake effect on the document body
+ *
+ * Creates a dramatic shake animation using GSAP that moves the entire
+ * page container in x/y directions with elastic easing.
+ *
+ * @param intensity - Shake intensity (0-1 scale, where 1 is max shake). Default: 1
+ * @param duration - Duration of the shake in seconds. Default: 0.5
+ *
+ * @example
+ * ```ts
+ * // Trigger a strong shake for big wins
+ * triggerScreenShake(1.0, 0.8)
+ *
+ * // Trigger a medium shake
+ * triggerScreenShake(0.5, 0.5)
+ * ```
+ */
+export function triggerScreenShake(intensity: number = 1, duration: number = 0.5): void {
+  // Only shake if we're in a browser environment
+  if (typeof window === "undefined" || typeof document === "undefined") return
+
+  // Target the main game container instead of body
+  // This avoids affecting fixed overlays (toasts, lightboxes, modals)
+  const target = document.querySelector(".bg") as HTMLElement
+
+  if (!target) {
+    console.warn("Screen shake target (.bg) not found")
+    return
+  }
+
+  // Import gsap dynamically to ensure it's available
+  import("gsap").then(({ gsap }) => {
+    // Calculate shake distance based on intensity
+    const maxShake = 35 * intensity // Max pixels to shake (increased for more vigorous effect)
+
+    // For long durations, repeat the shake pattern
+    // Each shake cycle is ~0.6s with 8 keyframes
+    const shakeCycleDuration = 0.1
+    const shakeCount = 12
+    const cycleCount = Math.ceil(duration / shakeCycleDuration)
+
+    // Create a timeline for the shake
+    const shakeTimeline = gsap.timeline()
+
+    // Generate shake cycles
+    for (let cycle = 0; cycle < cycleCount; cycle++) {
+      // Fade in intensity from nothing to full over the duration
+      const cycleProgress = cycle / Math.max(1, cycleCount - 1)
+      // Use power curve for smoother ramp: slow start, faster growth, full intensity at end
+      const intensityFactor = Math.pow(cycleProgress, 0.7)
+      const cycleIntensity = intensityFactor * maxShake
+
+      // Each cycle has multiple shake keyframes
+      for (let i = 0; i < shakeCount; i++) {
+        const keyframeProgress = i / shakeCount
+        // Slight decay within each cycle for natural motion
+        const currentIntensity = (1 - keyframeProgress * 0.3) * cycleIntensity
+
+        const x = (Math.random() - 0.5) * 2 * currentIntensity
+        const y = (Math.random() - 0.5) * 2 * currentIntensity
+
+        shakeTimeline.to(target, {
+          x,
+          y,
+          duration: shakeCycleDuration / shakeCount,
+          ease: "power2.out"
+        })
+      }
+    }
+
+    // Reset to original position at the end
+    shakeTimeline.to(target, {
+      x: 0,
+      y: 0,
+      duration: shakeCycleDuration / shakeCount,
+      ease: "power2.out"
+    })
+  })
 }

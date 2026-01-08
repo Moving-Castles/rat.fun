@@ -80,6 +80,18 @@
   <LogStatus status="START" onTimeline={timeline => addToTimeline(timeline)} />
   <LogInventory onTimeline={timeline => addToTimeline(timeline)} />
   {#if mergedLog && mergedLog.length > 0}
+    <!-- <LogItem
+      logEntry={{
+        timestamp: "0",
+        event: "YOU WIN EVERYTHING",
+        balanceTransfer: {
+          logStep: 1,
+          amount: 10000
+        }
+      }}
+      onTimeline={timeline => addToTimeline(timeline)}
+      delay={0}
+    /> -->
     {#each mergedLog as logEntry, i (i)}
       <LogItem {logEntry} onTimeline={timeline => addToTimeline(timeline)} delay={0} />
     {/each}

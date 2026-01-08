@@ -3,7 +3,7 @@
   import { updateProcessingState } from "$lib/components/GameRun/state.svelte"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import { playSound } from "$lib/modules/sound"
-  import { addEasedCountAnimation } from "$lib/modules/animations"
+  import { addEasedCountAnimation, triggerScreenShake } from "$lib/modules/animations"
 
   let {
     id,
@@ -80,7 +80,16 @@
       addEasedCountAnimation({
         timeline,
         valueElement,
-        value: value - 1
+        value: value - 1,
+        // Trigger shake when counter reaches 1000
+        threshold: 1000,
+        onThresholdReached: (remainingDuration) => {
+          // Scale intensity based on value size
+          // 1000-5000: 0.5 intensity
+          // 5000+: 1.0 intensity (max)
+          const intensity = value > 5000 ? 1.0 : 0.5
+          triggerScreenShake(intensity, remainingDuration)
+        }
       })
     }
 
