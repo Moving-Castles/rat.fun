@@ -2,13 +2,14 @@
   import { BigButton } from "$lib/components/Shared"
 
   function goToRatFun() {
-    window.location.href = "https://rat.fun"
+    window.location.href =
+      "https://matcha.xyz/tokens/base/0xf2dd384662411a21259ab17038574289091f2d41"
   }
 </script>
 
 <div class="ended">
   <div class="content">
-    <div class="title">SALE ENDED</div>
+    <div class="title">BUY $RAT</div>
     <div class="button-container">
       <BigButton text="GO TO RAT.FUN" onclick={goToRatFun} />
     </div>
