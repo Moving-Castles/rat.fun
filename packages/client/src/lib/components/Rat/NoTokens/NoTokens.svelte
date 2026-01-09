@@ -35,7 +35,10 @@
   })
 
   const goToSale = () => {
-    window.open("https://sale.rat.fun", "_blank")
+    window.open(
+      "https://matcha.xyz/tokens/base/0xf2dd384662411a21259ab17038574289091f2d41",
+      "_blank"
+    )
   }
 </script>
 
