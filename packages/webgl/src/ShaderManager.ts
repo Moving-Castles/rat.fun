@@ -33,6 +33,12 @@ export class ShaderManager {
   private preserveDrawingBuffer: boolean
   currentShaderKey: string | null = null
   private shaderChangeListeners: Array<(shaderKey: string | null) => void> = []
+  private shaderChangeTimeout: ReturnType<typeof setTimeout> | null = null
+  private pendingShaderChange: {
+    shaderKey: string
+    inverted: boolean
+    uniforms?: Record<string, { type: UniformType; value: number | boolean | number[] }>
+  } | null = null
 
   constructor(options: ShaderManagerOptions) {
     this.errorHandler = options.errorHandler
@@ -138,7 +144,7 @@ export class ShaderManager {
   }
 
   /**
-   * Set new shader programmatically
+   * Set new shader programmatically (with debouncing to prevent rapid context creation/destruction)
    */
   setShader(
     shaderKey: string,
@@ -162,63 +168,92 @@ export class ShaderManager {
       Object.entries(this.customUniforms).forEach(([name, uniform]) => {
         this._renderer?.setUniform(name, uniform.value, uniform.type)
       })
+      // Clear any pending shader change since we're already on this shader
+      if (this.shaderChangeTimeout) {
+        clearTimeout(this.shaderChangeTimeout)
+        this.shaderChangeTimeout = null
+      }
+      this.pendingShaderChange = null
       return
     }
 
-    // Set invert state
-    this._invert = inverted
-    this.currentShaderKey = shaderKey
-    this.notifyShaderChange()
+    // Store pending shader change
+    this.pendingShaderChange = { shaderKey, inverted, uniforms }
 
-    // Destroy current renderer
-    if (this._renderer) {
-      this._renderer.destroy()
-      this._renderer = null
+    // Clear any existing timeout
+    if (this.shaderChangeTimeout) {
+      clearTimeout(this.shaderChangeTimeout)
     }
 
-    // If we have a canvas, reinitialize the renderer
-    if (this._canvas) {
-      try {
-        this.initializeRenderer(this._canvas, shaderSource)
-        // Successfully created renderer, clear exhausted flag
-        this._contextExhausted = false
-        if (this._canvas) {
-          this._canvas.style.display = "block"
-        }
+    // Debounce shader changes to prevent rapid context creation/destruction
+    this.shaderChangeTimeout = setTimeout(() => {
+      this.shaderChangeTimeout = null
+      if (!this.pendingShaderChange) return
 
-        // On mobile/Firefox, pause after first frame unless continuous rendering is forced
-        if (this.singleFrameRender() && !this.forceContinuousRendering && this._renderer) {
-          // Cancel any pending pause RAF from previous shader
-          if (this.singleFramePauseRafId !== null) {
-            cancelAnimationFrame(this.singleFramePauseRafId)
-            this.singleFramePauseRafId = null
-          }
-          // Wait for first frame to render, then pause
-          // Use double requestAnimationFrame to ensure the frame is actually painted
-          this.singleFramePauseRafId = requestAnimationFrame(() => {
-            this.singleFramePauseRafId = requestAnimationFrame(() => {
-              this.singleFramePauseRafId = null
-              if (this._renderer && !this.forceContinuousRendering) {
-                this._renderer.pause()
-              }
-            })
-          })
-        }
-      } catch (error) {
-        // Error already logged to Sentry in initializeRenderer
-        console.error(`Failed to initialize shader "${shaderKey}":`, error)
+      const { shaderKey: pendingKey, inverted: pendingInverted } = this.pendingShaderChange
+      this.pendingShaderChange = null
 
-        // Mark context as exhausted and hide canvas to show CSS fallback
-        this._contextExhausted = true
-        if (this._canvas) {
-          this._canvas.style.display = "none"
-        }
+      // Set invert state
+      this._invert = pendingInverted
+      this.currentShaderKey = pendingKey
+      this.notifyShaderChange()
 
-        // Don't try to create black fallback - it also needs a context!
-        // Instead, trigger recovery system
-        this.scheduleContextRecovery(shaderKey)
+      // Destroy current renderer
+      if (this._renderer) {
+        this._renderer.destroy()
+        this._renderer = null
       }
-    }
+
+      // Add microtask delay to allow browser to clean up the old context
+      setTimeout(() => {
+        // If we have a canvas, reinitialize the renderer
+        if (this._canvas) {
+          const source = shaders?.[pendingKey as keyof typeof shaders]
+          if (!source) return
+
+          try {
+            this.initializeRenderer(this._canvas, source)
+            // Successfully created renderer, clear exhausted flag
+            this._contextExhausted = false
+            if (this._canvas) {
+              this._canvas.style.display = "block"
+            }
+
+            // On mobile/Firefox, pause after first frame unless continuous rendering is forced
+            if (this.singleFrameRender() && !this.forceContinuousRendering && this._renderer) {
+              // Cancel any pending pause RAF from previous shader
+              if (this.singleFramePauseRafId !== null) {
+                cancelAnimationFrame(this.singleFramePauseRafId)
+                this.singleFramePauseRafId = null
+              }
+              // Wait for first frame to render, then pause
+              // Use double requestAnimationFrame to ensure the frame is actually painted
+              this.singleFramePauseRafId = requestAnimationFrame(() => {
+                this.singleFramePauseRafId = requestAnimationFrame(() => {
+                  this.singleFramePauseRafId = null
+                  if (this._renderer && !this.forceContinuousRendering) {
+                    this._renderer.pause()
+                  }
+                })
+              })
+            }
+          } catch (error) {
+            // Error already logged to Sentry in initializeRenderer
+            console.error(`Failed to initialize shader "${pendingKey}":`, error)
+
+            // Mark context as exhausted and hide canvas to show CSS fallback
+            this._contextExhausted = true
+            if (this._canvas) {
+              this._canvas.style.display = "none"
+            }
+
+            // Don't try to create black fallback - it also needs a context!
+            // Instead, trigger recovery system
+            this.scheduleContextRecovery(pendingKey)
+          }
+        }
+      }, 10) // 10ms microtask delay for browser cleanup
+    }, 100) // 100ms debounce for rapid shader changes
   }
 
   /**
@@ -395,6 +430,15 @@ export class ShaderManager {
       clearTimeout(this.recoveryTimeout)
       this.recoveryTimeout = null
     }
+
+    // Cancel any pending shader change timeout
+    if (this.shaderChangeTimeout) {
+      clearTimeout(this.shaderChangeTimeout)
+      this.shaderChangeTimeout = null
+    }
+
+    // Clear pending shader change
+    this.pendingShaderChange = null
 
     // Cancel any pending single-frame pause RAF
     if (this.singleFramePauseRafId !== null) {

@@ -101,7 +101,7 @@
       grid-template-columns: 1fr;
       grid-auto-rows: 120px;
       height: auto;
-      min-height: calc(100% - 60px);
+      min-height: 0;
       gap: 5px;
     }
   }
