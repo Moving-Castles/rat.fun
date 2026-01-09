@@ -1,9 +1,15 @@
 import Anthropic from "@anthropic-ai/sdk"
-import type { Trip, Rat, TripOutcomeHistory, TripSelectionResult } from "../../types"
+import type { Trip, Rat, TripSelectionResult } from "../../types"
+import type { OutcomeWithPrompt } from "../cms"
 
 interface ClaudeResponse {
   tripId: string
   explanation: string
+}
+
+export interface InventoryItem {
+  name: string
+  value: number
 }
 
 /**
@@ -13,7 +19,8 @@ export async function selectTripWithClaude(
   anthropic: Anthropic,
   trips: Trip[],
   rat: Rat,
-  outcomeHistory: TripOutcomeHistory[] = []
+  inventoryDetails: InventoryItem[] = [],
+  recentOutcomes: OutcomeWithPrompt[] = []
 ): Promise<TripSelectionResult | null> {
   if (trips.length === 0) return null
 
@@ -46,56 +53,119 @@ export async function selectTripWithClaude(
     }
   })
 
-  let historySection = ""
-  if (outcomeHistory.length > 0) {
-    // Filter history to only include outcomes for currently available trips
+  // Build inventory section for prompt
+  const totalInventoryValue = inventoryDetails.reduce((sum, item) => sum + item.value, 0)
+  let inventorySection = ""
+  if (inventoryDetails.length > 0) {
+    const itemsList = inventoryDetails.map(i => `  - ${i.name} (value: ${i.value})`).join("\n")
+    inventorySection = `
+## Current Inventory
+The rat is carrying the following items (total inventory value: ${totalInventoryValue}):
+${itemsList}
+
+IMPORTANT: Consider how these items might interact with trip scenarios:
+- Some trips may require specific items to succeed or avoid danger
+- Some items may provide advantages in certain situations
+- Losing valuable items is a risk - consider if a trip might cause item loss
+`
+  } else {
+    inventorySection = `
+## Current Inventory
+The rat is not carrying any items.
+`
+  }
+
+  // Build recent outcomes section
+  let outcomesSection = ""
+  if (recentOutcomes.length > 0) {
+    // Filter to only outcomes for currently available trips
     const availableTripIds = new Set(trips.map(t => t.id))
-    const relevantHistory = outcomeHistory.filter(h => availableTripIds.has(h.tripId)).slice(-10)
+    const relevantOutcomes = recentOutcomes.filter(o => availableTripIds.has(o.tripId))
 
-    if (relevantHistory.length > 0) {
-      historySection = `
-## Previous Trip Outcomes (for learning)
-Here are the outcomes of recent trips this rat has taken on currently available trips. Use this to inform your strategy:
-${JSON.stringify(relevantHistory, null, 2)}
+    if (relevantOutcomes.length > 0) {
+      // Summarize outcomes by trip
+      const outcomesByTrip = new Map<
+        string,
+        { wins: number; deaths: number; totalChange: number; prompt: string }
+      >()
 
-Note: valueChange represents the change in TOTAL VALUE (balance + inventory items). This is the key success metric.
+      for (const outcome of relevantOutcomes) {
+        const existing = outcomesByTrip.get(outcome.tripId) || {
+          wins: 0,
+          deaths: 0,
+          totalChange: 0,
+          prompt: outcome.tripPrompt || ""
+        }
+        const isDeath = (outcome.newRatBalance ?? 0) === 0 && (outcome.oldRatBalance ?? 0) > 0
 
-Analyze patterns:
-– If rat died or lost a lot of value in a trip, do not re-enter unless there is very clear ground to assume the outcome will be different this time.
-- Which types of trip prompts led to positive vs negative valueChange?
-- How do items gained/lost affect total value?
-- What scenarios were dangerous (led to death or large value losses)?
-- What strategies seem to work best?
-- health, token, cash, money, points etc all mean the same thing and are interchangeable. exhanging one for the other 1:1 is pointless.
+        if (isDeath) {
+          existing.deaths++
+        } else {
+          existing.wins++
+          existing.totalChange += outcome.ratValueChange ?? 0
+        }
+
+        outcomesByTrip.set(outcome.tripId, existing)
+      }
+
+      const summaries = Array.from(outcomesByTrip.entries()).map(([tripId, stats]) => {
+        const avgGain = stats.wins > 0 ? Math.round(stats.totalChange / stats.wins) : 0
+        return `- Trip "${stats.prompt.slice(0, 50)}...": ${stats.wins} survivals (avg +${avgGain}), ${stats.deaths} deaths`
+      })
+
+      outcomesSection = `
+## Recent Outcome History (from other rats)
+Here's what happened to other rats in currently available trips (last 50 game-wide outcomes):
+${summaries.join("\n")}
+
+Use this data to identify which trips are actually rewarding vs deadly in practice.
 `
     }
   }
 
+  const targetValue = 200
+  const currentValue = rat.balance + totalInventoryValue
+  const valueNeeded = Math.max(0, targetValue - currentValue)
+
   const prompt = `You are an AI strategist helping a rat named "${rat.name}" choose which trip to enter in a game.
 
 ## Primary Goal
-Your goal is to INCREASE the rat's TOTAL VALUE (balance + inventory item values). The rat gains value by completing trips that provide positive value changes - this includes gaining balance OR valuable items. Trips that result in 0 value change are wasteful - they risk death without any reward. Always prioritize trips likely to yield positive total value gains.
+Your goal is to reach ${targetValue} TOTAL VALUE as quickly as possible so the rat can be liquidated for profit. Current value: ${currentValue}. You need ${valueNeeded} more value to reach the target.
+
+IMPORTANT MINDSET: You have an APPETITE FOR RISK. Mere survival is NOT desirable - a rat that survives but gains nothing is wasting time. You'd rather take calculated risks for high rewards than play it safe. Death is acceptable if the potential reward justified the risk.
+
+## Risk Philosophy
+- HIGH reward trips are preferred even if they have moderate danger
+- Playing it safe with low-reward trips is a LOSING strategy
+- The goal is to GROW value fast, not to survive the longest
+- A 60% survival rate with +20 value potential beats a 90% survival rate with +5 value potential
+- Time is money - slow safe gains mean more exposure to eventual death anyway
 
 ## Current Rat State
 - Balance: ${rat.balance} credits
-- Items in inventory: ${rat.inventory.length}
+- Items in inventory: ${rat.inventory.length} (total inventory value: ${totalInventoryValue})
+- Total value: ${currentValue} / ${targetValue} target
+- Progress: ${Math.round((currentValue / targetValue) * 100)}% to liquidation goal
 - Total trips survived: ${rat.tripCount}
-${historySection}
+${inventorySection}${outcomesSection}
 ## Available Trips
 ${JSON.stringify(tripsForPrompt, null, 2)}
 
 ## Your Task
-Analyze each trip's prompt, balance, and statistics to maximize TOTAL VALUE gain. Consider:
-1. Which trip is most likely to result in a POSITIVE value change (balance + items)? Avoid trips that seem likely to have no reward.
-2. Which trip has the best risk/reward ratio? High balance trips often mean higher potential gains.
-3. Based on the trip prompt, does it suggest opportunities for the rat to find loot, treasure, or rewards?
-4. Avoid trips with prompts suggesting high danger with no clear reward opportunity.
-5. Carefully evaluate if a trip requires the rat to have a particular item to succeed. Or if a particular item that the rat currently has gives it an advantage.
-6. IMPORTANT: Use the trip statistics to assess danger:
-   - survivalRate: Bayesian-weighted survival percentage (accounts for sample size uncertainty)
-   - confidence: "high" (10+ visits), "medium" (5-9 visits), "low" (<5 visits)
-   - Prefer trips with high survivalRate AND high confidence. Be cautious of "low" confidence trips - their survival rate is uncertain.
-${outcomeHistory.length > 0 ? "6. What patterns from previous outcomes show which trip types yield gains vs losses or deaths?" : ""}
+Analyze each trip to find the BEST VALUE OPPORTUNITY. Consider:
+1. Which trip offers the HIGHEST potential value gain? Prioritize trips with high balance pools.
+2. Does the trip prompt suggest treasure, loot, rewards, or valuable items? These are attractive.
+3. Accept moderate risk (40-70% survival) if the reward potential is high.
+4. Only avoid trips that seem like death traps with NO reward (high danger + no loot mentioned).
+5. Consider if your inventory items give advantages or are required for certain trips.
+6. Use trip statistics AND recent outcome history to assess real-world performance:
+   - Recent outcomes show actual results from other rats - this is valuable data
+   - Trips with good avg gains and low death rates are proven winners
+   - Be wary of trips where recent rats died frequently
+7. Use the survivalRate statistic as a guide, but weigh recent outcomes more heavily:
+   - survivalRate below 30% with recent deaths = avoid
+   - survivalRate 40-60% with good recent gains = worth the risk
+   - survivalRate above 70% = safe, but make sure the reward is worth it
 
 ## Response Format
 Respond with a JSON object containing:
@@ -106,7 +176,7 @@ Example:
 \`\`\`json
 {
   "tripId": "0x1234...",
-  "explanation": "This trip offers high rewards with a relatively safe scenario based on the prompt."
+  "explanation": "High balance pool with treasure mentioned in prompt - worth the 55% survival odds for potential +25 value."
 }
 \`\`\`
 

@@ -43,8 +43,8 @@ var worlds_default = {
     address: "0x6439113f0e1f64018c3167DA2aC21e2689818086"
   },
   "84532": {
-    address: "0xAD73982AE505ba40d98b375B5f65C4B265a8C193",
-    blockNumber: 33500368
+    address: "0xb559D9fb876F6fC3AC05B21004B33760B3582042",
+    blockNumber: 35154850
   },
   "695569": {
     address: "0x78a2B029a5B5600d87b4951D5108E02F87D12806",
@@ -767,6 +767,24 @@ var IWorld_abi_default = [
   },
   {
     type: "function",
+    name: "ratfun__addTripBalance",
+    inputs: [
+      {
+        name: "_tripId",
+        type: "bytes32",
+        internalType: "bytes32"
+      },
+      {
+        name: "_amount",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    outputs: [],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
     name: "ratfun__applyOutcome",
     inputs: [
       {
@@ -877,6 +895,21 @@ var IWorld_abi_default = [
       },
       {
         name: "_tripCreationCost",
+        type: "uint256",
+        internalType: "uint256"
+      },
+      {
+        name: "_isChallengeTrip",
+        type: "bool",
+        internalType: "bool"
+      },
+      {
+        name: "_fixedMinValueToEnter",
+        type: "uint256",
+        internalType: "uint256"
+      },
+      {
+        name: "_overrideMaxValuePerWinPercentage",
         type: "uint256",
         internalType: "uint256"
       },
@@ -2543,8 +2576,19 @@ var mud_config_default = defineWorld({
     // = = = = = = = = = =
     Prompt: "string",
     // = = = = = = = = = =
-    TripCreationCost: "uint256"
+    TripCreationCost: "uint256",
     // Initial balance of trip.
+    // = = = = = = = = = =
+    // Challenge trip extensions
+    // = = = = = = = = = =
+    ChallengeTrip: "bool",
+    // Mark trip as a challenge trip
+    FixedMinValueToEnter: "uint256",
+    // Fixed minimum value to enter the trip
+    OverrideMaxValuePerWinPercentage: "uint256",
+    // Override maximum value per win percentage
+    ChallengeWinner: "bytes32"
+    // Winner of the challenge trip
   },
   systems: {
     // DevSystem is conditionally deployed for local/test chains in PostDeploy
@@ -2597,30 +2641,21 @@ async function setupMud(privateKey, chainId, worldAddressOverride) {
     indexerUrl: networkConfig.indexerUrl
   });
   console.log("Waiting for initial state sync...");
-  try {
-    await new Promise((resolve, reject) => {
-      const timeoutId = setTimeout(() => {
-        subscription.unsubscribe();
-        reject(new Error("Sync timeout"));
-      }, 3e4);
-      const subscription = storedBlockLogs$.subscribe({
-        next: (block) => {
-          if (block.blockNumber > 0n) {
-            clearTimeout(timeoutId);
-            subscription.unsubscribe();
-            resolve();
-          }
-        },
-        error: (err) => {
-          clearTimeout(timeoutId);
-          reject(err);
+  await new Promise((resolve, reject) => {
+    const subscription = storedBlockLogs$.subscribe({
+      next: (block) => {
+        if (block.blockNumber > 0n) {
+          subscription.unsubscribe();
+          resolve();
         }
-      });
+      },
+      error: (err) => {
+        subscription.unsubscribe();
+        reject(err);
+      }
     });
-    console.log("MUD sync complete!");
-  } catch (e) {
-    console.log("Warning: Sync timeout, proceeding with available data...");
-  }
+  });
+  console.log("MUD sync complete!");
   return {
     world,
     components,
@@ -2897,7 +2932,7 @@ function selectTripRandom(trips) {
 }
 
 // src/modules/trip-selector/claude.ts
-async function selectTripWithClaude(anthropic, trips, rat, outcomeHistory = []) {
+async function selectTripWithClaude(anthropic, trips, rat, inventoryDetails = [], recentOutcomes = []) {
   if (trips.length === 0) return null;
   if (trips.length === 1) {
     return {
@@ -2922,53 +2957,103 @@ async function selectTripWithClaude(anthropic, trips, rat, outcomeHistory = []) 
       confidence: t.visitCount >= 10 ? "high" : t.visitCount >= 5 ? "medium" : "low"
     };
   });
-  let historySection = "";
-  if (outcomeHistory.length > 0) {
+  const totalInventoryValue = inventoryDetails.reduce((sum, item) => sum + item.value, 0);
+  let inventorySection = "";
+  if (inventoryDetails.length > 0) {
+    const itemsList = inventoryDetails.map((i) => `  - ${i.name} (value: ${i.value})`).join("\n");
+    inventorySection = `
+## Current Inventory
+The rat is carrying the following items (total inventory value: ${totalInventoryValue}):
+${itemsList}
+
+IMPORTANT: Consider how these items might interact with trip scenarios:
+- Some trips may require specific items to succeed or avoid danger
+- Some items may provide advantages in certain situations
+- Losing valuable items is a risk - consider if a trip might cause item loss
+`;
+  } else {
+    inventorySection = `
+## Current Inventory
+The rat is not carrying any items.
+`;
+  }
+  let outcomesSection = "";
+  if (recentOutcomes.length > 0) {
     const availableTripIds = new Set(trips.map((t) => t.id));
-    const relevantHistory = outcomeHistory.filter((h) => availableTripIds.has(h.tripId)).slice(-10);
-    if (relevantHistory.length > 0) {
-      historySection = `
-## Previous Trip Outcomes (for learning)
-Here are the outcomes of recent trips this rat has taken on currently available trips. Use this to inform your strategy:
-${JSON.stringify(relevantHistory, null, 2)}
+    const relevantOutcomes = recentOutcomes.filter((o) => availableTripIds.has(o.tripId));
+    if (relevantOutcomes.length > 0) {
+      const outcomesByTrip = /* @__PURE__ */ new Map();
+      for (const outcome of relevantOutcomes) {
+        const existing = outcomesByTrip.get(outcome.tripId) || {
+          wins: 0,
+          deaths: 0,
+          totalChange: 0,
+          prompt: outcome.tripPrompt || ""
+        };
+        const isDeath = (outcome.newRatBalance ?? 0) === 0 && (outcome.oldRatBalance ?? 0) > 0;
+        if (isDeath) {
+          existing.deaths++;
+        } else {
+          existing.wins++;
+          existing.totalChange += outcome.ratValueChange ?? 0;
+        }
+        outcomesByTrip.set(outcome.tripId, existing);
+      }
+      const summaries = Array.from(outcomesByTrip.entries()).map(([tripId, stats]) => {
+        const avgGain = stats.wins > 0 ? Math.round(stats.totalChange / stats.wins) : 0;
+        return `- Trip "${stats.prompt.slice(0, 50)}...": ${stats.wins} survivals (avg +${avgGain}), ${stats.deaths} deaths`;
+      });
+      outcomesSection = `
+## Recent Outcome History (from other rats)
+Here's what happened to other rats in currently available trips (last 50 game-wide outcomes):
+${summaries.join("\n")}
 
-Note: valueChange represents the change in TOTAL VALUE (balance + inventory items). This is the key success metric.
-
-Analyze patterns:
-\u2013 If rat died or lost a lot of value in a trip, do not re-enter unless there is very clear ground to assume the outcome will be different this time.
-- Which types of trip prompts led to positive vs negative valueChange?
-- How do items gained/lost affect total value?
-- What scenarios were dangerous (led to death or large value losses)?
-- What strategies seem to work best?
-- health, token, cash, money, points etc all mean the same thing and are interchangeable. exhanging one for the other 1:1 is pointless.
+Use this data to identify which trips are actually rewarding vs deadly in practice.
 `;
     }
   }
+  const targetValue = 200;
+  const currentValue = rat.balance + totalInventoryValue;
+  const valueNeeded = Math.max(0, targetValue - currentValue);
   const prompt = `You are an AI strategist helping a rat named "${rat.name}" choose which trip to enter in a game.
 
 ## Primary Goal
-Your goal is to INCREASE the rat's TOTAL VALUE (balance + inventory item values). The rat gains value by completing trips that provide positive value changes - this includes gaining balance OR valuable items. Trips that result in 0 value change are wasteful - they risk death without any reward. Always prioritize trips likely to yield positive total value gains.
+Your goal is to reach ${targetValue} TOTAL VALUE as quickly as possible so the rat can be liquidated for profit. Current value: ${currentValue}. You need ${valueNeeded} more value to reach the target.
+
+IMPORTANT MINDSET: You have an APPETITE FOR RISK. Mere survival is NOT desirable - a rat that survives but gains nothing is wasting time. You'd rather take calculated risks for high rewards than play it safe. Death is acceptable if the potential reward justified the risk.
+
+## Risk Philosophy
+- HIGH reward trips are preferred even if they have moderate danger
+- Playing it safe with low-reward trips is a LOSING strategy
+- The goal is to GROW value fast, not to survive the longest
+- A 60% survival rate with +20 value potential beats a 90% survival rate with +5 value potential
+- Time is money - slow safe gains mean more exposure to eventual death anyway
 
 ## Current Rat State
 - Balance: ${rat.balance} credits
-- Items in inventory: ${rat.inventory.length}
+- Items in inventory: ${rat.inventory.length} (total inventory value: ${totalInventoryValue})
+- Total value: ${currentValue} / ${targetValue} target
+- Progress: ${Math.round(currentValue / targetValue * 100)}% to liquidation goal
 - Total trips survived: ${rat.tripCount}
-${historySection}
+${inventorySection}${outcomesSection}
 ## Available Trips
 ${JSON.stringify(tripsForPrompt, null, 2)}
 
 ## Your Task
-Analyze each trip's prompt, balance, and statistics to maximize TOTAL VALUE gain. Consider:
-1. Which trip is most likely to result in a POSITIVE value change (balance + items)? Avoid trips that seem likely to have no reward.
-2. Which trip has the best risk/reward ratio? High balance trips often mean higher potential gains.
-3. Based on the trip prompt, does it suggest opportunities for the rat to find loot, treasure, or rewards?
-4. Avoid trips with prompts suggesting high danger with no clear reward opportunity.
-5. Carefully evaluate if a trip requires the rat to have a particular item to succeed. Or if a particular item that the rat currently has gives it an advantage.
-6. IMPORTANT: Use the trip statistics to assess danger:
-   - survivalRate: Bayesian-weighted survival percentage (accounts for sample size uncertainty)
-   - confidence: "high" (10+ visits), "medium" (5-9 visits), "low" (<5 visits)
-   - Prefer trips with high survivalRate AND high confidence. Be cautious of "low" confidence trips - their survival rate is uncertain.
-${outcomeHistory.length > 0 ? "6. What patterns from previous outcomes show which trip types yield gains vs losses or deaths?" : ""}
+Analyze each trip to find the BEST VALUE OPPORTUNITY. Consider:
+1. Which trip offers the HIGHEST potential value gain? Prioritize trips with high balance pools.
+2. Does the trip prompt suggest treasure, loot, rewards, or valuable items? These are attractive.
+3. Accept moderate risk (40-70% survival) if the reward potential is high.
+4. Only avoid trips that seem like death traps with NO reward (high danger + no loot mentioned).
+5. Consider if your inventory items give advantages or are required for certain trips.
+6. Use trip statistics AND recent outcome history to assess real-world performance:
+   - Recent outcomes show actual results from other rats - this is valuable data
+   - Trips with good avg gains and low death rates are proven winners
+   - Be wary of trips where recent rats died frequently
+7. Use the survivalRate statistic as a guide, but weigh recent outcomes more heavily:
+   - survivalRate below 30% with recent deaths = avoid
+   - survivalRate 40-60% with good recent gains = worth the risk
+   - survivalRate above 70% = safe, but make sure the reward is worth it
 
 ## Response Format
 Respond with a JSON object containing:
@@ -2979,7 +3064,7 @@ Example:
 \`\`\`json
 {
   "tripId": "0x1234...",
-  "explanation": "This trip offers high rewards with a relatively safe scenario based on the prompt."
+  "explanation": "High balance pool with treasure mentioned in prompt - worth the 55% survival odds for potential +25 value."
 }
 \`\`\`
 
@@ -3044,8 +3129,23 @@ var sanityClient = createClient({
   apiVersion: "2025-06-01",
   useCdn: false
 });
-async function getOutcomesForTrips(tripIds, worldAddress) {
-  const query = `*[_type == "outcome" && tripId in $tripIds && worldAddress == $worldAddress] {
+async function getRecentOutcomes(worldAddress, limit = 50) {
+  const query = `*[_type == "outcome" && worldAddress == $worldAddress] | order(_createdAt desc) [0...$limit] {
+    _id,
+    tripId,
+    ratId,
+    ratName,
+    ratValueChange,
+    ratValue,
+    oldRatValue,
+    newRatBalance,
+    oldRatBalance,
+    "tripPrompt": *[_type == "trip" && _id == ^.tripRef._ref][0].prompt
+  }`;
+  return sanityClient.fetch(query, { worldAddress, limit });
+}
+async function getAllOutcomesForWorld(worldAddress) {
+  const query = `*[_type == "outcome" && worldAddress == $worldAddress] {
     _id,
     tripId,
     ratId,
@@ -3056,103 +3156,235 @@ async function getOutcomesForTrips(tripIds, worldAddress) {
     newRatBalance,
     oldRatBalance
   }`;
-  return sanityClient.fetch(query, { tripIds, worldAddress });
+  return sanityClient.fetch(query, { worldAddress });
 }
 
 // src/modules/trip-selector/historical.ts
-function calculateTripStats(trips, outcomes) {
-  const outcomesByTrip = /* @__PURE__ */ new Map();
-  for (const outcome of outcomes) {
-    const existing = outcomesByTrip.get(outcome.tripId) || [];
-    existing.push(outcome);
-    outcomesByTrip.set(outcome.tripId, existing);
+function calculateScore(stats) {
+  if (stats.survivals === 0) return -Infinity;
+  return stats.survivalEv * (1 - stats.deathRate) * stats.activeRate;
+}
+async function selectWithClaude(anthropic, candidates, rat, inventoryDetails) {
+  if (candidates.length === 0) return null;
+  if (candidates.length === 1) {
+    return { selected: candidates[0], reasoning: "Only one candidate" };
   }
-  return trips.map((trip) => {
-    const tripOutcomes = outcomesByTrip.get(trip.id) || [];
-    const totalOutcomes = tripOutcomes.length;
-    if (totalOutcomes === 0) {
+  const totalInventoryValue = inventoryDetails.reduce((sum, item) => sum + item.value, 0);
+  let inventorySection = "";
+  if (inventoryDetails.length > 0) {
+    const itemsList = inventoryDetails.map((i) => `- ${i.name} (value: ${i.value})`).join("\n");
+    inventorySection = `
+## Current Inventory
+The rat is carrying:
+${itemsList}
+Total inventory value: ${totalInventoryValue}
+`;
+  } else {
+    inventorySection = "\n## Current Inventory\nThe rat has no items.\n";
+  }
+  const candidatesList = candidates.map((c, i) => {
+    const survivalPct = (100 - c.deathRate * 100).toFixed(0);
+    const evStr = c.survivalEv >= 0 ? `+${c.survivalEv.toFixed(1)}` : c.survivalEv.toFixed(1);
+    return `${i + 1}. "${c.trip.prompt}"
+   - Trip balance: ${c.trip.balance}
+   - Survival rate: ${survivalPct}%
+   - Expected value when surviving: ${evStr}
+   - Historical outcomes: ${c.outcomes}
+   - Score: ${c.score.toFixed(2)}`;
+  }).join("\n\n");
+  const prompt = `You are helping a rat choose the best trip from a pre-filtered shortlist.
+
+## Rat Status
+- Name: ${rat.name}
+- Balance: ${rat.balance}
+- Total value: ${rat.balance + totalInventoryValue}
+${inventorySection}
+## Candidate Trips (includes all available trips - some may be risky!)
+${candidatesList}
+
+## Your Task
+Choose the BEST trip considering:
+1. Does the rat's inventory match what the trip might need?
+2. Which trip prompt suggests the best reward for this rat's situation?
+3. Consider trips that might GIVE useful items - items can be used in future trips for bigger gains
+4. Higher scores are generally better, but inventory synergy and item acquisition potential matter more
+5. Be adventurous - sometimes a lower-scored trip with good item potential is worth it
+6. AVOID trips with survival rate below 30% unless the reward potential is exceptional
+7. Negative scores indicate historically unprofitable trips - be cautious but not dismissive
+
+Respond with JSON only:
+\`\`\`json
+{
+  "choice": 1,
+  "reasoning": "Brief explanation"
+}
+\`\`\``;
+  try {
+    const response = await anthropic.messages.create({
+      model: "claude-sonnet-4-20250514",
+      max_tokens: 200,
+      temperature: 1,
+      messages: [{ role: "user", content: prompt }]
+    });
+    const content = response.content[0];
+    if (content.type !== "text") return null;
+    let jsonText = content.text.trim();
+    if (jsonText.startsWith("```json")) jsonText = jsonText.slice(7);
+    if (jsonText.startsWith("```")) jsonText = jsonText.slice(3);
+    if (jsonText.endsWith("```")) jsonText = jsonText.slice(0, -3);
+    const parsed = JSON.parse(jsonText.trim());
+    const choiceIndex = (parsed.choice || 1) - 1;
+    if (choiceIndex >= 0 && choiceIndex < candidates.length) {
       return {
-        tripId: trip.id,
-        trip,
-        totalOutcomes: 0,
-        avgValueChange: 0,
-        totalValueChange: 0,
-        survivalRate: 0.5,
-        // Unknown, assume 50%
-        deaths: 0
+        selected: candidates[choiceIndex],
+        reasoning: parsed.reasoning || "Claude selection"
       };
     }
-    const totalValueChange = tripOutcomes.reduce((sum, o) => sum + (o.ratValueChange ?? 0), 0);
-    const avgValueChange = totalValueChange / totalOutcomes;
-    const deaths = tripOutcomes.filter(
-      (o) => (o.newRatBalance ?? 0) === 0 && (o.oldRatBalance ?? 0) > 0
-    ).length;
-    const survivalRate = (totalOutcomes - deaths) / totalOutcomes;
-    return {
-      tripId: trip.id,
-      trip,
-      totalOutcomes,
-      avgValueChange,
-      totalValueChange,
-      survivalRate,
-      deaths
-    };
-  });
-}
-function scoreTrip(stats) {
-  if (stats.totalOutcomes === 0) {
-    return stats.trip.balance * 0.1;
+  } catch (error) {
+    console.warn("[Claude] Failed to select from shortlist:", error);
   }
-  const confidenceBonus = Math.min(stats.totalOutcomes / 20, 1) * 10;
-  return stats.avgValueChange + confidenceBonus;
+  return null;
 }
-async function selectTripHistorical(trips, worldAddress) {
+async function selectTripHistorical(trips, worldAddress, anthropic, rat, inventoryDetails = []) {
   if (trips.length === 0) return null;
-  const tripIds = trips.map((t) => t.id);
-  const outcomes = await getOutcomesForTrips(tripIds, worldAddress);
-  const stats = calculateTripStats(trips, outcomes);
-  const scoredTrips = stats.map((s) => ({
-    stats: s,
-    score: scoreTrip(s)
-  }));
-  scoredTrips.sort((a, b) => b.score - a.score);
-  const best = scoredTrips[0];
-  if (!best) return null;
-  let explanation;
-  if (best.stats.totalOutcomes === 0) {
-    explanation = `No historical data, selected based on trip balance (${best.stats.trip.balance})`;
-  } else {
-    const avgStr = best.stats.avgValueChange >= 0 ? `+${best.stats.avgValueChange.toFixed(1)}` : best.stats.avgValueChange.toFixed(1);
-    const survivalPct = (best.stats.survivalRate * 100).toFixed(0);
-    explanation = `Best historical performance: avg ${avgStr} value change, ${survivalPct}% survival rate (${best.stats.totalOutcomes} outcomes)`;
+  const allOutcomes = await getAllOutcomesForWorld(worldAddress);
+  console.log(`Fetched ${allOutcomes.length} total outcomes from CMS`);
+  const tripIdSet = new Set(trips.map((t) => t.id.toLowerCase()));
+  const outcomes = allOutcomes.filter(
+    (o) => tripIdSet.has(o.tripId.toLowerCase()) && o.ratValueChange !== void 0 && o.ratValueChange !== null
+  );
+  console.log(`${outcomes.length} valid outcomes match ${trips.length} available trips`);
+  const statsByTrip = /* @__PURE__ */ new Map();
+  for (const trip of trips) {
+    statsByTrip.set(trip.id.toLowerCase(), {
+      trip,
+      outcomes: 0,
+      survivals: 0,
+      wins: 0,
+      losses: 0,
+      zeros: 0,
+      deaths: 0,
+      survivalValue: 0,
+      survivalEv: 0,
+      winRate: 0,
+      deathRate: 0,
+      activeRate: 0,
+      score: -Infinity
+    });
   }
+  for (const outcome of outcomes) {
+    const key = outcome.tripId.toLowerCase();
+    const stats = statsByTrip.get(key);
+    if (!stats) continue;
+    stats.outcomes++;
+    const isDeath = (outcome.newRatBalance ?? -1) === 0 && (outcome.oldRatBalance ?? 0) > 0;
+    if (isDeath) {
+      stats.deaths++;
+    } else {
+      stats.survivals++;
+      stats.survivalValue += outcome.ratValueChange;
+      if (outcome.ratValueChange > 0) {
+        stats.wins++;
+      } else if (outcome.ratValueChange < 0) {
+        stats.losses++;
+      } else {
+        stats.zeros++;
+      }
+    }
+  }
+  for (const stats of statsByTrip.values()) {
+    if (stats.outcomes > 0) {
+      stats.deathRate = stats.deaths / stats.outcomes;
+      if (stats.survivals > 0) {
+        stats.survivalEv = stats.survivalValue / stats.survivals;
+        stats.winRate = stats.wins / stats.survivals;
+        stats.activeRate = (stats.wins + stats.losses) / stats.survivals;
+      }
+      stats.score = calculateScore(stats);
+    }
+  }
+  const allTripsWithData = Array.from(statsByTrip.values()).filter((s) => s.outcomes >= 1).sort((a, b) => b.score - a.score);
+  console.log(`
+ALL ${allTripsWithData.length} trips with scores (score = survivalEv \xD7 (1-deathRate) \xD7 activeRate):`);
+  allTripsWithData.forEach((s, i) => {
+    const evStr2 = s.survivalEv >= 0 ? `+${s.survivalEv.toFixed(1)}` : s.survivalEv.toFixed(1);
+    const deathPct = (s.deathRate * 100).toFixed(0);
+    const winPct2 = (s.winRate * 100).toFixed(0);
+    const activePct = (s.activeRate * 100).toFixed(0);
+    const survivalPct2 = (100 - s.deathRate * 100).toFixed(0);
+    const tripDesc = s.trip.prompt.slice(0, 20).padEnd(20);
+    console.log(`  ${i + 1}. "${tripDesc}" score: ${s.score.toFixed(2)}, survEV: ${evStr2}, survival: ${survivalPct2}%, active: ${activePct}%, win: ${winPct2}%, n=${s.outcomes}`);
+  });
+  const validTrips = allTripsWithData.filter((s) => s.score > 0 && s.deathRate <= 0.7);
+  console.log(`
+Valid trips (score > 0, survival >= 30%): ${validTrips.length}`);
+  if (validTrips.length === 0) {
+    if (allTripsWithData.length > 0) {
+      console.log("Using fallback (ignoring death filter)");
+      const best = allTripsWithData[0];
+      const evStr2 = best.survivalEv >= 0 ? `+${best.survivalEv.toFixed(1)}` : best.survivalEv.toFixed(1);
+      const survivalPct2 = (100 - best.deathRate * 100).toFixed(0);
+      return {
+        trip: best.trip,
+        explanation: `Fallback: score ${best.score.toFixed(2)}, survEV ${evStr2}, ${survivalPct2}% survival (${best.outcomes} outcomes)`
+      };
+    }
+    console.log("No trips with data found!");
+    return null;
+  }
+  const candidates = Array.from(statsByTrip.values());
+  const poolSource = `all ${candidates.length} available trips`;
+  let selected;
+  let selectionSource;
+  if (anthropic && rat && candidates.length > 1) {
+    console.log(`[Claude] Selecting from ${candidates.length} candidates...`);
+    const claudeResult = await selectWithClaude(anthropic, candidates, rat, inventoryDetails);
+    if (claudeResult) {
+      selected = claudeResult.selected;
+      selectionSource = `Claude (${poolSource}): ${claudeResult.reasoning}`;
+      console.log(`[Claude] Selected: "${selected.trip.prompt.slice(0, 30)}..."`);
+    } else {
+      const randomIndex = Math.floor(Math.random() * candidates.length);
+      selected = candidates[randomIndex];
+      selectionSource = `random from ${poolSource} (Claude failed)`;
+    }
+  } else {
+    const randomIndex = Math.floor(Math.random() * candidates.length);
+    selected = candidates[randomIndex];
+    selectionSource = `random from ${poolSource}`;
+  }
+  const evStr = selected.survivalEv >= 0 ? `+${selected.survivalEv.toFixed(1)}` : selected.survivalEv.toFixed(1);
+  const survivalPct = (100 - selected.deathRate * 100).toFixed(0);
+  const winPct = (selected.winRate * 100).toFixed(0);
+  const explanation = `${selectionSource}: score ${selected.score.toFixed(2)}, survEV ${evStr}, ${winPct}% wins, ${survivalPct}% survival (${selected.outcomes} outcomes)`;
+  console.log(`Selected via ${selectionSource}`);
   return {
-    trip: best.stats.trip,
+    trip: selected.trip,
     explanation
   };
 }
 
 // src/modules/trip-selector/index.ts
-async function selectTrip(configOrOptions, trips, rat, anthropic, outcomeHistory = [], worldAddress) {
+async function selectTrip(configOrOptions, trips, rat, anthropic, inventoryDetails = [], worldAddress) {
   let config;
   let tripsArray;
   let ratObj;
   let anthropicClient;
-  let history;
+  let inventory;
   let worldAddr;
   if ("config" in configOrOptions) {
     config = configOrOptions.config;
     tripsArray = configOrOptions.trips;
     ratObj = configOrOptions.rat;
     anthropicClient = configOrOptions.anthropic;
-    history = configOrOptions.outcomeHistory ?? [];
+    inventory = configOrOptions.inventoryDetails ?? [];
     worldAddr = configOrOptions.worldAddress;
   } else {
     config = configOrOptions;
     tripsArray = trips;
     ratObj = rat;
     anthropicClient = anthropic;
-    history = outcomeHistory;
+    inventory = inventoryDetails;
     worldAddr = worldAddress;
   }
   if (tripsArray.length === 0) {
@@ -3160,7 +3392,17 @@ async function selectTrip(configOrOptions, trips, rat, anthropic, outcomeHistory
   }
   if (config.tripSelector === "claude" && anthropicClient) {
     console.log("Using Claude AI to select trip...");
-    return selectTripWithClaude(anthropicClient, tripsArray, ratObj, history);
+    let recentOutcomes = [];
+    if (worldAddr) {
+      try {
+        console.log("Fetching recent outcomes from CMS...");
+        recentOutcomes = await getRecentOutcomes(worldAddr, 50);
+        console.log(`Fetched ${recentOutcomes.length} recent outcomes`);
+      } catch (error) {
+        console.warn("Failed to fetch recent outcomes:", error);
+      }
+    }
+    return selectTripWithClaude(anthropicClient, tripsArray, ratObj, inventory, recentOutcomes);
   } else if (config.tripSelector === "random") {
     console.log("Using random selection...");
     const trip = selectTripRandom(tripsArray);
@@ -3171,7 +3413,7 @@ async function selectTrip(configOrOptions, trips, rat, anthropic, outcomeHistory
     };
   } else if (config.tripSelector === "historical" && worldAddr) {
     console.log("Using historical data from CMS to select trip...");
-    return selectTripHistorical(tripsArray, worldAddr);
+    return selectTripHistorical(tripsArray, worldAddr, anthropicClient, ratObj, inventory);
   } else {
     console.log("Using heuristic (highest balance) to select trip...");
     const trip = selectTripHeuristic(tripsArray);
@@ -3303,34 +3545,6 @@ function logValueBar(options) {
   );
 }
 
-// src/modules/history/index.ts
-import { readFileSync, writeFileSync, existsSync } from "fs";
-var HISTORY_FILE = "outcome-history.json";
-function loadOutcomeHistory() {
-  try {
-    if (existsSync(HISTORY_FILE)) {
-      const data = readFileSync(HISTORY_FILE, "utf-8");
-      const history = JSON.parse(data);
-      console.log(`Loaded ${history.length} previous outcomes from ${HISTORY_FILE}`);
-      return history;
-    }
-  } catch (error) {
-    console.warn(
-      `Failed to load outcome history: ${error instanceof Error ? error.message : error}`
-    );
-  }
-  return [];
-}
-function saveOutcomeHistory(history) {
-  try {
-    writeFileSync(HISTORY_FILE, JSON.stringify(history, null, 2));
-  } catch (error) {
-    console.warn(
-      `Failed to save outcome history: ${error instanceof Error ? error.message : error}`
-    );
-  }
-}
-
 // src/bot.ts
 async function liquidateRat(mud) {
   console.log("Liquidating rat...");
@@ -3353,7 +3567,7 @@ async function runBot(config) {
     logInfo(`Liquidate below value: ${config.liquidateBelowValue}`);
   }
   let anthropic;
-  if (config.tripSelector === "claude") {
+  if (config.tripSelector === "claude" || config.tripSelector === "historical") {
     anthropic = new Anthropic({ apiKey: config.anthropicApiKey });
     logInfo("Claude API client initialized");
   }
@@ -3425,7 +3639,6 @@ async function runBot(config) {
   let sessionTotalRats = 1;
   let sessionTotalTrips = 0;
   let sessionTotalProfitLoss = 0;
-  const outcomeHistory = loadOutcomeHistory();
   logInfo("Starting main loop...");
   logInfo("==========================================");
   while (true) {
@@ -3520,12 +3733,13 @@ async function runBot(config) {
       continue;
     }
     const worldAddress = mud.worldContract.address;
+    const inventoryDetails = getInventoryDetails(mud, rat);
     const selection = await selectTrip(
       config,
       enterableTrips,
       rat,
       anthropic,
-      outcomeHistory,
+      inventoryDetails,
       worldAddress
     );
     if (!selection) {
@@ -3551,16 +3765,6 @@ async function runBot(config) {
         console.log("");
       }
       if (outcome.ratDead) {
-        outcomeHistory.push({
-          tripId: selectedTrip.id,
-          tripPrompt: selectedTrip.prompt,
-          totalValueBefore,
-          totalValueAfter: 0,
-          valueChange: -totalValueBefore,
-          died: true,
-          logSummary: logEntries.slice(0, 3).join(" | ")
-        });
-        saveOutcomeHistory(outcomeHistory);
         logDeath(rat.name, tripCount);
         sessionTotalTrips += tripCount;
         sessionTotalProfitLoss += 0 - startingBalance;
@@ -3602,16 +3806,6 @@ async function runBot(config) {
         if (rat) {
           const totalValueAfter = getRatTotalValue(mud, rat);
           const valueChange = totalValueAfter - totalValueBefore;
-          outcomeHistory.push({
-            tripId: selectedTrip.id,
-            tripPrompt: selectedTrip.prompt,
-            totalValueBefore,
-            totalValueAfter,
-            valueChange,
-            died: false,
-            logSummary: logEntries.slice(0, 3).join(" | ")
-          });
-          saveOutcomeHistory(outcomeHistory);
           const changeStr = valueChange >= 0 ? `+${valueChange}` : `${valueChange}`;
           const inventoryItems = getInventoryDetails(mud, rat);
           const inventoryStr = inventoryItems.length > 0 ? `, Inventory: [${inventoryItems.map((i) => `${i.name}(${i.value})`).join(", ")}]` : "";

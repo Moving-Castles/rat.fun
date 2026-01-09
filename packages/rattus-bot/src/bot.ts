@@ -1,5 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk"
-import type { Config, Rat, TripOutcomeHistory } from "./types"
+import type { Config, Rat } from "./types"
 import {
   setupMud,
   spawn,
@@ -30,7 +30,6 @@ import {
   logSessionStats,
   logValueBar
 } from "./modules/logger"
-import { loadOutcomeHistory, saveOutcomeHistory } from "./modules/history"
 
 // Add liquidateRat action
 async function liquidateRat(mud: SetupResult): Promise<string> {
@@ -55,9 +54,9 @@ export async function runBot(config: Config) {
     logInfo(`Liquidate below value: ${config.liquidateBelowValue}`)
   }
 
-  // Initialize Anthropic client if using Claude selector
+  // Initialize Anthropic client if using Claude or historical selector
   let anthropic: Anthropic | undefined
-  if (config.tripSelector === "claude") {
+  if (config.tripSelector === "claude" || config.tripSelector === "historical") {
     anthropic = new Anthropic({ apiKey: config.anthropicApiKey })
     logInfo("Claude API client initialized")
   }
@@ -157,9 +156,6 @@ export async function runBot(config: Config) {
   let sessionTotalRats = 1
   let sessionTotalTrips = 0
   let sessionTotalProfitLoss = 0
-
-  // Track outcome history for learning (persists across respawns and bot restarts)
-  const outcomeHistory: TripOutcomeHistory[] = loadOutcomeHistory()
 
   logInfo("Starting main loop...")
   logInfo("==========================================")
@@ -285,14 +281,15 @@ export async function runBot(config: Config) {
       continue
     }
 
-    // Select a trip (pass history for learning)
+    // Select a trip (pass inventory details for Claude to consider)
     const worldAddress = mud.worldContract.address
+    const inventoryDetails = getInventoryDetails(mud, rat!)
     const selection = await selectTrip(
       config,
       enterableTrips,
       rat!,
       anthropic,
-      outcomeHistory,
+      inventoryDetails,
       worldAddress
     )
     if (!selection) {
@@ -328,18 +325,6 @@ export async function runBot(config: Config) {
 
       // Check if rat died
       if (outcome.ratDead) {
-        // Record outcome for history
-        outcomeHistory.push({
-          tripId: selectedTrip.id,
-          tripPrompt: selectedTrip.prompt,
-          totalValueBefore,
-          totalValueAfter: 0,
-          valueChange: -totalValueBefore,
-          died: true,
-          logSummary: logEntries.slice(0, 3).join(" | ")
-        })
-        saveOutcomeHistory(outcomeHistory)
-
         logDeath(rat!.name, tripCount)
 
         // Update session stats
@@ -391,19 +376,6 @@ export async function runBot(config: Config) {
         if (rat) {
           const totalValueAfter = getRatTotalValue(mud, rat)
           const valueChange = totalValueAfter - totalValueBefore
-
-          // Record outcome for history
-          outcomeHistory.push({
-            tripId: selectedTrip.id,
-            tripPrompt: selectedTrip.prompt,
-            totalValueBefore,
-            totalValueAfter,
-            valueChange,
-            died: false,
-            logSummary: logEntries.slice(0, 3).join(" | ")
-          })
-          saveOutcomeHistory(outcomeHistory)
-
           const changeStr = valueChange >= 0 ? `+${valueChange}` : `${valueChange}`
           const inventoryItems = getInventoryDetails(mud, rat)
           const inventoryStr =

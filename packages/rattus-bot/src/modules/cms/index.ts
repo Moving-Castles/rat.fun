@@ -61,3 +61,49 @@ export async function getOutcomesForTrips(
 
   return sanityClient.fetch(query, { tripIds, worldAddress })
 }
+
+export interface OutcomeWithPrompt extends Outcome {
+  tripPrompt?: string
+}
+
+/**
+ * Fetch the most recent outcomes from the CMS
+ */
+export async function getRecentOutcomes(
+  worldAddress: string,
+  limit: number = 50
+): Promise<OutcomeWithPrompt[]> {
+  const query = `*[_type == "outcome" && worldAddress == $worldAddress] | order(_createdAt desc) [0...$limit] {
+    _id,
+    tripId,
+    ratId,
+    ratName,
+    ratValueChange,
+    ratValue,
+    oldRatValue,
+    newRatBalance,
+    oldRatBalance,
+    "tripPrompt": *[_type == "trip" && _id == ^.tripRef._ref][0].prompt
+  }`
+
+  return sanityClient.fetch(query, { worldAddress, limit })
+}
+
+/**
+ * Fetch ALL outcomes for a world from the CMS (no limit)
+ */
+export async function getAllOutcomesForWorld(worldAddress: string): Promise<Outcome[]> {
+  const query = `*[_type == "outcome" && worldAddress == $worldAddress] {
+    _id,
+    tripId,
+    ratId,
+    ratName,
+    ratValueChange,
+    ratValue,
+    oldRatValue,
+    newRatBalance,
+    oldRatBalance
+  }`
+
+  return sanityClient.fetch(query, { worldAddress })
+}

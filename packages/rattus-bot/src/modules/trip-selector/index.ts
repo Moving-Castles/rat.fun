@@ -1,8 +1,9 @@
 import Anthropic from "@anthropic-ai/sdk"
-import type { Trip, Rat, Config, TripOutcomeHistory, TripSelectionResult } from "../../types"
+import type { Trip, Rat, Config, TripSelectionResult } from "../../types"
 import { selectTripHeuristic, selectTripRandom } from "./heuristic"
-import { selectTripWithClaude } from "./claude"
+import { selectTripWithClaude, type InventoryItem } from "./claude"
 import { selectTripHistorical } from "./historical"
+import { getRecentOutcomes } from "../cms"
 
 export type TripSelector = "claude" | "heuristic" | "random" | "historical"
 
@@ -11,7 +12,7 @@ export interface SelectTripOptions {
   trips: Trip[]
   rat: Rat
   anthropic?: Anthropic
-  outcomeHistory?: TripOutcomeHistory[]
+  inventoryDetails?: InventoryItem[]
   worldAddress?: string
 }
 
@@ -27,7 +28,7 @@ export async function selectTrip(
   trips: Trip[],
   rat: Rat,
   anthropic?: Anthropic,
-  outcomeHistory?: TripOutcomeHistory[],
+  inventoryDetails?: InventoryItem[],
   worldAddress?: string
 ): Promise<TripSelectionResult | null>
 export async function selectTrip(
@@ -35,7 +36,7 @@ export async function selectTrip(
   trips?: Trip[],
   rat?: Rat,
   anthropic?: Anthropic,
-  outcomeHistory: TripOutcomeHistory[] = [],
+  inventoryDetails: InventoryItem[] = [],
   worldAddress?: string
 ): Promise<TripSelectionResult | null> {
   // Handle both overloads
@@ -43,7 +44,7 @@ export async function selectTrip(
   let tripsArray: Trip[]
   let ratObj: Rat
   let anthropicClient: Anthropic | undefined
-  let history: TripOutcomeHistory[]
+  let inventory: InventoryItem[]
   let worldAddr: string | undefined
 
   if ("config" in configOrOptions) {
@@ -52,7 +53,7 @@ export async function selectTrip(
     tripsArray = configOrOptions.trips
     ratObj = configOrOptions.rat
     anthropicClient = configOrOptions.anthropic
-    history = configOrOptions.outcomeHistory ?? []
+    inventory = configOrOptions.inventoryDetails ?? []
     worldAddr = configOrOptions.worldAddress
   } else {
     // Legacy positional arguments
@@ -60,7 +61,7 @@ export async function selectTrip(
     tripsArray = trips!
     ratObj = rat!
     anthropicClient = anthropic
-    history = outcomeHistory
+    inventory = inventoryDetails
     worldAddr = worldAddress
   }
 
@@ -70,7 +71,20 @@ export async function selectTrip(
 
   if (config.tripSelector === "claude" && anthropicClient) {
     console.log("Using Claude AI to select trip...")
-    return selectTripWithClaude(anthropicClient, tripsArray, ratObj, history)
+
+    // Fetch recent outcomes from CMS for Claude to learn from
+    let recentOutcomes: Awaited<ReturnType<typeof getRecentOutcomes>> = []
+    if (worldAddr) {
+      try {
+        console.log("Fetching recent outcomes from CMS...")
+        recentOutcomes = await getRecentOutcomes(worldAddr, 50)
+        console.log(`Fetched ${recentOutcomes.length} recent outcomes`)
+      } catch (error) {
+        console.warn("Failed to fetch recent outcomes:", error)
+      }
+    }
+
+    return selectTripWithClaude(anthropicClient, tripsArray, ratObj, inventory, recentOutcomes)
   } else if (config.tripSelector === "random") {
     console.log("Using random selection...")
     const trip = selectTripRandom(tripsArray)
@@ -81,7 +95,7 @@ export async function selectTrip(
     }
   } else if (config.tripSelector === "historical" && worldAddr) {
     console.log("Using historical data from CMS to select trip...")
-    return selectTripHistorical(tripsArray, worldAddr)
+    return selectTripHistorical(tripsArray, worldAddr, anthropicClient, ratObj, inventory)
   } else {
     console.log("Using heuristic (highest balance) to select trip...")
     const trip = selectTripHeuristic(tripsArray)
@@ -94,5 +108,5 @@ export async function selectTrip(
 }
 
 export { selectTripHeuristic, selectTripRandom } from "./heuristic"
-export { selectTripWithClaude } from "./claude"
+export { selectTripWithClaude, type InventoryItem } from "./claude"
 export { selectTripHistorical } from "./historical"
