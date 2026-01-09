@@ -1,10 +1,5 @@
 import { writable, derived, get } from "svelte/store"
-import type {
-  FeedMessage,
-  NewTripMessage,
-  NewOutcomeMessage,
-  TripLiquidatedMessage
-} from "./Feed/types"
+import type { FeedMessage, NewTripMessage, NewOutcomeMessage } from "./Feed/types"
 import { FEED_MESSAGE_TYPE } from "./Feed/types"
 import { environment } from "$lib/modules/network"
 import {
