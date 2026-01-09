@@ -21,10 +21,16 @@ import { getAddresses } from "@whetstone-research/doppler-sdk"
 
 type AuctionParams = NonNullable<ReturnType<typeof readAuctionParams>>
 type PublicClientInstance = ReturnType<typeof createPublicClient>
-type ReceiptLog = Extract<ParseEventLogsReturnType<typeof derc20BuyLimitAbi>[number], { eventName: "Receipt" }>
-type PoolSwapLog = Extract<ParseEventLogsReturnType<typeof poolManagerAbi>[number], {
-  eventName: "Swap"
-}>
+type ReceiptLog = Extract<
+  ParseEventLogsReturnType<typeof derc20BuyLimitAbi>[number],
+  { eventName: "Receipt" }
+>
+type PoolSwapLog = Extract<
+  ParseEventLogsReturnType<typeof poolManagerAbi>[number],
+  {
+    eventName: "Swap"
+  }
+>
 
 type ReceiptRow = {
   blockNumber: bigint
@@ -325,13 +331,17 @@ for (const code of ISO_ALPHA2_CODES) {
   COUNTRY_CODE_HASHES.set(keccak256(TEXT_ENCODER.encode(code)).toLowerCase(), code)
 }
 
-const receiptEventDefinition = derc20BuyLimitAbi.find(
-  item => item.type === "event" && item.name === "Receipt"
-) ?? (() => { throw new Error("Receipt event missing from derc20BuyLimitAbi") })()
+const receiptEventDefinition =
+  derc20BuyLimitAbi.find(item => item.type === "event" && item.name === "Receipt") ??
+  (() => {
+    throw new Error("Receipt event missing from derc20BuyLimitAbi")
+  })()
 
-const swapEventDefinition = poolManagerAbi.find(item => item.type === "event" && item.name === "Swap") ?? (() => {
-  throw new Error("Swap event missing from poolManagerAbi")
-})()
+const swapEventDefinition =
+  poolManagerAbi.find(item => item.type === "event" && item.name === "Swap") ??
+  (() => {
+    throw new Error("Swap event missing from poolManagerAbi")
+  })()
 
 const program = new Command()
 program
@@ -422,10 +432,23 @@ if (useExistingCsv) {
   await ensureCsvExists(swapCsvPath)
   console.log(`Reusing existing CSVs: ${receiptCsvPath} and ${swapCsvPath}`)
 } else {
-  const receiptCount = await writeReceiptCsv(publicClient, auctionParams, fromBlock, toBlock, receiptCsvPath)
+  const receiptCount = await writeReceiptCsv(
+    publicClient,
+    auctionParams,
+    fromBlock,
+    toBlock,
+    receiptCsvPath
+  )
   console.log(`Saved ${receiptCount} receipts to ${receiptCsvPath}`)
 
-  const swapCount = await writeSwapCsv(publicClient, poolManagerAddress, auctionParams, fromBlock, toBlock, swapCsvPath)
+  const swapCount = await writeSwapCsv(
+    publicClient,
+    poolManagerAddress,
+    auctionParams,
+    fromBlock,
+    toBlock,
+    swapCsvPath
+  )
   console.log(`Saved ${swapCount} pool swaps to ${swapCsvPath}`)
 }
 
@@ -433,7 +456,9 @@ const joinResult = await joinCsvs(receiptCsvPath, swapCsvPath, joinedCsvPath)
 const receiptSummary = joinResult.unmatchedReceiptCount
   ? `${joinResult.matchedReceiptCount} matched, ${joinResult.unmatchedReceiptCount} remaining receipts`
   : `${joinResult.matchedReceiptCount} matched`
-console.log(`Saved ${joinResult.rowsWritten} pool swaps (${receiptSummary}) for ${auctionParams.token.symbol} to ${joinedCsvPath}`)
+console.log(
+  `Saved ${joinResult.rowsWritten} pool swaps (${receiptSummary}) for ${auctionParams.token.symbol} to ${joinedCsvPath}`
+)
 
 async function writeReceiptCsv(
   publicClient: PublicClientInstance,
@@ -456,7 +481,9 @@ async function writeReceiptCsv(
     ) as ReceiptLog[]
     const sortedLogs = parsedLogs.slice().sort(compareLogs)
     if (!sortedLogs.length) continue
-    const rows = await Promise.all(sortedLogs.map(receipt => formatReceiptRow(receipt, auctionParams, publicClient, blockCache)))
+    const rows = await Promise.all(
+      sortedLogs.map(receipt => formatReceiptRow(receipt, auctionParams, publicClient, blockCache))
+    )
     await appendCsvRows(filePath, rows)
     rowCount += rows.length
   }
@@ -488,7 +515,9 @@ async function writeSwapCsv(
       .map(log => log as PoolSwapLog)
     const sortedLogs = parsedLogs.slice().sort(compareLogs)
     if (!sortedLogs.length) continue
-    const rows = await Promise.all(sortedLogs.map(swap => formatSwapRow(swap, auctionParams, publicClient, blockCache)))
+    const rows = await Promise.all(
+      sortedLogs.map(swap => formatSwapRow(swap, auctionParams, publicClient, blockCache))
+    )
     await appendCsvRows(filePath, rows)
     rowCount += rows.length
   }
@@ -577,7 +606,8 @@ async function* iterateLogChunks(
   let currentFrom = params.fromBlock
 
   while (currentFrom <= toBlock) {
-    const chunkEnd = currentFrom + MAX_BLOCK_RANGE - 1n > toBlock ? toBlock : currentFrom + MAX_BLOCK_RANGE - 1n
+    const chunkEnd =
+      currentFrom + MAX_BLOCK_RANGE - 1n > toBlock ? toBlock : currentFrom + MAX_BLOCK_RANGE - 1n
     const chunkRequest = {
       address: params.address,
       fromBlock: currentFrom,
@@ -590,7 +620,10 @@ async function* iterateLogChunks(
   }
 }
 
-function compareLogs(a: { blockNumber?: bigint; logIndex?: number }, b: { blockNumber?: bigint; logIndex?: number }) {
+function compareLogs(
+  a: { blockNumber?: bigint; logIndex?: number },
+  b: { blockNumber?: bigint; logIndex?: number }
+) {
   const blockA = a.blockNumber ?? 0n
   const blockB = b.blockNumber ?? 0n
   if (blockA < blockB) return -1
@@ -658,7 +691,11 @@ function enqueueReceipt(map: Map<string, ReceiptBucket>, receipt: ReceiptRow) {
   map.set(key, { blockNumber: receipt.blockNumber, entries: [receipt] })
 }
 
-function dropReceiptsBefore(map: Map<string, ReceiptBucket>, blockThreshold: bigint, onDrop: (count: number) => void) {
+function dropReceiptsBefore(
+  map: Map<string, ReceiptBucket>,
+  blockThreshold: bigint,
+  onDrop: (count: number) => void
+) {
   for (const [key, bucket] of Array.from(map.entries())) {
     if (bucket.blockNumber < blockThreshold) {
       onDrop(bucket.entries.length)
@@ -760,7 +797,9 @@ async function ensureCsvExists(filePath: string) {
   try {
     await fs.access(filePath)
   } catch (error) {
-    throw new Error(`Expected existing CSV at ${filePath} (use --use-existing-csv to skip fetching). ${error}`)
+    throw new Error(
+      `Expected existing CSV at ${filePath} (use --use-existing-csv to skip fetching). ${error}`
+    )
   }
 }
 
@@ -799,7 +838,7 @@ async function getBlockDatetime(
 ): Promise<string> {
   const cached = cache.get(blockNumber)
   if (cached) return cached
-  
+
   const block = await publicClient.getBlock({ blockNumber })
   const datetime = new Date(Number(block.timestamp) * 1000).toISOString()
   cache.set(blockNumber, datetime)

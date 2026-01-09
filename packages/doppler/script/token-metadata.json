@@ -1,8 +1,10 @@
 {
   "name": "RAT",
   "symbol": "RAT",
+  "decimals": 18,
   "description": "RAT.FUN is a game about having fun and drugging rats",
   "image": "ipfs://bafkreifa2klsoc7w3icegsmlvxe4wutk2strreheqopic6kwdt7gv6h4pi",
   "external_url": "https://rat.fun",
-  "decimals": 18
+  "x": "https://x.com/movingcastles_",
+  "telegram": "https://t.me/ratfun"
 }
