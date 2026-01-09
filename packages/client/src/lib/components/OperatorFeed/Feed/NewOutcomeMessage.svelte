@@ -51,6 +51,7 @@
       message.itemsGained.length > 0 ||
       allLostItems.length > 0
   )
+  const depletedTrip = $derived(message.tripValue === 0)
 </script>
 
 <button class="outcome" onclick={handleTripClick}>
@@ -58,8 +59,13 @@
     <span class="marker">****</span>
     <span class="owner-name">{message.ratOwnerName}</span>
     <span class="result">
-      {message.result === "survived" ? "RAT SURVIVED" : "RAT DIED"}
+      {#if depletedTrip}
+        RAT DEPLETED TRIP
+      {:else}
+        {message.result === "survived" ? "RAT SURVIVED TRIP" : "RAT DIED"}
+      {/if}
     </span>
+    <span class="trip-index">#{message.tripIndex}</span>
     <span
       class="value-change"
       class:positive={message.ratValueChange >= 0}
@@ -67,7 +73,6 @@
     >
       {formatValueChange(message.ratValueChange)}
     </span>
-    <span class="trip-index">#{message.tripIndex}</span>
   </div>
 
   <div class="outcome-details">

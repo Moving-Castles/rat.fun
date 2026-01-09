@@ -54,6 +54,7 @@ export type NewOutcomeMessage = BaseFeedMessage & {
   itemsLost: FeedItem[]
   // Items lost on death (only if rat died)
   itemsLostOnDeath: FeedItem[]
+  tripValue?: number
   isChallenge?: boolean
 }
 

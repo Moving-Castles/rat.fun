@@ -167,6 +167,7 @@ const recentOutcomesForFeed = `*[_type == "outcome" && worldAddress == $worldAdd
   newRatBalance,
   inventoryOnEntrance,
   itemChanges,
+  tripValue,
   itemsLostOnDeath,
   "tripPrompt": *[_type == "trip" && _id == ^.tripId][0].prompt,
   challenge
