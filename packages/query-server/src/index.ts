@@ -14,6 +14,7 @@ import config from "./routes/config.js"
 import worldStats from "./routes/world-stats.js"
 import players from "./routes/players.js"
 import trips from "./routes/trips.js"
+import availableTrips from "./routes/available-trips.js"
 import challenges from "./routes/challenges.js"
 import { closePool } from "./db.js"
 
@@ -57,6 +58,7 @@ fastify.register(leaderboards)
 fastify.register(hydration)
 fastify.register(players)
 fastify.register(trips)
+fastify.register(availableTrips)
 fastify.register(challenges)
 fastify.register(status)
 
