@@ -83,7 +83,7 @@
         value: value - 1,
         // Trigger shake when counter reaches 1000
         threshold: 1000,
-        onThresholdReached: (remainingDuration) => {
+        onThresholdReached: remainingDuration => {
           // Scale intensity based on value size
           // 1000-5000: 0.5 intensity
           // 5000+: 1.0 intensity (max)

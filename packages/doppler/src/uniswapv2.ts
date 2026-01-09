@@ -150,6 +150,60 @@ export async function univ2removeLiquidity(
   })
 }
 
+export async function univ2simulateRemoveLiquidity(
+  publicClient: PublicClient,
+  walletClient: WalletClient<Transport, Chain, Account>,
+  pair: Hex,
+  tokenA: Hex,
+  tokenB: Hex,
+  liquidity: bigint,
+  receiver: Hex
+) {
+  const address = getAddresses(walletClient.chain.id).univ2Router02
+  if (!address) throw new Error("No univ2Router02 address for chain")
+
+  // 10 seconds
+  const deadline = BigInt(Math.floor(Date.now() / 1000) + 10)
+  // get nonce
+  const nonce = await publicClient.readContract({
+    address: pair,
+    abi: v2pairAbi,
+    functionName: "nonces",
+    args: [walletClient.account.address]
+  })
+  // sign typed data (local operation)
+  const signature = await univ2signPermit(
+    walletClient,
+    pair,
+    walletClient.account.address,
+    address,
+    liquidity,
+    nonce,
+    deadline
+  )
+  const parsedSignature = parseSignature(signature)
+
+  return await publicClient.simulateContract({
+    address,
+    abi: v2router02Abi,
+    functionName: "removeLiquidityWithPermit",
+    args: [
+      tokenA,
+      tokenB,
+      liquidity,
+      0n,
+      0n,
+      receiver,
+      deadline,
+      false,
+      Number(parsedSignature.v),
+      parsedSignature.r,
+      parsedSignature.s
+    ],
+    account: walletClient.account
+  })
+}
+
 export async function v2LockerGetAddress(publicClient: PublicClient<Transport, Chain>) {
   return await publicClient.readContract({
     address: getAddresses(publicClient.chain.id).v2Migrator,

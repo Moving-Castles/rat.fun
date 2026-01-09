@@ -256,8 +256,8 @@
     max-height: 90dvh;
 
     @media (max-width: 800px) {
-      height: 100dvh;
-      max-height: 80dvh;
+      height: auto;
+      max-height: 90dvh;
       width: 100dvw;
     }
   }
@@ -278,6 +278,8 @@
     @media (max-width: 800px) {
       width: 100dvw;
       border: none;
+      height: auto;
+      min-height: 100%;
     }
 
     .folder-selection {
@@ -288,8 +290,16 @@
       font-size: var(--font-size-medium);
       font-family: var(--special-font-stack);
 
+      @media (max-width: 800px) {
+        overflow-y: auto;
+      }
+
       > :global(.tiles) {
         flex: 1;
+
+        @media (max-width: 800px) {
+          flex: 0 1 auto;
+        }
       }
     }
   }
@@ -306,6 +316,7 @@
 
     @media (max-width: 800px) {
       background: var(--background);
+      align-items: flex-start;
     }
   }
 
@@ -317,6 +328,7 @@
 
     @media (max-width: 800px) {
       overflow-y: auto;
+      max-height: 100dvh;
     }
   }
 </style>

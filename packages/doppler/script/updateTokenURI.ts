@@ -23,6 +23,7 @@ program
   .requiredOption("-c, --chain-id <CHAINID>", "Chain id", (val: string) => parseInt(val), 8453)
   .requiredOption("-t, --token <ADDRESS>", "Token address")
   .requiredOption("-u, --uri <URI>", "Token URI (e.g., ipfs://... or https://...)")
+  .option("--dry-run", "Simulate the transaction without sending it")
   .parse(process.argv)
 
 const options = program.opts()
@@ -31,6 +32,7 @@ const chainId: number = options.chainId
 const chain = getChain(chainId)
 const tokenAddress = getAddress(options.token)
 const tokenURI: string = options.uri
+const dryRun: boolean = options.dryRun ?? false
 
 const transport = http(RPC_URL_BASE)
 
@@ -45,19 +47,36 @@ const walletClient = createWalletClient({
   account
 })
 
-// Read current tokenURI
-const currentURI = await publicClient.readContract({
-  address: tokenAddress,
-  abi: derc20BuyLimitAbi,
-  functionName: "tokenURI"
-})
+// Read current tokenURI and owner
+const [currentURI, owner] = await Promise.all([
+  publicClient.readContract({
+    address: tokenAddress,
+    abi: derc20BuyLimitAbi,
+    functionName: "tokenURI"
+  }),
+  publicClient.readContract({
+    address: tokenAddress,
+    abi: derc20BuyLimitAbi,
+    functionName: "owner"
+  })
+])
 
 console.log("RPC URL:", RPC_URL_BASE)
 console.log("Token address:", tokenAddress)
+console.log("Token owner:", owner)
 console.log("Current tokenURI:", currentURI || "(empty)")
 console.log("New tokenURI:", tokenURI)
 console.log("Sender:", account.address)
+if (dryRun) {
+  console.log("Mode: DRY RUN (no transaction will be sent)")
+}
 console.log("")
+
+// Check if sender is the owner
+if (owner !== account.address) {
+  console.error("Error: Sender is not the token owner. Only the owner can update the token URI.")
+  process.exit(1)
+}
 
 // Simulate the transaction first
 console.log("Simulating transaction...")
@@ -73,6 +92,12 @@ try {
 } catch (error) {
   console.error("Simulation failed:", error)
   process.exit(1)
+}
+
+if (dryRun) {
+  console.log("")
+  console.log("Dry run complete. No transaction was sent.")
+  process.exit(0)
 }
 
 // Send the transaction
