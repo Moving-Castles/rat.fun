@@ -1,7 +1,8 @@
 export enum FEED_MESSAGE_TYPE {
   CHAT = "chat",
   NEW_TRIP = "new_trip",
-  NEW_OUTCOME = "new_outcome"
+  NEW_OUTCOME = "new_outcome",
+  TRIP_LIQUIDATED = "trip_liquidated"
 }
 
 export type BaseFeedMessage = {
@@ -57,4 +58,13 @@ export type NewOutcomeMessage = BaseFeedMessage & {
   isChallenge?: boolean
 }
 
-export type FeedMessage = ChatMessage | NewTripMessage | NewOutcomeMessage
+export type TripLiquidatedMessage = BaseFeedMessage & {
+  type: FEED_MESSAGE_TYPE.TRIP_LIQUIDATED
+  tripId: string
+  tripIndex: number
+  tripPrompt: string
+  ownerName: string
+  liquidationValue: number
+}
+
+export type FeedMessage = ChatMessage | NewTripMessage | NewOutcomeMessage | TripLiquidatedMessage

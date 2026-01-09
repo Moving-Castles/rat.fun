@@ -10,7 +10,8 @@
   const filterOptions = [
     { type: FEED_MESSAGE_TYPE.CHAT, label: "Chat" },
     { type: FEED_MESSAGE_TYPE.NEW_TRIP, label: "Trips" },
-    { type: FEED_MESSAGE_TYPE.NEW_OUTCOME, label: "Outcomes" }
+    { type: FEED_MESSAGE_TYPE.NEW_OUTCOME, label: "Outcomes" },
+    { type: FEED_MESSAGE_TYPE.TRIP_LIQUIDATED, label: "Liquidated" }
   ] as const
 
   function handleChange(type: FEED_MESSAGE_TYPE, checked: boolean) {

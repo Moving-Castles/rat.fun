@@ -4,6 +4,7 @@
   import ChatMessage from "./ChatMessage.svelte"
   import NewTripMessage from "./NewTripMessage.svelte"
   import NewOutcomeMessage from "./NewOutcomeMessage.svelte"
+  import TripLiquidatedMessage from "./TripLiquidatedMessage.svelte"
 
   let { message }: { message: FeedMessage; onclick: () => void } = $props()
 
@@ -22,6 +23,8 @@
     <NewTripMessage {message} />
   {:else if message.type === FEED_MESSAGE_TYPE.NEW_OUTCOME}
     <NewOutcomeMessage {message} />
+  {:else if message.type === FEED_MESSAGE_TYPE.TRIP_LIQUIDATED}
+    <TripLiquidatedMessage {message} />
   {/if}
 </div>
 

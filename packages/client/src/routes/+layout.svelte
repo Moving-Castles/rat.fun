@@ -32,6 +32,10 @@
   import { initOffChainSync, disconnectOffChainSync } from "$lib/modules/off-chain-sync"
   import { resetEntitiesInitialization } from "$lib/modules/chain-sync"
   import { initErc20Listener } from "$lib/modules/erc20Listener"
+  import {
+    initLiquidationWatcher,
+    cleanupLiquidationWatcher
+  } from "$lib/modules/liquidation-watcher"
 
   // Components
   import Spawn from "$lib/components/Spawn/Spawn.svelte"
@@ -177,9 +181,12 @@
     initTrips($publicNetwork.worldAddress, finalRelevantTripIds)
     initPlayerOutcomes($publicNetwork.worldAddress, finalPlayerTripIds)
 
-    console.log("loading history", $publicNetwork.worldAddress)
+    logger.log("loading history", $publicNetwork.worldAddress)
     // Load recent trips/outcomes for operator feed history (non-blocking)
     loadFeedHistory($publicNetwork.worldAddress)
+
+    // Initialize liquidation watcher to track onchain trip liquidations
+    initLiquidationWatcher()
 
     UIState.set(UI.READY)
   }
@@ -206,6 +213,8 @@
       logger.log("Wallet disconnected externally, navigating back to spawn")
       // Reset entities initialization so it will reinitialize for the new wallet
       resetEntitiesInitialization()
+      // Clean up liquidation watcher
+      cleanupLiquidationWatcher()
       UIState.set(UI.SPAWNING)
     }
   })
@@ -251,6 +260,8 @@
     // Clean up drawbridge
     cleanupDrawbridge()
     cleanupSound()
+    // Clean up liquidation watcher
+    cleanupLiquidationWatcher()
 
     // Clean up global shader manager when the app unmounts
     shaderManager.destroy()

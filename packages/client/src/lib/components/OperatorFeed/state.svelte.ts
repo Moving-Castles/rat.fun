@@ -1,5 +1,10 @@
 import { writable, derived, get } from "svelte/store"
-import type { FeedMessage, NewTripMessage, NewOutcomeMessage } from "./Feed/types"
+import type {
+  FeedMessage,
+  NewTripMessage,
+  NewOutcomeMessage,
+  TripLiquidatedMessage
+} from "./Feed/types"
 import { FEED_MESSAGE_TYPE } from "./Feed/types"
 import { environment } from "$lib/modules/network"
 import {
@@ -37,7 +42,12 @@ export const hasReachedHistoryLimit = writable<boolean>(false)
 // Active filters - when empty, all types are shown
 // When populated, only checked types are shown
 export const activeFilters = writable<Set<FEED_MESSAGE_TYPE>>(
-  new Set([FEED_MESSAGE_TYPE.CHAT, FEED_MESSAGE_TYPE.NEW_TRIP, FEED_MESSAGE_TYPE.NEW_OUTCOME])
+  new Set([
+    FEED_MESSAGE_TYPE.CHAT,
+    FEED_MESSAGE_TYPE.NEW_TRIP,
+    FEED_MESSAGE_TYPE.NEW_OUTCOME,
+    FEED_MESSAGE_TYPE.TRIP_LIQUIDATED
+  ])
 )
 
 // Helper to check if a message is a challenge message
@@ -57,7 +67,7 @@ export const filteredMessages = derived([feedMessages, activeFilters], ([$messag
   if ($filters.size === 0) return []
 
   // Start with messages filtered by type
-  let filtered = $filters.size === 3 ? $messages : $messages.filter(m => $filters.has(m.type))
+  let filtered = $filters.size === 4 ? $messages : $messages.filter(m => $filters.has(m.type))
 
   // Filter out challenge messages when feature is disabled
   if (!FEATURES.ENABLE_CHALLENGE_TRIPS) {
