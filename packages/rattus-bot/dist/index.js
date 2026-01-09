@@ -43,8 +43,8 @@ var worlds_default = {
     address: "0x6439113f0e1f64018c3167DA2aC21e2689818086"
   },
   "84532": {
-    address: "0xAD73982AE505ba40d98b375B5f65C4B265a8C193",
-    blockNumber: 33500368
+    address: "0xb559D9fb876F6fC3AC05B21004B33760B3582042",
+    blockNumber: 35154850
   },
   "695569": {
     address: "0x78a2B029a5B5600d87b4951D5108E02F87D12806",
@@ -767,6 +767,24 @@ var IWorld_abi_default = [
   },
   {
     type: "function",
+    name: "ratfun__addTripBalance",
+    inputs: [
+      {
+        name: "_tripId",
+        type: "bytes32",
+        internalType: "bytes32"
+      },
+      {
+        name: "_amount",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    outputs: [],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
     name: "ratfun__applyOutcome",
     inputs: [
       {
@@ -877,6 +895,21 @@ var IWorld_abi_default = [
       },
       {
         name: "_tripCreationCost",
+        type: "uint256",
+        internalType: "uint256"
+      },
+      {
+        name: "_isChallengeTrip",
+        type: "bool",
+        internalType: "bool"
+      },
+      {
+        name: "_fixedMinValueToEnter",
+        type: "uint256",
+        internalType: "uint256"
+      },
+      {
+        name: "_overrideMaxValuePerWinPercentage",
         type: "uint256",
         internalType: "uint256"
       },
@@ -2543,8 +2576,19 @@ var mud_config_default = defineWorld({
     // = = = = = = = = = =
     Prompt: "string",
     // = = = = = = = = = =
-    TripCreationCost: "uint256"
+    TripCreationCost: "uint256",
     // Initial balance of trip.
+    // = = = = = = = = = =
+    // Challenge trip extensions
+    // = = = = = = = = = =
+    ChallengeTrip: "bool",
+    // Mark trip as a challenge trip
+    FixedMinValueToEnter: "uint256",
+    // Fixed minimum value to enter the trip
+    OverrideMaxValuePerWinPercentage: "uint256",
+    // Override maximum value per win percentage
+    ChallengeWinner: "bytes32"
+    // Winner of the challenge trip
   },
   systems: {
     // DevSystem is conditionally deployed for local/test chains in PostDeploy
@@ -2597,30 +2641,21 @@ async function setupMud(privateKey, chainId, worldAddressOverride) {
     indexerUrl: networkConfig.indexerUrl
   });
   console.log("Waiting for initial state sync...");
-  try {
-    await new Promise((resolve, reject) => {
-      const timeoutId = setTimeout(() => {
-        subscription.unsubscribe();
-        reject(new Error("Sync timeout"));
-      }, 3e4);
-      const subscription = storedBlockLogs$.subscribe({
-        next: (block) => {
-          if (block.blockNumber > 0n) {
-            clearTimeout(timeoutId);
-            subscription.unsubscribe();
-            resolve();
-          }
-        },
-        error: (err) => {
-          clearTimeout(timeoutId);
-          reject(err);
+  await new Promise((resolve, reject) => {
+    const subscription = storedBlockLogs$.subscribe({
+      next: (block) => {
+        if (block.blockNumber > 0n) {
+          subscription.unsubscribe();
+          resolve();
         }
-      });
+      },
+      error: (err) => {
+        subscription.unsubscribe();
+        reject(err);
+      }
     });
-    console.log("MUD sync complete!");
-  } catch (e) {
-    console.log("Warning: Sync timeout, proceeding with available data...");
-  }
+  });
+  console.log("MUD sync complete!");
   return {
     world,
     components,
@@ -3132,6 +3167,1081 @@ async function selectTripHistorical(trips, worldAddress) {
   };
 }
 
+// src/modules/trip-selector/graph/types.ts
+var VALUE_BUCKET_RANGES = {
+  very_low: { min: 0, max: 200 },
+  low: { min: 200, max: 1e3 },
+  medium: { min: 1e3, max: 3e3 },
+  high: { min: 3e3, max: 1e4 },
+  very_high: { min: 1e4, max: Infinity }
+};
+
+// src/modules/trip-selector/graph/statistics.ts
+function getValueBucket(value) {
+  for (const [bucket, range] of Object.entries(VALUE_BUCKET_RANGES)) {
+    if (value >= range.min && value < range.max) {
+      return bucket;
+    }
+  }
+  return "very_high";
+}
+function median(values) {
+  if (values.length === 0) return 0;
+  const sorted = [...values].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  return sorted.length % 2 !== 0 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+}
+function stdDev(values, mean) {
+  if (values.length < 2) return 0;
+  const squaredDiffs = values.map((v) => Math.pow(v - mean, 2));
+  return Math.sqrt(squaredDiffs.reduce((a, b) => a + b, 0) / values.length);
+}
+function normalizeOutcome(outcome) {
+  return {
+    ...outcome,
+    inventoryOnEntrance: outcome.inventoryOnEntrance || [],
+    itemChanges: outcome.itemChanges || [],
+    itemsLostOnDeath: outcome.itemsLostOnDeath || [],
+    died: outcome.newRatBalance === 0 && outcome.oldRatBalance > 0,
+    survived: !(outcome.newRatBalance === 0 && outcome.oldRatBalance > 0)
+  };
+}
+function calculateTripStatistics(trip, outcomes, allOutcomes) {
+  const normalizedOutcomes = outcomes.map(normalizeOutcome);
+  const tripId = trip.id;
+  const stats = {
+    tripId,
+    totalOutcomes: normalizedOutcomes.length,
+    lastUpdated: /* @__PURE__ */ new Date(),
+    overall: {
+      avgValueChange: 0,
+      medianValueChange: 0,
+      stdDevValueChange: 0,
+      survivalRate: 0,
+      avgValueGainOnSurvival: 0,
+      avgValueLossOnDeath: 0
+    },
+    byValueBucket: /* @__PURE__ */ new Map(),
+    itemInfluence: /* @__PURE__ */ new Map(),
+    itemAwards: [],
+    commonPredecessors: [],
+    commonSuccessors: []
+  };
+  if (normalizedOutcomes.length === 0) {
+    return stats;
+  }
+  const valueChanges = normalizedOutcomes.map((o) => o.ratValueChange);
+  const survived = normalizedOutcomes.filter((o) => o.survived);
+  const died = normalizedOutcomes.filter((o) => o.died);
+  stats.overall.avgValueChange = valueChanges.reduce((a, b) => a + b, 0) / valueChanges.length;
+  stats.overall.medianValueChange = median(valueChanges);
+  stats.overall.stdDevValueChange = stdDev(valueChanges, stats.overall.avgValueChange);
+  stats.overall.survivalRate = survived.length / normalizedOutcomes.length;
+  if (survived.length > 0) {
+    stats.overall.avgValueGainOnSurvival = survived.map((o) => o.ratValueChange).reduce((a, b) => a + b, 0) / survived.length;
+  }
+  if (died.length > 0) {
+    stats.overall.avgValueLossOnDeath = died.map((o) => o.ratValueChange).reduce((a, b) => a + b, 0) / died.length;
+  }
+  stats.byValueBucket = calculateBucketStats(normalizedOutcomes);
+  stats.itemInfluence = calculateItemInfluence(normalizedOutcomes);
+  stats.itemAwards = calculateItemAwards(normalizedOutcomes);
+  if (allOutcomes && allOutcomes.length > 0) {
+    const { predecessors, successors } = calculateTripSequencePatterns(
+      tripId,
+      allOutcomes.map(normalizeOutcome)
+    );
+    stats.commonPredecessors = predecessors;
+    stats.commonSuccessors = successors;
+  }
+  return stats;
+}
+function calculateBucketStats(outcomes) {
+  const bucketMap = /* @__PURE__ */ new Map();
+  const bucketOutcomes = /* @__PURE__ */ new Map();
+  for (const outcome of outcomes) {
+    const bucket = getValueBucket(outcome.oldRatValue || 0);
+    const existing = bucketOutcomes.get(bucket) || [];
+    existing.push(outcome);
+    bucketOutcomes.set(bucket, existing);
+  }
+  for (const [bucket, bucketOuts] of bucketOutcomes) {
+    const valueChanges = bucketOuts.map((o) => o.ratValueChange);
+    const survived = bucketOuts.filter((o) => o.survived);
+    const died = bucketOuts.filter((o) => o.died);
+    const avgValueChange = valueChanges.reduce((a, b) => a + b, 0) / valueChanges.length;
+    const bucketStats = {
+      bucket,
+      outcomes: bucketOuts.length,
+      avgValueChange,
+      medianValueChange: median(valueChanges),
+      stdDevValueChange: stdDev(valueChanges, avgValueChange),
+      survivalRate: survived.length / bucketOuts.length,
+      avgValueGainOnSurvival: survived.length > 0 ? survived.map((o) => o.ratValueChange).reduce((a, b) => a + b, 0) / survived.length : 0,
+      avgValueLossOnDeath: died.length > 0 ? died.map((o) => o.ratValueChange).reduce((a, b) => a + b, 0) / died.length : 0
+    };
+    bucketMap.set(bucket, bucketStats);
+  }
+  return bucketMap;
+}
+function calculateItemInfluence(outcomes) {
+  const influenceMap = /* @__PURE__ */ new Map();
+  const allItems = /* @__PURE__ */ new Map();
+  for (const outcome of outcomes) {
+    for (const item of outcome.inventoryOnEntrance) {
+      if (item.name) {
+        allItems.set(item.name, { id: item.id, name: item.name });
+      }
+    }
+  }
+  for (const [itemName, itemInfo] of allItems) {
+    const withItem = outcomes.filter(
+      (o) => o.inventoryOnEntrance.some((i) => i.name === itemName)
+    );
+    const withoutItem = outcomes.filter(
+      (o) => !o.inventoryOnEntrance.some((i) => i.name === itemName)
+    );
+    if (withItem.length < 2 || withoutItem.length < 2) {
+      continue;
+    }
+    const withItemSurvived = withItem.filter((o) => o.survived);
+    const withoutItemSurvived = withoutItem.filter((o) => o.survived);
+    const withItemAvgChange = withItem.map((o) => o.ratValueChange).reduce((a, b) => a + b, 0) / withItem.length;
+    const withoutItemAvgChange = withoutItem.map((o) => o.ratValueChange).reduce((a, b) => a + b, 0) / withoutItem.length;
+    const withItemSurvivalRate = withItemSurvived.length / withItem.length;
+    const withoutItemSurvivalRate = withoutItemSurvived.length / withoutItem.length;
+    const itemGains = /* @__PURE__ */ new Map();
+    for (const outcome of withItem) {
+      for (const change of outcome.itemChanges) {
+        if (change.type === "gained" && change.name) {
+          itemGains.set(change.name, (itemGains.get(change.name) || 0) + 1);
+        }
+      }
+    }
+    const commonGains = Array.from(itemGains.entries()).map(([name, count]) => ({ itemName: name, frequency: count / withItem.length })).filter((g) => g.frequency > 0.1).sort((a, b) => b.frequency - a.frequency).slice(0, 5);
+    const valueInfluence = withItemAvgChange - withoutItemAvgChange;
+    const survivalInfluence = (withItemSurvivalRate - withoutItemSurvivalRate) * 100;
+    const influenceScore = valueInfluence + survivalInfluence;
+    const influence = {
+      itemId: itemInfo.id,
+      itemName,
+      withItem: {
+        outcomes: withItem.length,
+        avgValueChange: withItemAvgChange,
+        survivalRate: withItemSurvivalRate,
+        commonGains
+      },
+      withoutItem: {
+        outcomes: withoutItem.length,
+        avgValueChange: withoutItemAvgChange,
+        survivalRate: withoutItemSurvivalRate
+      },
+      influenceScore
+    };
+    influenceMap.set(itemName, influence);
+  }
+  return influenceMap;
+}
+function calculateItemAwards(outcomes) {
+  const itemCounts = /* @__PURE__ */ new Map();
+  for (const outcome of outcomes) {
+    for (const change of outcome.itemChanges) {
+      if (change.type === "gained" && change.name) {
+        const existing = itemCounts.get(change.name) || {
+          count: 0,
+          value: change.value || 0,
+          id: change.id || "",
+          successCount: 0
+        };
+        existing.count++;
+        if (outcome.survived && outcome.ratValueChange > 0) {
+          existing.successCount++;
+        }
+        itemCounts.set(change.name, existing);
+      }
+    }
+  }
+  const awards = [];
+  for (const [itemName, data] of itemCounts) {
+    const frequency = data.count / outcomes.length;
+    const conditionalOnSuccess = data.successCount / data.count > 0.7;
+    awards.push({
+      itemId: data.id,
+      itemName,
+      itemValue: data.value,
+      frequency,
+      conditionalOnSuccess
+    });
+  }
+  return awards.filter((a) => a.frequency > 0.05).sort((a, b) => b.frequency - a.frequency);
+}
+function calculateTripSequencePatterns(tripId, allOutcomes) {
+  const outcomesbyRat = /* @__PURE__ */ new Map();
+  for (const outcome of allOutcomes) {
+    const existing = outcomesbyRat.get(outcome.ratId) || [];
+    existing.push(outcome);
+    outcomesbyRat.set(outcome.ratId, existing);
+  }
+  for (const outcomes of outcomesbyRat.values()) {
+    outcomes.sort((a, b) => new Date(a._createdAt).getTime() - new Date(b._createdAt).getTime());
+  }
+  const predecessorCounts = /* @__PURE__ */ new Map();
+  const successorCounts = /* @__PURE__ */ new Map();
+  for (const ratOutcomes of outcomesbyRat.values()) {
+    for (let i = 0; i < ratOutcomes.length; i++) {
+      if (ratOutcomes[i].tripId === tripId) {
+        if (i > 0) {
+          const prevTripId = ratOutcomes[i - 1].tripId;
+          const existing = predecessorCounts.get(prevTripId) || { count: 0, valueChanges: [] };
+          existing.count++;
+          existing.valueChanges.push(ratOutcomes[i].ratValueChange);
+          predecessorCounts.set(prevTripId, existing);
+        }
+        if (i < ratOutcomes.length - 1 && ratOutcomes[i].survived) {
+          const nextTripId = ratOutcomes[i + 1].tripId;
+          const existing = successorCounts.get(nextTripId) || { count: 0, valueChanges: [] };
+          existing.count++;
+          existing.valueChanges.push(ratOutcomes[i + 1].ratValueChange);
+          successorCounts.set(nextTripId, existing);
+        }
+      }
+    }
+  }
+  const thisTripsOutcomes = allOutcomes.filter((o) => o.tripId === tripId);
+  const totalOccurrences = thisTripsOutcomes.length;
+  const predecessors = Array.from(predecessorCounts.entries()).map(([predTripId, data]) => ({
+    tripId: predTripId,
+    frequency: data.count / totalOccurrences,
+    avgValueChangeAfter: data.valueChanges.length > 0 ? data.valueChanges.reduce((a, b) => a + b, 0) / data.valueChanges.length : 0
+  })).filter((p) => p.frequency > 0.05).sort((a, b) => b.frequency - a.frequency).slice(0, 10);
+  const survivedCount = thisTripsOutcomes.filter((o) => o.survived).length;
+  const successors = Array.from(successorCounts.entries()).map(([succTripId, data]) => ({
+    tripId: succTripId,
+    frequency: survivedCount > 0 ? data.count / survivedCount : 0,
+    avgValueChangeOnSuccessor: data.valueChanges.length > 0 ? data.valueChanges.reduce((a, b) => a + b, 0) / data.valueChanges.length : 0
+  })).filter((s) => s.frequency > 0.05).sort((a, b) => b.frequency - a.frequency).slice(0, 10);
+  return { predecessors, successors };
+}
+function updateStatisticsWithOutcome(existingStats, newOutcome) {
+  const outcome = normalizeOutcome(newOutcome);
+  const n = existingStats.totalOutcomes;
+  const newN = n + 1;
+  const newAvgValueChange = (existingStats.overall.avgValueChange * n + outcome.ratValueChange) / newN;
+  const oldSurvivedCount = existingStats.overall.survivalRate * n;
+  const newSurvivedCount = oldSurvivedCount + (outcome.survived ? 1 : 0);
+  const newSurvivalRate = newSurvivedCount / newN;
+  const updatedStats = {
+    ...existingStats,
+    totalOutcomes: newN,
+    lastUpdated: /* @__PURE__ */ new Date(),
+    overall: {
+      ...existingStats.overall,
+      avgValueChange: newAvgValueChange,
+      survivalRate: newSurvivalRate
+      // Note: median and stdDev would need full recalculation for accuracy
+      // but we keep them as approximations for performance
+    }
+  };
+  const bucket = getValueBucket(outcome.oldRatValue || 0);
+  const existingBucket = existingStats.byValueBucket.get(bucket);
+  if (existingBucket) {
+    const bucketN = existingBucket.outcomes;
+    const newBucketN = bucketN + 1;
+    const newBucketAvg = (existingBucket.avgValueChange * bucketN + outcome.ratValueChange) / newBucketN;
+    const oldBucketSurvived = existingBucket.survivalRate * bucketN;
+    const newBucketSurvived = oldBucketSurvived + (outcome.survived ? 1 : 0);
+    updatedStats.byValueBucket.set(bucket, {
+      ...existingBucket,
+      outcomes: newBucketN,
+      avgValueChange: newBucketAvg,
+      survivalRate: newBucketSurvived / newBucketN
+    });
+  } else {
+    updatedStats.byValueBucket.set(bucket, {
+      bucket,
+      outcomes: 1,
+      avgValueChange: outcome.ratValueChange,
+      medianValueChange: outcome.ratValueChange,
+      stdDevValueChange: 0,
+      survivalRate: outcome.survived ? 1 : 0,
+      avgValueGainOnSurvival: outcome.survived ? outcome.ratValueChange : 0,
+      avgValueLossOnDeath: outcome.died ? outcome.ratValueChange : 0
+    });
+  }
+  return updatedStats;
+}
+
+// src/modules/trip-selector/graph/path-reconstruction.ts
+function reconstructJourneys(outcomes) {
+  const outcomesByRat = /* @__PURE__ */ new Map();
+  for (const outcome of outcomes) {
+    const existing = outcomesByRat.get(outcome.ratId) || [];
+    existing.push(outcome);
+    outcomesByRat.set(outcome.ratId, existing);
+  }
+  const journeys = [];
+  for (const [ratId, ratOutcomes] of outcomesByRat) {
+    const sorted = [...ratOutcomes].sort(
+      (a, b) => new Date(a._createdAt).getTime() - new Date(b._createdAt).getTime()
+    );
+    const journey = buildJourney(ratId, sorted);
+    if (journey.steps.length > 0) {
+      journeys.push(journey);
+    }
+  }
+  return journeys;
+}
+function buildJourney(ratId, sortedOutcomes) {
+  const steps = [];
+  let peakValue = 0;
+  let peakValueStep = 0;
+  const uniqueItems = /* @__PURE__ */ new Set();
+  for (let i = 0; i < sortedOutcomes.length; i++) {
+    const outcome = sortedOutcomes[i];
+    const died = outcome.newRatBalance === 0 && outcome.oldRatBalance > 0;
+    const survived = !died;
+    const itemsOnEntrance = (outcome.inventoryOnEntrance || []).map((item) => ({
+      id: item.id || "",
+      name: item.name || "",
+      value: item.value || 0
+    }));
+    const itemsGained = (outcome.itemChanges || []).filter((c) => c.type === "gained").map((c) => ({
+      id: c.id || "",
+      name: c.name || "",
+      value: c.value || 0
+    }));
+    const itemsLost = died ? (outcome.itemsLostOnDeath || []).map((item) => ({
+      id: item.id || "",
+      name: item.name || "",
+      value: item.value || 0
+    })) : (outcome.itemChanges || []).filter((c) => c.type === "lost").map((c) => ({
+      id: c.id || "",
+      name: c.name || "",
+      value: c.value || 0
+    }));
+    for (const item of itemsGained) {
+      if (item.name) uniqueItems.add(item.name);
+    }
+    const step = {
+      tripId: outcome.tripId,
+      tripPrompt: "",
+      // We don't have this in outcomes, will be enriched later
+      valueChange: outcome.ratValueChange,
+      valueBefore: outcome.oldRatValue || 0,
+      valueAfter: outcome.ratValue || 0,
+      survived,
+      itemsOnEntrance,
+      itemsGained,
+      itemsLost
+    };
+    steps.push(step);
+    if (step.valueAfter > peakValue) {
+      peakValue = step.valueAfter;
+      peakValueStep = i;
+    }
+    if (died) {
+      break;
+    }
+  }
+  const firstOutcome = sortedOutcomes[0];
+  const lastStep = steps[steps.length - 1];
+  return {
+    ratId,
+    ratName: firstOutcome?.ratName || "",
+    playerId: firstOutcome?.playerId || "",
+    steps,
+    totalTrips: steps.length,
+    totalValueGained: steps.reduce((sum, s) => sum + s.valueChange, 0),
+    finalValue: lastStep?.valueAfter || 0,
+    survived: lastStep?.survived ?? false,
+    peakValue,
+    peakValueStep,
+    uniqueItemsCollected: Array.from(uniqueItems)
+  };
+}
+var DEFAULT_SUCCESS_CRITERIA = {
+  minTrips: 3,
+  minTotalValueGain: 500,
+  minFinalValue: 1e3,
+  mustSurvive: false
+  // Even dead rats can have successful paths up to a point
+};
+function filterSuccessfulJourneys(journeys, criteria = {}) {
+  const c = { ...DEFAULT_SUCCESS_CRITERIA, ...criteria };
+  return journeys.filter((journey) => {
+    if (journey.totalTrips < c.minTrips) return false;
+    if (journey.totalValueGained < c.minTotalValueGain) return false;
+    if (journey.peakValue < c.minFinalValue) return false;
+    if (c.mustSurvive && !journey.survived) return false;
+    return true;
+  });
+}
+function extractPathPatterns(journeys, minOccurrences = 3, maxPatternLength = 5) {
+  const patterns = [];
+  for (let length = 2; length <= maxPatternLength; length++) {
+    const subsequenceCounts = /* @__PURE__ */ new Map();
+    for (const journey of journeys) {
+      for (let start = 0; start <= journey.steps.length - length; start++) {
+        const subsequence = journey.steps.slice(start, start + length);
+        const tripIds = subsequence.map((s) => s.tripId);
+        const key = tripIds.join("->");
+        const valueGain = subsequence.reduce((sum, s) => sum + s.valueChange, 0);
+        const completed = subsequence.every((s, i) => i === subsequence.length - 1 || s.survived);
+        const existing = subsequenceCounts.get(key) || {
+          tripSequence: tripIds,
+          journeys: [],
+          totalValueGains: [],
+          completionCount: 0
+        };
+        existing.journeys.push(journey);
+        existing.totalValueGains.push(valueGain);
+        if (completed) existing.completionCount++;
+        subsequenceCounts.set(key, existing);
+      }
+    }
+    for (const [, data] of subsequenceCounts) {
+      if (data.journeys.length < minOccurrences) continue;
+      const avgTotalValueGain = data.totalValueGains.reduce((a, b) => a + b, 0) / data.totalValueGains.length;
+      const completionRate = data.completionCount / data.journeys.length;
+      const keyItems = findKeyItemsForPattern(data.journeys, data.tripSequence);
+      const entryValues = data.journeys.map((j) => {
+        const startStep = j.steps.find((s) => s.tripId === data.tripSequence[0]);
+        return startStep?.valueBefore || 0;
+      });
+      const optimalRange = findOptimalValueRange(entryValues, data.totalValueGains);
+      patterns.push({
+        tripSequence: data.tripSequence,
+        occurrences: data.journeys.length,
+        avgTotalValueGain,
+        completionRate,
+        keyItems,
+        optimalEntryValueRange: optimalRange
+      });
+    }
+  }
+  return patterns.filter((p) => p.completionRate > 0.3).sort((a, b) => {
+    const scoreA = a.avgTotalValueGain * a.completionRate * Math.log(a.occurrences + 1);
+    const scoreB = b.avgTotalValueGain * b.completionRate * Math.log(b.occurrences + 1);
+    return scoreB - scoreA;
+  }).slice(0, 50);
+}
+function findKeyItemsForPattern(journeys, tripSequence) {
+  const itemAtStep = /* @__PURE__ */ new Map();
+  for (const journey of journeys) {
+    const patternStart = findPatternStart(journey.steps, tripSequence);
+    if (patternStart === -1) continue;
+    for (let i = 0; i < tripSequence.length; i++) {
+      const step = journey.steps[patternStart + i];
+      if (!step) continue;
+      for (const item of step.itemsOnEntrance) {
+        if (!item.name) continue;
+        const itemSteps = itemAtStep.get(item.name) || /* @__PURE__ */ new Map();
+        itemSteps.set(i, (itemSteps.get(i) || 0) + 1);
+        itemAtStep.set(item.name, itemSteps);
+      }
+    }
+  }
+  const keyItems = [];
+  for (const [itemName, stepCounts] of itemAtStep) {
+    let maxStep = 0;
+    let maxCount = 0;
+    for (const [step, count] of stepCounts) {
+      if (count > maxCount) {
+        maxCount = count;
+        maxStep = step;
+      }
+    }
+    const frequency = maxCount / journeys.length;
+    if (frequency > 0.3) {
+      keyItems.push({
+        itemName,
+        acquiredAtStep: maxStep,
+        importanceScore: frequency
+      });
+    }
+  }
+  return keyItems.sort((a, b) => b.importanceScore - a.importanceScore).slice(0, 5);
+}
+function findPatternStart(steps, tripSequence) {
+  for (let i = 0; i <= steps.length - tripSequence.length; i++) {
+    let matches = true;
+    for (let j = 0; j < tripSequence.length; j++) {
+      if (steps[i + j].tripId !== tripSequence[j]) {
+        matches = false;
+        break;
+      }
+    }
+    if (matches) return i;
+  }
+  return -1;
+}
+function findOptimalValueRange(entryValues, valueGains) {
+  if (entryValues.length === 0) {
+    return { min: 0, max: Infinity };
+  }
+  const pairs = entryValues.map((v, i) => ({ entry: v, gain: valueGains[i] }));
+  pairs.sort((a, b) => a.entry - b.entry);
+  const windowSize = Math.max(3, Math.floor(pairs.length / 3));
+  let bestAvg = -Infinity;
+  let bestMin = 0;
+  let bestMax = Infinity;
+  for (let i = 0; i <= pairs.length - windowSize; i++) {
+    const window = pairs.slice(i, i + windowSize);
+    const avgGain = window.reduce((sum, p) => sum + p.gain, 0) / windowSize;
+    if (avgGain > bestAvg) {
+      bestAvg = avgGain;
+      bestMin = window[0].entry;
+      bestMax = window[window.length - 1].entry;
+    }
+  }
+  const range = bestMax - bestMin;
+  return {
+    min: Math.max(0, bestMin - range * 0.1),
+    max: bestMax + range * 0.1
+  };
+}
+
+// src/modules/trip-selector/graph/graph-builder.ts
+async function fetchExtendedOutcomes(tripIds, worldAddress) {
+  if (tripIds.length === 0) return [];
+  const query = `*[_type == "outcome" && tripId in $tripIds && worldAddress == $worldAddress] {
+    _id,
+    _createdAt,
+    tripId,
+    tripIndex,
+    ratId,
+    ratName,
+    playerId,
+    playerName,
+    ratValueChange,
+    ratValue,
+    oldRatValue,
+    newRatBalance,
+    oldRatBalance,
+    inventoryOnEntrance[] {
+      "id": id,
+      "name": name,
+      "value": value
+    },
+    itemChanges[] {
+      "name": name,
+      "type": type,
+      "value": value,
+      "id": id
+    },
+    itemsLostOnDeath[] {
+      "id": id,
+      "name": name,
+      "value": value
+    }
+  }`;
+  const outcomes = await sanityClient.fetch(query, { tripIds, worldAddress });
+  return outcomes.map((o) => ({
+    ...o,
+    died: o.newRatBalance === 0 && (o.oldRatBalance ?? 0) > 0,
+    survived: !(o.newRatBalance === 0 && (o.oldRatBalance ?? 0) > 0)
+  }));
+}
+async function fetchAllOutcomes(worldAddress) {
+  const query = `*[_type == "outcome" && worldAddress == $worldAddress] | order(_createdAt asc) {
+    _id,
+    _createdAt,
+    tripId,
+    tripIndex,
+    ratId,
+    ratName,
+    playerId,
+    playerName,
+    ratValueChange,
+    ratValue,
+    oldRatValue,
+    newRatBalance,
+    oldRatBalance,
+    inventoryOnEntrance[] {
+      "id": id,
+      "name": name,
+      "value": value
+    },
+    itemChanges[] {
+      "name": name,
+      "type": type,
+      "value": value,
+      "id": id
+    },
+    itemsLostOnDeath[] {
+      "id": id,
+      "name": name,
+      "value": value
+    }
+  }`;
+  const outcomes = await sanityClient.fetch(query, { worldAddress });
+  return outcomes.map((o) => ({
+    ...o,
+    died: o.newRatBalance === 0 && (o.oldRatBalance ?? 0) > 0,
+    survived: !(o.newRatBalance === 0 && (o.oldRatBalance ?? 0) > 0)
+  }));
+}
+var TripGraphBuilder = class {
+  constructor(worldAddress, minRatValueToEnterPercent = 30) {
+    this.initialized = false;
+    this.graph = {
+      worldAddress,
+      nodes: /* @__PURE__ */ new Map(),
+      edges: /* @__PURE__ */ new Map(),
+      successfulJourneys: [],
+      pathPatterns: [],
+      lastFullRebuild: /* @__PURE__ */ new Date(),
+      outcomeCount: 0,
+      minRatValueToEnterPercent
+    };
+  }
+  /**
+   * Get the current graph state
+   */
+  getGraph() {
+    return this.graph;
+  }
+  /**
+   * Check if graph is initialized
+   */
+  isInitialized() {
+    return this.initialized;
+  }
+  /**
+   * Initialize the graph from CMS data
+   */
+  async initialize(trips) {
+    console.log(`[GraphBuilder] Initializing graph with ${trips.length} trips...`);
+    console.log(`[GraphBuilder] Fetching all outcomes from CMS...`);
+    const allOutcomes = await fetchAllOutcomes(this.graph.worldAddress);
+    console.log(`[GraphBuilder] Fetched ${allOutcomes.length} outcomes`);
+    this.graph.outcomeCount = allOutcomes.length;
+    const outcomesByTrip = /* @__PURE__ */ new Map();
+    for (const outcome of allOutcomes) {
+      const existing = outcomesByTrip.get(outcome.tripId) || [];
+      existing.push(outcome);
+      outcomesByTrip.set(outcome.tripId, existing);
+    }
+    console.log(`[GraphBuilder] Building trip nodes...`);
+    for (const trip of trips) {
+      const tripOutcomes = outcomesByTrip.get(trip.id) || [];
+      const stats = calculateTripStatistics(trip, tripOutcomes, allOutcomes);
+      const minEntryValue = Math.floor(
+        trip.tripCreationCost * this.graph.minRatValueToEnterPercent / 100
+      );
+      const node = {
+        tripId: trip.id,
+        trip,
+        stats,
+        minEntryValue,
+        active: trip.balance > 0
+      };
+      this.graph.nodes.set(trip.id, node);
+    }
+    console.log(`[GraphBuilder] Reconstructing rat journeys...`);
+    const journeys = reconstructJourneys(allOutcomes);
+    console.log(`[GraphBuilder] Found ${journeys.length} rat journeys`);
+    const successfulJourneys = filterSuccessfulJourneys(journeys, {
+      minTrips: 3,
+      minTotalValueGain: 300,
+      minFinalValue: 500
+    });
+    console.log(`[GraphBuilder] Found ${successfulJourneys.length} successful journeys`);
+    this.graph.successfulJourneys = successfulJourneys;
+    console.log(`[GraphBuilder] Extracting path patterns...`);
+    const patterns = extractPathPatterns(successfulJourneys, 2);
+    console.log(`[GraphBuilder] Found ${patterns.length} path patterns`);
+    this.graph.pathPatterns = patterns;
+    console.log(`[GraphBuilder] Computing trip edges...`);
+    this.computeEdges(allOutcomes);
+    this.graph.lastFullRebuild = /* @__PURE__ */ new Date();
+    this.initialized = true;
+    console.log(`[GraphBuilder] Graph initialization complete`);
+    this.logGraphStats();
+  }
+  /**
+   * Compute edges between trips based on historical transitions
+   */
+  computeEdges(allOutcomes) {
+    const outcomesByRat = /* @__PURE__ */ new Map();
+    for (const outcome of allOutcomes) {
+      const existing = outcomesByRat.get(outcome.ratId) || [];
+      existing.push(outcome);
+      outcomesByRat.set(outcome.ratId, existing);
+    }
+    const transitions = /* @__PURE__ */ new Map();
+    for (const outcomes of outcomesByRat.values()) {
+      const sorted = [...outcomes].sort(
+        (a, b) => new Date(a._createdAt).getTime() - new Date(b._createdAt).getTime()
+      );
+      for (let i = 0; i < sorted.length - 1; i++) {
+        const from = sorted[i];
+        const to = sorted[i + 1];
+        if (!from.survived) continue;
+        const key = `${from.tripId}->${to.tripId}`;
+        const existing = transitions.get(key) || {
+          fromTripId: from.tripId,
+          toTripId: to.tripId,
+          count: 0,
+          survivedCount: 0,
+          valueGains: []
+        };
+        existing.count++;
+        if (to.survived) existing.survivedCount++;
+        existing.valueGains.push(to.ratValueChange);
+        transitions.set(key, existing);
+      }
+    }
+    for (const [, data] of transitions) {
+      if (data.count < 2) continue;
+      const avgValueGain = data.valueGains.reduce((a, b) => a + b, 0) / data.valueGains.length;
+      const successRate = data.survivedCount / data.count;
+      const beneficialItems = this.findBeneficialItemsForTransition(
+        data.fromTripId,
+        data.toTripId,
+        allOutcomes
+      );
+      const edge = {
+        fromTripId: data.fromTripId,
+        toTripId: data.toTripId,
+        accessibilityProbability: successRate,
+        // Simplified - real value depends on rat value
+        expectedValueGain: avgValueGain,
+        beneficialItems,
+        transitionSuccessRate: successRate,
+        transitionCount: data.count
+      };
+      const existing = this.graph.edges.get(data.fromTripId) || [];
+      existing.push(edge);
+      this.graph.edges.set(data.fromTripId, existing);
+    }
+  }
+  /**
+   * Find items that improve outcomes when transitioning between two trips
+   */
+  findBeneficialItemsForTransition(fromTripId, toTripId, allOutcomes) {
+    const outcomesByRat = /* @__PURE__ */ new Map();
+    for (const outcome of allOutcomes) {
+      const existing = outcomesByRat.get(outcome.ratId) || [];
+      existing.push(outcome);
+      outcomesByRat.set(outcome.ratId, existing);
+    }
+    const transitionOutcomes = [];
+    for (const outcomes of outcomesByRat.values()) {
+      const sorted = [...outcomes].sort(
+        (a, b) => new Date(a._createdAt).getTime() - new Date(b._createdAt).getTime()
+      );
+      for (let i = 0; i < sorted.length - 1; i++) {
+        if (sorted[i].tripId === fromTripId && sorted[i + 1].tripId === toTripId) {
+          transitionOutcomes.push({
+            itemsOnEntrance: (sorted[i + 1].inventoryOnEntrance || []).map((item) => item.name).filter(Boolean),
+            valueChange: sorted[i + 1].ratValueChange,
+            survived: sorted[i + 1].survived
+          });
+        }
+      }
+    }
+    if (transitionOutcomes.length < 3) return [];
+    const itemImpact = /* @__PURE__ */ new Map();
+    const allItems = /* @__PURE__ */ new Set();
+    for (const t of transitionOutcomes) {
+      for (const item of t.itemsOnEntrance) {
+        allItems.add(item);
+      }
+    }
+    for (const item of allItems) {
+      const withItem = transitionOutcomes.filter((t) => t.itemsOnEntrance.includes(item)).map((t) => t.valueChange);
+      const withoutItem = transitionOutcomes.filter((t) => !t.itemsOnEntrance.includes(item)).map((t) => t.valueChange);
+      if (withItem.length >= 2 && withoutItem.length >= 2) {
+        itemImpact.set(item, { withItem, withoutItem });
+      }
+    }
+    const beneficial = [];
+    for (const [item, impact] of itemImpact) {
+      const avgWith = impact.withItem.reduce((a, b) => a + b, 0) / impact.withItem.length;
+      const avgWithout = impact.withoutItem.reduce((a, b) => a + b, 0) / impact.withoutItem.length;
+      if (avgWith > avgWithout + 50) {
+        beneficial.push(item);
+      }
+    }
+    return beneficial.slice(0, 3);
+  }
+  /**
+   * Update the graph with a new outcome (incremental update)
+   */
+  updateWithOutcome(tripId, outcome) {
+    const node = this.graph.nodes.get(tripId);
+    if (!node) {
+      console.log(`[GraphBuilder] Trip ${tripId} not in graph, skipping update`);
+      return;
+    }
+    node.stats = updateStatisticsWithOutcome(node.stats, outcome);
+    this.graph.outcomeCount++;
+  }
+  /**
+   * Mark a trip as depleted (balance = 0)
+   */
+  markTripDepleted(tripId) {
+    const node = this.graph.nodes.get(tripId);
+    if (node) {
+      node.active = false;
+      console.log(`[GraphBuilder] Marked trip ${tripId} as depleted`);
+    }
+  }
+  /**
+   * Add a new trip to the graph
+   */
+  async addTrip(trip) {
+    const outcomes = await fetchExtendedOutcomes([trip.id], this.graph.worldAddress);
+    const allOutcomes = await fetchAllOutcomes(this.graph.worldAddress);
+    const stats = calculateTripStatistics(trip, outcomes, allOutcomes);
+    const minEntryValue = Math.floor(
+      trip.tripCreationCost * this.graph.minRatValueToEnterPercent / 100
+    );
+    const node = {
+      tripId: trip.id,
+      trip,
+      stats,
+      minEntryValue,
+      active: trip.balance > 0
+    };
+    this.graph.nodes.set(trip.id, node);
+    console.log(`[GraphBuilder] Added new trip ${trip.id}`);
+  }
+  /**
+   * Update trip data (e.g., new balance)
+   */
+  updateTrip(trip) {
+    const node = this.graph.nodes.get(trip.id);
+    if (node) {
+      node.trip = trip;
+      node.active = trip.balance > 0;
+      node.minEntryValue = Math.floor(
+        trip.tripCreationCost * this.graph.minRatValueToEnterPercent / 100
+      );
+    }
+  }
+  /**
+   * Get edges from a trip
+   */
+  getEdgesFrom(tripId) {
+    return this.graph.edges.get(tripId) || [];
+  }
+  /**
+   * Get active trips that a rat can enter
+   */
+  getAccessibleTrips(ratValue) {
+    const accessible = [];
+    for (const node of this.graph.nodes.values()) {
+      if (node.active && ratValue >= node.minEntryValue) {
+        accessible.push(node);
+      }
+    }
+    return accessible;
+  }
+  /**
+   * Full rebuild of the graph (call periodically for accuracy)
+   */
+  async rebuild(trips) {
+    console.log(`[GraphBuilder] Performing full graph rebuild...`);
+    this.initialized = false;
+    this.graph.nodes.clear();
+    this.graph.edges.clear();
+    await this.initialize(trips);
+  }
+  /**
+   * Log graph statistics
+   */
+  logGraphStats() {
+    const activeNodes = Array.from(this.graph.nodes.values()).filter((n) => n.active).length;
+    const totalEdges = Array.from(this.graph.edges.values()).reduce(
+      (sum, edges) => sum + edges.length,
+      0
+    );
+    console.log(`[GraphBuilder] Graph stats:`);
+    console.log(`  - Total trips: ${this.graph.nodes.size}`);
+    console.log(`  - Active trips: ${activeNodes}`);
+    console.log(`  - Total edges: ${totalEdges}`);
+    console.log(`  - Outcomes: ${this.graph.outcomeCount}`);
+    console.log(`  - Successful journeys: ${this.graph.successfulJourneys.length}`);
+    console.log(`  - Path patterns: ${this.graph.pathPatterns.length}`);
+  }
+};
+var graphInstance = null;
+function getGraphBuilder(worldAddress, minRatValueToEnterPercent = 30) {
+  if (!graphInstance || graphInstance.getGraph().worldAddress !== worldAddress) {
+    graphInstance = new TripGraphBuilder(worldAddress, minRatValueToEnterPercent);
+  }
+  return graphInstance;
+}
+
+// src/modules/trip-selector/graph/index.ts
+var graphBuilder = null;
+var graphInitPromise = null;
+async function initializeGraph(worldAddress, trips, minRatValueToEnterPercent = 30) {
+  if (graphBuilder && graphBuilder.getGraph().worldAddress === worldAddress && graphBuilder.isInitialized()) {
+    return graphBuilder;
+  }
+  if (graphInitPromise) {
+    await graphInitPromise;
+    if (graphBuilder) return graphBuilder;
+  }
+  graphBuilder = getGraphBuilder(worldAddress, minRatValueToEnterPercent);
+  graphInitPromise = graphBuilder.initialize(trips);
+  await graphInitPromise;
+  graphInitPromise = null;
+  return graphBuilder;
+}
+function updateGraphWithOutcome(tripId, outcome) {
+  if (graphBuilder) {
+    graphBuilder.updateWithOutcome(tripId, outcome);
+  }
+}
+function markTripDepleted(tripId) {
+  if (graphBuilder) {
+    graphBuilder.markTripDepleted(tripId);
+  }
+}
+async function selectTripWithGraph(options) {
+  const {
+    trips,
+    ratTotalValue,
+    worldAddress,
+    minRatValueToEnterPercent = 30,
+    currentPath = []
+  } = options;
+  console.log(`[Graph] Starting trip selection (rat value: ${ratTotalValue}, trips available: ${trips.length})`);
+  if (trips.length === 0) {
+    return null;
+  }
+  const availableTripIds = new Set(trips.map((t) => t.id));
+  console.log(`[Graph] Ensuring graph is initialized...`);
+  const builder = await initializeGraph(worldAddress, trips, minRatValueToEnterPercent);
+  const graph = builder.getGraph();
+  const journeys = [...graph.successfulJourneys].sort((a, b) => b.peakValue - a.peakValue);
+  console.log(`[Graph] Found ${journeys.length} profitable journeys to learn from`);
+  if (journeys.length === 0) {
+    console.log(`[Graph] No journeys found, falling back to highest balance trip`);
+    const sorted2 = [...trips].sort((a, b) => b.balance - a.balance);
+    return {
+      trip: sorted2[0],
+      explanation: "Fallback: highest balance trip (no journey data)"
+    };
+  }
+  console.log(`[Graph] Top profitable journeys:`);
+  for (let i = 0; i < Math.min(3, journeys.length); i++) {
+    const j = journeys[i];
+    console.log(`[Graph]   ${i + 1}. ${j.ratName} - peak: ${j.peakValue}, trips: ${j.totalTrips}, gain: ${j.totalValueGained}`);
+  }
+  const currentStep = currentPath.length;
+  console.log(`[Graph] Current step: ${currentStep} (path: ${currentPath.length > 0 ? currentPath.map((id) => id.slice(0, 8)).join(" -> ") : "start"})`);
+  for (const journey of journeys) {
+    const journeyTripIds = journey.steps.map((s) => s.tripId);
+    if (currentStep === 0) {
+      const firstTripId = journeyTripIds[0];
+      if (availableTripIds.has(firstTripId)) {
+        const trip = trips.find((t) => t.id === firstTripId);
+        console.log(`[Graph] Following journey of "${journey.ratName}" (peak: ${journey.peakValue})`);
+        console.log(`[Graph] Journey path: ${journeyTripIds.map((id) => id.slice(0, 8)).join(" -> ")}`);
+        console.log(`[Graph] Starting with trip 1/${journeyTripIds.length}`);
+        return {
+          trip,
+          explanation: `Following ${journey.ratName}'s journey (peak: ${journey.peakValue}) - step 1/${journeyTripIds.length}`
+        };
+      }
+      continue;
+    }
+    let matchesPrefix = true;
+    for (let i = 0; i < currentPath.length && i < journeyTripIds.length; i++) {
+      if (currentPath[i] !== journeyTripIds[i]) {
+        matchesPrefix = false;
+        break;
+      }
+    }
+    if (matchesPrefix && currentStep < journeyTripIds.length) {
+      const nextTripId = journeyTripIds[currentStep];
+      if (availableTripIds.has(nextTripId)) {
+        const trip = trips.find((t) => t.id === nextTripId);
+        console.log(`[Graph] Continuing journey of "${journey.ratName}" (peak: ${journey.peakValue})`);
+        console.log(`[Graph] Next trip: step ${currentStep + 1}/${journeyTripIds.length}`);
+        return {
+          trip,
+          explanation: `Following ${journey.ratName}'s journey (peak: ${journey.peakValue}) - step ${currentStep + 1}/${journeyTripIds.length}`
+        };
+      }
+    }
+  }
+  console.log(`[Graph] No exact journey match, looking for any profitable trip...`);
+  const tripScores = /* @__PURE__ */ new Map();
+  for (const journey of journeys) {
+    for (let i = 0; i < journey.steps.length; i++) {
+      const tripId = journey.steps[i].tripId;
+      if (!availableTripIds.has(tripId)) continue;
+      const positionBonus = (journey.steps.length - i) / journey.steps.length;
+      const score = journey.peakValue * positionBonus;
+      const existing = tripScores.get(tripId);
+      if (!existing || score > existing.score) {
+        tripScores.set(tripId, { score, journeyPeak: journey.peakValue, journeyName: journey.ratName });
+      }
+    }
+  }
+  let bestTripId = null;
+  let bestScore = -Infinity;
+  let bestData = null;
+  for (const [tripId, data] of tripScores) {
+    if (data.score > bestScore) {
+      bestScore = data.score;
+      bestTripId = tripId;
+      bestData = data;
+    }
+  }
+  if (bestTripId && bestData) {
+    const trip = trips.find((t) => t.id === bestTripId);
+    console.log(`[Graph] Selected trip from ${bestData.journeyName}'s journey (peak: ${bestData.journeyPeak})`);
+    return {
+      trip,
+      explanation: `Trip from ${bestData.journeyName}'s journey (peak: ${bestData.journeyPeak})`
+    };
+  }
+  console.log(`[Graph] No matching trips, falling back to highest balance`);
+  const sorted = [...trips].sort((a, b) => b.balance - a.balance);
+  return {
+    trip: sorted[0],
+    explanation: "Fallback: highest balance trip"
+  };
+}
+async function getRecommendedPath(ratValue, _inventory, worldAddress, trips, maxSteps = 5) {
+  const builder = await initializeGraph(worldAddress, trips);
+  const graph = builder.getGraph();
+  const availableTripIds = new Set(trips.map((t) => t.id));
+  const journeys = [...graph.successfulJourneys].sort((a, b) => b.peakValue - a.peakValue);
+  if (journeys.length === 0) {
+    return [];
+  }
+  for (const journey of journeys) {
+    const journeyTripIds = journey.steps.map((s) => s.tripId);
+    const firstTripId = journeyTripIds[0];
+    if (!availableTripIds.has(firstTripId)) continue;
+    const path = [];
+    let cumulativeValue = ratValue;
+    for (let i = 0; i < Math.min(maxSteps, journey.steps.length); i++) {
+      const step = journey.steps[i];
+      if (!availableTripIds.has(step.tripId)) break;
+      cumulativeValue += step.valueChange;
+      path.push({
+        tripId: step.tripId,
+        expectedValue: step.valueChange,
+        cumulativeValue
+      });
+    }
+    if (path.length > 0) {
+      console.log(`[Graph] Recommended path from ${journey.ratName}'s journey (peak: ${journey.peakValue})`);
+      return path;
+    }
+  }
+  return [];
+}
+
 // src/modules/trip-selector/index.ts
 async function selectTrip(configOrOptions, trips, rat, anthropic, outcomeHistory = [], worldAddress) {
   let config;
@@ -3140,6 +4250,11 @@ async function selectTrip(configOrOptions, trips, rat, anthropic, outcomeHistory
   let anthropicClient;
   let history;
   let worldAddr;
+  let ratTotalValue;
+  let minRatValueToEnterPercent;
+  let graphConfig;
+  let currentPath;
+  let inventory;
   if ("config" in configOrOptions) {
     config = configOrOptions.config;
     tripsArray = configOrOptions.trips;
@@ -3147,6 +4262,11 @@ async function selectTrip(configOrOptions, trips, rat, anthropic, outcomeHistory
     anthropicClient = configOrOptions.anthropic;
     history = configOrOptions.outcomeHistory ?? [];
     worldAddr = configOrOptions.worldAddress;
+    ratTotalValue = configOrOptions.ratTotalValue;
+    minRatValueToEnterPercent = configOrOptions.minRatValueToEnterPercent;
+    graphConfig = configOrOptions.graphConfig;
+    currentPath = configOrOptions.currentPath;
+    inventory = configOrOptions.inventory;
   } else {
     config = configOrOptions;
     tripsArray = trips;
@@ -3172,6 +4292,18 @@ async function selectTrip(configOrOptions, trips, rat, anthropic, outcomeHistory
   } else if (config.tripSelector === "historical" && worldAddr) {
     console.log("Using historical data from CMS to select trip...");
     return selectTripHistorical(tripsArray, worldAddr);
+  } else if (config.tripSelector === "graph" && worldAddr) {
+    console.log("Using graph-based pathfinding to select trip...");
+    return selectTripWithGraph({
+      trips: tripsArray,
+      rat: ratObj,
+      ratTotalValue: ratTotalValue ?? ratObj.balance,
+      worldAddress: worldAddr,
+      minRatValueToEnterPercent,
+      config: graphConfig,
+      currentPath,
+      inventory
+    });
   } else {
     console.log("Using heuristic (highest balance) to select trip...");
     const trip = selectTripHeuristic(tripsArray);
@@ -3349,9 +4481,6 @@ async function runBot(config) {
   if (config.liquidateAtValue) {
     logInfo(`Liquidate at value: ${config.liquidateAtValue}`);
   }
-  if (config.liquidateBelowValue) {
-    logInfo(`Liquidate below value: ${config.liquidateBelowValue}`);
-  }
   let anthropic;
   if (config.tripSelector === "claude") {
     anthropic = new Anthropic({ apiKey: config.anthropicApiKey });
@@ -3426,6 +4555,8 @@ async function runBot(config) {
   let sessionTotalTrips = 0;
   let sessionTotalProfitLoss = 0;
   const outcomeHistory = loadOutcomeHistory();
+  let currentPath = [];
+  const gamePercentagesConfig = getGamePercentagesConfig(mud);
   logInfo("Starting main loop...");
   logInfo("==========================================");
   while (true) {
@@ -3465,43 +4596,7 @@ async function runBot(config) {
         startingBalance = rat.balance;
         startingRatName = rat.name;
         tripCount = 0;
-        continue;
-      }
-    }
-    if (config.liquidateBelowValue && rat) {
-      const totalValue = getRatTotalValue(mud, rat);
-      if (totalValue < config.liquidateBelowValue) {
-        logWarning(`Rat value (${totalValue}) fell below threshold (${config.liquidateBelowValue})`);
-        sessionTotalTrips += tripCount;
-        sessionTotalProfitLoss += totalValue - startingBalance;
-        logStats({
-          ratName: rat.name,
-          totalTrips: tripCount,
-          startingBalance,
-          finalBalance: totalValue
-        });
-        logSessionStats({
-          totalRats: sessionTotalRats,
-          totalTrips: sessionTotalTrips,
-          totalProfitLoss: sessionTotalProfitLoss
-        });
-        await liquidateRat(mud);
-        logInfo("Rat liquidated due to low value. Creating new rat...");
-        await createRat(mud, config.ratName);
-        await sleep(3e3);
-        player = getPlayer(mud, playerId);
-        if (player?.currentRat) {
-          ratId = player.currentRat;
-          rat = await retryUntilResult(() => getRat(mud, ratId), 1e4, 500);
-        }
-        if (!rat) {
-          throw new Error("Failed to create new rat after liquidation");
-        }
-        logSuccess(`New rat created: ${rat.name} (balance: ${rat.balance})`);
-        sessionTotalRats++;
-        startingBalance = rat.balance;
-        startingRatName = rat.name;
-        tripCount = 0;
+        currentPath = [];
         continue;
       }
     }
@@ -3520,14 +4615,21 @@ async function runBot(config) {
       continue;
     }
     const worldAddress = mud.worldContract.address;
-    const selection = await selectTrip(
+    const ratTotalValue = getRatTotalValue(mud, rat);
+    const inventoryItems = getInventoryDetails(mud, rat);
+    const inventoryNames = inventoryItems.map((i) => i.name);
+    const selection = await selectTrip({
       config,
-      enterableTrips,
+      trips: enterableTrips,
       rat,
+      ratTotalValue,
       anthropic,
       outcomeHistory,
-      worldAddress
-    );
+      worldAddress,
+      minRatValueToEnterPercent: gamePercentagesConfig.minRatValueToEnter,
+      currentPath,
+      inventory: inventoryNames
+    });
     if (!selection) {
       logError("Failed to select a trip");
       await sleep(5e3);
@@ -3538,6 +4640,35 @@ async function runBot(config) {
     logTrip(tripCount, `Entering: "${selectedTrip.prompt.slice(0, 60)}..."`);
     logTrip(tripCount, `Trip balance: ${selectedTrip.balance}`);
     logInfo(`Selection reason: ${explanation}`);
+    if (config.tripSelector === "graph") {
+      try {
+        const plannedRoute = await getRecommendedPath(
+          ratTotalValue,
+          inventoryNames,
+          worldAddress,
+          enterableTrips,
+          5
+          // Look ahead 5 trips
+        );
+        if (plannedRoute.length > 0) {
+          console.log("");
+          logInfo("=== PLANNED ROUTE ===");
+          let cumulativeEV = ratTotalValue;
+          for (let i = 0; i < plannedRoute.length; i++) {
+            const step = plannedRoute[i];
+            const tripData = enterableTrips.find((t) => t.id === step.tripId);
+            const prompt = tripData?.prompt?.slice(0, 40) || "Unknown";
+            cumulativeEV += step.expectedValue;
+            const evSign = step.expectedValue >= 0 ? "+" : "";
+            logInfo(`  ${i + 1}. "${prompt}..." (EV: ${evSign}${step.expectedValue.toFixed(0)}, cumulative: ${cumulativeEV.toFixed(0)})`);
+          }
+          logInfo("=====================");
+          console.log("");
+        }
+      } catch (e) {
+      }
+    }
+    currentPath.push(selectedTrip.id);
     const totalValueBefore = getRatTotalValue(mud, rat);
     try {
       const outcome = await enterTrip(config.serverUrl, mud.walletClient, selectedTrip.id, rat.id);
@@ -3550,8 +4681,11 @@ async function runBot(config) {
         }
         console.log("");
       }
+      if (outcome.tripDepleted) {
+        markTripDepleted(selectedTrip.id);
+      }
       if (outcome.ratDead) {
-        outcomeHistory.push({
+        const historyEntry = {
           tripId: selectedTrip.id,
           tripPrompt: selectedTrip.prompt,
           totalValueBefore,
@@ -3559,8 +4693,29 @@ async function runBot(config) {
           valueChange: -totalValueBefore,
           died: true,
           logSummary: logEntries.slice(0, 3).join(" | ")
-        });
+        };
+        outcomeHistory.push(historyEntry);
         saveOutcomeHistory(outcomeHistory);
+        updateGraphWithOutcome(selectedTrip.id, {
+          _id: "",
+          _createdAt: (/* @__PURE__ */ new Date()).toISOString(),
+          tripId: selectedTrip.id,
+          tripIndex: 0,
+          ratId: rat.id,
+          ratName: rat.name,
+          playerId,
+          playerName: player?.name || "",
+          ratValueChange: -totalValueBefore,
+          ratValue: 0,
+          oldRatValue: totalValueBefore,
+          newRatBalance: 0,
+          oldRatBalance: rat.balance,
+          inventoryOnEntrance: inventoryItems.map((i) => ({ id: "", name: i.name, value: i.value })),
+          itemChanges: [],
+          itemsLostOnDeath: inventoryItems.map((i) => ({ id: "", name: i.name, value: i.value })),
+          died: true,
+          survived: false
+        });
         logDeath(rat.name, tripCount);
         sessionTotalTrips += tripCount;
         sessionTotalProfitLoss += 0 - startingBalance;
@@ -3592,6 +4747,7 @@ async function runBot(config) {
           startingBalance = rat.balance;
           startingRatName = rat.name;
           tripCount = 0;
+          currentPath = [];
         } else {
           logInfo("Auto-respawn disabled, exiting...");
           break;
@@ -3602,6 +4758,7 @@ async function runBot(config) {
         if (rat) {
           const totalValueAfter = getRatTotalValue(mud, rat);
           const valueChange = totalValueAfter - totalValueBefore;
+          const updatedInventoryItems = getInventoryDetails(mud, rat);
           outcomeHistory.push({
             tripId: selectedTrip.id,
             tripPrompt: selectedTrip.prompt,
@@ -3612,9 +4769,29 @@ async function runBot(config) {
             logSummary: logEntries.slice(0, 3).join(" | ")
           });
           saveOutcomeHistory(outcomeHistory);
+          updateGraphWithOutcome(selectedTrip.id, {
+            _id: "",
+            _createdAt: (/* @__PURE__ */ new Date()).toISOString(),
+            tripId: selectedTrip.id,
+            tripIndex: 0,
+            ratId: rat.id,
+            ratName: rat.name,
+            playerId,
+            playerName: player?.name || "",
+            ratValueChange: valueChange,
+            ratValue: totalValueAfter,
+            oldRatValue: totalValueBefore,
+            newRatBalance: rat.balance,
+            oldRatBalance: totalValueBefore - inventoryItems.reduce((sum, i) => sum + i.value, 0),
+            inventoryOnEntrance: inventoryItems.map((i) => ({ id: "", name: i.name, value: i.value })),
+            itemChanges: [],
+            // Would need to compare inventories to populate this
+            itemsLostOnDeath: [],
+            died: false,
+            survived: true
+          });
           const changeStr = valueChange >= 0 ? `+${valueChange}` : `${valueChange}`;
-          const inventoryItems = getInventoryDetails(mud, rat);
-          const inventoryStr = inventoryItems.length > 0 ? `, Inventory: [${inventoryItems.map((i) => `${i.name}(${i.value})`).join(", ")}]` : "";
+          const inventoryStr = updatedInventoryItems.length > 0 ? `, Inventory: [${updatedInventoryItems.map((i) => `${i.name}(${i.value})`).join(", ")}]` : "";
           logRat(
             rat.name,
             `Balance: ${rat.balance}, Total Value: ${totalValueAfter} (${changeStr}), Trips: ${tripCount}${inventoryStr}`
@@ -3624,6 +4801,35 @@ async function runBot(config) {
             liquidateBelowValue: config.liquidateBelowValue,
             liquidateAtValue: config.liquidateAtValue
           });
+          if (config.tripSelector === "graph") {
+            try {
+              const updatedInventoryNames = updatedInventoryItems.map((i) => i.name);
+              const updatedTrips = getAvailableTrips(mud).filter((trip) => canRatEnterTrip(mud, rat, trip));
+              const updatedRoute = await getRecommendedPath(
+                totalValueAfter,
+                updatedInventoryNames,
+                worldAddress,
+                updatedTrips,
+                5
+              );
+              if (updatedRoute.length > 0) {
+                console.log("");
+                logInfo("=== UPDATED ROUTE (after outcome) ===");
+                let cumulativeEV = totalValueAfter;
+                for (let i = 0; i < updatedRoute.length; i++) {
+                  const step = updatedRoute[i];
+                  const tripData = updatedTrips.find((t) => t.id === step.tripId);
+                  const prompt = tripData?.prompt?.slice(0, 40) || "Unknown";
+                  cumulativeEV += step.expectedValue;
+                  const evSign = step.expectedValue >= 0 ? "+" : "";
+                  logInfo(`  ${i + 1}. "${prompt}..." (EV: ${evSign}${step.expectedValue.toFixed(0)}, cumulative: ${cumulativeEV.toFixed(0)})`);
+                }
+                logInfo("=====================================");
+                console.log("");
+              }
+            } catch (e) {
+            }
+          }
         }
       }
       await sleep(2e3);
@@ -3686,7 +4892,7 @@ function loadConfig(opts) {
 }
 
 // src/index.ts
-var program = new Command().name("rattus-bot").description("Autonomous rat.fun player bot").version("1.0.0").option("-c, --chain <id>", "Chain ID (8453=Base, 84532=Base Sepolia, 31337=local)").option("-s, --selector <type>", "Trip selector: claude or heuristic").option("-r, --auto-respawn", "Automatically create new rat on death").option("-n, --name <name>", "Name for the rat").option("-l, --liquidate-at <value>", "Liquidate rat when total value reaches this threshold").option(
+var program = new Command().name("rattus-bot").description("Autonomous rat.fun player bot").version("1.0.0").option("-c, --chain <id>", "Chain ID (8453=Base, 84532=Base Sepolia, 31337=local)").option("-s, --selector <type>", "Trip selector: claude, heuristic, random, historical, or graph").option("-r, --auto-respawn", "Automatically create new rat on death").option("-n, --name <name>", "Name for the rat").option("-l, --liquidate-at <value>", "Liquidate rat when total value reaches this threshold").option(
   "-b, --liquidate-below <value>",
   "Liquidate rat when total value falls below this threshold"
 ).action(async (options) => {

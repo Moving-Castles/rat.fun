@@ -3,16 +3,23 @@ import type { Trip, Rat, Config, TripOutcomeHistory, TripSelectionResult } from 
 import { selectTripHeuristic, selectTripRandom } from "./heuristic"
 import { selectTripWithClaude } from "./claude"
 import { selectTripHistorical } from "./historical"
+import { selectTripWithGraph } from "./graph"
+import type { GraphStrategyConfig } from "./graph"
 
-export type TripSelector = "claude" | "heuristic" | "random" | "historical"
+export type TripSelector = "claude" | "heuristic" | "random" | "historical" | "graph"
 
 export interface SelectTripOptions {
   config: Config
   trips: Trip[]
   rat: Rat
+  ratTotalValue?: number
   anthropic?: Anthropic
   outcomeHistory?: TripOutcomeHistory[]
   worldAddress?: string
+  minRatValueToEnterPercent?: number
+  graphConfig?: Partial<GraphStrategyConfig>
+  currentPath?: string[] // Trip IDs taken this session (for graph strategy)
+  inventory?: string[] // Item names rat currently has (for graph strategy)
 }
 
 /**
@@ -45,6 +52,11 @@ export async function selectTrip(
   let anthropicClient: Anthropic | undefined
   let history: TripOutcomeHistory[]
   let worldAddr: string | undefined
+  let ratTotalValue: number | undefined
+  let minRatValueToEnterPercent: number | undefined
+  let graphConfig: Partial<GraphStrategyConfig> | undefined
+  let currentPath: string[] | undefined
+  let inventory: string[] | undefined
 
   if ("config" in configOrOptions) {
     // Options object overload
@@ -54,6 +66,11 @@ export async function selectTrip(
     anthropicClient = configOrOptions.anthropic
     history = configOrOptions.outcomeHistory ?? []
     worldAddr = configOrOptions.worldAddress
+    ratTotalValue = configOrOptions.ratTotalValue
+    minRatValueToEnterPercent = configOrOptions.minRatValueToEnterPercent
+    graphConfig = configOrOptions.graphConfig
+    currentPath = configOrOptions.currentPath
+    inventory = configOrOptions.inventory
   } else {
     // Legacy positional arguments
     config = configOrOptions
@@ -82,6 +99,18 @@ export async function selectTrip(
   } else if (config.tripSelector === "historical" && worldAddr) {
     console.log("Using historical data from CMS to select trip...")
     return selectTripHistorical(tripsArray, worldAddr)
+  } else if (config.tripSelector === "graph" && worldAddr) {
+    console.log("Using graph-based pathfinding to select trip...")
+    return selectTripWithGraph({
+      trips: tripsArray,
+      rat: ratObj,
+      ratTotalValue: ratTotalValue ?? ratObj.balance,
+      worldAddress: worldAddr,
+      minRatValueToEnterPercent,
+      config: graphConfig,
+      currentPath,
+      inventory
+    })
   } else {
     console.log("Using heuristic (highest balance) to select trip...")
     const trip = selectTripHeuristic(tripsArray)
@@ -96,3 +125,14 @@ export async function selectTrip(
 export { selectTripHeuristic, selectTripRandom } from "./heuristic"
 export { selectTripWithClaude } from "./claude"
 export { selectTripHistorical } from "./historical"
+export {
+  selectTripWithGraph,
+  initializeGraph,
+  updateGraphWithOutcome,
+  markTripDepleted,
+  getGraph,
+  addTripToGraph,
+  rebuildGraph,
+  getRecommendedPath
+} from "./graph"
+export type { GraphStrategyConfig, ExtendedOutcome } from "./graph"

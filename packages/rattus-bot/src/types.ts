@@ -5,7 +5,7 @@ export interface Config {
   anthropicApiKey: string
   chainId: number
   serverUrl: string
-  tripSelector: "claude" | "heuristic" | "random" | "historical"
+  tripSelector: "claude" | "heuristic" | "random" | "historical" | "graph"
   autoRespawn: boolean
   ratName: string
   worldAddress?: string

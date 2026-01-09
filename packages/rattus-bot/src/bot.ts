@@ -16,7 +16,14 @@ import {
   type SetupResult
 } from "./modules/mud"
 import { enterTrip } from "./modules/server"
-import { selectTrip } from "./modules/trip-selector"
+import {
+  selectTrip,
+  updateGraphWithOutcome,
+  markTripDepleted,
+  getRecommendedPath,
+  getGraph
+} from "./modules/trip-selector"
+import { getGamePercentagesConfig } from "./modules/mud"
 import { addressToId, sleep, retryUntilResult } from "./modules/utils"
 import {
   logInfo,
@@ -50,9 +57,6 @@ export async function runBot(config: Config) {
   logInfo(`Auto-respawn: ${config.autoRespawn}`)
   if (config.liquidateAtValue) {
     logInfo(`Liquidate at value: ${config.liquidateAtValue}`)
-  }
-  if (config.liquidateBelowValue) {
-    logInfo(`Liquidate below value: ${config.liquidateBelowValue}`)
   }
 
   // Initialize Anthropic client if using Claude selector
@@ -161,6 +165,12 @@ export async function runBot(config: Config) {
   // Track outcome history for learning (persists across respawns and bot restarts)
   const outcomeHistory: TripOutcomeHistory[] = loadOutcomeHistory()
 
+  // Track current path for graph strategy (trips taken by current rat)
+  let currentPath: string[] = []
+
+  // Get game percentages config for graph strategy
+  const gamePercentagesConfig = getGamePercentagesConfig(mud)
+
   logInfo("Starting main loop...")
   logInfo("==========================================")
 
@@ -212,55 +222,7 @@ export async function runBot(config: Config) {
         startingBalance = rat.balance
         startingRatName = rat.name
         tripCount = 0
-        continue
-      }
-    }
-
-    // Check if we should liquidate because value fell too low
-    if (config.liquidateBelowValue && rat) {
-      const totalValue = getRatTotalValue(mud, rat)
-      if (totalValue < config.liquidateBelowValue) {
-        logWarning(`Rat value (${totalValue}) fell below threshold (${config.liquidateBelowValue})`)
-
-        // Update session stats
-        sessionTotalTrips += tripCount
-        sessionTotalProfitLoss += totalValue - startingBalance
-
-        logStats({
-          ratName: rat.name,
-          totalTrips: tripCount,
-          startingBalance,
-          finalBalance: totalValue
-        })
-        logSessionStats({
-          totalRats: sessionTotalRats,
-          totalTrips: sessionTotalTrips,
-          totalProfitLoss: sessionTotalProfitLoss
-        })
-
-        // Liquidate the rat
-        await liquidateRat(mud)
-        logInfo("Rat liquidated due to low value. Creating new rat...")
-
-        await createRat(mud, config.ratName)
-        await sleep(3000)
-
-        // Re-fetch player and rat
-        player = getPlayer(mud, playerId)
-        if (player?.currentRat) {
-          ratId = player.currentRat
-          rat = await retryUntilResult(() => getRat(mud, ratId!), 10000, 500)
-        }
-
-        if (!rat) {
-          throw new Error("Failed to create new rat after liquidation")
-        }
-
-        logSuccess(`New rat created: ${rat.name} (balance: ${rat.balance})`)
-        sessionTotalRats++
-        startingBalance = rat.balance
-        startingRatName = rat.name
-        tripCount = 0
+        currentPath = [] // Reset path for new rat (graph strategy)
         continue
       }
     }
@@ -287,14 +249,22 @@ export async function runBot(config: Config) {
 
     // Select a trip (pass history for learning)
     const worldAddress = mud.worldContract.address
-    const selection = await selectTrip(
+    const ratTotalValue = getRatTotalValue(mud, rat!)
+    const inventoryItems = getInventoryDetails(mud, rat!)
+    const inventoryNames = inventoryItems.map(i => i.name)
+
+    const selection = await selectTrip({
       config,
-      enterableTrips,
-      rat!,
+      trips: enterableTrips,
+      rat: rat!,
+      ratTotalValue,
       anthropic,
       outcomeHistory,
-      worldAddress
-    )
+      worldAddress,
+      minRatValueToEnterPercent: gamePercentagesConfig.minRatValueToEnter,
+      currentPath,
+      inventory: inventoryNames
+    })
     if (!selection) {
       logError("Failed to select a trip")
       await sleep(5000)
@@ -307,6 +277,41 @@ export async function runBot(config: Config) {
     logTrip(tripCount, `Entering: "${selectedTrip.prompt.slice(0, 60)}..."`)
     logTrip(tripCount, `Trip balance: ${selectedTrip.balance}`)
     logInfo(`Selection reason: ${explanation}`)
+
+    // Log planned route (graph strategy only)
+    if (config.tripSelector === "graph") {
+      try {
+        const plannedRoute = await getRecommendedPath(
+          ratTotalValue,
+          inventoryNames,
+          worldAddress,
+          enterableTrips,
+          5 // Look ahead 5 trips
+        )
+        if (plannedRoute.length > 0) {
+          console.log("")
+          logInfo("=== PLANNED ROUTE ===")
+          let cumulativeEV = ratTotalValue
+          for (let i = 0; i < plannedRoute.length; i++) {
+            const step = plannedRoute[i]
+            const tripData = enterableTrips.find(t => t.id === step.tripId)
+            const prompt = tripData?.prompt?.slice(0, 40) || "Unknown"
+            cumulativeEV += step.expectedValue
+            const evSign = step.expectedValue >= 0 ? "+" : ""
+            logInfo(
+              `  ${i + 1}. "${prompt}..." (EV: ${evSign}${step.expectedValue.toFixed(0)}, cumulative: ${cumulativeEV.toFixed(0)})`
+            )
+          }
+          logInfo("=====================")
+          console.log("")
+        }
+      } catch (e) {
+        // Route planning failed, continue without it
+      }
+    }
+
+    // Track this trip in current path for graph strategy
+    currentPath.push(selectedTrip.id)
 
     // Store rat total value before trip (balance + inventory)
     const totalValueBefore = getRatTotalValue(mud, rat!)
@@ -326,10 +331,15 @@ export async function runBot(config: Config) {
         console.log("")
       }
 
+      // Check if trip was depleted
+      if (outcome.tripDepleted) {
+        markTripDepleted(selectedTrip.id)
+      }
+
       // Check if rat died
       if (outcome.ratDead) {
         // Record outcome for history
-        outcomeHistory.push({
+        const historyEntry = {
           tripId: selectedTrip.id,
           tripPrompt: selectedTrip.prompt,
           totalValueBefore,
@@ -337,8 +347,31 @@ export async function runBot(config: Config) {
           valueChange: -totalValueBefore,
           died: true,
           logSummary: logEntries.slice(0, 3).join(" | ")
-        })
+        }
+        outcomeHistory.push(historyEntry)
         saveOutcomeHistory(outcomeHistory)
+
+        // Update graph with outcome (for graph strategy learning)
+        updateGraphWithOutcome(selectedTrip.id, {
+          _id: "",
+          _createdAt: new Date().toISOString(),
+          tripId: selectedTrip.id,
+          tripIndex: 0,
+          ratId: rat!.id,
+          ratName: rat!.name,
+          playerId,
+          playerName: player?.name || "",
+          ratValueChange: -totalValueBefore,
+          ratValue: 0,
+          oldRatValue: totalValueBefore,
+          newRatBalance: 0,
+          oldRatBalance: rat!.balance,
+          inventoryOnEntrance: inventoryItems.map(i => ({ id: "", name: i.name, value: i.value })),
+          itemChanges: [],
+          itemsLostOnDeath: inventoryItems.map(i => ({ id: "", name: i.name, value: i.value })),
+          died: true,
+          survived: false
+        })
 
         logDeath(rat!.name, tripCount)
 
@@ -380,6 +413,7 @@ export async function runBot(config: Config) {
           startingBalance = rat.balance
           startingRatName = rat.name
           tripCount = 0 // Reset trip count for new rat
+          currentPath = [] // Reset path for new rat (graph strategy)
         } else {
           logInfo("Auto-respawn disabled, exiting...")
           break
@@ -391,6 +425,9 @@ export async function runBot(config: Config) {
         if (rat) {
           const totalValueAfter = getRatTotalValue(mud, rat)
           const valueChange = totalValueAfter - totalValueBefore
+
+          // Get updated inventory for logging and graph update
+          const updatedInventoryItems = getInventoryDetails(mud, rat)
 
           // Record outcome for history
           outcomeHistory.push({
@@ -404,11 +441,36 @@ export async function runBot(config: Config) {
           })
           saveOutcomeHistory(outcomeHistory)
 
+          // Update graph with outcome (for graph strategy learning)
+          updateGraphWithOutcome(selectedTrip.id, {
+            _id: "",
+            _createdAt: new Date().toISOString(),
+            tripId: selectedTrip.id,
+            tripIndex: 0,
+            ratId: rat.id,
+            ratName: rat.name,
+            playerId,
+            playerName: player?.name || "",
+            ratValueChange: valueChange,
+            ratValue: totalValueAfter,
+            oldRatValue: totalValueBefore,
+            newRatBalance: rat.balance,
+            oldRatBalance: totalValueBefore - inventoryItems.reduce((sum, i) => sum + i.value, 0),
+            inventoryOnEntrance: inventoryItems.map(i => ({
+              id: "",
+              name: i.name,
+              value: i.value
+            })),
+            itemChanges: [], // Would need to compare inventories to populate this
+            itemsLostOnDeath: [],
+            died: false,
+            survived: true
+          })
+
           const changeStr = valueChange >= 0 ? `+${valueChange}` : `${valueChange}`
-          const inventoryItems = getInventoryDetails(mud, rat)
           const inventoryStr =
-            inventoryItems.length > 0
-              ? `, Inventory: [${inventoryItems.map(i => `${i.name}(${i.value})`).join(", ")}]`
+            updatedInventoryItems.length > 0
+              ? `, Inventory: [${updatedInventoryItems.map(i => `${i.name}(${i.value})`).join(", ")}]`
               : ""
           logRat(
             rat.name,
@@ -419,6 +481,42 @@ export async function runBot(config: Config) {
             liquidateBelowValue: config.liquidateBelowValue,
             liquidateAtValue: config.liquidateAtValue
           })
+
+          // Re-evaluate and log updated route after trip outcome (graph strategy only)
+          if (config.tripSelector === "graph") {
+            try {
+              const updatedInventoryNames = updatedInventoryItems.map(i => i.name)
+              const updatedTrips = getAvailableTrips(mud).filter(trip =>
+                canRatEnterTrip(mud, rat!, trip)
+              )
+              const updatedRoute = await getRecommendedPath(
+                totalValueAfter,
+                updatedInventoryNames,
+                worldAddress,
+                updatedTrips,
+                5
+              )
+              if (updatedRoute.length > 0) {
+                console.log("")
+                logInfo("=== UPDATED ROUTE (after outcome) ===")
+                let cumulativeEV = totalValueAfter
+                for (let i = 0; i < updatedRoute.length; i++) {
+                  const step = updatedRoute[i]
+                  const tripData = updatedTrips.find(t => t.id === step.tripId)
+                  const prompt = tripData?.prompt?.slice(0, 40) || "Unknown"
+                  cumulativeEV += step.expectedValue
+                  const evSign = step.expectedValue >= 0 ? "+" : ""
+                  logInfo(
+                    `  ${i + 1}. "${prompt}..." (EV: ${evSign}${step.expectedValue.toFixed(0)}, cumulative: ${cumulativeEV.toFixed(0)})`
+                  )
+                }
+                logInfo("=====================================")
+                console.log("")
+              }
+            } catch (e) {
+              // Route re-evaluation failed, continue without it
+            }
+          }
         }
       }
 

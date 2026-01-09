@@ -70,7 +70,8 @@ export function loadConfig(opts: {
       | "claude"
       | "heuristic"
       | "random"
-      | "historical",
+      | "historical"
+      | "graph",
     autoRespawn: opts.autoRespawn ?? process.env.AUTO_RESPAWN === "true",
     ratName: opts.name || process.env.RAT_NAME || "RattusBot",
     worldAddress: process.env.WORLD_ADDRESS,

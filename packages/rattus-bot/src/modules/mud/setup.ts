@@ -87,31 +87,21 @@ export async function setupMud(
 
   // Wait for initial sync to complete (wait for first block with logs)
   console.log("Waiting for initial state sync...")
-  try {
-    await new Promise<void>((resolve, reject) => {
-      const timeoutId = setTimeout(() => {
-        subscription.unsubscribe()
-        reject(new Error("Sync timeout"))
-      }, 30000)
-
-      const subscription = storedBlockLogs$.subscribe({
-        next: (block: { blockNumber: bigint }) => {
-          if (block.blockNumber > 0n) {
-            clearTimeout(timeoutId)
-            subscription.unsubscribe()
-            resolve()
-          }
-        },
-        error: err => {
-          clearTimeout(timeoutId)
-          reject(err)
+  await new Promise<void>((resolve, reject) => {
+    const subscription = storedBlockLogs$.subscribe({
+      next: (block: { blockNumber: bigint }) => {
+        if (block.blockNumber > 0n) {
+          subscription.unsubscribe()
+          resolve()
         }
-      })
+      },
+      error: err => {
+        subscription.unsubscribe()
+        reject(err)
+      }
     })
-    console.log("MUD sync complete!")
-  } catch (e) {
-    console.log("Warning: Sync timeout, proceeding with available data...")
-  }
+  })
+  console.log("MUD sync complete!")
 
   return {
     world,
