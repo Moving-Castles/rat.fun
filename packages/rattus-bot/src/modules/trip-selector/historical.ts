@@ -50,18 +50,24 @@ async function selectWithClaude(
 
   const totalInventoryValue = inventoryDetails.reduce((sum, item) => sum + item.value, 0)
 
-  // Build inventory description
+  // Build inventory description with utility hints
   let inventorySection = ""
   if (inventoryDetails.length > 0) {
     const itemsList = inventoryDetails.map(i => `- ${i.name} (value: ${i.value})`).join("\n")
     inventorySection = `
-## Current Inventory
-The rat is carrying:
+## Current Inventory (${inventoryDetails.length} items)
 ${itemsList}
 Total inventory value: ${totalInventoryValue}
+
+**Strategic note**: You have items! Look for trips where these items provide an advantage. Match item names to trip themes (e.g., "torch" → dark/cave trips, "key" → locked areas, "weapon" → combat).
 `
   } else {
-    inventorySection = "\n## Current Inventory\nThe rat has no items.\n"
+    inventorySection = `
+## Current Inventory
+**EMPTY** - The rat has no items.
+
+**Strategic priority**: With an empty inventory, your TOP PRIORITY should be acquiring items. Look for trips mentioning treasure, loot, discoveries, or rewards. Build your toolkit before attempting high-risk ventures.
+`
   }
 
   // Build candidates list with stats
@@ -76,31 +82,79 @@ Total inventory value: ${totalInventoryValue}
    - Score: ${c.score.toFixed(2)}`
   }).join("\n\n")
 
-  const prompt = `You are helping a rat choose the best trip from a pre-filtered shortlist.
+  const prompt = `You are helping a rat choose the best trip using an ITEM ACCUMULATION STRATEGY.
+
+## Core Strategy: Item Collection
+Your PRIMARY goal is to accumulate items that unlock or improve outcomes in OTHER trips. Items are force multipliers - a rat with the right items can survive dangerous trips and extract maximum value.
 
 ## Rat Status
 - Name: ${rat.name}
 - Balance: ${rat.balance}
 - Total value: ${rat.balance + totalInventoryValue}
 ${inventorySection}
-## Candidate Trips (includes all available trips - some may be risky!)
+## Candidate Trips
 ${candidatesList}
 
-## Your Task
-Choose the BEST trip considering:
-1. Does the rat's inventory match what the trip might need?
-2. Which trip prompt suggests the best reward for this rat's situation?
-3. Consider trips that might GIVE useful items - items can be used in future trips for bigger gains
-4. Higher scores are generally better, but inventory synergy and item acquisition potential matter more
-5. Be adventurous - sometimes a lower-scored trip with good item potential is worth it
-6. AVOID trips with survival rate below 30% unless the reward potential is exceptional
-7. Negative scores indicate historically unprofitable trips - be cautious but not dismissive
+## Item Acquisition Priority (MOST IMPORTANT)
+Think about trips in terms of their ITEM POTENTIAL:
+
+1. **Trips that GIVE items**: Look for keywords suggesting item rewards:
+   - "treasure", "chest", "loot", "find", "discover", "artifact", "relic"
+   - "tool", "weapon", "key", "map", "potion", "scroll", "gem"
+   - "reward", "prize", "gift", "equipment", "gear"
+   These trips are HIGH PRIORITY even if the immediate value gain is lower.
+
+2. **Items as prerequisites**: Many dangerous trips become safer with items:
+   - Keys open locked doors/chests
+   - Weapons help in combat encounters
+   - Lights/torches help in dark places
+   - Maps/compasses help in mazes/forests
+   - Protective gear reduces death risk
+
+3. **Build inventory BEFORE high-risk/high-reward trips**:
+   - If you see a lucrative but dangerous trip, ask: "What item would help here?"
+   - Then prioritize trips that might GIVE that item first
+   - This is how you turn death traps into profitable ventures
+
+## Decision Framework
+1. **If inventory is EMPTY or LOW**: Prioritize item-acquisition trips above all else
+   - Accept lower immediate value for trips that mention finding/discovering items
+   - Build your toolkit before tackling dangerous high-value trips
+
+2. **If inventory has useful items**: Look for trips where those items provide advantage
+   - Match your items to trip requirements (torch → dark cave, key → locked door)
+   - Now you can tackle higher-risk trips that others can't survive
+
+3. **Score is secondary**: A trip with score +5 that gives an item beats a trip with score +15 that doesn't
+   - Items compound value over multiple trips
+   - Immediate value is one-time; items are reusable advantages
+
+4. **Survival matters for item carriers**: If you have valuable items, be slightly more conservative
+   - Dying loses all items - wasting the investment
+   - But don't be too timid - items exist to be used
+
+## AVOID: Gambling & Chance-Based Trips
+**STRONGLY DEPRIORITIZE** trips that rely on pure luck/gambling. Watch for keywords:
+- "gamble", "bet", "wager", "casino", "dice", "cards", "slots", "roulette"
+- "flip a coin", "roll", "spin", "chance", "lucky", "fortune", "lottery"
+- "all or nothing", "double or nothing", "50/50"
+
+Why avoid gambling trips:
+- Outcomes are random - items and strategy provide NO advantage
+- Can't improve odds through preparation or inventory
+- High variance wastes runs that could build inventory
+- Even "good odds" gambling is worse than strategic item accumulation
+
+Exception: Only consider gambling trips if ALL other options are worse (very low survival or negative scores)
+
+## Response
+Choose the trip that best serves the ITEM ACCUMULATION STRATEGY.
 
 Respond with JSON only:
 \`\`\`json
 {
   "choice": 1,
-  "reasoning": "Brief explanation"
+  "reasoning": "Brief explanation focusing on item strategy"
 }
 \`\`\``
 
