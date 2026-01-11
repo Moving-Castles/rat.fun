@@ -44,17 +44,29 @@ function decodeRevertData(hexData: string) {
  * Extracts revert data from error messages
  */
 function extractRevertData(errorMessage: string): string | null {
-  // First try to match "with reason: 0x..." pattern
+  // Try to match "with reason: 0x..." pattern
   const reasonPattern = /with reason:\s*(0x[a-fA-F0-9]+)/
   const reasonMatch = errorMessage.match(reasonPattern)
   if (reasonMatch) {
     return reasonMatch[1]
   }
 
-  // Fallback to any hex string with 8+ chars
-  const hexPattern = /0x[a-fA-F0-9]{8,}/g
-  const matches = errorMessage.match(hexPattern)
-  return matches ? matches[0] : null
+  // Try to match "reverted with 0x..." or "revert data: 0x..." patterns
+  const revertPatterns = [
+    /reverted with\s*(0x[a-fA-F0-9]{8,})/i,
+    /revert data:\s*(0x[a-fA-F0-9]{8,})/i,
+    /execution reverted:\s*(0x[a-fA-F0-9]{8,})/i
+  ]
+
+  for (const pattern of revertPatterns) {
+    const match = errorMessage.match(pattern)
+    if (match) {
+      return match[1]
+    }
+  }
+
+  // Don't use a greedy fallback - it can match addresses from error messages
+  return null
 }
 
 /**
