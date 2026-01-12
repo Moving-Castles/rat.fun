@@ -1,0 +1,22 @@
+{
+  "name": "get-trip-outcomes",
+  "version": "1.0.0",
+  "description": "Download all outcomes for a specific trip and save as JSON",
+  "main": "index.ts",
+  "scripts": {
+    "start": "ts-node index.ts"
+  },
+  "author": "",
+  "license": "MIT",
+  "packageManager": "pnpm@10.8.0",
+  "dependencies": {
+    "@sanity/client": "^7.8.1",
+    "commander": "^14.0.0",
+    "dotenv": "^17.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  }
+}
