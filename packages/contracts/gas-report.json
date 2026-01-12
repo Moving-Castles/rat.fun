@@ -27,7 +27,7 @@
     "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
     "test": "testApplyOutcomeOverTransferToTrip",
     "name": "Apply outcome (over transfer to trip)",
-    "gasUsed": 397468
+    "gasUsed": 397569
   },
   {
     "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
@@ -39,7 +39,7 @@
     "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
     "test": "testApplyOutcomeRemoveItemsFromDifferentArrayPositions",
     "name": "Apply outcome (remove item from middle of full inventory)",
-    "gasUsed": 173529
+    "gasUsed": 173518
   },
   {
     "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
@@ -57,7 +57,19 @@
     "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
     "test": "testApplyOutcomeValueTransferOnDeath",
     "name": "Apply outcome (value transfer on death)",
-    "gasUsed": 412885
+    "gasUsed": 412986
+  },
+  {
+    "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
+    "test": "testChallengeTripWinnerTakesAllWithItemRemoval",
+    "name": "Apply outcome (challenge trip winner takes all with item)",
+    "gasUsed": 222653
+  },
+  {
+    "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",
+    "test": "testItemRemovalValueAvailableForBalanceTransfer",
+    "name": "Apply outcome (item removal contributes to budget)",
+    "gasUsed": 182070
   },
   {
     "file": "test/systems/ManagerSystem.t.sol:ManagerSystemTest",

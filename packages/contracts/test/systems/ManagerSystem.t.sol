@@ -649,4 +649,203 @@ contract ManagerSystemTest is BaseTest {
     assertEq(Inventory.length(ratId), initialRatInventoryLength, "Rat inventory should be unchanged");
     assertEq(Balance.get(tripId), initialTripBalance, "Trip balance should be unchanged");
   }
+
+  // * * * * * * * * * * * * * * * * * *
+  // Item Removal Budget Contribution
+  // * * * * * * * * * * * * * * * * * *
+
+  /**
+   * @notice Tests that item removal value should be available for balance transfer
+   * @dev This test demonstrates the desired behavior where removing an item
+   *      adds its value to the available budget BEFORE the balance transfer is applied.
+   *
+   *      Scenario:
+   *      - Trip balance: 1000
+   *      - Rat has item worth 100
+   *      - LLM removes item and requests transfer of 1100 (1000 trip + 100 item value)
+   *
+   *      Current behavior (bug): Transfer is capped to 1000, item removal adds 100 back to trip
+   *      Desired behavior: Item removal happens first, making 1100 available for transfer
+   */
+  function testItemRemovalValueAvailableForBalanceTransfer() public {
+    // Set up: high maxValuePerWin so only trip balance limits transfer
+    prankAdmin();
+    GamePercentagesConfig.setMaxValuePerWin(100); // 100% so no percentage limit
+    vm.stopPrank();
+
+    // Set trip balance to exactly 1000
+    uint256 tripBalance = 1000;
+    prankAdmin();
+    Balance.set(tripId, tripBalance);
+    vm.stopPrank();
+
+    // Give rat an item worth 100
+    uint256 itemValue = 100;
+    Item[] memory newItems = new Item[](1);
+    newItems[0] = Item("valuable_item", itemValue);
+
+    prankAdmin();
+    world.ratfun__applyOutcome(ratId, tripId, 0, new bytes32[](0), newItems);
+    vm.stopPrank();
+
+    // Verify setup: trip has 900 (1000 - 100 for item), rat has 1 item
+    assertEq(Balance.get(tripId), tripBalance - itemValue, "Trip should have 900 after giving item");
+    assertEq(Inventory.length(ratId), 1, "Rat should have 1 item");
+
+    // Reset trip balance to 1000 for the actual test scenario
+    prankAdmin();
+    Balance.set(tripId, tripBalance);
+    vm.stopPrank();
+
+    // Now the scenario: trip has 1000, rat has item worth 100
+    // LLM says: remove item, give rat 1100 (full trip balance + item value)
+    uint256 initialRatBalance = Balance.get(ratId);
+    bytes32[] memory itemsToRemove = new bytes32[](1);
+    itemsToRemove[0] = Inventory.getItem(ratId, 0);
+
+    // Transfer amount = trip balance + item value = 1100
+    int256 transferAmount = int256(tripBalance + itemValue);
+
+    prankAdmin();
+    startGasReport("Apply outcome (item removal contributes to budget)");
+    world.ratfun__applyOutcome(ratId, tripId, transferAmount, itemsToRemove, new Item[](0));
+    endGasReport();
+    vm.stopPrank();
+
+    // DESIRED BEHAVIOR:
+    // - Item removal should happen first, adding 100 to trip balance (1000 -> 1100)
+    // - Budget should then be 1100
+    // - Transfer of 1100 should succeed fully
+    // - Trip should end with 0 balance
+    // - Rat should receive the full 1100
+
+    assertEq(Inventory.length(ratId), 0, "Item should be removed from rat");
+    assertEq(Balance.get(tripId), 0, "Trip balance should be fully depleted");
+    assertEq(
+      Balance.get(ratId),
+      initialRatBalance + tripBalance + itemValue,
+      "Rat should receive full transfer amount (trip balance + item value)"
+    );
+  }
+
+  /**
+   * @notice Tests challenge trip winner-takes-all with item removal
+   * @dev In a challenge trip, when the LLM decides a player wins everything,
+   *      including compensation for items lost, the trip should be fully depleted
+   *      and the winner should be set.
+   *
+   *      Scenario:
+   *      - Challenge trip with balance 1000
+   *      - Rat enters with item worth 100
+   *      - LLM: "You win! Take everything (1000 + 100 for your lost item)"
+   *      - Contract removes item and transfers 1100
+   *
+   *      Expected: Trip depleted to 0, challenge winner set
+   */
+  function testChallengeTripWinnerTakesAllWithItemRemoval() public {
+    // Create a challenge trip
+    prankAdmin();
+    bytes32 challengeTripId = world.ratfun__createTrip(
+      bobId,
+      bytes32(0),
+      1000, // Trip balance
+      true, // isChallenge = true
+      1, // fixedMinValueToEnter (required for challenge trips)
+      100, // overrideMaxValuePerWinPercentage = 100% (winner takes all)
+      "challenge trip"
+    );
+    vm.stopPrank();
+
+    // Verify challenge trip setup
+    assertTrue(ChallengeTrip.get(challengeTripId), "Should be a challenge trip");
+    assertEq(Balance.get(challengeTripId), 1000, "Challenge trip should have 1000 balance");
+
+    // Give rat an item worth 100
+    uint256 itemValue = 100;
+    Item[] memory newItems = new Item[](1);
+    newItems[0] = Item("challenge_item", itemValue);
+
+    prankAdmin();
+    world.ratfun__applyOutcome(ratId, challengeTripId, 0, new bytes32[](0), newItems);
+    vm.stopPrank();
+
+    // Now trip has 900, rat has item worth 100
+    assertEq(Balance.get(challengeTripId), 900, "Trip should have 900 after giving item");
+
+    // Reset trip balance to 1000 for the winner-takes-all scenario
+    prankAdmin();
+    Balance.set(challengeTripId, 1000);
+    vm.stopPrank();
+
+    // The scenario: rat enters with item worth 100, trip has 1000
+    // LLM decides: rat wins everything, including compensation for lost item
+    uint256 initialRatBalance = Balance.get(ratId);
+    bytes32[] memory itemsToRemove = new bytes32[](1);
+    itemsToRemove[0] = Inventory.getItem(ratId, 0);
+
+    // Transfer = trip balance + item value compensation
+    int256 transferAmount = int256(1000 + itemValue);
+
+    prankAdmin();
+    startGasReport("Apply outcome (challenge trip winner takes all with item)");
+    world.ratfun__applyOutcome(ratId, challengeTripId, transferAmount, itemsToRemove, new Item[](0));
+    endGasReport();
+    vm.stopPrank();
+
+    // DESIRED BEHAVIOR for challenge trips:
+    // - Item removed, its value (100) added to trip budget
+    // - Full transfer of 1100 succeeds
+    // - Trip balance reaches 0
+    // - Challenge winner is set to the rat's owner (alice)
+
+    assertEq(Inventory.length(ratId), 0, "Item should be removed");
+    assertEq(Balance.get(challengeTripId), 0, "Challenge trip should be fully depleted");
+    assertEq(Balance.get(ratId), initialRatBalance + 1000 + itemValue, "Rat should receive full amount");
+    assertEq(ChallengeWinner.get(challengeTripId), aliceId, "Alice (rat owner) should be the challenge winner");
+  }
+
+  /**
+   * @notice Tests multiple items removed should all contribute to budget
+   * @dev When multiple items are removed, their combined value should be
+   *      available for the balance transfer.
+   */
+  function testMultipleItemsRemovalContributesToBudget() public {
+    // Set up: high maxValuePerWin
+    prankAdmin();
+    GamePercentagesConfig.setMaxValuePerWin(100);
+    Balance.set(tripId, 1000);
+    vm.stopPrank();
+
+    // Give rat multiple items: 50 + 30 + 20 = 100 total
+    Item[] memory newItems = new Item[](3);
+    newItems[0] = Item("item_a", 50);
+    newItems[1] = Item("item_b", 30);
+    newItems[2] = Item("item_c", 20);
+
+    prankAdmin();
+    world.ratfun__applyOutcome(ratId, tripId, 0, new bytes32[](0), newItems);
+    vm.stopPrank();
+
+    // Reset trip balance
+    prankAdmin();
+    Balance.set(tripId, 1000);
+    vm.stopPrank();
+
+    uint256 initialRatBalance = Balance.get(ratId);
+
+    // Remove all items and request transfer of 1100 (1000 + 100 from items)
+    bytes32[] memory itemsToRemove = new bytes32[](3);
+    itemsToRemove[0] = Inventory.getItem(ratId, 0);
+    itemsToRemove[1] = Inventory.getItem(ratId, 1);
+    itemsToRemove[2] = Inventory.getItem(ratId, 2);
+
+    prankAdmin();
+    world.ratfun__applyOutcome(ratId, tripId, 1100, itemsToRemove, new Item[](0));
+    vm.stopPrank();
+
+    // DESIRED: All 3 items' values (100 total) contribute to budget
+    assertEq(Inventory.length(ratId), 0, "All items should be removed");
+    assertEq(Balance.get(tripId), 0, "Trip should be depleted");
+    assertEq(Balance.get(ratId), initialRatBalance + 1100, "Rat should receive full amount");
+  }
 }

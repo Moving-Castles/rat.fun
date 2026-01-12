@@ -77,7 +77,15 @@ contract ManagerSystem is System {
     uint256 tripBudget = LibUtils.min(LibTrip.getMaxValuePerWin(_tripId), tripBalance);
 
     // * * * * * * * * * * * * *
-    // BALANCE
+    // ITEM REMOVAL
+    // * * * * * * * * * * * * *
+
+    // Remove items FIRST so their value is available for balance transfer
+    // As items always have positive value, this will always increase the trip budget
+    tripBudget = LibManager.removeItemsFromRat(tripBudget, _ratId, _tripId, _itemsToRemoveFromRat);
+
+    // * * * * * * * * * * * * *
+    // BALANCE TRANSFER
     // * * * * * * * * * * * * *
 
     // Balance transfer can have positive or negative value: effect on trip balance unknown
@@ -91,11 +99,9 @@ contract ManagerSystem is System {
     }
 
     // * * * * * * * * * * * * *
-    // ITEMS
+    // ITEM ADDITION
     // * * * * * * * * * * * * *
 
-    // As items always have positive value, this will always increase the trip balance
-    tripBudget = LibManager.removeItemsFromRat(tripBudget, _ratId, _tripId, _itemsToRemoveFromRat);
     // As items always have positive value, this will always decrease the trip balance
     tripBudget = LibManager.addItemsToRat(tripBudget, _ratId, _tripId, _itemsToAddToRat);
 
