@@ -8,8 +8,16 @@ import { ENTITY_TYPE } from "contracts/enums"
  * Get all available trips (balance > 0) from MUD state
  */
 export function getAvailableTrips(mud: SetupResult): Trip[] {
-  const { EntityType, Balance, Prompt, TripCreationCost, Owner, VisitCount, KillCount } =
-    mud.components
+  const {
+    EntityType,
+    Balance,
+    Prompt,
+    TripCreationCost,
+    Owner,
+    VisitCount,
+    KillCount,
+    CreationBlock
+  } = mud.components
 
   const trips: Trip[] = []
 
@@ -29,6 +37,9 @@ export function getAvailableTrips(mud: SetupResult): Trip[] {
         const owner = (getComponentValue(Owner, entityId as Entity)?.value ?? "") as string
         const visitCount = Number(getComponentValue(VisitCount, entityId as Entity)?.value ?? 0)
         const killCount = Number(getComponentValue(KillCount, entityId as Entity)?.value ?? 0)
+        const creationBlock = Number(
+          getComponentValue(CreationBlock, entityId as Entity)?.value ?? 0
+        )
 
         trips.push({
           id: entityId,
@@ -37,7 +48,8 @@ export function getAvailableTrips(mud: SetupResult): Trip[] {
           tripCreationCost,
           owner,
           visitCount,
-          killCount
+          killCount,
+          creationBlock
         })
       }
     }

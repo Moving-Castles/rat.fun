@@ -3,9 +3,10 @@ import type { Trip, Rat, Config, TripSelectionResult } from "../../types"
 import { selectTripHeuristic, selectTripRandom } from "./heuristic"
 import { selectTripWithClaude, type InventoryItem } from "./claude"
 import { selectTripHistorical } from "./historical"
+import { selectTripScalper } from "./scalper"
 import { getRecentOutcomes } from "../cms"
 
-export type TripSelector = "claude" | "heuristic" | "random" | "historical"
+export type TripSelector = "claude" | "heuristic" | "random" | "historical" | "scalper"
 
 export interface SelectTripOptions {
   config: Config
@@ -14,6 +15,7 @@ export interface SelectTripOptions {
   anthropic?: Anthropic
   inventoryDetails?: InventoryItem[]
   worldAddress?: string
+  currentBlockNumber?: number
 }
 
 /**
@@ -47,6 +49,8 @@ export async function selectTrip(
   let inventory: InventoryItem[]
   let worldAddr: string | undefined
 
+  let currentBlock: number | undefined
+
   if ("config" in configOrOptions) {
     // Options object overload
     config = configOrOptions.config
@@ -55,6 +59,7 @@ export async function selectTrip(
     anthropicClient = configOrOptions.anthropic
     inventory = configOrOptions.inventoryDetails ?? []
     worldAddr = configOrOptions.worldAddress
+    currentBlock = configOrOptions.currentBlockNumber
   } else {
     // Legacy positional arguments
     config = configOrOptions
@@ -96,6 +101,15 @@ export async function selectTrip(
   } else if (config.tripSelector === "historical" && worldAddr) {
     console.log("Using historical data from CMS to select trip...")
     return selectTripHistorical(tripsArray, worldAddr, anthropicClient, ratObj, inventory)
+  } else if (config.tripSelector === "scalper" && anthropicClient && currentBlock) {
+    console.log("Using scalper strategy (target trips created in last hour)...")
+    return selectTripScalper({
+      trips: tripsArray,
+      currentBlockNumber: currentBlock,
+      anthropic: anthropicClient,
+      rat: ratObj,
+      inventoryDetails: inventory
+    })
   } else {
     console.log("Using heuristic (highest balance) to select trip...")
     const trip = selectTripHeuristic(tripsArray)
@@ -110,3 +124,4 @@ export async function selectTrip(
 export { selectTripHeuristic, selectTripRandom } from "./heuristic"
 export { selectTripWithClaude, type InventoryItem } from "./claude"
 export { selectTripHistorical } from "./historical"
+export { selectTripScalper, updateScalperState, resetScalperState } from "./scalper"

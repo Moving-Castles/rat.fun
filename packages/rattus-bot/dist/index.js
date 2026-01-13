@@ -2739,7 +2739,16 @@ import { getComponentValue as getComponentValue2 } from "@latticexyz/recs";
 import { singletonEntity as singletonEntity2 } from "@latticexyz/store-sync/recs";
 import { ENTITY_TYPE as ENTITY_TYPE2 } from "contracts/enums";
 function getAvailableTrips(mud) {
-  const { EntityType, Balance, Prompt, TripCreationCost, Owner, VisitCount, KillCount } = mud.components;
+  const {
+    EntityType,
+    Balance,
+    Prompt,
+    TripCreationCost,
+    Owner,
+    VisitCount,
+    KillCount,
+    CreationBlock
+  } = mud.components;
   const trips = [];
   EntityType.values.value.forEach((entityType, entityKey) => {
     const entityId = entityKey.description;
@@ -2753,6 +2762,9 @@ function getAvailableTrips(mud) {
         const owner = getComponentValue2(Owner, entityId)?.value ?? "";
         const visitCount = Number(getComponentValue2(VisitCount, entityId)?.value ?? 0);
         const killCount = Number(getComponentValue2(KillCount, entityId)?.value ?? 0);
+        const creationBlock = Number(
+          getComponentValue2(CreationBlock, entityId)?.value ?? 0
+        );
         trips.push({
           id: entityId,
           prompt,
@@ -2760,7 +2772,8 @@ function getAvailableTrips(mud) {
           tripCreationCost,
           owner,
           visitCount,
-          killCount
+          killCount,
+          creationBlock
         });
       }
     }
@@ -3174,13 +3187,19 @@ async function selectWithClaude(anthropic, candidates, rat, inventoryDetails) {
   if (inventoryDetails.length > 0) {
     const itemsList = inventoryDetails.map((i) => `- ${i.name} (value: ${i.value})`).join("\n");
     inventorySection = `
-## Current Inventory
-The rat is carrying:
+## Current Inventory (${inventoryDetails.length} items)
 ${itemsList}
 Total inventory value: ${totalInventoryValue}
+
+**Strategic note**: You have items! Look for trips where these items provide an advantage. Match item names to trip themes (e.g., "torch" \u2192 dark/cave trips, "key" \u2192 locked areas, "weapon" \u2192 combat).
 `;
   } else {
-    inventorySection = "\n## Current Inventory\nThe rat has no items.\n";
+    inventorySection = `
+## Current Inventory
+**EMPTY** - The rat has no items.
+
+**Strategic priority**: With an empty inventory, your TOP PRIORITY should be acquiring items. Look for trips mentioning treasure, loot, discoveries, or rewards. Build your toolkit before attempting high-risk ventures.
+`;
   }
   const candidatesList = candidates.map((c, i) => {
     const survivalPct = (100 - c.deathRate * 100).toFixed(0);
@@ -3192,31 +3211,79 @@ Total inventory value: ${totalInventoryValue}
    - Historical outcomes: ${c.outcomes}
    - Score: ${c.score.toFixed(2)}`;
   }).join("\n\n");
-  const prompt = `You are helping a rat choose the best trip from a pre-filtered shortlist.
+  const prompt = `You are helping a rat choose the best trip using an ITEM ACCUMULATION STRATEGY.
+
+## Core Strategy: Item Collection
+Your PRIMARY goal is to accumulate items that unlock or improve outcomes in OTHER trips. Items are force multipliers - a rat with the right items can survive dangerous trips and extract maximum value.
 
 ## Rat Status
 - Name: ${rat.name}
 - Balance: ${rat.balance}
 - Total value: ${rat.balance + totalInventoryValue}
 ${inventorySection}
-## Candidate Trips (includes all available trips - some may be risky!)
+## Candidate Trips
 ${candidatesList}
 
-## Your Task
-Choose the BEST trip considering:
-1. Does the rat's inventory match what the trip might need?
-2. Which trip prompt suggests the best reward for this rat's situation?
-3. Consider trips that might GIVE useful items - items can be used in future trips for bigger gains
-4. Higher scores are generally better, but inventory synergy and item acquisition potential matter more
-5. Be adventurous - sometimes a lower-scored trip with good item potential is worth it
-6. AVOID trips with survival rate below 30% unless the reward potential is exceptional
-7. Negative scores indicate historically unprofitable trips - be cautious but not dismissive
+## Item Acquisition Priority (MOST IMPORTANT)
+Think about trips in terms of their ITEM POTENTIAL:
+
+1. **Trips that GIVE items**: Look for keywords suggesting item rewards:
+   - "treasure", "chest", "loot", "find", "discover", "artifact", "relic"
+   - "tool", "weapon", "key", "map", "potion", "scroll", "gem"
+   - "reward", "prize", "gift", "equipment", "gear"
+   These trips are HIGH PRIORITY even if the immediate value gain is lower.
+
+2. **Items as prerequisites**: Many dangerous trips become safer with items:
+   - Keys open locked doors/chests
+   - Weapons help in combat encounters
+   - Lights/torches help in dark places
+   - Maps/compasses help in mazes/forests
+   - Protective gear reduces death risk
+
+3. **Build inventory BEFORE high-risk/high-reward trips**:
+   - If you see a lucrative but dangerous trip, ask: "What item would help here?"
+   - Then prioritize trips that might GIVE that item first
+   - This is how you turn death traps into profitable ventures
+
+## Decision Framework
+1. **If inventory is EMPTY or LOW**: Prioritize item-acquisition trips above all else
+   - Accept lower immediate value for trips that mention finding/discovering items
+   - Build your toolkit before tackling dangerous high-value trips
+
+2. **If inventory has useful items**: Look for trips where those items provide advantage
+   - Match your items to trip requirements (torch \u2192 dark cave, key \u2192 locked door)
+   - Now you can tackle higher-risk trips that others can't survive
+
+3. **Score is secondary**: A trip with score +5 that gives an item beats a trip with score +15 that doesn't
+   - Items compound value over multiple trips
+   - Immediate value is one-time; items are reusable advantages
+
+4. **Survival matters for item carriers**: If you have valuable items, be slightly more conservative
+   - Dying loses all items - wasting the investment
+   - But don't be too timid - items exist to be used
+
+## AVOID: Gambling & Chance-Based Trips
+**STRONGLY DEPRIORITIZE** trips that rely on pure luck/gambling. Watch for keywords:
+- "gamble", "bet", "wager", "casino", "dice", "cards", "slots", "roulette"
+- "flip a coin", "roll", "spin", "chance", "lucky", "fortune", "lottery"
+- "all or nothing", "double or nothing", "50/50"
+
+Why avoid gambling trips:
+- Outcomes are random - items and strategy provide NO advantage
+- Can't improve odds through preparation or inventory
+- High variance wastes runs that could build inventory
+- Even "good odds" gambling is worse than strategic item accumulation
+
+Exception: Only consider gambling trips if ALL other options are worse (very low survival or negative scores)
+
+## Response
+Choose the trip that best serves the ITEM ACCUMULATION STRATEGY.
 
 Respond with JSON only:
 \`\`\`json
 {
   "choice": 1,
-  "reasoning": "Brief explanation"
+  "reasoning": "Brief explanation focusing on item strategy"
 }
 \`\`\``;
   try {
@@ -3364,6 +3431,195 @@ Valid trips (score > 0, survival >= 30%): ${validTrips.length}`);
   };
 }
 
+// src/modules/trip-selector/scalper.ts
+var state = {
+  currentTripId: null,
+  currentTripPrompt: null,
+  lastValueChange: null,
+  lastOutcomeLog: null,
+  unprofitableTrips: /* @__PURE__ */ new Set()
+};
+function updateScalperState(tripId, tripPrompt, valueChange, outcomeLog) {
+  state.currentTripId = tripId;
+  state.currentTripPrompt = tripPrompt;
+  state.lastValueChange = valueChange;
+  state.lastOutcomeLog = outcomeLog;
+  if (valueChange <= 0) {
+    state.unprofitableTrips.add(tripId);
+    console.log(`[Scalper] Marked trip as unprofitable (${state.unprofitableTrips.size} total blacklisted)`);
+  }
+  console.log(`[Scalper] Updated state: trip=${tripId.slice(0, 10)}..., valueChange=${valueChange}`);
+}
+function resetScalperState() {
+  state.currentTripId = null;
+  state.currentTripPrompt = null;
+  state.lastValueChange = null;
+  state.lastOutcomeLog = null;
+  state.unprofitableTrips.clear();
+  console.log("[Scalper] State reset (cleared unprofitable trips list)");
+}
+async function selectWithClaude2(anthropic, trips, rat, inventoryDetails) {
+  if (trips.length === 0) return null;
+  if (trips.length === 1) {
+    return { selected: trips[0], reasoning: "Only one new trip available" };
+  }
+  const totalInventoryValue = inventoryDetails.reduce((sum, item) => sum + item.value, 0);
+  let inventorySection = "";
+  if (inventoryDetails.length > 0) {
+    const itemsList = inventoryDetails.map((i) => `- ${i.name} (value: ${i.value})`).join("\n");
+    inventorySection = `
+## Current Inventory (${inventoryDetails.length} items)
+${itemsList}
+Total inventory value: ${totalInventoryValue}
+`;
+  } else {
+    inventorySection = `
+## Current Inventory
+**EMPTY** - The rat has no items.
+`;
+  }
+  let lastOutcomeSection = "";
+  if (state.lastOutcomeLog && state.lastOutcomeLog.length > 0 && state.currentTripPrompt) {
+    const outcomeText = state.lastOutcomeLog.join("\n");
+    const profitStatus = state.lastValueChange !== null ? state.lastValueChange > 0 ? `+${state.lastValueChange} (profitable)` : `${state.lastValueChange} (not profitable)` : "unknown";
+    lastOutcomeSection = `
+## Last Trip Outcome
+**Trip:** "${state.currentTripPrompt}"
+**Result:** ${profitStatus}
+**Log:**
+${outcomeText}
+`;
+  }
+  const tripsList = trips.map((t, i) => {
+    return `${i + 1}. "${t.prompt}"
+   - Balance: ${t.balance}
+   - Visit count: ${t.visitCount}
+   - Kill count: ${t.killCount}`;
+  }).join("\n\n");
+  const prompt = `You are helping a rat choose the best trip to scalp.
+
+## Strategy: Scalping Newest Trips
+You're targeting the newest trips. The goal is to find underexplored opportunities before other players discover them.
+${lastOutcomeSection}
+## Rat Status
+- Name: ${rat.name}
+- Balance: ${rat.balance}
+- Total value: ${rat.balance + totalInventoryValue}
+${inventorySection}
+## Available Trips (${trips.length} newest trips)
+${tripsList}
+
+## Selection Criteria
+1. **Low visit/kill counts are good** - Less explored means more potential
+2. **Higher balance is attractive** - More rewards available
+3. **Read the prompt carefully** - Avoid obvious death traps
+4. **Match inventory to trip theme** - Use items you have for advantage
+5. **Avoid gambling/chance trips** - Pure luck doesn't benefit from strategy
+
+## Response
+Choose the best trip for scalping.
+
+Respond with JSON only:
+\`\`\`json
+{
+  "choice": 1,
+  "reasoning": "Brief explanation"
+}
+\`\`\``;
+  try {
+    const response = await anthropic.messages.create({
+      model: "claude-sonnet-4-20250514",
+      max_tokens: 200,
+      temperature: 1,
+      messages: [{ role: "user", content: prompt }]
+    });
+    const content = response.content[0];
+    if (content.type !== "text") return null;
+    let jsonText = content.text.trim();
+    if (jsonText.startsWith("```json")) jsonText = jsonText.slice(7);
+    if (jsonText.startsWith("```")) jsonText = jsonText.slice(3);
+    if (jsonText.endsWith("```")) jsonText = jsonText.slice(0, -3);
+    const parsed = JSON.parse(jsonText.trim());
+    const choiceIndex = (parsed.choice || 1) - 1;
+    if (choiceIndex >= 0 && choiceIndex < trips.length) {
+      return {
+        selected: trips[choiceIndex],
+        reasoning: parsed.reasoning || "Claude selection"
+      };
+    }
+  } catch (error) {
+    console.warn("[Scalper] Claude selection failed:", error);
+  }
+  return null;
+}
+async function selectTripScalper(options) {
+  const {
+    trips,
+    currentBlockNumber,
+    anthropic,
+    rat,
+    inventoryDetails = [],
+    newestCount = 10
+  } = options;
+  if (trips.length === 0) return null;
+  const sortedByCreation = [...trips].sort((a, b) => b.creationBlock - a.creationBlock);
+  const newestTrips = sortedByCreation.slice(0, newestCount);
+  const eligibleTrips = newestTrips.filter((t) => !state.unprofitableTrips.has(t.id));
+  if (state.unprofitableTrips.size > 0) {
+    console.log(`[Scalper] Excluding ${newestTrips.length - eligibleTrips.length} unprofitable trips`);
+  }
+  if (eligibleTrips.length === 0) {
+    console.log("[Scalper] All newest trips are blacklisted, no eligible trips");
+    return null;
+  }
+  console.log(`[Scalper] Selecting from ${eligibleTrips.length} eligible trips (of ${trips.length} total):`);
+  eligibleTrips.forEach((t) => {
+    const ageBlocks = currentBlockNumber - t.creationBlock;
+    const ageMinutes = Math.round(ageBlocks * 2 / 60);
+    console.log(
+      `  - "${t.prompt.slice(0, 30)}..." (${ageMinutes}m old, ${t.visitCount} visits, balance: ${t.balance})`
+    );
+  });
+  if (state.currentTripId !== null && state.lastValueChange !== null && state.lastValueChange > 0) {
+    const currentTrip = eligibleTrips.find((t) => t.id === state.currentTripId);
+    if (currentTrip) {
+      console.log(
+        `[Scalper] Sticking with profitable trip: "${currentTrip.prompt.slice(0, 30)}..." (last: +${state.lastValueChange})`
+      );
+      return {
+        trip: currentTrip,
+        explanation: `Scalper: continuing profitable trip (last: +${state.lastValueChange})`
+      };
+    }
+    console.log("[Scalper] Previous trip no longer in eligible pool, selecting new");
+  } else if (state.currentTripId !== null && state.lastValueChange !== null) {
+    console.log(`[Scalper] Previous trip was not profitable (${state.lastValueChange}), switching`);
+  }
+  console.log(`[Scalper] Asking Claude to select from ${eligibleTrips.length} eligible trips...`);
+  const claudeResult = await selectWithClaude2(anthropic, eligibleTrips, rat, inventoryDetails);
+  if (claudeResult) {
+    const { selected: selected2, reasoning } = claudeResult;
+    state.currentTripId = selected2.id;
+    state.lastValueChange = null;
+    const ageBlocks = currentBlockNumber - selected2.creationBlock;
+    const ageMinutes = Math.round(ageBlocks * 2 / 60);
+    console.log(`[Scalper] Claude selected: "${selected2.prompt.slice(0, 30)}..."`);
+    return {
+      trip: selected2,
+      explanation: `Scalper (Claude): ${reasoning} (${ageMinutes}m old, ${selected2.visitCount} visits)`
+    };
+  }
+  console.log("[Scalper] Claude failed, falling back to random selection");
+  const randomIndex = Math.floor(Math.random() * eligibleTrips.length);
+  const selected = eligibleTrips[randomIndex];
+  state.currentTripId = selected.id;
+  state.lastValueChange = null;
+  return {
+    trip: selected,
+    explanation: `Scalper (random fallback): ${selected.visitCount} visits, balance ${selected.balance}`
+  };
+}
+
 // src/modules/trip-selector/index.ts
 async function selectTrip(configOrOptions, trips, rat, anthropic, inventoryDetails = [], worldAddress) {
   let config;
@@ -3372,6 +3628,7 @@ async function selectTrip(configOrOptions, trips, rat, anthropic, inventoryDetai
   let anthropicClient;
   let inventory;
   let worldAddr;
+  let currentBlock;
   if ("config" in configOrOptions) {
     config = configOrOptions.config;
     tripsArray = configOrOptions.trips;
@@ -3379,6 +3636,7 @@ async function selectTrip(configOrOptions, trips, rat, anthropic, inventoryDetai
     anthropicClient = configOrOptions.anthropic;
     inventory = configOrOptions.inventoryDetails ?? [];
     worldAddr = configOrOptions.worldAddress;
+    currentBlock = configOrOptions.currentBlockNumber;
   } else {
     config = configOrOptions;
     tripsArray = trips;
@@ -3414,6 +3672,15 @@ async function selectTrip(configOrOptions, trips, rat, anthropic, inventoryDetai
   } else if (config.tripSelector === "historical" && worldAddr) {
     console.log("Using historical data from CMS to select trip...");
     return selectTripHistorical(tripsArray, worldAddr, anthropicClient, ratObj, inventory);
+  } else if (config.tripSelector === "scalper" && anthropicClient && currentBlock) {
+    console.log("Using scalper strategy (target trips created in last hour)...");
+    return selectTripScalper({
+      trips: tripsArray,
+      currentBlockNumber: currentBlock,
+      anthropic: anthropicClient,
+      rat: ratObj,
+      inventoryDetails: inventory
+    });
   } else {
     console.log("Using heuristic (highest balance) to select trip...");
     const trip = selectTripHeuristic(tripsArray);
@@ -3567,7 +3834,7 @@ async function runBot(config) {
     logInfo(`Liquidate below value: ${config.liquidateBelowValue}`);
   }
   let anthropic;
-  if (config.tripSelector === "claude" || config.tripSelector === "historical") {
+  if (config.tripSelector === "claude" || config.tripSelector === "historical" || config.tripSelector === "scalper") {
     anthropic = new Anthropic({ apiKey: config.anthropicApiKey });
     logInfo("Claude API client initialized");
   }
@@ -3734,17 +4001,24 @@ async function runBot(config) {
     }
     const worldAddress = mud.worldContract.address;
     const inventoryDetails = getInventoryDetails(mud, rat);
-    const selection = await selectTrip(
+    const currentBlockNumber = Number(await mud.publicClient.getBlockNumber());
+    const selection = await selectTrip({
       config,
-      enterableTrips,
+      trips: enterableTrips,
       rat,
       anthropic,
       inventoryDetails,
-      worldAddress
-    );
+      worldAddress,
+      currentBlockNumber
+    });
     if (!selection) {
-      logError("Failed to select a trip");
-      await sleep(5e3);
+      if (config.tripSelector === "scalper") {
+        logInfo("No new trips available (created in last hour), waiting 30 seconds...");
+        await sleep(3e4);
+      } else {
+        logError("Failed to select a trip");
+        await sleep(5e3);
+      }
       continue;
     }
     const { trip: selectedTrip, explanation } = selection;
@@ -3766,6 +4040,9 @@ async function runBot(config) {
       }
       if (outcome.ratDead) {
         logDeath(rat.name, tripCount);
+        if (config.tripSelector === "scalper") {
+          resetScalperState();
+        }
         sessionTotalTrips += tripCount;
         sessionTotalProfitLoss += 0 - startingBalance;
         logStats({
@@ -3813,6 +4090,9 @@ async function runBot(config) {
             rat.name,
             `Balance: ${rat.balance}, Total Value: ${totalValueAfter} (${changeStr}), Trips: ${tripCount}${inventoryStr}`
           );
+          if (config.tripSelector === "scalper") {
+            updateScalperState(selectedTrip.id, selectedTrip.prompt, valueChange, logEntries);
+          }
           logValueBar({
             currentValue: totalValueAfter,
             liquidateBelowValue: config.liquidateBelowValue,
@@ -3880,7 +4160,7 @@ function loadConfig(opts) {
 }
 
 // src/index.ts
-var program = new Command().name("rattus-bot").description("Autonomous rat.fun player bot").version("1.0.0").option("-c, --chain <id>", "Chain ID (8453=Base, 84532=Base Sepolia, 31337=local)").option("-s, --selector <type>", "Trip selector: claude or heuristic").option("-r, --auto-respawn", "Automatically create new rat on death").option("-n, --name <name>", "Name for the rat").option("-l, --liquidate-at <value>", "Liquidate rat when total value reaches this threshold").option(
+var program = new Command().name("rattus-bot").description("Autonomous rat.fun player bot").version("1.0.0").option("-c, --chain <id>", "Chain ID (8453=Base, 84532=Base Sepolia, 31337=local)").option("-s, --selector <type>", "Trip selector: claude, heuristic, random, historical, scalper").option("-r, --auto-respawn", "Automatically create new rat on death").option("-n, --name <name>", "Name for the rat").option("-l, --liquidate-at <value>", "Liquidate rat when total value reaches this threshold").option(
   "-b, --liquidate-below <value>",
   "Liquidate rat when total value falls below this threshold"
 ).action(async (options) => {

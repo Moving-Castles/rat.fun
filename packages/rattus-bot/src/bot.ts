@@ -16,7 +16,7 @@ import {
   type SetupResult
 } from "./modules/mud"
 import { enterTrip } from "./modules/server"
-import { selectTrip } from "./modules/trip-selector"
+import { selectTrip, updateScalperState, resetScalperState } from "./modules/trip-selector"
 import { addressToId, sleep, retryUntilResult } from "./modules/utils"
 import {
   logInfo,
@@ -54,9 +54,13 @@ export async function runBot(config: Config) {
     logInfo(`Liquidate below value: ${config.liquidateBelowValue}`)
   }
 
-  // Initialize Anthropic client if using Claude or historical selector
+  // Initialize Anthropic client if using Claude, historical, or scalper selector
   let anthropic: Anthropic | undefined
-  if (config.tripSelector === "claude" || config.tripSelector === "historical") {
+  if (
+    config.tripSelector === "claude" ||
+    config.tripSelector === "historical" ||
+    config.tripSelector === "scalper"
+  ) {
     anthropic = new Anthropic({ apiKey: config.anthropicApiKey })
     logInfo("Claude API client initialized")
   }
@@ -284,17 +288,27 @@ export async function runBot(config: Config) {
     // Select a trip (pass inventory details for Claude to consider)
     const worldAddress = mud.worldContract.address
     const inventoryDetails = getInventoryDetails(mud, rat!)
-    const selection = await selectTrip(
+
+    // Get current block number for scalper strategy
+    const currentBlockNumber = Number(await mud.publicClient.getBlockNumber())
+
+    const selection = await selectTrip({
       config,
-      enterableTrips,
-      rat!,
+      trips: enterableTrips,
+      rat: rat!,
       anthropic,
       inventoryDetails,
-      worldAddress
-    )
+      worldAddress,
+      currentBlockNumber
+    })
     if (!selection) {
-      logError("Failed to select a trip")
-      await sleep(5000)
+      if (config.tripSelector === "scalper") {
+        logInfo("No new trips available (created in last hour), waiting 30 seconds...")
+        await sleep(30000)
+      } else {
+        logError("Failed to select a trip")
+        await sleep(5000)
+      }
       continue
     }
 
@@ -326,6 +340,11 @@ export async function runBot(config: Config) {
       // Check if rat died
       if (outcome.ratDead) {
         logDeath(rat!.name, tripCount)
+
+        // Reset scalper state on death
+        if (config.tripSelector === "scalper") {
+          resetScalperState()
+        }
 
         // Update session stats
         sessionTotalTrips += tripCount
@@ -386,6 +405,11 @@ export async function runBot(config: Config) {
             rat.name,
             `Balance: ${rat.balance}, Total Value: ${totalValueAfter} (${changeStr}), Trips: ${tripCount}${inventoryStr}`
           )
+
+          // Update scalper state with trip outcome
+          if (config.tripSelector === "scalper") {
+            updateScalperState(selectedTrip.id, selectedTrip.prompt, valueChange, logEntries)
+          }
           logValueBar({
             currentValue: totalValueAfter,
             liquidateBelowValue: config.liquidateBelowValue,
