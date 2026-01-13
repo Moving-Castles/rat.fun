@@ -91,7 +91,8 @@
 
     return {
       tripId: challengeTrip[0],
-      visitCount: Number(challengeTrip[1].visitCount ?? 0)
+      visitCount: Number(challengeTrip[1].visitCount ?? 0),
+      creationBlock: Number(challengeTrip[1].creationBlock ?? 0)
     }
   })
 
@@ -229,8 +230,8 @@
         {restrictedFolderCount}
         challengeTripId={challengeTripData?.tripId}
         challengeTripAttempts={challengeTripData?.visitCount}
-        dailyChallengeTime={$staticContent.dailyChallengeTime}
-        nextChallengeDay={$staticContent.nextChallengeDay}
+        challengeCreationBlock={challengeTripData?.creationBlock}
+        currentBlockNumber={Number($blockNumber)}
         challengeTitle={$staticContent.challengeTitle}
         {lastWinnerName}
         {lastWinTimestamp}

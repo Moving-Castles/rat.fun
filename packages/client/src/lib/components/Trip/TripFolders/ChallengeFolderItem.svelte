@@ -3,14 +3,13 @@
   import { goto } from "$app/navigation"
   import type { TripFolder } from "@sanity-types"
   import { playSound } from "$lib/modules/sound"
-  import {
-    getTodayCETTime,
-    getNextCETTime,
-    getTargetCETDate,
-    formatCountdown
-  } from "@ratfun/shared-utils"
+  import { formatCountdown } from "@ratfun/shared-utils"
 
-  const GRACE_PERIOD_MS = 10 * 60 * 1000 // 10 minutes
+  // Challenge active period in blocks (24h at 2s/block on Base)
+  const CHALLENGE_ACTIVE_PERIOD_BLOCKS = 43200
+  // Block time on Base in milliseconds
+  const BLOCK_TIME_MS = 2000
+  // How long to show winner after challenge ends
   const WINNER_DISPLAY_DURATION_MS = 15 * 60 * 1000 // 15 minutes
 
   let {
@@ -18,8 +17,8 @@
     folder,
     challengeTripId,
     attemptCount,
-    dailyChallengeTime,
-    nextChallengeDay,
+    challengeCreationBlock,
+    currentBlockNumber,
     challengeTitle,
     lastWinnerName,
     lastWinTimestamp
@@ -28,8 +27,8 @@
     folder: TripFolder
     challengeTripId?: string
     attemptCount?: number
-    dailyChallengeTime?: string | null
-    nextChallengeDay?: string | null // Date in YYYY-MM-DD format, or null for tomorrow
+    challengeCreationBlock?: number
+    currentBlockNumber?: number
     challengeTitle?: string | null
     lastWinnerName?: string | null
     lastWinTimestamp?: number | null // Unix timestamp in ms
@@ -37,100 +36,45 @@
 
   let hasActiveChallenge = $derived(!!challengeTripId)
 
-  // Countdown state
-  let countdownText = $state("")
-  let countdownInterval: ReturnType<typeof setInterval> | null = null
+  // Calculate expiration block for active challenge
+  let expirationBlock = $derived(
+    challengeCreationBlock ? challengeCreationBlock + CHALLENGE_ACTIVE_PERIOD_BLOCKS : 0
+  )
+
+  // Calculate blocks remaining until expiration
+  let blocksRemaining = $derived.by(() => {
+    if (!expirationBlock || !currentBlockNumber) return 0
+    return Math.max(0, expirationBlock - currentBlockNumber)
+  })
+
+  // Calculate time remaining in milliseconds
+  let timeRemainingMs = $derived(blocksRemaining * BLOCK_TIME_MS)
+
+  // Countdown text derived from time remaining
+  let countdownText = $derived.by(() => {
+    if (timeRemainingMs <= 0) return ""
+    return formatCountdown(timeRemainingMs)
+  })
 
   // Display state - determines what to show
-  let displayState = $state<"countdown" | "grace" | "winner" | "active">("countdown")
-
-  function updateCountdown() {
+  let displayState = $derived.by<"countdown" | "winner" | "active">(() => {
     const now = Date.now()
 
-    // Priority 1: Active challenge - show attempts
-    if (hasActiveChallenge) {
-      displayState = "active"
-      countdownText = ""
-      return
+    // Priority 1: Active challenge - show countdown to expiration
+    if (hasActiveChallenge && blocksRemaining > 0) {
+      return "active"
     }
 
-    // Priority 2: Recent winner - show "Won by X" for 10 minutes
+    // Priority 2: Recent winner - show "Won by X" for 15 minutes
     if (lastWinnerName && lastWinTimestamp) {
       const timeSinceWin = now - lastWinTimestamp
       if (timeSinceWin < WINNER_DISPLAY_DURATION_MS) {
-        displayState = "winner"
-        countdownText = ""
-        return
+        return "winner"
       }
     }
 
-    // Priority 3: No dailyChallengeTime - nothing to show
-    if (!dailyChallengeTime) {
-      displayState = "countdown"
-      countdownText = ""
-      return
-    }
-
-    // If nextChallengeDay is set (a date string like "2025-01-15"), show countdown to that specific date
-    // Validate it's a proper date string (YYYY-MM-DD format)
-    if (
-      nextChallengeDay &&
-      typeof nextChallengeDay === "string" &&
-      /^\d{4}-\d{2}-\d{2}$/.test(nextChallengeDay)
-    ) {
-      // Fixed target date - just show countdown
-      displayState = "countdown"
-      const target = getTargetCETDate(dailyChallengeTime, nextChallengeDay).getTime()
-      const diff = target - now
-
-      if (diff <= 0) {
-        countdownText = "Starting soon..."
-        return
-      }
-
-      countdownText = formatCountdown(diff)
-      return
-    }
-
-    // Default behavior: countdown to next occurrence of dailyChallengeTime
-    // Check if we're in grace period (just after target time)
-    const todayTarget = getTodayCETTime(dailyChallengeTime).getTime()
-    const timeSinceTarget = now - todayTarget
-
-    if (timeSinceTarget >= 0 && timeSinceTarget < GRACE_PERIOD_MS) {
-      // Within grace period - show "Starting soon..."
-      displayState = "grace"
-      countdownText = "Starting soon..."
-      return
-    }
-
-    // Show countdown to next occurrence of dailyChallengeTime
-    displayState = "countdown"
-    const target = getNextCETTime(dailyChallengeTime).getTime()
-    const diff = target - now
-
-    if (diff <= 0) {
-      countdownText = "Starting soon..."
-      return
-    }
-
-    countdownText = formatCountdown(diff)
-  }
-
-  $effect(() => {
-    // Access reactive props to establish tracking
-    const _time = dailyChallengeTime
-    const _day = nextChallengeDay
-
-    // Always run the update to determine display state
-    updateCountdown()
-    countdownInterval = setInterval(updateCountdown, 1000)
-
-    return () => {
-      if (countdownInterval) {
-        clearInterval(countdownInterval)
-      }
-    }
+    // Default: show countdown placeholder (no active challenge)
+    return "countdown"
   })
 
   // Disabled when not showing active challenge (nothing to navigate to)
@@ -154,7 +98,7 @@
 <div class="tile wide" in:fade={{ duration: 100, delay: listingIndex * 30 }}>
   <button
     class:disabled
-    class:countdown={displayState === "countdown" || displayState === "grace"}
+    class:countdown={displayState === "countdown"}
     class:winner={displayState === "winner"}
     onclick={handleClick}
     {onmouseup}
@@ -168,9 +112,10 @@
       {/if}
       <div class="count">
         {#if displayState === "active"}
-          {attemptCount ?? 0} attempt{attemptCount === 1 ? "" : "s"}
-        {:else}
           <span class="countdown-time">{countdownText}</span>
+          <span class="attempts">{attemptCount ?? 0} attempt{attemptCount === 1 ? "" : "s"}</span>
+        {:else}
+          <span class="countdown-time">No active challenge</span>
         {/if}
       </div>
     </div>
@@ -247,9 +192,17 @@
           font-size: var(--font-size-normal);
           font-family: var(--typewriter-font-stack);
           margin-top: 10px;
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
 
           .countdown-time {
             font-size: var(--font-size-large);
+          }
+
+          .attempts {
+            font-size: var(--font-size-small);
+            opacity: 0.8;
           }
         }
       }

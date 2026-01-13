@@ -16,8 +16,8 @@
     restrictedFolderCount,
     challengeTripId,
     challengeTripAttempts,
-    dailyChallengeTime,
-    nextChallengeDay,
+    challengeCreationBlock,
+    currentBlockNumber,
     challengeTitle,
     lastWinnerName,
     lastWinTimestamp
@@ -32,8 +32,8 @@
     restrictedFolderCount?: number
     challengeTripId?: string
     challengeTripAttempts?: number
-    dailyChallengeTime?: string | null
-    nextChallengeDay?: string | null // Date in YYYY-MM-DD format, or null for tomorrow
+    challengeCreationBlock?: number
+    currentBlockNumber?: number
     challengeTitle?: string | null
     lastWinnerName?: string | null
     lastWinTimestamp?: number | null
@@ -49,8 +49,8 @@
         folder={restrictedFolder}
         {challengeTripId}
         attemptCount={challengeTripAttempts}
-        {dailyChallengeTime}
-        {nextChallengeDay}
+        {challengeCreationBlock}
+        {currentBlockNumber}
         {challengeTitle}
         {lastWinnerName}
         {lastWinTimestamp}
