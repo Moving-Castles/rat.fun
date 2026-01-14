@@ -525,3 +525,22 @@ export class RedisDataError extends RedisError {
     super("REDIS_DATA_ERROR", "Redis data error", message)
   }
 }
+
+// ============================================================================
+// Lock Errors
+// ============================================================================
+
+export class LockError extends AppError {
+  constructor(code: string = "LOCK_ERROR", errorType: string = "Lock error", message: string) {
+    super(code, errorType, message)
+  }
+}
+
+export class TripEntryLockError extends LockError {
+  constructor(
+    message: string = "Trip entry already in progress for this user",
+    public playerId?: string
+  ) {
+    super("TRIP_ENTRY_LOCK_ERROR", "Trip entry locked", message)
+  }
+}
