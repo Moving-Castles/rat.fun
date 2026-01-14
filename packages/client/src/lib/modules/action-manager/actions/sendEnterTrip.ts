@@ -12,6 +12,7 @@ import {
 import { errorHandler } from "$lib/modules/error-handling"
 import { APIError, TripError } from "@ratfun/common/error-handling"
 import { createLogger } from "$lib/modules/logger"
+import { toastManager, TOAST_TYPE } from "$lib/modules/ui/toasts.svelte"
 
 const logger = createLogger("sendEnterTrip")
 
@@ -69,6 +70,19 @@ export async function sendEnterTrip(tripId: string, ratId: string) {
 
     if (!response.ok) {
       const error = await response.json()
+
+      // Handle trip entry lock error with a friendly message
+      // This happens when user reloads or clicks again while a trip is still processing
+      if (error.error === "TRIP_ENTRY_LOCK_ERROR") {
+        logger.warn("Trip entry already in progress")
+        toastManager.add({
+          message: "Trip already in progress. Please wait for it to complete.",
+          type: TOAST_TYPE.WARNING
+        })
+        busy.EnterTrip.set(0, { duration: 0 })
+        return null
+      }
+
       throw new APIError(`${error.error}: ${error.message}`, error)
     }
 
