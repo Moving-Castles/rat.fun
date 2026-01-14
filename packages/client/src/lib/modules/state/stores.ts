@@ -191,25 +191,60 @@ export const ratImageUrl = derived([player, staticContent], ([$player, $staticCo
 // ADMIN STORES
 // * * * * * * * * * * * * * * * * *
 
-export const investment = derived(playerNonDepletedTrips, $playerNonDepletedTrips =>
-  Object.values($playerNonDepletedTrips).reduce((a, b) => a + Number(b.tripCreationCost ?? 0), 0)
+// investment = balance - profit (includes manual funding, not just creation cost)
+export const investment = derived(
+  [playerNonDepletedTrips, staticContent],
+  ([$playerNonDepletedTrips, $staticContent]) => {
+    const outcomes = $staticContent?.outcomes ?? []
+    let total = 0
+    for (const [tripId, trip] of Object.entries($playerNonDepletedTrips)) {
+      const tripProfit = outcomes
+        .filter(o => o.tripId === tripId)
+        .reduce((sum, o) => sum + (o.tripValueChange ?? 0), 0)
+      total += Number(trip.balance ?? 0) - tripProfit
+    }
+    return total
+  }
 )
 
 export const balance = derived(playerNonDepletedTrips, $playerNonDepletedTrips =>
   Object.values($playerNonDepletedTrips).reduce((a, b) => a + Number(b.balance ?? 0), 0)
 )
 
-export const profitLoss = derived([balance, investment], ([$b, $i]) => {
-  return $b - $i
-})
+// profit/loss calculated from actual trip outcomes, not balance delta
+// this avoids counting manual balance additions as profit
+export const profitLoss = derived(
+  [playerNonDepletedTrips, staticContent],
+  ([$playerNonDepletedTrips, $staticContent]) => {
+    const tripIds = new Set(Object.keys($playerNonDepletedTrips))
+    const outcomes = $staticContent?.outcomes ?? []
+    return outcomes
+      .filter(o => o.tripId && tripIds.has(o.tripId))
+      .reduce((sum, o) => sum + (o.tripValueChange ?? 0), 0)
+  }
+)
 
 export const portfolioClass = derived([profitLoss], ([$profitLoss]) => {
   if ($profitLoss === 0) return "neutral"
   return $profitLoss < 0 ? "downText" : "upText"
 })
 
-export const realisedInvestment = derived(playerDepletedTrips, $playerDepletedTrips =>
-  Object.values($playerDepletedTrips).reduce((a, b) => a + Number(b.tripCreationCost), 0)
+// realised investment includes manual funding for depleted trips
+export const realisedInvestment = derived(
+  [playerDepletedTrips, staticContent],
+  ([$playerDepletedTrips, $staticContent]) => {
+    const outcomes = $staticContent?.outcomes ?? []
+    let total = 0
+    for (const [tripId, trip] of Object.entries($playerDepletedTrips)) {
+      const tripProfit = outcomes
+        .filter(o => o.tripId === tripId)
+        .reduce((sum, o) => sum + (o.tripValueChange ?? 0), 0)
+      // for depleted trips, use liquidationValue or 0 as final balance
+      const finalBalance = trip.liquidated ? Number(trip.liquidationValue ?? 0) : 0
+      total += finalBalance - tripProfit
+    }
+    return total
+  }
 )
 
 export const realisedBalance = derived(playerDepletedTrips, $playerDepletedTrips =>
@@ -219,9 +254,16 @@ export const realisedBalance = derived(playerDepletedTrips, $playerDepletedTrips
   )
 )
 
+// realised profit/loss from actual trip outcomes
 export const realisedProfitLoss = derived(
-  [realisedBalance, realisedInvestment],
-  ([$rb, $i]) => $rb - $i
+  [playerDepletedTrips, staticContent],
+  ([$playerDepletedTrips, $staticContent]) => {
+    const tripIds = new Set(Object.keys($playerDepletedTrips))
+    const outcomes = $staticContent?.outcomes ?? []
+    return outcomes
+      .filter(o => o.tripId && tripIds.has(o.tripId))
+      .reduce((sum, o) => sum + (o.tripValueChange ?? 0), 0)
+  }
 )
 
 // * * * * * * * * * * * * * * * * *
