@@ -23,6 +23,7 @@
   let hasUnseenMessages = $state(false)
   let previousMessageCount = $state(0)
   let isLoadingMore = $state(false)
+  let hasInitiallyScrolled = $state(false)
 
   // Check if user is near bottom of scroll
   function isNearBottom(): boolean {
@@ -131,9 +132,10 @@
     previousMessageCount = currentCount
   })
 
-  // Initial scroll to bottom on mount
+  // Initial scroll to bottom on mount (run only once)
   $effect(() => {
-    if (scrollContainer && $visibleMessages.length > 0) {
+    if (scrollContainer && $visibleMessages.length > 0 && !hasInitiallyScrolled) {
+      hasInitiallyScrolled = true
       tick().then(() => {
         if (scrollContainer) {
           scrollContainer.scrollTop = scrollContainer.scrollHeight

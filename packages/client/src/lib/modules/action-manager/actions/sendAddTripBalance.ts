@@ -13,6 +13,7 @@ const DEFAULT_TIMING = 4000
  * @param amount The amount to add (in token units, not wei)
  */
 export async function sendAddTripBalance(tripId: string, amount: bigint) {
+  console.log("adding, ", tripId, amount)
   const _externalAddressesConfig = get(externalAddressesConfig)
   const _playerERC20Allowance = get(playerERC20Allowance)
 

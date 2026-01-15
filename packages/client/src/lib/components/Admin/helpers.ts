@@ -56,12 +56,12 @@ export function calculateProfitLossForTrip(
    * ADD VISIT/DEATH EVENTS
    **************************/
   tripOutcomes.forEach((outcome, i) => {
-    const previousOutcome = tripOutcomes[i - 1]
-
     const outcomeTime = new Date(outcome._createdAt).getTime()
-    const previousOutcomeValue = previousOutcome?.tripValue || Number(trip.tripCreationCost) // Value from the previous trip, and if it's the first outcome, creation cost of the trip
-    const currentTripValue = outcome.tripValue || 0
-    const valueChange = currentTripValue - previousOutcomeValue
+    // Use tripValueChange from outcome directly - it's calculated by the server as
+    // newTripBalance - oldTripBalance, which correctly accounts for manual funding.
+    // Previously we recalculated using tripCreationCost as baseline, which was wrong
+    // when manual funding was added between creation and first visit.
+    const valueChange = outcome.tripValueChange ?? 0
 
     let eventData = {} as TripEventDeath | TripEventVisit
 
