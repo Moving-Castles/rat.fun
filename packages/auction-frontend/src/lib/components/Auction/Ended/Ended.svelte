@@ -9,9 +9,9 @@
 
 <div class="ended">
   <div class="content">
-    <div class="title">BUY $RAT</div>
+    <div class="title">AUCTION ENDED</div>
     <div class="button-container">
-      <BigButton text="GO TO RAT.FUN" onclick={goToRatFun} />
+      <BigButton text="BUY $RAT" onclick={goToRatFun} />
     </div>
   </div>
 </div>
