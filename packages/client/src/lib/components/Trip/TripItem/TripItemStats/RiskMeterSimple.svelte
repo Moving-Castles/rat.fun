@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { rat } from "$lib/modules/state/stores"
+  import { ratTotalValue } from "$lib/modules/state/stores"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import { Tooltip } from "$lib/components/Shared"
 
@@ -62,7 +62,7 @@
   <div class="meta-data-item max-risk">
     <Tooltip content="WARNING! When you enter a trip you risk your RAT's health and PSYCHO OBJECTS">
       <div class="inner">
-        {$rat.balance}<span class="currency-symbol">{CURRENCY_SYMBOL}</span>
+        {$ratTotalValue}<span class="currency-symbol">{CURRENCY_SYMBOL}</span>
       </div>
     </Tooltip>
   </div>
@@ -90,27 +90,25 @@
 
 <style lang="scss">
   .group {
-    width: 40%;
-
-    @media screen and (min-width: 800px) {
-      width: unset;
-    }
+    width: 100%;
+    padding-inline: 5px;
   }
+
   .meta {
     font-size: var(--font-size-small);
     color: var(--color-grey-lighter);
-    margin: 2px 0 5px;
+    margin: 2px 0 3px;
     width: 100%;
-    margin-bottom: 5px;
+    margin-bottom: 3px;
   }
 
   .meta-data-item {
     background: var(--foreground-semi-transparent);
     color: var(--background);
-    margin-bottom: 4px;
+    margin-bottom: 3px;
     border-radius: 4px;
     font-size: var(--font-size-normal);
-    height: 30px;
+    height: 25px;
     display: flex;
     align-items: center;
     justify-content: center;

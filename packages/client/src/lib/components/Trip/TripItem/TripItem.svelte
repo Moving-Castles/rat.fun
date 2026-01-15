@@ -33,7 +33,7 @@
       if (result == "") {
         return false
       } else {
-        return result.width(400).auto("format").url()
+        return result.width(600).auto("format").url()
       }
     } else {
       return false
@@ -101,6 +101,7 @@
 
 <style lang="scss">
   .trip-listing-item {
+    height: 180px;
     display: flex;
     background: transparent;
     outline: none;
@@ -111,20 +112,11 @@
     color: var(--foreground);
     text-align: left;
     position: relative;
-    // overflow: hidden;
+    overflow: hidden;
     background: var(--background-semi-transparent);
 
     .trip-image {
       position: relative;
-    }
-
-    @media (max-width: 800px) {
-      flex-direction: column;
-      padding: 0;
-      margin-bottom: 10px;
-    }
-    @media (min-width: 800px) {
-      padding: var(--trip-item-padding);
     }
 
     &.not-clickable {
@@ -133,13 +125,23 @@
     }
 
     &:hover {
-      background-color: var(--background-dark-transparent);
+      background-color: var(--background);
 
       .trip-image {
-        transform: scale(1.05);
-        @media (max-width: 800px) {
-          transform: none;
+        :global(img) {
+          transform: scale(2);
+          transition: transform 0.1s ease-out;
+          animation: hue-rotate 4s linear infinite;
         }
+      }
+    }
+
+    @keyframes hue-rotate {
+      from {
+        filter: hue-rotate(0deg);
+      }
+      to {
+        filter: hue-rotate(360deg);
       }
     }
 
@@ -169,41 +171,30 @@
     .column {
       &.left {
         height: 100%;
-        width: 300px;
-        margin-right: 10px;
+        width: 160px;
         display: flex;
         flex-direction: column;
         z-index: var(--z-base);
 
-        @media (max-width: 800px) {
-          width: 100%;
-          margin-right: 0;
-          order: 0;
+        @media (max-width: 768px) {
+          display: none;
         }
 
         .trip-image {
           line-height: 0;
-          width: 100%;
-          mix-blend-mode: screen;
-          border-radius: 20px;
-          border: 5px solid var(--foreground-light-transparent);
+          width: 160px;
+          height: 100%;
           overflow: hidden;
-
-          @media (max-width: 800px) {
-            border-radius: 0;
-            border: none;
-          }
+          transform-origin: center center;
+          border-right: var(--default-border-style);
 
           :global(img) {
+            padding: 5px;
             display: block;
             width: 100%;
             height: 100%;
             aspect-ratio: 1/1;
             object-fit: cover;
-
-            @media (max-width: 800px) {
-              aspect-ratio: 2.4/1;
-            }
           }
         }
       }
@@ -215,66 +206,44 @@
         width: 100%;
         flex-wrap: nowrap;
 
-        @media (max-width: 800px) {
-          flex-direction: column;
-          width: 100%;
-          order: 1;
-        }
-
         .main-info {
           width: calc(100% - 100px);
-          padding-inline: 5px;
+          display: flex;
+          flex-direction: column;
+          height: 100%;
 
-          @media (max-width: 800px) {
+          .trip-creator {
+            font-size: var(--font-size-small);
+            color: var(--color-grey-light);
             width: 100%;
+            padding-bottom: 5px;
+            padding-top: 5px;
+            border-bottom: var(--default-border-style);
+            flex-shrink: 0;
+            padding-inline: 10px;
           }
           .trip-prompt {
             width: 100%;
-            height: 100%;
-            max-height: 200px;
-            padding-bottom: 5px;
+            flex: 1;
+            min-height: 0;
+            padding-top: 5px;
             word-break: break-word;
             overflow-wrap: anywhere;
             font-family: var(--special-font-stack);
             text-overflow: ellipsis;
             white-space: normal;
             line-height: 0.9em;
-
-            @media (max-width: 800px) {
-              order: 2;
-              overflow: visible;
-              height: 120px;
-            }
-          }
-
-          .trip-creator {
-            font-size: var(--font-size-normal);
-            color: var(--color-grey-mid);
-            margin-bottom: 5px;
-            width: 100%;
+            overflow: hidden;
+            padding-inline: 10px;
             padding-bottom: 5px;
-            border-bottom: var(--default-border-style);
-
-            @media (max-width: 800px) {
-              padding-top: 5px;
-            }
           }
         }
 
         .meta-data {
           border-left: var(--default-border-style);
-          padding-left: 10px;
           width: 120px;
           height: 200px;
-
-          @media (max-width: 800px) {
-            width: 100%;
-            height: auto;
-            border-left: none;
-            border-top: var(--default-border-style);
-            padding-left: 0;
-            order: 3;
-          }
+          padding-top: 5px;
         }
       }
     }

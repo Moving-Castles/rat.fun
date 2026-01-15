@@ -227,7 +227,7 @@
             </div>
             <div class="nft-actions">
               <SmallButton
-                text={importing === nft.tokenId ? "Importing..." : "Import"}
+                text={importing === nft.tokenId ? "Injecting..." : "Inject"}
                 disabled={importing !== null || !ratId || inventoryFull}
                 onclick={() => handleImport(nft.tokenId)}
               />

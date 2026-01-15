@@ -25,15 +25,7 @@
     height: 100%;
     user-select: none;
     display: flex;
-    padding: 8px 8px 0 8px;
-
-    @media (min-width: 800px) {
-      justify-content: flex-start;
-      flex-direction: column;
-    }
-
-    @media (max-width: 800px) {
-      gap: 12px;
-    }
+    flex-direction: column;
+    padding: 3px 3px 0 3px;
   }
 </style>

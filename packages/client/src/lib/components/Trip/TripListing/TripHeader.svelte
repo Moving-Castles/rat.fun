@@ -1,12 +1,9 @@
 <script lang="ts">
-  import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
   let {
-    title,
     eligibleCount,
     totalCount,
     hasBackButton = false
   }: {
-    title: string
     eligibleCount?: number
     totalCount?: number
     hasBackButton?: boolean
@@ -18,7 +15,7 @@
     <!-- <span>{title}</span> -->
     {#if eligibleCount !== undefined && totalCount !== undefined}
       <span class="trips-count">
-        {UI_STRINGS.trips}: {eligibleCount} / {totalCount - eligibleCount} locked
+        {totalCount} trips
       </span>
     {/if}
   </div>
@@ -26,9 +23,9 @@
 
 <style lang="scss">
   .trip-header {
-    line-height: 60px;
-    height: 60px;
-    border-bottom: 1px solid var(--color-grey-mid);
+    line-height: 40px;
+    height: 40px;
+    border-bottom: var(--default-border-style);
     padding-inline: 20px;
     display: flex;
     overflow: hidden;
@@ -37,7 +34,10 @@
     z-index: var(--z-high);
     background-repeat: repeat;
     text-align: center;
-    background: var(--color-grey-dark);
+    justify-content: center;
+    background: var(--background-semi-transparent);
+    user-select: none;
+    text-align: right;
 
     @media screen and (max-width: 800px) {
       height: var(--top-bar-height-phone);
@@ -50,13 +50,12 @@
   }
 
   .header-text {
-    font-size: var(--font-size-normal);
+    font-size: var(--font-size-small);
     font-family: var(--typewriter-font-stack);
     color: var(--foreground);
   }
 
   .trips-count {
-    margin-left: 10px;
     color: var(--color-grey-light);
   }
 </style>

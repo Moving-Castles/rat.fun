@@ -79,8 +79,8 @@
     return "countdown"
   })
 
-  // Disabled when not showing active challenge (nothing to navigate to)
-  let disabled = $derived(!hasActiveChallenge)
+  // Disabled when no active challenge or challenge has expired
+  let disabled = $derived(!hasActiveChallenge || blocksRemaining <= 0)
 
   const handleClick = () => {
     if (challengeTripId) {
@@ -122,10 +122,7 @@
             </div>
           {/if}
           {#if maxReward}
-            <div class="meta-row reward">
-              <span class="label">MAX REWARD</span>
-              <span class="value">{maxReward} {CURRENCY_SYMBOL}</span>
-            </div>
+            <div class="reward-amount">{maxReward} {CURRENCY_SYMBOL}</div>
           {/if}
         </div>
       {/if}
@@ -133,7 +130,6 @@
       <div class="count">
         {#if displayState === "active"}
           <span class="countdown-time">{countdownText}</span>
-          <span class="attempts">{attemptCount ?? 0} attempt{attemptCount === 1 ? "" : "s"}</span>
         {:else}
           <span class="countdown-time">No active challenge</span>
         {/if}
@@ -154,7 +150,7 @@
     button {
       position: relative;
       width: 100%;
-      min-height: 180px;
+      height: 180px;
       font-family: var(--special-font-stack);
       font-size: var(--font-size-large);
       box-shadow: 0 0px 10px 0px var(--color-restricted-trip-folder-transparent);
@@ -197,7 +193,7 @@
         width: 100%;
 
         .challenge-title {
-          font-size: var(--font-size-extra-large);
+          font-size: var(--font-size-large);
           line-height: 1em;
 
           &.winner {
@@ -210,8 +206,6 @@
           display: flex;
           flex-direction: column;
           gap: 4px;
-          background: var(--background-semi-transparent);
-          padding: 8px 12px;
 
           .meta-row {
             display: flex;
@@ -228,30 +222,26 @@
 
             .value {
               font-family: var(--special-font-stack);
-              font-size: var(--font-size-medium);
-              color: var(--foreground);
-            }
-
-            &.reward .value {
               font-size: var(--font-size-large);
+              color: var(--background);
             }
+          }
+
+          .reward-amount {
+            font-family: var(--special-font-stack);
+            font-size: var(--font-size-extra-large);
+            color: var(--background);
           }
         }
 
         .count {
-          font-size: var(--font-size-normal);
-          font-family: var(--typewriter-font-stack);
+          font-family: var(--special-font-stack);
           display: flex;
           flex-direction: column;
           gap: 4px;
 
           .countdown-time {
             font-size: var(--font-size-large);
-          }
-
-          .attempts {
-            font-size: var(--font-size-small);
-            opacity: 0.8;
           }
         }
       }

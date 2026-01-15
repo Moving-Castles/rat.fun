@@ -97,10 +97,10 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: var(--color-inventory-item-background);
+    background-color: var(--color-inventory-item-background);
     color: var(--background);
     padding: 5px;
-    border: 8px inset var(--background-semi-transparent);
+    border: 8px ridge var(--background-semi-transparent);
     outline: none;
     box-shadow: 0 4px 8px var(--background-light-transparent);
   }
