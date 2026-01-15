@@ -116,6 +116,16 @@ contract ItemNFT is ERC721Enumerable {
   }
 
   /**
+   * @notice Returns the on-chain contract-level metadata (ERC-7572)
+   * @return URI with base64-encoded JSON metadata
+   */
+  function contractURI() external pure returns (string memory) {
+    string
+      memory json = '{"name":"RAT.FUN PSYCHO OBJECTS","description":"Psycho Objects from RAT.FUN. These items can be imported back into the game at rat.fun","external_link":"https://rat.fun"}';
+    return string(abi.encodePacked("data:application/json;base64,", Base64.encode(bytes(json))));
+  }
+
+  /**
    * @notice Returns the on-chain metadata URI for a token
    * @param tokenId Token ID
    * @return URI with base64-encoded JSON metadata
@@ -127,7 +137,7 @@ contract ItemNFT is ERC721Enumerable {
     uint256 value = itemValues[tokenId];
 
     // Generate SVG image
-    string memory svg = _generateSVG(name, value);
+    string memory svg = _generateSVG(name);
     string memory svgBase64 = Base64.encode(bytes(svg));
 
     // Build JSON metadata
@@ -137,7 +147,7 @@ contract ItemNFT is ERC721Enumerable {
         name,
         '","description":"A Psycho Object from RAT.FUN - import back to the game at rat.fun","image":"data:image/svg+xml;base64,',
         svgBase64,
-        '","attributes":[{"trait_type":"Value","value":',
+        '","external_url":"https://rat.fun","attributes":[{"trait_type":"Value","value":',
         Strings.toString(value),
         "}]}"
       )
@@ -149,42 +159,19 @@ contract ItemNFT is ERC721Enumerable {
   /**
    * @notice Generates an SVG image for the item
    * @param name Item name
-   * @param value Item value
    * @return SVG string
    */
-  function _generateSVG(string memory name, uint256 value) internal pure returns (string memory) {
-    string memory color = _getRarityColor(value);
-
-    // Build SVG in parts to avoid stack too deep
-    bytes memory part1 = abi.encodePacked(
-      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">',
-      '<rect width="400" height="400" fill="#0a0a0a"/>',
-      '<rect x="20" y="20" width="360" height="360" fill="',
-      color,
-      '" rx="20"/>',
-      '<rect x="30" y="30" width="340" height="340" fill="#1a1a1a" rx="15"/>'
-    );
-
-    bytes memory part2 = abi.encodePacked(
-      '<text x="200" y="100" text-anchor="middle" fill="#666" font-family="monospace" font-size="14">RAT.FUN</text>',
-      '<text x="200" y="200" text-anchor="middle" fill="#fff" font-family="serif" font-size="24">',
-      name,
-      "</text>",
-      '<text x="200" y="300" text-anchor="middle" fill="',
-      color,
-      '" font-family="monospace" font-size="20">',
-      Strings.toString(value),
-      "</text>",
-      "</svg>"
-    );
-
-    return string(abi.encodePacked(part1, part2));
-  }
-
-  function _getRarityColor(uint256 value) internal pure returns (string memory) {
-    if (value >= 100) return "#9333ea";
-    if (value >= 50) return "#eab308";
-    if (value >= 20) return "#9ca3af";
-    return "#b45309";
+  function _generateSVG(string memory name) internal pure returns (string memory) {
+    return
+      string(
+        abi.encodePacked(
+          '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">',
+          '<rect width="400" height="400" fill="#000"/>',
+          '<text x="200" y="200" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-family="serif" font-size="24">',
+          name,
+          "</text>",
+          "</svg>"
+        )
+      );
   }
 }
