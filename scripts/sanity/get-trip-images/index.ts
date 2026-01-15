@@ -4,7 +4,7 @@ import * as path from "path"
 import * as https from "https"
 
 const SANITY_PUBLIC_CMS_ID = "saljmqwt"
-const TARGET_WORLD_ADDRESS = "0x06522e692F64655123512FbdA87a9452cf287602"
+const TARGET_WORLD_ADDRESS = "0x28d10E6aAb1a749Be792b4D8aa0519c70E83386a"
 
 // Initialize Sanity client
 const client = createClient({
