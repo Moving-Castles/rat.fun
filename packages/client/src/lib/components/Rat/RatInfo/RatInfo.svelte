@@ -242,7 +242,6 @@
     .rat-liquidate-container {
       height: 140px;
       width: 100%;
-      border-bottom: var(--default-border-style);
       flex-shrink: 0;
       overflow: visible; // Allow total value to overflow during scale animation
 

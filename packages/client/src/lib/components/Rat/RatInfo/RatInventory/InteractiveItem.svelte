@@ -57,9 +57,7 @@
     <div class="item-back">
       <div class="value">{Number(item.value)} {CURRENCY_SYMBOL}</div>
       {#if onExport && itemId}
-        <button class="export-button" onclick={handleExport}>
-          Export NFT
-        </button>
+        <button class="export-button" onclick={handleExport}> Export NFT </button>
       {/if}
     </div>
   </div>

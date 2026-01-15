@@ -71,7 +71,8 @@
   --color-inventory-item-background: rgba(200, 200, 200, 0.9);
 
   /* Colors: Border */
-  --color-border: #8a6572;
+  /* --color-border: #8a6572; */
+  --color-border: #667050;
 
   /* Color: Special */
   --color-total-value: gold;

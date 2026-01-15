@@ -119,12 +119,6 @@
       flex-direction: column;
       gap: 16px;
 
-      .header {
-        font-family: var(--special-font-stack);
-        font-size: var(--font-size-extra-large);
-        color: var(--background);
-      }
-
       .item-preview {
         padding: 20px;
         background: var(--foreground-semi-transparent);
@@ -137,14 +131,6 @@
           position: absolute;
           top: 0;
           right: 0;
-        }
-
-        .rarity-indicator {
-          padding: 4px 12px;
-          color: white;
-          font-family: var(--special-font-stack);
-          font-size: var(--font-size-small);
-          text-transform: uppercase;
         }
 
         .item-name {
@@ -167,39 +153,6 @@
         color: var(--background);
         font-family: var(--typewriter-font-stack);
         font-size: var(--font-size-small);
-      }
-
-      .rarity-info {
-        padding: 10px;
-        background: var(--background-semi-transparent);
-
-        .rarity-title {
-          font-family: var(--special-font-stack);
-          font-size: var(--font-size-small);
-          margin-bottom: 8px;
-          color: var(--foreground);
-        }
-
-        .rarity-list {
-          display: flex;
-          flex-wrap: wrap;
-          justify-content: center;
-          gap: 8px;
-
-          .rarity-item {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            font-size: var(--font-size-xsmall);
-            color: var(--foreground);
-
-            .rarity-dot {
-              width: 10px;
-              height: 10px;
-              border-radius: 50%;
-            }
-          }
-        }
       }
 
       .button-container {

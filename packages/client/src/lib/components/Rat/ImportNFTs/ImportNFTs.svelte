@@ -224,10 +224,7 @@
         {#each ownedNFTs as nft (nft.tokenId.toString())}
           <div class="nft-item">
             <div class="nft-left">
-              <div
-                class="rarity-indicator"
-                style="background-color: {getRarityColor(nft.value)}"
-              >
+              <div class="rarity-indicator" style="background-color: {getRarityColor(nft.value)}">
                 {getRarityLabel(nft.value)}
               </div>
               <div class="nft-details">

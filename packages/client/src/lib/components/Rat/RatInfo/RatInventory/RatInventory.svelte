@@ -279,7 +279,13 @@
 </script>
 
 <div class="inventory">
-  <InventoryHeader {filledSlots} totalSlots={MAX_INVENTORY_SIZE} {totalValue} {nftCount} {onImportClick} />
+  <InventoryHeader
+    {filledSlots}
+    totalSlots={MAX_INVENTORY_SIZE}
+    {totalValue}
+    {nftCount}
+    {onImportClick}
+  />
   {#if displayRat}
     <div class="inventory-container" bind:this={inventoryContainer}>
       <!-- INVENTORY GRID -->

@@ -148,7 +148,7 @@
 
 <div class="content" data-tutorial="trip-list">
   {#if showNoRatListing}
-    <TripHeader title={UI_STRINGS.tripHeaderNoRat} />
+    <TripHeader hasBackButton />
     <NoRatListing />
   {:else}
     <!-- Challenge Card - Pinned at top, not scrollable -->
@@ -169,11 +169,7 @@
     {/if}
 
     <!-- Trip Header -->
-    <TripHeader
-      title={UI_STRINGS.tripHeader}
-      {eligibleCount}
-      totalCount={tripsWithEligibility.length}
-    />
+    <TripHeader hasBackButton {eligibleCount} totalCount={tripsWithEligibility.length} />
 
     <!-- Scrollable Trip List -->
     <div class="trip-list-container" bind:this={scrollContainer}>
@@ -230,9 +226,9 @@
 
   .challenge-section {
     flex-shrink: 0;
-    padding: 10px;
+    padding: 15px;
     border-bottom: var(--default-border-style);
-    background: var(--background);
+    background: var(--background-semi-transparent);
   }
 
   .trip-list-container {

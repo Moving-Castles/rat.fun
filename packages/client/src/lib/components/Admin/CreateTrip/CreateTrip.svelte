@@ -40,12 +40,8 @@
   let flooredTripCreationCost = $derived(Math.floor(tripCreationCost))
 
   // Get default folder IDs (use first available folder for each type)
-  let regularFolderId = $derived(
-    $staticContent.tripFolders.find(f => !f.restricted)?._id ?? ""
-  )
-  let challengeFolderId = $derived(
-    $staticContent.tripFolders.find(f => f.restricted)?._id ?? ""
-  )
+  let regularFolderId = $derived($staticContent.tripFolders.find(f => !f.restricted)?._id ?? "")
+  let challengeFolderId = $derived($staticContent.tripFolders.find(f => f.restricted)?._id ?? "")
 
   // Check for foul language
   let tripDescriptionIncludesFoulLanguage = $derived(
@@ -161,7 +157,10 @@
               <button
                 class="type-button challenge"
                 class:disabled={!canCreateChallenge || !FEATURES.ENABLE_CHALLENGE_TRIPS}
-                onclick={() => canCreateChallenge && FEATURES.ENABLE_CHALLENGE_TRIPS && selectTripType("challenge")}
+                onclick={() =>
+                  canCreateChallenge &&
+                  FEATURES.ENABLE_CHALLENGE_TRIPS &&
+                  selectTripType("challenge")}
               >
                 <div class="type-title">CHALLENGE</div>
                 <div class="type-details">
