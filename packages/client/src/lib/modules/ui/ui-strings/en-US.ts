@@ -227,7 +227,7 @@ export const enUS = {
   yourName: "YOUR NAME",
   youWillRecover: "You will recover",
   allIsFine: "ALL IS FINE.\n JUST ONE MOMENT.\n WE VALUE YOUR PATIENCE.",
-  tripHeader: "Select a category",
+  tripHeader: "",
   tripHeaderNoRat: "Buy rat to select TRIP.",
   unlockAdminHeader: "Unlock TRIP LAB",
   unlockAdminMessage:

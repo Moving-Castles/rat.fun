@@ -15,7 +15,7 @@
 
 <div class="trip-header" class:with-back-button={hasBackButton}>
   <div class="header-text">
-    <span>{title}</span>
+    <!-- <span>{title}</span> -->
     {#if eligibleCount !== undefined && totalCount !== undefined}
       <span class="trips-count">
         {UI_STRINGS.trips}: {eligibleCount} / {totalCount - eligibleCount} locked

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { player } from "$lib/modules/state/stores"
   import { playSound } from "$lib/modules/sound"
-  import { BigButton } from "$lib/components/Shared"
+  import { BigButton, ResizableText } from "$lib/components/Shared"
   import { ratState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
   import { exportItemToNFT } from "$lib/modules/on-chain-transactions"
   import { errorHandler } from "$lib/modules/error-handling"
@@ -56,13 +56,14 @@
       if (result) {
         logger.log("Item exported successfully")
         playSound({ category: "ratfunUI", id: "itemPositive" })
-        ratState.exportItem.clear()
-        ratState.state.transitionTo(RAT_BOX_STATE.HAS_RAT)
       }
     } catch (e) {
       errorHandler(e)
     } finally {
       isExporting = false
+      // Always transition back to inventory after export attempt (success or failure)
+      ratState.exportItem.clear()
+      ratState.state.transitionTo(RAT_BOX_STATE.HAS_RAT)
     }
   }
 
@@ -78,11 +79,19 @@
     <!-- <div class="header">EXPORT TO NFT</div> -->
 
     <div class="item-preview" style="background-color: {rarityColor}">
-      <div class="rarity-label" style="color: {rarityTextColor}">
-        {rarityLabel}
+      <div class="item-name">
+        <ResizableText>
+          {itemName ?? "Unknown Item"}
+        </ResizableText>
       </div>
-      <div class="item-name">{itemName ?? "Unknown Item"}</div>
-      <div class="item-value">{itemValue ?? 0} {CURRENCY_SYMBOL}</div>
+      <div class="flexy-row">
+        <div class="item-value">{itemValue ?? 0} {CURRENCY_SYMBOL}</div>
+        <div class="rarity-label" style="color: {rarityTextColor}">
+          <span class="label">
+            {rarityLabel}
+          </span>
+        </div>
+      </div>
     </div>
 
     <div class="warning-text">
@@ -132,11 +141,30 @@
         flex-direction: column;
         align-items: center;
         gap: 8px;
+        position: relative;
+        border: 8px inset var(--background-semi-transparent);
+
+        .flexy-row {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 8px;
+        }
 
         .rarity-label {
-          position: absolute;
-          top: 0;
-          right: 0;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 8px 12px;
+          background: var(--background-semi-transparent);
+
+          .label {
+            font-family: var(--typewriter-font-stack);
+            font-size: var(--font-size-xsmall);
+            opacity: 0.8;
+            color: var(--foreground);
+            text-transform: uppercase;
+          }
         }
 
         .rarity-indicator {
@@ -148,6 +176,12 @@
         }
 
         .item-name {
+          height: 200px;
+          width: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          // line-height: 200px;
           font-family: var(--special-font-stack);
           font-size: var(--font-size-large);
           color: var(--background);

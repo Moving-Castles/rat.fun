@@ -5,10 +5,11 @@
   import { itemNftConfig, playerAddress, player, rat } from "$lib/modules/state/stores"
   import { importNFTToItem } from "$lib/modules/on-chain-transactions"
   import { errorHandler } from "$lib/modules/error-handling"
+  import { getRarityColor, getRarityLabel, getRarityTextColor } from "$lib/modules/ui/item-rarity"
   import { playSound } from "$lib/modules/sound"
   import { createLogger } from "$lib/modules/logger"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
-  import { SmallButton, BackButton } from "$lib/components/Shared"
+  import { SmallButton, BackButton, ResizableText } from "$lib/components/Shared"
   import { ratState, RAT_BOX_STATE } from "$lib/components/Rat/state.svelte"
   import { getRatInventory } from "$lib/modules/state/utils"
 
@@ -82,21 +83,6 @@
       return config.itemNftAddress
     }
     return null
-  }
-
-  // Determine rarity color based on value
-  function getRarityColor(value: number): string {
-    if (value >= 100) return "#9333ea" // Purple
-    if (value >= 50) return "#eab308" // Yellow
-    if (value >= 20) return "#9ca3af" // Gray
-    return "#b45309" // Brown
-  }
-
-  function getRarityLabel(value: number): string {
-    if (value >= 100) return "Legendary"
-    if (value >= 50) return "Rare"
-    if (value >= 20) return "Uncommon"
-    return "Common"
   }
 
   async function loadOwnedNFTs() {
@@ -205,9 +191,8 @@
 
 <div class="import-nfts">
   <div class="header">
-    <div class="title">IMPORT PSYCHO OBJECTS</div>
+    <div class="title">PsychoObjects NFT Vault</div>
     <div class="inventory-status">
-      Inventory: {inventorySize}/{MAX_INVENTORY_SIZE}
       {#if inventoryFull}
         <span class="full-warning">(Full)</span>
       {/if}
@@ -222,17 +207,22 @@
     {:else}
       <div class="nft-list">
         {#each ownedNFTs as nft (nft.tokenId.toString())}
-          <div class="nft-item">
+          <div
+            class="nft-item"
+            style="background-color: {getRarityColor(nft.value)}; color: {getRarityTextColor(
+              nft.value
+            )}"
+          >
             <div class="nft-left">
-              <div
-                class="rarity-indicator"
-                style="background-color: {getRarityColor(nft.value)}"
-              >
-                {getRarityLabel(nft.value)}
+              <div class="rarity-indicator">
+                <div class="nft-value">
+                  {nft.value}
+                </div>
               </div>
               <div class="nft-details">
-                <div class="nft-name">{nft.name}</div>
-                <div class="nft-value">{nft.value} {CURRENCY_SYMBOL}</div>
+                <ResizableText>
+                  {nft.name} ({getRarityLabel(nft.value)})
+                </ResizableText>
               </div>
             </div>
             <div class="nft-actions">
@@ -267,6 +257,7 @@
     padding: 20px;
     border-bottom: var(--default-border-style);
     text-align: center;
+    background-image: url("/images/texture-4.png");
 
     .title {
       font-family: var(--special-font-stack);
@@ -291,6 +282,7 @@
     flex: 1;
     overflow-y: auto;
     padding: 16px;
+    background-image: url("/images/texture-3.png");
   }
 
   .loading,
@@ -312,51 +304,74 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px;
+    height: 100px;
+    // padding: 12px;
     background: var(--background-semi-transparent);
-    border: 2px solid var(--foreground);
+    // border: 2px solid var(--foreground);
   }
 
   .nft-left {
+    width: 100%;
+    height: 100%;
     display: flex;
     align-items: center;
-    gap: 12px;
   }
 
   .rarity-indicator {
     padding: 4px 8px;
     color: white;
+    background: var(--color-grey-dark);
     font-family: var(--special-font-stack);
     font-size: var(--font-size-xsmall);
     text-transform: uppercase;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
     white-space: nowrap;
+    height: 100%;
+    border: none;
+    border-style: outset;
+    border-width: 4px;
+    border-color: var(--background-light-transparent);
   }
 
   .nft-details {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
+    height: 100%;
+    width: 100%;
+    padding: 12px;
+    display: block;
+    font-family: var(--special-font-stack);
+    border: none;
+    border-style: outset;
+    border-width: 4px;
+    border-color: var(--background-light-transparent);
   }
 
   .nft-name {
+    width: 100%;
+    height: 100%;
     font-family: var(--special-font-stack);
-    font-size: var(--font-size-medium);
-    color: var(--foreground);
+    // font-size: var(--font-size-medium);
   }
 
   .nft-value {
     font-family: var(--typewriter-font-stack);
-    font-size: var(--font-size-small);
+    font-size: var(--font-size-large);
     color: var(--foreground);
     opacity: 0.8;
+    width: 50px;
+    padding: 12px;
+    // height: 100%;
   }
 
   .nft-actions {
     flex-shrink: 0;
+    height: 100%;
+    width: 120px;
   }
 
   .back-button-container {
-    padding: 16px;
     border-top: var(--default-border-style);
     display: flex;
     justify-content: center;

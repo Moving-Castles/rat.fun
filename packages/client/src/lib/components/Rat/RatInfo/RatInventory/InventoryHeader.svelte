@@ -82,15 +82,20 @@
       .import-nfts-button {
         // font-family: var(--special-font-stack);
         font-size: var(--font-size-small);
+        margin: -32px -12px;
+        height: 40px;
         padding: 4px 12px;
-        background: var(--color-restricted-trip-folder);
-        color: var(--background);
-        border: 2px solid var(--background);
+        background: var(--color-grey-light);
+        border: none;
+        border-style: outset;
+        border-width: 4px;
+        border-color: var(--background-light-transparent);
         cursor: pointer;
         transition: all 0.15s ease;
 
         &:hover {
-          transform: scale(1.05);
+          background: var(--color-grey-lighter);
+          // transform: scale(1.05);
         }
 
         &:active {

@@ -3,6 +3,7 @@
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import { ResizableText } from "$lib/components/Shared"
   import { isPhone } from "$lib/modules/ui/state.svelte"
+  import { getRarityColor } from "$lib/modules/ui/item-rarity"
 
   let {
     item,
@@ -54,12 +55,10 @@
         <div class="name">{item.name}</div>
       {/if}
     </div>
-    <div class="item-back">
+    <div class="item-back" style="background-color: {getRarityColor(item.value)}">
       <div class="value">{Number(item.value)} {CURRENCY_SYMBOL}</div>
       {#if onExport && itemId}
-        <button class="export-button" onclick={handleExport}>
-          Export NFT
-        </button>
+        <button class="export-button" onclick={handleExport}> Export NFT </button>
       {/if}
     </div>
   </div>
@@ -103,7 +102,7 @@
     padding: 5px;
     border: 8px inset var(--background-semi-transparent);
     outline: none;
-    box-shadow: 0 2px 8px var(--background-light-transparent);
+    box-shadow: 0 4px 8px var(--background-light-transparent);
   }
 
   .item-front {
@@ -113,6 +112,7 @@
 
   .item-back {
     transform: rotateY(180deg);
+    position: relative;
     background: var(--color-inventory-item-reverse-side);
   }
 
@@ -122,19 +122,26 @@
   }
 
   .export-button {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 40px;
     margin-top: 8px;
     padding: 4px 8px;
     font-size: var(--font-size-small);
     font-family: var(--special-font-stack);
-    background: var(--background);
-    color: var(--foreground);
-    border: 2px solid var(--foreground);
+    background: var(--color-grey-light);
+    color: var(--background);
+    border: none;
+    border-style: outset;
+    border-width: 4px;
+    border-color: var(--background-light-transparent);
     cursor: pointer;
     transition: all 0.15s ease;
 
     &:hover:not(:disabled) {
-      background: var(--foreground);
-      color: var(--background);
+      background: var(--color-grey-lighter);
     }
 
     &:disabled {
