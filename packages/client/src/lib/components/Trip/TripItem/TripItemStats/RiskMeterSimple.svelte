@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { rat } from "$lib/modules/state/stores"
+  import { ratTotalValue } from "$lib/modules/state/stores"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import { Tooltip } from "$lib/components/Shared"
 
@@ -62,7 +62,7 @@
   <div class="meta-data-item max-risk">
     <Tooltip content="WARNING! When you enter a trip you risk your RAT's health and PSYCHO OBJECTS">
       <div class="inner">
-        {$rat.balance}<span class="currency-symbol">{CURRENCY_SYMBOL}</span>
+        {$ratTotalValue}<span class="currency-symbol">{CURRENCY_SYMBOL}</span>
       </div>
     </Tooltip>
   </div>
