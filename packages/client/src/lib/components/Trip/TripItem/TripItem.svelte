@@ -129,9 +129,19 @@
 
       .trip-image {
         :global(img) {
-          transform: scale(2.5);
-          transition: transform 0.1s ease-in-out;
+          transform: scale(2);
+          transition: transform 0.1s ease-out;
+          animation: hue-rotate 4s linear infinite;
         }
+      }
+    }
+
+    @keyframes hue-rotate {
+      from {
+        filter: hue-rotate(0deg);
+      }
+      to {
+        filter: hue-rotate(360deg);
       }
     }
 
@@ -179,6 +189,7 @@
           border-right: var(--default-border-style);
 
           :global(img) {
+            padding: 5px;
             display: block;
             width: 100%;
             height: 100%;
@@ -224,6 +235,7 @@
             line-height: 0.9em;
             overflow: hidden;
             padding-inline: 10px;
+            padding-bottom: 5px;
           }
         }
 

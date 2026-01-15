@@ -28,7 +28,7 @@
         <span class="inventory-header-count">{filledSlots}/{totalSlots}</span>
       </div>
       {#if hasNFTs}
-        <button class="import-nfts-button" onclick={onImportClick}> IMPORT NFT </button>
+        <button class="import-nfts-button" onclick={onImportClick}>INJECT PSYCHO OBJECT</button>
       {:else}
         <div class="inventory-header-total-value">{totalValue} {CURRENCY_SYMBOL}</div>
       {/if}
@@ -40,7 +40,7 @@
   .inventory-header-wrapper {
     height: 40px;
     flex-shrink: 0;
-    border-bottom: var(--dashed-border-style);
+    border-bottom: var(--default-border-style);
     background: var(--background-semi-transparent);
 
     .inventory-header {
@@ -80,21 +80,18 @@
       }
 
       .import-nfts-button {
-        // font-family: var(--special-font-stack);
         font-size: var(--font-size-small);
+        font-family: var(--special-font-stack);
         padding: 4px 12px;
-        background: var(--color-restricted-trip-folder);
-        color: var(--background);
-        border: 2px solid var(--background);
+        color: var(--foreground);
+        background: var(--background-semi-transparent);
+        border: 1px dashed var(--foreground);
         cursor: pointer;
         transition: all 0.15s ease;
 
         &:hover {
-          transform: scale(1.05);
-        }
-
-        &:active {
-          transform: scale(0.95);
+          color: var(--foreground);
+          border: 1px solid var(--foreground);
         }
       }
     }

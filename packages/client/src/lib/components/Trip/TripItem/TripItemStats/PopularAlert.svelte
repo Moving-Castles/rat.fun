@@ -34,7 +34,6 @@
     animation: pulsatingFire 0.5s ease-in-out infinite;
     color: var(--background);
     margin-bottom: 5px;
-    border-radius: 4px;
     display: flex;
     align-items: center;
     justify-content: center;

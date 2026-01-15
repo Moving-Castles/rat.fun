@@ -57,7 +57,7 @@
     <div class="item-back">
       <div class="value">{Number(item.value)} {CURRENCY_SYMBOL}</div>
       {#if onExport && itemId}
-        <button class="export-button" onclick={handleExport}> Export NFT </button>
+        <button class="export-button" onclick={handleExport}>EXTRACT</button>
       {/if}
     </div>
   </div>
@@ -96,12 +96,12 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: var(--color-inventory-item-background);
+    background-color: var(--color-inventory-item-background);
     color: var(--background);
     padding: 5px;
-    border: 8px inset var(--background-semi-transparent);
+    border: 8px ridge var(--background-semi-transparent);
     outline: none;
-    box-shadow: 0 2px 8px var(--background-light-transparent);
+    box-shadow: inset 0 2px 8px var(--background-light-transparent);
   }
 
   .item-front {
@@ -124,15 +124,15 @@
     padding: 4px 8px;
     font-size: var(--font-size-small);
     font-family: var(--special-font-stack);
-    background: var(--background);
-    color: var(--foreground);
-    border: 2px solid var(--foreground);
+    color: var(--background);
+    background: transparent;
+    border: 1px dashed var(--background);
     cursor: pointer;
     transition: all 0.15s ease;
 
     &:hover:not(:disabled) {
-      background: var(--foreground);
       color: var(--background);
+      border: 1px solid var(--background);
     }
 
     &:disabled {
