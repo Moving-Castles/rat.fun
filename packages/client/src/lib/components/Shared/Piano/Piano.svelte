@@ -97,16 +97,16 @@
   {#if showPiano}
     <div class="piano-keys">
       <button class="white-key" onclick={() => playNote(-12)}>C</button>
-      <button class="black-key black-1" onclick={() => playNote(-11)}></button>
+      <button class="black-key black-1" onclick={() => playNote(-11)} aria-label="C sharp"></button>
       <button class="white-key" onclick={() => playNote(-10)}>D</button>
-      <button class="black-key black-2" onclick={() => playNote(-9)}></button>
+      <button class="black-key black-2" onclick={() => playNote(-9)} aria-label="D sharp"></button>
       <button class="white-key" onclick={() => playNote(-8)}>E</button>
       <button class="white-key" onclick={() => playNote(-7)}>F</button>
-      <button class="black-key black-3" onclick={() => playNote(-6)}></button>
+      <button class="black-key black-3" onclick={() => playNote(-6)} aria-label="F sharp"></button>
       <button class="white-key" onclick={() => playNote(-5)}>G</button>
-      <button class="black-key black-4" onclick={() => playNote(-4)}></button>
+      <button class="black-key black-4" onclick={() => playNote(-4)} aria-label="G sharp"></button>
       <button class="white-key" onclick={() => playNote(-3)}>A</button>
-      <button class="black-key black-5" onclick={() => playNote(-2)}></button>
+      <button class="black-key black-5" onclick={() => playNote(-2)} aria-label="A sharp"></button>
       <button class="white-key" onclick={() => playNote(-1)}>B</button>
       <button class="white-key" onclick={() => playNote(0)}>C</button>
     </div>

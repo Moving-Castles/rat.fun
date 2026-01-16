@@ -324,13 +324,6 @@
     box-shadow: 0 4px 8px var(--background-light-transparent);
   }
 
-  .nft-name {
-    width: 100%;
-    height: 100%;
-    font-family: var(--special-font-stack);
-    // font-size: var(--font-size-medium);
-  }
-
   .nft-value {
     font-family: var(--typewriter-font-stack);
     font-size: var(--font-size-large);
