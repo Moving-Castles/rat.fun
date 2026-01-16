@@ -44,14 +44,7 @@ async function routes(fastify: FastifyInstance) {
     "/trip/create",
     opts,
     async (request: FastifyRequest<{ Body: SignedRequest<CreateTripRequestBody> }>, reply) => {
-      const {
-        tripPrompt,
-        tripCreationCost,
-        folderId,
-        isChallengeTrip,
-        fixedMinValueToEnter,
-        overrideMaxValuePerWinPercentage
-      } = request.body.data
+      const { tripPrompt, tripCreationCost, folderId, isChallengeTrip } = request.body.data
 
       // Recover player address from signature and convert to MUD bytes32 format
       const { callerAddress, playerId } = await verifyRequest(request.body)
