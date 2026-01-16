@@ -49,16 +49,21 @@ type ChallengeConfigRow = {
 // Note: Some table names are truncated in the MUD indexer database
 // WorldStats is fetched separately via /api/world-stats (not cached)
 async function fetchGlobalConfigs(): Promise<Omit<GlobalConfigsResponse, "blockNumber">> {
-  const [gameConfigRow, gamePercentagesRow, externalAddressesRow, itemNftConfigRow, challengeConfigRow] =
-    await Promise.all([
-      getSingletonTableRow<GameConfigRow>("GameConfig"),
-      // Truncated table name: game_percentages_c instead of game_percentages_config
-      getSingletonTableRow<GamePercentagesRow>("GamePercentagesC", "game_percentages_c"),
-      // Truncated table name: external_addresse instead of external_addresses_config
-      getSingletonTableRow<ExternalAddressesRow>("ExternalAddresse", "external_addresse"),
-      getSingletonTableRow<ItemNftConfigRow>("ItemNftConfig"),
-      getSingletonTableRow<ChallengeConfigRow>("ChallengeConfig")
-    ])
+  const [
+    gameConfigRow,
+    gamePercentagesRow,
+    externalAddressesRow,
+    itemNftConfigRow,
+    challengeConfigRow
+  ] = await Promise.all([
+    getSingletonTableRow<GameConfigRow>("GameConfig"),
+    // Truncated table name: game_percentages_c instead of game_percentages_config
+    getSingletonTableRow<GamePercentagesRow>("GamePercentagesC", "game_percentages_c"),
+    // Truncated table name: external_addresse instead of external_addresses_config
+    getSingletonTableRow<ExternalAddressesRow>("ExternalAddresse", "external_addresse"),
+    getSingletonTableRow<ItemNftConfigRow>("ItemNftConfig"),
+    getSingletonTableRow<ChallengeConfigRow>("ChallengeConfig")
+  ])
 
   // Debug logging
   console.log("[config] GameConfig row:", gameConfigRow)
