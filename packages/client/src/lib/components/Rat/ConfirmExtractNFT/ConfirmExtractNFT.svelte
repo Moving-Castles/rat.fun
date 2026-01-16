@@ -8,7 +8,7 @@
   import { createLogger } from "$lib/modules/logger"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
 
-  const logger = createLogger("[ConfirmExportNFT]")
+  const logger = createLogger("[ConfirmExtractNFT]")
 
   // Get item data from ratState
   let itemId = $derived(ratState.exportItem.itemId)
@@ -18,38 +18,12 @@
   // Get current rat ID
   let ratId = $derived($player?.currentRat as string | undefined)
 
-  // Determine rarity color based on value
-  let rarityColor = $derived.by(() => {
-    if (!itemValue) return "#b45309" // Brown (default)
-    if (itemValue >= 100) return "#9333ea" // Purple
-    if (itemValue >= 50) return "#eab308" // Yellow
-    if (itemValue >= 20) return "#9ca3af" // Gray
-    return "#b45309" // Brown
-  })
-
-  // Determine rarity color based on value
-  let rarityTextColor = $derived.by(() => {
-    if (!itemValue) return "white" // Brown (default)
-    if (itemValue >= 100) return "white" // Purple
-    if (itemValue >= 50) return "black" // Yellow
-    if (itemValue >= 20) return "black" // Gray
-    return "black" // Brown
-  })
-
-  let rarityLabel = $derived.by(() => {
-    if (!itemValue) return "Common"
-    if (itemValue >= 100) return "Legendary"
-    if (itemValue >= 50) return "Rare"
-    if (itemValue >= 20) return "Uncommon"
-    return "Common"
-  })
-
-  let isExporting = $state(false)
+  let isExtracting = $state(false)
 
   const onClickConfirm = async () => {
     if (!itemId || !ratId) return
 
-    isExporting = true
+    isExtracting = true
     try {
       logger.log("Exporting item to NFT:", { itemId, ratId })
       const result = await exportItemToNFT(ratId, itemId)
@@ -60,7 +34,7 @@
     } catch (e) {
       errorHandler(e)
     } finally {
-      isExporting = false
+      isExtracting = false
       // Always transition back to inventory after export attempt (success or failure)
       ratState.exportItem.clear()
       ratState.state.transitionTo(RAT_BOX_STATE.HAS_RAT)
@@ -78,7 +52,7 @@
   <div class="confirm-export-content">
     <!-- <div class="header">EXPORT TO NFT</div> -->
 
-    <div class="item-preview" style="background-color: {rarityColor}">
+    <div class="item-preview">
       <div class="item-name">
         <ResizableText>
           {itemName ?? "Unknown Item"}
@@ -86,11 +60,6 @@
       </div>
       <div class="flexy-row">
         <div class="item-value">{itemValue ?? 0} {CURRENCY_SYMBOL}</div>
-        <div class="rarity-label" style="color: {rarityTextColor}">
-          <span class="label">
-            {rarityLabel}
-          </span>
-        </div>
       </div>
     </div>
 
@@ -100,10 +69,10 @@
 
     <div class="button-container">
       <div class="abort-button-container">
-        <BigButton text="Cancel" type="abort" onclick={onClickAbort} disabled={isExporting} />
+        <BigButton text="Cancel" type="abort" onclick={onClickAbort} disabled={isExtracting} />
       </div>
       <div class="confirm-button-container">
-        <BigButton text="Export" type="confirm" onclick={onClickConfirm} disabled={isExporting} />
+        <BigButton text="Extract" type="confirm" onclick={onClickConfirm} disabled={isExtracting} />
       </div>
     </div>
   </div>
@@ -129,14 +98,21 @@
       gap: 16px;
 
       .item-preview {
+        width: 200px;
+        height: 240px;
+        margin: 0 auto;
         padding: 20px;
-        background: var(--foreground-semi-transparent);
         display: flex;
         flex-direction: column;
         align-items: center;
         gap: 8px;
         position: relative;
-        border: 8px inset var(--background-semi-transparent);
+        background-color: var(--color-inventory-item-background);
+        color: var(--background);
+        padding: 5px;
+        border: 8px ridge var(--background-semi-transparent);
+        outline: none;
+        box-shadow: 0 4px 8px var(--background-light-transparent);
 
         .flexy-row {
           display: flex;
@@ -145,31 +121,16 @@
           gap: 8px;
         }
 
-        .rarity-label {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 8px 12px;
-          background: var(--background-semi-transparent);
-
-          .label {
-            font-family: var(--typewriter-font-stack);
-            font-size: var(--font-size-xsmall);
-            opacity: 0.8;
-            color: var(--foreground);
-            text-transform: uppercase;
-          }
-        }
-
         .item-name {
-          height: 200px;
-          width: 100%;
+          height: 300px;
+          width: 200px;
           display: flex;
           justify-content: center;
           align-items: center;
+          padding: 24px;
           // line-height: 200px;
           font-family: var(--special-font-stack);
-          font-size: var(--font-size-large);
+          // font-size: var(--font-size-large);
           color: var(--background);
         }
 

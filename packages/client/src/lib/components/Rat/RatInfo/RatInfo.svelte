@@ -71,6 +71,7 @@
       })) as bigint
 
       nftCount = Number(balance)
+      console.log("new nft count", nftCount)
       logger.log("NFT balance checked:", { count: nftCount })
     } catch (e) {
       logger.error("Error checking NFT balance:", e)

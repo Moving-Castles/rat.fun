@@ -3,7 +3,6 @@
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import { ResizableText } from "$lib/components/Shared"
   import { isPhone } from "$lib/modules/ui/state.svelte"
-  import { getRarityColor } from "$lib/modules/ui/item-rarity"
 
   let {
     item,
@@ -25,22 +24,13 @@
     }
   }
 
-  // Determine rarity class based on value
-  const getRarityClass = (value: bigint | number) => {
-    const numValue = typeof value === "bigint" ? Number(value) : value
-    if (numValue >= 100) return "holographic"
-    if (numValue >= 50) return "gold"
-    if (numValue >= 20) return "silver"
-    return "copper"
-  }
-
   const onMouseEnter = () => {
     playSound({ category: "ratfunUI", id: "hover3" })
   }
 </script>
 
 <div
-  class="inventory-item-wrapper {getRarityClass(item.value)} index-{index}"
+  class="inventory-item-wrapper index-{index}"
   role="button"
   tabindex="0"
   onmouseenter={onMouseEnter}
@@ -55,10 +45,10 @@
         <div class="name">{item.name}</div>
       {/if}
     </div>
-    <div class="item-back" style="background-color: {getRarityColor(item.value)}">
+    <div class="item-back">
       <div class="value">{Number(item.value)} {CURRENCY_SYMBOL}</div>
       {#if onExport && itemId}
-        <button class="export-button" onclick={handleExport}> Export NFT </button>
+        <button class="export-button" onclick={handleExport}> Extract NFT </button>
       {/if}
     </div>
   </div>

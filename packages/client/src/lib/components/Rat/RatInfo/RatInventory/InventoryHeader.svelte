@@ -18,17 +18,23 @@
 </script>
 
 <div class="inventory-header-wrapper">
-  <Tooltip content={UI_STRINGS.itemExplanation}>
-    <div class="inventory-header">
-      <div class="inventory-header-title">
-        {UI_STRINGS.inventoryName}
-        <span class="inventory-header-count">{filledSlots}/{totalSlots}</span>
-      </div>
-      {#if hasNFTs}
-        <button class="import-nfts-button" onclick={onImportClick}>INJECT PSYCHO OBJECT</button>
-      {/if}
+  <div class="inventory-header">
+    <div class="left">
+      <Tooltip content={UI_STRINGS.itemExplanation}>
+        <div class="inventory-header-title">
+          {UI_STRINGS.inventoryName}
+          <span class="inventory-header-count">{filledSlots}/{totalSlots}</span>
+        </div>
+      </Tooltip>
     </div>
-  </Tooltip>
+    {#if hasNFTs}
+      <div class="right">
+        <Tooltip content="Re-inject NFTs you've extracted from rats">
+          <button class="import-nfts-button" onclick={onImportClick}>INJECT PSYCHO OBJECT</button>
+        </Tooltip>
+      </div>
+    {/if}
+  </div>
 </div>
 
 <style lang="scss">

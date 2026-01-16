@@ -9,6 +9,7 @@
   import { createLogger } from "$lib/modules/logger"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import { SmallButton } from "$lib/components/Shared"
+  import { ItemNFTAbi } from "contracts/externalAbis"
 
   const logger = createLogger("[NFTInventory]")
 
@@ -19,44 +20,6 @@
     ratId?: string
     onRefresh?: () => void
   } = $props()
-
-  // NFT contract ABI (minimal for reading)
-  const ITEM_NFT_ABI = [
-    {
-      inputs: [{ name: "owner", type: "address" }],
-      name: "balanceOf",
-      outputs: [{ name: "", type: "uint256" }],
-      stateMutability: "view",
-      type: "function"
-    },
-    {
-      inputs: [
-        { name: "owner", type: "address" },
-        { name: "index", type: "uint256" }
-      ],
-      name: "tokenOfOwnerByIndex",
-      outputs: [{ name: "", type: "uint256" }],
-      stateMutability: "view",
-      type: "function"
-    },
-    {
-      inputs: [{ name: "tokenId", type: "uint256" }],
-      name: "getItemId",
-      outputs: [{ name: "itemId", type: "bytes32" }],
-      stateMutability: "view",
-      type: "function"
-    },
-    {
-      inputs: [{ name: "tokenId", type: "uint256" }],
-      name: "getItemData",
-      outputs: [
-        { name: "name", type: "string" },
-        { name: "value", type: "uint256" }
-      ],
-      stateMutability: "view",
-      type: "function"
-    }
-  ] as const
 
   let ownedNFTs = $state<ItemNFT[]>([])
   let loading = $state(true)
@@ -96,7 +59,7 @@
       // Get balance
       const balance = (await publicClient.readContract({
         address: itemNftAddress as `0x${string}`,
-        abi: ITEM_NFT_ABI,
+        abi: ItemNFTAbi,
         functionName: "balanceOf",
         args: [account as `0x${string}`]
       })) as bigint
@@ -109,21 +72,21 @@
       for (let i = 0n; i < balance; i++) {
         const tokenId = (await publicClient.readContract({
           address: itemNftAddress as `0x${string}`,
-          abi: ITEM_NFT_ABI,
+          abi: ItemNFTAbi,
           functionName: "tokenOfOwnerByIndex",
           args: [account as `0x${string}`, i]
         })) as bigint
 
         const itemId = (await publicClient.readContract({
           address: itemNftAddress as `0x${string}`,
-          abi: ITEM_NFT_ABI,
+          abi: ItemNFTAbi,
           functionName: "getItemId",
           args: [tokenId]
         })) as `0x${string}`
 
         const [name, value] = (await publicClient.readContract({
           address: itemNftAddress as `0x${string}`,
-          abi: ITEM_NFT_ABI,
+          abi: ItemNFTAbi,
           functionName: "getItemData",
           args: [tokenId]
         })) as [string, bigint]

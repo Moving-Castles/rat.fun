@@ -149,9 +149,9 @@
         {#if tripType === null}
           <!-- STEP 1: TYPE SELECTION -->
           <div class="type-selection">
-            <div class="instructions">
+            <!-- <div class="instructions">
               <span class="highlight">Create</span>
-            </div>
+            </div> -->
             <div class="type-buttons">
               <!-- CHALLENGE BUTTON -->
               <button
@@ -163,16 +163,6 @@
                   selectTripType("challenge")}
               >
                 <div class="type-title">CHALLENGE</div>
-                <div class="type-details">
-                  <div class="detail-row">
-                    <span class="label">Min Pool:</span>
-                    <span class="value">5000 {CURRENCY_SYMBOL}</span>
-                  </div>
-                  <div class="detail-row">
-                    <span class="label">Max Win:</span>
-                    <span class="value">100%</span>
-                  </div>
-                </div>
                 {#if !canCreateChallenge && FEATURES.ENABLE_CHALLENGE_TRIPS}
                   <div class="unavailable-notice">
                     Active challenge expires in {challengeExpiryText}
@@ -186,16 +176,6 @@
               <!-- REGULAR TRIP BUTTON -->
               <button class="type-button regular" onclick={() => selectTripType("regular")}>
                 <div class="type-title">TRIP</div>
-                <div class="type-details">
-                  <div class="detail-row">
-                    <span class="label">Min Pool:</span>
-                    <span class="value">Adjustable</span>
-                  </div>
-                  <div class="detail-row">
-                    <span class="label">Max Win:</span>
-                    <span class="value">25%</span>
-                  </div>
-                </div>
               </button>
             </div>
           </div>
@@ -297,9 +277,9 @@
       font-family: var(--special-font-stack);
 
       .type-buttons {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 16px;
+        display: flex;
+        flex-flow: column nowrap;
+        gap: 4px;
         flex: 1;
 
         @media (max-width: 800px) {
@@ -310,20 +290,19 @@
 
       .type-button {
         display: flex;
+        height: 50%;
         flex-direction: column;
         justify-content: center;
         align-items: center;
         gap: 16px;
         padding: 24px;
-        border: 4px solid var(--color-grey-mid);
         background: var(--background);
         cursor: pointer;
         transition: all 0.15s ease;
-
-        &:hover:not(.disabled) {
-          transform: scale(0.98);
-          border-color: var(--foreground);
-        }
+        border: none;
+        border-style: outset;
+        border-width: 4px;
+        border-color: var(--background-light-transparent);
 
         &:active:not(.disabled) {
           transform: scale(0.95);
@@ -334,10 +313,18 @@
           cursor: not-allowed;
         }
 
+        cursor: pointer;
+
         &.challenge {
           background-color: var(--color-restricted-trip-folder);
-          color: var(--background);
-          border-color: var(--background);
+          border: none;
+          border-style: outset;
+          border-width: 4px;
+          border-color: var(--background-light-transparent);
+
+          &:hover:not(.disabled) {
+            background-color: var(--color-inventory-item-reverse-side);
+          }
 
           .type-title {
             color: var(--background);
@@ -366,10 +353,39 @@
         }
 
         &.regular {
-          background: var(--background);
+          position: relative;
+          // font-family: var(--special-font-stack);
+          // font-size: var(--font-size-medium);
+
+          border-style: outset;
+          border-color: var(--background-semi-transparent);
+          // color: var(--foreground);
+
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+
+          background: var(--color-grey-light);
+
+          &:hover {
+            background: var(--color-grey-lighter);
+          }
+
+          &::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: url("/images/spiral4.png");
+            background-repeat: no-repeat;
+            background-size: 200% 200%;
+            background-position: center;
+            opacity: 0.2;
+            z-index: 0;
+          }
 
           .type-title {
-            color: var(--foreground);
+            // color: var(--foreground);
           }
 
           .type-details {

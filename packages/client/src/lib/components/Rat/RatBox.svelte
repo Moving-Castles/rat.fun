@@ -11,7 +11,7 @@
     RatDeploy,
     DeployingRat,
     ConfirmLiquidation,
-    ConfirmExportNFT,
+    ConfirmExtractNFT,
     ImportNFTs,
     LiquidatingRat,
     NoTokens,
@@ -112,7 +112,7 @@
   {:else if ratState.state.current === RAT_BOX_STATE.LIQUIDATING_RAT}
     <LiquidatingRat />
   {:else if ratState.state.current === RAT_BOX_STATE.CONFIRM_EXPORT_NFT}
-    <ConfirmExportNFT />
+    <ConfirmExtractNFT />
   {:else if ratState.state.current === RAT_BOX_STATE.IMPORTING_OBJECTS_FROM_NFT}
     <ImportNFTs />
   {:else if ratState.state.current === RAT_BOX_STATE.NO_TOKENS}

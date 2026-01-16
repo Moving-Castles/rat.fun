@@ -3,9 +3,9 @@
   import { get } from "svelte/store"
   import { publicNetwork } from "$lib/modules/network"
   import { itemNftConfig, playerAddress, player, rat } from "$lib/modules/state/stores"
+  import { ItemNFTAbi } from "contracts/externalAbis"
   import { importNFTToItem } from "$lib/modules/on-chain-transactions"
   import { errorHandler } from "$lib/modules/error-handling"
-  import { getRarityColor, getRarityLabel, getRarityTextColor } from "$lib/modules/ui/item-rarity"
   import { playSound } from "$lib/modules/sound"
   import { createLogger } from "$lib/modules/logger"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
@@ -16,44 +16,6 @@
   const logger = createLogger("[ImportNFTs]")
 
   const MAX_INVENTORY_SIZE = 6
-
-  // NFT contract ABI (minimal for reading)
-  const ITEM_NFT_ABI = [
-    {
-      inputs: [{ name: "owner", type: "address" }],
-      name: "balanceOf",
-      outputs: [{ name: "", type: "uint256" }],
-      stateMutability: "view",
-      type: "function"
-    },
-    {
-      inputs: [
-        { name: "owner", type: "address" },
-        { name: "index", type: "uint256" }
-      ],
-      name: "tokenOfOwnerByIndex",
-      outputs: [{ name: "", type: "uint256" }],
-      stateMutability: "view",
-      type: "function"
-    },
-    {
-      inputs: [{ name: "tokenId", type: "uint256" }],
-      name: "getItemId",
-      outputs: [{ name: "itemId", type: "bytes32" }],
-      stateMutability: "view",
-      type: "function"
-    },
-    {
-      inputs: [{ name: "tokenId", type: "uint256" }],
-      name: "getItemData",
-      outputs: [
-        { name: "name", type: "string" },
-        { name: "value", type: "uint256" }
-      ],
-      stateMutability: "view",
-      type: "function"
-    }
-  ] as const
 
   interface OwnedNFT {
     tokenId: bigint
@@ -106,7 +68,7 @@
     try {
       const balance = (await publicClient.readContract({
         address: itemNftAddress as `0x${string}`,
-        abi: ITEM_NFT_ABI,
+        abi: ItemNFTAbi,
         functionName: "balanceOf",
         args: [account as `0x${string}`]
       })) as bigint
@@ -118,21 +80,21 @@
       for (let i = 0n; i < balance; i++) {
         const tokenId = (await publicClient.readContract({
           address: itemNftAddress as `0x${string}`,
-          abi: ITEM_NFT_ABI,
+          abi: ItemNFTAbi,
           functionName: "tokenOfOwnerByIndex",
           args: [account as `0x${string}`, i]
         })) as bigint
 
         const itemId = (await publicClient.readContract({
           address: itemNftAddress as `0x${string}`,
-          abi: ITEM_NFT_ABI,
+          abi: ItemNFTAbi,
           functionName: "getItemId",
           args: [tokenId]
         })) as `0x${string}`
 
         const [name, value] = (await publicClient.readContract({
           address: itemNftAddress as `0x${string}`,
-          abi: ITEM_NFT_ABI,
+          abi: ItemNFTAbi,
           functionName: "getItemData",
           args: [tokenId]
         })) as [string, bigint]
@@ -190,8 +152,12 @@
 </script>
 
 <div class="import-nfts">
+  <div class="back-button-container">
+    <BackButton onclick={handleBack} />
+  </div>
+
   <div class="header">
-    <div class="title">PsychoObjects NFT Vault</div>
+    <div class="title">PsychoObjects Vault</div>
     <div class="inventory-status">
       {#if inventoryFull}
         <span class="full-warning">(Full)</span>
@@ -207,27 +173,19 @@
     {:else}
       <div class="nft-list">
         {#each ownedNFTs as nft (nft.tokenId.toString())}
-          <div
-            class="nft-item"
-            style="background-color: {getRarityColor(nft.value)}; color: {getRarityTextColor(
-              nft.value
-            )}"
-          >
+          <div class="nft-item">
             <div class="nft-left">
-              <div class="rarity-indicator">
-                <div class="nft-value">
-                  {nft.value}
-                </div>
-              </div>
               <div class="nft-details">
                 <ResizableText>
-                  {nft.name} ({getRarityLabel(nft.value)})
+                  {nft.name} ({nft.value}
+                  {CURRENCY_SYMBOL})
                 </ResizableText>
               </div>
             </div>
             <div class="nft-actions">
               <SmallButton
                 text={importing === nft.tokenId ? "Injecting..." : "Inject"}
+                extraClass="text-large"
                 disabled={importing !== null || !ratId || inventoryFull}
                 onclick={() => handleImport(nft.tokenId)}
               />
@@ -236,10 +194,6 @@
         {/each}
       </div>
     {/if}
-  </div>
-
-  <div class="back-button-container">
-    <BackButton onclick={handleBack} />
   </div>
 </div>
 
@@ -253,18 +207,36 @@
     background-size: 200px;
   }
 
-  .header {
-    padding: 20px;
-    border-bottom: var(--default-border-style);
-    text-align: center;
-    background-image: url("/images/texture-4.png");
+  :global(.text-large) {
+    font-size: var(--font-large);
+  }
 
-    .title {
-      font-family: var(--special-font-stack);
-      font-size: var(--font-size-extra-large);
-      color: var(--foreground);
-      margin-bottom: 8px;
-    }
+  .header {
+    line-height: 40px;
+    height: 40px;
+    border-bottom: var(--default-border-style);
+    padding-inline: 20px;
+    display: flex;
+    overflow: hidden;
+    position: sticky;
+    top: 0;
+    z-index: var(--z-high);
+    background-repeat: repeat;
+    text-align: center;
+    justify-content: center;
+    background: var(--background-semi-transparent);
+    user-select: none;
+    text-align: right;
+    color: var(--color-grey-light);
+    font-size: var(--font-size-small);
+    font-family: var(--typewriter-font-stack);
+
+    // .title {
+    //   font-family: var(--special-font-stack);
+    //   font-size: var(--font-size-extra-large);
+    //   color: var(--foreground);
+    //   margin-bottom: 8px;
+    // }
 
     .inventory-status {
       font-family: var(--typewriter-font-stack);
@@ -339,13 +311,17 @@
   .nft-details {
     height: 100%;
     width: 100%;
-    padding: 12px;
     display: block;
     font-family: var(--special-font-stack);
-    border: none;
     border-style: outset;
     border-width: 4px;
     border-color: var(--background-light-transparent);
+    background-color: var(--color-inventory-item-background);
+    color: var(--background);
+    padding: 5px;
+    border: 8px ridge var(--background-semi-transparent);
+    outline: none;
+    box-shadow: 0 4px 8px var(--background-light-transparent);
   }
 
   .nft-name {
@@ -368,12 +344,13 @@
   .nft-actions {
     flex-shrink: 0;
     height: 100%;
-    width: 120px;
+    width: 200px;
   }
 
   .back-button-container {
     border-top: var(--default-border-style);
     display: flex;
     justify-content: center;
+    height: 60px;
   }
 </style>

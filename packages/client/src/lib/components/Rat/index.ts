@@ -5,7 +5,7 @@ export { default as RatInventory } from "./RatInfo/RatInventory/RatInventory.sve
 export { default as NFTInventory } from "./RatInfo/NFTInventory/NFTInventory.svelte"
 export { default as RatInfo } from "./RatInfo/RatInfo.svelte"
 export { default as ConfirmLiquidation } from "./ConfirmLiquidation/ConfirmLiquidation.svelte"
-export { default as ConfirmExportNFT } from "./ConfirmExportNFT/ConfirmExportNFT.svelte"
+export { default as ConfirmExtractNFT } from "./ConfirmExtractNFT/ConfirmExtractNFT.svelte"
 export { default as ImportNFTs } from "./ImportNFTs/ImportNFTs.svelte"
 export { default as DeployingRat } from "./DeployingRat/DeployingRat.svelte"
 export { default as LiquidatingRat } from "./LiquidatingRat/LiquidatingRat.svelte"
