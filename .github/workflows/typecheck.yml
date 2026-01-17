@@ -35,7 +35,7 @@ jobs:
         run: pnpm --filter 'contracts' run build
 
       - name: Build libs
-        run: pnpm build:libs
+        run: pnpm build:libs && pnpm --filter 'query-server' run build
 
       - name: TypeScript check
         # claim-frontend, auction-frontend: deprecated, events over
