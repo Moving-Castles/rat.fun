@@ -30,4 +30,5 @@ jobs:
         run: pnpm build:libs
 
       - name: TypeScript check
-        run: pnpm check
+        # TODO: re-enable claim-frontend and exchange-frontend once env vars are configured for CI
+        run: pnpm --filter '@ratfun/shared-ui' --filter 'client' --filter 'auction-frontend' --filter 'server' --filter 'websocket-server' --filter 'query-server' run check
