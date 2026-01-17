@@ -38,4 +38,5 @@ jobs:
         run: pnpm build:libs
 
       - name: TypeScript check
-        run: pnpm check
+        # claim-frontend excluded - depends on merkle-tree-airdrop which is deprecated post-airdrop
+        run: pnpm --filter '!claim-frontend' check
