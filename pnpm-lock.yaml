@@ -84,206 +84,6 @@ importers:
         specifier: ^3.2.4
         version: 3.2.4(@types/debug@4.1.12)(@types/node@24.7.2)(jiti@2.6.1)(jsdom@27.0.0(bufferutil@4.0.9)(postcss@8.5.6)(utf-8-validate@5.0.10))(sass-embedded@1.97.1)(sass@1.97.1)(tsx@4.20.6)(yaml@2.8.1)
 
-  packages/auction-frontend:
-    dependencies:
-      '@ratfun/common':
-        specifier: workspace:*
-        version: link:../common
-      '@ratfun/shared-ui':
-        specifier: workspace:*
-        version: link:../shared-ui
-      '@ratfun/shared-utils':
-        specifier: workspace:*
-        version: link:../shared-utils
-      '@ratfun/webgl':
-        specifier: workspace:*
-        version: link:../webgl
-      '@sentry/sveltekit':
-        specifier: ^10.27.0
-        version: 10.27.0(@sveltejs/kit@2.49.0(@opentelemetry/api@1.9.0)(@sveltejs/vite-plugin-svelte@6.2.1(svelte@5.45.2)(vite@7.2.4(@types/node@24.7.2)(jiti@2.6.1)(sass-embedded@1.93.3)(sass@1.97.1)(tsx@4.21.0)(yaml@2.8.1)))(svelte@5.45.2)(vite@7.2.4(@types/node@24.7.2)(jiti@2.6.1)(sass-embedded@1.93.3)(sass@1.97.1)(tsx@4.21.0)(yaml@2.8.1)))(svelte@5.45.2)(vite@7.2.4(@types/node@24.7.2)(jiti@2.6.1)(sass-embedded@1.93.3)(sass@1.97.1)(tsx@4.21.0)(yaml@2.8.1))
-      '@wagmi/core':
-        specifier: 2.22.1
-        version: 2.22.1(@tanstack/query-core@5.90.7)(@types/react@19.2.6)(immer@10.2.0)(react@19.2.0)(typescript@5.9.3)(use-sync-external-store@1.4.0(react@19.2.0))(viem@2.39.0(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))
-      '@whetstone-research/doppler-sdk':
-        specifier: npm:@dk1a/doppler-sdk-fork@0.0.1-alpha.57
-        version: '@dk1a/doppler-sdk-fork@0.0.1-alpha.57(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76)'
-      abitype:
-        specifier: ^1.2.1
-        version: 1.2.1(typescript@5.9.3)(zod@3.25.76)
-      contracts:
-        specifier: workspace:*
-        version: link:../contracts
-      doppler:
-        specifier: workspace:*
-        version: link:../doppler
-      drawbridge:
-        specifier: workspace:*
-        version: link:../drawbridge
-      gsap:
-        specifier: ^3.13.0
-        version: 3.13.0
-      howler:
-        specifier: ^2.2.4
-        version: 2.2.4
-      tippy.js:
-        specifier: ^6.3.7
-        version: 6.3.7
-      viem:
-        specifier: 2.39.0
-        version: 2.39.0(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76)
-      wagmi:
-        specifier: ^2.19.2
-        version: 2.19.4(@tanstack/query-core@5.90.7)(@tanstack/react-query@5.90.7(react@19.2.0))(@types/react@19.2.6)(bufferutil@4.0.9)(fastestsmallesttextencoderdecoder@1.0.22)(immer@10.2.0)(react@19.2.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(viem@2.39.0(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))(ws@8.19.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))(zod@3.25.76)
-    devDependencies:
-      '@eslint/compat':
-        specifier: ^2.0.0
-        version: 2.0.0(eslint@9.39.1(jiti@2.6.1))
-      '@eslint/js':
-        specifier: ^9.39.1
-        version: 9.39.1
-      '@sveltejs/adapter-static':
-        specifier: ^3.0.10
-        version: 3.0.10(@sveltejs/kit@2.49.0(@opentelemetry/api@1.9.0)(@sveltejs/vite-plugin-svelte@6.2.1(svelte@5.45.2)(vite@7.2.4(@types/node@24.7.2)(jiti@2.6.1)(sass-embedded@1.93.3)(sass@1.97.1)(tsx@4.21.0)(yaml@2.8.1)))(svelte@5.45.2)(vite@7.2.4(@types/node@24.7.2)(jiti@2.6.1)(sass-embedded@1.93.3)(sass@1.97.1)(tsx@4.21.0)(yaml@2.8.1)))
-      '@sveltejs/kit':
-        specifier: ^2.49.0
-        version: 2.49.0(@opentelemetry/api@1.9.0)(@sveltejs/vite-plugin-svelte@6.2.1(svelte@5.45.2)(vite@7.2.4(@types/node@24.7.2)(jiti@2.6.1)(sass-embedded@1.93.3)(sass@1.97.1)(tsx@4.21.0)(yaml@2.8.1)))(svelte@5.45.2)(vite@7.2.4(@types/node@24.7.2)(jiti@2.6.1)(sass-embedded@1.93.3)(sass@1.97.1)(tsx@4.21.0)(yaml@2.8.1))
-      '@sveltejs/vite-plugin-svelte':
-        specifier: ^6.2.1
-        version: 6.2.1(svelte@5.45.2)(vite@7.2.4(@types/node@24.7.2)(jiti@2.6.1)(sass-embedded@1.93.3)(sass@1.97.1)(tsx@4.21.0)(yaml@2.8.1))
-      '@types/howler':
-        specifier: ^2.2.12
-        version: 2.2.12
-      eslint:
-        specifier: ^9.39.1
-        version: 9.39.1(jiti@2.6.1)
-      eslint-config-prettier:
-        specifier: ^10.1.8
-        version: 10.1.8(eslint@9.39.1(jiti@2.6.1))
-      eslint-plugin-svelte:
-        specifier: ^3.13.0
-        version: 3.13.0(eslint@9.39.1(jiti@2.6.1))(svelte@5.45.2)(ts-node@10.9.2(@types/node@24.7.2)(typescript@5.9.3))
-      globals:
-        specifier: ^16.5.0
-        version: 16.5.0
-      sass-embedded:
-        specifier: ^1.93.3
-        version: 1.93.3
-      svelte:
-        specifier: ^5.45.2
-        version: 5.45.2
-      svelte-check:
-        specifier: ^4.3.4
-        version: 4.3.4(picomatch@4.0.3)(svelte@5.45.2)(typescript@5.9.3)
-      svelte-tippy:
-        specifier: ^1.3.2
-        version: 1.3.2
-      typescript-eslint:
-        specifier: ^8.48.0
-        version: 8.48.0(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3)
-      vite:
-        specifier: ^7.2.4
-        version: 7.2.4(@types/node@24.7.2)(jiti@2.6.1)(sass-embedded@1.93.3)(sass@1.97.1)(tsx@4.21.0)(yaml@2.8.1)
-      vite-plugin-devtools-json:
-        specifier: ^1.0.0
-        version: 1.0.0(vite@7.2.4(@types/node@24.7.2)(jiti@2.6.1)(sass-embedded@1.93.3)(sass@1.97.1)(tsx@4.21.0)(yaml@2.8.1))
-
-  packages/claim-frontend:
-    dependencies:
-      '@ratfun/common':
-        specifier: workspace:*
-        version: link:../common
-      '@ratfun/shared-ui':
-        specifier: workspace:*
-        version: link:../shared-ui
-      '@ratfun/shared-utils':
-        specifier: workspace:*
-        version: link:../shared-utils
-      '@ratfun/webgl':
-        specifier: workspace:*
-        version: link:../webgl
-      '@sentry/sveltekit':
-        specifier: ^10.27.0
-        version: 10.27.0(@sveltejs/kit@2.49.0(@opentelemetry/api@1.9.0)(@sveltejs/vite-plugin-svelte@6.2.1(svelte@5.45.2)(vite@7.2.4(@types/node@24.7.2)(jiti@2.6.1)(sass-embedded@1.93.3)(sass@1.97.1)(tsx@4.21.0)(yaml@2.8.1)))(svelte@5.45.2)(vite@7.2.4(@types/node@24.7.2)(jiti@2.6.1)(sass-embedded@1.93.3)(sass@1.97.1)(tsx@4.21.0)(yaml@2.8.1)))(svelte@5.45.2)(vite@7.2.4(@types/node@24.7.2)(jiti@2.6.1)(sass-embedded@1.93.3)(sass@1.97.1)(tsx@4.21.0)(yaml@2.8.1))
-      '@wagmi/core':
-        specifier: 2.22.1
-        version: 2.22.1(@tanstack/query-core@5.90.7)(@types/react@19.2.6)(immer@10.2.0)(react@19.2.0)(typescript@5.9.3)(use-sync-external-store@1.6.0(react@19.2.0))(viem@2.39.0(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))
-      contracts:
-        specifier: workspace:*
-        version: link:../contracts
-      drawbridge:
-        specifier: workspace:*
-        version: link:../drawbridge
-      gsap:
-        specifier: ^3.13.0
-        version: 3.13.0
-      howler:
-        specifier: ^2.2.4
-        version: 2.2.4
-      merkle-tree-airdrop:
-        specifier: workspace:*
-        version: link:../merkle-tree-airdrop
-      tippy.js:
-        specifier: ^6.3.7
-        version: 6.3.7
-      viem:
-        specifier: 2.39.0
-        version: 2.39.0(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76)
-      wagmi:
-        specifier: ^2.19.2
-        version: 2.19.2(@tanstack/query-core@5.90.7)(@tanstack/react-query@5.90.7(react@19.2.0))(@types/react@19.2.6)(bufferutil@4.0.9)(fastestsmallesttextencoderdecoder@1.0.22)(immer@10.2.0)(react@19.2.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(viem@2.39.0(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))(ws@8.19.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))(zod@3.25.76)
-    devDependencies:
-      '@eslint/compat':
-        specifier: ^2.0.0
-        version: 2.0.0(eslint@9.39.1(jiti@2.6.1))
-      '@eslint/js':
-        specifier: ^9.39.1
-        version: 9.39.1
-      '@sveltejs/adapter-static':
-        specifier: ^3.0.10
-        version: 3.0.10(@sveltejs/kit@2.49.0(@opentelemetry/api@1.9.0)(@sveltejs/vite-plugin-svelte@6.2.1(svelte@5.45.2)(vite@7.2.4(@types/node@24.7.2)(jiti@2.6.1)(sass-embedded@1.93.3)(sass@1.97.1)(tsx@4.21.0)(yaml@2.8.1)))(svelte@5.45.2)(vite@7.2.4(@types/node@24.7.2)(jiti@2.6.1)(sass-embedded@1.93.3)(sass@1.97.1)(tsx@4.21.0)(yaml@2.8.1)))
-      '@sveltejs/kit':
-        specifier: ^2.49.0
-        version: 2.49.0(@opentelemetry/api@1.9.0)(@sveltejs/vite-plugin-svelte@6.2.1(svelte@5.45.2)(vite@7.2.4(@types/node@24.7.2)(jiti@2.6.1)(sass-embedded@1.93.3)(sass@1.97.1)(tsx@4.21.0)(yaml@2.8.1)))(svelte@5.45.2)(vite@7.2.4(@types/node@24.7.2)(jiti@2.6.1)(sass-embedded@1.93.3)(sass@1.97.1)(tsx@4.21.0)(yaml@2.8.1))
-      '@sveltejs/vite-plugin-svelte':
-        specifier: ^6.2.1
-        version: 6.2.1(svelte@5.45.2)(vite@7.2.4(@types/node@24.7.2)(jiti@2.6.1)(sass-embedded@1.93.3)(sass@1.97.1)(tsx@4.21.0)(yaml@2.8.1))
-      '@types/howler':
-        specifier: ^2.2.12
-        version: 2.2.12
-      eslint:
-        specifier: ^9.39.1
-        version: 9.39.1(jiti@2.6.1)
-      eslint-config-prettier:
-        specifier: ^10.1.8
-        version: 10.1.8(eslint@9.39.1(jiti@2.6.1))
-      eslint-plugin-svelte:
-        specifier: ^3.13.0
-        version: 3.13.0(eslint@9.39.1(jiti@2.6.1))(svelte@5.45.2)(ts-node@10.9.2(@types/node@24.7.2)(typescript@5.9.3))
-      globals:
-        specifier: ^16.5.0
-        version: 16.5.0
-      sass-embedded:
-        specifier: ^1.93.3
-        version: 1.93.3
-      svelte:
-        specifier: ^5.45.2
-        version: 5.45.2
-      svelte-check:
-        specifier: ^4.3.4
-        version: 4.3.4(picomatch@4.0.3)(svelte@5.45.2)(typescript@5.9.3)
-      svelte-tippy:
-        specifier: ^1.3.2
-        version: 1.3.2
-      typescript-eslint:
-        specifier: ^8.48.0
-        version: 8.48.0(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3)
-      vite:
-        specifier: ^7.2.4
-        version: 7.2.4(@types/node@24.7.2)(jiti@2.6.1)(sass-embedded@1.93.3)(sass@1.97.1)(tsx@4.21.0)(yaml@2.8.1)
-      vite-plugin-devtools-json:
-        specifier: ^1.0.0
-        version: 1.0.0(vite@7.2.4(@types/node@24.7.2)(jiti@2.6.1)(sass-embedded@1.93.3)(sass@1.97.1)(tsx@4.21.0)(yaml@2.8.1))
-
   packages/client:
     dependencies:
       '@farcaster/miniapp-sdk':
@@ -291,7 +91,7 @@ importers:
         version: 0.2.1(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76)
       '@farcaster/miniapp-wagmi-connector':
         specifier: ^1.1.0
-        version: 1.1.0(@farcaster/miniapp-sdk@0.2.1(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))(@wagmi/core@2.22.1(@tanstack/query-core@5.90.7)(@types/react@19.2.6)(immer@10.2.0)(react@19.2.0)(typescript@5.9.3)(use-sync-external-store@1.6.0(react@19.2.0))(viem@2.39.0(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(viem@2.39.0(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))
+        version: 1.1.0(@farcaster/miniapp-sdk@0.2.1(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))(@wagmi/core@2.22.1(@tanstack/query-core@5.90.7)(@types/react@19.2.6)(immer@10.2.0)(react@19.2.0)(typescript@5.9.3)(use-sync-external-store@1.4.0(react@19.2.0))(viem@2.39.0(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(viem@2.39.0(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))
       '@latticexyz/common':
         specifier: 2.2.23-94cac741be24bb5743f2f36235cc3bb40012417a
         version: 2.2.23-94cac741be24bb5743f2f36235cc3bb40012417a(@aws-sdk/client-kms@3.828.0)(asn1.js@5.4.1)(typescript@5.9.3)(viem@2.39.0(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))(zod@3.25.76)
@@ -339,7 +139,7 @@ importers:
         version: 10.32.1(@sveltejs/kit@2.49.3(@opentelemetry/api@1.9.0)(@sveltejs/vite-plugin-svelte@6.2.1(svelte@5.46.1)(vite@7.3.1(@types/node@24.7.2)(jiti@2.6.1)(sass-embedded@1.97.1)(sass@1.97.1)(tsx@4.21.0)(yaml@2.8.1)))(svelte@5.46.1)(typescript@5.9.3)(vite@7.3.1(@types/node@24.7.2)(jiti@2.6.1)(sass-embedded@1.97.1)(sass@1.97.1)(tsx@4.21.0)(yaml@2.8.1)))(svelte@5.46.1)(vite@7.3.1(@types/node@24.7.2)(jiti@2.6.1)(sass-embedded@1.97.1)(sass@1.97.1)(tsx@4.21.0)(yaml@2.8.1))
       '@wagmi/core':
         specifier: 2.22.1
-        version: 2.22.1(@tanstack/query-core@5.90.7)(@types/react@19.2.6)(immer@10.2.0)(react@19.2.0)(typescript@5.9.3)(use-sync-external-store@1.6.0(react@19.2.0))(viem@2.39.0(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))
+        version: 2.22.1(@tanstack/query-core@5.90.7)(@types/react@19.2.6)(immer@10.2.0)(react@19.2.0)(typescript@5.9.3)(use-sync-external-store@1.4.0(react@19.2.0))(viem@2.39.0(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))
       d3-array:
         specifier: ^3.2.4
         version: 3.2.4
@@ -643,8 +443,8 @@ importers:
         specifier: ^24.7.2
         version: 24.7.2
       forge-std:
-        specifier: https://github.com/foundry-rs/forge-std.git#60acb7aaadcce2d68e52986a0a66fe79f07d138f
-        version: https://codeload.github.com/foundry-rs/forge-std/tar.gz/60acb7aaadcce2d68e52986a0a66fe79f07d138f
+        specifier: https://github.com/foundry-rs/forge-std.git#v1.14.0
+        version: https://codeload.github.com/foundry-rs/forge-std/tar.gz/1801b0541f4fda118a10798fd3486bb7051c5dd6
       solhint:
         specifier: ^6.0.1
         version: 6.0.1(typescript@5.9.3)
@@ -937,28 +737,6 @@ importers:
       vite-plugin-devtools-json:
         specifier: ^1.0.0
         version: 1.0.0(vite@7.2.4(@types/node@24.7.2)(jiti@2.6.1)(sass-embedded@1.93.3)(sass@1.97.1)(tsx@4.21.0)(yaml@2.8.1))
-
-  packages/merkle-tree-airdrop:
-    dependencies:
-      '@openzeppelin/merkle-tree':
-        specifier: ^1.0.8
-        version: 1.0.8
-      csv-parse:
-        specifier: ^6.1.0
-        version: 6.1.0
-      viem:
-        specifier: 2.39.0
-        version: 2.39.0(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@4.3.5)
-    devDependencies:
-      '@types/node':
-        specifier: ^24.7.0
-        version: 24.7.2
-      tsup:
-        specifier: ^8.5.0
-        version: 8.5.0(@microsoft/api-extractor@7.54.0(@types/node@24.7.2))(jiti@2.6.1)(postcss@8.5.6)(tsx@4.20.6)(typescript@5.9.3)(yaml@2.8.1)
-      tsx:
-        specifier: ^4.20.6
-        version: 4.20.6
 
   packages/query-server:
     dependencies:
@@ -2297,10 +2075,6 @@ packages:
 
   '@date-fns/utc@2.1.1':
     resolution: {integrity: sha512-SlJDfG6RPeEX8wEVv6ZB3kak4MmbtyiI2qX/5zuKdordbrhB/iaJ58GVMZgJ6P1sJaM1gMgENFYYeg1JWrCFrA==}
-
-  '@dk1a/doppler-sdk-fork@0.0.1-alpha.57':
-    resolution: {integrity: sha512-X8DJQC758qmmeJR/El0NNQKcs02IZsXFiAcwjt4m7GODz74xoX75bJhrX5vrE83eV/ky/Vg5dVBqukif7PpuRQ==}
-    engines: {node: '>=18.0.0'}
 
   '@dk1a/doppler-sdk-fork@0.0.1-alpha.62':
     resolution: {integrity: sha512-a0iXeTvkBFeHdOfMu2KSaamV0klG0e69cpJOhTPq+fXiqjBnmOFnrSyhj95paI+4t9Vk3sgm90pliHoBsbU/ag==}
@@ -4001,10 +3775,6 @@ packages:
   '@marijn/find-cluster-break@1.0.2':
     resolution: {integrity: sha512-l0h88YhZFyKdXIFNfSWpyjStDjGHwZ/U7iobcK1cQQD8sejsONdQtTVU+1wVN1PBw40PiiHB1vA5S7VTfQiP9g==}
 
-  '@metamask/abi-utils@2.0.4':
-    resolution: {integrity: sha512-StnIgUB75x7a7AgUhiaUZDpCsqGp7VkNnZh2XivXkJ6mPkE83U8ARGQj5MbRis7VJY8BC5V1AbB1fjdh0hupPQ==}
-    engines: {node: '>=16.0.0'}
-
   '@metamask/eth-json-rpc-provider@1.0.1':
     resolution: {integrity: sha512-whiUMPlAOrVGmX8aKYVPvlKyG4CpQXiNNyt74vE1xb5sPvmx5oA7B/kOi/JdBvhGQq97U1/AVdXEdk2zkP8qyA==}
     engines: {node: '>=14.0.0'}
@@ -4233,10 +4003,6 @@ packages:
 
   '@noble/curves@1.8.1':
     resolution: {integrity: sha512-warwspo+UYUPep0Q+vtdVB4Ugn8GGQj8iyB3gnRWsztmUHTI3S1nhdiWNsPUGL0vud7JlRRk1XEu7Lq1KGTnMQ==}
-    engines: {node: ^14.21.3 || >=16}
-
-  '@noble/curves@1.9.0':
-    resolution: {integrity: sha512-7YDlXiNMdO1YZeH6t/kvopHHbIZzlxrCV9WLqCY6QhcXOoXiNCMDqJIglZ9Yjx5+w7Dz30TITFrlTjnRg7sKEg==}
     engines: {node: ^14.21.3 || >=16}
 
   '@noble/curves@1.9.1':
@@ -4557,9 +4323,6 @@ packages:
 
   '@openzeppelin/contracts@5.4.0':
     resolution: {integrity: sha512-eCYgWnLg6WO+X52I16TZt8uEjbtdkgLC0SUX/xnAksjjrQI4Xfn4iBRoI5j55dmlOhDv1Y7BoR3cU7e3WWhC6A==}
-
-  '@openzeppelin/merkle-tree@1.0.8':
-    resolution: {integrity: sha512-E2c9/Y3vjZXwVvPZKqCKUn7upnvam1P1ZhowJyZVQSkzZm5WhumtaRr+wkUXrZVfkIc7Gfrl7xzabElqDL09ow==}
 
   '@parcel/watcher-android-arm64@2.5.1':
     resolution: {integrity: sha512-KF8+j9nNbUN8vzOFDpRMsaKBHZ/mcjEjMToVMJOhTozkDonQFFrRcfdLWn6yWKCmJKmdVxSgHiYvTCef4/qcBA==}
@@ -9060,9 +8823,6 @@ packages:
   csstype@3.2.3:
     resolution: {integrity: sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==}
 
-  csv-parse@6.1.0:
-    resolution: {integrity: sha512-CEE+jwpgLn+MmtCpVcPtiCZpVtB6Z2OKPTr34pycYYoL7sxdOkXDdQ4lRiw6ioC0q6BLqhc6cKweCVvral8yhw==}
-
   custom-media-element@1.4.5:
     resolution: {integrity: sha512-cjrsQufETwxjvwZbYbKBCJNvmQ2++G9AvT45zDi7NXL9k2PdVcs2h0jQz96J6G4TMKRCcEsoJ+QTgQD00Igtjw==}
 
@@ -9794,10 +9554,6 @@ packages:
   ethereum-cryptography@2.2.1:
     resolution: {integrity: sha512-r/W8lkHSiTLxUxW8Rf3u4HGB0xQweG2RyETjywylKZSzLWoWAijRz8WCuOtJ6wah+avllXBqZuk29HCCvhEIRg==}
 
-  ethereum-cryptography@3.2.0:
-    resolution: {integrity: sha512-Urr5YVsalH+Jo0sYkTkv1MyI9bLYZwW8BENZCeE1QYaTHETEYx0Nv/SVsWkSqpYrzweg6d8KMY1wTjH/1m/BIg==}
-    engines: {node: ^14.21.3 || >=16, npm: '>=9'}
-
   ethers@6.15.0:
     resolution: {integrity: sha512-Kf/3ZW54L4UT0pZtsY/rf+EkBU7Qi5nnhonjUb8yTXcxH3cdcWrV2cRyk0Xk/4jK6OoHhxxZHriyhje20If2hQ==}
     engines: {node: '>=14.0.0'}
@@ -10053,9 +9809,9 @@ packages:
     resolution: {integrity: sha512-gIXjKqtFuWEgzFRJA9WCQeSJLZDjgJUOMCMzxtvFq/37KojM1BFGufqsCy0r4qSQmYLsZYMeyRqzIWOMup03sw==}
     engines: {node: '>=14'}
 
-  forge-std@https://codeload.github.com/foundry-rs/forge-std/tar.gz/60acb7aaadcce2d68e52986a0a66fe79f07d138f:
-    resolution: {tarball: https://codeload.github.com/foundry-rs/forge-std/tar.gz/60acb7aaadcce2d68e52986a0a66fe79f07d138f}
-    version: 1.9.7
+  forge-std@https://codeload.github.com/foundry-rs/forge-std/tar.gz/1801b0541f4fda118a10798fd3486bb7051c5dd6:
+    resolution: {tarball: https://codeload.github.com/foundry-rs/forge-std/tar.gz/1801b0541f4fda118a10798fd3486bb7051c5dd6}
+    version: 1.14.0
 
   form-data-encoder@2.1.4:
     resolution: {integrity: sha512-yDYSgNMraqvnxiEXO4hi88+YZxaHC6QKzb5N84iRCTDeRO7ZALpir/lVmf/uXUhnwUr2O4HU8s/n6x+yNjQkHw==}
@@ -17133,15 +16889,6 @@ snapshots:
 
   '@date-fns/utc@2.1.1': {}
 
-  '@dk1a/doppler-sdk-fork@0.0.1-alpha.57(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76)':
-    dependencies:
-      viem: 2.39.0(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76)
-    transitivePeerDependencies:
-      - bufferutil
-      - typescript
-      - utf-8-validate
-      - zod
-
   '@dk1a/doppler-sdk-fork@0.0.1-alpha.62(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@4.3.5)':
     dependencies:
       viem: 2.39.0(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@4.3.5)
@@ -17900,10 +17647,10 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@farcaster/miniapp-wagmi-connector@1.1.0(@farcaster/miniapp-sdk@0.2.1(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))(@wagmi/core@2.22.1(@tanstack/query-core@5.90.7)(@types/react@19.2.6)(immer@10.2.0)(react@19.2.0)(typescript@5.9.3)(use-sync-external-store@1.6.0(react@19.2.0))(viem@2.39.0(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(viem@2.39.0(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))':
+  '@farcaster/miniapp-wagmi-connector@1.1.0(@farcaster/miniapp-sdk@0.2.1(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))(@wagmi/core@2.22.1(@tanstack/query-core@5.90.7)(@types/react@19.2.6)(immer@10.2.0)(react@19.2.0)(typescript@5.9.3)(use-sync-external-store@1.4.0(react@19.2.0))(viem@2.39.0(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(viem@2.39.0(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))':
     dependencies:
       '@farcaster/miniapp-sdk': 0.2.1(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76)
-      '@wagmi/core': 2.22.1(@tanstack/query-core@5.90.7)(@types/react@19.2.6)(immer@10.2.0)(react@19.2.0)(typescript@5.9.3)(use-sync-external-store@1.6.0(react@19.2.0))(viem@2.39.0(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))
+      '@wagmi/core': 2.22.1(@tanstack/query-core@5.90.7)(@types/react@19.2.6)(immer@10.2.0)(react@19.2.0)(typescript@5.9.3)(use-sync-external-store@1.4.0(react@19.2.0))(viem@2.39.0(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))
       viem: 2.39.0(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76)
 
   '@farcaster/quick-auth@0.0.6(typescript@5.9.3)':
@@ -20642,13 +20389,6 @@ snapshots:
 
   '@marijn/find-cluster-break@1.0.2': {}
 
-  '@metamask/abi-utils@2.0.4':
-    dependencies:
-      '@metamask/superstruct': 3.2.1
-      '@metamask/utils': 9.3.0
-    transitivePeerDependencies:
-      - supports-color
-
   '@metamask/eth-json-rpc-provider@1.0.1':
     dependencies:
       '@metamask/json-rpc-engine': 7.3.3
@@ -21052,10 +20792,6 @@ snapshots:
     dependencies:
       '@noble/hashes': 1.7.1
 
-  '@noble/curves@1.9.0':
-    dependencies:
-      '@noble/hashes': 1.8.0
-
   '@noble/curves@1.9.1':
     dependencies:
       '@noble/hashes': 1.8.0
@@ -21432,13 +21168,6 @@ snapshots:
   '@openzeppelin/contracts@4.9.6': {}
 
   '@openzeppelin/contracts@5.4.0': {}
-
-  '@openzeppelin/merkle-tree@1.0.8':
-    dependencies:
-      '@metamask/abi-utils': 2.0.4
-      ethereum-cryptography: 3.2.0
-    transitivePeerDependencies:
-      - supports-color
 
   '@parcel/watcher-android-arm64@2.5.1':
     optional: true
@@ -29601,8 +29330,6 @@ snapshots:
 
   csstype@3.2.3: {}
 
-  csv-parse@6.1.0: {}
-
   custom-media-element@1.4.5: {}
 
   cyclist@1.0.2: {}
@@ -30566,14 +30293,6 @@ snapshots:
       '@scure/bip32': 1.4.0
       '@scure/bip39': 1.3.0
 
-  ethereum-cryptography@3.2.0:
-    dependencies:
-      '@noble/ciphers': 1.3.0
-      '@noble/curves': 1.9.0
-      '@noble/hashes': 1.8.0
-      '@scure/bip32': 1.7.0
-      '@scure/bip39': 1.6.0
-
   ethers@6.15.0(bufferutil@4.0.9)(utf-8-validate@5.0.10):
     dependencies:
       '@adraffy/ens-normalize': 1.10.1
@@ -30874,7 +30593,7 @@ snapshots:
       cross-spawn: 7.0.6
       signal-exit: 4.1.0
 
-  forge-std@https://codeload.github.com/foundry-rs/forge-std/tar.gz/60acb7aaadcce2d68e52986a0a66fe79f07d138f: {}
+  forge-std@https://codeload.github.com/foundry-rs/forge-std/tar.gz/1801b0541f4fda118a10798fd3486bb7051c5dd6: {}
 
   form-data-encoder@2.1.4: {}
 
