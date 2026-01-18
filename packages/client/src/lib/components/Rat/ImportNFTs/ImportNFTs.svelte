@@ -289,25 +289,6 @@
     align-items: center;
   }
 
-  .rarity-indicator {
-    padding: 4px 8px;
-    color: white;
-    background: var(--color-grey-dark);
-    font-family: var(--special-font-stack);
-    font-size: var(--font-size-xsmall);
-    text-transform: uppercase;
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: center;
-    align-items: center;
-    white-space: nowrap;
-    height: 100%;
-    border: none;
-    border-style: outset;
-    border-width: 4px;
-    border-color: var(--background-light-transparent);
-  }
-
   .nft-details {
     height: 100%;
     width: 100%;
@@ -322,16 +303,6 @@
     border: 8px ridge var(--background-semi-transparent);
     outline: none;
     box-shadow: 0 4px 8px var(--background-light-transparent);
-  }
-
-  .nft-value {
-    font-family: var(--typewriter-font-stack);
-    font-size: var(--font-size-large);
-    color: var(--foreground);
-    opacity: 0.8;
-    width: 50px;
-    padding: 12px;
-    // height: 100%;
   }
 
   .nft-actions {

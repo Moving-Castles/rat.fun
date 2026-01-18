@@ -45,7 +45,9 @@
   // Cooldown until trip can be liquidated
   // Challenge trips use activePeriodBlocks from challengeConfig, regular trips use cooldownCloseTrip from gameConfig
   let cooldownBlocks = $derived(
-    trip.challengeTrip ? Number($challengeConfig?.activePeriodBlocks ?? 0) : $gameConfig.cooldownCloseTrip
+    trip.challengeTrip
+      ? Number($challengeConfig?.activePeriodBlocks ?? 0)
+      : $gameConfig.cooldownCloseTrip
   )
   let blockUntilUnlock = $derived(
     Number(trip.creationBlock) + cooldownBlocks - Number($blockNumber)

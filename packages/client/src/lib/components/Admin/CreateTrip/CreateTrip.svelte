@@ -228,21 +228,6 @@
 {/if}
 
 <style lang="scss">
-  .instructions {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    margin-bottom: 10px;
-    font-family: var(--typewriter-font-stack);
-    font-size: var(--font-size-normal);
-  }
-
-  .highlight {
-    background: var(--color-grey-mid);
-    padding: 5px;
-    color: var(--background);
-  }
-
   .modal-content {
     height: 700px;
     max-height: 90dvh;
@@ -336,17 +321,6 @@
             color: var(--background);
           }
 
-          .type-details {
-            .label {
-              color: var(--background);
-              opacity: 0.8;
-            }
-
-            .value {
-              color: var(--background);
-            }
-          }
-
           .unavailable-notice {
             font-family: var(--typewriter-font-stack);
             font-size: var(--font-size-small);
@@ -389,49 +363,11 @@
             opacity: 0.2;
             z-index: 0;
           }
-
-          .type-title {
-            // color: var(--foreground);
-          }
-
-          .type-details {
-            .label {
-              color: var(--foreground);
-              opacity: 0.7;
-            }
-
-            .value {
-              color: var(--foreground);
-            }
-          }
         }
 
         .type-title {
           font-family: var(--special-font-stack);
           font-size: var(--font-size-super-large);
-        }
-
-        .type-details {
-          display: flex;
-          flex-direction: column;
-          gap: 4px;
-          width: 100%;
-
-          .detail-row {
-            display: flex;
-            justify-content: space-between;
-            font-family: var(--typewriter-font-stack);
-            font-size: var(--font-size-small);
-
-            .label {
-              opacity: 0.7;
-            }
-
-            .value {
-              font-family: var(--special-font-stack);
-              font-size: var(--font-size-medium);
-            }
-          }
         }
       }
     }
