@@ -1,0 +1,41 @@
+name: TypeScript Check
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+
+      - name: Setup env files
+        run: |
+          for pkg in packages/*/; do
+            if [ -f "$pkg.env.example" ]; then
+              cp "$pkg.env.example" "$pkg.env"
+            fi
+          done
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build contracts
+        run: pnpm --filter 'contracts' run build
+
+      - name: Build libs
+        run: pnpm build:libs && pnpm --filter 'query-server' run build
+
+      - name: TypeScript check
+        run: pnpm check

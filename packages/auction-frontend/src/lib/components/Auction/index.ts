@@ -1,7 +1,0 @@
-export { default as Swap } from "./Swap/Swap.svelte"
-export { default as ConnectWalletForm } from "./ConnectWalletForm/ConnectWalletForm.svelte"
-export { default as NotStarted } from "./NotStarted/NotStarted.svelte"
-export { default as WaitingForEpoch } from "./WaitingForEpoch/WaitingForEpoch.svelte"
-export { default as Ended } from "./Ended/Ended.svelte"
-export { default as Error } from "./Error/Error.svelte"
-export { default as CountryBlocked } from "./CountryBlocked/CountryBlocked.svelte"

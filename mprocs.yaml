@@ -8,12 +8,6 @@ procs:
   # exchange-frontend:
   #   cwd: packages/exchange-frontend
   #   shell: pnpm dev
-  # claim-frontend:
-  #   cwd: packages/claim-frontend
-  #   shell: pnpm dev
-  auction-frontend:
-    cwd: packages/auction-frontend
-    shell: pnpm dev
   # webgl:
   #   cwd: packages/webgl
   #   shell: pnpm dev

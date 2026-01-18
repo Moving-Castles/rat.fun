@@ -25,12 +25,4 @@ echo "=== Deploying dashboard to testnet ==="
 echo "=== Deploying exchange frontend to mainnet ==="
 ./deploy-exchange-frontend.sh
 
-# Deploy claim frontend to mainnet
-echo "=== Deploying claim frontend to mainnet ==="
-./deploy-claim-frontend.sh
-
-# Deploy auction frontend to mainnet
-echo "=== Deploying auction frontend to mainnet ==="
-./deploy-auction-frontend.sh
-
 echo "All deployments completed!"
