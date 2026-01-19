@@ -4,6 +4,7 @@
   import { playSound } from "$lib/modules/sound"
   import { backgroundMusic } from "$lib/modules/sound/stores"
   import { shaderManager } from "$lib/modules/webgl/shaders/index.svelte"
+  import { singleFrameRender } from "$lib/modules/ui/state.svelte"
   import TripProcessingPopUp from "./TripProcessingPopUp.svelte"
 
   const {
@@ -45,9 +46,11 @@
     shaderManager.enableContinuousRendering()
 
     // Set the trip processing shader with custom uniforms
+    // u_quality: 0.0 on mobile (skip madness layer), 1.0 on desktop (full quality)
     shaderManager.setShader("tripProcessing", false, {
       u_seed1: { type: "float", value: seed1 },
-      u_seed2: { type: "float", value: seed2 }
+      u_seed2: { type: "float", value: seed2 },
+      u_quality: { type: "float", value: $singleFrameRender ? 0.0 : 1.0 }
     })
 
     // Start timer

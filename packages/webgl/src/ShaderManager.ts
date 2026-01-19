@@ -2,6 +2,7 @@ import { WebGLGeneralRenderer } from "./WebGLGeneralRenderer"
 import { shaders } from "./shaders"
 import { ShaderInitializationError } from "@ratfun/common/error-handling"
 import type { UniformType, UniformDefinition } from "./types"
+import { logger } from "./logger"
 
 export type ErrorHandler = (error: Error, context?: string) => void
 
@@ -11,6 +12,8 @@ export interface ShaderManagerOptions {
   singleFrameRender: () => boolean
   /** Preserve drawing buffer for canvas capture (enables toDataURL) - impacts performance */
   preserveDrawingBuffer?: boolean
+  /** Target FPS (default: 60 desktop, 30 mobile) */
+  targetFPS?: number
 }
 
 export class ShaderManager {
@@ -31,6 +34,7 @@ export class ShaderManager {
   private singleFrameRender: () => boolean
   private singleFramePauseRafId: number | null = null
   private preserveDrawingBuffer: boolean
+  private targetFPS: number
   currentShaderKey: string | null = null
   private shaderChangeListeners: Array<(shaderKey: string | null) => void> = []
   private shaderChangeTimeout: ReturnType<typeof setTimeout> | null = null
@@ -44,6 +48,8 @@ export class ShaderManager {
     this.errorHandler = options.errorHandler
     this.singleFrameRender = options.singleFrameRender
     this.preserveDrawingBuffer = options.preserveDrawingBuffer ?? false
+    // 30fps on mobile, 60fps on desktop
+    this.targetFPS = options.targetFPS ?? (options.singleFrameRender() ? 30 : 60)
   }
 
   /**
@@ -239,7 +245,7 @@ export class ShaderManager {
             }
           } catch (error) {
             // Error already logged to Sentry in initializeRenderer
-            console.error(`Failed to initialize shader "${pendingKey}":`, error)
+            logger.error(`shader init failed: ${pendingKey}`)
 
             // Mark context as exhausted and hide canvas to show CSS fallback
             this._contextExhausted = true
@@ -312,7 +318,8 @@ export class ShaderManager {
         shader: shaderSource,
         uniforms: initialUniforms,
         onError: this.errorHandler,
-        preserveDrawingBuffer: this.preserveDrawingBuffer
+        preserveDrawingBuffer: this.preserveDrawingBuffer,
+        targetFPS: this.targetFPS
       })
 
       this._renderer.render()
@@ -321,7 +328,7 @@ export class ShaderManager {
       window.removeEventListener("resize", this.handleResize)
       window.addEventListener("resize", this.handleResize)
     } catch (error) {
-      console.error("Failed to initialize WebGL renderer:", error)
+      logger.error("renderer init failed")
       this._renderer = null
 
       // Report to Sentry
@@ -398,7 +405,7 @@ export class ShaderManager {
             }
           } catch (error) {
             // Still failing, try again
-            console.warn(`Recovery attempt ${this.recoveryAttempts} failed, will retry...`)
+            logger.warn(`recovery attempt ${this.recoveryAttempts} failed, retrying`)
             this.scheduleContextRecovery(shaderKey)
           }
         }

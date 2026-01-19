@@ -6,6 +6,7 @@ import {
   WebGLError,
   UniformLocationError
 } from "@ratfun/common/error-handling"
+import { logger } from "./logger"
 
 /**
  * A general-purpose WebGL renderer that can render shaders to a canvas.
@@ -53,7 +54,7 @@ export class WebGLGeneralRenderer implements WebGLRenderer {
     this.startTime = performance.now()
     this.uniforms = options.uniforms || {}
     this.autoRender = options.autoRender ?? true
-    this.frameInterval = 1000 / 60
+    this.frameInterval = 1000 / (options.targetFPS ?? 60)
     this.shaderSource = options.shader
     this.onError = options.onError
     this.preserveDrawingBuffer = options.preserveDrawingBuffer ?? false
@@ -239,14 +240,14 @@ export class WebGLGeneralRenderer implements WebGLRenderer {
       this.animationId = undefined
     }
 
-    console.warn("WebGL context lost")
+    logger.warn("context lost")
   }
 
   /**
    * Handles WebGL context restore event.
    */
   private handleContextRestored = (): void => {
-    console.log("WebGL context restored, reinitializing...")
+    logger.log("context restored, reinitializing")
     this.contextLost = false
 
     try {
@@ -255,7 +256,7 @@ export class WebGLGeneralRenderer implements WebGLRenderer {
         this.render()
       }
     } catch (error) {
-      console.error("Failed to restore WebGL context:", error)
+      logger.error("failed to restore context")
       // Error already reported in initWebGL
     }
   }
@@ -520,7 +521,7 @@ export class WebGLGeneralRenderer implements WebGLRenderer {
         }
       } catch (error) {
         // WebGL context may be lost or invalid, ignore cleanup errors
-        console.warn("WebGL cleanup failed (context may be lost):", error)
+        logger.warn("cleanup failed, context may be lost")
       } finally {
         this.uniformLocations.clear()
         // Clear references to allow garbage collection

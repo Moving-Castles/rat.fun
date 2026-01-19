@@ -45,6 +45,12 @@ precision highp float;
 #define WARP3_MULTIPLIER 3.33           // Warp3 intensity multiplier
 #define WARP3_STRENGTH 1.5              // Warp3 displacement strength
 
+// LOD time thresholds (must match complexity thresholds to avoid negative amplitude)
+// complexityFactor = u_time / 10.0, so threshold 0.6 = 6 seconds
+#define LOD_TIME_TURB 6.0               // Enable turbulence at t=6s (complexity=0.6)
+#define LOD_TIME_WARP3 7.0              // Enable warp3 at t=7s (complexity=0.7)
+#define LOD_TIME_MADNESS 8.0            // Enable madness at t=8s (complexity=0.8)
+
 // Turbulence parameters
 #define TURB_THRESHOLD 0.6              // Complexity threshold for turbulence
 #define TURB_MULTIPLIER 2.5             // Turbulence pattern multiplier
@@ -126,6 +132,7 @@ uniform vec2 u_resolution;              // Screen resolution (width, height)
 uniform bool u_invert;                  // Color inversion toggle
 uniform float u_seed1;                  // First seed value (0-1)
 uniform float u_seed2;                  // Second seed value (0-1)
+uniform float u_quality;                // Quality tier (0.0=mobile, 1.0=desktop)
 
 // ============================================================================
 // HASH FUNCTIONS
@@ -315,7 +322,8 @@ void main() {
     warpedUV += vec2(sin(warp2 * TWO_PI), cos(warp2 * TWO_PI)) * (WARP2_STRENGTH_BASE + chaosIntensity * WARP2_STRENGTH_CHAOS);
 
     // Coordinate warping - layer 3 (extreme chaos)
-    if (complexityFactor > WARP3_THRESHOLD) {
+    // LOD: uniform-based branch allows GPU to skip entirely before 7s
+    if (u_time > LOD_TIME_WARP3) {
         float warp3a = rotatedNoise(warpedUV * (10.0 + seedOffset1 * 0.1), noiseRotation2, smoothness1);
         float warp3b = ridgedNoise(warpedUV * (8.0 + seedOffset2 * 0.1), smoothness2);
         float warp3 = mix(warp3a, warp3b, combinedSeed) * (complexityFactor - WARP3_THRESHOLD) * WARP3_MULTIPLIER;
@@ -359,7 +367,8 @@ void main() {
     pattern += noisePattern2 * chaosIntensity * LAYER5_CHAOS_WEIGHT;
 
     // Layer 6: Extreme turbulence (conditional)
-    if (complexityFactor > TURB_THRESHOLD) {
+    // LOD: uniform-based branch allows GPU to skip entirely before 6s
+    if (u_time > LOD_TIME_TURB) {
         vec2 turbCoord = warpedUV * (12.0 + combinedSeed * 20.0);
         vec2 spiralVec = vec2(spiralTime);
 
@@ -374,7 +383,8 @@ void main() {
     }
 
     // Layer 7: Complete madness (conditional)
-    if (complexityFactor > MAD_THRESHOLD) {
+    // LOD: skip on mobile (u_quality < 1.0) and before 5s
+    if (u_time > LOD_TIME_MADNESS && u_quality > 0.5) {
         float madness = (complexityFactor - MAD_THRESHOLD) * MAD_MULTIPLIER;
         vec2 madCoord = warpedUV * (20.0 + seedOffset1 * HALF) + vec2(spiralTime * TWO, -spiralTime * 1.5);
 
