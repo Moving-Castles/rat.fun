@@ -1,1 +1,0 @@
-export const env={"PUBLIC_SENTRY_DSN":"https://af53ec2174eb8c539a63dd1f48c0fd77@o4509677575208960.ingest.de.sentry.io/4510478084210768","PUBLIC_BASE_RPC_URL":"https://base-mainnet.g.alchemy.com/v2/o0Q1hppQS1CH1vqg63edZ","PUBLIC_TEST_AUCTION":"false","PUBLIC_WAITING_FOR_EPOCH":"false"}
