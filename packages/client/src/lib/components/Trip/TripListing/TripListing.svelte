@@ -292,7 +292,7 @@
     flex: 1;
     overflow-y: auto;
     min-height: 0;
-    overscroll-behavior-y: contain;
+    overscroll-behavior: auto !important;
     touch-action: pan-y;
     -webkit-overflow-scrolling: touch;
   }
