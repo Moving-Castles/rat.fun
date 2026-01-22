@@ -124,7 +124,9 @@
         const creator = creatorId ? $players[creatorId] : undefined
         const creatorName = creator?.name?.toLowerCase() ?? ""
         const tripIdLower = tripId.toLowerCase()
-        return prompt.includes(filter) || creatorName.includes(filter) || tripIdLower.includes(filter)
+        return (
+          prompt.includes(filter) || creatorName.includes(filter) || tripIdLower.includes(filter)
+        )
       })
     }
 

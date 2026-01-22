@@ -47,7 +47,7 @@ async function routes(fastify: FastifyInstance) {
       const { tripPrompt, tripCreationCost, folderId, isChallengeTrip } = request.body.data
 
       // Recover player address from signature and convert to MUD bytes32 format
-      const { callerAddress, playerId } = await verifyRequest(request.body)
+      const { playerId } = await verifyRequest(request.body)
 
       // * * * * * * * * * * * * * * * * * *
       // Get onchain data
@@ -62,7 +62,7 @@ async function routes(fastify: FastifyInstance) {
       validateInputData(gameConfig, player, tripPrompt, tripCreationCost)
 
       // Validate trip folder with user address for whitelist checking
-      await validateTripFolder(folderId, callerAddress)
+      await validateTripFolder(folderId)
 
       // Validate challenge trip params (no whitelist check - anyone can create)
       validateChallengeTripParams(isChallengeTrip, tripCreationCost, CHALLENGE_MIN_CREATION_COST)

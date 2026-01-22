@@ -54,17 +54,12 @@ export const isWhitelistedForChallengeTrips = async (callerAddress: string): Pro
 }
 
 /**
- * Validate that a folder ID exists in the trip folder list and is not restricted,
- * or if restricted, that the user is whitelisted
+ * Validate that a folder ID exists in the trip folder list
  * @param folderId - The ID of the folder to validate
- * @param callerAddress - Optional caller address to check against whitelist
- * @returns True if the folder is valid and accessible
- * @throws CMSAPIError if the folder is invalid or not accessible
+ * @returns True if the folder is valid
+ * @throws CMSAPIError if the folder is invalid
  */
-export const validateTripFolder = async (
-  folderId: string,
-  callerAddress?: string
-): Promise<boolean> => {
+export const validateTripFolder = async (folderId: string): Promise<boolean> => {
   try {
     const folderList = (await loadDataPublicSanity(
       queries.tripFolderList,
@@ -79,22 +74,6 @@ export const validateTripFolder = async (
 
     if (!folder) {
       throw new CMSAPIError(`Trip folder with ID ${folderId} not found`, null)
-    }
-
-    if (folder.restricted) {
-      // Check if user is whitelisted using Challenge document
-      const challenge = (await loadDataPublicSanity(queries.challenge, {})) as ChallengeDoc
-      const whitelist = challenge?.whitelist || []
-      const isWhitelisted =
-        callerAddress &&
-        whitelist.some((addr: string) => addr.toLowerCase() === callerAddress.toLowerCase())
-
-      if (!isWhitelisted) {
-        throw new CMSAPIError(
-          `Trip folder ${folder.title} is restricted and cannot be used for trip creation`,
-          null
-        )
-      }
     }
 
     return true
