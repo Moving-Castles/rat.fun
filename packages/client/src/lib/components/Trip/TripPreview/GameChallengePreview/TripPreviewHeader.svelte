@@ -5,11 +5,15 @@
     getTripMinRatValueToEnter,
     getTripOwnerName
   } from "$lib/modules/state/utils"
-  import { staticContent } from "$lib/modules/content"
+  import { currentBlockNumber } from "$lib/modules/state/stores"
+  import { CHALLENGE_ACTIVE_PERIOD_BLOCKS } from "$lib/modules/state/constants"
   import { isPhone } from "$lib/modules/ui/state.svelte"
   import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
-  import { getNextCETTime, getTargetCETDate, formatCountdown } from "@ratfun/shared-utils"
+  import { formatCountdown } from "@ratfun/shared-utils"
+
+  // Block time on Base in milliseconds
+  const BLOCK_TIME_MS = 2000
 
   let { trip, tripId }: { trip: Trip; tripId?: Hex } = $props()
 
@@ -27,48 +31,24 @@
     trip.fixedMinValueToEnter
   )
 
-  // Countdown state
-  let countdownText = $state("")
-  let countdownInterval: ReturnType<typeof setInterval> | null = null
+  // Calculate expiration block for active challenge based on creation block
+  let expirationBlock = $derived(
+    trip.creationBlock ? Number(trip.creationBlock) + CHALLENGE_ACTIVE_PERIOD_BLOCKS : 0
+  )
 
-  // Get dailyChallengeTime and nextChallengeDay from staticContent
-  let dailyChallengeTime = $derived($staticContent?.dailyChallengeTime)
-  let nextChallengeDay = $derived($staticContent?.nextChallengeDay)
+  // Calculate blocks remaining until expiration
+  let blocksRemaining = $derived.by(() => {
+    if (!expirationBlock || !$currentBlockNumber) return 0
+    return Math.max(0, expirationBlock - $currentBlockNumber)
+  })
 
-  function updateCountdown() {
-    if (!dailyChallengeTime) {
-      countdownText = ""
-      return
-    }
+  // Calculate time remaining in milliseconds
+  let timeRemainingMs = $derived(blocksRemaining * BLOCK_TIME_MS)
 
-    const now = Date.now()
-    // Use nextChallengeDay if set (a valid date string), otherwise target next occurrence of dailyChallengeTime
-    const isValidDate =
-      nextChallengeDay &&
-      typeof nextChallengeDay === "string" &&
-      /^\d{4}-\d{2}-\d{2}$/.test(nextChallengeDay)
-    const target = isValidDate
-      ? getTargetCETDate(dailyChallengeTime, nextChallengeDay).getTime()
-      : getNextCETTime(dailyChallengeTime).getTime()
-    const diff = target - now
-
-    if (diff <= 0) {
-      countdownText = "Ending soon..."
-      return
-    }
-
-    countdownText = formatCountdown(diff)
-  }
-
-  $effect(() => {
-    updateCountdown()
-    countdownInterval = setInterval(updateCountdown, 1000)
-
-    return () => {
-      if (countdownInterval) {
-        clearInterval(countdownInterval)
-      }
-    }
+  // Countdown text derived from time remaining
+  let countdownText = $derived.by(() => {
+    if (timeRemainingMs <= 0) return ""
+    return formatCountdown(timeRemainingMs)
   })
 
   // Data rows configuration with reactivity
