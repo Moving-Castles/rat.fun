@@ -59,7 +59,7 @@ export function calculateProfitLossForTrip(
     const previousOutcome = tripOutcomes[i - 1]
 
     const outcomeTime = new Date(outcome._createdAt).getTime()
-    const previousOutcomeValue = previousOutcome?.tripValue || Number(trip.tripCreationCost) // Value from the previous trip, and if it's the first outcome, creation cost of the trip
+    const previousOutcomeValue = previousOutcome?.tripValue ?? outcome.oldTripValue ?? Number(trip.tripCreationCost) // Value from the previous trip, or oldTripValue (accounts for boosts), or creation cost
     const currentTripValue = outcome.tripValue || 0
     const valueChange = currentTripValue - previousOutcomeValue
 
