@@ -176,6 +176,8 @@ function filterEntityProps(entity: Entity, fullSync: boolean): Entity {
 
 export type InitEntitiesOptions = {
   activePlayerId?: string | null
+  /** Force full sync from MUD indexer even if some entities exist (use when query server is stale) */
+  forceIndexerSync?: boolean
 }
 
 // Track initialization state to prevent duplicate calls
@@ -208,7 +210,7 @@ export function resetEntitiesInitialization(): void {
 }
 
 export async function initEntities(options: InitEntitiesOptions = {}) {
-  const { activePlayerId = null } = options
+  const { activePlayerId = null, forceIndexerSync = false } = options
 
   // Guard against duplicate initialization for same player
   if (activePlayerId && initializedForPlayer === activePlayerId) {
@@ -221,8 +223,17 @@ export async function initEntities(options: InitEntitiesOptions = {}) {
 
   // Check if entities were already populated by server hydration
   // In this case, skip MUD component processing and just set up live update systems
+  // UNLESS forceIndexerSync is true (e.g., when query server data was stale)
   const existingEntities = get(entities)
-  if (Object.keys(existingEntities).length > 0) {
+  const shouldSkipIndexer = Object.keys(existingEntities).length > 0 && !forceIndexerSync
+
+  logger.log("initEntities called:", {
+    existingEntityCount: Object.keys(existingEntities).length,
+    forceIndexerSync,
+    shouldSkipIndexer
+  })
+
+  if (shouldSkipIndexer) {
     logger.log("Entities already populated (server hydration), setting up live systems only")
 
     // Create systems to listen to changes on game-specific tables

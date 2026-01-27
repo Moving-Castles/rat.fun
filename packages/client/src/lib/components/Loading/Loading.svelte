@@ -108,10 +108,11 @@
     // Step 1: Initialize public network (MUD sync + global config)
     // -------------------------------------------------------------------------
     // Sets up MUD layer and fetches global config from server (if enabled).
+    // Checks server data staleness - if stale, syncs from MUD indexer instead.
     // Global config populates entities["0x"] with ExternalAddressesConfig, etc.
     // Returns publicClient and transport for reuse by drawbridge.
     logger.log("Initializing public network...")
-    const { publicClient, transport, worldAddress, configFromServer } = await initPublicNetwork({
+    const { publicClient, transport, worldAddress, serverDataFresh } = await initPublicNetwork({
       environment,
       url: page.url
     })
@@ -171,67 +172,49 @@
       // Try server hydration for player-specific data
       const playerId = addressToId(drawbridgeState.userAddress)
 
-      if (configFromServer) {
-        // Server hydration enabled - fetch player data
+      if (serverDataFresh) {
+        // Server data is fresh (staleness already checked in initPublicNetwork)
+        // Fetch player-specific data from server
+        logger.log("Server data is fresh, using server hydration")
         const hydrationResult = await hydrateFromServer(playerId, env)
 
         if (hydrationResult) {
-          // Check for stale hydration data before using it
-          let useServerHydration = true
-          try {
-            const currentBlock = await network.publicClient.getBlockNumber()
-            const hydrationBlock = hydrationResult.blockNumber
-            const blocksBehind = currentBlock - hydrationBlock
+          // Merge server entities with existing (keep worldObject from config)
+          entities.update(current => ({
+            ...current,
+            ...hydrationResult.entities
+          }))
+          logger.log("Player hydration succeeded")
 
-            if (blocksBehind > 60n) {
-              // Data is too stale - fallback to normal indexer sync
-              logger.warn(
-                `Hydration data is ${blocksBehind} blocks behind (hydration: ${hydrationBlock}, current: ${currentBlock}) - falling back to indexer sync`
-              )
-              useServerHydration = false
-            } else if (blocksBehind > 10n) {
-              logger.warn(
-                `Hydration data is ${blocksBehind} blocks behind (hydration: ${hydrationBlock}, current: ${currentBlock})`
-              )
-            } else {
-              logger.log(`Hydration data is fresh (${blocksBehind} blocks behind)`)
-            }
-          } catch (error) {
-            logger.warn("Could not check hydration staleness:", error)
-          }
-
-          if (useServerHydration) {
-            // Merge server entities with existing (keep worldObject from config)
+          // Fetch trips - must complete before spawned() runs so trip IDs are available for CMS queries
+          const tripsResult = await fetchTrips(playerId, env)
+          if (tripsResult) {
+            logger.log(
+              "fetchTrips completed, updating entities store with",
+              Object.keys(tripsResult.entities).length,
+              "trips"
+            )
             entities.update(current => ({
               ...current,
-              ...hydrationResult.entities
+              ...tripsResult.entities
             }))
-            logger.log("Player hydration succeeded")
-
-            // Fetch trips - must complete before spawned() runs so trip IDs are available for CMS queries
-            const tripsResult = await fetchTrips(playerId, env)
-            if (tripsResult) {
-              logger.log(
-                "fetchTrips completed, updating entities store with",
-                Object.keys(tripsResult.entities).length,
-                "trips"
-              )
-              entities.update(current => ({
-                ...current,
-                ...tripsResult.entities
-              }))
-              // Flush reactivity so derived stores (trips, nonDepletedTrips, playerTrips) update
-              await tick()
-              logger.log("Entities store updated with trips, tick completed")
-            } else {
-              logger.log("fetchTrips completed but returned null")
-            }
+            // Flush reactivity so derived stores (trips, nonDepletedTrips, playerTrips) update
+            await tick()
+            logger.log("Entities store updated with trips, tick completed")
+          } else {
+            logger.log("fetchTrips completed but returned null")
           }
         }
-      }
 
-      // Initialize entities with player filtering (sets up subscriptions)
-      await initEntities({ activePlayerId: playerId })
+        // Initialize entities - server data is fresh, no need to force indexer sync
+        logger.log("Calling initEntities (server data fresh, no force sync)")
+        await initEntities({ activePlayerId: playerId })
+      } else {
+        // Server data is stale or unavailable - MUD indexer has already synced
+        // Just initialize entities which will read from MUD components
+        logger.log("Server data stale/unavailable, using MUD indexer data")
+        await initEntities({ activePlayerId: playerId, forceIndexerSync: true })
+      }
     } else if (drawbridgeState.userAddress) {
       // -----------------------------------------------------------------------
       // SCENARIO B: Wallet connected, but NO session
@@ -248,7 +231,7 @@
       logger.log("Address:", drawbridgeState.userAddress)
 
       const playerId = addressToId(drawbridgeState.userAddress)
-      await initEntities({ activePlayerId: playerId })
+      await initEntities({ activePlayerId: playerId, forceIndexerSync: !serverDataFresh })
 
       if (isOnTripPage()) {
         logger.log("On trip page → tourist mode")
@@ -272,7 +255,7 @@
         logger.log("On trip page → tourist mode")
         // Initialize entities without player ID - syncs ALL entities (no filtering)
         // This should be optimized...
-        await initEntities()
+        await initEntities({ forceIndexerSync: !serverDataFresh })
         if (typer?.stop) typer.stop()
         await animateOut()
         loadedAsTourist()

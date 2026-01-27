@@ -21,6 +21,9 @@ import { createLogger } from "$lib/modules/logger"
 
 const logger = createLogger("[PublicNetwork]")
 
+// Staleness threshold - if server data is more than this many blocks behind, sync from indexer
+const STALENESS_THRESHOLD_BLOCKS = 60n
+
 interface InitPublicNetworkOptions {
   environment: ENVIRONMENT
   url: URL
@@ -30,7 +33,8 @@ interface InitPublicNetworkResult {
   publicClient: SetupPublicNetworkResult["publicClient"]
   transport: SetupPublicNetworkResult["transport"]
   worldAddress: Hex
-  configFromServer: boolean
+  /** Whether server config was available and fresh (indexer was skipped) */
+  serverDataFresh: boolean
 }
 
 /**
@@ -61,12 +65,34 @@ function getIndexerUrlConfig(environment: ENVIRONMENT): IndexerUrlConfig | null 
 }
 
 /**
+ * Get current block number via direct RPC call.
+ * Used to check server data staleness before MUD setup.
+ */
+async function getCurrentBlockNumber(rpcUrl: string): Promise<bigint> {
+  const response = await fetch(rpcUrl, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      jsonrpc: "2.0",
+      method: "eth_blockNumber",
+      params: [],
+      id: 1
+    }),
+    signal: AbortSignal.timeout(5000)
+  })
+  const data = await response.json()
+  return BigInt(data.result)
+}
+
+/**
  * Initialize the public network connection and wait for chain sync to complete.
  * Sets up MUD layer, waits for indexer sync, and starts block listener.
  *
- * Fetches global config from server if hydration is enabled, which populates
- * the entities["0x"] WorldObject with GameConfig, ExternalAddressesConfig, etc.
- * When server config is available, the indexer is skipped entirely.
+ * Strategy:
+ * 1. Fetch global config from server (if hydration enabled)
+ * 2. Check if server data is fresh (within STALENESS_THRESHOLD_BLOCKS)
+ * 3. If fresh → skip indexer, use server data
+ * 4. If stale → sync from indexer for reliable data
  *
  * Returns the publicClient and transport for use by other systems (e.g. drawbridge).
  *
@@ -78,29 +104,45 @@ export async function initPublicNetwork(
 ): Promise<InitPublicNetworkResult> {
   const { environment, url } = options
 
+  // Get network config early - we need the RPC URL to check staleness
+  const indexerUrlConfig = getIndexerUrlConfig(environment)
+  const networkConfig = getNetworkConfig(environment, url, null, indexerUrlConfig)
+  const rpcUrl = networkConfig.chain.rpcUrls.default.http[0]
+
   // Fetch global config from server (if enabled)
-  // This gives us ExternalAddressesConfig needed for allowance checks
-  // and a blockNumber to skip the indexer sync
   logger.log("Fetching global config...")
   const configResult = await fetchConfig(environment)
 
+  let skipIndexer = false
   let initialBlockLogs: StorageAdapterBlock | undefined
 
   if (configResult) {
-    logger.log("Config fetched from server, will skip indexer")
-    // Set the WorldObject in entities store
+    // Check staleness before deciding to skip indexer
+    try {
+      const currentBlock = await getCurrentBlockNumber(rpcUrl)
+      const blocksBehind = currentBlock - configResult.blockNumber
+
+      if (blocksBehind <= STALENESS_THRESHOLD_BLOCKS) {
+        logger.log(`Server data is fresh (${blocksBehind} blocks behind), skipping indexer`)
+        skipIndexer = true
+        initialBlockLogs = {
+          blockNumber: configResult.blockNumber,
+          logs: [] as const
+        }
+      } else {
+        logger.warn(`Server data is stale (${blocksBehind} blocks behind), will sync from indexer`)
+      }
+    } catch (error) {
+      logger.warn("Could not check staleness, will sync from indexer:", error)
+    }
+
+    // Always set WorldObject from server config (even if stale, it's better than nothing initially)
     entities.update(current => ({
       ...current,
       [WORLD_OBJECT_ID]: configResult.worldObject
     }))
-    // Prepare initialBlockLogs to skip indexer
-    initialBlockLogs = {
-      blockNumber: configResult.blockNumber,
-      logs: [] as const
-    }
 
     // Fetch world stats in background (non-blocking)
-    // Stats are fetched separately since they change frequently and shouldn't be cached
     fetchWorldStats(environment).then(statsResult => {
       if (statsResult) {
         entities.update(current => {
@@ -118,7 +160,6 @@ export async function initPublicNetwork(
     })
 
     // Fetch all players in background (non-blocking)
-    // Players are fetched separately to not block initial load
     fetchPlayers(environment).then(playersResult => {
       if (playersResult) {
         entities.update(current => ({
@@ -131,11 +172,8 @@ export async function initPublicNetwork(
     logger.log("No server config, will sync from indexer")
   }
 
-  // Setup MUD layer (skip indexer if we have server config)
-  // Time the indexer sync when not using server hydration
-  const indexerStartTime = !configResult ? performance.now() : null
-  const indexerUrlConfig = getIndexerUrlConfig(environment)
-  const networkConfig = getNetworkConfig(environment, url, null, indexerUrlConfig)
+  // Setup MUD layer
+  const indexerStartTime = performance.now()
 
   // Timeout for setupPublicNetwork to prevent Firefox hanging on refresh
   const NETWORK_SETUP_TIMEOUT_MS = 30000
@@ -158,9 +196,11 @@ export async function initPublicNetwork(
   // Wait for chain sync to complete (instant if we skipped indexer)
   await waitForChainSync()
 
-  // Log indexer sync time when using indexer path
-  if (indexerStartTime !== null) {
-    const elapsed = (performance.now() - indexerStartTime).toFixed(0)
+  // Log timing
+  const elapsed = (performance.now() - indexerStartTime).toFixed(0)
+  if (skipIndexer) {
+    logger.log(`MUD setup complete in ${elapsed}ms (indexer skipped)`)
+  } else {
     logger.log(`Indexer sync complete in ${elapsed}ms`)
   }
 
@@ -175,6 +215,6 @@ export async function initPublicNetwork(
     publicClient: mudLayer.publicClient,
     transport: mudLayer.transport,
     worldAddress: mudLayer.worldAddress,
-    configFromServer: !!configResult
+    serverDataFresh: skipIndexer
   }
 }
