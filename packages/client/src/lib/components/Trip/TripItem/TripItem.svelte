@@ -114,6 +114,7 @@
     position: relative;
     overflow: hidden;
     background: var(--background-semi-transparent);
+    overscroll-behavior: auto;
 
     .trip-image {
       position: relative;
@@ -185,6 +186,7 @@
           width: 160px;
           height: 100%;
           overflow: hidden;
+          overscroll-behavior: auto;
           transform-origin: center center;
           border-right: var(--default-border-style);
 
@@ -234,6 +236,7 @@
             white-space: normal;
             line-height: 0.9em;
             overflow: hidden;
+            overscroll-behavior: auto;
             padding-inline: 10px;
             padding-bottom: 5px;
           }

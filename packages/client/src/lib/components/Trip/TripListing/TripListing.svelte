@@ -18,7 +18,6 @@
   import { blockNumber } from "$lib/modules/network"
   import { CURRENCY_SYMBOL } from "$lib/modules/ui/constants"
   import { staticContent } from "$lib/modules/content"
-  import { UI_STRINGS } from "$lib/modules/ui/ui-strings/index.svelte"
   import { FEATURES } from "$lib/config/features"
 
   import { TripItem, NoRatListing } from "$lib/components/Trip"
