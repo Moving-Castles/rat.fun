@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>rat.fun — trip outcomes</title>
+    <link rel="stylesheet" href="assets/fonts.css" />
+    <link rel="stylesheet" href="widget.css" />
+  </head>
+  <body>
+    <div class="widget">
+      <div class="trip-header" id="trip-header"></div>
+      <div class="log-container" id="log-container"></div>
+      <div class="bottom-bar">
+        <div id="rat-slot"></div>
+        <div class="result-strip" id="result-strip"></div>
+      </div>
+      <div class="nav">
+        <button id="prev" aria-label="Previous example">&lsaquo; prev</button>
+        <span class="counter" id="counter"></span>
+        <button id="replay" aria-label="Replay log">replay</button>
+        <button id="next" aria-label="Next example">next &rsaquo;</button>
+      </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="widget.js"></script>
+    <script>
+      const outcomes = window.OUTCOME_DATA || []
+      let current = 0
+
+      const els = {
+        header: document.getElementById("trip-header"),
+        logContainer: document.getElementById("log-container"),
+        resultStrip: document.getElementById("result-strip"),
+        ratSlot: document.getElementById("rat-slot")
+      }
+
+      function render(index) {
+        const outcome = outcomes[index]
+        if (!outcome) return
+        window.RatWidget.renderOutcome(outcome, els)
+        document.getElementById("counter").textContent = `${index + 1} / ${outcomes.length}`
+      }
+
+      document.getElementById("prev").addEventListener("click", () => {
+        current = (current - 1 + outcomes.length) % outcomes.length
+        render(current)
+      })
+      document.getElementById("next").addEventListener("click", () => {
+        current = (current + 1) % outcomes.length
+        render(current)
+      })
+      document.getElementById("replay").addEventListener("click", () => render(current))
+
+      // Deep-linking: ?i=<index> or ?id=<outcome _id>
+      const params = new URLSearchParams(location.search)
+      if (params.has("id")) {
+        const found = outcomes.findIndex(o => o._id === params.get("id"))
+        if (found >= 0) current = found
+      } else if (params.has("i")) {
+        const i = parseInt(params.get("i"), 10)
+        if (!isNaN(i) && i >= 0 && i < outcomes.length) current = i
+      }
+
+      render(current)
+    </script>
+  </body>
+</html>

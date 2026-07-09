@@ -1,0 +1,408 @@
+/* Design tokens copied from packages/shared-ui/src/app.css */
+:root {
+  --black: #000000;
+  --white: #ffffff;
+  --green: rgb(51, 195, 99);
+  --yellow: rgb(234, 234, 51);
+  --red: rgb(246, 52, 42);
+  --background: var(--black);
+  --foreground: var(--white);
+  --foreground-semi-transparent: rgba(255, 255, 255, 0.6);
+  --color-grey-light: rgb(153, 153, 153);
+  --color-grey-dark: rgb(51, 51, 51);
+  --color-good: var(--green);
+  --color-bad: var(--red);
+  --color-log-text-item: var(--yellow);
+  --color-log-text-quote: pink;
+  --color-log-text-system: orangered;
+  --color-log-text-balance: var(--green);
+  --typewriter-font-stack: "Workbench", monospace;
+  --special-font-stack: "Xanh Mono", monospace;
+  --font-size-normal: 16px;
+  --font-size-small: 12px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--typewriter-font-stack);
+  font-size: var(--font-size-normal);
+  height: 100%;
+}
+
+.widget {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 12px 0;
+  gap: 12px;
+}
+
+/* ── Header: the trip (trap) prompt ─────────────────────── */
+.trip-header {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  border: 1px solid var(--color-grey-dark);
+  padding: 10px;
+}
+
+.trip-image {
+  width: 150px;
+  aspect-ratio: 1 / 1;
+  height: auto;
+  object-fit: cover;
+  flex-shrink: 0;
+  image-rendering: pixelated;
+}
+
+.trip-meta {
+  min-width: 0;
+}
+
+.trip-label {
+  font-size: var(--font-size-small);
+  color: var(--color-grey-light);
+  margin-bottom: 4px;
+}
+
+.trip-prompt {
+  font-family: var(--special-font-stack);
+  line-height: 1.3em;
+  overflow-wrap: break-word;
+}
+
+.run-meta {
+  font-size: var(--font-size-small);
+  color: var(--color-grey-light);
+  margin-top: 6px;
+}
+
+/* ── Rat panel: layered avatar as in RatAvatar.svelte ────── */
+.rat-box {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: start;
+  gap: 10px;
+}
+
+.rat-chip::before {
+  content: "Rat name";
+  display: block;
+  font-size: var(--font-size-small);
+  color: var(--color-grey-dark);
+  /* margin-bottom: 4px; */
+}
+
+
+.rat-avatar {
+  position: relative;
+  width: 90px;
+  aspect-ratio: 1;
+  user-select: none;
+}
+
+.rat-avatar .layer {
+  position: absolute;
+  inset: 0;
+  /* Layers fade in staggered when the reveal starts */
+  opacity: 0;
+  transition: opacity 0.4s ease-out;
+}
+
+.rat-avatar .layer.body {
+  transition-delay: 0s;
+}
+.rat-avatar .layer.arms {
+  transition-delay: 0.12s;
+}
+.rat-avatar .layer.head {
+  transition-delay: 0.24s;
+}
+.rat-avatar .layer.ears {
+  transition-delay: 0.36s;
+}
+
+.rat-avatar.revealed .layer {
+  opacity: 1;
+}
+
+.rat-avatar .layer img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Idle arm wobble: gsap yoyo -2° ↔ 2° over 0.4s in the game.
+   Starts only after the layer reveal to avoid fighting the fade. */
+.rat-avatar.revealed .layer.arms {
+  animation: arm-wobble 0.4s ease-in-out 0.6s infinite alternate;
+  transform-origin: 50% 50%;
+}
+
+.rat-avatar.dead .layer {
+  animation: none !important;
+  filter: grayscale(1);
+}
+
+@keyframes arm-wobble {
+  from {
+    transform: rotate(-2deg);
+  }
+  to {
+    transform: rotate(2deg);
+  }
+}
+
+.rat-info {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+
+  gap: 2px;
+  opacity: 0;
+  transition: opacity 0.4s ease-out 0.4s;
+}
+
+.rat-info.revealed {
+  opacity: 1;
+}
+
+.rat-chip {
+  display: inline-block;
+  padding: 5px 10px;
+  background: var(--color-grey-light);
+  color: var(--background);
+  font-family: var(--typewriter-font-stack);
+  white-space: nowrap;
+}
+
+.rat-chip.dead {
+  background: var(--color-bad);
+  text-decoration: line-through;
+}
+
+/* ── Log ─────────────────────────────────────────────────── */
+.log-container {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 200px;
+}
+
+.inventory-section {
+  margin-bottom: 1em;
+  padding-bottom: 1em;
+  border-bottom: 1px solid var(--color-grey-dark);
+}
+
+.inventory-label {
+  color: var(--color-grey-light);
+  margin-bottom: 0.5em;
+  font-size: var(--font-size-small);
+}
+
+.inventory-items,
+.outcome-list {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.log-item {
+  display: flex;
+  margin-bottom: 0.5em;
+  line-height: 1.2em;
+  justify-content: flex-start;
+  align-items: flex-start;
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 0.15s ease-out,
+    transform 0.15s ease-out;
+}
+
+.log-item.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.timestamp {
+  display: inline-block;
+  background: var(--color-grey-light);
+  padding: 5px;
+  color: var(--background);
+  margin-right: 10px;
+  white-space: nowrap;
+}
+
+.log-text {
+  display: inline-block;
+  background: var(--foreground-semi-transparent);
+  max-width: 100%;
+  padding: 5px;
+  color: var(--background);
+  line-height: 1.4em;
+  font-family: var(--special-font-stack);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.log-text .item-ref {
+  background: var(--color-log-text-item);
+  padding: 2px 4px;
+}
+
+.log-text .quote {
+  background: var(--color-log-text-quote);
+  padding: 2px 4px;
+}
+
+.log-text .system-message {
+  background: var(--color-log-text-system);
+  padding: 2px 4px;
+}
+
+.log-text .balance-message {
+  background: var(--color-log-text-balance);
+  padding: 2px 4px;
+}
+
+.outcome-list {
+  margin-left: 10px;
+}
+
+.outcome {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 10px;
+  white-space: nowrap;
+  background: var(--color-good);
+  color: var(--background);
+  font-family: var(--typewriter-font-stack);
+}
+
+.outcome.negative {
+  background: var(--color-bad);
+}
+
+.outcome .heart {
+  display: inline-block;
+  margin-right: 5px;
+}
+
+/* ── Result strip ────────────────────────────────────────── */
+.result-strip {
+  border-top: 1px solid var(--color-grey-dark);
+  padding-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.4s ease-out;
+}
+
+.result-strip.visible {
+  opacity: 1;
+}
+
+.result-box {
+  border: 1px solid var(--color-grey-dark);
+  padding: 6px 10px;
+}
+
+.result-box .label {
+  font-size: var(--font-size-small);
+  color: var(--color-grey-light);
+  display: block;
+}
+
+.result-box.dead {
+  background: var(--color-bad);
+  color: var(--background);
+  border-color: var(--color-bad);
+}
+
+.value-up {
+  color: var(--color-good);
+}
+
+.value-down {
+  color: var(--color-bad);
+}
+
+/* ── Navigation / footer ─────────────────────────────────── */
+.nav {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav.solo {
+  justify-content: flex-end;
+}
+
+.nav button {
+  background: var(--background);
+  color: var(--color-grey-light);
+  border: 1px solid var(--color-grey-light);
+  font-family: var(--typewriter-font-stack);
+  font-size: var(--font-size-normal);
+  padding: 6px 14px;
+  cursor: pointer;
+}
+
+.nav button:hover {
+  background: var(--foreground);
+  color: var(--background);
+}
+
+.nav .counter {
+  color: var(--color-grey-light);
+  font-size: var(--font-size-small);
+}
+
+/* ── Bottom bar: rat panel, result strip, (solo) replay ──── */
+.bottom-bar {
+  border-top: 1px solid var(--color-grey-dark);
+  padding-top: 10px;
+  display: flex;
+  align-items: start;
+  gap: 12px;
+}
+
+.bottom-bar .result-strip {
+  border-top: none;
+  padding-top: 0;
+  flex: 1;
+}
+
+/* ── Solo-mode error ─────────────────────────────────────── */
+.solo-error {
+  border: 1px solid var(--color-bad);
+  color: var(--color-bad);
+  padding: 12px;
+  line-height: 1.5em;
+}
+
+.solo-error code {
+  color: var(--foreground);
+  font-family: var(--special-font-stack);
+}

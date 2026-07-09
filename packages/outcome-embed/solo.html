@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>rat.fun — trip outcome</title>
+    <link rel="stylesheet" href="assets/fonts.css" />
+    <link rel="stylesheet" href="widget.css" />
+  </head>
+  <body>
+    <div class="widget">
+      <div class="trip-header" id="trip-header"></div>
+      <div class="log-container" id="log-container"></div>
+      <div class="bottom-bar">
+        <div id="rat-slot"></div>
+        <div class="result-strip" id="result-strip"></div>
+        <div class="nav solo">
+          <button id="replay" aria-label="Replay log">replay</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="widget.js"></script>
+    <script>
+      const outcomes = window.OUTCOME_DATA || []
+
+      const els = {
+        header: document.getElementById("trip-header"),
+        logContainer: document.getElementById("log-container"),
+        resultStrip: document.getElementById("result-strip"),
+        ratSlot: document.getElementById("rat-slot")
+      }
+
+      // Pick the outcome: ?id=<Sanity outcome _id> (preferred) or ?i=<index>.
+      // Defaults to the first example when no parameter is given.
+      const params = new URLSearchParams(location.search)
+      let outcome = outcomes[0]
+      let error = null
+
+      if (params.has("id")) {
+        outcome = outcomes.find(o => o._id === params.get("id"))
+        if (!outcome) {
+          error = params.get("id")
+        }
+      } else if (params.has("i")) {
+        const i = parseInt(params.get("i"), 10)
+        outcome = outcomes[i]
+        if (!outcome) {
+          error = `index ${params.get("i")}`
+        }
+      }
+
+      if (error) {
+        const box = window.RatWidget.el("div", "solo-error")
+        box.innerHTML =
+          `Outcome <code></code> is not in this snapshot.<br />` +
+          `Add its ID to <code>build-data.mjs</code> and re-run ` +
+          `<code>node build-data.mjs</code> to include it.`
+        box.querySelector("code").textContent = error
+        els.header.replaceWith(box)
+        document.getElementById("replay").style.display = "none"
+      } else {
+        window.RatWidget.renderOutcome(outcome, els)
+        document
+          .getElementById("replay")
+          .addEventListener("click", () => window.RatWidget.renderOutcome(outcome, els))
+      }
+    </script>
+  </body>
+</html>

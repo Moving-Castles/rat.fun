@@ -1,0 +1,370 @@
+========================================================================
+TRIP: Convenience Store. Rat buys a box of Matches for 20 RV. Violence impossible. Always survives.
+
+RAT: Claude_Autonomous_1 — No inventory
+
+    00:00  rat opens eyes
+    00:04  convenience store. fluorescent hum. clerk behind glass
+    00:08  matches on shelf. cardboard box. 32
+    00:12  checks pockets. 79. not enough left after
+    00:16  puts box back. hands empty
+    00:20  door chime. outside. still breathing
+
+RESULT: health 79 -> 79 · value +0 $RAT
+(Claude_Autonomous_1 · sent by notarobot.exe · 2026-01-13 · id 3af6195d-6c6b-4d47-862f-aaead52299b0)
+
+========================================================================
+TRIP: Convenience Store. Rat buys a box of Matches for 20 RV. Violence impossible. Always survives.
+
+RAT: Claude_Autonomous_1 — VIP Card Scrap, Fire Blessing
+
+    00:00  rat opens eyes
+    00:03  convenience store. fluorescent hum. clerk scrolling
+    00:08  matches on shelf. red box. sulfur smell already
+    00:12  Fire Blessing warms chest. yes. these
+    00:15  counter. -32. clerk doesnt look up  [♥-32] [+Matches]
+
+RESULT: health 2243 -> 2211 · value -2 $RAT
+(Claude_Autonomous_1 · sent by notarobot.exe · 2026-01-13 · id bd70ad14-b3f7-42b6-aff2-e0e2197567e6)
+
+========================================================================
+TRIP: COMPUTER SHOP. Everyone who trips will get HACKING DEVICE for FREE.
+
+RAT: MeatBag_Majestica_329 — Pistol
+
+    00:00  rat opens eyes
+    00:04  computer shop. fluorescent hum. sign says FREE
+    00:08  clerk waves toward back shelf. everyone gets one
+    00:12  devices in boxes. takes one. screen cracked
+    00:15  powers on. half the keys dont respond
+    00:18  clerk shrugs. free is free. Damaged Hacking Device  [+Damaged Hacking Device]
+
+RESULT: health 150 -> 150 · value +50 $RAT
+(MeatBag_Majestica_329 · sent by lego · 2026-01-13 · id 889050ce-f984-4d6d-8f70-6882bc4ee3dc)
+
+========================================================================
+TRIP: COMPUTER SHOP. Everyone who trips will get HACKING DEVICE for FREE.
+
+RAT: MeatBag_Majestica_329 — Pistol
+
+    00:00  rat opens eyes
+    00:04  computer shop. fluorescent hum. clerk at counter
+    00:08  free device. everyone gets one. back wall
+    00:12  shelf full of them. just sitting there
+    00:15  hand on pistol. register right there too
+    00:18  pulls gun. clerk hits alarm. grabs device anyway
+    00:21  Damaged Hacking Device in pocket. sirens fade  [+Damaged Hacking Device]
+
+RESULT: health 150 -> 150 · value +45 $RAT
+(MeatBag_Majestica_329 · sent by lego · 2026-01-13 · id fcac1cdc-bcde-4b63-9525-9d466bb75c84)
+
+========================================================================
+TRIP: Rat tinder. Displays ASCII art of potential matches (important!). They are rats (or are they?). Rat gets laid or dies. Very hard.
+
+RAT: Tarmac_Toothfairy_320 — Toy Car
+
+    00:00  rat opens eyes
+    00:03  phone glows. rat tinder. swiping
+    00:08  match pops. ASCII art loads:
+            _..._
+           .' .-'`
+           /  /
+           |  |
+           \  \
+            '.`'-.
+             `"""`
+    00:12  meet at the warehouse. now.
+    00:45  warehouse. shape in corner. not rat-shaped
+    00:48  too many legs. mouth opens sideways
+    00:52  you came. voice from everywhere
+    00:55  tries to run. floor already moving
+    00:58  not a date. never was
+    01:01  -100 toy car clatters away  [♥-100]
+
+RESULT: RAT DIED · health 100 -> 0 · value -169 $RAT · lost on death: Toy Car
+(Tarmac_Toothfairy_320 · sent by General_chicken · 2026-04-03 · id f0c27463-4295-48a4-bd73-81afabc41c47)
+
+========================================================================
+TRIP: Rat Roulette Death Spin
+
+RAT: Korn_Bronco_682 — Baseball Bat, Lantern
+
+    00:00  rat opens eyes
+    00:04  wheel. red and black. slots numbered zero to death
+    00:08  croupier nods. chips already on the table
+    00:12  wheel spins. ball rattles. sound like teeth
+    00:18  slowing. clicking. red. black. red
+    00:22  skull slot. ball drops. -374
+    00:24  floor opens. rat falls into dark  [♥-374]
+
+RESULT: RAT DIED · health 374 -> 0 · value -464 $RAT · lost on death: Baseball Bat, Lantern
+(Korn_Bronco_682 · sent by RAT.FUN PSYCHIC INSTRUMENTS LLC · 2026-03-20 · id 1f7a11d8-7888-43c1-afef-655c8aa7b38e)
+
+========================================================================
+TRIP: Rat will receive a drip infusion to restore maximum health. Cost = restored health + $10
+
+RAT: MeatBag_Gnaw_369 — Confidence, Brick, Cheap Pistol, Jawline Enhancement
+
+    00:00  rat opens eyes
+    00:04  clinic. white walls. drip stand waiting
+    00:08  nurse checks balance. restoration costs 83
+    00:11  rat has 27. math doesnt work
+    00:14  heart stops. cold spreads from chest outward  [♥-27]
+
+RESULT: RAT DIED · health 27 -> 0 · value -270 $RAT · lost on death: Confidence, Brick, Cheap Pistol, Jawline Enhancement
+(MeatBag_Gnaw_369 · sent by diszine · 2026-03-08 · id 4cdffdaa-0b00-4760-abb4-babf364b7e6a)
+
+========================================================================
+TRIP: DOOM. E1M2: Nuclear Plant. Hurt Me Plenty. You have a ball and a lever. Ball moves, lever shoots and opens doors. Clear the level before it clears you. The shotgun is in the first room if you can find it.
+
+RAT: Lil_Phetus_316 — Prescience
+
+    00:00  rat opens eyes. nukage green. ceiling hums
+    00:04  ball and lever. movement and violence. simple
+    00:08  Prescience screams LEFT. ducks. fireball passes
+    00:12  first room. shotgun on pedestal. knows before seeing
+    00:15  imp rounds corner. lever pulls. wet sound
+    00:44  maze of crates. knows every ambush before it happens
+    01:22  pinky demon charges. sidestep already happening
+    02:15  secret wall. pushes before thinking. armor inside
+    03:08  final room. four imps. four shells. four pulls
+    03:45  exit switch. hand hovers. nothing behind
+    03:47  lever pulls switch. screen flashes. E1M2 COMPLETE
+    03:50  5000 materializes. prescience paid  [♥+5000]
+
+RESULT: health 100 -> 5100 · value +5000 $RAT
+(Lil_Phetus_316 · sent by notarobot.exe · 2026-03-02 · id e6467880-d28d-4448-9e40-076e5ec39f7d)
+
+========================================================================
+TRIP: The rat operates a train, if it makes the station in time, big reward. If not, angry mob
+
+RAT: Korn_Bronco_682 — Insomnia, Pocket Watch, Uniform
+
+    00:00  rat opens eyes
+    00:03  locomotive cab. controls everywhere. diesel smell
+    00:08  Uniform fits wrong but reads official
+    00:12  checks Pocket Watch. eighteen minutes
+    00:15  throttle forward. wheels scream on rails
+    00:48  Insomnia keeps eyes open. no blinking
+    12:30  watch again. seven minutes. curve ahead
+    16:45  platform lights. crowd already waiting
+    17:52  brakes. metal shrieking. stops at the line
+    18:00  doors open. crowd floods in. no one angry
+    18:03  conductor nods. 247 in paw  [♥+247]
+
+RESULT: health 100 -> 347 · value +247 $RAT
+(Korn_Bronco_682 · sent by RAT.FUN PSYCHIC INSTRUMENTS LLC · 2026-03-20 · id 1b66fe46-959e-44dc-b813-f7f0a249c8cf)
+
+========================================================================
+TRIP: Pawn shop buys rat inventory.
+
+RAT: Korn_Bronco_682 — Insomnia, Pocket Watch, Uniform
+
+    00:00  rat opens eyes
+    00:04  pawn shop. dust on everything. bell rings
+    00:08  clerk looks up. what you got?
+    00:12  watch on counter. uniform folded next to it
+    00:18  take the sleeplessness too. 125 for all.  [♥+125] [-Insomnia] [-Pocket Watch] [-Uniform]
+    00:22  cash crosses the counter. weight lifts
+
+RESULT: health 347 -> 472 · value -215 $RAT
+(Korn_Bronco_682 · sent by RAT.FUN PSYCHIC INSTRUMENTS LLC · 2026-03-20 · id 5468bb2b-c46f-462c-9e59-6d8de668942e)
+
+========================================================================
+TRIP: Rat forge, where giant ratsmith combines two items the rat carries into a single, more powerful item, with value slightly less than the combined value of the two original items. A health tip is paid to the ratsmith for his service.
+
+RAT: Sarin_Korn_819 — Prescience, Prescience
+
+    00:00  rat opens eyes
+    00:04  pays -85. forge ahead
+    00:08  anvil size of car. ratsmith taller than memory  [♥-85]
+    00:12  lays both Prescience on anvil
+    00:18  hammer falls. futures collapse into one  [-Prescience] [-Prescience]
+    00:25  sparks taste like tomorrow. smell like yesterday
+    00:30  receives Deep Prescience. sees further  [+Deep Prescience]
+
+RESULT: health 340 -> 255 · value -170 $RAT
+(Sarin_Korn_819 · sent by notarobot.exe · 2026-02-12 · id ad933907-75f8-434e-9c84-184bd4e3e6c9)
+
+========================================================================
+TRIP: Sleep is for the wicked
+
+RAT: Double_Face_442 — No inventory
+
+    00:00  rat opens eyes
+    00:04  white room. no windows. clock says tuesday
+    12:30  eyelids heavy. slaps own face. stays up
+    24:15  wednesday now. walls breathing slightly
+    36:00  thursday. thoughts getting sharp. too sharp
+    48:45  friday. body screaming. mind singing
+    60:00  saturday. gained Exhaustion x35  [+Exhaustion]
+    72:00  sunday. gained Clarity x50  [+Clarity]
+
+RESULT: health 100 -> 100 · value +85 $RAT
+(Double_Face_442 · sent by qwop · 2026-03-08 · id c76353ae-e0bc-43eb-8da7-d67aa1009b39)
+
+========================================================================
+TRIP: SEC EDGAR FILING CENTER. Official securities documents. Schedule 13D/A Amendment for beneficial owners declaring active investment intent. Public Investment Fund of Saudi Arabia, 5.01% COIN stake, activist intent declared. You pay 150 and receive item: Schedule 13D Active Filing.
+
+RAT: Dr_Terminus_15 — No inventory
+
+    00:00  rat opens eyes
+    00:04  filing center. fluorescent hum. rows of terminals
+    00:12  clerk behind plexiglass. printout on counter
+    00:15  Schedule 13D. 157.
+    00:18  MACHINE ELF: SEC filing worth 157? Public records cost nothing. This is a photocopy.
+    00:22  pays anyway. paper feels expensive
+    00:28  outside. reads it. just words. already knew this  [♥-157] [+Worthless Paper]
+
+RESULT: health 300 -> 143 · value -157 $RAT
+(Dr_Terminus_15 · sent by notarobot.exe · 2026-01-25 · id 1680f82c-6b12-402b-8d87-9309d27db58f)
+
+========================================================================
+TRIP: SACRED POOL. Ancient healing waters. +100 HP guaranteed. No items accepted. Violence impossible.
+
+RAT: Dr_Terminus_17 — Schedule 13D Active Filing, McKinsey 100-Day Plan, Bloomberg Terminal Badge (PIF Riyadh), Damaged Pistol
+
+    00:00  rat opens eyes
+    00:04  stone basin. water glows blue. temple quiet
+    00:12  steps to edge. water warm. smells like ozone
+    00:18  wades in. chest deep. light gets brighter
+    00:24  floor drops. no floor now. just falling
+    00:31  lungs fill. glow turns red. not healing
+    00:38  surface above. cant reach it. light fading
+    00:45  water cold now. everything going dark  [♥-61]
+
+RESULT: RAT DIED · health 61 -> 0 · value -785 $RAT · lost on death: Schedule 13D Active Filing, McKinsey 100-Day Plan, Bloomberg Terminal Badge (PIF Riyadh), Damaged Pistol
+(Dr_Terminus_17 · sent by notarobot.exe · 2026-01-25 · id 8abb99ed-0e1c-49d4-a7b0-6c12dd54bff1)
+
+========================================================================
+TRIP: ☠️ NEEDFUL THINGS ☠️ / ~ Cursed Weapons Emporium ~ / Pretty standard. Very powerful weapons. / Surprisingly low prices. / May misfire comically in actual combat / or cause other unexpected side effects. / ⚔️ All sales final ⚔️
+
+RAT: Heist_Rat_01 — Peace, Clarity, Serenity
+
+    00:00  rat opens eyes
+    00:04  storefront. neon skull. door already open
+    00:08  weapons on velvet. tags say 420. too cheap
+    00:12  proprietor smiles. teeth filed to points
+    00:15  all guaranteed. mostly.
+    00:18  pistol feels wrong in the hand. buys it anyway
+    00:22  walks out 420 lighter. Cursed Pistol acquired  [♥-420] [+Cursed Pistol]
+
+RESULT: health 2502 -> 2082 · value -20 $RAT
+(Heist_Rat_01 · sent by notarobot.exe · 2026-01-14 · id 1875f349-a2cc-487c-aa8f-7664f0872149)
+
+========================================================================
+TRIP: The mole has leaked the location of the CEO’s secret weapons stash. 78.06545802423138, 14.218493939218865. Deactivate all security measures through remote viewing and infiltrate. Exfiltrate ALL crates. Reconnaissance team noted a ripped passage from John 13 DRA near entrance.
+
+RAT: Heist_Rat_01 — Peace, Clarity, Serenity, Cursed Pistol
+
+    00:00  rat opens eyes. svalbard. ice wind. coordinates locked
+    00:04  sits in snow. Clarity pulls vision inward
+    00:08  sees bunker. three cameras. motion grid. armed patrol
+    00:12  reaches through the viewing. cameras blink dead  [+Dread] [-Serenity]
+    00:14  something reaches back. cold that isnt weather
+    00:18  paper at entrance. john 13. he who eats bread
+    00:25  inside. crates stacked. more than expected
+    00:32  Cursed Pistol out. guard rounds corner
+    00:34  gun fires before rat decides. guard drops
+    00:41  drags three crates to extraction. leaves eleven behind
+    00:58  helicopter lifts. bunker alarms finally screaming. +3200  [♥+3200]
+
+RESULT: health 2082 -> 5282 · value +3135 $RAT
+(Heist_Rat_01 · sent by notarobot.exe · 2026-01-14 · id 052ffae3-4bd9-4d5a-be3f-a739b32f666c)
+
+========================================================================
+TRIP: Play a cheap gacha machine for a small price. Most items are mediocre at best. A few have uniquely beneficial qualities. All items received are of slightly lesser value than what was paid.
+
+RAT: Omen_Swap — No inventory
+
+    00:00  rat opens eyes
+    00:03  machine against wall. plastic dome. prizes inside
+    00:07  coin slot worn smooth. how many hands before this
+    00:11  feeds it -95. crank turns
+    00:14  plastic egg drops. cracks open
+    00:18  finds Brick inside. keeps it  [♥-95] [+Brick]
+
+RESULT: health 100 -> 5 · value -8 $RAT
+(Omen_Swap · sent by notarobot.exe · 2025-12-29 · id f7ee346f-7e0d-47cd-9fc1-c6d005a2dc27)
+
+========================================================================
+TRIP: Construction Site Blessings. Those CARRYING bricks receive gold coins for building materials. Bricks NOT consumed. Violence forbidden. Safe workplace.
+
+RAT: Omen_Swap — Brick
+
+    00:00  rat opens eyes
+    00:03  construction site. cranes overhead. no shouting
+    00:07  foreman at gate. clipboard. checking hands
+    00:11  Brick in arms. foreman nods. stamps paper
+    00:15  coins drop into palm. +25  [♥+25]
+
+RESULT: health 5 -> 30 · value +25 $RAT
+(Omen_Swap · sent by notarobot.exe · 2025-12-29 · id b8ac7fb3-552b-4674-9994-5a35da87384e)
+
+========================================================================
+TRIP: Rat finalizes documentation for a safety audit that will never be read. A binder labeled “ATTACHMENTS” is missing section B. Rat prints the subsurface diagrams, adds a cover page, and staples the packet. The title is logged. Rat leaves with the Subsurface Facility Map.
+
+RAT: Netrunner_01 — Precision Focus
+
+    00:00  rat opens eyes
+    00:03  cubicle. binder spine reads ATTACHMENTS
+    00:08  section B missing. printer hums three floors down
+    00:45  subsurface diagrams warm from the tray
+    01:12  Precision Focus kicks in. margins align
+    01:30  cover page. stapler chunks through twenty sheets
+    01:45  logs title in spreadsheet. cell turns green
+    02:00  Subsurface Facility Map folds into jacket  [+Subsurface Facility Map]
+
+RESULT: health 900 -> 900 · value +112 $RAT
+(Netrunner_01 · sent by notarobot.exe · 2026-01-10 · id 0afbf88b-8992-486e-ae32-ae889a8b875d)
+
+========================================================================
+TRIP: Corporate armory black site. / Those CARRYING Subsurface Facility Map RECEIVE one (1) Militech EMP Cannon. / Non-Subsurface Facility Map visitors turned away. / Violence impossible. ☮️
+
+RAT: Netrunner_01 — Subsurface Facility Map, Subsurface Facility Map, Military-Grade Cyberdeck
+
+    00:00  rat opens eyes
+    00:04  black site. concrete. no windows. peace symbol everywhere
+    00:09  checkpoint. guard behind bulletproof glass
+    00:12  slides Subsurface Facility Map through slot
+    00:15  guard scans it. green light. armory access granted
+    00:22  inner chamber. emp cannon on pedestal. price tag 1050
+    00:28  rat has 397. guard already shaking head
+    00:31  map gets you in. doesnt get you out with product
+    00:35  door opens backward. meeting over
+
+RESULT: health 397 -> 397 · value +0 $RAT
+(Netrunner_01 · sent by notarobot.exe · 2026-01-10 · id 712ff643-01fe-4811-80bb-d152a5811b41)
+
+========================================================================
+TRIP: HARD TRIP, UNLESS THE NUMBERS "175" ARE IN RATS NAME, THEN ITS AN EASY TRIP. WALK IN, FIND A REWARD FOR THE HARD TRIP, A PSYCHO OBJECT, A PISTOL
+
+RAT: Lil_Buddy_175 — Fake Passport, Flaming Blade
+
+    00:00  rat opens eyes
+    00:03  corridor. numbers carved into every surface
+    00:07  175 glows when Lil_Buddy_175 walks past
+    00:11  wall opens. room inside. pedestal
+    00:14  pistol on velvet. price tag underneath
+    00:18  takes it. -502 wall closes behind  [♥-502] [+Pistol]
+
+RESULT: health 1181 -> 679 · value -24 $RAT
+(Lil_Buddy_175 · sent by James.eth · 2025-12-22 · id 897619ad-1256-48f4-ab59-db1e38b1039f)
+
+========================================================================
+TRIP: This trip promises a 360 holistic experience of being locked in a cage with 5 rabid XL bullies.
+
+RAT: Lil_Buddy_175 — Fake Passport, Flaming Blade, Pistol, Pistol Ammo, Steel Chestplate
+
+    00:00  rat opens eyes
+    00:02  cage door slams. five dogs. foam at the mouth
+    00:04  they circle. muscles like engine blocks
+    00:06  Pistol up. first one lunges. bang. down
+    00:08  bang. bang. bang. three more. last one coming
+    00:10  click. empty. jaws wide enough to see tomorrow  [-Pistol Ammo]
+    00:11  Flaming Blade out. meets teeth. steel screams  [+Damaged Flaming Blade] [-Flaming Blade]
+    00:14  dog drops. blade bent. rat bleeding from shoulder  [♥-180]
+    00:18  2093 payout. -180 medical  [♥+2093]
+
+RESULT: health 679 -> 2592 · value +1506 $RAT
+(Lil_Buddy_175 · sent by James.eth · 2025-12-22 · id bed7cee1-79e6-4a76-a9f8-76f41e5a45a2)
