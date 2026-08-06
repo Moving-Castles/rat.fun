@@ -127,6 +127,7 @@ contract RatRouter {
         amountOutMinimum: 0
       })
     );
+    require(amountOut <= type(uint128).max, "amount overflow");
     return uint128(amountOut);
   }
 

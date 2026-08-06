@@ -14,7 +14,6 @@ import {
 } from "../codegen/index.sol";
 import { System } from "@latticexyz/world/src/System.sol";
 import { LibUtils, LibRat, LibWorld } from "../libraries/Libraries.sol";
-import { console2 as console } from "forge-std/console2.sol";
 
 contract RatSystem is System {
   /**
