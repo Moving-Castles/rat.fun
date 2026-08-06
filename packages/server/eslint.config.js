@@ -10,7 +10,10 @@ export default ts.config(
   prettier,
   {
     languageOptions: {
-      globals: { ...globals.node }
+      globals: { ...globals.node },
+      parserOptions: {
+        project: "./tsconfig.json"
+      }
     },
     rules: {
       "no-undef": "off",
@@ -20,7 +23,13 @@ export default ts.config(
       ],
       "@typescript-eslint/no-explicit-any": "warn",
       "@typescript-eslint/no-empty-object-type": "off",
-      "no-useless-catch": "warn"
+      "no-useless-catch": "warn",
+      // prevent auth bypass via missing await on async functions
+      "@typescript-eslint/no-floating-promises": "error",
+      "@typescript-eslint/no-misused-promises": [
+        "error",
+        { checksConditionals: true }
+      ]
     }
   }
 )

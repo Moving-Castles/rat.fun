@@ -78,8 +78,8 @@ const gracefulShutdown = async (signal: string) => {
 }
 
 // Handle shutdown signals
-process.on("SIGTERM", () => gracefulShutdown("SIGTERM"))
-process.on("SIGINT", () => gracefulShutdown("SIGINT"))
+process.on("SIGTERM", () => void gracefulShutdown("SIGTERM"))
+process.on("SIGINT", () => void gracefulShutdown("SIGINT"))
 
 // Start the server
 const start = async (port: number) => {
@@ -94,4 +94,4 @@ const start = async (port: number) => {
   }
 }
 
-start(Number(process.env.PORT))
+void start(Number(process.env.PORT))
